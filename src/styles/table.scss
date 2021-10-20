@@ -1,0 +1,138 @@
+// 表格不换行
+.tableLimit tr td .cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /*可以显示的行数，超出部分用...表示 */
+  -webkit-box-orient: vertical;
+}
+
+// 单元格遮罩
+.mask-td {
+  .cell {
+    &:after {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      background-color: $cellDangerMaskColor;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none; // 穿透
+    }
+  }
+}
+
+// table-cell 梯形标签 【甲供 / 工厂简称】
+.table-cell-tag {
+  background: #1682e6;
+  transform: rotate(-45deg);
+  color: white;
+  font-weight: 100;
+  position: absolute;
+  top: 5px;
+  left: -20px;
+  right: 0;
+  width: 70px;
+  height: 20px;
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-cell-tag + span {
+  margin-left: 15px;
+}
+
+// 甲供材料提示标签
+.first-party-tip {
+  @extend .table-cell-tag;
+  background: #e64242;
+}
+
+// TODO:重复标签。写进对应文件css，材料申购重复时用的样式
+.duplicate-tip {
+  color: white;
+  font-weight: 100;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-left: 10px solid red;
+  border-bottom: 5px solid transparent;
+}
+
+// 三角角标
+.table-cell-triangle {
+  background: red;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  color: white;
+  font-weight: 100;
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 45px;
+  height: 7px;
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-cell-triangle + span {
+  margin-left: 20px;
+}
+
+// -------------  echart-dataView 表格样式 start ------------------
+.pure-table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  border: 1px solid #cbcbcb;
+}
+
+.pure-table caption {
+  color: #000;
+  font: italic 85%/1 arial, sans-serif;
+  padding: 1em 0;
+  text-align: center;
+}
+
+.pure-table td,
+.pure-table th {
+  border-bottom: 1px solid #cbcbcb;
+  border-width: 0 0 1px 0;
+  font-size: inherit;
+  margin: 0;
+  overflow: visible;
+  padding: 0.5em 1em;
+}
+
+.pure-table thead {
+  background-color: #e0e0e0;
+  color: #000;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.pure-table td {
+  background-color: transparent;
+}
+
+.pure-table-horizontal td,
+.pure-table-horizontal th {
+  border-width: 0 0 1px 0;
+  border-bottom: 1px solid #cbcbcb;
+}
+
+.pure-table-horizontal tbody > tr:last-child > td {
+  border-bottom-width: 0;
+}
+// -------------  echart-dataView 表格样式 end ------------------

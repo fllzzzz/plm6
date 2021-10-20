@@ -1,0 +1,48 @@
+// base color
+$blue:#324157;
+$light-blue:#3A71A8;
+$red:#C03639;
+$pink: #E65D6E;
+$green: #30B08F;
+$tiffany: #4AB7BD;
+$yellow:#FEC171;
+$panGreen: #30B08F;
+
+// sidebar
+$menuText:#fff;
+$menuActiveText:#ffd04b;
+$subMenuActiveText:#ffd04b; // https://github.com/ElemeFE/element/issues/12951
+
+// $menuBg:#304156;
+// $menuHover:#263445;
+
+// $subMenuBg:#242525;
+// $subMenuHover:#001528;
+// active-text-color="#ffd04b"
+//         background-color="#545c64"
+//         text-color="#fff"
+$menuBg:#545c64;
+$menuActive:#333;
+$menuHover:#333;
+
+$subMenuBg:#242525;
+$subMenuHover:#001528;
+
+$sideBarWidth: 210px;
+
+// #ffd86e63 黄色 #52f09840绿色
+$cellDangerMaskColor: #ff000021;
+
+// vite2 不支持 在js引入这种写法
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+  cellDangerMaskColor: $cellDangerMaskColor;
+}

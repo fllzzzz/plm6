@@ -1,0 +1,105 @@
+import { constantize } from '../base'
+
+// 使用状态
+const enabledEnum = {
+  TRUE: { L: '启用', K: 'TRUE', V: 1 },
+  FALSE: { L: '禁用', K: 'FALSE', V: 0 }
+}
+constantize(enabledEnum)
+
+// 是否
+const whetherEnum = {
+  TRUE: { L: '是', K: 'TRUE', V: true },
+  FALSE: { L: '否', K: 'FALSE', V: false }
+}
+constantize(whetherEnum)
+
+// 重量类型
+const weightTypeEnum = {
+  NET: { L: '净重', K: 'NET', V: 0 },
+  GROSS: { L: '毛重', K: 'GROSS', V: 1 }
+}
+constantize(weightTypeEnum)
+
+// 进行中/暂停  流程状态
+const processingEnum = {
+  PROCESS: { L: '进行', K: 'TRUE', V: 1 },
+  PAUSE: { L: '暂停', K: 'FALSE', V: 0 }
+}
+constantize(processingEnum)
+
+// 商务审核状态
+const businessAuditStatusEnum = {
+  AUDIT_NOT_PASS: { L: '未审核', K: 'AUDIT_NOT_PASS', V: 0 },
+  AUDIT_PASS: { L: '已通过', K: 'AUDIT_PASS', V: 1 },
+  AUDIT_REFUSE: { L: '已拒绝', K: 'AUDIT_REFUSE', V: 2 }
+}
+constantize(businessAuditStatusEnum)
+
+// 安装审核状态
+const installationAuditStatusEnum = {
+  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 0 },
+  CHECKED: { L: '已审核', K: 'CHECKED', V: 1 }
+}
+constantize(installationAuditStatusEnum)
+
+// 打包清单状态
+const packStatusTypeEnum = {
+  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
+  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 2 },
+  CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
+}
+constantize(packStatusTypeEnum)
+
+// 查询条件
+const queryConditionTypeEnum = {
+  PROJECT: { L: '项目', K: 'PROJECT ', V: 1 },
+  MONOMER: { L: '单体', K: 'MONOMER', V: 2 },
+  AREA: { L: '区域', K: 'AREA', V: 3 }
+}
+constantize(queryConditionTypeEnum)
+
+// 数据来源
+const dataSourceSysEnum = {
+  CURRENT: { L: '当前系统', K: 'CURRENT', V: 1 },
+  OA: { L: 'OA', K: 'OA', V: 2 },
+  DD: { L: '钉钉', K: 'DD', V: 3 }
+}
+constantize(dataSourceSysEnum)
+
+// 操作类型
+const operationTypeEnum = {
+  ADD: { L: '新增', K: 'ADD', V: 1, T: 'primary' },
+  DELETE: { L: '删除', K: 'DELETE', V: 2, T: 'danger' },
+  EDIT: { L: '修改', K: 'EDIT', V: 3, T: 'info' }
+}
+constantize(operationTypeEnum)
+
+// 文件分类
+const fileClassifyEnum = {
+  MODEL: { L: '3D模型', K: 'MODEL', V: -2 },
+  OTHER: { L: '其他', K: 'OTHER', V: -1 },
+  CONTRACT_ATT: { L: '合同附件', K: 'CONTRACT_ATT', V: 1 },
+  CHANGE_LIST_ATT: { L: '变更清单附件', K: 'CHANGE_LIST_ATT', V: 4 },
+  PROBLEM_REPORT_ATT: { L: '问题报告附件', K: 'PROBLEM_REPORT_ATT', V: 5 },
+  SUPPLIER_ATT: { L: '供应商附件', K: 'SUPPLIER_ATT', V: 7 },
+  SECTION_ATT: { L: '型材导入附件', K: 'SECTION_ATT', V: 8 },
+  CONTRACT_BUSINESS_SETTLEMENT_ATT: { L: '合同商务结算附件', K: 'CONTRACT_BUSINESS_SETTLEMENT_ATT', V: 9 },
+  PURCHASE_ORDER_AIT: { L: '采购订单附件', K: 'PURCHASE_ORDER_AIT', V: 12 }
+}
+constantize(fileClassifyEnum)
+
+export default {
+  packStatusTypeEnum, // 打包清单状态
+  queryConditionTypeEnum, // 查询条件
+  dataSourceSysEnum, // 数据来源
+  processingEnum, // 进行中/暂停  流程状态
+  enabledEnum, // 使用状态
+  whetherEnum, // 是否
+  weightTypeEnum, // 重量类型
+  fileClassifyEnum, // 文件分类
+  businessAuditStatusEnum, // 商务审核状态
+  installationAuditStatusEnum, // 安装审核状态
+  operationTypeEnum // 操作类型
+}
+
