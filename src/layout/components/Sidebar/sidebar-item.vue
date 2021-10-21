@@ -31,7 +31,7 @@ export default {
 }
 </script>
 <script setup>
-// TODO: item.routePath 代替 resolvePath(basePath, item.path)
+// TODO: item.routePath 代替 resolvePath(basePath, item.path) toRefs toref
 import { computed, defineProps, reactive } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { resolvePath } from '@/utils/resolve-path'

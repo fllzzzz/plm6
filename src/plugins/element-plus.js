@@ -7,7 +7,7 @@ import {
   ElBadge,
   ElBreadcrumb,
   ElBreadcrumbItem,
-  ElButton,
+  // ElButton,
   ElButtonGroup,
   // ElCalendar,
   ElCard,
@@ -75,10 +75,11 @@ import {
   // ElTimelineItem,
   ElTooltip,
   // ElTransfer,
+  ElLoading,
   ElTree,
-  ElUpload,
-  ElMessage,
-  ElMessageBox
+  ElUpload
+  // ElMessage,
+  // ElMessageBox
 } from 'element-plus'
 
 const components = [
@@ -90,7 +91,7 @@ const components = [
   ElBadge,
   ElBreadcrumb,
   ElBreadcrumbItem,
-  ElButton,
+  // ElButton,
   ElButtonGroup,
   // ElCalendar,
   ElCard,
@@ -164,9 +165,9 @@ const components = [
 
 const plugins = [
 //   ElInfiniteScroll,
-//   ElLoading,
-  ElMessage,
-  ElMessageBox
+  ElLoading
+  // ElMessage,
+  // ElMessageBox
 //   ElNotification
 ]
 
@@ -182,7 +183,7 @@ const useElementPlus = (app) => {
     app.component(component.name, component)
   })
 
-  // // 插件注册
+  // 插件注册
   plugins.forEach((plugin) => {
     app.use(plugin)
   })

@@ -18,30 +18,17 @@
     // "allowSyntheticDefaultImports": true,
     // // 是否包含可以用于 debug 的 sourceMap
     // "sourceMap": true,
-    // 解析非相对模块名的基准目录 
+    // 解析非相对模块名的基准目录
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@crud/*": [
-        "src/components/Crud"
-      ],
-      "@comp/*":[
-        "src/components/*"
-      ],
-      "@common-comp/*": [
-        "src/components-system/common/*"
-      ],
-      "@wms-comp/*": [
-        "src/components-system/wms/*"
-      ],
-      "@enum": [
-        "src/utils/enum"
-      ],
-      "@enum-ms/*": [
-        "src/utils/enum/modules/*"
-      ],
-    },
+      "@/*": ["src/*"],
+      "@crud/*": ["src/components/Crud"],
+      "@comp/*": ["src/components/*"],
+      "@comp-common/*": ["src/components-system/common/*"],
+      "@comp-wms/*": ["src/components-system/wms/*"],
+      "@compos/*": ["src/composables/*"],
+      "@enum": ["src/utils/enum"],
+      "@enum-ms/*": ["src/utils/enum/modules/*"]
+    }
   }
 }

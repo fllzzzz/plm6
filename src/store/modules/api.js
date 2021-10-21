@@ -18,7 +18,8 @@ const state = {
     contract: `/api/contract/v${apiVersion.contract}/`,
     user: `/api/user/v${apiVersion.user}/`,
     wms: `/api/wms/v${apiVersion.wms}/`,
-    common: `/api/common/v${apiVersion.common}/`
+    common: `/api/common/v${apiVersion.common}/`,
+    config: `/api/config/v${apiVersion.config}/`
   }
 }
 

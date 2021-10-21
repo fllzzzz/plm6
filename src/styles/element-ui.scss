@@ -250,7 +250,14 @@ body .el-table th.gutter {
   }
 }
 
-
+// card 标题
+.el-card{
+  .card-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #f56c6c;
+  }
+}
 
 // 统计报表
 .statistics-report .el-radio-button__orig-radio:checked+.el-radio-button__inner {

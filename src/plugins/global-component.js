@@ -1,17 +1,19 @@
-import commonSelect from '@common-comp/common-select'
-import commonRadio from '@common-comp/common-radio'
-import commonRadioButton from '@common-comp/common-radio-button'
+import commonButton from '@comp-common/common-button'
+import commonSelect from '@comp-common/common-select'
+import commonRadio from '@comp-common/common-radio'
+import commonRadioButton from '@comp-common/common-radio-button'
 
-const components = [
-  commonSelect,
-  commonRadio,
-  commonRadioButton
-]
+const components = new Map([
+  ['commonButton', commonButton],
+  ['commonSelect', commonSelect],
+  ['commonRadio', commonRadio],
+  ['commonRadioButton', commonRadioButton]
+])
 
 const useComponents = (app) => {
   // 组件注册
-  components.forEach((component) => {
-    app.component(component.name, component)
+  components.forEach((component, name) => {
+    app.component(name, component)
   })
 }
 

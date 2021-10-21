@@ -16,17 +16,21 @@ import 'element-plus/packages/theme-chalk/src/base.scss'
 // 组件：svg-icon
 import useSvgIcon from '@/plugins/svg-icon'
 
-// 设置全局方法
+// 设置全局方法(TODO:废弃，或以provide注册到所有组件中)
 import setGlobalFun from '@/plugins/globalFun'
 
 // 系统定义的全局组件
 import useGlobalComponents from '@/plugins/global-component'
+
+// 全局指令
+import useGlobalDirective from '@/plugins/global-directive'
 
 const app = createApp(App)
 
 useElementPlus(app)
 useSvgIcon(app)
 useGlobalComponents(app)
+useGlobalDirective(app)
 setGlobalFun(app)
 
 app.use(router)

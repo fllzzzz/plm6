@@ -35,7 +35,6 @@ const variables = reactive({
   menuActiveText: '#ffd04b',
   menuBg: '#545c64'
 })
-console.log('variables', variables.menuText)
 
 // 是否显示logo  / 路由 / sidebar配置
 const { showSidebarLogo, permissionRoutes, sidebar } = mapGetters(['showSidebarLogo', 'permissionRoutes', 'sidebar'])

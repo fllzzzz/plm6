@@ -73,8 +73,9 @@ export default ({ command }) => {
       alias: [
         { find: '@', replacement: resolve(__dirname, 'src') },
         { find: '@comp', replacement: resolve(__dirname, 'src/components') },
-        { find: '@wms-comp', replacement: resolve(__dirname, 'src/components-system/wms') },
-        { find: '@common-comp', replacement: resolve(__dirname, 'src/components-system/common') },
+        { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },
+        { find: '@comp-common', replacement: resolve(__dirname, 'src/components-system/common') },
+        { find: '@compos', replacement: resolve(__dirname, 'src/composables') },
         { find: '@enum', replacement: resolve(__dirname, 'src/utils/enum') },
         { find: '@enum-ms', replacement: resolve(__dirname, 'src/utils/enum/modules') }
       ],

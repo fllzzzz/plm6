@@ -43,21 +43,12 @@ const installationAuditStatusEnum = {
 }
 constantize(installationAuditStatusEnum)
 
-// 打包清单状态
-const packStatusTypeEnum = {
-  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
-  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 2 },
-  CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
+// 数值或百分比
+const numOrPctEnum = {
+  NUMBER: { L: '数值', K: 'NUMBER', V: 1 },
+  PERCENTAGE: { L: '百分比', K: 'PERCENTAGE', V: 2 }
 }
-constantize(packStatusTypeEnum)
-
-// 查询条件
-const queryConditionTypeEnum = {
-  PROJECT: { L: '项目', K: 'PROJECT ', V: 1 },
-  MONOMER: { L: '单体', K: 'MONOMER', V: 2 },
-  AREA: { L: '区域', K: 'AREA', V: 3 }
-}
-constantize(queryConditionTypeEnum)
+constantize(numOrPctEnum)
 
 // 数据来源
 const dataSourceSysEnum = {
@@ -89,13 +80,25 @@ const fileClassifyEnum = {
 }
 constantize(fileClassifyEnum)
 
-export default {
-  packStatusTypeEnum, // 打包清单状态
-  queryConditionTypeEnum, // 查询条件
+export {
   dataSourceSysEnum, // 数据来源
   processingEnum, // 进行中/暂停  流程状态
   enabledEnum, // 使用状态
   whetherEnum, // 是否
+  numOrPctEnum, // 数字或者百分比类型
+  weightTypeEnum, // 重量类型
+  fileClassifyEnum, // 文件分类
+  businessAuditStatusEnum, // 商务审核状态
+  installationAuditStatusEnum, // 安装审核状态
+  operationTypeEnum // 操作类型
+}
+
+export default {
+  dataSourceSysEnum, // 数据来源
+  processingEnum, // 进行中/暂停  流程状态
+  enabledEnum, // 使用状态
+  whetherEnum, // 是否
+  numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型
   fileClassifyEnum, // 文件分类
   businessAuditStatusEnum, // 商务审核状态
