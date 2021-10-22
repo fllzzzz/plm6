@@ -2,7 +2,7 @@
 <template>
   <div class="inline-block">
     <el-tooltip :effect="props.effect" :content="props.content" :placement="props.placement" :disabled="tooltipDisabled">
-      <div class="inline-block">
+      <div class="inline-block" style="width: inherit;">
         <el-button v-bind="$attrs" :size="props.size" :type="props.type" :disabled="props.disabled" :loading="loading" @click.stop="handleClick">
           <span @click.stop="handleClick"><slot /></span>
         </el-button>

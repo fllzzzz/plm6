@@ -3,7 +3,11 @@ import { isBlank } from '@/utils/data-type'
 // admin 拥有所有权限
 const fixedRoles = ['admin']
 
-// 校验权限
+/**
+ * 校验权限
+ * @param {array} value 权限
+ * @returns
+ */
 export default function useCheckPermission(value) {
   // 没有权限返回通过
   if (isBlank(value)) return true

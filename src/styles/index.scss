@@ -226,6 +226,23 @@ div:focus {
   }
 }
 
+.el-form {
+    .form-tip-item {
+      margin-bottom: 8px!important;
+    }
+} 
+
+// 表单提示信息
+.form-item-tip {
+  display: block;
+  margin-top: 8px;
+  line-height: 20px;
+  color: #e6a23cc2;
+}
+.form-item-tip + .form-item-tip {
+  margin-top: 5px;
+}
+
 // 模态框（外层盒子）
 .dialog-container{
   padding: 0px 20px 20px 20px;

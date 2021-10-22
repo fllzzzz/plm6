@@ -1,93 +1,76 @@
 <!-- 枚举类型通用单选按钮：单选按钮 -->
 <template>
-  <el-radio-group v-model="c_value" :size="size" @change="selectChange">
-    <el-radio-button v-if="showAll" :label="undefined">全部</el-radio-button>
+  <el-radio-group class="inline-block" v-model="copyValue" :size="size" :disabled="disabled" @change="selectChange">
+    <el-radio-button v-if="showOptionAll" :label="undefined">全部</el-radio-button>
     <template v-for="item in options">
       <el-radio-button
-        v-if="unshowVal.indexOf(item[c_props.value]) === -1"
-        :key="item[c_props.key]"
-        :label="item[c_props.value]"
-        :disabled="disabledVal.indexOf(item[c_props.value]) > -1"
+        v-if="unshowVal.indexOf(item[DS.value]) === -1"
+        :key="item[DS.key]"
+        :label="item[DS.value]"
+        :disabled="disabledVal.indexOf(item[DS.value]) > -1"
       >
-        {{ item[c_props.label] }}
+        {{ item[DS.label] }}
       </el-radio-button>
     </template>
   </el-radio-group>
 </template>
 
-<script>
-const dictProps = { key: 'id', label: 'label', value: 'value' }
-const enumProps = { key: 'K', label: 'L', value: 'V' }
-const otherProps = { key: 'id', label: 'name', value: 'id' }
+<script setup>
+import { defineProps, defineEmits, watch, ref } from 'vue'
+import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
-export default {
-  name: 'CommonRadioButton',
-  props: {
-    value: [Number, String],
-    size: {
-      type: String,
-      default: 'small'
-    },
-    options: {
-      type: [Object, Array, Number],
-      required: true
-    },
-    disabledVal: {
-      type: Array,
-      default: () => []
-    },
-    unshowVal: {
-      type: Array,
-      default: () => []
-    },
-    type: { // dict , enum, other
-      type: String,
-      default: 'dict'
-    },
-    showAll: {
-      type: Boolean,
-      default: false
-    },
-    // eslint-disable-next-line vue/require-default-prop
-    props: {
-      type: Object
-    }
+const emit = defineEmits(['change', 'update:value'])
+
+const props = defineProps({
+  value: [Number, String],
+  size: {
+    type: String,
+    default: 'small'
   },
-  data() {
-    return {
-      c_value: null
-    }
+  options: {
+    type: [Object, Array, Number],
+    required: true
   },
-  computed: {
-    c_props() {
-      if (!this.props) {
-        if (this.type === 'dict') {
-          return dictProps
-        } else if (this.type === 'enum') {
-          return enumProps
-        } else {
-          return otherProps
-        }
-      } else {
-        return this.props
-      }
-    }
+  disabled: {
+    type: Boolean,
+    default: false
   },
-  watch: {
-    value(newVal) {
-      // if (newVal || newVal === 0) {
-      this.c_value = newVal
-      // }
-    }
+  disabledVal: {
+    type: Array,
+    default: () => []
   },
-  created() {
-    this.c_value = this.value
+  unshowVal: {
+    type: Array,
+    default: () => []
   },
-  methods: {
-    selectChange(val) {
-      this.$emit('update:value', val)
-      this.$emit('change', val)
-    }
+  type: {
+    // dict , enum, other
+    type: String,
+    default: 'other'
+  },
+  showOptionAll: {
+    type: Boolean,
+    default: false
+  },
+  dataStructure: {
+    // 数据结构， type不选择dict与enum的情景下，可使用
+    type: Object
   }
+})
+
+const copyValue = ref()
+
+// 数据结构
+const DS = useCommonDataStructureByType(props.type, props.dataStructure)
+
+watch(
+  () => props.value,
+  (value) => { copyValue.value = value },
+  { immediate: true }
+)
+
+function selectChange(val) {
+  emit('update:value', val)
+  emit('change', val)
 }
 </script>

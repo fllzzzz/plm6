@@ -7,7 +7,7 @@ import {
   ElBadge,
   ElBreadcrumb,
   ElBreadcrumbItem,
-  // ElButton,
+  // ElButton,  // 非必要不使用ElButton，在禁用后点击按钮内文字仍可触发点击事件（使用common-button）
   ElButtonGroup,
   // ElCalendar,
   ElCard,

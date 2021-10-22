@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <basic-inbound v-permission="permission.basicInboundGet" style="width: 700px" />
-    <steel-inbound v-permission="permission.steelInboundGet" style="margin-top:20px" />
+    <basic-inbound v-permission="permission.basicInboundGet" class="card" />
+    <steel-inbound v-permission="permission.steelInboundGet" class="card" />
   </div>
 </template>
 
@@ -20,3 +20,13 @@ const permission = {
 
 provide('permission', permission)
 </script>
+
+<style lang="scss" scoped>
+.card {
+  width: 700px;
+}
+
+.card + .card {
+  margin-top: 20px;
+}
+</style>

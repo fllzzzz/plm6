@@ -16,12 +16,12 @@
         </common-button>
       </div>
     </template>
-    <el-form v-loading="dataLoading" :disabled="dataLoading" :model="form" label-position="left" label-width="120px">
+    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="120px">
       <el-form-item label="金额填写场景">
-        <common-radio v-model:value="form.amountFillWay" :options="inboundFillWayEnum" type="enum" :size="'small'" />
+        <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum" type="enum" size="small" />
       </el-form-item>
       <el-form-item label="工厂填写场景">
-        <common-radio v-model:value="form.factoryFillWay" :options="inboundFillWayEnum" type="enum" :size="'small'" />
+        <common-radio v-model="form.factoryFillWay" :options="inboundFillWayEnum" type="enum" size="small" />
       </el-form-item>
     </el-form>
   </el-card>
@@ -54,6 +54,7 @@ const submitLoading = ref(false)
 
 // 未修改时，禁止点击保存按钮
 const submitDisabled = computed(() => isObjectValueEqual(form, dataSource))
+const formDisabled = computed(() => dataLoading.value || submitLoading.value)
 
 onMounted(() => {
   fetchData()

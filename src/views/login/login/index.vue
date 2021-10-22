@@ -56,7 +56,7 @@
             <span class="change-title" @click="clearRequestUrl">更换公司</span>
           </div>
         </div>
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.prevent="login">登录</el-button>
+        <common-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="login">登录</common-button>
       </el-form>
     </div>
     <div v-show="showAuthent" id="authent" class="authent">
