@@ -1,4 +1,4 @@
-import { constantize, val2key, toArr, getBits, setEnumValue } from '../enum/base'
+import { constantize, key2val, toArr, getBits, setEnumValue } from '../enum/base'
 /**
  * @author dhh
  * L:label 名称,
@@ -212,7 +212,7 @@ export {
 }
 
 export default {
-  val2key,
+  key2val,
   toArr,
   getBits,
   setEnumValue

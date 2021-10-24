@@ -12,13 +12,14 @@
         :unique-opened="false"
         collapse-transition
       >
-        <sidebar-item v-for="r in permissionRoutes" :key="r.path" :item="r" :base-path="r.path" />
+        <sidebar-item v-for="r in routes" :key="r.path" :item="r" :base-path="r.path" />
       </el-menu>
     </el-scrollbar>
   </div>
 </template>
 
 <script setup>
+import { ElScrollbar } from 'element-plus'
 import { computed, reactive } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { useRoute } from 'vue-router'
@@ -37,7 +38,7 @@ const variables = reactive({
 })
 
 // 是否显示logo  / 路由 / sidebar配置
-const { showSidebarLogo, permissionRoutes, sidebar } = mapGetters(['showSidebarLogo', 'permissionRoutes', 'sidebar'])
+const { showSidebarLogo, routes, sidebar } = mapGetters(['showSidebarLogo', 'routes', 'sidebar'])
 
 // 当前菜单
 const activeMenu = computed(() => {

@@ -65,8 +65,8 @@ service.interceptors.request.use(
 
     // 带cancelKey的接口把source保存下来，再次请求前需要取消之前的请求
     if (config.cancelKey) {
-      // 当cancelKey 填写boolean值时，直接使用url作为key
-      const cancelKey = typeof config.cancelKey === 'boolean' ? config.url : config.cancelKey
+      // 当cancelKey 填写boolean值时，直接使用method(请求方式)加url(请求地址)作为key
+      const cancelKey = typeof config.cancelKey === 'boolean' ? `${config.method}|${config.url}` : config.cancelKey
 
       // 取消接口
       if (axiosCancelTokens[cancelKey]) {

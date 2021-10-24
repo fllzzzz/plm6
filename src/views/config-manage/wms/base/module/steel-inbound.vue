@@ -9,6 +9,7 @@
           :disabled="submitDisabled"
           show-tip
           size="mini"
+          type="primary"
           style="float: right"
           @click="submit"
         >

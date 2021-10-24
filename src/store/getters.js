@@ -27,6 +27,9 @@ const getters = {
   // 公司名称/标题(可在浏览器标签中展示)
   title: state => state.settings.title,
 
+  // 访问过的页面
+  visitedViews: state => state.tagsView.visitedViews,
+
   // token 访问令牌
   token: state => state.user.token,
   // 用户信息
@@ -41,7 +44,7 @@ const getters = {
   loadedMenus: state => state.user.loadedMenus,
 
   // 路由
-  permissionRoutes: state => state.permission.routes,
+  routes: state => state.permission.routes,
 
   // 系统当前项目id（Navbar）
   globalProjectId: state => state.project.id,

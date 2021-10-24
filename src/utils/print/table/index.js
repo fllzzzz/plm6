@@ -817,7 +817,7 @@ function enumFormat(val, format) {
       })
       return res.join('/')
     } else {
-      const enumV = enumOperate.val2key(enumK)
+      const enumV = enumOperate.key2val(enumK)
       return isNotBlank(enumV) && isNotBlank(enumV[val]) ? enumV[val][key] || enumV[val]['L'] : ''
     }
   }

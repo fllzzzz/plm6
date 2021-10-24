@@ -21,7 +21,7 @@ export function constantize(obj) {
  * @param {object} enumerate 枚举对象
  * @returns
  */
-export function val2key(enumerate) {
+export function key2val(enumerate) {
   const newEnum = {}
   for (const key in enumerate) {
     newEnum[enumerate[key].V] = enumerate[key]

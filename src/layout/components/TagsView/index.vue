@@ -1,219 +1,258 @@
 <template>
   <!-- 只有 Firefox 中支持 contextmenu 属性 -->
-  <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
+  <div ref="rootRef" id="tags-view-container" class="tags-view-container">
+    <scroll-pane ref="scrollPaneRef" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
-        ref="tag"
+        :ref="setTagRef"
         :key="tag.path"
-        :class="isActive(tag)?'active':''"
+        :class="isActive(tag) ? 'active' : ''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         tag="span"
         class="tags-view-item"
         @click.middle="closeSelectedTag(tag)"
-        @contextmenu.prevent="openMenu(tag,$event)"
+        @contextmenu.prevent="openMenu(tag, $event)"
       >
         {{ tag.title }}
         <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新这个标签页</li>
-      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">关闭这个标签页</li>
+    <ul v-show="menu.visible" :style="{ left: menu.left + 'px', top: menu.top + 'px' }" class="contextmenu">
+      <li @click="refreshSelectedTag(tag.selected)">刷新这个标签页</li>
+      <li v-if="!(tag.selected.meta && tag.selected.meta.affix)" @click="closeSelectedTag(tag.selected)">关闭这个标签页</li>
       <li @click="closeOthersTags">关闭其他标签页</li>
-      <li @click="closeAllTags(selectedTag)">关闭全部标签页</li>
+      <li @click="closeAllTags(tag.selected)">关闭全部标签页</li>
     </ul>
   </div>
 </template>
 
-<script>
+<script setup>
 import ScrollPane from './ScrollPane'
-import { mapGetters } from 'vuex'
+
+import { onMounted, reactive, ref, watch, nextTick } from 'vue'
+import { useStore } from 'vuex'
+import { mapGetters } from '@/store/lib'
+import { useRoute, useRouter } from 'vue-router'
 import path from 'path'
 
-export default {
-  components: { ScrollPane },
-  data() {
-    return {
-      visible: false,
-      top: 0,
-      left: 0,
-      selectedTag: {},
-      affixTags: []
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'currentMenu'
-    ]),
-    visitedViews() {
-      return this.$store.state.tagsView.visitedViews
-    },
-    routes() {
-      return this.$store.state.permission.routes
-    }
-  },
-  watch: {
-    $route() {
-      this.addTags()
-      this.moveToCurrentTag()
-    },
-    visible(value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu, { passive: false })
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
-    }
-  },
-  mounted() {
-    this.initTags()
-    this.addTags()
-  },
-  methods: {
-    isActive(route) {
-      return route.path === this.$route.path
-    },
-    filterAffixTags(routes, basePath = '/') {
-      let tags = []
-      routes.forEach(route => {
-        if (route.meta && route.meta.affix) {
-          const tagPath = path.resolve(basePath, route.path)
-          tags.push({
-            fullPath: tagPath,
-            path: tagPath,
-            name: route.name,
-            meta: { ...route.meta }
-          })
-        }
-        if (route.children) {
-          const tempTags = this.filterAffixTags(route.children, route.path)
-          if (tempTags.length >= 1) {
-            tags = [...tags, ...tempTags]
-          }
-        }
-      })
-      return tags
-    },
-    initTags() {
-      const affixTags = this.affixTags = this.filterAffixTags(this.routes)
-      for (const tag of affixTags) {
-        // Must have tag name
-        if (tag.name) {
-          this.$store.dispatch('tagsView/addVisitedView', tag)
-        }
-      }
-    },
-    addTags() {
-      const { name } = this.$route
-      if (name) {
-        this.$store.dispatch('tagsView/addView', this.$route)
-      }
-      return false
-    },
-    moveToCurrentTag() {
-      const tags = this.$refs.tag
-      this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag)
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
-            }
-            break
-          }
-        }
-      })
-    },
-    refreshSelectedTag(view) {
-      this.$store.dispatch('tagsView/delCachedView', view).then(() => {
-        console.log('refresh')
-        const { fullPath } = view
-        this.$nextTick(() => {
-          this.$router.replace({
-            path: '/redirect' + fullPath
-          })
-        })
-      })
-    },
-    closeSelectedTag(view) {
-      this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-        if (this.isActive(view)) {
-          this.toLastView(visitedViews, view)
-        }
-      })
-    },
-    closeOthersTags() {
-      this.$router.push(this.selectedTag)
-      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
-        this.moveToCurrentTag()
-      })
-    },
-    closeAllTags(view) {
-      this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
-        if (this.affixTags.some(tag => tag.path === view.path)) {
-          return
-        }
-        this.toLastView(visitedViews, view)
-      })
-    },
-    toLastView(visitedViews, view) {
-      const latestView = visitedViews.slice(-1)[0]
-      if (latestView) {
-        this.$router.push(latestView.fullPath)
-      } else {
-        const path = this.currentMenu.redirect
-        const matchResult = this.matchedPath(view.matched, path)
-        if (!matchResult) {
-          this.$router.push({ path })
-        } else {
-          this.refreshSelectedTag(view)
-        }
-      }
-    },
-    matchedPath(viewMatched, path) {
-      let flag = false
-      const matched = [...viewMatched]
-      if (!matched || matched.length === 0) {
-        return flag
-      }
-      while (matched.length > 0) {
-        const item = matched.shift()
-        if (item.path === path) {
-          if (item.redirect) {
-            path = item.redirect
-          } else {
-            flag = true
-            break
-          }
-        } else {
-          break
-        }
-      }
-      return flag
-    },
-    openMenu(tag, e) {
-      const menuMinWidth = 105
-      const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
-      const offsetWidth = this.$el.offsetWidth // container width
-      const maxLeft = offsetWidth - menuMinWidth // left boundary
-      const left = e.clientX - offsetLeft + 15 // 15: margin right
+const route = useRoute()
+const router = useRouter()
 
-      if (left > maxLeft) {
-        this.left = maxLeft
-      } else {
-        this.left = left
-      }
+const store = useStore()
 
-      this.top = e.clientY
-      this.visible = true
-      this.selectedTag = tag
-    },
-    closeMenu() {
-      this.visible = false
+// dom
+const rootRef = ref()
+const scrollPaneRef = ref()
+const tagRefs = reactive([])
+const setTagRef = el => {
+  if (el) {
+    tagRefs.push(el)
+  }
+}
+
+// 右键菜单
+const menu = reactive({
+  visible: false, // 菜单是否展示
+  top: 0, // 定位信息
+  left: 0
+})
+
+// 标签
+const tag = reactive({
+  selected: {}
+})
+
+let affixTags = []
+
+const { currentMenu, routes, visitedViews } = mapGetters(['currentMenu', 'routes', 'visitedViews'])
+
+watch(route, () => {
+  addTags()
+  moveToCurrentTag()
+})
+
+watch(
+  () => menu.visible,
+  (value) => {
+    if (value) {
+      document.body.addEventListener('click', closeMenu, { passive: false })
+    } else {
+      document.body.removeEventListener('click', closeMenu)
     }
   }
+)
+
+onMounted(() => {
+  initTags()
+  addTags()
+})
+
+function isActive(inputRoute) {
+  return inputRoute.path === route.path
+}
+
+function filterAffixTags(routes, basePath = '/') {
+  let tags = []
+  routes.forEach((route) => {
+    if (route.meta && route.meta.affix) {
+      const tagPath = path.resolve(basePath, route.path)
+      tags.push({
+        fullPath: tagPath,
+        path: tagPath,
+        name: route.name,
+        meta: { ...route.meta }
+      })
+    }
+    if (route.children) {
+      const tempTags = filterAffixTags(route.children, route.path)
+      if (tempTags.length >= 1) {
+        tags = [...tags, ...tempTags]
+      }
+    }
+  })
+  return tags
+}
+
+// 初始化标签
+function initTags() {
+  affixTags = filterAffixTags(routes.value)
+  for (const tag of affixTags) {
+    // 必须拥有标签名称
+    if (tag.name) {
+      store.dispatch('tagsView/addVisitedView', tag)
+    }
+  }
+}
+
+// 新增标签
+function addTags() {
+  const { name } = route
+  if (name) {
+    store.dispatch('tagsView/addView', route)
+  }
+  return false
+}
+
+// 视图移动到当前标签
+function moveToCurrentTag() {
+  const tags = tagRefs
+  nextTick(() => {
+    for (const tag of tags) {
+      console.log('tag', tag)
+      if (tag.to.path === route.path) {
+        console.log('scrollPaneRef', scrollPaneRef.value)
+        scrollPaneRef.value.moveToTarget(tag)
+        // when query is different then update
+        if (tag.to.fullPath !== route.fullPath) {
+          store.dispatch('tagsView/updateVisitedView', route)
+        }
+        break
+      }
+    }
+  })
+}
+
+// 刷新当前标签页
+function refreshSelectedTag(view) {
+  store.dispatch('tagsView/delCachedView', view).then(() => {
+    console.log('refresh')
+    const { fullPath } = view
+    nextTick(() => {
+      router.replace({
+        path: '/redirect' + fullPath
+      })
+    })
+  })
+}
+
+// 关闭当前标签页
+function closeSelectedTag(view) {
+  store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
+    if (isActive(view)) {
+      toLastView(visitedViews, view)
+    }
+  })
+}
+
+// 关闭其他标签页
+function closeOthersTags() {
+  router.push(tag.selected)
+  store.dispatch('tagsView/delOthersViews', tag.selected).then(() => {
+    moveToCurrentTag()
+  })
+}
+
+// 关闭所有标签页
+function closeAllTags(view) {
+  store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
+    if (affixTags.some((tag) => tag.path === view.path)) {
+      return
+    }
+    toLastView(visitedViews, view)
+  })
+}
+
+// 跳转到最后一个页面
+function toLastView(visitedViews, view) {
+  const latestView = visitedViews.slice(-1)[0]
+  if (latestView) {
+    router.push(latestView.fullPath)
+  } else {
+    const path = currentMenu.redirect
+    const matchResult = matchedPath(view.matched, path)
+    if (!matchResult) {
+      router.push({ path })
+    } else {
+      refreshSelectedTag(view)
+    }
+  }
+}
+
+// 匹配路径
+function matchedPath(viewMatched, path) {
+  let flag = false
+  const matched = [...viewMatched]
+  if (!matched || matched.length === 0) {
+    return flag
+  }
+  while (matched.length > 0) {
+    const item = matched.shift()
+    if (item.path === path) {
+      if (item.redirect) {
+        path = item.redirect
+      } else {
+        flag = true
+        break
+      }
+    } else {
+      break
+    }
+  }
+  return flag
+}
+
+// 打开菜单(右键)
+function openMenu(tag, e) {
+  const menuMinWidth = 105
+  const offsetLeft = rootRef.value.getBoundingClientRect().left // container margin left
+  const offsetWidth = rootRef.value.offsetWidth // container width
+  const maxLeft = offsetWidth - menuMinWidth // left boundary
+  const left = e.clientX - offsetLeft + 15 // 15: margin right
+
+  if (left > maxLeft) {
+    menu.left = maxLeft
+  } else {
+    menu.left = left
+  }
+
+  menu.top = e.clientY
+  menu.visible = true
+  tag.selected = tag
+}
+
+// 关闭菜单
+function closeMenu() {
+  menu.visible = false
 }
 </script>
 
@@ -223,7 +262,7 @@ export default {
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -272,7 +311,7 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
     li {
       margin: 0;
       padding: 7px 16px;
@@ -295,10 +334,10 @@ export default {
       vertical-align: 2px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
       &:before {
-        transform: scale(.6);
+        transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }

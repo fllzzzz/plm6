@@ -1,68 +1,63 @@
 <template>
   <!-- onwheel 在 <div> 元素上滚动鼠标滚轮时执行 JavaScript -->
-  <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.passive.prevent="handleScroll">
+  <el-scrollbar ref="scrollContainerRef" :vertical="false" class="scroll-container" @wheel.passive.prevent="handleScroll">
     <slot />
   </el-scrollbar>
 </template>
 
-<script>
-const tagAndTagSpacing = 4 // tagAndTagSpacing
+<script setup>
+// FIXME: 代码错误，需要秀改
+import { ElScrollbar } from 'element-plus'
+import { ref, computed } from 'vue'
+const tagAndTagSpacing = 4 // tag间距
 
-export default {
-  name: 'ScrollPane',
-  data() {
-    return {
-      left: 0
-    }
-  },
-  computed: {
-    scrollWrapper() {
-      return this.$refs.scrollContainer.$refs.wrap
-    }
-  },
-  methods: {
-    handleScroll(e) {
-      const eventDelta = e.wheelDelta || -e.deltaY * 40
-      const $scrollWrapper = this.scrollWrapper
-      $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
-    },
-    moveToTarget(currentTag) {
-      const $container = this.$refs.scrollContainer.$el
-      const $containerWidth = $container.offsetWidth
-      const $scrollWrapper = this.scrollWrapper
-      const tagList = this.$parent.$refs.tag
+const scrollContainerRef = ref()
+// const scrollWrapper = computed(() => scrollContainerRef.value.wrapRef.value)
+const scrollWrapper = computed(() => scrollContainerRef.value)
 
-      let firstTag = null
-      let lastTag = null
+function handleScroll(e) {
+  const eventDelta = e.wheelDelta || -e.deltaY * 40
+  const $scrollWrapper = scrollWrapper.value
+  $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
+}
 
-      // find first tag and last tag
-      if (tagList.length > 0) {
-        firstTag = tagList[0]
-        lastTag = tagList[tagList.length - 1]
-      }
+// eslint-disable-next-line no-unused-vars
+function moveToTarget(currentTag) {
+  const $container = scrollContainerRef.value.$el
+  const $containerWidth = $container.offsetWidth
+  const $scrollWrapper = scrollWrapper.value
+  // 获取父组件tags对象，有问题
+  const tagList = parent.tagRefs
 
-      if (firstTag === currentTag) {
-        $scrollWrapper.scrollLeft = 0
-      } else if (lastTag === currentTag) {
-        $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth
-      } else {
-        // find preTag and nextTag
-        const currentIndex = tagList.findIndex(item => item === currentTag)
-        const prevTag = tagList[currentIndex - 1]
-        const nextTag = tagList[currentIndex + 1]
+  let firstTag = null
+  let lastTag = null
 
-        // the tag's offsetLeft after of nextTag
-        const afterNextTagOffsetLeft = nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing
+  // 获取第一个tag和最后一个tag
+  if (tagList.length > 0) {
+    firstTag = tagList[0]
+    lastTag = tagList[tagList.length - 1]
+  }
 
-        // the tag's offsetLeft before of prevTag
-        const beforePrevTagOffsetLeft = prevTag.$el.offsetLeft - tagAndTagSpacing
+  if (firstTag === currentTag) {
+    $scrollWrapper.scrollLeft = 0
+  } else if (lastTag === currentTag) {
+    $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth
+  } else {
+    // 获取前一个tag和下一个tag
+    const currentIndex = tagList.findIndex((item) => item === currentTag)
+    const prevTag = tagList[currentIndex - 1]
+    const nextTag = tagList[currentIndex + 1]
 
-        if (afterNextTagOffsetLeft > $scrollWrapper.scrollLeft + $containerWidth) {
-          $scrollWrapper.scrollLeft = afterNextTagOffsetLeft - $containerWidth
-        } else if (beforePrevTagOffsetLeft < $scrollWrapper.scrollLeft) {
-          $scrollWrapper.scrollLeft = beforePrevTagOffsetLeft
-        }
-      }
+    // the tag's offsetLeft after of nextTag
+    const afterNextTagOffsetLeft = nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing
+
+    // the tag's offsetLeft before of prevTag
+    const beforePrevTagOffsetLeft = prevTag.$el.offsetLeft - tagAndTagSpacing
+
+    if (afterNextTagOffsetLeft > $scrollWrapper.scrollLeft + $containerWidth) {
+      $scrollWrapper.scrollLeft = afterNextTagOffsetLeft - $containerWidth
+    } else if (beforePrevTagOffsetLeft < $scrollWrapper.scrollLeft) {
+      $scrollWrapper.scrollLeft = beforePrevTagOffsetLeft
     }
   }
 }
@@ -74,11 +69,11 @@ export default {
   position: relative;
   overflow: hidden;
   width: 100%;
-    ::v-deep(.el-scrollbar__bar) {
-      bottom: 0px;
-    }
-    ::v-deep(.el-scrollbar__wrap) {
-      height: 49px;
-    }
+  ::v-deep(.el-scrollbar__bar) {
+    bottom: 0px;
+  }
+  ::v-deep(.el-scrollbar__wrap) {
+    height: 49px;
+  }
 }
 </style>

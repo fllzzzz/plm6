@@ -1,11 +1,30 @@
 <!-- 普通按钮 -->
 <template>
-  <div class="inline-block">
+  <div class="common-button inline-block">
     <el-tooltip :effect="props.effect" :content="props.content" :placement="props.placement" :disabled="tooltipDisabled">
-      <div class="inline-block" style="width: inherit;">
-        <el-button v-bind="$attrs" :size="props.size" :type="props.type" :disabled="props.disabled" :loading="loading" @click.stop="handleClick">
+      <div class="inline-block" style="width: inherit">
+        <el-button
+          v-if="slotDefault"
+          v-bind="$attrs"
+          :icon="icon"
+          :size="props.size"
+          :type="props.type"
+          :disabled="props.disabled"
+          :loading="loading"
+          @click.stop="handleClick"
+        >
           <span @click.stop="handleClick"><slot /></span>
         </el-button>
+        <el-button
+          v-else
+          v-bind="$attrs"
+          :icon="icon"
+          :size="props.size"
+          :type="props.type"
+          :disabled="props.disabled"
+          :loading="loading"
+          @click.stop="handleClick"
+        />
       </div>
     </el-tooltip>
   </div>
@@ -13,7 +32,10 @@
 
 <script setup>
 import { ElButton } from 'element-plus'
-import { defineProps, defineEmits, computed } from 'vue'
+import { defineProps, defineEmits, computed, useSlots } from 'vue'
+
+// 判断<slot/>是否有传值,<el-button></el-button>会产生<span></span>,由与element-ui全局样式的影响, 当按钮只有图标时，这种情况会产生一个margin
+const slotDefault = !!useSlots().default
 
 const emit = defineEmits(['click'])
 
@@ -55,8 +77,10 @@ const props = defineProps({
   },
   type: {
     // 按钮样式
-    type: String,
-    default: 'primary'
+    type: String
+  },
+  icon: {
+    type: String
   }
 })
 
@@ -74,3 +98,9 @@ function handleClick() {
   emit('click')
 }
 </script>
+
+<style lang="scss" scoped>
+.common-button + .common-button{
+  margin-left: 8px;
+}
+</style>

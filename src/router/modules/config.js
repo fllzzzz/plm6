@@ -4,47 +4,47 @@ export default {
   name: '配置管理',
   children: [
     {
-      path: '/subject-manage',
+      path: '/classification-manage',
       component: 'Layout',
       hidden: false,
-      name: 'SubjectManage',
+      name: 'ClassificationManage',
       alwaysShow: false,
-      redirect: '/config-manage/subject-manage/subject-config',
+      redirect: '/config-manage/classification-manage/classification-config',
       meta: { title: '科目管理', icon: 'config-2', noCache: true },
       children: [
         {
-          name: 'SubjectConfig',
-          path: 'subject-config',
+          name: 'ClassificationConfig',
+          path: 'classification-config',
           hidden: false,
-          component: '/config-manage/subject-manage/subject-config/index',
+          component: '/config-manage/classification-manage/classification-config/index',
           meta: { title: '科目配置', icon: 'project', noCache: true }
         }
         // {
         //   name: 'SpecificationConfig',
         //   path: 'specification-config',
         //   hidden: false,
-        //   component: '/subject-manage/specification-config/index',
+        //   component: '/classification-manage/specification-config/index',
         //   meta: { title: '规格配置', icon: 'project', noCache: true }
         // },
         // {
         //   name: 'UnitConfig',
         //   path: 'unit-config',
         //   hidden: false,
-        //   component: '/subject-manage/unit-config/index',
+        //   component: '/classification-manage/unit-config/index',
         //   meta: { title: '计量配置', icon: 'project', noCache: true }
         // },
         // {
         //   name: 'OutboundMethod',
         //   path: 'outbound-method',
         //   hidden: false,
-        //   component: '/subject-manage/outbound-method/index',
+        //   component: '/classification-manage/outbound-method/index',
         //   meta: { title: '出库方式', icon: 'project', noCache: true }
         // }
         // {
         //   name: 'InstallationMethod',
         //   path: 'installation-method',
         //   hidden: false,
-        //   component: '/subject-manage/installation-method/index',
+        //   component: '/classification-manage/installation-method/index',
         //   meta: { title: '安装方式', icon: 'project', noCache: true }
         // }
       ]

@@ -8,7 +8,7 @@ import moment from 'moment'
 
 import _ from 'lodash'
 
-const pageFormatEnumV = enumOperate.val2key(pageFormatEnum)
+const pageFormatEnumV = enumOperate.key2val(pageFormatEnum)
 
 // 获取所有列
 const getAllColumns = (columns) => {
@@ -574,7 +574,7 @@ const setting = {
         })
         return res.join('/')
       } else {
-        const enumV = enumOperate.val2key(enumK)
+        const enumV = enumOperate.key2val(enumK)
         return isNotBlank(enumV) && isNotBlank(enumV[val]) ? enumV[val][key] || enumV[val]['L'] : ''
       }
     }

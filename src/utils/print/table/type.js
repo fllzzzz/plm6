@@ -1,4 +1,4 @@
-import { constantize, val2key, toArr, getBits, setValue } from '../enum/base'
+import { constantize, key2val, toArr, getBits, setValue } from '../enum/base'
 // PS: 模块类型和表格类型的key请不要设置成相同的
 
 // 模块类型
@@ -30,7 +30,7 @@ export {
 }
 
 export default {
-  val2key,
+  key2val,
   toArr,
   getBits,
   setValue
