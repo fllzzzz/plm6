@@ -1,7 +1,7 @@
 <!-- 通用:下拉选择框 -->
 <template>
   <el-select
-    v-model="c_value"
+    v-model="copyValue"
     :size="size"
     :disabled="disabled"
     :multiple="multiple"
@@ -23,11 +23,11 @@
     />
     <template v-for="item in options">
       <el-option
-        v-if="unshowOptions.indexOf(item[c_props.key]) === -1"
-        :key="item[c_props.key]"
-        :label="item[c_props.label]"
-        :value="item[c_props.value]"
-        :disabled="disabledVal.includes(item[c_props.value])"
+        v-if="unshowOptions.indexOf(item[DS.key]) === -1"
+        :key="item[DS.key]"
+        :label="item[DS.label]"
+        :value="item[DS.value]"
+        :disabled="disabledVal.includes(item[DS.value])"
       >
         <slot :data="item" />
       </el-option>
@@ -35,138 +35,113 @@
   </el-select>
 </template>
 
-<script>
-const dictProps = { key: 'id', label: 'label', value: 'value' }
-const enumProps = { key: 'K', label: 'L', value: 'V' }
-const otherProps = { key: 'id', label: 'name', value: 'id' }
+<script setup>
+import { defineProps, defineEmits, computed, watch, ref } from 'vue'
+import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
-export default {
-  name: 'CommonSelect',
-  props: {
-    // eslint-disable-next-line vue/require-default-prop
-    value: {
-      type: [Number, String, Array]
-    },
-    options: {
-      type: [Array, Object],
-      default: () => []
-    },
-    size: {
-      type: String,
-      default: 'small'
-    },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    clearable: {
-      type: Boolean,
-      default: false
-    },
-    filterable: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    collapseTags: {
-      type: Boolean,
-      default: false
-    },
-    showAll: {
-      type: Boolean,
-      default: false
-    },
-    unshowOptions: { // value
-      type: Array,
-      default: () => []
-    },
-    placeholder: {
-      type: String,
-      default: '请选择'
-    },
-    textAlign: {
-      type: String,
-      default: 'left'
-    },
-    allLabelText: {
-      type: String,
-      default: '全部'
-    },
-    allVal: {
-      type: [Number, String],
-      default: undefined
-    },
-    disabledVal: {
-      type: Array,
-      default: () => []
-    },
-    type: { // dict , enum, other
-      type: String,
-      default: 'dict'
-    },
-    // eslint-disable-next-line vue/require-default-prop
-    props: {
-      type: Object
-    }
+const emit = defineEmits(['change', 'blur', 'update:value'])
+
+const props = defineProps({
+  value: {
+    type: [Number, String, Array]
   },
-  data() {
-    return {
-      loading: false,
-      c_value: undefined,
-      defaultValue: undefined,
-      c_props: null
-    }
+  options: {
+    type: [Array, Object],
+    default: () => []
   },
-  computed: {
-    textAlignClass() {
-      if (this.textAlign === 'center') {
-        return 'alignCenter'
-      }
-      if (this.textAlign === 'left') {
-        return 'alignLeft'
-      }
-      if (this.textAlign === 'right') {
-        return 'alignRight'
-      }
-      return 'alignLeft'
-    }
+  size: {
+    type: String,
+    default: 'small'
   },
-  watch: {
-    value(newVal) {
-      this.c_value = newVal
-    }
+  multiple: {
+    type: Boolean,
+    default: false
   },
-  created() {
-    if (!this.props) {
-      if (this.type === 'dict') {
-        this.c_props = dictProps
-      } else if (this.type === 'enum') {
-        this.c_props = enumProps
-      } else {
-        this.c_props = otherProps
-      }
-    } else {
-      this.c_props = this.props
-    }
-    this.c_value = this.value
+  clearable: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    selectChange(val) {
-      this.$emit('update:value', val)
-      this.$emit('change', val)
-    },
-    handleBlur(event) {
-      this.$emit('blur', event)
-    },
-    getOptions() {
-      return this.options
-    }
+  filterable: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  collapseTags: {
+    type: Boolean,
+    default: false
+  },
+  showAll: {
+    type: Boolean,
+    default: false
+  },
+  unshowOptions: { // value
+    type: Array,
+    default: () => []
+  },
+  placeholder: {
+    type: String,
+    default: '请选择'
+  },
+  textAlign: {
+    type: String,
+    default: 'left'
+  },
+  allLabelText: {
+    type: String,
+    default: '全部'
+  },
+  allVal: {
+    type: [Number, String],
+    default: undefined
+  },
+  disabledVal: {
+    type: Array,
+    default: () => []
+  },
+  type: { // dict , enum, other
+    type: String,
+    default: 'dict'
+  },
+  dataStructure: {
+    // 数据结构， type不选择dict与enum的情景下，可使用
+    type: Object
   }
+})
+
+const loading = ref(false)
+const copyValue = ref()
+
+// 数据结构
+const DS = useCommonDataStructureByType(props.type, props.dataStructure)
+
+const textAlignClass = computed(() => {
+  switch (props.textAlign) {
+    case 'center': return 'alignCenter'
+    case 'left': return 'alignLeft'
+    case 'right': return 'alignRight'
+    default: return 'alignLeft'
+  }
+})
+
+watch(
+  () => props.value,
+  (value) => { copyValue.value = value },
+  { immediate: true }
+)
+
+function selectChange(val) {
+  emit('update:value', val)
+  emit('change', val)
+}
+
+function handleBlur(event) {
+  emit('blur', event)
 }
 </script>
+
 <style lang="scss" scoped>
 .alignCenter {
   ::v-deep(.el-input input){
