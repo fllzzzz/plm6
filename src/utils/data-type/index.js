@@ -46,6 +46,7 @@ export function judgeSameValue(a, b) {
 }
 
 // 1.判断是否为空
+// TODO: 待修改：不支持判断el(列如getElementById获得的数据)
 export function isNotBlank(...arr) {
   if (!arr.length) {
     throw new Error('No parameters passed in')

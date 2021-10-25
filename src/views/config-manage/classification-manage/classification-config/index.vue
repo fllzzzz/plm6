@@ -1,6 +1,6 @@
 <template>
-  <div v-loading="loading.data" class="app-container">
-    <div class="flex-rsc" style="padding-bottom: 20px;;overflow-x: auto;">
+  <div v-loading="loading.data" class="app-container" id="hhaa">
+    <div id="card-main-content" class="flex-rsc" style="padding-bottom: 20px;overflow-x: auto;">
       <rootCard class="box-card lv-one-card" title="一级科目" :data="listMap.LV_1"/>
 
       <div>
@@ -15,6 +15,7 @@ import crudApi from '@/api/config/classification-manage/classification-config'
 import rootCard from './module/root-card.vue'
 import { reactive, provide } from 'vue'
 import { isNotBlank } from '@/utils/data-type'
+import useMaxHeight from '@compos/use-max-height'
 
 import useCheckPermission from '@compos/use-check-permission'
 
@@ -25,8 +26,8 @@ const permission = {
   del: ['config_wms_classConfig:del']
 }
 
-provide('permission', permission)
-provide('crudApi', crudApi)
+// 最大高度
+const maxHeight = useMaxHeight({ extraDom: null, wrapperDom: ['.app-container', '#card-main-content'] })
 
 const loading = reactive({
   data: false
@@ -34,6 +35,10 @@ const loading = reactive({
 const listMap = reactive({
   LV_1: [], LV_2: [], LV_3: []
 })
+
+provide('permission', permission)
+provide('crudApi', crudApi)
+provide('maxHeight', maxHeight)
 
 fetchList()
 
@@ -132,4 +137,7 @@ function tree2listByDeep(tree, parent, deep = 1) {
   height: 100%;
 }
 
+.app-container {
+  padding:20px;
+}
 </style>

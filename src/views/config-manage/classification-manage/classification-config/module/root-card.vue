@@ -1,5 +1,5 @@
 <template>
-  <el-card v-bind="$attrs" :style="{ height: `1000px` }">
+  <el-card v-bind="$attrs" :style="{ height: `${maxHeight}px` }">
     <template #header>
       <div class="card-header flex-css">
         <div class="flex-rbc">
@@ -33,7 +33,8 @@
       <el-table
         :ref="tableRef"
         :data="tableList"
-        :max-height="700"
+        :max-height="maxHeight - 130"
+        empty-text="暂无数据"
         highlight-current-row
         style="width: 100%"
         @row-click="(row, col, event) => rowClick(row, col, event, 1)"
@@ -65,6 +66,8 @@ import { classificationEnum } from '@enum-ms/classification'
 
 const permission = inject('permission')
 const crudApi = inject('crudApi')
+const maxHeight = inject('maxHeight')
+
 const emit = defineEmits(['add', 'del'])
 const props = defineProps({
   title: {
