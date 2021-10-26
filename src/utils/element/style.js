@@ -1,4 +1,4 @@
-import { isBlank } from '@/utils/data-type'
+import { isBlank } from '@data-type/index'
 
 // 获取el样式
 export function getStyle(el, styleProp) {

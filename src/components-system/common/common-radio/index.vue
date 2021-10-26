@@ -16,10 +16,10 @@
 import { defineProps, defineEmits, watch, ref } from 'vue'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
-const emit = defineEmits(['change', 'update:value'])
+const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
-  value: [Number, String],
+  modelValue: [Number, String],
   type: {
     // dict , enum, other
     type: String,
@@ -57,13 +57,13 @@ const copyValue = ref()
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 watch(
-  () => props.value,
+  () => props.modelValue,
   (value) => { copyValue.value = value },
   { immediate: true }
 )
 
 function selectChange(val) {
-  emit('update:value', val)
+  emit('update:modelValue', val)
   emit('change', val)
 }
 </script>

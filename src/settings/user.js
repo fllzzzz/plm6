@@ -32,22 +32,20 @@ export const showSidebarLogo = true
  */
 export const errorLog = 'production'
 
-/**
- * @description 【未使用】记住密码状态下的token在Cookie中存储的天数，默认1天
- */
+// 【未使用】记住密码状态下的token在Cookie中存储的天数，默认1天
 export const tokenCookieExpires = 3
 
-/**
- * @description token key
- */
+// token key
 export const TokenKey = 'User-Token'
 
-/**
- * @description request url key (原公司地址)
- */
+// request url key (原公司地址)
 export const RequestUrlKey = 'Request-Url'
 
-/**
- * @description 主题
- */
+// 主题
 export const theme = variables.theme
+
+// 表格边框
+export const tableBorder = true
+
+// 表格斑马线
+export const tableStripe = true

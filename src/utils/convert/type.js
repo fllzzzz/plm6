@@ -4,7 +4,7 @@
  * @param {*} mark 唯一标识 作为对象key
  * @returns
  */
-export function arr2Obj(arr, mark = 'id') {
+export function arr2obj(arr, mark = 'id') {
   const newObj = {}
   for (const item of arr) {
     newObj[item[mark]] = item
@@ -17,7 +17,7 @@ export function arr2Obj(arr, mark = 'id') {
  * @param {*} obj 需要处理的对象
  * @returns
  */
-export function obj2Arr(obj) {
+export function obj2arr(obj) {
   const newArr = []
   for (const key in obj) {
     if (obj[key]) {

@@ -1,5 +1,5 @@
 import storage from '@/utils/storage'
-import { showSettings, tagsView, fixedHeader, showSidebarLogo, theme } from '@/settings/user'
+import { showSettings, tagsView, fixedHeader, showSidebarLogo, theme, tableBorder, tableStripe } from '@/settings/user'
 import { title, logo, sidebarLogo, projectNameShowConfig } from '@/settings/system'
 
 // 获取缓存的配置信息
@@ -15,6 +15,10 @@ const state = {
   showSettings: stateStorage.showSettings || showSettings,
   // 主题
   theme: stateStorage.theme || theme,
+  // 表格边框显示
+  tableBorder: stateStorage.tableBorder || tableBorder,
+  // 表格斑马线显示
+  tableStripe: stateStorage.tableStripe || tableStripe,
   // 显示标签页
   tagsView: stateStorage.tagsView || tagsView,
   // 吸顶

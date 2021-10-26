@@ -3,8 +3,8 @@
  * 在打印控件支持 “ ItemType与Offset2Top同时使用 ” 或允许修改次页样式（列如：次页高度）时，方可使用该文件
  * @author duhh
  */
-import { emptyTextFormatter, isNotBlank } from '@/utils/data-type'
-import { toThousandFilter } from '@/utils/data-type/number'
+import { emptyTextFormatter, isNotBlank } from '@data-type/index'
+import { toThousandFilter } from '@data-type/number'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import { projectNameFormatter } from '@/utils/project'
 import { alignEnum, fieldTypeEnum as typeEnum, printModeEnum as PrintMode } from '../enum'

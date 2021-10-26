@@ -1,7 +1,7 @@
 /**
  * 数组工具类
  */
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank } from '@data-type/index'
 
 /**
  * 去除数组中 0,false,null,undefined 等

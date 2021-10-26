@@ -17,7 +17,7 @@ export default ({ command }) => {
     brotliSize: false, // 关闭计算打包时间
     server: {
       open: true,
-      host: 'localhost',
+      host: '172.16.3.4',
       port: 668, // 本地服务端口
       strictPort: false // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口
       // proxy: {
@@ -73,11 +73,13 @@ export default ({ command }) => {
       alias: [
         { find: '@', replacement: resolve(__dirname, 'src') },
         { find: '@comp', replacement: resolve(__dirname, 'src/components') },
-        { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },
         { find: '@comp-common', replacement: resolve(__dirname, 'src/components-system/common') },
+        { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },
+        { find: '@comp-cls', replacement: resolve(__dirname, 'src/components-system/classification') },
         { find: '@compos', replacement: resolve(__dirname, 'src/composables') },
         { find: '@enum', replacement: resolve(__dirname, 'src/utils/enum') },
-        { find: '@enum-ms', replacement: resolve(__dirname, 'src/utils/enum/modules') }
+        { find: '@enum-ms', replacement: resolve(__dirname, 'src/utils/enum/modules') },
+        { find: '@data-type', replacement: resolve(__dirname, 'src/utils/data-type') }
       ],
       // 忽略后缀名的配置选项, 添加 .vue 选项时要记得原本默认忽略的选项也要手动写入
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']

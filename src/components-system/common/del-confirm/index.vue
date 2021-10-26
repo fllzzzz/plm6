@@ -1,30 +1,26 @@
 <template>
-  <el-dialog
-    title="提示"
-    v-model="dialogVisible"
-    :width="props.width"
-    :before-close="handleClose"
-    :show-close="false"
-  >
-    <span class="tip"><i class="el-icon-warning" />{{ props.tip }}</span>
-    <template #footer>
-    <span class="dialog-footer">
-      <common-button type="danger" size="small" @click="handleExit">退 出</common-button>
-      <common-button size="small" @click="handleCancel">取 消</common-button>
-      <common-button :loading="subLoading" type="primary" size="small" @click="handleSubimt">确 定</common-button>
-    </span>
-    </template>
-  </el-dialog>
+  <div class="del-confirm">
+    <el-dialog title="提示" v-model="dialogVisible" :width="props.width" :before-close="handleClose" :show-close="false" :top="top">
+      <span class="tip"><i class="el-icon-warning" />{{ props.tip }}</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <common-button v-if="showExit" type="danger" size="small" @click="handleExit">退 出</common-button>
+          <common-button size="small" @click="handleCancel">取 消</common-button>
+          <common-button :loading="subLoading" type="primary" size="small" @click="handleSubimt">确 定</common-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, ref, computed, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const emit = defineEmits(['success', 'error', 'exit', 'cancel', 'update:value'])
+const emit = defineEmits(['success', 'error', 'exit', 'cancel', 'update:modelValue'])
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: Boolean,
     require: true
   },
@@ -36,6 +32,10 @@ const props = defineProps({
     type: null,
     require: false
   },
+  showExit: {
+    type: Boolean,
+    default: false
+  },
   showSuccessMsg: {
     type: Boolean,
     default: true
@@ -43,6 +43,10 @@ const props = defineProps({
   width: {
     type: String,
     default: '400px'
+  },
+  top: {
+    type: String,
+    default: '33vh'
   },
   tip: {
     type: String,
@@ -52,18 +56,15 @@ const props = defineProps({
 
 const subLoading = ref(false)
 
-const dialogVisible = computed(() => props.value)
+const dialogVisible = computed(() => props.modelValue)
 
-watch(
-  dialogVisible,
-  (val) => {
-    if (!val) {
-      nextTick(() => {
-        subLoading.value = false
-      })
-    }
+watch(dialogVisible, (val) => {
+  if (!val) {
+    nextTick(() => {
+      subLoading.value = false
+    })
   }
-)
+})
 
 /**
  * 确认删除
@@ -103,29 +104,30 @@ function handleExit() {
  * 关闭窗口
  */
 function handleClose() {
-  emit('update:visible', false)
+  emit('update:modelValue', false)
 }
-
 </script>
 
 <style lang="scss" scoped>
-::v-deep(.el-dialog__header){
-  padding: 10px 20px;
-}
-::v-deep(.el-dialog__body) {
-  padding: 10px 20px
-}
-::v-deep(.el-dialog__footer) {
-  padding: 15px 20px
-}
-.tip {
-  display: inline-flex;
-  align-items: center;
+.del-confirm {
+  ::v-deep(.el-dialog__header) {
+    padding: 10px 20px;
+  }
+  ::v-deep(.el-dialog__body) {
+    padding: 10px 20px;
+  }
+  ::v-deep(.el-dialog__footer) {
+    padding: 5px 20px 15px 20px;
+  }
+  .tip {
+    display: inline-flex;
+    align-items: center;
 
-  .el-icon-warning {
-    font-size:22px;
-    color: #ff8100;
-    margin-right: 5px;
+    .el-icon-warning {
+      font-size: 22px;
+      color: #ff8100;
+      margin-right: 5px;
+    }
   }
 }
 </style>

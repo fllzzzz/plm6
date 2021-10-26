@@ -1,5 +1,5 @@
 import store from '@/store'
-import { isBlank } from '@/utils/data-type'
+import { isBlank } from '@data-type/index'
 // admin 拥有所有权限
 const fixedRoles = ['admin']
 

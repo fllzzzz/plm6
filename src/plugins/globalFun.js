@@ -1,4 +1,4 @@
-import { isNotBlank, isBlank } from '@/utils/data-type'
+import { isNotBlank, isBlank } from '@data-type/index'
 
 // 全局方法
 export default (app) => {

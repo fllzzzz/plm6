@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank } from '@data-type/index'
 import Layout from '@/layout/index.vue'
 
 /**

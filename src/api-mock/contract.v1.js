@@ -2,7 +2,7 @@ import { projectTypeEnum, projectStatusEnum } from '@/utils/enum/modules/contrac
 
 // 获取所有项目（简要信息）
 const allProjectSimple = {
-  url: '/api/project/simple',
+  url: '/api/contract/v1/project/simple',
   method: 'get',
   response: () => {
     return {
@@ -46,7 +46,7 @@ const allProjectSimple = {
 
 // 获取用户的所有项目（简要信息）
 const projectSimple = {
-  url: '/api/user/project/simple',
+  url: '/api/contract/v1/user/project/simple',
   method: 'get',
   response: () => {
     return {

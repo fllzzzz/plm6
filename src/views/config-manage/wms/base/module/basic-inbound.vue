@@ -35,7 +35,7 @@ import { getInboundBasicConf, setInboundBasicConf } from '@/api/config/wms/base'
 
 import { reactive, ref, onMounted, inject, computed } from 'vue'
 import { inboundFillWayEnum } from '@enum-ms/wms'
-import { isObjectValueEqual } from '@/utils/data-type/object'
+import { isObjectValueEqual } from '@data-type/object'
 
 const permission = inject('permission')
 

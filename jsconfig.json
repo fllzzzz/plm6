@@ -26,9 +26,11 @@
       "@comp/*": ["src/components/*"],
       "@comp-common/*": ["src/components-system/common/*"],
       "@comp-wms/*": ["src/components-system/wms/*"],
+      "@comp-cls/*": ["src/components-system/classification/*"],
       "@compos/*": ["src/composables/*"],
       "@enum": ["src/utils/enum"],
-      "@enum-ms/*": ["src/utils/enum/modules/*"]
+      "@enum-ms/*": ["src/utils/enum/modules/*"],
+      "@data-type/*": ["src/utils/data-type/*"]
     }
   }
 }

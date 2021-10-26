@@ -3,7 +3,7 @@ import { numOrPctEnum } from '@enum-ms/common'
 
 // 获取入库基础配置
 const getInboundBasicConf = {
-  url: '/api/wms/v1/config/inbound/base',
+  url: '/api/wms/config/inbound/base',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -20,7 +20,7 @@ const getInboundBasicConf = {
 
 // 设置入库基础配置
 const setInboundBasicConf = {
-  url: '/api/wms/v1/config/inbound/base',
+  url: '/api/wms/config/inbound/base',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -33,7 +33,7 @@ const setInboundBasicConf = {
 
 // 获取入库钢材配置
 const getInboundSteelConf = {
-  url: '/api/wms/v1/config/inbound/steel',
+  url: '/api/wms/config/inbound/steel',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -56,7 +56,7 @@ const getInboundSteelConf = {
 
 // 保存入库钢材配置
 const setInboundSteelConf = {
-  url: '/api/wms/v1/config/inbound/steel',
+  url: '/api/wms/config/inbound/steel',
   method: 'put',
   timeout: 1000,
   response: () => {

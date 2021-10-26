@@ -1,6 +1,6 @@
 // 获取分类树
 const getClassificationTree = {
-  url: '/api/config/v1/classification/tree',
+  url: '/api/config/classification/tree',
   method: 'get',
   timeout: 1000,
   response: () => {

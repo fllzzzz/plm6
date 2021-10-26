@@ -39,10 +39,10 @@
 import { defineProps, defineEmits, computed, watch, ref } from 'vue'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
-const emit = defineEmits(['change', 'blur', 'update:value'])
+const emit = defineEmits(['change', 'blur', 'update:modelValue'])
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: [Number, String, Array]
   },
   options: {
@@ -77,7 +77,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  unshowOptions: { // value
+  unshowOptions: {
     type: Array,
     default: () => []
   },
@@ -127,13 +127,13 @@ const textAlignClass = computed(() => {
 })
 
 watch(
-  () => props.value,
+  () => props.modelValue,
   (value) => { copyValue.value = value },
   { immediate: true }
 )
 
 function selectChange(val) {
-  emit('update:value', val)
+  emit('update:modelValue', val)
   emit('change', val)
 }
 

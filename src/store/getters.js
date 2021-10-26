@@ -26,9 +26,16 @@ const getters = {
   showSidebarLogo: state => state.settings.showSidebarLogo,
   // 公司名称/标题(可在浏览器标签中展示)
   title: state => state.settings.title,
+  // 表格边框显示
+  tableBorder: state => state.settings.tableBorder,
+  // 表格斑马线显示
+  tableStripe: state => state.settings.tableStripe,
 
   // 访问过的页面
   visitedViews: state => state.tagsView.visitedViews,
+
+  // 材料类科目树
+  matClsTree: state => state.config.matClsTree,
 
   // token 访问令牌
   token: state => state.user.token,

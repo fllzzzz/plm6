@@ -4,7 +4,10 @@
       <template #header>
         <div class="card-header flex-css">
           <div class="flex-rbc">
-            <span>{{ title }}</span>
+            <div class="flex-rsc">
+              <span>{{ title }}</span>
+              <el-tag v-show="labelTip" size="small" style="margin-left:5px">{{ labelTip }}</el-tag>
+            </div>
             <div>
               <common-button v-permission="permission.add" size="small" type="success" icon="el-icon-plus" @click="add()" />
               <common-button
@@ -18,14 +21,13 @@
           </div>
           <div class="flex-rbc">
             <el-input v-model.trim="search.name" class="search-name" size="small" :placeholder="`名称查询（${title}）`" clearable />
-            <common-select
-              v-model="search.basicClass"
-              :options="classificationEnum"
-              clearable
-              type="enum"
+            <el-input
+              v-model.trim="search.serialNumber"
+              class="search-name"
               size="small"
-              placeholder="材料类型"
-              class="search-type"
+              :placeholder="`编号查询（${title}}）`"
+              clearable
+              style="margin-left: 15px"
             />
           </div>
         </div>
@@ -44,7 +46,7 @@
           <el-table-column v-if="selected.delBtn" type="selection" width="45" align="center" />
           <el-table-column prop="name" label="名称" min-width="120" />
           <el-table-column prop="code" align="center" label="代码" />
-          <el-table-column prop="basicClassName" align="center" label="类型" />
+          <el-table-column prop="attributeName" align="center" label="类型" />
         </el-table>
       </div>
     </el-card>
@@ -62,7 +64,6 @@
 
 <script setup>
 import { defineProps, defineEmits, inject, ref, reactive, computed, watch } from 'vue'
-import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank, isBlank } from '@data-type/index'
 import { dightLowercase } from '@data-type/number'
 
@@ -77,7 +78,7 @@ const emit = defineEmits(['add', 'del'])
 const props = defineProps({
   level: {
     type: Number,
-    default: 1
+    required: true
   },
   data: {
     type: Object,
@@ -87,12 +88,14 @@ const props = defineProps({
   }
 })
 
+const parentLevel = props.level - 1
+
 // 表格ref
 const tableRef = ref()
 
 const search = reactive({
   name: '',
-  basicClass: undefined
+  serialNumber: ''
 })
 
 const selected = reactive({
@@ -112,8 +115,36 @@ const title = computed(() => {
 // 删除提示
 const delTip = `此操作不可逆，确认删除【${title.value}】中选中的记录`
 
+// 选中的父级科目
+const selectedParent = computed(() => {
+  return selectMap[`current_LV${parentLevel}`]
+})
+
+// 上级科目选中提示
+const labelTip = computed(() => {
+  const parent = selectedParent.value
+  return isNotBlank(parent) ? `上级科目：${parent.basicClassName}-${parent.name}-${parent.code}` : null
+})
+
+// 上一个等级的所有的科目id
+const selectedParentIds = computed(() => {
+  const filterParentList = selectMap[`current_list_LV${parentLevel}`]
+  if (selectedParent.value) { // 父级有选中的情况（高亮）
+    return [selectedParent.value.id]
+  } else if (filterParentList) { // 父级科目未选中的情况，父级的列表
+    return filterParentList.map((v) => v.id)
+  }
+  return []
+})
+
+// 列表
 const tableList = computed(() => {
-  const list = props.data.filter((v) => v.name.includes(search.name) && (isBlank(search.basicClass) || v.basicClass === search.basicClass))
+  const list = props.data.filter(
+    (v) =>
+      selectedParentIds.value.includes(v.parent.id) &&
+      v.name.includes(search.name) &&
+      v.serialNumber.includes(search.serialNumber)
+  )
   // 校验选中行是否依然被选中，未选中则取消
   whetherContainsCheckRow(list)
   return list

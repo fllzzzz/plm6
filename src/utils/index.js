@@ -2,7 +2,7 @@
  * 工具类
  */
 import { validStartSymbol } from '@/utils/validate'
-import { cleanArray } from '@/utils/data-type/array'
+import { cleanArray } from '@data-type/array'
 
 /**
  * 获取url中查询内容，并合并为对象

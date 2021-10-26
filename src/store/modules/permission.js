@@ -5,8 +5,8 @@ import BlankLayout from '@/layout/components/AppMain.vue'
 import { showProjectSearch } from '@/settings/system'
 import { repairStartSymbol } from '@/utils'
 import checkPermission from '@/utils/permission'
-import { arr2Obj } from '@/utils/convert/type'
-import { deepClone } from '@/utils/data-type'
+import { arr2obj } from '@/utils/convert/type'
+import { deepClone } from '@data-type/index'
 import { resolvePath } from '@/utils/resolve-path'
 import { projectTypeEnum } from '@/utils/enum/modules/contract'
 
@@ -51,7 +51,7 @@ const actions = {
       let moduleRoutes = []
       // 获取菜单
       const menus = rootGetters.menus
-      const menusMap = arr2Obj(menus, 'id')
+      const menusMap = arr2obj(menus, 'id')
       // TODO: 待删除
       // for (const item of state.allRoutes) {
       //   if (item.routePath === routePath) {

@@ -1,23 +1,28 @@
 <template>
   <div v-loading="loading.data" class="app-container" id="hhaa">
     <div id="card-main-content" class="flex-rsc" style="padding-bottom: 20px;overflow-x: auto;">
-      <rootCard class="box-card lv-one-card" title="一级科目" :data="listMap.LV_1"/>
-
-      <div>
-        <!-- <batchAdd v-model:visible="batchAddVisible" :default-level="defaultAdd_LV" @success="handleAddSuccess" /> -->
-      </div>
+      <root-card class="box-card lv-one-card" :level="1" :data="listMap.LV1" @add="openAddDlg" />
+      <child-card class="box-card lv-two-card" :level="2" :data="listMap.LV2" @add="openAddDlg" />
+      <child-card class="box-card lv-three-card" :level="3" :data="listMap.LV3" @add="openAddDlg" />
     </div>
+    <batchAdd v-model="visible.batchAdd" :level="addLevel" @success="handleAddSuccess" />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/config/classification-manage/classification-config'
-import rootCard from './module/root-card.vue'
-import { reactive, provide } from 'vue'
-import { isNotBlank } from '@/utils/data-type'
-import useMaxHeight from '@compos/use-max-height'
+import { reactive, ref, provide } from 'vue'
+import EO from '@enum'
+import { classificationEnum } from '@enum-ms/classification'
+import { isNotBlank } from '@data-type/index'
 
+import crudApi from '@/api/config/classification-manage/classification-config'
+import useMaxHeight from '@compos/use-max-height'
 import useCheckPermission from '@compos/use-check-permission'
+import rootCard from './module/root-card.vue'
+import childCard from './module/child-card.vue'
+import batchAdd from './module/batch-add.vue'
+
+const classificationEnumV = EO.key2val(classificationEnum)
 
 // 权限
 const permission = {
@@ -29,18 +34,33 @@ const permission = {
 // 最大高度
 const maxHeight = useMaxHeight({ extraDom: null, wrapperDom: ['.app-container', '#card-main-content'] })
 
+const addLevel = ref(1)
+const visible = reactive({
+  batchAdd: false
+})
 const loading = reactive({
   data: false
 })
 const listMap = reactive({
-  LV_1: [], LV_2: [], LV_3: []
+  LV1: [], LV2: [], LV3: []
+})
+const selectMap = reactive({
+  current_LV1: undefined, current_LV2: undefined, current_LV3: undefined,
+  current_list_LV1: undefined, current_list_LV2: undefined, current_list_LV3: undefined
 })
 
 provide('permission', permission)
 provide('crudApi', crudApi)
 provide('maxHeight', maxHeight)
+provide('selectMap', selectMap)
 
 fetchList()
+
+// 打开添加窗口
+function openAddDlg(level) {
+  addLevel.value = level
+  visible.batchAdd = true
+}
 
 async function fetchList() {
   if (!useCheckPermission(permission.get)) return
@@ -50,7 +70,8 @@ async function fetchList() {
     // 转换数据
     tree2listByDeep(content)
   } catch (error) {
-    Object.assign(listMap).forEach(key => {
+    console.log('error', error)
+    Object.keys(listMap).forEach(key => {
       listMap[key] = []
     })
   } finally {
@@ -65,20 +86,27 @@ async function fetchList() {
  * @param {number} deep 树深度
  */
 function tree2listByDeep(tree, parent, deep = 1) {
-  const list = listMap[`LV_${deep}`]
+  const list = listMap[`LV${deep}`]
   tree.forEach(node => {
     const n = {
       parent: parent,
       id: node.id,
       name: node.name,
       code: node.code,
-      serialNumber: `${parent.code || ''}${node.code}`
+      basicClass: deep === 1 ? node.basicClass : parent.basicClass,
+      basicClassName: deep === 1 ? classificationEnumV[`${node.basicClass}`].L : parent.basicClassName,
+      serialNumber: `${isNotBlank(parent) ? parent.code : ''}${node.code}`
     }
+
     list.push(n)
     if (isNotBlank(node.children)) {
       tree2listByDeep(node.children, n, deep + 1)
     }
   })
+}
+
+function handleAddSuccess() {
+  fetchList()
 }
 </script>
 

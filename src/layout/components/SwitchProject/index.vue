@@ -1,7 +1,7 @@
 <template>
   <div v-show="showable" class="cascader-container">
     <common-select
-      v-model:value="projectType"
+      v-model="projectType"
       :options="projectTypeEnum"
       :all-val="allVal"
       :disabled-val="disabledTypeArr"
@@ -36,7 +36,7 @@ import { mapGetters } from 'vuex'
 import { getUserProjectGroupByYear } from '@/api/contract/project'
 import enumOperate from '@/utils/enum'
 import { projectTypeEnum } from '@/utils/enum/modules/contract'
-import { getBitwiseBack } from '@/utils/data-type/number'
+import { getBitwiseBack } from '@data-type/number'
 const projectTypes = enumOperate.toArr(projectTypeEnum).map((e) => e.V)
 const allVal = 0
 projectTypes.push(allVal)

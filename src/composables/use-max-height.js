@@ -1,11 +1,12 @@
 import { onBeforeMount, onMounted, onUnmounted, ref, nextTick } from 'vue'
-import { cleanArray } from '@/utils/data-type/array'
+import { cleanArray } from '@data-type/array'
 import { getStyle, style2Num } from '@/utils/element/style'
 
 // 分页插件
 const EL_PAGINATION = '.el-pagination'
 const NAVBAR = '#navbar'
 /**
+ * TODO: 考虑页面可能会出现多个相同的class，允许传入class的序号以便获取正确的class
  * 为了保证页面内部不出现滚动条计算dom的最大高度
  * @param {string | Array} extraDom 默认：.head-container。需要删去高度的dom 可传入id或class
  * @param {boolean} paginate 是否存在分页插件。

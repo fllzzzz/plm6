@@ -1,4 +1,4 @@
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank } from '@data-type/index'
 import { fieldTypeEnum, dataSourceEnum } from '@/utils/print/enum'
 import { validatorLicensePlate, validatorPhone, validatorTel } from '@/utils/validatePattern'
 import enumAll from '@/utils/enum/all'

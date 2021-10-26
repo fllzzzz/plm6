@@ -1,7 +1,7 @@
 /**
  * 日期及时间处理工具类
  */
-import { prefixZero } from '@/utils/data-type/number'
+import { prefixZero } from '@data-type/number'
 
 /**
  * 时间快捷选择：日

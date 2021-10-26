@@ -3,7 +3,7 @@
  */
 import axios from 'axios'
 import store from '@/store'
-import { isBlank } from '@/utils/data-type'
+import { isBlank } from '@data-type/index'
 import { getToken, getRequestUrl } from '@/utils/storage'
 import { validRequestUrl } from '@/utils/validate'
 import Qs from 'qs'
@@ -52,7 +52,7 @@ service.interceptors.request.use(
 
     // 设置token
     if (getToken()) {
-      config.headers['Authorization'] = `cat ${getToken()}`
+      config.headers['Authorization'] = getToken()
     }
 
     if (isBlank(config.data)) config.data = {}

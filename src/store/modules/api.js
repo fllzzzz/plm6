@@ -15,11 +15,16 @@ const state = {
   // materialChangeListUploadApi: lStore.get('requestUrl') + '/api/material/changeListUpload',
   // baseUrl，
   baseApi: {
-    contract: `/api/contract/v${apiVersion.contract}/`,
-    user: `/api/user/v${apiVersion.user}/`,
-    wms: `/api/wms/v${apiVersion.wms}/`,
-    common: `/api/common/v${apiVersion.common}/`,
-    config: `/api/config/v${apiVersion.config}/`
+    // contract: `/api/contract/v${apiVersion.contract}/`,
+    // user: `/api/user/v${apiVersion.user}/`,
+    // wms: `/api/wms/v${apiVersion.wms}/`,
+    // common: `/api/common/v${apiVersion.common}/`,
+    // config: `/api/config/v${apiVersion.config}/`
+    contract: `/api/`,
+    user: `/api/`,
+    wms: `/api/wms/`,
+    common: `/api/`,
+    config: `/api/config/`
   }
 }
 

@@ -1,5 +1,5 @@
-import { isBlank, isNotBlank } from '@/utils/data-type'
-import { getBitwiseBack } from '@/utils/data-type/number'
+import { isBlank, isNotBlank } from '@data-type/index'
+import { getBitwiseBack } from '@data-type/number'
 
 /**
  * 创建枚举对象(常量对象)

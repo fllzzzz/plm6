@@ -1,6 +1,6 @@
 // 路由：配置管理
 export default {
-  id: 2,
+  id: 1,
   name: '配置管理',
   children: [
     {

@@ -1,5 +1,5 @@
 import { parseTime } from '@/utils/date'
-import { isBlank } from '@/utils/data-type'
+import { isBlank } from '@data-type/index'
 import { projectStatusEnum, projectNameArrangementModeEnum } from '@enum-ms/contract'
 import EO from '@enum'
 import store from '@/store'

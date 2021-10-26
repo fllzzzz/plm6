@@ -1,5 +1,5 @@
-import { isNotBlank } from '@/utils/data-type'
-import { toThousandFilter } from '@/utils/data-type/number'
+import { isNotBlank } from '@data-type/index'
+import { toThousandFilter } from '@data-type/number'
 /*eslint no-extend-native: ["error", { "exceptions": ["Array", 'Number', 'String'] }]*/
 
 // 判断两个数组是否相等（包括数组里的键值是否相等）
