@@ -42,6 +42,25 @@ export function getStyle2(el, styleProp) {
 // 20px -> 20
 export function style2Num(str) {
   if (isBlank(str)) return
-  const number = Number(str.match(/^\d+\.?\d*/)[0])
+  const res = str.match(/^\d+\.?\d*/)
+  if (isBlank(res)) return // TODO: auto 未处理
+  const number = Number(res[0])
   return number
+}
+
+// 20px -> [20, 'px']
+export function splitStyleOfNum(val) {
+  if (isBlank(val)) return [null, null]
+  if (typeof val === 'string') {
+    const res = val.match(/^\d+\.?\d*/)
+    if (isBlank(res)) return [null, null]
+    const numStr = res[0]
+    return [
+      Number(numStr),
+      val.substring(numStr.length)
+    ]
+  }
+  if (typeof val === 'number') {
+    return [val, null]
+  }
 }

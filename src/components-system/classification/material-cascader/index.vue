@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed, watch, reactive, ref } from 'vue'
+import { defineExpose, defineProps, defineEmits, computed, watch, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
@@ -281,14 +281,12 @@ function setNodeDisabled(list) {
 }
 
 // 单选 获取选中节点信息
-// eslint-disable-next-line no-unused-vars
 function getNodeInfo() {
   const node = cascaderRef.value.getCheckedNodes(true)
   return node.length ? node[0].data : {}
 }
 
 // 获取选中子节点的顶级父节点
-// eslint-disable-next-line no-unused-vars
 function getParentNode(node) {
   if (node.parent) {
     return getParentNode(node.parent)
@@ -296,6 +294,11 @@ function getParentNode(node) {
     return node
   }
 }
+
+defineExpose({
+  getNodeInfo,
+  getParentNode
+})
 </script>
 
 <style lang="scss" scoped>

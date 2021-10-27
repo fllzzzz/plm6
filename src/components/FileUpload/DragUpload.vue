@@ -19,7 +19,7 @@ multiple>
       </template>
     </el-upload>
     <div class="attachment-content">
-      <el-table :data="files" style="width: 100%">
+      <common-table :data="files" style="width: 100%">
         <el-table-column v-if="$TBS.INDEX" :label="$TBS.INDEX_LABEL ? '序号' : ''" type="index" align="center" width="60" />
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="200" />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" min-width="180">
@@ -33,7 +33,7 @@ multiple>
             <el-button v-show="showDownload && currentUpload.indexOf(scope.row.id) == -1" v-permission="downloadPerm" :loading="downloadLoading" size="mini" type="warning" icon="el-icon-download" @click="downloadFile(scope.$index)" />
           </template>
         </el-table-column>
-      </el-table>
+      </common-table>
     </div>
   </div>
 </template>

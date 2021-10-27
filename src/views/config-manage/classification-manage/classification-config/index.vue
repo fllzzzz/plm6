@@ -1,9 +1,9 @@
 <template>
   <div v-loading="loading.data" class="app-container" id="hhaa">
     <div id="card-main-content" class="flex-rsc" style="padding-bottom: 20px;overflow-x: auto;">
-      <root-card class="box-card lv-one-card" :level="1" :data="listMap.LV1" @add="openAddDlg" />
-      <child-card class="box-card lv-two-card" :level="2" :data="listMap.LV2" @add="openAddDlg" />
-      <child-card class="box-card lv-three-card" :level="3" :data="listMap.LV3" @add="openAddDlg" />
+      <root-card class="box-card lv-one-card" :level="1" :data="listMap.LV1" @add="openAddDlg" @del="handleDelSuccess" />
+      <child-card class="box-card lv-two-card" :level="2" :data="listMap.LV2" @add="openAddDlg" @del="handleDelSuccess" />
+      <child-card class="box-card lv-three-card" :level="3" :data="listMap.LV3" @add="openAddDlg" @del="handleDelSuccess" />
     </div>
     <batchAdd v-model="visible.batchAdd" :level="addLevel" @success="handleAddSuccess" />
   </div>
@@ -32,7 +32,7 @@ const permission = {
 }
 
 // 最大高度
-const maxHeight = useMaxHeight({ extraDom: null, wrapperDom: ['.app-container', '#card-main-content'] })
+const maxHeight = useMaxHeight({ extraBox: null, wrapperBox: ['.app-container', '#card-main-content'] })
 
 const addLevel = ref(1)
 const visible = reactive({
@@ -66,9 +66,9 @@ async function fetchList() {
   if (!useCheckPermission(permission.get)) return
   loading.data = true
   try {
-    const { content = [] } = await crudApi.get()
+    const tree = await crudApi.get()
     // 转换数据
-    tree2listByDeep(content)
+    tree2listByDeep(tree)
   } catch (error) {
     console.log('error', error)
     Object.keys(listMap).forEach(key => {
@@ -106,6 +106,10 @@ function tree2listByDeep(tree, parent, deep = 1) {
 }
 
 function handleAddSuccess() {
+  fetchList()
+}
+
+function handleDelSuccess() {
   fetchList()
 }
 </script>

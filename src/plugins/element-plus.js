@@ -5,8 +5,8 @@ import {
   // ElAvatar,
   // ElBacktop,
   ElBadge,
-  ElBreadcrumb,
-  ElBreadcrumbItem,
+  // ElBreadcrumb,
+  // ElBreadcrumbItem,
   // ElButton,  // 非必要不使用ElButton，在禁用后点击按钮内文字仍可触发点击事件（使用common-button）
   ElButtonGroup,
   // ElCalendar,
@@ -64,10 +64,10 @@ import {
   ElSteps,
   // ElSubMenu,
   ElSwitch,
-  ElTabPane,
-  ElTable,
+  // ElTabPane,
+  // ElTable,
   ElTableColumn,
-  ElTabs,
+  // ElTabs,
   ElTag,
   // ElTimePicker,
   // ElTimeSelect,
@@ -76,8 +76,8 @@ import {
   ElTooltip,
   // ElTransfer,
   ElLoading,
-  ElTree,
-  ElUpload
+  ElTree
+  // ElUpload
   // ElMessage,
   // ElMessageBox
 } from 'element-plus'
@@ -89,8 +89,8 @@ const components = [
   // ElAvatar,
   // ElBacktop,
   ElBadge,
-  ElBreadcrumb,
-  ElBreadcrumbItem,
+  // ElBreadcrumb,
+  // ElBreadcrumbItem,
   // ElButton,
   ElButtonGroup,
   // ElCalendar,
@@ -148,10 +148,10 @@ const components = [
   ElSteps,
   // ElSubMenu,
   ElSwitch,
-  ElTabPane,
-  ElTable,
+  // ElTabPane,
+  // ElTable,
   ElTableColumn,
-  ElTabs,
+  // ElTabs,
   ElTag,
   // ElTimePicker,
   // ElTimeSelect,
@@ -159,8 +159,8 @@ const components = [
   // ElTimelineItem,
   ElTooltip,
   // ElTransfer,
-  ElTree,
-  ElUpload
+  ElTree
+  // ElUpload
 ]
 
 const plugins = [

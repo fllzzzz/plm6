@@ -31,7 +31,7 @@
         </div>
       </template>
       <div class="card-body">
-        <el-table
+        <common-table
           ref="tableRef"
           :data="tableList"
           :max-height="maxHeight - 170"
@@ -45,13 +45,13 @@
           <el-table-column prop="name" label="名称" min-width="120" />
           <el-table-column prop="code" align="center" label="代码" />
           <el-table-column prop="basicClassName" align="center" label="类型" />
-        </el-table>
+        </common-table>
       </div>
     </el-card>
     <del-confirm
       v-model="visible.del"
       :tip="delTip"
-      :fn="crudApi.del"
+      :fn="delRow"
       :fn-data="selected.rows"
       show-exit
       @exit="delExit()"
@@ -140,6 +140,16 @@ function del() {
     visible.del = true
   } else {
     selected.delBtn = !selected.delBtn
+  }
+}
+
+// 删除方法
+async function delRow() {
+  try {
+    const rowIds = selected.rows.map(row => row.id)
+    await crudApi.del(rowIds)
+  } catch (error) {
+    console.log('删除科目', error)
   }
 }
 

@@ -5,6 +5,8 @@ import 'nprogress/nprogress.css' // Progress 进度条样式
 import { ElMessage } from 'element-plus'
 import { getToken, getRequestUrl } from '@/utils/storage'
 import { fetchMenus } from '@/api/user' // 获取菜单
+import configRouter from '@/router/modules/config'
+
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
 NProgress.configure({ showSpinner: false }) // 进度条配置：不显示Loading图标
@@ -109,7 +111,8 @@ const loadMenus = async (next, to) => {
   let success = false
   try {
     // 菜单：content
-    const { content = [] } = await fetchMenus()
+    // const { content = [] } = await fetchMenus()
+    const content = [configRouter]
     await store.dispatch('permission/generateRoutes', content)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

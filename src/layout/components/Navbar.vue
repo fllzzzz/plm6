@@ -9,7 +9,7 @@
         <!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
         <!-- <screenfull class="right-menu-item hover-effect" /> -->
         <el-tooltip content="字体大小" effect="dark" placement="bottom">
-          <size-select class="right-menu-item hover-effect" />
+          <span class="right-menu-item hover-effect"><size-select/></span>
         </el-tooltip>
       </template>
       <div class="right-menu-item hover-effect avatar-container avatar">

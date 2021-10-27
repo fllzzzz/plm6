@@ -69,7 +69,7 @@ watch(
 
 // ------------------ 生命周期 start ------------------------
 onMounted(() => {
-  insertToBody()
+  // insertToBody()
 })
 // ------------------ 生命周期 end ------------------------
 
@@ -86,12 +86,11 @@ function closeSidebar(evt) {
 }
 
 // 将dom插入到body中，并排在body子节点的第一位
-const insertToBody = () => {
-  const elx = rightPanel.value
-  const body = document.querySelector('body')
-  body.insertBefore(elx, body.firstChild)
-}
-
+// const insertToBody = () => {
+//   const elx = rightPanel.value
+//   const body = document.querySelector('body')
+//   body.insertBefore(elx, body.firstChild)
+// }
 </script>
 
 <style>

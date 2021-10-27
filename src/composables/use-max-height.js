@@ -1,6 +1,8 @@
-import { onBeforeMount, onMounted, onUnmounted, ref, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, nextTick, watch, onUpdated } from 'vue'
 import { cleanArray } from '@data-type/array'
-import { getStyle, style2Num } from '@/utils/element/style'
+import { elHScrollable } from '@/utils/element/index'
+import { getStyle, style2Num, splitStyleOfNum } from '@/utils/element/style'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 
 // 分页插件
 const EL_PAGINATION = '.el-pagination'
@@ -8,27 +10,65 @@ const NAVBAR = '#navbar'
 /**
  * TODO: 考虑页面可能会出现多个相同的class，允许传入class的序号以便获取正确的class
  * 为了保证页面内部不出现滚动条计算dom的最大高度
- * @param {string | Array} extraDom 默认：.head-container。需要删去高度的dom 可传入id或class
- * @param {boolean} paginate 是否存在分页插件。
- * @param {boolean} navbar 是否存在navbar。Layout-navbar
- * @param {boolean} appContainer 是被被app-container包裹
- * @param {number} extraHeight 需要减去的额外高度
+ * @param {string | Array} extraBox ='.head-container' 需要删去高度的dom 可传入id或class
+ * @param {string | Array} wrapperBox = '.app-container' 包裹层
+ * @param {boolean} navbar = true 是否存在navbar。Layout-navbar
+ * @param {boolean} paginate = false 是否存在分页插件。
+ * @param {number | string} extraHeight = 0 需要减去的额外高度 允许px，vh，vw, 其他单位视为px。不带单位视为px
+ * @param {number | string} minHeight = 400 最小高度 允许px，vh, vw, 其他单位视为px。不带单位视为px
+ * @param {computed(boolean)} listener 开始监听
  * @returns
  */
-export default function test({ extraDom = '.head-container', wrapperDom = '.app-container', navbar = true, paginate = false, extraHeight = 0 } = {}) {
+export default function useMaxHeight(
+  {
+    mainBox,
+    extraBox = '.head-container',
+    wrapperBox = '.app-container',
+    navbar = true,
+    paginate = false,
+    extraHeight = 0,
+    minHeight = 400
+  } = {},
+  listener
+) {
   const maxHeight = ref(0)
-
-  // 监听resize
-  onBeforeMount(() => {
-    window.addEventListener('resize', windowSizeHandler, { passive: false })
-  })
+  const isBind = ref(false)
 
   onMounted(() => {
-    // TODO:首次触发wrapper层的padding未获取成功,具体是否使用,看视图是否会有明显变化
-    // windowSizeHandler()
-    nextTick(() => {
+    bindEventListener(windowSizeHandler, isBind)
+    if (isNotBlank(listener)) {
+      watch(
+        () => listener.value,
+        (flag) => {
+          if (flag) {
+            nextTick(() => windowSizeHandler())
+          }
+        },
+        { immediate: true }
+      )
+    }
+    // if (isBlank(listener)) {
+    //   bindEventListener(windowSizeHandler, isBind)
+    // } else {
+    //   // 只监听一次。适用于一开始隐藏的页面，高度计算不准确
+    //   const onceWatch = watch(
+    //     () => listener.value,
+    //     (flag) => {
+    //       if (flag) {
+    //         // onceWatch() // 卸载
+    //         bindEventListener(windowSizeHandler, isBind)
+    //       }
+    //     },
+    //     { immediate: true }
+    //   )
+    // }
+  })
+
+  onUpdated(() => {
+    // 避免数据渲染后出现滚动条未处理
+    if (isBind.value) {
       windowSizeHandler()
-    })
+    }
   })
 
   // 取消resize
@@ -37,51 +77,59 @@ export default function test({ extraDom = '.head-container', wrapperDom = '.app-
   })
 
   const windowSizeHandler = () => {
-    maxHeight.value = calcMaxHeight({ extraDom, wrapperDom, navbar, paginate, extraHeight })
+    maxHeight.value = calcMaxHeight({ mainBox, extraBox, wrapperBox, navbar, paginate, extraHeight, minHeight })
   }
 
   return maxHeight
 }
 
 // 计算最大高度
-function calcMaxHeight({ extraDom, navbar, wrapperDom, paginate, extraHeight = 0 }) {
-  const rect = document.documentElement
-  // 窗口高度及宽度
-  const clientHeight = rect.clientHeight || 0
+function calcMaxHeight({ mainBox, extraBox, navbar, wrapperBox, paginate, extraHeight, minHeight }) {
+  // 主盒子高度
+  const [mainBoxEl, mainBoxHeight] = getMainBoxHeight(mainBox)
 
   // 所传入dom组件的高度
-  const extraDomHeight = getDomHeight(extraDom)
+  const extraBoxHeight = getDomHeight(extraBox, mainBoxEl)
 
   // 包裹在外层的dom的边距之和
-  const wrapperDomHeight = getWrapperDomHeight(wrapperDom)
+  const wrapperBoxHeight = getWrapperBoxHeight(wrapperBox, mainBoxEl)
 
   // 分页组件高度(不考虑页面多个分页组件的情况)
-  const paginateHeight = paginate ? getDomHeight(EL_PAGINATION) : 0
+  const paginateHeight = paginate ? getDomHeight(EL_PAGINATION, mainBoxEl) : 0
 
   // navbar高度
-  const navbarHeight = navbar ? getDomHeight(NAVBAR) : 0
+  const navbarHeight = navbar ? getDomHeight(NAVBAR, mainBoxEl) : 0
+
+  // 实际额外高度
+  const realExtraHeight = getRealHeight(extraHeight)
+
+  // 实际最小高度
+  const realMiniHeight = getRealHeight(minHeight)
+
+  // 滚动条高度(出现横向滚动条时，要减少滚动条高度)
+  const horizontalScrollBarHeight = getHorizontalScrollBarHeight(mainBoxEl)
 
   // 窗口高度 - navbar高度 - 包装层内外边距 - 额外dom的高度（含外边距） - 分页插件的高度 - 自定义额外高度
   // 注意：未处理外边距重叠的情况，若产生，可通过填写extraHeight处理
-  const height = clientHeight - navbarHeight - wrapperDomHeight - extraDomHeight - paginateHeight - extraHeight
+  const height = mainBoxHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight
 
-  return height > 0 ? height : 0
+  return height > realMiniHeight ? height : realMiniHeight
 }
 
 // 获取包装的高度（边距）
-function getWrapperDomHeight(wrapperDom) {
-  const styleProps = ['paddingTop', 'paddingBottom', 'marginTop', 'marginBottom']
-  return calcHeight(wrapperDom, styleProps)
+function getWrapperBoxHeight(wrapperBox, mainBoxEl) {
+  const styleProps = ['paddingTop', 'paddingBottom']
+  return calcHeight(wrapperBox, mainBoxEl, styleProps)
 }
 
 // 获取dom的高度
-function getDomHeight(dom) {
+function getDomHeight(dom, mainBoxEl) {
   const styleProps = ['height', 'marginTop', 'marginBottom']
-  return calcHeight(dom, styleProps)
+  return calcHeight(dom, mainBoxEl, styleProps)
 }
 
 // 计算高度
-function calcHeight(doms, styleProps) {
+function calcHeight(doms, mainBoxEl, styleProps) {
   let domHeight = 0
   let _doms = doms
   if (!(_doms instanceof Array)) {
@@ -90,21 +138,19 @@ function calcHeight(doms, styleProps) {
   // 转换dom格式
   _doms = domFormatter(_doms)
   _doms.forEach((h) => {
-    let el
-    if (h.type === 'class') {
-      el = document.getElementsByClassName(h.name)
-      el = el ? el[0] : null
-    }
-    if (h.type === 'id') {
-      el = document.getElementById(h.name)
-    }
+    const el = getElement(h, mainBoxEl)
     if (el) {
-      domHeight = styleProps.reduce((sum, curStyle) => {
-        return sum + style2Num(getStyle(el, curStyle)) || 0
-      }, domHeight)
+      domHeight += getElHeight(el, styleProps)
     }
   })
   return domHeight
+}
+
+// 计算实际高度
+function getElHeight(el, styleProps) {
+  return styleProps.reduce((sum, curStyle) => {
+    return sum + style2Num(getStyle(el, curStyle)) || 0
+  }, 0)
 }
 
 // dom格式转换 '.app' => { name:'app', type:'class' }
@@ -119,7 +165,7 @@ function domFormatter(dom) {
     doms = dom.split(',')
   }
 
-  const _dom = doms.map(name => {
+  const _dom = doms.map((name) => {
     let type
     name = name.trim()
     if (name.substr(0, 1) === '.') {
@@ -139,5 +185,110 @@ function domFormatter(dom) {
   })
 
   return cleanArray(_dom)
+}
+
+/**
+ * 获取el
+ * @param {*} dom domInfo { type:'class', name:'box'}
+ * @param {*} ancestorDomEl 祖先节点
+ * @returns
+ */
+function getElement(dom, ancestorDomEl) {
+  if (dom.type === 'class') {
+    const elArr = document.getElementsByClassName(dom.name)
+    if (isBlank(elArr)) return null
+    if (ancestorDomEl) {
+      // 判断是否被祖先包含
+      for (let i = 0; i < elArr.length; i++) {
+        const curEl = elArr[i]
+        if (ancestorDomEl.contains(curEl)) {
+          return curEl
+        }
+      }
+    } else {
+      return elArr[0]
+    }
+  }
+  if (dom.type === 'id') {
+    const curEl = document.getElementById(dom.name)
+    if (ancestorDomEl) {
+      // 判断是否被祖先包含
+      if (ancestorDomEl.contains(curEl)) {
+        return curEl
+      }
+    } else {
+      return curEl
+    }
+  }
+  console.log('未找到正确的盒子', dom, ancestorDomEl)
+  // throw new Error('未找到正确的盒子')
+  return null
+}
+
+// 获取主盒子高度
+function getMainBoxHeight(mainBox) {
+  if (isBlank(mainBox)) {
+    // 主盒子不存在，则视主盒子为浏览器窗口
+    return [document.documentElement, document.documentElement.clientHeight || 0]
+  }
+  // dom-name => dom-info
+  const box = domFormatter(mainBox)
+  let lastBox
+  if (box.length > 0) {
+    // 多层级的
+    let prevBox = null
+    box.forEach((b, index) => {
+      const curBox = getElement(b, prevBox)
+      prevBox = curBox
+    })
+    lastBox = prevBox
+  } else {
+    lastBox = getElement(box)
+  }
+
+  // 高度 - 内边距 为实际可用高度
+  const elHeight = getElHeight(lastBox, ['height'])
+  const elPadding = getElHeight(lastBox, ['paddingTop', 'paddingBottom'])
+  return [lastBox, elHeight - elPadding]
+}
+
+// 获取横向滚动条高度
+function getHorizontalScrollBarHeight(mainBoxEl) {
+  const able = elHScrollable(mainBoxEl)
+  // 移动时有时仍会出现滚动条 与 盒子不为浏览器窗口时，未处理
+  const scrollWidth = window.innerWidth - document.body.clientWidth //  = 10
+  if (able) {
+    return scrollWidth
+  }
+  return 0
+}
+
+// 计算高度
+function getRealHeight(heightStyle) {
+  if (isBlank(heightStyle)) {
+    return 0
+  }
+  const res = splitStyleOfNum(heightStyle)
+  let height
+  switch (res[1]) {
+    case 'vh':
+      height = (document.documentElement.clientHeight * res[0]) / 100
+      break
+    case 'vw':
+      height = (document.documentElement.clientWidth * res[0]) / 100
+      break
+    default:
+      height = res[0]
+  }
+  return height
+}
+
+// 绑定监听事件
+function bindEventListener(fn, isBind) {
+  nextTick(() => {
+    fn() // 第一次手动触发
+    window.addEventListener('resize', fn, { passive: false })
+    isBind.value = true
+  })
 }
 

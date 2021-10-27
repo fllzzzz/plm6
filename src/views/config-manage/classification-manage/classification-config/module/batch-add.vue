@@ -17,12 +17,10 @@
           <common-button size="mini" @click="handleClose">退 出</common-button>
         </div>
       </div>
-      <el-table
+      <common-table
         v-if="refreshTable"
         ref="table"
-        :border="tableBorder"
-        :stripe="tableStripe"
-        :data="list"
+        :data="form.list"
         empty-text="暂无数据"
         :max-height="maxHeight"
         default-expand-all
@@ -80,14 +78,13 @@
             <common-button type="danger" icon="el-icon-delete" size="mini" style="padding: 6px" @click.stop="delRow(scope.$index)" />
           </template>
         </el-table-column>
-      </el-table>
+      </common-table>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, computed } from 'vue'
-import { mapGetters } from '@/store/lib'
 import { classificationEnum } from '@enum-ms/classification'
 import { isBlank } from '@data-type/index'
 import { obj2arr } from '@/utils/convert/type'
@@ -119,9 +116,6 @@ const props = defineProps({
   }
 })
 
-// TODO:最大高度 有问题，待处理
-const maxHeight = useMaxHeight({ extraDom: null, wrapperDom: ['.app-container', '#card-main-content'] })
-
 // 提交loading
 const submitLoading = ref(false)
 // 刷新表格
@@ -135,8 +129,6 @@ const extraVal = -1
 const form = reactive({
   list: [] // 添加列表
 })
-
-const { tableBorder, tableStripe } = mapGetters(['tableBorder', 'tableStripe'])
 
 const rules = {
   common: {
@@ -158,6 +150,14 @@ const rules = {
 const currentRules = computed(() => rules[`LV${currentLevel.value}`])
 
 const { dialogVisible, handleClose } = useCustomizeElDialog(emit, props)
+
+const maxHeight = useMaxHeight({
+  mainBox: ['#cls-batch-add', '.el-overlay'],
+  extraBox: ['.el-dialog__header'],
+  wrapperBox: ['.el-dialog__body'],
+  extraHeight: '30vh',
+  navbar: false
+}, dialogVisible)
 
 watch(
   () => props.level,

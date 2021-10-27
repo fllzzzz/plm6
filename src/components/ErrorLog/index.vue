@@ -14,7 +14,7 @@
           <el-button size="mini" type="primary" icon="el-icon-delete" @click="clearAll">Clear All</el-button>
         </div>
       </template>
-      <el-table :data="errorLogs" :border="$TBS.BORDER" :stripe="$TBS.STRIPE">
+      <common-table :data="errorLogs" :border="$TBS.BORDER" :stripe="$TBS.STRIPE">
         <el-table-column label="Message">
           <template v-slot="{ row }">
             <div>
@@ -42,7 +42,7 @@
             {{ scope.row.err.stack }}
           </template>
         </el-table-column>
-      </el-table>
+      </common-table>
     </el-dialog>
   </div>
 </template>

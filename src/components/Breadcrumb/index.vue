@@ -12,11 +12,13 @@
 </template>
 
 <script>
+import { ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
 import { mapGetters } from 'vuex'
 // 路由匹配
 import { compile } from 'path-to-regexp'
 
 export default {
+  components: { ElBreadcrumb, ElBreadcrumbItem },
   data() {
     return {
       levelList: null

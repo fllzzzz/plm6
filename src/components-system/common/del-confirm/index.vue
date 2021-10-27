@@ -15,7 +15,6 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, computed, watch, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'error', 'exit', 'cancel', 'update:modelValue'])
 
@@ -28,17 +27,9 @@ const props = defineProps({
     type: Function,
     require: true
   },
-  fnData: {
-    type: null,
-    require: false
-  },
   showExit: {
     type: Boolean,
     default: false
-  },
-  showSuccessMsg: {
-    type: Boolean,
-    default: true
   },
   width: {
     type: String,
@@ -73,12 +64,9 @@ async function handleSubimt() {
   if (subLoading.value) return
   subLoading.value = true
   try {
-    const data = await props.fn(props.fnData)
-    this.handleClose()
-    if (props.showSuccessMsg) {
-      ElMessage.success(data.message || '删除成功')
-    }
-    emit('success', data)
+    await props.fn()
+    handleClose()
+    emit('success')
   } catch (error) {
     console.log('error', error)
   }
