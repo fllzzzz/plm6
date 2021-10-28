@@ -120,7 +120,9 @@ export default {
     showUserHeader() {
       const duration = 1000 // 动画持续时间
       // 从上向下淡入
-      this.menuTween = TweenMax.from('#rightDrawer', duration / 1000, { y: -100, opacity: 0 })
+      // transform 会改变有 position:fixed 属性的后代元素的定位（变成根据有 transform 属性的祖先元素来定位，而不是根据浏览器来定位）
+      this.menuTween = TweenMax.from('#rightDrawer', duration / 1000, { opacity: 0 })
+      // this.menuTween = TweenMax.from('#rightDrawer', duration / 1000, { y: -100, opacity: 0 })
     },
     /**
      * 显示菜单
