@@ -26,9 +26,9 @@ const classificationEnumV = EO.key2val(classificationEnum)
 
 // 权限
 const permission = {
-  get: ['config_wms_classConfig:get'],
-  add: ['config_wms_classConfig:add'],
-  del: ['config_wms_classConfig:del']
+  get: ['config_classConfig:get'],
+  add: ['config_classConfig:add'],
+  del: ['config_classConfig:del']
 }
 
 // 最大高度

@@ -49,3 +49,6 @@ export const tableBorder = true
 
 // 表格斑马线
 export const tableStripe = true
+
+// 表格分页每页默认数量
+export const tablePageSize = 20

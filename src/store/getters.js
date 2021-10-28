@@ -26,10 +26,13 @@ const getters = {
   showSidebarLogo: state => state.settings.showSidebarLogo,
   // 公司名称/标题(可在浏览器标签中展示)
   title: state => state.settings.title,
+
   // 表格边框显示
   tableBorder: state => state.settings.tableBorder,
   // 表格斑马线显示
   tableStripe: state => state.settings.tableStripe,
+  // 表格分页每页默认数量
+  tablePageSize: state => state.settings.tablePageSize,
 
   // 访问过的页面
   visitedViews: state => state.tagsView.visitedViews,
