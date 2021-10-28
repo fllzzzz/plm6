@@ -3,7 +3,8 @@
     <template v-if="hasOneShowingChild(props.item.children, props.item)">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(basePath, onlyOneChild.path)">
         <el-menu-item :index="resolvePath(basePath, onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
-          <item :icon="onlyOneChild.meta.icon || (props.item.meta && props.item.meta.icon)" :title="onlyOneChild.meta.title" />
+          <svg-icon :icon-class="onlyOneChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
+          <template #title class="system-menu-title">{{ onlyOneChild.meta.title }}</template>
         </el-menu-item>
       </app-link>
     </template>
@@ -109,4 +110,6 @@ function childNeedProject() {
   }
   return false
 }
+
+hasOneShowingChild(props.item.children, props.item)
 </script>
