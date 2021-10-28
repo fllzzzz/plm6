@@ -66,14 +66,15 @@ async function fetchList() {
   if (!useCheckPermission(permission.get)) return
   loading.data = true
   try {
+    // 清空老数据
+    Object.keys(listMap).forEach(key => {
+      listMap[key] = []
+    })
     const tree = await crudApi.get()
     // 转换数据
     tree2listByDeep(tree)
   } catch (error) {
     console.log('error', error)
-    Object.keys(listMap).forEach(key => {
-      listMap[key] = []
-    })
   } finally {
     loading.data = false
   }
@@ -95,7 +96,7 @@ function tree2listByDeep(tree, parent, deep = 1) {
       code: node.code,
       basicClass: deep === 1 ? node.basicClass : parent.basicClass,
       basicClassName: deep === 1 ? classificationEnumV[`${node.basicClass}`].L : parent.basicClassName,
-      serialNumber: `${isNotBlank(parent) ? parent.code : ''}${node.code}`
+      serialNumber: `${isNotBlank(parent) ? parent.serialNumber : ''}${node.code}`
     }
 
     list.push(n)

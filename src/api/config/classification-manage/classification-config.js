@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 材料类型科目数
+// 材料类型科目树
 export function getMatClsTree() {
   return request({
     module: 'config',

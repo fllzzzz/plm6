@@ -9,10 +9,10 @@
       :close-on-click-modal="false"
       top="10vh"
     >
-      <div class="flex-rbc">
+      <div class="flex-rbc heade-operate">
         <common-radio-button v-model="currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
         <div class="flex-rsc">
-          <common-button size="small" type="success" icon="el-icon-plus" style="padding: 6px" @click="addRow" />
+          <common-button size="mini" type="success" icon="el-icon-plus" style="padding: 6px" @click="addRow" />
           <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
           <common-button size="mini" @click="handleClose">退 出</common-button>
         </div>
@@ -24,22 +24,29 @@
         empty-text="暂无数据"
         :max-height="maxHeight"
         default-expand-all
-        :cell-class-name="handelCellClassName"
+        :cell-class-name="(data) => wrongCellMask(data, currentRules)"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="currentLevel > 1" key="pid" prop="pid" :show-overflow-tooltip="true" label="上级科目" min-width="150">
+        <el-table-column
+          v-if="currentLevel > 1"
+          key="parentId"
+          prop="parentId"
+          :show-overflow-tooltip="true"
+          label="上级科目"
+          min-width="150"
+        >
           <template v-slot="scope">
-            <mat-cls-cascader
-              v-model="scope.row.pid"
-              :show-currentLevel="currentLevel - 1"
+            <cls-cascader
+              v-model="scope.row.parentId"
+              :deep="currentLevel - 1"
               show-all-levels
               separator=" > "
               clearable
               placeholder="上级科目"
-              :extra-val="{ name: '同上', id: extraVal }"
-              size="mini"
-              cascader-style="width: 100%;"
+              :extra-option="{ name: '同上', id: dittos.get('parentId') }"
+              size="small"
+              style="width: 100%"
             />
           </template>
         </el-table-column>
@@ -55,21 +62,20 @@
         </el-table-column>
         <el-table-column
           v-if="currentLevel == 1"
-          key="attribute"
-          prop="attribute"
+          key="basicClass"
+          prop="basicClass"
           :show-overflow-tooltip="true"
           label="材料类型"
-          width="125"
+          width="128"
         >
           <template v-slot="scope">
             <common-select
-              v-model="scope.row.attribute"
+              v-model="scope.row.basicClass"
               :options="classificationEnum"
-              show-other
-              :extra-val="extraVal"
+              show-extra
               type="enum"
               placeholder="材料类型"
-              style="width: 100px"
+              style="width: 105px"
             />
           </template>
         </el-table-column>
@@ -86,14 +92,12 @@
 <script setup>
 import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, computed } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
-import { isBlank } from '@data-type/index'
-import { obj2arr } from '@/utils/convert/type'
-import tableValidate from '@/utils/validate'
 
 import { batchAdd } from '@/api/config/classification-manage/classification-config'
 import useMaxHeight from '@compos/use-max-height'
-import useCustomizeElDialog from '@compos/use-customize-el-dialog'
-import matClsCascader from '@comp-cls/material-cascader/index.vue'
+import useDialogVisible from '@compos/use-dialog-visible'
+import useTableValidate, { wrongCellMask } from '@compos/form/use-table-validate'
+import clsCascader from '@comp-cls/cascader/index.vue'
 import { ElMessage } from 'element-plus'
 
 // 等级枚举
@@ -123,8 +127,6 @@ const refreshTable = ref(true)
 // 当前等级
 const currentLevel = ref(1)
 
-// 选择框，option-同上的值
-const extraVal = -1
 // 表单
 const form = reactive({
   list: [] // 添加列表
@@ -133,31 +135,40 @@ const form = reactive({
 const rules = {
   common: {
     name: [{ required: true, max: 20, message: '不能超过20个字符', trigger: 'blur' }],
-    code: [{ max: 3, message: '不能超过3个字符', trigger: 'blur' }]
+    code: [{ required: true, max: 3, message: '不能超过3个字符', trigger: 'blur' }]
   },
   LV1: {
     // 添加规则
-    attribute: [{ required: true, message: '请选择材料类型', trigger: 'change' }]
+    basicClass: [{ required: true, message: '请选择材料类型', trigger: 'change' }]
   },
   LV2: {
-    pid: [{ required: true, message: '请选择上级科目', trigger: 'change' }]
+    parentId: [{ required: true, message: '请选择上级科目', trigger: 'change' }]
   },
   LV3: {
-    pid: [{ required: true, message: '请选择上级科目', trigger: 'change' }]
+    parentId: [{ required: true, message: '请选择上级科目', trigger: 'change' }]
   }
 }
 
 const currentRules = computed(() => rules[`LV${currentLevel.value}`])
 
-const { dialogVisible, handleClose } = useCustomizeElDialog(emit, props)
+// 同上的选项与值
+const dittos = new Map([
+  ['basicClass', -1],
+  ['parentId', -1]
+])
 
-const maxHeight = useMaxHeight({
-  mainBox: ['#cls-batch-add', '.el-overlay'],
-  extraBox: ['.el-dialog__header'],
-  wrapperBox: ['.el-dialog__body'],
-  extraHeight: '30vh',
-  navbar: false
-}, dialogVisible)
+const { dialogVisible, handleClose } = useDialogVisible(emit, props, () => init())
+
+const maxHeight = useMaxHeight(
+  {
+    mainBox: ['#cls-batch-add', '.el-overlay'],
+    extraBox: ['.el-dialog__header', '.heade-operate'],
+    wrapperBox: ['.el-dialog__body'],
+    extraHeight: '20vh',
+    navbar: false
+  },
+  dialogVisible
+)
 
 watch(
   () => props.level,
@@ -166,18 +177,6 @@ watch(
     handleLevelChange()
   },
   { immediate: true }
-)
-
-watch(
-  () => props.modelValue,
-  (flag) => {
-    if (!flag) {
-      // 关闭重置表单
-      nextTick(() => {
-        init()
-      })
-    }
-  }
 )
 
 onMounted(() => {
@@ -197,8 +196,8 @@ function init() {
 function addRow() {
   const row = {}
   if (form.list.length > 0) {
-    row.attribute = extraVal
-    row.pid = extraVal
+    row.basicClass = dittos.get('basicClass')
+    row.parentId = dittos.get('parentId')
   }
   form.list.push(row)
 }
@@ -221,135 +220,57 @@ function handleLevelChange() {
 async function submit() {
   try {
     submitLoading.value = true
-    const list = JSON.parse(JSON.stringify(form.list)) // 深拷贝，避免失败后，数据修改
-    if (validate(list)) {
+    const copyList = JSON.parse(JSON.stringify(form.list)) // 深拷贝，避免失败后，数据修改
+    const { validResult, dealList } = useTableValidate({ list: copyList, rules: currentRules, dittos })
+    form.list = dealList
+    if (validResult) {
+      // 一级科目
       if (currentLevel.value === 1) {
         let prevAttr
-        list.forEach((v) => {
-          v.pid = 0
+        dealList.forEach((v) => {
+          v.parentId = 0
           delete v.verify
-          if (v.attribute === extraVal) {
-            v.attribute = prevAttr
+          if (v.basicClass === dittos.get('basicClass')) {
+            v.basicClass = prevAttr
           } else {
-            prevAttr = v.attribute
+            prevAttr = v.basicClass
           }
         })
       }
 
+      // 二、三级科目
       if (currentLevel.value !== 1) {
         let prevPid
-        list.forEach((v) => {
+        dealList.forEach((v) => {
           delete v.verify
-          if (v.pid === extraVal) {
-            v.pid = prevPid
+          if (v.parentId === dittos.get('parentId')) {
+            v.parentId = prevPid
           } else {
-            prevPid = v.pid
+            prevPid = v.parentId
           }
         })
       }
 
-      console.log('list: ', list)
-      await batchAdd(list)
+      await batchAdd(dealList)
       emit('success')
       ElMessage.success('添加成功')
       handleClose()
     }
   } catch (error) {
-    console.log('辅材添加', error)
+    console.log('科目添加', error)
   } finally {
     submitLoading.value = false
   }
-}
-
-function validate(list) {
-  let flag = true
-  let message = '请填写数据'
-  if (list && list.length > 0) {
-    const _blankRowIndexs = [] // 数据为空的下标
-    let _isFirstRow = true // 首行，第一条有数据的记录
-    // TODO: 考虑封装
-    for (const i in list) {
-      const row = list[i]
-      delete row.verify // 删除验证字段，避免切换科目级别产生规则混淆，以及进行空行处理
-
-      // ------ 空行处理 start ------
-      const rowCopy = JSON.parse(JSON.stringify(row))
-      if (rowCopy.attribute === extraVal) {
-        delete rowCopy.attribute // 删除同上
-      }
-      if (rowCopy.pid === extraVal) {
-        delete rowCopy.pid // 删除同上
-      }
-      // delete rowCopy.verify // 删除验证字段
-      const rowArr = obj2arr(rowCopy)
-      const blankRow = rowArr.every((v) => isBlank(v))
-      if (blankRow) {
-        _blankRowIndexs.push(i)
-        continue
-      }
-      // ------ 空行处理 end------
-
-      // 首行处理
-      if (_isFirstRow) {
-        // 处理首行"同上"问题，若首行填写“同上”则视为未填写
-        if (row.attribute === extraVal) {
-          delete row.attribute
-        }
-        if (row.pid === extraVal) {
-          delete row.pid
-        }
-        _isFirstRow = false
-      }
-
-      row.verify = {}
-      for (const rule in currentRules.value) {
-        row.verify[rule] = tableValidate(currentRules.value[rule], row[rule])
-        if (!row.verify[rule]) {
-          flag = false
-        }
-      }
-    }
-    // 删除空行
-    for (const i in _blankRowIndexs) {
-      const index = _blankRowIndexs[i]
-      list.splice(index - i, 1)
-    }
-    if (!flag) {
-      form.list = Object.assign([], list)
-      message = '请修正表格中标红的信息'
-    }
-    // 数据为空(全部空行的情况)
-    if (list.length === 0) {
-      flag = false
-    }
-  } else {
-    flag = false
-  }
-  if (!flag) {
-    ElMessage({ message, type: 'error' })
-  }
-  return flag
-}
-
-// 处理表格变色
-function handelCellClassName({ row, column, rowIndex, columnIndex }) {
-  let flag = true
-  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
-    if (row.verify[column.property] === false) {
-      flag = tableValidate(currentRules.value[column.property], row[column.property])
-    }
-    if (flag) {
-      row.verify[column.property] = true
-    }
-  }
-  return flag ? '' : 'mask-td'
 }
 </script>
 
 <style lang="scss" scoped>
 #cls-batch-add {
   ::v-deep(.el-dialog__body) {
-    padding-top: 15px;
+    padding-top: 0px;
+  }
+  .heade-operate {
+    margin-bottom: 10px;
   }
 }
 </style>

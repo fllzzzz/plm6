@@ -34,6 +34,7 @@ const getters = {
   // 访问过的页面
   visitedViews: state => state.tagsView.visitedViews,
 
+  clsTree: state => state.config.clsTree,
   // 材料类科目树
   matClsTree: state => state.config.matClsTree,
 

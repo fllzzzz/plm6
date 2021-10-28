@@ -1,12 +1,17 @@
-import { getMatClsTree } from '@/api/config/classification-manage/classification-config'
+import { getMatClsTree, get as getClassificationTree } from '@/api/config/classification-manage/classification-config'
 import useFormatTree from '@compos/classification/use-format-tree'
+
 const state = {
+  clsTree: [],
   matClsTree: []
 }
 
 const mutations = {
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
+  },
+  SET_CLS_TREE(state, tree) {
+    state.clsTree = tree
   }
 }
 
@@ -17,9 +22,14 @@ const actions = {
   },
   // 加载分类
   async fetchMatClsTree({ commit }) {
-    const { content = [] } = await getMatClsTree()
-    const tree = useFormatTree(content)
+    const res = await getMatClsTree()
+    const tree = useFormatTree(res)
     commit('SET_MAT_CLS_TREE', tree)
+  },
+  async fetchClassificationTree({ commit }) {
+    const res = await getClassificationTree()
+    const tree = useFormatTree(res)
+    commit('SET_CLS_TREE', tree)
   }
 }
 

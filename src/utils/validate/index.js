@@ -4,59 +4,6 @@
 import { luhn } from '@/utils'
 
 /**
- * table 表格校验
- * @param {*} rules
- * @param {*} value
- */
-export default function tableValidate(rules, value, row = {}) {
-  let flag = true
-  // 判断是否存在校验
-  if (!rules || rules.length === 0) {
-    return flag
-  }
-  for (const rule of rules) {
-    const pattern = rule.pattern
-    if (pattern && !pattern.test(value || '')) {
-      flag = false
-      break
-    }
-    const validator = rule.validator
-    if (typeof validator === 'function') {
-      const validatorResult = validator(value, row)
-      if (validatorResult === false) {
-        flag = false
-        break
-      }
-    }
-    const required = rule.required
-    if (required === true) {
-      if (typeof value !== 'string' && !value) {
-        flag = false
-      }
-      if (typeof value !== 'number' && (!value && value !== 0)) {
-        flag = false
-      }
-      if (value instanceof Array && (!value || value.length === 0)) {
-        flag = false
-      }
-      break
-    }
-    const type = rule.type
-    if (type && (typeof value !== type)) {
-      flag = false
-      break
-    }
-    const max = rule.max
-    const min = rule.min
-    if (typeof value === 'string' && ((min && min !== 0 && value.length < min) || (max && max !== 0 && max < value.length))) {
-      flag = false
-      break
-    }
-  }
-  return flag
-}
-
-/**
  * 外部：链接、邮箱、电话
  * @param {string} path
  * @returns {Boolean}

@@ -126,7 +126,7 @@ const classification = reactive({
 
 const refreshLoading = ref(true)
 
-const { matClsTree } = mapGetters('matClsTree')
+const { clsTree } = mapGetters('clsTree')
 
 const cascaderProps = computed(() => {
   return {
@@ -142,7 +142,7 @@ const cascaderProps = computed(() => {
 
 // 监听全局科目选项
 watch(
-  [() => matClsTree.value, () => props.basicClass],
+  [() => clsTree.value, () => props.basicClass],
   ([list]) => {
     setCascader(list)
   },
@@ -170,8 +170,8 @@ watch(
   { immediate: true, deep: true }
 )
 
-if (isBlank(matClsTree.value)) {
-  store.dispatch('config/fetchMatClsTree')
+if (isBlank(clsTree.value)) {
+  store.dispatch('config/fetchClassificationTree')
 }
 
 // 搜索匹配，code从开始位置匹配
