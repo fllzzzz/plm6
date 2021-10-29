@@ -1,15 +1,15 @@
 <template>
   <div v-if="showMenu" class="menu-wrapper">
-    <template v-if="hasOneShowingChild(props.item.children, props.item)">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(basePath, onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(basePath, onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
-          <svg-icon :icon-class="onlyOneChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
-          <template #title class="system-menu-title">{{ onlyOneChild.meta.title }}</template>
+    <template v-if="isOnlyOne">
+      <app-link v-if="lastChild.meta" :to="resolvePath(basePath, lastChild.path)">
+        <el-menu-item :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
+          <svg-icon :icon-class="lastChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
+          <template #title class="system-menu-title">{{ lastChild.meta.title }}</template>
         </el-menu-item>
       </app-link>
     </template>
     <template v-else>
-      <el-sub-menu v-if="childNeedProject()" ref="subMenu" :index="resolvePath(basePath, props.item.path)" popper-append-to-body>
+      <el-sub-menu v-if="childNeedProject" ref="subMenu" :index="resolvePath(basePath, props.item.path)" popper-append-to-body>
         <template #title>
           <item v-if="props.item.meta" :icon="props.item.meta.icon" :title="props.item.meta.title" />
         </template>
@@ -33,12 +33,13 @@ export default {
 </script>
 <script setup>
 // TODO: item.routePath 代替 resolvePath(basePath, item.path) toRefs toref
-import { computed, defineProps, reactive } from 'vue'
+import { computed, defineProps } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { resolvePath } from '@/utils/resolve-path'
 import { ElSubMenu, ElMenuItem } from 'element-plus'
 import Item from './item.vue'
 import AppLink from './link.vue'
+import { isNotBlank } from '@/utils/data-type'
 
 const props = defineProps({
   item: {
@@ -68,9 +69,12 @@ const showMenu = computed(() => {
   return hidden && sameModule && notNeedProject
 })
 
-let onlyOneChild = reactive({})
-function hasOneShowingChild(children = [], parent) {
-  let hasOne = false
+// TODO: 需要项目问题暂不明确，后期修改
+// 当前路径最后一个菜单节点
+const lastChild = computed(() => {
+  const current = props.item
+  const children = props.item.children || []
+  let lastChild
   let needProjectFlag = false
   const showingChildren = children.filter((item) => {
     // TODO: notNeedProject
@@ -86,22 +90,22 @@ function hasOneShowingChild(children = [], parent) {
   })
   // 当只有一个子路由器时，默认显示子路由器
   if (showingChildren.length === 1) {
-    Object.assign(onlyOneChild, showingChildren[0])
-    hasOne = true
+    lastChild = showingChildren[0]
   }
   // 如果没有要显示的子路由器，则显示父级
   if (showingChildren.length === 0 && !needProjectFlag) {
-    onlyOneChild = Object.assign({ ...parent, path: '', noShowingChildren: true })
-    hasOne = true
+    lastChild = { ...current, path: '' }
   }
-  if (hasOne) {
-    // 该唯一节点不存在子节点或者没有要显示的子节点,TODO:!props.item.alwaysShow
-    hasOne = (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !props.item.alwaysShow
-  }
-  return hasOne
-}
+  return lastChild
+})
 
-function childNeedProject() {
+// 判断是否只有一个需要显示的节点
+const isOnlyOne = computed(() => {
+  return isNotBlank(lastChild.value) && !props.item.alwaysShow
+})
+
+// 子节点需要项目
+const childNeedProject = computed(() => {
   if (props.item.children) {
     return props.item.children.some((c) => {
       // TODO: notNeedProject
@@ -109,7 +113,5 @@ function childNeedProject() {
     })
   }
   return false
-}
-
-hasOneShowingChild(props.item.children, props.item)
+})
 </script>

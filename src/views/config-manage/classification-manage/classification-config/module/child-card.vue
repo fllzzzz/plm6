@@ -44,9 +44,9 @@
           @selection-change="handleSelectionChange($event, 1)"
         >
           <el-table-column v-if="selected.delBtn" type="selection" width="45" align="center" />
+          <el-table-column prop="serialNumber" label="编码" min-width="120" />
           <el-table-column prop="name" label="名称" min-width="120" />
           <el-table-column prop="code" align="center" label="代码" />
-          <el-table-column prop="attributeName" align="center" label="类型" />
         </common-table>
       </div>
     </el-card>
@@ -98,7 +98,7 @@ const search = reactive({
 })
 
 const selected = reactive({
-  currentRow: null,
+  checkRow: null,
   rows: [],
   delBtn: false
 })
@@ -152,10 +152,10 @@ const tableList = computed(() => {
 selectMap[`current_list_LV${props.level}`] = tableList
 
 watch(tableList.value, (list) => {
-  const selectedExit = isNotBlank(selected.currentRow) && list.some((l) => selected.currentRow.id !== l.id)
+  const selectedExit = isNotBlank(selected.checkRow) && list.some((l) => selected.checkRow.id !== l.id)
   // 不存在则取消选中
   if (!selectedExit) {
-    selected.currentRow = null
+    selected.checkRow = null
   }
 })
 
@@ -198,18 +198,18 @@ function handleDelSuccess() {
 // 选中行，设置选中/取消选中
 function rowClick(row) {
   // 选择已选中则取消选中
-  if (isNotBlank(selected.currentRow) && selected.currentRow.id === row.id) {
-    selected.currentRow = null
+  if (isNotBlank(selected.checkRow) && selected.checkRow.id === row.id) {
+    selected.checkRow = null
     tableRef.value.setCurrentRow()
   } else {
-    selected.currentRow = row
+    selected.checkRow = row
   }
-  selectMap[`current_LV${props.level}`] = selected.currentRow
+  selectMap[`current_LV${props.level}`] = selected.checkRow
 }
 
 function whetherContainsCheckRow(list) {
-  if (isBlank(selected.currentRow)) return
-  const checked = list.some(v => v.id === selected.currentRow.id)
+  if (isBlank(selected.checkRow)) return
+  const checked = list.some(v => v.id === selected.checkRow.id)
   if (!checked) {
     uncheck()
   }
@@ -217,9 +217,9 @@ function whetherContainsCheckRow(list) {
 
 // 取消选中
 function uncheck() {
-  selected.currentRow = null
+  selected.checkRow = null
   tableRef.value.setCurrentRow()
-  selectMap[`current_LV${props.level}`] = selected.currentRow
+  selectMap[`current_LV${props.level}`] = selected.checkRow
 }
 
 // 选择行

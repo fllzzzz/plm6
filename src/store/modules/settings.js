@@ -1,5 +1,5 @@
 import storage from '@/utils/storage'
-import { showSettings, tagsView, fixedHeader, showSidebarLogo, theme, tableBorder, tableStripe } from '@/settings/user'
+import { showSettings, tagsView, fixedHeader, showSidebarLogo, theme, tableBorder, tableStripe, tablePageSize } from '@/settings/user'
 import { title, logo, sidebarLogo, projectNameShowConfig } from '@/settings/system'
 
 // 获取缓存的配置信息
@@ -19,6 +19,8 @@ const state = {
   tableBorder: stateStorage.tableBorder || tableBorder,
   // 表格斑马线显示
   tableStripe: stateStorage.tableStripe || tableStripe,
+  // 表格分页每页默认数量
+  tablePageSize: stateStorage.tablePageSize || tablePageSize,
   // 显示标签页
   tagsView: stateStorage.tagsView || tagsView,
   // 吸顶

@@ -21,6 +21,13 @@
       :value="allVal"
       :disabled="disabledVal.includes(allVal)"
     />
+    <el-option
+      v-if="showExtra"
+      :key="-2"
+      :label="extraOption.label"
+      :value="extraOption.value"
+      :disabled="disabledVal.includes(extraOption.value)"
+    />
     <template v-for="item in options">
       <el-option
         v-if="unshowOptions.indexOf(item[DS.key]) === -1"
@@ -80,6 +87,19 @@ const props = defineProps({
   unshowOptions: {
     type: Array,
     default: () => []
+  },
+  showExtra: {
+    type: Boolean,
+    default: false
+  },
+  extraOption: {
+    type: Object,
+    default: () => {
+      return {
+        label: '同上',
+        value: -1
+      }
+    }
   },
   placeholder: {
     type: String,

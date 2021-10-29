@@ -18,14 +18,14 @@ export default {
           hidden: false,
           component: '/config-manage/classification-manage/classification-config/index',
           meta: { title: '科目配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SpecificationConfig',
+          path: 'specification-config',
+          hidden: false,
+          component: '/config-manage/classification-manage/specification-config/index',
+          meta: { title: '规格配置', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'SpecificationConfig',
-        //   path: 'specification-config',
-        //   hidden: false,
-        //   component: '/classification-manage/specification-config/index',
-        //   meta: { title: '规格配置', icon: 'project', noCache: true }
-        // },
         // {
         //   name: 'UnitConfig',
         //   path: 'unit-config',
