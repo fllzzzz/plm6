@@ -24,7 +24,8 @@ const state = {
     user: `/api/`,
     wms: `/api/wms/`,
     common: `/api/`,
-    config: `/api/config/`
+    config: `/api/config/`,
+    project: `/api/project/`
   }
 }
 
@@ -37,7 +38,8 @@ const mutations = {
       contract: `/api/contract/v${apiVersion.contract}`,
       user: `/api/user/v${apiVersion.user}`,
       wms: `/api/wms/v${apiVersion.wms}`,
-      common: `/api/common/v${apiVersion.common}`
+      common: `/api/common/v${apiVersion.common}`,
+      project: `/api/project/v${apiVersion.common}`
     }
   }
 }
