@@ -1,18 +1,10 @@
 <template>
   <div v-if="showMenu" class="menu-wrapper">
-<<<<<<< HEAD
     <template v-if="isOnlyOne">
       <app-link v-if="lastChild.meta" :to="resolvePath(basePath, lastChild.path)">
         <el-menu-item :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
           <svg-icon :icon-class="lastChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
           <template #title class="system-menu-title">{{ lastChild.meta.title }}</template>
-=======
-    111
-    <template v-if="isOnlyOne">
-      <app-link v-if="lastChild.meta" :to="resolvePath(basePath, lastChild.path)">
-        <el-menu-item :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
-          <item :icon="lastChild.meta.icon || (props.item.meta && props.item.meta.icon)" :title="lastChild.meta.title" />
->>>>>>> master
         </el-menu-item>
       </app-link>
     </template>
