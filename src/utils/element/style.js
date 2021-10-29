@@ -2,6 +2,7 @@ import { isBlank } from '@data-type/index'
 
 // 获取el样式
 export function getStyle(el, styleProp) {
+  if (!(el instanceof HTMLElement)) return
   // console.log('window.getComputedStyle(el)', window.getComputedStyle(el))
   return window.getComputedStyle(el)[styleProp]
 }

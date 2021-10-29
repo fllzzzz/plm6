@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, nextTick, watch, onUpdated } from 'vue'
+import { onMounted, onBeforeUnmount, ref, nextTick, watch, onUpdated } from 'vue'
 import { cleanArray } from '@data-type/array'
 import { elHScrollable } from '@/utils/element/index'
 import { getStyle, style2Num, splitStyleOfNum } from '@/utils/element/style'
@@ -24,7 +24,7 @@ export default function useMaxHeight(
     mainBox,
     extraBox = '.head-container',
     wrapperBox = '.app-container',
-    navbar = true,
+    navbar = !mainBox,
     paginate = false,
     extraHeight = 0,
     minHeight = 400
@@ -32,6 +32,8 @@ export default function useMaxHeight(
   listener
 ) {
   const maxHeight = ref(0)
+  const maxHeightStyle = ref()
+  const heightStyle = ref()
   const isBind = ref(false)
 
   onMounted(() => {
@@ -42,26 +44,13 @@ export default function useMaxHeight(
         (flag) => {
           if (flag) {
             nextTick(() => windowSizeHandler())
+          } else {
+            unbindEventListener(windowSizeHandler)
           }
         },
         { immediate: true }
       )
     }
-    // if (isBlank(listener)) {
-    //   bindEventListener(windowSizeHandler, isBind)
-    // } else {
-    //   // 只监听一次。适用于一开始隐藏的页面，高度计算不准确
-    //   const onceWatch = watch(
-    //     () => listener.value,
-    //     (flag) => {
-    //       if (flag) {
-    //         // onceWatch() // 卸载
-    //         bindEventListener(windowSizeHandler, isBind)
-    //       }
-    //     },
-    //     { immediate: true }
-    //   )
-    // }
   })
 
   onUpdated(() => {
@@ -72,15 +61,21 @@ export default function useMaxHeight(
   })
 
   // 取消resize
-  onUnmounted(() => {
-    window.removeEventListener('resize', windowSizeHandler)
+  onBeforeUnmount(() => {
+    unbindEventListener(windowSizeHandler)
   })
 
   const windowSizeHandler = () => {
     maxHeight.value = calcMaxHeight({ mainBox, extraBox, wrapperBox, navbar, paginate, extraHeight, minHeight })
+    heightStyle.value = `height: ${maxHeight.value}px`
+    maxHeightStyle.value = `max-height: ${maxHeight.value}px`
   }
 
-  return maxHeight
+  return {
+    maxHeight,
+    heightStyle,
+    maxHeightStyle
+  }
 }
 
 // 计算最大高度
@@ -112,6 +107,7 @@ function calcMaxHeight({ mainBox, extraBox, navbar, wrapperBox, paginate, extraH
   // 窗口高度 - navbar高度 - 包装层内外边距 - 额外dom的高度（含外边距） - 分页插件的高度 - 自定义额外高度
   // 注意：未处理外边距重叠的情况，若产生，可通过填写extraHeight处理
   const height = mainBoxHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight
+  // console.log(extraBox, mainBoxHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
 
   return height > realMiniHeight ? height : realMiniHeight
 }
@@ -290,5 +286,10 @@ function bindEventListener(fn, isBind) {
     window.addEventListener('resize', fn, { passive: false })
     isBind.value = true
   })
+}
+
+// 移除监听事件
+function unbindEventListener(fn) {
+  window.removeEventListener('resize', fn)
 }
 

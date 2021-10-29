@@ -25,11 +25,13 @@ const actions = {
     const res = await getMatClsTree()
     const tree = useFormatTree(res)
     commit('SET_MAT_CLS_TREE', tree)
+    return tree
   },
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
     const tree = useFormatTree(res)
     commit('SET_CLS_TREE', tree)
+    return tree
   }
 }
 

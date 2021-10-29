@@ -140,8 +140,9 @@ function moveToCurrentTag() {
     for (const tag of tags) {
       console.log('tag', tag)
       if (tag.to.path === route.path) {
-        console.log('scrollPaneRef', scrollPaneRef.value)
-        scrollPaneRef.value.moveToTarget(tag)
+        // TODO:滚动条问题
+        // console.log('scrollPaneRef', scrollPaneRef.value)
+        // scrollPaneRef.value.moveToTarget(tag)
         // when query is different then update
         if (tag.to.fullPath !== route.fullPath) {
           store.dispatch('tagsView/updateVisitedView', route)

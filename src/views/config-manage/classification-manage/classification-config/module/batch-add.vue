@@ -90,10 +90,10 @@
 </template>
 
 <script setup>
+import { batchAdd } from '@/api/config/classification-manage/classification-config'
 import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, computed } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
 
-import { batchAdd } from '@/api/config/classification-manage/classification-config'
 import useMaxHeight from '@compos/use-max-height'
 import useDialogVisible from '@compos/use-dialog-visible'
 import useTableValidate, { wrongCellMask } from '@compos/form/use-table-validate'
@@ -159,7 +159,7 @@ const dittos = new Map([
 
 const { dialogVisible, handleClose } = useDialogVisible(emit, props, () => init())
 
-const maxHeight = useMaxHeight(
+const { maxHeight } = useMaxHeight(
   {
     mainBox: ['#cls-batch-add', '.el-overlay'],
     extraBox: ['.el-dialog__header', '.heade-operate'],

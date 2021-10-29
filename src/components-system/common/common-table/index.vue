@@ -269,6 +269,12 @@ const { tableBorder, tableStripe } = mapGetters(['tableBorder', 'tableStripe'])
 const tBorder = computed(() => (props.border ? props.border : tableBorder.value))
 const tStripe = computed(() => (props.stripe ? props.stripe : tableStripe.value))
 
+// 获取表格中的列
+// 不能直接 const colums = tableRef.value.$refs.tableHeader.columns.setup时，ref里面还是空的
+function getColumns() {
+  return tableRef.value.$refs.tableHeader.columns
+}
+
 function clearSelection() {
   tableRef.value.clearSelection()
 }
@@ -396,6 +402,7 @@ function expandChange(row, expandedRowsOrExpanded) {
 }
 
 defineExpose({
+  getColumns,
   clearSelection,
   toggleRowSelection,
   toggleAllSelection,
