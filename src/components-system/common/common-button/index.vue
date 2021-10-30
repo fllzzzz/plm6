@@ -1,4 +1,4 @@
-<!-- 普通按钮 -->
+<!-- 普通按钮, 避免使用el-button 时产生, disabled后仍可通过点击按钮中的文字触发click事件的BUG -->
 <template>
   <span class="common-button inline-block">
     <el-tooltip :effect="props.effect" :content="props.content" :placement="props.placement" :disabled="tooltipDisabled">
@@ -111,4 +111,5 @@ function handleClick(event) {
 .common-button + .el-tag {
   margin-left: 8px;
 }
+
 </style>

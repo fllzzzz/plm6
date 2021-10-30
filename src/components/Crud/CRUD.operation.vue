@@ -12,7 +12,7 @@
         icon="el-icon-plus"
         @click.stop="crud.toAdd"
       >
-        {{ addText }}
+        {{ props.addText }}
       </el-button>
       <el-button
         v-if="crud.optShow.edit"
@@ -37,7 +37,7 @@
         :disabled="crud.selections.length === 0"
         @click.stop="toDelete(crud.selections)"
       >
-        {{ delText }}
+        {{ props.delText }}
       </el-button>
       <el-button
         v-if="crud.optShow.download"
@@ -57,16 +57,16 @@
       <slot v-if="device !== 'mobile'" name="viewLeft" />
       <el-button-group style="max-width:142px">
         <el-button
-          v-if="showSearch"
+          v-if="props.showSearch"
           size="mini"
           plain
           type="info"
           icon="el-icon-search"
-          :style="{ border: !showRefresh && !showGrid ? '1px solid #d3d4d6' : '' }"
+          :style="{ border: !props.showRefresh && !props.showGrid ? '1px solid #d3d4d6' : '' }"
           @click.stop="toggleSearch()"
         />
-        <el-button v-if="showRefresh" size="mini" icon="el-icon-refresh" @click.stop="crud.refresh()" />
-        <el-popover v-if="showGrid" placement="bottom-end" width="150" trigger="click">
+        <el-button v-if="props.showRefresh" size="mini" icon="el-icon-refresh" @click.stop="crud.refresh()" />
+        <el-popover v-if="props.showGrid" placement="bottom-end" width="150" trigger="click">
           <template v-slot:reference>
             <el-button size="mini" icon="el-icon-s-grid">
               <!-- <i
@@ -91,98 +91,100 @@
     </span>
   </div>
 </template>
-<script>
-import CRUD, { crud } from '@crud/crud'
-export default {
-  mixins: [crud()],
-  inject: ['permission'],
-  props: {
-    showRefresh: {
-      type: Boolean,
-      default: true
-    },
-    showGrid: {
-      type: Boolean,
-      default: true
-    },
-    showSearch: {
-      type: Boolean,
-      default: true
-    },
-    addText: {
-      type: String,
-      default: '新增'
-    },
-    delText: {
-      type: String,
-      default: '删除'
-    }
+<script setup>
+import { defineProps, ref, inject, nextTick } from 'vue'
+import { regExtra } from '@compos/use-crud'
+import { mapGetters } from '@/store/lib'
+import { ElMessageBox } from 'element-plus'
+
+const props = defineProps({
+  showRefresh: {
+    type: Boolean,
+    default: true
   },
-  data() {
-    return {
-      allColumnsSelected: true,
-      allColumnsSelectedIndeterminate: false
-    }
+  showGrid: {
+    type: Boolean,
+    default: true
   },
-  computed: {
-    device() {
-      return this.$store.state.app.device
-    }
+  showSearch: {
+    type: Boolean,
+    default: true
   },
-  created() {
-    this.crud.updateProp('searchToggle', true)
+  addText: {
+    type: String,
+    default: '新增'
   },
-  methods: {
-    toDelete(datas) {
-      this.$confirm(`确认${this.delText}选中的${datas.length}条数据?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.crud.delAllLoading = true
-          this.crud.doDelete(datas)
-        })
-        .catch(() => {})
-    },
-    handleCheckAllChange(val) {
-      if (val === false) {
-        this.allColumnsSelected = true
-        return
-      }
-      for (const key in this.crud.props.tableColumns) {
-        this.crud.props.tableColumns[key].visible = val
-      }
-      this.allColumnsSelected = val
-      this.allColumnsSelectedIndeterminate = false
-    },
-    handleCheckedTableColumnsChange(item) {
-      let totalCount = 0
-      let selectedCount = 0
-      for (const key in this.crud.props.tableColumns) {
-        ++totalCount
-        selectedCount += this.crud.props.tableColumns[key].visible ? 1 : 0
-      }
-      if (selectedCount === 0) {
-        this.crud.notify('请至少选择一列', CRUD.NOTIFICATION_TYPE.WARNING)
-        this.$nextTick(function () {
-          item.visible = true
-        })
-        return
-      }
-      this.allColumnsSelected = selectedCount === totalCount
-      this.allColumnsSelectedIndeterminate = selectedCount !== totalCount && selectedCount !== 0
-    },
-    toggleSearch() {
-      this.crud.props.searchToggle = !this.crud.props.searchToggle
-      this.$nextTick(() => {
-        // 手动resize 来触发对resize的监听方法：$_windowSizeHandler
-        var e = document.createEvent('Event')
-        e.initEvent('resize', true, true)
-        window.dispatchEvent(e)
-      })
-    }
+  delText: {
+    type: String,
+    default: '删除'
   }
+})
+
+const permission = inject('permission')
+
+const allColumnsSelected = ref(true)
+const allColumnsSelectedIndeterminate = ref(false)
+
+const { CRUD, crud } = regExtra()
+
+const { device } = mapGetters('device')
+
+// 批量删除
+function toDelete(datas) {
+  ElMessageBox.confirm(`确认${props.delText}选中的${datas.length}条数据?`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      crud.delAllLoading = true
+      crud.doDelete(datas)
+    })
+    .catch(() => {})
+}
+
+// 列：全选
+function handleCheckAllChange(val) {
+  if (val === false) {
+    allColumnsSelected.value = true
+    return
+  }
+  for (const key in crud.props.tableColumns) {
+    crud.props.tableColumns[key].visible = val
+  }
+  allColumnsSelected.value = val
+  allColumnsSelectedIndeterminate.value = false
+}
+
+// 处理表格选择变更
+function handleCheckedTableColumnsChange(item) {
+  let totalCount = 0
+  let selectedCount = 0
+  for (const key in crud.props.tableColumns) {
+    ++totalCount
+    selectedCount += crud.props.tableColumns[key].visible ? 1 : 0
+  }
+  if (selectedCount === 0) {
+    crud.notify('请至少选择一列', CRUD.NOTIFICATION_TYPE.WARNING)
+    nextTick(function () {
+      item.visible = true
+    })
+    return
+  }
+  allColumnsSelected.value = selectedCount === totalCount
+  allColumnsSelectedIndeterminate.value = selectedCount !== totalCount && selectedCount !== 0
+}
+
+// toggleSearch切换
+function toggleSearch() {
+  crud.props.searchToggle = !crud.props.searchToggle
+  nextTick(() => {
+    // TODO:判断是否还需要
+    // 手动resize 来触发对resize的监听方法：$_windowSizeHandler
+    var e = document.createEvent('Event')
+    e.initEvent('resize', true, true)
+    window.dispatchEvent(e)
+  })
 }
 </script>
 

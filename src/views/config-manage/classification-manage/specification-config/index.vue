@@ -38,11 +38,11 @@
                 <el-tag v-if="item.isWeightMean" type="success" effect="plain" size="mini">加权</el-tag>
                 <!-- <el-tag v-if="item.isCustomizeable" style="margin-right: 4px" type="success" effect="plain" size="mini">可自定义</el-tag> -->
               </span>
-              <!-- <udOperation style="float: right" :data="item" /> -->
+              <ud-operation style="float: right" :data="item" />
             </div>
           </template>
           <div class="card-box">
-            <common-table :data="item.details" style="width: 100%" :maxHeight="maxHeight - 105">
+            <common-table :data="item.list" style="width: 100%" :maxHeight="maxHeight - 105">
               <!-- <el-table-column v-if="!item.isCustomizeable" prop="code" align="center" label="编号" width="80" /> -->
               <el-table-column prop="value" label="规格" min-width="140" />
             </common-table>
@@ -64,7 +64,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useGetFirstLeafNode from '@compos/classification/use-get-first-leaf-node'
 
-// import udOperation from '@crud/UD.operation'
+import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
 
@@ -167,6 +167,7 @@ function handleNodeClick(data) {
       // width: 360px;
       overflow-y: auto;
       padding-right: 5px;
+      font-size: 15px;
     }
     ::v-deep(.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content) {
       background-color: #ffe48d !important;
@@ -194,7 +195,7 @@ function handleNodeClick(data) {
   // flex-wrap: wrap;
   .el-card {
     display: inline-block;
-    width: 320px;
+    width: 280px;
     margin-bottom: 10px;
     margin-left: 20px;
   }

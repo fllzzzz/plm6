@@ -9,6 +9,8 @@ const EL_PAGINATION = '.el-pagination'
 const NAVBAR = '#navbar'
 /**
  * TODO: 考虑页面可能会出现多个相同的class，允许传入class的序号以便获取正确的class
+ * TODO: 考虑有很多模块extraBox与wrapperBox是重复的，设置为指定模式，不用填写
+ * TODO: 考虑传入el
  * 为了保证页面内部不出现滚动条计算dom的最大高度
  * @param {string | Array} extraBox ='.head-container' 需要删去高度的dom 可传入id或class
  * @param {string | Array} wrapperBox = '.app-container' 包裹层
@@ -16,7 +18,7 @@ const NAVBAR = '#navbar'
  * @param {boolean} paginate = false 是否存在分页插件。
  * @param {number | string} extraHeight = 0 需要减去的额外高度 允许px，vh，vw, 其他单位视为px。不带单位视为px
  * @param {number | string} minHeight = 400 最小高度 允许px，vh, vw, 其他单位视为px。不带单位视为px
- * @param {computed(boolean)} listener 开始监听
+ * @param {computed(boolean), Function} listener 开始监听.function 的返回值需要是可监听的对象
  * @returns
  */
 export default function useMaxHeight(
@@ -39,8 +41,9 @@ export default function useMaxHeight(
   onMounted(() => {
     bindEventListener(windowSizeHandler, isBind)
     if (isNotBlank(listener)) {
+      const wv = listener instanceof Function ? listener : listener.value
       watch(
-        () => listener.value,
+        wv,
         (flag) => {
           if (flag) {
             nextTick(() => windowSizeHandler())

@@ -46,8 +46,9 @@
   }
 }
 
-.el-button--mini {
+.el-button--mini >span{
   height: 29px;
+  line-height: 13px;
 }
 
 .el-tag.el-tag--medium {

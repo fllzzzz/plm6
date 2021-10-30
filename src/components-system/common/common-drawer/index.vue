@@ -29,16 +29,15 @@
     <template #title>
       <slot name="title">
         <div class="drawer-title">
-          <div class="title">
+          <span class="title">
             <span>{{ props.title }}</span>
-          </div>
+          </span>
+          <span>
           <slot name="titleRight" />
-          <common-button v-if="props.showClose" @click="handleClose">关闭</common-button>
+          <common-button v-if="props.showClose" @click="handleClose" size="mini" type="warning" >关闭</common-button>
+          </span>
         </div>
       </slot>
-      <!-- <div class="drawer-title">
-          <slot name="title" />
-        </div> -->
     </template>
 
     <div v-show="contentVisible">
@@ -221,6 +220,7 @@ function closed() {
 }
 
 defineExpose({
+  loaded,
   handleClose
 })
 </script>

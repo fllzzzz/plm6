@@ -8,7 +8,7 @@ import useCheckPermission from './use-check-permission'
 import { ElNotification } from 'element-plus'
 
 const CRUD = {} // crud公共信息处理
-
+// TODO: 关闭修改或添加窗口，由于状态信息的及时变更，会导致窗口未关闭，标题直接发生变化
 /**
  * crud组件
  * @param {*} options 组件自定义选项
@@ -21,7 +21,7 @@ export default function useCRUD(options, tableRef, registerPresenter = true) {
   // 不能添加新属性，也不能重新配置或者删除任何现有属性（但是可以修改属性的值）
   Object.seal(crud)
   if (registerPresenter) {
-    const data = useRegPresenter(crud, tableRef)
+    const data = regPresenter(crud, tableRef)
     return data
   }
   return { crud }
@@ -33,7 +33,7 @@ export default function useCRUD(options, tableRef, registerPresenter = true) {
  * @param {*} tableRef
  * @returns { columns, crud } = { 显示的列, crud }
  */
-export function useRegPresenter(crud, tableRef) {
+export function regPresenter(crud, tableRef) {
   let columns = ref({})
   provide('crud', crud)
   provide('permission', crud.permission)
@@ -77,7 +77,7 @@ export function useRegPresenter(crud, tableRef) {
     }
   })
 
-  return { crud, columns, CRUD: vmInfo.CRUD }
+  return { CRUD: vmInfo.CRUD, crud, columns }
 }
 
 /**
@@ -85,7 +85,7 @@ export function useRegPresenter(crud, tableRef) {
  * @param {object} defaultQuery 默认查询项
  * @returns
  */
-export function useRegHeader(defaultQuery) {
+export function regHeader(defaultQuery) {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
@@ -119,7 +119,7 @@ export function useRegHeader(defaultQuery) {
     crud.unregisterVM(internalInstance)
   })
 
-  return { crud, CRUD: vmInfo.CRUD }
+  return { CRUD: vmInfo.CRUD, crud, query: crud.query }
 }
 
 /**
@@ -127,7 +127,7 @@ export function useRegHeader(defaultQuery) {
  * @param {object} defaultForm 默认表单
  * @param {object} formRef
  */
-export function useRegForm(defaultForm, formRef) {
+export function regForm(defaultForm, formRef) {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
@@ -142,13 +142,13 @@ export function useRegForm(defaultForm, formRef) {
     delete crud.ref.form
   })
 
-  return { crud, CRUD: vmInfo.CRUD }
+  return { CRUD: vmInfo.CRUD, crud, form: crud.form }
 }
 
 /**
  * 注册分页组件
  */
-export function useRegPagination() {
+export function regPagination() {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
@@ -157,22 +157,23 @@ export function useRegPagination() {
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
   })
-  return { crud, CRUD: vmInfo.CRUD }
+  return { CRUD: vmInfo.CRUD, crud, page: crud.page }
 }
 
 /**
  * 注册其他组件
  * @param {object} options 选项
  */
-export function useRegOther(options = {}) {
+export function regExtra(options = {}) {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
-  crud.registerVM(CRUD.VM_TYPE.OTHER, internalInstance)
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.OTHER, internalInstance)
 
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
   })
+  return { CRUD: vmInfo.CRUD, crud }
 }
 
 /**
@@ -186,7 +187,7 @@ function getCrud(options) {
   // 添加crud内部选项
   const data = addSystemOptions(hOptions)
   // 拷贝data
-  const _data = cloneData(data)
+  const _data = deepClone(data)
   // 以上为基础数据
   const crud = reactive(Object.assign({}, _data))
   // 添加crud默认信息
@@ -201,32 +202,6 @@ function getCrud(options) {
   return crud
 }
 
-// 拷贝data
-// TODO: 此处status待查
-function cloneData(data) {
-  return Object.assign(deepClone(data), {
-    status: {
-      add: CRUD.STATUS.NORMAL,
-      edit: CRUD.STATUS.NORMAL,
-      // 添加或编辑状态
-      get cu() {
-        if (this.add === CRUD.STATUS.NORMAL && this.edit === CRUD.STATUS.NORMAL) {
-          return CRUD.STATUS.NORMAL
-        } else if (this.add === CRUD.STATUS.PREPARED || this.edit === CRUD.STATUS.PREPARED) {
-          return CRUD.STATUS.PREPARED
-        } else if (this.add === CRUD.STATUS.PROCESSING || this.edit === CRUD.STATUS.PROCESSING) {
-          return CRUD.STATUS.PROCESSING
-        }
-        throw new Error('错误的状态')
-      },
-      // 标题
-      get title() {
-        return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
-      }
-    }
-  })
-}
-
 /**
  * 获取默认选项
  * @returns
@@ -238,7 +213,7 @@ function getDefaultOption() {
     // 请求数据的url
     url: '',
     // 表单ref
-    formName: 'form',
+    // formName: 'form',
     // table,emptyText
     emptyText: '等待加载',
     // 表格数据
@@ -330,7 +305,9 @@ function addSystemOptions(options) {
     // 导出的 Loading
     downloadLoading: false,
     // 删除的 Loading
-    delAllLoading: false
+    delAllLoading: false,
+    // 是否显示搜索项
+    searchToggle: true
   }
   return data
 }
@@ -347,7 +324,26 @@ function addCrudDefaultInfo(crud, data) {
     // 用于存放tableRef、formRef等
     ref: {},
     // 表格列
-    tableColumns: {}
+    tableColumns: {},
+    status: { // status 需要放在深拷贝之后加入，因此放在该对象中
+      add: CRUD.STATUS.NORMAL,
+      edit: CRUD.STATUS.NORMAL,
+      // 添加或编辑状态
+      get cu() {
+        if (this.add === CRUD.STATUS.NORMAL && this.edit === CRUD.STATUS.NORMAL) {
+          return CRUD.STATUS.NORMAL
+        } else if (this.add === CRUD.STATUS.PREPARED || this.edit === CRUD.STATUS.PREPARED) {
+          return CRUD.STATUS.PREPARED
+        } else if (this.add === CRUD.STATUS.PROCESSING || this.edit === CRUD.STATUS.PROCESSING) {
+          return CRUD.STATUS.PROCESSING
+        }
+        throw new Error('错误的状态')
+      },
+      // 标题
+      get title() {
+        return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
+      }
+    }
   })
 }
 
@@ -523,7 +519,7 @@ function addCrudBusinessMethod(crud) {
 
   // 提交新增/编辑
   const submitCU = async () => {
-    if (!crud.verifySubmit()) {
+    if (!verifySubmit()) {
       return
     }
     if (!await callVmHook(crud, CRUD.HOOK.beforeValidateCU)) {
@@ -731,12 +727,7 @@ function addCrudFeatureMethod(crud, data) {
       crudFrom[key] = undefined
     }
     for (const key in form) {
-      // if (Object.prototype.hasOwnProperty.call(crudFrom, key)) {
       crudFrom[key] = form[key]
-      // } else {
-      // TODO: 待测
-      // Vue.set(crudFrom, key, form[key])
-      // }
     }
   }
 
@@ -939,7 +930,7 @@ async function callVmHook(crud, hook) {
   // 遍历各组件
   for (const VM of crud.vms) {
     if (VM && VM.CRUD.HOOK[hook]) {
-      result = (await VM.CRUD.HOOK[hook](args)) !== false && result
+      result = (await VM.CRUD.HOOK[hook].apply(VM, args)) !== false && result
     }
   }
   return result

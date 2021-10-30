@@ -138,7 +138,7 @@ function moveToCurrentTag() {
   const tags = tagRefs
   nextTick(() => {
     for (const tag of tags) {
-      console.log('tag', tag)
+      // console.log('tag', tag)
       if (tag.to.path === route.path) {
         // TODO:滚动条问题
         // console.log('scrollPaneRef', scrollPaneRef.value)

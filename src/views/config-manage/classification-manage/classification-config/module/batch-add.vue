@@ -24,7 +24,7 @@
         empty-text="暂无数据"
         :max-height="maxHeight"
         default-expand-all
-        :cell-class-name="(data) => wrongCellMask(data, currentRules)"
+        :cell-class-name="data => wrongCellMask(data, currentRules)"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -221,7 +221,7 @@ async function submit() {
   try {
     submitLoading.value = true
     const copyList = JSON.parse(JSON.stringify(form.list)) // 深拷贝，避免失败后，数据修改
-    const { validResult, dealList } = useTableValidate({ list: copyList, rules: currentRules, dittos })
+    const { validResult, dealList } = useTableValidate({ list: copyList, rules: currentRules.value, dittos })
     form.list = dealList
     if (validResult) {
       // 一级科目

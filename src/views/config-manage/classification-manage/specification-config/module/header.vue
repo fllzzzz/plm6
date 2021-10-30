@@ -20,7 +20,7 @@
 
 <script setup>
 import { inject } from 'vue'
-import { useRegHeader } from '@compos/use-crud'
+import { regHeader } from '@compos/use-crud'
 
 const defaultQuery = {
   id: undefined
@@ -29,7 +29,7 @@ const defaultQuery = {
 const currentNode = inject('currentNode')
 const permission = inject('permission')
 
-const { crud } = useRegHeader(defaultQuery)
+const { crud } = regHeader(defaultQuery)
 </script>
 
 <style lang="scss" scoped>

@@ -10,9 +10,9 @@
     @current-change="crud.pageChangeHandler"
   />
 </template>
-<script>
-import { pagination } from '@crud/crud'
-export default {
-  mixins: [pagination()]
-}
+
+<script setup>
+import { regPagination } from '@compos/use-crud'
+
+const { crud, page } = regPagination()
 </script>
