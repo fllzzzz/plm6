@@ -34,7 +34,7 @@
           </span>
           <span>
           <slot name="titleRight" />
-          <common-button v-if="props.showClose" @click="handleClose" size="mini" type="warning" >关闭</common-button>
+          <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>
         </div>
       </slot>
@@ -141,6 +141,10 @@ const props = defineProps({
   loadDelay: {
     type: Number,
     default: 300
+  },
+  closeBtnType: {
+    type: String,
+    default: undefined
   }
 })
 

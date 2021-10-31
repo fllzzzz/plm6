@@ -101,15 +101,22 @@ function handleClick(event) {
 
 <style lang="scss" scoped>
 .common-button + .common-button{
-  margin-left: 8px;
+  margin-left: 6px;
 }
 
 .el-tag + .common-button{
-  margin-left: 8px;
+  margin-left: 6px;
 }
 
 .common-button + .el-tag {
-  margin-left: 8px;
+  margin-left: 6px;
 }
 
+span + .common-button {
+  margin-left: 6px;
+}
+
+.common-button + span {
+  margin-left: 6px;
+}
 </style>

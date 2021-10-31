@@ -18,7 +18,7 @@ const NAVBAR = '#navbar'
  * @param {boolean} paginate = false 是否存在分页插件。
  * @param {number | string} extraHeight = 0 需要减去的额外高度 允许px，vh，vw, 其他单位视为px。不带单位视为px
  * @param {number | string} minHeight = 400 最小高度 允许px，vh, vw, 其他单位视为px。不带单位视为px
- * @param {computed(boolean), Function} listener 开始监听.function 的返回值需要是可监听的对象
+ * @param {computed(boolean), Function} trigger 开始监听.function 的返回值需要是可监听的对象
  * @returns
  */
 export default function useMaxHeight(
@@ -31,7 +31,7 @@ export default function useMaxHeight(
     extraHeight = 0,
     minHeight = 400
   } = {},
-  listener
+  trigger
 ) {
   const maxHeight = ref(0)
   const maxHeightStyle = ref()
@@ -40,8 +40,16 @@ export default function useMaxHeight(
 
   onMounted(() => {
     bindEventListener(windowSizeHandler, isBind)
-    if (isNotBlank(listener)) {
-      const wv = listener instanceof Function ? listener : listener.value
+    if (isNotBlank(trigger)) {
+      let wv
+      switch (trigger.constructor.name) {
+        case 'Function':
+        case 'RefImpl': wv = trigger
+          break
+        case 'ComputedRefImpl':wv = trigger.value
+          break
+        default: wv = trigger
+      }
       watch(
         wv,
         (flag) => {

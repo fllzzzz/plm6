@@ -5,6 +5,7 @@ import { debounce } from '@/utils'
 import { fileDownload } from '@/utils/file'
 
 import useCheckPermission from './use-check-permission'
+import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
 import { ElNotification } from 'element-plus'
 
 const CRUD = {} // crud公共信息处理
@@ -137,12 +138,20 @@ export function regForm(defaultForm, formRef) {
   crud.ref.form = formRef
   crud.resetForm()
 
+  // 添加表单缓存
+  let fmStore
+  if (crud.formStore) {
+    const store = useAddFormLocalStorage(`specification_config`)
+    fmStore = store
+    provide('fmStore', fmStore)
+  }
+
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
     delete crud.ref.form
   })
 
-  return { CRUD: vmInfo.CRUD, crud, form: crud.form }
+  return { CRUD: vmInfo.CRUD, crud, form: crud.form, fmStore, ADD_FORM: fmStore }
 }
 
 /**
@@ -233,6 +242,10 @@ function getDefaultOption() {
     form: {},
     // 重置表单
     defaultForm: () => {},
+    // 表单是否缓存key
+    formStoreKey: '',
+    // 表单缓存
+    formStore: false,
     // 默认隐藏列
     invisibleColumns: ['createTime', 'updateTime'],
     // 提交时必填字段
@@ -547,6 +560,7 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.submitResult = await crud.crudApi.add(crud.form)
+      await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL
       crud.resetForm()
       crud.addSuccessNotify()
@@ -1024,6 +1038,8 @@ CRUD.HOOK = {
   beforeSubmit: 'beforeSubmit',
   /** 提交 - 之后 */
   afterSubmit: 'afterSubmit',
+  /** 添加成功 - 之后 */
+  afterAddSuccess: 'afterAddSuccess',
   /** 添加失败 - 之后 */
   afterAddError: 'afterAddError',
   /** 编辑失败 - 之后 */

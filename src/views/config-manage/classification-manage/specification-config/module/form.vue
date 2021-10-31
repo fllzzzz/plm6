@@ -107,7 +107,7 @@ const permission = inject('permission')
 
 const defaultForm = {
   name: '', // 规格名称
-  classificationId: currentNode.value.id, // 科目id
+  classificationId: undefined, // 科目id
   isWeightMean: 1, // 是否参加加权平均
   list: [] // 具体规格列表
 }
@@ -143,6 +143,7 @@ const { maxHeight } = useMaxHeight({
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const { init, addRow, removeRow } = useTableOperate(defaultRow, 10)
 
+// 初始化表单
 CRUD.HOOK.afterToAdd = () => {
   init(form.list)
 }
@@ -154,6 +155,10 @@ CRUD.HOOK.beforeValidateCU = () => {
   } else {
     return validResult
   }
+}
+
+CRUD.HOOK.beforeSubmit = () => {
+  form.classificationId = currentNode.value.id
 }
 </script>
 
