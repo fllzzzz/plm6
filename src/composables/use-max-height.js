@@ -8,16 +8,17 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 const EL_PAGINATION = '.el-pagination'
 const NAVBAR = '#navbar'
 /**
- * TODO: 考虑页面可能会出现多个相同的class，允许传入class的序号以便获取正确的class
  * TODO: 考虑有很多模块extraBox与wrapperBox是重复的，设置为指定模式，不用填写
- * TODO: 考虑传入el
+ * TODO: 考虑可以直接传入el
  * 为了保证页面内部不出现滚动条计算dom的最大高度
+ * @param {string | Array} main 尽量传入主盒子，会检测其他盒子是否处于主盒子，可以有效的避免多个class无法取得正确的class的问题。（极端情况仍会有问题）
  * @param {string | Array} extraBox ='.head-container' 需要删去高度的dom 可传入id或class
  * @param {string | Array} wrapperBox = '.app-container' 包裹层
  * @param {boolean} navbar = true 是否存在navbar。Layout-navbar
  * @param {boolean} paginate = false 是否存在分页插件。
  * @param {number | string} extraHeight = 0 需要减去的额外高度 允许px，vh，vw, 其他单位视为px。不带单位视为px
  * @param {number | string} minHeight = 400 最小高度 允许px，vh, vw, 其他单位视为px。不带单位视为px
+ * @param {boolean} clientHRepMainH = false 使用窗口高度代替主盒子高度。避免类似于dialog这样“高度由子盒子撑开的”dom。
  * @param {computed(boolean), Function} trigger 开始监听.function 的返回值需要是可监听的对象
  * @returns
  */
@@ -29,7 +30,8 @@ export default function useMaxHeight(
     navbar = !mainBox,
     paginate = false,
     extraHeight = 0,
-    minHeight = 400
+    minHeight = 400,
+    clientHRepMainH = false
   } = {},
   trigger
 ) {
@@ -39,14 +41,12 @@ export default function useMaxHeight(
   const isBind = ref(false)
 
   onMounted(() => {
-    bindEventListener(windowSizeHandler, isBind)
     if (isNotBlank(trigger)) {
       let wv
       switch (trigger.constructor.name) {
         case 'Function':
-        case 'RefImpl': wv = trigger
-          break
-        case 'ComputedRefImpl':wv = trigger.value
+        case 'RefImpl':
+        case 'ComputedRefImpl':wv = trigger
           break
         default: wv = trigger
       }
@@ -54,13 +54,15 @@ export default function useMaxHeight(
         wv,
         (flag) => {
           if (flag) {
-            nextTick(() => windowSizeHandler())
+            bindEventListener(windowSizeHandler, isBind)
           } else {
             unbindEventListener(windowSizeHandler)
           }
         },
         { immediate: true }
       )
+    } else {
+      bindEventListener(windowSizeHandler, isBind)
     }
   })
 
@@ -77,7 +79,7 @@ export default function useMaxHeight(
   })
 
   const windowSizeHandler = () => {
-    maxHeight.value = calcMaxHeight({ mainBox, extraBox, wrapperBox, navbar, paginate, extraHeight, minHeight })
+    maxHeight.value = calcMaxHeight({ clientHRepMainH, mainBox, extraBox, wrapperBox, navbar, paginate, extraHeight, minHeight })
     heightStyle.value = `height: ${maxHeight.value}px`
     maxHeightStyle.value = `max-height: ${maxHeight.value}px`
   }
@@ -90,7 +92,7 @@ export default function useMaxHeight(
 }
 
 // 计算最大高度
-function calcMaxHeight({ mainBox, extraBox, navbar, wrapperBox, paginate, extraHeight, minHeight }) {
+function calcMaxHeight({ clientHRepMainH, mainBox, extraBox, wrapperBox, navbar, paginate, extraHeight, minHeight }) {
   // 主盒子高度
   const [mainBoxEl, mainBoxHeight] = getMainBoxHeight(mainBox)
 
@@ -117,7 +119,8 @@ function calcMaxHeight({ mainBox, extraBox, navbar, wrapperBox, paginate, extraH
 
   // 窗口高度 - navbar高度 - 包装层内外边距 - 额外dom的高度（含外边距） - 分页插件的高度 - 自定义额外高度
   // 注意：未处理外边距重叠的情况，若产生，可通过填写extraHeight处理
-  const height = mainBoxHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight
+  const mainHeight = clientHRepMainH ? document.documentElement.clientHeight : mainBoxHeight
+  const height = mainHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight
   // console.log(extraBox, mainBoxHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
 
   return height > realMiniHeight ? height : realMiniHeight

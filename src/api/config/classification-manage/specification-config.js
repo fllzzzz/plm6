@@ -13,10 +13,10 @@ export function get(params) {
 
 /**
  * 添加规格
- * @param {number} subjectId|required 科目id
+ * @param {number} classification|required 科目id
  * @param {string} name|required 名称
  * @param {boolean} isWeightMean|required 是否计算加权平均价
- * @param {Array} details [{code, value}]
+ * @param {Array} list [{code, value}]
  */
 export function add(data) {
   return request({
@@ -32,7 +32,7 @@ export function add(data) {
  * @param {number} id|required id
  * @param {string} name|required 名称
  * @param {boolean} isWeightMean|required 是否计算加权平均价
- * @param {Array} details [{id, code, value}]
+ * @param {Array} list [{id, code, value}]
  */
 export function edit(data) {
   return request({

@@ -5,16 +5,22 @@ import { deepClone } from '@/utils/data-type'
  * @param {*} rowNumbers 初始化数量
  * @param {*} defaultInfo 默认参数
  */
-export default function useTableOperate(defaultInfo, rowNumbers = 1) {
+export default function useTableOperate(defaultInfo, rowNumbers = 1, dittos) {
   const init = (list) => {
     list.length = 0
     for (let i = 0; i < rowNumbers; i++) {
-      list.push(deepClone(defaultInfo))
+      addRow(list)
     }
   }
 
   const addRow = (list) => {
-    list.push(deepClone(defaultInfo))
+    const row = deepClone(defaultInfo)
+    if (dittos && list.length > 0) {
+      dittos.forEach((value, key) => {
+        row[key] = value
+      })
+    }
+    list.push(row)
   }
 
   const removeRow = (list, index) => {

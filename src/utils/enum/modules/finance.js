@@ -2,8 +2,8 @@
 import { constantize } from '../base'
 
 const isWeightMeanEnum = {
-  TRUE: { L: '加权平均', K: 'TRUE', V: 1 },
-  FALSE: { L: '不加权平均', K: 'FALSE', V: 0 }
+  TRUE: { L: '加权平均', K: 'TRUE', V: true },
+  FALSE: { L: '不加权平均', K: 'FALSE', V: false }
 }
 constantize(isWeightMeanEnum)
 

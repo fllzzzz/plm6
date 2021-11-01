@@ -1,65 +1,66 @@
-import { onBeforeUnmount, watch, reactive } from 'vue'
+import { onBeforeUnmount, reactive } from 'vue'
 import storage from '@/utils/storage'
-import { isNotBlank, isBlank, deepClone } from '@data-type/index'
+import { isBlank, deepClone } from '@data-type/index'
 import { isObjectValueEqual } from '@data-type/object'
+import { regExtra } from '../use-crud'
 // TODO: 版本更新后的表单变更缓存问题
 // TODO: 考虑将异常与主动保存为草稿分开，在异常草稿时，给与用户提示
 
 const ADD_FORM = {}
 
 // 缓存key的前缀
-ADD_FORM.KEY_PREFIX = 'ADD_FORM'
+ADD_FORM.KEY_PREFIX = 'ADD_BATCH_FORM'
 ADD_FORM.TYPE = {
   normal: 1, // 正常保存
   browserClose: 2 // 浏览器关闭保存
 }
 
-export default function useAddFormLocalStorage(key, pendingForm, trigger) {
+export default function useCrudAddFormLocalStorage(key) {
+  const { CRUD, crud } = regExtra()
   const ls = reactive({
     key: key,
     expired: 604800000,
-    form: pendingForm, // 待处理的表单
+    form: crud.batchForm, // 待处理的表单
     initForm: undefined, // 初始的表单
     init: undefined, // 初始化方法
-    isRegister: false // 是否注册的
+    isRegister: false, // 是否注册的
+    saveStoreForm: () => {
+      // 保存草稿并退出
+      saveFormToStorage(ls)
+      crud.cancelBCU()
+    },
+    resetForm: () => {
+      // 清除内容
+      crud.resetBatchForm()
+      ls.init()
+    }
   })
 
-  // 如果不传入trigger，则通过openStore手动开启
-  if (isNotBlank(trigger)) {
-    const wv = typeof trigger === 'function' ? trigger : trigger.value
-    watch(
-      wv,
-      (flag) => {
-        if (flag) {
-          openStore(ls)
-        } else {
-          closeStore(ls)
-        }
-      }
-    )
+  // crud添加的钩子中，尽量不要写除了ADD_FORM.init 的其他方法初始方法
+  // 在打开后开启缓存
+  CRUD.HOOK.afterToBatchAdd = () => openStore(ls)
+
+  // 在退出后关闭缓存
+  CRUD.HOOK.beforeBatchAddCancel = () => closeStore(ls)
+
+  // 在添加成功后清除缓存
+  CRUD.HOOK.afterBatchAddSuccess = () => {
+    clearFormStorage(ls)
+    closeStore(ls)
   }
 
   // 卸载时判断是否需要记录
   onBeforeUnmount(() => {
-    abnormalClose(ls, trigger)
+    abnormalClose(ls, crud)
     closeStore(ls)
   })
 
   // 浏览器关闭
   window.onbeforeunload = () => {
-    abnormalClose(ls, trigger)
+    abnormalClose(ls, crud)
   }
 
-  return {
-    ADD_FORM: ls,
-    openStore: (form) => {
-      if (form) ls.form = form
-      openStore(ls)
-    },
-    closeStore: () => closeStore(ls),
-    saveStoreForm: (form) => saveFormToStorage(ls, form),
-    clearFormStorage: () => clearFormStorage(ls)
-  }
+  return ls
 }
 
 // 当前组件初始化
@@ -114,12 +115,9 @@ function clearFormStorage(ls) {
 }
 
 // 异常关闭
-function abnormalClose(ls, trigger) {
+function abnormalClose(ls, crud) {
   if (!ls.isRegister) return
-  let inEdit = true
-  if (isNotBlank(trigger)) {
-    inEdit = typeof trigger === 'function' ? trigger() : trigger.value
-  }
+  const inEdit = crud.status.cu > 0
   // 当在编辑中,并且初始表单内容与当前表单内容不一致时，将信息存为异常保存
   if (inEdit && !isObjectValueEqual(ls.initForm, ls.form)) {
     saveFormToStorage(ls, null, ADD_FORM.TYPE.browserClose)

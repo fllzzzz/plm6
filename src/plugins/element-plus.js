@@ -8,7 +8,7 @@ import {
   // ElBreadcrumb,
   // ElBreadcrumbItem,
   // ElButton,  // 非必要不使用ElButton，在禁用后点击按钮内文字仍可触发点击事件（使用common-button）
-  ElButtonGroup,
+  // ElButtonGroup,
   // ElCalendar,
   ElCard,
   ElCarousel,
@@ -92,7 +92,7 @@ const components = [
   // ElBreadcrumb,
   // ElBreadcrumbItem,
   // ElButton,
-  ElButtonGroup,
+  // ElButtonGroup,
   // ElCalendar,
   ElCard,
   ElCarousel,

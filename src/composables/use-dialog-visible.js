@@ -10,9 +10,11 @@ export default function useDialogVisible(emit, props, callback) {
       dialogVisible.value = flag
       if (!flag) {
         // 关闭重置表单
-        nextTick(() => {
-          callback()
-        })
+        if (typeof callback === 'function') {
+          nextTick(() => {
+            callback()
+          })
+        }
       }
     }
   )

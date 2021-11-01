@@ -4,6 +4,24 @@ export default {
   name: '配置管理',
   children: [
     {
+      path: '/base-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'BaseConfig',
+      alwaysShow: false,
+      redirect: '/config-manage/base-config/unit-config',
+      meta: { title: '基础配置', icon: 'config-2', noCache: true },
+      children: [
+        {
+          name: 'UnitConfig',
+          path: 'unit-config',
+          hidden: false,
+          component: '/config-manage/main/unit-config/index',
+          meta: { title: '单位配置', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/classification-manage',
       component: 'Layout',
       hidden: false,

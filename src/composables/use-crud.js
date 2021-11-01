@@ -6,6 +6,8 @@ import { fileDownload } from '@/utils/file'
 
 import useCheckPermission from './use-check-permission'
 import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
+import useBatchAddFormLocalStorage from '@/composables/form/use-crud-add-batch-form-local-storage'
+
 import { ElNotification } from 'element-plus'
 
 const CRUD = {} // crud公共信息处理
@@ -35,7 +37,7 @@ export default function useCRUD(options, tableRef, registerPresenter = true) {
  * @returns { columns, crud } = { 显示的列, crud }
  */
 export function regPresenter(crud, tableRef) {
-  let columns = ref({})
+  const columns = ref({})
   provide('crud', crud)
   provide('permission', crud.permission)
   const internalInstance = getCurrentInstance()
@@ -62,22 +64,22 @@ export function regPresenter(crud, tableRef) {
     }
     if (tableRef) {
       const tableColumns = tableRef.value.getColumns()
+
       // 获得table的所有列
       tableColumns.forEach(e => {
         if (!e.property || e.type !== 'default') {
           return
         }
-        columns[e.property] = {
+        columns.value[e.property] = {
           label: e.label,
           visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
         }
       })
       // 显示列的方法
-      columns = crud.obColumns(columns)
       crud.tableColumns = columns
     }
   })
-
+  columns.value = crud.obColumns(columns)
   return { CRUD: vmInfo.CRUD, crud, columns }
 }
 
@@ -139,9 +141,9 @@ export function regForm(defaultForm, formRef) {
   crud.resetForm()
 
   // 添加表单缓存
-  let fmStore
+  let fmStore = {}
   if (crud.formStore) {
-    const store = useAddFormLocalStorage(`specification_config`)
+    const store = useAddFormLocalStorage(crud.formStoreKey)
     fmStore = store
     provide('fmStore', fmStore)
   }
@@ -151,7 +153,39 @@ export function regForm(defaultForm, formRef) {
     delete crud.ref.form
   })
 
-  return { CRUD: vmInfo.CRUD, crud, form: crud.form, fmStore, ADD_FORM: fmStore }
+  return { CRUD: vmInfo.CRUD, crud, form: crud.form, ADD_FORM: fmStore }
+}
+
+/**
+ * 注册表单组件
+ * @param {object} defaultForm 默认表单
+ * @param {object} formRef
+ */
+export function regBatchForm(defaultForm, formRef) {
+  const crud = inject('crud')
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.BATCH_FORM, internalInstance, 3)
+  crud.defaultBatchForm = defaultForm
+  vmInfo.formRef = formRef
+  crud.ref.form = formRef
+  crud.ref.batchForm = formRef
+  crud.resetBatchForm()
+
+  // 添加表单缓存
+  let fmStore = {}
+  if (crud.formStore) {
+    const store = useBatchAddFormLocalStorage(crud.formStoreKey)
+    fmStore = store
+    provide('bfmStore', fmStore)
+  }
+
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+    delete crud.ref.batchForm
+  })
+
+  return { CRUD: vmInfo.CRUD, crud, form: crud.batchForm, ADD_FORM: fmStore }
 }
 
 /**
@@ -161,7 +195,7 @@ export function regPagination() {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
-  const vmInfo = crud.registerVM(CRUD.VM_TYPE.PAGINATION, internalInstance, 3)
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.PAGINATION, internalInstance, 4)
   // 卸载前，注销组件
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
@@ -240,6 +274,10 @@ function getDefaultOption() {
     params: {},
     // Form 表单
     form: {},
+    // 批量添加表单
+    batchForm: {},
+    // 重置表单
+    defaultBatchForm: () => {},
     // 重置表单
     defaultForm: () => {},
     // 表单是否缓存key
@@ -250,6 +288,8 @@ function getDefaultOption() {
     invisibleColumns: ['createTime', 'updateTime'],
     // 提交时必填字段
     requiredSubmitField: [],
+    // 批量添加表单提交时必填字段
+    requiredBatchSubmitField: [],
     // 提交回调结果
     submitResult: null,
     // 排序规则，默认 id 降序， 支持多字段排序 ['id.desc', 'createTime.asc']
@@ -261,6 +301,7 @@ function getDefaultOption() {
     // CRUD Method
     crudApi: {
       add: (form) => {},
+      batchAdd: (form) => {},
       delete: (id) => {},
       edit: (form) => {},
       get: (id) => {}
@@ -356,6 +397,25 @@ function addCrudDefaultInfo(crud, data) {
       get title() {
         return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
       }
+    },
+    bStatus: { // bStatus 需要放在深拷贝之后加入，因此放在该对象中
+      batchAdd: CRUD.STATUS.NORMAL,
+      batchEdit: CRUD.STATUS.NORMAL,
+      // 添加或编辑状态
+      get cu() {
+        if (this.batchAdd === CRUD.STATUS.NORMAL && this.batchEdit === CRUD.STATUS.NORMAL) {
+          return CRUD.STATUS.NORMAL
+        } else if (this.batchAdd === CRUD.STATUS.PREPARED || this.batchEdit === CRUD.STATUS.PREPARED) {
+          return CRUD.STATUS.PREPARED
+        } else if (this.batchAdd === CRUD.STATUS.PROCESSING || this.batchEdit === CRUD.STATUS.PROCESSING) {
+          return CRUD.STATUS.PROCESSING
+        }
+        throw new Error('错误的状态')
+      },
+      // 标题
+      get title() {
+        return this.batchAdd > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.batchEdit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
+      }
     }
   })
 }
@@ -381,9 +441,15 @@ function addCrudBusinessMethod(crud) {
     const result = crud.requiredQuery.some(v => crud.query[v] === null || crud.query[v] === undefined)
     return !result
   }
-  // eslint-disable-next-line no-unused-vars
+
   const verifySubmit = () => {
     const result = crud.requiredSubmitField.some(v => crud.form[v] === null || crud.form[v] === undefined)
+    return !result
+  }
+
+  // 校验批量提交
+  const verifyBatchSubmit = () => {
+    const result = crud.requiredBatchSubmitField.some(v => crud.batchForm[v] === null || crud.batchForm[v] === undefined)
     return !result
   }
 
@@ -461,7 +527,7 @@ function addCrudBusinessMethod(crud) {
     }
   }
 
-  // 启动添加
+  // 打开添加
   const toAdd = async () => {
     if (!(await callVmHook(crud, CRUD.HOOK.beforeToAdd, crud.form) && await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form))) {
       return
@@ -482,6 +548,30 @@ function addCrudBusinessMethod(crud) {
     crud.getDataStatus(data.id).edit = CRUD.STATUS.PREPARED
     await callVmHook(crud, CRUD.HOOK.afterToEdit, crud.form)
     await callVmHook(crud, CRUD.HOOK.afterToCU, crud.form)
+  }
+
+  // 打开批量添加
+  const toBatchAdd = async () => {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeToBatchAdd, crud.batchForm) && await callVmHook(crud, CRUD.HOOK.beforeToBCU, crud.batchForm))) {
+      return
+    }
+    crud.bStatus.batchAdd = CRUD.STATUS.PREPARED
+    crud.submitResult = null
+    await callVmHook(crud, CRUD.HOOK.afterToBatchAdd, crud.batchForm)
+    await callVmHook(crud, CRUD.HOOK.afterToBCU, crud.batchForm)
+  }
+
+  // 打开批量修改
+  const toBatchEdit = async (data) => {
+    crud.resetBatchForm(JSON.parse(JSON.stringify(data)))
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeToBatchEdit, crud.batchForm) && await callVmHook(crud, CRUD.HOOK.beforeToBCU, crud.batchForm))) {
+      return
+    }
+    crud.bStatus.edit = CRUD.STATUS.PREPARED
+    crud.submitResult = null
+    crud.getDataStatus(data.id).batchEdit = CRUD.STATUS.PREPARED
+    await callVmHook(crud, CRUD.HOOK.afterToBatchEdit, crud.batchForm)
+    await callVmHook(crud, CRUD.HOOK.afterToBCU, crud.batchForm)
   }
 
   // 启动删除
@@ -530,6 +620,38 @@ function addCrudBusinessMethod(crud) {
     }
   }
 
+  /**
+     * 取消批量新增/编辑
+     */
+  const cancelBCU = async () => {
+    const addStatus = crud.bStatus.batchAdd
+    const editStatus = crud.bStatus.batchEdit
+    if (addStatus === CRUD.STATUS.PREPARED) {
+      if (!await callVmHook(crud, CRUD.HOOK.beforeBatchAddCancel, crud.batchForm)) {
+        return
+      }
+      crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
+    }
+    if (editStatus === CRUD.STATUS.PREPARED) {
+      if (!await callVmHook(crud, CRUD.HOOK.beforeBatchEditCancel, crud.batchForm)) {
+        return
+      }
+      crud.bStatus.batchEdit = CRUD.STATUS.NORMAL
+      crud.getDataStatus(crud.batchForm.id).batchEdit = CRUD.STATUS.NORMAL
+    }
+    crud.resetBatchForm()
+    if (addStatus === CRUD.STATUS.PREPARED) {
+      await callVmHook(crud, CRUD.HOOK.afterBatchAddCancel, crud.batchForm)
+    }
+    if (editStatus === CRUD.STATUS.PREPARED) {
+      await callVmHook(crud, CRUD.HOOK.afterBatchEditCancel, crud.batchForm)
+    }
+    // 清除表单验证
+    if (crud.ref.batchForm) {
+      crud.ref.batchForm.clearValidate()
+    }
+  }
+
   // 提交新增/编辑
   const submitCU = async () => {
     if (!verifySubmit()) {
@@ -546,9 +668,32 @@ function addCrudBusinessMethod(crud) {
         return
       }
       if (crud.status.add === CRUD.STATUS.PREPARED) {
-        crud.doAdd()
+        doAdd()
       } else if (crud.status.edit === CRUD.STATUS.PREPARED) {
-        crud.doEdit()
+        doEdit()
+      }
+    })
+  }
+
+  // 提交批量新增/编辑
+  const submitBCU = async () => {
+    if (!verifyBatchSubmit()) {
+      return
+    }
+    if (!await callVmHook(crud, CRUD.HOOK.beforeValidateBCU)) {
+      return
+    }
+    crud.ref.batchForm.validate(async (valid) => {
+      if (!valid) {
+        return
+      }
+      if (!await callVmHook(crud, CRUD.HOOK.afterValidateBCU)) {
+        return
+      }
+      if (crud.bStatus.batchAdd === CRUD.STATUS.PREPARED) {
+        doBatchAdd()
+      } else if (crud.bStatus.batchEdit === CRUD.STATUS.PREPARED) {
+        doBatchEdit()
       }
     })
   }
@@ -559,6 +704,7 @@ function addCrudBusinessMethod(crud) {
       return
     }
     try {
+      crud.status.add = CRUD.STATUS.PROCESSING
       crud.submitResult = await crud.crudApi.add(crud.form)
       await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL
@@ -578,6 +724,7 @@ function addCrudBusinessMethod(crud) {
       return
     }
     try {
+      crud.status.edit = CRUD.STATUS.PROCESSING
       crud.submitResult = await crud.crudApi.edit(crud.form)
       crud.status.edit = CRUD.STATUS.NORMAL
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
@@ -588,6 +735,49 @@ function addCrudBusinessMethod(crud) {
     } catch (error) {
       console.log('编辑', error)
       await callVmHook(crud, CRUD.HOOK.afterEditError)
+    }
+  }
+
+  // 执行批量添加
+  const doBatchAdd = async () => {
+    if (!await callVmHook(crud, CRUD.HOOK.beforeBatchSubmit)) {
+      return
+    }
+    try {
+      crud.bStatus.batchAdd = CRUD.STATUS.PROCESSING
+      // 深拷贝表单后转换，避免表单发生变化
+      const data = crud.submitBatchFormFormat(deepClone(crud.batchForm))
+      crud.submitResult = await crud.crudApi.batchAdd(data)
+      await callVmHook(crud, CRUD.HOOK.afterBatchAddSuccess)
+      crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
+      crud.resetBatchForm()
+      crud.addSuccessNotify()
+      await callVmHook(crud, CRUD.HOOK.afterBatchSubmit)
+      crud.toQuery()
+    } catch (error) {
+      console.log('添加', error)
+      await callVmHook(crud, CRUD.HOOK.afterBatchAddError)
+    }
+  }
+
+  // 执行编辑
+  const doBatchEdit = async () => {
+    if (!await callVmHook(crud, CRUD.HOOK.beforeBatchSubmit)) {
+      return
+    }
+    try {
+      crud.bStatus.batchEdit = CRUD.STATUS.PROCESSING
+      crud.submitResult = await crud.crudApi.batchEdit(crud.batchForm)
+      crud.bStatus.batchEdit = CRUD.STATUS.NORMAL
+      // TODO: batchForm 此处会有问题，批量修改暂不存在
+      crud.getDataStatus(crud.batchForm.id).edit = CRUD.STATUS.NORMAL
+      crud.editSuccessNotify()
+      crud.resetBatchForm()
+      await callVmHook(crud, CRUD.HOOK.afterBatchSubmit)
+      crud.refresh()
+    } catch (error) {
+      console.log('编辑', error)
+      await callVmHook(crud, CRUD.HOOK.afterBatchEditError)
     }
   }
 
@@ -657,9 +847,13 @@ function addCrudBusinessMethod(crud) {
     cancelDelete, // 取消删除
     cancelCU, // 取消新增/编辑
     submitCU, // 提交新增/编辑
-    doAdd, // 执行添加
-    doEdit, // 执行编辑
-    doDelete // 执行删除
+    doDelete, // 执行删除
+    cancelBCU, // 取消新增/编辑（批量）
+    submitBCU, // 提交新增/编辑（批量）
+    toBatchAdd, // 启动添加（批量）
+    toBatchEdit, // 启动编辑（批量）
+    doBatchAdd, // 执行添加（批量）
+    doBatchEdit // 执行编辑（批量）
   })
 }
 
@@ -744,10 +938,40 @@ function addCrudFeatureMethod(crud, data) {
       crudFrom[key] = form[key]
     }
   }
+  /**
+   * 重置批量表单
+   * @param {Array} data 数据
+   */
+  const resetBatchForm = (data) => {
+    const ref = crud.ref.batchForm
+    // 清除表单信息 TODO:待改待测
+    if (ref) {
+      // 设置默认值，因此重置放在顶部
+      ref.resetFields()
+    }
+    const form = data || (typeof crud.defaultBatchForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultBatchForm)) : crud.defaultBatchForm())
+    const crudBatchForm = crud.batchForm
+    for (const key in crudBatchForm) {
+      crudBatchForm[key] = undefined
+    }
+    for (const key in form) {
+      crudBatchForm[key] = form[key]
+    }
+  }
 
   // 表单验证
   const validateField = (field) => {
     crud.ref.form.validateField(field)
+  }
+
+  // 批量添加表单验证
+  const validateFieldForBatch = (field) => {
+    crud.ref.batchForm.validateField(field)
+  }
+
+  // 提交批量表单数据格式化
+  const submitBatchFormFormat = (list) => {
+    return list
   }
 
   // 重置数据状态
@@ -757,7 +981,8 @@ function addCrudFeatureMethod(crud, data) {
       datas.forEach(e => {
         dataStatus[e.id] = {
           delete: 0,
-          edit: 0
+          edit: 0,
+          batchEdit: 0
         }
         if (e.children) {
           resetStatus(e.children)
@@ -857,7 +1082,7 @@ function addCrudFeatureMethod(crud, data) {
   const obColumns = (columns) => {
     return {
       visible(col) {
-        return !columns || !columns[col] ? true : columns[col].visible
+        return !columns || !columns.value[col] ? true : columns.value[col].visible
       }
     }
   }
@@ -870,7 +1095,10 @@ function addCrudFeatureMethod(crud, data) {
     dleChangePage, // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
     resetQuery, // 重置查询参数,重置后进行查询操作
     resetForm, // 重置表单
+    resetBatchForm, // 重置表单
     validateField, // 表单字段校验
+    validateFieldForBatch, // 批量表单字段校验
+    submitBatchFormFormat, // 提交批量表单数据格式化
     resetDataStatus, // 重置数据状态
     getDataStatus, // 获取数据状态
     selectionChangeHandler, // 选择改变
@@ -890,6 +1118,8 @@ function addCrudMethod(crud, data) {
     Object.assign(crud, deepClone(data))
     crud.status.add = CRUD.STATUS.NORMAL
     crud.status.edit = CRUD.STATUS.NORMAL
+    crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
+    crud.bStatus.batchEdit = CRUD.STATUS.NORMAL
   }
 
   // 注册组件
@@ -898,7 +1128,10 @@ function addCrudMethod(crud, data) {
       uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
-      CRUD: { HOOK: {}} // 用于hook
+      CRUD: {
+        HOOK: {},
+        STATUS: CRUD.STATUS
+      } // 用于hook
     }
     // 默认新加入的vm放在数组最后面
     if (index < 0) {
@@ -974,6 +1207,7 @@ CRUD.VM_TYPE = {
   HEADER: 'header',
   PAGINATION: 'pagination',
   FORM: 'form',
+  BATCH_FORM: 'batchForm',
   OTHER: 'other'
 }
 
@@ -990,6 +1224,11 @@ CRUD.NOTIFICATION_TYPE = {
   WARNING: 'warning',
   INFO: 'info',
   ERROR: 'error'
+}
+
+// 方法变更
+CRUD.METHOD = {
+  submitBatchFormFormat: 'submitBatchFormFormat'
 }
 
 // key 与 value 需要一致
@@ -1044,6 +1283,42 @@ CRUD.HOOK = {
   afterAddError: 'afterAddError',
   /** 编辑失败 - 之后 */
   afterEditError: 'afterEditError',
+
+  /** 新建 - 之前 */
+  beforeToBatchAdd: 'beforeToBatchAdd',
+  /** 新建 - 之后 */
+  afterToBatchAdd: 'afterToBatchAdd',
+  /** 编辑 - 之前 */
+  beforeToBatchEdit: 'beforeToBatchEdit',
+  /** 编辑 - 之后 */
+  afterToBatchEdit: 'afterToBatchEdit',
+  /** 开始 "新建/编辑" - 之前 */
+  beforeToBCU: 'beforeToBCU',
+  /** 开始 "新建/编辑" - 之后 */
+  afterToBCU: 'afterToBCU',
+  /** "新建/编辑" 验证 - 之前 */
+  beforeValidateBCU: 'beforeValidateBCU',
+  /** "新建/编辑" 验证 - 之后 */
+  afterValidateBCU: 'afterValidateBCU',
+  /** 添加取消 - 之前 */
+  beforeBatchAddCancel: 'beforeBatchAddCancel',
+  /** 添加取消 - 之后 */
+  afterBatchAddCancel: 'afterBatchAddCancel',
+  /** 编辑取消 - 之前 */
+  beforeBatchEditCancel: 'beforeBatchEditCancel',
+  /** 编辑取消 - 之后 */
+  afterBatchEditCancel: 'afterBatchEditCancel',
+  /** 提交 - 之前 */
+  beforeBatchSubmit: 'beforeBatchSubmit',
+  /** 提交 - 之后 */
+  afterBatchSubmit: 'afterBatchSubmit',
+  /** 添加成功 - 之后 */
+  afterBatchAddSuccess: 'afterBatchAddSuccess',
+  /** 添加失败 - 之后 */
+  afterBatchAddError: 'afterBatchAddError',
+  /** 编辑失败 - 之后 */
+  afterBatchEditError: 'afterBatchEditError',
+
   /** 重置搜索条件 - 之前 */
   beforeResetQuery: 'beforeResetQuery',
   /** TODO:未定义 重置搜索条件 - 之后 */

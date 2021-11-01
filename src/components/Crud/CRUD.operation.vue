@@ -3,7 +3,18 @@
     <span class="crud-opts-left">
       <!--左侧插槽-->
       <slot name="optLeft" />
-      <el-button
+      <common-button
+        v-if="crud.optShow.batchAdd"
+        v-permission="permission.batchAdd"
+        class="filter-item"
+        size="mini"
+        type="primary"
+        icon="el-icon-plus"
+        @click.stop="crud.toBatchAdd"
+      >
+        {{ props.addBatchText }}
+      </common-button>
+      <common-button
         v-if="crud.optShow.add"
         v-permission="permission.add"
         class="filter-item"
@@ -13,8 +24,8 @@
         @click.stop="crud.toAdd"
       >
         {{ props.addText }}
-      </el-button>
-      <el-button
+      </common-button>
+      <common-button
         v-if="crud.optShow.edit"
         v-permission="permission.edit"
         class="filter-item"
@@ -25,8 +36,8 @@
         @click.stop="crud.toEdit(crud.selections[0])"
       >
         修改
-      </el-button>
-      <el-button
+      </common-button>
+      <common-button
         v-if="crud.optShow.del"
         v-permission="permission.del"
         class="filter-item"
@@ -38,8 +49,8 @@
         @click.stop="toDelete(crud.selections)"
       >
         {{ props.delText }}
-      </el-button>
-      <el-button
+      </common-button>
+      <common-button
         v-if="crud.optShow.download"
         :loading="crud.downloadLoading"
         :disabled="!crud.data.length"
@@ -48,14 +59,14 @@
         type="warning"
         icon="el-icon-download"
         @click.stop="crud.doExport"
-        >导出</el-button
+        >导出</common-button
       >
       <!--右侧-->
       <slot name="optRight" />
     </span>
     <span class="crud-opts-right">
       <slot v-if="device !== 'mobile'" name="viewLeft" />
-      <el-button-group style="max-width:142px">
+      <el-button-group style="max-width: 142px">
         <el-button
           v-if="props.showSearch"
           size="mini"
@@ -75,17 +86,27 @@
             /> -->
             </el-button>
           </template>
-          <el-checkbox v-model="allColumnsSelected" :indeterminate="allColumnsSelectedIndeterminate" @change="handleCheckAllChange">
-            全选
-          </el-checkbox>
-          <el-checkbox
-            v-for="item in crud.props.tableColumns"
-            :key="item.label"
-            v-model="item.visible"
-            @change="handleCheckedTableColumnsChange(item)"
-          >
-            {{ item.label }}
-          </el-checkbox>
+          <div class="column-list">
+            <el-checkbox
+              v-model="allColumnsSelected"
+              :indeterminate="allColumnsSelectedIndeterminate"
+              @change="handleCheckAllChange"
+              size="mini"
+            >
+              全选
+            </el-checkbox>
+            <template v-for="item in crud.tableColumns">
+              <el-checkbox
+                v-if="typeof item === 'object'"
+                :key="item.label"
+                v-model="item.visible"
+                size="mini"
+                @change="handleCheckedTableColumnsChange(item)"
+              >
+                {{ item.label }}
+              </el-checkbox>
+            </template>
+          </div>
         </el-popover>
       </el-button-group>
     </span>
@@ -95,7 +116,7 @@
 import { defineProps, ref, inject, nextTick } from 'vue'
 import { regExtra } from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElButtonGroup, ElButton } from 'element-plus'
 
 const props = defineProps({
   showRefresh: {
@@ -109,6 +130,10 @@ const props = defineProps({
   showSearch: {
     type: Boolean,
     default: true
+  },
+  addBatchText: {
+    type: String,
+    default: '批量新增'
   },
   addText: {
     type: String,
@@ -149,8 +174,8 @@ function handleCheckAllChange(val) {
     allColumnsSelected.value = true
     return
   }
-  for (const key in crud.props.tableColumns) {
-    crud.props.tableColumns[key].visible = val
+  for (const key in crud.tableColumns) {
+    crud.tableColumns[key].visible = val
   }
   allColumnsSelected.value = val
   allColumnsSelectedIndeterminate.value = false
@@ -160,9 +185,9 @@ function handleCheckAllChange(val) {
 function handleCheckedTableColumnsChange(item) {
   let totalCount = 0
   let selectedCount = 0
-  for (const key in crud.props.tableColumns) {
+  for (const key in crud.tableColumns) {
     ++totalCount
-    selectedCount += crud.props.tableColumns[key].visible ? 1 : 0
+    selectedCount += crud.tableColumns[key].visible ? 1 : 0
   }
   if (selectedCount === 0) {
     crud.notify('请至少选择一列', CRUD.NOTIFICATION_TYPE.WARNING)
@@ -189,6 +214,13 @@ function toggleSearch() {
 </script>
 
 <style lang="scss" scoped>
+.column-list {
+  display: inline-flex;
+  flex-direction: column;
+}
+.common-button + .common-button {
+  margin-left: 0;
+}
 .crud-opts {
   padding: 6px 0;
   display: -webkit-flex;

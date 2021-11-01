@@ -104,14 +104,14 @@ function setFormContent(form, storageForm) {
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
   if (!ls.isRegister) return
   const _form = form || ls.form
-  storage.set(`ADD_FORM_${ls.key}`, {
+  storage.set(`${ADD_FORM.KEY_PREFIX}_${ls.key}`, {
     type: type,
     content: _form
   }, ls.expired)
 }
 
 function clearFormStorage(ls) {
-  storage.remove(`ADD_FORM_${ls.key}`)
+  storage.remove(`${ADD_FORM.KEY_PREFIX}_${ls.key}`)
 }
 
 // 异常关闭
@@ -126,5 +126,5 @@ function abnormalClose(ls, crud) {
 
 // 获取表单缓存
 function getFormByStorage(key) {
-  return storage.get(`ADD_FORM_${key}`)
+  return storage.get(`${ADD_FORM.KEY_PREFIX}_${key}`)
 }

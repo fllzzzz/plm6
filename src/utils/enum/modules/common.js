@@ -43,6 +43,16 @@ const installationAuditStatusEnum = {
 }
 constantize(installationAuditStatusEnum)
 
+// 单位类型
+const unitTypeEnum = {
+  DIGIT: { L: '计数单位', K: 'DIGIT', V: 1 },
+  WEIGHT: { L: '质量单位', K: 'WEIGHT', V: 2 },
+  LENGTH: { L: '长度单位', K: 'LENGTH', V: 3 },
+  AREA: { L: '面积单位', K: 'AREA', V: 4 },
+  VOLUME: { L: '体积单位', K: 'VOLUME', V: 5 }
+}
+constantize(unitTypeEnum)
+
 // 数值或百分比
 const numOrPctEnum = {
   NUMBER: { L: '数值', K: 'NUMBER', V: 1 },
@@ -87,6 +97,7 @@ export {
   whetherEnum, // 是否
   numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型
+  unitTypeEnum, // 单位类型
   fileClassifyEnum, // 文件分类
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
@@ -100,6 +111,7 @@ export default {
   whetherEnum, // 是否
   numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型
+  unitTypeEnum, // 单位类型
   fileClassifyEnum, // 文件分类
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态

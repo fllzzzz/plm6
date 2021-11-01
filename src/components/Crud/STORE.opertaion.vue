@@ -6,6 +6,12 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
-const fmStore = inject('fmStore')
+import { defineProps, inject } from 'vue'
+const props = defineProps({
+  batch: {
+    type: Boolean,
+    default: false
+  }
+})
+const fmStore = inject(props.batch ? 'bfmStore' : 'fmStore')
 </script>

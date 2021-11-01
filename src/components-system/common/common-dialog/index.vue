@@ -1,6 +1,11 @@
 <template>
-  <el-drawer
-    v-model="drawerVisible"
+  <el-dialog
+    v-model="dialogVisible"
+    :title="props.title"
+    :width="props.width"
+    :fullscreen="props.fullscreen"
+    :top="props.top"
+    :center="props.center"
     :append-to-body="props.appendToBody"
     :lock-scroll="props.lockScroll"
     :before-close="handleClose"
@@ -11,44 +16,37 @@
     :custom-class="customClass"
     :destroy-on-close="props.destroyOnClose"
     :modal="props.modal"
-    :direction="props.direction"
     :show-close="false"
-    :size="props.size"
-    :title="props.title"
-    :with-header="props.withHeader"
-    :modal-class="props.modalClass"
-    :z-index="props.zIndex"
     @open="open"
     @opened="opened"
     @close="close"
     @closed="closed"
   >
-    <!-- 避免el-drawer自带的打开聚焦功能 -->
-    <el-input class="remove" />
-
     <template #title>
       <slot name="title">
-        <div class="drawer-title">
+        <div class="dialog-title">
           <span class="title">
             <span>{{ props.title }}</span>
           </span>
           <span>
-          <slot name="titleRight" />
-          <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
+            <slot name="titleRight" />
+            <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>
         </div>
       </slot>
     </template>
-
-    <div v-show="contentVisible">
-      <slot v-if="loaded" name="content" />
-    </div>
-  </el-drawer>
+    <slot />
+    <template v-if="slots.footer" #footer>
+      <slot name="footer" />
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { watch, computed, defineProps, defineEmits, defineExpose, ref } from 'vue'
+import { watch, computed, defineProps, defineEmits, ref, useSlots } from 'vue'
 import { isNotBlank } from '@data-type/index'
+
+const slots = useSlots()
 
 const emit = defineEmits(['open', 'opened', 'close', 'closed', 'update:modelValue'])
 
@@ -57,6 +55,7 @@ const props = defineProps({
     type: Boolean,
     default: undefined
   },
+  // crud用
   visible: {
     // crud 使用
     type: Boolean,
@@ -70,6 +69,27 @@ const props = defineProps({
     type: String,
     default: undefined
   },
+  title: {
+    type: String,
+    default: undefined
+  },
+  top: {
+    type: String,
+    default: '15vh'
+  },
+  center: {
+    type: Boolean,
+    default: true
+  },
+  width: {
+    type: [String, Number],
+    default: '50%'
+  },
+  fullscreen: {
+    type: Boolean,
+    default: false
+  },
+
   appendToBody: {
     type: Boolean,
     default: true
@@ -109,88 +129,19 @@ const props = defineProps({
   modal: {
     type: Boolean,
     default: true
-  },
-  direction: {
-    type: String,
-    default: 'rtl'
-  },
-  size: {
-    type: [String, Number],
-    default: '30%'
-  },
-  title: {
-    type: String,
-    default: undefined
-  },
-  withHeader: {
-    type: Boolean,
-    default: true
-  },
-  modalClass: {
-    type: String,
-    default: undefined
-  },
-  zIndex: {
-    type: Number,
-    default: undefined
-  },
-  wrapperClosable: {
-    type: Boolean,
-    default: true
-  },
-  showDelay: {
-    type: Number,
-    default: 0
-  },
-  loadDelay: {
-    type: Number,
-    default: 300
   }
 })
 
 // 自定义类名
-const customClass = props.customClass || '' + ' common-drawer'
+const customClass = props.customClass || '' + ' common-dialog'
 
-const drawerVisible = ref(false)
-// 内容是否显示
-const contentVisible = ref(false)
-// 是否已加载
-const loaded = ref(false)
+const dialogVisible = ref(false)
 
 // 是否使用prop:visible 控制
 const isVisibleProp = computed(() => isNotBlank(props.visible))
 
 watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
-  drawerVisible.value = isVisibleProp.value ? v : mv
-})
-
-watch(
-  () => drawerVisible.value,
-  (flag) => {
-    if (flag) {
-      if (props.showDelay) {
-        setTimeout(() => {
-          contentVisible.value = true
-        }, props.showDelay)
-      } else {
-        contentVisible.value = true
-      }
-    } else {
-      contentVisible.value = false
-    }
-  }
-)
-
-watch(contentVisible, (flag) => {
-  if (flag && !loaded.value) {
-    if (props.loadDelay) {
-      setTimeout(() => {
-        loaded.value = true
-      }, props.loadDelay)
-    } else {
-      loaded.value = true
-    }
-  }
+  dialogVisible.value = isVisibleProp.value ? v : mv
 })
 
 function handleClose() {
@@ -222,26 +173,10 @@ function close() {
 function closed() {
   emit('closed')
 }
-
-defineExpose({
-  loaded,
-  handleClose
-})
 </script>
 
 <style lang="scss" scoped>
-.common-drawer  {
-  ::v-global(.el-drawer__header) {
-    margin-bottom: 15px;
-  }
-}
-.remove {
-  position: absolute;
-  top: -99999px;
-  left: -99999px;
-}
-
-.drawer-title {
+.dialog-title {
   display: flex;
   align-items: center;
   justify-content: space-between;

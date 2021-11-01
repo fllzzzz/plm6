@@ -9,7 +9,7 @@
       icon="el-icon-edit"
       @click.stop="crud.toEdit(props.data)"
     />
-    <el-popover v-model:visible="pop" placement="top" width="180" trigger="manual" @show="onPopoverShow" @hide="onPopoverHide">
+    <el-popover v-if="props.showDel && useCheckPermission(permission.del)" v-model:visible="pop" placement="top" width="180" trigger="manual" @show="onPopoverShow" @hide="onPopoverHide">
       <p>{{ props.delPrompt }}</p>
       <div style="text-align: right; margin: 0">
         <common-button size="mini" type="text" @click="cancelDelete">取消</common-button>
@@ -17,8 +17,6 @@
       </div>
       <template #reference>
         <common-button
-          v-if="props.showDel"
-          v-permission="permission.del"
           :loading="crud.dataStatus[data.id].delete === 2"
           :disabled="props.disabledDle"
           type="danger"
@@ -34,6 +32,7 @@
 <script setup>
 import { defineProps, ref, inject } from 'vue'
 import { regExtra } from '@compos/use-crud'
+import useCheckPermission from '@compos/use-check-permission'
 
 const props = defineProps({
   data: {
