@@ -122,7 +122,7 @@ const selectedParent = computed(() => {
 // 上级科目选中提示
 const labelTip = computed(() => {
   const parent = selectedParent.value
-  return isNotBlank(parent) ? `上级科目：${parent.basicClassName}-${parent.name}-${parent.code}` : null
+  return isNotBlank(parent) ? `上级科目：【${parent.serialNumber}】${parent.basicClassName}-${parent.name}` : null
 })
 
 // 上一个等级的所有的科目id

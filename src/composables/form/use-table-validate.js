@@ -11,6 +11,7 @@ import { ElMessage } from 'element-plus'
 export default function useTableValidate({ list, rules, dittos = new Map() }) {
   let flag = true
   let message = '请填写数据'
+  const copyList = JSON.parse(JSON.stringify(list))
   if (list && list.length > 0) {
     const blankRowsIndex = [] // 数据为空的下标
     let isFirstRow = true // 首行，第一条有数据的记录
@@ -51,8 +52,8 @@ export default function useTableValidate({ list, rules, dittos = new Map() }) {
       }
 
       row.verify = {}
-      for (const rule in rules.value) {
-        row.verify[rule] = validate(rules.value[rule], row[rule])
+      for (const rule in rules) {
+        row.verify[rule] = validate(rules[rule], row[rule])
         if (!row.verify[rule]) {
           flag = false
         }
@@ -72,6 +73,7 @@ export default function useTableValidate({ list, rules, dittos = new Map() }) {
     // 数据为空(全部空行的情况)
     if (list.length === 0) {
       flag = false
+      Object.assign(list, copyList)
     }
   } else {
     flag = false
@@ -103,7 +105,7 @@ export function wrongCellMask({ row, column, rowIndex, columnIndex }, rules) {
 export function validate(rules, value, row = {}) {
   let flag = true
   // 判断是否存在校验
-  if (!rules || rules.length === 0) {
+  if (isBlank(rules)) {
     return flag
   }
   for (const rule of rules) {

@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, nextTick, watch, onUpdated } from 'vue'
+import { onMounted, onBeforeUnmount, ref, nextTick, watch, onUpdated } from 'vue'
 import { cleanArray } from '@data-type/array'
 import { elHScrollable } from '@/utils/element/index'
 import { getStyle, style2Num, splitStyleOfNum } from '@/utils/element/style'
@@ -9,6 +9,8 @@ const EL_PAGINATION = '.el-pagination'
 const NAVBAR = '#navbar'
 /**
  * TODO: 考虑页面可能会出现多个相同的class，允许传入class的序号以便获取正确的class
+ * TODO: 考虑有很多模块extraBox与wrapperBox是重复的，设置为指定模式，不用填写
+ * TODO: 考虑传入el
  * 为了保证页面内部不出现滚动条计算dom的最大高度
  * @param {string | Array} extraBox ='.head-container' 需要删去高度的dom 可传入id或class
  * @param {string | Array} wrapperBox = '.app-container' 包裹层
@@ -16,7 +18,7 @@ const NAVBAR = '#navbar'
  * @param {boolean} paginate = false 是否存在分页插件。
  * @param {number | string} extraHeight = 0 需要减去的额外高度 允许px，vh，vw, 其他单位视为px。不带单位视为px
  * @param {number | string} minHeight = 400 最小高度 允许px，vh, vw, 其他单位视为px。不带单位视为px
- * @param {computed(boolean)} listener 开始监听
+ * @param {computed(boolean), Function} trigger 开始监听.function 的返回值需要是可监听的对象
  * @returns
  */
 export default function useMaxHeight(
@@ -24,44 +26,42 @@ export default function useMaxHeight(
     mainBox,
     extraBox = '.head-container',
     wrapperBox = '.app-container',
-    navbar = true,
+    navbar = !mainBox,
     paginate = false,
     extraHeight = 0,
     minHeight = 400
   } = {},
-  listener
+  trigger
 ) {
   const maxHeight = ref(0)
+  const maxHeightStyle = ref()
+  const heightStyle = ref()
   const isBind = ref(false)
 
   onMounted(() => {
     bindEventListener(windowSizeHandler, isBind)
-    if (isNotBlank(listener)) {
+    if (isNotBlank(trigger)) {
+      let wv
+      switch (trigger.constructor.name) {
+        case 'Function':
+        case 'RefImpl': wv = trigger
+          break
+        case 'ComputedRefImpl':wv = trigger.value
+          break
+        default: wv = trigger
+      }
       watch(
-        () => listener.value,
+        wv,
         (flag) => {
           if (flag) {
             nextTick(() => windowSizeHandler())
+          } else {
+            unbindEventListener(windowSizeHandler)
           }
         },
         { immediate: true }
       )
     }
-    // if (isBlank(listener)) {
-    //   bindEventListener(windowSizeHandler, isBind)
-    // } else {
-    //   // 只监听一次。适用于一开始隐藏的页面，高度计算不准确
-    //   const onceWatch = watch(
-    //     () => listener.value,
-    //     (flag) => {
-    //       if (flag) {
-    //         // onceWatch() // 卸载
-    //         bindEventListener(windowSizeHandler, isBind)
-    //       }
-    //     },
-    //     { immediate: true }
-    //   )
-    // }
   })
 
   onUpdated(() => {
@@ -72,15 +72,21 @@ export default function useMaxHeight(
   })
 
   // 取消resize
-  onUnmounted(() => {
-    window.removeEventListener('resize', windowSizeHandler)
+  onBeforeUnmount(() => {
+    unbindEventListener(windowSizeHandler)
   })
 
   const windowSizeHandler = () => {
     maxHeight.value = calcMaxHeight({ mainBox, extraBox, wrapperBox, navbar, paginate, extraHeight, minHeight })
+    heightStyle.value = `height: ${maxHeight.value}px`
+    maxHeightStyle.value = `max-height: ${maxHeight.value}px`
   }
 
-  return maxHeight
+  return {
+    maxHeight,
+    heightStyle,
+    maxHeightStyle
+  }
 }
 
 // 计算最大高度
@@ -112,6 +118,7 @@ function calcMaxHeight({ mainBox, extraBox, navbar, wrapperBox, paginate, extraH
   // 窗口高度 - navbar高度 - 包装层内外边距 - 额外dom的高度（含外边距） - 分页插件的高度 - 自定义额外高度
   // 注意：未处理外边距重叠的情况，若产生，可通过填写extraHeight处理
   const height = mainBoxHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight
+  // console.log(extraBox, mainBoxHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
 
   return height > realMiniHeight ? height : realMiniHeight
 }
@@ -290,5 +297,10 @@ function bindEventListener(fn, isBind) {
     window.addEventListener('resize', fn, { passive: false })
     isBind.value = true
   })
+}
+
+// 移除监听事件
+function unbindEventListener(fn) {
+  window.removeEventListener('resize', fn)
 }
 

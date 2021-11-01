@@ -10,12 +10,12 @@
 </template>
 
 <script setup>
+import crudApi from '@/api/config/classification-manage/classification-config'
 import { reactive, ref, provide } from 'vue'
 import EO from '@enum'
 import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank } from '@data-type/index'
 
-import crudApi from '@/api/config/classification-manage/classification-config'
 import useMaxHeight from '@compos/use-max-height'
 import useCheckPermission from '@compos/use-check-permission'
 import rootCard from './module/root-card.vue'
@@ -32,7 +32,7 @@ const permission = {
 }
 
 // 最大高度
-const maxHeight = useMaxHeight({ extraBox: null, wrapperBox: ['.app-container', '#card-main-content'] })
+const { maxHeight } = useMaxHeight({ extraBox: null, wrapperBox: ['.app-container', '#card-main-content'] })
 
 const addLevel = ref(1)
 const visible = reactive({

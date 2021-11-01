@@ -1,9 +1,9 @@
 <!--搜索与重置-->
 <template>
   <span>
-    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">搜索</el-button>
-    <el-button
-      v-if="resetBtn"
+    <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="crud.toQuery">搜索</common-button>
+    <common-button
+      v-if="props.resetBtn"
       class="filter-item"
       size="mini"
       type="warning"
@@ -11,25 +11,22 @@
       @click.stop="crud.resetQuery()"
     >
       重置
-    </el-button>
+    </common-button>
   </span>
 </template>
-<script>
-export default {
-  props: {
-    crud: {
-      type: Object,
-      required: true
-    },
-    resetBtn: {
-      type: Boolean,
-      default: true
-    },
-    itemClass: {
-      type: String,
-      required: false,
-      default: ''
-    }
+<script setup>
+import { defineProps, inject } from 'vue'
+
+const props = defineProps({
+  crud: {
+    type: Object,
+    required: true
+  },
+  resetBtn: {
+    type: Boolean,
+    default: true
   }
-}
+})
+
+const crud = inject('crud', crud)
 </script>

@@ -1,77 +1,74 @@
 <template>
-  <el-tooltip class="item" effect="dark" :content="tip" :disabled="!showTooltip" placement="top-start">
+  <el-tooltip class="item" effect="dark" :content="props.tip" :disabled="!props.showTooltip" placement="top-start">
     <el-button
-      v-permission="permission"
+      v-permission="props.permission"
       :loading="downloadLoading"
-      :disabled="disabled"
+      :disabled="props.disabled"
       type="warning"
       icon="el-icon-download"
       size="mini"
       @click.stop="doExport"
     >
-      <span v-if="showText" v-text="tip" />
+      <span v-if="props.showText" v-text="tip" />
     </el-button>
   </el-tooltip>
 </template>
-<script>
-import { crud } from '@crud/crud'
-import { fileDownload } from '@/utils/other'
 
-export default {
-  mixins: [crud()],
-  props: {
-    data: {
-      type: null,
-      default: undefined
-    },
-    permission: {
-      type: Array,
-      required: true
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    tip: {
-      type: String,
-      default: '导出'
-    },
-    customFn: {
-      type: Function,
-      default: undefined
-    },
-    showText: {
-      type: Boolean,
-      default: false
-    },
-    showTooltip: {
-      type: Boolean,
-      default: false
-    }
+<script setup>
+import { defineProps, ref } from 'vue'
+import { regExtra } from '@compos/use-crud'
+import { isNotBlank } from '@data-type/index'
+import { fileDownload } from '@/utils/file'
+
+const props = defineProps({
+  data: {
+    type: null,
+    default: undefined
   },
-  data() {
-    return {
-      downloadLoading: false
-    }
+  permission: {
+    type: Array,
+    required: true
   },
-  methods: {
-    async doExport() {
-      try {
-        this.downloadLoading = true
-        if (this.customFn) {
-          await fileDownload(this.customFn, this.data)
-        } else {
-          this.crud.downloadLoading = true
-          await this.crud.doExport(this.data)
-        }
-      } catch (error) {
-        console.log('通用导出', error)
-      } finally {
-        this.downloadLoading = false
-        if (this.$isNotBlank(this.customFn)) {
-          this.crud.downloadLoading = false
-        }
-      }
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  tip: {
+    type: String,
+    default: '导出'
+  },
+  customFn: {
+    type: Function,
+    default: undefined
+  },
+  showText: {
+    type: Boolean,
+    default: false
+  },
+  showTooltip: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const downloadLoading = ref(false)
+const { crud } = regExtra()
+
+async function doExport() {
+  try {
+    downloadLoading.value = true
+    if (props.customFn) {
+      await fileDownload(props.customFn, props.data)
+    } else {
+      crud.downloadLoading = true
+      await crud.doExport(props.data)
+    }
+  } catch (error) {
+    console.log('通用导出', error)
+  } finally {
+    downloadLoading.value = false
+    if (isNotBlank(props.customFn)) {
+      crud.downloadLoading = false
     }
   }
 }

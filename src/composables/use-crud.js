@@ -1,24 +1,189 @@
+import { provide, inject, reactive, ref, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { deepClone } from '@data-type/index'
+import { deepClone, isNotBlank } from '@data-type/index'
 import { debounce } from '@/utils'
 import { fileDownload } from '@/utils/file'
 
 import useCheckPermission from './use-check-permission'
+import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
 import { ElNotification } from 'element-plus'
 
 const CRUD = {} // crud公共信息处理
-
+// TODO: 关闭修改或添加窗口，由于状态信息的及时变更，会导致窗口未关闭，标题直接发生变化
 /**
- *
+ * crud组件
+ * @param {*} options 组件自定义选项
+ * @param {*} tableRef 非必填 (由于执行顺序问题，无法直接从实例中获取该值，需要传入)
+ * @param {*} registerPresenter= true 是否注册主组件，若不注册可之后调用presenter方法注册
  */
-export default function useCrud(options) {
+export default function useCRUD(options, tableRef, registerPresenter = true) {
   // 获取crud实例
   const crud = getCrud(options)
-  Object.freeze(crud)
+  // 不能添加新属性，也不能重新配置或者删除任何现有属性（但是可以修改属性的值）
+  Object.seal(crud)
+  if (registerPresenter) {
+    const data = regPresenter(crud, tableRef)
+    return data
+  }
   return { crud }
 }
 
-// TODO:组件注册方法
+/**
+ * 主页面注册 主列表页的注册
+ * @param {*} crud
+ * @param {*} tableRef
+ * @returns { columns, crud } = { 显示的列, crud }
+ */
+export function regPresenter(crud, tableRef) {
+  let columns = ref({})
+  provide('crud', crud)
+  provide('permission', crud.permission)
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.PRESENTER, internalInstance, 0)
+  vmInfo.tableRef = tableRef
+  crud.ref.table = tableRef
+
+  // 卸载前，注销组件
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+    delete crud.ref.table
+  })
+
+  // TODO:卸载后初始化crud
+  onUnmounted(() => {
+    crud.init()
+  })
+
+  onMounted(() => {
+    if (crud.queryOnPresenterCreated) {
+      // TODO:toQuery本来是放在created中查询，因钩子写在组件中，此时触发无法触发钩子的函数，故移入mounted，等待created完成再执行(错误)
+      crud.toQuery()
+    }
+    if (tableRef) {
+      const tableColumns = tableRef.value.getColumns()
+      // 获得table的所有列
+      tableColumns.forEach(e => {
+        if (!e.property || e.type !== 'default') {
+          return
+        }
+        columns[e.property] = {
+          label: e.label,
+          visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+        }
+      })
+      // 显示列的方法
+      columns = crud.obColumns(columns)
+      crud.tableColumns = columns
+    }
+  })
+
+  return { CRUD: vmInfo.CRUD, crud, columns }
+}
+
+/**
+ * header组件
+ * @param {object} defaultQuery 默认查询项
+ * @returns
+ */
+export function regHeader(defaultQuery) {
+  const crud = inject('crud')
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.HEADER, internalInstance, 1)
+
+  for (const key in defaultQuery) {
+    if (typeof defaultQuery[key] !== 'object') {
+      defaultQuery[key] = {
+        value: defaultQuery[key], // 默认值
+        resetAble: true // 是否可重置
+      }
+    }
+    // TODO: defaultQuery.date是数组
+    if (defaultQuery[key] instanceof Array) {
+      crud.query[key] = defaultQuery[key]
+    } else {
+      crud.query[key] = defaultQuery[key].value
+    }
+  }
+  Object.assign(crud.defaultQuery, JSON.parse(JSON.stringify(defaultQuery)))
+
+  onMounted(() => {
+    if (crud.queryOnPresenterCreated) {
+      // TODO:toQuery本来是放在created中查询，因钩子写在组件中，此时触发无法触发钩子的函数，故移入mounted，等待created完成再执行(错误)
+      crud.toQuery()
+    }
+  })
+
+  // 卸载前，注销组件
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+  })
+
+  return { CRUD: vmInfo.CRUD, crud, query: crud.query }
+}
+
+/**
+ * 注册表单组件
+ * @param {object} defaultForm 默认表单
+ * @param {object} formRef
+ */
+export function regForm(defaultForm, formRef) {
+  const crud = inject('crud')
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.FORM, internalInstance, 2)
+  crud.defaultForm = defaultForm
+  vmInfo.formRef = formRef
+  crud.ref.form = formRef
+  crud.resetForm()
+
+  // 添加表单缓存
+  let fmStore
+  if (crud.formStore) {
+    const store = useAddFormLocalStorage(`specification_config`)
+    fmStore = store
+    provide('fmStore', fmStore)
+  }
+
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+    delete crud.ref.form
+  })
+
+  return { CRUD: vmInfo.CRUD, crud, form: crud.form, fmStore, ADD_FORM: fmStore }
+}
+
+/**
+ * 注册分页组件
+ */
+export function regPagination() {
+  const crud = inject('crud')
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.PAGINATION, internalInstance, 3)
+  // 卸载前，注销组件
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+  })
+  return { CRUD: vmInfo.CRUD, crud, page: crud.page }
+}
+
+/**
+ * 注册其他组件
+ * @param {object} options 选项
+ */
+export function regExtra(options = {}) {
+  const crud = inject('crud')
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.OTHER, internalInstance)
+
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+  })
+  return { CRUD: vmInfo.CRUD, crud }
+}
 
 /**
  * 获取主要数据
@@ -31,9 +196,9 @@ function getCrud(options) {
   // 添加crud内部选项
   const data = addSystemOptions(hOptions)
   // 拷贝data
-  const _data = cloneData(data)
+  const _data = deepClone(data)
   // 以上为基础数据
-  const crud = Object.assign({}, _data)
+  const crud = reactive(Object.assign({}, _data))
   // 添加crud默认信息
   addCrudDefaultInfo(crud, data)
   // 添加crud主要业务使用的方法
@@ -44,32 +209,6 @@ function getCrud(options) {
   addCrudMethod(crud, data)
 
   return crud
-}
-
-// 拷贝data
-// TODO: 此处status待查
-function cloneData(data) {
-  return Object.assign(deepClone(data), {
-    status: {
-      add: CRUD.STATUS.NORMAL,
-      edit: CRUD.STATUS.NORMAL,
-      // 添加或编辑状态
-      get cu() {
-        if (this.add === CRUD.STATUS.NORMAL && this.edit === CRUD.STATUS.NORMAL) {
-          return CRUD.STATUS.NORMAL
-        } else if (this.add === CRUD.STATUS.PREPARED || this.edit === CRUD.STATUS.PREPARED) {
-          return CRUD.STATUS.PREPARED
-        } else if (this.add === CRUD.STATUS.PROCESSING || this.edit === CRUD.STATUS.PROCESSING) {
-          return CRUD.STATUS.PROCESSING
-        }
-        throw new Error('错误的状态')
-      },
-      // 标题
-      get title() {
-        return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
-      }
-    }
-  })
 }
 
 /**
@@ -83,11 +222,12 @@ function getDefaultOption() {
     // 请求数据的url
     url: '',
     // 表单ref
-    formName: 'form',
+    // formName: 'form',
     // table,emptyText
     emptyText: '等待加载',
     // 表格数据
     data: [],
+    dataPath: 'content',
     // 额外数据,可用于crud组件之间的数据传输
     // extra: {},
     // 选择项
@@ -102,6 +242,10 @@ function getDefaultOption() {
     form: {},
     // 重置表单
     defaultForm: () => {},
+    // 表单是否缓存key
+    formStoreKey: '',
+    // 表单缓存
+    formStore: false,
     // 默认隐藏列
     invisibleColumns: ['createTime', 'updateTime'],
     // 提交时必填字段
@@ -115,7 +259,7 @@ function getDefaultOption() {
     // 首次查询时间
     firstQueryTime: null,
     // CRUD Method
-    crudMethod: {
+    crudApi: {
       add: (form) => {},
       delete: (id) => {},
       edit: (form) => {},
@@ -174,7 +318,9 @@ function addSystemOptions(options) {
     // 导出的 Loading
     downloadLoading: false,
     // 删除的 Loading
-    delAllLoading: false
+    delAllLoading: false,
+    // 是否显示搜索项
+    searchToggle: true
   }
   return data
 }
@@ -183,11 +329,34 @@ function addSystemOptions(options) {
 function addCrudDefaultInfo(crud, data) {
   Object.assign(crud, {
     // 避免默认sort变更
-    defaultSort: data.options.sort,
+    defaultSort: data.sort,
     // 记录初始默认的查询参数，后续重置查询时使用
     defaultQuery: JSON.parse(JSON.stringify(data.query)),
     // 预留4位存储：组件 主页、头部、分页、表单，调试查看也方便找
-    vms: Array(4)
+    vms: [],
+    // 用于存放tableRef、formRef等
+    ref: {},
+    // 表格列
+    tableColumns: {},
+    status: { // status 需要放在深拷贝之后加入，因此放在该对象中
+      add: CRUD.STATUS.NORMAL,
+      edit: CRUD.STATUS.NORMAL,
+      // 添加或编辑状态
+      get cu() {
+        if (this.add === CRUD.STATUS.NORMAL && this.edit === CRUD.STATUS.NORMAL) {
+          return CRUD.STATUS.NORMAL
+        } else if (this.add === CRUD.STATUS.PREPARED || this.edit === CRUD.STATUS.PREPARED) {
+          return CRUD.STATUS.PREPARED
+        } else if (this.add === CRUD.STATUS.PROCESSING || this.edit === CRUD.STATUS.PROCESSING) {
+          return CRUD.STATUS.PROCESSING
+        }
+        throw new Error('错误的状态')
+      },
+      // 标题
+      get title() {
+        return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
+      }
+    }
   })
 }
 
@@ -229,7 +398,7 @@ function addCrudBusinessMethod(crud) {
       }, CRUD.QUERY_DEBOUNCE_TIME)
       return
     }
-    if (!crud.verifyQuery()) {
+    if (!verifyQuery()) {
       crud.data = []
       crud.page.total = 0
       crud.emptyText = '暂无数据'
@@ -264,13 +433,13 @@ function addCrudBusinessMethod(crud) {
     let data = []
     try {
       crud.loading = true
-      data = await crud.crudMethod.get(crud.getQueryParams())
+      data = await crud.crudApi.get(crud.getQueryParams())
       crud.emptyText = '暂无数据'
-      data.content = data.content || []
+      // data.content = data.content || []
       await callVmHook(crud, CRUD.HOOK.handleRefresh, data)
       crud.page.total = data.totalElements
       crud.page.hasNextPage = data.hasNextPage
-      crud.data = data.content || []
+      crud.data = isNotBlank(crud.dataPath) ? data[crud.dataPath] || [] : data || []
       crud.resetDataStatus()
       crud.loading = false
     } catch (error) {
@@ -356,20 +525,20 @@ function addCrudBusinessMethod(crud) {
       await callVmHook(crud, CRUD.HOOK.afterEditCancel, crud.form)
     }
     // 清除表单验证
-    if (crud.findVM(crud.formName).$refs[crud.formName]) {
-      crud.findVM(crud.formName).$refs[crud.formName].clearValidate()
+    if (crud.ref.form) {
+      crud.ref.form.clearValidate()
     }
   }
 
   // 提交新增/编辑
   const submitCU = async () => {
-    if (!crud.verifySubmit()) {
+    if (!verifySubmit()) {
       return
     }
     if (!await callVmHook(crud, CRUD.HOOK.beforeValidateCU)) {
       return
     }
-    crud.findVM('form').$refs[crud.formName].validate(async (valid) => {
+    crud.ref.form.validate(async (valid) => {
       if (!valid) {
         return
       }
@@ -390,7 +559,8 @@ function addCrudBusinessMethod(crud) {
       return
     }
     try {
-      crud.submitResult = await crud.crudMethod.add(crud.form)
+      crud.submitResult = await crud.crudApi.add(crud.form)
+      await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL
       crud.resetForm()
       crud.addSuccessNotify()
@@ -408,7 +578,7 @@ function addCrudBusinessMethod(crud) {
       return
     }
     try {
-      crud.submitResult = await crud.crudMethod.edit(crud.form)
+      crud.submitResult = await crud.crudApi.edit(crud.form)
       crud.status.edit = CRUD.STATUS.NORMAL
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
       crud.editSuccessNotify()
@@ -442,7 +612,7 @@ function addCrudBusinessMethod(crud) {
       dataStatus.delete = CRUD.STATUS.PROCESSING
     }
     // TODO:查看代码逻辑是否有问题
-    return crud.crudMethod.del(ids).then(async () => {
+    return crud.crudApi.del(ids).then(async () => {
       if (delAll) {
         crud.delAllLoading = false
       } else dataStatus.delete = CRUD.STATUS.PREPARED
@@ -458,7 +628,7 @@ function addCrudBusinessMethod(crud) {
   }
 
   const _toQueryByDebounce = debounce(async () => {
-    crud._toQuery()
+    _toQuery()
   }, CRUD.QUERY_DEBOUNCE_TIME, false)
 
   const _toQuery = async () => {
@@ -499,7 +669,7 @@ function addCrudFeatureMethod(crud, data) {
   const doExport = async (data) => {
     try {
       crud.downloadLoading = true
-      await fileDownload(crud.crudMethod.download, data)
+      await fileDownload(crud.crudApi.download, data)
     } catch (error) {
       console.log(error)
     } finally {
@@ -559,10 +729,11 @@ function addCrudFeatureMethod(crud, data) {
    * @param {Array} data 数据
    */
   const resetForm = (data) => {
+    const ref = crud.ref.form
     // 清除表单信息 TODO:待改待测
-    if (crud.findVM('form').$refs[crud.formName]) {
+    if (ref) {
       // 设置默认值，因此重置放在顶部
-      crud.findVM('form').$refs[crud.formName].resetFields()
+      ref.resetFields()
     }
     const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm())
     const crudFrom = crud.form
@@ -570,14 +741,15 @@ function addCrudFeatureMethod(crud, data) {
       crudFrom[key] = undefined
     }
     for (const key in form) {
-      if (Object.prototype.hasOwnProperty.call(crudFrom, key)) {
-        crudFrom[key] = form[key]
-      } else {
-        // TODO: 待测
-        // Vue.set(crudFrom, key, form[key])
-      }
+      crudFrom[key] = form[key]
     }
   }
+
+  // 表单验证
+  const validateField = (field) => {
+    crud.ref.form.validateField(field)
+  }
+
   // 重置数据状态
   const resetDataStatus = () => {
     const dataStatus = {}
@@ -617,7 +789,7 @@ function addCrudFeatureMethod(crud, data) {
         crud.selectChange(selection, val)
       })
     } else {
-      crud.findVM('presenter').$refs['table'].clearSelection()
+      crud.ref.table.clearSelection()
     }
   }
   /**
@@ -631,7 +803,7 @@ function addCrudFeatureMethod(crud, data) {
       if (row.children) {
         row.children.forEach(val => {
           // TODO: 待改待测
-          crud.findVM('presenter').$refs['table'].toggleRowSelection(val, true)
+          crud.ref.table.toggleRowSelection(val, true)
           selection.push(val)
           if (val.children) {
             crud.selectChange(selection, val)
@@ -646,7 +818,7 @@ function addCrudFeatureMethod(crud, data) {
   const toggleRowSelection = (selection, data) => {
     if (data.children) {
       data.children.forEach(val => {
-        crud.findVM('presenter').$refs['table'].toggleRowSelection(val, false)
+        crud.ref.table.toggleRowSelection(val, false)
         for (const i in selection) {
           if (selection[i].id === val.id) {
             selection.splice(i, 1)
@@ -666,7 +838,7 @@ function addCrudFeatureMethod(crud, data) {
       const shortOrder = order === 'ascending' ? 'asc' : 'desc'
       sort = [`${prop}.${shortOrder}`]
     } else {
-      sort = crud.initSort
+      sort = crud.defaultSort
     }
     crud.sort = sort
     crud.toQuery()
@@ -681,6 +853,15 @@ function addCrudFeatureMethod(crud, data) {
     })
   }
 
+  // 显示的列
+  const obColumns = (columns) => {
+    return {
+      visible(col) {
+        return !columns || !columns[col] ? true : columns[col].visible
+      }
+    }
+  }
+
   Object.assign(crud, {
     doExport, // 通用导出
     getQueryParams, //  获取查询参数
@@ -689,6 +870,7 @@ function addCrudFeatureMethod(crud, data) {
     dleChangePage, // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
     resetQuery, // 重置查询参数,重置后进行查询操作
     resetForm, // 重置表单
+    validateField, // 表单字段校验
     resetDataStatus, // 重置数据状态
     getDataStatus, // 获取数据状态
     selectionChangeHandler, // 选择改变
@@ -696,7 +878,8 @@ function addCrudFeatureMethod(crud, data) {
     selectChange, // 用于树形表格多选，单选的封装
     toggleRowSelection, // 切换选中状态
     handleSortChange, // 处理排序方式改变
-    notify
+    notify,
+    obColumns // 获取显示的列
   })
 }
 
@@ -712,7 +895,7 @@ function addCrudMethod(crud, data) {
   // 注册组件
   const registerVM = (type, vm, index = -1) => {
     const vmInfo = {
-      id: `${crud.vms.length}_${new Date().getTime()}_${Math.random() * 100000}`,
+      uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
       CRUD: { HOOK: {}} // 用于hook
@@ -720,16 +903,17 @@ function addCrudMethod(crud, data) {
     // 默认新加入的vm放在数组最后面
     if (index < 0) {
       crud.vms.push(vmInfo)
-      return
+    } else {
+      // 将vm插入指定位置
+      crud.vms.length = Math.max(crud.vms.length, index)
+      crud.vms.splice(index, 1, vmInfo)
     }
-    // 将vm插入指定位置
-    crud.vms.length = Math.max(crud.vms.length, index)
-    crud.vms.splice(index, 1, vmInfo)
+    return vmInfo
   }
 
   // 注销组件
   const unregisterVM = (vm) => {
-    const del = crud.vms.splice(crud.vms.findIndex(e => e && e.id === vm.id), 1)
+    const del = crud.vms.splice(crud.vms.findIndex(e => e && e.uid === vm.uid), 1)
     return del
   }
 
@@ -759,8 +943,8 @@ async function callVmHook(crud, hook) {
   }
   // 遍历各组件
   for (const VM of crud.vms) {
-    if (VM.CRUD.HOOK[hook]) {
-      result = (await VM.CRUD.HOOK[hook](args)) !== false && result
+    if (VM && VM.CRUD.HOOK[hook]) {
+      result = (await VM.CRUD.HOOK[hook].apply(VM, args)) !== false && result
     }
   }
   return result
@@ -783,6 +967,15 @@ function mergeOptions(source, rewrite) {
 }
 
 CRUD.QUERY_DEBOUNCE_TIME = 350 // 查询防抖时间
+
+// CRUD 组件类型
+CRUD.VM_TYPE = {
+  PRESENTER: 'presenter',
+  HEADER: 'header',
+  PAGINATION: 'pagination',
+  FORM: 'form',
+  OTHER: 'other'
+}
 
 // CRUD状态
 CRUD.STATUS = {
@@ -845,6 +1038,8 @@ CRUD.HOOK = {
   beforeSubmit: 'beforeSubmit',
   /** 提交 - 之后 */
   afterSubmit: 'afterSubmit',
+  /** 添加成功 - 之后 */
+  afterAddSuccess: 'afterAddSuccess',
   /** 添加失败 - 之后 */
   afterAddError: 'afterAddError',
   /** 编辑失败 - 之后 */

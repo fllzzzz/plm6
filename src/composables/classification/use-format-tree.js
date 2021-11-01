@@ -24,6 +24,9 @@ function format(tree, parent, deep = 1) {
 
     if (isNotBlank(node.children)) {
       n.children = format(node.children, n, deep + 1)
+      n.isLeaf = false
+    } else {
+      n.isLeaf = true
     }
     return n
   })

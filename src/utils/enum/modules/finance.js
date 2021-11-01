@@ -1,6 +1,12 @@
 
 import { constantize } from '../base'
 
+const isWeightMeanEnum = {
+  TRUE: { L: '加权平均', K: 'TRUE', V: 1 },
+  FALSE: { L: '不加权平均', K: 'FALSE', V: 0 }
+}
+constantize(isWeightMeanEnum)
+
 // 工程结算类型
 const engineerSettlementTypeEnum = {
   THEORY: { L: '理计结算', SL: '理计', K: 'THEORY', V: 1 << 0, COLOR: '#1682e6' },
@@ -56,6 +62,7 @@ const paymentFineModeEnum = {
 constantize(paymentFineModeEnum)
 
 export default {
+  isWeightMeanEnum, // 是否加权平均
   invoiceTypeEnum, // 票据类型
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
@@ -66,6 +73,7 @@ export default {
 }
 
 export {
+  isWeightMeanEnum, // 是否加权平均
   invoiceTypeEnum, // 票据类型
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式

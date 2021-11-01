@@ -72,6 +72,7 @@ export default ({ command }) => {
     resolve: {
       alias: [
         { find: '@', replacement: resolve(__dirname, 'src') },
+        { find: '@crud', replacement: resolve(__dirname, 'src/components/Crud') },
         { find: '@comp', replacement: resolve(__dirname, 'src/components') },
         { find: '@comp-common', replacement: resolve(__dirname, 'src/components-system/common') },
         { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },

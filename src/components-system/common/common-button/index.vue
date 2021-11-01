@@ -1,8 +1,8 @@
-<!-- 普通按钮 -->
+<!-- 普通按钮, 避免使用el-button 时产生, disabled后仍可通过点击按钮中的文字触发click事件的BUG -->
 <template>
-  <div class="common-button inline-block">
+  <span class="common-button inline-block">
     <el-tooltip :effect="props.effect" :content="props.content" :placement="props.placement" :disabled="tooltipDisabled">
-      <div class="inline-block" style="width: inherit">
+      <span class="inline-block" style="width: inherit">
         <el-button
           v-if="slotDefault"
           v-bind="$attrs"
@@ -11,7 +11,7 @@
           :type="props.type"
           :disabled="props.disabled"
           :loading="loading"
-          @click.stop="handleClick"
+          @click="handleClick"
         >
           <span @click.stop="handleClick"><slot /></span>
         </el-button>
@@ -25,9 +25,9 @@
           :loading="loading"
           @click.stop="handleClick"
         />
-      </div>
+      </span>
     </el-tooltip>
-  </div>
+  </span>
 </template>
 
 <script setup>
@@ -93,14 +93,30 @@ const tooltipDisabled = computed(() => {
 })
 
 // 处理禁用，点击按钮内的文字仍可触发点击的情况
-function handleClick() {
+function handleClick(event) {
   if (props.disabled) return
-  emit('click')
+  emit('click', event)
 }
 </script>
 
 <style lang="scss" scoped>
 .common-button + .common-button{
-  margin-left: 8px;
+  margin-left: 6px;
+}
+
+.el-tag + .common-button{
+  margin-left: 6px;
+}
+
+.common-button + .el-tag {
+  margin-left: 6px;
+}
+
+span + .common-button {
+  margin-left: 6px;
+}
+
+.common-button + span {
+  margin-left: 6px;
 }
 </style>
