@@ -4,5 +4,6 @@ export const apiVersion = {
   contract: 1,
   common: 1,
   wms: 1,
-  config: 1
+  config: 1,
+  project: 1
 }

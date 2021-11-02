@@ -2,7 +2,7 @@
   <div ref="rightPanel" :class="{show:show}" class="rightPanel-container">
     <div class="rightPanel-background" />
     <div class="rightPanel">
-      <div v-show="show" class="handle-button" :style="{'top':buttonTop+'px','background-color':theme}" @click="show=!show">
+      <div v-show="show" class="handle-button" :style="{'top':buttonTop+'px','background-color':theme || '#1890ff'}" @click="show=!show">
         <i :class="show?'el-icon-close':'el-icon-setting'" />
       </div>
       <div class="rightPanel-items">
@@ -40,7 +40,7 @@ const rightPanel = ref()
 const { theme } = mapGetters('theme')
 
 // 显示当前窗口
-let show = computed({
+const show = computed({
   get() {
     return store.getters.showSettings
   },
@@ -68,7 +68,12 @@ watch(
 // ------------------ 监听 end -----------------------------
 
 // ------------------ 生命周期 start ------------------------
+
 onMounted(() => {
+  // 当前打开了右侧页面风格设计时，并且刷新了浏览器，需要添加点击事件
+  if (show.value) {
+    addEventClick()
+  }
   // insertToBody()
 })
 // ------------------ 生命周期 end ------------------------
@@ -80,7 +85,7 @@ function addEventClick() {
 function closeSidebar(evt) {
   const parent = evt.target.closest('.rightPanel')
   if (!parent) {
-    show = false
+    show.value = false
     window.removeEventListener('click', this.closeSidebar)
   }
 }

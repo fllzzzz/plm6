@@ -4,8 +4,9 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
 import { ElMessage } from 'element-plus'
 import { getToken, getRequestUrl } from '@/utils/storage'
-import { fetchMenus } from '@/api/user' // 获取菜单
+// import { fetchMenus } from '@/api/user' // 获取菜单
 import configRouter from '@/router/modules/config'
+import projectRouter from '@/router/modules/project'
 
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
@@ -112,7 +113,7 @@ const loadMenus = async (next, to) => {
   try {
     // 菜单：content
     // const { content = [] } = await fetchMenus()
-    const content = [configRouter]
+    const content = [configRouter, projectRouter]
     await store.dispatch('permission/generateRoutes', content)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

@@ -1,5 +1,6 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import configRouter from '@/router/modules/config'
+import projectRouter from '@/router/modules/project'
 
 // 用户登录（获取token）
 const userLogin = {
@@ -49,6 +50,18 @@ const userInfo = {
             'name': '配置管理',
             'icon': 'config',
             'redirect': 'base-config'
+          },
+          {
+            'id': 4,
+            'name': '项目管理',
+            'icon': 'config',
+            'redirect': 'project-manage/data-manage'
+          },
+          {
+            'id': 3,
+            'name': '成本管理',
+            'icon': 'config',
+            'redirect': 'base-config'
           }]
       }
     }
@@ -77,7 +90,8 @@ const userMenu = {
       message: '成功',
       data: {
         'content': [
-          configRouter
+          configRouter,
+          projectRouter
         ]
       }
     }
