@@ -149,7 +149,7 @@ const props = defineProps({
 })
 
 // 自定义类名
-const customClass = props.customClass || '' + ' common-drawer'
+const customClass = `${props.customClass || ''} common-drawer`
 
 const drawerVisible = ref(false)
 // 内容是否显示

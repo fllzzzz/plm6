@@ -232,6 +232,12 @@ div:focus {
     }
 } 
 
+.common-dialog {
+  .el-dialog__header{
+    padding-bottom: 0px;
+  }
+}
+
 // 表单提示信息
 .form-item-tip {
   display: block;
@@ -247,6 +253,10 @@ div:focus {
 .dialog-container{
   padding: 0px 20px 20px 20px;
   overflow: auto;
+}
+
+.icon-readonly {
+  color:darkgrey;
 }
 
 //vue-multiselect样式修改

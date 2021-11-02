@@ -12,10 +12,10 @@
     <template #titleRight>
       <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
       <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
-      <!-- <store-opertaion batch /> -->
+      <store-opertaion type="normal" />
     </template>
     <div class="heade-operate">
-      <common-radio-button v-model="currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
+      <common-radio-button v-model="form.currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
     </div>
     <el-form ref="formRef" :model="form" :disabled="submitLoading">
       <common-table
@@ -30,7 +30,7 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column
-          v-if="currentLevel > 1"
+          v-if="form.currentLevel > 1"
           key="parentId"
           prop="parentId"
           :show-overflow-tooltip="true"
@@ -40,7 +40,7 @@
           <template v-slot="scope">
             <cls-cascader
               v-model="scope.row.parentId"
-              :deep="currentLevel - 1"
+              :deep="form.currentLevel - 1"
               show-all-levels
               separator=" > "
               clearable
@@ -62,7 +62,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="currentLevel == 1"
+          v-if="form.currentLevel == 1"
           key="basicClass"
           prop="basicClass"
           :show-overflow-tooltip="true"
@@ -97,6 +97,7 @@
 </template>
 
 <script setup>
+// TODO:考虑增加缓存功能
 import { batchAdd } from '@/api/config/classification-manage/classification-config'
 import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, computed } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
@@ -105,7 +106,9 @@ import useMaxHeight from '@compos/use-max-height'
 import useDialogVisible from '@compos/use-dialog-visible'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
+import useAddFormLocalStorage from '@compos/form/use-add-form-local-storage'
 import clsCascader from '@comp-cls/cascader/index.vue'
+import StoreOpertaion from '@crud/STORE.opertaion.vue'
 import { ElMessage } from 'element-plus'
 
 // 等级枚举
@@ -133,10 +136,11 @@ const submitLoading = ref(false)
 // 刷新表格
 const refreshTable = ref(true)
 // 当前等级
-const currentLevel = ref(1)
+// const currentLevel = ref(1)
 
 // 表单
 const form = reactive({
+  currentLevel: 1, // 当前等级
   list: [] // 添加列表
 })
 
@@ -157,7 +161,7 @@ const rules = {
   }
 }
 
-const currentRules = computed(() => rules[`LV${currentLevel.value}`])
+const currentRules = computed(() => rules[`LV${form.currentLevel}`])
 
 // 同上的选项与值
 const dittos = new Map([
@@ -165,16 +169,19 @@ const dittos = new Map([
   ['parentId', -1]
 ])
 
-const { dialogVisible, handleClose } = useDialogVisible(emit, props, () => init(form.list))
+const { dialogVisible, handleClose } = useDialogVisible(emit, props)
 const { init, addRow, removeRow } = useTableOperate({}, 10, dittos)
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: currentRules, dittos })
+const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form.list, dialogVisible)
+
+ADD_FORM.init = () => init(form.list)
 
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.cls-batch-add',
     extraBox: ['.el-dialog__header', '.heade-operate'],
     wrapperBox: ['.cls-batch-add', '.el-dialog__body'],
-    extraHeight: '20vh',
+    extraHeight: '18vh',
     clientHRepMainH: true,
     navbar: false
   },
@@ -184,7 +191,7 @@ const { maxHeight } = useMaxHeight(
 watch(
   () => props.level,
   (value) => {
-    currentLevel.value = value
+    form.currentLevel = value
     handleLevelChange()
   },
   { immediate: true }
@@ -212,8 +219,9 @@ async function submit() {
     const { validResult, dealList } = tableValidate(form.list)
     form.list = dealList
     if (validResult) {
+      // 数据格式化
       // 一级科目
-      if (currentLevel.value === 1) {
+      if (form.currentLevel === 1) {
         let prevAttr
         dealList.forEach((v) => {
           v.parentId = 0
@@ -227,7 +235,7 @@ async function submit() {
       }
 
       // 二、三级科目
-      if (currentLevel.value !== 1) {
+      if (form.currentLevel !== 1) {
         let prevPid
         dealList.forEach((v) => {
           delete v.verify
@@ -240,6 +248,8 @@ async function submit() {
       }
 
       await batchAdd(dealList)
+      // 清除本地缓存
+      clearFormStorage()
       emit('success')
       ElMessage.success('添加成功')
       handleClose()
@@ -258,7 +268,7 @@ async function submit() {
     padding-top: 0px;
   }
   .heade-operate {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 }
 </style>

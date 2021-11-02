@@ -7,11 +7,25 @@
 
 <script setup>
 import { defineProps, inject } from 'vue'
+
 const props = defineProps({
-  batch: {
-    type: Boolean,
-    default: false
+  type: {
+    type: String,
+    default: 'crud'
   }
 })
-const fmStore = inject(props.batch ? 'bfmStore' : 'fmStore')
+
+let injectContent
+switch (props.type) {
+  case 'crud': injectContent = 'fmStore'
+    break
+  case 'crudBatch': injectContent = 'bfmStore'
+    break
+  case 'normal': injectContent = 'nfmStore'
+    break
+  default: injectContent = 'fmStore'
+    break
+}
+
+const fmStore = inject(injectContent)
 </script>

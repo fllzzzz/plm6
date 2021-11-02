@@ -145,7 +145,6 @@ export function regForm(defaultForm, formRef) {
   if (crud.formStore) {
     const store = useAddFormLocalStorage(crud.formStoreKey)
     fmStore = store
-    provide('fmStore', fmStore)
   }
 
   onBeforeUnmount(() => {
@@ -177,7 +176,6 @@ export function regBatchForm(defaultForm, formRef) {
   if (crud.formStore) {
     const store = useBatchAddFormLocalStorage(crud.formStoreKey)
     fmStore = store
-    provide('bfmStore', fmStore)
   }
 
   onBeforeUnmount(() => {
@@ -395,7 +393,7 @@ function addCrudDefaultInfo(crud, data) {
       },
       // 标题
       get title() {
-        return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
+        return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : ''
       }
     },
     bStatus: { // bStatus 需要放在深拷贝之后加入，因此放在该对象中
@@ -414,7 +412,7 @@ function addCrudDefaultInfo(crud, data) {
       },
       // 标题
       get title() {
-        return this.batchAdd > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.batchEdit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : data.title
+        return this.batchAdd > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.batchEdit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : ''
       }
     }
   })
@@ -714,6 +712,7 @@ function addCrudBusinessMethod(crud) {
       crud.toQuery()
     } catch (error) {
       console.log('添加', error)
+      crud.status.add = CRUD.STATUS.PREPARED
       await callVmHook(crud, CRUD.HOOK.afterAddError)
     }
   }
@@ -734,6 +733,7 @@ function addCrudBusinessMethod(crud) {
       crud.refresh()
     } catch (error) {
       console.log('编辑', error)
+      crud.status.edit = CRUD.STATUS.PREPARED
       await callVmHook(crud, CRUD.HOOK.afterEditError)
     }
   }
@@ -756,6 +756,7 @@ function addCrudBusinessMethod(crud) {
       crud.toQuery()
     } catch (error) {
       console.log('添加', error)
+      crud.bStatus.batchAdd = CRUD.STATUS.PREPARED
       await callVmHook(crud, CRUD.HOOK.afterBatchAddError)
     }
   }
@@ -777,6 +778,7 @@ function addCrudBusinessMethod(crud) {
       crud.refresh()
     } catch (error) {
       console.log('编辑', error)
+      crud.bStatus.batchEdit = CRUD.STATUS.PREPARED
       await callVmHook(crud, CRUD.HOOK.afterBatchEditError)
     }
   }

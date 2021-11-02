@@ -1,4 +1,4 @@
-import { onBeforeUnmount, reactive } from 'vue'
+import { onBeforeUnmount, reactive, provide } from 'vue'
 import storage from '@/utils/storage'
 import { isBlank, deepClone } from '@data-type/index'
 import { isObjectValueEqual } from '@data-type/object'
@@ -32,7 +32,7 @@ export default function useCrudAddFormLocalStorage(key) {
     resetForm: () => {
       // 清除内容
       crud.resetForm()
-      ls.init()
+      ls.init && ls.init()
     }
   })
 
@@ -60,6 +60,7 @@ export default function useCrudAddFormLocalStorage(key) {
     abnormalClose(ls, crud)
   }
 
+  provide('fmStore', ls)
   return ls
 }
 

@@ -9,12 +9,13 @@ const getSpecification = {
       'data|0-3': [{
         'id|+1': 1,
         'name|+1': ['直径', '长度', '材质'],
-        'isWeightMean|1-2': false,
-        'isCustomizeable|1-2': false,
+        'boolWeightMean|1-2': false,
+        'boolCustomizeable|1-2': false,
         'list|11-14': [{
           'id': 1,
           'code': /^([0-9]{2})$/,
           'value': /^([A-Z0-9]{3})$/,
+          'boolUsed|1-2': false,
           'sort|1-999': 1
         }
         ]
