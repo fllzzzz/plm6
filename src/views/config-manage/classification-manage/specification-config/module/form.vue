@@ -76,7 +76,6 @@
             <el-table-column label="操作" align="center" width="80">
               <template v-slot="scope">
                 <common-button
-                  v-show="form.list.length > 1"
                   icon="el-icon-minus"
                   type="danger"
                   style="padding: 5px"

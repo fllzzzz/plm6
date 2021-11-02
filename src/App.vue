@@ -1,58 +1,56 @@
 <template>
   <div id="app">
-    <!-- <transition :name="transitionName">  -->
-    <router-view />
-    <!-- </transition> -->
+    <el-config-provider :locale="zhCn">
+      <router-view></router-view>
+    </el-config-provider>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  data() {
-    return {
-      transitionName: ''
-    }
-  },
-  watch: { // 使用watch 监听$router的变化
-    $route(to, from) {
-      // TODO: 如果此处不使用nextTick会导致，SwitchProject插件中的routeProjectType无法监听，暂时未找到原因
-      this.$nextTick(() => {
-        this.$store.dispatch('project/setRouteProjectMeta', to.meta)
-      })
-      if (to && to.path === '/login') {
-        this.transitionName = null
-      } else {
-        this.transitionName = 'slide-left'
-      }
-    }
-  }
-}
+<script setup>
+// import { watch, nextTick } from 'vue'
+// import { useRoute } from 'vue-router'
+// import { useStore } from 'vuex'
+import { ElConfigProvider } from 'element-plus'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+
+// const store = useStore()
+// const route = useRoute()
+
+// watch(
+//   route,
+//   (val) => {
+//     nextTick(() => {
+//       store.dispatch('project/setRouteProjectMeta', val.meta)
+//     })
+//   }
+// )
+
 </script>
+
 <style lang="scss">
-  @import './styles/index.scss'; // 全局自定义的css样式
-  .slide-right-enter-active,
-  .slide-right-leave-active,
-  .slide-left-enter-active,
-  .slide-left-leave-active {
-    will-change: transform;
-    transition: all 1000ms;
-    position: absolute;
-  }
-  .slide-right-enter {
-    opacity: 0;
-    // transform: translate3d(-100%, 0, 0);
-  }
-  .slide-right-leave-active {
-    opacity: 0;
-    // transform: translate3d(100%, 0, 0);
-  }
-  .slide-left-enter {
-    opacity: 0;
-    // transform: translate3d(100%, 0, 0);
-  }
-  .slide-left-leave-active {
-    opacity: 0;
-    // transform: translate3d(-100%, 0, 0);
-  }
+@import './styles/index.scss'; // 全局自定义的css样式
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  will-change: transform;
+  transition: all 1000ms;
+  position: absolute;
+}
+.slide-right-enter {
+  opacity: 0;
+  // transform: translate3d(-100%, 0, 0);
+}
+.slide-right-leave-active {
+  opacity: 0;
+  // transform: translate3d(100%, 0, 0);
+}
+.slide-left-enter {
+  opacity: 0;
+  // transform: translate3d(100%, 0, 0);
+}
+.slide-left-leave-active {
+  opacity: 0;
+  // transform: translate3d(-100%, 0, 0);
+}
 </style>

@@ -1,9 +1,11 @@
 import { getMatClsTree, get as getClassificationTree } from '@/api/config/classification-manage/classification-config'
+import { getAll as getDicts } from '@/api/system/dict-detail'
 import useFormatTree from '@compos/classification/use-format-tree'
 
 const state = {
-  clsTree: [],
-  matClsTree: []
+  clsTree: [], // 科目树
+  matClsTree: [], // 物料科目树
+  dict: {} // 字典值
 }
 
 const mutations = {
@@ -32,6 +34,20 @@ const actions = {
     const tree = useFormatTree(res)
     commit('SET_CLS_TREE', tree)
     return tree
+  },
+  // 加载字典值
+  async fetchDict({ state }, names = []) {
+    for (const name of names) {
+      const { content = [] } = await getDicts(name)
+      const dict = state.dict
+      dict[name] = [...content]
+      dict.dict[name] = {}
+      dict.label[name] = {}
+      content.forEach(v => {
+        dict.dict[name][v.value] = v
+        dict.label[name][v.value] = v.label
+      })
+    }
   }
 }
 

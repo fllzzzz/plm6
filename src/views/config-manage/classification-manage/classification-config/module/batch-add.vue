@@ -1,22 +1,23 @@
 <template>
-  <div id="cls-batch-add">
-    <el-dialog
-      title="新增科目"
-      v-model="dialogVisible"
-      width="800px"
-      :before-close="handleClose"
-      :show-close="false"
-      :close-on-click-modal="false"
-      top="10vh"
-    >
-      <div class="flex-rbc heade-operate">
-        <common-radio-button v-model="currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
-        <div class="flex-rsc">
-          <common-button size="mini" type="success" icon="el-icon-plus" style="padding: 6px" @click="addRow" />
-          <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
-          <common-button size="mini" @click="handleClose">退 出</common-button>
-        </div>
-      </div>
+  <common-dialog
+    title="新增科目"
+    v-model="dialogVisible"
+    width="800px"
+    :before-close="handleClose"
+    :show-close="true"
+    :close-on-click-modal="false"
+    custom-class="cls-batch-add"
+    top="10vh"
+  >
+    <template #titleRight>
+      <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
+      <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
+      <!-- <store-opertaion batch /> -->
+    </template>
+    <div class="heade-operate">
+      <common-radio-button v-model="currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
+    </div>
+    <el-form ref="formRef" :model="form" :disabled="submitLoading">
       <common-table
         v-if="refreshTable"
         ref="table"
@@ -24,7 +25,7 @@
         empty-text="暂无数据"
         :max-height="maxHeight"
         default-expand-all
-        :cell-class-name="data => wrongCellMask(data, currentRules)"
+        :cell-class-name="wrongCellMask"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -81,12 +82,18 @@
         </el-table-column>
         <el-table-column label="操作" width="70px" align="center" fixed="right">
           <template v-slot="scope">
-            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding: 6px" @click.stop="delRow(scope.$index)" />
+            <common-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              style="padding: 6px"
+              @click.stop="removeRow(form.list, scope.$index)"
+            />
           </template>
         </el-table-column>
       </common-table>
-    </el-dialog>
-  </div>
+    </el-form>
+  </common-dialog>
 </template>
 
 <script setup>
@@ -96,7 +103,8 @@ import { classificationEnum } from '@enum-ms/classification'
 
 import useMaxHeight from '@compos/use-max-height'
 import useDialogVisible from '@compos/use-dialog-visible'
-import useTableValidate, { wrongCellMask } from '@compos/form/use-table-validate'
+import useTableOperate from '@compos/form/use-table-operate'
+import useTableValidate from '@compos/form/use-table-validate'
 import clsCascader from '@comp-cls/cascader/index.vue'
 import { ElMessage } from 'element-plus'
 
@@ -157,14 +165,17 @@ const dittos = new Map([
   ['parentId', -1]
 ])
 
-const { dialogVisible, handleClose } = useDialogVisible(emit, props, () => init())
+const { dialogVisible, handleClose } = useDialogVisible(emit, props, () => init(form.list))
+const { init, addRow, removeRow } = useTableOperate({}, 10, dittos)
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: currentRules, dittos })
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: ['#cls-batch-add', '.el-overlay'],
+    mainBox: '.cls-batch-add',
     extraBox: ['.el-dialog__header', '.heade-operate'],
-    wrapperBox: ['.el-dialog__body'],
+    wrapperBox: ['.cls-batch-add', '.el-dialog__body'],
     extraHeight: '20vh',
+    clientHRepMainH: true,
     navbar: false
   },
   dialogVisible
@@ -185,31 +196,9 @@ onMounted(() => {
   rules.LV3 = Object.assign(rules.LV3, rules.common)
 })
 
-// 初始化表单,默认10条
-function init() {
-  form.list = []
-  for (let i = 0; i < 10; i++) {
-    addRow()
-  }
-}
-// 添加行
-function addRow() {
-  const row = {}
-  if (form.list.length > 0) {
-    row.basicClass = dittos.get('basicClass')
-    row.parentId = dittos.get('parentId')
-  }
-  form.list.push(row)
-}
-
-// 删除行
-function delRow(index) {
-  form.list.splice(index, 1)
-}
-
 // level变更
 function handleLevelChange() {
-  init()
+  init(form.list)
   refreshTable.value = false
   nextTick(() => {
     refreshTable.value = true
@@ -220,8 +209,7 @@ function handleLevelChange() {
 async function submit() {
   try {
     submitLoading.value = true
-    const copyList = JSON.parse(JSON.stringify(form.list)) // 深拷贝，避免失败后，数据修改
-    const { validResult, dealList } = useTableValidate({ list: copyList, rules: currentRules.value, dittos })
+    const { validResult, dealList } = tableValidate(form.list)
     form.list = dealList
     if (validResult) {
       // 一级科目
@@ -265,7 +253,7 @@ async function submit() {
 </script>
 
 <style lang="scss" scoped>
-#cls-batch-add {
+.cls-batch-add {
   ::v-deep(.el-dialog__body) {
     padding-top: 0px;
   }

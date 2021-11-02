@@ -1,6 +1,6 @@
 <template>
   <el-tooltip class="item" effect="dark" :content="props.tip" :disabled="!props.showTooltip" placement="top-start">
-    <el-button
+    <common-button
       v-permission="props.permission"
       :loading="downloadLoading"
       :disabled="props.disabled"
@@ -10,7 +10,7 @@
       @click.stop="doExport"
     >
       <span v-if="props.showText" v-text="tip" />
-    </el-button>
+    </common-button>
   </el-tooltip>
 </template>
 

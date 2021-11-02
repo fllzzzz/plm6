@@ -9,7 +9,7 @@
           </el-select>
         </template>
         <template v-slot:append>
-          <el-button style="color:#ffffff;" @click="submit">确认</el-button>
+          <common-button style="color:#ffffff;" @click="submit">确认</common-button>
         </template>
       </el-input>
     </div>

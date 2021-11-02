@@ -22,7 +22,7 @@ import useCommonDataStructureByType from '@compos/use-common-data-structure-by-t
 const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
-  modelValue: [Number, String],
+  modelValue: [Number, String, Boolean],
   size: {
     type: String,
     default: 'small'
