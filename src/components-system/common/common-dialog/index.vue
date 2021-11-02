@@ -133,7 +133,7 @@ const props = defineProps({
 })
 
 // 自定义类名
-const customClass = props.customClass || '' + ' common-dialog'
+const customClass = `${props.customClass || ''} common-dialog`
 
 const dialogVisible = ref(false)
 
@@ -174,34 +174,41 @@ function closed() {
   emit('closed')
 }
 </script>
+<style>
 
-<style lang="scss" scoped>
-.dialog-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .title {
+</style>
+<style lang="scss" >
+.common-dialog {
+  // ::v-deep(.el-dialog__header){
+  //   padding-bottom: 0px!important;
+  // }
+  .dialog-title {
     display: flex;
     align-items: center;
-    font-weight: bold;
-    font-size: 18px;
-    margin-right: 15px;
-    color: #000;
-    position: relative;
-    padding-left: 10px;
-    box-sizing: border-box;
+    justify-content: space-between;
 
-    &::before {
-      content: '';
-      width: 4px;
-      height: 15px;
-      border-radius: 10px;
-      background: #1890ff;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
+    .title {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-right: 15px;
+      color: #000;
+      position: relative;
+      padding-left: 10px;
+      box-sizing: border-box;
+
+      &::before {
+        content: '';
+        width: 4px;
+        height: 15px;
+        border-radius: 10px;
+        background: #1890ff;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
     }
   }
 }

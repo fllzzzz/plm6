@@ -1,4 +1,4 @@
-import { onBeforeUnmount, watch, reactive } from 'vue'
+import { onBeforeUnmount, watch, reactive, provide } from 'vue'
 import storage from '@/utils/storage'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import { isObjectValueEqual } from '@data-type/object'
@@ -14,6 +14,13 @@ ADD_FORM.TYPE = {
   browserClose: 2 // 浏览器关闭保存
 }
 
+/**
+ * 使用本地缓存
+ * @param {string} key 本地缓存key值
+ * @param {object} pendingForm 待处理表单
+ * @param {*} trigger 触发器,适用于添加在Dialog/Drawer(弹窗)中的情景
+ * @returns
+ */
 export default function useAddFormLocalStorage(key, pendingForm, trigger) {
   const ls = reactive({
     key: key,
@@ -21,14 +28,28 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger) {
     form: pendingForm, // 待处理的表单
     initForm: undefined, // 初始的表单
     init: undefined, // 初始化方法
-    isRegister: false // 是否注册的
+    isRegister: false, // 是否注册的
+    saveStoreForm: () => saveFormToStorage(ls),
+    resetForm: () => {
+      // 清除内容
+      ls.form.length = 0
+      ls.init && ls.init()
+    }
   })
 
   // 如果不传入trigger，则通过openStore手动开启
   if (isNotBlank(trigger)) {
-    const wv = typeof trigger === 'function' ? trigger : trigger.value
+    let _trigger
+    switch (trigger.constructor.name) {
+      case 'Function':
+      case 'RefImpl':
+      case 'ComputedRefImpl':_trigger = trigger
+        break
+      default: _trigger = trigger
+    }
+    // 传入触发器的情况下监听弹窗打开和关闭的状态
     watch(
-      wv,
+      _trigger,
       (flag) => {
         if (flag) {
           openStore(ls)
@@ -49,6 +70,8 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger) {
   window.onbeforeunload = () => {
     abnormalClose(ls, trigger)
   }
+
+  provide('nfmStore', ls)
 
   return {
     ADD_FORM: ls,
@@ -71,9 +94,13 @@ function componentInit(ls) {
 // 打开记录本地缓存
 function openStore(ls) {
   const storageFormInfo = getFormByStorage(ls.key)
+  console.log(111)
+  console.log('storageFormInfo', storageFormInfo)
   if (isBlank(storageFormInfo)) {
+    console.log(222)
     // 如果缓存为空，则调用初始化方法
     ls.init && ls.init()
+    console.log('xxx', ls.form)
   } else {
     // 如果当前表单缓存不为空，则将原表单覆盖
     const storageForm = storageFormInfo.content
@@ -103,6 +130,8 @@ function setFormContent(form, storageForm) {
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
   if (!ls.isRegister) return
   const _form = form || ls.form
+  console.log('ls.form', ls.form)
+  console.log('form', form)
   storage.set(`${ADD_FORM.KEY_PREFIX}_${ls.key}`, {
     type: type,
     content: _form

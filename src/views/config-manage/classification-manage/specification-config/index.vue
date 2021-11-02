@@ -35,8 +35,8 @@
             <div class="clearfix">
               <span style="line-height: 29px">
                 {{ item.name }}
-                <el-tag v-if="item.isWeightMean" type="success" effect="plain" size="mini">加权</el-tag>
-                <!-- <el-tag v-if="item.isCustomizeable" style="margin-right: 4px" type="success" effect="plain" size="mini">可自定义</el-tag> -->
+                <el-tag v-if="item.boolWeightMean" type="success" effect="plain" size="mini">加权</el-tag>
+                <!-- <el-tag v-if="item.boolCustomizeable" style="margin-right: 4px" type="success" effect="plain" size="mini">可自定义</el-tag> -->
               </span>
               <ud-operation style="float: right" :data="item" />
             </div>

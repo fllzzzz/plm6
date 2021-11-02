@@ -9,23 +9,15 @@ import { ElMessage } from 'element-plus'
  * @param {map} dittos=[] 含“同上”选项或值的字段。例： { name：'id', value: -1 }
  */
 export default function useTableValidate({ rules = {}, dittos = new Map() }) {
-  let _rules
-  switch (rules.constructor.name) {
-    case 'RefImpl':
-    case 'ComputedRefImpl': _rules = rules.value
-      break
-    default: _rules = rules
-      break
-  }
-
   return {
-    tableValidate: (list) => tableValidate(list, _rules, dittos),
-    wrongCellMask: (tableInfo) => wrongCellMask(tableInfo, _rules),
+    tableValidate: (list) => tableValidate(list, rules, dittos),
+    wrongCellMask: (tableInfo) => wrongCellMask(tableInfo, rules),
     cleanUpData: (list) => cleanUpData(list, dittos)
   }
 }
 
-function tableValidate(list, rules, dittos) {
+function tableValidate(list, tableRules, dittos) {
+  const rules = getRules(tableRules)
   let flag = true
   let message = '请填写数据'
   const copyList = JSON.parse(JSON.stringify(list))
@@ -71,6 +63,7 @@ function tableValidate(list, rules, dittos) {
       for (const rule in rules) {
         row.verify[rule] = validate(rules[rule], row[rule])
         if (!row.verify[rule]) {
+          console.log('rule', rule, rules[rule], row[rule])
           flag = false
         }
       }
@@ -108,7 +101,8 @@ function tableValidate(list, rules, dittos) {
 }
 
 // 处理表格变色 el-table cell-class-name
-export function wrongCellMask({ row, column }, rules) {
+export function wrongCellMask({ row, column }, tableRules) {
+  const rules = getRules(tableRules)
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -205,3 +199,15 @@ export function cleanUpData(list, dittos) {
   return list
 }
 
+// 获取校验规则
+function getRules(rules) {
+  let _rules
+  switch (rules.constructor.name) {
+    case 'RefImpl':
+    case 'ComputedRefImpl': _rules = rules.value
+      break
+    default: _rules = rules
+      break
+  }
+  return _rules
+}
