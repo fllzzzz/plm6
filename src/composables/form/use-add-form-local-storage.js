@@ -58,6 +58,8 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger) {
         }
       }
     )
+  } else {
+    openStore(ls)
   }
 
   // 卸载时判断是否需要记录
