@@ -1,6 +1,9 @@
 <template>
   <div class="head-container">
-    <template v-if="crud.data.length">
+    <template v-if="currentNode.basicClass === classificationEnum.SECTION_STEEL.V">
+      <el-tag type="warning" size="medium" >“型材”请前往【型材库页面】编辑规格</el-tag>
+    </template>
+    <template v-else-if="crud.data.length">
       <el-tag v-show="currentNode.name" effect="plain" size="medium">{{ `${currentNode.serialNumber} ${currentNode.name}` }}</el-tag>
       <common-button
         v-permission="permission.add"
@@ -13,13 +16,15 @@
       </common-button>
     </template>
     <template v-else>
-      <el-tag type="info" style="width: 160px" size="medium">当前科目尚未配置规格</el-tag>
+      <el-tag type="info" size="medium">当前科目尚未配置规格</el-tag>
     </template>
   </div>
 </template>
 
 <script setup>
 import { inject } from 'vue'
+import { classificationEnum } from '@enum-ms/classification'
+
 import { regHeader } from '@compos/use-crud'
 
 const defaultQuery = {
