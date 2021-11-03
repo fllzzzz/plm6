@@ -202,7 +202,7 @@ function handleCheckedTableColumnsChange(item) {
 
 // toggleSearch切换
 function toggleSearch() {
-  crud.props.searchToggle = !crud.props.searchToggle
+  crud.searchToggle = !crud.searchToggle
   nextTick(() => {
     // TODO:判断是否还需要
     // 手动resize 来触发对resize的监听方法：$_windowSizeHandler
