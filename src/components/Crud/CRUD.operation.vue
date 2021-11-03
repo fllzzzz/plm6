@@ -66,7 +66,7 @@
     </span>
     <span class="crud-opts-right">
       <slot v-if="device !== 'mobile'" name="viewLeft" />
-      <el-button-group style="max-width: 142px">
+      <el-button-group style="max-width: 142px;margin-left: 6px;">
         <el-button
           v-if="props.showSearch"
           size="mini"
@@ -233,6 +233,7 @@ function toggleSearch() {
   }
   ::v-deep(.crud-opts-right) {
     margin-left: auto;
+    display: flex;
     .filter-item {
       margin-bottom: 0;
     }

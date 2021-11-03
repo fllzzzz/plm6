@@ -2,8 +2,8 @@ import { constantize } from '../base'
 
 // 使用状态
 const enabledEnum = {
-  TRUE: { L: '启用', K: 'TRUE', V: 1 },
-  FALSE: { L: '禁用', K: 'FALSE', V: 0 }
+  TRUE: { L: '启用', K: 'TRUE', V: true },
+  FALSE: { L: '禁用', K: 'FALSE', V: false }
 }
 constantize(enabledEnum)
 

@@ -1,4 +1,4 @@
-import { provide, inject, reactive, ref, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
+import { provide, inject, reactive, ref, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isNotBlank } from '@data-type/index'
 import { debounce } from '@/utils'
@@ -64,17 +64,19 @@ export function regPresenter(crud, tableRef) {
     }
     if (tableRef) {
       const tableColumns = tableRef.value.getColumns()
-
-      // 获得table的所有列
-      tableColumns.forEach(e => {
-        if (!e.property || e.type !== 'default') {
-          return
-        }
-        columns.value[e.property] = {
-          label: e.label,
-          visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
-        }
+      nextTick(() => {
+        // 获得table的所有列
+        tableColumns.forEach(e => {
+          if (!e.property || e.type !== 'default') {
+            return
+          }
+          columns.value[e.property] = {
+            label: e.label,
+            visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+          }
+        })
       })
+
       // 显示列的方法
       crud.tableColumns = columns
     }
@@ -498,12 +500,13 @@ function addCrudBusinessMethod(crud) {
     try {
       crud.loading = true
       data = await crud.crudApi.get(crud.getQueryParams())
+      const res = { data: data }
       crud.emptyText = '暂无数据'
       // data.content = data.content || []
-      await callVmHook(crud, CRUD.HOOK.handleRefresh, data)
+      await callVmHook(crud, CRUD.HOOK.handleRefresh, res)
       crud.page.total = data.totalElements
       crud.page.hasNextPage = data.hasNextPage
-      crud.data = isNotBlank(crud.dataPath) ? data[crud.dataPath] || [] : data || []
+      crud.data = isNotBlank(crud.dataPath) ? res.data[crud.dataPath] || [] : res.data || []
       crud.resetDataStatus()
       crud.loading = false
     } catch (error) {
@@ -1089,6 +1092,11 @@ function addCrudFeatureMethod(crud, data) {
     }
   }
 
+  // 设置自定义扩展参数
+  const updateProp = (name, value) => {
+    crud.props[name] = value
+  }
+
   Object.assign(crud, {
     doExport, // 通用导出
     getQueryParams, //  获取查询参数
@@ -1109,7 +1117,8 @@ function addCrudFeatureMethod(crud, data) {
     toggleRowSelection, // 切换选中状态
     handleSortChange, // 处理排序方式改变
     notify,
-    obColumns // 获取显示的列
+    obColumns, // 获取显示的列
+    updateProp // 设置自定义扩展参数
   })
 }
 
@@ -1132,7 +1141,8 @@ function addCrudMethod(crud, data) {
       vm,
       CRUD: {
         HOOK: {},
-        STATUS: CRUD.STATUS
+        STATUS: CRUD.STATUS,
+        NOTIFICATION_TYPE: CRUD.NOTIFICATION_TYPE
       } // 用于hook
     }
     // 默认新加入的vm放在数组最后面
