@@ -43,14 +43,14 @@ export default {
           hidden: false,
           component: '/config-manage/classification-manage/specification-config/index',
           meta: { title: '规格配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ClassificationUnitConfig',
+          path: 'measure-config',
+          hidden: false,
+          component: '/config-manage/classification-manage/measure-config/index',
+          meta: { title: '计量配置', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'UnitConfig',
-        //   path: 'unit-config',
-        //   hidden: false,
-        //   component: '/classification-manage/unit-config/index',
-        //   meta: { title: '计量配置', icon: 'project', noCache: true }
-        // },
         // {
         //   name: 'OutboundMethod',
         //   path: 'outbound-method',

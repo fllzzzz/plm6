@@ -153,6 +153,7 @@ watch(
 )
 
 function selectChange(val) {
+  if (!val) val = undefined
   emit('update:modelValue', val)
   emit('change', val)
 }

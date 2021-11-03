@@ -7,10 +7,19 @@ const inboundFillWayEnum = {
 }
 constantize(inboundFillWayEnum)
 
+// 计量配置
+const measureTypeEnum = {
+  MEASURE: { L: '计量', K: 'MEASURE', V: 1 },
+  ACCOUNTING: { L: '核算', K: 'ACCOUNTING', V: 2 }
+}
+constantize(measureTypeEnum)
+
 export {
-  inboundFillWayEnum
+  inboundFillWayEnum,
+  measureTypeEnum
 }
 
 export default {
-  inboundFillWayEnum
+  inboundFillWayEnum,
+  measureTypeEnum
 }

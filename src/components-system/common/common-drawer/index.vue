@@ -232,7 +232,7 @@ defineExpose({
 <style lang="scss" scoped>
 .common-drawer  {
   ::v-global(.el-drawer__header) {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
   }
 }
 .remove {

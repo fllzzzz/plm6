@@ -119,9 +119,15 @@ function calcMaxHeight({ clientHRepMainH, mainBox, extraBox, wrapperBox, navbar,
 
   // 窗口高度 - navbar高度 - 包装层内外边距 - 额外dom的高度（含外边距） - 分页插件的高度 - 自定义额外高度
   // 注意：未处理外边距重叠的情况，若产生，可通过填写extraHeight处理
-  const mainHeight = clientHRepMainH ? document.documentElement.clientHeight : mainBoxHeight
+  let mainHeight
+  if (clientHRepMainH) {
+    // 如果使用client作为高度，则需要减去主盒子的外边距和内边距
+    mainHeight = document.documentElement.clientHeight - getElHeight(mainBoxEl, ['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom'])
+  } else {
+    mainHeight = mainBoxHeight
+  }
   const height = mainHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight
-  // console.log(extraBox, mainBoxHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
+  // console.log(extraBox, mainBoxHeight, mainHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
 
   return height > realMiniHeight ? height : realMiniHeight
 }

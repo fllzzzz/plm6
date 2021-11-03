@@ -57,7 +57,7 @@
           <template v-slot="scope">
             <common-select
               v-model="scope.row.type"
-              :options="unitTypeEnum"
+              :options="unitTypeEnum.ENUM"
               show-extra
               :extra-val="dittos.get('type')"
               type="enum"
@@ -123,8 +123,7 @@ const { maxHeight } = useMaxHeight(
   {
     mainBox: '.unit-batch-add',
     extraBox: ['.el-dialog__header'],
-    wrapperBox: ['.unit-batch-add', '.el-dialog__body'],
-    extraHeight: '20vh',
+    wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     navbar: false
   },

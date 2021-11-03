@@ -7,23 +7,23 @@
 </template>
 
 <script setup>
-// import { watch, nextTick } from 'vue'
-// import { useRoute } from 'vue-router'
-// import { useStore } from 'vuex'
+import { watch, nextTick } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
-// const store = useStore()
-// const route = useRoute()
+const store = useStore()
+const route = useRoute()
 
-// watch(
-//   route,
-//   (val) => {
-//     nextTick(() => {
-//       store.dispatch('project/setRouteProjectMeta', val.meta)
-//     })
-//   }
-// )
+watch(
+  () => route.path,
+  () => {
+    nextTick(() => {
+      store.dispatch('project/setRouteProjectByMeta', route.meta)
+    })
+  }
+)
 
 </script>
 

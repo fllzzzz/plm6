@@ -2,7 +2,7 @@
   <div v-show="showable" class="cascader-container">
     <common-select
       v-model="projectType"
-      :options="projectTypeEnum"
+      :options="projectTypeEnum.ENUM"
       :all-val="allVal"
       :disabled-val="disabledTypeArr"
       show-all

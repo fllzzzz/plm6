@@ -35,7 +35,7 @@
             <common-radio-button
               v-model="form.boolWeightMean"
               :disabled="!useCheckPermission(permission.weightedAverage)"
-              :options="boolWeightMeanEnum"
+              :options="boolWeightMeanEnum.ENUM"
               type="enum"
             />
           </el-form-item>

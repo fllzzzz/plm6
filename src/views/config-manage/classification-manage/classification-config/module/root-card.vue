@@ -20,7 +20,7 @@
             <el-input v-model.trim="search.name" class="search-name" size="small" :placeholder="`名称查询（${title}）`" clearable />
             <common-select
               v-model="search.basicClass"
-              :options="classificationEnum"
+              :options="classificationEnum.ENUM"
               clearable
               type="enum"
               size="small"

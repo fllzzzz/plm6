@@ -23,7 +23,7 @@
           <span>车次钢材总重误差({{ form.trainsDiffType === numOrPctEnum.NUMBER.V ? 'g' : '%' }})</span>
         </template>
         <div class="flex-r">
-          <common-radio-button v-model="form.trainsDiffType" :options="numOrPctEnum" type="enum" size="small" />
+          <common-radio-button v-model="form.trainsDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
           <el-input-number
             v-model="form.trainsDiff"
             :max="form.trainsDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
@@ -46,7 +46,7 @@
           <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? 'g' : '%' }})</span>
         </template>
         <div class="flex-r">
-          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum" type="enum" size="small" />
+          <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
           <el-input-number
             v-model="form.steelDiff"
             :max="form.steelDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
@@ -75,7 +75,7 @@ import { getInboundSteelConf, setInboundSteelConf } from '@/api/config/wms/base'
 import { numOrPctEnum } from '@enum-ms/common'
 import { reactive, ref, onMounted, inject, computed } from 'vue'
 import { isObjectValueEqual } from '@data-type/object'
-import useFormValidate from '@compos/use-form-validate'
+import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 const permission = inject('permission')
 
 // 数据源
@@ -125,7 +125,7 @@ async function fetchData() {
     const res = await getInboundSteelConf()
     dataSource = res
     Object.assign(form, res)
-    useFormValidate(formRef, form)
+    useWatchFormValidate(formRef, form)
   } catch (error) {
     console.log('获取入库钢材配置', error)
   } finally {

@@ -7,12 +7,28 @@ import { getBitwiseBack } from '@data-type/number'
  * constantize实现递归freeze
  */
 export function constantize(obj) {
-  Object.freeze(obj)
-  Object.keys(obj).forEach((key, i) => {
-    if (typeof obj[key] === 'object') {
-      constantize(obj[key])
-    }
+  const KV = {}
+  const VL = {}
+  const VK = {}
+  const KEYS = Object.keys(obj)
+  obj.ENUM = Object.assign({}, obj)
+  KEYS.forEach(key => {
+    const value = obj[key].V
+    const label = obj[key].L
+    KV[key] = value
+    VL[value] = label
+    VK[value] = key
   })
+  obj.KV = KV // key - value
+  obj.VL = VL // value : label
+  obj.VK = VK // value : key
+  obj.KEYS = KEYS // keys
+  // Object.freeze(obj)
+  // Object.keys(obj).forEach((key, i) => {
+  //   if (typeof obj[key] === 'object') {
+  //     constantize(obj[key])
+  //   }
+  // })
 }
 
 /**

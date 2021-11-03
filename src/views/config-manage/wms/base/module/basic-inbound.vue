@@ -19,10 +19,10 @@
     </template>
     <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="120px">
       <el-form-item label="金额填写场景">
-        <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum" type="enum" size="small" />
+        <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
       <el-form-item label="工厂填写场景">
-        <common-radio v-model="form.factoryFillWay" :options="inboundFillWayEnum" type="enum" size="small" />
+        <common-radio v-model="form.factoryFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
     </el-form>
   </el-card>

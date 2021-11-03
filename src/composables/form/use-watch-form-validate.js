@@ -7,7 +7,7 @@ import { watch, nextTick } from 'vue'
  * @param {object} form 表单对象
  * @param {array} fields 需要校验的字段
  */
-export default function useFormValidate(formRef, form, fields) {
+export default function useWatchFormValidate(formRef, form, fields) {
   nextTick(() => {
     const fls = fields || Object.keys(form)
     fls.forEach(field => {

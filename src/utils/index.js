@@ -237,3 +237,16 @@ export function throttle(func, wait, type = 1) {
     }
   }
 }
+
+/**
+ * 判断对象中的字段是否发生改变，适用于对象中存储了oldVal与newVal的情况，如 sourceHeight 与 height
+ * @param {object} item 校验对象
+ * @param {map} fieldMap 需要校验的字段，oldVal与newVal的字段名 以键值对的方式存储
+ * @returns 是否变化。true:发生变化
+ */
+export function judgeItemFieldChange(item, fieldMap) {
+  for (const [key, value] of fieldMap) {
+    if (item[key] !== item[value]) return true
+  }
+  return false
+}

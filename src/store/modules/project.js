@@ -56,7 +56,7 @@ const actions = {
   setProjectId({ commit }, id) {
     commit('SET_PROJECT_ID', id)
   },
-  setRouteProjectMeta({ commit }, meta) {
+  setRouteProjectByMeta({ commit }, meta) {
     const _projectType = meta && isNotBlank(meta.projectType) ? meta.projectType : undefined
     commit('SET_ROUTE_PROJECT_TYPE', _projectType)
   },

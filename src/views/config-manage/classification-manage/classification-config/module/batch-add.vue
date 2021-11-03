@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     title="新增科目"
-    v-model="dialogVisible"
+    v-model="visible"
     width="800px"
     :before-close="handleClose"
     :show-close="true"
@@ -72,7 +72,7 @@
           <template v-slot="scope">
             <common-select
               v-model="scope.row.basicClass"
-              :options="classificationEnum"
+              :options="classificationEnum.ENUM"
               show-extra
               type="enum"
               placeholder="材料类型"
@@ -102,7 +102,7 @@ import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, co
 import { classificationEnum } from '@enum-ms/classification'
 
 import useMaxHeight from '@compos/use-max-height'
-import useDialogVisible from '@compos/use-dialog-visible'
+import useVisible from '@compos/use-dialog-visible'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useAddFormLocalStorage from '@compos/form/use-add-form-local-storage'
@@ -168,10 +168,10 @@ const dittos = new Map([
   ['parentId', -1]
 ])
 
-const { dialogVisible, handleClose } = useDialogVisible(emit, props)
+const { visible, handleClose } = useVisible({ emit, props })
 const { init, addRow, removeRow } = useTableOperate({}, 10, dittos)
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: currentRules, dittos })
-const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form.list, dialogVisible)
+const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form.list, visible)
 
 ADD_FORM.init = () => init(form.list)
 
@@ -179,12 +179,11 @@ const { maxHeight } = useMaxHeight(
   {
     mainBox: '.cls-batch-add',
     extraBox: ['.el-dialog__header', '.heade-operate'],
-    wrapperBox: ['.cls-batch-add', '.el-dialog__body'],
-    extraHeight: '18vh',
+    wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     navbar: false
   },
-  dialogVisible
+  visible
 )
 
 watch(

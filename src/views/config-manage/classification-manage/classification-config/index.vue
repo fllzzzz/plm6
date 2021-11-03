@@ -12,7 +12,6 @@
 <script setup>
 import crudApi from '@/api/config/classification-manage/classification-config'
 import { reactive, ref, provide } from 'vue'
-import EO from '@enum'
 import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank } from '@data-type/index'
 
@@ -21,8 +20,6 @@ import useCheckPermission from '@compos/use-check-permission'
 import rootCard from './module/root-card.vue'
 import childCard from './module/child-card.vue'
 import batchAdd from './module/batch-add.vue'
-
-const classificationEnumV = EO.key2val(classificationEnum)
 
 // 权限
 const permission = {
@@ -95,7 +92,7 @@ function tree2listByDeep(tree, parent, deep = 1) {
       name: node.name,
       code: node.code,
       basicClass: deep === 1 ? node.basicClass : parent.basicClass,
-      basicClassName: deep === 1 ? classificationEnumV[`${node.basicClass}`].L : parent.basicClassName,
+      basicClassName: deep === 1 ? classificationEnum.VL[`${node.basicClass}`] : parent.basicClassName,
       serialNumber: `${isNotBlank(parent) ? parent.serialNumber : ''}${node.code}`
     }
 
