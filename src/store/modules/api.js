@@ -25,7 +25,8 @@ const state = {
     wms: `/api/wms/`,
     common: `/api/`,
     config: `/api/config/`,
-    project: `/api/project/`
+    project: `/api/project/`,
+    mes: `/api/mes/building/`
   }
 }
 

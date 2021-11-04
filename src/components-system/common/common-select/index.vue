@@ -50,7 +50,7 @@ const emit = defineEmits(['change', 'blur', 'update:modelValue'])
 
 const props = defineProps({
   modelValue: {
-    type: [Number, String, Array]
+    type: [Number, String, Array, Boolean]
   },
   options: {
     type: [Array, Object],

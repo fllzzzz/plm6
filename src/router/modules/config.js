@@ -119,6 +119,52 @@ export default {
         //   meta: { title: '型材库', icon: 'warehouse', noCache: true }
         // }
       ]
+    },
+    {
+      path: '/mes/production-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'MesProductionConfig',
+      alwaysShow: false,
+      redirect: '/mes/production-config/factory-and-workshop',
+      meta: { title: '建钢-生产配置', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'MesConfigFactoryAndWorkshop',
+          path: 'factory-and-workshop',
+          hidden: false,
+          component: '/mes/production-config/factory-and-workshop/index',
+          meta: { title: '工厂管理', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigProductionLine',
+          path: 'production-line',
+          hidden: false,
+          component: '/mes/production-config/production-line/index',
+          meta: { title: '生产线管理', icon: 'project', noCache: true }
+        }
+        // {
+        //   name: 'MesConfigProcess',
+        //   path: 'process',
+        //   hidden: false,
+        //   component: '/mes/production-config/process/index',
+        //   meta: { title: '工序配置', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'MesConfigProductProcess',
+        //   path: 'product-process',
+        //   hidden: false,
+        //   component: '/mes/production-config/product-process/index',
+        //   meta: { title: '工序管理', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'MesConfigWageQuota',
+        //   path: 'wage-quota',
+        //   hidden: false,
+        //   component: '/mes/production-config/wage-quota/index',
+        //   meta: { title: '工价定额', icon: 'project', noCache: true }
+        // }
+      ]
     }
   ]
 }
