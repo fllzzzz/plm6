@@ -81,6 +81,7 @@ const actions = {
         options: unit[key]
       })
     })
+    // 可以通过名称获取
     unit.symbol = (name) => unit.KS.get(name)
     commit('SET_UNIT', unit)
   }

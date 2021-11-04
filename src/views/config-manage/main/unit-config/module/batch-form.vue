@@ -133,6 +133,7 @@ const { maxHeight } = useMaxHeight(
 // 表格初始化
 ADD_FORM.init = () => init(form.list)
 
+// 表单校验
 CRUD.HOOK.beforeValidateBCU = () => {
   const { validResult, dealList } = tableValidate(form.list)
   if (validResult) {
@@ -142,5 +143,6 @@ CRUD.HOOK.beforeValidateBCU = () => {
   }
 }
 
+// 表单提交数据清理
 crud.submitBatchFormFormat = (form) => cleanUpData(form.list)
 </script>

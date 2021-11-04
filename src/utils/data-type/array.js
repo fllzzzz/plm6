@@ -3,6 +3,19 @@
  */
 import { isNotBlank } from '@data-type/index'
 
+export function toArr(val, splitSymbol = ',') {
+  if (Array.isArray(val)) {
+    return val
+  }
+  if (typeof val === 'string') {
+    return val.split(',')
+  }
+  if (typeof ids === 'number') {
+    return [val]
+  }
+  return [val]
+}
+
 /**
  * 去除数组中 0,false,null,undefined 等
  * @param {Array} actual

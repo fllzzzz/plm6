@@ -119,3 +119,12 @@ export function deepClone(source) {
   })
   return targetObj
 }
+
+// 转换数据 用于 值是ref、computed需要.value的情况
+export function convertVal(val) {
+  switch (val.constructor.name) {
+    case 'RefImpl':
+    case 'ComputedRefImpl': return val.value
+    default: return val
+  }
+}

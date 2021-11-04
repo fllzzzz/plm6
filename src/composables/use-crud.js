@@ -1,4 +1,4 @@
-import { provide, inject, reactive, ref, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
+import { provide, inject, reactive, ref, watch, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isNotBlank } from '@data-type/index'
 import { debounce } from '@/utils'
@@ -62,24 +62,30 @@ export function regPresenter(crud, tableRef) {
       // TODO:toQuery本来是放在created中查询，因钩子写在组件中，此时触发无法触发钩子的函数，故移入mounted，等待created完成再执行(错误)
       crud.toQuery()
     }
-    if (tableRef) {
-      const tableColumns = tableRef.value.getColumns()
-      nextTick(() => {
-        // 获得table的所有列
-        tableColumns.forEach(e => {
-          if (!e.property || e.type !== 'default') {
-            return
-          }
-          columns.value[e.property] = {
-            label: e.label,
-            visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
-          }
-        })
-      })
+    watch( // TODO:正确情况不需要监听，当table在弹出框（dlg，drawer）中的时候需要监听。是否在监听一次后就取消，看后期业务。
+      tableRef,
+      () => {
+        if (tableRef && tableRef.value) {
+          const tableColumns = tableRef.value.getColumns()
+          nextTick(() => {
+            // 获得table的所有列
+            tableColumns.forEach(e => {
+              if (!e.property || e.type !== 'default') {
+                return
+              }
+              columns.value[e.property] = {
+                label: e.label,
+                visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+              }
+            })
+          })
 
-      // 显示列的方法
-      crud.tableColumns = columns
-    }
+          // 显示列的方法
+          crud.tableColumns = columns
+        }
+      },
+      { immediate: true }
+    )
   })
   columns.value = crud.obColumns(columns)
   return { CRUD: vmInfo.CRUD, crud, columns }
@@ -169,7 +175,6 @@ export function regBatchForm(defaultForm, formRef) {
   const vmInfo = crud.registerVM(CRUD.VM_TYPE.BATCH_FORM, internalInstance, 3)
   crud.defaultBatchForm = defaultForm
   vmInfo.formRef = formRef
-  crud.ref.form = formRef
   crud.ref.batchForm = formRef
   crud.resetBatchForm()
 
@@ -308,6 +313,7 @@ function getDefaultOption() {
     },
     // 主页操作栏显示哪些按钮
     optShow: {
+      batchAdd: false,
       add: true,
       edit: false,
       del: true,
@@ -706,7 +712,8 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.add = CRUD.STATUS.PROCESSING
-      crud.submitResult = await crud.crudApi.add(crud.form)
+      const data = crud.submitFormFormat(deepClone(crud.form))
+      crud.submitResult = await crud.crudApi.add(data)
       await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL
       crud.resetForm()
@@ -727,7 +734,8 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.edit = CRUD.STATUS.PROCESSING
-      crud.submitResult = await crud.crudApi.edit(crud.form)
+      const data = crud.submitFormFormat(deepClone(crud.form))
+      crud.submitResult = await crud.crudApi.edit(data)
       crud.status.edit = CRUD.STATUS.NORMAL
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
       crud.editSuccessNotify()
@@ -974,9 +982,14 @@ function addCrudFeatureMethod(crud, data) {
     crud.ref.batchForm.validateField(field)
   }
 
+  // 提交表单数据格式化
+  const submitFormFormat = (form) => {
+    return form
+  }
+
   // 提交批量表单数据格式化
-  const submitBatchFormFormat = (list) => {
-    return list
+  const submitBatchFormFormat = (form) => {
+    return form
   }
 
   // 重置数据状态
@@ -1108,6 +1121,7 @@ function addCrudFeatureMethod(crud, data) {
     resetBatchForm, // 重置表单
     validateField, // 表单字段校验
     validateFieldForBatch, // 批量表单字段校验
+    submitFormFormat, // 提交表单数据格式化
     submitBatchFormFormat, // 提交批量表单数据格式化
     resetDataStatus, // 重置数据状态
     getDataStatus, // 获取数据状态
@@ -1236,11 +1250,6 @@ CRUD.NOTIFICATION_TYPE = {
   WARNING: 'warning',
   INFO: 'info',
   ERROR: 'error'
-}
-
-// 方法变更
-CRUD.METHOD = {
-  submitBatchFormFormat: 'submitBatchFormFormat'
 }
 
 // key 与 value 需要一致

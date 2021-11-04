@@ -40,7 +40,7 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mForm />
+    <m-batch-form />
   </div>
 </template>
 
@@ -56,7 +56,7 @@ import useCheckPermission from '@compos/use-check-permission'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import mForm from './module/form'
+import mBatchForm from './module/batch-form'
 
 // // crud交由presenter持有
 const permission = {

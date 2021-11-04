@@ -50,6 +50,13 @@ export default {
           hidden: false,
           component: '/config-manage/classification-manage/measure-config/index',
           meta: { title: '计量配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ConfigSectionSteelLibrary',
+          path: 'section-steel-specification-config',
+          hidden: false,
+          component: '/config-manage/classification-manage/section-steel-specification-config/index',
+          meta: { title: '型材库', icon: 'warehouse', noCache: true }
         }
         // {
         //   name: 'OutboundMethod',

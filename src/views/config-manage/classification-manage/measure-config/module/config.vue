@@ -189,7 +189,7 @@ import { measureTypeEnum } from '@enum-ms/wms'
 import { unitTypeEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
-import useVisible from '@compos/use-dialog-visible'
+import useVisible from '@compos/use-visible'
 import useTableChange from '@compos/form/use-table-change'
 import unitSelect from '@comp-common/unit-select'
 import configPreview from './config-preview'
