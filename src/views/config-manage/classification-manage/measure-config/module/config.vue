@@ -129,6 +129,7 @@
               <unit-select
                 v-if="isEditMode"
                 v-model="scope.row.accountingUnit"
+                :unit-type="scope.row.basicClass & STEEL_ENUM > 0 ? unitTypeEnum.WEIGHT.K : undefined"
                 size="mini"
                 style="width: 100%"
                 clearable
@@ -183,7 +184,9 @@
 <script setup>
 import { defineProps, defineEmits, inject, reactive, ref, watch, computed } from 'vue'
 import { emptyTextFormatter } from '@data-type'
+import { STEEL_ENUM } from '@/config/wms'
 import { measureTypeEnum } from '@enum-ms/wms'
+import { unitTypeEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-dialog-visible'
