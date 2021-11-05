@@ -63,6 +63,12 @@ service.interceptors.request.use(
       config.data = Qs.stringify(config.data)
     }
 
+    if (config.method === 'get') {
+      config.paramsSerializer = (params) => {
+        return Qs.stringify(params, { arrayFormat: 'repeat' })
+      }
+    }
+
     // 带cancelKey的接口把source保存下来，再次请求前需要取消之前的请求
     if (config.cancelKey) {
       // 当cancelKey 填写boolean值时，直接使用method(请求方式)加url(请求地址)作为key
