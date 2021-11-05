@@ -14,6 +14,31 @@ const teamAttributeEnum = {
 }
 constantize(teamAttributeEnum)
 
+// 工序类型
+const processTypeEnum = {
+  ONCE: { L: '一次工序', K: 'ONCE', V: false },
+  TWICE: { L: '二次工序', K: 'TWICE', V: true }
+}
+constantize(processTypeEnum)
+
+// 工序生产检验方式
+const processInspectTypeEnum = {
+  SINGLE_UNSCAN: { L: '单件(不扫码)', K: 'SINGLE_UNSCAN', V: 0, T: 'info' },
+  SINGLE_SCAN: { L: '单件(需扫码)', K: 'SINGLE_SCAN', V: 1, T: 'warning' },
+  BATCH_UNSCAN: { L: '批量(不扫码)', K: 'BATCH_UNSCAN', V: 2, T: 'danger' },
+  BATCH_SCAN: { L: '批量(需扫码)', K: 'BATCH_SCAN', V: 3, T: 'success' }
+}
+constantize(processInspectTypeEnum)
+
+// 工序生产上报方式
+const processReportTypeEnum = {
+  SINGLE_UNSCAN: { L: '单件(不扫码)', K: 'SINGLE_UNSCAN', V: 0, T: 'info' },
+  SINGLE_SCAN: { L: '单件(需扫码)', K: 'SINGLE_SCAN', V: 1, T: 'warning' },
+  BATCH_UNSCAN: { L: '批量(不扫码)', K: 'BATCH_UNSCAN', V: 2, T: 'danger' },
+  BATCH_SCAN: { L: '批量(需扫码)', K: 'BATCH_SCAN', V: 3, T: 'success' }
+}
+constantize(processReportTypeEnum)
+
 // mes 产品类型
 const productTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 1 },
@@ -26,7 +51,7 @@ constantize(productTypeEnum)
 
 // 含有工序的材料类型
 const processMaterialListTypeEnum = {
-  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: productTypeEnum.ARTIFACT.V, T: 'primary' },
+  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: productTypeEnum.ARTIFACT.V, T: '' },
   MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: productTypeEnum.MACHINE_PART.V, T: 'success' },
   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: productTypeEnum.ENCLOSURE.V, T: 'warning' }
 }
@@ -36,12 +61,18 @@ export {
   teamTypeEnum,
   teamAttributeEnum,
   productTypeEnum,
-  processMaterialListTypeEnum
+  processMaterialListTypeEnum,
+  processTypeEnum,
+  processInspectTypeEnum,
+  processReportTypeEnum
 }
 
 export default {
   teamTypeEnum,
   teamAttributeEnum,
   productTypeEnum,
-  processMaterialListTypeEnum
+  processMaterialListTypeEnum,
+  processTypeEnum,
+  processInspectTypeEnum,
+  processReportTypeEnum
 }

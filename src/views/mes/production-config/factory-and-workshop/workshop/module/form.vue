@@ -85,7 +85,7 @@ const rules = {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  :v-deep .el-input-number .el-input__inner {
-    text-align: left;
-  }
+::v-deep(.el-input-number .el-input__inner) {
+  text-align: left;
+}
 </style>

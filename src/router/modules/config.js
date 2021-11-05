@@ -142,14 +142,14 @@ export default {
           hidden: false,
           component: '/mes/production-config/production-line/index',
           meta: { title: '生产线管理', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigProcess',
+          path: 'process',
+          hidden: false,
+          component: '/mes/production-config/process/index',
+          meta: { title: '工序配置', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'MesConfigProcess',
-        //   path: 'process',
-        //   hidden: false,
-        //   component: '/mes/production-config/process/index',
-        //   meta: { title: '工序配置', icon: 'project', noCache: true }
-        // },
         // {
         //   name: 'MesConfigProductProcess',
         //   path: 'product-process',
