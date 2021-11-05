@@ -36,7 +36,7 @@ const props = defineProps({
   // 查询指定工序次序，不传查所有
   processType: {
     // Value
-    type: Number,
+    type: [Number, Boolean],
     default: undefined
   },
   // 查询指定产品类型，不传查所有
@@ -81,7 +81,7 @@ const processOptions = computed(() => {
   return options.value.filter((v) => {
     if (v.originOptions && v.originOptions.length) {
       v.options = v.originOptions.filter((o) => {
-        return isNotBlank(props.processType) ? props.processType === Number(o.type) : true
+        return isNotBlank(props.processType) ? props.processType === o.type : true
       })
     }
     return isNotBlank(props.sequenceType) ? props.sequenceType === v.type : true

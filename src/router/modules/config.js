@@ -149,21 +149,21 @@ export default {
           hidden: false,
           component: '/mes/production-config/process/index',
           meta: { title: '工序配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigProductProcess',
+          path: 'product-process',
+          hidden: false,
+          component: '/mes/production-config/product-process/index',
+          meta: { title: '工序管理', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MesConfigWageQuota',
+          path: 'wage-quota',
+          hidden: false,
+          component: '/mes/production-config/wage-quota/index',
+          meta: { title: '工价定额', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'MesConfigProductProcess',
-        //   path: 'product-process',
-        //   hidden: false,
-        //   component: '/mes/production-config/product-process/index',
-        //   meta: { title: '工序管理', icon: 'project', noCache: true }
-        // },
-        // {
-        //   name: 'MesConfigWageQuota',
-        //   path: 'wage-quota',
-        //   hidden: false,
-        //   component: '/mes/production-config/wage-quota/index',
-        //   meta: { title: '工价定额', icon: 'project', noCache: true }
-        // }
       ]
     }
   ]

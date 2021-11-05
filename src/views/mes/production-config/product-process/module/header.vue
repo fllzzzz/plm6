@@ -3,39 +3,37 @@
     <common-radio-button
       v-model="query.sequenceType"
       :options="typeEnum.ENUM"
+      :unshow-val="[typeEnum.MACHINE_PART.V]"
       class="filter-item"
       type="enum"
       size="small"
-      @change="productTypeChange"
+      @change="sequenceTypeChange"
     />
     <common-radio-button
       v-if="query.sequenceType === typeEnum.ARTIFACT.V"
-      v-model="query.type"
+      v-model="query.processType"
       :options="processTypeEnum.ENUM"
       size="small"
       class="filter-item"
       type="enum"
       @change="crud.toQuery"
     />
-    <common-select
+    <common-radio-button
+      v-model="query.boolEnabledEnum"
+      :options="enabledEnum.ENUM"
       type="enum"
-      v-model="query.reportType"
-      :options="reportTypeEnum.ENUM"
-      clearable
-      placeholder="可选择上报方式"
-      style="width: 200px"
+      showOptionAll
       class="filter-item"
       @change="crud.toQuery"
     />
-    <common-select
-      type="enum"
-      v-model="query.inspectType"
-      :options="inspectTypeEnum.ENUM"
-      clearable
-      placeholder="可选择检验方式"
-      style="width: 200px"
+    <el-input
+      v-model="query.name"
+      placeholder="输入名称搜索"
       class="filter-item"
-      @change="crud.toQuery"
+      style="width: 200px"
+      size="small"
+      clearable
+      @keyup.enter="crud.toQuery"
     />
     <rrOperation />
   </div>
@@ -43,32 +41,27 @@
 </template>
 
 <script setup>
-import {
-  processTypeEnum,
-  processMaterialListTypeEnum as typeEnum,
-  processInspectTypeEnum as inspectTypeEnum,
-  processReportTypeEnum as reportTypeEnum
-} from '@enum-ms/mes'
+import { enabledEnum } from '@enum-ms/common'
+import { processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  type: processTypeEnum.ONCE.V,
+  name: undefined,
+  boolEnabledEnum: enabledEnum.TRUE.V,
   sequenceType: typeEnum.ARTIFACT.V,
-  inspectType: undefined,
-  reportType: undefined,
-  name: undefined
+  processType: processTypeEnum.ONCE.V
 }
 
 const { crud, query } = regHeader(defaultQuery)
 
-function productTypeChange() {
+function sequenceTypeChange() {
   if (query.sequenceType === typeEnum.ARTIFACT.V) {
-    query.type = processTypeEnum.ONCE.V
+    query.processType = processTypeEnum.ONCE.V
   } else {
-    delete query.type
+    delete query.processType
   }
   crud.toQuery()
 }

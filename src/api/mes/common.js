@@ -6,7 +6,8 @@ export function getFactoriesAllSimple(params) {
     module: 'mes',
     url: 'factory',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 
@@ -16,7 +17,8 @@ export function getWorkshopAllSimple(params) {
     module: 'mes',
     url: 'workshop',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 
@@ -25,6 +27,7 @@ export function getProcessAllSimple(params) {
   return request({
     url: 'api/mes/building/process',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }

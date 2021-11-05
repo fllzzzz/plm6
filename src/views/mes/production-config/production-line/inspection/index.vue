@@ -36,7 +36,7 @@
         />
         <!--编辑与删除-->
         <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
+          v-if="useCheckPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="130px"
           align="center"
@@ -58,7 +58,7 @@
 import crudApi from '@/api/mes/production-config/production-line-inspection'
 import { defineExpose, ref, defineProps, watch, computed } from 'vue'
 
-import checkPermission from '@/utils/permission'
+import useCheckPermission from '@compos/use-check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -79,7 +79,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '质检',
-    sort: ['sort.asc', 'id.desc'],
+    sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false
@@ -87,7 +87,11 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.team-card',
+  paginate: true,
+  extraHeight: 157
+})
 
 const props = defineProps({
   line: {

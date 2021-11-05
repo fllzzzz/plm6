@@ -45,7 +45,7 @@
         </template>
         <template v-slot="scope">
           <el-select
-            v-if="checkPermission(permission.edit)"
+            v-if="useCheckPermission(permission.edit)"
             v-model="scope.row.reportType"
             size="small"
             placeholder="请选择"
@@ -84,7 +84,7 @@
         </template>
         <template v-slot="scope">
           <el-select
-            v-if="checkPermission(permission.edit)"
+            v-if="useCheckPermission(permission.edit)"
             v-model="scope.row.inspectType"
             size="small"
             placeholder="请选择"
@@ -113,10 +113,10 @@
           <el-tag :type="typeEnum[typeEnum.VK[scope.row.sequenceType]].T">{{ typeEnum.VL[scope.row.sequenceType] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" min-width="160px" />
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" min-width="110px" />
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.del, ...permission.edit])"
+        v-if="useCheckPermission([...permission.del, ...permission.edit])"
         label="操作"
         width="130px"
         align="center"
@@ -144,7 +144,8 @@ import {
   processInspectTypeEnum as inspectTypeEnum,
   processReportTypeEnum as reportTypeEnum
 } from '@enum-ms/mes'
-import checkPermission from '@/utils/permission'
+import { parseTime } from '@/utils/date'
+import useCheckPermission from '@compos/use-check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -165,7 +166,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '工序',
-    sort: ['sort.asc', 'id.desc'],
+    sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi }
   },
@@ -220,6 +221,7 @@ async function changeReportType(data, val) {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    v.createTime = parseTime(v.createTime)
     v.orginInspectType = v.inspectType
     v.orginReportType = v.reportType
     return v

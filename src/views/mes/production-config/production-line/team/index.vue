@@ -48,7 +48,7 @@
         />
         <!--编辑与删除-->
         <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
+          v-if="useCheckPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="130px"
           align="center"
@@ -71,7 +71,7 @@ import crudApi from '@/api/mes/production-config/production-line-team'
 import { defineExpose, ref, defineProps, watch, computed } from 'vue'
 
 import { teamAttributeEnum } from '@enum-ms/mes'
-import checkPermission from '@/utils/permission'
+import useCheckPermission from '@compos/use-check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -92,7 +92,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '班组',
-    sort: ['sort.asc', 'id.desc'],
+    sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
     queryOnPresenterCreated: false
@@ -100,7 +100,11 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.team-card',
+  paginate: true,
+  extraHeight: 157
+})
 
 const props = defineProps({
   line: {
@@ -129,9 +133,9 @@ CRUD.HOOK.beforeRefresh = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map(v => {
+  res.data.content = res.data.content.map((v) => {
     const members = []
-    v.mesBuildingTeamUserLinkList.forEach(m => {
+    v.mesBuildingTeamUserLinkList.forEach((m) => {
       if (m.boolLeaderEnum) {
         v.leaderName = m.userName
         v.leaderId = m.userId
@@ -145,8 +149,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     })
     v.members = members
     if (v.members.length > 0) {
-      v.memberNames = v.members.map(v => v.userName).join(', ')
-      v.memberIds = v.members.map(v => v.userId)
+      v.memberNames = v.members.map((v) => v.userName).join(', ')
+      v.memberIds = v.members.map((v) => v.userId)
     } else {
       v.memberNames = ''
       v.memberIds = []

@@ -72,7 +72,7 @@
         <template v-slot="scope">
           <el-switch
             v-model="scope.row.boolEnabledEnum"
-            :disabled="!checkPermission(permission.editStatus)"
+            :disabled="!useCheckPermission(permission.editStatus)"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             :active-value="enabledEnum.TRUE.V"
@@ -92,7 +92,7 @@
       />
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.del, ...permission.edit])"
+        v-if="useCheckPermission([...permission.del, ...permission.edit])"
         label="操作"
         width="130px"
         align="center"
@@ -116,7 +116,7 @@ import { ElMessageBox } from 'element-plus'
 
 import { enabledEnum } from '@enum-ms/common'
 import { TAG_FACTORY_DEF_COLOR } from '@/config/common'
-import checkPermission from '@/utils/permission'
+import useCheckPermission from '@compos/use-check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -147,7 +147,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '工厂',
-    sort: ['sort.asc', 'id.desc'],
+    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

@@ -5,14 +5,14 @@
         <line-config @click-line="handleChangeline" />
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="14">
-        <el-card class="box-card">
+        <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
             <common-radio-button v-model="teamType" :disabled="!currentLine.name" size="mini" type="enum" :options="teamTypeEnum.ENUM" />
             <el-tag v-if="currentLine.factory && currentLine.name" size="medium">{{
               `${currentLine.factory.name} - ${currentLine.name}`
             }}</el-tag>
             <common-button
-              v-if="teamType == teamTypeEnum.TEAM.V && teamRef && checkPermission(teamRef.permission.add) && currentLine.id"
+              v-if="teamType == teamTypeEnum.TEAM.V && teamRef && useCheckPermission(teamRef.permission.add) && currentLine.id"
               size="mini"
               style="float: right; padding: 6px 10px; margin-bottom: 0px"
               type="primary"
@@ -23,7 +23,7 @@
             </common-button>
             <common-button
               v-if="
-                teamType == teamTypeEnum.INSPECTION.V && inspectionRef && checkPermission(inspectionRef.permission.add) && currentLine.id
+                teamType == teamTypeEnum.INSPECTION.V && inspectionRef && useCheckPermission(inspectionRef.permission.add) && currentLine.id
               "
               size="mini"
               style="float: right; padding: 6px 10px; margin-bottom: 0px"
@@ -46,7 +46,7 @@
 import { reactive, ref } from 'vue'
 
 import { teamTypeEnum } from '@enum-ms/mes'
-import checkPermission from '@/utils/permission'
+import useCheckPermission from '@compos/use-check-permission'
 
 import lineConfig from './line'
 import teamConfig from './team'

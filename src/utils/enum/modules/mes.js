@@ -57,6 +57,14 @@ const processMaterialListTypeEnum = {
 }
 constantize(processMaterialListTypeEnum)
 
+// 工价定额单价类型
+const wageQuotaTypeEnum = {
+  WEIGHT: { L: '重量', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨' },
+  LENGTH: { L: '长度', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米' },
+  AREA: { L: '面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米' }
+}
+constantize(wageQuotaTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -64,7 +72,8 @@ export {
   processMaterialListTypeEnum,
   processTypeEnum,
   processInspectTypeEnum,
-  processReportTypeEnum
+  processReportTypeEnum,
+  wageQuotaTypeEnum
 }
 
 export default {
@@ -74,5 +83,6 @@ export default {
   processMaterialListTypeEnum,
   processTypeEnum,
   processInspectTypeEnum,
-  processReportTypeEnum
+  processReportTypeEnum,
+  wageQuotaTypeEnum
 }
