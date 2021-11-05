@@ -218,9 +218,6 @@ function toggleSearch() {
   display: inline-flex;
   flex-direction: column;
 }
-.common-button + .common-button {
-  margin-left: 0;
-}
 .crud-opts {
   padding: 6px 0;
   display: -webkit-flex;

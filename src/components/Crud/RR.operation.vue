@@ -24,9 +24,3 @@ const props = defineProps({
 
 const crud = inject('crud')
 </script>
-
-<style lang="scss" scoped>
-.common-button + .common-button {
-  margin-left: 0;
-}
-</style>

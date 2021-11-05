@@ -26,12 +26,12 @@ export function add(data) {
 }
 
 // 批量添加型材信息
-export function batchAdd(data) {
+export function batchAdd({ sectionSteelId, list }) {
   return request({
     module: 'config',
-    url: 'classification/material/section-steel/specification/batch',
+    url: `classification/material/section-steel/${sectionSteelId}/specification/batch`,
     method: 'post',
-    data
+    data: list
   })
 }
 

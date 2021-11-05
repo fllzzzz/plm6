@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import { toArr } from '@data-type/array'
 
 /**
  * 获取国标列表
@@ -34,12 +33,13 @@ export function addStandard(data) {
  * @param {array} ids
  * @returns
  */
-export function delStandard(ids) {
+export function delStandard(id) {
   return request({
     module: 'config',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     url: 'classification/material/section-steel/standard',
     method: 'delete',
-    data: toArr(ids)
+    data: id
   })
 }
 

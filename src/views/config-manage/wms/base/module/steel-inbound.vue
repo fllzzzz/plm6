@@ -3,7 +3,7 @@
     <template #header>
       <div class="clearfix">
         <span class="card-title">钢材入库配置</span>
-        <common-button
+        <common-tip-button
           v-permission="permission.steelInboundEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
@@ -14,7 +14,7 @@
           @click="submit"
         >
           保存
-        </common-button>
+        </common-tip-button>
       </div>
     </template>
     <el-form ref="formRef" v-loading="dataLoading" :disabled="formDisabled" :model="form" :rules="rules" label-position="left" label-width="170px">

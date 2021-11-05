@@ -3,7 +3,7 @@
     <template #header>
       <div class="clearfix">
         <span class="card-title">基础入库配置</span>
-        <common-button
+        <common-tip-button
           v-permission="permission.basicInboundEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
@@ -14,7 +14,7 @@
           @click="submit"
         >
           保存
-        </common-button>
+        </common-tip-button>
       </div>
     </template>
     <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="120px">

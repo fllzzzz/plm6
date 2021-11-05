@@ -1,4 +1,5 @@
 import commonButton from '@comp-common/common-button'
+import commonTipButton from '@comp-common/common-tip-button'
 import commonSelect from '@comp-common/common-select'
 import commonRadio from '@comp-common/common-radio'
 import commonRadioButton from '@comp-common/common-radio-button'
@@ -8,6 +9,7 @@ import commonDialog from '@comp-common/common-dialog'
 
 const components = new Map([
   ['commonButton', commonButton],
+  ['commonTipButton', commonTipButton],
   ['commonSelect', commonSelect],
   ['commonRadio', commonRadio],
   ['commonRadioButton', commonRadioButton],

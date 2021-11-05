@@ -2,6 +2,8 @@
  * 处理文件工具类
  */
 import { parseTime } from '@/utils/date'
+import XLSX from 'xlsx-styleable'
+import { ElMessage } from 'element-plus'
 
 // 获取文件后缀名
 export function getFileSuffix(fileName) {
@@ -94,4 +96,96 @@ export function downloadFile(obj, name, suffix) {
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
+}
+
+/**
+ * 文件校验
+ * @param {*} file 文件
+ * @param {*} param 校验参数
+ * @returns
+ */
+export function fileVerification(file, { accept, sizeLimit }) {
+  if (accept) {
+    const typeFlag = accept.split(',').indexOf(`.${getFileSuffix(file.name).toLowerCase()}`) > -1
+    if (!typeFlag) {
+      ElMessage.error(`上传文件后缀需为${accept}格式`, 2000)
+      return false
+    }
+  }
+  const sizeM = file.size / 1024 / 1024
+  const isLimit = !sizeLimit || (sizeLimit && sizeM < sizeLimit)
+  if (!isLimit) {
+    ElMessage.error(`上传文件大小大小不能超过 ${sizeLimit}MB!`, 2000)
+    return false
+  }
+  return true
+}
+
+/**
+ * 解析excel
+ * @param {*} file 文件
+ * @returns
+ */
+export function resolveExcel(file) {
+  return new Promise((resolve, reject) => {
+    var rABS = false // 是否将文件读取为二进制字符串
+    var f = file
+    var reader = new FileReader()
+    // if (!FileReader.prototype.readAsBinaryString) {
+    FileReader.prototype.readAsBinaryString = function (f) {
+      var binary = ''
+      var rABS = false // 是否将文件读取为二进制字符串
+      // eslint-disable-next-line no-unused-vars
+      // var pt = this
+      var wb // 读取完成的数据
+      var outData
+      var reader = new FileReader()
+      reader.onload = (e) => {
+        var bytes = new Uint8Array(reader.result)
+        var length = bytes.byteLength
+        for (var i = 0; i < length; i++) {
+          binary += String.fromCharCode(bytes[i])
+        }
+        if (rABS) {
+          // eslint-disable-next-line no-undef
+          wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
+            type: 'base64'
+          })
+        } else {
+          wb = XLSX.read(binary, {
+            type: 'binary'
+          })
+        }
+        outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])// outData就是结果
+        resolve(outData)
+        // return arr
+      }
+      reader.readAsArrayBuffer(f)
+    }
+
+    if (rABS) {
+      reader.readAsArrayBuffer(f)
+    } else {
+      reader.readAsBinaryString(f)
+    }
+  })
+}
+
+// excel数据格式转换
+export function formatExcelData(data, template = {}) {
+  const res = []
+  const skipLine = template.skipLine || 0
+  const fields = template.fields
+  if (data.length > skipLine && fields) {
+    const _data = data.slice(skipLine, data.length)
+    _data.forEach(item => {
+      const obj = {}
+      fields.forEach(f => {
+        obj[f.field] = item[f.excelField]
+      })
+      res.push(obj)
+    })
+  }
+  console.log('res', res)
+  return res
 }

@@ -1,12 +1,13 @@
 <template>
   <div class="head-container">
     <template v-if="currentNode.basicClass === classificationEnum.SECTION_STEEL.V">
-      <el-tag type="warning" size="medium" >“型材”请前往【型材库页面】编辑规格</el-tag>
+      <el-tag class="filter-item" type="warning" size="medium" >“型材”请前往【型材库页面】编辑规格</el-tag>
     </template>
     <template v-else-if="crud.data.length">
-      <el-tag v-show="currentNode.name" effect="plain" size="medium">{{ `${currentNode.serialNumber} ${currentNode.name}` }}</el-tag>
+      <el-tag v-show="currentNode.name" class="filter-item" effect="plain" size="medium">{{ `${currentNode.serialNumber} ${currentNode.name}` }}</el-tag>
       <common-button
         v-permission="permission.add"
+        class="filter-item"
         size="mini"
         type="primary"
         icon="el-icon-plus"
@@ -16,7 +17,7 @@
       </common-button>
     </template>
     <template v-else>
-      <el-tag type="info" size="medium">当前科目尚未配置规格</el-tag>
+      <el-tag class="filter-item" type="info" size="medium">当前科目尚未配置规格</el-tag>
     </template>
   </div>
 </template>
