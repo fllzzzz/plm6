@@ -65,7 +65,7 @@ import { isBlank } from '@data-type'
 import { judgeItemFieldChange } from '@/utils'
 
 import useMaxHeight from '@compos/use-max-height'
-import useVisible from '@compos/use-dialog-visible'
+import useVisible from '@compos/use-visible'
 import { ElNotification } from 'element-plus'
 import cellChangePreview from '@comp-common/cell-change-preview'
 
@@ -110,7 +110,8 @@ async function submit() {
         measureUnit: v.measureUnit,
         accountingUnit: v.accountingUnit,
         accountingPrecision: v.accountingPrecision,
-        measurePrecision: v.measurePrecision
+        measurePrecision: v.measurePrecision,
+        outboundUnit: v.outboundUnit
       }
     })
     await save(details)

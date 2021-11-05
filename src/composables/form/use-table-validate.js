@@ -185,14 +185,14 @@ export function cleanUpData(list, dittos) {
   })
 
   // 给同上赋值
-  dittos.forEach((val, key) => {
-    let prevAttr
-    list.forEach((v) => {
-      delete v.verify
+  const prevAttr = new Map()
+  list.forEach((v) => {
+    delete v.verify
+    dittos.forEach((val, key) => {
       if (isBlank(v[key])) {
-        v[key] = prevAttr
+        v[key] = prevAttr.get(key)
       } else {
-        prevAttr = v[key]
+        prevAttr.set(key, v[key])
       }
     })
   })

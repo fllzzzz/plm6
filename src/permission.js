@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
     next()
   }
 
-  // 请求地址未填写，则回到登录页面填写请求地址
+  // TODO:请求地址未填写，则回到登录页面填写请求地址
   if (!requestUrl || !validRequestUrl(requestUrl)) {
     try {
       // TODO: 重置请求地址,修改名称
@@ -48,11 +48,11 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (!hasToken) {
-    // 其他无权访问的页面将重定向到登录页面。
-    next(`/login?redirect=${to.path}`)
-    // NProgress.done()
-  }
+  // if (!hasToken) {
+  //   // 其他无权访问的页面将重定向到登录页面。
+  //   next(`/login?redirect=${to.path}`)
+  //   // NProgress.done()
+  // }
 
   if (hasToken) {
     /**

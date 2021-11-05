@@ -102,7 +102,7 @@ import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, co
 import { classificationEnum } from '@enum-ms/classification'
 
 import useMaxHeight from '@compos/use-max-height'
-import useVisible from '@compos/use-dialog-visible'
+import useVisible from '@compos/use-visible'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useAddFormLocalStorage from '@compos/form/use-add-form-local-storage'

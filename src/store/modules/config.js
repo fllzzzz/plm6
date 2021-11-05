@@ -1,17 +1,14 @@
 import { getMatClsTree, get as getClassificationTree } from '@/api/config/classification-manage/classification-config'
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
-import EO from '@enum'
 import { unitTypeEnum } from '@enum-ms/common'
 import useFormatTree from '@compos/classification/use-format-tree'
-
-const unitTypeEnumV = EO.key2val(unitTypeEnum)
 
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
   dict: {}, // 字典值
-  unit: {} // 单位列表 all，WEIGHT...
+  unit: { ALL: [], GROUP: [] } // 单位列表 ALL，WEIGHT...
 }
 
 const mutations = {
@@ -62,8 +59,8 @@ const actions = {
   async fetchUnit({ commit }) {
     const res = await getAllUnit() || []
     // 单位分为分类列表与全单位列表
-    const unit = { all: [] }
-    Object.keys(unitTypeEnum).forEach(key => {
+    const unit = { ALL: [], GROUP: [], KS: new Map() }
+    Object.keys(unitTypeEnum.ENUM).forEach(key => {
       unit[key] = []
     })
     res.forEach(v => {
@@ -73,9 +70,19 @@ const actions = {
         type: v.type,
         symbol: v.symbol
       }
-      unit.all.push(n)
-      unit[unitTypeEnumV[v.type].K].push(n)
+      unit.ALL.push(n)
+      unit.KS.set(v.name, v.symbol || v.name)
+      unit[unitTypeEnum.VK[v.type]].push(n)
     })
+    Object.keys(unitTypeEnum.ENUM).forEach(key => {
+      unit.GROUP.push({
+        name: unitTypeEnum[key].L,
+        type: key,
+        options: unit[key]
+      })
+    })
+    // 可以通过名称获取
+    unit.symbol = (name) => unit.KS.get(name)
     commit('SET_UNIT', unit)
   }
 }

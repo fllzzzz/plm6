@@ -1,6 +1,6 @@
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref } from 'vue'
 
-export default function useDialogVisible({ emit, props, field = 'modelValue', closeHook }, callback) {
+export default function useVisible({ emit, props, field = 'modelValue', closeHook, showHook }) {
   // dlg显示控制
   const visible = ref(false)
 
@@ -8,12 +8,10 @@ export default function useDialogVisible({ emit, props, field = 'modelValue', cl
     () => props[field],
     (flag) => {
       visible.value = flag
-      if (!flag) {
+      if (flag) {
         // 关闭重置表单
-        if (typeof callback === 'function') {
-          nextTick(() => {
-            callback()
-          })
+        if (typeof showHook === 'function') {
+          showHook()
         }
       }
     }

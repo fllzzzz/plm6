@@ -88,6 +88,13 @@ div:focus {
   padding-left: 5px;
 }
 
+.align-left {
+  text-align: left;
+  .el-input__inner {
+    text-align: left;
+  }
+}
+
 .flex-r {
   display: flex;
   flex-direction: row;
