@@ -2,7 +2,6 @@
 // 判断元素是否可以滚动
 export function elHScrollable(el) {
   if (!(el instanceof HTMLElement)) {
-    console.log('不是element')
     return
   }
   if (el.scrollTop > 0) {

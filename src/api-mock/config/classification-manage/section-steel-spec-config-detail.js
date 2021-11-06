@@ -301,7 +301,7 @@ const getSectionSteelSpecList = {
   }
 }
 
-// 添加国标
+// 添加规格
 const addSectionSteelSpec = {
   url: '/api/config/classification/material/section-steel/specification',
   method: 'post',
@@ -313,9 +313,9 @@ const addSectionSteelSpec = {
   }
 }
 
-// 批量添加国标
+// 批量添加规格
 const batchAddSectionSteelSpec = {
-  url: '/api/config/classification/material/section-steel/specification/batch',
+  url: RegExp('/api/config/classification/material/section-steel/' + '[1-9][0-9]*' + '/specification/batch'),
   method: 'post',
   response: () => {
     return {
@@ -325,7 +325,7 @@ const batchAddSectionSteelSpec = {
   }
 }
 
-// 设置国标
+// 修改规格
 const editSectionSteelSpec = {
   url: '/api/config/classification/material/section-steel/specification',
   method: 'put',
@@ -337,7 +337,7 @@ const editSectionSteelSpec = {
   }
 }
 
-// 删除国标
+// 删除规格
 const delSectionSteelSpec = {
   url: '/api/config/classification/material/section-steel/specification',
   method: 'delete',

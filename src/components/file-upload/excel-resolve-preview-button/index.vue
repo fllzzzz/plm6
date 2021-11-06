@@ -35,7 +35,7 @@
     <common-dialog
       :title="props.title"
       v-model="previewVisible"
-      width="800px"
+      :width="props.width || props.template.dlgWidth || '800px'"
       :before-close="handleClose"
       :show-close="true"
       :close-on-click-modal="false"
@@ -45,10 +45,18 @@
       <template #titleRight>
         <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
       </template>
-      <common-table ref="table" :data="list" empty-text="暂无数据" :max-height="maxHeight" default-expand-all style="width: 100%">
+      <common-table
+        ref="table"
+        :data="list"
+        empty-text="暂无数据"
+        :max-height="maxHeight"
+        :cell-class-name="wrongCellMask"
+        default-expand-all
+        style="width: 100%"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template v-for="item in props.template.fields" :key="item.field">
-          {{item.name}}
+          {{ item.name }}
           <el-table-column :prop="item.field" :show-overflow-tooltip="true" :label="item.label" />
         </template>
       </common-table>
@@ -56,14 +64,14 @@
   </div>
 </template>
 <script setup>
-import { defineEmits, defineProps, computed, ref } from 'vue'
+import { defineEmits, defineProps, ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 import { ElUpload, ElMessage, ElButton } from 'element-plus'
 import { resolveExcel, fileVerification, formatExcelData } from '@/utils/file'
 
-const emit = defineEmits(['data'])
+const emit = defineEmits(['success'])
 
 const props = defineProps({
   title: {
@@ -73,6 +81,13 @@ const props = defineProps({
   template: {
     type: Object,
     required: true
+  },
+  submitFn: {
+    type: Function,
+    required: true
+  },
+  width: {
+    type: [String, Number]
   },
   accept: {
     type: String,
@@ -88,15 +103,15 @@ const props = defineProps({
   },
   icon: {
     type: String,
-    default: 'el-icon-upload'
+    default: 'el-icon-upload2'
   },
   btnName: {
     type: String,
-    default: ''
+    default: 'info'
   },
   btnType: {
     type: String,
-    default: 'primary'
+    default: ''
   },
   btnSize: {
     type: String,
@@ -123,19 +138,17 @@ const props = defineProps({
 const previewVisible = ref(false)
 // 提交loading
 const submitLoading = ref(false)
-const list = computed(() => {
-  return formatExcelData(resolveData.value, props.template)
-})
 
-// const { tableValidate, wrongCellMask } = useTableValidate({ rules: currentRules })
+const list = ref([])
+
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: props.template.rules })
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.cls-batch-add',
-    extraBox: ['.el-dialog__header', '.heade-operate'],
+    mainBox: '.excel-resolve-preview',
+    extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
-    clientHRepMainH: true,
-    navbar: false
+    clientHRepMainH: true
   },
   previewVisible
 )
@@ -144,9 +157,12 @@ const { maxHeight } = useMaxHeight(
 async function submit() {
   submitLoading.value = true
   try {
-    emit('success')
-    ElMessage.success('添加成功')
-    handleClose()
+    const { validResult, dealList } = tableValidate(list.value)
+    if (validResult) {
+      await props.submitFn(cleanUpData(dealList))
+      emit('success', dealList)
+      handleClose()
+    }
   } catch (error) {
     console.log('科目添加', error)
   } finally {
@@ -161,7 +177,6 @@ const handleClose = () => {
 // ------------------------------- 处理文件 -------------------------------
 const uploadRef = ref()
 const resolveLoading = ref(false)
-const resolveData = ref([])
 
 // 处理前
 function handleBefore(file) {
@@ -179,7 +194,8 @@ async function handleChange(file, fileList) {
     resolveLoading.value = true
     // TODO: 清空无效
     // uploadRef.value.clearFiles()
-    resolveData.value = await resolveExcel(file.raw)
+    const resolveData = await resolveExcel(file.raw)
+    list.value = formatExcelData(resolveData, props.template)
   } catch (error) {
     console.log('excel文件解析', error)
   } finally {
@@ -193,3 +209,14 @@ function handleExceed(files, fileList) {
   )
 }
 </script>
+
+<style lang="scss" scoped>
+.upload-excel-resolve {
+  ::v-deep(.el-upload) {
+    width: 100%;
+    .el-button {
+      width:100%
+    }
+  }
+}
+</style>

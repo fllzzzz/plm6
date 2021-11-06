@@ -174,10 +174,10 @@ export function resolveExcel(file) {
 // excel数据格式转换
 export function formatExcelData(data, template = {}) {
   const res = []
-  const skipLine = template.skipLine || 0
+  const startRow = template.startRow || 0
   const fields = template.fields
-  if (data.length > skipLine && fields) {
-    const _data = data.slice(skipLine, data.length)
+  if (data.length >= startRow && fields) {
+    const _data = data.slice(startRow - 1, data.length)
     _data.forEach(item => {
       const obj = {}
       fields.forEach(f => {
@@ -186,6 +186,5 @@ export function formatExcelData(data, template = {}) {
       res.push(obj)
     })
   }
-  console.log('res', res)
   return res
 }

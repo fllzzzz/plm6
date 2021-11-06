@@ -3,7 +3,7 @@
  */
 export const purchaseApplyList_SteelPlate = {
   title: '钢板申购清单',
-  skipLine: 2,
+  startRow: 2,
   field: {
     subjectName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
@@ -22,7 +22,7 @@ export const purchaseApplyList_SteelPlate = {
  */
 export const purchaseApplyList_SectionSteel = {
   title: '型钢申购清单',
-  skipLine: 2,
+  startRow: 2,
   field: {
     subjectName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
@@ -40,7 +40,7 @@ export const purchaseApplyList_SectionSteel = {
  */
 export const purchaseApplyList_SteelCoil = {
   title: '钢卷申购清单',
-  skipLine: 2,
+  startRow: 2,
   field: {
     subjectName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
@@ -59,7 +59,7 @@ export const purchaseApplyList_SteelCoil = {
  */
 export const inStorageList_SteelPlate = {
   title: '钢板入库清单',
-  skipLine: 2,
+  startRow: 2,
   field: {
     subjectName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格

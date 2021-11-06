@@ -76,66 +76,23 @@
               >查看</common-button
             >
             <el-popover placement="bottom" :title="``" trigger="click" width="100">
-              <!-- <upload-btn
-                    v-permission="permission.import"
-                    class="upload-btn"
-                    :action="fileUploadApi"
-                    v-model:files="scope.row.files"
-                    :has-before-confirm="true"
-                    :before-message="'确认更换当前清单吗？'"
-                    :file-classify="fileClassificationEnum.SECTION_ATT.V"
-                    btn-name="GB-98"
-                    :icon="'el-icon-upload2'"
-                    :size="'mini'"
-                    :limit="1"
-                    :show-file-list="false"
-                    btn-type="info"
-                    style="margin-bottom: 5px"
-                    @change="filesChange(scope.row)"
-                  />
-                  <upload-btn
-                    v-permission="permission.import"
-                    class="upload-btn"
-                    :action="fileUploadApi"
-                    v-model:files="scope.row.files"
-                    :has-before-confirm="true"
-                    :before-message="'确认更换当前清单吗？'"
-                    :file-classify="fileClassificationEnum.SECTION_ATT.V"
-                    btn-name="GB-82"
-                    :icon="'el-icon-upload2'"
-                    :size="'mini'"
-                    :limit="1"
-                    :show-file-list="false"
-                    btn-type="info"
-                    @change="filesChange(scope.row)"
-                  /> -->
+              <excel-resolve-preview-button
+                v-for="sd in standard"
+                :key="sd.id"
+                class="resolve-btn"
+                :btn-name="sd.name"
+                :template="sectionSteelSpecTemp"
+                :title="`${scope.row.name}：${sd.name}`"
+                :submitFn="data => sectionSteelSpecTemp.submit(data, scope.row, sd)"
+                @success="handleUploadSuccess"
+              />
               <template #reference>
                 <common-button size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
               </template>
             </el-popover>
             <el-popover placement="bottom" :title="``" trigger="click" width="100">
-              <common-button
-                class="download-btn"
-                :loading="scope.row.downloadLoading"
-                size="mini"
-                style="margin-bottom: 5px"
-                type="info"
-                icon="el-icon-download"
-                @click="downloadFile(scope.row, scope.row.id)"
-                >GB-98</common-button
-              >
-              <common-button
-                class="download-btn"
-                :loading="scope.row.downloadLoading"
-                size="mini"
-                style="margin-left: 0px"
-                type="info"
-                icon="el-icon-download"
-                @click="downloadFile(scope.row, scope.row.id)"
-                >GB-82</common-button
-              >
               <template #reference>
-                <common-button size="mini" icon="el-icon-upload2" type="success" style="margin-left: 5px">下载</common-button>
+                <common-button size="mini" icon="el-icon-download" type="success" style="margin-left: 5px">下载</common-button>
               </template>
             </el-popover>
             <!-- <common-button :loading="scope.row.downloadLoading" size="mini" style="margin-left:5px;" type="success" icon="el-icon-download" @click="downloadFile(scope.row,scope.row.id)">下载</common-button> -->
@@ -152,14 +109,13 @@
 <script setup>
 import crudApi, { addStandard, getStandard, setStandard } from '@/api/config/classification-manage/section-steel-spec-config'
 import { provide, ref, computed } from 'vue'
-// import { mapGetters } from '@/store/lib'
-// import { fileClassificationEnum } from '@enum-ms/file'
 import { isNotBlank, isBlank } from '@data-type/index'
+import { sectionSteelSpecTemp } from '@/utils/excel/import-template/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-// import uploadBtn from '@comp/FileUpload/UploadBtn'
-import { ElMessage, ElNotification, ElCheckTag } from 'element-plus'
+import ExcelResolvePreviewButton from '@comp/file-upload/excel-resolve-preview-button/index.vue'
+import { ElMessage, ElCheckTag } from 'element-plus'
 import mHeader from './module/header'
 import mForm from './module/form'
 import specDetail from './detail/index.vue'
@@ -228,6 +184,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   }
 }
 
+// 显示型材规格详情
+function showSpec(row) {
+  currentRow.value = row
+  specsVisible.value = true
+}
+
 // 获取国标
 async function fetchStandard() {
   try {
@@ -241,28 +203,16 @@ async function fetchStandard() {
   }
 }
 
-async function filesChange(row) {
-  try {
-    if (row.files && row.files.length > 0) {
-      row.attachmentId = row.files[0].id
-      await crudApi.edit(row)
-      ElNotification({ title: '更新成功', type: 'success', duration: 2500 })
-      crud.toQuery()
-    }
-  } catch (error) {
-    ElNotification({ title: '更新失败', type: 'error', duration: 2500 })
-  }
-}
-
-function showSpec(row) {
-  currentRow.value = row
-  specsVisible.value = true
+// 处理上传成功
+function handleUploadSuccess() {
+  crud.refresh()
+  fetchStandard()
 }
 
 async function changeStandard(row, standardId) {
   if (row.standardId === standardId) return
   try {
-    await setStandard(row.standardId, standardId)
+    await setStandard(standardId, row.id)
     ElMessage({
       message: `【${row.name}】默认国标切换为【${standardMap.value.get(standardId)}】`,
       type: 'success'
@@ -284,8 +234,11 @@ async function changeStandard(row, standardId) {
 .section-steel .box-card {
   width: 100%;
 }
-.upload-btn {
-  width: 72px;
+.resolve-btn {
+  width: 100%;
+}
+.resolve-btn + .resolve-btn {
+  margin-top: 5px;
 }
 .download-btn {
   width: 84px;
