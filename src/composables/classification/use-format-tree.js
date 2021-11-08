@@ -1,8 +1,5 @@
-import EO from '@enum'
 import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank } from '@data-type/index'
-
-const classificationEnumV = EO.key2val(classificationEnum)
 
 // 格式化分类树
 export default function useFormatTree(tree, parent, deep = 1) {
@@ -18,7 +15,7 @@ function format(tree, parent, deep = 1) {
       name: node.name,
       code: node.code,
       basicClass: deep === 1 ? node.basicClass : parent.basicClass,
-      basicClassName: deep === 1 ? classificationEnumV[`${node.basicClass}`].L : parent.basicClassName,
+      basicClassName: deep === 1 ? classificationEnum.VL[node.basicClass] : parent.basicClassName,
       serialNumber: `${isNotBlank(parent) ? parent.code : ''}${node.code}`
     }
 

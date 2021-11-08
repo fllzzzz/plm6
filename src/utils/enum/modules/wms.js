@@ -14,12 +14,21 @@ const measureTypeEnum = {
 }
 constantize(measureTypeEnum)
 
+// 仓库类型
+const warehouseTypeEnum = {
+  NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 0 },
+  WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 1 }
+}
+constantize(warehouseTypeEnum)
+
 export {
   inboundFillWayEnum,
-  measureTypeEnum
+  measureTypeEnum,
+  warehouseTypeEnum
 }
 
 export default {
   inboundFillWayEnum,
-  measureTypeEnum
+  measureTypeEnum,
+  warehouseTypeEnum
 }

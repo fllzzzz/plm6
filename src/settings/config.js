@@ -1,5 +1,5 @@
 import { materialListTypeEnum, materialTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
-import { classificationEnum } from '@enum-ms/classification'
+import { materialClassificationEnum } from '@enum-ms/classification'
 
 // 工厂标签默认颜色
 export const TAG_FACTORY_DEF_COLOR = '#1682e6'
@@ -17,7 +17,7 @@ export const STEEL_DENSITY = 7.85
 export const STAINLESS_STEEL_DENSITY = 7.93
 
 // 钢材的val
-export const STEEL_ENUM = classificationEnum.STEEL_PLATE.V | classificationEnum.SECTION_STEEL.V | classificationEnum.STEEL_COIL.V
+export const STEEL_ENUM = materialClassificationEnum.STEEL_PLATE.V | materialClassificationEnum.SECTION_STEEL.V | materialClassificationEnum.STEEL_COIL.V
 
 // 系统最小单位（默认）
 export const MIN_UNIT = {
