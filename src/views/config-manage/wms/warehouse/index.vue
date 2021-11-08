@@ -129,7 +129,7 @@ const { maxHeight } = useMaxHeight()
 
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '仓库位设置',
+    title: '仓库设置',
     formStore: true,
     formStoreKey: 'CONFIG_WMS_WAREHOUSE',
     permission: { ...permission },

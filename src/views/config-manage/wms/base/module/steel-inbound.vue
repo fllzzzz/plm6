@@ -17,7 +17,7 @@
         </common-tip-button>
       </div>
     </template>
-    <el-form ref="formRef" v-loading="dataLoading" :disabled="formDisabled" :model="form" :rules="rules" label-position="left" label-width="170px">
+    <el-form ref="formRef" v-loading="dataLoading" :disabled="formDisabled" :model="form" :rules="rules" label-position="top" label-width="170px">
       <el-form-item class="form-tip-item" prop="trainsDiffType">
         <template #label>
           <span>车次钢材总重误差({{ form.trainsDiffType === numOrPctEnum.NUMBER.V ? 'g' : '%' }})</span>
@@ -68,18 +68,19 @@
 </template>
 
 <script setup>
+import { getInboundSteelConf, setInboundSteelConf } from '@/api/config/wms/base'
+import { reactive, ref, onMounted, inject, computed } from 'vue'
+import { numOrPctEnum } from '@enum-ms/common'
+import { deepClone } from '@/utils/data-type'
+import { isObjectValueEqual } from '@data-type/object'
+
+import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElNotification } from 'element-plus'
 
-import { getInboundSteelConf, setInboundSteelConf } from '@/api/config/wms/base'
-
-import { numOrPctEnum } from '@enum-ms/common'
-import { reactive, ref, onMounted, inject, computed } from 'vue'
-import { isObjectValueEqual } from '@data-type/object'
-import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 const permission = inject('permission')
 
 // 数据源
-let dataSource = {
+const dataSource = ref({
   // 车次重量差值
   trainsDiff: undefined,
   // 车次重量差值类型（g 或 %）
@@ -88,20 +89,20 @@ let dataSource = {
   steelDiff: undefined,
   // 差值类型（g 或 %）
   steelDiffType: undefined
-}
+})
 
 // from-dom
 const formRef = ref()
 
 // 表单
-const form = reactive(dataSource)
+const form = ref(dataSource.value)
 
 // loading
 const dataLoading = ref(false)
 const submitLoading = ref(false)
 
 // 未修改时，禁止点击保存按钮
-const submitDisabled = computed(() => isObjectValueEqual(form, dataSource))
+const submitDisabled = computed(() => isObjectValueEqual(form.value, dataSource.value))
 const formDisabled = computed(() => dataLoading.value || submitLoading.value)
 
 // 表单校验
@@ -123,9 +124,9 @@ async function fetchData() {
   dataLoading.value = true
   try {
     const res = await getInboundSteelConf()
-    dataSource = res
-    Object.assign(form, res)
-    useWatchFormValidate(formRef, form)
+    dataSource.value = res
+    Object.assign(form.value, res)
+    useWatchFormValidate(formRef, form.value)
   } catch (error) {
     console.log('获取入库钢材配置', error)
   } finally {
@@ -139,13 +140,13 @@ async function submit() {
     const passed = await formRef.value.validate()
     if (!passed) return
     submitLoading.value = true
-    await setInboundSteelConf(form)
+    await setInboundSteelConf(form.value)
     ElNotification({
       title: '入库钢材配置设置成功',
       type: 'success',
       duration: 2500
     })
-    fetchData()
+    dataSource.value = deepClone(form.value)
     // TODO:更新配置
     // await store.dispatch('config/fetchConfigInfo')
   } catch (error) {
@@ -161,7 +162,7 @@ async function submit() {
 
 // 表单校验
 function validateSteelDiff(rule, value, callback) {
-  const flag = value === numOrPctEnum.PERCENTAGE.V && form.steelDiff > 100
+  const flag = value === numOrPctEnum.PERCENTAGE.V && form.value.steelDiff > 100
   if (flag) {
     callback(new Error('误差百分比不可超过100'))
   }
@@ -169,7 +170,7 @@ function validateSteelDiff(rule, value, callback) {
 }
 
 function validateTrainsDiff(rule, value, callback) {
-  const flag = value === numOrPctEnum.PERCENTAGE.V && form.trainsDiff > 100
+  const flag = value === numOrPctEnum.PERCENTAGE.V && form.value.trainsDiff > 100
   if (flag) {
     callback(new Error('误差百分比不可超过100'))
   }

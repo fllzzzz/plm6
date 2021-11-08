@@ -1,5 +1,5 @@
 import { inboundFillWayEnum } from '@enum-ms/wms'
-import { numOrPctEnum } from '@enum-ms/common'
+import { numOrPctEnum, whetherEnum } from '@enum-ms/common'
 
 // 获取入库基础配置
 const getInboundBasicConf = {
@@ -67,9 +67,40 @@ const setInboundSteelConf = {
   }
 }
 
+// 获取出库基础配置
+const getOutboundBasicConf = {
+  url: '/api/wms/config/outbound/base',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        'auxMatToWorkShopWay': whetherEnum.FALSE.V
+      }
+    }
+  }
+}
+
+// 设置出库基础配置
+const setOutboundBasicConf = {
+  url: '/api/wms/config/outbound/base',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 export default [
   getInboundBasicConf,
   setInboundBasicConf,
   getInboundSteelConf,
-  setInboundSteelConf
+  setInboundSteelConf,
+  getOutboundBasicConf,
+  setOutboundBasicConf
 ]

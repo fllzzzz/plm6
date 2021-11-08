@@ -95,7 +95,7 @@ export default {
           path: 'warehouse',
           hidden: false,
           component: '/config-manage/wms/warehouse/index',
-          meta: { title: '仓库位设置', icon: 'Steve-Jobs', noCache: true }
+          meta: { title: '仓库设置', icon: 'Steve-Jobs', noCache: true }
         }
         // {
         //   name: 'InventoryWarning',

@@ -1,5 +1,9 @@
+import { deepClone } from './index'
+
 // 判断对象内的值是否相同
 export function isObjectValueEqual(a, b) {
+  a = deepClone(a) // 深拷贝可以将proxy（代理对象）转换为普通对象
+  b = deepClone(b)
   // 取对象a和b的属性名
   var aProps = Object.getOwnPropertyNames(a)
   var bProps = Object.getOwnPropertyNames(b)

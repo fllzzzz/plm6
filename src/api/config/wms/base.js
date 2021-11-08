@@ -37,3 +37,22 @@ export function setInboundSteelConf(params) {
     params
   })
 }
+
+// 获取出库基础配置
+export function getOutboundBasicConf() {
+  return request({
+    module: 'wms',
+    url: 'config/outbound/base',
+    method: 'get'
+  })
+}
+
+// 保存出库基础配置
+export function setOutboundBasicConf(params) {
+  return request({
+    module: 'wms',
+    url: 'config/outbound/base',
+    method: 'put',
+    params
+  })
+}

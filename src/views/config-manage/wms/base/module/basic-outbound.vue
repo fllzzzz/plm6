@@ -2,9 +2,9 @@
   <el-card shadow="always">
     <template #header>
       <div class="clearfix">
-        <span class="card-title">基础入库配置</span>
+        <span class="card-title">基础出库配置</span>
         <common-tip-button
-          v-permission="permission.basicInboundEdit"
+          v-permission="permission.basicOutboundEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
           show-tip
@@ -17,34 +17,36 @@
         </common-tip-button>
       </div>
     </template>
-    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="120px">
-      <el-form-item label="金额填写场景">
-        <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
+    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="top" label-width="120px">
+      <el-form-item label="辅材入库到车间直接出库">
+        <el-switch
+          v-model="form.auxMatToWorkShopWay"
+          :active-value="whetherEnum.TRUE.V"
+          :inactive-value="whetherEnum.FALSE.V"
+          class="drawer-switch"
+        />
       </el-form-item>
-      <el-form-item label="工厂填写场景">
-        <common-radio v-model="form.factoryFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
+       <el-form-item>
+        <span class="form-item-tip">在辅材入库到类型为“车间”的仓库时，直接出库。</span>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script setup>
-import { getInboundBasicConf, setInboundBasicConf } from '@/api/config/wms/base'
+import { getOutboundBasicConf, setOutboundBasicConf } from '@/api/config/wms/base'
 import { ref, onMounted, inject, computed } from 'vue'
-import { inboundFillWayEnum } from '@enum-ms/wms'
-import { isObjectValueEqual } from '@data-type/object'
+import { whetherEnum } from '@enum-ms/common'
 import { deepClone } from '@/utils/data-type'
-
+import { isObjectValueEqual } from '@data-type/object'
 import { ElNotification } from 'element-plus'
 
 const permission = inject('permission')
 
 // 数据源
 const dataSource = ref({
-  // 金额填写方式
-  amountFillWay: undefined,
-  // 工厂填写方式
-  factoryFillWay: undefined
+  // 辅材出库到车间的配置
+  auxMatToWorkShopWay: undefined
 })
 // 表单
 const form = ref(dataSource.value)
@@ -65,13 +67,12 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const { amountFillWay, factoryFillWay } = await getInboundBasicConf()
-    form.value.amountFillWay = amountFillWay
-    form.value.factoryFillWay = factoryFillWay
+    const { auxMatToWorkShopWay } = await getOutboundBasicConf()
+    form.value.auxMatToWorkShopWay = auxMatToWorkShopWay
 
-    dataSource.value = { amountFillWay, factoryFillWay }
+    dataSource.value = { auxMatToWorkShopWay }
   } catch (error) {
-    console.log('wms基础配置', error)
+    console.log('出库基础配置', error)
   } finally {
     dataLoading.value = false
   }
@@ -82,19 +83,19 @@ async function submit() {
   try {
     submitLoading.value = true
 
-    await setInboundBasicConf(form)
+    await setOutboundBasicConf(form)
     ElNotification({
-      title: '入库基础配置设置成功',
+      title: '出库基础配置设置成功',
       type: 'success',
       duration: 2500
     })
+
     dataSource.value = deepClone(form.value)
-    // fetchData()
     // TODO:更新配置
     // await store.dispatch('config/fetchConfigInfo')
   } catch (error) {
     ElNotification({
-      title: '基础入库配置设置失败',
+      title: '出库基础配置设置失败',
       type: 'error',
       duration: 2500
     })
