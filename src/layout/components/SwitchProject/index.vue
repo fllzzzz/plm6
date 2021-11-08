@@ -88,7 +88,7 @@ export default {
       handler(newVal, oldVal) {
         if (newVal && !(newVal & this.projectType)) {
           const valArr = getBitwiseBack(this.routeProjectType)
-          this.projectType = valArr.length && valArr.length <= 1 ? newVal : newVal & this.currentProjectType ? this.currentProjectType : valArr[0]
+          this.projectType = valArr.length && valArr.length === 1 ? newVal : newVal & this.currentProjectType ? this.currentProjectType : valArr[0]
           this.handleTypeChange(this.projectType)
         }
       }
@@ -154,7 +154,7 @@ export default {
         if (this.routeProjectType && !(this.routeProjectType & this.projectType)) {
           const routeProjectTypeArr = getBitwiseBack(this.routeProjectType)
           this.projectType =
-            routeProjectTypeArr.length && routeProjectTypeArr.length <= 1
+            routeProjectTypeArr.length && routeProjectTypeArr.length === 1
               ? this.routeProjectType
               : this.routeProjectType & this.currentProjectType
                 ? this.currentProjectType

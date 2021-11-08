@@ -22,7 +22,7 @@
       <el-table-column v-if="columns.visible('enabled')" :show-overflow-tooltip="true" prop="enabled" label="状态" align="center">
         <template v-slot="scope">
           <template v-if="useCheckPermission(permission.edit)">
-            <el-switch :disabled="updateLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleChangeEnabled(scope.row, scope.row.enabled)" />
+            <el-switch :disabled="scope.row.enabledLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleEnabledChange(scope.row)" />
           </template>
           <template v-else>
             {{ enabledEnum.VL[scope.row.enabled] }}
@@ -52,6 +52,7 @@ import { enabledEnum, unitTypeEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import useCrudEnabledChange from '@compos/use-crud-enabled-change'
 import useCheckPermission from '@compos/use-check-permission'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -74,7 +75,6 @@ const optShow = {
   download: false
 }
 
-const updateLoading = ref(false)
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -92,17 +92,5 @@ const { CRUD, crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 启用状态变更
-async function handleChangeEnabled(data, val) {
-  try {
-    updateLoading.value = true
-    await editEnabled({ id: data.id, enabled: val })
-    crud.refresh()
-    crud.notify(enabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-  } catch (error) {
-    console.log('基础单位-操作使用状态', error)
-    data.enabled = data.enabled === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
-  } finally {
-    updateLoading.value = false
-  }
-}
+const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled })
 </script>

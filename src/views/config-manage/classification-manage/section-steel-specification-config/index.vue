@@ -151,8 +151,7 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get: crudApi.get, add: addStandard },
-    hasPagination: false,
-    dataPath: null
+    hasPagination: false
   },
   tableRef
 )
@@ -177,8 +176,8 @@ provide('sectionSteel', currentRow)
 
 fetchStandard()
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  if (isNotBlank(res.data)) {
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  if (isNotBlank(data.content)) {
     const iterateTree = (tree) => {
       tree.forEach((node) => {
         node.downloadLoading = false
@@ -190,7 +189,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         }
       })
     }
-    iterateTree(res.data)
+    iterateTree(data.content)
   }
 }
 

@@ -53,7 +53,7 @@ const getUnit = {
 const batchAddUnit = {
   url: '/api/config/base-config/unit/batch',
   method: 'post',
-  timeout: 5000,
+  timeout: 1000,
   response: () => {
     return {
       code: 20000,
@@ -62,7 +62,7 @@ const batchAddUnit = {
   }
 }
 
-// 修改单位
+// 修改启用状态
 const editEnabled = {
   url: '/api/config/base-config/unit/enabled',
   method: 'put',

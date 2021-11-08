@@ -89,6 +89,13 @@ export default {
           hidden: false,
           component: '/config-manage/wms/base/index',
           meta: { title: '基础配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ConfigWarehouse',
+          path: 'warehouse',
+          hidden: false,
+          component: '/config-manage/wms/warehouse/index',
+          meta: { title: '仓库位设置', icon: 'Steve-Jobs', noCache: true }
         }
         // {
         //   name: 'InventoryWarning',
@@ -111,13 +118,7 @@ export default {
         //   component: '/wms-config/factory/index',
         //   meta: { title: '工厂管理', icon: 'factory', noCache: true }
         // },
-        // {
-        //   name: 'ConfigWarehouseSetting',
-        //   path: 'warehouse-setting',
-        //   hidden: false,
-        //   component: '/wms-config/warehouse-setting/index',
-        //   meta: { title: '仓库位设置', icon: 'Steve-Jobs', noCache: true }
-        // },
+
         // {
         //   name: 'ConfigSectionSteelLibrary',
         //   path: 'profile-spec',

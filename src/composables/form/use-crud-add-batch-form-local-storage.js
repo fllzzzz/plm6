@@ -118,7 +118,7 @@ function clearFormStorage(ls) {
 // 异常关闭
 function abnormalClose(ls, crud) {
   if (!ls.isRegister) return
-  const inEdit = crud.status.cu > 0
+  const inEdit = crud.bStatus.cu > 0
   // 当在编辑中,并且初始表单内容与当前表单内容不一致时，将信息存为异常保存
   if (inEdit && !isObjectValueEqual(ls.initForm, ls.form)) {
     saveFormToStorage(ls, null, ADD_FORM.TYPE.browserClose)

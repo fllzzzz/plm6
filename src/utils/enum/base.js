@@ -55,7 +55,7 @@ export function key2val(enumerate) {
  */
 export function toArr(obj, newObj = true) {
   let arr = []
-  for (const key in obj) {
+  for (const key in obj.ENUM) {
     arr.push(obj[key])
   }
   if (newObj) {
@@ -70,11 +70,18 @@ export function toArr(obj, newObj = true) {
  * @param {*} value 值
  * @returns 枚举值数组
  */
-export function getBits(enumerate, value) {
+export function getBits(enumerate, value, type) {
   const bitArr = []
   for (const i in enumerate) {
     if (enumerate[i].V & value) {
-      bitArr.push(enumerate[i])
+      switch (type) {
+        case 'K':
+        case 'V':
+        case 'L': bitArr.push(enumerate[i][type])
+          break
+        default: bitArr.push(enumerate[i])
+          break
+      }
     }
   }
   return bitArr
@@ -87,7 +94,13 @@ export function getBits(enumerate, value) {
  * @returns 枚举值数组
  */
 export function getBitsSum(enumerate) {
-  return Object.keys(enumerate).reduce((res, cur) => {
+  let _e
+  if (Array.isArray(enumerate)) {
+    _e = enumerate
+  } else if (typeof enumerate === 'object') { // enum
+    _e = Object.keys(enumerate.VK)
+  }
+  return _e.reduce((res, cur) => {
     return res | cur
   }, 0)
 }

@@ -32,6 +32,7 @@ export function editEnabled(data) {
     module: 'config',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     url: `base-config/unit/enabled`,
+    cancelKey: false,
     method: 'put',
     data
   })

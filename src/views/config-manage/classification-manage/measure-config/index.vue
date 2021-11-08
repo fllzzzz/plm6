@@ -141,8 +141,7 @@ const { crud, columns } = useCRUD({
   permission: { ...permission },
   crudApi: { ...crudApi },
   optShow: { ...optShow },
-  hasPagination: false,
-  dataPath: null
+  hasPagination: false
 }, tableRef)
 
 const list = computed(() => {

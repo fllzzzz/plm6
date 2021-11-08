@@ -96,13 +96,9 @@ function componentInit(ls) {
 // 打开记录本地缓存
 function openStore(ls) {
   const storageFormInfo = getFormByStorage(ls.key)
-  console.log(111)
-  console.log('storageFormInfo', storageFormInfo)
   if (isBlank(storageFormInfo)) {
-    console.log(222)
     // 如果缓存为空，则调用初始化方法
     ls.init && ls.init()
-    console.log('xxx', ls.form)
   } else {
     // 如果当前表单缓存不为空，则将原表单覆盖
     const storageForm = storageFormInfo.content

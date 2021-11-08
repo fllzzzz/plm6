@@ -269,5 +269,8 @@ defineExpose({
       transform: translateY(-50%);
     }
   }
+  .el-button + .el-button {
+      margin-left: 6px;
+    }
 }
 </style>

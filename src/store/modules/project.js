@@ -79,6 +79,8 @@ const actions = {
   },
   // 项目类型变更
   changeProjectType({ dispatch, commit, state, rootGetters }, type) {
+    // TODO: 出现保存为projectType 字符串数组的情况
+    if (typeof type !== 'number' || type === null || type === undefined) throw Error('type为null、undefined或number类型')
     const _type = type || allProjectTypes
     const _cascade = state.projectsCascadeMap[_type]
     const _projects = state.projectsMap[_type]

@@ -1,20 +1,18 @@
 <template>
   <div class="head-container">
-    <factory-tabs v-model:value="query.factoryId" @tab-click="crud.toQuery()" />
-    <crudOperation :permission="permission" />
+    <factory-tabs v-model="query.factoryId" @tab-click="crud.toQuery()" />
+    <crudOperation />
   </div>
 </template>
 
-<script>
-import { header } from '@crud/crud'
+<script setup>
+import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import factoryTabs from '@/views/components/base/factory-tabs'
+import factoryTabs from '@comp-common/factory-tabs/index.vue'
 const defaultQuery = {
+  factoryId: undefined // 工厂
 }
 
-export default {
-  components: { crudOperation, factoryTabs },
-  mixins: [header(defaultQuery)],
-  inject: ['permission']
-}
+const { crud, query } = regHeader(defaultQuery)
+
 </script>

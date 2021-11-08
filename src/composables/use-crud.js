@@ -717,6 +717,12 @@ function addCrudBusinessMethod(crud) {
       await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL
       crud.resetForm()
+      // 清除表单验证,避免在form重置后，由于值清空触发change
+      if (crud.ref.form) {
+        nextTick(() => {
+          crud.ref.form.clearValidate()
+        })
+      }
       crud.addSuccessNotify()
       await callVmHook(crud, CRUD.HOOK.afterSubmit)
       crud.toQuery()
@@ -740,6 +746,12 @@ function addCrudBusinessMethod(crud) {
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
       crud.editSuccessNotify()
       crud.resetForm()
+      // 清除表单验证
+      if (crud.ref.form) {
+        nextTick(() => {
+          crud.ref.form.clearValidate()
+        })
+      }
       await callVmHook(crud, CRUD.HOOK.afterSubmit)
       crud.refresh()
     } catch (error) {

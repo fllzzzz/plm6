@@ -89,7 +89,6 @@ const { crud } = useCRUD({
   permission: { ...permission },
   requiredQuery: ['id'],
   crudApi: { ...crudApi },
-  dataPath: null,
   hasPagination: false
 })
 

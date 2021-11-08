@@ -1,6 +1,7 @@
 import { batchAdd } from '@/api/config/classification-manage/section-steel-spec-config-detail'
 /**
  * 可在模板中增加format来转换格式
+ * TODO:字段是否设置数据类型，即string/number
  */
 
 import { deepClone } from '@/utils/data-type'

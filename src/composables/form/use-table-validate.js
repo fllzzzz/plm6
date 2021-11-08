@@ -63,7 +63,6 @@ function tableValidate(list, tableRules, dittos) {
       for (const rule in rules) {
         row.verify[rule] = validate(rules[rule], row[rule])
         if (!row.verify[rule]) {
-          console.log('rule', rule, rules[rule], row[rule])
           flag = false
         }
       }
@@ -167,8 +166,8 @@ export function validate(rules, value, row = {}) {
 // 清理数据
 export function cleanUpData(list, dittos) {
   const copyList = deepClone(list)
-  // 清空数组, 保留数组地址不变
   list.length = 0
+  // 清空数组, 保留数组地址不变
   copyList.forEach((row, index) => {
     dittos.forEach((val, name) => {
       if (row[name] === val) {

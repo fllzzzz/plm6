@@ -76,10 +76,12 @@ import {
   ElTooltip,
   // ElTransfer,
   ElLoading,
-  ElTree
+  ElTree,
   // ElUpload
   // ElMessage,
   // ElMessageBox
+  ElSkeleton,
+  ElSkeletonItem
 } from 'element-plus'
 
 const components = [
@@ -159,8 +161,10 @@ const components = [
   // ElTimelineItem,
   ElTooltip,
   // ElTransfer,
-  ElTree
+  ElTree,
   // ElUpload
+  ElSkeleton,
+  ElSkeletonItem
 ]
 
 const plugins = [

@@ -100,6 +100,7 @@
 import { batchAdd } from '@/api/config/classification-manage/classification-config'
 import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, computed } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
+import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -170,7 +171,7 @@ const dittos = new Map([
 
 const { visible, handleClose } = useVisible({ emit, props })
 const { init, addRow, removeRow } = useTableOperate({}, 10, dittos)
-const { tableValidate, wrongCellMask } = useTableValidate({ rules: currentRules, dittos })
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: currentRules, dittos })
 const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form.list, visible)
 
 ADD_FORM.init = () => init(form.list)
@@ -217,35 +218,10 @@ async function submit() {
     const { validResult, dealList } = tableValidate(form.list)
     form.list = dealList
     if (validResult) {
+      // 清除无用数据
+      const _list = cleanUpData(deepClone(dealList))
       // 数据格式化
-      // 一级科目
-      if (form.currentLevel === 1) {
-        let prevAttr
-        dealList.forEach((v) => {
-          v.parentId = 0
-          delete v.verify
-          if (v.basicClass === dittos.get('basicClass')) {
-            v.basicClass = prevAttr
-          } else {
-            prevAttr = v.basicClass
-          }
-        })
-      }
-
-      // 二、三级科目
-      if (form.currentLevel !== 1) {
-        let prevPid
-        dealList.forEach((v) => {
-          delete v.verify
-          if (v.parentId === dittos.get('parentId')) {
-            v.parentId = prevPid
-          } else {
-            prevPid = v.parentId
-          }
-        })
-      }
-
-      await batchAdd(dealList)
+      await batchAdd(_list)
       // 清除本地缓存
       clearFormStorage()
       emit('success')

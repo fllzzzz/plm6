@@ -28,7 +28,7 @@
           <span class="title">
             <span>{{ props.title }}</span>
           </span>
-          <span>
+          <span class="dialog-title-right">
             <slot name="titleRight" />
             <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>
@@ -209,6 +209,9 @@ function closed() {
         left: 0;
         transform: translateY(-50%);
       }
+    }
+    .el-button + .el-button {
+      margin-left: 6px;
     }
   }
 }

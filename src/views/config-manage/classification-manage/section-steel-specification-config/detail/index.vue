@@ -104,8 +104,7 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false,
-    dataPath: null
+    hasPagination: false
   },
   tableRef
 )
@@ -125,9 +124,9 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 数据处理
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  if (Array.isArray(res.data)) {
-    res.data.forEach(item => {
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  if (Array.isArray(data.content)) {
+    data.content.forEach(item => {
       if (Array.isArray(item.standard)) {
         item.standard.forEach(sd => {
           item[`${prefix}${sd.id}`] = sd.unitNet

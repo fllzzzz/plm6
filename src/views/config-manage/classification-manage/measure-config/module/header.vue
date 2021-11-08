@@ -56,7 +56,7 @@ const config = reactive({
 CRUD.HOOK.handleRefresh = (crud, res) => {
   // 筛选科目类型为材料类型的科目
   classificationMap.value = new Map()
-  res.data = classificationTreeFormat(res.data)
+  res.data.content = classificationTreeFormat(res.data.content)
 }
 
 function configDetail(level) {
