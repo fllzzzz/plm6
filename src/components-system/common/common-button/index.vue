@@ -66,4 +66,3 @@ function handleClick(event) {
   emit('click', event)
 }
 </script>
-

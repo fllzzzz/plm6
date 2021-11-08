@@ -70,32 +70,40 @@
               v-permission="permission.detail"
               size="mini"
               type="primary"
-              style="margin-right: 5px"
               icon="el-icon-view"
               @click="showSpec(scope.row)"
               >查看</common-button
             >
-            <el-popover placement="bottom" :title="``" trigger="click" width="100">
+            <el-popover placement="right" :title="``" trigger="click" :width="150">
               <excel-resolve-preview-button
                 v-for="sd in standard"
-                :key="sd.id"
+                :key="`import_${sd.id}`"
                 class="resolve-btn"
                 :btn-name="sd.name"
-                :template="sectionSteelSpecTemp"
+                :template="sectionSteelSpecITmpl"
                 :title="`${scope.row.name}：${sd.name}`"
-                :submitFn="data => sectionSteelSpecTemp.submit(data, scope.row, sd)"
+                :submitFn="(data) => sectionSteelSpecITmpl.submit(data, scope.row, sd)"
                 @success="handleUploadSuccess"
               />
               <template #reference>
                 <common-button size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
               </template>
             </el-popover>
-            <el-popover placement="bottom" :title="``" trigger="click" width="100">
+            <el-popover placement="right" :title="``" trigger="click" :width="150">
+              <excel-export-button
+                v-for="sd in standard"
+                :key="`export_${sd.id}`"
+                class="resolve-btn"
+                :btn-name="sd.name"
+                :template="sectionSteelSpecETmpl"
+                :title="`${scope.row.name}：${sd.name}`"
+                :filename="`${scope.row.name}_${sd.name}规格清单`"
+                :params="{ sectionSteelId: scope.row.id, standardId: sd.id }"
+              />
               <template #reference>
-                <common-button size="mini" icon="el-icon-download" type="success" style="margin-left: 5px">下载</common-button>
+                <common-button size="mini" icon="el-icon-download" type="success">下载</common-button>
               </template>
             </el-popover>
-            <!-- <common-button :loading="scope.row.downloadLoading" size="mini" style="margin-left:5px;" type="success" icon="el-icon-download" @click="downloadFile(scope.row,scope.row.id)">下载</common-button> -->
           </div>
         </template>
       </el-table-column>
@@ -110,11 +118,13 @@
 import crudApi, { addStandard, getStandard, setStandard } from '@/api/config/classification-manage/section-steel-spec-config'
 import { provide, ref, computed } from 'vue'
 import { isNotBlank, isBlank } from '@data-type/index'
-import { sectionSteelSpecTemp } from '@/utils/excel/import-template/config'
+import sectionSteelSpecITmpl from '@/utils/excel/import-template/config/section-steel-spec-template'
+import sectionSteelSpecETmpl from '@/utils/excel/export-template/config/section-steel-spec-template'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import ExcelResolvePreviewButton from '@comp/file-upload/excel-resolve-preview-button/index.vue'
+import ExcelResolvePreviewButton from '@comp-common/excel-resolve-preview-button/index.vue'
+import ExcelExportButton from '@comp-common/excel-export-button/index.vue'
 import { ElMessage, ElCheckTag } from 'element-plus'
 import mHeader from './module/header'
 import mForm from './module/form'
@@ -170,7 +180,7 @@ fetchStandard()
 CRUD.HOOK.handleRefresh = (crud, res) => {
   if (isNotBlank(res.data)) {
     const iterateTree = (tree) => {
-      tree.forEach(node => {
+      tree.forEach((node) => {
         node.downloadLoading = false
         if (isNotBlank(node.children)) {
           iterateTree(node.children)
@@ -239,6 +249,7 @@ async function changeStandard(row, standardId) {
 }
 .resolve-btn + .resolve-btn {
   margin-top: 5px;
+  margin-left: 0;
 }
 .download-btn {
   width: 84px;

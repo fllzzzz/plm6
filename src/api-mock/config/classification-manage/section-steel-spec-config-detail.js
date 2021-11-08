@@ -302,6 +302,27 @@ const getSectionSteelSpecList = {
 }
 
 // 添加规格
+const getSectionSteelStandardSpec = {
+  url: RegExp('/api/config/classification/material/section-steel/' + '[1-9][0-9]*' + '/standard/' + '[1-9][0-9]*' + '/specification'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        'table|10-20': [
+          {
+            'specification': /\d{1,3}\*\d{1,3}/,
+            'unitNet': '@float(100,999,1,3)'
+          }
+        ]
+      }
+    }
+  }
+}
+
+// 添加规格
 const addSectionSteelSpec = {
   url: '/api/config/classification/material/section-steel/specification',
   method: 'post',
@@ -354,5 +375,6 @@ export default [
   addSectionSteelSpec,
   batchAddSectionSteelSpec,
   editSectionSteelSpec,
-  delSectionSteelSpec
+  delSectionSteelSpec,
+  getSectionSteelStandardSpec
 ]

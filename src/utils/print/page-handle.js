@@ -1,14 +1,18 @@
-import { minUnit } from '@/utils/constant'
-import { toThousandFilter, emptyTextFormatter, isNotBlank, convertUnits } from '@/utils'
+import { MIN_UNIT } from '@/settings/config'
+import { emptyTextFormatter, isNotBlank } from '@data-type/index'
+import { toThousandFilter } from '@data-type/number'
+import { convertUnits } from '@/utils/convert/unit'
+import { projectNameFormatter } from '@/utils/project'
 import { amountUnitEnum, alignEnum, verticleAlignEnum, dataSourceEnum, fieldTypeEnum, pageFormatEnum } from '@/utils/print/enum'
-import enumOperate, { projectNameArrangementModeEnum } from '@/utils/enum'
-import { projectNameFormatter, getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
+import EO from '@/utils/enum'
+import { projectNameArrangementModeEnum } from '@enum-ms/contract'
+// import { getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
 import enumAll from '@/utils/enum/all'
 import moment from 'moment'
-
 import _ from 'lodash'
 
-const pageFormatEnumV = enumOperate.key2val(pageFormatEnum)
+// TODO: 待修改
+const pageFormatEnumV = EO.key2val(pageFormatEnum)
 
 // 获取所有列
 const getAllColumns = (columns) => {
@@ -565,7 +569,7 @@ const setting = {
       const key = format.key || 'L'
       const enumK = enumAll[format.enum]
       if (format.bit) { // 位运算的值
-        const enums = enumOperate.toArr(enumK)
+        const enums = EO.toArr(enumK)
         const res = []
         enums.forEach(e => {
           if (e.V & val) {
@@ -574,7 +578,7 @@ const setting = {
         })
         return res.join('/')
       } else {
-        const enumV = enumOperate.key2val(enumK)
+        const enumV = EO.key2val(enumK)
         return isNotBlank(enumV) && isNotBlank(enumV[val]) ? enumV[val][key] || enumV[val]['L'] : ''
       }
     }
@@ -671,7 +675,7 @@ const setting = {
     if (isNotBlank(_val)) {
       // 单位转换
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, minUnit.WEIGHT, format.unit)
+        _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -695,7 +699,7 @@ const setting = {
     let _val = val
     if (isNotBlank(_val)) {
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, minUnit.LENGTH, format.unit)
+        _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -719,7 +723,7 @@ const setting = {
     let _val = val
     if (isNotBlank(_val)) {
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, minUnit.THICKNESS, format.unit)
+        _val = convertUnits(_val, MIN_UNIT.THICKNESS, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -756,27 +760,27 @@ const setting = {
       // 是否显示单位
       if (format.showUnit) {
         let _unit
-        if (isNotBlank(basicClass)) {
-          if (checkUnit) {
-            _unit = checkUnit
-          } else {
-            _unit = getBasicClassUnit(basicClass)
-          }
-        }
-        if (isNotBlank(materialType)) {
-          if (unit) {
-            _unit = unit
-          } else {
-            _unit = getMaterialTypeUnit(materialType)
-          }
-        }
-        if (isNotBlank(materialListType)) {
-          if (unit) {
-            _unit = unit
-          } else {
-            _unit = getMaterialListTypeUnit(materialListType)
-          }
-        }
+        // if (isNotBlank(basicClass)) {
+        //   if (checkUnit) {
+        //     _unit = checkUnit
+        //   } else {
+        //     _unit = getBasicClassUnit(basicClass)
+        //   }
+        // }
+        // if (isNotBlank(materialType)) {
+        //   if (unit) {
+        //     _unit = unit
+        //   } else {
+        //     _unit = getMaterialTypeUnit(materialType)
+        //   }
+        // }
+        // if (isNotBlank(materialListType)) {
+        //   if (unit) {
+        //     _unit = unit
+        //   } else {
+        //     _unit = getMaterialListTypeUnit(materialListType)
+        //   }
+        // }
         if (_unit) {
           _val += ` ${_unit}`
         }

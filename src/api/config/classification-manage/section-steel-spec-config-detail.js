@@ -55,4 +55,18 @@ export function del(ids) {
   })
 }
 
+/**
+ * 表格导出
+ * @param {number} sectionSteelId 型材id
+ * @param {number} standardId 国标id
+ * @returns
+ */
+export function getSectionSteelStandardSpec({ sectionSteelId, standardId }) {
+  return request({
+    module: 'config',
+    url: `classification/material/section-steel/${sectionSteelId}/standard/${standardId}/specification`,
+    method: 'get'
+  })
+}
+
 export default { get, add, edit, del, batchAdd }

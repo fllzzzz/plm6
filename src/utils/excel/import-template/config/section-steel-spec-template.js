@@ -1,4 +1,4 @@
-import { batchAdd as sectionSteelSpecTempAdd } from '@/api/config/classification-manage/section-steel-spec-config-detail'
+import { batchAdd } from '@/api/config/classification-manage/section-steel-spec-config-detail'
 /**
  * 可在模板中增加format来转换格式
  */
@@ -6,7 +6,7 @@ import { batchAdd as sectionSteelSpecTempAdd } from '@/api/config/classification
 import { deepClone } from '@/utils/data-type'
 import { ElNotification } from 'element-plus'
 
-export const sectionSteelSpecTemp = {
+const sectionSteelSpecTmpl = {
   title: '型材规格导入',
   dlgWidth: '500px',
   startRow: 2, // 起始行
@@ -30,8 +30,10 @@ export const sectionSteelSpecTemp = {
     return list
   },
   submit: async (tableList, sectionSteel, standard) => {
-    const list = sectionSteelSpecTemp.submitFormat(tableList, standard)
-    await sectionSteelSpecTempAdd({ sectionSteelId: sectionSteel.id, list })
+    const list = sectionSteelSpecTmpl.submitFormat(tableList, standard)
+    await batchAdd({ sectionSteelId: sectionSteel.id, list })
     ElNotification({ title: `${sectionSteel.name}-${standard.name}，规格导入成功`, type: 'success' })
   }
 }
+
+export default sectionSteelSpecTmpl

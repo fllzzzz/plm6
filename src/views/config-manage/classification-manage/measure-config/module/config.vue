@@ -184,7 +184,7 @@
 <script setup>
 import { defineProps, defineEmits, inject, reactive, ref, watch, computed } from 'vue'
 import { emptyTextFormatter } from '@data-type'
-import { STEEL_ENUM } from '@/config/wms'
+import { STEEL_ENUM } from '@/settings/config'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { unitTypeEnum } from '@enum-ms/common'
 

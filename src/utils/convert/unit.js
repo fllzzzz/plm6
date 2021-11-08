@@ -31,6 +31,18 @@ export function convertUnits(num, from, to, decimals = 10, showUnit = false, isN
 }
 
 /**
+ * px转emu
+ * @param {*} val
+ * @param {*} scale
+ * @returns
+ */
+export function px2emu(val, scale) {
+  const mmVal = px2mm(val, 10)
+  // 1 mm = 36000 EMUs
+  return Math.floor(mmVal * 36000 * (scale || 1))
+}
+
+/**
  * 像素（px） 转 长度单位
  * @export
  * @param {number} pixel px

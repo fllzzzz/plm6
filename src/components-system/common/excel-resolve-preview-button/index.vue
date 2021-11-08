@@ -15,7 +15,7 @@
     >
       <common-button
         v-if="props.disabled"
-        :loading="props.resolveLoading"
+        :loading="resolveLoading"
         :disabled="props.disabled"
         :icon="props.icon"
         :size="props.btnSize"
@@ -24,7 +24,7 @@
       >
       <el-button
         v-else
-        :loading="props.resolveLoading"
+        :loading="resolveLoading"
         :disabled="props.disabled"
         :icon="props.icon"
         :size="props.btnSize"
@@ -83,8 +83,7 @@ const props = defineProps({
     required: true
   },
   submitFn: {
-    type: Function,
-    required: true
+    type: Function
   },
   width: {
     type: [String, Number]
@@ -107,7 +106,7 @@ const props = defineProps({
   },
   btnName: {
     type: String,
-    default: 'info'
+    default: '上传'
   },
   btnType: {
     type: String,
@@ -159,7 +158,7 @@ async function submit() {
   try {
     const { validResult, dealList } = tableValidate(list.value)
     if (validResult) {
-      await props.submitFn(cleanUpData(dealList))
+      await props.submitFn ? props.submitFn(cleanUpData(dealList)) : props.template.submit(cleanUpData(dealList))
       emit('success', dealList)
       handleClose()
     }

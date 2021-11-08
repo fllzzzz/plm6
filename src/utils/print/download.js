@@ -1,23 +1,24 @@
+import { MIN_UNIT } from '@/settings/config'
 import { emptyTextFormatter, isNotBlank } from '@data-type/index'
 import { toThousandFilter } from '@data-type/number'
 import { createUniqueString } from '@data-type/string'
-import { projectNameFormatter, getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
-import { px2emu, convertUnits, lengthUnit2px, pt2px } from '@/utils/unit'
+import { projectNameFormatter } from '@/utils/project'
+// import { getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
+import { px2emu, convertUnits, lengthUnit2px, pt2px } from '@/utils/convert/unit'
 import { imgLoaded, img2Uint8Array, base64ToUint8Array } from '@/utils/image'
-import { getFileType } from '@/utils/file'
+import { getFileSuffix } from '@/utils/file'
+import EO from '@/utils/enum'
+import enumAll from '@/utils/enum/all'
+import { projectNameArrangementModeEnum } from '@enum-ms/contract'
 import { amountUnitEnum, dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum } from './enum'
 import { convertColumns, delNotDisplayed, getLastColumns } from './page-handle'
-import enumOperate, { projectNameArrangementModeEnum } from '@/utils/enum'
-import enumAll from '@/utils/enum/all'
-import { minUnit } from '@/utils/constant'
 import moment from 'moment'
 import _ from 'lodash'
+import XLSX from 'xlsx-styleable'
+import jrQrcode from 'jr-qrcode'
 
-let XLSX
 // MDW can control the column width, but don't understand what this number is
 const MDW = 8.1
-
-if (typeof require !== 'undefined') XLSX = require('xlsx-styleable')
 
 // Do not use font attribute： shadow, vertAlign
 // Cell border line style
@@ -32,6 +33,7 @@ const borderStyle = {
 
 /**
    * Export Excel
+   * @param {object} title customize title
    * @param {object} header header data
    * @param {object} footer footer data
    * @param {object} table table data
@@ -39,107 +41,110 @@ const borderStyle = {
    * @param {object} config config
    * @author duhh
    */
-async function download({ header, table, footer, qrCode, config }) {
+async function download({ filename, title, header = {}, table = [], footer = {}, qrCode, config }) {
   if (!isNotBlank(config)) {
     throw new Error('未配置')
   }
-  try {
-    if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-      const _img = await imgLoaded(config.logo.url)
-      if (_img) config.logo.binary = img2Uint8Array(_img)
-    }
-    // Each module configuration
-    const titleCfg = config.title
-    const headerCfg = config.header
-    const tableCfg = config.table
-    const footerCfg = config.footer
-    const logoCfg = config.logo
-    const qrCodeCfg = config.qrCode
-
-    // base configuration
-    const baseCfg = {
-      height: config.height,
-      width: config.width,
-      paddingTB: config.paddingTB,
-      paddingLR: config.paddingLR,
-      aclHeight: config.height - config.paddingTB * 2,
-      aclWidth: config.width - config.paddingLR * 2,
-      unit: config.unit
-    }
-
-    // sr:starting row
-    const sr = {
-      title: void 0,
-      header: void 0,
-      tHeader: void 0,
-      tBody: void 0,
-      footer: void 0,
-      footerTip: void 0,
-      footerExtra: void 0,
-      all: void 0
-    }
-
-    // rn:row number
-    const rn = {
-      title: 0,
-      header: 0,
-      tHeader: 0,
-      tBody: 0,
-      footer: 0,
-      footerTip: 0,
-      footerExtra: 0
-    }
-
-    const headerRows = []
-    const footerRows = []
-
-    // File (workbook) name
-    const filename = config.name + '.xlsx'
-
-    // Create workbook object
-    const wb = XLSX.utils.book_new()
-
-    // Worksheet options
-    var wsopts = { WTF: true, cellStyles: true, dateNF: 'yyyy/mm/dd' }
-
-    // Worksheet data
-    const wsData = []
-
-    // worksheet name
-    const ws_name = titleCfg.title
-
-    // Converts an array of arrays of JS data to a worksheet
-    var ws = XLSX.utils.aoa_to_sheet(wsData, wsopts)
-    ws['!rows'] = []
-    ws['!cols'] = []
-
-    // Set the contents of the worksheet, example: worksheet width and height
-    setBase({ config, baseCfg, ws })
-    setColumns(tableCfg)
-    sr.header = setTitle({ config: titleCfg, baseCfg, ws, sr, rn })
-    sr.tHeader = setHeader({ data: header, config: headerCfg, baseCfg, ws, sr, rn, headerRows })
-    // FIXME: Project / Multiple lines, Line height problem (Not high enough )
-    // TODO: Date format problem, whether to use the date format of SHEET
-    // TODO: tHeader cell line break
-    sr.footer = setTable({ data: table, config: tableCfg, baseCfg, ws, sr, rn })
-    sr.all = setFooter({ data: footer, config: footerCfg, baseCfg, ws, sr, rn, footerRows })
-
-    // Merger cells (May contain Settings for row height and column width)
-    mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, headerRows, footerRows })
-
-    // Image Settings are related to column width and row height, so they are set after merging cells
-    setLogo({ baseCfg, config: logoCfg, ws })
-
-    setQRCode({ baseCfg, qrCode, config: qrCodeCfg, ws })
-
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(wb, ws, ws_name)
-
-    XLSX.write(wb, { file: filename, bookType: 'xlsx', bookSST: false, type: 'file', cellStyles: false })
-    return true
-  } catch (e) {
-    throw new Error(e)
+  // try {
+  if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
+    const _img = await imgLoaded(config.logo.url)
+    if (_img) config.logo.binary = img2Uint8Array(_img)
   }
+  // Each module configuration
+  const titleCfg = config.title
+  const headerCfg = config.header
+  const tableCfg = config.table
+  const footerCfg = config.footer
+  const logoCfg = config.logo
+  const qrCodeCfg = config.qrCode
+
+  if (title) {
+    titleCfg.title = title
+  }
+
+  // base configuration
+  const baseCfg = {
+    height: config.height,
+    width: config.width,
+    paddingTB: config.paddingTB,
+    paddingLR: config.paddingLR,
+    aclHeight: config.height - config.paddingTB * 2,
+    aclWidth: config.width - config.paddingLR * 2,
+    unit: config.unit
+  }
+
+  // sr:starting row
+  const sr = {
+    title: void 0,
+    header: void 0,
+    tHeader: void 0,
+    tBody: void 0,
+    footer: void 0,
+    footerTip: void 0,
+    footerExtra: void 0,
+    all: void 0
+  }
+
+  // rn:row number
+  const rn = {
+    title: 0,
+    header: 0,
+    tHeader: 0,
+    tBody: 0,
+    footer: 0,
+    footerTip: 0,
+    footerExtra: 0
+  }
+
+  const headerRows = []
+  const footerRows = []
+
+  // File (workbook) name
+  const _filename = (filename || config.name) + '.xlsx'
+
+  // Create workbook object
+  const wb = XLSX.utils.book_new()
+
+  // Worksheet options
+  var wsopts = { WTF: true, cellStyles: true, dateNF: 'yyyy/mm/dd' }
+
+  // Worksheet data
+  const wsData = []
+
+  // worksheet name
+  const ws_name = titleCfg.title
+
+  // Converts an array of arrays of JS data to a worksheet
+  var ws = XLSX.utils.aoa_to_sheet(wsData, wsopts)
+  ws['!rows'] = []
+  ws['!cols'] = []
+  // Set the contents of the worksheet, example: worksheet width and height
+  setBase({ config, baseCfg, ws })
+  setColumns(tableCfg)
+  sr.header = setTitle({ config: titleCfg, baseCfg, ws, sr, rn })
+  sr.tHeader = setHeader({ data: header, config: headerCfg, baseCfg, ws, sr, rn, headerRows })
+  // FIXME: Project / Multiple lines, Line height problem (Not high enough )
+  // TODO: Date format problem, whether to use the date format of SHEET
+  // TODO: tHeader cell line break
+  sr.footer = setTable({ data: table, config: tableCfg, baseCfg, ws, sr, rn })
+  sr.all = setFooter({ data: footer, config: footerCfg, baseCfg, ws, sr, rn, footerRows })
+
+  // Merger cells (May contain Settings for row height and column width)
+  mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, headerRows, footerRows })
+
+  // Image Settings are related to column width and row height, so they are set after merging cells
+  setLogo({ baseCfg, config: logoCfg, ws })
+
+  setQRCode({ baseCfg, qrCode, config: qrCodeCfg, ws })
+
+  // Add worksheet to workbook
+  XLSX.utils.book_append_sheet(wb, ws, ws_name)
+
+  XLSX.write(wb, { file: _filename, bookType: 'xlsx', bookSST: false, type: 'file', cellStyles: false })
+  return true
+//   } catch (e) {
+//     throw new Error(e)
+//   }
 }
 
 /**
@@ -165,7 +170,7 @@ function setLogo({ baseCfg, config, ws }) {
     return
   }
   setImage(ws, baseCfg, {
-    name: `LOGO_${createUniqueString()}.${getFileType(config.url) || 'png'}`,
+    name: `LOGO_${createUniqueString()}.${getFileSuffix(config.url) || 'png'}`,
     data: config.binary,
     width: config.width,
     height: config.height,
@@ -186,7 +191,7 @@ function setQRCode({ baseCfg, qrCode, config, ws }) {
     return
   }
 
-  const jrQrcode = require('jr-qrcode')
+  // const jrQrcode = require('jr-qrcode')
 
   /**
    * Get the QR Code of base64 encoding
@@ -410,11 +415,11 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
       if (headerMax >= footerMax) {
         _startIndex = _.sum(headerRowsLengthArr.slice(0, headerMaxFieldsI))
         _endIndex = _startIndex + headerMax - 1
-        _fields = headerCfg.fields.filter(f => f.show)
+        _fields = headerCfg.fields ? headerCfg.fields.filter(f => f.show) : []
       } else {
         _startIndex = _.sum(footerRowsLengthArr.slice(0, footerMaxFieldsI))
         _endIndex = _startIndex + footerMax - 1
-        _fields = footerCfg.fields.filter(f => f.show)
+        _fields = footerCfg.fields ? footerCfg.fields.filter(f => f.show) : []
       }
       const _maxFields = JSON.parse(JSON.stringify(_fields.slice(_startIndex, _endIndex + 1)))
 
@@ -442,7 +447,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
     wsMerges.push({ s: { r: sr.footerTip, c: firstCell.c }, e: { r: sr.footerTip, c: lastCell.c }})
   }
   if (rn.header) {
-    const fields = headerCfg.fields.filter(f => f.show)
+    const fields = headerCfg.fields ? headerCfg.fields.filter(f => f.show) : []
     const newHeaderRows = []
     const rowIndex = sr.header
     const rowEndIndex = rowIndex + rn.header
@@ -530,7 +535,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
     }
   }
 
-  if (isNotBlank(rn.footerExtra)) {
+  if (rn.footerExtra) {
     const fields = footerCfg.fields.filter(f => f.show)
     const newFooterRows = []
     const rowIndex = sr.footerExtra
@@ -703,7 +708,7 @@ function setHeader({ data, config, ws, sr, rn, headerRows }) {
     return _sr
   }
   const rows = []
-  if (config.show && config.fields) {
+  if (config.show && isNotBlank(config.fields)) {
     const rowMaxW = config.width
     let currentRowW = 0 // The width of the current row is used
     let rowI = -1
@@ -974,8 +979,9 @@ function setFooter({ data, config, baseCfg, ws, sr, rn, footerRows }) {
   if (tipCfg && tipCfg.show && tipCfg.above) {
     sr.all = setFooterTip({ config: tipCfg, footerCfg: config, baseCfg, ws, sr, rn })
   }
-
-  sr.all = setFooterExtra({ data, config, baseCfg, ws, sr, rn, footerRows })
+  if (isNotBlank(config.fields)) {
+    sr.all = setFooterExtra({ data, config, baseCfg, ws, sr, rn, footerRows })
+  }
 
   if (tipCfg && tipCfg.show && !tipCfg.above) {
     sr.all = setFooterTip({ config: tipCfg, footerCfg: config, baseCfg, ws, sr, rn })
@@ -1024,7 +1030,7 @@ function setFooterTip({ config, footerCfg, baseCfg, ws, sr, rn }) {
     }
 
     let _tipHeight = lengthUnit2px(footerCfg.height, baseCfg.unit)
-    if (footerCfg.fields) {
+    if (isNotBlank(footerCfg.fields)) {
       const rowMaxW = footerCfg.width
       let currentRowW = 0 // The width of the current row is used
       let rowI = -1
@@ -1272,7 +1278,7 @@ function enumFormat(val, format) {
     const key = format.key || 'L'
     const enumK = enumAll[format.enum]
     if (format.bit) { // 位运算的值
-      const enums = enumOperate.toArr(enumK)
+      const enums = EO.toArr(enumK)
       const res = []
       enums.forEach(e => {
         if (e.V & val) {
@@ -1281,7 +1287,7 @@ function enumFormat(val, format) {
       })
       return res.join('/')
     } else {
-      const enumV = enumOperate.key2val(enumK)
+      const enumV = EO.key2val(enumK)
       return isNotBlank(enumV) && isNotBlank(enumV[val]) ? enumV[val][key] || enumV[val]['L'] : ''
     }
   }
@@ -1378,7 +1384,7 @@ function weightFormat(val, format = {}) {
   if (isNotBlank(_val)) {
     // 单位转换
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.WEIGHT, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1402,7 +1408,7 @@ function lengthFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.LENGTH, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1426,7 +1432,7 @@ function thicknessFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.THICKNESS, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.THICKNESS, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1461,27 +1467,27 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
     // 是否显示单位
     if (format.showUnit) {
       let _unit
-      if (isNotBlank(basicClass)) {
-        if (checkUnit) {
-          _unit = checkUnit
-        } else {
-          _unit = getBasicClassUnit(basicClass)
-        }
-      }
-      if (isNotBlank(materialType)) {
-        if (unit) {
-          _unit = unit
-        } else {
-          _unit = getMaterialTypeUnit(materialType)
-        }
-      }
-      if (isNotBlank(materialListType)) {
-        if (unit) {
-          _unit = unit
-        } else {
-          _unit = getMaterialListTypeUnit(materialListType)
-        }
-      }
+      // if (isNotBlank(basicClass)) {
+      //   if (checkUnit) {
+      //     _unit = checkUnit
+      //   } else {
+      //     _unit = getBasicClassUnit(basicClass)
+      //   }
+      // }
+      // if (isNotBlank(materialType)) {
+      //   if (unit) {
+      //     _unit = unit
+      //   } else {
+      //     _unit = getMaterialTypeUnit(materialType)
+      //   }
+      // }
+      // if (isNotBlank(materialListType)) {
+      //   if (unit) {
+      //     _unit = unit
+      //   } else {
+      //     _unit = getMaterialListTypeUnit(materialListType)
+      //   }
+      // }
       if (_unit) {
         _val += ` ${_unit}`
       }
@@ -1546,6 +1552,4 @@ function keyParse(data, key) {
   return
 }
 
-export {
-  download
-}
+export default download

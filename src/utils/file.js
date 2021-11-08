@@ -4,13 +4,19 @@
 import { parseTime } from '@/utils/date'
 import XLSX from 'xlsx-styleable'
 import { ElMessage } from 'element-plus'
+import { isNotBlank } from './data-type'
 
 // 获取文件后缀名
 export function getFileSuffix(fileName) {
+  if (!isNotBlank(fileName)) return ''
   var first = fileName.lastIndexOf('.') // 取到文件名开始到最后一个点的长度
   var nameLength = fileName.length // 取到文件名长度
-  var fileSuffix = fileName.substring(first + 1, nameLength) // 截取获得后缀名
-  return fileSuffix
+  if (first !== -1) {
+    var fileSuffix = fileName.substring(first + 1, nameLength) // 截取获得后缀名
+    return fileSuffix
+  } else {
+    return ''
+  }
 }
 
 /**
