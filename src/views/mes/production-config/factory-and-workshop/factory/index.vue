@@ -115,7 +115,7 @@ import { ref, defineEmits } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import { enabledEnum } from '@enum-ms/common'
-import { TAG_FACTORY_DEF_COLOR } from '@/config/common'
+import { TAG_FACTORY_DEF_COLOR } from '@/settings/config'
 import useCheckPermission from '@compos/use-check-permission'
 
 import useMaxHeight from '@compos/use-max-height'

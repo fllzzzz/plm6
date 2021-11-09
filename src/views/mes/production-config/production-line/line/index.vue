@@ -175,7 +175,7 @@ function handleCurrentChange(val) {
 </script>
 
 <style lang="scss" scoped>
-::deep(.line-box) {
+::v-deep(.line-box) {
   .el-card__body {
     padding-top: 11px;
     .el-tabs {

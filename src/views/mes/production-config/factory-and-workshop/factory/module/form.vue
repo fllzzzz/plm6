@@ -60,7 +60,7 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { TAG_FACTORY_DEF_COLOR } from '@/config/common'
+import { TAG_FACTORY_DEF_COLOR } from '@/settings/config'
 
 const formRef = ref()
 
