@@ -77,7 +77,7 @@ const getOutboundBasicConf = {
       code: 20000,
       message: '成功',
       data: {
-        'auxMatToWorkShopWay': whetherEnum.FALSE.V
+        'boolAuxMatToWorkShopWay': whetherEnum.FALSE.V
       }
     }
   }

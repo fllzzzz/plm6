@@ -5,10 +5,11 @@
       <el-skeleton-item variant="rect" style="margin-top: 10px; height: 30px; margin-bottom: 10px" />
     </template>
     <template #default>
-      <el-tabs v-model="factoryId" :tab-position="props.tabPosition" :type="props.type" @tab-click="tabClick">
+      <el-tabs v-if="isNotBlank(factories)" v-model="factoryId" :tab-position="props.tabPosition" :type="props.type" @tab-click="tabClick">
         <el-tab-pane v-for="item in factories" :key="item.id" :label="`${item.name}`" :name="`${item.id}`" />
         <slot name="content" />
       </el-tabs>
+      <el-tag v-else type="danger" style="margin:15px 0">* 暂无工厂, 请添加工厂后再添加仓库</el-tag>
     </template>
   </el-skeleton>
 </template>

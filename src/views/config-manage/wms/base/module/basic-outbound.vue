@@ -20,7 +20,7 @@
     <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="top" label-width="120px">
       <el-form-item label="辅材入库到车间直接出库">
         <el-switch
-          v-model="form.auxMatToWorkShopWay"
+          v-model="form.boolAuxMatToWorkShopWay"
           :active-value="whetherEnum.TRUE.V"
           :inactive-value="whetherEnum.FALSE.V"
           class="drawer-switch"
@@ -46,7 +46,7 @@ const permission = inject('permission')
 // 数据源
 const dataSource = ref({
   // 辅材出库到车间的配置
-  auxMatToWorkShopWay: undefined
+  boolAuxMatToWorkShopWay: undefined
 })
 // 表单
 const form = ref(dataSource.value)
@@ -67,10 +67,10 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const { auxMatToWorkShopWay } = await getOutboundBasicConf()
-    form.value.auxMatToWorkShopWay = auxMatToWorkShopWay
+    const { boolAuxMatToWorkShopWay } = await getOutboundBasicConf()
+    form.value.boolAuxMatToWorkShopWay = boolAuxMatToWorkShopWay
 
-    dataSource.value = { auxMatToWorkShopWay }
+    dataSource.value = { boolAuxMatToWorkShopWay }
   } catch (error) {
     console.log('出库基础配置', error)
   } finally {

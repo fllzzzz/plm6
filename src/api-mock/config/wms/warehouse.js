@@ -28,7 +28,7 @@ const getWarehouse = {
   }
 }
 
-// 批量添加单位
+// 添加仓库
 const addWarehouse = {
   url: '/api/wms/config/material/warehouse',
   method: 'post',
@@ -41,7 +41,7 @@ const addWarehouse = {
   }
 }
 
-// 批量添加单位
+// 批量添加仓库
 const batchAddWarehouse = {
   url: '/api/wms/config/material/warehouse/batch',
   method: 'post',
@@ -54,7 +54,7 @@ const batchAddWarehouse = {
   }
 }
 
-// 修改启用状态
+// 修改仓库
 const editWarehouse = {
   url: '/api/wms/config/material/warehouse',
   method: 'put',
@@ -80,7 +80,7 @@ const editEnabled = {
   }
 }
 
-// 删除单位
+// 删除仓库
 const delWarehouse = {
   url: '/api/wms/config/material/warehouse',
   method: 'delete',
