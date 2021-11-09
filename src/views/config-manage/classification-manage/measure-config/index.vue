@@ -28,7 +28,7 @@
           </el-tooltip>
         </template>
         <template v-slot="scope">
-          <div class="subjectName">
+          <div class="classifyName">
             <span>{{ `${scope.row.fullName[0]}-${scope.row.fullSerialNumber[0]}` }}</span>
           </div>
         </template>
@@ -47,7 +47,7 @@
           </el-tooltip>
         </template>
         <template v-slot="scope">
-          <div class="subjectName">
+          <div class="classifyName">
             <template v-if="scope.row.fullName.length > 1">
               <span>{{ `${scope.row.fullName[1]}-${scope.row.fullSerialNumber[1]}` }}</span>
             </template>
@@ -68,7 +68,7 @@
           </el-tooltip>
         </template>
         <template v-slot="scope">
-          <div class="subjectName">
+          <div class="classifyName">
             <template v-if="scope.row.fullName.length > 2">
               <span>{{ `${scope.row.fullName[2]}-${scope.row.fullSerialNumber[2]}` }}</span>
             </template>

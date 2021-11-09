@@ -1,6 +1,6 @@
 <!-- 工厂：tab选择 -->
 <template>
-  <el-skeleton :loading="loading" :rows="1" animated>
+  <el-skeleton :loading="!loaded" :rows="1" animated>
     <template #template>
       <el-skeleton-item variant="rect" style="margin-top: 10px; height: 30px; margin-bottom: 10px" />
     </template>
@@ -15,16 +15,17 @@
 </template>
 
 <script setup>
-import { getFactoriesAllSimple as getAll } from '@/api/mes/common'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, watch } from 'vue'
 import { isNotBlank } from '@data-type/index'
+
+import useFactory from '@compos/store/use-factories'
 import { ElTabs, ElTabPane } from 'element-plus'
 
-const emit = defineEmits(['update:moduleValue', 'tab-click'])
+const emit = defineEmits(['update:modelValue', 'tab-click'])
 
 const props = defineProps({
-  moduleValue: {
-    type: String
+  modelValue: {
+    type: Number
   },
   tabPosition: {
     type: String,
@@ -37,37 +38,44 @@ const props = defineProps({
 })
 
 const factoryId = ref()
-const factories = ref([])
-const loading = ref(false)
+let factoriesMap = new Map()
 
-fetchFactories()
+const { loaded, factories } = useFactory()
 
-function tabClick(val) {
-  emit('update:moduleValue', val.name)
+watch(
+  factories,
+  (list) => {
+    dataFormat(list)
+  },
+  { immediate: true, deep: true }
+)
+
+function tabClick() {
+  const factory = factoriesMap.get(factoryId.value)
+  emit('update:modelValue', factory.id)
   emit('tab-click', {
-    name: val.name,
-    label: val.label
+    id: factory.id,
+    name: factory.name
   })
 }
 
-async function fetchFactories() {
-  loading.value = true
-  let _factories = []
+async function dataFormat() {
+  factoriesMap = new Map()
   try {
-    const { content = [] } = await getAll()
-    _factories = content
-    if (isNotBlank(factories)) {
-      factoryId.value = `${_factories[0].id}`
+    if (isNotBlank(factories.value)) {
+      // key 使用字符串，因为tab的v-model是字符串类型
+      factories.value.forEach(v => {
+        factoriesMap.set(`${v.id}`, v)
+      })
+      factoryId.value = `${factories.value[0].id}`
+
       tabClick({
-        name: factoryId.value,
-        label: `${_factories[0].name}`
+        id: factoryId.value,
+        name: `${factories.value[0].name}`
       })
     }
   } catch (error) {
     console.log('获取工厂', error)
-  } finally {
-    factories.value = _factories
-    loading.value = false
   }
 }
 </script>

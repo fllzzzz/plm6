@@ -204,7 +204,7 @@ const STEEL_MES_SITE_WAREHOUSE_STATE_AUXILIARY_MATERIAL = {
     fields: [
       { show: true, key: 'area', title: '区域名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'fullClassName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
+      { show: true, key: 'fullClassifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
       { show: true, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COLOR.K },

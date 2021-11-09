@@ -7,6 +7,7 @@ import { getToken, getRequestUrl } from '@/utils/storage'
 // import { fetchMenus } from '@/api/user' // 获取菜单
 import configRouter from '@/router/modules/config'
 import projectRouter from '@/router/modules/project'
+import wmsRouter from '@/router/modules/wms'
 
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
@@ -113,7 +114,7 @@ const loadMenus = async (next, to) => {
   try {
     // 菜单：content
     // const { content = [] } = await fetchMenus()
-    const content = [configRouter, projectRouter]
+    const content = [configRouter, projectRouter, wmsRouter]
     await store.dispatch('permission/generateRoutes', content)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

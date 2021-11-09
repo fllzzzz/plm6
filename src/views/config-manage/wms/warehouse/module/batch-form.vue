@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelBCU"
     :visible="dialogVisible"
-    :title="crud.bStatus.title"
+    :title="`${crud.props.factory ? crud.props.factory.name + '：' : ''}${crud.bStatus.title}`"
     :show-close="false"
     custom-class="warehouse-batch-add"
     width="1000px"
@@ -98,6 +98,7 @@
 </template>
 
 <script setup>
+// TODO: 考虑根据工厂id存为草稿
 import { computed, ref } from 'vue'
 import EO from '@enum'
 import { warehouseTypeEnum } from '@enum-ms/wms'
@@ -150,8 +151,9 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 表格初始化
-ADD_FORM.init = () => init(form.list)
-
+ADD_FORM.init = () => {
+  init(form.list)
+}
 // 表单校验
 CRUD.HOOK.beforeValidateBCU = () => {
   const { validResult, dealList } = tableValidate(form.list)
@@ -168,5 +170,7 @@ crud.submitBatchFormFormat = (form) => {
   form.list.forEach(v => {
     v.materialType = EO.getBitsSum(v.materialType)
   })
+  form.factoryId = crud.query.factoryId
+  return form
 }
 </script>

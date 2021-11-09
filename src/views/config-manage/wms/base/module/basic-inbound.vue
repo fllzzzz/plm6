@@ -82,7 +82,7 @@ async function submit() {
   try {
     submitLoading.value = true
 
-    await setInboundBasicConf(form)
+    await setInboundBasicConf(form.value)
     ElNotification({
       title: '入库基础配置设置成功',
       type: 'success',

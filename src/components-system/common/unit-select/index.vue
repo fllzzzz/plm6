@@ -4,6 +4,7 @@
     class="unit-select"
     v-model="copyValue"
     :size="size"
+    :loading="!loaded"
     :disabled="disabled"
     :multiple="multiple"
     :collapse-tags="collapseTags"
@@ -110,7 +111,7 @@ const props = defineProps({
 })
 
 const copyValue = ref()
-const unit = useUnit()
+const { unit, loaded } = useUnit()
 
 const options = computed(() => {
   if (props.unitType) {

@@ -5,7 +5,7 @@ export const purchaseApplyList_SteelPlate = {
   title: '钢板申购清单',
   startRow: 2,
   field: {
-    subjectName: '__EMPTY', // 科目
+    classifyName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
     thickness: '__EMPTY_2', // 厚度
     width: '__EMPTY_3', // 宽度
@@ -24,7 +24,7 @@ export const purchaseApplyList_SectionSteel = {
   title: '型钢申购清单',
   startRow: 2,
   field: {
-    subjectName: '__EMPTY', // 科目
+    classifyName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
     length: '__EMPTY_2', // 定尺长度
     quantity: '__EMPTY_3', // 数量
@@ -42,7 +42,7 @@ export const purchaseApplyList_SteelCoil = {
   title: '钢卷申购清单',
   startRow: 2,
   field: {
-    subjectName: '__EMPTY', // 科目
+    classifyName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
     thickness: '__EMPTY_2', // 厚度
     width: '__EMPTY_3', // 宽度
@@ -61,7 +61,7 @@ export const inStorageList_SteelPlate = {
   title: '钢板入库清单',
   startRow: 2,
   field: {
-    subjectName: '__EMPTY', // 科目
+    classifyName: '__EMPTY', // 科目
     specifications: '__EMPTY_1', // 规格
     thickness: '__EMPTY_2', // 厚度
     width: '__EMPTY_3', // 宽度

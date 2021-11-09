@@ -3,6 +3,7 @@ import { enabledEnum, unitTypeEnum } from '@enum-ms/common'
 // 获取所有单位
 const getAllUnit = {
   url: '/api/config/base-config/unit/all',
+  timeout: 500,
   method: 'get',
   response: () => {
     return {

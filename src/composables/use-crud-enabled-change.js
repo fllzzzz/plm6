@@ -15,7 +15,14 @@ export default function useCrudEnabledChange({ CRUD, crud, editEnabled }) {
       data.enabledLoading = true
       await editEnabled({ id: data.id, enabled: data.enabled })
       let label = ''
-      if (labelField) label = `“${data[labelField]}”`
+      if (labelField) {
+        if (Array.isArray(labelField)) {
+          const _label = labelField.map(v => data[v])
+          label = _label.join(' / ')
+        } else {
+          label = `“${data[labelField]}”`
+        }
+      }
       crud.notify(label + enabledEnum.VL[data.enabled] + '成功', data.enabled === enabledEnum.TRUE.V ? CRUD.NOTIFICATION_TYPE.SUCCESS : CRUD.NOTIFICATION_TYPE.WARNING)
     } catch (error) {
       console.log('使用状态', error)

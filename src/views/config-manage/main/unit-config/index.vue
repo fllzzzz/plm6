@@ -29,12 +29,20 @@
           </template>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.updateTime) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column v-permission="permission.edit" label="操作" width="130px" align="center">
         <template v-slot="scope">
-          <div>
             <udOperation :show-del="!scope.row.boolSystem" :show-edit="false" :data="scope.row" />
-          </div>
         </template>
       </el-table-column>
     </common-table>
@@ -49,6 +57,7 @@
 import crudApi, { editEnabled } from '@/api/config/main/unit-config'
 import { ref } from 'vue'
 import { enabledEnum, unitTypeEnum } from '@enum-ms/common'
+import { parseTime } from '@/utils/date'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

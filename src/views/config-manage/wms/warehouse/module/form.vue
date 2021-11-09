@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :visible="crud.status.cu > CRUD.STATUS.NORMAL"
     :before-close="crud.cancelCU"
-    :title="crud.status.title"
+    :title="`${crud.props.factory ? crud.props.factory.name + '：' : ''}${crud.status.title}`"
     :show-close="true"
     custom-class="conifg-wms-warehouse-form"
     width="600px"
@@ -86,6 +86,7 @@ const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 crud.submitFormFormat = (form) => {
   form.materialType = EO.getBitsSum(form.materialType)
+  form.factoryId = crud.query.factoryId
   return form
 }
 </script>
