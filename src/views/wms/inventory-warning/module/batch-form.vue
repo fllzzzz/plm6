@@ -56,6 +56,7 @@
       </div>
     </div>
     <div class="container flex-rbs" style="margin-top: 20px; align-items: flex-start">
+      <material-spec-select style="width: 300px" />
       <div class="flex-r" style="width: 100%">
         <common-table ref="tableRef" border :data="selectList" style="width: 100%">
           <el-table-column label="序号" type="index" align="center" width="60" />
@@ -108,6 +109,7 @@ import { regBatchForm } from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import materialCascader from '@comp-cls/material-cascader/index.vue'
+import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 import factorySelect from '@comp-mes/factory-select/index.vue'
 // import subscribeList from './subscribe-list'
 // import factorySelect from '@/views/components/base/factory-select'

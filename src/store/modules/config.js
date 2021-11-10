@@ -2,12 +2,17 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
+import { getFinalMatClsById } from '@/api/common'
 import { unitTypeEnum } from '@enum-ms/common'
 import useFormatTree from '@compos/classification/use-format-tree'
+import { isBlank } from '@/utils/data-type'
+import { arr2obj } from '@/utils/convert/type'
 
+// TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
+  classifySpec: {}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
@@ -107,7 +112,86 @@ const actions = {
     commit('SET_FACTORIES', content)
     commit('SET_LOADED', { key: 'factories', loaded: true })
     return content
+  },
+  async fetchMarClsSpec({ state }, classifyIds = []) {
+    const allInterFace = []
+    const classifySpec = state.classifySpec
+    for (const id of classifyIds) {
+      const ps = getFinalMatClsById(id).then(res => {
+        const clsSimple = {
+          id: res.id,
+          name: res.name,
+          fullName: res.fullName
+        }
+        const matCls = {
+          ...clsSimple,
+          specConfig: res.specConfig.map((sc, ci) => {
+            return {
+              id: sc.id,
+              name: sc.name,
+              index: ci,
+              list: sc.list.map((v, i) => {
+                return {
+                  index: i,
+                  code: v.code,
+                  name: v.name
+                }
+              })
+            }
+          }),
+          specMap: {}
+        }
+        classifySpec[id].specList = getSpecList(clsSimple, matCls.specConfig)
+        Object.assign(matCls.specMap, arr2obj(classifySpec[id].specList, 'sn'))
+        Object.assign(classifySpec[id], matCls)
+      })
+      allInterFace.push(ps)
+    }
+    await Promise.all(allInterFace)
   }
+}
+
+function getSpecList(classify, specConfig) {
+  if (isBlank(specConfig)) return []
+  const specLengthArr = []
+  const arrLength = specConfig.reduce((res, cur) => {
+    specLengthArr.push(cur.list.length)
+    return res * cur.list.length
+  }, 1)
+
+  // 创建规格列表
+  const arr = new Array(arrLength)
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = {
+      classify,
+      index: new Array(specLengthArr.length),
+      arr: new Array(specLengthArr.length)
+    }
+  }
+  // 遍历方式：按顺序将每一个【规格配置】的所有【小规格】推入数组来获得结果
+  let kl = arrLength // 单个规格需要遍历几次，起始为数组长度
+  let prevLength = 1 // 一套【规格配置】需要重复遍历几次
+  for (let i = 0; i < specLengthArr.length; i++) {
+    kl = kl / specLengthArr[i] // 除当前【规格配置】的长度，等于单个规格需要遍历的次数
+    for (let p = 0; p < prevLength; p++) {
+      for (let j = 0; j < specLengthArr[i]; j++) {
+        const spec = specConfig[i].list[j] // 当前【小规格】
+        for (let k = 0; k < kl; k++) {
+          const currentIndex = p * specLengthArr[i] + j * kl + k
+          arr[currentIndex].index[i] = spec.index
+          arr[currentIndex].arr[i] = spec.name
+        }
+      }
+    }
+    prevLength = prevLength * specLengthArr[i]
+  }
+  arr.forEach(v => {
+    v.spec = v.arr.join('*') // 规格
+    v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
+    v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value
+    v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号
+  })
+  return arr
 }
 
 export default {

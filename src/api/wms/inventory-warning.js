@@ -44,6 +44,7 @@ export function batchAdd(data) {
 export function editMinimumInventory(data) {
   return request({
     module: 'wms',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     url: 'material/inventory-warning/minimumInventory',
     method: 'put',
     data
