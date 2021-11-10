@@ -6,6 +6,7 @@ import { ElMessage } from 'element-plus'
 import { getToken, getRequestUrl } from '@/utils/storage'
 // import { fetchMenus } from '@/api/user' // 获取菜单
 import configRouter from '@/router/modules/config'
+import mesRouter from '@/router/modules/mes'
 import projectRouter from '@/router/modules/project'
 import wmsRouter from '@/router/modules/wms'
 
@@ -114,7 +115,7 @@ const loadMenus = async (next, to) => {
   try {
     // 菜单：content
     // const { content = [] } = await fetchMenus()
-    const content = [configRouter, projectRouter, wmsRouter]
+    const content = [configRouter, projectRouter, wmsRouter, mesRouter]
     await store.dispatch('permission/generateRoutes', content)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

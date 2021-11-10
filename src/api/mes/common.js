@@ -32,3 +32,17 @@ export function getProcessAllSimple(params) {
     cancelKey: false
   })
 }
+
+/**
+ * 层级：工厂-车间-生产线
+ * @export
+ * @returns
+ */
+export function getAllFactoryWorkshopLines(params) {
+  return request({
+    module: 'mes',
+    url: 'factory/production_line_group',
+    method: 'get',
+    params
+  })
+}

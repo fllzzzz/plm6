@@ -25,6 +25,14 @@
   }
 }
 
+.mask-td-green{
+  .cell {
+    &:after {
+      background-color: $cellSuccessMaskColor;
+    }
+  }
+}
+
 // table-cell 梯形标签 【甲供 / 工厂简称】
 .table-cell-tag {
   background: #1682e6;

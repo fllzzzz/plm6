@@ -32,6 +32,7 @@ $sideBarWidth: 210px;
 
 // #ffd86e63 黄色 #52f09840绿色
 $cellDangerMaskColor: #ff000021;
+$cellSuccessMaskColor: #52f09840;
 
 // vite2 不支持 在js引入这种写法
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
@@ -45,4 +46,5 @@ $cellDangerMaskColor: #ff000021;
   subMenuHover: $subMenuHover;
   sideBarWidth: $sideBarWidth;
   cellDangerMaskColor: $cellDangerMaskColor;
+  cellSuccessMaskColor: $cellSuccessMaskColor;
 }
