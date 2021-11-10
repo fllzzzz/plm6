@@ -6,7 +6,7 @@
     :disabled="disabled"
     :multiple="multiple"
     :collapse-tags="collapseTags"
-    :loading="loading"
+    :loading="!loaded"
     :clearable="clearable"
     filterable
     :placeholder="placeholder"
@@ -17,10 +17,9 @@
 </template>
 
 <script setup>
-import { getFactoriesAllSimple as getAll } from '@/api/mes/common'
 import { defineProps, defineEmits, ref, watch } from 'vue'
-
 import { isNotBlank, isBlank } from '@data-type/index'
+import useFactory from '@compos/store/use-factories'
 
 const emit = defineEmits(['change', 'update:value'])
 
@@ -49,14 +48,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showAll: {
-    type: Boolean,
-    default: false
-  },
-  labelName: {
-    type: String,
-    default: '全部工厂'
-  },
   default: {
     type: Boolean,
     default: false
@@ -67,9 +58,10 @@ const props = defineProps({
   }
 })
 
-const loading = ref(false)
 const selectValue = ref()
 const options = ref([])
+
+const { loaded, factories } = useFactory()
 
 watch(
   () => props.value,
@@ -83,6 +75,14 @@ watch(
   { immediate: true }
 )
 
+watch(
+  factories,
+  (list) => {
+    dataFormat(list)
+  },
+  { immediate: true, deep: true }
+)
+
 function handleChange(val) {
   if (props.value !== val) {
     emit('update:value', val)
@@ -90,14 +90,12 @@ function handleChange(val) {
   }
 }
 
-async function fetch() {
+function dataFormat(list) {
   options.value = []
   let _options = []
   try {
-    loading.value = true
-    const { content } = await getAll()
-    if (content && content.length > 0) {
-      _options = content.map((o) => {
+    if (isNotBlank(list)) {
+      _options = list.map((o) => {
         return {
           value: o.id,
           label: o.name
@@ -105,16 +103,14 @@ async function fetch() {
       })
     }
   } catch (error) {
-    console.log('获取工厂列表', error)
+    console.log('获取工厂', error)
   } finally {
     options.value = _options
     if (isNotBlank(options.value) && props.default && !selectValue.value) {
       selectValue.value = options.value[0].value
     }
     handleChange(selectValue.value)
-    loading.value = false
   }
 }
 
-fetch()
 </script>

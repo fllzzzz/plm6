@@ -4,7 +4,7 @@
     :size="size"
     :multiple="multiple"
     :collapse-tags="collapseTags"
-    :loading="loading"
+    :loading="!loaded"
     filterable
     :placeholder="placeholder"
     @change="handleChange"
@@ -22,8 +22,9 @@
 </template>
 
 <script setup>
-import { getUserAllSimple as getAllUser } from '@/api/common'
 import { defineExpose, defineProps, defineEmits, ref, watch } from 'vue'
+import { deepClone } from '@data-type/index'
+import useUsers from '@compos/store/use-users'
 
 const emit = defineEmits(['change', 'update:value'])
 
@@ -58,10 +59,11 @@ const props = defineProps({
   }
 })
 
-const loading = ref(false)
 const selectIds = ref([])
 const options = ref([])
 const sourceOptions = ref([])
+
+const { loaded, users } = useUsers()
 
 watch(
   () => props.value,
@@ -70,6 +72,14 @@ watch(
     handleChange(val)
   },
   { immediate: true }
+)
+
+watch(
+  users,
+  (list) => {
+    dataFormat()
+  },
+  { immediate: true, deep: true }
 )
 
 function handleChange(val) {
@@ -101,18 +111,15 @@ function getUser(val) {
   }
 }
 
-async function fetchAllUser() {
+function dataFormat() {
   let _options = []
   try {
-    loading.value = true
-    const { content } = await getAllUser()
-    sourceOptions.value = content
-    _options = struTransform(content)
+    sourceOptions.value = deepClone(users.value)
+    _options = struTransform(deepClone(users.value))
   } catch (error) {
     console.log('获取所有用户-下拉列表', error)
   } finally {
     options.value = _options
-    loading.value = false
   }
 }
 
@@ -136,8 +143,6 @@ function struTransform(data) {
   })
   return cascade || []
 }
-
-fetchAllUser()
 
 defineExpose({
   getUser

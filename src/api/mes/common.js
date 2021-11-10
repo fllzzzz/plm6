@@ -12,7 +12,7 @@ export function getFactoriesAllSimple(params) {
 }
 
 // 获取所有车间
-export function getWorkshopAllSimple(params) {
+export function getWorkshopsAllSimple(params) {
   return request({
     module: 'mes',
     url: 'workshop',
@@ -25,7 +25,8 @@ export function getWorkshopAllSimple(params) {
 // 获取所有工序
 export function getProcessAllSimple(params) {
   return request({
-    url: 'api/mes/building/process',
+    module: 'mes',
+    url: 'process',
     method: 'get',
     params,
     cancelKey: false

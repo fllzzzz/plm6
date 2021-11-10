@@ -5,7 +5,7 @@
     :size="size"
     :multiple="multiple"
     :collapse-tags="collapseTags"
-    :loading="loading"
+    :loading="!loaded"
     :clearable="clearable"
     filterable
     placeholder="请选择工序"
@@ -24,11 +24,12 @@
 </template>
 
 <script setup>
-import { getProcessAllSimple as getAllProcess } from '@/api/mes/common'
 import { defineExpose, defineProps, defineEmits, computed, watch, ref } from 'vue'
 import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import { isNotBlank } from '@data-type/index'
 import RAF from '@/utils/raf'
+
+import useProcess from '@compos/store/use-process'
 
 const emit = defineEmits(['change', 'update:value'])
 
@@ -71,11 +72,12 @@ const props = defineProps({
   }
 })
 
-const loading = ref(false)
 const hasLoad = ref(false)
 const selectIds = ref([])
 const options = ref([])
 const sourceData = ref()
+
+const { loaded, process } = useProcess()
 
 const processOptions = computed(() => {
   return options.value.filter((v) => {
@@ -95,6 +97,14 @@ watch(
     handleChange(val)
   },
   { immediate: true }
+)
+
+watch(
+  process,
+  (list) => {
+    dataFormat()
+  },
+  { immediate: true, deep: true }
 )
 
 function handleChange(val) {
@@ -120,21 +130,19 @@ async function waitLoad() {
   })
 }
 
-async function fetchAllProcess() {
+function dataFormat() {
   options.value = []
   const _options = []
   try {
-    loading.value = true
-    const { content } = await getAllProcess()
-    sourceData.value = JSON.parse(JSON.stringify(content))
+    sourceData.value = JSON.parse(JSON.stringify(process.value))
     typeEnum.KEYS.forEach((type) => {
       const _optionObj = {}
       _optionObj.type = typeEnum[type].V
       _optionObj.name = typeEnum[type].L + '工序'
-      _optionObj.options = content.filter((v) => {
+      _optionObj.options = process.value.filter((v) => {
         return v.sequenceType === typeEnum[type].V
       })
-      _optionObj.originOptions = content.filter((v) => {
+      _optionObj.originOptions = process.value.filter((v) => {
         return v.sequenceType === typeEnum[type].V
       })
       if (_optionObj.options && _optionObj.options.length) {
@@ -145,12 +153,9 @@ async function fetchAllProcess() {
     console.log('获取工序', error)
   } finally {
     options.value = _options
-    loading.value = false
     hasLoad.value = true
   }
 }
-
-fetchAllProcess()
 
 defineExpose({
   getSourceData

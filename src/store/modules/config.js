@@ -2,6 +2,9 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
+import { getWorkshopsAllSimple } from '@/api/mes/common'
+import { getProcessAllSimple } from '@/api/mes/common'
+import { getUserAllSimple } from '@/api/common'
 import { unitTypeEnum } from '@enum-ms/common'
 import useFormatTree from '@compos/classification/use-format-tree'
 
@@ -11,8 +14,14 @@ const state = {
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
+  workshops: [], // 车间
+  process: [], // 工序
+  users: [], // 人员列表
   loaded: { // 接口是否加载
     factories: false,
+    workshops: false,
+    process: false,
+    users: false,
     unit: false,
     matClsTree: false,
     clsTree: false
@@ -34,6 +43,15 @@ const mutations = {
   },
   SET_FACTORIES(state, factories) {
     state.factories = factories
+  },
+  SET_WORKSHOPS(state, workshops) {
+    state.workshops = workshops
+  },
+  SET_PROCESS(state, process) {
+    state.process = process
+  },
+  SET_USERS(state, users) {
+    state.users = users
   }
 }
 
@@ -106,6 +124,24 @@ const actions = {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
     commit('SET_LOADED', { key: 'factories', loaded: true })
+    return content
+  },
+  async fetchWorkshops({ commit }) {
+    const { content = [] } = await getWorkshopsAllSimple()
+    commit('SET_WORKSHOPS', content)
+    commit('SET_LOADED', { key: 'workshops', loaded: true })
+    return content
+  },
+  async fetchProcess({ commit }) {
+    const { content = [] } = await getProcessAllSimple()
+    commit('SET_PROCESS', content)
+    commit('SET_LOADED', { key: 'process', loaded: true })
+    return content
+  },
+  async fetchUsers({ commit }) {
+    const { content = [] } = await getUserAllSimple()
+    commit('SET_USERS', content)
+    commit('SET_LOADED', { key: 'users', loaded: true })
     return content
   }
 }

@@ -44,6 +44,7 @@
 
 <script setup>
 import { defineProps, defineEmits, computed, watch, ref } from 'vue'
+import { isBlank } from '@data-type/index'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
 const emit = defineEmits(['change', 'blur', 'update:modelValue'])
@@ -153,7 +154,7 @@ watch(
 )
 
 function selectChange(val) {
-  if (!val) val = undefined
+  if (isBlank(val)) val = undefined
   emit('update:modelValue', val)
   emit('change', val)
 }

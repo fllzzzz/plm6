@@ -54,7 +54,7 @@
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
-import userSelect from '@comp-base/user-select'
+import userSelect from '@comp-common/user-select'
 import { teamAttributeEnum } from '@enum-ms/mes'
 
 const formRef = ref()

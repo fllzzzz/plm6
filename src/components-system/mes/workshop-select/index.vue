@@ -6,7 +6,7 @@
     :disabled="disabled"
     :multiple="multiple"
     :collapse-tags="collapseTags"
-    :loading="loading"
+    :loading="!loaded"
     :clearable="clearable"
     filterable
     :placeholder="placeholder"
@@ -17,9 +17,9 @@
 </template>
 
 <script setup>
-import { getWorkshopAllSimple as getAll } from '@/api/mes/common'
 import { defineProps, defineEmits, ref, watch } from 'vue'
-import { isNotBlank, isBlank } from '@data-type/index'
+import { isNotBlank, isBlank, deepClone } from '@data-type/index'
+import useWorkshop from '@compos/store/use-workshops'
 
 const emit = defineEmits(['change', 'update:value'])
 
@@ -62,9 +62,10 @@ const props = defineProps({
   }
 })
 
-const loading = ref(false)
 const selectValue = ref()
 const options = ref([])
+
+const { loaded, workshops } = useWorkshop()
 
 watch(
   () => props.value,
@@ -79,9 +80,17 @@ watch(
 )
 
 watch(
+  workshops,
+  (list) => {
+    dataFormat()
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
   () => props.factoryId,
   (value) => {
-    fetch()
+    dataFormat()
   },
   { immediate: true }
 )
@@ -93,14 +102,14 @@ function handleChange(val) {
   }
 }
 
-async function fetch() {
+function dataFormat() {
   options.value = []
   let _options = []
   try {
-    loading.value = true
-    const { content } = await getAll({ factoryId: props.factoryId })
-    if (content && content.length > 0) {
-      _options = content.map((o) => {
+    if (isNotBlank(workshops.value)) {
+      let list = deepClone(workshops.value)
+      if (props.factoryId) list = list.filter(v => props.factoryId === v.factoryId)
+      _options = list.map(o => {
         return {
           value: o.id,
           label: o.name
@@ -115,7 +124,6 @@ async function fetch() {
       selectValue.value = options.value[0].value
     }
     handleChange(selectValue.value)
-    loading.value = false
   }
 }
 </script>
