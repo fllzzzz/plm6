@@ -10,6 +10,7 @@
         size="mini"
         type="primary"
         icon="el-icon-plus"
+        :disabled="disabled"
         @click.stop="crud.toBatchAdd"
       >
         {{ props.addBatchText }}
@@ -21,6 +22,7 @@
         size="mini"
         type="primary"
         icon="el-icon-plus"
+        :disabled="disabled"
         @click.stop="crud.toAdd"
       >
         {{ props.addText }}
@@ -32,7 +34,7 @@
         size="mini"
         type="success"
         icon="el-icon-edit"
-        :disabled="crud.selections.length !== 1"
+        :disabled="disabled || crud.selections.length !== 1"
         @click.stop="crud.toEdit(crud.selections[0])"
       >
         修改
@@ -45,7 +47,7 @@
         icon="el-icon-delete"
         size="mini"
         :loading="crud.delAllLoading"
-        :disabled="crud.selections.length === 0"
+        :disabled="disabled || crud.selections.length === 0"
         @click.stop="toDelete(crud.selections)"
       >
         {{ props.delText }}
@@ -53,7 +55,7 @@
       <common-button
         v-if="crud.optShow.download"
         :loading="crud.downloadLoading"
-        :disabled="!crud.data.length"
+        :disabled="disabled || !crud.data.length"
         class="filter-item"
         size="mini"
         type="warning"
@@ -142,6 +144,10 @@ const props = defineProps({
   delText: {
     type: String,
     default: '删除'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 

@@ -1,6 +1,7 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import configRouter from '@/router/modules/config'
 import projectRouter from '@/router/modules/project'
+import wmsRouter from '@/router/modules/wms'
 
 // 用户登录（获取token）
 const userLogin = {
@@ -91,7 +92,8 @@ const userMenu = {
       data: {
         'content': [
           configRouter,
-          projectRouter
+          projectRouter,
+          wmsRouter
         ]
       }
     }

@@ -78,6 +78,11 @@
           </template>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="130px" align="center" fixed="right">
         <template v-slot="scope">
@@ -97,6 +102,7 @@ import { ref } from 'vue'
 import EO from '@enum'
 import { materialClassificationEnum } from '@enum-ms/classification'
 import { warehouseTypeEnum } from '@enum-ms/wms'
+import { parseTime } from '@/utils/date'
 
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
@@ -135,6 +141,7 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    sort: ['sort.asc'],
     queryOnPresenterCreated: false
   },
   tableRef

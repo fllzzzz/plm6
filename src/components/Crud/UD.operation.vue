@@ -1,5 +1,5 @@
 <template>
-  <span style="display: inline-block">
+  <span class="ud-operation" style="display: inline-block">
     <common-button
       v-if="props.showEdit"
       v-permission="permission.edit"
@@ -104,3 +104,12 @@ function handleDocumentClick(event) {
   pop.value = false
 }
 </script>
+
+<style lang="scss" scoped>
+.ud-operation + .el-button {
+  margin-left: 8px;
+}
+.el-button + .ud-operation {
+  margin-left: 8px;
+}
+</style>

@@ -1,6 +1,7 @@
 import { getMatClsTree, get as getClassificationTree } from '@/api/config/classification-manage/classification-config'
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
+import { getFactoriesAllSimple } from '@/api/mes/common'
 import { unitTypeEnum } from '@enum-ms/common'
 import useFormatTree from '@compos/classification/use-format-tree'
 
@@ -8,10 +9,20 @@ const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
   dict: {}, // 字典值
-  unit: { ALL: [], GROUP: [] } // 单位列表 ALL，WEIGHT...
+  unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
+  factories: [], // 工厂
+  loaded: { // 接口是否加载
+    factories: false,
+    unit: false,
+    matClsTree: false,
+    clsTree: false
+  }
 }
 
 const mutations = {
+  SET_LOADED(state, { key, loaded }) {
+    state.loaded[key] = loaded
+  },
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
   },
@@ -20,6 +31,9 @@ const mutations = {
   },
   SET_UNIT(state, unit) {
     state.unit = unit
+  },
+  SET_FACTORIES(state, factories) {
+    state.factories = factories
   }
 }
 
@@ -33,12 +47,14 @@ const actions = {
     const res = await getMatClsTree()
     const tree = useFormatTree(res)
     commit('SET_MAT_CLS_TREE', tree)
+    commit('SET_LOADED', { key: 'matClsTree', loaded: true })
     return tree
   },
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
     const tree = useFormatTree(res)
     commit('SET_CLS_TREE', tree)
+    commit('SET_LOADED', { key: 'clsTree', loaded: true })
     return tree
   },
   // 加载字典值
@@ -84,6 +100,13 @@ const actions = {
     // 可以通过名称获取
     unit.symbol = (name) => unit.KS.get(name)
     commit('SET_UNIT', unit)
+    commit('SET_LOADED', { key: 'unit', loaded: true })
+  },
+  async fetchFactories({ commit }) {
+    const { content = [] } = await getFactoriesAllSimple()
+    commit('SET_FACTORIES', content)
+    commit('SET_LOADED', { key: 'factories', loaded: true })
+    return content
   }
 }
 
