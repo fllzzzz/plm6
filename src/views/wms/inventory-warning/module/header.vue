@@ -1,5 +1,6 @@
 <template>
   <div class="head-container">
+    <factory-select v-model:value="query.factoryId" class="filter-item" placeholder="可选择工厂" clearable style="width: 200px"/>
     <material-cascader
       check-strictly
       v-model="query.classifyId"
@@ -35,8 +36,10 @@ import materialCascader from '@comp-cls/material-cascader/index.vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation.vue'
 import rrOperation from '@crud/RR.operation.vue'
+import factorySelect from '@comp-mes/factory-select/index.vue'
 
 const defaultQuery = {
+  factoryId: undefined, // 工厂id
   classifyId: undefined, // 科目id
   classifySpec: undefined // 科目规格
 }
@@ -46,5 +49,4 @@ const { crud, query } = regHeader(defaultQuery)
 function openNotify() {
   this.notifyVisible = true
 }
-
 </script>

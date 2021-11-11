@@ -12,11 +12,12 @@ import { arr2obj } from '@/utils/convert/type'
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
-  classifySpec: {}, // 科目规格
+  classifySpec: { specMap: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
-  loaded: { // 接口是否加载
+  loaded: {
+    // 接口是否加载
     factories: false,
     unit: false,
     matClsTree: false,
@@ -70,7 +71,7 @@ const actions = {
       dict[name] = [...content]
       dict.dict[name] = {}
       dict.label[name] = {}
-      content.forEach(v => {
+      content.forEach((v) => {
         dict.dict[name][v.value] = v
         dict.label[name][v.value] = v.label
       })
@@ -78,13 +79,13 @@ const actions = {
   },
   // 加载单位
   async fetchUnit({ commit }) {
-    const res = await getAllUnit() || []
+    const res = (await getAllUnit()) || []
     // 单位分为分类列表与全单位列表
     const unit = { ALL: [], GROUP: [], KS: new Map() }
-    Object.keys(unitTypeEnum.ENUM).forEach(key => {
+    Object.keys(unitTypeEnum.ENUM).forEach((key) => {
       unit[key] = []
     })
-    res.forEach(v => {
+    res.forEach((v) => {
       const n = {
         id: v.id,
         name: v.name,
@@ -95,7 +96,7 @@ const actions = {
       unit.KS.set(v.name, v.symbol || v.name)
       unit[unitTypeEnum.VK[v.type]].push(n)
     })
-    Object.keys(unitTypeEnum.ENUM).forEach(key => {
+    Object.keys(unitTypeEnum.ENUM).forEach((key) => {
       unit.GROUP.push({
         name: unitTypeEnum[key].L,
         type: key,
@@ -117,11 +118,17 @@ const actions = {
     const allInterFace = []
     const classifySpec = state.classifySpec
     for (const id of classifyIds) {
-      const ps = getFinalMatClsById(id).then(res => {
+      const ps = getFinalMatClsById(id).then((res) => {
         const clsSimple = {
           id: res.id,
           name: res.name,
-          fullName: res.fullName
+          fullName: res.fullName,
+          measureUnit: res.measureUnit, // 计量单位
+          accountingUnit: res.accountingUnit, // 核算单位
+          accountingPrecision: res.accountingPrecision, // 核算单位小数精度
+          measurePrecision: res.measurePrecision, // 计量单位小数精度
+          outboundUnit: res.outboundUnit, // 出库方式
+          basicClass: res.basicClass
         }
         const matCls = {
           ...clsSimple,
@@ -144,6 +151,7 @@ const actions = {
         classifySpec[id].specList = getSpecList(clsSimple, matCls.specConfig)
         Object.assign(matCls.specMap, arr2obj(classifySpec[id].specList, 'sn'))
         Object.assign(classifySpec[id], matCls)
+        Object.assign(classifySpec.specMap, matCls.specMap)
       })
       allInterFace.push(ps)
     }
@@ -151,6 +159,7 @@ const actions = {
   }
 }
 
+// 获取规格列表（将后端的规格转换为各种常用格式）
 function getSpecList(classify, specConfig) {
   if (isBlank(specConfig)) return []
   const specLengthArr = []
@@ -177,7 +186,7 @@ function getSpecList(classify, specConfig) {
       for (let j = 0; j < specLengthArr[i]; j++) {
         const spec = specConfig[i].list[j] // 当前【小规格】
         for (let k = 0; k < kl; k++) {
-          const currentIndex = p * specLengthArr[i] + j * kl + k
+          const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
         }
@@ -185,7 +194,7 @@ function getSpecList(classify, specConfig) {
     }
     prevLength = prevLength * specLengthArr[i]
   }
-  arr.forEach(v => {
+  arr.forEach((v) => {
     v.spec = v.arr.join('*') // 规格
     v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
     v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value

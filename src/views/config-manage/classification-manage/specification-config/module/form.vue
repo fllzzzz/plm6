@@ -103,7 +103,7 @@ import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useCheckPermission from '@compos/use-check-permission'
 import useTableOperate from '@compos/form/use-table-operate'
-import useTableValidate, { wrongCellMask } from '@compos/form/use-table-validate'
+import useTableValidate from '@compos/form/use-table-validate'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 
 const currentNode = inject('currentNode')
@@ -112,7 +112,7 @@ const permission = inject('permission')
 const defaultForm = {
   name: '', // 规格名称
   classificationId: undefined, // 科目id
-  boolWeightMean: 1, // 是否参加加权平均
+  boolWeightMean: boolWeightMeanEnum.TRUE.V, // 是否参加加权平均
   list: [] // 具体规格列表
 }
 
@@ -125,7 +125,7 @@ const defaultRow = {
 
 const rules = {
   name: [{ required: true, message: '请输入规格名称', trigger: 'blur' }],
-  boolWeightMean: [{ required: true, message: '请选择是否参加加权平均', trigger: 'blur' }]
+  boolWeightMean: [{ required: true, message: '请选择是否参加加权平均', trigger: 'change' }]
 }
 
 const tableRules = {
@@ -151,9 +151,10 @@ const { init, addRow, removeRow } = useTableOperate(defaultRow, 10)
 CRUD.HOOK.afterToAdd = () => {
   init(form.list)
 }
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 CRUD.HOOK.beforeValidateCU = () => {
-  const { validResult, dealList } = useTableValidate({ list: form.list, rules: tableRules })
+  const { validResult, dealList } = tableValidate(form.list)
   if (validResult) {
     form.list = dealList
   } else {
@@ -161,8 +162,11 @@ CRUD.HOOK.beforeValidateCU = () => {
   }
 }
 
-CRUD.HOOK.beforeSubmit = () => {
+// 表单提交数据清理
+crud.submitFormFormat = (form) => {
   form.classificationId = currentNode.value.id
+  cleanUpData(form.list)
+  return form
 }
 </script>
 

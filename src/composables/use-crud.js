@@ -1,8 +1,9 @@
 import { provide, inject, reactive, ref, watch, getCurrentInstance, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { deepClone, isNotBlank } from '@data-type/index'
+import { isNotBlank } from '@data-type/index'
 import { debounce } from '@/utils'
 import { fileDownload } from '@/utils/file'
+import * as lodash from 'lodash'
 
 import useCheckPermission from './use-check-permission'
 import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
@@ -235,7 +236,7 @@ function getCrud(options) {
   // 添加crud内部选项
   const data = addSystemOptions(hOptions)
   // 拷贝data
-  const _data = deepClone(data)
+  const _data = lodash.cloneDeep(data)
   // 以上为基础数据
   const crud = reactive(Object.assign({}, _data))
   // 添加crud默认信息
@@ -712,7 +713,7 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.add = CRUD.STATUS.PROCESSING
-      const data = crud.submitFormFormat(deepClone(crud.form))
+      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.crudApi.add(data)
       await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL
@@ -740,7 +741,7 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.edit = CRUD.STATUS.PROCESSING
-      const data = crud.submitFormFormat(deepClone(crud.form))
+      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.crudApi.edit(data)
       crud.status.edit = CRUD.STATUS.NORMAL
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
@@ -769,7 +770,7 @@ function addCrudBusinessMethod(crud) {
     try {
       crud.bStatus.batchAdd = CRUD.STATUS.PROCESSING
       // 深拷贝表单后转换，避免表单发生变化
-      const data = crud.submitBatchFormFormat(deepClone(crud.batchForm))
+      const data = crud.submitBatchFormFormat(lodash.cloneDeep(crud.batchForm))
       crud.submitResult = await crud.crudApi.batchAdd(data)
       await callVmHook(crud, CRUD.HOOK.afterBatchAddSuccess)
       crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
@@ -1152,7 +1153,7 @@ function addCrudFeatureMethod(crud, data) {
 function addCrudMethod(crud, data) {
   // 初始化crud
   const init = () => {
-    Object.assign(crud, deepClone(data))
+    Object.assign(crud, lodash.cloneDeep(data))
     crud.status.add = CRUD.STATUS.NORMAL
     crud.status.edit = CRUD.STATUS.NORMAL
     crud.bStatus.batchAdd = CRUD.STATUS.NORMAL

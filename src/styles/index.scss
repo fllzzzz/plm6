@@ -119,6 +119,12 @@ div:focus {
   align-items: center;
 }
 
+.flex-rss {
+  @extend .flex-r;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
 .flex-rcc {
   @extend .flex-r;
   justify-content: center;
