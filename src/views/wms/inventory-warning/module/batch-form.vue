@@ -134,7 +134,6 @@ import useMaxHeight from '@compos/use-max-height'
 import StoreOpertaion from '@crud/STORE.opertaion.vue'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 import factorySelect from '@comp-mes/factory-select/index.vue'
-import { map2arr } from '@/utils/data-type/map'
 
 // 未进行重复数据校验，目前由后端处理
 const tableRules = {}
@@ -149,7 +148,7 @@ const batch = reactive({
 const tableRef = ref()
 const formRef = ref()
 const specRef = ref()
-const { matClsSpecMap } = mapGetters('matClsSpecMap')
+const { matClsSpecKV } = mapGetters('matClsSpecKV')
 
 const { CRUD, crud, form } = regBatchForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.bStatus.cu > CRUD.STATUS.NORMAL)
@@ -190,7 +189,7 @@ crud.submitBatchFormFormat = (form) => {
     return {
       classifyId: row.classifyId,
       specification: row.specification,
-      specificationKV: map2arr(row.specificationMap),
+      specificationArrKV: row.specificationArrKV,
       minimumInventory: row.minimumInventory,
       unitType: row.unitType,
       factoryId: row.factoryId
@@ -203,7 +202,7 @@ crud.submitBatchFormFormat = (form) => {
 function handleAccumulateChange({ addList, cancelList }) {
   if (isNotBlank(addList)) {
     addList.forEach((sn) => {
-      const row = rowInit(matClsSpecMap.value[sn])
+      const row = rowInit(matClsSpecKV.value[sn])
       if (row) form.list.push(row)
     })
   }
@@ -219,7 +218,7 @@ function rowInit(row) {
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称
     specification: row.spec, // 规格
-    specificationMap: row.specMap, // 规格map格式
+    specificationArrKV: row.specArrKV, // 规格KV格式
     unitType: row.classify.outboundUnit, // 单位配置
     measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位

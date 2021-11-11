@@ -14,7 +14,9 @@
         新增
       </common-button>
     </template>
-    <mHeader />
+    <div class="head-container">
+      <mHeader />
+    </div>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -175,7 +177,7 @@ function handleCurrentChange(val) {
 </script>
 
 <style lang="scss" scoped>
-::deep(.line-box) {
+::v-deep(.line-box) {
   .el-card__body {
     padding-top: 11px;
     .el-tabs {

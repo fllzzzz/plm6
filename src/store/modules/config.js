@@ -3,6 +3,9 @@ import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
 import { getFinalMatClsById } from '@/api/common'
+import { getWorkshopsAllSimple } from '@/api/mes/common'
+import { getProcessAllSimple } from '@/api/mes/common'
+import { getUserAllSimple } from '@/api/common'
 import { unitTypeEnum } from '@enum-ms/common'
 import useFormatTree from '@compos/classification/use-format-tree'
 import { isBlank } from '@/utils/data-type'
@@ -12,13 +15,19 @@ import { arr2obj } from '@/utils/convert/type'
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
-  classifySpec: { specMap: {}}, // 科目规格
+  classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
+  workshops: [], // 车间
+  process: [], // 工序
+  users: [], // 人员列表
   loaded: {
     // 接口是否加载
     factories: false,
+    workshops: false,
+    process: false,
+    users: false,
     unit: false,
     matClsTree: false,
     clsTree: false
@@ -40,6 +49,15 @@ const mutations = {
   },
   SET_FACTORIES(state, factories) {
     state.factories = factories
+  },
+  SET_WORKSHOPS(state, workshops) {
+    state.workshops = workshops
+  },
+  SET_PROCESS(state, process) {
+    state.process = process
+  },
+  SET_USERS(state, users) {
+    state.users = users
   }
 }
 
@@ -114,6 +132,24 @@ const actions = {
     commit('SET_LOADED', { key: 'factories', loaded: true })
     return content
   },
+  async fetchWorkshops({ commit }) {
+    const { content = [] } = await getWorkshopsAllSimple()
+    commit('SET_WORKSHOPS', content)
+    commit('SET_LOADED', { key: 'workshops', loaded: true })
+    return content
+  },
+  async fetchProcess({ commit }) {
+    const { content = [] } = await getProcessAllSimple()
+    commit('SET_PROCESS', content)
+    commit('SET_LOADED', { key: 'process', loaded: true })
+    return content
+  },
+  async fetchUsers({ commit }) {
+    const { content = [] } = await getUserAllSimple()
+    commit('SET_USERS', content)
+    commit('SET_LOADED', { key: 'users', loaded: true })
+    return content
+  },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
     const classifySpec = state.classifySpec
@@ -146,12 +182,12 @@ const actions = {
               })
             }
           }),
-          specMap: {}
+          specKV: {}
         }
         classifySpec[id].specList = getSpecList(clsSimple, matCls.specConfig)
-        Object.assign(matCls.specMap, arr2obj(classifySpec[id].specList, 'sn'))
+        Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
         Object.assign(classifySpec[id], matCls)
-        Object.assign(classifySpec.specMap, matCls.specMap)
+        Object.assign(classifySpec.specKV, matCls.specKV)
       })
       allInterFace.push(ps)
     }
@@ -196,6 +232,19 @@ function getSpecList(classify, specConfig) {
   }
   arr.forEach((v) => {
     v.spec = v.arr.join('*') // 规格
+    // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
+    v.specKV = {}
+    v.specNameKV = {}
+    v.specArrKV = []
+    v.arr.forEach((c, i) => {
+      v.specArrKV.push({
+        key: specConfig[i].id,
+        value: c
+      })
+      v.specKV[specConfig[i].id] = c
+      v.specNameKV[specConfig[i].name] = c
+    })
+    // TODO:map可删除
     v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
     v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value
     v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号

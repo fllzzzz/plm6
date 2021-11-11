@@ -144,13 +144,17 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
           name: m.userName
         }
       } else {
-        members.push(m)
+        members.push({
+          teamId: m.teamId,
+          id: m.userId,
+          name: m.userName
+        })
       }
     })
     v.members = members
     if (v.members.length > 0) {
-      v.memberNames = v.members.map((v) => v.userName).join(', ')
-      v.memberIds = v.members.map((v) => v.userId)
+      v.memberNames = v.members.map((v) => v.name).join(', ')
+      v.memberIds = v.members.map((v) => v.id)
     } else {
       v.memberNames = ''
       v.memberIds = []
@@ -168,7 +172,6 @@ CRUD.HOOK.beforeSubmit = () => {
   const userList = []
   userList.push({
     boolLeaderEnum: true,
-    id: crud.form.leaderId,
     userId: crud.form.leader.id,
     userName: crud.form.leader.name,
     teamId: crud.form.id
@@ -177,14 +180,13 @@ CRUD.HOOK.beforeSubmit = () => {
     if (members[i]) {
       userList.push({
         boolLeaderEnum: false,
-        id: members[i].id,
         userId: members[i].id,
         userName: members[i].name,
         teamId: crud.form.id
       })
     }
   }
-  crud.form.mesBuildingTeamUserLinkList = userList
+  crud.form.userLinks = userList
 }
 
 defineExpose({

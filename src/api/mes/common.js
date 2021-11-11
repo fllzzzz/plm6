@@ -12,7 +12,7 @@ export function getFactoriesAllSimple(params) {
 }
 
 // 获取所有车间
-export function getWorkshopAllSimple(params) {
+export function getWorkshopsAllSimple(params) {
   return request({
     module: 'mes',
     url: 'workshop',
@@ -25,9 +25,24 @@ export function getWorkshopAllSimple(params) {
 // 获取所有工序
 export function getProcessAllSimple(params) {
   return request({
-    url: 'api/mes/building/process',
+    module: 'mes',
+    url: 'process',
     method: 'get',
     params,
     cancelKey: false
+  })
+}
+
+/**
+ * 层级：工厂-车间-生产线
+ * @export
+ * @returns
+ */
+export function getAllFactoryWorkshopLines(params) {
+  return request({
+    module: 'mes',
+    url: 'factory/production_line_group',
+    method: 'get',
+    params
   })
 }

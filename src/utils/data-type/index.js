@@ -17,6 +17,17 @@ export function emptyTextFormatter(val, sign = '-') {
 }
 
 /**
+ * toFixed
+ * @param {number} num
+ * @param {number} precision 精确度
+ */
+export function toFixed(num, precision) {
+  if (num === undefined || num === null || isNaN(+num)) return ''
+  // isNaN(num) 字符串类型的数字是false，所以使用 +num 转为数字,但为了保险在上面的isNaN中的num也使用+num
+  return (+num).toFixed(precision)
+}
+
+/**
  * 比较两个值是否相同
  * TODO:待优化
  * @param {*} a 比较的值

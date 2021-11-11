@@ -129,7 +129,7 @@ CRUD.HOOK.beforeSubmit = async () => {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-::deep(.el-input-group__append) {
+::v-deep(.el-input-group__append) {
   width: 100px;
   text-align: center;
 }

@@ -1,5 +1,6 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import configRouter from '@/router/modules/config'
+import mesRouter from '@/router/modules/mes'
 import projectRouter from '@/router/modules/project'
 import wmsRouter from '@/router/modules/wms'
 
@@ -45,6 +46,12 @@ const userInfo = {
             'name': 'WMS',
             'icon': 'wms-wms',
             'redirect': 'wms'
+          },
+          {
+            'id': 2,
+            'name': '建刚MES',
+            'icon': 'mes-steel',
+            'redirect': 'mes-project'
           },
           {
             'id': 1,
@@ -93,7 +100,9 @@ const userMenu = {
         'content': [
           configRouter,
           projectRouter,
-          wmsRouter
+          wmsRouter,
+          mesRouter,
+          projectRouter
         ]
       }
     }

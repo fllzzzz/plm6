@@ -124,7 +124,7 @@ const specList = computed(() => {
       let extraFlag = true
       matCls.value.specConfig.forEach((config) => {
         if (isNotBlank(query.value[config.id])) {
-          extraFlag = extraFlag && v.specMap.get(config.id) === query.value[config.id]
+          extraFlag = extraFlag && v.specKV[config.id] === query.value[config.id]
         }
       })
       return specFlag && extraFlag

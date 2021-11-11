@@ -121,10 +121,17 @@ CRUD.HOOK.beforeRefresh = () => {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.inspectors = JSON.parse(JSON.stringify(v.mesBuildingInspectionTeamUserLinkDTOList))
+    v.inspectors = v.mesBuildingInspectionTeamUserLinkDTOList.map(v => {
+      const user = {
+        inspectionTeamId: v.inspectionTeamId,
+        id: v.userId,
+        name: v.userName
+      }
+      return user
+    })
     if (v.inspectors && v.inspectors.length > 0) {
-      v.inspectorNames = v.inspectors.map((v) => v.userName).join(', ')
-      v.inspectorIds = v.inspectors.map((v) => v.userId)
+      v.inspectorNames = v.inspectors.map(v => v.name).join(', ')
+      v.inspectorIds = v.inspectors.map(v => v.id)
     } else {
       v.inspectorNames = ''
       v.inspectorIds = []
@@ -143,14 +150,13 @@ CRUD.HOOK.beforeSubmit = () => {
   for (let i = 0; i < members.length; i++) {
     if (members[i]) {
       userList.push({
-        id: members[i].id,
         userId: members[i].id,
         userName: members[i].name,
-        inspectionTeamId: this.crud.form.id
+        inspectionTeamId: crud.form.id
       })
     }
   }
-  crud.form.mesBuildingInspectionTeamUserLinkList = userList
+  crud.form.userLinks = userList
 }
 
 defineExpose({

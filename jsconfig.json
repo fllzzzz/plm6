@@ -28,7 +28,6 @@
       "@comp-wms/*": ["src/components-system/wms/*"],
       "@comp-cls/*": ["src/components-system/classification/*"],
       "@comp-mes/*": ["src/components-system/mes/*"],
-      "@comp-base/*": ["src/components-system/base/*"],
       "@compos/*": ["src/composables/*"],
       "@enum": ["src/utils/enum"],
       "@enum-ms/*": ["src/utils/enum/modules/*"],

@@ -46,3 +46,20 @@ MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V] = {}
 MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.LENGTH.V] = { unit: 'm', normal: 'm', smallest: 'mm', precision: 3 }
 MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.AREA.V] = { unit: '㎡', normal: 'm2', smallest: 'mm2', precision: 3 }
 MES_MATERIAL_UNIT[materialListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
+
+export const DP = {
+  COM_WT__T: 2, // 通用_重量（t）
+  COM_WT__KG: 2, // 通用_重量（kg）
+  COM_WT__G: 3, // 通用_重量（kg）
+  COM_AREA__M2: 2, // 通用_面积（㎡）
+  COM_UNIT__KG_M2: 2, // 通用_单位净重（kg/㎡）
+  COM_UNIT__KG_M: 2, // 通用_单位净重（kg/m）
+  MES_ARTIFACT_L__MM: 0, // mes_构件_长度（mm）
+  MES_ARTIFACT_L__M: 2, // mes_构件_长度（mm）
+  MES_MACHINE_PART_L__MM: 0, // mes_零件_长度（m）
+  MES_MACHINE_PART_L__M: 2, // mes_零件_长度（m）
+  MES_ENCLOSURE_L__MM: 0, // mes_围护_长度（mm）
+  MES_ENCLOSURE_L__M: 2, // mes_围护_长度（m）
+  MES_ENCLOSURE_W__MM: 0, // mes_围护_有效宽度（mm）
+  MES_ENCLOSURE_T__MM: 3 // mes_围护_厚度（mm）
+}

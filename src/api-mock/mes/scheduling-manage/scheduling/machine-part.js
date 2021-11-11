@@ -1,0 +1,12 @@
+const getMachinePart = {
+  url: '/api/mes/building/machine_part/scheduling/page',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return { 'code': 20000, 'message': '成功', 'data': { 'hasPreviousPage': false, 'hasNextPage': false, 'totalElements': 4, 'content': [{ 'createTime': null, 'id': 1, 'boolStatusEnum': true, 'districtId': 4, 'grossWeight': null, 'length': null, 'material': 'Q355B', 'monomerId': 3, 'netWeight': null, 'projectId': 38, 'quantity': 1000, 'remark': null, 'serialNumber': 'A10', 'specification': 'PL18*728', 'totalGrossWeight': null, 'totalNetWeight': null, 'type': 1, 'usedQuantity': null, 'producedQuantity': 0, 'totalSchedulingQuantity': 0, 'totalTaskQuantity': 0, 'projectName': 'hgg', 'monomerName': '单体#1', 'districtName': '结构区域1', 'schedulingProductionLineDTOS': [] }, { 'createTime': null, 'id': 2, 'boolStatusEnum': true, 'districtId': 4, 'grossWeight': null, 'length': null, 'material': 'Q355B', 'monomerId': 3, 'netWeight': null, 'projectId': 38, 'quantity': 1000, 'remark': null, 'serialNumber': 'A11', 'specification': 'PL10*509', 'totalGrossWeight': null, 'totalNetWeight': null, 'type': 1, 'usedQuantity': null, 'producedQuantity': 0, 'totalSchedulingQuantity': 0, 'totalTaskQuantity': 0, 'projectName': 'hgg', 'monomerName': '单体#1', 'districtName': '结构区域1', 'schedulingProductionLineDTOS': [] }, { 'createTime': null, 'id': 3, 'boolStatusEnum': true, 'districtId': 8, 'grossWeight': null, 'length': null, 'material': 'Q355B', 'monomerId': 5, 'netWeight': null, 'projectId': 39, 'quantity': 1000, 'remark': null, 'serialNumber': 'A10', 'specification': 'PL18*728', 'totalGrossWeight': null, 'totalNetWeight': null, 'type': 1, 'usedQuantity': null, 'producedQuantity': 0, 'totalSchedulingQuantity': 0, 'totalTaskQuantity': 0, 'projectName': 'content测试', 'monomerName': '单体1', 'districtName': '区域1', 'schedulingProductionLineDTOS': [] }, { 'createTime': null, 'id': 4, 'boolStatusEnum': true, 'districtId': 8, 'grossWeight': null, 'length': null, 'material': 'Q355B', 'monomerId': 5, 'netWeight': null, 'projectId': 39, 'quantity': 1000, 'remark': null, 'serialNumber': 'A11', 'specification': 'PL10*509', 'totalGrossWeight': null, 'totalNetWeight': null, 'type': 1, 'usedQuantity': null, 'producedQuantity': 0, 'totalSchedulingQuantity': 0, 'totalTaskQuantity': 0, 'projectName': 'content测试', 'monomerName': '单体1', 'districtName': '区域1', 'schedulingProductionLineDTOS': [] }] }}
+  }
+}
+
+export default [
+  getMachinePart
+]

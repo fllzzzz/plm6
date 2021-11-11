@@ -15,14 +15,14 @@
         <process-select v-model:value="form.processId" :multiple="false" style="width: 270px" />
       </el-form-item>
       <el-form-item label="质检" prop="inspectorIds">
-        <!-- <user-select
+        <user-select
           ref="inspectorSelectRef"
           v-model:value="form.inspectorIds"
           :multiple="true"
           placeholder="请选择质检人员"
           style="width: 270px"
           @change="inspectorChange"
-        /> -->
+        />
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -32,10 +32,10 @@
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
-// import userSelect from '@/views/components/base/user-select'
+import userSelect from '@comp-common/user-select'
 
 const formRef = ref()
-// const inspectorSelectRef = ref()
+const inspectorSelectRef = ref()
 
 const defaultForm = {
   id: undefined,
@@ -50,7 +50,7 @@ const rules = {
   inspectorIds: [{ required: true, message: '请选择质检', trigger: 'change' }]
 }
 
-// function inspectorChange() {
-//   form.inspectors = inspectorSelectRef.getUser(form.inspectorIds)
-// }
+function inspectorChange(userlist) {
+  form.inspectors = userlist
+}
 </script>
