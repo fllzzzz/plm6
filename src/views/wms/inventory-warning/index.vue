@@ -14,15 +14,6 @@
       <el-table-column type="selection" align="center" width="55" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('factoryName')"
-        key="factoryName"
-        :show-overflow-tooltip="true"
-        prop="factoryName"
-        label="工厂"
-        align="left"
-        min-width="120"
-      />
-      <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
         :show-overflow-tooltip="true"
@@ -30,7 +21,12 @@
         label="编码"
         align="left"
         width="150"
-      />
+      >
+        <template v-slot="scope">
+          <factory-table-cell-tag :id="scope.row.factoryId" />
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('fullClassifyName')"
         key="fullClassifyName"
@@ -155,6 +151,7 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 const permission = {
   get: ['wms_inventoryWarning:get'],

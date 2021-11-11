@@ -47,13 +47,13 @@
             style="width: 100%;"
           >
             <el-table-column label="序号" type="index" align="center" width="60" />
-            <el-table-column prop="code" label="编号" align="center" width="100">
+            <el-table-column prop="code" label="编码" align="center" width="100">
               <template v-slot="scope">
                 <el-input
                   v-model.trim="scope.row.code"
                   :readonly="scope.row.boolUsed"
                   type="text"
-                  placeholder="编号"
+                  placeholder="编码"
                   size="mini"
                   maxlength="3"
                   class="input-underline"

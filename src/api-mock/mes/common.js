@@ -15,7 +15,7 @@ const getFactorySimple = {
           'remark': 'remark',
           'shortName': '一工',
           'sort': 1,
-          'tagColor': 'rgba(250, 212, 0, 1)',
+          'tagColor': '#409eff',
           'updateTime': '2021-10-08T10:10:36',
           'userId': 1,
           'version': 2

@@ -133,7 +133,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import StoreOpertaion from '@crud/STORE.opertaion.vue'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
-import factorySelect from '@comp-mes/factory-select/index.vue'
+import factorySelect from '@comp-base/factory-select.vue'
 
 // 未进行重复数据校验，目前由后端处理
 const tableRules = {}

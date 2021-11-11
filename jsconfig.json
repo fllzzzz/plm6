@@ -25,6 +25,7 @@
       "@crud/*": ["src/components/Crud/*"],
       "@comp/*": ["src/components/*"],
       "@comp-common/*": ["src/components-system/common/*"],
+      "@comp-base/*": ["src/components-system/base/*"],
       "@comp-wms/*": ["src/components-system/wms/*"],
       "@comp-cls/*": ["src/components-system/classification/*"],
       "@comp-mes/*": ["src/components-system/mes/*"],

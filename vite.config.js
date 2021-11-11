@@ -75,6 +75,7 @@ export default ({ command }) => {
         { find: '@crud', replacement: resolve(__dirname, 'src/components/Crud') },
         { find: '@comp', replacement: resolve(__dirname, 'src/components') },
         { find: '@comp-common', replacement: resolve(__dirname, 'src/components-system/common') },
+        { find: '@comp-base', replacement: resolve(__dirname, 'src/components-system/base') },
         { find: '@comp-wms', replacement: resolve(__dirname, 'src/components-system/wms') },
         { find: '@comp-cls', replacement: resolve(__dirname, 'src/components-system/classification') },
         { find: '@comp-mes', replacement: resolve(__dirname, 'src/components-system/mes') },

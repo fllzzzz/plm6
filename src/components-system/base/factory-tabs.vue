@@ -59,7 +59,7 @@ function tabClick() {
   })
 }
 
-async function dataFormat() {
+function dataFormat() {
   factoriesMap = new Map()
   try {
     if (isNotBlank(factories.value)) {

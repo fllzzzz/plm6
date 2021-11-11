@@ -19,6 +19,7 @@ const state = {
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
+  factoryKV: {}, // 工厂id:value 格式
   workshops: [], // 车间
   process: [], // 工序
   users: [], // 人员列表
@@ -49,6 +50,11 @@ const mutations = {
   },
   SET_FACTORIES(state, factories) {
     state.factories = factories
+    // 生产工厂kv
+    state.factoryKV = {}
+    factories.forEach((v) => {
+      state.factoryKV[v.id] = v
+    })
   },
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops

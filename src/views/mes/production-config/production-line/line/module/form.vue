@@ -42,7 +42,7 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import factorySelect from '@comp-mes/factory-select'
+import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
 
 const formRef = ref()

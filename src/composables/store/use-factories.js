@@ -9,6 +9,7 @@ const useFactory = () => {
     store.dispatch('config/fetchFactories')
   }
   return {
+    factoryKV: computed(() => store.state.config.factoryKV),
     factories: computed(() => store.state.config.factories),
     loaded: computed(() => store.state.config.loaded.factories)
   }

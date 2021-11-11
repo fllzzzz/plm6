@@ -298,14 +298,14 @@ export function getNodeIdsById(pendingTree, id, idField = 'id', childField = 'ch
  * @param {*} tree 数组（树）
  * @param {*} childField childField 字段名
  */
-export function setEmptyArrToUndefined(tree, childField = 'children') {
+export function setEmptyArr2Undefined(tree, childField = 'children') {
   if (tree && tree.length > 0) {
     tree.forEach(node => {
       if (node[childField]) {
         if (node[childField].length < 1) {
           node[childField] = undefined
         } else {
-          setEmptyArrToUndefined(node[childField], childField)
+          setEmptyArr2Undefined(node[childField], childField)
         }
       }
     })

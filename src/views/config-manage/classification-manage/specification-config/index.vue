@@ -43,7 +43,7 @@
           </template>
           <div class="card-box">
             <common-table :data="item.list" style="width: 100%" :maxHeight="maxHeight - 105">
-              <el-table-column prop="code" label="编号" width="80" align="left"/>
+              <el-table-column prop="code" label="编码" width="80" align="left"/>
               <el-table-column prop="value" label="规格" min-width="140" />
             </common-table>
           </div>

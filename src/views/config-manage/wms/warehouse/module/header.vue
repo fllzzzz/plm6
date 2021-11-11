@@ -8,7 +8,7 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation.vue'
-import factoryTabs from '@comp-common/factory-tabs/index.vue'
+import factoryTabs from '@comp-base/factory-tabs.vue'
 const defaultQuery = {
   factoryId: undefined // 工厂
 }

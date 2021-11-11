@@ -9,7 +9,6 @@ export function arr2obj(arr, mark = 'id') {
   for (const item of arr) {
     newObj[item[mark]] = item
   }
-  console.log('newObj', newObj)
   return newObj
 }
 
