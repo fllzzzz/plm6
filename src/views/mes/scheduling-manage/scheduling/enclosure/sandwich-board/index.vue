@@ -20,24 +20,6 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
-        <el-input
-          v-model="crud.query.specification"
-          size="small"
-          placeholder="输入规格搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <el-input
-          v-model="crud.query.material"
-          size="small"
-          placeholder="输入材质搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
       </template>
     </mHeader>
     <!--表格渲染-->
@@ -64,25 +46,93 @@
         width="120px"
       />
       <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
-        prop="serialNumber"
+        v-if="columns.visible('name')"
+        key="name"
+        prop="name"
         fixed
         sortable="custom"
         :show-overflow-tooltip="true"
-        label="编号"
-        width="140px"
+        label="名称"
+        width="120px"
       />
       <el-table-column
-        v-if="columns.visible('specification')"
-        key="specification"
-        prop="specification"
+        v-if="columns.visible('plate')"
+        key="plate"
+        prop="plate"
         fixed
         sortable="custom"
         :show-overflow-tooltip="true"
-        label="规格"
-        width="140px"
+        label="板型"
+        width="120px"
       />
+
+      <el-table-column
+        v-if="columns.visible('thickness')"
+        key="thickness"
+        prop="thickness"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`板厚\n(mm)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('width')"
+        key="width"
+        prop="width"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`有效宽度\n(mm)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('brand')"
+        key="brand"
+        prop="brand"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="芯材品牌"
+        sortable="custom"
+        fixed
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('type')"
+        key="type"
+        prop="type"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="芯材种类"
+        sortable="custom"
+        fixed
+        width="100"
+      />
+      <el-table-column
+        v-if="columns.visible('capacity')"
+        key="capacity"
+        prop="capacity"
+        :show-overflow-tooltip="true"
+        align="center"
+        :label="`芯材容重\n(kg/m³)`"
+        sortable="custom"
+        fixed
+        width="100"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.capacity, DP.COM_UNIT__KG_M3) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -90,106 +140,41 @@
         sortable="custom"
         fixed
         :show-overflow-tooltip="true"
-        :label="`长度\n(mm)`"
+        :label="`单长\n(mm)`"
         align="center"
         width="80px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}
+          <span>{{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('material')"
-        key="material"
-        prop="material"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="材质"
-        width="80px"
-      />
-      <el-table-column
-        v-if="columns.visible('netWeight')"
-        key="netWeight"
-        prop="netWeight"
+        v-if="columns.visible('totalArea')"
+        key="totalArea"
+        prop="totalArea"
         sortable="custom"
         fixed
-        :show-overflow-tooltip="true"
-        :label="`单净重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.netWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('grossWeight')"
-        key="grossWeight"
-        prop="grossWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`单毛重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.grossWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalNetWeight')"
-        key="totalNetWeight"
-        prop="totalNetWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`总净重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.totalNetWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalGrossWeight')"
-        key="totalGrossWeight"
-        prop="totalGrossWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`总毛重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.totalGrossWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('drawingNumber')"
-        key="drawingNumber"
-        prop="drawingNumber"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="图号"
-        width="140px"
-      />
-      <el-table-column
-        v-if="columns.visible('area')"
-        key="area"
-        prop="area"
-        sortable="custom"
-        fixed
-        :label="`面积\n(㎡)`"
+        :label="`总面积\n(㎡)`"
         align="left"
         width="80px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.area, DP.COM_AREA__M2) }}
+          <span>{{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalLength')"
+        key="totalLength"
+        prop="totalLength"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`总长度\n(m)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -290,10 +275,10 @@ v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity"
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/scheduling-manage/scheduling/machine-part'
+import crudApi from '@/api/mes/scheduling-manage/scheduling/enclosure'
 import { provide, ref } from 'vue'
 
-import { productTypeEnum, processTypeEnum } from '@enum-ms/mes'
+import { productTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 // import useCheckPermission from '@compos/use-check-permission'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
@@ -321,34 +306,24 @@ const optShow = {
 }
 
 provide('needTableColumns', [
-  { label: '编号', width: '140px', field: 'serialNumber' },
-  { label: '规格', width: '140px', field: 'specification' },
-  { label: '材质', width: '80px', field: 'material' }
-  //  { label: `长度\n(mm)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ARTIFACT_L__MM }
+  { label: '名称', width: '120px', field: 'name' },
+  { label: '板型', width: '120px', field: 'plate' },
+  { label: `板厚\n(mm)`, width: '80px', field: 'thickness', toFixed: true, DP: DP.MES_ENCLOSURE_T__MM },
+  { label: `有效宽度\n(mm)`, width: '80px', field: 'width', toFixed: true, DP: DP.MES_ENCLOSURE_W__MM }
 ])
-provide('productType', productTypeEnum.MACHINE_PART.V)
-provide('processType', processTypeEnum.ONCE.V)
+provide('productType', productTypeEnum.ENCLOSURE.V)
+provide('processType', processTypeEnum.TWICE.V)
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
-    title: '零件排产',
+    title: '夹芯板排产',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     // requiredQuery: ['districtId'],
-    invisibleColumns: [
-      'districtName',
-      'length',
-      'netWeight',
-      'grossWeight',
-      'totalNetWeight',
-      'totalGrossWeight',
-      'drawingNumber',
-      'area',
-      'remark'
-    ]
+    invisibleColumns: ['districtName', 'length', 'totalArea', 'totalLength', 'brand', 'type', 'capacity', 'remark']
     // queryOnPresenterCreated: false
   },
   tableRef
@@ -357,6 +332,10 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.category = mesEnclosureTypeEnum.SANDWICH_BOARD.V
+}
 </script>
 
 <style lang="scss" scoped>

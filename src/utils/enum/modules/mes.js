@@ -65,6 +65,23 @@ const wageQuotaTypeEnum = {
 }
 constantize(wageQuotaTypeEnum)
 
+// 围护产品类型
+const mesEnclosureTypeEnum = {
+  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 },
+  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 2 },
+  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: 4 },
+  TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 3 },
+  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 6 }
+}
+constantize(mesEnclosureTypeEnum)
+
+// 任务下发状态类型
+const taskIssueTypeEnum = {
+  NOT_ISSUED: { L: '未下发', K: 'NOT_ISSUED', V: false, T: 'danger' },
+  HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: true, T: 'success' }
+}
+constantize(taskIssueTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -73,7 +90,9 @@ export {
   processTypeEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
-  wageQuotaTypeEnum
+  wageQuotaTypeEnum,
+  mesEnclosureTypeEnum,
+  taskIssueTypeEnum
 }
 
 export default {
@@ -84,5 +103,7 @@ export default {
   processTypeEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
-  wageQuotaTypeEnum
+  wageQuotaTypeEnum,
+  mesEnclosureTypeEnum,
+  taskIssueTypeEnum
 }

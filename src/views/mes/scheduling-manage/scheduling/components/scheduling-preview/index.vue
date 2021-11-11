@@ -17,29 +17,48 @@
     <template #titleRight>
       <el-popover placement="left-end" width="850" trigger="click">
         <common-table :data="workshopList">
-          <el-table-column width="150" property="name" label="工厂" />
+          <el-table-column width="150" property="name" label="车间" />
           <el-table-column width="110" align="center" property="increase" label="新增数量" />
-          <el-table-column width="110" align="center" property="netWeightIncrease" :label="`新增分配重量\n（净重, kg）`">
-            <template v-slot="scope">
-              {{ toFixed(scope.row.netWeightIncrease, DP.COM_WT__KG) }}
-            </template>
-          </el-table-column>
-          <el-table-column width="110" align="center" property="grossWeightIncrease" :label="`新增分配重量\n（毛重, kg）`">
-            <template v-slot="scope">
-              {{ toFixed(scope.row.grossWeightIncrease, DP.COM_WT__KG) }}
-            </template>
-          </el-table-column>
+          <template v-if="productType === productTypeEnum.ENCLOSURE.V">
+            <el-table-column min-width="110" align="center" property="lengthIncrease" :label="`新增分配长度\n（m）`">
+              <template v-slot="scope">
+                {{ convertUnits(scope.row.lengthIncrease, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
+              </template>
+            </el-table-column>
+          </template>
+          <template v-else>
+            <el-table-column width="110" align="center" property="netWeightIncrease" :label="`新增分配重量\n（净重, kg）`">
+              <template v-slot="scope">
+                {{ toFixed(scope.row.netWeightIncrease, DP.COM_WT__KG) }}
+              </template>
+            </el-table-column>
+            <el-table-column width="110" align="center" property="grossWeightIncrease" :label="`新增分配重量\n（毛重, kg）`">
+              <template v-slot="scope">
+                {{ toFixed(scope.row.grossWeightIncrease, DP.COM_WT__KG) }}
+              </template>
+            </el-table-column>
+          </template>
+
           <el-table-column width="110" align="center" property="reduce" label="减少数量" />
-          <el-table-column width="110" align="center" property="netWeightReduce" :label="`减少分配重量\n（净重, kg）`">
-            <template v-slot="scope">
-              {{ toFixed(scope.row.netWeightReduce, DP.COM_WT__KG) }}
-            </template>
-          </el-table-column>
-          <el-table-column width="110" align="center" property="grossWeightReduce" :label="`减少分配重量\n（毛重, kg）`">
-            <template v-slot="scope">
-              {{ toFixed(scope.row.grossWeightReduce, DP.COM_WT__KG) }}
-            </template>
-          </el-table-column>
+          <template v-if="productType === productTypeEnum.ENCLOSURE.V">
+            <el-table-column min-width="110" align="center" property="lengthReduce" :label="`减少分配长度\n（m）`">
+              <template v-slot="scope">
+                {{ convertUnits(scope.row.lengthReduce, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
+              </template>
+            </el-table-column>
+          </template>
+          <template v-else>
+            <el-table-column width="110" align="center" property="netWeightReduce" :label="`减少分配重量\n（净重, kg）`">
+              <template v-slot="scope">
+                {{ toFixed(scope.row.netWeightReduce, DP.COM_WT__KG) }}
+              </template>
+            </el-table-column>
+            <el-table-column width="110" align="center" property="grossWeightReduce" :label="`减少分配重量\n（毛重, kg）`">
+              <template v-slot="scope">
+                {{ toFixed(scope.row.grossWeightReduce, DP.COM_WT__KG) }}
+              </template>
+            </el-table-column>
+          </template>
         </common-table>
         <template #reference>
           <common-button type="warning" size="mini">查看分配汇总</common-button>
@@ -61,16 +80,16 @@ type="primary"
       <el-table-column prop="districtName" fixed :show-overflow-tooltip="true" label="区域" width="120px" /> -->
       <template v-for="item in needTableColumns" :key="item.field">
         <el-table-column
-          v-if="item.field === 'length'"
+          v-if="item.toFixed"
           fixed
           :show-overflow-tooltip="true"
-          prop="length"
-          :label="`长度\n(mm)`"
+          :prop="item.field"
+          :label="item.label"
           align="center"
           :width="item.width"
         >
           <template v-slot="scope">
-            {{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}
+            {{ toFixed(scope.row[item.field], item.DP) }}
           </template>
         </el-table-column>
         <el-table-column v-else fixed :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width" />
@@ -88,19 +107,7 @@ type="primary"
             <template v-slot:header>
               <span class="ellipsis-text">【{{ workshop.name }}】</span>
               <span class="ellipsis-text">{{ line.name }}</span>
-              <el-tooltip
-                class="item"
-                effect="light"
-                :content="`${workshop.name}\n
-                ${line.name}\n
-                新增分配数量：${changedLineData[line.id].increase} 件\n
-                新增分配重量（净重）：${changedLineData[line.id].netWeightIncrease.toFixed(DP.COM_WT__KG)} kg\n
-                新增分配重量（毛重）：${changedLineData[line.id].grossWeightIncrease.toFixed(DP.COM_WT__KG)} kg\n
-                减少分配数量：${changedLineData[line.id].reduce} 件\n
-                减少分配重量（净重）：${changedLineData[line.id].netWeightReduce.toFixed(DP.COM_WT__KG)} kg\n
-                减少分配重量（毛重）：${changedLineData[line.id].grossWeightReduce.toFixed(DP.COM_WT__KG)} kg\n`"
-                placement="top-start"
-              >
+              <el-tooltip class="item" effect="light" :content="ellipsisTextTip(workshop,line)" placement="top-start">
                 <div>
                   <span
 v-if="changedLineData[line.id]"
@@ -168,9 +175,11 @@ import { save } from '@/api/mes/scheduling-manage/scheduling/common'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
+import { productTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { obj2arr } from '@/utils/convert/type'
+import { convertUnits } from '@/utils/convert/unit'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -222,6 +231,27 @@ watch(
   },
   { immediate: true }
 )
+
+function ellipsisTextTip(workshop, line) {
+  const _data = changedLineData.value[line.id]
+  if (productType === productTypeEnum.ENCLOSURE.V) {
+    return `${workshop.name}\n
+                ${line.name}\n
+                新增分配数量：${_data.increase} 张\n
+                新增分配长度：${convertUnits(_data.lengthIncrease, 'mm', 'm', DP.MES_ENCLOSURE_L__M)} m\n
+                减少分配数量：${_data.reduce} 张\n
+                减少分配长度：${convertUnits(_data.lengthReduce, 'mm', 'm', DP.MES_ENCLOSURE_L__M)} m\n`
+  } else {
+    return `${workshop.name}\n
+                ${line.name}\n
+                新增分配数量：${_data.increase} 件\n
+                新增分配重量（净重）：${toFixed(_data.netWeightIncrease, DP.COM_WT__KG)} kg\n
+                新增分配重量（毛重）：${toFixed(_data.grossWeightIncrease, DP.COM_WT__KG)} kg\n
+                减少分配数量：${_data.reduce} 件\n
+                减少分配重量（净重）：${toFixed(_data.netWeightReduce, DP.COM_WT__KG)} kg\n
+                减少分配重量（毛重）：${toFixed(_data.grossWeightReduce, DP.COM_WT__KG)} kg\n`
+  }
+}
 
 async function submit() {
   try {
@@ -285,17 +315,27 @@ function handleDataChange() {
               netWeightIncrease: 0,
               netWeightReduce: 0,
               grossWeightIncrease: 0,
-              grossWeightReduce: 0
+              grossWeightReduce: 0,
+              lengthIncrease: 0,
+              lengthReduce: 0
             }
           }
           if (changeQuantity > 0) {
             hasChangedLine[key].increase += Math.abs(changeQuantity)
-            hasChangedLine[key].netWeightIncrease += Math.abs(changeQuantity) * v.netWeight
-            hasChangedLine[key].grossWeightIncrease += Math.abs(changeQuantity) * v.grossWeight
+            if (productType === productTypeEnum.ENCLOSURE.V) {
+              hasChangedLine[key].lengthIncrease += Math.abs(changeQuantity) * v.length
+            } else {
+              hasChangedLine[key].netWeightIncrease += Math.abs(changeQuantity) * v.netWeight
+              hasChangedLine[key].grossWeightIncrease += Math.abs(changeQuantity) * v.grossWeight
+            }
           } else {
             hasChangedLine[key].reduce += Math.abs(changeQuantity)
-            hasChangedLine[key].netWeightReduce += Math.abs(changeQuantity) * v.netWeight
-            hasChangedLine[key].grossWeightReduce += Math.abs(changeQuantity) * v.grossWeight
+            if (productType === productTypeEnum.ENCLOSURE.V) {
+              hasChangedLine[key].lengthReduce += Math.abs(changeQuantity) * v.length
+            } else {
+              hasChangedLine[key].netWeightReduce += Math.abs(changeQuantity) * v.netWeight
+              hasChangedLine[key].grossWeightReduce += Math.abs(changeQuantity) * v.grossWeight
+            }
           }
         }
       }
@@ -323,15 +363,22 @@ function handleDataChange() {
             netWeightIncrease: 0,
             netWeightReduce: 0,
             grossWeightIncrease: 0,
-            grossWeightReduce: 0
+            grossWeightReduce: 0,
+            lengthIncrease: 0,
+            lengthReduce: 0
           }
         }
         hasChangedWorkshop[workshop.id].increase += hasChangedLine[line.id].increase
         hasChangedWorkshop[workshop.id].reduce += hasChangedLine[line.id].reduce
-        hasChangedWorkshop[workshop.id].netWeightIncrease += hasChangedLine[line.id].netWeightIncrease
-        hasChangedWorkshop[workshop.id].netWeightReduce += hasChangedLine[line.id].netWeightReduce
-        hasChangedWorkshop[workshop.id].grossWeightIncrease += hasChangedLine[line.id].grossWeightIncrease
-        hasChangedWorkshop[workshop.id].grossWeightReduce += hasChangedLine[line.id].grossWeightReduce
+        if (productType === productTypeEnum.ENCLOSURE.V) {
+          hasChangedWorkshop[workshop.id].lengthIncrease += hasChangedLine[line.id].lengthIncrease
+          hasChangedWorkshop[workshop.id].lengthReduce += hasChangedLine[line.id].lengthReduce
+        } else {
+          hasChangedWorkshop[workshop.id].netWeightIncrease += hasChangedLine[line.id].netWeightIncrease
+          hasChangedWorkshop[workshop.id].netWeightReduce += hasChangedLine[line.id].netWeightReduce
+          hasChangedWorkshop[workshop.id].grossWeightIncrease += hasChangedLine[line.id].grossWeightIncrease
+          hasChangedWorkshop[workshop.id].grossWeightReduce += hasChangedLine[line.id].grossWeightReduce
+        }
       }
     })
   })

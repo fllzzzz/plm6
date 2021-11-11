@@ -15,18 +15,27 @@
       <div class="el-drawer-container">
         <div class="table-content">
           <common-table ref="table" :data="assignAbleList" empty-text="暂无数据" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55" align="center" />
-            <el-table-column label="序号" type="index" align="center" width="60" />
+            <el-table-column fixed type="selection" width="55" align="center" />
+            <el-table-column fixed label="序号" type="index" align="center" width="60" />
             <!-- <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目" width="120px" />
             <el-table-column prop="monomerName" :show-overflow-tooltip="true" label="单体" width="120px" />
             <el-table-column prop="districtName" :show-overflow-tooltip="true" label="区域" width="120px" /> -->
             <template v-for="item in needTableColumns" :key="item.field">
-              <el-table-column :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width" />
+              <el-table-column
+                v-if="item.toFixed"
+                fixed
+                :show-overflow-tooltip="true"
+                :prop="item.field"
+                :label="item.label"
+                align="center"
+                :width="item.width"
+              >
+                <template v-slot="scope">
+                  {{ toFixed(scope.row[item.field], item.DP) }}
+                </template>
+              </el-table-column>
+              <el-table-column v-else fixed :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width" />
             </template>
-            <!-- <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="120" />
-            <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" width="250px" />
-            <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="120" />
-            <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px" /> -->
             <el-table-column key="unassignQuantity" fixed="right" prop="unassignQuantity" label="未分配" align="center" min-width="70px">
               <template v-slot="scope">
                 <span style="color: #13ce66">{{ scope.row.unassignQuantity }}</span>
@@ -58,6 +67,8 @@
 
 <script setup>
 import { computed, defineProps, defineEmits, ref, watch, inject } from 'vue'
+
+import { toFixed } from '@data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'

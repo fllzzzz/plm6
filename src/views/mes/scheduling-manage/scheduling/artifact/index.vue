@@ -24,7 +24,7 @@
           v-model="crud.query.specification"
           size="small"
           placeholder="输入规格搜索"
-          style="width: 170px;"
+          style="width: 170px"
           class="filter-item"
           clearable
           @keyup.enter="crud.toQuery"
@@ -186,7 +186,7 @@
         sortable="custom"
         :show-overflow-tooltip="true"
         label="图号"
-        min-width="140px"
+        width="140px"
       />
       <el-table-column
         v-if="columns.visible('area')"
@@ -196,7 +196,7 @@
         fixed
         :label="`面积\n(㎡)`"
         align="left"
-        min-width="80px"
+        width="80px"
       >
         <template v-slot="scope">
           {{ toFixed(scope.row.area, DP.COM_AREA__M2) }}
@@ -209,7 +209,7 @@
         fixed
         :show-overflow-tooltip="true"
         label="备注"
-        min-width="120"
+        width="120px"
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
@@ -335,7 +335,7 @@ provide('needTableColumns', [
   { label: '编号', width: '140px', field: 'serialNumber' },
   { label: '规格', width: '140px', field: 'specification' },
   { label: '材质', width: '80px', field: 'material' },
-  { label: '长度', width: '80px', field: 'length' }
+  { label: `长度\n(mm)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ARTIFACT_L__MM }
 ])
 provide('productType', productTypeEnum.ARTIFACT.V)
 provide('processType', processTypeEnum.TWICE.V)

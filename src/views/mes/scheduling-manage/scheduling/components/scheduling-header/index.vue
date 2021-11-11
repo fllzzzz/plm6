@@ -43,8 +43,8 @@
         >
       </template>
       <template v-slot:viewLeft>
-        <common-button :loading="lineLoading" type="success" size="mini" @click.stop="productionLineVisible = true">{{
-          lineLoading ? '生产线加载中' : '选择生产线'
+        <common-button :loading="!loaded" type="success" size="mini" @click.stop="productionLineVisible = true">{{
+          !loaded ? '生产线加载中' : '选择生产线'
         }}</common-button>
       </template>
     </crudOperation>
@@ -95,9 +95,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:lines', 'update:modifying'])
 
-const { productionLineVisible, lineLoading, lineLoad, schedulingMapTemplate } = useGetLines({ emit, dataHasFormatHook })
-const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
-
 const previewVisible = ref(false) // 分配预览dlg
 const quicklyAssignVisible = ref(false) // 快速分配dlg
 const dataHasFormat = ref(false) // 排产数据格式是否已转换，未转换则在生产线加载成功时转换
@@ -105,6 +102,9 @@ const dataHasFormat = ref(false) // 排产数据格式是否已转换，未转�
 const currentArea = {
   name: ''
 }
+
+const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGetLines({ emit, dataHasFormatHook })
+const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   dataHasFormat.value = lineLoad.value // 数据格式是否已经转换，因为接口异步，所以dataHasFormat放在循环前赋值

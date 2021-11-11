@@ -52,6 +52,7 @@ export const DP = {
   COM_WT__KG: 2, // 通用_重量（kg）
   COM_WT__G: 3, // 通用_重量（kg）
   COM_AREA__M2: 2, // 通用_面积（㎡）
+  COM_UNIT__KG_M3: 2, // 通用_单位净重（kg/m³）
   COM_UNIT__KG_M2: 2, // 通用_单位净重（kg/㎡）
   COM_UNIT__KG_M: 2, // 通用_单位净重（kg/m）
   MES_ARTIFACT_L__MM: 0, // mes_构件_长度（mm）

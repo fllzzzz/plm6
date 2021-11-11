@@ -3,6 +3,7 @@ import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
+import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { unitTypeEnum } from '@enum-ms/common'
@@ -15,11 +16,13 @@ const state = {
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
   workshops: [], // 车间
+  productLines: [], // 生产线
   process: [], // 工序
   users: [], // 人员列表
   loaded: { // 接口是否加载
     factories: false,
     workshops: false,
+    productLines: false,
     process: false,
     users: false,
     unit: false,
@@ -46,6 +49,9 @@ const mutations = {
   },
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops
+  },
+  SET_PRODUCT_LINES(state, productLines) {
+    state.productLines = productLines
   },
   SET_PROCESS(state, process) {
     state.process = process
@@ -130,6 +136,12 @@ const actions = {
     const { content = [] } = await getWorkshopsAllSimple()
     commit('SET_WORKSHOPS', content)
     commit('SET_LOADED', { key: 'workshops', loaded: true })
+    return content
+  },
+  async fetchProductLines({ commit }) {
+    const { content = [] } = await getAllFactoryWorkshopLines()
+    commit('SET_PRODUCT_LINES', content)
+    commit('SET_LOADED', { key: 'productLines', loaded: true })
     return content
   },
   async fetchProcess({ commit }) {
