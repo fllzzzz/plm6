@@ -2,7 +2,7 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
-import { getFinalMatClsById } from '@/api/common'
+import { getFinalMatClsById, getUserTree } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
@@ -23,6 +23,7 @@ const state = {
   workshops: [], // 车间
   process: [], // 工序
   users: [], // 人员列表
+  userDeptTree: [], // 人员部门树
   loaded: {
     // 接口是否加载
     factories: false,
@@ -30,6 +31,7 @@ const state = {
     process: false,
     users: false,
     unit: false,
+    userDeptTree: false,
     matClsTree: false,
     clsTree: false
   }
@@ -64,6 +66,9 @@ const mutations = {
   },
   SET_USERS(state, users) {
     state.users = users
+  },
+  SET_USER_DEPT_TREE(state, tree) {
+    state.userDeptTree = tree
   }
 }
 
@@ -154,6 +159,12 @@ const actions = {
     const { content = [] } = await getUserAllSimple()
     commit('SET_USERS', content)
     commit('SET_LOADED', { key: 'users', loaded: true })
+    return content
+  },
+  async fetchUserDeptTree({ commit }) {
+    const { content = [] } = await getUserTree()
+    commit('SET_USER_DEPT_TREE', content)
+    commit('SET_LOADED', { key: 'userDeptTree', loaded: true })
     return content
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {

@@ -42,6 +42,8 @@ const getters = {
   matClsTree: state => state.config.matClsTree,
   // 材料科目规格 key:value
   matClsSpecKV: state => state.config.classifySpec.specKV,
+  // 用户部门树
+  userDeptTree: state => state.config.userDeptTree,
 
   // token 访问令牌
   token: state => state.user.token,

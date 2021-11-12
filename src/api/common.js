@@ -27,3 +27,11 @@ export function getFinalMatClsById(id) {
     method: 'get'
   })
 }
+
+// 获取所有用户,带部门
+export function getUserTree() {
+  return request({
+    method: 'get',
+    url: 'api/user/tree'
+  })
+}
