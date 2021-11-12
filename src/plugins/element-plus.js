@@ -81,7 +81,8 @@ import {
   // ElMessage,
   // ElMessageBox
   ElSkeleton,
-  ElSkeletonItem
+  ElSkeletonItem,
+  ElInfiniteScroll
 } from 'element-plus'
 
 const components = [
@@ -168,7 +169,7 @@ const components = [
 ]
 
 const plugins = [
-//   ElInfiniteScroll,
+  ElInfiniteScroll,
   ElLoading
   // ElMessage,
   // ElMessageBox

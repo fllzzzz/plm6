@@ -4,7 +4,7 @@ import { useStore } from 'vuex'
 // 获取工序
 const useProcess = () => {
   const store = useStore()
-  // 拉取未加载的工序
+  // 未加载则拉取
   if (!store.state.config.loaded.process) {
     store.dispatch('config/fetchProcess')
   }

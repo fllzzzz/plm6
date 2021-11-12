@@ -14,7 +14,8 @@ const state = {
     introduction: '', // 介绍
     companyName: '', // 公司名称
     phone: '', // 电话
-    sex: '' // 性别
+    sex: '', // 性别
+    inventoryNotifyPerm: false // 库存预警权限
   },
   menus: [], // 菜单
   roles: [], // 权限
@@ -39,8 +40,8 @@ const mutations = {
   SET_LOAD_MENUS: (state, loadedMenus) => {
     state.loadedMenus = loadedMenus
   },
-  SET_USER: (state, { id, name = '', avatar = '', introduction = '', companyName = '', phone = '', sex }) => {
-    state.user = { id, name, avatar, introduction, companyName, phone, sex }
+  SET_USER: (state, { id, name = '', avatar = '', introduction = '', companyName = '', phone = '', inventoryNotifyPerm = false, sex }) => {
+    state.user = { id, name, avatar, introduction, companyName, phone, sex, inventoryNotifyPerm }
   },
   SET_REQUEST_URL: (state, requestUrl) => {
     state.requestUrl = requestUrl

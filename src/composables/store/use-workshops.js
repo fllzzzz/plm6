@@ -4,7 +4,7 @@ import { useStore } from 'vuex'
 // 获取车间
 const useWorkshop = () => {
   const store = useStore()
-  // 拉取未加载的车间
+  // 未加载则拉取
   if (!store.state.config.loaded.workshops) {
     store.dispatch('config/fetchWorkshops')
   }

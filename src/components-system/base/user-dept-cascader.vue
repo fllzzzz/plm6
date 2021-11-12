@@ -5,7 +5,7 @@
     class="user-dept-cascader"
     v-model="copyValue"
     :placeholder="placeholder"
-    :options="userDept.tree"
+    :options="options"
     :props="cascaderProps"
     :show-all-levels="showAllLevels"
     :separator="separator"
@@ -18,11 +18,10 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, defineEmits, computed, watch, reactive, ref } from 'vue'
-import { useStore } from 'vuex'
-import { mapGetters } from '@/store/lib'
+import { defineExpose, defineProps, defineEmits, computed, watch, ref } from 'vue'
+import { isNotBlank, isBlank, deepClone, judgeSameValue } from '@data-type/index'
 
-import { isNotBlank, isBlank } from '@data-type/index'
+import useUserDeptTree from '@compos/store/use-user-dept-tree'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
@@ -92,18 +91,12 @@ const props = defineProps({
   }
 })
 
-const store = useStore()
 const userDeptCascaderRef = ref()
 const copyValue = ref()
 
-const userDept = reactive({
-  tree: [],
-  treeOrigin: []
-})
+const options = ref([])
 
-const refreshLoading = ref(true)
-
-const { userDeptTree } = mapGetters('userDeptTree')
+const { userDeptTree } = useUserDeptTree()
 
 const cascaderProps = computed(() => {
   return {
@@ -119,9 +112,9 @@ const cascaderProps = computed(() => {
 
 // 监听全局科目选项
 watch(
-  [() => userDeptTree.value, () => props.deptIds],
+  [userDeptTree, () => props.deptIds],
   ([list]) => {
-    setCascader(list)
+    setOptions(list)
   },
   { deep: true, immediate: true }
 )
@@ -142,23 +135,15 @@ watch(
 watch(
   () => props.disabledVal,
   () => {
-    setNodeDisabled(userDept.tree)
+    setNodeDisabled(options.value)
   },
   { immediate: true, deep: true }
 )
 
-if (isBlank(userDeptTree.value)) {
-  store.dispatch('config/fetchUserDeptTree')
-}
-
 // 发生change
 function handleChange(val) {
   // 发生变化
-  let isChange = val !== props.modelValue
-  if (val instanceof Array) {
-    // 两个数组不相等
-    isChange = !val.equals(props.modelValue)
-  }
+  const isChange = !judgeSameValue(val, props.modelValue)
   // 两个值都为空
   const allBlank = isBlank(val) && isBlank(props.modelValue)
 
@@ -171,52 +156,27 @@ function handleChange(val) {
 }
 
 // 设置级联数据
-function setCascader(tree) {
+function setOptions(tree) {
+  options.value = []
   try {
     if (tree) {
-      userDept.treeOrigin = tree
-
-      // 过滤部门
-      const origin = JSON.parse(JSON.stringify(tree))
-      // origin = getFilterOptions(origin, props.deptIds)
-      userDept.tree = dataFormat(origin)
+      // 过滤空部门
+      options.value = filterBlankDept(deepClone(tree))
       // 加入额外的选项
       if (props.extraOption) {
-        userDept.tree.unshift(props.extraOption)
+        options.value.unshift(props.extraOption)
       }
-    } else {
-      userDept.treeOrigin = []
-      userDept.tree = []
     }
   } catch (error) {
     console.log('获取人员部门树失败', error)
-  } finally {
-    refreshLoading.value = false
   }
 }
 
-// 过滤部门
-// function getFilterOptions(options, ids, pollingTimes = 1) {
-//   if (ids.length > 0 && ids.length < pollingTimes) {
-//     return options
-//   }
-//   options = options.filter(node => {
-//     if (node.id === -ids[pollingTimes - 1]) {
-//       if (node.children && node.children.length > 0 && ids.length >= pollingTimes) {
-//         node.children = getFilterOptions(node.children, ids, ++pollingTimes)
-//       }
-//       return true
-//     }
-//     return false
-//   })
-//   return options
-// }
-
 // 过滤空部门
-function dataFormat(tree) {
+function filterBlankDept(tree) {
   return tree.filter((node) => {
     if (isNotBlank(node.children)) {
-      node.children = dataFormat(node.children)
+      node.children = filterBlankDept(node.children)
       return isNotBlank(node.children)
     }
     return node.isUser
@@ -226,13 +186,7 @@ function dataFormat(tree) {
 // 设置禁用的节点
 function setNodeDisabled(list) {
   list.forEach((v) => {
-    if (props.disabledVal.includes(v.id)) {
-      v.disabled = true
-      v.initDisabled = true // 是否是起始禁用
-    } else {
-      v.disabled = false
-      v.initDisabled = false
-    }
+    v.disabled = props.disabledVal.includes(v.id)
     if (isNotBlank(v.children)) {
       setNodeDisabled(v.children)
     }

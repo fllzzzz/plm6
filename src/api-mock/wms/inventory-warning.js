@@ -104,7 +104,7 @@ const delMaterialIW = {
 const getInventoryNotifyConf = {
   url: '/api/wms/material/inventory-warning/notify-config',
   method: 'get',
-  timeout: 500,
+  timeout: 5000,
   response: () => {
     return {
       code: 20000,
@@ -112,9 +112,9 @@ const getInventoryNotifyConf = {
       data: {
         content: [
           {
-            factoryId: 1,
-            userIds: [1, 2, 3],
-            deptIds: [1, 2, 3]
+            factoryId: 3,
+            userIds: [23, 36, 52],
+            deptIds: [22]
           }
         ]
       }

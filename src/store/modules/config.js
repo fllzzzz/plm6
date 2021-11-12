@@ -178,10 +178,11 @@ const actions = {
     return dept
   },
   async fetchUserDeptTree({ commit }) {
-    const { content = [] } = await getUserTree()
-    commit('SET_USER_DEPT_TREE', content)
+    const { content: tree = [] } = await getUserTree()
+    setEmptyArr2Undefined(tree)
+    commit('SET_USER_DEPT_TREE', tree)
     commit('SET_LOADED', { key: 'userDeptTree' })
-    return content
+    return tree
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
@@ -192,6 +193,7 @@ const actions = {
           id: res.id,
           name: res.name,
           fullName: res.fullName,
+          serialNumber: res.serialNumber, // 编码
           measureUnit: res.measureUnit, // 计量单位
           accountingUnit: res.accountingUnit, // 核算单位
           accountingPrecision: res.accountingPrecision, // 核算单位小数精度

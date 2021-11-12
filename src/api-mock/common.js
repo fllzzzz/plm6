@@ -35,6 +35,7 @@ const getFinalMatClsById = {
           'id|1-100': 1,
           name: '大六角',
           fullName: '紧固件>高强螺栓>大六角',
+          serialNumber: /[0-9]{10}/,
           measureUnit: '套', // 计量单位
           accountingUnit: '套', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度

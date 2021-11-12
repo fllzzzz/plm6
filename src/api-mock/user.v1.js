@@ -33,6 +33,7 @@ const userInfo = {
         'phone': validatorPhone,
         'email': '@email',
         'companyName': '杭州初鸣建筑科技有限公司',
+        'inventoryNotifyPerm': true,
         'roles': ['admin'],
         'roleNames': ['超级管理员'],
         'dept': '管理部门',

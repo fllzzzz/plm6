@@ -9,26 +9,26 @@
     :before-close="handleClose"
   >
     <template #titleRight>
-      <common-button :loading="submitLoading" type="primary" size="mini" @click="submit"> 提 交 </common-button>
+      <common-button v-permission="permission.edit" :loading="submitLoading" type="primary" size="mini" @click="submit"> 提 交 </common-button>
     </template>
     <template #content>
-      <common-table v-loading="!loaded" :data="form.list" style="width: 100%">
+      <common-table v-loading="!loaded || configLoading" :data="form.list" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="factoryName" label="工厂名称" :show-overflow-tooltip="true" width="150" />
         <el-table-column prop="createTime" label="通知人" :show-overflow-tooltip="true" min-width="180">
-          <!-- <template v-slot="scope">
-              <user-dept-cascader
-                v-if="scope.row.userOrDept === userOrDeptEnum.USER.V"
-                :filter-not-dd-user="false"
-                :filterable="true"
-                :collapse-tags="false"
-                multiple
-                clearable
-                show-all-levels
-                style="width: 100%"
-                placeholder="选择通知人"
-              />
-            </template> -->
+          <template v-slot="scope">
+            <user-dept-cascader
+              v-model="scope.row.userIds"
+              filterable
+              :collapse-tags="false"
+              :disabled="!useCheckPermission(permission.edit)"
+              multiple
+              clearable
+              show-all-levels
+              style="width: 100%"
+              placeholder="选择通知人"
+            />
+          </template>
         </el-table-column>
         <el-table-column prop="createTime" label="通知部门" :show-overflow-tooltip="true" min-width="180">
           <template v-slot="scope">
@@ -36,6 +36,7 @@
               v-model="scope.row.deptIds"
               filterable
               :collapse-tags="false"
+              :disabled="!useCheckPermission(permission.edit)"
               multiple
               clearable
               show-all-levels
@@ -50,14 +51,16 @@
 </template>
 
 <script setup>
+// TODO: disabled 改为 span, 直接显示用户名，用户信息从store中读取（暂未封装）
 import { getInventoryNotifyConf, setInventoryNotifyConf } from '@/api/wms/inventory-warning'
-import { defineEmits, defineProps, watch, ref } from 'vue'
+import { inject, defineEmits, defineProps, watch, ref } from 'vue'
 import { isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 
 import useVisible from '@compos/use-visible'
 import useFactory from '@compos/store/use-factories'
-// import userDeptCascader from '@/views/components/base/user-dept-cascader'
+import useCheckPermission from '@compos/use-check-permission'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import deptCascader from '@comp-base/dept-cascader.vue'
 import { ElNotification } from 'element-plus'
 
@@ -70,11 +73,14 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
+
 const form = ref({
   list: []
 })
 
 const submitLoading = ref(false)
+const configLoading = ref(false)
 
 const { loaded, factories } = useFactory()
 
@@ -90,19 +96,25 @@ watch(
 
 // 表单初始化
 async function formInit(factoryList) {
-  form.value.list = []
-  if (isNotBlank(factoryList)) {
-    console.log('factoryList', factoryList)
-    const config = await fetchConf()
-    factoryList.forEach((f) => {
-      const conf = config[f.id] || {}
-      form.value.list.push({
-        factoryId: f.id,
-        factoryName: f.name,
-        userIds: conf.userIds || [],
-        deptIds: conf.deptIds || []
+  try {
+    form.value.list = []
+    if (isNotBlank(factoryList)) {
+      configLoading.value = true
+      const config = await fetchConf()
+      factoryList.forEach((f) => {
+        const conf = config[f.id] || {}
+        form.value.list.push({
+          factoryId: f.id,
+          factoryName: f.name,
+          userIds: conf.userIds || [],
+          deptIds: conf.deptIds || []
+        })
       })
-    })
+    }
+  } catch (error) {
+    console.log('数据转换', error)
+  } finally {
+    configLoading.value = false
   }
 }
 
