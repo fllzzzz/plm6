@@ -2,7 +2,7 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
-import { getFinalMatClsById } from '@/api/common'
+import { getFinalMatClsById, getUserTree } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
@@ -28,6 +28,7 @@ const state = {
   process: [], // 工序
   users: [], // 人员列表
   dept: [], // 部门列表
+  userDeptTree: [], // 人员部门树
   loaded: {
     // 接口是否加载
     factories: false,
@@ -36,6 +37,7 @@ const state = {
     users: false,
     dept: false,
     unit: false,
+    userDeptTree: false,
     matClsTree: false,
     clsTree: false
   }
@@ -73,6 +75,9 @@ const mutations = {
   },
   SET_DEPT(state, dept) {
     state.dept = dept
+  },
+  SET_USER_DEPT_TREE(state, tree) {
+    state.userDeptTree = tree
   }
 }
 
@@ -86,14 +91,14 @@ const actions = {
     const res = await getMatClsTree()
     const tree = useFormatTree(res)
     commit('SET_MAT_CLS_TREE', tree)
-    commit('SET_LOADED', { key: 'matClsTree', loaded: true })
+    commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
     const tree = useFormatTree(res)
     commit('SET_CLS_TREE', tree)
-    commit('SET_LOADED', { key: 'clsTree', loaded: true })
+    commit('SET_LOADED', { key: 'clsTree' })
     return tree
   },
   // 加载字典值
@@ -139,30 +144,30 @@ const actions = {
     // 可以通过名称获取
     unit.symbol = (name) => unit.KS.get(name)
     commit('SET_UNIT', unit)
-    commit('SET_LOADED', { key: 'unit', loaded: true })
+    commit('SET_LOADED', { key: 'unit' })
   },
   async fetchFactories({ commit }) {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
-    commit('SET_LOADED', { key: 'factories', loaded: true })
+    commit('SET_LOADED', { key: 'factories' })
     return content
   },
   async fetchWorkshops({ commit }) {
     const { content = [] } = await getWorkshopsAllSimple()
     commit('SET_WORKSHOPS', content)
-    commit('SET_LOADED', { key: 'workshops', loaded: true })
+    commit('SET_LOADED', { key: 'workshops' })
     return content
   },
   async fetchProcess({ commit }) {
     const { content = [] } = await getProcessAllSimple()
     commit('SET_PROCESS', content)
-    commit('SET_LOADED', { key: 'process', loaded: true })
+    commit('SET_LOADED', { key: 'process' })
     return content
   },
   async fetchUsers({ commit }) {
     const { content = [] } = await getUserAllSimple()
     commit('SET_USERS', content)
-    commit('SET_LOADED', { key: 'users', loaded: true })
+    commit('SET_LOADED', { key: 'users' })
     return content
   },
   async fetchDept({ commit }) {
@@ -171,6 +176,12 @@ const actions = {
     commit('SET_DEPT', dept)
     commit('SET_LOADED', { key: 'dept' })
     return dept
+  },
+  async fetchUserDeptTree({ commit }) {
+    const { content = [] } = await getUserTree()
+    commit('SET_USER_DEPT_TREE', content)
+    commit('SET_LOADED', { key: 'userDeptTree' })
+    return content
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
