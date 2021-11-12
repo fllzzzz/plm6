@@ -32,7 +32,7 @@ import useVisible from '@compos/use-visible'
 import productionLineBox from '../production-line-box'
 
 const drawerRef = ref()
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'changeLines'])
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -84,6 +84,7 @@ function handleBeforeClose() {
 function handleLines() {
   // 在关闭界面时再给主页面的line赋值，避免由于主界面dom重绘过慢，导致当前界面选择效果的展示(dom重绘)也变慢
   const _updateIds = []
+  const changeLines = {}
   for (const key in updateLines) {
     if (updateLines[key]) {
       _updateIds.push(+key)
@@ -95,9 +96,11 @@ function handleLines() {
     for (const line of _productionLineList) {
       if (_updateIds.includes(line.id)) {
         line.selected = !line.selected
+        changeLines[line.id] = line.selected
       }
     }
   }
+  emit('changeLines', changeLines)
 }
 
 function handleChange({ workshop, line }) {

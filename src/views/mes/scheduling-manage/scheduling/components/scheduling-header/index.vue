@@ -50,7 +50,7 @@
     </crudOperation>
   </div>
   <mPreview v-model:visible="previewVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
-  <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" />
+  <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" @changeLines="handleChangeLines"/>
   <quickly-assign-drawer v-model:visible="quicklyAssignVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
 </template>
 
@@ -151,6 +151,20 @@ function handleSaveSuccess() {
 
 function refresh() {
   crud.toQuery()
+}
+
+function handleChangeLines(changeLines) {
+  crud.data.forEach(v => {
+    for (const id in changeLines) {
+      console.log(id, changeLines[id])
+      // 取消选择还原数据
+      if (!changeLines[id]) {
+        const changeQuantity = (v.schedulingMap[id]?.quantity || 0) - (v.schedulingMap[id]?.sourceQuantity || 0)
+        v.unassignQuantity += changeQuantity
+        v.assignQuantity -= changeQuantity
+      }
+    }
+  })
 }
 
 function handelModifying(modifying, reset = false) {

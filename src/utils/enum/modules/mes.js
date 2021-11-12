@@ -69,7 +69,7 @@ constantize(wageQuotaTypeEnum)
 const mesEnclosureTypeEnum = {
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 },
   PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 2 },
-  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: 4 },
+  FLOOR_PLATE: { L: '开闭口楼承板', K: 'FLOOR_PLATE', V: 4 },
   TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 3 },
   FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 6 }
 }

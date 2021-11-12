@@ -164,28 +164,28 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesTaskArtifact',
+        path: 'task/artifact',
+        hidden: false,
+        component: '/mes/scheduling-manage/task/artifact/index',
+        meta: { title: '构件任务', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesTaskMachinePart',
+        path: 'task/machine-part',
+        hidden: false,
+        component: '/mes/scheduling-manage/task/machine-part/index',
+        meta: { title: '零件任务', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesTaskEnclosure',
+        path: 'task/enclosure',
+        hidden: false,
+        component: '/mes/scheduling-manage/task/enclosure/index',
+        meta: { title: '围护任务', icon: 'project', noCache: true }
       }
-      // {
-      //   name: 'MesTaskArtifact',
-      //   path: 'task/artifact',
-      //   hidden: false,
-      //   component: '/mes/scheduling-manage/task/artifact/index',
-      //   meta: { title: '构件任务', icon: 'project', noCache: true }
-      // }
-      // {
-      //   name: 'MesTaskMachinePart',
-      //   path: 'task/machine-part',
-      //   hidden: false,
-      //   component: '/mes/scheduling-manage/task/machine-part/index',
-      //   meta: { title: '零件任务', icon: 'project', noCache: true }
-      // },
-      // {
-      //   name: 'MesTaskEnclosure',
-      //   path: 'task/enclosure',
-      //   hidden: false,
-      //   component: '/mes/scheduling-manage/task/enclosure/index',
-      //   meta: { title: '围护任务', icon: 'project', noCache: true }
-      // }
     ]
   }
     // {
