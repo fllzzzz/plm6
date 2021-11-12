@@ -15,7 +15,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克', // 核算单位
           'accountingPrecision': 2, // 核算单位小数精度
           'measurePrecision': 0, // 计量单位小数精度
-          'outboundMethod': 1, // 出库方式
+          'outboundUnit': 1, // 出库方式
           'code': '1', // 编码
           'basicClass': 1 // 基础分类
         }, {
@@ -25,7 +25,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '2',
           'basicClass': 1
         }, {
@@ -35,7 +35,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '3',
           'basicClass': 1
         }, {
@@ -45,7 +45,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '4',
           'basicClass': 1
         }, {
@@ -55,7 +55,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '5',
           'basicClass': 1
         }, {
@@ -65,7 +65,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '6',
           'basicClass': 2
         }, {
@@ -75,7 +75,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '7',
           'basicClass': 2
         }, {
@@ -85,7 +85,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '8',
           'basicClass': 2
         }, {
@@ -95,7 +95,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '9',
           'basicClass': 2
         }, {
@@ -105,7 +105,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '10',
           'basicClass': 2
         }, {
@@ -115,7 +115,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '11',
           'basicClass': 2
         }, {
@@ -125,7 +125,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '12',
           'basicClass': 2
         }, {
@@ -135,7 +135,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '13',
           'basicClass': 2
         }, {
@@ -145,7 +145,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '14',
           'basicClass': 3
         }, {
@@ -155,7 +155,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '15',
           'basicClass': 3
         }, {
@@ -165,7 +165,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '16',
           'basicClass': 3
         }, {
@@ -175,7 +175,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '17',
           'basicClass': 3
         }, {
@@ -185,7 +185,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundMethod': 1,
+          'outboundUnit': 1,
           'code': '18',
           'basicClass': 3
         }, {
@@ -202,7 +202,7 @@ const getMaterialMeasure = {
               'accountingUnit': '千克',
               'accountingPrecision': 2,
               'measurePrecision': 0,
-              'outboundMethod': 1,
+              'outboundUnit': 1,
               'code': '01',
               'level': 2
             },
@@ -213,7 +213,7 @@ const getMaterialMeasure = {
               'accountingUnit': '千克',
               'accountingPrecision': 2,
               'measurePrecision': 0,
-              'outboundMethod': 1,
+              'outboundUnit': 1,
               'code': '02',
               'level': 2
             },
@@ -224,7 +224,7 @@ const getMaterialMeasure = {
               'accountingUnit': '千克',
               'accountingPrecision': 2,
               'measurePrecision': 0,
-              'outboundMethod': 1,
+              'outboundUnit': 1,
               'code': '03',
               'level': 2
             }

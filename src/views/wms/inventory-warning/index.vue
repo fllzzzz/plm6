@@ -11,7 +11,7 @@
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column type="selection" align="center" width="55" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('serialNumber')"
@@ -21,7 +21,12 @@
         label="编码"
         align="left"
         width="150"
-      />
+      >
+        <template v-slot="scope">
+          <factory-table-cell-tag :id="scope.row.factoryId" />
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('fullClassifyName')"
         key="fullClassifyName"
@@ -90,7 +95,7 @@
               :disabled="scope.row.enabledLoading"
               v-model="scope.row.enabled"
               class="drawer-switch"
-              @change="handleEnabledChange(scope.row, ['fullClassifyName','specification'])"
+              @change="handleEnabledChange(scope.row, ['fullClassifyName', 'specification'])"
             />
           </template>
           <template v-else>
@@ -146,6 +151,7 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 const permission = {
   get: ['wms_inventoryWarning:get'],
@@ -169,6 +175,8 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '库存预警',
     sort: ['id.desc'],
+    formStore: true,
+    formStoreKey: 'WMS_INVENTORY_WARNING',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

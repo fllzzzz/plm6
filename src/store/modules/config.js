@@ -2,24 +2,31 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
+import { getFinalMatClsById } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { unitTypeEnum } from '@enum-ms/common'
 import useFormatTree from '@compos/classification/use-format-tree'
+import { isBlank } from '@/utils/data-type'
+import { arr2obj } from '@/utils/convert/type'
 
+// TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
+  classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
+  factoryKV: {}, // 工厂id:value 格式
   workshops: [], // 车间
   productLines: [], // 生产线
   process: [], // 工序
   users: [], // 人员列表
-  loaded: { // 接口是否加载
+  loaded: {
+    // 接口是否加载
     factories: false,
     workshops: false,
     productLines: false,
@@ -46,6 +53,11 @@ const mutations = {
   },
   SET_FACTORIES(state, factories) {
     state.factories = factories
+    // 生产工厂kv
+    state.factoryKV = {}
+    factories.forEach((v) => {
+      state.factoryKV[v.id] = v
+    })
   },
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops
@@ -89,7 +101,7 @@ const actions = {
       dict[name] = [...content]
       dict.dict[name] = {}
       dict.label[name] = {}
-      content.forEach(v => {
+      content.forEach((v) => {
         dict.dict[name][v.value] = v
         dict.label[name][v.value] = v.label
       })
@@ -97,13 +109,13 @@ const actions = {
   },
   // 加载单位
   async fetchUnit({ commit }) {
-    const res = await getAllUnit() || []
+    const res = (await getAllUnit()) || []
     // 单位分为分类列表与全单位列表
     const unit = { ALL: [], GROUP: [], KS: new Map() }
-    Object.keys(unitTypeEnum.ENUM).forEach(key => {
+    Object.keys(unitTypeEnum.ENUM).forEach((key) => {
       unit[key] = []
     })
-    res.forEach(v => {
+    res.forEach((v) => {
       const n = {
         id: v.id,
         name: v.name,
@@ -114,7 +126,7 @@ const actions = {
       unit.KS.set(v.name, v.symbol || v.name)
       unit[unitTypeEnum.VK[v.type]].push(n)
     })
-    Object.keys(unitTypeEnum.ENUM).forEach(key => {
+    Object.keys(unitTypeEnum.ENUM).forEach((key) => {
       unit.GROUP.push({
         name: unitTypeEnum[key].L,
         type: key,
@@ -155,7 +167,107 @@ const actions = {
     commit('SET_USERS', content)
     commit('SET_LOADED', { key: 'users', loaded: true })
     return content
+  },
+  async fetchMarClsSpec({ state }, classifyIds = []) {
+    const allInterFace = []
+    const classifySpec = state.classifySpec
+    for (const id of classifyIds) {
+      const ps = getFinalMatClsById(id).then((res) => {
+        const clsSimple = {
+          id: res.id,
+          name: res.name,
+          fullName: res.fullName,
+          measureUnit: res.measureUnit, // 计量单位
+          accountingUnit: res.accountingUnit, // 核算单位
+          accountingPrecision: res.accountingPrecision, // 核算单位小数精度
+          measurePrecision: res.measurePrecision, // 计量单位小数精度
+          outboundUnit: res.outboundUnit, // 出库方式
+          basicClass: res.basicClass
+        }
+        const matCls = {
+          ...clsSimple,
+          specConfig: res.specConfig.map((sc, ci) => {
+            return {
+              id: sc.id,
+              name: sc.name,
+              index: ci,
+              list: sc.list.map((v, i) => {
+                return {
+                  index: i,
+                  code: v.code,
+                  name: v.name
+                }
+              })
+            }
+          }),
+          specKV: {}
+        }
+        classifySpec[id].specList = getSpecList(clsSimple, matCls.specConfig)
+        Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
+        Object.assign(classifySpec[id], matCls)
+        Object.assign(classifySpec.specKV, matCls.specKV)
+      })
+      allInterFace.push(ps)
+    }
+    await Promise.all(allInterFace)
   }
+}
+
+// 获取规格列表（将后端的规格转换为各种常用格式）
+function getSpecList(classify, specConfig) {
+  if (isBlank(specConfig)) return []
+  const specLengthArr = []
+  const arrLength = specConfig.reduce((res, cur) => {
+    specLengthArr.push(cur.list.length)
+    return res * cur.list.length
+  }, 1)
+
+  // 创建规格列表
+  const arr = new Array(arrLength)
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = {
+      classify,
+      index: new Array(specLengthArr.length),
+      arr: new Array(specLengthArr.length)
+    }
+  }
+  // 遍历方式：按顺序将每一个【规格配置】的所有【小规格】推入数组来获得结果
+  let kl = arrLength // 单个规格需要遍历几次，起始为数组长度
+  let prevLength = 1 // 一套【规格配置】需要重复遍历几次
+  for (let i = 0; i < specLengthArr.length; i++) {
+    kl = kl / specLengthArr[i] // 除当前【规格配置】的长度，等于单个规格需要遍历的次数
+    for (let p = 0; p < prevLength; p++) {
+      for (let j = 0; j < specLengthArr[i]; j++) {
+        const spec = specConfig[i].list[j] // 当前【小规格】
+        for (let k = 0; k < kl; k++) {
+          const currentIndex = p * specLengthArr[i] * kl + j * kl + k
+          arr[currentIndex].index[i] = spec.index
+          arr[currentIndex].arr[i] = spec.name
+        }
+      }
+    }
+    prevLength = prevLength * specLengthArr[i]
+  }
+  arr.forEach((v) => {
+    v.spec = v.arr.join('*') // 规格
+    // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
+    v.specKV = {}
+    v.specNameKV = {}
+    v.specArrKV = []
+    v.arr.forEach((c, i) => {
+      v.specArrKV.push({
+        key: specConfig[i].id,
+        value: c
+      })
+      v.specKV[specConfig[i].id] = c
+      v.specNameKV[specConfig[i].name] = c
+    })
+    // TODO:map可删除
+    v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
+    v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value
+    v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号
+  })
+  return arr
 }
 
 export default {

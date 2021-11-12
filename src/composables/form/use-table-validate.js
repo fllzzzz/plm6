@@ -1,5 +1,6 @@
 import { obj2arr } from '@/utils/convert/type'
-import { deepClone, isBlank, isNotBlank } from '@data-type/index'
+import { isBlank, isNotBlank } from '@data-type/index'
+import * as lodash from 'lodash'
 import { ElMessage } from 'element-plus'
 
 /**
@@ -93,7 +94,7 @@ function tableValidate(list, tableRules, dittos) {
   // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
   for (let i = list.length; i < copyList.length; i++) {
     // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
-    list.push(deepClone(copyList[blankRowsIndex[0]]))
+    list.push(lodash.cloneDeep(copyList[blankRowsIndex[0]]))
   }
 
   return { dealList: list, validResult: flag }
@@ -165,7 +166,7 @@ export function validate(rules, value, row = {}) {
 
 // 清理数据
 export function cleanUpData(list, dittos) {
-  const copyList = deepClone(list)
+  const copyList = lodash.cloneDeep(list)
   list.length = 0
   // 清空数组, 保留数组地址不变
   copyList.forEach((row, index) => {

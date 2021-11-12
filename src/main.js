@@ -11,6 +11,7 @@ import '@/utils/js-datatypes-prototype'
 
 // 组件：element-plus | element-ui 不支持 vue3
 import useElementPlus from '@/plugins/element-plus'
+import useElementIcon from '@/plugins/element-icon'
 import 'element-plus/packages/theme-chalk/src/base.scss'
 
 // 组件：svg-icon
@@ -28,6 +29,7 @@ import useGlobalDirective from '@/plugins/global-directive'
 const app = createApp(App)
 
 useElementPlus(app)
+useElementIcon(app)
 useSvgIcon(app)
 useGlobalComponents(app)
 useGlobalDirective(app)

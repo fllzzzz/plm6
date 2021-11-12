@@ -97,7 +97,7 @@
       </el-table-column>
       <el-table-column key="outboundUnit" prop="outboundUnit" :show-overflow-tooltip="true" label="出库单位" min-width="100px" align="center">
         <template v-slot="scope">
-          <div>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundMethod]) }}</div>
+          <div>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnit]) }}</div>
         </template>
       </el-table-column>
     </common-table>

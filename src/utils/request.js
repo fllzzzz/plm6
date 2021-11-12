@@ -27,6 +27,7 @@ const axiosCancelTokens = store.getters.axiosCancelTokens
 const baseApi = store.getters.baseApi
 
 // request拦截器
+// 注意：Map对象无法提交，会被转化为空对象
 service.interceptors.request.use(
   config => {
     const requestUrl = getRequestUrl()

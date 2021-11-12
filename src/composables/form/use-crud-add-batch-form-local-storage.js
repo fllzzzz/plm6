@@ -1,7 +1,8 @@
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import storage from '@/utils/storage'
-import { isBlank, deepClone } from '@data-type/index'
+import { isBlank } from '@data-type/index'
 import { isObjectValueEqual } from '@data-type/object'
+import * as lodash from 'lodash'
 import { regExtra } from '../use-crud'
 // TODO: 版本更新后的表单变更缓存问题
 // TODO: 考虑将异常与主动保存为草稿分开，在异常草稿时，给与用户提示
@@ -81,7 +82,7 @@ function openStore(ls) {
     const storageForm = storageFormInfo.content
     setFormContent(ls.form, storageForm)
   }
-  ls.initForm = deepClone(ls.form)
+  ls.initForm = lodash.cloneDeep(ls.form)
   ls.isRegister = true
 }
 

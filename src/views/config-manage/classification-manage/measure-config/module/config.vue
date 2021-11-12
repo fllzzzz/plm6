@@ -171,7 +171,7 @@
             style="width: 100%;"
             clearable
           />
-          <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundMethod]) }}</div>
+          <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnit]) }}</div>
         </template>
       </el-table-column>
         </common-table>
