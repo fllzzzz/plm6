@@ -237,6 +237,10 @@ function init() {
   curClsId.value = undefined
 }
 
+function clear() {
+  selected.value = {}
+}
+
 // 计算tag宽度
 function calcWidth() {
   if (isNotBlank(matCls.value.specList)) {
@@ -267,7 +271,8 @@ function calcWidth() {
 
 defineExpose({
   accReduce,
-  init
+  init,
+  clear
 })
 </script>
 

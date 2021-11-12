@@ -6,10 +6,14 @@ import { getFinalMatClsById } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
+import { getDeptAllSimple } from '@/api/common'
+
 import { unitTypeEnum } from '@enum-ms/common'
-import useFormatTree from '@compos/classification/use-format-tree'
+import { setEmptyArr2Undefined } from '@/utils/data-type/tree'
 import { isBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
+
+import useFormatTree from '@compos/classification/use-format-tree'
 
 // TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
@@ -23,12 +27,14 @@ const state = {
   workshops: [], // 车间
   process: [], // 工序
   users: [], // 人员列表
+  dept: [], // 部门列表
   loaded: {
     // 接口是否加载
     factories: false,
     workshops: false,
     process: false,
     users: false,
+    dept: false,
     unit: false,
     matClsTree: false,
     clsTree: false
@@ -36,7 +42,7 @@ const state = {
 }
 
 const mutations = {
-  SET_LOADED(state, { key, loaded }) {
+  SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
   },
   SET_MAT_CLS_TREE(state, tree) {
@@ -64,6 +70,9 @@ const mutations = {
   },
   SET_USERS(state, users) {
     state.users = users
+  },
+  SET_DEPT(state, dept) {
+    state.dept = dept
   }
 }
 
@@ -155,6 +164,13 @@ const actions = {
     commit('SET_USERS', content)
     commit('SET_LOADED', { key: 'users', loaded: true })
     return content
+  },
+  async fetchDept({ commit }) {
+    const { content: dept = [] } = await getDeptAllSimple()
+    setEmptyArr2Undefined(dept)
+    commit('SET_DEPT', dept)
+    commit('SET_LOADED', { key: 'dept' })
+    return dept
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []

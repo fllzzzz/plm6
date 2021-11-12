@@ -15,7 +15,7 @@
       <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">
         提 交
       </common-button>
-      <store-opertaion type="crudBatch" />
+      <store-opertaion type="crudBatch" @clear="handleClear" />
       <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
     </template>
     <div class="flex-rss">
@@ -178,9 +178,7 @@ CRUD.HOOK.beforeValidateBCU = () => {
 }
 
 // 打开时初始化组件
-CRUD.HOOK.beforeToBCU = () => {
-  specRef.value && specRef.value.init()
-}
+CRUD.HOOK.beforeToBCU = () => specInit()
 
 // 表单提交数据清理
 crud.submitBatchFormFormat = (form) => {
@@ -189,13 +187,21 @@ crud.submitBatchFormFormat = (form) => {
     return {
       classifyId: row.classifyId,
       specification: row.specification,
-      specificationArrKV: row.specificationArrKV,
+      specificationMap: row.specificationMap,
       minimumInventory: row.minimumInventory,
       unitType: row.unitType,
       factoryId: row.factoryId
     }
   })
   return form
+}
+
+function handleClear() {
+  specRef.value && specRef.value.clear()
+}
+
+function specInit() {
+  specRef.value && specRef.value.init()
 }
 
 // 处理选择变化
@@ -218,7 +224,7 @@ function rowInit(row) {
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称
     specification: row.spec, // 规格
-    specificationArrKV: row.specArrKV, // 规格KV格式
+    specificationMap: row.specKV, // 规格KV格式
     unitType: row.classify.outboundUnit, // 单位配置
     measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位
