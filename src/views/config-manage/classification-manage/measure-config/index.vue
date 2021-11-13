@@ -155,7 +155,7 @@ const list = computed(() => {
 
 onUnmounted(() => {
   // TODO:在离开该页面时重新拉取科目列表以获取最新的数据
-  store.dispatch('interfaceCache/fetchSubjectSimple')
+  // store.dispatch('interfaceCache/fetchSubjectSimple')
 })
 
 // 合并单元格

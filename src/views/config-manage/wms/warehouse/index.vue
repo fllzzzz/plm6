@@ -70,7 +70,7 @@
         width="100px"
       >
         <template v-slot="scope">
-          <template v-if="useCheckPermission(permission.edit)">
+          <template v-if="checkPermission(permission.edit)">
             <el-switch :disabled="scope.row.enabledLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleEnabledChange(scope.row)" />
           </template>
           <template v-else>
@@ -103,11 +103,11 @@ import EO from '@enum'
 import { materialClassificationEnum } from '@enum-ms/classification'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { parseTime } from '@/utils/date'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
 import useMaxHeight from '@compos/use-max-height'
-import useCheckPermission from '@compos/use-check-permission'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'

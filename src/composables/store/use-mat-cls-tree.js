@@ -1,13 +1,13 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
-// 获取人员列表
-const useUsers = (loadedCallBack) => {
+// 获取物料分类树
+const useMatClsTree = (loadedCallBack) => {
   const store = useStore()
-  const loaded = computed(() => store.state.config.loaded.users)
+  const loaded = computed(() => store.state.config.loaded.matClsTree)
   // 未加载则拉取
-  if (!store.state.config.loaded.users) {
-    store.dispatch('config/fetchUsers')
+  if (!loaded.value) {
+    store.dispatch('config/fetchMatClsTree')
   }
 
   // 加载成功回调
@@ -27,9 +27,10 @@ const useUsers = (loadedCallBack) => {
   }
 
   return {
-    users: computed(() => store.state.config.users),
+    normMatClsTree: computed(() => store.state.config.normMatClsTree),
+    matClsTree: computed(() => store.state.config.matClsTree),
     loaded
   }
 }
 
-export default useUsers
+export default useMatClsTree

@@ -21,7 +21,7 @@
               v-model="scope.row.userIds"
               filterable
               :collapse-tags="false"
-              :disabled="!useCheckPermission(permission.edit)"
+              :disabled="!checkPermission(permission.edit)"
               multiple
               clearable
               show-all-levels
@@ -36,7 +36,7 @@
               v-model="scope.row.deptIds"
               filterable
               :collapse-tags="false"
-              :disabled="!useCheckPermission(permission.edit)"
+              :disabled="!checkPermission(permission.edit)"
               multiple
               clearable
               show-all-levels
@@ -53,13 +53,13 @@
 <script setup>
 // TODO: disabled 改为 span, 直接显示用户名，用户信息从store中读取（暂未封装）
 import { getInventoryNotifyConf, setInventoryNotifyConf } from '@/api/wms/inventory-warning'
-import { inject, defineEmits, defineProps, watch, ref } from 'vue'
+import { inject, defineEmits, defineProps, ref } from 'vue'
 import { isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
+import checkPermission from '@/utils/system/check-permission'
 
 import useVisible from '@compos/use-visible'
 import useFactory from '@compos/store/use-factories'
-import useCheckPermission from '@compos/use-check-permission'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import deptCascader from '@comp-base/dept-cascader.vue'
 import { ElNotification } from 'element-plus'
@@ -82,26 +82,18 @@ const form = ref({
 const submitLoading = ref(false)
 const configLoading = ref(false)
 
-const { loaded, factories } = useFactory()
+const { loaded, factories } = useFactory(formInit)
 
 const { visible, handleClose } = useVisible({ emit, props })
 
-watch(
-  factories,
-  (val) => {
-    formInit(val)
-  },
-  { immediate: true }
-)
-
 // 表单初始化
-async function formInit(factoryList) {
+async function formInit() {
   try {
     form.value.list = []
-    if (isNotBlank(factoryList)) {
+    if (isNotBlank(factories.value)) {
       configLoading.value = true
       const config = await fetchConf()
-      factoryList.forEach((f) => {
+      factories.value.forEach((f) => {
         const conf = config[f.id] || {}
         form.value.list.push({
           factoryId: f.id,

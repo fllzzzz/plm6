@@ -9,16 +9,17 @@ import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
 
 import { unitTypeEnum } from '@enum-ms/common'
+import { materialClassificationEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined } from '@/utils/data-type/tree'
 import { isBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
-
-import useFormatTree from '@compos/classification/use-format-tree'
+import { formatClsTree } from '@/utils/system/classification'
 
 // TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
+  normMatClsTree: [], // 普通物料科目树（不含制成品）
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
@@ -49,6 +50,7 @@ const mutations = {
   },
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
+    state.normMatClsTree = tree.filter(t => t.basicClass !== materialClassificationEnum.MANUFACTURED.V)
   },
   SET_CLS_TREE(state, tree) {
     state.clsTree = tree
@@ -89,14 +91,14 @@ const actions = {
   // 加载分类
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
-    const tree = useFormatTree(res)
+    const tree = formatClsTree(res)
     commit('SET_MAT_CLS_TREE', tree)
     commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
-    const tree = useFormatTree(res)
+    const tree = formatClsTree(res)
     commit('SET_CLS_TREE', tree)
     commit('SET_LOADED', { key: 'clsTree' })
     return tree

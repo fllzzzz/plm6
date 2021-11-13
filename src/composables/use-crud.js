@@ -3,9 +3,9 @@ import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
 import { debounce } from '@/utils'
 import { fileDownload } from '@/utils/file'
+import checkPermission from '@/utils/system/check-permission'
 import * as lodash from 'lodash'
 
-import useCheckPermission from './use-check-permission'
 import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
 import useBatchAddFormLocalStorage from '@/composables/form/use-crud-add-batch-form-local-storage'
 
@@ -492,7 +492,7 @@ function addCrudBusinessMethod(crud) {
 
   // 刷新
   const refresh = async () => {
-    if (!useCheckPermission(crud.permission.get)) {
+    if (!checkPermission(crud.permission.get)) {
       return
     }
     crud.emptyText = '加载中'

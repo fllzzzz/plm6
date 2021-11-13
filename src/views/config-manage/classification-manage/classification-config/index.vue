@@ -14,9 +14,9 @@ import crudApi from '@/api/config/classification-manage/classification-config'
 import { reactive, ref, provide } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank } from '@data-type/index'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
-import useCheckPermission from '@compos/use-check-permission'
 import rootCard from './module/root-card.vue'
 import childCard from './module/child-card.vue'
 import batchAdd from './module/batch-add.vue'
@@ -60,7 +60,7 @@ function openAddDlg(level) {
 }
 
 async function fetchList() {
-  if (!useCheckPermission(permission.get)) return
+  if (!checkPermission(permission.get)) return
   loading.data = true
   try {
     // 清空老数据

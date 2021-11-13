@@ -20,7 +20,7 @@
             <el-input v-model.trim="search.name" class="search-name" size="small" :placeholder="`名称查询（${title}）`" clearable />
             <common-select
               v-model="search.basicClass"
-              :options="classificationEnum.ENUM"
+              :options="normMatClsEnum.ENUM"
               clearable
               type="enum"
               size="small"
@@ -62,7 +62,7 @@
 
 <script setup>
 import { defineProps, defineEmits, inject, ref, reactive, computed, watch } from 'vue'
-import { classificationEnum } from '@enum-ms/classification'
+import { normMatClsEnum } from '@enum-ms/classification'
 import { isNotBlank, isBlank } from '@data-type/index'
 import { dightLowercase } from '@data-type/number'
 

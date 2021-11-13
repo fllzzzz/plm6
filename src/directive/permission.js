@@ -1,10 +1,10 @@
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 // 验证权限
 export default {
   mounted(el, binding) {
     const { value } = binding
-    const passable = useCheckPermission(value)
+    const passable = checkPermission(value)
     if (passable) {
       return true
     } else {

@@ -114,56 +114,58 @@ const getClassificationTree = {
         'isNormalPart': 1,
         'code': '18',
         'basicClass': 4
-      }, {
-        'id': 121,
-        'name': '成品构件',
-        'isLast': 0,
-        'isNormalPart': 1,
-        'code': '19',
-        'basicClass': 8,
-        'children': [
-          {
-            'id': 1210,
-            'name': '钢柱',
-            'code': '01'
-          },
-          {
-            'id': 1211,
-            'name': '钢梁',
-            'code': '02'
-          },
-          {
-            'id': 1212,
-            'name': '钢箱梁',
-            'code': '03'
-          }
-        ]
       },
+      //  {
+      //   'id': 121,
+      //   'name': '成品构件',
+      //   'isLast': 0,
+      //   'isNormalPart': 1,
+      //   'code': '19',
+      //   'basicClass': 8,
+      //   'children': [
+      //     {
+      //       'id': 1210,
+      //       'name': '钢柱',
+      //       'code': '01'
+      //     },
+      //     {
+      //       'id': 1211,
+      //       'name': '钢梁',
+      //       'code': '02'
+      //     },
+      //     {
+      //       'id': 1212,
+      //       'name': '钢箱梁',
+      //       'code': '03'
+      //     }
+      //   ]
+      // },
+      // {
+      //   'id': 122,
+      //   'name': '成品围护',
+      //   'isLast': 0,
+      //   'isNormalPart': 1,
+      //   'code': '20',
+      //   'basicClass': 8,
+      //   'children': [
+      //     {
+      //       'id': 1220,
+      //       'name': '压型彩钢板',
+      //       'code': '01'
+      //     },
+      //     {
+      //       'id': 1221,
+      //       'name': '楼承板',
+      //       'code': '02'
+      //     },
+      //     {
+      //       'id': 1222,
+      //       'name': '采光带',
+      //       'code': '03'
+      //     }
+      //   ]
+      // },
       {
-        'id': 122,
-        'name': '成品围护',
-        'isLast': 0,
-        'isNormalPart': 1,
-        'code': '20',
-        'basicClass': 8,
-        'children': [
-          {
-            'id': 1220,
-            'name': '压型彩钢板',
-            'code': '01'
-          },
-          {
-            'id': 1221,
-            'name': '楼承板',
-            'code': '02'
-          },
-          {
-            'id': 1222,
-            'name': '采光带',
-            'code': '03'
-          }
-        ]
-      }, {
         'id': 139,
         'name': '紧固件',
         'isLast': 0,

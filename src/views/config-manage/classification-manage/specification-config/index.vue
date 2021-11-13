@@ -6,7 +6,7 @@
       </div>
       <el-tree
         ref="treeMenuRef"
-        v-loading="loading.clsTree"
+        v-loading="!loaded && loading.clsTree"
         :data="treeMenu"
         :props="defaultProps"
         :filter-node-method="filterDeptNode"
@@ -57,12 +57,13 @@
 <script setup>
 import crudApi from '@/api/config/classification-manage/specification-config'
 import { nextTick, provide, reactive, ref, watch } from 'vue'
-import { useStore } from 'vuex'
+import { normMatClsEnum } from '@enum-ms/classification'
+import { getFirstLeafNode } from '@/utils/system/classification'
 import * as lodash from 'lodash'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import useGetFirstLeafNode from '@compos/classification/use-get-first-leaf-node'
+import useMatClsTree from '@/composables/store/use-mat-cls-tree'
 
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
@@ -93,8 +94,8 @@ const { crud } = useCRUD({
 })
 
 const { maxHeight, heightStyle } = useMaxHeight({ extraHeight: 15 })
+const { loaded, normMatClsTree } = useMatClsTree(formatTree)
 
-const store = useStore()
 const treeMenuRef = ref() // 菜单ref
 
 const filterText = ref() // 菜单过滤输入
@@ -104,7 +105,7 @@ const lastCurrentRow = ref({}) // 菜单当前选中节点
 const defaultProps = { children: 'children', label: 'name' } // 树结构数据默认格式
 const loading = reactive({
   // 加载
-  clsTree: false
+  clsTree: true
 })
 
 provide('currentNode', lastCurrentRow)
@@ -114,16 +115,11 @@ watch(filterText, (val) => {
   treeMenuRef.value.filter(val)
 })
 
-// 加载数据
-fetchMatClsTree()
-
 // 拉取最新的物料分类树
-async function fetchMatClsTree() {
+async function formatTree() {
   try {
-    loading.clsTree = true
-    const tree = await store.dispatch('config/fetchMatClsTree')
-    treeMenu.value = lodash.cloneDeep(tree)
-    const firstLeafNode = useGetFirstLeafNode(tree)
+    treeMenu.value = lodash.cloneDeep(normMatClsTree.value.filter(v => v.basicClass !== normMatClsEnum.SECTION_STEEL.V))
+    const firstLeafNode = getFirstLeafNode(treeMenu.value)
     // 触发选中
     handleNodeClick(firstLeafNode)
     nextTick(() => {

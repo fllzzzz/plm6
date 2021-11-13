@@ -8,14 +8,14 @@
     <crudOperation>
       <template v-slot:optRight>
         <!-- 任务录入按钮 -->
-        <template v-if="true || (query.districtId && useCheckPermission(permission.save))">
+        <template v-if="true || (query.districtId && checkPermission(permission.save))">
           <template v-if="modifying">
             <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
             <common-button type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
           </template>
           <common-button v-else type="primary" size="mini" @click.stop="handelModifying(true)">任务录入</common-button>
           <el-popover
-            v-if="true || (query.districtId && useCheckPermission(permission.clear))"
+            v-if="true || (query.districtId && checkPermission(permission.clear))"
             v-model:visible="clearPopVisible"
             placement="top"
             width="600"
@@ -35,7 +35,7 @@
           </el-popover>
         </template>
         <common-button
-          v-if="true || (query.districtId && useCheckPermission(permission.save))"
+          v-if="true || (query.districtId && checkPermission(permission.save))"
           type="warning"
           size="mini"
           @click.stop="openQuicklyAssignDlg"
@@ -56,16 +56,15 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, inject } from 'vue'
-import { ElMessage } from 'element-plus'
+import checkPermission from '@/utils/system/check-permission'
 
-import useCheckPermission from '@compos/use-check-permission'
 import useGetLines from '@compos/mes/scheduling/use-get-lines'
 import useFormatSchedulingList from '@compos/mes/scheduling/use-format-scheduling-list'
 import useSchedulingClear from '@compos/mes/scheduling/use-scheduling-clear'
-
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import { ElMessage } from 'element-plus'
 import productionLineDrawer from '../production-line-drawer'
 import quicklyAssignDrawer from '../quickly-assign-drawer'
 import mPreview from '../scheduling-preview'

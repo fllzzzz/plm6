@@ -1,3 +1,4 @@
+import { normMatClsEnum } from '@enum-ms/classification'
 // 获取物料计量配置
 const getMaterialMeasure = {
   url: '/api/config/classification/material/measure',
@@ -17,7 +18,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0, // 计量单位小数精度
           'outboundUnit': 1, // 出库方式
           'code': '1', // 编码
-          'basicClass': 1 // 基础分类
+          'basicClass': normMatClsEnum.STEEL_PLATE.V // 基础分类
         }, {
           'id': 104,
           'name': '开平板',
@@ -27,7 +28,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '2',
-          'basicClass': 1
+          'basicClass': normMatClsEnum.STEEL_PLATE.V
         }, {
           'id': 105,
           'name': '镀锌板',
@@ -37,7 +38,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '3',
-          'basicClass': 1
+          'basicClass': normMatClsEnum.STEEL_PLATE.V
         }, {
           'id': 106,
           'name': '不锈钢板',
@@ -47,7 +48,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '4',
-          'basicClass': 1
+          'basicClass': normMatClsEnum.STEEL_PLATE.V
         }, {
           'id': 107,
           'name': '花纹钢板',
@@ -57,7 +58,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '5',
-          'basicClass': 1
+          'basicClass': normMatClsEnum.STEEL_PLATE.V
         }, {
           'id': 108,
           'name': '工字钢',
@@ -67,7 +68,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '6',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 109,
           'name': '热轧H型钢',
@@ -77,7 +78,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '7',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 110,
           'name': '角钢',
@@ -87,7 +88,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '8',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 111,
           'name': '槽钢',
@@ -97,7 +98,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '9',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 112,
           'name': '方管',
@@ -107,7 +108,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '10',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 113,
           'name': '矩形管',
@@ -117,7 +118,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '11',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 114,
           'name': '扁铁',
@@ -127,7 +128,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '12',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 115,
           'name': 'U肋',
@@ -137,7 +138,7 @@ const getMaterialMeasure = {
           'measurePrecision': 0,
           'outboundUnit': 1,
           'code': '13',
-          'basicClass': 2
+          'basicClass': normMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 116,
           'name': '镀锌彩卷',
@@ -188,92 +189,94 @@ const getMaterialMeasure = {
           'outboundUnit': 1,
           'code': '18',
           'basicClass': 3
-        }, {
-          'id': 121,
-          'name': '成品构件',
-          'isLast': 0,
-          'code': '19',
-          'basicClass': 4,
-          'children': [
-            {
-              'id': 1210,
-              'name': '钢柱',
-              'measureUnit': '根',
-              'accountingUnit': '千克',
-              'accountingPrecision': 2,
-              'measurePrecision': 0,
-              'outboundUnit': 1,
-              'code': '01',
-              'level': 2
-            },
-            {
-              'id': 1211,
-              'name': '钢梁',
-              'measureUnit': '根',
-              'accountingUnit': '千克',
-              'accountingPrecision': 2,
-              'measurePrecision': 0,
-              'outboundUnit': 1,
-              'code': '02',
-              'level': 2
-            },
-            {
-              'id': 1212,
-              'name': '钢箱梁',
-              'measureUnit': '根',
-              'accountingUnit': '千克',
-              'accountingPrecision': 2,
-              'measurePrecision': 0,
-              'outboundUnit': 1,
-              'code': '03',
-              'level': 2
-            }
-          ]
         },
+        // {
+        //   'id': 121,
+        //   'name': '成品构件',
+        //   'isLast': 0,
+        //   'code': '19',
+        //   'basicClass': normMatClsEnum.MANUFACTURED.V,
+        //   'children': [
+        //     {
+        //       'id': 1210,
+        //       'name': '钢柱',
+        //       'measureUnit': '根',
+        //       'accountingUnit': '千克',
+        //       'accountingPrecision': 2,
+        //       'measurePrecision': 0,
+        //       'outboundUnit': 1,
+        //       'code': '01',
+        //       'level': 2
+        //     },
+        //     {
+        //       'id': 1211,
+        //       'name': '钢梁',
+        //       'measureUnit': '根',
+        //       'accountingUnit': '千克',
+        //       'accountingPrecision': 2,
+        //       'measurePrecision': 0,
+        //       'outboundUnit': 1,
+        //       'code': '02',
+        //       'level': 2
+        //     },
+        //     {
+        //       'id': 1212,
+        //       'name': '钢箱梁',
+        //       'measureUnit': '根',
+        //       'accountingUnit': '千克',
+        //       'accountingPrecision': 2,
+        //       'measurePrecision': 0,
+        //       'outboundUnit': 1,
+        //       'code': '03',
+        //       'level': 2
+        //     }
+        //   ]
+        // },
+        // {
+        //   'id': 122,
+        //   'name': '成品围护',
+        //   'isLast': 0,
+        //   'code': '20',
+        //   'basicClass': normMatClsEnum.MANUFACTURED.V,
+        //   'children': [
+        //     {
+        //       'id': 1220,
+        //       'name': '压型彩钢板',
+        //       'measureUnit': '张',
+        //       'accountingUnit': '米',
+        //       'accountingPrecision': 2,
+        //       'measurePrecision': 0,
+        //       'code': '01',
+        //       'level': 2
+        //     },
+        //     {
+        //       'id': 1221,
+        //       'name': '楼承板',
+        //       'measureUnit': '张',
+        //       'accountingUnit': '米',
+        //       'accountingPrecision': 2,
+        //       'measurePrecision': 0,
+        //       'code': '02',
+        //       'level': 2
+        //     },
+        //     {
+        //       'id': 1222,
+        //       'name': '采光带',
+        //       'measureUnit': '条',
+        //       'accountingUnit': '米',
+        //       'accountingPrecision': 2,
+        //       'measurePrecision': 0,
+        //       'code': '03',
+        //       'level': 2
+        //     }
+        //   ]
+        // },
         {
-          'id': 122,
-          'name': '成品围护',
-          'isLast': 0,
-          'code': '20',
-          'basicClass': 4,
-          'children': [
-            {
-              'id': 1220,
-              'name': '压型彩钢板',
-              'measureUnit': '张',
-              'accountingUnit': '米',
-              'accountingPrecision': 2,
-              'measurePrecision': 0,
-              'code': '01',
-              'level': 2
-            },
-            {
-              'id': 1221,
-              'name': '楼承板',
-              'measureUnit': '张',
-              'accountingUnit': '米',
-              'accountingPrecision': 2,
-              'measurePrecision': 0,
-              'code': '02',
-              'level': 2
-            },
-            {
-              'id': 1222,
-              'name': '采光带',
-              'measureUnit': '条',
-              'accountingUnit': '米',
-              'accountingPrecision': 2,
-              'measurePrecision': 0,
-              'code': '03',
-              'level': 2
-            }
-          ]
-        }, {
           'id': 139,
           'name': '紧固件',
           'isLast': 0,
           'code': '21',
-          'basicClass': 5,
+          'basicClass': normMatClsEnum.MATERIAL.V,
           'children': [{
             'id': 196,
             'name': '高强螺栓',
@@ -330,7 +333,7 @@ const getMaterialMeasure = {
           'name': '配套件',
           'isLast': 0,
           'code': '22',
-          'basicClass': 5,
+          'basicClass': normMatClsEnum.MATERIAL.V,
           'children': [{
             'id': 216,
             'name': '雨水管',
@@ -353,7 +356,7 @@ const getMaterialMeasure = {
           'name': '油漆涂料',
           'isLast': 0,
           'code': '23',
-          'basicClass': 5,
+          'basicClass': normMatClsEnum.MATERIAL.V,
           'children': [{
             'id': 247,
             'name': '油漆',
@@ -368,7 +371,7 @@ const getMaterialMeasure = {
           'name': '气体',
           'isLast': 0,
           'code': '24',
-          'basicClass': 6,
+          'basicClass': normMatClsEnum.GAS.V,
           'children': [{
             'id': 2147,
             'name': '丙烷',

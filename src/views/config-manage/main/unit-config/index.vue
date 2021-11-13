@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('enabled')" :show-overflow-tooltip="true" prop="enabled" label="状态" align="center">
         <template v-slot="scope">
-          <template v-if="useCheckPermission(permission.edit)">
+          <template v-if="checkPermission(permission.edit)">
             <el-switch :disabled="scope.row.enabledLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleEnabledChange(scope.row)" />
           </template>
           <template v-else>
@@ -62,7 +62,7 @@ import { parseTime } from '@/utils/date'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'

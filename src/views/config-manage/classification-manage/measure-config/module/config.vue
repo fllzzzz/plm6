@@ -90,6 +90,7 @@
                 v-model="scope.row.measureUnit"
                 size="mini"
                 style="width: 100%"
+                :disabled="scope.row.disabled"
                 clearable
                 filterable
               />
@@ -111,6 +112,7 @@
                 :step="1"
                 :min="0"
                 :max="10"
+                :disabled="scope.row.disabled"
                 size="mini"
                 style="width: 100%"
               />
@@ -130,6 +132,7 @@
                 v-if="isEditMode"
                 v-model="scope.row.accountingUnit"
                 :unit-type="scope.row.basicClass & STEEL_ENUM > 0 ? unitTypeEnum.WEIGHT.K : undefined"
+                :disabled="scope.row.disabled"
                 size="mini"
                 style="width: 100%"
                 clearable
@@ -153,6 +156,7 @@
                 :step="1"
                 :min="0"
                 :max="10"
+                :disabled="scope.row.disabled"
                 size="mini"
                 style="width: 100%"
               />
@@ -165,6 +169,7 @@
             v-if="isEditMode"
             v-model="scope.row.outboundUnit"
             :options="measureTypeEnum.ENUM"
+            :disabled="scope.row.disabled"
             text-align="center"
             type="enum"
             size="mini"
@@ -263,7 +268,7 @@ function init() {
   loading.value = true
   // 深拷贝数组，退出编辑时还原数据
   list.value = props.classificationList.map((item) => {
-    return { ...item }
+    return { ...item, disabled: (item.basicClass & STEEL_ENUM) > 0 }
   })
   loading.value = false
 }
@@ -378,9 +383,6 @@ $default-cell-mask-color: #52f09840;
     .el-input-number__decrease {
       border-right: none;
       margin-left: 10px;
-    }
-    .el-input-number {
-      padding: 0 10px;
     }
   }
 }

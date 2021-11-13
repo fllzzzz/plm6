@@ -12,7 +12,7 @@
               `${currentLine.factory.name} - ${currentLine.name}`
             }}</el-tag>
             <common-button
-              v-if="teamType == teamTypeEnum.TEAM.V && teamRef && useCheckPermission(teamRef.permission.add) && currentLine.id"
+              v-if="teamType == teamTypeEnum.TEAM.V && teamRef && checkPermission(teamRef.permission.add) && currentLine.id"
               size="mini"
               style="float: right; padding: 6px 10px; margin-bottom: 0px"
               type="primary"
@@ -23,7 +23,7 @@
             </common-button>
             <common-button
               v-if="
-                teamType == teamTypeEnum.INSPECTION.V && inspectionRef && useCheckPermission(inspectionRef.permission.add) && currentLine.id
+                teamType == teamTypeEnum.INSPECTION.V && inspectionRef && checkPermission(inspectionRef.permission.add) && currentLine.id
               "
               size="mini"
               style="float: right; padding: 6px 10px; margin-bottom: 0px"
@@ -46,7 +46,7 @@
 import { reactive, ref } from 'vue'
 
 import { teamTypeEnum } from '@enum-ms/mes'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import lineConfig from './line'
 import teamConfig from './team'

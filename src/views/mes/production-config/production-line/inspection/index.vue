@@ -36,7 +36,7 @@
         />
         <!--编辑与删除-->
         <el-table-column
-          v-if="useCheckPermission([...permission.edit, ...permission.del])"
+          v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="130px"
           align="center"
@@ -58,7 +58,7 @@
 import crudApi from '@/api/mes/production-config/production-line-inspection'
 import { defineExpose, ref, defineProps, watch, computed } from 'vue'
 
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

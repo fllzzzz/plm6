@@ -28,7 +28,7 @@
         <template v-slot="scope">
           <el-switch
             v-model="scope.row.boolEnabledEnum"
-            :disabled="!useCheckPermission(permission.editStatus)"
+            :disabled="!checkPermission(permission.editStatus)"
             active-color="#409EFF"
             inactive-color="#F56C6C"
             :active-value="enabledEnum.TRUE.V"
@@ -53,7 +53,7 @@
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="110px" />
       <!--编辑与删除-->
       <el-table-column
-        v-if="useCheckPermission([...permission.del, ...permission.edit])"
+        v-if="checkPermission([...permission.del, ...permission.edit])"
         label="操作"
         width="130px"
         align="center"
@@ -78,7 +78,7 @@ import { ElMessageBox } from 'element-plus'
 import { enabledEnum } from '@enum-ms/common'
 import { processTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
