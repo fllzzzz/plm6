@@ -1,6 +1,15 @@
 <template>
   <span class="ud-operation" style="display: inline-block">
     <common-button
+      v-if="props.showDetail"
+      v-permission="permission.get"
+      :disabled="props.disabledDetail"
+      size="mini"
+      :type="props.detailBtnType"
+      icon="el-icon-view"
+      @click.stop="crud.toDetail(props.data)"
+    />
+    <common-button
       v-if="props.showEdit"
       v-permission="permission.edit"
       :disabled="props.disabledEdit"
@@ -39,11 +48,19 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  disabledDetail: {
+    type: Boolean,
+    default: false
+  },
   disabledEdit: {
     type: Boolean,
     default: false
   },
   disabledDle: {
+    type: Boolean,
+    default: false
+  },
+  showDetail: {
     type: Boolean,
     default: false
   },
@@ -56,6 +73,10 @@ const props = defineProps({
     default: true
   },
   editBtnType: {
+    type: String,
+    default: 'primary'
+  },
+  detailBtnType: {
     type: String,
     default: 'primary'
   },

@@ -107,7 +107,6 @@
 <script setup>
 import crudApi from '@/api/config/classification-manage/measure-config'
 import { nextTick, onUnmounted, ref } from 'vue'
-import { useStore } from 'vuex'
 import { isNotBlank, emptyTextFormatter } from '@data-type'
 import { measureTypeEnum } from '@enum-ms/wms'
 
@@ -115,8 +114,6 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import { computed } from '@vue/reactivity'
 import mHeader from './module/header'
-
-const store = useStore()
 
 // crud交由presenter持有
 const permission = {

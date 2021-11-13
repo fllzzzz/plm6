@@ -197,11 +197,27 @@ export function regBatchForm(defaultForm, formRef) {
 /**
  * 注册分页组件
  */
+export function regDetail() {
+  const crud = inject('crud')
+  const internalInstance = getCurrentInstance()
+  // 注册组件
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.DETAIL, internalInstance, 4)
+  crud.resetRowDetail()
+  // 卸载前，注销组件
+  onBeforeUnmount(() => {
+    crud.unregisterVM(internalInstance)
+  })
+  return { CRUD: vmInfo.CRUD, crud, detail: crud.rowDetail }
+}
+
+/**
+ * 注册分页组件
+ */
 export function regPagination() {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
-  const vmInfo = crud.registerVM(CRUD.VM_TYPE.PAGINATION, internalInstance, 4)
+  const vmInfo = crud.registerVM(CRUD.VM_TYPE.PAGINATION, internalInstance, 5)
   // 卸载前，注销组件
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
@@ -278,6 +294,8 @@ function getDefaultOption() {
     requiredQuery: [],
     // 查询数据的参数
     params: {},
+    // 当前行详情
+    rowDetail: {},
     // Form 表单
     form: {},
     // 批量添加表单
@@ -360,6 +378,9 @@ function addSystemOptions(options) {
       total: 0,
       hasNextPage: true
     },
+    // 详情加载
+    detailVisible: false,
+    // 首次加载
     firstLoaded: false,
     // 整体loading
     loading: false,
@@ -533,6 +554,30 @@ function addCrudBusinessMethod(crud) {
         await callVmHook(crud, CRUD.HOOK.afterRefresh, data)
       }, crud.time)
     }
+  }
+
+  // 打开详情
+  const toDetail = async (data) => {
+    if (typeof crud.crudApi.detail === 'function') {
+      // 如果查询项不为id，则可改造方法，在crud中传入自定义字段
+      data = await crud.crudApi.detail(crud.form.id)
+    }
+    crud.resetRowDetail(data)
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeToDetail, crud.rowDetail))) {
+      return
+    }
+    crud.detailVisible = true
+    await callVmHook(crud, CRUD.HOOK.afterToDetail, crud.rowDetail)
+  }
+
+  // 关闭详情
+  const cancelDetail = async (data) => {
+    if (!await callVmHook(crud, CRUD.HOOK.beforeDetailCancel, data)) {
+      return
+    }
+    crud.detailVisible = false
+    crud.resetRowDetail()
+    await callVmHook(crud, CRUD.HOOK.afterDetailCancel, data)
   }
 
   // 打开添加
@@ -866,7 +911,9 @@ function addCrudBusinessMethod(crud) {
     editSuccessNotify, // 编辑成功通知
     delSuccessNotify, // 删除成功通知
     toQuery, // 搜索
-    refresh, // 刷新
+    refresh, // 刷新v
+    toDetail, // 打开详情
+    cancelDetail, // 关闭详情
     toAdd, // 启动添加
     toEdit, // 启动编辑
     toDelete, // 启动删除
@@ -942,6 +989,20 @@ function addCrudFeatureMethod(crud, data) {
     })
     if (toQuery) {
       crud.toQuery()
+    }
+  }
+  /**
+   * 重置详情对象
+   * @param {Array} data 数据
+   */
+  const resetRowDetail = (data) => {
+    const form = data || {}
+    const rowDetail = crud.rowDetail
+    for (const key in rowDetail) {
+      rowDetail[key] = undefined
+    }
+    for (const key in form) {
+      rowDetail[key] = form[key]
     }
   }
   /**
@@ -1130,6 +1191,7 @@ function addCrudFeatureMethod(crud, data) {
     sizeChangeHandler, // 每页条数改变
     dleChangePage, // 预防删除第二页最后一条数据时，或者多选删除第二页的数据时，页码错误导致请求无数据
     resetQuery, // 重置查询参数,重置后进行查询操作
+    resetRowDetail, // 重置详情
     resetForm, // 重置表单
     resetBatchForm, // 重置表单
     validateField, // 表单字段校验
@@ -1246,6 +1308,7 @@ CRUD.VM_TYPE = {
   HEADER: 'header',
   PAGINATION: 'pagination',
   FORM: 'form',
+  DETAIL: 'detail',
   BATCH_FORM: 'batchForm',
   OTHER: 'other'
 }
@@ -1283,6 +1346,14 @@ CRUD.HOOK = {
   beforeDeleteCancel: 'beforeDeleteCancel',
   /** 删除取消 - 之后 */
   afterDeleteCancel: 'afterDeleteCancel',
+  /** 详情 - 之前 */
+  beforeToDetail: 'beforeToDetail',
+  /** 详情 - 之后 */
+  afterToDetail: 'afterToDetail',
+  /** 详情关闭 - 之前 */
+  beforeDetailCancel: 'beforeDetailCancel',
+  /** 详情关闭 - 之后 */
+  afterDetailCancel: 'afterDetailCancel',
   /** 新建 - 之前 */
   beforeToAdd: 'beforeToAdd',
   /** 新建 - 之后 */
