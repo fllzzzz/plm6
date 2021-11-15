@@ -8,7 +8,7 @@ const fixedRoles = ['admin']
  * @param {array} value 权限
  * @returns
  */
-export default function useCheckPermission(value) {
+export default function checkPermission(value) {
   // 没有权限返回通过
   if (isBlank(value)) return true
   if (value instanceof Array && value.length > 0) {

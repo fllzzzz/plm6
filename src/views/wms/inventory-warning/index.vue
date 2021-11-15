@@ -90,7 +90,7 @@
         width="100"
       >
         <template v-slot="scope">
-          <template v-if="useCheckPermission(permission.edit)">
+          <template v-if="checkPermission(permission.edit)">
             <el-switch
               :disabled="scope.row.enabledLoading"
               v-model="scope.row.enabled"
@@ -141,17 +141,17 @@ import { ref } from 'vue'
 import { enabledEnum } from '@enum-ms/common'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { parseTime } from '@/utils/date'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
-import useCheckPermission from '@compos/use-check-permission'
 import useRowEdit from '@compos/use-row-edit'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 const permission = {
   get: ['wms_inventoryWarning:get'],

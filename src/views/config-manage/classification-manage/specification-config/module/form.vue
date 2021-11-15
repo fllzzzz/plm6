@@ -34,7 +34,7 @@
           <el-form-item label="加权平均" prop="boolWeightMean">
             <common-radio-button
               v-model="form.boolWeightMean"
-              :disabled="!useCheckPermission(permission.weightedAverage)"
+              :disabled="!checkPermission(permission.weightedAverage)"
               :options="boolWeightMeanEnum.ENUM"
               type="enum"
             />
@@ -98,10 +98,10 @@
 <script setup>
 import { inject, ref } from 'vue'
 import { boolWeightMeanEnum } from '@enum-ms/finance'
+import checkPermission from '@/utils/system/check-permission'
 
 import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useCheckPermission from '@compos/use-check-permission'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import SvgIcon from '@/components/SvgIcon/index.vue'

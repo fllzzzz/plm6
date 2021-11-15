@@ -45,7 +45,7 @@
         </template>
         <template v-slot="scope">
           <el-select
-            v-if="useCheckPermission(permission.edit)"
+            v-if="checkPermission(permission.edit)"
             v-model="scope.row.reportType"
             size="small"
             placeholder="请选择"
@@ -84,7 +84,7 @@
         </template>
         <template v-slot="scope">
           <el-select
-            v-if="useCheckPermission(permission.edit)"
+            v-if="checkPermission(permission.edit)"
             v-model="scope.row.inspectType"
             size="small"
             placeholder="请选择"
@@ -116,7 +116,7 @@
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" min-width="110px" />
       <!--编辑与删除-->
       <el-table-column
-        v-if="useCheckPermission([...permission.del, ...permission.edit])"
+        v-if="checkPermission([...permission.del, ...permission.edit])"
         label="操作"
         width="130px"
         align="center"
@@ -145,7 +145,7 @@ import {
   processReportTypeEnum as reportTypeEnum
 } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

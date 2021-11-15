@@ -1,7 +1,7 @@
 import { enabledEnum } from '@enum-ms/common'
 import { measureTypeEnum } from '@enum-ms/wms'
 
-// 获取仓库位置
+// 获取库存预警
 const getMaterialIW = {
   url: '/api/wms/material/inventory-warning',
   method: 'get',
@@ -48,7 +48,7 @@ const getMaterialIW = {
   }
 }
 
-// 批量添加仓库
+// 批量添加库存预警
 const batchAddMaterialIW = {
   url: '/api/wms/material/inventory-warning/batch',
   method: 'post',
@@ -87,10 +87,45 @@ const editEnabled = {
   }
 }
 
-// 删除仓库
+// 删除库存预警
 const delMaterialIW = {
   url: '/api/wms/material/inventory-warning',
   method: 'delete',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
+// 获取库存预警通知配置
+const getInventoryNotifyConf = {
+  url: '/api/wms/material/inventory-warning/notify-config',
+  method: 'get',
+  timeout: 5000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        content: [
+          {
+            factoryId: 3,
+            userIds: [23, 36, 52],
+            deptIds: [22]
+          }
+        ]
+      }
+    }
+  }
+}
+
+// 保存库存预警通知配置
+const setInventoryNotifyConf = {
+  url: '/api/wms/material/inventory-warning/notify-config',
+  method: 'put',
   timeout: 500,
   response: () => {
     return {
@@ -105,5 +140,7 @@ export default [
   batchAddMaterialIW,
   editMaterialIW,
   editEnabled,
-  delMaterialIW
+  delMaterialIW,
+  getInventoryNotifyConf,
+  setInventoryNotifyConf
 ]

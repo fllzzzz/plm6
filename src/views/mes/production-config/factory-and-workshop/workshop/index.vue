@@ -70,7 +70,7 @@
           <template v-slot="scope">
             <el-switch
               v-model="scope.row.boolEnabledEnum"
-              :disabled="!useCheckPermission(permission.editStatus)"
+              :disabled="!checkPermission(permission.editStatus)"
               active-color="#409EFF"
               inactive-color="#F56C6C"
               :active-value="enabledEnum.TRUE.V"
@@ -90,7 +90,7 @@
         />
         <!--编辑与删除-->
         <el-table-column
-          v-if="useCheckPermission([...permission.del, ...permission.edit])"
+          v-if="checkPermission([...permission.del, ...permission.edit])"
           label="操作"
           width="130px"
           align="center"
@@ -112,9 +112,9 @@
 import crudApi, { editStatus } from '@/api/mes/production-config/workshop'
 import { ref, defineProps, computed, watch } from 'vue'
 import { ElMessageBox } from 'element-plus'
+import checkPermission from '@/utils/system/check-permission'
 
 import { enabledEnum } from '@enum-ms/common'
-import useCheckPermission from '@compos/use-check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

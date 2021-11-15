@@ -1,7 +1,7 @@
 /**
  * 树形结构工具类
  */
-import { deepClone } from '@/utils'
+import { deepClone } from '@/utils/data-type'
 
 /**
  *

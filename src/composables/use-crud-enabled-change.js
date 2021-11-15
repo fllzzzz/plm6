@@ -7,13 +7,17 @@ import { enabledEnum } from '@enum-ms/common'
  * @param {*} editEnabled 修改方法
  * @returns
  */
-export default function useCrudEnabledChange({ CRUD, crud, editEnabled }) {
+export default function useCrudEnabledChange({ CRUD, crud, editEnabled }, { enabledField = 'enabled', enumObj = enabledEnum, t = 'TRUE', f = 'FALSE' } = {}) {
   const enabledLoading = ref(false)
   const handleEnabledChange = async (data, labelField = 'name') => {
     try {
       enabledLoading.value = true
       data.enabledLoading = true
-      await editEnabled({ id: data.id, enabled: data.enabled })
+      const params = {
+        id: data.id
+      }
+      params[enabledField] = data[enabledField]
+      await editEnabled(params)
       let label = ''
       if (labelField) {
         if (Array.isArray(labelField)) {
@@ -23,10 +27,10 @@ export default function useCrudEnabledChange({ CRUD, crud, editEnabled }) {
           label = `“${data[labelField]}”`
         }
       }
-      crud.notify(label + enabledEnum.VL[data.enabled] + '成功', data.enabled === enabledEnum.TRUE.V ? CRUD.NOTIFICATION_TYPE.SUCCESS : CRUD.NOTIFICATION_TYPE.WARNING)
+      crud.notify(label + enumObj.VL[data[enabledField]], data[enabledField] === enumObj[t].V ? CRUD.NOTIFICATION_TYPE.SUCCESS : CRUD.NOTIFICATION_TYPE.WARNING)
     } catch (error) {
       console.log('使用状态', error)
-      data.enabled = data.enabled === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
+      data[enabledField] = data[enabledField] === enumObj[t].V ? enumObj[f].V : enumObj[t].V
     } finally {
       enabledLoading.value = false
       data.enabledLoading = false

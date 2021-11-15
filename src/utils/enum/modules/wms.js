@@ -21,14 +21,32 @@ const warehouseTypeEnum = {
 }
 constantize(warehouseTypeEnum)
 
+// 订单供货类型
+const orderSupplyTypeEnum = {
+  SELF: { L: '自采物料', K: 'SELF', V: 1 << 0 },
+  PARTY_A: { L: '甲供物料', K: 'PARTY_A', V: 1 << 1 }
+}
+constantize(orderSupplyTypeEnum)
+
+// 采购状态(订单采购状态/申购单采购状态)
+const purchaseStatusEnum = {
+  UNFINISHED: { L: '采购中', K: 'UNFINISHED', V: 1 },
+  FINISHED: { L: '已完成', K: 'FINISHED', V: 2 }
+}
+constantize(purchaseStatusEnum)
+
 export {
   inboundFillWayEnum,
   measureTypeEnum,
-  warehouseTypeEnum
+  warehouseTypeEnum,
+  orderSupplyTypeEnum,
+  purchaseStatusEnum
 }
 
 export default {
   inboundFillWayEnum,
   measureTypeEnum,
-  warehouseTypeEnum
+  warehouseTypeEnum,
+  orderSupplyTypeEnum,
+  purchaseStatusEnum
 }

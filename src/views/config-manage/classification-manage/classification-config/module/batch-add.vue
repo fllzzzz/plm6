@@ -72,7 +72,7 @@
           <template v-slot="scope">
             <common-select
               v-model="scope.row.basicClass"
-              :options="classificationEnum.ENUM"
+              :options="normMatClsEnum.ENUM"
               show-extra
               type="enum"
               placeholder="材料类型"
@@ -99,7 +99,7 @@
 <script setup>
 import { batchAdd } from '@/api/config/classification-manage/classification-config'
 import { defineProps, defineEmits, onMounted, watch, ref, reactive, nextTick, computed } from 'vue'
-import { classificationEnum } from '@enum-ms/classification'
+import { normMatClsEnum } from '@enum-ms/classification'
 import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'

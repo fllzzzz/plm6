@@ -2,20 +2,25 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
-import { getFinalMatClsById } from '@/api/common'
+import { getFinalMatClsById, getUserTree } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
+import { getDeptAllSimple } from '@/api/common'
+
 import { unitTypeEnum } from '@enum-ms/common'
-import useFormatTree from '@compos/classification/use-format-tree'
+import { materialClassificationEnum } from '@enum-ms/classification'
+import { setEmptyArr2Undefined } from '@/utils/data-type/tree'
 import { isBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
+import { formatClsTree } from '@/utils/system/classification'
 
 // TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
+  normMatClsTree: [], // 普通物料科目树（不含制成品）
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
@@ -25,6 +30,8 @@ const state = {
   productLines: [], // 生产线
   process: [], // 工序
   users: [], // 人员列表
+  dept: [], // 部门列表
+  userDeptTree: [], // 人员部门树
   loaded: {
     // 接口是否加载
     factories: false,
@@ -32,18 +39,21 @@ const state = {
     productLines: false,
     process: false,
     users: false,
+    dept: false,
     unit: false,
+    userDeptTree: false,
     matClsTree: false,
     clsTree: false
   }
 }
 
 const mutations = {
-  SET_LOADED(state, { key, loaded }) {
+  SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
   },
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
+    state.normMatClsTree = tree.filter(t => t.basicClass !== materialClassificationEnum.MANUFACTURED.V)
   },
   SET_CLS_TREE(state, tree) {
     state.clsTree = tree
@@ -70,6 +80,12 @@ const mutations = {
   },
   SET_USERS(state, users) {
     state.users = users
+  },
+  SET_DEPT(state, dept) {
+    state.dept = dept
+  },
+  SET_USER_DEPT_TREE(state, tree) {
+    state.userDeptTree = tree
   }
 }
 
@@ -81,16 +97,16 @@ const actions = {
   // 加载分类
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
-    const tree = useFormatTree(res)
+    const tree = formatClsTree(res)
     commit('SET_MAT_CLS_TREE', tree)
-    commit('SET_LOADED', { key: 'matClsTree', loaded: true })
+    commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
-    const tree = useFormatTree(res)
+    const tree = formatClsTree(res)
     commit('SET_CLS_TREE', tree)
-    commit('SET_LOADED', { key: 'clsTree', loaded: true })
+    commit('SET_LOADED', { key: 'clsTree' })
     return tree
   },
   // 加载字典值
@@ -136,18 +152,18 @@ const actions = {
     // 可以通过名称获取
     unit.symbol = (name) => unit.KS.get(name)
     commit('SET_UNIT', unit)
-    commit('SET_LOADED', { key: 'unit', loaded: true })
+    commit('SET_LOADED', { key: 'unit' })
   },
   async fetchFactories({ commit }) {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
-    commit('SET_LOADED', { key: 'factories', loaded: true })
+    commit('SET_LOADED', { key: 'factories' })
     return content
   },
   async fetchWorkshops({ commit }) {
     const { content = [] } = await getWorkshopsAllSimple()
     commit('SET_WORKSHOPS', content)
-    commit('SET_LOADED', { key: 'workshops', loaded: true })
+    commit('SET_LOADED', { key: 'workshops' })
     return content
   },
   async fetchProductLines({ commit }) {
@@ -159,14 +175,28 @@ const actions = {
   async fetchProcess({ commit }) {
     const { content = [] } = await getProcessAllSimple()
     commit('SET_PROCESS', content)
-    commit('SET_LOADED', { key: 'process', loaded: true })
+    commit('SET_LOADED', { key: 'process' })
     return content
   },
   async fetchUsers({ commit }) {
     const { content = [] } = await getUserAllSimple()
     commit('SET_USERS', content)
-    commit('SET_LOADED', { key: 'users', loaded: true })
+    commit('SET_LOADED', { key: 'users' })
     return content
+  },
+  async fetchDept({ commit }) {
+    const { content: dept = [] } = await getDeptAllSimple()
+    setEmptyArr2Undefined(dept)
+    commit('SET_DEPT', dept)
+    commit('SET_LOADED', { key: 'dept' })
+    return dept
+  },
+  async fetchUserDeptTree({ commit }) {
+    const { content: tree = [] } = await getUserTree()
+    setEmptyArr2Undefined(tree)
+    commit('SET_USER_DEPT_TREE', tree)
+    commit('SET_LOADED', { key: 'userDeptTree' })
+    return tree
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
@@ -177,6 +207,7 @@ const actions = {
           id: res.id,
           name: res.name,
           fullName: res.fullName,
+          serialNumber: res.serialNumber, // 编码
           measureUnit: res.measureUnit, // 计量单位
           accountingUnit: res.accountingUnit, // 核算单位
           accountingPrecision: res.accountingPrecision, // 核算单位小数精度

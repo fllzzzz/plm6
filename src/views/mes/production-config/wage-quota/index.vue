@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
       <!--编辑-->
-      <el-table-column v-if="useCheckPermission([...permission.edit])" label="操作" width="90px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="90px" align="center" fixed="right">
         <template v-slot="scope">
           <udOperation :data="scope.row" :show-del="false" />
         </template>
@@ -63,7 +63,7 @@ import { ref } from 'vue'
 import { isNotBlank } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { wageQuotaTypeEnum, processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

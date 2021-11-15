@@ -19,7 +19,7 @@
         </template>
       </el-calendar>
     </el-config-provider>
-    <mDetail v-if="useCheckPermission(permission.detail)" v-model:visible="journal.visible" :info="journal.info" :isEdit="journal.isEdit" :day="journal.day" :project-id="globalProjectId" @refresh="fetchList" />
+    <mDetail v-if="checkPermission(permission.detail)" v-model:visible="journal.visible" :info="journal.info" :isEdit="journal.isEdit" :day="journal.day" :project-id="globalProjectId" @refresh="fetchList" />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import { ElCalendar, ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import crudApi from '@/api/project/data-manage/construction-log'
 import { reactive, provide, computed, getCurrentInstance } from 'vue'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 import moment from 'moment'
 import { mapGetters } from '@/store/lib'
 import mDetail from './module/detail'
@@ -85,7 +85,7 @@ function initVal() {
 
 // 获取列表
 async function fetchList() {
-  if (!useCheckPermission(permission.get)) return
+  if (!checkPermission(permission.get)) return
   initVal()
   try {
     const startDate = moment(activeMonth.value).startOf('month').valueOf()

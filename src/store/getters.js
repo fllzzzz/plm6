@@ -42,11 +42,15 @@ const getters = {
   matClsTree: state => state.config.matClsTree,
   // 材料科目规格 key:value
   matClsSpecKV: state => state.config.classifySpec.specKV,
+  // 用户部门树
+  userDeptTree: state => state.config.userDeptTree,
 
   // token 访问令牌
   token: state => state.user.token,
   // 用户信息
   user: state => state.user.user,
+  // 库存预警权限
+  inventoryNotifyPerm: state => state.user.user.inventoryNotifyPerm,
   // 用户权限
   roles: state => state.user.roles,
   // 用户菜单

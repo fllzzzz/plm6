@@ -8,6 +8,7 @@
       <template v-if="device !== 'mobile'">
         <!-- <error-log class="errLog-container right-menu-item hover-effect" /> -->
         <!-- <screenfull class="right-menu-item hover-effect" /> -->
+        <inventory-notify v-if="inventoryNotifyPerm" class="right-menu-item hover-effect" />
         <el-tooltip content="字体大小" effect="dark" placement="bottom">
           <span class="right-menu-item hover-effect"><size-select/></span>
         </el-tooltip>
@@ -29,10 +30,11 @@ import Hamburger from '@/components/Hamburger/index.vue'
 import SizeSelect from '@/components/SizeSelect/index.vue'
 import UserHeader from '@/components/UserHeader/index.vue'
 import HeadSwitchProject from './SwitchProject'
+import inventoryNotify from '@/components-system/wms/inventory-notify/index.vue'
 
 const store = useStore()
 
-const { sidebar, device } = mapGetters(['sidebar', 'device', 'user'])
+const { sidebar, device, inventoryNotifyPerm } = mapGetters(['sidebar', 'device', 'inventoryNotifyPerm'])
 /**
  * 切换SideBar
  */

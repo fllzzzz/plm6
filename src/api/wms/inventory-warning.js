@@ -77,4 +77,23 @@ export function del(ids) {
   })
 }
 
+// 获取库存预警通知配置
+export function getInventoryNotifyConf() {
+  return request({
+    module: 'wms',
+    url: 'material/inventory-warning/notify-config',
+    method: 'get'
+  })
+}
+
+// 保存库存预警通知配置
+export function setInventoryNotifyConf(data) {
+  return request({
+    module: 'wms',
+    url: `material/inventory-warning/notify-config`,
+    method: 'put',
+    data
+  })
+}
+
 export default { get, batchAdd, del }

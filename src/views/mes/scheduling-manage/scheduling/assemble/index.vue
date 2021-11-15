@@ -247,7 +247,7 @@ import crudApi from '@/api/mes/scheduling-manage/scheduling/assemble'
 import { provide, ref } from 'vue'
 
 import { productTypeEnum, processTypeEnum } from '@enum-ms/mes'
-// import useCheckPermission from '@compos/use-check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { mapGetters } from '@/store/lib'

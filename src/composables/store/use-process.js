@@ -1,16 +1,34 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
 // 获取工序
-const useProcess = () => {
+const useProcess = (loadedCallBack) => {
   const store = useStore()
-  // 拉取未加载的工序
-  if (!store.state.config.loaded.process) {
+  const loaded = computed(() => store.state.config.loaded.process)
+  // 未加载则拉取
+  if (!loaded.value) {
     store.dispatch('config/fetchProcess')
   }
+
+  // 加载成功回调
+  if (loadedCallBack) {
+    const monitor = watch(
+      loaded,
+      (flag) => {
+        if (flag) {
+          setTimeout(() => {
+            loadedCallBack()
+            monitor()
+          }, 0)
+        }
+      },
+      { immediate: true }
+    )
+  }
+
   return {
     process: computed(() => store.state.config.process),
-    loaded: computed(() => store.state.config.loaded.process)
+    loaded
   }
 }
 

@@ -1,6 +1,15 @@
 <template>
   <span class="ud-operation" style="display: inline-block">
     <common-button
+      v-if="props.showDetail"
+      v-permission="permission.get"
+      :disabled="props.disabledDetail"
+      size="mini"
+      :type="props.detailBtnType"
+      icon="el-icon-view"
+      @click.stop="crud.toDetail(props.data)"
+    />
+    <common-button
       v-if="props.showEdit"
       v-permission="permission.edit"
       :disabled="props.disabledEdit"
@@ -9,7 +18,7 @@
       icon="el-icon-edit"
       @click.stop="crud.toEdit(props.data)"
     />
-    <el-popover v-if="props.showDel && useCheckPermission(permission.del)" v-model:visible="pop" placement="top" width="180" trigger="manual" @show="onPopoverShow" @hide="onPopoverHide">
+    <el-popover v-if="props.showDel && checkPermission(permission.del)" v-model:visible="pop" placement="top" width="180" trigger="manual" @show="onPopoverShow" @hide="onPopoverHide">
       <p>{{ props.delPrompt }}</p>
       <div style="text-align: right; margin: 0">
         <common-button size="mini" type="text" @click="cancelDelete">取消</common-button>
@@ -31,19 +40,27 @@
 
 <script setup>
 import { defineProps, ref, inject } from 'vue'
+import checkPermission from '@/utils/system/check-permission'
 import { regExtra } from '@compos/use-crud'
-import useCheckPermission from '@compos/use-check-permission'
 
 const props = defineProps({
   data: {
     type: Object,
     required: true
   },
+  disabledDetail: {
+    type: Boolean,
+    default: false
+  },
   disabledEdit: {
     type: Boolean,
     default: false
   },
   disabledDle: {
+    type: Boolean,
+    default: false
+  },
+  showDetail: {
     type: Boolean,
     default: false
   },
@@ -56,6 +73,10 @@ const props = defineProps({
     default: true
   },
   editBtnType: {
+    type: String,
+    default: 'primary'
+  },
+  detailBtnType: {
     type: String,
     default: 'primary'
   },

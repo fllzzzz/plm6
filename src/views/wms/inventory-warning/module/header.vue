@@ -35,15 +35,18 @@
         <common-button size="mini" type="warning" @click="openNotify">查看/设置预警通知人</common-button>
       </template>
     </crudOperation>
+    <notify-others v-model="notifyVisible" />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import materialCascader from '@comp-cls/material-cascader/index.vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation.vue'
 import rrOperation from '@crud/RR.operation.vue'
 import factorySelect from '@comp-base/factory-select.vue'
+import notifyOthers from './notify-others.vue'
 
 const defaultQuery = {
   factoryId: undefined, // 工厂id
@@ -53,7 +56,9 @@ const defaultQuery = {
 
 const { crud, query } = regHeader(defaultQuery)
 
+const notifyVisible = ref(false)
+
 function openNotify() {
-  this.notifyVisible = true
+  notifyVisible.value = true
 }
 </script>
