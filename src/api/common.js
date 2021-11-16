@@ -19,6 +19,14 @@ export function getUserAllSimple(params) {
   })
 }
 
+// 省市区级联
+export function getRegionalCascade() {
+  return request({
+    url: '/api/regionalCascade',
+    method: 'get'
+  })
+}
+
 // 获取所有部门
 export function getDeptAllSimple(hasRoot = true) {
   return request({
