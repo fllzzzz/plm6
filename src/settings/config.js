@@ -64,3 +64,61 @@ export const DP = {
   MES_ENCLOSURE_W__MM: 0, // mes_围护_有效宽度（mm）
   MES_ENCLOSURE_T__MM: 3 // mes_围护_厚度（mm）
 }
+
+export const PICKER_OPTIONS_SHORTCUTS = [{
+  text: '最近一周',
+  value: () => {
+    const end = new Date()
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+    return [start, end]
+  }
+},
+{
+  text: '当前月份',
+  value: () => {
+    const end = new Date()
+    const start = new Date()
+    start.setDate(1)
+    start.setHours(0)
+    start.setSeconds(0)
+    start.setMinutes(0)
+    return [start, end]
+  }
+},
+{
+  text: '最近一个月',
+  value: () => {
+    const end = new Date()
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+    return [start, end]
+  }
+},
+{
+  text: '最近三个月',
+  value: () => {
+    const end = new Date()
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+    return [start, end]
+  }
+},
+{
+  text: '最近六个月',
+  value: () => {
+    const end = new Date()
+    const start = new Date()
+    start.setMonth(start.getMonth() - 6)
+    return [start, end]
+  }
+},
+{
+  text: '今年至今',
+  value: () => {
+    const end = new Date()
+    const start = new Date(new Date().getFullYear(), 0)
+    return [start, end]
+  }
+}
+]

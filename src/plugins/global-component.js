@@ -6,6 +6,7 @@ import commonRadioButton from '@comp-common/common-radio-button'
 import commonTable from '@comp-common/common-table'
 import commonDrawer from '@comp-common/common-drawer'
 import commonDialog from '@comp-common/common-dialog'
+import projectRadioButton from '@comp-common/project-radio-button'
 
 const components = new Map([
   ['commonButton', commonButton],
@@ -15,7 +16,8 @@ const components = new Map([
   ['commonRadioButton', commonRadioButton],
   ['commonTable', commonTable],
   ['commonDrawer', commonDrawer],
-  ['commonDialog', commonDialog]
+  ['commonDialog', commonDialog],
+  ['projectRadioButton', projectRadioButton]
 ])
 
 const useComponents = (app) => {

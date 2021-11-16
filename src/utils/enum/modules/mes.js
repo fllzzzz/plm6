@@ -82,6 +82,29 @@ const taskIssueTypeEnum = {
 }
 constantize(taskIssueTypeEnum)
 
+// 可打包类型
+const packTypeEnum = {
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: productTypeEnum.ARTIFACT.V, T: '' },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: productTypeEnum.ENCLOSURE.V, T: 'warning' },
+  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: productTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+}
+constantize(packTypeEnum)
+
+const qrCodeTypeEnum = {
+  PACKAGE: { L: '包', K: 'PACKAGE', V: 11 }
+}
+constantize(qrCodeTypeEnum)
+
+// 打包清单状态
+const packStatusTypeEnum = {
+  // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
+  // ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 2 },
+  // CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
+  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: false, T: '' },
+  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: true, T: 'warning' }
+}
+constantize(packStatusTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -92,7 +115,10 @@ export {
   processReportTypeEnum,
   wageQuotaTypeEnum,
   mesEnclosureTypeEnum,
-  taskIssueTypeEnum
+  taskIssueTypeEnum,
+  packTypeEnum,
+  qrCodeTypeEnum,
+  packStatusTypeEnum
 }
 
 export default {
@@ -105,5 +131,8 @@ export default {
   processReportTypeEnum,
   wageQuotaTypeEnum,
   mesEnclosureTypeEnum,
-  taskIssueTypeEnum
+  taskIssueTypeEnum,
+  packTypeEnum,
+  qrCodeTypeEnum,
+  packStatusTypeEnum
 }

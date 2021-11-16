@@ -423,7 +423,8 @@ const getAllFactoryWorkshopLines = {
               'factoryId': 3,
               'workshopId': 1,
               'userId': 1
-            }]
+            }
+            ]
           }]
         }, {
           'createTime': 1635907717000,
@@ -453,9 +454,70 @@ const getAllFactoryWorkshopLines = {
   }
 }
 
+const getAllPackage = {
+  url: '/api/mes/building/package/list',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      'code': 20000,
+      'message': '成功',
+      'data': {
+        'totalElements': 4,
+        'content': [{
+          'id': 9,
+          'project': null,
+          'packageNumber': '2021-11-09-04',
+          'productType': 2,
+          'status': false,
+          'remark': '',
+          'printType': false,
+          'userId': 1,
+          'userName': '超级管理员',
+          'createTime': 1636437879000
+        }, {
+          'id': 11,
+          'project': null,
+          'packageNumber': '2021-11-09-05',
+          'productType': 2,
+          'status': false,
+          'remark': '2222',
+          'printType': false,
+          'userId': 1,
+          'userName': '超级管理员',
+          'createTime': 1636440562000
+        }, {
+          'id': 12,
+          'project': null,
+          'packageNumber': '2021-11-09-06',
+          'productType': 2,
+          'status': false,
+          'remark': '1213',
+          'printType': false,
+          'userId': 1,
+          'userName': '超级管理员',
+          'createTime': 1636446532000
+        }, {
+          'id': 17,
+          'project': null,
+          'packageNumber': '2021-11-10-04',
+          'productType': 4,
+          'status': false,
+          'remark': '123213123213',
+          'printType': false,
+          'userId': 1,
+          'userName': '超级管理员',
+          'createTime': 1636512111000
+        }]
+      }
+    }
+  }
+}
+
 export default [
   getFactorySimple,
   getWorkshopSimple,
   getProcessSimple,
-  getAllFactoryWorkshopLines
+  getAllFactoryWorkshopLines,
+  getAllPackage
 ]

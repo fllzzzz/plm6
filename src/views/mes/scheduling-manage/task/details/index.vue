@@ -129,7 +129,7 @@ import { taskIssueTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import { emptyTextFormatter, toFixed } from '@data-type'
 
-// import useCheckPermission from '@compos/use-check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'

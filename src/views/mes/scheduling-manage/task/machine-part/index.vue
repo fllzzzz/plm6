@@ -70,7 +70,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="useCheckPermission([...permission.detail, ...permission.download])"
+        v-if="checkPermission([...permission.detail, ...permission.download])"
         label="操作"
         width="120px"
         align="center"
@@ -110,11 +110,11 @@ import { productTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { emptyTextFormatter, toFixed } from '@data-type'
-import useCheckPermission from '@compos/use-check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import mDetail from '@/views/mes/scheduling-manage/task/details'
+import mDetail from '../details'
 import mHeader from './module/header'
 
 // crud交由presenter持有
