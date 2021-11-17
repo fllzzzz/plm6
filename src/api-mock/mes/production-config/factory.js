@@ -6,60 +6,18 @@ const getFactory = {
     return {
       'code': 20000,
       'data': {
-        'content': [
+        'content|1-100': [
           {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:07:22',
-            'id': 3,
-            'name': '一号工厂',
-            'remark': 'remark',
-            'shortName': '一工',
-            'sort': 1,
-            'tagColor': 'rgba(250, 212, 0, 1)',
-            'updateTime': '2021-10-08T10:10:36',
-            'userId': 1,
-            'version': 2
-          },
-          {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:07:22',
-            'id': 4,
-            'name': '二号工厂',
-            'remark': 'remark',
-            'shortName': '二工',
-            'sort': 1,
-            'tagColor': 'rgba(250, 150, 0, 1)',
-            'updateTime': '2021-10-08T10:10:36',
-            'userId': 1,
-            'version': 2
-          },
-          {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:07:22',
-            'id': 5,
-            'name': '三号工厂',
-            'remark': 'remark',
-            'shortName': '三工',
-            'sort': 1,
-            'tagColor': 'rgba(150, 212, 0, 1)',
-            'updateTime': '2021-10-08T10:10:36',
-            'userId': 1,
-            'version': 2
-          },
-          {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:07:22',
-            'id': 5,
-            'name': '四号工厂',
-            'remark': 'remark',
-            'shortName': '四工',
-            'sort': 1,
-            'tagColor': 'rgba(250, 212, 150, 1)',
-            'updateTime': '2021-10-08T10:10:36',
+            'boolDeleteEnum|1-2': false,
+            'boolEnabledEnum|1-2': true,
+            'createTime': '@datetime',
+            'id|+1': 1,
+            'name': '@cword(2,5)',
+            'remark': '@cword(4,60)',
+            'shortName': '@cword(2)',
+            'sort|+1': 1,
+            'tagColor': '@color',
+            'updateTime': '@datetime',
             'userId': 1,
             'version': 2
           }

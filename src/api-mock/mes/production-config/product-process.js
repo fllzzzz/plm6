@@ -3,7 +3,45 @@ const getProductProcess = {
   method: 'get',
   timeout: 1000,
   response: () => {
-    return { 'code': 20000, 'message': '成功', 'data': { 'hasPreviousPage': false, 'hasNextPage': false, 'totalElements': 1, 'content': [{ 'createTime': 1635733418000, 'id': 1, 'name': '1-1', 'alias': null, 'processType': false, 'sequenceType': 2, 'productType': 16, 'boolEnabledEnum': true, 'sort': null, 'userId': 1, 'medBuildingProductProcessLinkList': [{ 'createTime': 1635734121000, 'id': 11, 'productProcessId': 1, 'processId': 1, 'sequence': 0, 'processName': '组立1', 'wageQuota': { 'createTime': null, 'id': null, 'productProcessId': null, 'processId': null, 'wageQuotaType': null, 'weightPrice': null, 'lengthPrice': null, 'areaPice': null, 'userId': null }}, { 'createTime': 1635734121000, 'id': 12, 'productProcessId': 1, 'processId': 2, 'sequence': 1, 'processName': '组立2', 'wageQuota': { 'createTime': null, 'id': null, 'productProcessId': null, 'processId': null, 'wageQuotaType': null, 'weightPrice': null, 'lengthPrice': null, 'areaPice': null, 'userId': null }}, { 'createTime': 1635734121000, 'id': 13, 'productProcessId': 1, 'processId': 3, 'sequence': 2, 'processName': '组立3', 'wageQuota': { 'createTime': null, 'id': null, 'productProcessId': null, 'processId': null, 'wageQuotaType': null, 'weightPrice': null, 'lengthPrice': null, 'areaPice': null, 'userId': null }}, { 'createTime': 1635734121000, 'id': 14, 'productProcessId': 1, 'processId': 4, 'sequence': 3, 'processName': '组立4', 'wageQuota': { 'createTime': null, 'id': null, 'productProcessId': null, 'processId': null, 'wageQuotaType': null, 'weightPrice': null, 'lengthPrice': null, 'areaPice': null, 'userId': null }}, { 'createTime': 1635734121000, 'id': 15, 'productProcessId': 1, 'processId': 5, 'sequence': 4, 'processName': '组立5', 'wageQuota': { 'createTime': null, 'id': null, 'productProcessId': null, 'processId': null, 'wageQuotaType': null, 'weightPrice': null, 'lengthPrice': null, 'areaPice': null, 'userId': null }}] }] }}
+    return {
+      'code': 20000,
+      'message': '成功',
+      'data': {
+        'hasPreviousPage': false,
+        'hasNextPage': false,
+        'totalElements': 1,
+        'content|1-100': [{
+          'createTime': '@datetime',
+          'id|+1': 1,
+          'name': '@cword(2,5)',
+          'alias': '@cword(2,5)',
+          'processType|1-2': false,
+          'sequenceType': 2,
+          'productType': 16,
+          'boolEnabledEnum|1-2': true,
+          'userId': 1,
+          'medBuildingProductProcessLinkList|1-10': [{
+            'createTime': '@datetime',
+            'id|+1': 1,
+            'productProcessId': 1,
+            'processId|+1': 1,
+            'sequence': 0,
+            'processName': '@cword(2,5)',
+            'wageQuota': {
+              'createTime': '@datetime',
+              'id|+1': 1,
+              'productProcessId': null,
+              'processId': null,
+              'wageQuotaType': 2,
+              'weightPrice|1-100': 1,
+              'lengthPrice|1-100': 1,
+              'areaPice|1-100': 1,
+              'userId': null
+            }
+          }]
+        }]
+      }
+    }
   }
 }
 
