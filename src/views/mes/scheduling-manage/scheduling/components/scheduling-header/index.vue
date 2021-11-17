@@ -43,14 +43,14 @@
         >
       </template>
       <template v-slot:viewLeft>
-        <common-button :loading="lineLoading" type="success" size="mini" @click.stop="productionLineVisible = true">{{
-          lineLoading ? '生产线加载中' : '选择生产线'
+        <common-button :loading="!loaded" type="success" size="mini" @click.stop="productionLineVisible = true">{{
+          !loaded ? '生产线加载中' : '选择生产线'
         }}</common-button>
       </template>
     </crudOperation>
   </div>
   <mPreview v-model:visible="previewVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
-  <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" />
+  <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" @changeLines="handleChangeLines"/>
   <quickly-assign-drawer v-model:visible="quicklyAssignVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
 </template>
 
@@ -94,9 +94,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:lines', 'update:modifying'])
 
-const { productionLineVisible, lineLoading, lineLoad, schedulingMapTemplate } = useGetLines({ emit, dataHasFormatHook })
-const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
-
 const previewVisible = ref(false) // 分配预览dlg
 const quicklyAssignVisible = ref(false) // 快速分配dlg
 const dataHasFormat = ref(false) // 排产数据格式是否已转换，未转换则在生产线加载成功时转换
@@ -104,6 +101,9 @@ const dataHasFormat = ref(false) // 排产数据格式是否已转换，未转�
 const currentArea = {
   name: ''
 }
+
+const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGetLines({ emit, dataHasFormatHook })
+const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   dataHasFormat.value = lineLoad.value // 数据格式是否已经转换，因为接口异步，所以dataHasFormat放在循环前赋值
@@ -150,6 +150,20 @@ function handleSaveSuccess() {
 
 function refresh() {
   crud.toQuery()
+}
+
+function handleChangeLines(changeLines) {
+  crud.data.forEach(v => {
+    for (const id in changeLines) {
+      console.log(id, changeLines[id])
+      // 取消选择还原数据
+      if (!changeLines[id]) {
+        const changeQuantity = (v.schedulingMap[id]?.quantity || 0) - (v.schedulingMap[id]?.sourceQuantity || 0)
+        v.unassignQuantity += changeQuantity
+        v.assignQuantity -= changeQuantity
+      }
+    }
+  })
 }
 
 function handelModifying(modifying, reset = false) {

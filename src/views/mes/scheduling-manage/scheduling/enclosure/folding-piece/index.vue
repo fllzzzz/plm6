@@ -1,0 +1,350 @@
+<template>
+  <div class="app-container">
+    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines">
+      <template v-slot:customSearch>
+        <el-input
+          v-model="crud.query.name"
+          size="small"
+          placeholder="输入名称搜索"
+          style="width: 170px"
+          class="filter-item"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
+        <el-input
+          v-model="crud.query.serialNumber"
+          size="small"
+          placeholder="输入编号搜索"
+          style="width: 170px"
+          class="filter-item"
+          clearable
+          @keyup.enter="crud.toQuery"
+        />
+      </template>
+    </mHeader>
+    <!--表格渲染-->
+    <common-table
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      :row-class-name="handleRowClassName"
+      :cell-class-name="handelCellClassName"
+      style="width: 100%"
+      @sort-change="crud.handleSortChange"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60" fixed />
+      <el-table-column
+        v-if="columns.visible('districtName')"
+        key="districtName"
+        prop="districtName"
+        fixed
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="区域"
+        width="120px"
+      />
+      <el-table-column
+        v-if="columns.visible('name')"
+        key="name"
+        prop="name"
+        fixed
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="名称"
+        width="120px"
+      />
+      <el-table-column
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
+        prop="serialNumber"
+        fixed
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="编号"
+        width="140px"
+      />
+      <el-table-column
+        v-if="columns.visible('color')"
+        key="color"
+        prop="color"
+        fixed
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="颜色"
+        width="100px"
+      />
+      <el-table-column
+        v-if="columns.visible('material')"
+        key="material"
+        prop="material"
+        fixed
+        sortable="custom"
+        :show-overflow-tooltip="true"
+        label="材质"
+        width="120px"
+      />
+      <el-table-column
+        v-if="columns.visible('length')"
+        key="length"
+        prop="length"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`单长\n(mm)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('thickness')"
+        key="thickness"
+        prop="thickness"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`板厚\n(mm)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('width')"
+        key="width"
+        prop="width"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`有效宽度\n(mm)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalArea')"
+        key="totalArea"
+        prop="totalArea"
+        sortable="custom"
+        fixed
+        :label="`总面积\n(㎡)`"
+        align="left"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalLength')"
+        key="totalLength"
+        prop="totalLength"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`总长度\n(m)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('weight')"
+        key="weight"
+        prop="weight"
+        sortable="custom"
+        fixed
+        :show-overflow-tooltip="true"
+        :label="`重量\n(kg)`"
+        align="center"
+        width="80px"
+      >
+        <template v-slot="scope">
+          <span>{{ toFixed(scope.row.weight, DP.COM_WT__KG) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('remark')"
+        key="remark"
+        prop="remark"
+        fixed
+        :show-overflow-tooltip="true"
+        label="备注"
+        width="120px"
+      />
+      <template v-for="workshop in lines">
+        <template v-for="line in workshop.productionLineList">
+          <el-table-column
+            v-if="line.selected"
+            :key="line.id"
+            :prop="`productionLine_${line.id}`"
+            :label="line.name"
+            align="center"
+            width="150px"
+          >
+            <template v-slot:header>
+              <span class="ellipsis-text">【{{ workshop.name }}】</span>
+              <span class="ellipsis-text">{{ line.name }}</span>
+            </template>
+            <template v-slot="scope">
+              <el-input-number
+                v-if="modifying"
+                v-model="scope.row.schedulingMap[line.id].quantity"
+                :step="1"
+                :min="scope.row.schedulingMap[line.id].sourceQuantity"
+                :max="scope.row.quantity"
+                size="mini"
+                controls-position="right"
+                style="width: 100%"
+                @change="handleQuantityChange(scope.row, line, $event)"
+              />
+              <span v-else>{{ scope.row.schedulingMap[line.id].quantity }}</span>
+            </template>
+          </el-table-column>
+        </template>
+      </template>
+      <el-table-column min-width="1px" />
+      <el-table-column
+        v-if="columns.visible('unassignQuantity')"
+        key="unassignQuantity"
+        prop="unassignQuantity"
+        sortable="custom"
+        fixed="right"
+        label="未分配"
+        align="center"
+        width="105px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.sourceUnassignQuantity }}</span>
+          <span
+v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuantity"
+            >▶<span :style="{ color: scope.row.unassignQuantity < scope.row.sourceUnassignQuantity ? '#11b95c' : 'red' }">{{
+              scope.row.unassignQuantity
+            }}</span></span
+          >
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('assignQuantity')"
+        key="assignQuantity"
+        prop="assignQuantity"
+        sortable="custom"
+        fixed="right"
+        label="已分配"
+        align="center"
+        width="105px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.sourceAssignQuantity }}</span>
+          <span
+v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity"
+            >▶<span :style="{ color: scope.row.assignQuantity > scope.row.sourceAssignQuantity ? '#11b95c' : 'red' }">{{
+              scope.row.assignQuantity
+            }}</span></span
+          >
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('quantity')"
+        key="quantity"
+        prop="quantity"
+        sortable="custom"
+        fixed="right"
+        label="数量"
+        align="center"
+        width="70px"
+      />
+    </common-table>
+    <!--分页组件-->
+    <pagination />
+  </div>
+</template>
+
+<script setup>
+import crudApi from '@/api/mes/scheduling-manage/scheduling/enclosure'
+import { provide, ref } from 'vue'
+
+import { productTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+// import checkPermission from '@/utils/system/check-permission'
+import { DP } from '@/settings/config'
+import { toFixed } from '@data-type'
+import { mapGetters } from '@/store/lib'
+
+import useMaxHeight from '@compos/use-max-height'
+import useCRUD from '@compos/use-crud'
+import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
+import pagination from '@crud/Pagination'
+import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
+
+// crud交由presenter持有
+const permission = {
+  get: ['artifactScheduling:get'],
+  editStatus: ['artifactScheduling:editStatus'],
+  save: ['artifactScheduling:save'],
+  clear: ['artifactScheduling:clearWithOneClick']
+}
+
+const optShow = {
+  add: false,
+  edit: false,
+  del: false,
+  download: false
+}
+
+provide('needTableColumns', [
+  { label: '名称', width: '120px', field: 'name' },
+  { label: '编号', width: '140px', field: 'serialNumber' },
+  { label: '颜色', width: '100px', field: 'color' },
+  { label: '材质', width: '120px', field: 'material' }
+])
+provide('productType', productTypeEnum.ENCLOSURE.V)
+provide('processType', processTypeEnum.TWICE.V)
+
+const tableRef = ref()
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '折边件排产',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    crudApi: { ...crudApi },
+    // requiredQuery: ['districtId'],
+    invisibleColumns: ['districtName', 'length', 'thickness', 'width', 'totalArea', 'totalLength', 'weight', 'remark']
+    // queryOnPresenterCreated: false
+  },
+  tableRef
+)
+
+const { maxHeight } = useMaxHeight({ paginate: true })
+const { globalProjectId } = mapGetters(['globalProjectId'])
+const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.category = mesEnclosureTypeEnum.FOLDING_PIECE.V
+}
+</script>
+
+<style lang="scss" scoped>
+::v-deep(.el-table) {
+  .cell {
+    line-height: 30px;
+  }
+}
+// /deep/.abnormal-row {
+//   background: linear-gradient(to right, #ffecec 0%, #ffffff 100%);
+// }
+::v-deep(.el-input__inner) {
+  font-size: 14px;
+}
+</style>

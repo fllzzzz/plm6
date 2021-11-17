@@ -65,6 +65,46 @@ const wageQuotaTypeEnum = {
 }
 constantize(wageQuotaTypeEnum)
 
+// 围护产品类型
+const mesEnclosureTypeEnum = {
+  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 },
+  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 2 },
+  FLOOR_PLATE: { L: '开闭口楼承板', K: 'FLOOR_PLATE', V: 4 },
+  TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 3 },
+  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 6 }
+}
+constantize(mesEnclosureTypeEnum)
+
+// 任务下发状态类型
+const taskIssueTypeEnum = {
+  NOT_ISSUED: { L: '未下发', K: 'NOT_ISSUED', V: false, T: 'danger' },
+  HAS_ISSUED: { L: '已下发', K: 'HAS_ISSUED', V: true, T: 'success' }
+}
+constantize(taskIssueTypeEnum)
+
+// 可打包类型
+const packTypeEnum = {
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: productTypeEnum.ARTIFACT.V, T: '' },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: productTypeEnum.ENCLOSURE.V, T: 'warning' },
+  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: productTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+}
+constantize(packTypeEnum)
+
+const qrCodeTypeEnum = {
+  PACKAGE: { L: '包', K: 'PACKAGE', V: 11 }
+}
+constantize(qrCodeTypeEnum)
+
+// 打包清单状态
+const packStatusTypeEnum = {
+  // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
+  // ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 2 },
+  // CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
+  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: false, T: '' },
+  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: true, T: 'warning' }
+}
+constantize(packStatusTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -73,7 +113,12 @@ export {
   processTypeEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
-  wageQuotaTypeEnum
+  wageQuotaTypeEnum,
+  mesEnclosureTypeEnum,
+  taskIssueTypeEnum,
+  packTypeEnum,
+  qrCodeTypeEnum,
+  packStatusTypeEnum
 }
 
 export default {
@@ -84,5 +129,10 @@ export default {
   processTypeEnum,
   processInspectTypeEnum,
   processReportTypeEnum,
-  wageQuotaTypeEnum
+  wageQuotaTypeEnum,
+  mesEnclosureTypeEnum,
+  taskIssueTypeEnum,
+  packTypeEnum,
+  qrCodeTypeEnum,
+  packStatusTypeEnum
 }

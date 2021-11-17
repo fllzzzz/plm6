@@ -1,15 +1,15 @@
 import { getLodop } from './lodop-funcs'
-import { MessageBox } from 'element-ui'
+import { ElMessageBox } from 'element-plus'
 import { printModeEnum as PrintMode } from './enum'
 import { codeWait } from '@/utils'
 
 let LODOP
 let printEnd = false
 let currentPollingNum = 0
-let lastTaskOKArr = taskOKArr
-let lastTaskExistArr = taskExistArr
 let taskOKArr = []
 let taskExistArr = []
+let lastTaskExistArr = taskExistArr
+let lastTaskOKArr = taskOKArr
 let hasCleanTask = false
 let hasOKReturn = true
 let hasExistReturn = true
@@ -356,7 +356,7 @@ function getStatusMessage(statusID) {
 }
 
 function download() {
-  MessageBox.confirm('请下载Web打印控件\n下载后刷新页面重试\n地址：http://www.LODOP.net/index.html', `请下载打印控件`, {
+  ElMessageBox.confirm('请下载Web打印控件\n下载后刷新页面重试\n地址：http://www.LODOP.net/index.html', `请下载打印控件`, {
     showCancelButton: false,
     confirmButtonText: '确认',
     type: 'warning'

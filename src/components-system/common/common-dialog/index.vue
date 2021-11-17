@@ -27,6 +27,7 @@
         <div class="dialog-title">
           <span class="title">
             <span>{{ props.title }}</span>
+            <slot name="tip"/>
           </span>
           <span class="dialog-title-right">
             <slot name="titleRight" />

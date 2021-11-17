@@ -43,3 +43,17 @@ export function getAllFactoryWorkshopLines(params) {
     params
   })
 }
+
+/**
+ * 所有包单号列表
+ * @export
+ * @returns
+ */
+export function getAllPackage(params) {
+  return request({
+    module: 'mes',
+    url: 'package/list',
+    method: 'get',
+    params
+  })
+}

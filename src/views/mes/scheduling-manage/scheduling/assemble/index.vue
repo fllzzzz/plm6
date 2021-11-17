@@ -123,7 +123,16 @@
         sortable="custom"
         :show-overflow-tooltip="true"
         label="图号"
-        min-width="140px"
+        width="140px"
+      />
+      <el-table-column
+        v-if="columns.visible('remark')"
+        key="remark"
+        prop="remark"
+        fixed
+        :show-overflow-tooltip="true"
+        label="备注"
+        width="120"
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
@@ -280,7 +289,7 @@ const { crud, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     // requiredQuery: ['districtId'],
-    invisibleColumns: ['specification', 'material', 'length', 'netWeight', 'totalNetWeight', 'drawingNumber']
+    invisibleColumns: ['specification', 'material', 'length', 'netWeight', 'totalNetWeight', 'drawingNumber', 'remark']
     // queryOnPresenterCreated: false
   },
   tableRef
