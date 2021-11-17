@@ -18,7 +18,7 @@
         <td colspan="2">打包：{{ packageInfo.packerName }} {{ packageInfo.createTime }}</td>
         <td rowspan="3">
           <div class="qr-content">
-            <!-- <vue-qr :text="labelData.qrCode" :size="180" /> -->
+              <qrcode-vue :value="labelData.qrCode" :size="180" :margin="2" />
           </div>
         </td>
       </tr>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-// import vueQr from 'vue-qr'
+import QrcodeVue from 'qrcode.vue'
 
 import { computed, defineEmits, defineProps } from 'vue'
 
