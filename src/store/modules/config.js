@@ -2,7 +2,7 @@ import { getMatClsTree, get as getClassificationTree } from '@/api/config/classi
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
-import { getFinalMatClsById, getUserTree } from '@/api/common'
+import { getFinalMatClsById, getUserTree, getRegionalCascade } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
@@ -32,6 +32,7 @@ const state = {
   users: [], // 人员列表
   dept: [], // 部门列表
   userDeptTree: [], // 人员部门树
+  regional: [], // 地区
   loaded: {
     // 接口是否加载
     factories: false,
@@ -86,6 +87,9 @@ const mutations = {
   },
   SET_USER_DEPT_TREE(state, tree) {
     state.userDeptTree = tree
+  },
+  SET_REGIONAL(state, regional) {
+    state.regional = regional
   }
 }
 
@@ -197,6 +201,13 @@ const actions = {
     commit('SET_USER_DEPT_TREE', tree)
     commit('SET_LOADED', { key: 'userDeptTree' })
     return tree
+  },
+  async fetchRegional({ commit }) {
+    const { content: regional = [] } = await getRegionalCascade()
+    setEmptyArr2Undefined(regional)
+    commit('SET_REGIONAL', regional)
+    commit('SET_LOADED', { key: 'regional' })
+    return regional
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
