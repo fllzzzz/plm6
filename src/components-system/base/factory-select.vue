@@ -1,6 +1,6 @@
 <!-- 工厂:下拉选择框 -->
 <template>
-  <el-select
+  <common-select
     v-model="selectValue"
     :size="size"
     :disabled="disabled"
@@ -10,10 +10,9 @@
     :clearable="clearable"
     filterable
     :placeholder="placeholder"
+    :options="factories"
     @change="handleChange"
-  >
-    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-  </el-select>
+  />
 </template>
 
 <script setup>
@@ -59,28 +58,20 @@ const props = defineProps({
 })
 
 const selectValue = ref()
-const options = ref([])
 
-const { loaded, factories } = useFactory()
+const { loaded, factories } = useFactory(loadedCallBack)
 
 watch(
   () => props.value,
   (value) => {
     selectValue.value = value
-    if (props.default && isBlank(value) && isNotBlank(options)) {
-      selectValue.value = options.value[0].value
+    // 有默认值的情况，并且value为空，则给value赋值
+    if (props.default && isBlank(value) && isNotBlank(factories.value)) {
+      selectValue.value = factories.value[0].value
       handleChange(selectValue.value)
     }
   },
   { immediate: true }
-)
-
-watch(
-  factories,
-  (list) => {
-    dataFormat(list)
-  },
-  { immediate: true, deep: true }
 )
 
 function handleChange(val) {
@@ -90,27 +81,11 @@ function handleChange(val) {
   }
 }
 
-function dataFormat(list) {
-  options.value = []
-  let _options = []
-  try {
-    if (isNotBlank(list)) {
-      _options = list.map((o) => {
-        return {
-          value: o.id,
-          label: o.name
-        }
-      })
-    }
-  } catch (error) {
-    console.log('获取工厂', error)
-  } finally {
-    options.value = _options
-    if (isNotBlank(options.value) && props.default && !selectValue.value) {
-      selectValue.value = options.value[0].value
-    }
-    handleChange(selectValue.value)
+function loadedCallBack() {
+  if (isNotBlank(factories.value) && props.default && !selectValue.value) {
+    selectValue.value = factories.value[0].value
   }
+  handleChange(selectValue.value)
 }
 
 </script>

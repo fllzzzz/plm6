@@ -19,8 +19,8 @@ constantize(projectStatusEnum)
 
 // 项目展示状态
 const projectNameArrangementModeEnum = {
-  CONTRACT_NO_START: { L: '合同编号 项目名称', K: 'CONTRACT_NO_START', V: 1 },
-  CONTRACT_NO_END: { L: '项目名称 合同编号', K: 'CONTRACT_NO_END', V: 2 }
+  SERIAL_NUMBER_START: { L: '合同编号 项目名称', K: 'SERIAL_NUMBER_START', V: 1 },
+  SERIAL_NUMBER_END: { L: '项目名称 合同编号', K: 'SERIAL_NUMBER_END', V: 2 }
 }
 constantize(projectNameArrangementModeEnum)
 

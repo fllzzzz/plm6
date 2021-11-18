@@ -105,7 +105,7 @@ const WMS_IN_WAREHOUSE_VOUCHER = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'orderNo', title: '订单号：', width: 135, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'measurementType', title: '计量方式：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'measurementType', title: '计量方式：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'storageNo', title: '入库单号：', width: 135, type: typeEnum.GUID.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'transportType', title: '运输方式：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'pickUpModeEnum', key: 'L' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '供应商：', width: 135, type: typeEnum.COMPANY_NAME.K },

@@ -8,6 +8,7 @@ import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
+import { getSuppliersBrief } from '@/api/common'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { materialClassificationEnum } from '@enum-ms/classification'
@@ -20,7 +21,7 @@ import { formatClsTree } from '@/utils/system/classification'
 const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
-  normMatClsTree: [], // 普通物料科目树（不含制成品）
+  rawMatClsTree: [], // 普通物料科目树（不含制成品）
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
@@ -33,6 +34,8 @@ const state = {
   dept: [], // 部门列表
   userDeptTree: [], // 人员部门树
   regional: [], // 地区
+  suppliers: [], // 供应商列表
+  supplierKV: {}, // 供应商id:value 格式
   loaded: {
     // 接口是否加载
     factories: false,
@@ -44,7 +47,8 @@ const state = {
     unit: false,
     userDeptTree: false,
     matClsTree: false,
-    clsTree: false
+    clsTree: false,
+    suppliers: false
   }
 }
 
@@ -54,7 +58,7 @@ const mutations = {
   },
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
-    state.normMatClsTree = tree.filter(t => t.basicClass !== materialClassificationEnum.MANUFACTURED.V)
+    state.rawMatClsTree = tree.filter(t => ![materialClassificationEnum.STRUC_MANUFACTURED.V, materialClassificationEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
   SET_CLS_TREE(state, tree) {
     state.clsTree = tree
@@ -81,6 +85,14 @@ const mutations = {
   },
   SET_USERS(state, users) {
     state.users = users
+  },
+  SET_SUPPLIERS(state, suppliers) {
+    state.suppliers = suppliers
+    // 供应商kv
+    state.supplierKV = {}
+    suppliers.forEach((v) => {
+      state.supplierKV[v.id] = v
+    })
   },
   SET_DEPT(state, dept) {
     state.dept = dept
@@ -188,15 +200,22 @@ const actions = {
     commit('SET_LOADED', { key: 'users' })
     return content
   },
+  async fetchSuppliers({ commit }) {
+    const { content = [] } = await getSuppliersBrief()
+    commit('SET_SUPPLIERS', content)
+    commit('SET_LOADED', { key: 'suppliers' })
+    return content
+  },
   async fetchDept({ commit }) {
-    const { content: dept = [] } = await getDeptAllSimple()
+    const dept = await getDeptAllSimple()
     setEmptyArr2Undefined(dept)
     commit('SET_DEPT', dept)
     commit('SET_LOADED', { key: 'dept' })
     return dept
   },
   async fetchUserDeptTree({ commit }) {
-    const { content: tree = [] } = await getUserTree()
+    const content = await getUserTree()
+    const tree = content
     setEmptyArr2Undefined(tree)
     commit('SET_USER_DEPT_TREE', tree)
     commit('SET_LOADED', { key: 'userDeptTree' })

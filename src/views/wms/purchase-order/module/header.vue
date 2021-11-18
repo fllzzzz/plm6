@@ -1,3 +1,76 @@
 <template>
-<span></span>
+  <div class="head-container">
+    <div v-if="crud.searchToggle">
+      <common-radio-button
+        v-model="query.purchaseStatus"
+        :options="purchaseStatusEnum.ENUM"
+        show-option-all
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <el-date-picker
+        v-model="query.createTime"
+        :default-time="defaultTime"
+        type="daterange"
+        range-separator=":"
+        size="small"
+        value-format="x"
+        :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+        unlink-panels
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        style="width: 240px"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <supplier-select
+        v-model="query.supplierId"
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+        placeholder="可选择供应商搜索"
+        style="width: 250px"
+       />
+      <el-input
+        v-model.trim="query.orderNo"
+        clearable
+        style="width: 250px"
+        size="small"
+        placeholder="按订单号搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <rrOperation/>
+    </div>
+    <crudOperation />
+  </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import { purchaseStatusEnum } from '@enum-ms/wms'
+
+import { regHeader } from '@compos/use-crud'
+import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import supplierSelect from '@comp-base/supplier-select.vue'
+
+const defaultTime = ref([
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59)
+])
+
+const defaultQuery = {
+  createTime: [],
+  purchaseStatus: purchaseStatusEnum.UNFINISHED.V,
+  projectId: undefined,
+  supplierId: undefined
+}
+
+const { crud, query } = regHeader(defaultQuery)
+useGlobalProjectIdChangeToQuery(crud)
+</script>

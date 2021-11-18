@@ -28,6 +28,28 @@ const orderSupplyTypeEnum = {
 }
 constantize(orderSupplyTypeEnum)
 
+// 采购类型
+const purchaseTypeEnum = {
+  RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 },
+  MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 2 }
+}
+constantize(purchaseTypeEnum)
+
+// 提货方式
+const pickUpModeEnum = {
+  SELF: { L: '自提', K: 'SELF', V: 1 << 0 },
+  SUPPLIER: { L: '到厂', K: 'SUPPLIER', V: 1 << 1 }
+}
+constantize(pickUpModeEnum)
+
+// 采购订单付款付款方式
+const purchaseOrderPaymentModeEnum = {
+  FUTURES: { L: '期货订单', K: 'FUTURES', V: 1 << 0 },
+  STOCK: { L: '现款订单', K: 'STOCK', V: 1 << 1 },
+  ARRIVAL: { L: '到货订单', K: 'ARRIVAL', V: 1 << 2 }
+}
+constantize(purchaseOrderPaymentModeEnum)
+
 // 采购状态(订单采购状态/申购单采购状态)
 const purchaseStatusEnum = {
   UNFINISHED: { L: '采购中', K: 'UNFINISHED', V: 1 },
@@ -40,7 +62,10 @@ export {
   measureTypeEnum,
   warehouseTypeEnum,
   orderSupplyTypeEnum,
-  purchaseStatusEnum
+  purchaseTypeEnum,
+  purchaseStatusEnum,
+  purchaseOrderPaymentModeEnum,
+  pickUpModeEnum
 }
 
 export default {
@@ -48,5 +73,8 @@ export default {
   measureTypeEnum,
   warehouseTypeEnum,
   orderSupplyTypeEnum,
-  purchaseStatusEnum
+  purchaseTypeEnum,
+  purchaseStatusEnum,
+  purchaseOrderPaymentModeEnum,
+  pickUpModeEnum
 }

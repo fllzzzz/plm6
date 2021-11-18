@@ -76,7 +76,13 @@
             />
             <el-table-column key="unitType" :show-overflow-tooltip="true" prop="unitType" label="单位配置" align="center" width="140">
               <template v-slot="scope">
-                <common-radio-button v-model="scope.row.unitType" :options="measureTypeEnum.ENUM" type="enum" size="small" />
+                <common-radio-button
+                  v-model="scope.row.unitType"
+                  :options="measureTypeEnum.ENUM"
+                  :disabled-val="scope.row.unitTypeDisabled"
+                  type="enum"
+                  size="small"
+                />
               </template>
             </el-table-column>
             <el-table-column key="unit" :show-overflow-tooltip="true" prop="unit" label="单位" align="center" width="70">
@@ -125,7 +131,7 @@
 <script setup>
 import { reactive, ref, computed } from 'vue'
 import { measureTypeEnum } from '@enum-ms/wms'
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank, isBlank } from '@/utils/data-type'
 import { mapGetters } from '@/store/lib'
 
 import { regBatchForm } from '@compos/use-crud'
@@ -183,7 +189,7 @@ CRUD.HOOK.beforeToBCU = () => specInit()
 // 表单提交数据清理
 crud.submitBatchFormFormat = (form) => {
   cleanUpData(form.list)
-  form.list = form.list.map(row => {
+  const formList = form.list.map((row) => {
     return {
       classifyId: row.classifyId,
       specification: row.specification,
@@ -193,7 +199,7 @@ crud.submitBatchFormFormat = (form) => {
       factoryId: row.factoryId
     }
   })
-  return form
+  return formList
 }
 
 function handleClear() {
@@ -226,12 +232,19 @@ function rowInit(row) {
     specification: row.spec, // 规格
     specificationMap: row.specKV, // 规格KV格式
     unitType: row.classify.outboundUnit, // 单位配置
+    unitTypeDisabled: [], // 禁用单位
     measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     minimumInventory: 0, // 最低库存数量
     factoryId: undefined // 工厂
+  }
+  if (isBlank(_row.measureUnit)) {
+    _row.unitTypeDisabled.push(measureTypeEnum.MEASURE.V)
+  }
+  if (isBlank(_row.accountingUnit)) {
+    _row.unitTypeDisabled.push(measureTypeEnum.ACCOUNTING.V)
   }
   return _row
 }

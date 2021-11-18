@@ -10,7 +10,7 @@ export default {
       name: 'SupplierManage',
       alwaysShow: false,
       redirect: '/wms/inventory-warning',
-      meta: { title: '供应商管理', icon: 'contract', noCache: true },
+      meta: { title: '库存管理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'InventoryWarning',
@@ -18,6 +18,24 @@ export default {
           hidden: false,
           component: '/wms/inventory-warning/index',
           meta: { title: '库存预警', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/purchase-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSPurchaseOrder',
+      alwaysShow: false,
+      redirect: '/wms/purchase-order',
+      meta: { title: '采购管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'PurchaseOrder',
+          path: 'purchase-order',
+          hidden: false,
+          component: '/wms/purchase-order/index',
+          meta: { title: '采购订单管理', icon: 'project', noCache: true }
         }
       ]
     }

@@ -1,15 +1,14 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
-// 获取物料分类树
-const useMatClsTree = (loadedCallBack) => {
+// 获取项目
+const useUserProjects = (loadedCallBack) => {
   const store = useStore()
-  const loaded = computed(() => store.state.config.loaded.matClsTree)
+  const loaded = computed(() => store.state.project.loaded)
   // 未加载则拉取
   if (!loaded.value) {
-    store.dispatch('config/fetchMatClsTree')
+    store.dispatch('project/fetchUserProjects')
   }
-
   // 加载成功回调
   if (loadedCallBack) {
     const monitor = watch(
@@ -27,10 +26,11 @@ const useMatClsTree = (loadedCallBack) => {
   }
 
   return {
-    rawMatClsTree: computed(() => store.state.config.rawMatClsTree),
-    matClsTree: computed(() => store.state.config.matClsTree),
-    loaded
+    loaded,
+    projects: computed(() => store.state.project.userProjects),
+    processProjects: computed(() => store.state.project.userProcessProjects),
+    projectsCascade: computed(() => store.state.project.userProjectsCascade)
   }
 }
 
-export default useMatClsTree
+export default useUserProjects

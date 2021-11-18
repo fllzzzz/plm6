@@ -105,7 +105,7 @@ const WMS_QUIT_WAREHOUSE_VOUCHER = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'orderNo', title: '订单号：', width: 120, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'measurementType', title: '计量方式：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'measurementType', title: '计量方式：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'returnWarehouseNo', title: '退库单号：', width: 120, type: typeEnum.GUID.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'licensePlate', title: '车牌号：', width: 55, type: typeEnum.LICENSE_PLATE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'storageNo', title: '入库单号：', width: 120, type: typeEnum.CONTRACT_NO.K },

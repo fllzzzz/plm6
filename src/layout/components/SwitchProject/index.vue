@@ -1,9 +1,10 @@
+<!-- 部门级联列表 -->
 <template>
   <div v-show="showable" class="cascader-container">
     <common-select
       v-model="projectType"
       :options="projectTypeEnum.ENUM"
-      :all-val="allVal"
+      :all-val="allPT"
       :disabled-val="disabledTypeArr"
       show-all
       type="enum"
@@ -12,202 +13,240 @@
       class="project-type-select"
       @change="handleTypeChange"
     />
-    <el-cascader
-      :key="cascaderKey"
-      v-model="currentProjectId"
-      placeholder="可搜索：项目名称"
-      :options="projectsCascade"
-      :props="props"
-      :show-all-levels="false"
-      size="medium"
-      filterable
-      style="width: 400px"
-      @change="projectChange"
-    />
+    <span class="project-cascader-container">
+      <el-cascader
+        v-model="copyValue"
+        :options="options"
+        :props="cascaderProps"
+        :filterable="props.filterable"
+        :clearable="props.clearable"
+        :show-all-levels="props.showAllLevels"
+        :placeholder="props.placeholder"
+        @change="projectChange"
+        class="project-cascader"
+        style="width: 100%"
+      />
+      <el-tag :type="showAll ? undefined : 'info'" size="medium" effect="plain" @click="showAll = !showAll" class="all-tag"> All </el-tag>
+    </span>
     <el-tooltip class="item" effect="dark" content="刷新项目列表" placement="right">
-      <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="fetchProjectYearCascade" />
+      <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
       <i v-else class="el-icon-loading" />
     </el-tooltip>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import { getUserProjectGroupByYear } from '@/api/contract/project'
-import enumOperate from '@/utils/enum'
-import { projectTypeEnum } from '@/utils/enum/modules/contract'
-import { getBitwiseBack } from '@data-type/number'
-const projectTypes = enumOperate.toArr(projectTypeEnum).map((e) => e.V)
-const allVal = 0
-projectTypes.push(allVal)
-// const loginPath = ['/login', '/']
+<script setup>
+import { defineProps, computed, watch, ref } from 'vue'
+import { useStore } from 'vuex'
+import { mapGetters } from '@/store/lib'
+import { allPT } from '@/settings/config'
+import { isNotBlank } from '@data-type/index'
+import { projectTypeEnum } from '@enum-ms/contract'
 
-export default {
-  data() {
-    return {
-      // permission,
-      allVal, // 全部时的值
-      cascaderKey: 0,
-      projectTypeEnum,
-      projectType: undefined,
-      currentProjectId: undefined,
-      projectCascadeList: [],
-      refreshLoading: false,
-      currentComponentChange: false,
-      props: {
-        value: 'id',
-        label: 'label',
-        children: 'children',
-        expandTrigger: 'hover',
-        emitPath: false
-      }
-    }
+import useUserProjects from '@compos/store/use-user-projects'
+import { getBitwiseBack } from '@/utils/data-type/number'
+
+const store = useStore()
+
+const props = defineProps({
+  modelValue: {
+    type: [Array, Number]
   },
-  computed: {
-    ...mapGetters(['globalProjectId', 'projectsCascade', 'routeProjectType', 'currentMenu', 'currentProjectType']),
-    visitedViews() {
-      return this.$store.state.tagsView.visitedViews
-    },
-    showable() {
-      return this.$isNotBlank(this.routeProjectType)
-    },
-    disabledTypeArr() {
-      const types = []
-      if (this.routeProjectType !== allVal) {
-        projectTypes.forEach((v) => {
-          if (!(v & this.routeProjectType)) {
-            types.push(v)
-          }
-        })
-      }
-      return types
-    }
+  checkStrictly: {
+    // 启用该功能后，可让父子节点取消关联，选择任意一级选项。
+    type: Boolean,
+    default: false
   },
-  watch: {
-    routeProjectType: {
-      handler(newVal, oldVal) {
-        if (newVal && !(newVal & this.projectType)) {
-          const valArr = getBitwiseBack(this.routeProjectType)
-          this.projectType = valArr.length && valArr.length === 1 ? newVal : newVal & this.currentProjectType ? this.currentProjectType : valArr[0]
-          this.handleTypeChange(this.projectType)
-        }
-      }
-    },
-    globalProjectId(val) {
-      // TODO:关于跳转界面待定，mes进入管理会触发, 该判断待定
-      if (!this.currentComponentChange) {
-        this.currentProjectId = val
-        // if (val && loginPath.indexOf(this.$route.path) === -1) {
-        //   this.refreshSelectedTag()
-        // } else {
-        //   this.closeAllTags()
-        // }
-      }
-    }
+  expandTrigger: {
+    // 次级菜单的展开方式
+    type: String,
+    default: 'hover'
   },
-  mounted() {
-    this.currentProjectId = this.globalProjectId
-    this.projectType = this.currentProjectType
-    this.$nextTick(() => {
-      if (this.routeProjectType !== allVal && this.projectType === 0) {
-        this.projectType = undefined
+  emitPath: {
+    type: Boolean,
+    default: false
+  },
+  filterable: {
+    type: Boolean,
+    default: false
+  },
+  multiple: {
+    type: Boolean,
+    default: false
+  },
+  clearable: {
+    type: Boolean,
+    default: false
+  },
+  showAllLevels: {
+    type: Boolean,
+    default: false
+  },
+  placeholder: {
+    type: String,
+    default: '可选择项目'
+  }
+})
+
+const copyValue = ref()
+const showAll = ref(false)
+const projectType = ref(allPT)
+const currentProjectId = ref()
+const refreshLoading = ref(false)
+let currentProjectChange = false
+
+const { routeProjectType, currentProjectType, globalProjectId } = mapGetters(['routeProjectType', 'currentProjectType', 'globalProjectId'])
+
+// 是否显示
+const showable = computed(() => isNotBlank(routeProjectType))
+
+const { projectsCascade, processProjects, projects } = useUserProjects()
+
+const options = computed(() => {
+  if (showAll.value) {
+    return projectsCascade.value
+  }
+  return processProjects.value
+})
+
+const cascaderProps = computed(() => {
+  return {
+    value: 'id',
+    label: 'name',
+    children: 'children',
+    checkStrictly: props.checkStrictly,
+    expandTrigger: props.expandTrigger,
+    emitPath: props.emitPath,
+    multiple: props.multiple
+  }
+})
+
+// 当前目录禁用
+const disabledTypeArr = computed(() => {
+  const types = []
+  if (routeProjectType !== allPT) {
+    Object.keys(projectTypeEnum.VL).forEach((v) => {
+      if (!(v & routeProjectType)) {
+        types.push(v)
       }
     })
-    if (!this.projectsCascade || this.projectsCascade.length === 0) {
-      this.fetchProjectYearCascade()
+  }
+  return types
+})
+
+watch(
+  showAll,
+  (flag) => {
+    let isExit = false
+    if (flag) {
+      isExit = projects.value.some(v => v.id === currentProjectId.value)
+    } else {
+      isExit = processProjects.value.some(v => v.id === currentProjectId.value)
+    }
+    if (!isExit) {
+      projectChange(undefined)
     }
   },
-  methods: {
-    async handleTypeChange(val) {
-      try {
-        ++this.cascaderKey
-        await this.$store.dispatch('project/changeProjectType', val)
-      } catch (error) {
-        // TODO: 失败应切换回上一个类型
-        console.log('切换项目', error)
-      }
-    },
-    async projectChange(val) {
-      this.currentComponentChange = true
-      try {
-        await this.$store.dispatch('project/setProjectId', val)
-        // if (val && loginPath.indexOf(this.$route.path) === -1) {
-        //   this.refreshSelectedTag()
-        // } else {
-        //   this.closeAllTags()
-        // }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.currentComponentChange = false
-      }
-    },
-    /**
-     * 获取项目年份级联列表
-     */
-    async fetchProjectYearCascade() {
-      try {
-        this.refreshLoading = true
-        const { content = [] } = (await getUserProjectGroupByYear()) || {}
-        const projects = content
-        await this.$store.dispatch('project/setProjects', projects)
-        if (this.routeProjectType && !(this.routeProjectType & this.projectType)) {
-          const routeProjectTypeArr = getBitwiseBack(this.routeProjectType)
-          this.projectType =
-            routeProjectTypeArr.length && routeProjectTypeArr.length === 1
-              ? this.routeProjectType
-              : this.routeProjectType & this.currentProjectType
-                ? this.currentProjectType
-                : undefined
-          this.handleTypeChange(this.projectType)
-        }
-      } catch (error) {
-        console.log(error)
-        this.$message.error('获取项目级联列表失败')
-      } finally {
-        this.refreshLoading = false
-      }
-    },
-    getActive() {
-      let view
-      for (const route of this.visitedViews) {
-        if (route.path === this.$route.path) {
-          view = route
-        }
-      }
-      return view
-    },
-    refreshSelectedTag() {
-      const view = this.getActive()
-      if (view) {
-        // TODO: 检查view不存在的原因
-        this.closeOthersTags(view)
-        this.$store.dispatch('tagsView/delCachedView', view).then(() => {
-          const { fullPath } = view
-          this.$nextTick(() => {
-            this.$router.replace({
-              path: '/redirect' + fullPath
-            })
-          })
-        })
-      }
-    },
-    closeOthersTags(selectedTag) {
-      this.$router.push(selectedTag)
-      this.$store.dispatch('tagsView/delOthersViews', selectedTag)
-    },
-    closeAllTags() {
-      this.$store.dispatch('tagsView/delAllViews').then(() => {
-        // if (this.currentMenu && this.currentMenu.redirect) {
-        //   this.$router.push({ path: this.currentMenu.redirect })
-        // }
-      })
+  { immediate: true }
+)
+
+watch(
+  globalProjectId,
+  (val) => {
+    if (currentProjectChange) {
+      currentProjectId.value = val
     }
+  },
+  { immediate: true }
+)
+
+// 监听当前路由的项目类型
+watch(
+  routeProjectType,
+  (val) => {
+    // 如果值存在， 并且该值未包含当前项目类型
+    if (val && !(val & projectType.value)) {
+      // 获取项目类型的种类
+      const bitArr = getBitwiseBack(routeProjectType)
+      // 如果有多种项目类型，则默认取第一个
+      projectType.value = bitArr.length && bitArr.length <= 1 ? val : val & currentProjectType ? currentProjectType : bitArr[0]
+      handleTypeChange(projectType.value)
+    }
+  },
+  { immediate: true }
+)
+
+// 处理项目类型变更
+async function handleTypeChange(val) {
+  try {
+    // ++this.cascaderKey
+    await store.dispatch('project/changeProjectType', val)
+  } catch (error) {
+    // TODO: 失败应切换回上一个类型
+    console.log('切换项目', error)
+  }
+}
+
+async function projectChange(val) {
+  currentProjectChange = true
+  try {
+    await store.dispatch('project/setProjectId', val)
+    // if (val && loginPath.indexOf(this.$route.path) === -1) {
+    //   this.refreshSelectedTag()
+    // } else {
+    //   this.closeAllTags()
+    // }
+  } catch (error) {
+    console.log(error)
+  } finally {
+    currentProjectChange = false
+  }
+}
+
+function refreshProjectList() {
+  refreshLoading.value = true
+  try {
+    store.dispatch('project/fetchUserProjects')
+  } catch (error) {
+    console.log('刷新项目', error)
+  } finally {
+    refreshLoading.value = false
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.project-cascader-container {
+  display: inline-flex;
+  position: relative;
+
+  .project-cascader {
+    width: 100%;
+  }
+
+  .all-tag {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translate(0, -50%);
+    border: none;
+    user-select: none;
+  }
+
+  ::v-deep(.el-input__inner) {
+    padding-right: 50px;
+  }
+  ::v-deep(.el-input__suffix) {
+    right: 35px;
+  }
+  ::v-deep(.el-tag--plain) {
+    color: cornflowerblue;
+  }
+  ::v-deep(.el-tag--plain.el-tag--info){
+    color: var(--el-tag-font-color)
+  }
+}
+
 .cascader-container {
   display: inline-flex;
   height: 100%;

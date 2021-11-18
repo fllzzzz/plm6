@@ -49,7 +49,17 @@ export function getFinalMatClsById(id) {
 // 获取所有用户,带部门
 export function getUserTree() {
   return request({
+    module: 'user',
     method: 'get',
-    url: 'api/user/tree'
+    url: 'user/tree'
+  })
+}
+
+// 获取所有供应商（简要的）
+export function getSuppliersBrief() {
+  return request({
+    module: 'wms',
+    url: `supplier/all/brief`,
+    method: 'get'
   })
 }

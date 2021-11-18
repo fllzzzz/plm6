@@ -124,7 +124,7 @@ const props = defineProps({
   },
   type: { // dict , enum, other
     type: String,
-    default: 'dict'
+    default: 'other'
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用

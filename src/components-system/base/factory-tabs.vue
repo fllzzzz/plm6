@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, ref, watch } from 'vue'
+import { defineEmits, defineProps, ref } from 'vue'
 import { isNotBlank } from '@data-type/index'
 
 import useFactory from '@compos/store/use-factories'
@@ -40,15 +40,7 @@ const props = defineProps({
 const factoryId = ref()
 let factoriesMap = new Map()
 
-const { loaded, factories } = useFactory()
-
-watch(
-  factories,
-  (list) => {
-    dataFormat(list)
-  },
-  { immediate: true, deep: true }
-)
+const { loaded, factories } = useFactory(dataFormat)
 
 function tabClick() {
   const factory = factoriesMap.get(factoryId.value)
