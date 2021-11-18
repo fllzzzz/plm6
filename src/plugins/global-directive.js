@@ -1,7 +1,9 @@
 import checkPermission from '@/directive/permission'
+import parseTime from '@/directive/parse-time'
 
 const directive = new Map([
-  ['permission', checkPermission]
+  ['permission', checkPermission],
+  ['parse-time', parseTime]
 ])
 
 export default (app) => {
