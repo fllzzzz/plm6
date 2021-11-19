@@ -6,7 +6,7 @@
       :options="projectTypeEnum.ENUM"
       :all-val="allPT"
       :disabled-val="disabledTypeArr"
-      show-all
+      show-option-all
       type="enum"
       size="medium"
       placeholder="项目类型"

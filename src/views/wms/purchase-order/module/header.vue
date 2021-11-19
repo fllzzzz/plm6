@@ -10,6 +10,16 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        type="enum"
+        v-model="query.purchaseType"
+        :options="purchaseTypeEnum.ENUM"
+        show-option-all
+        clearable
+        placeholder="可选择物料种类"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.createTime"
         :default-time="defaultTime"
@@ -32,7 +42,7 @@
         @change="crud.toQuery"
         placeholder="可选择供应商搜索"
         style="width: 250px"
-       />
+      />
       <el-input
         v-model.trim="query.orderNo"
         clearable
@@ -42,7 +52,7 @@
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
-      <rrOperation/>
+      <rrOperation />
     </div>
     <crudOperation />
   </div>
@@ -51,7 +61,7 @@
 <script setup>
 import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { purchaseStatusEnum } from '@enum-ms/wms'
+import { purchaseStatusEnum, purchaseTypeEnum } from '@enum-ms/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -59,13 +69,11 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import supplierSelect from '@comp-base/supplier-select.vue'
 
-const defaultTime = ref([
-  new Date(2000, 1, 1, 0, 0, 0),
-  new Date(2000, 2, 1, 23, 59, 59)
-])
+const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
   createTime: [],
+  purchaseType: undefined,
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V,
   projectId: undefined,
   supplierId: undefined

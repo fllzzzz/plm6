@@ -15,7 +15,7 @@
     @blur="handleBlur"
   >
     <el-option
-      v-if="showAll"
+      v-if="showOptionAll"
       :key="-1"
       :label="allLabelText"
       :value="allVal"
@@ -81,7 +81,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showAll: {
+  showOptionAll: {
     type: Boolean,
     default: false
   },
