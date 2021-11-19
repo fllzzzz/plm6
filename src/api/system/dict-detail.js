@@ -13,6 +13,7 @@ export function getAll(name) {
   }
   return request({
     url: 'api/dictDetail/all',
+    cancelKey: false,
     method: 'get',
     params
   })

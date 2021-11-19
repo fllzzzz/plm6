@@ -5,6 +5,8 @@ const getters = {
   device: state => state.app.device,
   // api基础路径
   baseApi: state => state.api.baseApi,
+  // api附件上传路径
+  fileUploadApi: state => state.api.fileUploadApi,
   // axios 取消接口tokens存储
   axiosCancelTokens: state => state.interface.axiosCancelTokens,
 

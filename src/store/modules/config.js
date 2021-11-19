@@ -127,17 +127,28 @@ const actions = {
   },
   // 加载字典值
   async fetchDict({ state }, names = []) {
-    for (const name of names) {
-      const { content = [] } = await getDicts(name)
-      const dict = state.dict
-      dict[name] = [...content]
-      dict.dict[name] = {}
-      dict.label[name] = {}
-      content.forEach((v) => {
-        dict.dict[name][v.value] = v
-        dict.label[name][v.value] = v.label
-      })
+    const allInterFace = []
+    const dict = state.dict
+    if (!('dict' in dict)) {
+      dict.dict = {}
     }
+    if (!('label' in dict)) {
+      dict.label = {}
+    }
+    for (const name of names) {
+      const ps = getDicts(name).then((res) => {
+        const content = res.content || []
+        dict[name] = [...content]
+        dict.dict[name] = {}
+        dict.label[name] = {}
+        content.forEach((v) => {
+          dict.dict[name][v.value] = v
+          dict.label[name][v.value] = v.label
+        })
+      })
+      allInterFace.push(ps)
+    }
+    await Promise.all(allInterFace)
   },
   // 加载单位
   async fetchUnit({ commit }) {
@@ -222,7 +233,7 @@ const actions = {
     return tree
   },
   async fetchRegional({ commit }) {
-    const { content: regional = [] } = await getRegionalCascade()
+    const regional = await getRegionalCascade() || []
     setEmptyArr2Undefined(regional)
     commit('SET_REGIONAL', regional)
     commit('SET_LOADED', { key: 'regional' })
