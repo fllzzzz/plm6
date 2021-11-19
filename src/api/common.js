@@ -63,3 +63,17 @@ export function getSuppliersBrief() {
     method: 'get'
   })
 }
+
+/**
+ * 上传公用附件
+ * @param {number} fileType 文件类型
+ * @param {string} file 二进制文件
+ */
+export function uploadAttachment(data) {
+  return request({
+    url: 'api/common/attachment',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data
+  })
+}

@@ -76,7 +76,23 @@ const operationTypeEnum = {
 }
 constantize(operationTypeEnum)
 
+// 文件分类
+const fileClassifyEnum = {
+  MODEL: { L: '3D模型', K: 'MODEL', V: -2 },
+  OTHER: { L: '其他', K: 'OTHER', V: -1 },
+  CONTRACT_ATT: { L: '合同附件', K: 'CONTRACT_ATT', V: 1 },
+  CHANGE_LIST_ATT: { L: '变更清单附件', K: 'CHANGE_LIST_ATT', V: 4 },
+  PROBLEM_REPORT_ATT: { L: '问题报告附件', K: 'PROBLEM_REPORT_ATT', V: 5 },
+  SUPPLIER_ATT: { L: '供应商附件', K: 'SUPPLIER_ATT', V: 7 },
+  SECTION_ATT: { L: '型材导入附件', K: 'SECTION_ATT', V: 8 },
+  CONTRACT_BUSINESS_SETTLEMENT_ATT: { L: '合同商务结算附件', K: 'CONTRACT_BUSINESS_SETTLEMENT_ATT', V: 9 },
+  PURCHASE_ORDER_AIT: { L: '采购订单附件', K: 'PURCHASE_ORDER_AIT', V: 12 },
+  CONSTRUCTION_AIT: { L: '施工资料附件', K: 'CONSTRUCTION_AIT', V: 801 }
+}
+constantize(fileClassifyEnum)
+
 export {
+  fileClassifyEnum, // 文件分类
   dataSourceSysEnum, // 数据来源
   processingEnum, // 进行中/暂停  流程状态
   enabledEnum, // 使用状态
@@ -90,6 +106,7 @@ export {
 }
 
 export default {
+  fileClassifyEnum, // 文件分类
   dataSourceSysEnum, // 数据来源
   processingEnum, // 进行中/暂停  流程状态
   enabledEnum, // 使用状态
