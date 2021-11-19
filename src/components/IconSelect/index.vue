@@ -7,7 +7,7 @@
       </template>
     </el-input>
     <div class="icon-list">
-      <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
+      <div v-for="(item, index) in iconList.data" :key="index" @click="selectedIcon(item)">
         <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
         <span>{{ item }}</span>
       </div>
@@ -15,34 +15,33 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import icons from './requireIcons'
-export default {
-  name: 'IconSelect',
-  data() {
-    return {
-      name: '',
-      iconList: icons
-    }
-  },
-  methods: {
-    filterIcons() {
-      if (this.name) {
-        this.iconList = this.iconList.filter(item => item.includes(this.name))
-      } else {
-        this.iconList = icons
-      }
-    },
-    selectedIcon(name) {
-      this.$emit('selected', name)
-      document.body.click()
-    },
-    reset() {
-      this.name = ''
-      this.iconList = icons
-    }
+import { defineExpose, defineEmits, ref, reactive } from 'vue'
+const emit = defineEmits(['selected'])
+const name = ref()
+const iconList = reactive({
+  data: icons
+})
+
+function filterIcons() {
+  if (name.value) {
+    iconList.data = iconList.data.filter(item => item.includes(name.value))
+  } else {
+    iconList.data = icons
   }
 }
+function selectedIcon(name) {
+  emit('selected', name)
+}
+function reset() {
+  name.value = ''
+  iconList.data = icons
+}
+
+defineExpose({
+  reset: reset
+})
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
