@@ -26,7 +26,7 @@
         class="project-cascader"
         style="width: 100%"
       />
-      <el-tag :type="showAll ? undefined : 'info'" size="medium" effect="plain" @click="showAll = !showAll" class="all-tag"> All </el-tag>
+      <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#dcdfe6'}"> All </span>
     </span>
     <el-tooltip class="item" effect="dark" content="刷新项目列表" placement="right">
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
@@ -68,7 +68,7 @@ const props = defineProps({
   },
   filterable: {
     type: Boolean,
-    default: false
+    default: true
   },
   multiple: {
     type: Boolean,
@@ -76,7 +76,7 @@ const props = defineProps({
   },
   clearable: {
     type: Boolean,
-    default: false
+    default: true
   },
   showAllLevels: {
     type: Boolean,
@@ -219,18 +219,20 @@ function refreshProjectList() {
 .project-cascader-container {
   display: inline-flex;
   position: relative;
-
+  width: 350px;
   .project-cascader {
     width: 100%;
   }
 
-  .all-tag {
+  .all-tip {
     position: absolute;
     right: 5px;
     top: 50%;
     transform: translate(0, -50%);
     border: none;
     user-select: none;
+    font-size: 14px;
+    margin: 0 5px;
   }
 
   ::v-deep(.el-input__inner) {
