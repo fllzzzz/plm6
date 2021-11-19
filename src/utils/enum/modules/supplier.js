@@ -24,8 +24,8 @@ constantize(supplierTypeEnum)
 
 // 供应商是否是隐藏
 const supplierIsHideEnum = {
-  SHOW: { L: '显示', K: 'SHOW', V: 0 },
-  HIDE: { L: '隐藏', K: 'HIDE', V: 1 }
+  FALSE: { L: '显示', K: 'FALSE', V: false },
+  TRUE: { L: '隐藏', K: 'TRUE', V: true }
 }
 constantize(supplierIsHideEnum)
 
