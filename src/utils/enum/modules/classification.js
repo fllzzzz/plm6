@@ -34,14 +34,23 @@ const rawMatClsEnum = {
 }
 constantize(rawMatClsEnum)
 
+// 制成品基础分类
+const manufClsEnum = {
+  STRUC_MANUFACTURED: classificationEnum.STRUC_MANUFACTURED,
+  ENCL_MANUFACTURED: classificationEnum.ENCL_MANUFACTURED
+}
+constantize(manufClsEnum)
+
 export {
   classificationEnum,
   materialClassificationEnum,
-  rawMatClsEnum
+  rawMatClsEnum,
+  manufClsEnum
 }
 
 export default {
   classificationEnum,
   materialClassificationEnum,
-  rawMatClsEnum
+  rawMatClsEnum,
+  manufClsEnum
 }

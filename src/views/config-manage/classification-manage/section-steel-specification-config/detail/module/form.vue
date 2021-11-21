@@ -10,13 +10,9 @@
     width="400px"
   >
     <template #titleRight>
-      <common-button
-:loading="crud.status.cu === CRUD.STATUS.PROCESSING"
-size="mini"
-type="primary"
-@click="crud.submitCU"
-        >确认</common-button
-      >
+      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
+        确认
+      </common-button>
     </template>
     <el-form
       ref="formRef"

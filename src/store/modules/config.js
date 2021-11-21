@@ -9,6 +9,8 @@ import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
+import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
+import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { materialClassificationEnum } from '@enum-ms/classification'
@@ -36,6 +38,8 @@ const state = {
   regional: [], // 地区
   suppliers: [], // 供应商列表
   supplierKV: {}, // 供应商id:value 格式
+  taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
+  unclosedRequisitions: [], // 未关闭的申购单
   loaded: {
     // 接口是否加载
     factories: false,
@@ -48,13 +52,21 @@ const state = {
     userDeptTree: false,
     matClsTree: false,
     clsTree: false,
-    suppliers: false
+    suppliers: false,
+    taxRate: false,
+    unclosedRequisitions: false
   }
 }
 
 const mutations = {
   SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
+  },
+  SET_TAX_RATE(state, list) {
+    state.taxRateKV = {}
+    list.forEach(v => {
+      state.taxRateKV[v.basicClass] = v.taxRateList
+    })
   },
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
@@ -102,6 +114,9 @@ const mutations = {
   },
   SET_REGIONAL(state, regional) {
     state.regional = regional
+  },
+  SET_UNCLOSED_REQUISITIONS(state, requisitions) {
+    state.unclosedRequisitions = requisitions
   }
 }
 
@@ -109,6 +124,13 @@ const mutations = {
 const actions = {
   fetchConfigInfo() {
     console.log('TODO：加载配置文件')
+  },
+  // 加载税率列表
+  async fetchTaxRate({ commit }) {
+    const { content = [] } = await getTaxRateBrief()
+    commit('SET_TAX_RATE', content)
+    commit('SET_LOADED', { key: 'taxRate' })
+    return content
   },
   // 加载分类
   async fetchMatClsTree({ commit }) {
@@ -227,6 +249,13 @@ const actions = {
     commit('SET_REGIONAL', regional)
     commit('SET_LOADED', { key: 'regional' })
     return regional
+  },
+  // 加载未关闭的申购单
+  async fetchUnclosedRequisitions({ commit }) {
+    const { content = [] } = await getUnclosedRequisitionsBrief()
+    commit('SET_UNCLOSED_REQUISITIONS', content)
+    commit('SET_LOADED', { key: 'unclosedRequisitions' })
+    return content
   },
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []

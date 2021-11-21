@@ -37,6 +37,7 @@
       />
       <supplier-select
         v-model="query.supplierId"
+        :type="query.purchaseType"
         clearable
         class="filter-item"
         @change="crud.toQuery"
@@ -46,9 +47,18 @@
       <el-input
         v-model.trim="query.orderNo"
         clearable
-        style="width: 250px"
+        style="width: 200px"
         size="small"
         placeholder="按订单号搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.operatorName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按操作人搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -72,11 +82,12 @@ import supplierSelect from '@comp-base/supplier-select.vue'
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
-  createTime: [],
-  purchaseType: undefined,
-  purchaseStatus: purchaseStatusEnum.UNFINISHED.V,
-  projectId: undefined,
-  supplierId: undefined
+  createTime: [], // [开始日期，结束日期]
+  purchaseType: undefined, // 采购类型
+  purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
+  projectId: { value: undefined, resetAble: false }, // 项目id
+  supplierId: undefined, // 供应商id
+  operatorName: undefined // 创建人 or 最后操作人
 }
 
 const { crud, query } = regHeader(defaultQuery)
