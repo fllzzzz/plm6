@@ -460,108 +460,74 @@ export default {
   //     }
   //   ]
   // },
-  // {
-  //   path: '/mes/manufactures-manage',
-  //   component: 'Layout',
-  //   hidden: false,
-  //   name: 'MesManufacturesManage',
-  //   alwaysShow: false,
-  //   redirect: '/mes/manufactures-manage/inbound-state',
-  //   meta: { title: '制成品管理', icon: 'contract', noCache: true },
-  //   children: [
-  //     {
-  //       name: 'MesManufacturesInboundState',
-  //       path: 'inbound-state',
-  //       hidden: false,
-  //       redirect: '/mes/manufactures-manage/inbound-state/artifact-dashboard',
-  //       meta: { title: '入库看板', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesInboundStateArtifactDashboard',
-  //           path: 'artifact-dashboard',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/inbound-state/artifact-dashboard/index',
-  //           meta: { title: '构件', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesInboundStateEnclosureDashboard',
-  //           path: 'enclosure-dashboard',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/inbound-state/enclosure-dashboard/index',
-  //           meta: { title: '围护', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       name: 'MesManufacturesOutboundState',
-  //       path: 'outbound-state',
-  //       hidden: false,
-  //       redirect: '/mes/manufactures-manage/outbound-state/artifact-dashboard',
-  //       meta: { title: '出库看板', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesOutboundStateArtifactDashboard',
-  //           path: 'artifact-dashboard',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/outbound-state/artifact-dashboard/index',
-  //           meta: { title: '构件', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesOutboundStateEnclosureDashboard',
-  //           path: 'enclosure-dashboard',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/outbound-state/enclosure-dashboard/index',
-  //           meta: { title: '围护', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesOutboundStateAuxiliaryMaterialDashboard',
-  //           path: 'auxiliary-material-dashboard',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/outbound-state/auxiliary-material-dashboard/index',
-  //           meta: { title: '辅材', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       name: 'MesManufacturesWarehouseState',
-  //       path: 'warehouse-state',
-  //       hidden: false,
-  //       redirect: '/mes/manufactures-manage/warehouse-state/artifact',
-  //       meta: { title: '出入库综合看板', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesWarehouseStateArtifact',
-  //           path: 'artifact',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/warehouse-state/artifact/index',
-  //           meta: { title: '构件', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesWarehouseStateEnclosure',
-  //           path: 'enclosure',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/warehouse-state/enclosure/index',
-  //           meta: { title: '围护', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesWarehouseStateAuxiliaryMaterial',
-  //           path: 'auxiliary-material',
-  //           hidden: false,
-  //           component: '/mes/manufactures-manage/warehouse-state/auxiliary-material/index',
-  //           meta: { title: '辅材', icon: 'project', noCache: true }
-  //         }
+  {
+    path: '/mes/manufactures-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesManufacturesManage',
+    alwaysShow: false,
+    redirect: '/mes/manufactures-manage/inbound-state/artifact-dashboard',
+    meta: { title: '制成品管理', icon: 'project', noCache: true },
+    children: [
+      {
+        name: 'MesInboundStateArtifactDashboard',
+        path: 'inbound-state/artifact-dashboard',
+        hidden: false,
+        component: '/mes/manufactures-manage/inbound-state/artifact-dashboard/index',
+        meta: { title: '入库看板-构件', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesInboundStateEnclosureDashboard',
+        path: 'inbound-state/enclosure-dashboard',
+        hidden: false,
+        component: '/mes/manufactures-manage/inbound-state/enclosure-dashboard/index',
+        meta: { title: '入库看板-围护', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesOutboundStateArtifactDashboard',
+        path: 'outbound-state/artifact-dashboard',
+        hidden: false,
+        component: '/mes/manufactures-manage/outbound-state/artifact-dashboard/index',
+        meta: { title: '出库看板-构件', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesOutboundStateEnclosureDashboard',
+        path: 'outbound-state/enclosure-dashboard',
+        hidden: false,
+        component: '/mes/manufactures-manage/outbound-state/enclosure-dashboard/index',
+        meta: { title: '出库看板-围护', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesWarehouseStateArtifact',
+        path: 'warehouse-state/artifact',
+        hidden: false,
+        component: '/mes/manufactures-manage/warehouse-state/artifact/index',
+        meta: { title: '出入库状态-构件', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesWarehouseStateEnclosure',
+        path: 'warehouse-state/enclosure',
+        hidden: false,
+        component: '/mes/manufactures-manage/warehouse-state/enclosure/index',
+        meta: { title: '出入库状态-围护', icon: 'project', noCache: true }
+      }
+      //     {
+      //       name: 'MesWarehouseStateAuxiliaryMaterial',
+      //       path: 'auxiliary-material',
+      //       hidden: false,
+      //       component: '/mes/manufactures-manage/warehouse-state/auxiliary-material/index',
+      //       meta: { title: '辅材', icon: 'project', noCache: true }
+      //     }
 
-  //       ]
-  //     },
-  //     {
-  //       name: 'MesManufacturesReport',
-  //       path: 'report',
-  //       hidden: false,
-  //       component: '/mes/manufactures-manage/warehouse-state/report/index',
-  //       meta: { title: '入发存报表', icon: 'project', noCache: true }
-  //     }
-  //   ]
-  // },
+      // {
+      //   name: 'MesManufacturesReport',
+      //   path: 'report',
+      //   hidden: false,
+      //   component: '/mes/manufactures-manage/warehouse-state/report/index',
+      //   meta: { title: '入发存报表', icon: 'project', noCache: true }
+      // }
+    ]
+  },
   {
     path: '/mes/pack-and-ship',
     component: 'Layout',
