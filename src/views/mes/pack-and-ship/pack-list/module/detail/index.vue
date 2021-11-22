@@ -9,7 +9,7 @@
     @closed="handleClose"
   >
     <template #tip>
-      <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.packageNumber }}</el-tag>
+      <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
     </template>
     <div class="head-container">
       <el-radio-group v-model="monomerStatus" class="filter-item" size="small">

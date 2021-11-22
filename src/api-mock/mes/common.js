@@ -129,7 +129,7 @@ const getAllPackage = {
         'content|1-100': [{
           'id|+1': 1,
           'project': null,
-          'packageNumber': '@guid',
+          'serialNumber': '@guid',
           'productType': 2
         }]
       }

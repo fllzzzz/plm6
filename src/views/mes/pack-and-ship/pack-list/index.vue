@@ -30,9 +30,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('packageNumber')"
-        key="packageNumber"
-        prop="packageNumber"
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
+        prop="serialNumber"
         :show-overflow-tooltip="true"
         label="包单号"
         align="center"
@@ -279,10 +279,10 @@ function openRecordView(row) {
 }
 
 function handelCellClassName({ row, column, rowIndex, columnIndex }) {
-  const markColumn = ['packageNumber'] // 标记字段
+  const markColumn = ['serialNumber'] // 标记字段
   let className = ''
   if (markColumn.includes(column.property)) {
-    if (column.property === 'packageNumber' && row['printedQuantity']) {
+    if (column.property === 'serialNumber' && row['printedQuantity']) {
       className = 'printed-mark'
     }
     // className += ' marked'

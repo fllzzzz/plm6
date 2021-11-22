@@ -24,7 +24,7 @@
       @change="handleDateChange"
     />
     <el-input
-      v-model="query.packageNumber"
+      v-model="query.serialNumber"
       placeholder="输入包单搜索"
       class="filter-item"
       style="width: 200px"
@@ -120,7 +120,7 @@ import rrOperation from '@crud/RR.operation'
 const permission = inject('permission')
 const { companyName } = mapGetters(['companyName'])
 const defaultQuery = {
-  packageNumber: undefined,
+  serialNumber: undefined,
   userName: undefined,
   startDate: undefined,
   endDate: undefined,
@@ -192,7 +192,7 @@ async function printLabel(row) {
   try {
     const labelInfo = getlabelInfo(row)
     while (pollingTimes--) {
-      printLoading.value.text = `正在加入打印队列：${row.packageNumber} 第${printedTimes + 1}张`
+      printLoading.value.text = `正在加入打印队列：${row.serialNumber} 第${printedTimes + 1}张`
       await printPackageLabel(labelInfo)
       printedTimes++
     }
@@ -219,7 +219,7 @@ function getlabelInfo(row) {
   // 标签构件信息
   const packageInfo = {
     projectName: row.project.name,
-    packageNumber: row.packageNumber,
+    serialNumber: row.serialNumber,
     totalWeight: row.totalGrossWeight && row.totalGrossWeight.toFixed(DP.COM_WT__KG),
     quantity: row.quantity,
     materialTypeNames: row.materialTypeNames,

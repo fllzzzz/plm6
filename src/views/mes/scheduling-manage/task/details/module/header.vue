@@ -54,7 +54,7 @@ import { defineProps, defineEmits, defineExpose, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { processTypeEnum, taskIssueTypeEnum } from '@enum-ms/mes'
-import { key2val } from '@/utils/enum/base'
+import EO from '@/utils/enum'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -64,7 +64,7 @@ const operateButtonEnum = {
   TASK_ISSUE: { L: '任务下发', K: 'TASK_ISSUE', V: 1, T: 'primary' }
   // MODIFY_TASK: { L: '修改排产任务', K: 'MODIFY_TASK', V: 2, T: 'warning' }
 }
-const operateButtonEnumV = key2val(operateButtonEnum)
+const operateButtonEnumV = EO.key2val(operateButtonEnum)
 
 const emit = defineEmits(['update:modifying', 'preview'])
 defineProps({

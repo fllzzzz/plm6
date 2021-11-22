@@ -18,7 +18,7 @@ const getPack = {
             'shortName': 'xm001',
             'contractNo': '2121212'
           },
-          'packageNumber': '2021-11-09-04',
+          'serialNumber': '2021-11-09-04',
           'productType': 2,
           'status': false,
           'remark': '',
@@ -38,7 +38,7 @@ const getPack = {
             'shortName': 'xm001',
             'contractNo': '2121212'
           },
-          'packageNumber': '2021-11-09-05',
+          'serialNumber': '2021-11-09-05',
           'productType': 2,
           'status': false,
           'remark': '2222',
@@ -58,7 +58,7 @@ const getPack = {
             'shortName': 'xm001',
             'contractNo': '2121212'
           },
-          'packageNumber': '2021-11-09-06',
+          'serialNumber': '2021-11-09-06',
           'productType': 2,
           'status': false,
           'remark': '1213',
@@ -78,7 +78,7 @@ const getPack = {
             'shortName': 'xm001',
             'contractNo': '2121212'
           },
-          'packageNumber': '2021-11-10-04',
+          'serialNumber': '2021-11-10-04',
           'productType': 4,
           'status': false,
           'remark': '123213123213',

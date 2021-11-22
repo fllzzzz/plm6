@@ -1,12 +1,12 @@
 <template>
-  <common-dialog :title="`${packageInfo.packageNumber}`" v-model="dialogVisible" width="640px" :before-close="handleClose">
+  <common-dialog :title="`${packageInfo.serialNumber}`" v-model="dialogVisible" width="640px" :before-close="handleClose">
     <table border="1" bordercolor="#000000">
       <tr>
         <td colspan="3">{{ packageInfo.projectName }}</td>
       </tr>
       <tr>
         <td colspan="3">
-          <span style="font-size: 18pt; font-weight: bold">{{ packageInfo.packageNumber }}</span>
+          <span style="font-size: 18pt; font-weight: bold">{{ packageInfo.serialNumber }}</span>
           <span style="font-size: 16px; float: right; margin-top: 4px">{{ packageInfo.materialTypeNames }}</span>
         </td>
       </tr>
