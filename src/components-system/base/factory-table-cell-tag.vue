@@ -1,5 +1,5 @@
 <template>
-  <span class="factory-table-cell-tag">
+  <span class="factory-table-cell-tag" :style="{'margin-left': `${props.offset}px`}">
     <table-cell-tag v-if="cur" :name="cur.shortName" :color="cur.tagColor" />
   </span>
 </template>
@@ -13,6 +13,10 @@ import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 const props = defineProps({
   id: {
     type: Number
+  },
+  offset: {
+    type: Number,
+    default: 15
   }
 })
 
@@ -23,8 +27,3 @@ const cur = computed(() => {
 })
 
 </script>
-<style lang="scss" scoped>
-.factory-table-cell-tag {
-  margin-left: 15px;
-}
-</style>

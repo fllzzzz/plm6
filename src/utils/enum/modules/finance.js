@@ -7,13 +7,13 @@ const boolWeightMeanEnum = {
 }
 constantize(boolWeightMeanEnum)
 
-// 工程结算类型
-const engineerSettlementTypeEnum = {
-  THEORY: { L: '理计结算', SL: '理计', K: 'THEORY', V: 1 << 0, COLOR: '#1682e6' },
-  OVERWEIGHT: { L: '磅计结算', SL: '磅计', K: 'OVERWEIGHT', V: 1 << 1, COLOR: '#e64242' },
-  MIXTURE: { L: '混合计结算', SL: '混合计', K: 'MIXTURE', V: 1 << 2 }
+// 重量计量方式
+const weightMeasurementModeEnum = {
+  THEORY: { L: '理计', K: 'THEORY', V: 1 << 0, COLOR: '#1682e6' },
+  OVERWEIGHT: { L: '磅计', K: 'OVERWEIGHT', V: 1 << 1, COLOR: '#e64242' },
+  MIXTURE: { L: '混合计', K: 'MIXTURE', V: 1 << 2 }
 }
-constantize(engineerSettlementTypeEnum)
+constantize(weightMeasurementModeEnum)
 
 // 结算状态
 const settlementStatusEnum = {
@@ -38,8 +38,8 @@ constantize(arrearsStatusEnum)
 
 // 票据类型
 const invoiceTypeEnum = {
-  SPECIAL_INVOICE: { L: '增值税专用发票', SL: '专票', K: 'SPECIAL_INVOICE', V: 1 << 0 },
-  GENERAL_INVOICE: { L: '增值税普通发票', SL: '普票', K: 'GENERAL_INVOICE', V: 1 << 1 },
+  SPECIAL: { L: '增值税专用发票', SL: '专票', K: 'SPECIAL', V: 1 << 0 },
+  ORDINARY: { L: '增值税普通发票', SL: '普票', K: 'ORDINARY', V: 1 << 1 },
   RECEIPT: { L: '收据', SL: '收据', K: 'RECEIPT', V: 1 << 2 }
 }
 constantize(invoiceTypeEnum)
@@ -67,7 +67,7 @@ export default {
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
   arrearsStatusEnum, // 欠款状态
-  engineerSettlementTypeEnum, // 工程结算方式
+  weightMeasurementModeEnum, // 工程结算方式
   settlementStatusEnum, // 结算状态
   enclosureSettlementTypeEnum //  围护结算类型
 }
@@ -78,7 +78,7 @@ export {
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
   arrearsStatusEnum, // 欠款状态
-  engineerSettlementTypeEnum, // 工程结算方式
+  weightMeasurementModeEnum, // 工程结算方式
   settlementStatusEnum, // 结算状态
   enclosureSettlementTypeEnum //  围护结算类型
 }

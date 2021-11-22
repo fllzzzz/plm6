@@ -1,8 +1,17 @@
 <template>
-  <span class="table-cell-tag" :style="tagStyle">
-    <el-tooltip :disabled="props.name.length > 4" :open-delay="300" :hide-after="10000" effect="light" :content="props.name" :placement="props.placement">
-      <span style="cursor: pointer">{{ props.name.substr(0, 4) }}</span>
-    </el-tooltip>
+  <span class="table-cell-tag-container" :style="{'margin-left': `${props.offset}px`}">
+    <span v-if="show" class="table-cell-tag" :style="tagStyle">
+      <el-tooltip
+        :disabled="props.name.length > 4"
+        :open-delay="300"
+        :hide-after="10000"
+        effect="light"
+        :content="props.name"
+        :placement="props.placement"
+      >
+        <span style="cursor: pointer">{{ props.name.substr(0, 4) }}</span>
+      </el-tooltip>
+    </span>
   </span>
 </template>
 
@@ -24,6 +33,14 @@ const props = defineProps({
   placement: {
     type: String,
     default: 'left'
+  },
+  show: {
+    type: Boolean,
+    default: true
+  },
+  offset: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -41,7 +58,7 @@ const tagStyle = computed(() => {
 <style lang="scss" scoped>
 .table-cell-tag {
   background: #1682e6;
-  transform:  rotate(-45deg);
+  transform: rotate(-45deg);
   color: white;
   font-weight: 100;
   position: absolute;
@@ -54,10 +71,5 @@ const tagStyle = computed(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.table-cell-tag +span {
-  // padding-left: 20px;
-  margin-left: 15px;
-  // margin-left: 10px;
 }
 </style>

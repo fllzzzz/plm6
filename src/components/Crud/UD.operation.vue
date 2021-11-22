@@ -133,4 +133,7 @@ function handleDocumentClick(event) {
 .el-button + .ud-operation {
   margin-left: 8px;
 }
+.el-button + .el-button {
+  margin-left: 8px;
+}
 </style>

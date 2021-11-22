@@ -106,7 +106,7 @@ const WMS_LOGISTICS_ORDER_MATERIAL_DETAIL = {
       { show: true, key: 'orderNo', title: '订单号：', source: dataSourceEnum.SYSTEM.V, width: 130, type: typeEnum.GUID.K },
       { show: true, key: 'supplierName', title: '供应商：', source: dataSourceEnum.SYSTEM.V, width: 60, align: alignEnum.LEFT.V, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'inWarehouseDate', title: '入库日期：', source: dataSourceEnum.SYSTEM.V, width: 130, type: typeEnum.DATES.K, format: 'YY/MM/DD' },
-      { show: true, key: 'measurementType', title: '计量方式：', source: dataSourceEnum.SYSTEM.V, width: 60, align: alignEnum.CENTER.V, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: true, key: 'measurementType', title: '计量方式：', source: dataSourceEnum.SYSTEM.V, width: 60, align: alignEnum.CENTER.V, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: false, key: 'printDate', title: '打印日期：', source: dataSourceEnum.SYSTEM.V, width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, key: 'printer', title: '打印人：', source: dataSourceEnum.SYSTEM.V, width: 35, type: typeEnum.USER_NAME.K }
     ]

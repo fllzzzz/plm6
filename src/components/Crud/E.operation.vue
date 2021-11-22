@@ -8,9 +8,7 @@
       icon="el-icon-download"
       size="mini"
       @click.stop="doExport"
-    >
-      <span v-if="props.showText" v-text="tip" />
-    </common-button>
+    />
   </el-tooltip>
 </template>
 
@@ -32,10 +30,6 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
-  },
-  tip: {
-    type: String,
-    default: '导出'
   },
   customFn: {
     type: Function,

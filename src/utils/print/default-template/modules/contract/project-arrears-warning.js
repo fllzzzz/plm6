@@ -205,7 +205,7 @@ const PROJECT_ARREARS_WARNING = {
       { show: false, key: 'project.contractNo', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.CONTRACT_NO.K },
       { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 27, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: false, key: 'orderType', title: '订单类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ORDER_TYPE.K },
-      { show: true, key: 'settlementType', title: '结算方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: true, key: 'settlementType', title: '结算方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: false, key: 'projectStatus', title: '项目状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'projectStatusEnum', key: 'L' }},
       { show: false, key: 'startDate', title: '开始日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, key: 'endDate', title: '结束日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },

@@ -23,7 +23,7 @@ const useMatClsSpec = (classifyId) => {
       })
     }
   }
-  if (classifyId) { // 如果传入了id则手动加载
+  if (classifyId) { // 如果传入了id则自动加载
     fetchMatClsSpec(classifyId)
   }
   return {

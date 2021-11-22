@@ -205,7 +205,7 @@ const PROJECT_COLLECTION_SUMMARY = {
       { show: true, key: 'orderType', title: '订单类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ORDER_TYPE.K },
       { show: false, key: 'structureType', title: '结构类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.STRUCTURE_TYPE.K },
       { show: true, key: 'businessLeaderName', title: '业务负责人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.USER_NAME.K },
-      { show: true, key: 'settlementType', title: '结算方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: true, key: 'settlementType', title: '结算方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: true, key: 'contractAmount', title: '合同金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'collectionAmount', title: '收款金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: false, key: 'collectionRate', title: '收款率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.RATE.K, format: { precision: 2 }},

@@ -21,7 +21,8 @@ export function getProjectById(id) {
 
 /**
  * 项目名称格式转化
- * @param {object} project 项目 { id,name,contractNo }
+ * TODO: 后期，服务端若配置简称，则全称不传
+ * @param {object} project 项目 { id,name,serialNumber }
  * @param {object} config 配置
  * @param {boolean} lineBreak=[true] 是否换行,默认换行
  */
@@ -33,17 +34,18 @@ export function projectNameFormatter(project, config, lineBreak = true) {
   if (isBlank(config)) {
     config = store.getters.projectNameShowConfig
   }
-  if (!config.showContractNo || !project.contractNo) {
-    return project.name
+  const _projectName = config.showProjectFullName ? project.name : project.shortName
+  if (!config.showSerialNumber || !project.serialNumber) {
+    return _projectName
   }
   let extra = `   `
   if (lineBreak) {
     extra = ` \n`
   }
   switch (config.arrangement) {
-    case projectNameArrangementModeEnum.CONTRACT_NO_START.V: return `${project.contractNo}${extra}${project.name}`
-    case projectNameArrangementModeEnum.CONTRACT_NO_END.V: return `${project.name}${extra}${project.contractNo}`
-    default: return `${project.name}`
+    case projectNameArrangementModeEnum.SERIAL_NUMBER_START.V: return `${project.serialNumber}${extra}${_projectName}`
+    case projectNameArrangementModeEnum.SERIAL_NUMBER_END.V: return `${_projectName}${extra}${project.serialNumber}`
+    default: return `${_projectName}`
   }
 }
 
@@ -77,7 +79,7 @@ export function projectsToCascade(projects, timeField = 'createTime') {
       // 设置级联第一级：项目年份
       cascade.push({
         id: -parseInt(pYear),
-        label: pYear,
+        name: pYear,
         children: []
       })
       // 更新数组下标
@@ -86,12 +88,12 @@ export function projectsToCascade(projects, timeField = 'createTime') {
       statusArr.forEach(item => {
         cascade[yIndex].children.push({
           id: -Number(item.V),
-          label: item.L,
+          name: item.L,
           children: []
         })
       })
     }
-    project.label = projectNameFormatter(project)
+    project.name = projectNameFormatter(project)
     // 设置级联第三级：项目
     cascade[yIndex].children[statusValArr.indexOf(project.status)].children.push(project)
   })

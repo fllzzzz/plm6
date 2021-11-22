@@ -96,6 +96,13 @@ export default {
           hidden: false,
           component: '/config-manage/wms/warehouse/index',
           meta: { title: '仓库设置', icon: 'Steve-Jobs', noCache: true }
+        },
+        {
+          name: 'CommonTaxRate',
+          path: 'common-tax-rate',
+          hidden: false,
+          component: '/config-manage/wms/common-tax-rate/index',
+          meta: { title: '常用税率', icon: 'Steve-Jobs', noCache: true }
         }
         // {
         //   name: 'InventoryWarning',

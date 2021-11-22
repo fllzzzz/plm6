@@ -2,20 +2,20 @@
 <template>
   <el-select
     v-model="copyValue"
-    :size="size"
-    :disabled="disabled"
-    :multiple="multiple"
-    :collapse-tags="collapseTags"
+    :size="props.size"
+    :disabled="props.disabled"
+    :multiple="props.multiple"
+    :collapse-tags="props.collapseTags"
     :loading="loading"
-    :clearable="clearable"
-    :filterable="filterable"
-    :placeholder="placeholder"
+    :clearable="props.clearable"
+    :filterable="props.filterable"
+    :placeholder="props.placeholder"
     :class="textAlignClass"
     @change="selectChange"
     @blur="handleBlur"
   >
     <el-option
-      v-if="showAll"
+      v-if="showOptionAll"
       :key="-1"
       :label="allLabelText"
       :value="allVal"
@@ -81,7 +81,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  showAll: {
+  showOptionAll: {
     type: Boolean,
     default: false
   },
@@ -124,7 +124,7 @@ const props = defineProps({
   },
   type: { // dict , enum, other
     type: String,
-    default: 'dict'
+    default: 'other'
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用

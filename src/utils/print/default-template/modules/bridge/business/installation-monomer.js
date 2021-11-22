@@ -109,7 +109,7 @@ const BRIDGE_MES_BUSINESS_INSTALLATION_MONOMER = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '类别：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'brMaterialTypeEnum', key: 'L' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 110, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'weightType', title: '重量类型：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'weightTypeEnum', key: 'L' }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'settlementType', title: '结算方式：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'settlementType', title: '结算方式：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 30, type: typeEnum.USER_NAME.K }
     ]

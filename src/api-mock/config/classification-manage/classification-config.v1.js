@@ -171,7 +171,7 @@ const getClassificationTree = {
         'isLast': 0,
         'isNormalPart': 1,
         'code': '21',
-        'basicClass': 16,
+        'basicClass': 8,
         'children': [{
           'id': 196,
           'name': '高强螺栓',
@@ -218,7 +218,7 @@ const getClassificationTree = {
         'id': 141,
         'name': '配套件',
         'code': '22',
-        'basicClass': 16,
+        'basicClass': 8,
         'children': [{
           'id': 216,
           'name': '雨水管',
@@ -242,7 +242,7 @@ const getClassificationTree = {
         'isLast': 0,
         'isNormalPart': 1,
         'code': '23',
-        'basicClass': 16,
+        'basicClass': 8,
         'children': [{
           'id': 247,
           'name': '油漆',
@@ -256,7 +256,7 @@ const getClassificationTree = {
         'id': 1131,
         'name': '气体',
         'code': '24',
-        'basicClass': 32,
+        'basicClass': 16,
         'children': [{
           'id': 2147,
           'name': '丙烷',

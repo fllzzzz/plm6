@@ -220,7 +220,7 @@ const CONTRACT_LEDGER = {
       { show: false, key: 'deptName', title: '签订部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.DEPT.K },
       { show: false, key: 'businessLeaderName', title: '业务负责人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: false, key: 'transportMode', title: '运输方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'transportModeEnum', key: 'L' }},
-      { show: false, key: 'settlementType', title: '结算方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL' }},
+      { show: false, key: 'settlementType', title: '结算方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},
       { show: false, key: 'invoiceType', title: '发票类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
       { show: true, key: 'collectionAmount', title: '收款金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: false, key: 'collectionRate', title: '收款率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.RATE.K, format: { precision: 2 }},

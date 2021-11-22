@@ -13,7 +13,7 @@ const getMaterialIW = {
         'content': [
           {
             'id|+1': 1,
-            'subjectId|+1': 1,
+            'classifyId|+1': 1,
             'serialNumber': /[0-9]{10}/,
             'factoryId': 3,
             'fullClassifyName': '紧固件>高强螺栓>大六角',
@@ -28,7 +28,7 @@ const getMaterialIW = {
           },
           {
             'id|+1': 1,
-            'subjectId|+1': 1,
+            'classifyId|+1': 1,
             'serialNumber': /[0-9]{10}/,
             'factoryId': undefined,
             'fullClassifyName': '紧固件>螺母',

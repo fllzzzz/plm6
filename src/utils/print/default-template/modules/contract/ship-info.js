@@ -209,7 +209,7 @@ const SHIP_INFO = {
       { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, key: 'orderType', title: '订单类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ORDER_TYPE.K },
       { show: true, key: 'structureType', title: '结构类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.STRUCTURE_TYPE.K },
-      { show: true, key: 'settlementType', title: '计量方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'engineerSettlementTypeEnum', key: 'SL', bit: true }},
+      { show: true, key: 'settlementType', title: '计量方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL', bit: true }},
       { show: true, key: 'supplierName', title: '物流单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 18, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
       { show: true, key: 'senderUserName', title: '发货人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },

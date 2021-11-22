@@ -1,3 +1,4 @@
+import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import { materialListTypeEnum, materialTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
 import { materialClassificationEnum } from '@enum-ms/classification'
 
@@ -18,6 +19,11 @@ export const STAINLESS_STEEL_DENSITY = 7.93
 
 // 钢材的val
 export const STEEL_ENUM = materialClassificationEnum.STEEL_PLATE.V | materialClassificationEnum.SECTION_STEEL.V | materialClassificationEnum.STEEL_COIL.V
+
+// 项目类型：全部
+export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {
+  return res | cur
+}, 0)
 
 // 系统最小单位（默认）
 export const MIN_UNIT = {
