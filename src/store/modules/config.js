@@ -65,7 +65,7 @@ const mutations = {
   SET_TAX_RATE(state, list) {
     state.taxRateKV = {}
     list.forEach(v => {
-      state.taxRateKV[v.basicClass] = v.taxRateList
+      state.taxRateKV[v.classification] = v.taxRateList
     })
   },
   SET_MAT_CLS_TREE(state, tree) {

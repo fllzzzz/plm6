@@ -14,7 +14,7 @@ const supplierClassEnum = {
 }
 constantize(supplierClassEnum)
 
-// 供应商类型
+// 供应商类型(前两项与基础材料类型相同)
 const supplierTypeEnum = {
   RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
   MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 1 << 1 },

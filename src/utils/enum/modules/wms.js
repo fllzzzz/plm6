@@ -28,12 +28,12 @@ const orderSupplyTypeEnum = {
 }
 constantize(orderSupplyTypeEnum)
 
-// 采购类型
-const purchaseTypeEnum = {
-  RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 },
-  MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 2 }
+// 基础材料类型/采购类型
+const baseMaterialTypeEnum = {
+  RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
+  MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 1 << 1 }
 }
-constantize(purchaseTypeEnum)
+constantize(baseMaterialTypeEnum)
 
 // 提货方式
 const pickUpModeEnum = {
@@ -62,7 +62,7 @@ export {
   measureTypeEnum,
   warehouseTypeEnum,
   orderSupplyTypeEnum,
-  purchaseTypeEnum,
+  baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
   pickUpModeEnum
@@ -73,7 +73,7 @@ export default {
   measureTypeEnum,
   warehouseTypeEnum,
   orderSupplyTypeEnum,
-  purchaseTypeEnum,
+  baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
   pickUpModeEnum

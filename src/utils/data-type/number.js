@@ -1,4 +1,3 @@
-
 /**
  * 数字位数不够，补0。 例 (1,3) => 001
  * @param {number} num 被操作数
@@ -24,6 +23,42 @@ export function getBitwiseBack(num) {
     }
   })
   return arr
+}
+
+export function getBits(options, val, type, { label = 'label', key = 'key', value = 'value' } = {}) {
+  const bitArr = []
+  for (const i in options) {
+    if (options[i][value] & val) {
+      switch (type) {
+        case 'key':bitArr.push(options[i][key])
+          break
+        case 'value':bitArr.push(options[i][value])
+          break
+        case 'label':bitArr.push(options[i][label])
+          break
+        default:
+          bitArr.push(options[i].value)
+          break
+      }
+    }
+  }
+  return bitArr
+}
+
+/**
+ * 返回枚举对象的位运算只和
+ * @param {*} enumerate 枚举对象
+ * @param {*} value 值
+ * @returns 枚举值数组
+ */
+export function getBitsSum(enumerate) {
+  let _e
+  if (Array.isArray(enumerate)) {
+    _e = enumerate
+  }
+  return _e.reduce((res, cur) => {
+    return res | cur
+  }, 0)
 }
 
 /**
@@ -124,7 +159,9 @@ export function dightLowercase(num) {
         re = BB[7] + re
         break
       case 4:
-        if (!new RegExp('0{4}\\d{' + (a[0].length - i - 1) + '}$').test(a[0])) { re = BB[4] + re }
+        if (!new RegExp('0{4}\\d{' + (a[0].length - i - 1) + '}$').test(a[0])) {
+          re = BB[4] + re
+        }
         break
       case 8:
         re = BB[5] + re
@@ -136,7 +173,8 @@ export function dightLowercase(num) {
     if (a[0].charAt(i) !== 0) re = AA[a[0].charAt(i)] + BB[k % 4] + re
     k++
   }
-  if (a.length > 1) { // 加上小数部分(如果有小数部分)
+  if (a.length > 1) {
+    // 加上小数部分(如果有小数部分)
     re += BB[6]
     for (i = 0; i < a[1].length; i++) re += AA[a[1].charAt(i)]
   }
@@ -154,6 +192,6 @@ export function toThousandFilter(num) {
   if (isNaN(+num)) {
     return num
   } else {
-    return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
+    return (+num || 0).toString().replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
   }
 }

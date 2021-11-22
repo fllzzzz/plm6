@@ -56,7 +56,7 @@ const getTaxRateBrief = {
   }
 }
 
-// 获取仓库位置
+// 获取常用税率
 const get = {
   url: '/api/wms/config/material/tax-rate',
   method: 'get',
@@ -129,7 +129,7 @@ const get = {
   }
 }
 
-// 修改仓库
+// 修改常用税率
 const edit = {
   url: '/api/wms/config/material/tax-rate',
   method: 'put',
