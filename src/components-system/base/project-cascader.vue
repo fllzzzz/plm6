@@ -13,15 +13,7 @@
       class="project-cascader"
       style="width:100%"
     />
-    <el-tag
-      :type="showAll ? undefined : 'info'"
-      size="medium"
-      effect="plain"
-      @click="showAll = !showAll"
-      class="all-tag"
-    >
-      All
-    </el-tag>
+    <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#c1c2c5'}"> All </span>
   </span>
 </template>
 
@@ -156,13 +148,15 @@ function handleChange(val) {
     width: 100%;
   }
 
-  .all-tag {
+  .all-tip {
     position: absolute;
     right: 5px;
     top: 50%;
-    transform:translate(0,-50%);
+    transform: translate(0, -50%);
     border: none;
     user-select: none;
+    font-size: 14px;
+    margin: 0 5px;
   }
 
   ::v-deep(.el-input__inner) {

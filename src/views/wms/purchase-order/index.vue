@@ -8,16 +8,19 @@
       v-loading="!loaded || crud.loading"
       :data="crud.data"
       :max-height="maxHeight"
+      :default-expand-all="false"
+      :expand-row-keys="expandRowKeys"
+      row-key="serialNumber"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="expand">
         <template #header>
-
+          <el-icon @click="handleExpandAll"><el-arrow-down v-if="expandAll" /><el-arrow-right v-else /></el-icon>
         </template>
         <template #default="scope">
           <div class="table-expand-container">
-            <p>关联项目：{{ scope.row.projectStr }}</p>
-            <p>关联申购单：{{ scope.row.requisitionsSNStr }}</p>
+            <p>关联项目：<span v-empty-text>{{ scope.row.projectStr }}</span></p>
+            <p>关联申购单：<span v-empty-text>{{ scope.row.requisitionsSNStr }}</span></p>
           </div>
         </template>
       </el-table-column>
@@ -119,7 +122,14 @@
           <span>{{ invoiceTypeEnum.VL[scope.row.invoiceType] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" label="采购状态" prop="purchaseStatus" align="center" width="90px">
+      <el-table-column
+        v-if="columns.visible('purchaseStatus')"
+        key="purchaseStatus"
+        label="采购状态"
+        prop="purchaseStatus"
+        align="center"
+        width="90px"
+      >
         <template #header>
           <el-tooltip
             class="item"
@@ -225,6 +235,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+const expandRowKeys = ref([])
+const expandAll = computed(() => expandRowKeys.value.length === crud.data.length)
 
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -251,9 +263,17 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.typeText = purchaseTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN.join('　、　')
-    v.projectStr = v.project.map(v => projectNameFormatter(v, null, false)).join('　、　')
+    v.projectStr = v.project.map((v) => projectNameFormatter(v, null, false)).join('　、　')
     return v
   })
 }
 
+// 展开所有行
+function handleExpandAll() {
+  if (!expandAll.value) {
+    expandRowKeys.value = crud.data.map((v) => v.serialNumber)
+  } else {
+    expandRowKeys.value = []
+  }
+}
 </script>

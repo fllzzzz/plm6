@@ -26,7 +26,7 @@
         class="project-cascader"
         style="width: 100%"
       />
-      <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#dcdfe6'}"> All </span>
+      <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#c1c2c5'}"> All </span>
     </span>
     <el-tooltip class="item" effect="dark" content="刷新项目列表" placement="right">
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
@@ -232,6 +232,7 @@ function refreshProjectList() {
     border: none;
     user-select: none;
     font-size: 14px;
+    // font-weight: bold;
     margin: 0 5px;
   }
 
