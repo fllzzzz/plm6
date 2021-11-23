@@ -2,6 +2,7 @@ import { validatorPhone } from '@/utils/validate/pattern'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { supplierClassEnum, supplierTypeEnum } from '@enum-ms/supplier'
 import { materialClassificationEnum } from '@enum-ms/classification'
+import { enabledEnum } from '@/utils/enum/modules/common'
 // 根据id, 获取末级物料分类
 const getFinalMatClsById = {
   url: RegExp('/api/config/classification/final-material/' + '[1-9][0-9]*'),
@@ -98,19 +99,30 @@ const getSuppliersBrief = {
             id: 1,
             name: '物产贸易',
             type: supplierTypeEnum.RAW_MATERIAL.V,
-            basicClass: supplierClassEnum.STEEL_PLATE.V
+            basicClass: supplierClassEnum.STEEL_PLATE.V,
+            'enabled|1-2': enabledEnum.TRUE.V
+
           },
           {
             id: 2,
             name: '景风重工',
             type: supplierTypeEnum.RAW_MATERIAL.V | supplierTypeEnum.MANUFACTURED.V,
-            basicClass: supplierClassEnum.STEEL_PLATE.V | supplierClassEnum.STEEL_COIL.V
+            basicClass: supplierClassEnum.STEEL_PLATE.V | supplierClassEnum.STEEL_COIL.V | supplierClassEnum.ENCL_MANUFACTURED.V,
+            'enabled|1-2': enabledEnum.TRUE.V
           },
           {
             id: 3,
+            name: '杭州天马制造',
+            type: supplierTypeEnum.MANUFACTURED.V,
+            basicClass: supplierClassEnum.STRUC_MANUFACTURED.V,
+            'enabled|1-2': enabledEnum.TRUE.V
+          },
+          {
+            id: 4,
             name: '山东万马物流',
             type: supplierTypeEnum.LOGISTICS.V,
-            basicClass: supplierClassEnum.LOGISTICS.V
+            basicClass: supplierClassEnum.LOGISTICS.V,
+            'enabled|1-2': enabledEnum.TRUE.V
           }
         ]
       }

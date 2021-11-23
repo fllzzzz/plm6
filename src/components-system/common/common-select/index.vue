@@ -1,6 +1,7 @@
 <!-- 通用:下拉选择框 -->
 <template>
   <el-select
+    :key="`common_select_${key}`"
     v-model="copyValue"
     :size="props.size"
     :disabled="props.disabled"
@@ -11,16 +12,10 @@
     :filterable="props.filterable"
     :placeholder="props.placeholder"
     :class="textAlignClass"
-    @change="selectChange"
+    @change="handleChange"
     @blur="handleBlur"
   >
-    <el-option
-      v-if="showOptionAll"
-      :key="-1"
-      :label="allLabelText"
-      :value="allVal"
-      :disabled="disabledVal.includes(allVal)"
-    />
+    <el-option v-if="showOptionAll" :key="-1" :label="allLabelText" :value="allVal" :disabled="disabledVal.includes(allVal)" />
     <el-option
       v-if="showExtra"
       :key="-2"
@@ -36,7 +31,7 @@
         :value="item[DS.value]"
         :disabled="disabledVal.includes(item[DS.value])"
       >
-        <slot :data="item" />
+        <slot name="view" :data="item" />
       </el-option>
     </template>
   </el-select>
@@ -44,7 +39,10 @@
 
 <script setup>
 import { defineProps, defineEmits, computed, watch, ref } from 'vue'
-import { isBlank } from '@data-type/index'
+import { getBits } from '@data-type/number'
+import { isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
+import { obj2arr } from '@/utils/convert/type'
+
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 
 const emit = defineEmits(['change', 'blur', 'update:modelValue'])
@@ -122,9 +120,15 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  type: { // dict , enum, other
+  type: {
+    // dict , enum, other
     type: String,
     default: 'other'
+  },
+  mode: {
+    // normal , bit
+    type: String,
+    default: 'normal'
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用
@@ -134,29 +138,80 @@ const props = defineProps({
 
 const loading = ref(false)
 const copyValue = ref()
+const key = ref(Math.random())
 
 // 数据结构
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 const textAlignClass = computed(() => {
   switch (props.textAlign) {
-    case 'center': return 'alignCenter'
-    case 'left': return 'alignLeft'
-    case 'right': return 'alignRight'
-    default: return 'alignLeft'
+    case 'center':
+      return 'alignCenter'
+    case 'left':
+      return 'alignLeft'
+    case 'right':
+      return 'alignRight'
+    default:
+      return 'alignLeft'
   }
 })
 
 watch(
-  () => props.modelValue,
-  (value) => { copyValue.value = value },
+  () => props.options,
+  (nVal, oVal) => {
+    if (isNotBlank(oVal)) {
+      let options = nVal || []
+      if (!Array.isArray(options)) {
+        options = obj2arr(options)
+      }
+      let cv = copyValue.value
+      if (Array.isArray(copyValue.value)) {
+        cv = options.filter(v => copyValue.value.includes(v[DS.value])).map(v => v[DS.value])
+      } else {
+        const isExit = options.some(v => v[DS.value] === copyValue.value)
+        if (!isExit) {
+          cv = undefined
+        }
+      }
+      handleChange(cv)
+    }
+    key.value = Math.random()
+  },
   { immediate: true }
 )
 
-function selectChange(val) {
-  if (isBlank(val)) val = undefined
-  emit('update:modelValue', val)
-  emit('change', val)
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (props.multiple && props.mode === 'bit') {
+      copyValue.value = getBits(props.options, value, 'value', DS)
+    } else {
+      copyValue.value = value
+    }
+  },
+  { immediate: true }
+)
+
+function handleChange(val) {
+  let data
+  if (isBlank(val)) data = undefined
+
+  if (props.multiple && props.mode === 'bit') {
+    data = val.reduce((res, cur) => {
+      return res | cur
+    }, 0)
+  } else {
+    data = val
+  }
+  // 发生变化
+  const isChange = !judgeSameValue(data, props.modelValue)
+  // 两个值都为空
+  const allBlank = isBlank(data) && isBlank(props.modelValue)
+
+  if (isChange && !allBlank) {
+    emit('update:modelValue', data)
+    emit('change', data)
+  }
 }
 
 function handleBlur(event) {
@@ -166,17 +221,17 @@ function handleBlur(event) {
 
 <style lang="scss" scoped>
 .alignCenter {
-  ::v-deep(.el-input input){
+  ::v-deep(.el-input input) {
     text-align: center;
   }
 }
 .alignLeft {
-  ::v-deep(.el-input input){
+  ::v-deep(.el-input input) {
     text-align: left;
   }
 }
 .alignRight {
-  ::v-deep(.el-input input){
+  ::v-deep(.el-input input) {
     text-align: right;
   }
 }

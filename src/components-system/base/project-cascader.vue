@@ -50,7 +50,7 @@ const props = defineProps({
   },
   filterable: {
     type: Boolean,
-    default: false
+    default: true
   },
   multiple: {
     type: Boolean,
@@ -109,16 +109,27 @@ const options = computed(() => {
 
 watch(
   showAll,
-  (flag) => {
-    let isExit = false
-    if (flag) {
-      isExit = projects.value.some(v => v.id === copyValue.value)
+  (allable) => {
+    let cv = copyValue.value
+    if (Array.isArray(copyValue.value)) {
+      if (allable) {
+        cv = projects.value.map(v => v.id).filter(v => copyValue.value.includes(v))
+      } else {
+        cv = processProjects.value.map(v => v.id).filter(v => copyValue.value.includes(v))
+      }
     } else {
-      isExit = processProjects.value.some(v => v.id === copyValue.value)
+      let isExit = false
+      if (allable) {
+        isExit = projects.value.some(v => v.id === copyValue.value)
+      } else {
+        isExit = processProjects.value.some(v => v.id === copyValue.value)
+      }
+      if (!isExit) {
+        cv = undefined
+      }
     }
-    if (!isExit) {
-      handleChange(undefined)
-    }
+
+    handleChange(cv)
   },
   { immediate: true }
 )

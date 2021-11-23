@@ -11,12 +11,24 @@
     filterable
     :placeholder="placeholder"
     :options="options"
+    :data-structure="DS"
     @change="handleChange"
-  />
+  >
+    <template #view="{ data }">
+      <span class="option-item">
+        <span>{{ data.serialNumber }}</span>
+        <span>
+          <span class="label">类型：</span><span v-parse-enum="{e:rawMatClsEnum, v:data.basicClass, bit:true, split: ' | '}"></span>
+        </span>
+      </span>
+      <!-- <common-button icon="el-icon-view" type="info" size="mini" @click.stop="showPurchaseNoDetail(data)" /> -->
+    </template>
+  </common-select>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank } from '@data-type/index'
 import useUnclosedRequisition from '@compos/store/use-unclosed-requisition'
 
@@ -24,10 +36,24 @@ const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
   modelValue: {
-    type: [Number, String]
+    type: [Array, Number, String]
+  },
+  projectId: {
+    // 项目id
+    type: [Array, Number]
+  },
+  publicWarehouse: {
+    type: Boolean,
+    default: false
   },
   basicClass: {
+    // 基础分类
     type: Number
+  },
+  viewsDetail: {
+    // 可查看详情
+    type: Boolean,
+    default: false
   },
   size: {
     type: String,
@@ -59,23 +85,38 @@ const props = defineProps({
   }
 })
 
+const DS = computed(() => {
+  return {
+    value: 'serialNumber',
+    label: 'serialNumber',
+    children: 'serialNumber'
+  }
+})
+
 const selectValue = ref()
 
 const { loaded, requisitions } = useUnclosedRequisition()
 
 const options = computed(() => {
-  if (props.basicClass) {
-    return requisitions.value.filter(v => v.basicClass & props.basicClass)
+  let list = requisitions.value
+  if (props.publicWarehouse) {
+    list = requisitions.value.filter((v) => v.projectId === undefined)
+  } else if (props.projectId) {
+    if (Array.isArray(props.projectId)) {
+      list = requisitions.value.filter((v) => props.projectId.includes(v.projectId))
+    } else {
+      list = requisitions.value.filter((v) => props.projectId === v.projectId)
+    }
   }
-  return requisitions.value
+  if (props.basicClass) {
+    list = list.filter((v) => v.basicClass & props.basicClass)
+  }
+  return list
 })
 
-watch(
-  options,
-  (opt) => {
-    loadedCallBack()
-  }
-)
+watch(options, (opt) => {
+  loadedCallBack()
+})
 
 watch(
   () => props.modelValue,
@@ -105,5 +146,25 @@ function loadedCallBack() {
   }
   handleChange(selectValue.value)
 }
-
 </script>
+
+<style lang="scss" scoped>
+.option-item {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+.option-item > span:nth-child(1) {
+  flex: none;
+  margin-right: 15px;
+}
+.option-item > span:nth-child(2) {
+  // flex: auto;
+   color: #8492a6;
+   font-size: 13px;
+   .label {
+     color: #333
+   }
+}
+</style>

@@ -91,7 +91,7 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
-    default: '请选择'
+    default: '单位'
   },
   disabledName: {
     type: Array,
