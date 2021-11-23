@@ -63,7 +63,7 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import menuSelect from '@/components-system/system/tree-select/index.vue'
+import menuSelect from '@/components-system/common/tree-select.vue'
 import { deptTree } from '@/api/system/member-manage/dept'
 import { systemEnabledEnum } from '@enum-ms/system'
 const formRef = ref()

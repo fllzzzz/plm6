@@ -12,7 +12,7 @@
 
 <script setup>
 import { defineEmits, defineProps } from 'vue'
-import TableTree from '@/components-system/system/vue-table-tree'
+import TableTree from '@/components-system/common/table-tree'
 
 const props = defineProps({
   currentId: {
