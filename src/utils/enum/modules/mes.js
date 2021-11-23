@@ -105,13 +105,19 @@ const packStatusTypeEnum = {
 }
 constantize(packStatusTypeEnum)
 
-const processingColorsEnum = {
-  UNSTART: { L: '未开始', K: 'NORMAL', V: 1 << 0, COLOR: '#f5f7fa' },
-  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 1, COLOR: '#ffba00' },
-  COMPLETE: { L: '已完成', K: 'NORMAL', V: 1 << 2, COLOR: '#40ed8d' },
-  ABNORMAL: { L: '异常', K: 'ABNORMAL', V: 1 << 3, COLOR: '#e64242' }
+// 收货状态
+const receiptStatusEnum = {
+  UNRECEIVED: { L: '未收货', K: 'UNRECEIVED', V: 1, COLOR: '#f5f7fa', T: 'success' },
+  RECEIVED: { L: '已收货', K: 'RECEIVED', V: 2, COLOR: '#40ed8d', T: 'warning' }
 }
-constantize(processingColorsEnum)
+constantize(receiptStatusEnum)
+
+// 物流计价方式
+const logisticsPriceTypeEnum = {
+  WEIGHT: { L: '重量', K: 'WEIGHT', V: 1, T: '', unit: '元/吨' },
+  TRAINS: { L: '车次', K: 'TRAINS', V: 2, T: 'warning', unit: '元/车' }
+}
+constantize(logisticsPriceTypeEnum)
 
 export {
   teamTypeEnum,
@@ -127,7 +133,8 @@ export {
   packTypeEnum,
   qrCodeTypeEnum,
   packStatusTypeEnum,
-  processingColorsEnum
+  receiptStatusEnum,
+  logisticsPriceTypeEnum
 }
 
 export default {
@@ -144,5 +151,6 @@ export default {
   packTypeEnum,
   qrCodeTypeEnum,
   packStatusTypeEnum,
-  processingColorsEnum
+  receiptStatusEnum,
+  logisticsPriceTypeEnum
 }

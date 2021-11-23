@@ -2,7 +2,7 @@ import { watch } from 'vue'
 
 import {
   processingColorsEnum
-} from '@enum-ms/mes'
+} from '@enum-ms/production'
 
 export default function useDashboardHeader({ colorCardTitle = '入库', emit, crud, fetchSummaryInfo }) {
   const colors = [{

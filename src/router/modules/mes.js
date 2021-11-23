@@ -550,28 +550,28 @@ export default {
         hidden: false,
         component: '/mes/pack-and-ship/pack-list/index',
         meta: { title: '打包记录', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesShipList',
+        path: 'ship-list',
+        hidden: false,
+        component: '/mes/pack-and-ship/ship-list/index',
+        meta: { title: '发运记录', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesReceiptStatus',
+        path: 'receipt-status',
+        hidden: false,
+        component: '/mes/pack-and-ship/receipt-status/index',
+        meta: { title: '收货状态', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesLogisticsList',
+        path: 'logistics-list',
+        hidden: false,
+        component: '/mes/pack-and-ship/logistics-list/index',
+        meta: { title: '物流记录', icon: 'project', noCache: true }
       }
-      // {
-      //   name: 'MesShipList',
-      //   path: 'ship-list',
-      //   hidden: false,
-      //   component: '/mes/pack-and-ship/ship-list/index',
-      //   meta: { title: '发运记录', icon: 'project', noCache: true }
-      // },
-      // {
-      //   name: 'MesReceiptStatus',
-      //   path: 'receipt-status',
-      //   hidden: false,
-      //   component: '/mes/pack-and-ship/receipt-status/index',
-      //   meta: { title: '收货状态', icon: 'project', noCache: true }
-      // },
-      // {
-      //   name: 'MesLogisticsList',
-      //   path: 'logistics-list',
-      //   hidden: false,
-      //   component: '/mes/pack-and-ship/logistics-list/index',
-      //   meta: { title: '物流详情', icon: 'project', noCache: true }
-      // },
       // {
       //   name: 'MesAuditList',
       //   path: 'audit-list',

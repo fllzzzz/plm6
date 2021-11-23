@@ -54,6 +54,7 @@ MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.
 MES_MATERIAL_UNIT[materialListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 
 export const DP = {
+  YUAN: 2,
   COM_WT__T: 2, // 通用_重量（t）
   COM_WT__KG: 2, // 通用_重量（kg）
   COM_WT__G: 3, // 通用_重量（kg）

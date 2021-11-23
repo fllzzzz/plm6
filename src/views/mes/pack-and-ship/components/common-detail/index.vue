@@ -3,13 +3,13 @@
     append-to-body
     :close-on-click-modal="false"
     v-model="dialogVisible"
-    title="打包清单"
+    :title="title"
     top="5vh"
     width="85vw"
     @closed="handleClose"
   >
     <template #tip>
-      <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
+      <slot name="tip"/>
     </template>
     <div class="head-container">
       <el-radio-group v-model="monomerStatus" class="filter-item" size="small">
@@ -28,7 +28,6 @@
 </template>
 
 <script setup>
-import { detail as getDetail } from '@/api/mes/pack-and-ship/pack-list'
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
 
 import { packTypeEnum } from '@enum-ms/mes'
@@ -52,12 +51,21 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  packageInfo: {
+  title: {
+    type: String,
+    default: ''
+  },
+  detailInfo: {
     type: Object,
     required: true
   },
   weightType: {
-    type: [Number, String]
+    type: [Number, String],
+    default: weightTypeEnum.NET.V
+  },
+  detailFunc: {
+    type: Function,
+    required: true
   }
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -76,14 +84,14 @@ const artifactList = ref([])
 const enclosureList = ref([])
 const auxList = ref([])
 
-const packType = computed(() => {
-  return props.packageInfo && props.packageInfo.productType
+const productType = computed(() => {
+  return props.detailInfo && props.detailInfo.productType
 })
-const packageId = computed(() => {
-  return (props.packageInfo && props.packageInfo.id) || undefined
+const detailId = computed(() => {
+  return (props.detailInfo && props.detailInfo.id) || undefined
 })
 const currentView = computed(() => {
-  switch (packType.value) {
+  switch (productType.value) {
     case packTypeEnum.STRUCTURE.V:
       return structureTable
     case packTypeEnum.ENCLOSURE.V:
@@ -95,7 +103,7 @@ const currentView = computed(() => {
   }
 })
 const list = computed(() => {
-  switch (packType.value) {
+  switch (productType.value) {
     case packTypeEnum.STRUCTURE.V:
       return (
         artifactList.value &&
@@ -128,7 +136,7 @@ const list = computed(() => {
 })
 
 watch(
-  () => packageId.value,
+  () => detailId.value,
   (val) => {
     if (val) {
       fetchDetail()
@@ -139,12 +147,12 @@ watch(
 async function fetchDetail() {
   try {
     tableLoading.value = true
-    const data = await getDetail(props.packageInfo.id)
+    const data = await props.detailFunc(detailId.value)
     artifactList.value = data.artifactList || []
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []
   } catch (error) {
-    console.log('包详情', error)
+    console.log('详情', error)
   } finally {
     tableLoading.value = false
   }
