@@ -1,5 +1,5 @@
 import { MES_MATERIAL_UNIT, MES_MATERIAL_LIST_UNIT } from '@/settings/config'
-import { materialTypeEnum, materialListTypeEnum, enclosureSettlementTypeEnum } from '@/utils/enum/modules/building-steel'
+import { componentTypeEnum, componentListTypeEnum, enclosureSettlementTypeEnum } from '@/utils/enum/modules/building-steel'
 import { isNotBlank } from '@data-type'
 
 /**
@@ -12,10 +12,10 @@ export function getMaterialTypeUnit(type, enclosureSettlementType = enclosureSet
   if (!isNotBlank(type)) {
     return
   }
-  if ([materialTypeEnum.AUXILIARY_MATERIAL.V, materialTypeEnum.STRUCTURE.V].includes(type)) {
+  if ([componentTypeEnum.AUXILIARY_MATERIAL.V, componentTypeEnum.STRUCTURE.V].includes(type)) {
     return MES_MATERIAL_UNIT[type].normal
   }
-  if (type === materialTypeEnum.ENCLOSURE.V) {
+  if (type === componentTypeEnum.ENCLOSURE.V) {
     return MES_MATERIAL_UNIT[type][enclosureSettlementType].normal
   }
 }
@@ -32,15 +32,15 @@ export function getMaterialListTypeUnit(type, enclosureSettlementType = enclosur
   }
   if (
     [
-      materialListTypeEnum.AUXILIARY_MATERIAL.V,
-      materialListTypeEnum.STRUCTURE.V,
-      materialListTypeEnum.MACHINE_PART.V,
-      materialListTypeEnum.ARTIFACT_TREE.V
+      componentListTypeEnum.AUXILIARY_MATERIAL.V,
+      componentListTypeEnum.STRUCTURE.V,
+      componentListTypeEnum.MACHINE_PART.V,
+      componentListTypeEnum.ARTIFACT_TREE.V
     ].includes(type)
   ) {
     return MES_MATERIAL_LIST_UNIT[type].normal
   }
-  if (type === materialListTypeEnum.ENCLOSURE.V) {
+  if (type === componentListTypeEnum.ENCLOSURE.V) {
     return MES_MATERIAL_LIST_UNIT[type][enclosureSettlementType].normal
   }
 }

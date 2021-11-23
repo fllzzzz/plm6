@@ -112,7 +112,7 @@ const getSuppliersBrief = {
             name: '物产贸易',
             type: supplierTypeEnum.RAW_MATERIAL.V,
             basicClass: supplierClassEnum.STEEL_PLATE.V,
-            'enabled|1-2': enabledEnum.TRUE.V
+            'enabled': enabledEnum.TRUE.V
 
           },
           {
@@ -120,7 +120,7 @@ const getSuppliersBrief = {
             name: '景风重工',
             type: supplierTypeEnum.RAW_MATERIAL.V | supplierTypeEnum.MANUFACTURED.V,
             basicClass: supplierClassEnum.STEEL_PLATE.V | supplierClassEnum.STEEL_COIL.V | supplierClassEnum.ENCL_MANUFACTURED.V,
-            'enabled|1-2': enabledEnum.TRUE.V
+            'enabled': enabledEnum.TRUE.V
           },
           {
             id: 3,

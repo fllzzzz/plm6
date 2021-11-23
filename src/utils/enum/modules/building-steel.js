@@ -7,32 +7,32 @@ const enclosureSettlementTypeEnum = {
 }
 constantize(enclosureSettlementTypeEnum)
 
-// 材料类型
-const materialTypeEnum = {
+// 产品类型
+const componentTypeEnum = {
   STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 },
   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 2 },
   AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: 3 }
 }
-constantize(materialTypeEnum)
+constantize(componentTypeEnum)
 
 // 材料清单上传类型
-const materialListTypeEnum = {
+const componentListTypeEnum = {
   ARTIFACT: { L: '构件清单', SL: '构件', K: 'ARTIFACT', V: 1 },
   MACHINE_PART: { L: '零件清单', SL: '零件', K: 'MACHINE_PART', V: 0 },
   ENCLOSURE: { L: '围护清单', SL: '围护', K: 'ENCLOSURE', V: 2 },
   AUXILIARY_MATERIAL: { L: '辅材清单', SL: '辅材', K: 'AUXILIARY_MATERIAL', V: 3 },
   ARTIFACT_TREE: { L: '构件零件关联清单', SL: '零构件', K: 'ARTIFACT_TREE', V: 4 }
 }
-constantize(materialListTypeEnum)
+constantize(componentListTypeEnum)
 
 export {
-  materialTypeEnum,
-  materialListTypeEnum,
+  componentTypeEnum,
+  componentListTypeEnum,
   enclosureSettlementTypeEnum
 }
 
 export default {
-  materialTypeEnum,
-  materialListTypeEnum,
+  componentTypeEnum,
+  componentListTypeEnum,
   enclosureSettlementTypeEnum
 }

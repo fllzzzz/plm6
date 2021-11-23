@@ -34,7 +34,7 @@ const getPurchaseOrder = {
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
             weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
-            paymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
             founderName: '@cname', // 创建人
@@ -58,6 +58,8 @@ const getPurchaseOrder = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
+            strucAreaIds: [1, 5], // 构件区域id
+            enclAreaIds: [2], // 围护区域id
             requisitionsSN: [], // 采购申请单
             supplierId: 1, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
@@ -67,7 +69,7 @@ const getPurchaseOrder = {
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
             weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
-            paymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
             founderName: '@cname', // 创建人
@@ -75,7 +77,8 @@ const getPurchaseOrder = {
             purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
             settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
             createTime: '@datetime(T)', // 创建时间
-            updateTime: '@datetime(T)' // 修改时间
+            updateTime: '@datetime(T)', // 修改时间
+            isUsed: true // 是否使用
           }
         ],
         totalElements: 2
