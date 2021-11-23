@@ -1,17 +1,19 @@
 import { constantize } from '../base'
 
 // 文件分类
-const fileClassificationEnum = {
-  NORMAL: { L: '公共文件', K: 'OTHER', V: 1 },
-  SECTION_ATT: { L: '型材导入附件', K: 'SECTION_ATT', V: 10 }
+const fileClassifyEnum = {
+  NORMAL: { L: '公共文件', K: 'NORMAL', V: 1 },
+  SECTION_ATT: { L: '型材导入附件', K: 'SECTION_ATT', V: 10 },
+  SUPPLIER_ATT: { L: '供应商附件', K: 'SUPPLIER_ATT', V: 50 },
+  PURCHASE_ORDER_ATT: { L: '采购订单附件', K: 'PURCHASE_ORDER_ATT', V: 100 }
 }
 
-constantize(fileClassificationEnum)
+constantize(fileClassifyEnum)
 
 export {
-  fileClassificationEnum
+  fileClassifyEnum
 }
 
 export default {
-  fileClassificationEnum
+  fileClassifyEnum
 }

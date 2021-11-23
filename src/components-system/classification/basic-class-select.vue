@@ -13,7 +13,7 @@
     :filterable="props.filterable"
     :textAlign="props.textAlign"
     type="enum"
-    mode='bit'
+    mode="bit"
     @change="selectChange"
     @blur="handleBlur"
   />
@@ -129,7 +129,6 @@ watch(
 
 function selectChange(val) {
   if (isBlank(val)) val = undefined
-  console.log('val', val)
   emit('update:modelValue', val)
   emit('change', val)
 }

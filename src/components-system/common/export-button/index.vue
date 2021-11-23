@@ -1,21 +1,22 @@
 <template>
-  <el-tooltip class="item" effect="dark" :content="props.tip" :disabled="!props.showTooltip" placement="top-start">
-    <common-button
-      :loading="downloadLoading"
-      :disabled="props.disabled"
-      :type="props.type"
-      :icon="props.icon"
-      :size="props.size"
-      @click.stop="doExport"
-    ><span v-if="props.btnText">{{props.btnText}}</span></common-button>
-  </el-tooltip>
+  <common-button
+    :loading="downloadLoading"
+    :disabled="props.disabled"
+    :type="props.type"
+    :icon="props.icon"
+    :size="props.size"
+    @click.stop="doExport"
+  >
+    <span v-if="props.btnText">
+      {{ props.btnText }}
+    </span>
+  </common-button>
 </template>
 
 <script setup>
 import { defineProps, ref } from 'vue'
 import { fileDownload } from '@/utils/file'
-
-import { ElTooltip } from 'element-plus'
+import { downloadAttachment } from '@/api/common'
 
 const props = defineProps({
   params: {
@@ -28,7 +29,7 @@ const props = defineProps({
   },
   fn: {
     type: Function,
-    required: true
+    default: downloadAttachment
   },
   btnText: {
     type: String,
@@ -45,14 +46,6 @@ const props = defineProps({
   icon: {
     type: String,
     default: 'el-icon-download'
-  },
-  tip: {
-    type: String,
-    default: '导出'
-  },
-  showTooltip: {
-    type: Boolean,
-    default: false
   }
 })
 

@@ -6,27 +6,24 @@
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="200" />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" min-width="180">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{scope.row.createTime}}</span>
+            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200px">
           <template v-slot="scope">
             <common-button v-if="uploadable" type="danger" icon="el-icon-delete" size="mini" @click="toDelete(scope.$index)" />
             <export-button
-              v-show="props.showDownload && currentUpload.indexOf(scope.row.id) == -1 && props.downloadFn"
+              v-show="props.showDownload"
               v-permission="props.downloadPerm"
               :params="{ ...props.downloadParams, id: props.files[scope.$index].id }"
               :fn="props.downloadFn"
-              size="mini"
-              type="warning"
-              icon="el-icon-download"
             />
           </template>
         </el-table-column>
       </common-table>
       <el-upload
         v-if="uploadable"
-        ref="upload"
+        ref="uploadRef"
         class="upload-box"
         :data="{ ...props.data, fileType: props.fileClassify }"
         :action="fileUploadApi"
@@ -49,7 +46,7 @@
           :icon="props.icon"
           :disabled="props.disabled"
           :type="props.btnType"
-          >
+        >
           <span v-if="props.btnName">{{ props.btnName }}</span>
         </common-button>
       </el-upload>
@@ -62,7 +59,7 @@ import { ref, defineEmits, defineProps } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { getToken } from '@/utils/storage'
-import { fileClassifyEnum } from '@enum-ms/common'
+import { fileClassifyEnum } from '@enum-ms/file'
 
 import { ElUpload, ElMessage, ElMessageBox } from 'element-plus'
 import ExportButton from '@comp-common/export-button/index.vue'
@@ -70,6 +67,7 @@ import ExportButton from '@comp-common/export-button/index.vue'
 const emit = defineEmits(['update:files', 'change'])
 
 // TODO: 后端暂不支持多文件上传
+// 将fileUploadApi 更改为调用方法上传
 const props = defineProps({
   data: {
     type: Object,
@@ -81,7 +79,7 @@ const props = defineProps({
   },
   fileClassify: {
     type: Number,
-    default: fileClassifyEnum.OTHER.V
+    default: fileClassifyEnum.NORMAL.V
   },
   downloadFn: {
     type: Function,
@@ -151,7 +149,7 @@ const props = defineProps({
 
 const { fileUploadApi } = mapGetters('fileUploadApi')
 
-const upload = ref()
+const uploadRef = ref()
 const headers = ref({ Authorization: getToken() })
 const uploadLoading = ref(false)
 const currentUpload = ref([])
@@ -163,12 +161,12 @@ function toDelete(index) {
 }
 
 function handleSuccess(response) {
-  upload.value.clearFiles()
+  uploadRef.value.clearFiles()
   uploadLoading.value = false
   if (response && response.code === 20000) {
     const data = response.data
     emit('update:files', props.files.concat(response.data))
-    currentUpload.value = currentUpload.value.concat(data.map(v => v.id))
+    currentUpload.value = currentUpload.value.concat(data.map((v) => v.id))
     ElMessage.success('上传成功')
   } else {
     ElMessage.error(response && response.message ? response.message : '上传失败')
@@ -176,7 +174,7 @@ function handleSuccess(response) {
 }
 
 function handleError() {
-  upload.value.clearFiles()
+  uploadRef.value.clearFiles()
   uploadLoading.value = false
   ElMessage.error('上传失败')
 }
@@ -197,7 +195,9 @@ function handleRemove(file, fileList) {
   }
 }
 function handleExceed(files, fileList) {
-  ElMessage.warning(`当前限制选择 ${props.limit} 个文件，本次选择了 ${props.files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+  ElMessage.warning(
+    `当前限制选择 ${props.limit} 个文件，本次选择了 ${props.files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
+  )
 }
 function beforeUpload() {
   if (props.hasBeforeConfirm) {
@@ -211,7 +211,6 @@ function beforeRemove(file, fileList) {
     return ElMessageBox.confirm(`确定移除 ${file.name}？`)
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -220,7 +219,6 @@ function beforeRemove(file, fileList) {
   .upload-box {
     position: absolute;
     display: inline-block;
-    margin-left: 20px;
     right: 5px;
     top: 5px;
   }

@@ -17,9 +17,9 @@
       <div class="main-content" :style="maxHeightStyle">
         <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top" inline label-width="200px">
           <div class="form-content">
-            <el-form-item class="el-form-item-1" label="采购订单号" prop="orderNo">
+            <el-form-item class="el-form-item-1" label="采购订单号" prop="serialNumber">
               <el-input
-                v-model.trim="form.orderNo"
+                v-model.trim="form.serialNumber"
                 placeholder="可输入采购订单号（不填写则自动生成）"
                 :disabled="isUsed"
                 maxlength="50"
@@ -63,8 +63,8 @@
                 class="input-underline"
               />
             </el-form-item>
-            <el-form-item label="选择单体/区域" class="el-form-item-5" prop="projectId">
-              <!-- <project-cascader
+            <!-- <el-form-item label="选择单体/区域" class="el-form-item-5" prop="projectId"> -->
+            <!-- <project-cascader
                 v-model="form.projectId"
                 style="width: 350px"
                 clearable
@@ -73,7 +73,7 @@
                 :initial="false"
                 class="input-underline"
               /> -->
-            </el-form-item>
+            <!-- </el-form-item> -->
 
             <el-form-item class="el-form-item-6" label="申购单号" prop="purchaseIds">
               <requisitions-sn-select
@@ -113,7 +113,14 @@
                     :controls="false"
                     style="width: 100%"
                   />
-                  <unit-select v-model="form.meteUnit" size="small" :disabled="isUsed" clearable filterable style="width: 100px; flex: none" />
+                  <unit-select
+                    v-model="form.meteUnit"
+                    size="small"
+                    :disabled="isUsed"
+                    clearable
+                    filterable
+                    style="width: 100px; flex: none"
+                  />
                 </div>
               </el-form-item>
               <el-form-item class="el-form-item-9" label="合同额（元）" prop="amount">
@@ -168,6 +175,18 @@
                 />
               </el-form-item>
             </template>
+            <el-form-item class="el-form-item-14" prop="paymentMode">
+              <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
+            </el-form-item>
+            <el-form-item class="el-form-item-15">
+              <!-- :show-download="!!form.id" -->
+              <upload-list
+                show-download
+                :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
+                v-model:files="form.attachment"
+                empty-text="暂未上传采购订单附件"
+              />
+            </el-form-item>
           </div>
         </el-form>
       </div>
@@ -179,7 +198,8 @@
 import { ref, watch } from 'vue'
 import { materialClassificationEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
-import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
+import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { fileClassifyEnum } from '@enum-ms/file'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
@@ -190,6 +210,7 @@ import supplierSelect from '@comp-base/supplier-select.vue'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
+import uploadList from '@/components/file-upload/UploadList.vue'
 
 const defaultForm = {
   name: '', // 规格名称
@@ -222,7 +243,7 @@ watch(
   () => form.basicClass,
   (bc) => {
     if (bc & materialClassificationEnum.GAS.V) {
-      // 气体只能选择到场
+      // 气体只能选择到厂
       form.pickUpMode = pickUpModeEnum.SUPPLIER.V
       pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
     } else {
@@ -244,6 +265,7 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
 // 表单提交数据清理
 crud.submitFormFormat = (form) => {
   // form.classificationId = currentNode.value.id
+  form.attachmentIds = form.attachment ? form.attachment.map((v) => v.id) : undefined
   return form
 }
 </script>
@@ -263,21 +285,21 @@ crud.submitFormFormat = (form) => {
 }
 
 .form-content {
-  width: 90%;
+  width: 750px;
   display: grid;
-  grid-template-columns: repeat(6, 16.66%);
+  grid-template-columns: repeat(12, 8.33%);
   grid-template-rows: auto;
-  // grid-row-gap: 20px;
   grid-column-gap: 20px;
   grid-auto-flow: row;
   grid-template-areas:
-    'a a a b b b'
-    'c c c . . .'
-    'd d d e e e'
-    'f f f g g g'
-    'h h i i j j'
-    'k k l l . .'
-    'm m m . . .';
+    'a a a a a a b b b b b b'
+    'c c c c c c . . . . . .'
+    'd d d d d d d d d d d d'
+    'f f f f f f g g g g g g'
+    'h h h h i i i i j j j j'
+    'k k k k l l l m m m m m'
+    'n n n n n n n n n n n n'
+    'o o o o o o o o o o o o';
   .el-form-item {
     margin-bottom: 20px;
   }
@@ -319,6 +341,14 @@ crud.submitFormFormat = (form) => {
   }
   > .el-form-item-13 {
     grid-area: m;
+  }
+
+  > .el-form-item-14 {
+    grid-area: n;
+  }
+
+  > .el-form-item-15 {
+    grid-area: o;
   }
 }
 </style>

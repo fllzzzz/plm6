@@ -106,7 +106,7 @@ import { downloadAttachment } from '@/api/wms/supplier/manage'
 import { ref } from 'vue'
 
 import { supplierClassEnum } from '@enum-ms/supplier'
-import { fileClassifyEnum } from '@enum-ms/common'
+import { fileClassifyEnum } from '@enum-ms/file'
 import { getBitwiseBack } from '@data-type/number'
 import { getLabelByBit } from '@/utils/enum/base'
 
