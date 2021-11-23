@@ -28,7 +28,7 @@ import { ref, defineEmits, defineProps, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { getToken } from '@/utils/storage'
-import { fileClassifyEnum } from '@enum-ms/common'
+import { fileClassifyEnum } from '@enum-ms/file'
 
 import { ElUpload, ElMessage, ElMessageBox } from 'element-plus'
 
@@ -46,7 +46,7 @@ const props = defineProps({
   },
   fileClassify: {
     type: Number,
-    default: fileClassifyEnum.OTHER.V
+    default: fileClassifyEnum.NORMAL.V
   },
   limit: {
     type: Number,

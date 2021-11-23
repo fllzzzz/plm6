@@ -198,6 +198,24 @@ export default {
           meta: { title: '工价定额', icon: 'project', noCache: true }
         }
       ]
+    },
+    {
+      path: '/contract/enclosure-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'ContractConfig',
+      alwaysShow: true,
+      redirect: '/contract/enclosure-config/info-manage',
+      meta: { title: '项目配置', icon: 'config-2', noCache: true },
+      children: [
+        {
+          name: 'EnclosureInfoConfig',
+          path: 'info-manage',
+          hidden: false,
+          component: '/config-manage/contract/enclosure-content/index',
+          meta: { title: '围护信息配置', icon: 'project', noCache: true }
+        }
+      ]
     }
   ]
 }

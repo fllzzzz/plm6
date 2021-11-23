@@ -84,6 +84,18 @@ const getFinalMatClsById = {
   }
 }
 
+const downloadAttachment = {
+  url: RegExp('/api/common/attachment/download/' + '.*'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '操作成功'
+    }
+  }
+}
+
 // 获取供应商（简要信息）
 const getSuppliersBrief = {
   url: '/api/wms/supplier/all/brief',
@@ -1052,11 +1064,9 @@ const uploadAttachment = {
       data: [{
         'createTime': 1637226476143,
         'fileName': '1637226476143_文件.png',
-        'filePath': 'supplier/',
         'id': 1,
         'mediaType': 'image/png',
         'name': '文件.png',
-        'thumbnailName': null,
         'type': 7
       }],
       message: '操作成功'
@@ -1071,5 +1081,6 @@ export default [
   getUserAllSimple,
   getDeptAllSimple,
   getSuppliersBrief,
-  getFinalMatClsById
+  getFinalMatClsById,
+  downloadAttachment
 ]

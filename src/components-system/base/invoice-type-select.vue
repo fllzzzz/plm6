@@ -10,20 +10,22 @@
       placeholder="选择票据类型"
       @change="handleInvoiceTypeChange"
     />
-    <common-select
-      v-if="copyInvoiceType !== invoiceTypeEnum.RECEIPT.V"
-      v-model="copyTaxRate"
-      :options="taxRateOption"
-      :disabled="props.disabled"
-      :data-structure="{ key: 'id', label: 'label', value: 'value' }"
-      allow-create
-      style="width: 80px"
-      clearable
-      filterable
-      placeholder="税率"
-      @blur="selectBlur"
-      @change="handleTaxRateChange"
-    />%
+    <template v-if="copyInvoiceType !== invoiceTypeEnum.RECEIPT.V">
+      <common-select
+        v-model="copyTaxRate"
+        :options="taxRateOption"
+        :disabled="props.disabled"
+        :data-structure="{ key: 'id', label: 'label', value: 'value' }"
+        allow-create
+        style="width: 80px"
+        clearable
+        filterable
+        placeholder="税率"
+        @blur="selectBlur"
+        @change="handleTaxRateChange"
+      />
+      <span>%</span>
+    </template>
   </span>
 </template>
 
@@ -65,7 +67,7 @@ const taxRateOption = computed(() => {
   })
   const opt = uniqueArr(res)
   if (opt[0]) handleTaxRateChange(opt[0])
-  return opt.map(v => {
+  return opt.map((v) => {
     return {
       value: v,
       label: `${v}`
@@ -110,16 +112,15 @@ function selectBlur(e) {
   handleTaxRateChange(copyTaxRate.value)
   // emit('blur', e.target.value.trim())
 }
-
 </script>
 
 <style lang="scss" scoped>
 .invoice-type-select {
   display: inline-flex;
-  >:nth-child(1){
+  > :nth-child(1) {
     flex: auto;
   }
-  >:nth-child(2){
+  > :nth-child(2) {
     flex: none;
   }
 }

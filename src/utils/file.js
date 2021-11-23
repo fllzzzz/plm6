@@ -5,6 +5,7 @@ import { parseTime } from '@/utils/date'
 import XLSX from 'xlsx-styleable'
 import { ElMessage } from 'element-plus'
 import { isNotBlank } from './data-type'
+import { ElNotification } from 'element-plus'
 
 // 获取文件后缀名
 export function getFileSuffix(fileName) {
@@ -31,9 +32,9 @@ export async function fileDownload(fn) {
     const response = await fn.apply(context, args)
     const result = downloadFileByResponse(response)
     if (result) {
-      Notification({ title: '导出成功', type: 'success', duration: 2 * 1000 })
+      ElNotification({ title: '导出成功', type: 'success', duration: 2 * 1000 })
     } else {
-      Notification({ title: '导出失败', type: 'error', duration: 2 * 1000 })
+      ElNotification({ title: '导出失败', type: 'error', duration: 2 * 1000 })
       throw Error('导出失败')
     }
   } catch (error) {

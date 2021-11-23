@@ -1,11 +1,10 @@
 
-const req = require.context('../../icons/svg', false, /\.svg$/)
-const requireAll = requireContext => requireContext.keys()
-
-const re = /\.\/(.*)\.svg/
-
-const icons = requireAll(req).map(i => {
-  return i.match(re)[1]
+const req = import.meta.globEager('../../icons/svg/**/*.svg')
+const requireAll = []
+for (const key in req) {
+  requireAll.push(key)
+}
+const icons = requireAll.map(i => {
+  return i.replace(/(.*\/)*([^.]+).*/ig, '$2')
 })
-
 export default icons

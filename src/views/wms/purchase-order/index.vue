@@ -263,8 +263,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN.join('　、　')
-    v.projectStr = v.projects && v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　')
-    v.projectId = v.projects.map(v => v.id)
+    v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
+    v.projectId = v.projects ? v.projects.map(v => v.id) : []
     return v
   })
 }

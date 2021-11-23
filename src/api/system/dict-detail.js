@@ -12,8 +12,8 @@ export function getAll(name) {
     name
   }
   return request({
-    url: 'api/dictDetail/all',
-    cancelKey: false,
+    module: 'system',
+    url: 'dictDetail/all',
     method: 'get',
     params
   })
@@ -21,7 +21,8 @@ export function getAll(name) {
 
 export function get(params) {
   return request({
-    url: 'api/dictDetail',
+    module: 'system',
+    url: 'dictDetail',
     method: 'get',
     params
   })
@@ -29,7 +30,8 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    url: 'api/dictDetail',
+    module: 'system',
+    url: 'dictDetail',
     method: 'post',
     data
   })
@@ -37,7 +39,8 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    url: 'api/dictDetail',
+    module: 'system',
+    url: 'dictDetail',
     method: 'put',
     data
   })
@@ -45,7 +48,8 @@ export function edit(data) {
 
 export function del(id) {
   return request({
-    url: 'api/dictDetail/' + id,
+    module: 'system',
+    url: 'dictDetail/' + id,
     method: 'delete'
   })
 }

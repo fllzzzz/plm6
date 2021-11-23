@@ -20,10 +20,10 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 import { isNotBlank, isBlank } from '@data-type/index'
 import useFactory from '@compos/store/use-factories'
 
-const emit = defineEmits(['change', 'update:value'])
+const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: [Number, String],
     default: undefined
   },
@@ -62,7 +62,7 @@ const selectValue = ref()
 const { loaded, factories } = useFactory(loadedCallBack)
 
 watch(
-  () => props.value,
+  () => props.modelValue,
   (value) => {
     selectValue.value = value
     // 有默认值的情况，并且value为空，则给value赋值
@@ -75,8 +75,8 @@ watch(
 )
 
 function handleChange(val) {
-  if (props.value !== val) {
-    emit('update:value', val)
+  if (props.modelValue !== val) {
+    emit('update:modelValue', val)
     emit('change', val)
   }
 }

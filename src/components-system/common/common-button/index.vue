@@ -1,37 +1,69 @@
 <!-- 普通按钮, 避免使用el-button 时产生, disabled后仍可通过点击按钮中的文字触发click事件的BUG -->
+<!-- 部分功能需要捕获click（列：el-upload上传）, 因此在未禁用（disabled）的情况下不使用.stop修饰符 -->
 <template>
-  <el-button
-    class="common-button"
-    v-if="slotDefault"
-    v-bind="$attrs"
-    :icon="icon"
-    :size="props.size"
-    :type="props.type"
-    :disabled="props.disabled"
-    :loading="loading"
-    @click="handleClick"
-  >
-    <span @click.stop="handleClick"><slot /></span>
-  </el-button>
-  <el-button
-    v-else
-    class="common-button"
-    v-bind="$attrs"
-    :icon="icon"
-    :size="props.size"
-    :type="props.type"
-    :disabled="props.disabled"
-    :loading="loading"
-    @click.stop="handleClick"
-  />
+    <el-button
+      class="common-button"
+      v-if="slotDefault && props.disabled"
+      v-bind="$attrs"
+      :icon="icon"
+      :size="props.size"
+      :type="props.type"
+      :disabled="props.disabled"
+      :loading="loading"
+      @click="handleClick"
+    >
+      <span @click.stop="handleClick"><slot /></span>
+    </el-button>
+    <el-button
+      v-else-if="!slotDefault && props.disabled"
+      class="common-button"
+      v-bind="$attrs"
+      :icon="icon"
+      :size="props.size"
+      :type="props.type"
+      :disabled="props.disabled"
+      :loading="loading"
+      @click.stop="handleClick"
+    />
+    <el-button
+      v-else-if="!props.disabled && slotDefault"
+      class="common-button"
+      v-bind="$attrs"
+      :icon="icon"
+      :size="props.size"
+      :type="props.type"
+      :disabled="props.disabled"
+      :loading="loading"
+      @click="handleClick"
+    >
+      <span @click="handleClick"><slot /></span>
+    </el-button>
+    <el-button
+      v-else-if="!props.disabled && !slotDefault"
+      class="common-button"
+      v-bind="$attrs"
+      :icon="icon"
+      :size="props.size"
+      :type="props.type"
+      :disabled="props.disabled"
+      :loading="loading"
+      @click="handleClick"
+    />
 </template>
 
 <script setup>
 import { ElButton } from 'element-plus'
-import { defineProps, defineEmits, useSlots } from 'vue'
+import { defineProps, defineEmits, useSlots, ref } from 'vue'
 
 // 判断<slot/>是否有传值,<el-button></el-button>会产生<span></span>,由与element-ui全局样式的影响, 当按钮只有图标时，这种情况会产生一个margin
-const slotDefault = !!useSlots().default
+const slotDefault = ref(!!useSlots().default)
+if (slotDefault.value) {
+  const slot = useSlots().default()
+  // 避免slot为v-if=false的情况，出现span，从而导致图标未居中
+  slotDefault.value = slot.some((v) => {
+    return v.children !== 'v-if'
+  })
+}
 
 const emit = defineEmits(['click'])
 

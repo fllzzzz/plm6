@@ -85,6 +85,32 @@ const getPurchaseOrder = {
   }
 }
 
+// 添加采购订单
+const add = {
+  url: '/api/wms/purchase-order',
+  method: 'post',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
+// 修改采购订单
+const edit = {
+  url: '/api/wms/purchase-order',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 // 修改采购单状态状态
 const editPurchaseStatus = {
   url: '/api/wms/purchase-order/purchase-status',
@@ -98,7 +124,7 @@ const editPurchaseStatus = {
   }
 }
 
-// 删除单位
+// 删除采购订单
 const del = {
   url: '/api/wms/purchase-order',
   method: 'delete',
@@ -111,4 +137,4 @@ const del = {
   }
 }
 
-export default [getPurchaseOrder, editPurchaseStatus, del]
+export default [getPurchaseOrder, add, edit, editPurchaseStatus, del]
