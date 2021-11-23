@@ -1,28 +1,9 @@
 import request from '@/utils/request'
 
-/**
- * 根据字典名称获取对应所有内容
- *
- * @export
- * @param {*} name
- * @returns
- */
-export function getAll(name) {
-  const params = {
-    name
-  }
-  return request({
-    module: 'system',
-    url: 'dictDetail/all',
-    method: 'get',
-    params
-  })
-}
-
 export function get(params) {
   return request({
     module: 'system',
-    url: 'dictDetail',
+    url: 'job',
     method: 'get',
     params
   })
@@ -31,7 +12,7 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'system',
-    url: 'dictDetail',
+    url: 'job',
     method: 'post',
     data
   })
@@ -40,17 +21,36 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'system',
-    url: 'dictDetail',
+    url: 'job',
     method: 'put',
     data
   })
 }
 
-export function del(id) {
+export function del(ids) {
   return request({
     module: 'system',
-    url: 'dictDetail/' + id,
-    method: 'delete'
+    url: 'job',
+    method: 'delete',
+    data: ids
+  })
+}
+
+export function editStatus(params) {
+  return request({
+    module: 'system',
+    url: 'job/enabled',
+    method: 'put',
+    params
+  })
+}
+
+export function jobAll(params) {
+  return request({
+    module: 'system',
+    url: 'job/all',
+    method: 'get',
+    params
   })
 }
 
