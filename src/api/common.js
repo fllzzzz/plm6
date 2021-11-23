@@ -63,3 +63,29 @@ export function getSuppliersBrief() {
     method: 'get'
   })
 }
+
+/**
+ * 上传公用附件
+ * @param {number} fileType 文件类型
+ * @param {string} file 二进制文件
+ */
+export function uploadAttachment(data) {
+  return request({
+    module: 'common',
+    url: 'attachment',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data
+  })
+}
+
+// 附件公用下载
+export function downloadAttachment({ id }) {
+  return request({
+    module: 'common',
+    url: `attachment/download/${id}`,
+    method: 'get',
+    timeout: 6000000,
+    responseType: 'blob'
+  })
+}

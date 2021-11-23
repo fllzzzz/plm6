@@ -11,7 +11,7 @@ const allProjectSimple = {
       data: {
         'content': [
           {
-            'contractNo': '@guid',
+            'serialNumber': /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             'createTime': '@datetime(T)',
             'id': 1,
             'name': '牙牙乐生产工厂',
@@ -20,7 +20,7 @@ const allProjectSimple = {
             'status': projectStatusEnum.PROCESS.V
           },
           {
-            'contractNo': '@guid',
+            'serialNumber': /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             'createTime': '@datetime(T)',
             'id': 2,
             'name': '洛阳市王城大道快速路与火车站北广场连接线工程施工第二标段钢箱梁',
@@ -29,7 +29,7 @@ const allProjectSimple = {
             'status': projectStatusEnum.PROCESS.V
           },
           {
-            'contractNo': '@guid',
+            'serialNumber': /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             'createTime': '@datetime(T)',
             'id': 3,
             'name': '石家庄美的电器加工车间',
@@ -55,7 +55,7 @@ const projectSimple = {
       data: {
         'content': [
           {
-            'contractNo': '@guid',
+            'serialNumber': /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             'createTime': '@datetime(T)',
             'id': 1,
             'name': '牙牙乐生产工厂',
@@ -64,7 +64,7 @@ const projectSimple = {
             'status': projectStatusEnum.PROCESS.V
           },
           {
-            'contractNo': '@guid',
+            'serialNumber': /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             'createTime': '@datetime(T)',
             'id': 2,
             'name': '洛阳市王城大道快速路与火车站北广场连接线工程施工第二标段钢箱梁',
@@ -73,7 +73,7 @@ const projectSimple = {
             'status': projectStatusEnum.PROCESS.V
           },
           {
-            'contractNo': '@guid',
+            'serialNumber': /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             'createTime': '@datetime(T)',
             'id': 3,
             'name': '石家庄美的电器加工车间',

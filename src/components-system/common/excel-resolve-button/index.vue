@@ -12,13 +12,12 @@
     :auto-upload="false"
     :show-file-list="false"
   >
-    <common-button v-if="props.disabled" :loading="props.resolveLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{ props.btnName }}</common-button>
-    <el-button v-else :loading="props.resolveLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{ props.btnName }}</el-button>
+    <common-button :loading="props.resolveLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">{{ props.btnName }}</common-button>
   </el-upload>
 </template>
 <script setup>
 import { defineEmits, defineProps, ref } from 'vue'
-import { ElUpload, ElMessage, ElButton } from 'element-plus'
+import { ElUpload, ElMessage } from 'element-plus'
 import { resolveExcel, fileVerification } from '@/utils/file'
 
 const emit = defineEmits(['data'])
@@ -75,11 +74,10 @@ const resolveLoading = ref(false)
 
 // 处理前
 function handleBefore(file) {
-  fileVerification(file, {
+  return fileVerification(file, {
     accept: props.accept,
     sizeLimit: props.sizeLimit
   })
-  return true
 }
 
 async function handleChange(file, fileList) {

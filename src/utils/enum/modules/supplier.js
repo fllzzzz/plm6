@@ -14,7 +14,7 @@ const supplierClassEnum = {
 }
 constantize(supplierClassEnum)
 
-// 供应商类型
+// 供应商类型(前两项与基础材料类型相同)
 const supplierTypeEnum = {
   RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
   MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 1 << 1 },
@@ -24,8 +24,8 @@ constantize(supplierTypeEnum)
 
 // 供应商是否是隐藏
 const supplierIsHideEnum = {
-  SHOW: { L: '显示', K: 'SHOW', V: 0 },
-  HIDE: { L: '隐藏', K: 'HIDE', V: 1 }
+  FALSE: { L: '显示', K: 'FALSE', V: false },
+  TRUE: { L: '隐藏', K: 'TRUE', V: true }
 }
 constantize(supplierIsHideEnum)
 

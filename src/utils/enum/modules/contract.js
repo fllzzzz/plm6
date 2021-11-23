@@ -32,6 +32,16 @@ const projectTypeEnum = {
 }
 constantize(projectTypeEnum)
 
+// 技术交底类型
+const TechnologyTypeEnum = {
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 5 },
+  PROFILEDPLATE: { L: '压型彩板', K: 'PROFILEDPLATE', V: 2 },
+  TRUSSFLOORPLATE: { L: '桁架楼承板', K: 'TRUSSFLOORPLATE', V: 3 },
+  PRESSUREBEARINGPLATE: { L: '压型楼承板', K: 'PRESSUREBEARINGPLATE', V: 4 },
+  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 }
+}
+constantize(TechnologyTypeEnum)
+
 // // 合同订单类型
 // const orderTypeEnum = {
 //   MACHINING: { L: '加工订单', K: 'MACHINING', V: 0 },
@@ -42,11 +52,13 @@ constantize(projectTypeEnum)
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
-  projectNameArrangementModeEnum // 项目名称显示
+  projectNameArrangementModeEnum, // 项目名称显示
+  TechnologyTypeEnum // 技术交底
 }
 
 export default {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
-  projectNameArrangementModeEnum // 项目名称显示
+  projectNameArrangementModeEnum, // 项目名称显示
+  TechnologyTypeEnum // 技术交底
 }

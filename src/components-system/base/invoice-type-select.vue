@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="invoice-type-select child-mr-10">
     <common-select
       v-model="copyInvoiceType"
       :options="invoiceTypeEnum.ENUM"
@@ -7,30 +7,38 @@
       clearable
       :disabled="props.disabled"
       style="width: 150px"
-      placeholder="请选择票据类型"
+      placeholder="选择票据类型"
       @change="handleInvoiceTypeChange"
     />
-    <common-select
-      v-if="form.invoiceType !== invoiceTypeEnum.RECEIPT.V"
-      v-model="copyTaxRate"
-      :options="taxRateOption"
-      :disabled="props.disabled"
-      allow-create
-      style="width: 100px"
-      clearable
-      @blur="taxBlur"
-      @change="handleTaxRateChange"
-    />
+    <template v-if="copyInvoiceType !== invoiceTypeEnum.RECEIPT.V">
+      <common-select
+        v-model="copyTaxRate"
+        :options="taxRateOption"
+        :disabled="props.disabled"
+        :data-structure="{ key: 'id', label: 'label', value: 'value' }"
+        allow-create
+        style="width: 80px"
+        clearable
+        filterable
+        placeholder="税率"
+        @blur="selectBlur"
+        @change="handleTaxRateChange"
+      />
+      <span>%</span>
+    </template>
   </span>
 </template>
 
 <script setup>
 // 未根据物料种类设置常用税率
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
+import { supplierClassEnum } from '@enum-ms/supplier'
 import { isBlank } from '@/utils/data-type'
 
 import useTaxRate from '@compos/store/use-tax-rate'
+import { uniqueArr } from '@/utils/data-type/array'
 
 const emit = defineEmits(['update:invoiceType', 'update:taxRate', 'change'])
 
@@ -52,11 +60,17 @@ const { taxRateKV } = useTaxRate()
 
 // 税率列表
 const taxRateOption = computed(() => {
-  const opt = taxRateKV.value[props.classification] || []
-  return opt.map(v => {
+  const bitArr = EO.getBits(supplierClassEnum, props.classification, 'V')
+  const res = []
+  bitArr.forEach((bit) => {
+    res.push.apply(res, taxRateKV.value[bit])
+  })
+  const opt = uniqueArr(res)
+  if (opt[0]) handleTaxRateChange(opt[0])
+  return opt.map((v) => {
     return {
       value: v,
-      label: v
+      label: `${v}`
     }
   })
 })
@@ -84,17 +98,30 @@ function handleInvoiceTypeChange(val) {
 }
 
 function handleTaxRateChange(val) {
-  if (isBlank(val)) val = undefined
+  var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
+  if (!reg.test(val) || isBlank(val)) val = undefined
   emit('update:taxRate', val)
   emit('change', {})
 }
 
-// function selectBlur(e) {
-//   if (!e.target.value) return
-//   var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
-//   if (!reg.test(e.target.value.trim())) return
-//   copyTaxRate.value = e.target.value || copyTaxRate.value
-//   emit('blur', e.target.value.trim())
-// }
-
+function selectBlur(e) {
+  if (!e.target.value) return
+  var reg = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,5}$/
+  if (!reg.test(e.target.value.trim())) return
+  copyTaxRate.value = e.target.value || copyTaxRate.value
+  handleTaxRateChange(copyTaxRate.value)
+  // emit('blur', e.target.value.trim())
+}
 </script>
+
+<style lang="scss" scoped>
+.invoice-type-select {
+  display: inline-flex;
+  > :nth-child(1) {
+    flex: auto;
+  }
+  > :nth-child(2) {
+    flex: none;
+  }
+}
+</style>

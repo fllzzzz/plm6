@@ -69,12 +69,12 @@
         <template #default="scope">
           <el-tooltip effect="light" placement="top">
             <template #content>
-              <div v-for="item in scope.row.project" :key="item.id" class="project-name" style="margin-bottom: 5px">
+              <div v-for="item in scope.row.projects" :key="item.id" class="project-name" style="margin-bottom: 5px">
                 {{ projectNameFormatter(item, undefined, false) }}
               </div>
             </template>
             <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
-              <span v-for="item in scope.row.project" :key="item.id"> 【{{ item.shortName }}】 </span>
+              <span v-for="item in scope.row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
             </div>
           </el-tooltip>
         </template>
@@ -119,7 +119,7 @@
         min-width="130"
       >
         <template #default="scope">
-          <span>{{ invoiceTypeEnum.VL[scope.row.invoiceType] }}</span>
+          <span v-parse-enum="{e:invoiceTypeEnum, v:scope.row.invoiceType}"/>
         </template>
       </el-table-column>
       <el-table-column
@@ -199,7 +199,7 @@ import crudApi, { editPurchaseStatus } from '@/api/wms/purchase-order'
 import { ref, computed } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
-import { orderSupplyTypeEnum, purchaseStatusEnum, purchaseTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { materialClassificationEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
@@ -259,11 +259,12 @@ const { handleEnabledChange } = useCrudEnabledChange(
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
-    const basicClassArr = EO.getBits(materialClassificationEnum, v.basicClass, 'L')
-    v.typeText = purchaseTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
+    const basicClassArr = EO.getBits(materialClassificationEnum.ENUM, v.basicClass, 'L')
+    v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN.join('　、　')
-    v.projectStr = v.project.map((v) => projectNameFormatter(v, null, false)).join('　、　')
+    v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
+    v.projectId = v.projects ? v.projects.map(v => v.id) : []
     return v
   })
 }

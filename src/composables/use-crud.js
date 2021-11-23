@@ -444,7 +444,8 @@ function addCrudDefaultInfo(crud, data) {
       get title() {
         return this.batchAdd > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.batchEdit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : ''
       }
-    }
+    },
+    detailTitle: `${data.title}详情`
   })
 }
 
@@ -560,7 +561,7 @@ function addCrudBusinessMethod(crud) {
   const toDetail = async (data) => {
     if (typeof crud.crudApi.detail === 'function') {
       // 如果查询项不为id，则可改造方法，在crud中传入自定义字段
-      data = await crud.crudApi.detail(crud.form.id)
+      data = await crud.crudApi.detail(data.id)
     }
     crud.resetRowDetail(data)
     if (!(await callVmHook(crud, CRUD.HOOK.beforeToDetail, crud.rowDetail))) {
@@ -1278,7 +1279,8 @@ async function callVmHook(crud, hook) {
   // 遍历各组件
   for (const VM of crud.vms) {
     if (VM && VM.CRUD.HOOK[hook]) {
-      result = (await VM.CRUD.HOOK[hook].apply(VM, args)) !== false && result
+      const res = await VM.CRUD.HOOK[hook].apply(VM, args)
+      result = res !== false && result
     }
   }
   return result

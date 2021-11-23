@@ -1,0 +1,278 @@
+<template>
+  <common-dialog
+    append-to-body
+    :close-on-click-modal="false"
+    :before-close="crud.cancelCU"
+    :visible="crud.status.cu > 0"
+    :title="crud.status.title"
+    :show-close="false"
+    width="80%"
+    fullscreen
+  >
+    <template #titleRight>
+      <span style="float:right">
+        <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">提 交</common-button>
+        <store-opertaion type="crud" />
+        <common-button size="mini" @click="crud.cancelCU">关 闭</common-button>
+      </span>
+    </template>
+    <div class="form">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
+        <div class="rule-row">
+          <el-form-item label="供应商名称" prop="name">
+            <el-input  v-model="form.name" maxlength="32" show-word-limit placeholder="请输入供应商名称" />
+          </el-form-item>
+          <el-form-item label="供应商分类" prop="supplierClass">
+            <common-select
+              v-model="form.supplierClass"
+              :options="supplierClassEnum.ENUM"
+              type="enum"
+              clearable
+              multiple
+              placeholder="请选择供应商分类"
+              style="width:100%;"
+              size="medium"
+              @change="handleSupplierClass"
+            />
+          </el-form-item>
+          <el-form-item label="主营业务" prop="mainBusiness">
+            <el-input  v-model="form.mainBusiness" placeholder="请输入主营业务" />
+          </el-form-item>
+        </div>
+        <div class="rule-row">
+            <el-form-item label="选择地区" prop="area">
+              <region-cascader
+                ref="region"
+                style="width:100%;"
+                v-model="form.area"
+                clearable
+                filterable
+                @change="handleRegionChange"
+              />
+            </el-form-item>
+            <el-form-item label="详细地址" prop="address">
+              <el-input v-model="form.address" placeholder="请您输入详细地址" />
+            </el-form-item>
+            <el-form-item/>
+        </div>
+        <div class="rule-row">
+          <el-form-item label="社会统一代码" prop="socialCode">
+            <el-input  v-model="form.socialCode" placeholder="请输入社会统一代码" />
+          </el-form-item>
+          <el-form-item label="成立日期" prop="registrationDate">
+            <el-date-picker
+              v-model="form.registrationDate"
+              type="date"
+              style="width:100%;"
+              value-format="timestamp"
+              placeholder="选择日期"
+            />
+          </el-form-item>
+          <el-form-item label="营业期限" prop="businessTerm">
+            <el-input v-model="form.businessTerm" placeholder="请输入营业期限" />
+          </el-form-item>
+        </div>
+        <div class="rule-row">
+          <el-form-item label="法定代表人" prop="legalRepresentative">
+            <el-input v-model="form.legalRepresentative" placeholder="请输入法定代表人" />
+          </el-form-item>
+          <el-form-item label="注册资本" prop="registeredCapital">
+            <el-input v-model="form.registeredCapital" placeholder="请输入注册资本" />
+          </el-form-item>
+          <el-form-item label="企业类型" prop="enterpriseType">
+            <common-select
+              v-model="form.enterpriseType"
+              :options="dict.enterprise_type"
+              type="dict"
+              clearable
+              placeholder="请选择企业类型"
+              style="width:100%;"
+              size="medium"
+            />
+          </el-form-item>
+        </div>
+        <div class="rule-row">
+          <el-form-item label="开户行名称" prop="bankName">
+            <el-input v-model="form.bankName" placeholder="请输入开户行名称" />
+          </el-form-item>
+          <el-form-item label="银行账户" prop="bankAccount">
+            <el-input v-model="form.bankAccount" placeholder="请输入银行账户"/>
+          </el-form-item>
+          <el-form-item/>
+        </div>
+        <div class="rule-row">
+          <el-form-item label="公司官网" prop="website">
+            <el-input v-model="form.website" placeholder="请输入公司官网" />
+          </el-form-item>
+          <el-form-item label="公司邮箱" prop="companyEmail">
+            <el-input v-model="form.companyEmail" placeholder="请输入公司邮箱" />
+          </el-form-item>
+          <el-form-item label="公司电话" prop="companyPhone">
+            <el-input v-model="form.companyPhone" placeholder="请输入公司电话" />
+          </el-form-item>
+        </div>
+        <div v-for="(item,index) in form.contacts" :key="index" class="rule-row">
+          <el-form-item label="联系人">
+            <el-input v-model="item.name" placeholder="请输入联系人"  />
+          </el-form-item>
+          <el-form-item label="联系电话">
+            <el-input v-model="item.phone" placeholder="请输入联系电话"  />
+          </el-form-item>
+          <el-form-item label="个人邮箱">
+            <el-input v-model="item.email" placeholder="请输入个人邮箱"  />
+          </el-form-item>
+          <div style="line-height: 32px;margin-left:-26px;">
+            <common-button v-if="index === form.contacts.length-1" type="primary" size="mini" circle icon="el-icon-plus" @click="form.contacts.push({...contact})" />
+            <common-button v-else type="danger" size="mini" circle icon="el-icon-minus" @click="form.contacts.splice(index, 1)" />
+          </div>
+        </div>
+        <div class="item-center">
+          <upload-list
+            :show-download="!!form.id"
+            :file-classify="fileClassifyEnum.SUPPLIER_ATT.V"
+            :download-perm="crud.permission.downloadAttachments"
+            :download-fn="downloadAttachment"
+            v-model:files="form.files"
+            style="padding: 10px 30px 0"
+          />
+        </div>
+      </el-form>
+    </div>
+  </common-dialog>
+</template>
+
+<script setup>
+import { detail, downloadAttachment } from '@/api/wms/supplier/manage'
+import { ref } from 'vue'
+
+import { supplierClassEnum } from '@enum-ms/supplier'
+import { fileClassifyEnum } from '@enum-ms/file'
+import { getBitwiseBack } from '@data-type/number'
+import { getLabelByBit } from '@/utils/enum/base'
+
+import { regForm } from '@compos/use-crud'
+import useDict from '@compos/store/use-dict'
+import storeOpertaion from '@crud/STORE.opertaion'
+import regionCascader from '@comp-base/region-cascader'
+import uploadList from '@/components/file-upload/uploadList'
+
+const formRef = ref()
+const contact = ref({ name: '', phone: '', email: '' })
+
+const defaultForm = {
+  name: '',
+  area: [],
+  address: '',
+  socialCode: '',
+  registrationDate: '',
+  businessTerm: '',
+  legalRepresentative: '',
+  registeredCapital: '',
+  enterpriseType: '',
+  enterpriseTypeName: '',
+  bankName: '',
+  contacts: [{ ...contact.value }],
+  bankAccount: '',
+  website: '',
+  companyEmail: '',
+  companyPhone: '',
+  mainBusiness: '',
+  files: [],
+  attachments: [],
+  supplierClass: [],
+  supplierClassification: undefined
+}
+
+const dict = useDict(['enterprise_type'])
+const { crud, form, CRUD } = regForm(defaultForm, formRef)
+
+const rules = {
+  name: [
+    { required: true, message: '请输入供应商名称', trigger: 'blur' },
+    { min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }
+  ],
+  supplierClass: [{ required: true, message: '请选择供应商分类', trigger: 'blur' }]
+}
+
+CRUD.HOOK.beforeToEdit = async () => {
+  try {
+    const supplierDetail = await detail(crud.form.id)
+    const list = [supplierDetail.countryId, supplierDetail.provinceId, supplierDetail.cityId, supplierDetail.regionId]
+    supplierDetail.area = list.filter(val => {
+      return !(!val || val === '')
+    })
+    supplierDetail.files = supplierDetail.attachments || []
+    supplierDetail.supplierClass = getBitwiseBack(supplierDetail.supplierClassification)
+    supplierDetail.supplierClassificationLable = getLabelByBit(supplierClassEnum, supplierDetail.supplierClassification, '、')
+    Object.assign(crud.form, supplierDetail)
+    getEnterpriseTypeName(crud.form.enterpriseType)
+  } catch (error) {
+    crud.notify('获取供应商详情失败', CRUD.NOTIFICATION_TYPE.ERROR)
+  }
+}
+
+// 提交前
+CRUD.HOOK.beforeSubmit = async () => {
+  crud.form.attachments = crud.form.files.map(f => f.id)
+  crud.form.contacts = crud.form.contacts.filter(v => v.name || v.phone || v.email)
+}
+
+function handleRegionChange(val) {
+  crud.form.countryId = undefined
+  crud.form.provinceId = undefined
+  crud.form.cityId = undefined
+  crud.form.regionId = undefined
+  val && val.forEach((v, i) => {
+    if (i === 0) {
+      crud.form.countryId = v
+    }
+    if (i === 1) {
+      crud.form.provinceId = v
+    }
+    if (i === 2) {
+      crud.form.cityId = v
+    }
+    if (i === 3) {
+      crud.form.regionId = v
+    }
+  })
+}
+
+// 获取企业类型名称
+function getEnterpriseTypeName(type) {
+  dict.value.enterprise_type.forEach(item => {
+    if (item.value === type) crud.form.enterpriseTypeName = item.label
+  })
+}
+
+function handleSupplierClass(val) {
+  let supplierClass
+  if (val) {
+    val.forEach(v => {
+      supplierClass |= v
+    })
+  }
+  crud.form.supplierClassification = supplierClass
+}
+</script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+.form {
+  padding:  0px 60px 35px 35px;
+}
+.demo-form .rule-row {
+  display: flex;
+  margin-bottom: 10px;
+}
+.demo-form .rule-row:last-child {
+  margin-bottom: 0px;
+}
+.form .el-form-item {
+  flex: 1;
+  width: 33%;
+  margin-right: 30px;
+}
+.form .el-upload__tip {
+  padding-left: 15px;
+}
+</style>

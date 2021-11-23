@@ -2,14 +2,14 @@
 <template>
   <common-select
     v-model="selectValue"
-    :size="size"
-    :disabled="disabled"
-    :multiple="multiple"
-    :collapse-tags="collapseTags"
+    :size="props.size"
+    :disabled="props.disabled"
+    :multiple="props.multiple"
+    :collapse-tags="props.collapseTags"
     :loading="!loaded"
-    :clearable="clearable"
-    :filterable="filterable"
-    :placeholder="placeholder"
+    :clearable="props.clearable"
+    :filterable="props.filterable"
+    :placeholder="props.placeholder"
     :options="options"
     @change="handleChange"
   >
@@ -19,6 +19,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
+import { enabledEnum } from '@/utils/enum/modules/common'
 import { isNotBlank, isBlank } from '@data-type/index'
 import useSuppliers from '@compos/store/use-suppliers'
 
@@ -34,6 +35,18 @@ const props = defineProps({
   type: {
     type: Number,
     default: supplierTypeEnum.RAW_MATERIAL.V | supplierTypeEnum.MANUFACTURED.V
+  },
+  mode: { // contained , contain, cross
+    type: String,
+    default: 'contained'
+  },
+  typeMode: { // contained , contain, cross
+    type: String,
+    default: 'cross'
+  },
+  showHide: { // 显示被列入黑名单的供应商
+    type: Boolean,
+    default: false
   },
   size: {
     type: String,
@@ -74,13 +87,30 @@ const selectValue = ref()
 const { loaded, suppliers } = useSuppliers(loadedCallBack)
 
 const options = computed(() => {
+  const supplierList = props.showHide ? suppliers.value : suppliers.value.filter(v => v.enabled === enabledEnum.TRUE.V)
   if (props.basicClass) {
-    return suppliers.value.filter(v => v.basicClass & props.basicClass)
+    if (props.mode === 'contained') {
+      return supplierList.filter(v => (v.basicClass & props.basicClass) === v.basicClass)
+    }
+    if (props.mode === 'contain') {
+      return supplierList.filter(v => (v.basicClass & props.basicClass) === props.basicClass)
+    }
+    if (props.mode === 'cross') {
+      return supplierList.filter(v => v.basicClass & props.basicClass)
+    }
   }
   if (props.type) {
-    return suppliers.value.filter(v => v.type & props.type)
+    if (props.typeMode === 'contained') {
+      return supplierList.filter(v => (v.type & props.type) === v.type)
+    }
+    if (props.typeMode === 'contain') {
+      return supplierList.filter(v => (v.type & props.type) === props.type)
+    }
+    if (props.typeMode === 'cross') {
+      return supplierList.filter(v => v.type & props.type)
+    }
   }
-  return suppliers.value
+  return supplierList
 })
 
 watch(

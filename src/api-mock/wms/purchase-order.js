@@ -1,4 +1,4 @@
-import { purchaseTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { invoiceTypeEnum, settlementStatusEnum, weightMeasurementModeEnum } from '@enum-ms/finance'
 
 // 获取采购订单
@@ -13,11 +13,11 @@ const getPurchaseOrder = {
         content: [
           {
             id: 1, // 订单id
-            purchaseType: purchaseTypeEnum.RAW_MATERIAL.V, // 采购类型
+            purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
             supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
             'basicClass|1-16': 1, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
-            'project|2': [
+            'projects|2': [
               {
                 'id|+1': 1,
                 'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -46,11 +46,11 @@ const getPurchaseOrder = {
           },
           {
             id: 2, // 订单id
-            purchaseType: purchaseTypeEnum.MANUFACTURED.V, // 采购类型
+            purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
             supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
             basicClass: 32, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
-            'project|2': [
+            'projects|2': [
               {
                 'id|+1': 1,
                 'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -85,6 +85,32 @@ const getPurchaseOrder = {
   }
 }
 
+// 添加采购订单
+const add = {
+  url: '/api/wms/purchase-order',
+  method: 'post',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
+// 修改采购订单
+const edit = {
+  url: '/api/wms/purchase-order',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 // 修改采购单状态状态
 const editPurchaseStatus = {
   url: '/api/wms/purchase-order/purchase-status',
@@ -98,7 +124,7 @@ const editPurchaseStatus = {
   }
 }
 
-// 删除单位
+// 删除采购订单
 const del = {
   url: '/api/wms/purchase-order',
   method: 'delete',
@@ -111,4 +137,4 @@ const del = {
   }
 }
 
-export default [getPurchaseOrder, editPurchaseStatus, del]
+export default [getPurchaseOrder, add, edit, editPurchaseStatus, del]

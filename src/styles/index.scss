@@ -295,6 +295,14 @@ div:focus {
   z-index: 1000 !important;
 }
 
+.child-mr-10 >:nth-child(n) {
+  margin-right: 10px;
+}
+
+.child-mr-10 >:last-child {
+  margin-right: 0;
+}
+
 // TODO:遮罩
 .mask-container {
   background-color: hsla(0, 0%, 100%, 0.8);

@@ -1,9 +1,8 @@
 <template>
   <common-select
-    v-model="scope.row.basicClass"
+    v-model="copyValue"
     :options="options"
     :showExtra="props.showExtra"
-    type="enum"
     :size="props.size"
     :disabled="disabled"
     :multiple="props.multiple"
@@ -13,6 +12,8 @@
     :clearable="props.clearable"
     :filterable="props.filterable"
     :textAlign="props.textAlign"
+    type="enum"
+    mode="bit"
     @change="selectChange"
     @blur="handleBlur"
   />
@@ -22,13 +23,17 @@
 import { defineEmits, defineProps, computed, ref, watch } from 'vue'
 import { materialClassificationEnum, rawMatClsEnum, manufClsEnum } from '@enum-ms/classification'
 import { isBlank } from '@/utils/data-type'
+import { baseMaterialTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['change', 'blur', 'update:modelValue'])
 
 const props = defineProps({
+  modelValue: {
+    type: [Array, Number]
+  },
   // raw , manuf
   type: {
-    type: String
+    type: [Number, String]
   },
   size: {
     type: String,
@@ -105,8 +110,14 @@ const loading = ref(false)
 const copyValue = ref()
 
 const options = computed(() => {
-  if (props.type === 'raw') return rawMatClsEnum.ENUM
-  if (props.type === 'manuf') return manufClsEnum.ENUM
+  if (typeof props.type === 'string') {
+    if (props.type === 'raw') return rawMatClsEnum.ENUM
+    if (props.type === 'manuf') return manufClsEnum.ENUM
+  }
+  if (typeof props.type === 'number') {
+    if (props.type === baseMaterialTypeEnum.RAW_MATERIAL.V) return rawMatClsEnum.ENUM
+    if (props.type === baseMaterialTypeEnum.MANUFACTURED.V) return manufClsEnum.ENUM
+  }
   return materialClassificationEnum.ENUM
 })
 

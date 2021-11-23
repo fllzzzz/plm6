@@ -7,7 +7,7 @@ export default {
       path: '/wms/inventory-warning-manage',
       component: 'Layout',
       hidden: false,
-      name: 'SupplierManage',
+      name: 'InventoryManage',
       alwaysShow: false,
       redirect: '/wms/inventory-warning',
       meta: { title: '库存管理', icon: 'contract', noCache: true },
@@ -38,7 +38,7 @@ export default {
           meta: { title: '采购订单管理', icon: 'project', noCache: true }
         }
       ]
-    }
+    },
     // {
     //   name: 'InventoryWarning',
     //   path: 'inventory-warning',
@@ -78,23 +78,23 @@ export default {
     //     }
     //   ]
     // },
-    // {
-    //   path: '/wms',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'SupplierManage',
-    //   alwaysShow: false,
-    //   redirect: '/wms/supplier/manage',
-    //   meta: { title: '供应商管理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'PurchaseSupplier',
-    //       path: 'supplier',
-    //       hidden: false,
-    //       component: '/wms/supplier/manage/index',
-    //       meta: { title: '供应商列表', icon: 'supplier', noCache: true }
-    //     }
-    //   ]
-    // }
+    {
+      path: '/wms/supplier',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplierManage',
+      alwaysShow: false,
+      redirect: '/wms/supplier/manage',
+      meta: { title: '供应商管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'PurchaseSupplier',
+          path: 'manage',
+          hidden: false,
+          component: '/wms/supplier/manage/index',
+          meta: { title: '供应商列表', icon: 'project', noCache: true }
+        }
+      ]
+    }
   ]
 }

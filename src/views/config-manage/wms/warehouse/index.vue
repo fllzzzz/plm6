@@ -152,7 +152,7 @@ const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled }
 CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
   content.forEach(v => {
     const mt = v.materialType
-    v.materialType = EO.getBits(materialClassificationEnum, mt, 'V')
+    v.materialType = EO.getBits(materialClassificationEnum.ENUM, mt, 'V')
   })
 }
 </script>

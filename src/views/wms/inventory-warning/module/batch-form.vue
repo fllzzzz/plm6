@@ -41,7 +41,7 @@
           </div>
           <div class="setting-item">
             <el-tag size="medium" effect="plain">【批量】设置工厂</el-tag>
-            <factory-select v-model:value="batch.factoryId" placeholder="可选择工厂" clearable />
+            <factory-select v-model="batch.factoryId" placeholder="可选择工厂" clearable />
             <common-button :disabled="!crud.selections.length" type="success" size="small" @click="handleBatchSetFactory">
               设置
             </common-button>
@@ -113,7 +113,7 @@
             </el-table-column>
             <el-table-column key="factoryId" prop="factoryId" label="工厂" align="center" min-width="160">
               <template v-slot="scope">
-                <factory-select v-model:value="scope.row.factoryId" placeholder="可选择工厂" clearable style="width: 100%" />
+                <factory-select v-model="scope.row.factoryId" placeholder="可选择工厂" clearable style="width: 100%" />
               </template>
             </el-table-column>
             <el-table-column key="operate" :show-overflow-tooltip="true" prop="operate" label="操作" align="center" width="70">

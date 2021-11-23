@@ -13,7 +13,7 @@
       <common-radio-button
         type="enum"
         v-model="query.purchaseType"
-        :options="purchaseTypeEnum.ENUM"
+        :options="baseMaterialTypeEnum.ENUM"
         show-option-all
         clearable
         placeholder="可选择物料种类"
@@ -42,6 +42,7 @@
         class="filter-item"
         @change="crud.toQuery"
         placeholder="可选择供应商搜索"
+        show-hide
         style="width: 250px"
       />
       <el-input
@@ -71,7 +72,7 @@
 <script setup>
 import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { purchaseStatusEnum, purchaseTypeEnum } from '@enum-ms/wms'
+import { purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'

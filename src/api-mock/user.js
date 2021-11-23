@@ -64,7 +64,7 @@ const userInfo = {
             'id': 4,
             'name': '项目管理',
             'icon': 'config',
-            'redirect': 'project-manage/data-manage'
+            'redirect': 'project-manage'
           },
           {
             'id': 3,

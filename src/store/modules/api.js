@@ -6,7 +6,7 @@ const state = {
   // // 修改头像
   // updateAvatarApi: lStore.get('requestUrl') + '/api/user/updateAvatar',
   // // 文件上传
-  // fileUploadApi: lStore.get('requestUrl') + '/api/attachment',
+  fileUploadApi: getRequestUrl() + '/api/common/attachment',
   // // 上传公司logo
   // fileUploadCompanyLogoApi: lStore.get('requestUrl') + '/api/config/company/logo',
   // // 材料清单上传
@@ -23,10 +23,11 @@ const state = {
     contract: `/api/`,
     user: `/api/`,
     wms: `/api/wms/`,
-    common: `/api/`,
+    common: `/api/common/`,
     config: `/api/config/`,
     project: `/api/project/`,
-    mes: `/api/mes/building/`
+    mes: `/api/mes/building/`,
+    system: `/api/`
   }
 }
 

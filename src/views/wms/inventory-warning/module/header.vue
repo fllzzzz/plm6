@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <factory-select
-      v-model:value="query.factoryId"
+      v-model="query.factoryId"
       class="filter-item"
       placeholder="可选择工厂"
       clearable

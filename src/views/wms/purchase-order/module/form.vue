@@ -15,149 +15,179 @@
     </template>
     <template #content>
       <div class="main-content" :style="maxHeightStyle">
-        <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top" inline label-width="80px">
-          <el-form-item label="采购订单号" prop="orderNo">
-            <div class="input-underline">
+        <el-form ref="formRef" :model="form" :rules="rules" size="small" label-position="top" inline label-width="200px">
+          <div class="form-content">
+            <el-form-item class="el-form-item-1" label="采购订单号" prop="serialNumber">
               <el-input
-                v-model.trim="form.orderNo"
+                v-model.trim="form.serialNumber"
                 placeholder="可输入采购订单号（不填写则自动生成）"
                 :disabled="isUsed"
-                maxlength="60"
+                maxlength="50"
                 size="small"
-                style="width: 350px"
+                class="input-underline"
               />
-            </div>
-          </el-form-item>
-          <el-form-item label="供货类型" prop="supplyType" class="form-label-require">
-            <common-radio v-model="form.supplyType" :options="orderSupplyTypeEnum.ENUM" type="enum" :disabled="isUsed" size="small" style="width:00px" />
-          </el-form-item>
-          <div class="form-row">
-            <!-- <el-form-item label="物料种类" prop="basicClass">
-              <div class="input-underline" style="min-width: 250px">
+            </el-form-item>
+            <el-form-item class="el-form-item-2" label="供货类型" prop="supplyType">
+              <common-radio v-model="form.supplyType" :options="orderSupplyTypeEnum.ENUM" type="enum" :disabled="isUsed" size="small" />
+            </el-form-item>
+            <el-form-item class="el-form-item-3" label="物料种类" prop="basicClass">
+              <div class="flex-rss child-mr-10">
+                <common-radio-button
+                  v-model="form.purchaseType"
+                  :options="baseMaterialTypeEnum.ENUM"
+                  type="enum"
+                  :disabled="isUsed"
+                  size="mini"
+                  style="flex: none"
+                />
                 <basic-class-select
                   v-model="form.basicClass"
-                  :type=""
+                  :type="form.purchaseType"
+                  multiple
                   clearable
                   :disabled="isUsed"
                   placeholder="请选择物料种类"
+                  class="input-underline"
+                  style="flex: auto"
                 />
               </div>
-            </el-form-item> -->
-          </div>
-          <el-form-item
-            label="选择项目"
-            prop="projectId"
-            :class="form.supplyType === orderSupplyTypeEnum.PARTY_A.V ? 'form-label-require' : ''"
-          >
-            <div class="input-underline">
+            </el-form-item>
+
+            <el-form-item label="选择项目" class="el-form-item-4" prop="projectId">
               <project-cascader
+                v-model="form.projectId"
+                clearable
+                :disabled="isUsed"
+                :multiple="true"
+                :initial="false"
+                class="input-underline"
+              />
+            </el-form-item>
+            <!-- <el-form-item label="选择单体/区域" class="el-form-item-5" prop="projectId"> -->
+            <!-- <project-cascader
                 v-model="form.projectId"
                 style="width: 350px"
                 clearable
                 :disabled="isUsed"
                 :multiple="true"
                 :initial="false"
-              />
-            </div>
-          </el-form-item>
-          <el-form-item label="申购单号" prop="purchaseIds">
-            <div class="input-underline">
+                class="input-underline"
+              /> -->
+            <!-- </el-form-item> -->
 
-              <!-- <purchase-no-select
-                v-model="purchaseIds"
+            <el-form-item class="el-form-item-6" label="申购单号" prop="purchaseIds">
+              <requisitions-sn-select
+                v-model="form.purchaseIds"
                 :project-id="form.projectId"
-                :basic-set-class="form.basicClass"
+                :basic-class="form.basicClass"
                 clearable
                 multiple
-                :default="false"
                 :disabled="isUsed"
-                value-type="value"
-                placeholder="请选择申购单号"
-                style="width: 350px"
-              >
-                <template v-slot:view="{ data }">
-                  <common-button icon="el-icon-view" type="info" size="mini" @click.stop="showPurchaseNoDetail(data)" />
-                </template>
-              </purchase-no-select> -->
-            </div>
-          </el-form-item>
-          <template v-if="form.supplyType == orderSupplyTypeEnum.SELF.V">
-            <el-form-item label="合同量" prop="totalMete">
-              <div class="input-underline">
-                <el-input v-model.trim="form.totalMete" style="width: 200px" placeholder="请填写合同量" autocomplete="off" />
-                <el-select
-                  v-model="form.meteUnit"
-                  filterable
-                  placeholder="请选择单位"
-                  style="width: 150px"
-                  @change="validateFieldTotalMete"
-                >
-                  <el-option v-for="item in dict.unit" :key="item.id" :label="item.label" :value="item.label" />
-                </el-select>
-              </div>
-            </el-form-item>
-            <div class="form-row">
-              <el-form-item label="合同额（元）" prop="contractAmount">
-                <div class="input-underline" style="min-width: 250px">
-                  <el-input-number
-                    v-model="form.contractAmount"
-                    :max="999999999999"
-                    :precision="$DP.YUAN"
-                    :step="100"
-                    :controls="false"
-                    style="width: 200px"
-                    placeholder="请填写合同额"
-                    autocomplete="off"
-                  />
-                </div>
-              </el-form-item>
-              <el-form-item label="选择订单税率" prop="invoiceType">
-                <div class="input-underline" style="min-width: 250px">
-                  <invoice-type-select v-model:invoiceType="form.invoiceType" v-model:taxRate="form.taxRate" :disabled="isUsed" />
-                </div>
-              </el-form-item>
-            </div>
-            <el-form-item
-              prop="measurementType"
-              label="计量方式"
-              :class="form.basicClass == STEEL_ENUM ? 'form-label-require' : ''"
-            >
-              <common-radio
-                v-model="form.measurementType"
-                :options="settlementTypeEnum"
-                type="enum"
-                :props="{ key: 'K', label: 'SL', value: 'V' }"
-                :disabled="form.basicClass !== STEEL_ENUM || isUsed"
-                :size="'small'"
+                :public-warehouse="isBlank(form.projectId)"
+                class="input-underline"
+                placeholder="可选择申购单号"
               />
             </el-form-item>
-            <div class="form-row">
-              <el-form-item label="选择供应商" prop="supplierId">
-                <div class="input-underline" style="min-width: 250px">
-                  <supplier-select
-                    ref="supplier"
-                    v-model="form.supplierId"
-                    :classification="classification"
+            <el-form-item class="el-form-item-7" label="选择供应商" prop="supplierId">
+              <supplier-select
+                v-model="form.supplierId"
+                :basicClass="form.basicClass"
+                :type="form.purchaseType"
+                :disabled="isUsed"
+                mode="contain"
+                clearable
+                filterable
+                class="input-underline"
+              />
+            </el-form-item>
+            <template v-if="form.supplyType == orderSupplyTypeEnum.SELF.V">
+              <el-form-item class="el-form-item-8" label="合同量" prop="mete">
+                <div class="input-underline flex-rss child-mr-10">
+                  <el-input-number
+                    v-model="form.mete"
+                    placeholder="请填写合同量"
+                    autocomplete="off"
+                    :max="999999999999"
+                    :precision="2"
+                    :step="1"
+                    :controls="false"
+                    style="width: 100%"
+                  />
+                  <unit-select
+                    v-model="form.meteUnit"
+                    size="small"
                     :disabled="isUsed"
-                    @change="supplierChange"
+                    clearable
+                    filterable
+                    style="width: 100px; flex: none"
                   />
                 </div>
               </el-form-item>
-              <el-form-item label="提货方式" prop="transportType">
+              <el-form-item class="el-form-item-9" label="合同额（元）" prop="amount">
+                <el-input-number
+                  v-model="form.amount"
+                  :max="999999999999"
+                  :precision="2"
+                  :step="1"
+                  :controls="false"
+                  placeholder="请填写合同额"
+                  autocomplete="off"
+                  class="input-underline"
+                  style="width: 100%"
+                />
+              </el-form-item>
+              <el-form-item class="el-form-item-10" label="选择订单税率" prop="invoiceType">
+                <invoice-type-select
+                  class="input-underline"
+                  v-model:invoiceType="form.invoiceType"
+                  v-model:taxRate="form.taxRate"
+                  :disabled="isUsed"
+                  :classification="form.basicClass"
+                />
+              </el-form-item>
+              <el-form-item class="el-form-item-11" prop="weightMeasurementMode" label="计量方式">
                 <common-radio
-                  v-model="form.transportType"
-                  :options="pickUpModeEnum"
+                  v-model="form.weightMeasurementMode"
+                  :options="weightMeasurementModeEnum.ENUM"
+                  type="enum"
+                  :props="{ key: 'K', label: 'SL', value: 'V' }"
+                  :disabled="isUsed"
+                  :size="'small'"
+                />
+              </el-form-item>
+              <el-form-item class="el-form-item-12" label="提货方式" prop="pickUpMode">
+                <common-radio
+                  v-model="form.pickUpMode"
+                  :options="pickUpModeEnum.ENUM"
                   :disabled-val="pickUpModeDisabled"
                   type="enum"
                   :disabled="isUsed"
                   size="small"
                 />
               </el-form-item>
-            </div>
-            <el-form-item label="订单类型" prop="type">
-              <common-radio v-model="form.type" :options="arrivalModeEnum" type="enum" :disabled="isUsed" :size="'small'" />
+              <el-form-item class="el-form-item-13" label="订单类型" prop="paymentMode">
+                <common-radio
+                  v-model="form.paymentMode"
+                  :options="purchaseOrderPaymentModeEnum.ENUM"
+                  type="enum"
+                  :disabled="isUsed"
+                  :size="'small'"
+                />
+              </el-form-item>
+            </template>
+            <el-form-item class="el-form-item-14" prop="paymentMode">
+              <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
             </el-form-item>
-          </template>
+            <el-form-item class="el-form-item-15">
+              <!-- :show-download="!!form.id" -->
+              <upload-list
+                show-download
+                :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
+                v-model:files="form.attachment"
+                empty-text="暂未上传采购订单附件"
+              />
+            </el-form-item>
+          </div>
         </el-form>
       </div>
     </template>
@@ -165,16 +195,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
-import { orderSupplyTypeEnum } from '@enum-ms/wms'
-import { isNotBlank } from '@/utils/data-type'
+import { ref, watch } from 'vue'
+import { materialClassificationEnum } from '@enum-ms/classification'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { fileClassifyEnum } from '@enum-ms/file'
+import { isNotBlank, isBlank } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import unitSelect from '@comp-common/unit-select/index.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
 import supplierSelect from '@comp-base/supplier-select.vue'
+import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
+import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
+import uploadList from '@/components/file-upload/UploadList.vue'
 
 const defaultForm = {
   name: '', // 规格名称
@@ -189,6 +225,7 @@ const rules = {
 const drawerRef = ref()
 const formRef = ref()
 const isUsed = ref(false) // 采购单是否已被使用，使用后部分信息无法修改
+const pickUpModeDisabled = ref([])
 
 const { maxHeightStyle } = useMaxHeight(
   {
@@ -201,6 +238,19 @@ const { maxHeightStyle } = useMaxHeight(
 )
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+
+watch(
+  () => form.basicClass,
+  (bc) => {
+    if (bc & materialClassificationEnum.GAS.V) {
+      // 气体只能选择到厂
+      form.pickUpMode = pickUpModeEnum.SUPPLIER.V
+      pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
+    } else {
+      pickUpModeDisabled.value = []
+    }
+  }
+)
 
 // 初始化表单
 CRUD.HOOK.afterToAdd = () => {}
@@ -215,23 +265,90 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
 // 表单提交数据清理
 crud.submitFormFormat = (form) => {
   // form.classificationId = currentNode.value.id
+  form.attachmentIds = form.attachment ? form.attachment.map((v) => v.id) : undefined
   return form
 }
 </script>
 
 <style lang="scss" scoped>
-// .spec-main-content {
-//   padding: 10px 20px 00px 20px;
-//   ::v-deep(.el-input-number .el-input__inner) {
-//     text-align: left;
-//   }
-//   ::v-deep(.common-button--mini) {
-//     min-height:20px;
-//   }
-// }
 .main-content {
-  ::v-deep(.el-form--inline .el-form-item){
-    margin-right: 60px;
+  ::v-deep(.el-form--inline .el-form-item) {
+    // margin-right: 60px;
+  }
+
+  ::v-deep(.el-form-item) {
+    // width: 400px;
+  }
+  ::v-deep(.input-underline input) {
+    text-align: left;
+  }
+}
+
+.form-content {
+  width: 750px;
+  display: grid;
+  grid-template-columns: repeat(12, 8.33%);
+  grid-template-rows: auto;
+  grid-column-gap: 20px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'a a a a a a b b b b b b'
+    'c c c c c c . . . . . .'
+    'd d d d d d d d d d d d'
+    'f f f f f f g g g g g g'
+    'h h h h i i i i j j j j'
+    'k k k k l l l m m m m m'
+    'n n n n n n n n n n n n'
+    'o o o o o o o o o o o o';
+  .el-form-item {
+    margin-bottom: 20px;
+  }
+  > .el-form-item-1 {
+    grid-area: a;
+  }
+  > .el-form-item-2 {
+    grid-area: b;
+  }
+  > .el-form-item-3 {
+    grid-area: c;
+  }
+  > .el-form-item-4 {
+    grid-area: d;
+  }
+  > .el-form-item-5 {
+    grid-area: e;
+  }
+  > .el-form-item-6 {
+    grid-area: f;
+  }
+  > .el-form-item-7 {
+    grid-area: g;
+  }
+  > .el-form-item-8 {
+    grid-area: h;
+  }
+  > .el-form-item-9 {
+    grid-area: i;
+  }
+  > .el-form-item-10 {
+    grid-area: j;
+  }
+  > .el-form-item-11 {
+    grid-area: k;
+  }
+  > .el-form-item-12 {
+    grid-area: l;
+  }
+  > .el-form-item-13 {
+    grid-area: m;
+  }
+
+  > .el-form-item-14 {
+    grid-area: n;
+  }
+
+  > .el-form-item-15 {
+    grid-area: o;
   }
 }
 </style>
