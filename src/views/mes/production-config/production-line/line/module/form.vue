@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
       <el-form-item label="工厂" prop="factoryId">
-        <factory-select v-model:value="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
+        <factory-select v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
       </el-form-item>
       <el-form-item label="车间" prop="workshopId">
         <workshop-select v-model:value="form.workshopId" :factory-id="form.factoryId" placeholder="请先选择工厂" style="width: 270px" />
