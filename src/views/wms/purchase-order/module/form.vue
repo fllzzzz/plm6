@@ -22,7 +22,7 @@
               <el-input
                 v-model.trim="form.serialNumber"
                 placeholder="可输入采购订单号（不填写则自动生成）"
-                :disabled="form.isUsed"
+                :disabled="form.boolUsed"
                 maxlength="30"
                 size="small"
                 class="input-underline"
@@ -33,7 +33,7 @@
                 v-model="form.supplyType"
                 :options="orderSupplyTypeEnum.ENUM"
                 type="enum"
-                :disabled="form.isUsed"
+                :disabled="form.boolUsed"
                 size="small"
               />
             </el-form-item>
@@ -43,7 +43,7 @@
                   v-model="form.purchaseType"
                   :options="baseMaterialTypeEnum.ENUM"
                   type="enum"
-                  :disabled="form.isUsed"
+                  :disabled="form.boolUsed"
                   size="mini"
                   style="flex: none"
                 />
@@ -52,7 +52,7 @@
                   :type="form.purchaseType"
                   multiple
                   clearable
-                  :disabled="form.isUsed"
+                  :disabled="form.boolUsed"
                   placeholder="请选择物料种类"
                   class="input-underline"
                   style="flex: auto"
@@ -64,7 +64,7 @@
               <project-cascader
                 v-model="form.projectIds"
                 clearable
-                :disabled="form.isUsed"
+                :disabled="form.boolUsed"
                 :multiple="true"
                 :initial="false"
                 class="input-underline"
@@ -78,7 +78,7 @@
                 :show-struc="!!(form.basicClass & materialClassificationEnum.STRUC_MANUFACTURED.V)"
                 :show-encl="!!(form.basicClass & materialClassificationEnum.ENCL_MANUFACTURED.V)"
                 :project-ids="form.projectIds"
-                :disabled="form.isUsed"
+                :disabled="form.boolUsed"
                 checkable
               />
             </el-form-item>
@@ -90,7 +90,7 @@
                 :basic-class="form.basicClass"
                 clearable
                 multiple
-                :disabled="form.isUsed"
+                :disabled="form.boolUsed"
                 :public-warehouse="isBlank(form.projectIds)"
                 class="input-underline"
                 placeholder="可选择申购单号"
@@ -101,7 +101,7 @@
                 v-model="form.supplierId"
                 :basicClass="form.basicClass"
                 :type="form.purchaseType"
-                :disabled="form.isUsed"
+                :disabled="form.boolUsed"
                 mode="contain"
                 clearable
                 filterable
@@ -124,7 +124,7 @@
                   <unit-select
                     v-model="form.meteUnit"
                     size="small"
-                    :disabled="form.isUsed"
+                    :disabled="form.boolUsed"
                     clearable
                     filterable
                     style="width: 100px; flex: none"
@@ -144,12 +144,12 @@
                   style="width: 100%"
                 />
               </el-form-item>
-              <el-form-item class="el-form-item-10" label="选择订单税率" prop="invoiceType">
+              <el-form-item class="el-form-item-10" label="发票及税率" prop="invoiceType">
                 <invoice-type-select
                   class="input-underline"
                   v-model:invoiceType="form.invoiceType"
                   v-model:taxRate="form.taxRate"
-                  :disabled="form.isUsed"
+                  :disabled="form.boolUsed"
                   :classification="form.basicClass"
                 />
               </el-form-item>
@@ -159,7 +159,7 @@
                   :options="weightMeasurementModeEnum.ENUM"
                   type="enum"
                   :props="{ key: 'K', label: 'SL', value: 'V' }"
-                  :disabled="form.isUsed"
+                  :disabled="form.boolUsed"
                   :size="'small'"
                 />
               </el-form-item>
@@ -169,7 +169,7 @@
                   :options="pickUpModeEnum.ENUM"
                   :disabled-val="pickUpModeDisabled"
                   type="enum"
-                  :disabled="form.isUsed"
+                  :disabled="form.boolUsed"
                   size="small"
                 />
               </el-form-item>
@@ -178,7 +178,7 @@
                   v-model="form.purchaseOrderPaymentMode"
                   :options="purchaseOrderPaymentModeEnum.ENUM"
                   type="enum"
-                  :disabled="form.isUsed"
+                  :disabled="form.boolUsed"
                   :size="'small'"
                 />
               </el-form-item>

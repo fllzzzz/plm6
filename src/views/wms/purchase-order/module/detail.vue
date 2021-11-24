@@ -39,7 +39,7 @@
                 </div>
               </el-form-item>
               <el-form-item label="合同额" prop="amount"> {{ detail.amount }}元 </el-form-item>
-              <el-form-item label="订单税率" prop="invoiceType">
+              <el-form-item label="发票及税率" prop="invoiceType">
                 <span v-parse-enum="{ e: invoiceTypeEnum, v: detail.invoiceType }" />
                 <span v-if="detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">（{{ detail.taxRate }}%）</span>
               </el-form-item>
@@ -66,7 +66,7 @@
                 :style="{ color: detail.purchaseStatus === purchaseStatusEnum.FINISHED.V ? 'green' : '' }"
                 v-parse-enum="{ e: purchaseStatusEnum, v: detail.purchaseStatus }"
               />
-              <span v-if="detail.isUsed && detail.purchaseStatus === purchaseStatusEnum.UNFINISHED.V">（有入库）</span>
+              <span v-if="detail.boolUsed && detail.purchaseStatus === purchaseStatusEnum.UNFINISHED.V">（有入库）</span>
             </el-form-item>
             <el-form-item label="结算状态" prop="settlementStatus">
               <span

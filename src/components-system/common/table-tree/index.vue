@@ -31,7 +31,7 @@ const props = defineProps({
     default: false
   },
   checkable: {
-    // 选择模式
+    // 选择模式(显示复选框)
     type: Boolean,
     default: false
   },

@@ -80,7 +80,7 @@ const getPurchaseOrder = {
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userEditTime: '@datetime(T)', // 用户修改时间
-            isUsed: true // 是否使用
+            boolUsed: true // 是否使用(使用状态下部分字段无法修改)
           }
         ],
         totalElements: 2
