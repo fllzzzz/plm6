@@ -106,7 +106,7 @@
 import crudApi from '@/api/mes/scheduling-manage/task/machine-part'
 import { ref, provide } from 'vue'
 
-import { productTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { emptyTextFormatter, toFixed } from '@data-type'
@@ -163,7 +163,7 @@ function showDetail(row) {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.productType = productTypeEnum.ENCLOSURE.V
+    v.productType = componentTypeEnum.ENCLOSURE.V
     v.schedulingQuantity = v.schedulingQuantity || 0
     v.taskQuantity = v.taskQuantity || 0
     v.unschedulingQuantity = v.schedulingQuantity - v.taskQuantity

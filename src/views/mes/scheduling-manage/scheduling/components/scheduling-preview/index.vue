@@ -19,7 +19,7 @@
         <common-table :data="workshopList">
           <el-table-column width="150" property="name" label="车间" />
           <el-table-column width="110" align="center" property="increase" label="新增数量" />
-          <template v-if="productType === productTypeEnum.ENCLOSURE.V">
+          <template v-if="productType === componentTypeEnum.ENCLOSURE.V">
             <el-table-column min-width="110" align="center" property="lengthIncrease" :label="`新增分配长度\n（m）`">
               <template v-slot="scope">
                 {{ convertUnits(scope.row.lengthIncrease, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
@@ -40,7 +40,7 @@
           </template>
 
           <el-table-column width="110" align="center" property="reduce" label="减少数量" />
-          <template v-if="productType === productTypeEnum.ENCLOSURE.V">
+          <template v-if="productType === componentTypeEnum.ENCLOSURE.V">
             <el-table-column min-width="110" align="center" property="lengthReduce" :label="`减少分配长度\n（m）`">
               <template v-slot="scope">
                 {{ convertUnits(scope.row.lengthReduce, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
@@ -175,7 +175,7 @@ import { save } from '@/api/mes/scheduling-manage/scheduling/common'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
-import { productTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { obj2arr } from '@/utils/convert/type'
@@ -234,7 +234,7 @@ watch(
 
 function ellipsisTextTip(workshop, line) {
   const _data = changedLineData.value[line.id]
-  if (productType === productTypeEnum.ENCLOSURE.V) {
+  if (productType === componentTypeEnum.ENCLOSURE.V) {
     return `${workshop.name}\n
                 ${line.name}\n
                 新增分配数量：${_data.increase} 张\n
@@ -322,7 +322,7 @@ function handleDataChange() {
           }
           if (changeQuantity > 0) {
             hasChangedLine[key].increase += Math.abs(changeQuantity)
-            if (productType === productTypeEnum.ENCLOSURE.V) {
+            if (productType === componentTypeEnum.ENCLOSURE.V) {
               hasChangedLine[key].lengthIncrease += Math.abs(changeQuantity) * v.length
             } else {
               hasChangedLine[key].netWeightIncrease += Math.abs(changeQuantity) * v.netWeight
@@ -330,7 +330,7 @@ function handleDataChange() {
             }
           } else {
             hasChangedLine[key].reduce += Math.abs(changeQuantity)
-            if (productType === productTypeEnum.ENCLOSURE.V) {
+            if (productType === componentTypeEnum.ENCLOSURE.V) {
               hasChangedLine[key].lengthReduce += Math.abs(changeQuantity) * v.length
             } else {
               hasChangedLine[key].netWeightReduce += Math.abs(changeQuantity) * v.netWeight
@@ -370,7 +370,7 @@ function handleDataChange() {
         }
         hasChangedWorkshop[workshop.id].increase += hasChangedLine[line.id].increase
         hasChangedWorkshop[workshop.id].reduce += hasChangedLine[line.id].reduce
-        if (productType === productTypeEnum.ENCLOSURE.V) {
+        if (productType === componentTypeEnum.ENCLOSURE.V) {
           hasChangedWorkshop[workshop.id].lengthIncrease += hasChangedLine[line.id].lengthIncrease
           hasChangedWorkshop[workshop.id].lengthReduce += hasChangedLine[line.id].lengthReduce
         } else {

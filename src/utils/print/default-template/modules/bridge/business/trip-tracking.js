@@ -198,7 +198,7 @@ const BRIDGE_MES_BUSINESS_TRIP_TRACKING = {
      * @param {*} format 格式转换
      */
     extraFields: [
-      { key: 'materialType', title: '类型', type: typeEnum.ENUM.K, format: { enum: 'materialTypeEnum' }}
+      { key: 'materialType', title: '类型', type: typeEnum.ENUM.K, format: { enum: 'componentTypeEnum' }}
     ],
     /**
      * 表格列

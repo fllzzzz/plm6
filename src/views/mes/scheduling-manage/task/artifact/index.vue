@@ -106,7 +106,7 @@
 import crudApi, { getArtifact } from '@/api/mes/scheduling-manage/task/artifact'
 import { ref, provide } from 'vue'
 
-import { productTypeEnum, processTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { emptyTextFormatter, toFixed } from '@data-type'
@@ -173,13 +173,13 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.unschedulingQuantity = v.schedulingQuantity - v.taskQuantity
     // 一次工序重量处理
     if (crud.query.processType === processTypeEnum.ONCE.V) {
-      v.productType = productTypeEnum.ASSEMBLE.V
+      v.productType = componentTypeEnum.ASSEMBLE.V
       v.totalSchedulingWeight = v.totalSchedulingWeight || 0
       v.totalTaskWeight = v.totalTaskWeight || 0
       v.unschedulingWeight = v.totalSchedulingWeight - v.totalTaskWeight
     } else {
       // 二次工序重量处理（暂时用毛重）
-      v.productType = productTypeEnum.ARTIFACT.V
+      v.productType = componentTypeEnum.ARTIFACT.V
       v.totalSchedulingWeight = v.totalSchedulingGrossWeight || 0
       v.totalTaskWeight = v.totalTaskGrossWeight || 0
       v.unschedulingWeight = v.totalSchedulingWeight - v.totalTaskWeight

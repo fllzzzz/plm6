@@ -246,7 +246,7 @@ v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity"
 import crudApi from '@/api/mes/scheduling-manage/scheduling/assemble'
 import { provide, ref } from 'vue'
 
-import { productTypeEnum, processTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
@@ -277,7 +277,7 @@ provide('needTableColumns', [
   { label: '区域', width: '140px', field: 'districtName' },
   { label: '组立号', width: '140px', field: 'serialNumber' }
 ])
-provide('productType', productTypeEnum.ASSEMBLE.V)
+provide('productType', componentTypeEnum.ASSEMBLE.V)
 provide('processType', processTypeEnum.ONCE.V)
 
 const tableRef = ref()

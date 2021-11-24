@@ -670,7 +670,9 @@ function addCrudBusinessMethod(crud) {
     }
     // 清除表单验证
     if (crud.ref.form) {
-      crud.ref.form.clearValidate()
+      nextTick(() => {
+        crud.ref.form.clearValidate()
+      })
     }
   }
 
@@ -702,7 +704,9 @@ function addCrudBusinessMethod(crud) {
     }
     // 清除表单验证
     if (crud.ref.batchForm) {
-      crud.ref.batchForm.clearValidate()
+      nextTick(() => {
+        crud.ref.batchForm.clearValidate()
+      })
     }
   }
 
@@ -1024,6 +1028,12 @@ function addCrudFeatureMethod(crud, data) {
     }
     for (const key in form) {
       crudFrom[key] = form[key]
+    }
+    // 清除表单验证
+    if (ref) {
+      nextTick(() => {
+        ref.clearValidate()
+      })
     }
   }
   /**
