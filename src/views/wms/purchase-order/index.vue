@@ -178,6 +178,19 @@
         align="center"
         width="90"
       />
+      <el-table-column
+        v-if="columns.visible('userEditTime')"
+        key="userEditTime"
+        :show-overflow-tooltip="true"
+        prop="userEditTime"
+        label="编辑日期"
+        align="center"
+        width="100"
+      >
+        <template #default="scope">
+          <span v-parse-time>{{ scope.row.userEditTime }}</span>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column label="操作" width="230px" align="center" fixed="right">
         <template #default="scope">
@@ -202,6 +215,7 @@ import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { materialClassificationEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
+import { projectNameFormatter } from '@/utils/project'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
@@ -215,7 +229,6 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
-import { projectNameFormatter } from '@/utils/project'
 
 // crud交由presenter持有
 const permission = {
@@ -242,10 +255,12 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料采购订单',
     sort: ['id.desc'],
-    invisibleColumns: ['invoiceType', 'updateTime'],
+    invisibleColumns: ['invoiceType', 'userEditTime'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    formStore: true,
+    formStoreKey: 'WMS_PURCHASE_ORDER'
   },
   tableRef
 )
@@ -262,7 +277,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     const basicClassArr = EO.getBits(materialClassificationEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
-    v.requisitionsSNStr = v.requisitionsSN.join('　、　')
+    v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
     v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
     v.projectIds = v.projects ? v.projects.map(v => v.id) : []
     return v

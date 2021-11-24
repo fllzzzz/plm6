@@ -33,8 +33,8 @@
             <span>{{ props.title }}</span>
           </span>
           <span>
-          <slot name="titleRight" />
-          <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
+            <slot name="titleRight" />
+            <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>
         </div>
       </slot>
@@ -230,7 +230,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.common-drawer  {
+.common-drawer {
   ::v-global(.el-drawer__header) {
     margin-bottom: 5px;
   }
@@ -269,8 +269,9 @@ defineExpose({
       transform: translateY(-50%);
     }
   }
-  .el-button + .el-button {
-      margin-left: 6px;
-    }
+
+  ::v-deep(.el-button + .el-button) {
+    margin-left: 6px;
+  }
 }
 </style>

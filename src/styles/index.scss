@@ -303,6 +303,10 @@ div:focus {
   margin-right: 0;
 }
 
+.pre-wrap {
+  white-space: pre-wrap;
+}
+
 // TODO:遮罩
 .mask-container {
   background-color: hsla(0, 0%, 100%, 0.8);

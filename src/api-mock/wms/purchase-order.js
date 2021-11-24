@@ -35,14 +35,15 @@ const getPurchaseOrder = {
             pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
             weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
-            remark: '', // 备注
+            remark: '@cparagraph', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
             founderName: '@cname', // 创建人
             lastOperatorName: '@cname', // 最后编辑人
             purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
             settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
             createTime: '@datetime(T)', // 创建时间
-            updateTime: '@datetime(T)' // 修改时间
+            updateTime: '@datetime(T)', // 修改时间
+            userEditTime: '@datetime(T)' // 用户修改时间
           },
           {
             id: 2, // 订单id
@@ -60,7 +61,7 @@ const getPurchaseOrder = {
             ], // 项目id
             strucAreaIds: [1, 5], // 构件区域id
             enclAreaIds: [2], // 围护区域id
-            requisitionsSN: [], // 采购申请单
+            requisitionsSN: ['SG-2021111801', 'SG-2021111823'], // 采购申请单
             supplierId: 1, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
@@ -70,14 +71,15 @@ const getPurchaseOrder = {
             pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
             weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
-            remark: '', // 备注
+            remark: '@cparagraph', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
             founderName: '@cname', // 创建人
             lastOperatorName: '@cname', // 最后编辑人
             purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
-            settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
+            settlementStatus: settlementStatusEnum.SETTLED.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
+            userEditTime: '@datetime(T)', // 用户修改时间
             isUsed: true // 是否使用
           }
         ],
@@ -140,4 +142,17 @@ const del = {
   }
 }
 
-export default [getPurchaseOrder, add, edit, editPurchaseStatus, del]
+// 下载excel表格
+const download = {
+  url: '/api/wms/purchase-order/export',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '操作成功'
+    }
+  }
+}
+
+export default [getPurchaseOrder, add, edit, editPurchaseStatus, del, download]

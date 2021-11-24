@@ -118,7 +118,7 @@ export function download(id) {
     module: 'wms',
     url: `purchase-order/export`,
     method: 'get',
-    // responseType: 'blob',
+    responseType: 'blob',
     params: {
       id
     }

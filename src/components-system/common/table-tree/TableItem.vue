@@ -1,13 +1,15 @@
 <template>
-  <div class="tree-item">
+  <div v-if="show" class="tree-item">
     <div class="tree-item-left">
       <el-checkbox
+        v-if="checkable"
         v-model="current.checked"
         :indeterminate="indeterminate"
         :label="current.label"
         :disabled="disabled"
         @change="handleChange"
       />
+      <span class="label-text" v-else>{{current.label}}</span>
     </div>
     <div v-if="isNotBlank(current.children)" class="tree-item-right">
       <table-item v-for="it in current.children" :key="it.key" :item="it" />
@@ -43,11 +45,20 @@ const checkedSet = inject('checkedSet')
 const checkStrictly = inject('checkStrictly')
 const returnLeaf = inject('returnLeaf')
 const disabled = inject('disabled')
+const checkable = inject('checkable')
+const onlyShowChecked = inject('onlyShowChecked')
 const current = ref(props.item)
 
 // 半选状态
 const indeterminate = computed(() => {
   return !current.value.checked && current.value.semiChecked
+})
+
+const show = computed(() => {
+  if (onlyShowChecked) {
+    return current.value.checked || current.value.semiChecked
+  }
+  return true
 })
 
 // 将消息传递给父节点
@@ -63,7 +74,8 @@ function handleChange(state) {
   }
   current.value.semiChecked = state
   const opt = state ? OPT.CHECKED : OPT.UN_CHECKED
-  if (!checkStrictly) { // 父子节点互相关联
+  if (!checkStrictly) {
+    // 父子节点互相关联
     setParentNode(current.value, opt)
     setChildNode(current.value, opt)
   }
@@ -170,6 +182,14 @@ function setChildNode(cur, opt) {
   border-bottom: 1px solid #e5e5e5;
   &:last-child {
     border-bottom: 0;
+  }
+  .label-text {
+    font-size: 14px;
+    height:25px;
+    line-height: 25px;
+    display: inline-block;
+    margin: 5px 10px;
+    color: #333
   }
 }
 .tree-item-left {

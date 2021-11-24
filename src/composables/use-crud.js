@@ -577,7 +577,6 @@ function addCrudBusinessMethod(crud) {
       return
     }
     crud.detailVisible = false
-    crud.resetRowDetail()
     await callVmHook(crud, CRUD.HOOK.afterDetailCancel, data)
   }
 
@@ -1001,13 +1000,13 @@ function addCrudFeatureMethod(crud, data) {
    * @param {Array} data 数据
    */
   const resetRowDetail = (data) => {
-    const form = data || {}
+    const detail = data || {}
     const rowDetail = crud.rowDetail
     for (const key in rowDetail) {
       rowDetail[key] = undefined
     }
-    for (const key in form) {
-      rowDetail[key] = form[key]
+    for (const key in detail) {
+      rowDetail[key] = detail[key]
     }
   }
   /**
