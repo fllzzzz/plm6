@@ -984,8 +984,11 @@ function addCrudFeatureMethod(crud, data) {
     const query = crud.query
     Object.keys(query).forEach(key => {
       if (defaultQuery[key]) {
+        // 字段是否可重置
         if (defaultQuery[key].resetAble) {
           query[key] = defaultQuery[key].value
+        } else {
+          query[key] = defaultQuery[key]
         }
       } else {
         query[key] = undefined

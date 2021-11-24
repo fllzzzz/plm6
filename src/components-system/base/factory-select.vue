@@ -17,7 +17,7 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch } from 'vue'
-import { isNotBlank, isBlank } from '@data-type/index'
+import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
 import useFactory from '@compos/store/use-factories'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -75,17 +75,24 @@ watch(
 )
 
 function handleChange(val) {
-  if (props.modelValue !== val) {
-    emit('update:modelValue', val)
-    emit('change', val)
+  let data = val
+  if (isBlank(data)) data = undefined
+  // 发生变化
+  const isChange = !judgeSameValue(data, props.modelValue)
+  // 两个值都为空
+  const allBlank = isBlank(data) && isBlank(props.modelValue)
+
+  if (isChange && !allBlank) {
+    emit('update:modelValue', data)
+    emit('change', data)
   }
 }
 
 function loadedCallBack() {
   if (isNotBlank(factories.value) && props.default && !selectValue.value) {
     selectValue.value = factories.value[0].value
+    handleChange(selectValue.value)
   }
-  handleChange(selectValue.value)
 }
 
 </script>

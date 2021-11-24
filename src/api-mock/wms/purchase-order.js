@@ -15,7 +15,7 @@ const getPurchaseOrder = {
             id: 1, // 订单id
             purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
             supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
-            'basicClass|1-16': 1, // 采购物料基础类型
+            basicClass: 1, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
             'projects|2': [
               {
@@ -25,7 +25,7 @@ const getPurchaseOrder = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            requisitionsSN: ['SG-2021111801', 'SG-2021111823'], // 采购申请单
+            requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
             supplierId: 1, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
@@ -61,7 +61,7 @@ const getPurchaseOrder = {
             ], // 项目id
             strucAreaIds: [1, 5], // 构件区域id
             enclAreaIds: [2], // 围护区域id
-            requisitionsSN: ['SG-2021111801', 'SG-2021111823'], // 采购申请单
+            requisitionsSN: ['AFTER-Q-123456', 'AFTER-Q-133456'], // 采购申请单
             supplierId: 1, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额

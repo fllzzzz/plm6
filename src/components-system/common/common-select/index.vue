@@ -15,7 +15,7 @@
     @change="handleChange"
     @blur="handleBlur"
   >
-    <el-option v-if="showOptionAll" :key="-1" :label="allLabelText" :value="allVal" :disabled="disabledVal.includes(allVal)" />
+    <el-option v-if="props.showOptionAll" :key="-1" :label="props.allLabelText" :value="allVal" :disabled="disabledVal.includes(allVal)" />
     <el-option
       v-if="showExtra"
       :key="-2"
@@ -40,7 +40,7 @@
 <script setup>
 import { defineProps, defineEmits, computed, watch, ref } from 'vue'
 import { getBits } from '@data-type/number'
-import { isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
+import { deepClone, isBlank, judgeSameValue } from '@data-type/index'
 import { obj2arr } from '@/utils/convert/type'
 
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
@@ -54,6 +54,10 @@ const props = defineProps({
   options: {
     type: [Array, Object],
     default: () => []
+  },
+  loading: {
+    type: Boolean,
+    default: false
   },
   size: {
     type: String,
@@ -136,9 +140,19 @@ const props = defineProps({
   }
 })
 
-const loading = ref(false)
-const copyValue = ref()
+const copyValue = ref(props.modelValue)
 const key = ref(Math.random())
+
+const allVal = computed(() => {
+  if (isBlank(props.allVal) && props.mode === 'bit') {
+    if (Array.isArray(props.options)) {
+      return props.options.reduce((res, cur) => {
+        return res | cur
+      }, 0)
+    }
+  }
+  return props.allVal
+})
 
 // 数据结构
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
@@ -157,13 +171,28 @@ const textAlignClass = computed(() => {
 })
 
 watch(
+  () => props.modelValue,
+  (value) => {
+    if (props.multiple && props.mode === 'bit') {
+      copyValue.value = getBits(props.options, value, 'value', DS)
+    } else {
+      copyValue.value = value
+    }
+  },
+  { immediate: true }
+)
+
+watch(
   () => props.options,
   (nVal, oVal) => {
-    if (isNotBlank(oVal)) {
-      let options = nVal || []
+    if (!props.loading) {
+      let options = nVal ? deepClone(nVal) : []
       if (!Array.isArray(options)) {
         options = obj2arr(options)
       }
+      const aOpt = {}
+      aOpt[DS.value] = allVal.value
+      options.push(aOpt)
       let cv = copyValue.value
       if (Array.isArray(copyValue.value)) {
         cv = options.filter(v => copyValue.value.includes(v[DS.value])).map(v => v[DS.value])
@@ -180,28 +209,16 @@ watch(
   { immediate: true }
 )
 
-watch(
-  () => props.modelValue,
-  (value) => {
-    if (props.multiple && props.mode === 'bit') {
-      copyValue.value = getBits(props.options, value, 'value', DS)
-    } else {
-      copyValue.value = value
-    }
-  },
-  { immediate: true }
-)
-
 function handleChange(val) {
-  let data
-  if (isBlank(val)) data = undefined
-
-  if (props.multiple && props.mode === 'bit') {
-    data = val.reduce((res, cur) => {
-      return res | cur
-    }, 0)
+  let data = val
+  if (isBlank(val)) {
+    data = undefined
   } else {
-    data = val
+    if (props.multiple && props.mode === 'bit') {
+      data = val.reduce((res, cur) => {
+        return res | cur
+      }, 0)
+    }
   }
   // 发生变化
   const isChange = !judgeSameValue(data, props.modelValue)

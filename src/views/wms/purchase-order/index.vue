@@ -15,12 +15,19 @@
     >
       <el-table-column type="expand">
         <template #header>
-          <el-icon @click="handleExpandAll"><el-arrow-down v-if="expandAll" /><el-arrow-right v-else /></el-icon>
+          <el-icon class="pointer" @click="handleExpandAll"><el-arrow-down v-if="expandAll" /><el-arrow-right v-else /></el-icon>
         </template>
         <template #default="scope">
           <div class="table-expand-container">
-            <p>关联项目：<span v-empty-text>{{ scope.row.projectStr }}</span></p>
-            <p>关联申购单：<span v-empty-text>{{ scope.row.requisitionsSNStr }}</span></p>
+            <p>
+              关联项目：<span v-empty-text>{{ scope.row.projectStr }}</span>
+            </p>
+            <p>
+              关联申购单：<span v-empty-text>{{ scope.row.requisitionsSNStr }}</span>
+            </p>
+            <p>
+              备注：<span v-empty-text>{{ scope.row.remark }}</span>
+            </p>
           </div>
         </template>
       </el-table-column>
@@ -65,18 +72,11 @@
         label="物料种类"
         min-width="170px"
       />
-      <el-table-column v-if="columns.visible('project')" key="project" prop="project" label="关联项目" min-width="170px">
+      <el-table-column v-if="columns.visible('projects')" key="projects" prop="projects" label="关联项目" min-width="170px">
         <template #default="scope">
-          <el-tooltip effect="light" placement="top">
-            <template #content>
-              <div v-for="item in scope.row.projects" :key="item.id" class="project-name" style="margin-bottom: 5px">
-                {{ projectNameFormatter(item, undefined, false) }}
-              </div>
-            </template>
-            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
-              <span v-for="item in scope.row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
-            </div>
-          </el-tooltip>
+          <span class="ellipsis-text">
+            <span v-for="item in scope.row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -119,7 +119,7 @@
         min-width="130"
       >
         <template #default="scope">
-          <span v-parse-enum="{e:invoiceTypeEnum, v:scope.row.invoiceType}"/>
+          <span v-parse-enum="{ e: invoiceTypeEnum, v: scope.row.invoiceType }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -279,7 +279,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
     v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
-    v.projectIds = v.projects ? v.projects.map(v => v.id) : []
+    v.projectIds = v.projects ? v.projects.map((v) => v.id) : []
     return v
   })
 }
