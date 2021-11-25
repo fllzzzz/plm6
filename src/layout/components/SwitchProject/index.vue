@@ -178,6 +178,7 @@ watch(
 
 // 处理项目类型变更
 async function handleTypeChange(val) {
+  console.log('val', val)
   try {
     // ++this.cascaderKey
     await store.dispatch('project/changeProjectType', val)

@@ -18,9 +18,8 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
-import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
-import { enabledEnum } from '@/utils/enum/modules/common'
-import { isNotBlank, isBlank } from '@data-type/index'
+import { supplierIsHideEnum, supplierTypeEnum } from '@/utils/enum/modules/supplier'
+import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
 import useSuppliers from '@compos/store/use-suppliers'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -87,7 +86,7 @@ const selectValue = ref()
 const { loaded, suppliers } = useSuppliers(loadedCallBack)
 
 const options = computed(() => {
-  const supplierList = props.showHide ? suppliers.value : suppliers.value.filter(v => v.enabled === enabledEnum.TRUE.V)
+  const supplierList = props.showHide ? suppliers.value : suppliers.value.filter(v => v.boolHide === supplierIsHideEnum.FALSE.V)
   if (props.basicClass) {
     if (props.mode === 'contained') {
       return supplierList.filter(v => (v.basicClass & props.basicClass) === v.basicClass)
@@ -127,16 +126,23 @@ watch(
 )
 
 function handleChange(val) {
-  if (props.modelValue !== val) {
-    emit('update:modelValue', val)
-    emit('change', val)
+  let data = val
+  if (isBlank(data)) data = undefined
+  // 发生变化
+  const isChange = !judgeSameValue(data, props.modelValue)
+  // 两个值都为空
+  const allBlank = isBlank(data) && isBlank(props.modelValue)
+
+  if (isChange && !allBlank) {
+    emit('update:modelValue', data)
+    emit('change', data)
   }
 }
 
 function loadedCallBack() {
   if (isNotBlank(suppliers.value) && props.default && !selectValue.value) {
     selectValue.value = suppliers.value[0].value
+    handleChange(selectValue.value)
   }
-  handleChange(selectValue.value)
 }
 </script>

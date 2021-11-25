@@ -46,7 +46,7 @@ const mutations = {
     state.routeProjectType = type
     storage.set('routeProjectType', type)
   },
-  SET_USER_PROJECTS: (state, projects) => {
+  SET_USER_PROJECTS: (state, projects = []) => {
     state.userProjects = projects
     state.userProcessProjects = projects.filter(v => v.status === projectStatusEnum.PROCESS.V)
   },

@@ -2,15 +2,6 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <common-radio-button
-        v-model="query.purchaseStatus"
-        :options="purchaseStatusEnum.ENUM"
-        show-option-all
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <common-radio-button
         type="enum"
         v-model="query.purchaseType"
         :options="baseMaterialTypeEnum.ENUM"
@@ -37,7 +28,7 @@
       />
       <supplier-select
         v-model="query.supplierId"
-        :type="query.purchaseType"
+        :type="supplierTypeEnum.LOGISTICS.V"
         clearable
         class="filter-item"
         @change="crud.toQuery"
@@ -45,12 +36,34 @@
         show-hide
         style="width: 250px"
       />
+
+    </div>
+    <crudOperation >
+      <template #optLeft>
+        <el-input
+        v-model.trim="query.purchaseSN"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按采购订单号搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.inboundSN"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按入库单号搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
       <el-input
         v-model.trim="query.serialNumber"
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按订单号搜索"
+        placeholder="按物流单号搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -64,15 +77,16 @@
         @keyup.enter="crud.toQuery"
       />
       <rrOperation />
-    </div>
-    <crudOperation />
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
+import { supplierTypeEnum } from '@enum-ms/supplier'
+import { baseMaterialTypeEnum } from '@enum-ms/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -85,9 +99,10 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   purchaseType: undefined, // 采购类型
-  purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
   projectId: { value: undefined, resetAble: false }, // 项目id
-  serialNumber: undefined, // 采购单号搜索
+  purchaseSN: undefined, // 采购单号
+  inboundSN: undefined, // 入库单号
+  serialNumber: undefined, // 物流单号
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人 or 最后操作人
 }

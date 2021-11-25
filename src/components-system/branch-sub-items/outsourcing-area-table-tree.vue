@@ -11,7 +11,7 @@
 
 <script setup>
 import { defineProps, defineEmits, watch, ref } from 'vue'
-import { isBlank, isNotBlank } from '@data-type/index'
+import { deepClone, isBlank, isNotBlank } from '@data-type/index'
 import tableTree from '@/components-system/common/table-tree/index.vue'
 import { getAreaOutsourcingTree } from '@/api/branch-sub-items/common'
 import { componentTypeEnum } from '@/utils/enum/modules/building-steel'
@@ -22,11 +22,23 @@ const props = defineProps({
   modelValue: {
     type: Array
   },
-  struc: { // 构件区域
+  struc: {
+    // 构件区域
     type: Array
   },
-  encl: { // 围护区域
+  encl: {
+    // 围护区域
     type: Array
+  },
+  showStruc: {
+    // 显示构件
+    type: Boolean,
+    default: false
+  },
+  showEncl: {
+    // 显示围护
+    type: Boolean,
+    default: false
   },
   projectIds: [Array, Number],
   disabled: {
@@ -37,6 +49,7 @@ const props = defineProps({
 })
 
 const tree = ref([])
+const sourceTree = ref([])
 const loading = ref(false)
 const copyValue = ref([])
 
@@ -56,6 +69,10 @@ watch(
   { immediate: true }
 )
 
+watch([() => props.showStruc, () => props.showEncl], () => {
+  tree.value = format(deepClone(sourceTree.value))
+})
+
 // 加载区域外包树
 async function fetchAreaOutsourcingTree(projectIds) {
   if (isBlank(projectIds)) {
@@ -65,7 +82,8 @@ async function fetchAreaOutsourcingTree(projectIds) {
   loading.value = true
   try {
     const _tree = await getAreaOutsourcingTree(projectIds)
-    tree.value = format(_tree)
+    sourceTree.value = _tree
+    tree.value = format(deepClone(_tree))
   } catch (error) {
     console.log('外包区域', error)
   } finally {
@@ -75,21 +93,28 @@ async function fetchAreaOutsourcingTree(projectIds) {
 
 // 格式化
 function format(tree = []) {
-  return tree.map(v => {
-    v.uid = v.type ? `${v.type}_${v.id}` : v.id
-    if (isNotBlank(v.children)) {
-      v.children = format(v.children)
-    }
-    return v
-  })
+  return tree
+    .filter((v) => {
+      const f1 = !v.type
+      const f2 = props.showStruc && v.type && v.type === componentTypeEnum.STRUCTURE.V
+      const f3 = props.showEncl && v.type && v.type === componentTypeEnum.ENCLOSURE.V
+      return f1 || f2 || f3
+    })
+    .map((v) => {
+      v.uid = v.type ? `${v.type}_${v.id}` : v.id
+      if (isNotBlank(v.children)) {
+        v.children = format(v.children)
+      }
+      return v
+    })
 }
 
 function formatVal(struc = [], encl = []) {
   const arr = []
-  struc.forEach(v => {
+  struc.forEach((v) => {
     arr.push(`${componentTypeEnum.STRUCTURE.V}_${v}`)
   })
-  encl.forEach(v => {
+  encl.forEach((v) => {
     arr.push(`${componentTypeEnum.ENCLOSURE.V}_${v}`)
   })
   return arr
@@ -98,8 +123,10 @@ function formatVal(struc = [], encl = []) {
 function handleChange(values) {
   const struc = []
   const encl = []
-  const selectMenus = Array.from(values).map(v => v.split('_')).filter(v => v.length === 2)
-  selectMenus.forEach(v => {
+  const selectMenus = Array.from(values)
+    .map((v) => typeof v === 'string' ? v.split('_') : v)
+    .filter((v) => v.length === 2)
+  selectMenus.forEach((v) => {
     if (+v[0] === componentTypeEnum.STRUCTURE.V) {
       struc.push(v[1])
     }

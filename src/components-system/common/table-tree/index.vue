@@ -1,8 +1,8 @@
 <template>
   <div v-loading="props.loading" class="table-tree">
-    <template v-if="isNotBlank(copyOptions)">
+    <div :key="key" v-if="isNotBlank(copyOptions)">
       <table-item v-for="item in copyOptions" :key="item.key" :item="item" />
-    </template>
+    </div>
     <span class="tip" v-else>暂无数据</span>
   </div>
 </template>
@@ -27,6 +27,16 @@ const props = defineProps({
   },
   checkStrictly: {
     // 是否严格的遵守父子节点不互相关联
+    type: Boolean,
+    default: false
+  },
+  checkable: {
+    // 选择模式(显示复选框)
+    type: Boolean,
+    default: false
+  },
+  onlyShowChecked: {
+    // 只显示选中的数据
     type: Boolean,
     default: false
   },
@@ -60,17 +70,21 @@ provide('checkedSet', checkedSet)
 provide('checkStrictly', props.checkStrictly)
 provide('returnLeaf', props.returnLeaf)
 provide('disabled', props.disabled)
+provide('checkable', props.checkable)
+provide('onlyShowChecked', props.onlyShowChecked)
 
 const copyOptions = ref([])
+const key = ref(1)
 
 watch(
   () => props.options,
   (tree) => {
     if (!props.loading) { // 传入options，且options加载中时，不触发（即接口情况下，第一次加载不触发，即option为undefined时）
+      key.value += 1
       copyOptions.value = format(tree)
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 watch(

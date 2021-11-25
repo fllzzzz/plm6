@@ -29,7 +29,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { isNotBlank, isBlank } from '@data-type/index'
+import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
 import useUnclosedRequisition from '@compos/store/use-unclosed-requisition'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -122,6 +122,7 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
+    console.log('selectValue.value', selectValue.value)
     // 有默认值的情况，并且value为空，则给value赋值
     if (props.default && isBlank(value) && isNotBlank(options.value)) {
       selectValue.value = options.value[0].value
@@ -132,19 +133,24 @@ watch(
 )
 
 function handleChange(val) {
-  if (props.modelValue !== val) {
-    emit('update:modelValue', val)
-    emit('change', val)
+  let data = val
+  if (isBlank(data)) data = undefined
+  // 发生变化
+  const isChange = !judgeSameValue(data, props.modelValue)
+  // 两个值都为空
+  const allBlank = isBlank(data) && isBlank(props.modelValue)
+
+  if (isChange && !allBlank) {
+    emit('update:modelValue', data)
+    emit('change', data)
   }
 }
 
 function loadedCallBack() {
   if (isNotBlank(options.value) && props.default && !selectValue.value) {
     selectValue.value = options.value[0].value
-  } else {
-    selectValue.value = undefined
+    handleChange(selectValue.value)
   }
-  handleChange(selectValue.value)
 }
 </script>
 

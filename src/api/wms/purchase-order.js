@@ -3,9 +3,8 @@ import request from '@/utils/request'
 /**
  *订单列表
  *
- * @param {String} orderNo 订单号/合同号
- * @param {String} startTime 起始时间
- * @param {String} endTime 结束时间
+ * @param {String} serialNumber 订单号/合同号
+ * @param {Array} createTime  创建时间
  * @param {String} supplierName 供应商名称
  * @param {Number} type 订单类型
  * @param {Number} page 页码
@@ -22,25 +21,9 @@ export function get(params) {
 }
 
 /**
- *新增订单
- *
- * @export
- * @param {*} supplyType 供货类型【enum】
- * @param {*} orderNo 采购订单号
- * @param {*} organizeTime 编制日期
- * @param {*} basicClass 物料基础分类【enum】
- * @param {Number} projectId 项目id
- * @param {Array} purchaseIds 备料单号
- * @param {*} supplierId 供应商id
- * @param {*} supplierName 供应商名称
- * @param {Number} totalMete 合同量
- * @param {String} meteUnit 单位
- * @param {Number} contractAmount 合同额
- * @param {Number} invoiceType 票据类型【enum】
- * @param {Number} taxRate 税率
- * @param {Number} measurementType 计量方式【enum】
- * @param {Number} transportType 提货方式【enum】
- * @param {Number} type 订单类型【enum】
+ * 新增订单
+ * @param {*} data
+ * @returns
  */
 export function add(data) {
   return request({
@@ -118,7 +101,7 @@ export function download(id) {
     module: 'wms',
     url: `purchase-order/export`,
     method: 'get',
-    // responseType: 'blob',
+    responseType: 'blob',
     params: {
       id
     }

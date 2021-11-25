@@ -23,15 +23,13 @@ export default function useWatchFormValidate(formRef, form, fields) {
           _wField = () => form[_wField]
         }
         _vField = field[0] // 校验字段
-        console.log('_wField', _wField)
       } else {
         _wField = () => form[_wField]
         _vField = field
       }
-      console.log('_wField', _wField)
       watch(
         _wField,
-        () => {
+        (val) => {
           formRef.value && formRef.value.validateField(_vField)
         })
     })

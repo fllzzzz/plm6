@@ -22,7 +22,7 @@ export function emptyTextFormatter(val, sign = '-') {
  * @param {number} precision 精确度
  */
 export function toFixed(num, precision) {
-  if (num === undefined || num === null || isNaN(+num)) return ''
+  if (num === undefined || num === null || isNaN(+num)) return num
   // isNaN(num) 字符串类型的数字是false，所以使用 +num 转为数字,但为了保险在上面的isNaN中的num也使用+num
   return (+num).toFixed(precision)
 }

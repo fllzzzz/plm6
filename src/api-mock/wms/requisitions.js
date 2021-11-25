@@ -1,4 +1,3 @@
-
 // 未关闭的申购单
 const getUnclosedRequisitionsBrief = {
   url: '/api/wms/requisitions/unclosed/brief',
@@ -12,7 +11,18 @@ const getUnclosedRequisitionsBrief = {
         'content|10': [
           {
             'basicClass|1-16': 1,
-            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
+            'serialNumber|+1': [
+              'SG-AFTER-123456',
+              'SG-AFTER-133456',
+              'SG-AFTER-123457',
+              'SG-AFTER-133458',
+              'SG-AFTER-123459',
+              'SG-AFTER-133451',
+              'SG-AFTER-123452',
+              'SG-AFTER-133453',
+              'SG-AFTER-123454',
+              'SG-AFTER-133455'
+            ],
             'projectId|+1': [undefined, 1, 2, 3, 4]
           }
         ]
@@ -21,6 +31,4 @@ const getUnclosedRequisitionsBrief = {
   }
 }
 
-export default [
-  getUnclosedRequisitionsBrief
-]
+export default [getUnclosedRequisitionsBrief]

@@ -577,7 +577,6 @@ function addCrudBusinessMethod(crud) {
       return
     }
     crud.detailVisible = false
-    crud.resetRowDetail()
     await callVmHook(crud, CRUD.HOOK.afterDetailCancel, data)
   }
 
@@ -985,8 +984,11 @@ function addCrudFeatureMethod(crud, data) {
     const query = crud.query
     Object.keys(query).forEach(key => {
       if (defaultQuery[key]) {
+        // 字段是否可重置
         if (defaultQuery[key].resetAble) {
           query[key] = defaultQuery[key].value
+        } else {
+          query[key] = defaultQuery[key]
         }
       } else {
         query[key] = undefined
@@ -1001,13 +1003,13 @@ function addCrudFeatureMethod(crud, data) {
    * @param {Array} data 数据
    */
   const resetRowDetail = (data) => {
-    const form = data || {}
+    const detail = data || {}
     const rowDetail = crud.rowDetail
     for (const key in rowDetail) {
       rowDetail[key] = undefined
     }
-    for (const key in form) {
-      rowDetail[key] = form[key]
+    for (const key in detail) {
+      rowDetail[key] = detail[key]
     }
   }
   /**
