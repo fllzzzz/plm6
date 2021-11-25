@@ -11,9 +11,10 @@ import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
+import { getPurchasingPurchaseOrderBrief } from '@/api/wms/purchase-order'
 
 import { unitTypeEnum } from '@enum-ms/common'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined } from '@/utils/data-type/tree'
 import { isBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
@@ -40,6 +41,7 @@ const state = {
   supplierKV: {}, // 供应商id:value 格式
   taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
   unclosedRequisitions: [], // 未关闭的申购单
+  unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
   loaded: {
     // 接口是否加载
     factories: false,
@@ -54,7 +56,8 @@ const state = {
     clsTree: false,
     suppliers: false,
     taxRate: false,
-    unclosedRequisitions: false
+    unclosedRequisitions: false,
+    unclosedPurchaseOrder: false
   }
 }
 
@@ -70,7 +73,7 @@ const mutations = {
   },
   SET_MAT_CLS_TREE(state, tree) {
     state.matClsTree = tree
-    state.rawMatClsTree = tree.filter(t => ![materialClassificationEnum.STRUC_MANUFACTURED.V, materialClassificationEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsTree = tree.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
   SET_CLS_TREE(state, tree) {
     state.clsTree = tree
@@ -117,6 +120,9 @@ const mutations = {
   },
   SET_UNCLOSED_REQUISITIONS(state, requisitions) {
     state.unclosedRequisitions = requisitions
+  },
+  SET_UNCLOSED_PURCHASE_ORDER(state, order) {
+    state.unclosedPurchaseOrder = order
   }
 }
 
@@ -132,7 +138,7 @@ const actions = {
     commit('SET_LOADED', { key: 'taxRate' })
     return content
   },
-  // 加载分类
+  // 物料分类树
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
     const tree = formatClsTree(res)
@@ -140,6 +146,7 @@ const actions = {
     commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
+  // 分类树
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
     const tree = formatClsTree(res)
@@ -203,6 +210,7 @@ const actions = {
     commit('SET_UNIT', unit)
     commit('SET_LOADED', { key: 'unit' })
   },
+  // 工厂
   async fetchFactories({ commit }) {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
@@ -215,30 +223,35 @@ const actions = {
     commit('SET_LOADED', { key: 'workshops' })
     return content
   },
+  // 生产线
   async fetchProductLines({ commit }) {
     const { content = [] } = await getAllFactoryWorkshopLines()
     commit('SET_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'productLines', loaded: true })
     return content
   },
+  // 工序
   async fetchProcess({ commit }) {
     const { content = [] } = await getProcessAllSimple()
     commit('SET_PROCESS', content)
     commit('SET_LOADED', { key: 'process' })
     return content
   },
+  // 用户
   async fetchUsers({ commit }) {
     const { content = [] } = await getUserAllSimple()
     commit('SET_USERS', content)
     commit('SET_LOADED', { key: 'users' })
     return content
   },
+  // 供应商
   async fetchSuppliers({ commit }) {
     const { content = [] } = await getSuppliersBrief()
     commit('SET_SUPPLIERS', content)
     commit('SET_LOADED', { key: 'suppliers' })
     return content
   },
+  // 部门
   async fetchDept({ commit }) {
     const dept = await getDeptAllSimple()
     setEmptyArr2Undefined(dept)
@@ -246,6 +259,7 @@ const actions = {
     commit('SET_LOADED', { key: 'dept' })
     return dept
   },
+  // 用户部门树
   async fetchUserDeptTree({ commit }) {
     const content = await getUserTree()
     const tree = content
@@ -254,6 +268,7 @@ const actions = {
     commit('SET_LOADED', { key: 'userDeptTree' })
     return tree
   },
+  // 省市区
   async fetchRegional({ commit }) {
     const regional = await getRegionalCascade() || []
     setEmptyArr2Undefined(regional)
@@ -268,6 +283,14 @@ const actions = {
     commit('SET_LOADED', { key: 'unclosedRequisitions' })
     return content
   },
+  // 加载未关闭的申购单
+  async fetchUnclosedPurchaseOrder({ commit }) {
+    const { content = [] } = await getPurchasingPurchaseOrderBrief()
+    commit('SET_UNCLOSED_PURCHASE_ORDER', content)
+    commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
+    return content
+  },
+  // 原材料规格
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
     const classifySpec = state.classifySpec

@@ -179,16 +179,16 @@
         width="90"
       />
       <el-table-column
-        v-if="columns.visible('userEditTime')"
-        key="userEditTime"
+        v-if="columns.visible('userUpdateTime')"
+        key="userUpdateTime"
         :show-overflow-tooltip="true"
-        prop="userEditTime"
+        prop="userUpdateTime"
         label="编辑日期"
         align="center"
         width="100"
       >
         <template #default="scope">
-          <span v-parse-time>{{ scope.row.userEditTime }}</span>
+          <span v-parse-time>{{ scope.row.userUpdateTime }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -213,7 +213,7 @@ import { ref, computed } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
-import { materialClassificationEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { projectNameFormatter } from '@/utils/project'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
@@ -230,7 +230,6 @@ import mForm from './module/form'
 import mDetail from './module/detail'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
-// crud交由presenter持有
 const permission = {
   get: ['wms_purchaseOrder:get'],
   add: ['wms_purchaseOrder:add'],
@@ -255,7 +254,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料采购订单',
     sort: ['id.desc'],
-    invisibleColumns: ['invoiceType', 'userEditTime'],
+    invisibleColumns: ['invoiceType', 'userUpdateTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
@@ -274,7 +273,7 @@ const { handleEnabledChange } = useCrudEnabledChange(
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
-    const basicClassArr = EO.getBits(materialClassificationEnum.ENUM, v.basicClass, 'L')
+    const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''

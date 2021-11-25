@@ -63,6 +63,17 @@
         <span class="form-item-tip">固定重量(g)：误差不可超过 固定重量；</span>
         <span class="form-item-tip">百分比(%)：误差不可超过 入库钢材的理论重量*百分比。</span>
       </el-form-item>
+      <el-form-item label="误差超过设定范围可提交">
+        <el-switch
+          v-model="form.overDiffSubmittable"
+          :active-value="whetherEnum.TRUE.V"
+          :inactive-value="whetherEnum.FALSE.V"
+          class="drawer-switch"
+        />
+      </el-form-item>
+       <el-form-item>
+        <span class="form-item-tip">当误差超过设定范围时仍然可以提交入库单。</span>
+      </el-form-item>
     </el-form>
   </el-card>
 </template>
@@ -70,7 +81,7 @@
 <script setup>
 import { getInboundSteelConf, setInboundSteelConf } from '@/api/config/wms/base'
 import { reactive, ref, onMounted, inject, computed } from 'vue'
-import { numOrPctEnum } from '@enum-ms/common'
+import { numOrPctEnum, whetherEnum } from '@enum-ms/common'
 import { deepClone } from '@/utils/data-type'
 import { isObjectValueEqual } from '@data-type/object'
 
@@ -88,7 +99,9 @@ const dataSource = ref({
   // 单件钢材差值
   steelDiff: undefined,
   // 差值类型（g 或 %）
-  steelDiffType: undefined
+  steelDiffType: undefined,
+  // 不在误差范围中是否可提交
+  overDiffSubmittable: true
 })
 
 // from-dom

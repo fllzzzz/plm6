@@ -4,20 +4,20 @@ export default {
   name: 'WMS',
   children: [
     {
-      path: '/wms/inventory-warning-manage',
+      path: '/wms/inbound-application',
       component: 'Layout',
       hidden: false,
-      name: 'InventoryManage',
+      name: 'WMSInboundApplication',
       alwaysShow: false,
-      redirect: '/wms/inventory-warning',
-      meta: { title: '库存管理', icon: 'contract', noCache: true },
+      redirect: '/wms/inbound-application/steel/index',
+      meta: { title: '入库办理', icon: 'contract', noCache: true },
       children: [
         {
-          name: 'InventoryWarning',
-          path: 'inventory-warning',
+          name: 'SteelInboundApplication',
+          path: 'steel',
           hidden: false,
-          component: '/wms/inventory-warning/index',
-          meta: { title: '库存预警', icon: 'project', noCache: true }
+          component: '/wms/inbound-application/steel/index',
+          meta: { title: '钢材入库', icon: 'project', noCache: true }
         }
       ]
     },
@@ -54,6 +54,24 @@ export default {
           hidden: false,
           component: '/wms/logistics-order/index',
           meta: { title: '物流订单', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/inventory-warning-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'InventoryManage',
+      alwaysShow: false,
+      redirect: '/wms/inventory-warning',
+      meta: { title: '库存管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'InventoryWarning',
+          path: 'inventory-warning',
+          hidden: false,
+          component: '/wms/inventory-warning/index',
+          meta: { title: '库存预警', icon: 'project', noCache: true }
         }
       ]
     },

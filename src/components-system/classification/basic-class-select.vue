@@ -21,7 +21,7 @@
 
 <script setup>
 import { defineEmits, defineProps, computed, ref, watch } from 'vue'
-import { materialClassificationEnum, rawMatClsEnum, manufClsEnum } from '@enum-ms/classification'
+import { matClsEnum, rawMatClsEnum, manufClsEnum } from '@enum-ms/classification'
 import { isBlank } from '@/utils/data-type'
 import { baseMaterialTypeEnum } from '@/utils/enum/modules/wms'
 
@@ -118,7 +118,7 @@ const options = computed(() => {
     if (props.type === baseMaterialTypeEnum.RAW_MATERIAL.V) return rawMatClsEnum.ENUM
     if (props.type === baseMaterialTypeEnum.MANUFACTURED.V) return manufClsEnum.ENUM
   }
-  return materialClassificationEnum.ENUM
+  return matClsEnum.ENUM
 })
 
 watch(

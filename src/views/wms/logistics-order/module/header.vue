@@ -36,11 +36,8 @@
         show-hide
         style="width: 250px"
       />
-
-    </div>
-    <crudOperation >
-      <template #optLeft>
-        <el-input
+      <br />
+      <el-input
         v-model.trim="query.purchaseSN"
         clearable
         style="width: 200px"
@@ -77,7 +74,10 @@
         @keyup.enter="crud.toQuery"
       />
       <rrOperation />
-      </template>
+    </div>
+    <crudOperation>
+      <!-- TODO:打印 -->
+      <template #optLeft></template>
     </crudOperation>
   </div>
 </template>
@@ -104,7 +104,7 @@ const defaultQuery = {
   inboundSN: undefined, // 入库单号
   serialNumber: undefined, // 物流单号
   supplierId: undefined, // 供应商id
-  operatorName: undefined // 创建人 or 最后操作人
+  operatorName: undefined // 创建人
 }
 
 const { crud, query } = regHeader(defaultQuery)

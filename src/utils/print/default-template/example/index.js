@@ -1,6 +1,6 @@
 import { isNotBlank } from '@data-type/index'
 import { fieldTypeEnum, dataSourceEnum } from '@/utils/print/enum'
-import { validatorLicensePlate, validatorPhone, validatorTel } from '@/utils/validatePattern'
+import { patternLicensePlate, validatorPhone, validatorTel } from '@/utils/validatePattern'
 import enumAll from '@/utils/enum/all'
 import enumOperate from '@/utils/enum'
 import { Random } from './data'
@@ -222,7 +222,7 @@ function getDataByType(field) {
       break
     case fieldTypeEnum.LICENSE_PLATE.K:
       var licensePlate = Mock.mock({ // 车牌
-        'data': validatorLicensePlate
+        'data': patternLicensePlate
       })
       _md = licensePlate.data
       break

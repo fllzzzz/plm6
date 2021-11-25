@@ -4,8 +4,8 @@ import EO from '@enum'
 
 // 枚举转换
 export default {
-  mounted(el, binding) {
-    const { value: { e, v, bit = false, split = '、', emptyText }} = binding
+  updated(el, binding) {
+    const { value: { e, v, bit = false, split = '、', emptyText, extra = '' }} = binding
     let text
     if (Array.isArray(v)) {
       text = v.map(v => e.VL[v]).join(split)
@@ -14,6 +14,7 @@ export default {
     } else {
       text = e.VL[v]
     }
+    text += extra
     el.innerText = emptyText ? emptyTextFormatter(text, emptyText) : text
   }
 }

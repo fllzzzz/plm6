@@ -14,7 +14,7 @@
       <span style="float:right">
         <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
         <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">提 交</common-button>
-        <store-opertaion type="crudBatch" />
+        <store-operation type="crudBatch" />
         <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
       </span>
     </template>
@@ -90,7 +90,7 @@ import { regBatchForm } from '@compos/use-crud'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
-import StoreOpertaion from '@crud/STORE.opertaion.vue'
+import StoreOperation from '@crud/STORE.operation.vue'
 
 const tableRules = {
   name: [{ required: true, max: 20, message: '不能超过20个字符', trigger: 'blur' }],

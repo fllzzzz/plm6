@@ -89,7 +89,7 @@ const DS = computed(() => {
   return {
     value: 'serialNumber',
     label: 'serialNumber',
-    children: 'serialNumber'
+    key: 'serialNumber'
   }
 })
 
@@ -122,7 +122,6 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    console.log('selectValue.value', selectValue.value)
     // 有默认值的情况，并且value为空，则给value赋值
     if (props.default && isBlank(value) && isNotBlank(options.value)) {
       selectValue.value = options.value[0].value
@@ -170,7 +169,7 @@ function loadedCallBack() {
    color: #8492a6;
    font-size: 13px;
    .label {
-     color: #333
+     color: #9b6161
    }
 }
 </style>

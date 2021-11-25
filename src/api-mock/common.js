@@ -1,7 +1,7 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { supplierClassEnum, supplierIsHideEnum, supplierTypeEnum } from '@enum-ms/supplier'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 // 根据id, 获取末级物料分类
 const getFinalMatClsById = {
   url: RegExp('/api/config/classification/final-material/' + '[1-9][0-9]*'),
@@ -21,7 +21,7 @@ const getFinalMatClsById = {
         //   accountingPrecision: 2, // 核算单位小数精度
         //   measurePrecision: 0, // 计量单位小数精度
         //   outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
-        //   basicClass: materialClassificationEnum.SECTION_STEEL.V,
+        //   basicClass: matClsEnum.SECTION_STEEL.V,
         //   specConfig: [
         //     {
         //       id: 1,
@@ -42,7 +42,7 @@ const getFinalMatClsById = {
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
-          basicClass: materialClassificationEnum.MATERIAL.V,
+          basicClass: matClsEnum.MATERIAL.V,
           specConfig: [
             {
               id: 1,

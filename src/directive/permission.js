@@ -2,7 +2,7 @@ import checkPermission from '@/utils/system/check-permission'
 
 // 验证权限
 export default {
-  mounted(el, binding) {
+  updated(el, binding) {
     const { value } = binding
     const passable = checkPermission(value)
     if (passable) {

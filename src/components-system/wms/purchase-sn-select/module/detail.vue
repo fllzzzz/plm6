@@ -1,15 +1,15 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :visible="crud.detailVisible"
-    :before-close="crud.cancelDetail"
-    :title="crud.detailTitle"
+    :visible="visible"
+    :before-close="handleClose"
+    title="采购订单详情"
     :show-close="true"
     :size="1000"
     custom-class="purchase-order-detail"
   >
     <template #content>
-      <div class="main-content">
+      <div v-loading="loading" class="main-content">
         <el-form :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content">
             <el-form-item label="采购订单" prop="serialNumber">
@@ -28,7 +28,7 @@
             </el-form-item>
 
             <el-form-item label="供应商" prop="supplierId">
-              {{ detail.supplier.name }}
+              {{ detail.supplier ? detail.supplier.name : '' }}
             </el-form-item>
 
             <template v-if="detail.supplyType == orderSupplyTypeEnum.SELF.V">
@@ -37,11 +37,6 @@
                   {{ detail.mete }}
                   {{ detail.meteUnit }}
                 </div>
-              </el-form-item>
-              <el-form-item label="合同额" prop="amount"> {{ detail.amount }}元 </el-form-item>
-              <el-form-item label="发票及税率" prop="invoiceType">
-                <span v-parse-enum="{ e: invoiceTypeEnum, v: detail.invoiceType }" />
-                <span v-if="detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">（{{ detail.taxRate }}%）</span>
               </el-form-item>
               <el-form-item prop="weightMeasurementMode" label="计量方式">
                 <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
@@ -82,13 +77,6 @@
               <span v-empty-text>{{ detail.lastOperatorName }}</span>
             </el-form-item>
 
-            <el-form-item label="创建日期" prop="founderName">
-              <span v-parse-time>{{ detail.createTime }}</span>
-            </el-form-item>
-            <el-form-item label="编辑日期" prop="founderName">
-              <span v-parse-time>{{ detail.userUpdateTime }}</span>
-            </el-form-item>
-
             <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">
               <span v-if="baseMaterialTypeEnum.RAW_MATERIAL.V === detail.purchaseType" class="pre-wrap">
                 {{ detail.projects ? detail.projects.map((v) => projectNameFormatter(v, null, false)).join(`\n`) : '' }}
@@ -121,18 +109,54 @@
 </template>
 
 <script setup>
+import { detail as detailApi } from '@/api/wms/purchase-order'
+import { defineEmits, defineProps, ref, watch } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
-import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
+import { weightMeasurementModeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
 import { isNotBlank } from '@/utils/data-type'
 
-import { regDetail } from '@compos/use-crud'
 import uploadList from '@/components/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
+import useVisible from '@/composables/use-visible'
 
-const { crud, detail } = regDetail()
+const emit = defineEmits(['success', 'update:modelValue'])
+
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    require: true
+  },
+  detailId: {
+    type: Number
+  }
+})
+
+const detail = ref({})
+const loading = ref(false)
+const { visible, handleClose } = useVisible({ emit, props })
+
+watch(
+  () => props.detailId,
+  (val) => {
+    getDetail(val)
+  }
+)
+
+// 加载详情
+async function getDetail(id) {
+  loading.value = true
+  detail.value = {}
+  try {
+    detail.value = await detailApi(id)
+  } catch (error) {
+    console.log('采购单详情', error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>
