@@ -16,6 +16,18 @@ export function get(params) {
 }
 
 /**
+ * 发运审核详情
+ * @param {number} id
+ */
+export function detail(id) {
+  return request({
+    module: 'mes',
+    url: `cargo/review/${id}`,
+    method: 'get'
+  })
+}
+
+/**
  * 审核
  * @param {number} id|required 发运信息id
  * @param {number} status|required 审核状态（ 1 || 2 ）
@@ -29,4 +41,4 @@ export function audit({ id, status }) {
   })
 }
 
-export default { get, edit: audit }
+export default { get }

@@ -33,10 +33,12 @@ export default {
       'grossWeight|1-100000.1-8': 20.00000000,
       'totalGrossWeight|1-100000.1-8': 1.00000000,
       'quantity|1-100': 1,
+      'shipQuantity|1-100': 1,
       'inQuantity|1-100': 1,
       'cargoQuantity|1-100': 1,
       'packageQuantity|1-100': 1,
-      'unPackageQuantity|1-100': 1
+      'unPackageQuantity|1-100': 1,
+      'unitPrice|1-1000.1-8': 1
     }],
     'enclosureList|1-10': [{
       'id|+1': 1,
@@ -69,11 +71,32 @@ export default {
       'plate': '板型' + '@cword(2,15)',
       'color|1': ['红色', '蓝色'],
       'quantity|1-100': 1,
+      'shipQuantity|1-100': 1,
       'inQuantity|1-100': 1,
       'cargoQuantity|1-100': 1,
       'packageQuantity|1-100': 1,
-      'unPackageQuantity|1-100': 1
+      'unPackageQuantity|1-100': 1,
+      'unitPrice|1-1000.1-8': 1
     }],
+    'review': {
+      'actualTime': '2021-11-22T10:20:47',
+      'actualUserName': '超级管理员',
+      'availableAmount|1-10000.1-8': 0,
+      'contractAmount|1-10000.1-8': 1111,
+      'deliveryAmount|1-10000.1-8': 0,
+      'id': null,
+      'licensePlate': 'string',
+      'loadTime': '2021-11-17T17:20:14',
+      'loadUserName': '超级管理员',
+      'managementFee|1-10000.1-8': 111.1,
+      'name': 'xm001',
+      'orderType': '',
+      'safeAmount|1-10000.1-8': 0,
+      'serialNumber': '2121212',
+      'shortName': 'xm001',
+      'totalCollectionAmount|1-10000.1-8': 0,
+      'totalDeliveryAmount|1-10000.1-8': 0
+    },
     'remark': 'remark',
     'status': false
   }

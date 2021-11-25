@@ -1,6 +1,7 @@
 import {
   validatorLicensePlate
 } from '@/utils/validate/pattern'
+import commonDetailRes from './common-detail'
 
 const getShipAuditList = {
   url: '/api/mes/building/cargo/review',
@@ -29,18 +30,32 @@ const getShipAuditList = {
             'price|1-1000.1-8': 10.00000000
           },
           'licensePlate': validatorLicensePlate,
+          'serialNumber': '@datetime',
+          'actualTime': '@datetime',
+          'loadingTime': '@datetime',
           'totalNetWeight|1-1000.1-8': 1.00000000,
           'totalGrossWeight|1-1000.1-8': 20.00000000,
           'actualWeight|1-1000.1-8': 20.00000000,
-          'measureMode': 1,
+          'structureMeasureMode|1': [1, 2],
+          'enclosureMeasureMode|1': [1, 2],
           'shipAmount|1-1000.1-8': 1,
           'userName': '@cname',
           'actualUserName': '@cname',
           'auditUserName': '@cname',
-          'checkStatus|1': [1, 2]
+          'checkStatus|1': [1, 2],
+          'productType|1': [2, 4, 8]
         }]
       }
     }
+  }
+}
+
+const shipAuditDetail = {
+  url: RegExp('/api/mes/building/cargo/review/' + '[1-9][0-9]*'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return commonDetailRes
   }
 }
 
@@ -58,5 +73,6 @@ const shipAudit = {
 
 export default [
   getShipAuditList,
-  shipAudit
+  shipAudit,
+  shipAuditDetail
 ]

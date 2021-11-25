@@ -8,7 +8,7 @@
     <el-table-column prop="unit" label="单位" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色" />
     <el-table-column :show-overflow-tooltip="true" prop="specification" label="规格" />
-    <el-table-column prop="packageQuantity" label="数量" align="center" />
+    <el-table-column prop="showQuantity" label="数量" align="center" />
   </common-table>
 </template>
 

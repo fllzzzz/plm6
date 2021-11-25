@@ -51,9 +51,13 @@
         width="100px"
       >
         <template v-slot="scope">
-          <el-tag style="margin-right: 5px" :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T" effect="light">{{
-            packTypeEnum.VL[scope.row.productType]
-          }}</el-tag>
+          <el-tag
+            style="margin-right: 5px"
+            v-if="scope.row.productType"
+            :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T"
+            effect="light"
+            >{{ packTypeEnum.VL[scope.row.productType] }}</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column
@@ -180,7 +184,7 @@
     <!--分页组件-->
     <pagination />
     <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
-    <m-detail v-model:visible="detailVisible" :detail-info="packageInfo" title="打包清单" :detailFunc="detail">
+    <m-detail v-model:visible="detailVisible" :detail-info="packageInfo" title="打包清单" quantityFelid="packageQuantity" :detailFunc="detail">
       <template #tip>
         <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
       </template>

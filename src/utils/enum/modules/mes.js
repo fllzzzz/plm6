@@ -90,11 +90,6 @@ const packTypeEnum = {
 }
 constantize(packTypeEnum)
 
-const qrCodeTypeEnum = {
-  PACKAGE: { L: '包', K: 'PACKAGE', V: 11 }
-}
-constantize(qrCodeTypeEnum)
-
 // 打包清单状态
 const packStatusTypeEnum = {
   // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
@@ -107,8 +102,8 @@ constantize(packStatusTypeEnum)
 
 // 收货状态
 const receiptStatusEnum = {
-  UNRECEIVED: { L: '未收货', K: 'UNRECEIVED', V: 1, COLOR: '#f5f7fa', T: 'success' },
-  RECEIVED: { L: '已收货', K: 'RECEIVED', V: 2, COLOR: '#40ed8d', T: 'warning' }
+  RECEIVED: { L: '已收货', K: 'RECEIVED', V: 1, COLOR: '#40ed8d', T: 'success' },
+  UNRECEIVED: { L: '未收货', K: 'UNRECEIVED', V: 2, COLOR: '#f5f7fa', T: 'warning' }
 }
 constantize(receiptStatusEnum)
 
@@ -118,6 +113,13 @@ const logisticsPriceTypeEnum = {
   TRAINS: { L: '车次', K: 'TRAINS', V: 2, T: 'warning', unit: '元/车' }
 }
 constantize(logisticsPriceTypeEnum)
+
+// 发运审核状态
+const shipAuditStatusEnum = {
+  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 1, T: 'warning' },
+  CHECKED: { L: '已审核', K: 'CHECKED', V: 2, T: 'success' }
+}
+constantize(shipAuditStatusEnum)
 
 export {
   teamTypeEnum,
@@ -131,10 +133,10 @@ export {
   mesEnclosureTypeEnum,
   taskIssueTypeEnum,
   packTypeEnum,
-  qrCodeTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
-  logisticsPriceTypeEnum
+  logisticsPriceTypeEnum,
+  shipAuditStatusEnum
 }
 
 export default {
@@ -149,8 +151,8 @@ export default {
   mesEnclosureTypeEnum,
   taskIssueTypeEnum,
   packTypeEnum,
-  qrCodeTypeEnum,
   packStatusTypeEnum,
   receiptStatusEnum,
-  logisticsPriceTypeEnum
+  logisticsPriceTypeEnum,
+  shipAuditStatusEnum
 }

@@ -571,14 +571,14 @@ export default {
         hidden: false,
         component: '/mes/pack-and-ship/logistics-list/index',
         meta: { title: '物流记录', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesShipAudit',
+        path: 'ship-audit',
+        hidden: false,
+        component: '/mes/pack-and-ship/ship-audit/index',
+        meta: { title: '发运审核', icon: 'project', noCache: true }
       }
-      // {
-      //   name: 'MesAuditList',
-      //   path: 'audit-list',
-      //   hidden: false,
-      //   component: '/mes/pack-and-ship/audit-list/index',
-      //   meta: { title: '发运审核', icon: 'project', noCache: true }
-      // },
       // {
       //   name: 'MesLimitList',
       //   path: 'limit-list',

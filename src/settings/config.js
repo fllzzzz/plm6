@@ -35,6 +35,16 @@ export const MIN_UNIT = {
   THICKNESS_DP: 3
 }
 
+export const QR_SCAN_F_TYPE = {
+  MEW_PRODUCTION: 1,
+  MES_PACKAGE_SHIP: 2
+}
+
+export const QR_SCAN_TYPE = {
+  MES_PACKAGE: 1,
+  MES_SHIP_LIST: 2
+}
+
 // mes系统单位
 export const MES_MATERIAL_UNIT = {}
 MES_MATERIAL_UNIT[materialTypeEnum.STRUCTURE.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }

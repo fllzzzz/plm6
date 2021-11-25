@@ -22,12 +22,24 @@
         {{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}
       </template>
     </el-table-column>
-    <el-table-column prop="packageQuantity" label="数量" align="center" />
+    <el-table-column prop="showQuantity" label="数量" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="totalLength" :label="`总长度\n(m)`" align="center" width="100px">
       <template v-slot="scope">
         {{ toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}
       </template>
     </el-table-column>
+        <template v-if="isShowPrice">
+      <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">
+        <template v-slot="scope">
+          {{ toFixed(scope.row.unitPrice, DP.YUAN) }}
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="totalPrice" :label="`总价\n（元）`" align="center">
+        <template v-slot="scope">
+          {{ toFixed(scope.row.totalPrice, DP.YUAN) }}
+        </template>
+      </el-table-column>
+    </template>
   </common-table>
 </template>
 
@@ -49,6 +61,10 @@ defineProps({
   maxHeight: {
     type: [String, Number],
     default: undefined
+  },
+  isShowPrice: {
+    type: Boolean,
+    default: false
   }
 })
 </script>

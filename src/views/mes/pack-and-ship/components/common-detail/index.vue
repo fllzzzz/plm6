@@ -11,17 +11,22 @@
     <template #tip>
       <slot name="tip"/>
     </template>
-    <div class="head-container">
+    <template #titleRight>
+       <slot name="titleRight"/>
+    </template>
+    <div class="head-container" v-if="!isShowPrice">
       <el-radio-group v-model="monomerStatus" class="filter-item" size="small">
         <el-radio-button :label="SummaryStatusEnum.PROCESS.V">{{ SummaryStatusEnum.PROCESS.L }}</el-radio-button>
         <el-radio-button :label="SummaryStatusEnum.SUSPEND.V">{{ SummaryStatusEnum.SUSPEND.L }}</el-radio-button>
       </el-radio-group>
     </div>
+    <slot name="contract" :contract="contract"></slot>
     <component
       :is="currentView"
       v-loading="tableLoading"
       :maxHeight="maxHeight"
       :list="list"
+      :isShowPrice="isShowPrice"
       :isSuspend="monomerStatus === SummaryStatusEnum.SUSPEND.V"
     />
   </common-dialog>
@@ -66,6 +71,14 @@ const props = defineProps({
   detailFunc: {
     type: Function,
     required: true
+  },
+  quantityFelid: {
+    type: String,
+    default: 'shipQuantity'
+  },
+  isShowPrice: {
+    type: Boolean,
+    default: false
   }
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -83,6 +96,7 @@ const tableLoading = ref(false)
 const artifactList = ref([])
 const enclosureList = ref([])
 const auxList = ref([])
+const contract = ref({})
 
 const productType = computed(() => {
   return props.detailInfo && props.detailInfo.productType
@@ -108,8 +122,10 @@ const list = computed(() => {
       return (
         artifactList.value &&
         artifactList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
           v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
-          v.totalWeight = convertUnits(v.weight * v.packageQuantity, 'kg', 't')
+          v.totalWeight = convertUnits(v.weight * v.showQuantity, 'kg', 't')
+          if (props.isShowPrice) v.totalPrice = v.unitPrice * v.weight || 0
           return v
         })
       )
@@ -117,8 +133,10 @@ const list = computed(() => {
       return (
         enclosureList.value &&
         enclosureList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
           v.processingPrice = v.processingPrice || v.processingPrice === 0 ? v.processingPrice : undefined
-          v.totalLength = convertUnits(v.length * v.packageQuantity, 'mm', 'm')
+          v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
+          if (props.isShowPrice) v.totalPrice = v.unitPrice * v.length || 0
           return v
         })
       )
@@ -126,7 +144,9 @@ const list = computed(() => {
       return (
         auxList.value &&
         auxList.value.map((v) => {
+          v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
+          if (props.isShowPrice) v.totalPrice = v.unitPrice * v.showQuantity || 0
           return v
         })
       )
@@ -151,6 +171,7 @@ async function fetchDetail() {
     artifactList.value = data.artifactList || []
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []
+    contract.value = data.review || {}
   } catch (error) {
     console.log('详情', error)
   } finally {

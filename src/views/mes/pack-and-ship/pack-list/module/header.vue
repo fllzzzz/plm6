@@ -105,10 +105,10 @@ import { mapGetters } from '@/store/lib'
 import { ElNotification, ElLoading } from 'element-plus'
 import moment from 'moment'
 
-import { packTypeEnum, qrCodeTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
-import { DP } from '@/settings/config'
+import { DP, QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
 // import { isNotBlank } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { codeWait } from '@/utils'
@@ -232,7 +232,8 @@ function getlabelInfo(row) {
     packageInfo,
     qrCode: JSON.stringify({
       id: row.id,
-      type: qrCodeTypeEnum.PACKAGE.V
+      type: QR_SCAN_TYPE.MES_PACKAGE,
+      ftype: QR_SCAN_F_TYPE.MES_PACKAGE_SHIP
     })
   }
 }

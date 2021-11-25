@@ -1,10 +1,5 @@
 <template>
-  <common-table
-    :data="list"
-    :max-height="maxHeight"
-    empty-text="暂无数据"
-    style="width: 100%"
-  >
+  <common-table :data="list" :max-height="maxHeight" empty-text="暂无数据" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" />
@@ -22,12 +17,24 @@
         {{ toFixed(scope.row.weight, DP.COM_WT__KG) }}
       </template>
     </el-table-column>
-    <el-table-column prop="packageQuantity" label="数量" align="center" />
+    <el-table-column prop="showQuantity" label="数量" align="center" />
     <el-table-column :show-overflow-tooltip="true" prop="totalWeight" :label="`总重\n（t）`" align="center">
       <template v-slot="scope">
         {{ toFixed(scope.row.totalWeight, DP.COM_WT__T) }}
       </template>
     </el-table-column>
+    <template v-if="isShowPrice">
+      <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">
+        <template v-slot="scope">
+          {{ toFixed(scope.row.unitPrice, DP.YUAN) }}
+        </template>
+      </el-table-column>
+      <el-table-column :show-overflow-tooltip="true" prop="totalPrice" :label="`总价\n（元）`" align="center">
+        <template v-slot="scope">
+          {{ toFixed(scope.row.totalPrice, DP.YUAN) }}
+        </template>
+      </el-table-column>
+    </template>
   </common-table>
 </template>
 
@@ -49,7 +56,10 @@ defineProps({
   maxHeight: {
     type: [String, Number],
     default: undefined
+  },
+  isShowPrice: {
+    type: Boolean,
+    default: false
   }
 })
-
 </script>
