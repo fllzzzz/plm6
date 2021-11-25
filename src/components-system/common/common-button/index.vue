@@ -36,7 +36,7 @@
       :loading="loading"
       @click="handleClick"
     >
-      <span @click="handleClick"><slot /></span>
+      <span @click.stop="handleClick"><slot /></span>
     </el-button>
     <el-button
       v-else-if="!props.disabled && !slotDefault"
