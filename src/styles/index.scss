@@ -145,6 +145,10 @@ div:focus {
   cursor: pointer;
 }
 
+.text-clickable {
+  color:#1881ef
+}
+
 // TODO: 改为inline-block
 .inline-block {
   display: inline-block;
@@ -301,6 +305,10 @@ div:focus {
 
 .child-mr-10 >:last-child {
   margin-right: 0;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
 }
 
 // TODO:遮罩

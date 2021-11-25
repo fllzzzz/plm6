@@ -40,20 +40,20 @@ const processReportTypeEnum = {
 constantize(processReportTypeEnum)
 
 // mes 产品类型
-const productTypeEnum = {
+const componentTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 1 },
   MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 0 },
   ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 },
   AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: 1 << 3 },
   ASSEMBLE: { L: '组立', K: 'ASSEMBLE', V: 1 << 4 }
 }
-constantize(productTypeEnum)
+constantize(componentTypeEnum)
 
 // 含有工序的材料类型
 const processMaterialListTypeEnum = {
-  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: productTypeEnum.ARTIFACT.V, T: '' },
-  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: productTypeEnum.MACHINE_PART.V, T: 'success' },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: productTypeEnum.ENCLOSURE.V, T: 'warning' }
+  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: componentTypeEnum.ARTIFACT.V, T: '' },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: componentTypeEnum.MACHINE_PART.V, T: 'success' },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' }
 }
 constantize(processMaterialListTypeEnum)
 
@@ -84,9 +84,9 @@ constantize(taskIssueTypeEnum)
 
 // 可打包类型
 const packTypeEnum = {
-  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: productTypeEnum.ARTIFACT.V, T: '' },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: productTypeEnum.ENCLOSURE.V, T: 'warning' },
-  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: productTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
 constantize(packTypeEnum)
 
@@ -124,7 +124,7 @@ constantize(shipAuditStatusEnum)
 export {
   teamTypeEnum,
   teamAttributeEnum,
-  productTypeEnum,
+  componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
   processInspectTypeEnum,
@@ -142,7 +142,7 @@ export {
 export default {
   teamTypeEnum,
   teamAttributeEnum,
-  productTypeEnum,
+  componentTypeEnum,
   processMaterialListTypeEnum,
   processTypeEnum,
   processInspectTypeEnum,

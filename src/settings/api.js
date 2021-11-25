@@ -2,6 +2,7 @@
 export const apiVersion = {
   user: 1,
   contract: 1,
+  plan: 1,
   common: 1,
   wms: 1,
   config: 1,

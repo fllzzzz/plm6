@@ -293,7 +293,7 @@ v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity"
 import crudApi from '@/api/mes/scheduling-manage/scheduling/machine-part'
 import { provide, ref } from 'vue'
 
-import { productTypeEnum, processTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { mapGetters } from '@/store/lib'
@@ -325,7 +325,7 @@ provide('needTableColumns', [
   { label: '材质', width: '80px', field: 'material' }
   //  { label: `长度\n(mm)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ARTIFACT_L__MM }
 ])
-provide('productType', productTypeEnum.MACHINE_PART.V)
+provide('productType', componentTypeEnum.MACHINE_PART.V)
 provide('processType', processTypeEnum.ONCE.V)
 
 const tableRef = ref()

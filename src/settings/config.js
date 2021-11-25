@@ -1,5 +1,5 @@
 import { projectTypeEnum } from '@/utils/enum/modules/contract'
-import { materialListTypeEnum, materialTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
+import { componentListTypeEnum, componentTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
 import { materialClassificationEnum } from '@enum-ms/classification'
 
 // 工厂标签默认颜色
@@ -47,21 +47,21 @@ export const QR_SCAN_TYPE = {
 
 // mes系统单位
 export const MES_MATERIAL_UNIT = {}
-MES_MATERIAL_UNIT[materialTypeEnum.STRUCTURE.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
-MES_MATERIAL_UNIT[materialTypeEnum.ENCLOSURE.V] = {}
-MES_MATERIAL_UNIT[materialTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.LENGTH.V] = { unit: 'm', normal: 'm', smallest: 'mm', precision: 3 }
-MES_MATERIAL_UNIT[materialTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.AREA.V] = { unit: '㎡', normal: 'm2', smallest: 'mm2', precision: 3 }
-MES_MATERIAL_UNIT[materialTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
+MES_MATERIAL_UNIT[componentTypeEnum.STRUCTURE.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
+MES_MATERIAL_UNIT[componentTypeEnum.ENCLOSURE.V] = {}
+MES_MATERIAL_UNIT[componentTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.LENGTH.V] = { unit: 'm', normal: 'm', smallest: 'mm', precision: 3 }
+MES_MATERIAL_UNIT[componentTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.AREA.V] = { unit: '㎡', normal: 'm2', smallest: 'mm2', precision: 3 }
+MES_MATERIAL_UNIT[componentTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 
 // mes系统，技术清单单位
 export const MES_MATERIAL_LIST_UNIT = {}
-MES_MATERIAL_UNIT[materialListTypeEnum.ARTIFACT.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
-MES_MATERIAL_UNIT[materialListTypeEnum.MACHINE_PART.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
-MES_MATERIAL_UNIT[materialListTypeEnum.ARTIFACT_TREE.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
-MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V] = {}
-MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.LENGTH.V] = { unit: 'm', normal: 'm', smallest: 'mm', precision: 3 }
-MES_MATERIAL_UNIT[materialListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.AREA.V] = { unit: '㎡', normal: 'm2', smallest: 'mm2', precision: 3 }
-MES_MATERIAL_UNIT[materialListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
+MES_MATERIAL_UNIT[componentListTypeEnum.ARTIFACT.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
+MES_MATERIAL_UNIT[componentListTypeEnum.MACHINE_PART.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
+MES_MATERIAL_UNIT[componentListTypeEnum.ARTIFACT_TREE.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
+MES_MATERIAL_UNIT[componentListTypeEnum.ENCLOSURE.V] = {}
+MES_MATERIAL_UNIT[componentListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.LENGTH.V] = { unit: 'm', normal: 'm', smallest: 'mm', precision: 3 }
+MES_MATERIAL_UNIT[componentListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum.AREA.V] = { unit: '㎡', normal: 'm2', smallest: 'mm2', precision: 3 }
+MES_MATERIAL_UNIT[componentListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 
 export const DP = {
   YUAN: 2,

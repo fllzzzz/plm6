@@ -27,7 +27,7 @@
         <div class="dialog-title">
           <span class="title">
             <span>{{ props.title }}</span>
-            <slot name="tip"/>
+            <slot name="tip" />
           </span>
           <span class="dialog-title-right">
             <slot name="titleRight" />
@@ -175,10 +175,8 @@ function closed() {
   emit('closed')
 }
 </script>
-<style>
-
-</style>
-<style lang="scss" >
+<style></style>
+<style lang="scss">
 .common-dialog {
   // ::v-deep(.el-dialog__header){
   //   padding-bottom: 0px!important;
@@ -211,7 +209,7 @@ function closed() {
         transform: translateY(-50%);
       }
     }
-    .el-button + .el-button {
+    ::v-deep(.el-button + .el-button) {
       margin-left: 6px;
     }
   }

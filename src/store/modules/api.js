@@ -21,6 +21,7 @@ const state = {
     // common: `/api/common/v${apiVersion.common}/`,
     // config: `/api/config/v${apiVersion.config}/`
     contract: `/api/`,
+    plan: `/api/plan/`,
     user: `/api/`,
     wms: `/api/wms/`,
     common: `/api/common/`,

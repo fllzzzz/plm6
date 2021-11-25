@@ -1,13 +1,15 @@
 import checkPermission from '@/directive/permission'
 import parseTime from '@/directive/parse-time'
-import emptyText from '@/directive/empty-text'
 import parseEnum from '@/directive/parse-enum'
+import emptyText from '@/directive/empty-text'
+import toFixed from '@/directive/to-fixed'
 
 const directive = new Map([
   ['permission', checkPermission],
   ['parse-time', parseTime],
+  ['parse-enum', parseEnum],
   ['empty-text', emptyText],
-  ['parse-enum', parseEnum]
+  ['to-fixed', toFixed]
 ])
 
 export default (app) => {

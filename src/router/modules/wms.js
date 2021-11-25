@@ -28,14 +28,32 @@ export default {
       name: 'WMSPurchaseOrder',
       alwaysShow: false,
       redirect: '/wms/purchase-order',
-      meta: { title: '采购管理', icon: 'contract', noCache: true },
+      meta: { title: '采购订单管理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'PurchaseOrder',
           path: 'purchase-order',
           hidden: false,
           component: '/wms/purchase-order/index',
-          meta: { title: '采购订单管理', icon: 'project', noCache: true }
+          meta: { title: '采购订单', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/logistics-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSLogisticsOrder',
+      alwaysShow: false,
+      redirect: '/wms/logistics-order',
+      meta: { title: '物流订单管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'LogisticsOrder',
+          path: 'purchase-order',
+          hidden: false,
+          component: '/wms/logistics-order/index',
+          meta: { title: '物流订单', icon: 'project', noCache: true }
         }
       ]
     },
