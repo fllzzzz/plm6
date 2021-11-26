@@ -137,10 +137,26 @@ const getAllPackage = {
   }
 }
 
+const getHasTaskLine = {
+  url: '/api/mes/building/productionLine/hasTask',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      'code': 20000,
+      'message': '成功',
+      'data': {
+        'ids': [1, 2]
+      }
+    }
+  }
+}
+
 export default [
   getFactorySimple,
   getWorkshopSimple,
   getProcessSimple,
   getAllFactoryWorkshopLines,
-  getAllPackage
+  getAllPackage,
+  getHasTaskLine
 ]

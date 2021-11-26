@@ -1,0 +1,277 @@
+<template>
+  <div class="hed-container">
+    <div v-show="crud.searchToggle">
+      <!-- <monomerAreaTabs :project-id="projectId" @change="fetchMonomerAndArea" /> -->
+      <slot name="customSearch" />
+      <rrOperation />
+    </div>
+    <production-line-box-select
+      ref="plBoxSelectRef"
+      v-model="query.productionLineId"
+      :selected-able-line-ids="selectedAbleLineIds"
+      :selected-able-line-loading="selectedAbleLineLoading"
+      tip="* 区域下没有含有任务的生产线"
+      class="filter-item"
+      @loaded="handleLinesLoaded"
+      @change="crud.toQuery"
+    />
+    <crudOperation>
+      <template v-slot:optRight>
+        <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
+          <el-form ref="form" :model="printConfig" label-width="90px" size="small">
+            <el-form-item label="重量">
+              <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
+            </el-form-item>
+            <el-form-item label="显示">
+              <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
+              <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
+              <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" />
+            </el-form-item>
+            <el-form-item label="制造商名称">
+              <el-input v-model.trim="printConfig.manufacturerName" maxlength="30" clearable size="small" style="width: 250px" />
+            </el-form-item>
+            <el-form-item label="份数">
+              <el-input-number
+                v-model="printConfig.copiesQuantity"
+                :step="1"
+                :min="1"
+                :max="99"
+                size="small"
+                style="width: 250px"
+                @change="handleCopiesChange"
+              />
+            </el-form-item>
+          </el-form>
+          <template #reference>
+            <common-button type="primary" :disabled="configLoading" size="mini">打印设置</common-button>
+          </template>
+          <div style="text-align: right">
+            <common-button size="small" type="success" @click="cancelConfig">取 消</common-button>
+            <common-button :loading="saveLoading" size="small" type="primary" @click="saveConfig">保 存</common-button>
+          </div>
+        </el-popover>
+        <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
+          <span v-if="!configLoading">{{
+            `重量：${printWeightTypeEnum.VL[sourcePrintConfig.weight]}，
+            区域：${isShowText(sourcePrintConfig.showArea)}，
+            工厂及生产线：${isShowText(sourcePrintConfig.showProductionLine)}，
+            单体：${isShowText(sourcePrintConfig.showMonomer)}，
+            制造商名称：${sourcePrintConfig.manufacturerName}，
+            份数：${sourcePrintConfig.copiesQuantity}`
+          }}</span>
+          <i v-else class="el-icon-loading" />
+        </el-tag>
+      </template>
+      <template v-slot:viewLeft>
+        <common-button
+          v-permission="permission.print"
+          type="success"
+          size="mini"
+          :disabled="crud.selections.length === 0"
+          @click="batchPrint(crud.selections)"
+          >批量打印标签
+        </common-button>
+      </template>
+    </crudOperation>
+  </div>
+</template>
+
+<script setup>
+import { getPrintConfig, setPrintConfig } from '@/api/mes/label-print/common'
+import { taskAdd as addPrintRecord } from '@/api/mes/label-print/print-record'
+import { getHasTaskLine } from '@/api/mes/common'
+import { ref, watch, inject, reactive, defineExpose } from 'vue'
+
+import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
+import { mapGetters } from '@/store/lib'
+import { deepClone } from '@data-type/index'
+import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'
+
+import usePrintLabel from '@compos/mes/label-print/use-label-print'
+import { regHeader } from '@compos/use-crud'
+import crudOperation from '@crud/CRUD.operation'
+import rrOperation from '@crud/RR.operation'
+import productionLineBoxSelect from '@comp-mes/production-line-box-select'
+import { ElMessage } from 'element-plus'
+
+const defaultQuery = {
+  serialNumber: '',
+  monomerId: { value: undefined, resetAble: false },
+  districtId: { value: undefined, resetAble: false }
+}
+
+const { crud, query, CRUD } = regHeader(defaultQuery)
+
+const { globalProjectId, user, requestUrl } = mapGetters(['globalProjectId', 'user', 'requestUrl'])
+const permission = inject('permission')
+
+// // TODO
+// const currentArea = {
+//   name: ''
+// }
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v) => {
+    v.printQuantity = 1
+    return v
+  })
+}
+
+const printConfigVisible = ref(false)
+const saveLoading = ref(false)
+const configLoading = ref(false)
+let printConfig = reactive({
+  weight: printWeightTypeEnum.GROSS.V,
+  showProductionLine: true,
+  showArea: true,
+  showMonomer: true,
+  manufacturerName: '',
+  copiesQuantity: 1
+})
+const sourcePrintConfig = ref(deepClone(printConfig))
+
+function isShowText(bool) {
+  return bool ? '显示' : '不显示'
+}
+
+watch(
+  () => globalProjectId,
+  () => {
+    fetchPrintConfig()
+  },
+  { immediate: true }
+)
+// 获取打印配置
+async function fetchPrintConfig() {
+  try {
+    configLoading.value = true
+    const { weight, showProductionLine, showArea, showMonomer, manufacturerName, copiesQuantity } = await getPrintConfig(
+      globalProjectId.value
+    )
+    printConfig.weight = weight
+    printConfig.showProductionLine = showProductionLine
+    printConfig.showArea = showArea
+    printConfig.showMonomer = showMonomer
+    printConfig.manufacturerName = manufacturerName || (user && user.companyName)
+    printConfig.copiesQuantity = copiesQuantity || 1
+    sourcePrintConfig.value = deepClone(printConfig)
+  } catch (error) {
+    console.log('项目打印配置', error)
+  } finally {
+    configLoading.value = false
+  }
+}
+// 取消配置恢复数据
+function cancelConfig() {
+  printConfigVisible.value = false
+  printConfig = Object.assign(printConfig, deepClone(sourcePrintConfig.value))
+}
+// 保存打印配置
+async function saveConfig() {
+  try {
+    saveLoading.value = true
+    const config = {
+      ...printConfig,
+      projectId: globalProjectId.value
+    }
+    await setPrintConfig({
+      ...config,
+      showProductionLine: printConfig.showProductionLine,
+      showArea: printConfig.showArea,
+      showMonomer: printConfig.showMonomer
+    })
+    printConfigVisible.value = false
+    sourcePrintConfig.value = deepClone(printConfig)
+    ElMessage({ message: '保存成功', type: 'success' })
+  } catch (error) {
+    console.log('设置项目打印配置', error)
+  } finally {
+    saveLoading.value = false
+  }
+}
+
+function handleCopiesChange(val) {
+  if (!val) {
+    printConfig.copiesQuantity = 1
+  }
+}
+
+// function fetchMonomerAndArea({ monomerId, districtId }) {
+//   query.monomerId = monomerId
+//   query.districtId = districtId
+//   crud.toQuery()
+// fetchHasTaskLine()
+// }
+
+const selectedAbleLineLoading = ref(true)
+const selectedAbleLineIds = ref([])
+const plBoxSelectRef = ref()
+const lines = ref([])
+
+async function fetchHasTaskLine() {
+  selectedAbleLineLoading.value = true
+  query.productionLineId = undefined
+  try {
+    const { ids } = await getHasTaskLine({ districtId: query.districtId, type: 1 })
+    if (ids && ids.length > 0) {
+      selectedAbleLineIds.value = ids
+      query.productionLineId = selectedAbleLineIds.value[0]
+      crud.toQuery()
+    }
+  } catch (error) {
+    console.log('获取有任务的生产线', error)
+  } finally {
+    selectedAbleLineLoading.value = false
+  }
+}
+function handleLinesLoaded() {
+  if (plBoxSelectRef.value) {
+    lines.value = plBoxSelectRef.value.getLines()
+    if (query.productionLineId) {
+      crud.toQuery()
+    }
+  }
+}
+
+function getLine() {
+  let _line = {}
+  for (const workshop of lines.value) {
+    const productionLines = workshop.productionLineList || []
+    for (const line of productionLines) {
+      if (line.id === this.query.productionLineId) {
+        _line = {
+          id: line.id,
+          name: line.name,
+          factoryId: workshop.factoryId,
+          factoryName: workshop.factoryName
+        }
+        break
+      }
+    }
+  }
+  return _line
+}
+
+fetchHasTaskLine()
+
+const { getLabelInfo, printLabelFunc } = inject('headerObj')
+const { batchPrint, print } = usePrintLabel({
+  getPrintTotalNumber: (row) => (row.printQuantity || 0) * sourcePrintConfig.value.copiesQuantity,
+  getLabelInfo: getLabelInfo,
+  printFinallyHook: crud.toQuery,
+  getLoadingTextFunc: (row) => `${row.name}-${row.serialNumber}`,
+  printLabelFunc: printLabelFunc,
+  needAddPrintRecord: false,
+  addPrintIdField: 'taskId',
+  addPrintRecordReq: addPrintRecord
+})
+
+defineExpose({
+  getLine,
+  printConfig: sourcePrintConfig,
+  spliceQrCodeUrl,
+  QR_SCAN_PATH,
+  requestUrl,
+  print
+})
+</script>
