@@ -1,7 +1,7 @@
 <template>
   <div id="material-spec-select" class="material-spec-select" :style="{ 'max-height': `${props.maxHeight}px` }">
     <div class="operate-container">
-      <div class="cls-container">
+      <div v-if="showClassify" class="cls-container">
         <div class="container-prepend">科目</div>
         <material-cascader class="cls-cascader" v-model="curClsId" separator=" > " show-all-levels clearable size="small" />
       </div>
@@ -13,7 +13,7 @@
       </div>
       <div v-if="extraQueryOpened">
         <!-- 型材没有规格配置 -->
-        <template v-if="matCls.basicClass !== materialClassificationEnum.SECTION_STEEL.V">
+        <template v-if="matCls.basicClass !== matClsEnum.SECTION_STEEL.V">
           <template v-for="item in matCls.specConfig" :key="item.id">
             <div class="select-container">
               <div class="container-prepend">{{ item.name }}</div>
@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref, watch, defineProps, defineEmits, defineExpose, computed, onMounted, onBeforeUnmount } from 'vue'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import { getTextDomWidth } from '@/utils/element'
 import { getStyle, style2Num } from '@/utils/element/style'
@@ -90,6 +90,10 @@ import materialCascader from '../material-cascader/index.vue'
 const emit = defineEmits(['accumulateChange', 'selectionChange', 'update:classifyId'])
 
 const props = defineProps({
+  showClassify: {
+    type: Boolean,
+    default: true
+  },
   classifyId: {
     type: Number
   },
@@ -98,7 +102,8 @@ const props = defineProps({
     default: 'accumulator' // accumulator
   },
   maxHeight: {
-    type: Number
+    type: Number,
+    default: 600
   }
 })
 
@@ -182,14 +187,14 @@ function getSpec(classifyId) {
  */
 function handleSelectChange(spec) {
   selected.value[spec.sn] = !selected.value[spec.sn]
-  const stauts = selected.value[spec.sn]
-  if (!stauts) {
+  const status = selected.value[spec.sn]
+  if (!status) {
     delete selected.value[spec.sn]
   }
   emit('selectionChange', {
     snList: Object.keys(selected.value), // sn 列表
-    addList: stauts ? [spec.sn] : [], // 添加列表
-    cancelList: !stauts ? [spec.sn] : [] // 删除列表
+    addList: status ? [spec.sn] : [], // 添加列表
+    cancelList: !status ? [spec.sn] : [] // 删除列表
   })
 }
 

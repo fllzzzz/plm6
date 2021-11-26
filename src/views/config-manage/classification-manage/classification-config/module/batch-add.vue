@@ -12,7 +12,7 @@
     <template #titleRight>
       <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
       <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
-      <store-opertaion type="normal" />
+      <store-operation type="normal" />
     </template>
     <div class="heade-operate">
       <common-radio-button v-model="form.currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
@@ -108,7 +108,7 @@ import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
 import useAddFormLocalStorage from '@compos/form/use-add-form-local-storage'
 import clsCascader from '@comp-cls/cascader/index.vue'
-import StoreOpertaion from '@crud/STORE.opertaion.vue'
+import StoreOperation from '@crud/STORE.operation.vue'
 import { ElMessage } from 'element-plus'
 
 // 等级枚举

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- *订单列表
+ * 物流订单列表（入库审核通过的）
  *
  * @param {String} serialNumber 订单号/合同号
  * @param {Array} createTime  创建时间
@@ -20,20 +20,4 @@ export function get(params) {
   })
 }
 
-/**
- * 导出采购订单
- * @param {*} id  采购订单id
- */
-export function download(id) {
-  return request({
-    module: 'wms',
-    url: `purchase-order/export`,
-    method: 'get',
-    responseType: 'blob',
-    params: {
-      id
-    }
-  })
-}
-
-export default { get, download }
+export default { get }

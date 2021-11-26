@@ -46,6 +46,8 @@ const getters = {
   matClsSpecKV: state => state.config.classifySpec.specKV,
   // 用户部门树
   userDeptTree: state => state.config.userDeptTree,
+  // 基础单位
+  baseUnit: state => state.config.baseUnit,
 
   // token 访问令牌
   token: state => state.user.token,

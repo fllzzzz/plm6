@@ -1,7 +1,21 @@
 import request from '@/utils/request'
 
 /**
- *订单列表
+ * 采购订单-采购中（简要的）
+ * @param {*} params
+ * @returns
+ */
+export function getPurchasingPurchaseOrderBrief(params) {
+  return request({
+    module: 'wms',
+    url: 'purchase-order/purchasing/all/brief',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 订单列表
  *
  * @param {String} serialNumber 订单号/合同号
  * @param {Array} createTime  创建时间
@@ -108,4 +122,4 @@ export function download(id) {
   })
 }
 
-export default { get, add, edit, del, download }
+export default { get, add, edit, del, detail, download }

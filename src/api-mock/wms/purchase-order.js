@@ -43,7 +43,7 @@ const getPurchaseOrder = {
             settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
-            userEditTime: '@datetime(T)' // 用户修改时间
+            userUpdateTime: '@datetime(T)' // 用户修改时间
           },
           {
             id: 2, // 订单id
@@ -79,13 +79,122 @@ const getPurchaseOrder = {
             settlementStatus: settlementStatusEnum.SETTLED.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
-            userEditTime: '@datetime(T)', // 用户修改时间
+            userUpdateTime: '@datetime(T)', // 用户修改时间
             boolUsed: true // 是否使用(使用状态下部分字段无法修改)
           }
         ],
         totalElements: 2
       },
       message: '操作成功'
+    }
+  }
+}
+
+// 获取采购中的订单（简要）
+const getPurchasingPurchaseOrderBrief = {
+  url: '/api/wms/purchase-order/purchasing/all/brief',
+  method: 'get',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      data: {
+        content: [
+          {
+            id: 1, // 订单id
+            purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
+            supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+            basicClass: 1, // 采购物料基础类型
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+            weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+            supplier: {
+              id: 1,
+              name: '杭州天马物流有限公司'
+            }
+          },
+          {
+            id: 2, // 订单id
+            purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
+            supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
+            basicClass: 32, // 采购物料基础类型
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+            strucAreaIds: [1, 5], // 构件区域id
+            enclAreaIds: [2], // 围护区域id
+            requisitionsSN: ['AFTER-Q-123456', 'AFTER-Q-133456'], // 采购申请单
+            supplier: { // 供应商
+              id: 1,
+              name: '杭州天马物流有限公司'
+            }
+          }
+        ],
+        totalElements: 2
+      },
+      message: '操作成功'
+    }
+  }
+}
+
+// 详情
+const detail = {
+  url: RegExp('/api/wms/purchase-order/' + '.*'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        id: 1, // 订单id
+        purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
+        supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+        basicClass: 1, // 采购物料基础类型
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+        'projects|2': [
+          {
+            'id|+1': 1,
+            'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+            'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          }
+        ], // 项目id
+        requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+        supplierId: 1, // 供应商id
+        'mete|1000-10000.1-2': 1000, // 合同量量
+        'amount|100000-1000000.1-2': 100000, // 合同金额
+        meteUnit: '千克', // 单位
+        'taxRate|1-4': 3, // 税率（百分比）
+        invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+        pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+        weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+        purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+        remark: '@cparagraph', // 备注
+        attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
+        founderName: '@cname', // 创建人
+        lastOperatorName: '@cname', // 最后编辑人
+        purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
+        settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
+        createTime: '@datetime(T)', // 创建时间
+        updateTime: '@datetime(T)', // 修改时间
+        userUpdateTime: '@datetime(T)' // 用户修改时间
+      }
     }
   }
 }
@@ -155,4 +264,4 @@ const download = {
   }
 }
 
-export default [getPurchaseOrder, add, edit, editPurchaseStatus, del, download]
+export default [getPurchasingPurchaseOrderBrief, getPurchaseOrder, detail, add, edit, editPurchaseStatus, del, download]

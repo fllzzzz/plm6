@@ -155,6 +155,19 @@
         min-width="170"
       />
       <el-table-column
+        v-if="columns.visible('purchaseSN')"
+        key="purchaseSN"
+        :show-overflow-tooltip="true"
+        prop="purchaseSN"
+        label="采购单号"
+        align="center"
+        min-width="170"
+      >
+        <template #default="scope">
+          <span class="text-clickable" @click="openInboundDetailView">{{ scope.row.inboundSN }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('inboundSN')"
         key="inboundSN"
         :show-overflow-tooltip="true"
@@ -164,7 +177,7 @@
         min-width="170"
       >
         <template #default="scope">
-          <span class="pointer text-clickable" @click="openInboundDetailView">{{ scope.row.inboundSN }}</span>
+          <span class="text-clickable" @click="openInboundDetailView">{{ scope.row.inboundSN }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -187,7 +200,7 @@ import { ref, computed } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { projectNameFormatter } from '@/utils/project'
 
 import useCRUD from '@compos/use-crud'
@@ -216,7 +229,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料物流订单',
     sort: ['id.desc'],
-    invisibleColumns: ['projects'],
+    invisibleColumns: ['projects', 'purchaseSN'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
@@ -231,7 +244,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
-    const basicClassArr = EO.getBits(materialClassificationEnum.ENUM, v.basicClass, 'L')
+    const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.materialTypeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
     v.supplier = computed(() => supplierKV.value[v.supplierId])

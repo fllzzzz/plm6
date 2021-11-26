@@ -93,6 +93,10 @@ div:focus {
   padding-left: 5px;
 }
 
+.ml-10 {
+  margin-left: 10px;
+}
+
 .align-left {
   text-align: left;
   .el-input__inner {
@@ -145,7 +149,12 @@ div:focus {
   cursor: pointer;
 }
 
+.not-allowed {
+  cursor: not-allowed
+}
+
 .text-clickable {
+  cursor: pointer;
   color:#1881ef
 }
 
