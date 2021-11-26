@@ -22,9 +22,9 @@
         align="left"
         width="150"
       >
-        <template v-slot="scope">
-          <factory-table-cell-tag :id="scope.row.factoryId" />
-          <span>{{ scope.row.serialNumber }}</span>
+        <template #default="{ row }">
+          <factory-table-cell-tag :id="row.factoryId" />
+          <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -46,11 +46,11 @@
         min-width="150"
       />
       <el-table-column v-if="columns.visible('unit')" :show-overflow-tooltip="true" prop="unit" label="单位" align="left" width="120">
-        <template v-slot="scope">
-          <el-tag :type="scope.row.unitType === measureTypeEnum.MEASURE.V ? '' : 'warning'" style="margin-right: 8px" effect="plain">
-            {{ measureTypeEnum.VL[scope.row.unitType] }}
+        <template #default="{ row }">
+          <el-tag :type="row.unitType === measureTypeEnum.MEASURE.V ? '' : 'warning'" style="margin-right: 8px" effect="plain">
+            {{ measureTypeEnum.VL[row.unitType] }}
           </el-tag>
-          {{ scope.row.unit }}
+          {{ row.unit }}
         </template>
       </el-table-column>
       <el-table-column
@@ -62,12 +62,12 @@
         align="center"
         min-width="180"
       >
-        <template v-slot="scope">
-          <template v-if="scope.row.editMode">
+        <template #default="{ row }">
+          <template v-if="row.editMode">
             <div class="edit-item">
               <el-input-number
-                v-model="scope.row.minimumInventory"
-                :disabled="scope.row.editLoading"
+                v-model="row.minimumInventory"
+                :disabled="row.editLoading"
                 :max="999999"
                 :min="0"
                 :precision="0"
@@ -75,10 +75,10 @@
                 label="描述文字"
                 size="small"
               />
-              <common-button class="icon-button" size="mini" icon="el-icon-circle-close" type="warning" @click="cancelRowEdit(scope.row)" />
+              <common-button class="icon-button" size="mini" icon="el-icon-circle-close" type="warning" @click="cancelRowEdit(row)" />
             </div>
           </template>
-          <span v-else>{{ scope.row.minimumInventory }}</span>
+          <span v-else>{{ row.minimumInventory }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -89,43 +89,43 @@
         align="center"
         width="100"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <template v-if="checkPermission(permission.edit)">
             <el-switch
-              :disabled="scope.row.enabledLoading"
-              v-model="scope.row.enabled"
+              :disabled="row.enabledLoading"
+              v-model="row.enabled"
               class="drawer-switch"
-              @change="handleEnabledChange(scope.row, ['fullClassifyName', 'specification'])"
+              @change="handleEnabledChange(row, ['fullClassifyName', 'specification'])"
             />
           </template>
           <template v-else>
-            {{ enabledEnum.VL[scope.row.enabled] }}
+            {{ enabledEnum.VL[row.enabled] }}
           </template>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
+        <template #default="{ row }">
+          <span>{{ parseTime(row.updateTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+        <template #default="{ row }">
+          <span>{{ parseTime(row.createTime) }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column v-permission="permission.edit" label="操作" width="130px" align="center">
-        <template v-slot="scope">
+        <template #default="{ row }">
           <common-button
-            v-if="scope.row.editMode"
-            :loading="scope.row.editLoading"
+            v-if="row.editMode"
+            :loading="row.editLoading"
             type="success"
             size="mini"
             icon="el-icon-check"
-            @click="confirmRowEdit(scope.row)"
+            @click="confirmRowEdit(row)"
           />
-          <common-button v-else type="primary" size="mini" icon="el-icon-edit" @click="scope.row.editMode = !scope.row.editMode" />
-          <udOperation :show-edit="false" :data="scope.row" />
+          <common-button v-else type="primary" size="mini" icon="el-icon-edit" @click="row.editMode = !row.editMode" />
+          <udOperation :show-edit="false" :data="row" />
         </template>
       </el-table-column>
     </common-table>

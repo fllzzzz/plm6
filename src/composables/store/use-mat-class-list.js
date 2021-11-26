@@ -1,8 +1,8 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
-// 获取物料分类树
-const useMatClsTree = (loadedCallBack) => {
+// 获取物料分类列表
+const useMatClsList = (loadedCallBack) => {
   const store = useStore()
   const loaded = computed(() => store.state.config.loaded.matClsTree)
   // 未加载则拉取
@@ -27,11 +27,11 @@ const useMatClsTree = (loadedCallBack) => {
   }
 
   return {
-    rawMatClsTree: computed(() => store.state.config.rawMatClsTree),
-    manufClsTree: computed(() => store.state.config.manufClsTree),
-    matClsTree: computed(() => store.state.config.matClsTree),
+    manufClsList: computed(() => store.state.config.manufClsList),
+    rawMatClsList: computed(() => store.state.config.rawMatClsList),
+    matClsList: computed(() => store.state.config.matClsList),
     loaded
   }
 }
 
-export default useMatClsTree
+export default useMatClsList

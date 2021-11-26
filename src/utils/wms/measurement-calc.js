@@ -1,7 +1,5 @@
-import { MATERIAL_CONSTANT, minUnit, decimalPlace } from '@/utils/constant'
-import { convertUnits } from '@/utils'
-import { materialBasicClassEnum as basicClassEnum } from '@/utils/enum/index'
-import store from '../store'
+import { STEEL_DENSITY, STAINLESS_STEEL_DENSITY } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 
 // TODO: 重写
 /**
@@ -20,17 +18,19 @@ export function calcSteelPlateWeight({ name, length, width, thickness, number = 
   if (!name || !length || !width || !thickness) {
     return null
   }
-  let density = MATERIAL_CONSTANT.STEEL_DENSITY // 密度 t/m³
+  let density = STEEL_DENSITY // 密度 t/m³
   if (name && name.indexOf('不锈钢') > -1) {
-    density = MATERIAL_CONSTANT.STAINLESS_STEEL_DENSITY
+    density = STAINLESS_STEEL_DENSITY
   }
-  let _singleWeight
-  const _length = convertUnits(length, lengthUnit, 'm')
-  const _width = convertUnits(width, lengthUnit, 'm')
+
+  let unitWeight
+  const len = convertUnits(length, lengthUnit, 'm')
+  const wth = convertUnits(width, lengthUnit, 'm')
   // 长宽以m为基础单位，换算出来的重量为kg
-  _singleWeight = _length * _width * thickness * density
-  _singleWeight = convertUnits(_singleWeight, 'kg', weightUnit, decimals)
-  return (_singleWeight * number).toFixed(decimals)
+  unitWeight = len * wth * thickness * density
+  unitWeight = convertUnits(unitWeight, 'kg', weightUnit, decimals)
+  console.log('unitWeight', unitWeight, len, wth, thickness, density)
+  return Number((unitWeight * number).toFixed(decimals))
 }
 
 /**
@@ -57,12 +57,12 @@ export function calcWeightSectionSteel(length, number, specWeight, lengthUnit, w
   if (!length || !number || !specWeight) {
     return null
   }
-  let _singleWeight
+  let unitWeight
   const _length = convertUnits(length, lengthUnit, 'm')
   // 长宽以m为基础单位，换算出来的重量为kg
-  _singleWeight = _length * number * specWeight
-  _singleWeight = convertUnits(_singleWeight, 'kg', weightToUnit, decimals)
-  return _singleWeight
+  unitWeight = _length * number * specWeight
+  unitWeight = convertUnits(unitWeight, 'kg', weightToUnit, decimals)
+  return unitWeight
 }
 
 /**
@@ -81,38 +81,38 @@ export function calcLengthSteelCoil(weight, width, thickness, number = 1, weight
   const _weight = convertUnits(weight, weightUnit, 'kg')
   const _width = convertUnits(width, lengthUnit, 'm')
   // 计算结果为 m
-  _totalLength = _weight / (_width * thickness * MATERIAL_CONSTANT.STEEL_DENSITY) * number
+  _totalLength = _weight / (_width * thickness * STEEL_DENSITY) * number
   _totalLength = convertUnits(_totalLength, 'm', lengthUnit, decimals)
   return _totalLength
 }
 
-export function calcPriceShow(price, basicClass, unitShow = false) {
-  if (!price) {
-    return price
-  }
-  const unitObj = Object.assign({}, store.getters.unitObj)
-  if ([basicClassEnum.STEEL_PLATE.V, basicClassEnum.SECTION_STEEL.V, basicClassEnum.STEEL_COIL.V].includes(basicClass)) {
-    const unit = unitObj[basicClass].weightUnit
-    const priceChange = convertUnits(1, minUnit.WEIGHT, unit)
-    let afterPrice = (price / priceChange).toFixed(decimalPlace.YUAN)
-    if (unitShow) {
-      afterPrice = afterPrice + '元/' + unit
-    }
-    return afterPrice || 0
-  } else if ([basicClassEnum.ENCLOSURE.V].includes(basicClass)) {
-    const unit = unitObj[basicClass].lengthUnit
-    const priceChange = convertUnits(1, minUnit.LENGTH, unit)
-    let afterPrice = (price / priceChange).toFixed(decimalPlace.YUAN)
-    if (unitShow) {
-      afterPrice = afterPrice + '元/' + unit
-    }
-    return afterPrice || 0
-  } else {
-    let afterPrice = price.toFixed(decimalPlace.YUAN)
-    if (unitShow) {
-      afterPrice = afterPrice + '元'
-    }
-    return afterPrice || 0
-  }
-}
+// export function calcPriceShow(price, basicClass, unitShow = false) {
+//   if (!price) {
+//     return price
+//   }
+//   const unitObj = Object.assign({}, store.getters.unitObj)
+//   if ([basicClassEnum.STEEL_PLATE.V, basicClassEnum.SECTION_STEEL.V, basicClassEnum.STEEL_COIL.V].includes(basicClass)) {
+//     const unit = unitObj[basicClass].weightUnit
+//     const priceChange = convertUnits(1, minUnit.WEIGHT, unit)
+//     let afterPrice = (price / priceChange).toFixed(decimalPlace.YUAN)
+//     if (unitShow) {
+//       afterPrice = afterPrice + '元/' + unit
+//     }
+//     return afterPrice || 0
+//   } else if ([basicClassEnum.ENCLOSURE.V].includes(basicClass)) {
+//     const unit = unitObj[basicClass].lengthUnit
+//     const priceChange = convertUnits(1, minUnit.LENGTH, unit)
+//     let afterPrice = (price / priceChange).toFixed(decimalPlace.YUAN)
+//     if (unitShow) {
+//       afterPrice = afterPrice + '元/' + unit
+//     }
+//     return afterPrice || 0
+//   } else {
+//     let afterPrice = price.toFixed(decimalPlace.YUAN)
+//     if (unitShow) {
+//       afterPrice = afterPrice + '元'
+//     }
+//     return afterPrice || 0
+//   }
+// }
 

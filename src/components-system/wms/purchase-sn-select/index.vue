@@ -143,12 +143,15 @@ const options = computed(() => {
 watch(
   () => props.modelValue,
   (value) => {
-    selectValue.value = value
-    emitInfo(value)
     // 有默认值的情况，并且value为空，则给value赋值
     if (props.default && isBlank(value) && isNotBlank(options.value)) {
       selectValue.value = options.value[0].value
       handleChange(selectValue.value)
+    } else {
+      if (!judgeSameValue(selectValue.value, value)) {
+        selectValue.value = value
+        emitInfo(value)
+      }
     }
   },
   { immediate: true }

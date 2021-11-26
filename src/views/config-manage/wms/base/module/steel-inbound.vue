@@ -20,7 +20,7 @@
     <el-form ref="formRef" v-loading="dataLoading" :disabled="formDisabled" :model="form" :rules="rules" label-position="top" label-width="170px">
       <el-form-item class="form-tip-item" prop="trainsDiffType">
         <template #label>
-          <span>车次钢材总重误差({{ form.trainsDiffType === numOrPctEnum.NUMBER.V ? 'g' : '%' }})</span>
+          <span>车次钢材总重误差({{ form.trainsDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
         </template>
         <div class="flex-r">
           <common-radio-button v-model="form.trainsDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
@@ -43,7 +43,7 @@
       </el-form-item>
       <el-form-item class="form-tip-item" label="重量允许误差(%)" prop="steelDiffType">
         <template #label>
-          <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? 'g' : '%' }})</span>
+          <span>单件钢材重量误差({{ form.steelDiffType === numOrPctEnum.NUMBER.V ? STEEL_DIFF_UNIT : '%' }})</span>
         </template>
         <div class="flex-r">
           <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
@@ -81,6 +81,7 @@
 <script setup>
 import { getInboundSteelConf, setInboundSteelConf } from '@/api/config/wms/base'
 import { reactive, ref, onMounted, inject, computed } from 'vue'
+import { STEEL_DIFF_UNIT } from '@/settings/config'
 import { numOrPctEnum, whetherEnum } from '@enum-ms/common'
 import { deepClone } from '@/utils/data-type'
 import { isObjectValueEqual } from '@data-type/object'

@@ -29,6 +29,7 @@ const useMatClsSpec = (classifyId) => {
   return {
     loaded,
     fetchMatClsSpec,
+    matClsSpecKV: computed(() => store.state.config.classifySpec.specKV),
     matClsSpec: computed(() => store.state.config.classifySpec)
   }
 }

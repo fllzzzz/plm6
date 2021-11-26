@@ -17,9 +17,9 @@ const getWmsConfig = {
             // 车次重量差值类型（g 或 %）
             trainsDiffType: numOrPctEnum.NUMBER.V,
             // 单件钢材差值
-            steelDiff: 0,
+            steelDiff: 100,
             // 差值类型（g 或 %）
-            steelDiffType: numOrPctEnum.PERCENTAGE.V,
+            steelDiffType: numOrPctEnum.NUMBER.V,
             // 误差超过范围可提交
             overDiffSubmittable: whetherEnum.FALSE.V
           },

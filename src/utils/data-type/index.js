@@ -2,6 +2,27 @@ import { isObjectValueEqual } from './object'
 import { compareArray } from './array'
 
 /**
+ * 是否json数据
+ * @param {*} str
+ * @returns
+ */
+export function isJSON(str) {
+  if (typeof str === 'string') {
+    try {
+      var obj = JSON.parse(str)
+      if (typeof obj === 'object' && obj) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      console.log('error：' + str + ',' + e)
+      return false
+    }
+  }
+}
+
+/**
  * 空值显示
  * @export
  * @param {*} val 值

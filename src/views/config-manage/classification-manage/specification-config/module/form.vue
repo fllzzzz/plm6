@@ -137,7 +137,7 @@ const drawerRef = ref()
 const formRef = ref()
 
 const { maxHeight } = useMaxHeight({
-  extraBox: '#el-drawer__title',
+  extraBox: '.el-drawer__header',
   wrapperBox: ['.el-drawer__body', '.spec-main-content'],
   navbar: false,
   extraHeight: 120,

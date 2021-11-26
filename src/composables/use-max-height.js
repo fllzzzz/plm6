@@ -236,7 +236,7 @@ function getElement(dom, ancestorDomEl) {
       return curEl
     }
   }
-  console.log('未找到正确的盒子', dom, ancestorDomEl)
+  // console.log('未找到正确的盒子', dom, ancestorDomEl)
   // throw new Error('未找到正确的盒子')
   return null
 }

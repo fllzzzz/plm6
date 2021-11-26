@@ -150,12 +150,12 @@ div:focus {
 }
 
 .not-allowed {
-  cursor: not-allowed
+  cursor: not-allowed;
 }
 
 .text-clickable {
   cursor: pointer;
-  color:#1881ef
+  color: #1881ef;
 }
 
 // TODO: 改为inline-block
@@ -308,16 +308,29 @@ div:focus {
   z-index: 1000 !important;
 }
 
-.child-mr-10 >:nth-child(n) {
+.child-mr-10 > :nth-child(n) {
   margin-right: 10px;
 }
 
-.child-mr-10 >:last-child {
+.child-mr-10 > :last-child {
   margin-right: 0;
 }
 
 .pre-wrap {
   white-space: pre-wrap;
+}
+
+.number-badge {
+  display: inline-block;
+  color: white;
+  background-color: red;
+  font-size: 12px;
+  height: 16px;
+  min-width: 20px; 
+  line-height: 16px;
+  text-align: center;
+  border-radius: 15px;
+  padding: 0 4px;
 }
 
 // TODO:遮罩
