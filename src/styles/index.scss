@@ -316,6 +316,15 @@ div:focus {
   margin-right: 0;
 }
 
+
+.child-mr-6 > :nth-child(n) {
+  margin-right: 6px;
+}
+
+.child-mr-6 > :last-child {
+  margin-right: 0;
+}
+
 .pre-wrap {
   white-space: pre-wrap;
 }

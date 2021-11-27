@@ -327,11 +327,16 @@ const actions = {
               name: sc.name,
               index: ci,
               list: sc.list.map((v, i) => {
-                return {
+                const spec = {
                   index: i,
                   code: v.code,
                   name: v.name
                 }
+                // 型材加入单位净重
+                if (res.basicClass === matClsEnum.SECTION_STEEL.V) {
+                  spec.unitWeight = v.unitWeight
+                }
+                return spec
               })
             }
           }),
@@ -378,6 +383,9 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
+          if (classify.basicClass === matClsEnum.SECTION_STEEL.V) {
+            arr[currentIndex].unitWeight = spec.unitWeight
+          }
         }
       }
     }

@@ -86,6 +86,7 @@ import { getStyle, style2Num } from '@/utils/element/style'
 import useMatClsSpec from '@compos/store/use-mat-cls-spec'
 import Hamburger from '@comp/Hamburger/index.vue'
 import materialCascader from '../material-cascader/index.vue'
+import { debounce } from '@/utils'
 
 const emit = defineEmits(['change', 'accumulateChange', 'selectionChange', 'update:classifyId', 'update:modelValue'])
 
@@ -124,6 +125,7 @@ const matCls = ref({})
 const selected = ref({})
 const curClsId = ref()
 const list = ref([])
+const calcSpecWidth = debounce(calcWidth, 100, true) // 计算规格列表处规格的宽度
 
 const { loaded, matClsSpec, matClsSpecKV, fetchMatClsSpec } = useMatClsSpec()
 
@@ -171,19 +173,26 @@ watch(
   { immediate: true }
 )
 
+// 规格列表参数变更时，重新计算宽度
 watch(
   () => matCls.value.specList,
-  (val) => {
-    calcWidth()
+  () => {
+    calcSpecWidth()
   }
 )
 
+// 监听material-spec-select，避免当页面被隐藏时，classify变化导致规格列表更新却并没有重新计算宽度的情况
+const observer = new MutationObserver(calcSpecWidth)
+
 onMounted(() => {
-  window.addEventListener('resize', calcWidth, { passive: false })
+  const targetNode = document.getElementById('material-spec-select')
+  targetNode ? observer.observe(targetNode, { attributes: true }) : ''
+  window.addEventListener('resize', calcSpecWidth, { passive: false })
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', calcWidth)
+  observer.disconnect() // 关闭监听
+  window.removeEventListener('resize', calcSpecWidth)
 })
 
 // 获取规格

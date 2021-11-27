@@ -1,6 +1,13 @@
 <template>
   <div class="steel-inbound-application-container">
-    <common-wrapper :basicClass="STEEL_ENUM" @purchase-order-change="handleOrderInfoChange">
+    <common-wrapper
+      :basicClass="STEEL_ENUM"
+      @purchase-order-change="handleOrderInfoChange"
+      total-name="总量合计"
+      :total-value="totalWeight"
+      unit="t"
+      @submit="submit"
+    >
       <div class="filter-container">
         <div class="filter-left-box">
           <el-radio-group v-model="currentBasicClass" size="small" class="filter-item">
@@ -10,14 +17,22 @@
           </el-radio-group>
         </div>
         <div class="filter-right-box">
+          <common-button
+            v-if="weightAssignable"
+            class="filter-item"
+            type="warning"
+            @click="automaticAssignWeight"
+            :disabled="!currentBasicClass"
+          >
+            按过磅重量自动分配（钢卷不参与分配)
+          </common-button>
           <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!currentBasicClass">
             添加物料
           </common-button>
         </div>
       </div>
-      <el-form ref="formRef" :model="form" size="small" label-position="right" inline label-width="80px">
-        <component ref="steelRef" :max-height="tableMaxHeight" :is="comp" :key="Math.random()" />
-        <!-- <steel-plate-table ref="steelRef" :max-height="tableMaxHeight" /> -->
+      <el-form ref="formRef" :model="form">
+        <component ref="steelRef" :max-height="tableMaxHeight" :is="comp" :key="Math.random()" @calc-weight="calcWeight" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -37,6 +52,7 @@
           :max-height="specSelectMaxHeight"
           :basic-class="steelBasicClassKV[currentBasicClass].V"
           :table-width="350"
+          auto-selected
         />
       </template>
     </common-drawer>
@@ -48,16 +64,18 @@
 import { ref, computed, watch, provide, nextTick } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
-
 import commonWrapper from '../components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import steelPlateTable from './module/steel-plate-table.vue'
 import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
-import { ElRadioGroup } from 'element-plus'
+import { ElMessage, ElRadioGroup } from 'element-plus'
+import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { convertUnits } from '@/utils/convert/unit'
 
 // 权限
 const permission = ['wms_steelInboundApplication:get']
@@ -83,22 +101,20 @@ const matSpecRef = ref() // 规格列表ref
 const formRef = ref() // form表单ref
 const drawerRef = ref()
 const order = ref() // 订单信息
-const disabledBasicClass = ref() // 禁用的基础分类
+const disabledBasicClass = ref({}) // 禁用的基础分类
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
-const steelRefList = { // 钢材三个组件的ref列表
+const totalWeight = ref() // 总重
+const steelRefList = {
+  // 钢材三个组件的ref列表
   steelPlateList: undefined,
   sectionSteelList: undefined,
   steelCoilList: undefined
 }
-provide('matSpecRef', matSpecRef)
+provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
-setTimeout(() => {
-  materialSelectVisible.value = true
-}, 500)
-
-const { form } = useForm(
+const { cu, form } = useForm(
   {
     title: '钢材入库',
     formStore: true,
@@ -137,6 +153,13 @@ const comp = computed(() => {
   return currentBasicClass.value ? steelBasicClassKV[currentBasicClass.value].TABLE : steelBasicClassKV.steelPlateList.TABLE
 })
 
+// 可自动分配重量
+const weightAssignable = computed(() => {
+  const modeFlag = order.value && order.value.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V
+  const isSpOrSs = !disabledBasicClass.value.steelPlateList || !disabledBasicClass.value.sectionSteelList
+  return modeFlag && isSpOrSs
+})
+
 // 监听切换钢材类型，为list赋值
 watch(
   currentBasicClass,
@@ -158,14 +181,98 @@ watch(list, (val) => {
 // 初始化
 init()
 
-// 行初始化
+function submit() {
+  if (isBlank(form.steelPlateList) && isBlank(form.sectionSteelList) && isBlank(form.steelCoilList)) {
+    ElMessage.warning('请填写数据')
+    return
+  }
+  const tableValidateRes = validateTable()
+  // 进入仓库级价格填写页面
+  console.log('tableValidateRes', tableValidateRes)
+}
+
+// 表格校验
+function validateTable() {
+  return Object.keys(steelRefList).every((k) => steelRefList[k] ? steelRefList[k].validate() : true)
+}
+
+// 行数据添加时初始化
 function rowInit(row) {
   return steelRef.value.rowInit(row)
 }
-function print() {
-  Object.keys(steelRefList).forEach((k) => {
-    console.log(k, steelRefList[k] && steelRefList[k].co)
-  })
+
+// 过磅重量自动分配(钢卷不参与重量分配)
+function automaticAssignWeight() {
+  if (!form.loadingWeight) {
+    ElMessage.warning('请先输入过磅重量')
+    return
+  }
+  let spList = []
+  let ssList = []
+  let spAndSsTheoryTotalWeight = 0
+  // 遍历钢板与型钢列表 计算这两种钢材的总理论重量
+  if (isNotBlank(form.steelPlateList)) {
+    spList = form.steelPlateList.filter((v) => {
+      spAndSsTheoryTotalWeight += v.theoryTotalWeight ? v.theoryTotalWeight : 0
+      return v.theoryTotalWeight
+    })
+  }
+  if (isNotBlank(form.sectionSteelList)) {
+    ssList = form.sectionSteelList.filter((v) => {
+      spAndSsTheoryTotalWeight += v.theoryTotalWeight ? v.theoryTotalWeight : 0
+      return v.theoryTotalWeight
+    })
+  }
+  // 可计算钢板及型钢数据为空
+  if (isBlank(spList) && isBlank(ssList)) {
+    ElMessage.warning('请先填写完整钢板或型钢的信息')
+    return
+  }
+
+  // 计算钢卷总重
+  let scWeight = 0
+  if (isNotBlank(form.steelCoilList)) {
+    form.steelCoilList.forEach((v) => {
+      scWeight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+
+  // 可分配重量 = 整车过磅重量 - 钢卷重量 - 钢板及型材的理论重量
+  let assignableWeight = form.loadingWeight - scWeight - spAndSsTheoryTotalWeight
+
+  // 理论重量/总理论重量*可分配重量
+  // 为0 则 过磅重量 = 理论重量(无需计算)
+  const calc = (row) => {
+    row.weighingTotalWeight = assignableWeight
+      ? toFixed((row.theoryTotalWeight / spAndSsTheoryTotalWeight) * assignableWeight + row.theoryTotalWeight, 2, { toNum: true })
+      : row.theoryTotalWeight
+    assignableWeight -= row.weighingTotalWeight - row.theoryTotalWeight
+    spAndSsTheoryTotalWeight -= row.theoryTotalWeight
+  }
+  spList.forEach(v => calc(v))
+  ssList.forEach(v => calc(v))
+}
+
+// 计算总重
+function calcWeight() {
+  let weight = 0
+  if (isNotBlank(form.steelPlateList)) {
+    form.steelPlateList.forEach((v) => {
+      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+  if (isNotBlank(form.sectionSteelList)) {
+    form.sectionSteelList.forEach((v) => {
+      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+  if (isNotBlank(form.steelCoilList)) {
+    form.steelCoilList.forEach((v) => {
+      weight += v.weighingTotalWeight ? v.weighingTotalWeight : 0
+    })
+  }
+  cu.props.totalWeight = toFixed(weight, 2) // 用于与车的过磅重量比较
+  totalWeight.value = convertUnits(weight, 'kg', 't', 3)
 }
 
 // 订单变化

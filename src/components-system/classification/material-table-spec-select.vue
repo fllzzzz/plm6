@@ -9,7 +9,7 @@
           <template v-if="isNotBlank(filterOptions)">
             <el-card
               class="classify-card"
-              :class="{ 'is-checked': opt.id === classifyId }"
+              :class="{ 'is-checked': opt.id === classify.id }"
               v-for="opt in filterOptions"
               :key="opt.id"
               shadow="hover"
@@ -41,7 +41,7 @@
       ref="specRef"
       class="right-container spec-select"
       v-model="list"
-      :classifyId="classifyId"
+      :classifyId="classify.id"
       :row-init-fn="props.rowInitFn"
       :mode="props.mode"
       :show-classify="false"
@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, defineExpose, ref, computed, watch } from 'vue'
+import { defineEmits, defineProps, defineExpose, ref, computed, watch, watchEffect } from 'vue'
 import { isNotBlank } from '@/utils/data-type'
 
 import useMatClsSpec from '@compos/store/use-mat-cls-spec'
@@ -85,14 +85,19 @@ const props = defineProps({
   },
   basicClass: {
     type: Number
+  },
+  autoSelected: {
+    type: Boolean,
+    default: false
   }
 })
 
 const specRef = ref({})
 const filterText = ref() // 筛选文字
-const classifyId = ref() // 分类
+const classify = ref({}) // 分类
 const list = ref() // 列表
 const counter = ref({})
+const options = ref([]) // 选项
 
 // 左侧列表宽度
 const leftWidth = computed(() => {
@@ -104,14 +109,6 @@ const leftWidth = computed(() => {
 
 const { matClsSpecKV } = useMatClsSpec()
 const { loaded, matClsList } = useMatClsList()
-
-// 科目过滤
-const options = computed(() => {
-  if (props.basicClass) {
-    return matClsList.value.filter((v) => props.basicClass & v.basicClass)
-  }
-  return matClsList.value
-})
 
 // 搜索过滤
 const filterOptions = computed(() => {
@@ -133,9 +130,35 @@ watch(
   { immediate: true }
 )
 
+watchEffect(() => setOption(props.basicClass))
+
+function setOption(basicClass) {
+  if (!matClsList.value) {
+    options.value = []
+    return
+  }
+  let opts
+  if (basicClass) {
+    opts = matClsList.value.filter((v) => basicClass & v.basicClass)
+  } else {
+    opts = matClsList.value
+  }
+  if (props.autoSelected && isNotBlank(opts)) {
+    setSelection(opts[0])
+  } else {
+    setSelection()
+  }
+  options.value = opts
+}
+
 // 选择物料
 function handleClassifyClick(item) {
-  classifyId.value = item.id
+  classify.value = item
+}
+
+// 设置选中
+function setSelection(item = {}) {
+  classify.value = item
 }
 
 // list发生变化

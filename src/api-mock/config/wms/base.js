@@ -13,7 +13,7 @@ const getWmsConfig = {
         inbound: {
           steel: { // 钢材配置
             // 车次重量差值
-            trainsDiff: 0,
+            trainsDiff: 1000,
             // 车次重量差值类型（g 或 %）
             trainsDiffType: numOrPctEnum.NUMBER.V,
             // 单件钢材差值

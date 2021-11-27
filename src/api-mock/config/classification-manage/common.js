@@ -1,8 +1,9 @@
 import { matClsEnum } from '@enum-ms/classification'
 import { measureTypeEnum } from '@enum-ms/wms'
 
+// 钢板
 const getFinalMatClsByIdForSteelPlate = {
-  url: RegExp('/api/config/classification/final-material/' + '[1][012][0-9]'),
+  url: RegExp('/api/config/classification/final-material/' + '[1][0][0-9]'),
   method: 'get',
   timeout: 500,
   response: () => {
@@ -20,13 +21,86 @@ const getFinalMatClsByIdForSteelPlate = {
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
-          basicClass: matClsEnum.MATERIAL.V,
+          basicClass: matClsEnum.STEEL_PLATE.V,
           specConfig: [
             {
               id: 1,
               name: '材质',
               list: [
                 { code: '01', name: 'Q325B' },
+                { code: '02', name: 'Q235B' },
+                { code: '03', name: 'Q235A' },
+                { code: '04', name: 'Q235C' }
+              ]
+            }
+          ]
+        }
+    }
+  }
+}
+
+// 型钢
+const getFinalMatClsByIdForSectionSteel = {
+  url: RegExp('/api/config/classification/final-material/' + '[1][1][0-9]'),
+  method: 'get',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data:
+        {
+          'id|1-100': 1,
+          serialNumber: /[0-9]{10}/,
+          name: '工字钢',
+          fullName: '工字钢',
+          measureUnit: '根', // 计量单位
+          accountingUnit: '千克', // 核算单位
+          accountingPrecision: 2, // 核算单位小数精度
+          measurePrecision: 0, // 计量单位小数精度
+          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          basicClass: matClsEnum.SECTION_STEEL.V,
+          specConfig: [
+            {
+              id: 1,
+              name: 'GB-06',
+              'list|20': [
+                { code: '01', name: /(\d{1,3}\*){3}\d{1,3}/, 'unitWeight|10-30.1-2': 1 }
+              ]
+            }
+          ]
+        }
+    }
+  }
+}
+
+// 钢卷
+const getFinalMatClsByIdForSteelCoil = {
+  url: RegExp('/api/config/classification/final-material/' + '[1][2][0-9]'),
+  method: 'get',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data:
+        {
+          'id|1-100': 1,
+          name: '镀锌彩卷',
+          fullName: '镀锌彩卷',
+          serialNumber: /[0-9]{10}/,
+          measureUnit: '套', // 计量单位
+          accountingUnit: '套', // 核算单位
+          accountingPrecision: 0, // 核算单位小数精度
+          measurePrecision: 0, // 计量单位小数精度
+          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          basicClass: matClsEnum.STEEL_COIL.V,
+          specConfig: [
+            {
+              id: 1,
+              name: '材质',
+              list: [
+                { code: '01', name: 'DC51D+Z' },
                 { code: '02', name: 'Q235B' },
                 { code: '03', name: 'Q235A' },
                 { code: '04', name: 'Q235C' }
@@ -48,26 +122,6 @@ const getFinalMatClsById = {
       code: 20000,
       message: '成功',
       data:
-        // {
-        //   'id|1-100': 1,
-        //   name: '角铁',
-        //   fullName: '角铁',
-        //   measureUnit: '根', // 计量单位
-        //   accountingUnit: '千克', // 核算单位
-        //   accountingPrecision: 2, // 核算单位小数精度
-        //   measurePrecision: 0, // 计量单位小数精度
-        //   outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
-        //   basicClass: matClsEnum.SECTION_STEEL.V,
-        //   specConfig: [
-        //     {
-        //       id: 1,
-        //       name: 'GB-06',
-        //       'list|20': [
-        //         { code: '01', name: /(\d{1,3}\*){3}\d{1,3}/ }
-        //       ]
-        //     }
-        //   ]
-        // }
         {
           'id|1-100': 1,
           name: '大六角',
@@ -121,5 +175,7 @@ const getFinalMatClsById = {
 
 export default [
   getFinalMatClsByIdForSteelPlate,
+  getFinalMatClsByIdForSectionSteel,
+  getFinalMatClsByIdForSteelCoil,
   getFinalMatClsById
 ]

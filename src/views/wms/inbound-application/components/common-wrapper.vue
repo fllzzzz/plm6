@@ -4,17 +4,26 @@
     <div class="main-content">
       <slot />
     </div>
-    <common-footer class="footer" :unit="props.unit" :total-value="totalValue" @submit="submit" />
+    <common-footer
+      class="footer"
+      :unit="props.unit"
+      :total-name="props.totalName"
+      :permission="props.permission"
+      :total-value="props.totalValue"
+      :submit-loading="props.submitLoading"
+      :show-total="props.showTotal"
+      @submit="submit"
+    />
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, inject, provide } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import useMaxHeight from '@/composables/use-max-height'
 import commonHeader from '../components/common-header.vue'
 import commonFooter from '../components/common-footer.vue'
 
-const emit = defineEmits(['purchase-order-change'])
+const emit = defineEmits(['purchase-order-change', 'submit'])
 
 const props = defineProps({
   basicClass: {
@@ -27,24 +36,39 @@ const props = defineProps({
   totalValue: {
     type: [Number, String],
     default: 0
+  },
+  permission: {
+    type: Array,
+    default: undefined
+  },
+  totalName: {
+    type: String,
+    default: '合计'
+  },
+  btnName: {
+    type: String,
+    default: '提交'
+  },
+  submitLoading: {
+    type: Boolean,
+    default: false
+  },
+  showTotal: {
+    type: Boolean,
+    default: true
   }
 })
 
 const headerRef = ref()
-const form = inject('form')
 
 const { heightStyle } = useMaxHeight({ extraBox: null, wrapperBox: null })
 
-// function handleOrderChange(info) {
-//   orderInfo.value = info
-//   console.log('orderInfo', orderInfo)
-// }
-
-// 表单提交
-function submit() {
-  const headerValidate = headerRef.value.validate()
-  console.log('form', form)
-  console.log('headerValidate', headerValidate)
+// 表单提交（下一步）
+async function submit() {
+  const headerValidate = await headerRef.value.validate()
+  if (headerValidate) {
+    emit('submit')
+  }
 }
 
 // 订单详情变更

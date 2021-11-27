@@ -2,7 +2,7 @@
   <div class="inbound-application-footer">
     <div v-show="showTotal" class="total-box">
       <div class="total-name">{{ props.totalName }}</div>
-      <div class="total-item">{{ props.totalValue }}{{ props.unit }}</div>
+      <div class="total-item">{{`${props.totalValue || 0} ${props.unit || ''}`}}</div>
     </div>
     <div>
       <slot name="calculator" />

@@ -33,7 +33,7 @@ const getPurchaseOrder = {
             'taxRate|1-4': 3, // 税率（百分比）
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
-            weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
+            weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '@cparagraph', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
@@ -183,7 +183,7 @@ const detail = {
         'taxRate|1-4': 3, // 税率（百分比）
         invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
         pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
-        weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+        weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
         purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
         remark: '@cparagraph', // 备注
         attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件

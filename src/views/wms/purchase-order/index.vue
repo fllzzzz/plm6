@@ -28,9 +28,9 @@
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60">
-        <template #default="{ row }">
+        <template #default="{ row, $index }">
           <table-cell-tag :show="row.supplyType == orderSupplyTypeEnum.PARTY_A.V" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
-          <span>{{ scope.$index + 1 }}</span>
+          <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column

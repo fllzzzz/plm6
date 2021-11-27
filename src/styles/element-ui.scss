@@ -108,6 +108,21 @@
   td {
     overflow: hidden;
   }
+  .el-table__cell {
+    .el-input {
+      min-width: 40px;
+      width: 100%;
+    }
+    .el-input-number {
+      min-width: 40px;
+      width: 100%;
+
+    }
+    .el-input__inner {
+      min-width: 40px;
+      width: 100%;
+    }
+  }
 } 
 
 .el-range-editor--medium .el-range-separator {
