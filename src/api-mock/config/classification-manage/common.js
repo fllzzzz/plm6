@@ -5,7 +5,7 @@ import { measureTypeEnum } from '@enum-ms/wms'
 const getFinalMatClsByIdForSteelPlate = {
   url: RegExp('/api/config/classification/final-material/' + '[1][0][0-9]'),
   method: 'get',
-  timeout: 500,
+  // timeout: 500,
   response: () => {
     return {
       code: 20000,
@@ -16,8 +16,8 @@ const getFinalMatClsByIdForSteelPlate = {
           name: '中厚板',
           fullName: '中厚板',
           serialNumber: /[0-9]{10}/,
-          measureUnit: '套', // 计量单位
-          accountingUnit: '套', // 核算单位
+          measureUnit: '张', // 计量单位
+          accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
@@ -43,7 +43,7 @@ const getFinalMatClsByIdForSteelPlate = {
 const getFinalMatClsByIdForSectionSteel = {
   url: RegExp('/api/config/classification/final-material/' + '[1][1][0-9]'),
   method: 'get',
-  timeout: 500,
+  // timeout: 500,
   response: () => {
     return {
       code: 20000,
@@ -78,7 +78,7 @@ const getFinalMatClsByIdForSectionSteel = {
 const getFinalMatClsByIdForSteelCoil = {
   url: RegExp('/api/config/classification/final-material/' + '[1][2][0-9]'),
   method: 'get',
-  timeout: 500,
+  // timeout: 500,
   response: () => {
     return {
       code: 20000,
@@ -89,8 +89,8 @@ const getFinalMatClsByIdForSteelCoil = {
           name: '镀锌彩卷',
           fullName: '镀锌彩卷',
           serialNumber: /[0-9]{10}/,
-          measureUnit: '套', // 计量单位
-          accountingUnit: '套', // 核算单位
+          measureUnit: '卷', // 计量单位
+          accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式

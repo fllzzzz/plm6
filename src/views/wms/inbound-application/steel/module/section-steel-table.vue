@@ -16,7 +16,7 @@
     <el-table-column prop="classifyFullName" label="物料种类" align="center" width="120px" fixed="left" />
     <el-table-column prop="specification" label="规格" align="center" width="170px" fixed="left">
       <template #default="{ row }">
-        <el-tooltip :content="row.specCName" placement="top">
+        <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
       </template>
@@ -132,10 +132,11 @@ function rowInit(row) {
   const _row = reactive({
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
-    specCName: row.specCName, // 规格中文
+    specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.classify.serialNumber, // 科目编号
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称
+    basicClass: row.classify.basicClass, // 基础类型
     specification: row.spec, // 规格
     specificationMap: row.specKV, // 规格KV格式
     measureUnit: row.classify.measureUnit, // 计量单位

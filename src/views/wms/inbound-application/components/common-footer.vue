@@ -1,28 +1,29 @@
 <template>
   <div class="inbound-application-footer">
-    <div v-show="showTotal" class="total-box">
-      <div class="total-name">{{ props.totalName }}</div>
-      <div class="total-item">{{`${props.totalValue || 0} ${props.unit || ''}`}}</div>
+    <div class="total-box">
+      <template v-if="props.showTotal">
+        <div class="total-name">{{ props.totalName }}</div>
+        <div class="total-item">{{ `${props.totalValue || 0} ${props.unit || ''}` }}</div>
+      </template>
     </div>
     <div>
       <slot name="calculator" />
       <common-button
-        v-permission="props.permission"
-        :loading="props.submitLoading"
+        :loading="cu.status.edit === FORM.STATUS.PROCESSING"
         type="primary"
         size="small"
-        icon="el-icon-right"
         style="margin-left: 10px"
         @click="submit"
       >
-        继续
+        {{ btnName }}
       </common-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+import { regExtra } from '@/composables/form/use-form'
 
 const emit = defineEmits(['submit'])
 const props = defineProps({
@@ -36,7 +37,7 @@ const props = defineProps({
   },
   btnName: {
     type: String,
-    default: '提交'
+    default: '确认并提交'
   },
   unit: {
     type: String,
@@ -46,21 +47,29 @@ const props = defineProps({
     type: [Number, String],
     default: 0
   },
-  submitLoading: {
-    type: Boolean,
-    default: false
-  },
   showTotal: {
     type: Boolean,
     default: true
+  },
+  isSubmit: {
+    type: Boolean,
+    default: false
   }
 })
 
-const successVisible = ref(false)
+const { cu, FORM } = regExtra() // 表单
 
-function submit() {
-  successVisible.value = false
-  emit('submit')
+async function submit() {
+  if (props.isSubmit) {
+    try {
+      await cu.submit()
+      emit('submit')
+    } catch (error) {
+      console.log('入库表单提交', error)
+    }
+  } else {
+    emit('submit')
+  }
 }
 </script>
 <style lang="scss" scoped>

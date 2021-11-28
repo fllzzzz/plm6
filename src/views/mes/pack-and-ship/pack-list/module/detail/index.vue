@@ -8,7 +8,7 @@
     width="85vw"
     @closed="handleClose"
   >
-    <template #tip>
+    <template #titleAfter>
       <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.packageNumber }}</el-tag>
     </template>
     <div class="head-container">

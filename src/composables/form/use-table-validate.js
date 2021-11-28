@@ -137,22 +137,12 @@ export function validate(rules, value, row = {}) {
       }
     }
     const required = rule.required
-    if (required === true) {
-      if (typeof value === 'string' && !value) {
-        flag = false
-        break
-      }
-      if (typeof value === 'number' && (!value && value !== 0)) {
-        flag = false
-        break
-      }
-      if (value instanceof Array && (!value || value.length === 0)) {
-        flag = false
-        break
-      }
+    if (required === true && isBlank(value)) {
+      flag = false
+      break
     }
     const type = rule.type
-    if (type && (typeof value !== type)) {
+    if (type && typeof value !== type) {
       flag = false
       break
     }
@@ -167,7 +157,7 @@ export function validate(rules, value, row = {}) {
 }
 
 // 清理数据
-export function cleanUpData(list, dittos) {
+export function cleanUpData(list, dittos = new Map()) {
   const copyList = lodash.cloneDeep(list)
   list.length = 0
   // 清空数组, 保留数组地址不变
@@ -206,9 +196,11 @@ function getRules(rules) {
   let _rules
   switch (rules.constructor.name) {
     case 'RefImpl':
-    case 'ComputedRefImpl': _rules = rules.value
+    case 'ComputedRefImpl':
+      _rules = rules.value
       break
-    default: _rules = rules
+    default:
+      _rules = rules
       break
   }
   return _rules

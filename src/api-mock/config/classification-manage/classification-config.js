@@ -2,7 +2,7 @@
 const getClassificationTree = {
   url: '/api/config/classification/tree',
   method: 'get',
-  timeout: 1000,
+  // timeout: 1000,
   response: () => {
     return {
       code: 20000,
@@ -250,7 +250,7 @@ const getClassificationTree = {
 const getMatClsTree = {
   url: '/api/config/classification/material/tree',
   method: 'get',
-  timeout: 1000,
+  // timeout: 1000,
   response: () => {
     return {
       code: 20000,

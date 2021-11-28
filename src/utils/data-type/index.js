@@ -23,6 +23,17 @@ export function isJSON(str) {
 }
 
 /**
+ * 添加后缀
+ * @param {*} value 值
+ * @param {*} suffix 后缀
+ * @returns
+ */
+export function addSuffix(value, suffix) {
+  if (isBlank(value)) return value
+  return value + suffix
+}
+
+/**
  * 空值显示
  * @export
  * @param {*} val 值

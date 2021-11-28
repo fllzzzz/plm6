@@ -114,7 +114,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
             requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             supplier: {
               id: 1,
@@ -135,6 +137,8 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             strucAreaIds: [1, 5], // 构件区域id
             enclAreaIds: [2], // 围护区域id

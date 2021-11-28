@@ -84,7 +84,7 @@ const props = defineProps({
   }
 })
 
-const { cu, form } = regExtra() // 表单
+const { cu, form, FORM } = regExtra() // 表单
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff() // 过磅重量超出理论重量处理
 
 const validateLoadingWeight = (rule, value, callback) => {
@@ -121,9 +121,14 @@ const orderInfo = computed(() => {
 watch(
   [() => form.loadingWeight, () => cu.props.totalWeight],
   ([loadW, totalW]) => {
-    trainsDiff.value = weightOverDiff(loadW, totalW)
+    trainsDiff.value = weightOverDiff(loadW, totalW) || {}
   }
 )
+
+// 提交后清除校验结果
+FORM.HOOK.afterSubmit = () => {
+  formRef.value.resetFields()
+}
 
 // 采购订单id变更
 function handlePurchaseIdChange(val) {

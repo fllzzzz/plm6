@@ -1,12 +1,12 @@
 <template>
-  <div class="steel-inbound-application-container">
+  <div v-permission="permission" class="steel-inbound-application-container">
     <common-wrapper
       :basicClass="STEEL_ENUM"
-      @purchase-order-change="handleOrderInfoChange"
-      total-name="总量合计"
       :total-value="totalWeight"
+      :validate="validate"
       unit="t"
-      @submit="submit"
+      total-name="总量合计"
+      @purchase-order-change="handleOrderInfoChange"
     >
       <div class="filter-container">
         <div class="filter-left-box">
@@ -61,6 +61,7 @@
 
 <script setup>
 // TODO: 编辑，反向赋值
+import { steelInboundApplication } from '@/api/wms/supplier/inbound/application'
 import { ref, computed, watch, provide, nextTick } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -78,7 +79,7 @@ import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
 
 // 权限
-const permission = ['wms_steelInboundApplication:get']
+const permission = ['wms_steelInboundApplication:submit']
 
 // 基础分类
 const steelBasicClassKV = {
@@ -91,6 +92,7 @@ const defaultForm = {
   purchaseId: null, // 申购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
   sectionSteelList: [], // 型钢列表
   steelCoilList: [] // 钢卷列表
@@ -114,14 +116,14 @@ const steelRefList = {
 }
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
-const { cu, form } = useForm(
+const { cu, form, FORM } = useForm(
   {
     title: '钢材入库',
     formStore: true,
     formStoreKey: 'WMS_INBOUND_APPLICATION_STEEL',
     permission: permission,
     defaultForm: defaultForm,
-    crudApi: ''
+    api: steelInboundApplication
   },
   formRef
 )
@@ -181,19 +183,32 @@ watch(list, (val) => {
 // 初始化
 init()
 
-function submit() {
+// 提交后清除校验结果
+FORM.HOOK.afterSubmit = () => {
+  init()
+}
+
+// 表单校验
+function validate() {
   if (isBlank(form.steelPlateList) && isBlank(form.sectionSteelList) && isBlank(form.steelCoilList)) {
     ElMessage.warning('请填写数据')
-    return
+    return false
   }
   const tableValidateRes = validateTable()
+  if (tableValidateRes) {
+    form.list = [...form.steelPlateList, ...form.sectionSteelList, ...form.steelCoilList]
+    form.list.forEach(v => {
+      v.mete = v.weighingTotalWeight
+      v.weight = v.weighingTotalWeight
+    })
+  }
   // 进入仓库级价格填写页面
-  console.log('tableValidateRes', tableValidateRes)
+  return tableValidateRes
 }
 
 // 表格校验
 function validateTable() {
-  return Object.keys(steelRefList).every((k) => steelRefList[k] ? steelRefList[k].validate() : true)
+  return Object.keys(steelRefList).every((k) => (steelRefList[k] ? steelRefList[k].validate() : true))
 }
 
 // 行数据添加时初始化
@@ -249,8 +264,8 @@ function automaticAssignWeight() {
     assignableWeight -= row.weighingTotalWeight - row.theoryTotalWeight
     spAndSsTheoryTotalWeight -= row.theoryTotalWeight
   }
-  spList.forEach(v => calc(v))
-  ssList.forEach(v => calc(v))
+  spList.forEach((v) => calc(v))
+  ssList.forEach((v) => calc(v))
 }
 
 // 计算总重
@@ -279,6 +294,7 @@ function calcWeight() {
 function handleOrderInfoChange(orderInfo) {
   init()
   order.value = orderInfo
+  cu.props.order = orderInfo
   if (orderInfo) {
     Object.keys(steelBasicClassKV).forEach((k) => {
       if (steelBasicClassKV[k].V & orderInfo.basicClass) {
@@ -300,6 +316,7 @@ function init() {
     steelCoilList: true
   }
   currentBasicClass.value = undefined
+  totalWeight.value = 0
 }
 </script>
 

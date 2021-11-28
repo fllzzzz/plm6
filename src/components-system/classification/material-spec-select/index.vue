@@ -35,7 +35,11 @@
       </div>
     </div>
     <div class="spec-container">
-      <div v-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
+      <el-tag class="tip-tag loading-tag" v-if="!loaded || !calcFinish" size="medium" effect="plain">
+        <el-icon class="is-loading"><el-icon-loading /></el-icon>
+        科目加载中
+      </el-tag>
+      <div v-else-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
         <template v-if="props.mode === 'accumulator'">
           <template v-for="item in specList" :key="item.sn">
             <div class="tag-content">
@@ -66,10 +70,6 @@
           </template>
         </template>
       </div>
-      <el-tag class="tip-tag loading-tag" v-else-if="!loaded" size="medium" effect="plain">
-        <el-icon class="is-loading"><el-icon-loading /></el-icon>
-        科目加载中
-      </el-tag>
       <el-tag class="tip-tag" v-else-if="curClsId" type="danger" size="medium" effect="plain"> * 当前科目未配置规格</el-tag>
 
       <el-tag class="tip-tag" v-else type="warning" size="medium" effect="plain"> * 请先选择科目</el-tag>
@@ -86,6 +86,7 @@ import { getStyle, style2Num } from '@/utils/element/style'
 import useMatClsSpec from '@compos/store/use-mat-cls-spec'
 import Hamburger from '@comp/Hamburger/index.vue'
 import materialCascader from '../material-cascader/index.vue'
+// eslint-disable-next-line no-unused-vars
 import { debounce } from '@/utils'
 
 const emit = defineEmits(['change', 'accumulateChange', 'selectionChange', 'update:classifyId', 'update:modelValue'])
@@ -125,7 +126,12 @@ const matCls = ref({})
 const selected = ref({})
 const curClsId = ref()
 const list = ref([])
-const calcSpecWidth = debounce(calcWidth, 100, true) // 计算规格列表处规格的宽度
+const calcFinish = ref(true) // 计算完成后再渲染，避免debounce延时导致的切换抖动
+// const calcSpecWidth = calcWidth // 计算规格列表处规格的宽度
+const calcSpecWidth = () => {
+  calcFinish.value = false
+  debounce(calcWidth, 100, false)()
+} // 计算规格列表处规格的宽度
 
 const { loaded, matClsSpec, matClsSpecKV, fetchMatClsSpec } = useMatClsSpec()
 
@@ -216,7 +222,7 @@ function handleListChange({ addList, cancelList }) {
       })
     }
     if (isNotBlank(cancelList)) {
-      list.value = list.value.filter((l) => !cancelList.map(v => v.sn).includes(l.sn))
+      list.value = list.value.filter((l) => !cancelList.map((v) => v.sn).includes(l.sn))
     }
   }
   if (props.mode === 'selector') {
@@ -322,7 +328,7 @@ function handleClear(sn) {
   const clearSnList = Array.isArray(sn) ? sn : [sn]
   if (props.mode === 'accumulator') {
     const cancelList = []
-    clearSnList.forEach(sn => {
+    clearSnList.forEach((sn) => {
       const num = selected.value[sn]
       delete selected.value[sn]
       cancelList.push({ sn, num })
@@ -374,6 +380,7 @@ function calcWidth() {
   } else {
     tagContainerStyle.value = {}
   }
+  calcFinish.value = true
 }
 
 defineExpose({

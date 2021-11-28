@@ -34,7 +34,8 @@ MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V] = {
   measure: { unit: '张', precision: 0 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
-  width: { unit: 'mm', precision: 0 }
+  width: { unit: 'mm', precision: 0 },
+  thickness: { unit: 'mm', precision: 2 }
 }
 MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   measure: { unit: '根', precision: 0 },
@@ -46,7 +47,8 @@ MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
   measure: { unit: '卷', precision: 0 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
-  width: { unit: 'mm', precision: 0 }
+  width: { unit: 'mm', precision: 0 },
+  thickness: { unit: 'mm', precision: 3 }
 }
 
 // 系统最小单位（默认）

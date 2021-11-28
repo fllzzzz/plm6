@@ -1240,7 +1240,8 @@ function addCrudMethod(crud, data) {
   // 注册组件
   const registerVM = (type, vm, index = -1) => {
     const vmInfo = {
-      uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
+      uid: vm.uid,
+      uuid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
       CRUD: {

@@ -395,7 +395,7 @@ function getSpecList(classify, specConfig) {
     v.spec = v.arr.join('*') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}
-    v.specCName = specConfig.map(v => v.name).join(' * ')
+    v.specificationLabels = specConfig.map(v => v.name).join(' * ')
     v.specNameKV = {}
     v.specArrKV = []
     v.arr.forEach((c, i) => {
