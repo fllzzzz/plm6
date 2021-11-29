@@ -35,16 +35,20 @@
       </div>
     </div>
     <div class="spec-container">
-      <div v-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
+      <el-tag class="tip-tag loading-tag" v-if="!loaded || !calcFinish" size="medium" effect="plain">
+        <el-icon class="is-loading"><el-icon-loading /></el-icon>
+        科目加载中
+      </el-tag>
+      <div v-else-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
         <template v-if="props.mode === 'accumulator'">
           <template v-for="item in specList" :key="item.sn">
             <div class="tag-content">
-              <el-badge :value="selected[item.sn]" :max="99" class="badge pointer" type="warning" @dblclick="handleClear(item)" />
+              <el-badge :value="selected[item.sn]" :max="99" class="badge pointer" type="warning" @dblclick="handleClear(item.sn)" />
               <el-tag
                 :type="selected[item.sn] ? 'success' : 'info'"
                 size="medium"
                 :effect="selected[item.sn] ? undefined : 'plain'"
-                @click.self="handleAccChange(item)"
+                @click.self="handleAccChange(item.sn)"
                 class="pointer"
               >
                 {{ item.spec }}
@@ -58,7 +62,7 @@
               :type="selected[item.sn] ? 'success' : 'info'"
               size="medium"
               :effect="selected[item.sn] ? undefined : 'plain'"
-              @click="handleSelectChange(item)"
+              @click="handleSelectChange(item.sn)"
               class="pointer"
             >
               {{ item.spec }}
@@ -66,10 +70,6 @@
           </template>
         </template>
       </div>
-      <el-tag class="tip-tag loading-tag" v-else-if="!loaded" size="medium" effect="plain">
-        <el-icon class="is-loading"><el-icon-loading /></el-icon>
-        科目加载中
-      </el-tag>
       <el-tag class="tip-tag" v-else-if="curClsId" type="danger" size="medium" effect="plain"> * 当前科目未配置规格</el-tag>
 
       <el-tag class="tip-tag" v-else type="warning" size="medium" effect="plain"> * 请先选择科目</el-tag>
@@ -86,10 +86,19 @@ import { getStyle, style2Num } from '@/utils/element/style'
 import useMatClsSpec from '@compos/store/use-mat-cls-spec'
 import Hamburger from '@comp/Hamburger/index.vue'
 import materialCascader from '../material-cascader/index.vue'
+// eslint-disable-next-line no-unused-vars
+import { debounce } from '@/utils'
 
-const emit = defineEmits(['accumulateChange', 'selectionChange', 'update:classifyId'])
+const emit = defineEmits(['change', 'accumulateChange', 'selectionChange', 'update:classifyId', 'update:modelValue'])
 
 const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => []
+  },
+  rowInitFn: {
+    type: Function
+  },
   showClassify: {
     type: Boolean,
     default: true
@@ -116,8 +125,15 @@ const extraQueryOpened = ref(false) // 规格配置查询打开
 const matCls = ref({})
 const selected = ref({})
 const curClsId = ref()
+const list = ref([])
+const calcFinish = ref(true) // 计算完成后再渲染，避免debounce延时导致的切换抖动
+// const calcSpecWidth = calcWidth // 计算规格列表处规格的宽度
+const calcSpecWidth = () => {
+  calcFinish.value = false
+  debounce(calcWidth, 100, false)()
+} // 计算规格列表处规格的宽度
 
-const { loaded, matClsSpec, fetchMatClsSpec } = useMatClsSpec()
+const { loaded, matClsSpec, matClsSpecKV, fetchMatClsSpec } = useMatClsSpec()
 
 // 筛选后的规格列表
 const specList = computed(() => {
@@ -138,6 +154,14 @@ const specList = computed(() => {
   return []
 })
 
+watch(
+  () => props.modelValue,
+  (val) => {
+    list.value = val
+  },
+  { immediate: true }
+)
+
 // 监听科目id 变化
 watch(
   () => props.classifyId,
@@ -155,19 +179,26 @@ watch(
   { immediate: true }
 )
 
+// 规格列表参数变更时，重新计算宽度
 watch(
   () => matCls.value.specList,
-  (val) => {
-    calcWidth()
+  () => {
+    calcSpecWidth()
   }
 )
 
+// 监听material-spec-select，避免当页面被隐藏时，classify变化导致规格列表更新却并没有重新计算宽度的情况
+const observer = new MutationObserver(calcSpecWidth)
+
 onMounted(() => {
-  window.addEventListener('resize', calcWidth, { passive: false })
+  const targetNode = document.getElementById('material-spec-select')
+  targetNode ? observer.observe(targetNode, { attributes: true }) : ''
+  window.addEventListener('resize', calcSpecWidth, { passive: false })
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', calcWidth)
+  observer.disconnect() // 关闭监听
+  window.removeEventListener('resize', calcSpecWidth)
 })
 
 // 获取规格
@@ -182,59 +213,136 @@ function getSpec(classifyId) {
   emit('update:classifyId', classifyId)
 }
 
+function handleListChange({ addList, cancelList }) {
+  if (props.mode === 'accumulator') {
+    if (isNotBlank(addList)) {
+      addList.forEach((sn) => {
+        const row = rowInit(matClsSpecKV.value[sn])
+        if (row) list.value.push(row)
+      })
+    }
+    if (isNotBlank(cancelList)) {
+      list.value = list.value.filter((l) => !cancelList.map((v) => v.sn).includes(l.sn))
+    }
+  }
+  if (props.mode === 'selector') {
+    // TODO:
+  }
+  emit('update:modelValue', list.value)
+  emit('change', list.value)
+}
+
+// 单条数据初始化
+function rowInit(row) {
+  if (typeof props.rowInitFn === 'function') {
+    return props.rowInitFn(row)
+  } else {
+    return {
+      sn: row.sn, // 该科目规格唯一编号
+      classifyId: row.classify.id, // 科目id
+      classifyFullName: row.classify.fullName, // 全路径名称
+      specification: row.spec, // 规格
+      specificationMap: row.specKV, // 规格KV格式
+      measureUnit: row.classify.measureUnit, // 计量单位
+      accountingUnit: row.classify.accountingUnit, // 核算单位
+      accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
+      measurePrecision: row.classify.measurePrecision // 计量单位小数精度
+    }
+  }
+}
+
 /**
  * selector 模式
  */
-function handleSelectChange(spec) {
-  selected.value[spec.sn] = !selected.value[spec.sn]
-  const status = selected.value[spec.sn]
+function handleSelectChange(sn) {
+  selected.value[sn] = !selected.value[sn]
+  const status = selected.value[sn]
   if (!status) {
-    delete selected.value[spec.sn]
+    delete selected.value[sn]
   }
-  emit('selectionChange', {
+  const data = {
     snList: Object.keys(selected.value), // sn 列表
-    addList: status ? [spec.sn] : [], // 添加列表
-    cancelList: !status ? [spec.sn] : [] // 删除列表
-  })
+    addList: status ? [sn] : [], // 添加列表
+    cancelList: !status ? [{ sn, num: 1 }] : [] // 删除列表
+  }
+  handleListChange(data)
+  emit('selectionChange', data)
 }
 
 /**
  * accumulator 模式
  */
-function handleAccChange(spec) {
-  if (isBlank(selected.value[spec.sn])) {
-    selected.value[spec.sn] = 1
+function handleAccChange(sn) {
+  if (isBlank(selected.value[sn])) {
+    selected.value[sn] = 1
   } else {
-    selected.value[spec.sn]++
+    selected.value[sn]++
   }
-  emit('accumulateChange', {
+  const data = {
     snList: Object.keys(selected.value), // sn 列表
-    addList: [spec.sn], // 添加列表
+    addList: [sn], // 添加列表
     cancelList: [] // 删除列表
-  })
+  }
+  handleListChange(data)
+  emit('accumulateChange', data)
 }
 
 /**
- * accumulator 模式下，减少
+ * 删除list-item(单条)
  */
-function accReduce(sn) {
-  if (isNotBlank(selected.value[sn])) {
-    selected.value[sn] -= 1
+function delListItem(sn, index) {
+  if (props.mode === 'accumulator') {
+    if (isNotBlank(selected.value[sn])) {
+      selected.value[sn] -= 1
+    }
+    if (selected.value[sn] === 0) {
+      delete selected.value[sn]
+    }
+    list.value.splice(index, 1)
+    const data = {
+      snList: Object.keys(selected.value), // sn 列表
+      cancelList: [{ sn, num: 1 }] // 删除列表
+    }
+    emit('accumulateChange', data)
   }
-  if (selected.value[sn] === 0) {
-    delete selected.value[sn]
+
+  if (props.mode === 'selector') {
+    // TODO:
   }
+  emit('update:modelValue', list.value)
+  emit('change', list.value)
+}
+
+// 清空当前科目的所有规格
+function clearCurrentClassify(classifyId) {
+  console.log(matClsSpec.value[classifyId])
+  const sns = Object.keys(matClsSpec.value[classifyId].specKV)
+  handleClear(sns)
 }
 
 /**
- * 清除所有列表
+ * 清除传入规格的所有列表
+ * @param {array, string} sn
  */
-function handleClear(spec) {
-  delete selected.value[spec.sn]
-  emit('accumulateChange', {
-    snList: Object.keys(selected.value), // sn 列表
-    cancelList: [spec.sn] // 删除列表
-  })
+function handleClear(sn) {
+  const clearSnList = Array.isArray(sn) ? sn : [sn]
+  if (props.mode === 'accumulator') {
+    const cancelList = []
+    clearSnList.forEach((sn) => {
+      const num = selected.value[sn]
+      delete selected.value[sn]
+      cancelList.push({ sn, num })
+    })
+    const data = {
+      snList: Object.keys(selected.value), // sn 列表
+      cancelList // 删除列表
+    }
+    handleListChange(data)
+    emit('accumulateChange', data)
+  }
+  if (props.mode === 'selector') {
+    // emit('selectionChange', data)
+  }
 }
 
 function init() {
@@ -272,12 +380,14 @@ function calcWidth() {
   } else {
     tagContainerStyle.value = {}
   }
+  calcFinish.value = true
 }
 
 defineExpose({
-  accReduce,
+  delListItem,
   init,
-  clear
+  clear,
+  clearCurrentClassify
 })
 </script>
 

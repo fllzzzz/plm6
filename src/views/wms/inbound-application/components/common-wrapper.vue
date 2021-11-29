@@ -4,21 +4,34 @@
     <div class="main-content">
       <slot />
     </div>
-    <common-footer class="footer" :unit="props.unit" :total-value="totalValue" @submit="submit" />
+    <common-footer
+      class="footer"
+      :unit="props.unit"
+      :total-name="props.totalName"
+      :total-value="props.totalValue"
+      :show-total="props.showTotal"
+      :btn-name="props.btnName"
+      @submit="submit"
+    />
+    <confirm-dialog v-model="previewVisible" :basicClass="props.basicClass" />
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, inject, provide } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import useMaxHeight from '@/composables/use-max-height'
 import commonHeader from '../components/common-header.vue'
 import commonFooter from '../components/common-footer.vue'
+import confirmDialog from './confirm-dialog.vue'
 
-const emit = defineEmits(['purchase-order-change'])
+const emit = defineEmits(['purchase-order-change', 'submit'])
 
 const props = defineProps({
   basicClass: {
     type: Number
+  },
+  validate: {
+    type: Function
   },
   unit: {
     type: String,
@@ -27,24 +40,36 @@ const props = defineProps({
   totalValue: {
     type: [Number, String],
     default: 0
+  },
+  totalName: {
+    type: String,
+    default: '合计'
+  },
+  btnName: {
+    type: String,
+    default: '下一步'
+  },
+  showTotal: {
+    type: Boolean,
+    default: true
   }
 })
 
 const headerRef = ref()
-const form = inject('form')
+const previewVisible = ref(false)
 
 const { heightStyle } = useMaxHeight({ extraBox: null, wrapperBox: null })
 
-// function handleOrderChange(info) {
-//   orderInfo.value = info
-//   console.log('orderInfo', orderInfo)
-// }
-
-// 表单提交
-function submit() {
-  const headerValidate = headerRef.value.validate()
-  console.log('form', form)
-  console.log('headerValidate', headerValidate)
+// 表单提交（预览）
+async function submit() {
+  const headerValidate = await headerRef.value.validate()
+  let formValidate = true
+  if (typeof props.validate === 'function') {
+    formValidate = await props.validate()
+  }
+  if (headerValidate && formValidate) {
+    previewVisible.value = true
+  }
 }
 
 // 订单详情变更

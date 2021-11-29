@@ -22,7 +22,7 @@
 
             <el-form-item label="物料种类" prop="basicClass">
               <div class="flex-rss child-mr-10">
-                <span v-parse-enum="{ e: baseMaterialTypeEnum, v: detail.purchaseType, extra:'：' }" />
+                <span v-parse-enum="{ e: baseMaterialTypeEnum, v: detail.purchaseType, extra: '：' }" />
                 <span v-parse-enum="{ e: matClsEnum, v: detail.basicClass, bit: true, split: ' | ' }" />
               </div>
             </el-form-item>
@@ -38,16 +38,16 @@
                   {{ detail.meteUnit }}
                 </div>
               </el-form-item>
-              <el-form-item prop="weightMeasurementMode" label="计量方式">
-                <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
-              </el-form-item>
-              <el-form-item label="提货方式" prop="pickUpMode">
-                <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
-              </el-form-item>
               <el-form-item label="订单类型" prop="purchaseOrderPaymentMode">
                 <span v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: detail.purchaseOrderPaymentMode }" />
               </el-form-item>
             </template>
+            <el-form-item prop="weightMeasurementMode" label="计量方式">
+              <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
+            </el-form-item>
+            <el-form-item label="提货方式" prop="pickUpMode">
+              <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
+            </el-form-item>
             <el-form-item label="备注" prop="remark">
               <span>{{ detail.remark }}</span>
             </el-form-item>

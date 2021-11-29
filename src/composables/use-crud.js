@@ -296,6 +296,8 @@ function getDefaultOption() {
     params: {},
     // 当前行详情
     rowDetail: {},
+    // 详情通过接口加载
+    detailFormApi: true,
     // Form 表单
     form: {},
     // 批量添加表单
@@ -559,7 +561,7 @@ function addCrudBusinessMethod(crud) {
 
   // 打开详情
   const toDetail = async (data) => {
-    if (typeof crud.crudApi.detail === 'function') {
+    if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
       // 如果查询项不为id，则可改造方法，在crud中传入自定义字段
       data = await crud.crudApi.detail(data.id)
     }
@@ -1238,7 +1240,8 @@ function addCrudMethod(crud, data) {
   // 注册组件
   const registerVM = (type, vm, index = -1) => {
     const vmInfo = {
-      uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
+      uid: vm.uid,
+      uuid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
       CRUD: {

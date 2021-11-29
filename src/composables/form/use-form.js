@@ -4,6 +4,7 @@ import * as lodash from 'lodash'
 import useFormLocalStorage from '@/composables/form/use-form-local-storage'
 
 import { ElNotification } from 'element-plus'
+import { deepClone } from '@/utils/data-type'
 
 const FORM = {} // crud公共信息处理
 
@@ -165,7 +166,7 @@ function addCrudDefaultInfo(crud, data) {
     // 表格列
     tableColumns: {},
     status: {
-      edit: FORM.STATUS.NORMAL
+      edit: FORM.STATUS.PREPARED
     }
   })
 }
@@ -182,38 +183,13 @@ function addCrudBusinessMethod(crud) {
     if (!(await callVmHook(crud, FORM.HOOK.beforeToEdit, crud.form) && await callVmHook(crud, FORM.HOOK.beforeToCU, crud.form))) {
       return
     }
-    crud.status.edit = FORM.STATUS.PREPARED
     crud.submitResult = null
     await callVmHook(crud, FORM.HOOK.afterToEdit, crud.form)
     await callVmHook(crud, FORM.HOOK.afterToCU, crud.form)
   }
 
-  /**
-     * 取消新增/编辑
-     */
-  const cancelCU = async () => {
-    const editStatus = crud.status.edit
-
-    if (editStatus === FORM.STATUS.PREPARED) {
-      if (!await callVmHook(crud, FORM.HOOK.beforeEditCancel, crud.form)) {
-        return
-      }
-      crud.status.edit = FORM.STATUS.NORMAL
-    }
-    crud.resetForm()
-    if (editStatus === FORM.STATUS.PREPARED) {
-      await callVmHook(crud, FORM.HOOK.afterEditCancel, crud.form)
-    }
-    // 清除表单验证
-    if (crud.ref.form) {
-      nextTick(() => {
-        crud.ref.form.clearValidate()
-      })
-    }
-  }
-
   // 提交新增/编辑
-  const submitCU = async () => {
+  const submit = async () => {
     if (!verifySubmit()) {
       return
     }
@@ -240,10 +216,10 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.edit = FORM.STATUS.PROCESSING
-      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
+      const data = await crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.api(data)
       await callVmHook(crud, FORM.HOOK.afterAddSuccess)
-      crud.status.edit = FORM.STATUS.NORMAL
+      crud.status.edit = FORM.STATUS.PREPARED
       crud.submitSuccessNotify()
       crud.resetForm()
       // 清除表单验证
@@ -253,7 +229,6 @@ function addCrudBusinessMethod(crud) {
         })
       }
       await callVmHook(crud, FORM.HOOK.afterSubmit)
-      crud.refresh()
     } catch (error) {
       console.log('编辑', error)
       crud.status.edit = FORM.STATUS.PREPARED
@@ -269,8 +244,7 @@ function addCrudBusinessMethod(crud) {
   Object.assign(crud, {
     submitSuccessNotify, // 表单提交成功通知
     toEdit, // 启动编辑
-    cancelCU, // 取消新增/编辑
-    submitCU // 提交新增/编辑
+    submit // 提交新增/编辑
   })
 }
 
@@ -339,13 +313,14 @@ function addCrudMethod(crud, data) {
   // 初始化crud
   const init = () => {
     Object.assign(crud, lodash.cloneDeep(data))
-    crud.status.edit = FORM.STATUS.NORMAL
+    crud.status.edit = FORM.STATUS.PREPARED
   }
 
   // 注册组件
   const registerVM = (type, vm, index = -1) => {
     const vmInfo = {
-      uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
+      uid: vm.uid,
+      uuid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
       FORM: {
@@ -456,10 +431,6 @@ FORM.HOOK = {
   beforeValidateCU: 'beforeValidateCU',
   /** "新建/编辑" 验证 - 之后 */
   afterValidateCU: 'afterValidateCU',
-  /** 编辑取消 - 之前 */
-  beforeEditCancel: 'beforeEditCancel',
-  /** 编辑取消 - 之后 */
-  afterEditCancel: 'afterEditCancel',
   /** 提交 - 之前 */
   beforeSubmit: 'beforeSubmit',
   /** 提交 - 之后 */

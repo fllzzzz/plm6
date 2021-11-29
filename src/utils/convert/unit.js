@@ -12,7 +12,7 @@ import convert from 'convert-units'
  * @param {boolean} showUnit 是否显示单位
  * @param {boolean} isNum 是否转为数字
  */
-export function convertUnits(num, from, to, decimals = 10, showUnit = false, isNum = true) {
+export function convertUnits(num, from, to, decimals = 10, { showUnit = false, isNum = true } = {}) {
   if (num === undefined || num === null || isNaN(+num)) return num
   if (!from || !to) return num
   const _to = to === 't' ? 'mt' : to

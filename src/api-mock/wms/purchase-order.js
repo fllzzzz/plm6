@@ -33,7 +33,7 @@ const getPurchaseOrder = {
             'taxRate|1-4': 3, // 税率（百分比）
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
-            weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
+            weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '@cparagraph', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
@@ -104,7 +104,7 @@ const getPurchasingPurchaseOrderBrief = {
             id: 1, // 订单id
             purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
             supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
-            basicClass: 1, // 采购物料基础类型
+            basicClass: 7, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
             'projects|2': [
               {
@@ -114,7 +114,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
             requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             supplier: {
               id: 1,
@@ -135,6 +137,8 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             strucAreaIds: [1, 5], // 构件区域id
             enclAreaIds: [2], // 围护区域id
@@ -183,7 +187,7 @@ const detail = {
         'taxRate|1-4': 3, // 税率（百分比）
         invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
         pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
-        weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+        weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
         purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
         remark: '@cparagraph', // 备注
         attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件

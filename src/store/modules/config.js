@@ -1,8 +1,9 @@
 import { getMatClsTree, get as getClassificationTree } from '@/api/config/classification-manage/classification-config'
+import { getFinalMatClsById } from '@/api/config/classification-manage/common'
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
-import { getFinalMatClsById, getUserTree, getRegionalCascade } from '@/api/common'
+import { getUserTree, getRegionalCascade } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
@@ -15,7 +16,7 @@ import { getPurchasingPurchaseOrderBrief } from '@/api/wms/purchase-order'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
-import { setEmptyArr2Undefined } from '@/utils/data-type/tree'
+import { setEmptyArr2Undefined, tree2list } from '@/utils/data-type/tree'
 import { isBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
@@ -25,6 +26,7 @@ const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
   rawMatClsTree: [], // 普通物料科目树（不含制成品）
+  manufClsTree: [], // 制成品科目树
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
@@ -65,23 +67,29 @@ const mutations = {
   SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
   },
-  SET_TAX_RATE(state, list) {
+  SET_TAX_RATE(state, list = []) {
     state.taxRateKV = {}
     list.forEach(v => {
       state.taxRateKV[v.classification] = v.taxRateList
     })
   },
-  SET_MAT_CLS_TREE(state, tree) {
+  SET_MAT_CLS_TREE(state, tree = []) {
     state.matClsTree = tree
     state.rawMatClsTree = tree.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsTree = tree.filter(t => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
-  SET_CLS_TREE(state, tree) {
+  SET_MAT_CLS_LIST(state, list = []) {
+    state.matClsList = list
+    state.rawMatClsList = list.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsList = list.filter(t => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+  },
+  SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
   },
   SET_UNIT(state, unit) {
     state.unit = unit
   },
-  SET_FACTORIES(state, factories) {
+  SET_FACTORIES(state, factories = []) {
     state.factories = factories
     // 生产工厂kv
     state.factoryKV = {}
@@ -142,7 +150,10 @@ const actions = {
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
     const tree = formatClsTree(res)
+    const list = tree2list(tree)
     commit('SET_MAT_CLS_TREE', tree)
+    commit('SET_MAT_CLS_LIST', list)
+
     commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
@@ -297,7 +308,7 @@ const actions = {
     for (const id of classifyIds) {
       const ps = getFinalMatClsById(id).then((res) => {
         const clsSimple = {
-          id: res.id,
+          id: id,
           name: res.name,
           fullName: res.fullName,
           serialNumber: res.serialNumber, // 编码
@@ -316,11 +327,16 @@ const actions = {
               name: sc.name,
               index: ci,
               list: sc.list.map((v, i) => {
-                return {
+                const spec = {
                   index: i,
                   code: v.code,
                   name: v.name
                 }
+                // 型材加入单位净重
+                if (res.basicClass === matClsEnum.SECTION_STEEL.V) {
+                  spec.unitWeight = v.unitWeight
+                }
+                return spec
               })
             }
           }),
@@ -367,6 +383,9 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
+          if (classify.basicClass === matClsEnum.SECTION_STEEL.V) {
+            arr[currentIndex].unitWeight = spec.unitWeight
+          }
         }
       }
     }
@@ -376,6 +395,7 @@ function getSpecList(classify, specConfig) {
     v.spec = v.arr.join('*') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}
+    v.specificationLabels = specConfig.map(v => v.name).join(' * ')
     v.specNameKV = {}
     v.specArrKV = []
     v.arr.forEach((c, i) => {

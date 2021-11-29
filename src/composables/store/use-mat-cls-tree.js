@@ -28,6 +28,7 @@ const useMatClsTree = (loadedCallBack) => {
 
   return {
     rawMatClsTree: computed(() => store.state.config.rawMatClsTree),
+    manufClsTree: computed(() => store.state.config.manufClsTree),
     matClsTree: computed(() => store.state.config.matClsTree),
     loaded
   }
