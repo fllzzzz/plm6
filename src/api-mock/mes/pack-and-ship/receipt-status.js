@@ -1,5 +1,5 @@
 import {
-  validatorLicensePlate,
+  patternLicensePlate,
   validatorPhone
 } from '@/utils/validate/pattern'
 import commonDetailRes from './common-detail'
@@ -27,7 +27,7 @@ const getReceiptList = {
           'manufactureType|1': [0, 1],
           'productType|1': [2, 4, 8],
           'serialNumber': '@datetime("yyyy-MM-dd")',
-          'licensePlate': validatorLicensePlate,
+          'licensePlate': patternLicensePlate,
           'driverName': '@cname',
           'driverPhone': validatorPhone,
           'auditUserName': '@cname',

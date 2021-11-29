@@ -8,20 +8,18 @@
     width="85vw"
     @closed="handleClose"
   >
-    <template #tip>
-      <slot name="tip" />
-    </template>
-    <template #titleAfter>
-      <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.packageNumber }}</el-tag>
-    </template>
+    <template #titleAfter> <slot name="tip"></slot> </template>
     <template #titleRight>
       <slot name="titleRight" />
     </template>
     <div class="head-container" v-if="!isShowPrice">
-      <el-radio-group v-model="monomerStatus" class="filter-item" size="small">
-        <el-radio-button :label="SummaryStatusEnum.PROCESS.V">{{ SummaryStatusEnum.PROCESS.L }}</el-radio-button>
-        <el-radio-button :label="SummaryStatusEnum.SUSPEND.V">{{ SummaryStatusEnum.SUSPEND.L }}</el-radio-button>
-      </el-radio-group>
+      <common-radio-button
+        v-model="monomerStatus"
+        :options="SummaryStatusEnum"
+        type="enum"
+        size="small"
+        class="filter-item"
+      />
     </div>
     <slot name="contract" :contract="contract"></slot>
     <component

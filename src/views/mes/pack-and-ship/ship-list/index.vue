@@ -187,8 +187,8 @@
     <m-detail v-model:visible="detailVisible" :detail-info="shipInfo" title="装车详情" :detailFunc="detail">
       <template #tip>
         <el-tag effect="plain" size="medium" style="margin-left: 5px" type="danger">车次：{{ shipInfo.serialNumber }}</el-tag>
-        <el-tag effect="plain" size="medium" style="margin-left: 5px">项目：{{ shipInfo.project && shipInfo.project.shortName }}</el-tag>
-        <el-tag effect="plain" size="medium" style="margin-left: 5px" type="success">办理人：{{ shipInfo.auditUserName }}</el-tag>
+        <el-tag effect="plain" size="medium">项目：{{ shipInfo.project && shipInfo.project.shortName }}</el-tag>
+        <el-tag effect="plain" size="medium" type="success">办理人：{{ shipInfo.auditUserName }}</el-tag>
       </template>
     </m-detail>
   </div>

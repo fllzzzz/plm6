@@ -1,5 +1,5 @@
 import {
-  validatorLicensePlate
+  patternLicensePlate
 } from '@/utils/validate/pattern'
 import commonDetailRes from './common-detail'
 
@@ -29,7 +29,7 @@ const getShipAuditList = {
             'priceType|1': [1, 2],
             'price|1-1000.1-8': 10.00000000
           },
-          'licensePlate': validatorLicensePlate,
+          'licensePlate': patternLicensePlate,
           'serialNumber': '@datetime',
           'actualTime': '@datetime',
           'loadingTime': '@datetime',
