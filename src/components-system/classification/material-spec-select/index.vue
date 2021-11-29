@@ -113,6 +113,10 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 600
+  },
+  visible: { // 用于当前组件父组件可能被隐藏的情况下，无法正常计算规格tag的宽度
+    type: Boolean,
+    default: true
   }
 })
 
@@ -181,23 +185,25 @@ watch(
 
 // 规格列表参数变更时，重新计算宽度
 watch(
-  () => matCls.value.specList,
-  () => {
-    calcSpecWidth()
+  [() => props.visible, () => matCls.value.specList],
+  ([visible]) => {
+    if (visible) {
+      calcSpecWidth()
+    }
   }
 )
 
 // 监听material-spec-select，避免当页面被隐藏时，classify变化导致规格列表更新却并没有重新计算宽度的情况
-const observer = new MutationObserver(calcSpecWidth)
+// const observer = new MutationObserver(calcSpecWidth)
 
 onMounted(() => {
-  const targetNode = document.getElementById('material-spec-select')
-  targetNode ? observer.observe(targetNode, { attributes: true }) : ''
+  // const targetNode = document.getElementById('material-spec-select')
+  // targetNode ? observer.observe(targetNode, { attributes: true }) : ''
   window.addEventListener('resize', calcSpecWidth, { passive: false })
 })
 
 onBeforeUnmount(() => {
-  observer.disconnect() // 关闭监听
+  // observer.disconnect() // 关闭监听
   window.removeEventListener('resize', calcSpecWidth)
 })
 

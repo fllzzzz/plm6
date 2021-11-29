@@ -21,11 +21,11 @@ const getWmsConfig = {
             // 差值类型（g 或 %）
             steelDiffType: numOrPctEnum.NUMBER.V,
             // 误差超过范围可提交
-            overDiffSubmittable: whetherEnum.FALSE.V
+            overDiffSubmittable: whetherEnum.TRUE.V
           },
           fillWay: {
-            amountFillWay: inboundFillWayEnum.AUDITING.V, // 金额填写场景
-            factoryFillWay: inboundFillWayEnum.APPLICATION.V // 工厂填写场景
+            amountFillWay: inboundFillWayEnum.APPLICATION.V, // 金额填写场景
+            warehouseFillWay: inboundFillWayEnum.APPLICATION.V // 存储位置填写场景
           },
           printLabelTipWay: { // 打印标签提示场景
             afterApplication: true, // 入库申请提交后
@@ -52,7 +52,7 @@ const getInboundBasicConf = {
       message: '成功',
       data: {
         'amountFillWay': inboundFillWayEnum.AUDITING.V, // 金额填写场景
-        'factoryFillWay': inboundFillWayEnum.APPLICATION.V, // 工厂填写场景
+        'warehouseFillWay': inboundFillWayEnum.APPLICATION.V, // 存储位置填写场景
         'printLabelTipWay': { // 打印标签提示场景
           afterApplication: true,
           afterAudit: true

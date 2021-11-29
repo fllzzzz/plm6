@@ -13,6 +13,7 @@ import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief } from '@/api/wms/purchase-order'
+import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
@@ -32,6 +33,7 @@ const state = {
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
   factoryKV: {}, // 工厂id:value 格式
+  warehouse: [], // 存储仓库
   workshops: [], // 车间
   productLines: [], // 生产线
   process: [], // 工序
@@ -47,6 +49,7 @@ const state = {
   loaded: {
     // 接口是否加载
     factories: false,
+    warehouse: false,
     workshops: false,
     productLines: false,
     process: false,
@@ -99,6 +102,9 @@ const mutations = {
   },
   SET_WORKSHOPS(state, workshops) {
     state.workshops = workshops
+  },
+  SET_WAREHOUSE(state, warehouse) {
+    state.warehouse = warehouse
   },
   SET_PRODUCT_LINES(state, productLines) {
     state.productLines = productLines
@@ -226,6 +232,13 @@ const actions = {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
     commit('SET_LOADED', { key: 'factories' })
+    return content
+  },
+  // 仓库
+  async fetchWarehouse({ commit }) {
+    const content = await getWarehouseBrief() || []
+    commit('SET_WAREHOUSE', content)
+    commit('SET_LOADED', { key: 'warehouse' })
     return content
   },
   async fetchWorkshops({ commit }) {

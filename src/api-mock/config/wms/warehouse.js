@@ -1,6 +1,28 @@
 import { enabledEnum } from '@enum-ms/common'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 
+// 获取仓库位置（简要的）
+const getWarehouseBrief = {
+  url: '/api/wms/config/material/warehouse/all/brief',
+  method: 'get',
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      'data|30': [
+        {
+          factoryId: 1,
+          'id|+1': 1,
+          name: '@increment()' + '号仓库',
+          'type|1-2': warehouseTypeEnum.NORMAL.V,
+          'materialType|1-64': 1,
+          'enabled|1-2': enabledEnum.TRUE.V
+        }
+      ]
+    }
+  }
+}
+
 // 获取仓库位置
 const getWarehouse = {
   url: '/api/wms/config/material/warehouse',
@@ -10,19 +32,20 @@ const getWarehouse = {
       code: 20000,
       message: '成功',
       data: {
-        'content|10': [{
-          'createTime': 1621315424103,
-          'factoryId': 1,
-          'id|+1': 1,
-          'name': '@increment()' + '号仓库',
-          'type|1-2': warehouseTypeEnum.NORMAL.V,
-          'materialType|1-64': 1,
-          'sort|+1': 1,
-          'enabled|1-2': enabledEnum.TRUE.V,
-          'updateTime': 1621315424103
-        }
+        'content|10': [
+          {
+            createTime: 1621315424103,
+            factoryId: 1,
+            'id|+1': 1,
+            name: '@increment()' + '号仓库',
+            'type|1-2': warehouseTypeEnum.NORMAL.V,
+            'materialType|1-64': 1,
+            'sort|+1': 1,
+            'enabled|1-2': enabledEnum.TRUE.V,
+            updateTime: 1621315424103
+          }
         ],
-        'totalElements': 10
+        totalElements: 10
       }
     }
   }
@@ -93,11 +116,4 @@ const delWarehouse = {
   }
 }
 
-export default [
-  getWarehouse,
-  addWarehouse,
-  batchAddWarehouse,
-  editWarehouse,
-  editEnabled,
-  delWarehouse
-]
+export default [getWarehouseBrief, getWarehouse, addWarehouse, batchAddWarehouse, editWarehouse, editEnabled, delWarehouse]

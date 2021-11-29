@@ -41,6 +41,7 @@
       ref="specRef"
       class="right-container spec-select"
       v-model="list"
+      :visible="props.visible"
       :classifyId="classify.id"
       :row-init-fn="props.rowInitFn"
       :mode="props.mode"
@@ -89,6 +90,10 @@ const props = defineProps({
   autoSelected: {
     type: Boolean,
     default: false
+  },
+  visible: {
+    type: Boolean,
+    default: true
   }
 })
 

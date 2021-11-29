@@ -48,6 +48,7 @@
           v-if="currentBasicClass"
           ref="matSpecRef"
           v-model="list"
+          :visible="materialSelectVisible"
           :row-init-fn="rowInit"
           :max-height="specSelectMaxHeight"
           :basic-class="steelBasicClassKV[currentBasicClass].V"
@@ -61,7 +62,7 @@
 
 <script setup>
 // TODO: 编辑，反向赋值
-import { steelInboundApplication } from '@/api/wms/supplier/inbound/application'
+import { steelInboundApplication } from '@/api/wms/inbound/application'
 import { ref, computed, watch, provide, nextTick } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -108,7 +109,7 @@ const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
 const totalWeight = ref() // 总重
-const steelRefList = {
+let steelRefList = {
   // 钢材三个组件的ref列表
   steelPlateList: undefined,
   sectionSteelList: undefined,
@@ -167,17 +168,19 @@ watch(
   currentBasicClass,
   (k) => {
     list.value = form[k]
-    nextTick(() => {
+    if (k) {
+      nextTick(() => {
       // nextTick 后 steelRef.value 才会发生变化
-      if (!steelRefList[k]) steelRefList[k] = steelRef.value
-    })
+        if (!steelRefList[k]) steelRefList[k] = steelRef.value
+      })
+    }
   },
   { immediate: true }
 )
 
 // 监听list变更,为对应的钢材清单赋值，监听地址即可
 watch(list, (val) => {
-  form[currentBasicClass] = val
+  form[currentBasicClass.value] = val
 })
 
 // 初始化
@@ -298,13 +301,19 @@ function handleOrderInfoChange(orderInfo) {
   if (orderInfo) {
     Object.keys(steelBasicClassKV).forEach((k) => {
       if (steelBasicClassKV[k].V & orderInfo.basicClass) {
-        if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K
+        if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
         disabledBasicClass.value[k] = false
       }
     })
+    // 默认赋值
+    nextTick(() => {
+      steelRefList[currentBasicClass.value] = steelRef.value
+    })
+  } else {
+    nextTick(() => {
+      steelRefList = {}
+    })
   }
-  // 默认赋值
-  steelRefList[currentBasicClass.value] = steelRef.value
 }
 
 // 信息初始化

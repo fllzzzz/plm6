@@ -19,10 +19,10 @@
       <template #default="{ row }">
         <el-input-number
           v-model="row.thickness"
+          :min="0"
           :max="999999"
           controls-position="right"
           :controls="false"
-          :min="0"
           :precision="baseUnit.thickness.precision"
           size="mini"
           placeholder="厚"
@@ -33,10 +33,10 @@
       <template #default="{ row }">
         <el-input-number
           v-model="row.width"
+          :min="0"
           :max="999999"
           controls-position="right"
           :controls="false"
-          :min="0"
           :precision="0"
           size="mini"
           placeholder="宽"
@@ -52,11 +52,11 @@
       <template #default="{ row }">
         <el-input-number
           v-model="row.number"
+          :min="1"
           :max="999999999"
           controls-position="right"
           :controls="false"
-          :min="1"
-          :step="5"
+          :step="1"
           :precision="0"
           size="mini"
           placeholder="数量"
@@ -80,10 +80,10 @@
         >
           <el-input-number
             v-model="row.weighingTotalWeight"
+            :min="0"
             :max="999999999"
             controls-position="right"
             :controls="false"
-            :min="0"
             :precision="baseUnit.weight.precision"
             size="mini"
             placeholder="重量"
@@ -113,6 +113,7 @@
 <script setup>
 import { defineEmits, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -121,7 +122,6 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
-import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['calc-weight'])
 
@@ -218,6 +218,7 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
+  if (isBlank(form.steelPlateList)) return true
   const { validResult, dealList } = tableValidate(form.steelPlateList)
   form.steelPlateList = dealList
   return validResult
