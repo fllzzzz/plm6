@@ -33,7 +33,7 @@
       >
         <template v-slot="scope">
           <template v-for="(item, index) in scope.row.materialType" :key="index">
-            <el-tag  effect="plain" style="margin-right: 5px">{{ materialClassificationEnum.VL[item] }}</el-tag>
+            <el-tag  effect="plain" style="margin-right: 5px">{{ matClsEnum.VL[item] }}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -100,7 +100,7 @@
 import crudApi, { editEnabled } from '@/api/config/wms/warehouse'
 import { ref } from 'vue'
 import EO from '@enum'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
@@ -152,7 +152,7 @@ const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled }
 CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
   content.forEach(v => {
     const mt = v.materialType
-    v.materialType = EO.getBits(materialClassificationEnum.ENUM, mt, 'V')
+    v.materialType = EO.getBits(matClsEnum.ENUM, mt, 'V')
   })
 }
 </script>

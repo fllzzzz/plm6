@@ -12,7 +12,7 @@
     <template #titleRight>
       <span style="float:right">
         <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">提 交</common-button>
-        <store-opertaion type="crud" />
+        <store-operation type="crud" />
         <common-button size="mini" @click="crud.cancelCU">关 闭</common-button>
       </span>
     </template>
@@ -152,7 +152,7 @@ import { getLabelByBit } from '@/utils/enum/base'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
-import storeOpertaion from '@crud/STORE.opertaion'
+import storeOperation from '@crud/STORE.operation'
 import regionCascader from '@comp-base/region-cascader'
 import uploadList from '@/components/file-upload/uploadList'
 

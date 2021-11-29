@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
         提 交
       </common-button>
-      <store-opertaion v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" />
+      <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" />
     </template>
     <template #content>
       <div class="main-content">
@@ -75,8 +75,8 @@
                 v-if="baseMaterialTypeEnum.MANUFACTURED.V === form.purchaseType && form.basicClass && isNotBlank(form.projectIds)"
                 v-model:struc="form.strucAreaIds"
                 v-model:encl="form.enclAreaIds"
-                :show-struc="!!(form.basicClass & materialClassificationEnum.STRUC_MANUFACTURED.V)"
-                :show-encl="!!(form.basicClass & materialClassificationEnum.ENCL_MANUFACTURED.V)"
+                :show-struc="!!(form.basicClass & matClsEnum.STRUC_MANUFACTURED.V)"
+                :show-encl="!!(form.basicClass & matClsEnum.ENCL_MANUFACTURED.V)"
                 :project-ids="form.projectIds"
                 :disabled="form.boolUsed"
                 checkable
@@ -186,12 +186,12 @@
             <el-form-item class="el-form-item-14" prop="remark">
               <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
             </el-form-item>
-            <el-form-item class="el-form-item-15" prop="attachment">
+            <el-form-item class="el-form-item-15" prop="attachments">
               <!-- :show-download="!!form.id" -->
               <upload-list
                 show-download
                 :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
-                v-model:files="form.attachment"
+                v-model:files="form.attachments"
                 empty-text="暂未上传采购订单附件"
               />
             </el-form-item>
@@ -204,7 +204,7 @@
 
 <script setup>
 import { ref, watch, computed, nextTick } from 'vue'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
@@ -220,7 +220,7 @@ import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
 import uploadList from '@/components/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
-import StoreOpertaion from '@crud/STORE.opertaion.vue'
+import StoreOperation from '@crud/STORE.operation.vue'
 
 const defaultForm = {
   serialNumber: undefined, // 采购订单编号
@@ -241,7 +241,7 @@ const defaultForm = {
   pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
   remark: undefined, // 备注
-  attachment: undefined, // 附件
+  attachments: undefined, // 附件
   attachmentIds: undefined // 附件ids
 }
 
@@ -260,11 +260,11 @@ const validateInvoiceType = (rule, value, callback) => {
 }
 
 const validateArea = (rule, value, callback) => {
-  if (form.basicClass & materialClassificationEnum.STRUC_MANUFACTURED.V && isBlank(form.strucAreaIds)) {
+  if (form.basicClass & matClsEnum.STRUC_MANUFACTURED.V && isBlank(form.strucAreaIds)) {
     callback(new Error('请选择构件区域'))
     return
   }
-  if (form.basicClass & materialClassificationEnum.ENCL_MANUFACTURED.V && isBlank(form.enclAreaIds)) {
+  if (form.basicClass & matClsEnum.ENCL_MANUFACTURED.V && isBlank(form.enclAreaIds)) {
     callback(new Error('请选择围护区域'))
     return
   }
@@ -337,7 +337,7 @@ useWatchFormValidate(formRef, form, [['areaIds', ['purchaseType', 'basicClass', 
 watch(
   () => form.basicClass,
   (bc) => {
-    if (bc & materialClassificationEnum.GAS.V) {
+    if (bc & matClsEnum.GAS.V) {
       // 气体只能选择到厂
       form.pickUpMode = pickUpModeEnum.SUPPLIER.V
       pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
@@ -358,7 +358,7 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
 
 // 表单提交数据清理
 crud.submitFormFormat = (form) => {
-  form.attachmentIds = form.attachment ? form.attachment.map((v) => v.id) : undefined
+  form.attachmentIds = form.attachments ? form.attachments.map((v) => v.id) : undefined
   return form
 }
 </script>

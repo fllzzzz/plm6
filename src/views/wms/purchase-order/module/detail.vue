@@ -6,7 +6,7 @@
     :title="crud.detailTitle"
     :show-close="true"
     :size="1000"
-    custom-class="purchase-order-form"
+    custom-class="purchase-order-detail"
   >
     <template #content>
       <div class="main-content">
@@ -22,8 +22,8 @@
 
             <el-form-item label="物料种类" prop="basicClass">
               <div class="flex-rss child-mr-10">
-                <span v-parse-enum="{ e: baseMaterialTypeEnum, v: detail.purchaseType }" />：
-                <span v-parse-enum="{ e: materialClassificationEnum, v: detail.basicClass, bit: true, split: ' | ' }" />
+                <span v-parse-enum="{ e: baseMaterialTypeEnum, v: detail.purchaseType, extra: '：' }" />
+                <span v-parse-enum="{ e: matClsEnum, v: detail.basicClass, bit: true, split: ' | ' }" />
               </div>
             </el-form-item>
 
@@ -43,16 +43,16 @@
                 <span v-parse-enum="{ e: invoiceTypeEnum, v: detail.invoiceType }" />
                 <span v-if="detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">（{{ detail.taxRate }}%）</span>
               </el-form-item>
-              <el-form-item prop="weightMeasurementMode" label="计量方式">
-                <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
-              </el-form-item>
-              <el-form-item label="提货方式" prop="pickUpMode">
-                <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
-              </el-form-item>
               <el-form-item label="订单类型" prop="purchaseOrderPaymentMode">
                 <span v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: detail.purchaseOrderPaymentMode }" />
               </el-form-item>
             </template>
+            <el-form-item prop="weightMeasurementMode" label="计量方式">
+              <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
+            </el-form-item>
+            <el-form-item label="提货方式" prop="pickUpMode">
+              <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
+            </el-form-item>
             <el-form-item label="备注" prop="remark">
               <span>{{ detail.remark }}</span>
             </el-form-item>
@@ -86,7 +86,7 @@
               <span v-parse-time>{{ detail.createTime }}</span>
             </el-form-item>
             <el-form-item label="编辑日期" prop="founderName">
-              <span v-parse-time>{{ detail.userEditTime }}</span>
+              <span v-parse-time>{{ detail.userUpdateTime }}</span>
             </el-form-item>
 
             <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">
@@ -98,8 +98,8 @@
               v-if="baseMaterialTypeEnum.MANUFACTURED.V === detail.purchaseType && detail.basicClass && isNotBlank(detail.projectIds)"
               v-model:struc="detail.strucAreaIds"
               v-model:encl="detail.enclAreaIds"
-              :show-struc="!!(detail.basicClass & materialClassificationEnum.STRUC_MANUFACTURED.V)"
-              :show-encl="!!(detail.basicClass & materialClassificationEnum.ENCL_MANUFACTURED.V)"
+              :show-struc="!!(detail.basicClass & matClsEnum.STRUC_MANUFACTURED.V)"
+              :show-encl="!!(detail.basicClass & matClsEnum.ENCL_MANUFACTURED.V)"
               :project-ids="detail.projectIds"
               only-show-checked
               style="width: 100%"
@@ -121,7 +121,7 @@
 </template>
 
 <script setup>
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'

@@ -47,6 +47,9 @@ const getters = {
   // 用户部门树
   userDeptTree: state => state.config.userDeptTree,
 
+  // 基础单位
+  baseUnit: state => state.wms.baseUnit,
+
   // token 访问令牌
   token: state => state.user.token,
   // 用户信息

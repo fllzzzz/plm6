@@ -9,15 +9,15 @@ import { ElMessage } from 'element-plus'
  * @param {object} rules 校验规则
  * @param {map} dittos=[] 含“同上”选项或值的字段。例： { name：'id', value: -1 }
  */
-export default function useTableValidate({ rules = {}, dittos = new Map() }) {
+export default function useTableValidate({ rules = {}, dittos = new Map(), errorMsg = '请修正表格中标红的信息' }) {
   return {
-    tableValidate: (list) => tableValidate(list, rules, dittos),
+    tableValidate: (list) => tableValidate(list, rules, dittos, errorMsg),
     wrongCellMask: (tableInfo) => wrongCellMask(tableInfo, rules),
     cleanUpData: (list) => cleanUpData(list, dittos)
   }
 }
 
-function tableValidate(list, tableRules, dittos) {
+function tableValidate(list, tableRules, dittos, errorMsg) {
   const rules = getRules(tableRules)
   let flag = true
   let message = '请填写数据'
@@ -62,7 +62,7 @@ function tableValidate(list, tableRules, dittos) {
 
       row.verify = {}
       for (const rule in rules) {
-        row.verify[rule] = validate(rules[rule], row[rule])
+        row.verify[rule] = validate(rules[rule], row[rule], row)
         if (!row.verify[rule]) {
           flag = false
         }
@@ -76,7 +76,7 @@ function tableValidate(list, tableRules, dittos) {
     }
 
     if (!flag) {
-      message = '请修正表格中标红的信息'
+      message = errorMsg
     }
 
     // 数据为空(全部空行的情况)
@@ -106,7 +106,7 @@ export function wrongCellMask({ row, column }, tableRules) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(rules[column.property], row[column.property])
+      flag = validate(rules[column.property], row[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -137,20 +137,12 @@ export function validate(rules, value, row = {}) {
       }
     }
     const required = rule.required
-    if (required === true) {
-      if (typeof value !== 'string' && !value) {
-        flag = false
-      }
-      if (typeof value !== 'number' && (!value && value !== 0)) {
-        flag = false
-      }
-      if (value instanceof Array && (!value || value.length === 0)) {
-        flag = false
-      }
+    if (required === true && isBlank(value)) {
+      flag = false
       break
     }
     const type = rule.type
-    if (type && (typeof value !== type)) {
+    if (type && typeof value !== type) {
       flag = false
       break
     }
@@ -165,7 +157,7 @@ export function validate(rules, value, row = {}) {
 }
 
 // 清理数据
-export function cleanUpData(list, dittos) {
+export function cleanUpData(list, dittos = new Map()) {
   const copyList = lodash.cloneDeep(list)
   list.length = 0
   // 清空数组, 保留数组地址不变
@@ -204,9 +196,11 @@ function getRules(rules) {
   let _rules
   switch (rules.constructor.name) {
     case 'RefImpl':
-    case 'ComputedRefImpl': _rules = rules.value
+    case 'ComputedRefImpl':
+      _rules = rules.value
       break
-    default: _rules = rules
+    default:
+      _rules = rules
       break
   }
   return _rules

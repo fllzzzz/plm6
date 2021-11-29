@@ -15,6 +15,7 @@
 <script setup>
 import { defineProps, defineEmits, watch, ref } from 'vue'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
+import { ElRadioGroup } from 'element-plus'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 

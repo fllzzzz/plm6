@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 获取wms配置
+export function getWmsConfig() {
+  return request({
+    module: 'wms',
+    url: 'config/all',
+    method: 'get'
+  })
+}
+
 // 获取入库基础配置
 export function getInboundBasicConf() {
   return request({

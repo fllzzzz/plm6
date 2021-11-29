@@ -1,0 +1,228 @@
+<template>
+  <common-table
+    v-bind="$attrs"
+    :data="form.steelCoilList"
+    :cell-class-name="wrongCellMask"
+    :expand-row-keys="expandRowKeys"
+    row-key="uid"
+  >
+    <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+      <template #default="{ row }">
+        <el-input v-model="row.remark" :rows="1" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
+      </template>
+    </el-expand-table-column>
+    <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
+    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
+    <el-table-column prop="classifyFullName" label="物料种类" align="center" width="120px" fixed="left" />
+    <el-table-column prop="specification" label="规格" align="center" width="120px" fixed="left">
+      <template #default="{ row }">
+        <el-tooltip :content="row.specificationLabels" placement="top">
+          <span>{{ row.specification }}</span>
+        </el-tooltip>
+      </template>
+    </el-table-column>
+    <el-table-column
+      key="weighingTotalWeight"
+      prop="weighingTotalWeight"
+      align="center"
+      :label="`总重 (${baseUnit.weight.unit})`"
+      width="135px"
+    >
+      <template #default="{ row }">
+          <el-input-number
+            v-model="row.weighingTotalWeight"
+            :max="999999999"
+            controls-position="right"
+            :controls="false"
+            :min="0"
+            :precision="baseUnit.weight.precision"
+            size="mini"
+            placeholder="重量"
+            @change="emit('calc-weight')"
+          />
+      </template>
+    </el-table-column>
+    <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (mm)`">
+      <template #default="{ row }">
+        <el-input-number
+          v-model="row.thickness"
+          :max="999999"
+          controls-position="right"
+          :controls="false"
+          :min="0"
+          :precision="baseUnit.thickness.precision"
+          size="mini"
+          placeholder="厚"
+        />
+      </template>
+    </el-table-column>
+    <el-table-column prop="width" align="center" width="135px" :label="`宽 (mm)`">
+      <template #default="{ row }">
+        <el-input-number
+          v-model="row.width"
+          :max="999999"
+          controls-position="right"
+          :controls="false"
+          :min="0"
+          :precision="0"
+          size="mini"
+          placeholder="宽"
+        />
+      </template>
+    </el-table-column>
+    <el-table-column prop="length" align="center" width="135px" :label="`长 (mm)`">
+      <template #default="{ row }">
+        <el-input-number
+          v-model="row.length"
+          :max="999999"
+          :controls="false"
+          :min="0"
+          :precision="0"
+          size="mini"
+          placeholder="长"
+        />
+      </template>
+    </el-table-column>
+    <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+      <template #default="{ row }">
+        <el-input-number
+          v-model="row.number"
+          :max="999999999"
+          controls-position="right"
+          :controls="false"
+          :min="1"
+          :step="5"
+          :precision="0"
+          size="mini"
+          placeholder="数量"
+        />
+      </template>
+    </el-table-column> -->
+    <el-table-column prop="color" label="颜色" align="center" width="140px">
+      <template #default="{ row }">
+        <el-input v-model.trim="row.color" maxlength="20" size="mini" placeholder="颜色" />
+      </template>
+    </el-table-column>
+    <el-table-column prop="brand" label="品牌" align="center" min-width="100px">
+      <template #default="{ row }">
+        <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
+      </template>
+    </el-table-column>
+    <el-table-column prop="heatNoAndBatchNo" label="炉批号/卷号" align="center" min-width="150px">
+      <template #default="{ row }">
+        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号/卷号" />
+      </template>
+    </el-table-column>
+    <el-table-column label="操作" width="70" align="center" fixed="right">
+      <template #default="{ row, $index }">
+        <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
+      </template>
+    </el-table-column>
+  </common-table>
+</template>
+
+<script setup>
+import { defineEmits, defineExpose, ref, inject, watchEffect, reactive } from 'vue'
+import { matClsEnum } from '@/utils/enum/modules/classification'
+
+import { regExtra } from '@/composables/form/use-form'
+import useTableValidate from '@compos/form/use-table-validate'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import { createUniqueString } from '@/utils/data-type/string'
+import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
+import { isNotBlank } from '@/utils/data-type'
+
+const emit = defineEmits(['calc-weight'])
+
+// 当前物料基础类型
+const basicClass = matClsEnum.STEEL_PLATE.V
+
+const tableRules = {
+  classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
+  width: [{ required: true, message: '请填写宽度', trigger: 'blur' }],
+  thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
+  weighingTotalWeight: [{ required: true, message: '请填写重量', trigger: 'blur' }],
+  length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
+  number: [{ required: true, message: '请填写数量', trigger: 'blur' }]
+}
+
+const matSpecRef = inject('matSpecRef') // 调用兄弟组件matSpecRef
+const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
+const { form } = regExtra() // 表单
+const expandRowKeys = ref([]) // 展开行key
+
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢卷清单】中标红的信息' }) // 表格校验
+
+// 行初始化
+function rowInit(row) {
+  const _row = reactive({
+    uid: createUniqueString(),
+    sn: row.sn, // 该科目规格唯一编号
+    specificationLabels: row.specificationLabels, // 规格中文
+    serialNumber: row.classify.serialNumber, // 科目编号
+    classifyId: row.classify.id, // 科目id
+    classifyFullName: row.classify.fullName, // 全路径名称
+    basicClass: row.classify.basicClass, // 基础类型
+    specification: row.spec, // 规格
+    specificationMap: row.specKV, // 规格KV格式
+    measureUnit: row.classify.measureUnit, // 计量单位
+    accountingUnit: row.classify.accountingUnit, // 核算单位
+    accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
+    measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
+    number: 1, // 数量
+    color: undefined, // 颜色
+    brand: undefined, // 品牌
+    heatNoAndBatchNo: undefined, // 炉批号
+    thickness: undefined, // 厚度
+    length: undefined, // 长度
+    width: undefined, // 宽度
+    theoryLength: undefined, // 理论单件重量
+    weighingTotalWeight: undefined // 过磅重量
+  })
+  watchEffect(() => calcTheoryLength(_row))
+  watchEffect(() => calcTotalLength(_row))
+  return _row
+}
+
+// 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
+// 计算单件重量
+function calcTheoryLength(row) {
+  row.theoryLength = calcSteelCoilLength({
+    weight: row.weighingTotalWeight,
+    width: row.width,
+    thickness: row.thickness,
+    weightUnit: baseUnit.value.weight.unit,
+    lengthUnit: baseUnit.value.length.unit,
+    weightPrecision: baseUnit.value.weight.precision,
+    lengthPrecision: baseUnit.value.weight.precision
+  })
+}
+
+// 计算总长
+function calcTotalLength(row) {
+  if (isNotBlank(row.theoryLength) && row.number) {
+    row.length = row.theoryLength * row.number
+  } else {
+    row.length = undefined
+  }
+}
+
+// 删除行
+function delRow(sn, $index) {
+  matSpecRef.value.delListItem(sn, $index)
+  emit('calc-weight')
+}
+
+// 校验
+function validate() {
+  const { validResult, dealList } = tableValidate(form.steelCoilList)
+  form.steelCoilList = dealList
+  return validResult
+}
+
+defineExpose({
+  rowInit,
+  validate
+})
+</script>

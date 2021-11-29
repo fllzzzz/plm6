@@ -1,8 +1,9 @@
 import { getMatClsTree, get as getClassificationTree } from '@/api/config/classification-manage/classification-config'
+import { getFinalMatClsById } from '@/api/config/classification-manage/common'
 import { getAll as getDicts } from '@/api/system/dict-detail'
 import { getAllUnit } from '@/api/config/main/unit-config'
 import { getFactoriesAllSimple } from '@/api/mes/common'
-import { getFinalMatClsById, getUserTree, getRegionalCascade } from '@/api/common'
+import { getUserTree, getRegionalCascade } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
@@ -11,10 +12,11 @@ import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
+import { getPurchasingPurchaseOrderBrief } from '@/api/wms/purchase-order'
 
 import { unitTypeEnum } from '@enum-ms/common'
-import { materialClassificationEnum } from '@enum-ms/classification'
-import { setEmptyArr2Undefined } from '@/utils/data-type/tree'
+import { matClsEnum } from '@enum-ms/classification'
+import { setEmptyArr2Undefined, tree2list } from '@/utils/data-type/tree'
 import { isBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
@@ -24,6 +26,7 @@ const state = {
   clsTree: [], // 科目树
   matClsTree: [], // 物料科目树
   rawMatClsTree: [], // 普通物料科目树（不含制成品）
+  manufClsTree: [], // 制成品科目树
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
@@ -40,6 +43,7 @@ const state = {
   supplierKV: {}, // 供应商id:value 格式
   taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
   unclosedRequisitions: [], // 未关闭的申购单
+  unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
   loaded: {
     // 接口是否加载
     factories: false,
@@ -54,7 +58,8 @@ const state = {
     clsTree: false,
     suppliers: false,
     taxRate: false,
-    unclosedRequisitions: false
+    unclosedRequisitions: false,
+    unclosedPurchaseOrder: false
   }
 }
 
@@ -62,23 +67,29 @@ const mutations = {
   SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
   },
-  SET_TAX_RATE(state, list) {
+  SET_TAX_RATE(state, list = []) {
     state.taxRateKV = {}
     list.forEach(v => {
       state.taxRateKV[v.classification] = v.taxRateList
     })
   },
-  SET_MAT_CLS_TREE(state, tree) {
+  SET_MAT_CLS_TREE(state, tree = []) {
     state.matClsTree = tree
-    state.rawMatClsTree = tree.filter(t => ![materialClassificationEnum.STRUC_MANUFACTURED.V, materialClassificationEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsTree = tree.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsTree = tree.filter(t => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
-  SET_CLS_TREE(state, tree) {
+  SET_MAT_CLS_LIST(state, list = []) {
+    state.matClsList = list
+    state.rawMatClsList = list.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsList = list.filter(t => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+  },
+  SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
   },
   SET_UNIT(state, unit) {
     state.unit = unit
   },
-  SET_FACTORIES(state, factories) {
+  SET_FACTORIES(state, factories = []) {
     state.factories = factories
     // 生产工厂kv
     state.factoryKV = {}
@@ -117,6 +128,9 @@ const mutations = {
   },
   SET_UNCLOSED_REQUISITIONS(state, requisitions) {
     state.unclosedRequisitions = requisitions
+  },
+  SET_UNCLOSED_PURCHASE_ORDER(state, order) {
+    state.unclosedPurchaseOrder = order
   }
 }
 
@@ -132,14 +146,18 @@ const actions = {
     commit('SET_LOADED', { key: 'taxRate' })
     return content
   },
-  // 加载分类
+  // 物料分类树
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
     const tree = formatClsTree(res)
+    const list = tree2list(tree)
     commit('SET_MAT_CLS_TREE', tree)
+    commit('SET_MAT_CLS_LIST', list)
+
     commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
+  // 分类树
   async fetchClassificationTree({ commit }) {
     const res = await getClassificationTree()
     const tree = formatClsTree(res)
@@ -203,6 +221,7 @@ const actions = {
     commit('SET_UNIT', unit)
     commit('SET_LOADED', { key: 'unit' })
   },
+  // 工厂
   async fetchFactories({ commit }) {
     const { content = [] } = await getFactoriesAllSimple()
     commit('SET_FACTORIES', content)
@@ -215,30 +234,35 @@ const actions = {
     commit('SET_LOADED', { key: 'workshops' })
     return content
   },
+  // 生产线
   async fetchProductLines({ commit }) {
     const { content = [] } = await getAllFactoryWorkshopLines()
     commit('SET_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'productLines', loaded: true })
     return content
   },
+  // 工序
   async fetchProcess({ commit }) {
     const { content = [] } = await getProcessAllSimple()
     commit('SET_PROCESS', content)
     commit('SET_LOADED', { key: 'process' })
     return content
   },
+  // 用户
   async fetchUsers({ commit }) {
     const { content = [] } = await getUserAllSimple()
     commit('SET_USERS', content)
     commit('SET_LOADED', { key: 'users' })
     return content
   },
+  // 供应商
   async fetchSuppliers({ commit }) {
     const { content = [] } = await getSuppliersBrief()
     commit('SET_SUPPLIERS', content)
     commit('SET_LOADED', { key: 'suppliers' })
     return content
   },
+  // 部门
   async fetchDept({ commit }) {
     const dept = await getDeptAllSimple()
     setEmptyArr2Undefined(dept)
@@ -246,6 +270,7 @@ const actions = {
     commit('SET_LOADED', { key: 'dept' })
     return dept
   },
+  // 用户部门树
   async fetchUserDeptTree({ commit }) {
     const content = await getUserTree()
     const tree = content
@@ -254,6 +279,7 @@ const actions = {
     commit('SET_LOADED', { key: 'userDeptTree' })
     return tree
   },
+  // 省市区
   async fetchRegional({ commit }) {
     const regional = await getRegionalCascade() || []
     setEmptyArr2Undefined(regional)
@@ -268,13 +294,21 @@ const actions = {
     commit('SET_LOADED', { key: 'unclosedRequisitions' })
     return content
   },
+  // 加载未关闭的申购单
+  async fetchUnclosedPurchaseOrder({ commit }) {
+    const { content = [] } = await getPurchasingPurchaseOrderBrief()
+    commit('SET_UNCLOSED_PURCHASE_ORDER', content)
+    commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
+    return content
+  },
+  // 原材料规格
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
     const classifySpec = state.classifySpec
     for (const id of classifyIds) {
       const ps = getFinalMatClsById(id).then((res) => {
         const clsSimple = {
-          id: res.id,
+          id: id,
           name: res.name,
           fullName: res.fullName,
           serialNumber: res.serialNumber, // 编码
@@ -293,11 +327,16 @@ const actions = {
               name: sc.name,
               index: ci,
               list: sc.list.map((v, i) => {
-                return {
+                const spec = {
                   index: i,
                   code: v.code,
                   name: v.name
                 }
+                // 型材加入单位净重
+                if (res.basicClass === matClsEnum.SECTION_STEEL.V) {
+                  spec.unitWeight = v.unitWeight
+                }
+                return spec
               })
             }
           }),
@@ -344,6 +383,9 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
+          if (classify.basicClass === matClsEnum.SECTION_STEEL.V) {
+            arr[currentIndex].unitWeight = spec.unitWeight
+          }
         }
       }
     }
@@ -353,6 +395,7 @@ function getSpecList(classify, specConfig) {
     v.spec = v.arr.join('*') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}
+    v.specificationLabels = specConfig.map(v => v.name).join(' * ')
     v.specNameKV = {}
     v.specArrKV = []
     v.arr.forEach((c, i) => {

@@ -27,7 +27,7 @@
       <el-form-item label="可存储材料类型" prop="materialType">
         <common-select
           v-model="form.materialType"
-          :options="materialClassificationEnum.ENUM"
+          :options="matClsEnum.ENUM"
           multiple
           type="enum"
           placeholder="可存储材料类型"
@@ -62,7 +62,7 @@
 import { ref } from 'vue'
 import EO from '@enum'
 import { warehouseTypeEnum } from '@enum-ms/wms'
-import { materialClassificationEnum } from '@enum-ms/classification'
+import { matClsEnum } from '@enum-ms/classification'
 
 import { regForm } from '@compos/use-crud'
 

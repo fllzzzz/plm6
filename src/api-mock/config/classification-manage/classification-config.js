@@ -2,7 +2,7 @@
 const getClassificationTree = {
   url: '/api/config/classification/tree',
   method: 'get',
-  timeout: 1000,
+  // timeout: 1000,
   response: () => {
     return {
       code: 20000,
@@ -33,67 +33,67 @@ const getClassificationTree = {
         'code': '5',
         'basicClass': 1
       }, {
-        'id': 108,
+        'id': 110,
         'name': '工字钢',
         'code': '6',
         'basicClass': 2
       }, {
-        'id': 109,
+        'id': 111,
         'name': '热轧H型钢',
         'code': '7',
         'basicClass': 2
       }, {
-        'id': 110,
+        'id': 112,
         'name': '角钢',
         'code': '8',
         'basicClass': 2
       }, {
-        'id': 111,
+        'id': 113,
         'name': '槽钢',
         'code': '9',
         'basicClass': 2
       }, {
-        'id': 112,
+        'id': 114,
         'name': '方管',
         'code': '10',
         'basicClass': 2
       }, {
-        'id': 113,
+        'id': 115,
         'name': '矩形管',
         'code': '11',
         'basicClass': 2
       }, {
-        'id': 114,
+        'id': 116,
         'name': '扁铁',
         'code': '12',
         'basicClass': 2
       }, {
-        'id': 115,
+        'id': 117,
         'name': 'U肋',
         'code': '13',
         'basicClass': 2
       }, {
-        'id': 116,
+        'id': 120,
         'name': '镀锌彩卷',
         'code': '14',
         'basicClass': 4
       }, {
-        'id': 117,
+        'id': 121,
         'name': '镀锌钢带',
         'code': '15',
         'basicClass': 4
       }, {
-        'id': 118,
+        'id': 122,
         'name': '热轧卷',
         'code': '16',
         'basicClass': 4
       }, {
-        'id': 119,
+        'id': 123,
         'name': '不锈钢热轧卷',
         'code': '17',
         'basicClass': 4
       }, {
-        'id': 120,
+        'id': 124,
         'name': '不锈钢冷轧卷',
         'code': '18',
         'basicClass': 4
@@ -250,7 +250,7 @@ const getClassificationTree = {
 const getMatClsTree = {
   url: '/api/config/classification/material/tree',
   method: 'get',
-  timeout: 1000,
+  // timeout: 1000,
   response: () => {
     return {
       code: 20000,
@@ -281,67 +281,67 @@ const getMatClsTree = {
         'code': '5',
         'basicClass': 1
       }, {
-        'id': 108,
+        'id': 110,
         'name': '工字钢',
         'code': '6',
         'basicClass': 2
       }, {
-        'id': 109,
+        'id': 111,
         'name': '热轧H型钢',
         'code': '7',
         'basicClass': 2
       }, {
-        'id': 110,
+        'id': 112,
         'name': '角钢',
         'code': '8',
         'basicClass': 2
       }, {
-        'id': 111,
+        'id': 113,
         'name': '槽钢',
         'code': '9',
         'basicClass': 2
       }, {
-        'id': 112,
+        'id': 114,
         'name': '方管',
         'code': '10',
         'basicClass': 2
       }, {
-        'id': 113,
+        'id': 115,
         'name': '矩形管',
         'code': '11',
         'basicClass': 2
       }, {
-        'id': 114,
+        'id': 116,
         'name': '扁铁',
         'code': '12',
         'basicClass': 2
       }, {
-        'id': 115,
+        'id': 117,
         'name': 'U肋',
         'code': '13',
         'basicClass': 2
       }, {
-        'id': 116,
+        'id': 120,
         'name': '镀锌彩卷',
         'code': '14',
         'basicClass': 4
       }, {
-        'id': 117,
+        'id': 121,
         'name': '镀锌钢带',
         'code': '15',
         'basicClass': 4
       }, {
-        'id': 118,
+        'id': 122,
         'name': '热轧卷',
         'code': '16',
         'basicClass': 4
       }, {
-        'id': 119,
+        'id': 123,
         'name': '不锈钢热轧卷',
         'code': '17',
         'basicClass': 4
       }, {
-        'id': 120,
+        'id': 124,
         'name': '不锈钢冷轧卷',
         'code': '18',
         'basicClass': 4

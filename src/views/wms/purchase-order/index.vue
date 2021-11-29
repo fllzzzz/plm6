@@ -13,29 +13,24 @@
       row-key="serialNumber"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-table-column type="expand">
-        <template #header>
-          <el-icon class="pointer" @click="handleExpandAll"><el-arrow-down v-if="expandAll" /><el-arrow-right v-else /></el-icon>
+      <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="serialNumber">
+        <template #default="{ row }">
+          <p>
+            关联项目：<span v-empty-text>{{ row.projectStr }}</span>
+          </p>
+          <p>
+            关联申购单：<span v-empty-text>{{ row.requisitionsSNStr }}</span>
+          </p>
+          <p>
+            备注：<span v-empty-text>{{ row.remark }}</span>
+          </p>
         </template>
-        <template #default="scope">
-          <div class="table-expand-container">
-            <p>
-              关联项目：<span v-empty-text>{{ scope.row.projectStr }}</span>
-            </p>
-            <p>
-              关联申购单：<span v-empty-text>{{ scope.row.requisitionsSNStr }}</span>
-            </p>
-            <p>
-              备注：<span v-empty-text>{{ scope.row.remark }}</span>
-            </p>
-          </div>
-        </template>
-      </el-table-column>
+      </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60">
-        <template #default="scope">
-          <table-cell-tag :show="scope.row.supplyType == orderSupplyTypeEnum.PARTY_A.V" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
-          <span>{{ scope.$index + 1 }}</span>
+        <template #default="{ row, $index }">
+          <table-cell-tag :show="row.supplyType == orderSupplyTypeEnum.PARTY_A.V" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+          <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -47,13 +42,13 @@
         align="center"
         width="100"
       >
-        <template #default="scope">
+        <template #default="{ row }">
           <table-cell-tag
-            v-if="scope.row.settlementStatus == settlementStatusEnum.SETTLED.V"
+            v-if="row.settlementStatus == settlementStatusEnum.SETTLED.V"
             :name="settlementStatusEnum.SETTLED.L"
             :color="settlementStatusEnum.SETTLED.COLOR"
           />
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
+          <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -73,9 +68,9 @@
         min-width="170px"
       />
       <el-table-column v-if="columns.visible('projects')" key="projects" prop="projects" label="关联项目" min-width="170px">
-        <template #default="scope">
+        <template #default="{ row }">
           <span class="ellipsis-text">
-            <span v-for="item in scope.row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
+            <span v-for="item in row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
           </span>
         </template>
       </el-table-column>
@@ -96,8 +91,8 @@
         align="center"
         width="110"
       >
-        <template #default="scope">
-          <span>{{ scope.row.mete ? `${scope.row.mete} ${scope.row.meteUnit}` : '' }}</span>
+        <template #default="{ row }">
+          <span>{{ row.mete ? `${row.mete} ${row.meteUnit}` : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -118,8 +113,8 @@
         align="center"
         min-width="130"
       >
-        <template #default="scope">
-          <span v-parse-enum="{ e: invoiceTypeEnum, v: scope.row.invoiceType }" />
+        <template #default="{ row }">
+          <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -144,20 +139,20 @@
             </div>
           </el-tooltip>
         </template>
-        <template #default="scope">
+        <template #default="{ row }">
           <el-switch
             v-if="checkPermission(permission.editPurchaseStatus)"
-            v-model="scope.row.purchaseStatus"
+            v-model="row.purchaseStatus"
             :disabled="
-              scope.row.enabledLoading ||
-              (scope.row.status === settlementStatusEnum.SETTLED.V && scope.row.purchaseStatus === purchaseStatusEnum.FINISHED.V)
+              row.enabledLoading ||
+              (row.status === settlementStatusEnum.SETTLED.V && row.purchaseStatus === purchaseStatusEnum.FINISHED.V)
             "
             active-color="#13ce66"
             :active-value="purchaseStatusEnum.UNFINISHED.V"
             :inactive-value="purchaseStatusEnum.FINISHED.V"
-            @change="handleEnabledChange(scope.row, 'serialNumber')"
+            @change="handleEnabledChange(row, 'serialNumber')"
           />
-          <el-tag v-else :type="scope.row.purchaseStatus">{{ purchaseStatusEnum.VL[scope.row.purchaseStatus] }}</el-tag>
+          <el-tag v-else :type="row.purchaseStatus">{{ purchaseStatusEnum.VL[row.purchaseStatus] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -179,23 +174,23 @@
         width="90"
       />
       <el-table-column
-        v-if="columns.visible('userEditTime')"
-        key="userEditTime"
+        v-if="columns.visible('userUpdateTime')"
+        key="userUpdateTime"
         :show-overflow-tooltip="true"
-        prop="userEditTime"
+        prop="userUpdateTime"
         label="编辑日期"
         align="center"
         width="100"
       >
-        <template #default="scope">
-          <span v-parse-time>{{ scope.row.userEditTime }}</span>
+        <template #default="{ row }">
+          <span v-parse-time>{{ row.userUpdateTime }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column label="操作" width="230px" align="center" fixed="right">
-        <template #default="scope">
-          <e-operation :data="scope.row.id" :permission="permission.download" />
-          <udOperation :disabled-edit="scope.row.purchaseStatus == purchaseStatusEnum.FINISHED.V" :data="scope.row" show-detail />
+        <template #default="{ row }">
+          <e-operation :data="row.id" :permission="permission.download" />
+          <udOperation :disabled-edit="row.purchaseStatus == purchaseStatusEnum.FINISHED.V" :data="row" show-detail />
         </template>
       </el-table-column>
     </common-table>
@@ -213,7 +208,7 @@ import { ref, computed } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
-import { materialClassificationEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { projectNameFormatter } from '@/utils/project'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
@@ -229,8 +224,8 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
-// crud交由presenter持有
 const permission = {
   get: ['wms_purchaseOrder:get'],
   add: ['wms_purchaseOrder:add'],
@@ -249,16 +244,16 @@ const optShow = {
 
 const tableRef = ref()
 const expandRowKeys = ref([])
-const expandAll = computed(() => expandRowKeys.value.length === crud.data.length)
 
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料采购订单',
     sort: ['id.desc'],
-    invisibleColumns: ['invoiceType', 'userEditTime'],
+    invisibleColumns: ['invoiceType', 'userUpdateTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    detailFormApi: false,
     formStore: true,
     formStoreKey: 'WMS_PURCHASE_ORDER'
   },
@@ -274,7 +269,7 @@ const { handleEnabledChange } = useCrudEnabledChange(
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
-    const basicClassArr = EO.getBits(materialClassificationEnum.ENUM, v.basicClass, 'L')
+    const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
@@ -284,12 +279,4 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   })
 }
 
-// 展开所有行
-function handleExpandAll() {
-  if (!expandAll.value) {
-    expandRowKeys.value = crud.data.map((v) => v.serialNumber)
-  } else {
-    expandRowKeys.value = []
-  }
-}
 </script>

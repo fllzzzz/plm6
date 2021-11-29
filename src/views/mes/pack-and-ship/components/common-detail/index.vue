@@ -9,10 +9,13 @@
     @closed="handleClose"
   >
     <template #tip>
-      <slot name="tip"/>
+      <slot name="tip" />
+    </template>
+    <template #titleAfter>
+      <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.packageNumber }}</el-tag>
     </template>
     <template #titleRight>
-       <slot name="titleRight"/>
+      <slot name="titleRight" />
     </template>
     <div class="head-container" v-if="!isShowPrice">
       <el-radio-group v-model="monomerStatus" class="filter-item" size="small">

@@ -16,11 +16,25 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('name')" key="name" :show-overflow-tooltip="true" prop="name" min-width="150" label="供应商名称" />
+      <el-table-column
+        v-if="columns.visible('name')"
+        key="name"
+        :show-overflow-tooltip="true"
+        prop="name"
+        min-width="150"
+        label="供应商名称"
+      />
       <el-table-column v-if="columns.visible('area')" key="area" :show-overflow-tooltip="true" prop="area" label="地区" min-width="150" />
-      <el-table-column v-if="columns.visible('supplierClassification')" key="supplierClassification" max-width="320" :show-overflow-tooltip="true" prop="supplierClassification" label="供应商分类">
-        <template v-slot="scope">
-          <span>{{ scope.row.supplierClassification }}</span>
+      <el-table-column
+        v-if="columns.visible('supplierClassification')"
+        key="supplierClassification"
+        max-width="320"
+        :show-overflow-tooltip="true"
+        prop="supplierClassification"
+        label="供应商分类"
+      >
+        <template #default="{ row }">
+          <span>{{ row.supplierClassification }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center">
@@ -29,15 +43,15 @@
             <span>列入隐藏列表 <i class="el-icon-info" /></span>
           </el-tooltip>
         </template>
-        <template v-slot="scope">
+        <template #default="{ row }">
           <el-switch
-            v-model="scope.row.enabled"
+            v-model="row.enabled"
             :disabled="!checkPermission(permission.editStatus)"
             active-color="#ff4949"
             inactive-color="#909399"
             :active-value="supplierIsHideEnum.TRUE.V"
             :inactive-value="supplierIsHideEnum.FALSE.V"
-            @change="changeEnabled(scope.row, scope.row.enabled)"
+            @change="changeEnabled(row, row.enabled)"
           />
         </template>
       </el-table-column>
@@ -50,8 +64,8 @@
         align="center"
         fixed="right"
       >
-        <template v-slot="scope">
-          <udOperation :show-detail="true" :data="{id: scope.row.id}" />
+        <template #default="{ row }">
+          <udOperation :show-detail="true" :data="{ id: row.id }" />
         </template>
       </el-table-column>
     </common-table>
@@ -119,7 +133,9 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 async function changeEnabled(data, val) {
   try {
     await ElMessageBox.confirm(
-      `此操作将"${supplierIsHideEnum.VL[val]}"${data.name}\n${val === supplierIsHideEnum.TRUE.V ? '被隐藏后，无法在订单编辑中搜索到该供应商\n' : ''} 是否继续？`,
+      `此操作将"${supplierIsHideEnum.VL[val]}"${data.name}\n${
+        val === supplierIsHideEnum.TRUE.V ? '被隐藏后，无法在订单编辑中搜索到该供应商\n' : ''
+      } 是否继续？`,
       '提示',
       {
         confirmButtonText: '确定',

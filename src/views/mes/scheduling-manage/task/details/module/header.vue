@@ -107,7 +107,6 @@ function handelModifying(modifying, reset = false) {
 
 // 应用
 function applyAll() {
-  console.log(crud.selections)
   if (crud.selections && crud.selections.length) {
     crud.selections.forEach((v) => {
       v.askCompleteTime = askCompleteTime.value

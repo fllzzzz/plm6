@@ -4,7 +4,7 @@
     ref="tableRef"
     :data="props.data"
     :height="props.height"
-    :max-heigth="props.maxHeigth"
+    :max-height="props.maxHeight"
     :stripe="tStripe"
     :border="tBorder"
     :size="props.size"
@@ -106,7 +106,7 @@ const props = defineProps({
     default: undefined
   },
   // Table 的最大高度。 合法的值为数字或者单位为 px 的高度。
-  maxHeigth: {
+  maxHeight: {
     type: [String, Number],
     default: undefined
   },
@@ -397,7 +397,14 @@ function headerDragend(newWidth, oldWidth, column, event) {
 }
 
 // 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
-function expandChange(row, expandedRowsOrExpanded) {
+function expandChange(row, expandedRowsOrExpanded) { // 配合组件el-expand-table-column 使用
+  const keys = props.expandRowKeys
+  const index = keys.indexOf(row[props.rowKey])
+  if (index > -1) {
+    keys.splice(index, 1)
+  } else {
+    keys.push(row[props.rowKey])
+  }
   emit('expandChange', row, expandedRowsOrExpanded)
 }
 
