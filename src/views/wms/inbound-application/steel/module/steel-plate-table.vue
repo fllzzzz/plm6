@@ -173,7 +173,7 @@ function rowInit(row) {
     theoryTotalWeight: undefined, // 理论总重量
     weighingTotalWeight: undefined // 过磅重量
   })
-  rowWatch(row)
+  rowWatch(_row)
   return _row
 }
 
@@ -195,6 +195,7 @@ function rowWatch(row) {
     },
     { immediate: true }
   )
+  console.log('log')
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量

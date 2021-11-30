@@ -1,7 +1,7 @@
 <template>
   <div class="logistics-form">
     <el-divider><span class="title">物流信息</span></el-divider>
-    <el-form ref="formRef" :model="form.logistics" :rules="rules" size="small" inline label-position="right" label-width="80px">
+    <el-form ref="formRef" :model="form.logistics" :disabled="props.disabled" :rules="rules" size="small" inline label-position="right" label-width="80px">
       <el-form-item label="运费" prop="freight" label-width="50px">
         <el-input-number
           class="input-underline"
@@ -70,13 +70,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 import { supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
 
 import { regExtra } from '@/composables/form/use-form'
-import supplierSelect from '@/components-system/base/supplier-select.vue'
+import supplierSelect from '@/components-system/base/supplier-select/index.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
+
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const formRef = ref()
 const { form, FORM } = regExtra() // 表单

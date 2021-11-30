@@ -11,9 +11,9 @@
   >
     <template #titleAfter>
       <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
-      <el-tag v-if="order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">{{
-        `过磅重量：${form.loadingWeight}`
-      }}</el-tag>
+      <el-tag v-if="order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
+        {{ `过磅重量：${form.loadingWeight}` }}
+      </el-tag>
       <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
@@ -55,7 +55,7 @@
         </template>
       </common-table>
       <!-- 物流信息设置 -->
-      <logistics-form class="logistics-form-content" v-if="showAmount && form.logistics" />
+      <logistics-form :disabled="cu.status.edit === FORM.STATUS.PROCESSING" class="logistics-form-content" v-if="showAmount && form.logistics" />
     </el-form>
     <common-footer class="footer" unit="元" :total-value="amount" :show-total="showAmount" is-submit />
   </common-dialog>

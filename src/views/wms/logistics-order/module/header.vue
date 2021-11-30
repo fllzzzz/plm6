@@ -92,7 +92,7 @@ import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import supplierSelect from '@comp-base/supplier-select.vue'
+import supplierSelect from '@comp-base/supplier-select/index.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 

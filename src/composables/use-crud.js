@@ -155,7 +155,10 @@ export function regForm(defaultForm, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useAddFormLocalStorage(crud.formStoreKey, crud.useFormDraftCallback)
+    const store = useAddFormLocalStorage(crud.formStoreKey, {
+      useDraftCallback: crud.useFormDraftCallback,
+      clearDraftCallback: crud.clearFormDraftCallback
+    })
     fmStore = store
   }
 
@@ -185,7 +188,10 @@ export function regBatchForm(defaultForm, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useBatchAddFormLocalStorage(crud.formStoreKey, crud.useBatchFormDraftCallback)
+    const store = useBatchAddFormLocalStorage(crud.formStoreKey, {
+      useDraftCallback: crud.useBatchFormDraftCallback,
+      clearDraftCallback: crud.clearBatchFormDraftCallback
+    })
     fmStore = store
   }
 
@@ -315,8 +321,12 @@ function getDefaultOption() {
     formStore: false,
     // 表单使用草稿后的回调
     useFormDraftCallback: null,
+    // 清除草稿的回调
+    clearFormDraftCallback: null,
     // 批量表单使用草稿后的回调
     useBatchFormDraftCallback: null,
+    // 清除草稿的回调
+    clearBatchFormDraftCallback: null,
     // 默认隐藏列
     invisibleColumns: ['createTime', 'updateTime'],
     // 提交时必填字段

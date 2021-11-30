@@ -23,7 +23,7 @@ ADD_FORM.TYPE = {
  * @param {*} trigger 触发器,适用于添加在Dialog/Drawer(弹窗)中的情景
  * @returns
  */
-export default function useAddFormLocalStorage(key, pendingForm, trigger, useDraftCallback) {
+export default function useAddFormLocalStorage(key, pendingForm, trigger, { useDraftCallback, clearDraftCallback }) {
   const ls = reactive({
     key: key,
     expired: 604800000,
@@ -38,6 +38,7 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger, useDra
       // 清除内容
       ls.form.length = 0
       ls.init && ls.init()
+      if (typeof clearDraftCallback === 'function') clearDraftCallback()
     }
   })
 

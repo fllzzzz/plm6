@@ -164,6 +164,7 @@ const { cu, form, FORM } = useForm(
     permission: permission,
     defaultForm: defaultForm,
     useDraftCallback: useDraftCallback,
+    clearDraftCallback: init,
     api: steelInboundApplication
   },
   formRef
@@ -331,7 +332,6 @@ function calcWeight() {
   }
   cu.props.totalWeight = toFixed(weight, 2) // 用于与车的过磅重量比较
   totalWeight.value = convertUnits(weight, 'kg', 't', 3)
-  console.log('cu.props.totalWeight', cu.props.totalWeight)
 }
 
 // 订单变化

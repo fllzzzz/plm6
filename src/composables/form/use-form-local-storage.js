@@ -15,7 +15,7 @@ ADD_FORM.TYPE = {
   browserClose: 2 // 浏览器关闭保存
 }
 
-export default function useFormLocalStorage(key, crud, FORM, useDraftCallback) {
+export default function useFormLocalStorage(key, crud, FORM, { useDraftCallback, clearDraftCallback }) {
   const ls = reactive({
     key: key,
     expired: 604800000,
@@ -31,6 +31,7 @@ export default function useFormLocalStorage(key, crud, FORM, useDraftCallback) {
       // 清除内容
       crud.resetForm()
       ls.init && ls.init()
+      if (typeof clearDraftCallback === 'function') clearDraftCallback()
     }
   })
 

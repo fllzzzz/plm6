@@ -45,7 +45,7 @@
       </el-form>
     </div>
     <div class="child-mr-7">
-      <store-operation type="cu" />
+      <store-operation type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
       <el-tooltip content="请先选择订单号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
@@ -66,7 +66,7 @@
 
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
-import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect } from 'vue'
+import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick } from 'vue'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
@@ -129,6 +129,20 @@ watchEffect(() => {
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
   formRef.value.resetFields()
+  init()
+}
+
+// 重置表单
+function handleClear() {
+  nextTick(() => {
+    formRef.value.clearValidate()
+    init()
+  })
+}
+
+function init() {
+  trainsDiff.value = {}
+  form.logistics = {}
 }
 
 // 采购订单id变更

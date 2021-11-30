@@ -31,7 +31,6 @@
   </el-table-column>
   <el-table-column v-if="requisitionsSNOptions" prop="requisitionsSN" label="申购单" min-width="130" align="center">
     <template #default="{ row, $index }">
-      {{scopeList}}
       <common-select
         v-model="row.requisitionsSN"
         :options="getRequisitionsSNOptions($index, row)"
@@ -73,7 +72,6 @@ const emit = defineEmits(['amount-change'])
 const { cu, form } = regExtra() // 表单
 
 const {
-  scopeList,
   initScopeList: initProjectScopeList,
   handleValueChange: handleProjectChange,
   getRealVal: getProjectVal
