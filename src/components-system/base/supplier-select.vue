@@ -1,19 +1,55 @@
 <!-- 供应商:下拉选择框 -->
 <template>
-  <common-select
-    v-model="selectValue"
-    :size="props.size"
-    :disabled="props.disabled"
-    :multiple="props.multiple"
-    :collapse-tags="props.collapseTags"
-    :loading="!loaded"
-    :clearable="props.clearable"
-    :filterable="props.filterable"
-    :placeholder="props.placeholder"
-    :options="options"
-    @change="handleChange"
-  >
-  </common-select>
+  <span class="supplier-sn-select-container" :class="{ 'show-add-icon': props.logisticsCreateable }">
+    <common-select
+      v-model="selectValue"
+      :size="props.size"
+      :disabled="props.disabled"
+      :multiple="props.multiple"
+      :collapse-tags="props.collapseTags"
+      :loading="!loaded"
+      :clearable="props.clearable"
+      :filterable="props.filterable"
+      :placeholder="props.placeholder"
+      :options="options"
+      class="supplier-sn-select"
+      @change="handleChange"
+    >
+      <template #view="{ data }">
+        <span class="customize-option-item">
+          <span class="flex-rsc label">
+            <span>{{ data.name }}</span>
+          </span>
+          <span>
+            <span class="extra-label">
+              <span class="title">类型：</span>
+              <span v-parse-enum="{ e: supplierTypeEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
+            </span>
+          </span>
+        </span>
+      </template>
+    </common-select>
+    <el-popover
+      placement="left-start"
+      width="450"
+      trigger="manual"
+      v-model:visible="addVisible"
+    >
+      <m-form @close="handlePopoverClose" />
+      <template #reference>
+        <span
+          v-if="props.logisticsCreateable"
+          class="add-icon pointer"
+          @click.stop="addVisible = true"
+        >
+          <el-icon v-permission="permission.add" color="#1881ef">
+            <el-icon-plus />
+          </el-icon>
+        </span>
+        <span v-else />
+      </template>
+    </el-popover>
+  </span>
 </template>
 
 <script setup>
@@ -21,6 +57,7 @@ import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { supplierIsHideEnum, supplierTypeEnum } from '@/utils/enum/modules/supplier'
 import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
 import useSuppliers from '@compos/store/use-suppliers'
+import mForm from './add-supplier.vue'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
@@ -33,7 +70,7 @@ const props = defineProps({
   },
   logisticsCreateable: { // 可创建物流供应商
     type: Boolean,
-    default: false
+    default: true
   },
   type: {
     type: Number,
@@ -85,6 +122,11 @@ const props = defineProps({
   }
 })
 
+const permission = {
+  add: ['wms_supplier:add']
+}
+
+const addVisible = ref(false)
 const selectValue = ref()
 
 const { loaded, suppliers } = useSuppliers(loadedCallBack)
@@ -149,4 +191,39 @@ function loadedCallBack() {
     handleChange(selectValue.value)
   }
 }
+
+function handlePopoverClose() {
+  addVisible.value = false
+}
 </script>
+
+<style lang="scss" scoped>
+.supplier-sn-select-container {
+  display: inline-flex;
+  position: relative;
+
+  .supplier-sn-select {
+    width: 100%;
+  }
+}
+
+.show-add-icon {
+  .add-icon {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translate(0, -50%);
+    border: none;
+    user-select: none;
+    font-size: 14px;
+    margin: 0 5px;
+  }
+
+  ::v-deep(.el-input__inner) {
+    padding-right: 50px;
+  }
+  ::v-deep(.el-input__suffix) {
+    right: 35px;
+  }
+}
+</style>

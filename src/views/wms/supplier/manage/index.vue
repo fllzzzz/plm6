@@ -143,12 +143,12 @@ async function changeEnabled(data, val) {
         type: 'warning'
       }
     )
-    await editStatus({ id: data.id, enabled: val })
+    await editStatus({ id: data.id, boolHide: val })
     crud.refresh()
     crud.notify(supplierIsHideEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
     console.log('操作构件工序状态', error)
-    data.enabled = data.enabled === supplierIsHideEnum.FALSE.V ? supplierIsHideEnum.TRUE.V : supplierIsHideEnum.FALSE.V
+    data.boolHide = data.boolHide === supplierIsHideEnum.FALSE.V ? supplierIsHideEnum.TRUE.V : supplierIsHideEnum.FALSE.V
   }
 }
 
