@@ -11,7 +11,9 @@
   >
     <template #titleAfter>
       <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
-      <el-tag effect="plain">{{ `过磅重量：${form.loadingWeight}` }}</el-tag>
+      <el-tag v-if="order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">{{
+        `过磅重量：${form.loadingWeight}`
+      }}</el-tag>
       <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
@@ -104,12 +106,12 @@ const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay ==
 
 // 表格校验
 const warehouseRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
 }
 
 const amountRules = {
+  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
 }
@@ -127,8 +129,8 @@ const amount = ref() // 金额
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
 const { inboundFillWayCfg } = useWmsConfig(() => {
-  // 回调后，设置金额时，设置form.logistics为空
-  if (showAmount.value) {
+  // 回调后，设置金额时，设置form.logistics为空，草稿及修改状态下已经存在则不用设置
+  if (showAmount.value && isBlank(form.logistics)) {
     form.logistics = {}
   }
 })
@@ -145,6 +147,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-dialog__header', '.logistics-form-content', '.footer'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
+    minHeight: 300,
     extraHeight: 10
   },
   dialogVisible
@@ -157,7 +160,7 @@ const ditto = new Map([
   ['factoryId', -1],
   ['warehouseId', -1]
 ])
-provide('dittos', ditto)
+provide('ditto', ditto)
 // 表格校验
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
@@ -172,8 +175,13 @@ watch(
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
   cleanUpData(form.list)
-  form.list = await numFmtByBasicClass(form.list, { toSmallest: true, isNum: true })
-
+  if (props.basicClass <= 7) {
+    if (form.steelPlateList) form.steelPlateList = await numFmtByBasicClass(form.steelPlateList, { toSmallest: true, isNum: true })
+    if (form.sectionSteelList) form.sectionSteelList = await numFmtByBasicClass(form.sectionSteelList, { toSmallest: true, isNum: true })
+    if (form.steelCoilList) form.steelCoilList = await numFmtByBasicClass(form.steelCoilList, { toSmallest: true, isNum: true })
+  } else {
+    form.list = await numFmtByBasicClass(form.list, { toSmallest: true, isNum: true })
+  }
   return form
 }
 
@@ -189,6 +197,9 @@ FORM.HOOK.beforeSubmit = () => {
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
   handleClose()
+  if (showAmount.value) {
+    form.logistics = {}
+  }
 }
 
 function closeHook() {
@@ -205,6 +216,7 @@ function setDitto(list) {
     ['factoryId', -1]
   ])
   let basicClass = list[0].basicClass // 首个不一样的物料类型，仓库位置不设置同上
+  const warehouseDittoableIdex = [0]
   for (let i = 1; i < list.length; i++) {
     const row = list[i]
     if (basicClass === row.basicClass) {
@@ -220,14 +232,21 @@ function setDitto(list) {
         }
       })
       basicClass = row.basicClass
+      warehouseDittoableIdex.push(i)
     }
   }
+  cu.props.warehouseDittoableIndex = warehouseDittoableIdex
 }
 
 // 金额变化
 function handleAmountChange() {
   amount.value = form.list.reduce((sum, cur) => {
-    return sum + cur.amount
+    const value = Number(cur.amount)
+    if (!isNaN(value)) {
+      return sum + cur.amount
+    } else {
+      return sum
+    }
   }, 0)
 }
 

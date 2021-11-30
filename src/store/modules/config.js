@@ -310,6 +310,9 @@ const actions = {
   // 加载未关闭的申购单
   async fetchUnclosedPurchaseOrder({ commit }) {
     const { content = [] } = await getPurchasingPurchaseOrderBrief()
+    content.forEach(v => {
+      if (v.projects) v.projectIds = v.projects.map(v => v.id)
+    })
     commit('SET_UNCLOSED_PURCHASE_ORDER', content)
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
     return content

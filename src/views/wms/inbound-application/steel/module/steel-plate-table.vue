@@ -173,16 +173,28 @@ function rowInit(row) {
     theoryTotalWeight: undefined, // 理论总重量
     weighingTotalWeight: undefined // 过磅重量
   })
-  watchEffect(() => calcTheoryWeight(_row))
-  watchEffect(() => calcTotalWeight(_row))
-  watchEffect(() => weightOverDiff(_row))
+  rowWatch(row)
+  return _row
+}
+
+// 行监听
+// 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
+function rowWatch(row) {
+  // watchEffect(() => calcTheoryWeight(row))
+  // watchEffect(() => calcTotalWeight(row))
+  watchEffect(() => weightOverDiff(row))
+  // 计算单件理论重量
+  watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
+  // 计算总重
+  watch([() => row.theoryWeight, () => row.number], () => calcTotalWeight(row))
+  // 钢材总重计算
   watch(
-    () => _row.weighingTotalWeight,
+    () => row.weighingTotalWeight,
     () => {
       emit('calc-weight')
-    }
+    },
+    { immediate: true }
   )
-  return _row
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -226,6 +238,7 @@ function validate() {
 
 defineExpose({
   rowInit,
+  rowWatch,
   validate
 })
 </script>

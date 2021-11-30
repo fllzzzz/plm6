@@ -10,3 +10,14 @@ export function getUnclosedRequisitionsBrief() {
     method: 'get'
   })
 }
+
+/**
+ * 获取申购单详情
+ */
+export function getRequisitionsDetailBySN(sn) {
+  return request({
+    module: 'wms',
+    url: `requisitions/serial-number/${sn}`,
+    method: 'get'
+  })
+}

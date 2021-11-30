@@ -1,7 +1,7 @@
 <template>
   <div class="logistics-form">
     <el-divider><span class="title">物流信息</span></el-divider>
-    <el-form :model="form.logistics" size="small" inline label-position="right" label-width="80px">
+    <el-form ref="formRef" :model="form.logistics" :rules="rules" size="small" inline label-position="right" label-width="80px">
       <el-form-item label="运费" prop="freight" label-width="50px">
         <el-input-number
           class="input-underline"
@@ -15,7 +15,7 @@
           style="width: 150px"
         />
       </el-form-item>
-      <el-form-item label="装车费" prop="loadingFee">
+      <!-- <el-form-item label="装车费" prop="loadingFee">
         <el-input-number
           class="input-underline"
           v-model="form.logistics.entruckPrice"
@@ -40,7 +40,7 @@
           placeholder="其他杂费"
           style="width: 150px"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item class="el-form-item-10" label="发票及税率" prop="invoiceType" label-width="100px">
         <invoice-type-select
           class="input-underline"
@@ -51,7 +51,7 @@
           :classification="supplierClassEnum.LOGISTICS.V"
         />
       </el-form-item>
-      <el-form-item label="物流单位" prop="OtherFees">
+      <el-form-item label="物流单位" prop="supplierId">
         <supplier-select
           class="input-underline"
           v-model="form.logistics.supplierId"
@@ -70,12 +70,55 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
 
 import { regExtra } from '@/composables/form/use-form'
 import supplierSelect from '@/components-system/base/supplier-select.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
-const { form } = regExtra() // 表单
+import { isNotBlank, isBlank } from '@/utils/data-type'
+
+const formRef = ref()
+const { form, FORM } = regExtra() // 表单
+
+const validateFreight = (rule, value, callback) => {
+  if (isNotBlank(form.logistics.supplierId) && isBlank(form.logistics.freight)) {
+    callback(new Error('请输入运费'))
+  }
+  callback()
+}
+
+const validateSupplierId = (rule, value, callback) => {
+  if (isNotBlank(form.logistics.freight) && isBlank(form.logistics.supplierId)) {
+    callback(new Error('请选择供应商'))
+  }
+  callback()
+}
+
+const rules = {
+  freight: [{ validator: validateFreight, trigger: 'blur' }],
+  supplierId: [{ validator: validateSupplierId, trigger: 'change' }]
+}
+
+// 表单提交前校验
+FORM.HOOK.beforeSubmit = async () => {
+  const res = await validate()
+  return res
+}
+
+// 表单校验
+async function validate() {
+  try {
+    if (formRef.value) {
+      const res = await formRef.value.validate()
+      return res
+    } else {
+      return false
+    }
+  } catch (error) {
+    return false
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -309,6 +309,7 @@ div:focus {
 }
 
 .child-mr-10 > :nth-child(n) {
+  margin-left: 0!important;
   margin-right: 10px;
 }
 
@@ -316,8 +317,18 @@ div:focus {
   margin-right: 0;
 }
 
+.child-mr-7 > :nth-child(n) {
+  margin-left: 0!important;
+  margin-right: 7px;
+}
+
+.child-mr-7 > :last-child {
+  margin-right: 0;
+}
+
 
 .child-mr-6 > :nth-child(n) {
+  margin-left: 0!important;
   margin-right: 6px;
 }
 

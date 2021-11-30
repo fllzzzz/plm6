@@ -120,7 +120,7 @@ const getPurchasingPurchaseOrderBrief = {
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             supplier: {
               id: 1,
-              name: '杭州天马物流有限公司'
+              name: '杭州天马钢材有限公司'
             }
           },
           {

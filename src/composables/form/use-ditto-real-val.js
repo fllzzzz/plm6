@@ -1,10 +1,11 @@
 import { isBlank } from '@/utils/data-type'
 import { ref } from 'vue'
 
-export default function useDittoRealVal(dittoKey, dittoVal) {
+export default function useDittoRealVal(dittoKey, dittoVal = -1) {
   const scopeList = ref([])
   return {
     scopeList,
+    getNotDittoArr: () => scopeList.value.map(v => v.start),
     initScopeList: (list, customMethod) => initScopeList(list, customMethod, { scopeList, dittoKey, dittoVal }),
     handleValueChange: (val, index) => handleValueChange(val, index, { scopeList, dittoVal }),
     getRealVal: (index) => getRealVal(index, { scopeList })
@@ -25,13 +26,13 @@ function initScopeList(list, customMethod, { scopeList, dittoKey, dittoVal }) {
   let start = 0
   let end = -1
   let val
-  for (const i in list) {
+  for (let i = 0; i < list.length; i++) {
     const currentVal = list[i][dittoKey]
-    if (isBlank(currentVal) || currentVal === dittoVal) {
+    if (currentVal === dittoVal) {
       // 为空或于val相等
       ++end
     } else {
-      if (start !== 0) scopeList.value.push({ start, end, val })
+      if (end !== -1) scopeList.value.push({ start, end, val })
       start = i
       end = i
       val = currentVal
@@ -56,7 +57,7 @@ function handleValueChange(val, index, { scopeList, dittoVal }) {
         val: val
       }
       currentScope.end = index - 1 // 更新原节点end
-      scopeList.value.splice(di, 0, newScope)
+      scopeList.value.splice(di + 1, 0, newScope)
     }
   } else {
     // 选中的值为“同上”

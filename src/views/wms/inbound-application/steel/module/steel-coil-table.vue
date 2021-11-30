@@ -1,11 +1,5 @@
 <template>
-  <common-table
-    v-bind="$attrs"
-    :data="form.steelCoilList"
-    :cell-class-name="wrongCellMask"
-    :expand-row-keys="expandRowKeys"
-    row-key="uid"
-  >
+  <common-table v-bind="$attrs" :data="form.steelCoilList" :cell-class-name="wrongCellMask" :expand-row-keys="expandRowKeys" row-key="uid">
     <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <el-input v-model="row.remark" :rows="1" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
@@ -29,17 +23,17 @@
       width="135px"
     >
       <template #default="{ row }">
-          <el-input-number
-            v-model="row.weighingTotalWeight"
-            :min="0"
-            :max="999999999"
-            controls-position="right"
-            :controls="false"
-            :precision="baseUnit.weight.precision"
-            size="mini"
-            placeholder="重量"
-            @change="emit('calc-weight')"
-          />
+        <el-input-number
+          v-model="row.weighingTotalWeight"
+          :min="0"
+          :max="999999999"
+          controls-position="right"
+          :controls="false"
+          :precision="baseUnit.weight.precision"
+          size="mini"
+          placeholder="重量"
+          @change="emit('calc-weight')"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (mm)`">
@@ -72,15 +66,7 @@
     </el-table-column>
     <el-table-column prop="length" align="center" width="135px" :label="`长 (mm)`">
       <template #default="{ row }">
-        <el-input-number
-          v-model="row.length"
-          :min="0"
-          :max="999999"
-          :controls="false"
-          :precision="0"
-          size="mini"
-          placeholder="长"
-        />
+        <el-input-number v-model="row.length" :min="0" :max="999999" :controls="false" :precision="0" size="mini" placeholder="长" />
       </template>
     </el-table-column>
     <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
@@ -122,7 +108,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineExpose, ref, inject, watchEffect, reactive } from 'vue'
+import { defineEmits, defineExpose, ref, inject, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 
@@ -180,9 +166,19 @@ function rowInit(row) {
     theoryLength: undefined, // 理论单件重量
     weighingTotalWeight: undefined // 过磅重量
   })
-  watchEffect(() => calcTheoryLength(_row))
-  watchEffect(() => calcTotalLength(_row))
+  rowWatch(_row)
   return _row
+}
+
+// 行监听
+// 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
+function rowWatch(row) {
+  // watchEffect(() => calcTheoryLength(_row))
+  // watchEffect(() => calcTotalLength(_row))
+  // 计算理论长度
+  watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
+  // 计算总长度
+  watch([() => row.theoryLength, () => row.number], () => calcTotalLength(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -224,6 +220,7 @@ function validate() {
 
 defineExpose({
   rowInit,
+  rowWatch,
   validate
 })
 </script>

@@ -6,7 +6,7 @@ import { convertUnits } from '@/utils/convert/unit'
 
 import useWmsConfig from '../store/use-wms-config'
 // 计算重量是否在正常范围内
-export default function useWeightOverDiff(baseUnit) {
+export default function useWeightOverDiff() {
   const { inboundSteelCfg } = useWmsConfig()
 
   // 超出提示
@@ -33,7 +33,7 @@ function diffSubmitValidate(hasOver, overDiffSubmittable) {
 }
 
 function weightOverDiff(trainsWeight, listWeight, { inboundSteelCfg }) {
-  if (isBlank(listWeight) && isBlank(trainsWeight)) return
+  if (isBlank(listWeight) && isBlank(trainsWeight)) return {}
 
   let hasOver = false
   const overNum = listWeight - trainsWeight
@@ -43,13 +43,7 @@ function weightOverDiff(trainsWeight, listWeight, { inboundSteelCfg }) {
     hasOver = Math.abs(listWeight / trainsWeight - 1) * 100 > trainsDiff
   }
   if (trainsDiffType === numOrPctEnum.NUMBER.V) {
-    hasOver =
-      convertUnits(
-        Math.abs(listWeight - trainsWeight),
-        'kg',
-        STEEL_DIFF_UNIT,
-        2
-      ) > trainsDiff
+    hasOver = convertUnits(Math.abs(listWeight - trainsWeight), 'kg', STEEL_DIFF_UNIT, 2) > trainsDiff
   }
   return {
     hasOver,

@@ -170,6 +170,7 @@ function setDefault() {
     handleChange(selectValue.value)
     return
   }
+  handleChange(selectValue.value)
 }
 </script>
 

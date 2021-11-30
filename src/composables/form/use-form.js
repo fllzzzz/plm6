@@ -4,7 +4,7 @@ import * as lodash from 'lodash'
 import useFormLocalStorage from '@/composables/form/use-form-local-storage'
 
 import { ElNotification } from 'element-plus'
-import { deepClone } from '@/utils/data-type'
+import { isNotBlank } from '@/utils/data-type'
 
 const FORM = {} // crud公共信息处理
 
@@ -43,9 +43,10 @@ export function register(crud, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useFormLocalStorage(crud.formStoreKey, crud, vmInfo.FORM)
+    const store = useFormLocalStorage(crud.formStoreKey, crud, vmInfo.FORM, crud.useDraftCallback)
     fmStore = store
   }
+  crud.toEdit()
 
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
@@ -121,6 +122,8 @@ function getDefaultOption() {
     formStoreKey: '',
     // 表单缓存
     formStore: false,
+    // 使用草稿后的回调
+    useDraftCallback: null,
     // 提交时必填字段
     requiredSubmitField: [],
     // 提交回调结果
@@ -179,7 +182,7 @@ function addCrudBusinessMethod(crud) {
   }
 
   const toEdit = async (data) => {
-    crud.resetForm(JSON.parse(JSON.stringify(data)))
+    crud.resetForm(isNotBlank(data) ? JSON.parse(JSON.stringify(data)) : undefined)
     if (!(await callVmHook(crud, FORM.HOOK.beforeToEdit, crud.form) && await callVmHook(crud, FORM.HOOK.beforeToCU, crud.form))) {
       return
     }
@@ -218,7 +221,7 @@ function addCrudBusinessMethod(crud) {
       crud.status.edit = FORM.STATUS.PROCESSING
       const data = await crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.api(data)
-      await callVmHook(crud, FORM.HOOK.afterAddSuccess)
+      await callVmHook(crud, FORM.HOOK.afterEditSuccess)
       crud.status.edit = FORM.STATUS.PREPARED
       crud.submitSuccessNotify()
       crud.resetForm()
@@ -436,5 +439,7 @@ FORM.HOOK = {
   /** 提交 - 之后 */
   afterSubmit: 'afterSubmit',
   /** 编辑失败 - 之后 */
-  afterEditError: 'afterEditError'
+  afterEditError: 'afterEditError',
+  /** 编辑成功 - 之后 */
+  afterEditSuccess: 'afterEditSuccess'
 }

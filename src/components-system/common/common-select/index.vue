@@ -2,7 +2,7 @@
 <template>
   <el-select
     :key="`common_select_${key}`"
-    v-model="copyValue"
+    v-model="selectValue"
     :size="props.size"
     :disabled="props.disabled"
     :multiple="props.multiple"
@@ -134,13 +134,21 @@ const props = defineProps({
     type: String,
     default: 'normal'
   },
+  default: {
+    type: Boolean,
+    default: false
+  },
+  onlyOneDefault: {
+    type: Boolean,
+    default: false
+  },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用
     type: Object
   }
 })
 
-const copyValue = ref(props.modelValue)
+const selectValue = ref(props.modelValue)
 const key = ref(Math.random())
 
 const allVal = computed(() => {
@@ -174,9 +182,9 @@ watch(
   () => props.modelValue,
   (value) => {
     if (props.multiple && props.mode === 'bit') {
-      copyValue.value = getBits(props.options, value, 'value', DS)
+      selectValue.value = getBits(props.options, value, 'value', DS)
     } else {
-      copyValue.value = value
+      selectValue.value = value
     }
   },
   { immediate: true }
@@ -201,16 +209,20 @@ watch(
         eOpt[DS.value] = props.extraOption.value
         options.push(eOpt)
       }
-      let cv = copyValue.value
-      if (Array.isArray(copyValue.value)) {
-        cv = options.filter(v => copyValue.value.includes(v[DS.value])).map(v => v[DS.value])
+      let cv = selectValue.value
+      if (Array.isArray(selectValue.value)) {
+        cv = options.filter(v => selectValue.value.includes(v[DS.value])).map(v => v[DS.value])
       } else {
-        const isExit = options.some(v => v[DS.value] === copyValue.value)
+        const isExit = options.some(v => v[DS.value] === selectValue.value)
         if (!isExit) {
           cv = undefined
         }
       }
-      handleChange(cv)
+      if (isBlank(cv)) {
+        setDefault()
+      } else {
+        handleChange(cv)
+      }
     }
     key.value = Math.random()
   },
@@ -241,6 +253,27 @@ function handleChange(val) {
 
 function handleBlur(event) {
   emit('blur', event)
+}
+
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+function setDefault() {
+  if (isBlank(props.options) || selectValue.value) {
+    return
+  }
+  if (props.onlyOneDefault && props.options.length === 1) {
+    selectValue.value = props.options[0].value
+    handleChange(selectValue.value)
+    return
+  }
+  if (props.default) {
+    selectValue.value = props.options[0].value
+    handleChange(selectValue.value)
+    return
+  }
+  handleChange(undefined)
 }
 </script>
 

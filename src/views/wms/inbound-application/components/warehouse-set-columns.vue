@@ -1,26 +1,12 @@
 <template>
-  <el-table-column v-if="projectOptions" prop="projectId" align="center" min-width="170px" label="所属项目">
-    <template #default="{ row }">
-      <common-select
-        v-model="row.projectId"
-        :options="projectOptions"
-        :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-        :extra-val="dittos.get('type')"
-        show-extra
-        type="other"
-        placeholder="所属项目"
-      />
-    </template>
-  </el-table-column>
   <el-table-column prop="factoryId" align="center" min-width="120px" label="工厂">
     <template #default="{ row, $index }">
       <factory-select
         v-model="row.factoryId"
         placeholder="请选择工厂"
         only-one-default
-        :extra-val="dittos.get('type')"
-        show-extra
-        @change="handleFactoryChange($event, $index)"
+        :show-extra="$index !== 0"
+        @change="handleFactoryChange($event, $index, row)"
       />
     </template>
   </el-table-column>
@@ -30,8 +16,7 @@
         v-model="row.warehouseId"
         :factory-id="getFactoryVal($index)"
         :basicClass="row.basicClass"
-        :extra-val="dittos.get('type')"
-        show-extra
+        :show-extra="!warehouseDittoableIndex.includes($index)"
         placeholder="存储位置"
       />
     </template>
@@ -39,49 +24,34 @@
 </template>
 
 <script setup>
-import { computed, watch, inject } from 'vue'
-import { isNotBlank } from '@/utils/data-type'
-import { projectNameFormatter } from '@/utils/project'
+import { computed, watchEffect } from 'vue'
 
 import { regExtra } from '@/composables/form/use-form'
 import factorySelect from '@/components-system/base/factory-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
+import { isBlank } from '@/utils/data-type'
 
-const { cu, form } = regExtra() // 表单
-const dittos = inject('dittos')
+const { form } = regExtra() // 表单
 const {
+  getNotDittoArr: getFactoryNotDittoArr,
   initScopeList: initFactoryScopeList,
-  handleValueChange: handleFactoryChange,
+  handleValueChange: handleFactoryChangeForValue,
   getRealVal: getFactoryVal
-} = useDittoRealVal('factoryId', dittos.get('factoryId'))
+} = useDittoRealVal('factoryId')
 
-// 申购单选择
-const projectOptions = computed(() => {
-  const order = cu.props.order
-  if (isNotBlank(order) && isNotBlank(order.projects)) {
-    return order.projects.map((p) => {
-      return { id: p.id, name: projectNameFormatter(p, { showSerialNumber: false }) }
-    })
-  } else {
-    return null
-  }
+const warehouseDittoableIndex = computed(() => {
+  return getFactoryNotDittoArr()
 })
 
-// 如果只有一个项目自动赋值
-watch(
-  projectOptions,
-  (opts) => {
-    if (opts && opts.length === 1 && form.list[0]) form.list[0].projectId = opts[0].id
-  },
-  { immediate: true }
-)
+watchEffect(() => initFactoryScopeList(form.list || []))
 
-watch(
-  () => form.list,
-  () => {
-    initFactoryScopeList(form.list || [])
-  },
-  { immediate: true }
-)
+function handleFactoryChange(val, index, row) {
+  handleFactoryChangeForValue(val, index)
+  if (val !== -1) {
+    row.warehouseId = undefined
+  } else {
+    if (isBlank(row.warehouseId)) row.warehouseId = -1
+  }
+}
 </script>

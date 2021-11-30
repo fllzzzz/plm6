@@ -114,6 +114,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  onlyOneDefault: {
+    type: Boolean,
+    default: false
+  },
   placeholder: {
     type: String,
     default: '选择采购订单'
@@ -154,16 +158,8 @@ const options = computed(() => {
 watch(
   () => props.modelValue,
   (value) => {
-    // 有默认值的情况，并且value为空，则给value赋值
-    if (props.default && isBlank(value) && isNotBlank(options.value)) {
-      selectValue.value = options.value[0].value
-      handleChange(selectValue.value)
-    } else {
-      if (!judgeSameValue(selectValue.value, value)) {
-        selectValue.value = value
-        emitInfo(value)
-      }
-    }
+    selectValue.value = value
+    setDefault()
   },
   { immediate: true }
 )
@@ -201,9 +197,30 @@ function loadedCallBack() {
       purchaseOrderKV.value[v.id] = v
     })
   }
-  if (isNotBlank(options.value) && props.default && !selectValue.value) {
+  if (isNotBlank(selectValue.value)) {
+    emitInfo(selectValue.value)
+  } else {
+    setDefault()
+  }
+}
+
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+function setDefault() {
+  if (isBlank(options.value) || selectValue.value) {
+    return
+  }
+  if (props.onlyOneDefault && options.value.length === 1) {
     selectValue.value = options.value[0].value
     handleChange(selectValue.value)
+    return
+  }
+  if (props.default) {
+    selectValue.value = options.value[0].value
+    handleChange(selectValue.value)
+    return
   }
 }
 </script>

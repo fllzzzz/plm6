@@ -17,7 +17,7 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch } from 'vue'
-import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
+import { isBlank, judgeSameValue } from '@data-type/index'
 import useFactory from '@compos/store/use-factories'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -69,19 +69,7 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    // 有默认值的情况，并且value为空，则给value赋值
-    if (isBlank(value) && isNotBlank(factories.value)) {
-      if (props.onlyOneDefault && factories.value.length === 1) {
-        selectValue.value = factories.value[0].value
-        handleChange(selectValue.value)
-        return
-      }
-      if (props.default) {
-        selectValue.value = factories.value[0].value
-        handleChange(selectValue.value)
-        return
-      }
-    }
+    setDefault()
   },
   { immediate: true }
 )
@@ -101,18 +89,27 @@ function handleChange(val) {
 }
 
 function loadedCallBack() {
-  if (isNotBlank(factories.value) && !selectValue.value) {
-    if (props.onlyOneDefault && factories.value.length === 1) {
-      selectValue.value = factories.value[0].value
-      handleChange(selectValue.value)
-      return
-    }
-    if (props.default) {
-      selectValue.value = factories.value[0].value
-      handleChange(selectValue.value)
-      return
-    }
-  }
+  setDefault()
 }
 
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+function setDefault() {
+  if (isBlank(factories.value) || selectValue.value) {
+    return
+  }
+  if (props.onlyOneDefault && factories.value.length === 1) {
+    selectValue.value = factories.value[0].value
+    handleChange(selectValue.value)
+    return
+  }
+  if (props.default) {
+    selectValue.value = factories.value[0].value
+    handleChange(selectValue.value)
+    return
+  }
+  handleChange(selectValue.value)
+}
 </script>

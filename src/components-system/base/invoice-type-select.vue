@@ -15,9 +15,11 @@
         v-model="copyTaxRate"
         :options="taxRateOption"
         :disabled="props.disabled"
+        :loading="!loaded"
         :data-structure="{ key: 'id', label: 'label', value: 'value' }"
         allow-create
         style="width: 80px"
+        default
         clearable
         filterable
         placeholder="税率"
@@ -31,7 +33,7 @@
 
 <script setup>
 // 未根据物料种类设置常用税率
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, watchEffect } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { supplierClassEnum } from '@enum-ms/supplier'
@@ -60,7 +62,7 @@ const props = defineProps({
 
 const copyInvoiceType = ref()
 const copyTaxRate = ref()
-const { taxRateKV } = useTaxRate()
+const { loaded, taxRateKV } = useTaxRate()
 
 // 税率列表
 const taxRateOption = computed(() => {
@@ -70,7 +72,7 @@ const taxRateOption = computed(() => {
     res.push.apply(res, taxRateKV.value[bit])
   })
   const opt = uniqueArr(res)
-  if (opt[0]) handleTaxRateChange(opt[0])
+  // if (opt[0] && !copyTaxRate.value) handleTaxRateChange(opt[0])
   return opt.map((v) => {
     return {
       value: v,
@@ -79,22 +81,14 @@ const taxRateOption = computed(() => {
   })
 })
 
-watch(
-  () => props.invoiceType,
-  (value) => {
-    copyInvoiceType.value = value
-    setDefault()
-  },
-  { immediate: true }
-)
+watchEffect(() => {
+  copyInvoiceType.value = props.invoiceType
+  setDefault()
+})
 
-watch(
-  () => props.taxRate,
-  (value) => {
-    copyTaxRate.value = value
-  },
-  { immediate: true }
-)
+watchEffect(() => {
+  copyTaxRate.value = props.taxRate
+})
 
 /**
  * 设置默认值
