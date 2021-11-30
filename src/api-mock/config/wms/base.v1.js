@@ -12,7 +12,7 @@ const getInboundBasicConf = {
       message: '成功',
       data: {
         'amountFillWay': inboundFillWayEnum.AUDITING.V,
-        'factoryFillWay': inboundFillWayEnum.APPLICATION.V
+        'warehouseFillWay': inboundFillWayEnum.APPLICATION.V
       }
     }
   }

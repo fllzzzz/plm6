@@ -190,9 +190,17 @@ watch(
       if (!Array.isArray(options)) {
         options = obj2arr(options)
       }
-      const aOpt = {}
-      aOpt[DS.value] = allVal.value
-      options.push(aOpt)
+      if (props.showOptionAll) {
+        const aOpt = {}
+        aOpt[DS.value] = allVal.value
+        options.push(aOpt)
+      }
+
+      if (props.showExtra && props.extraOption) {
+        const eOpt = {}
+        eOpt[DS.value] = props.extraOption.value
+        options.push(eOpt)
+      }
       let cv = copyValue.value
       if (Array.isArray(copyValue.value)) {
         cv = options.filter(v => copyValue.value.includes(v[DS.value])).map(v => v[DS.value])

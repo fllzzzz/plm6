@@ -28,8 +28,12 @@ const props = defineProps({
   modelValue: {
     type: [Number, String]
   },
-  basicClass: {
+  basicClass: { // 供应商类型
     type: Number
+  },
+  logisticsCreateable: { // 可创建物流供应商
+    type: Boolean,
+    default: false
   },
   type: {
     type: Number,

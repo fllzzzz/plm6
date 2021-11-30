@@ -31,10 +31,10 @@
       <template #default="{ row }">
           <el-input-number
             v-model="row.weighingTotalWeight"
+            :min="0"
             :max="999999999"
             controls-position="right"
             :controls="false"
-            :min="0"
             :precision="baseUnit.weight.precision"
             size="mini"
             placeholder="重量"
@@ -46,10 +46,10 @@
       <template #default="{ row }">
         <el-input-number
           v-model="row.thickness"
+          :min="0"
           :max="999999"
           controls-position="right"
           :controls="false"
-          :min="0"
           :precision="baseUnit.thickness.precision"
           size="mini"
           placeholder="厚"
@@ -60,10 +60,10 @@
       <template #default="{ row }">
         <el-input-number
           v-model="row.width"
+          :min="0"
           :max="999999"
           controls-position="right"
           :controls="false"
-          :min="0"
           :precision="0"
           size="mini"
           placeholder="宽"
@@ -74,9 +74,9 @@
       <template #default="{ row }">
         <el-input-number
           v-model="row.length"
+          :min="0"
           :max="999999"
           :controls="false"
-          :min="0"
           :precision="0"
           size="mini"
           placeholder="长"
@@ -124,6 +124,7 @@
 <script setup>
 import { defineEmits, defineExpose, ref, inject, watchEffect, reactive } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -131,7 +132,6 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
-import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['calc-weight'])
 
@@ -216,6 +216,7 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
+  if (isBlank(form.steelCoilList)) return true
   const { validResult, dealList } = tableValidate(form.steelCoilList)
   form.steelCoilList = dealList
   return validResult

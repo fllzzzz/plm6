@@ -342,6 +342,37 @@ div:focus {
   padding: 0 4px;
 }
 
+// 自定义options-item
+.customize-option-item {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  .label {
+    > .el-icon {
+      margin-right: 10px;
+    }
+  }
+  .extra-label {
+    margin-right: 10px;
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.customize-option-item > span:nth-child(1) {
+  flex: none;
+  margin-right: 15px;
+}
+.customize-option-item > span:nth-child(2) {
+  // flex: auto;
+  color: #8492a6;
+  font-size: 13px;
+  .title {
+    color: #9b6161;
+  }
+}
+
 // TODO:遮罩
 .mask-container {
   background-color: hsla(0, 0%, 100%, 0.8);

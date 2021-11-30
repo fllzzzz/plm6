@@ -51,6 +51,10 @@ const props = defineProps({
   },
   classification: {
     type: Number
+  },
+  default: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -79,6 +83,7 @@ watch(
   () => props.invoiceType,
   (value) => {
     copyInvoiceType.value = value
+    setDefault()
   },
   { immediate: true }
 )
@@ -90,6 +95,21 @@ watch(
   },
   { immediate: true }
 )
+
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+function setDefault() {
+  if (copyInvoiceType.value) {
+    return
+  }
+  if (props.default) {
+    copyInvoiceType.value = invoiceTypeEnum.SPECIAL.V
+    handleInvoiceTypeChange(copyInvoiceType.value)
+    return
+  }
+}
 
 function handleInvoiceTypeChange(val) {
   if (isBlank(val)) val = undefined

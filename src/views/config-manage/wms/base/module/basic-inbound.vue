@@ -21,8 +21,8 @@
       <el-form-item label="金额填写场景">
         <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
-      <el-form-item label="工厂填写场景">
-        <common-radio v-model="form.factoryFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
+      <el-form-item label="存储位置填写场景">
+        <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
       <el-form-item label="打印标签提示场景">
         <el-checkbox v-model="form.printLabelTipWay.afterApplication" label="入库申请提交后" size="mini"></el-checkbox>
@@ -51,7 +51,7 @@ const dataSource = ref({
   // 金额填写方式
   amountFillWay: undefined,
   // 工厂填写方式
-  factoryFillWay: undefined,
+  warehouseFillWay: undefined,
   // 标签打印提示场景
   printLabelTipWay: {
     afterApplication: undefined,

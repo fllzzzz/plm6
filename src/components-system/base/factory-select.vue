@@ -51,6 +51,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  onlyOneDefault: {
+    type: Boolean,
+    default: false
+  },
   placeholder: {
     type: String,
     default: '请选择工厂'
@@ -66,9 +70,17 @@ watch(
   (value) => {
     selectValue.value = value
     // 有默认值的情况，并且value为空，则给value赋值
-    if (props.default && isBlank(value) && isNotBlank(factories.value)) {
-      selectValue.value = factories.value[0].value
-      handleChange(selectValue.value)
+    if (isBlank(value) && isNotBlank(factories.value)) {
+      if (props.onlyOneDefault && factories.value.length === 1) {
+        selectValue.value = factories.value[0].value
+        handleChange(selectValue.value)
+        return
+      }
+      if (props.default) {
+        selectValue.value = factories.value[0].value
+        handleChange(selectValue.value)
+        return
+      }
     }
   },
   { immediate: true }
@@ -89,9 +101,17 @@ function handleChange(val) {
 }
 
 function loadedCallBack() {
-  if (isNotBlank(factories.value) && props.default && !selectValue.value) {
-    selectValue.value = factories.value[0].value
-    handleChange(selectValue.value)
+  if (isNotBlank(factories.value) && !selectValue.value) {
+    if (props.onlyOneDefault && factories.value.length === 1) {
+      selectValue.value = factories.value[0].value
+      handleChange(selectValue.value)
+      return
+    }
+    if (props.default) {
+      selectValue.value = factories.value[0].value
+      handleChange(selectValue.value)
+      return
+    }
   }
 }
 
