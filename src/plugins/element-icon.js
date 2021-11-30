@@ -3,6 +3,7 @@ import {
   Fold,
   Loading,
   View,
+  Plus,
   ArrowDown,
   ArrowRight
 } from '@element-plus/icons'
@@ -12,6 +13,7 @@ const components = new Map([
   ['ElIconFold', Fold],
   ['ElIconLoading', Loading],
   ['ElIconView', View],
+  ['ElIconPlus', Plus],
   ['ElArrowDown', ArrowDown],
   ['ElArrowRight', ArrowRight]
 ])
