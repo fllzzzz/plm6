@@ -401,63 +401,31 @@ export default {
   //         }
   //       ]
   //     }
-  //   ]
-  // },
-  // {
-  //   path: '/mes/QHSE-manage',
-  //   component: 'Layout',
-  //   hidden: false,
-  //   name: 'MesQHSEManage',
-  //   alwaysShow: false,
-  //   redirect: '/mes/QHSE-manage/disclosure',
-  //   meta: { title: 'QHSE管理', icon: 'contract', noCache: true },
-  //   children: [
-  //     {
-  //       name: 'MesQHSEManageDisclosure',
-  //       path: 'disclosure',
-  //       hidden: false,
-  //       component: '/mes/QHSE-manage/disclosure/index',
-  //       meta: { title: '问题曝光', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesQHSEManageExFactoryData',
-  //       path: 'ex-factory-data',
-  //       hidden: false,
-  //       component: '/mes/QHSE-manage/ex-factory-data/index',
-  //       meta: { title: '出厂资料', icon: 'project', noCache: true }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/mes/label-printing',
-  //   component: 'Layout',
-  //   hidden: false,
-  //   name: 'MesLabelPrinting',
-  //   alwaysShow: false,
-  //   redirect: '/mes/label-printing/artifact',
-  //   meta: { title: '产品标签', icon: 'contract', noCache: true },
-  //   children: [
-  //     {
-  //       name: 'MesLabelPrintingArtifact',
-  //       path: 'artifact',
-  //       hidden: false,
-  //       component: '/mes/label-printing/artifact/index',
-  //       meta: { title: '构件', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesLabelPrintingEnclosure',
-  //       path: 'enclosure',
-  //       hidden: false,
-  //       component: '/mes/label-printing/enclosure/index',
-  //       meta: { title: '围护', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesLabelPrintingAuxiliaryMaterial',
-  //       path: 'auxiliary-material',
-  //       hidden: false,
-  //       component: '/mes/label-printing/auxiliary-material/index',
-  //       meta: { title: '辅材', icon: 'project', noCache: true }
-  //     }
+  {
+    path: '/mes/QHSE-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesQHSEManage',
+    alwaysShow: false,
+    redirect: '/mes/QHSE-manage/disclosure',
+    meta: { title: 'QHSE管理', icon: 'contract', noCache: true },
+    children: [
+      {
+        name: 'MesQHSEManageDisclosure',
+        path: 'disclosure',
+        hidden: false,
+        component: '/mes/QHSE-manage/disclosure/index',
+        meta: { title: '问题曝光', icon: 'project', noCache: true }
+      }
+      // {
+      //   name: 'MesQHSEManageExFactoryData',
+      //   path: 'ex-factory-data',
+      //   hidden: false,
+      //   component: '/mes/QHSE-manage/ex-factory-data/index',
+      //   meta: { title: '出厂资料', icon: 'project', noCache: true }
+      // }
+    ]
+  },
   //   ]
   // },
   {
