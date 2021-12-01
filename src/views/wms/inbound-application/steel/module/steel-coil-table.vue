@@ -72,7 +72,7 @@
     <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
         <el-input-number
-          v-model="row.number"
+          v-model="row.quantity"
           :max="999999999"
           controls-position="right"
           :controls="false"
@@ -130,10 +130,10 @@ const tableRules = {
   thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
   weighingTotalWeight: [{ required: true, message: '请填写重量', trigger: 'blur' }],
   length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
-  number: [{ required: true, message: '请填写数量', trigger: 'blur' }]
+  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
 
-const matSpecRef = inject('matSpecRef') // 调用兄弟组件matSpecRef
+const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
@@ -156,7 +156,7 @@ function rowInit(row) {
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
-    number: 1, // 数量
+    quantity: 1, // 数量
     color: undefined, // 颜色
     brand: undefined, // 品牌
     heatNoAndBatchNo: undefined, // 炉批号
@@ -178,7 +178,7 @@ function rowWatch(row) {
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度
-  watch([() => row.theoryLength, () => row.number], () => calcTotalLength(row))
+  watch([() => row.theoryLength, () => row.quantity], () => calcTotalLength(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -197,8 +197,8 @@ function calcTheoryLength(row) {
 
 // 计算总长
 function calcTotalLength(row) {
-  if (isNotBlank(row.theoryLength) && row.number) {
-    row.length = row.theoryLength * row.number
+  if (isNotBlank(row.theoryLength) && row.quantity) {
+    row.length = row.theoryLength * row.quantity
   } else {
     row.length = undefined
   }

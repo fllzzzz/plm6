@@ -18,6 +18,20 @@ export default {
           hidden: false,
           component: '/wms/inbound-application/steel/index',
           meta: { title: '钢材入库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'auxMatInboundApplication',
+          path: 'auxiliary-material',
+          hidden: false,
+          component: '/wms/inbound-application/auxiliary-material/index',
+          meta: { title: '辅材入库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'gasInboundApplication',
+          path: 'gas',
+          hidden: false,
+          component: '/wms/inbound-application/gas/index',
+          meta: { title: '气体入库', icon: 'project', noCache: true }
         }
       ]
     },

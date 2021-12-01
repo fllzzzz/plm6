@@ -4,9 +4,9 @@
       <span v-empty-text>{{ row.measureUnit }}</span>
     </template>
   </el-table-column>
-  <el-table-column prop="number" label="数量" align="center" width="90px">
+  <el-table-column prop="quantity" label="数量" align="center" width="90px">
     <template #default="{ row }">
-      <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.number }}</span>
+      <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
     </template>
   </el-table-column>
   <el-table-column prop="accountingUnit" label="核算单位" align="center" width="70px">

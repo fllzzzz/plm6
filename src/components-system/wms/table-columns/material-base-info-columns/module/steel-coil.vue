@@ -4,10 +4,8 @@
   <template v-if="props.specMerge">
     <el-table-column prop="specification" label="规格" align="center" width="220px" fixed="left">
       <template #default="{ row }">
-        <el-tooltip :content="`${addSuffix(row.specificationLabels, ' | ')}${addSuffix(row.color ? '颜色' : '', ' | ')}厚(mm) * 宽(mm)`" placement="top">
-          <span v-suffix="' | '">{{ row.specification }}</span>
-          <span v-suffix="' | '">{{ row.color }}</span>
-          <span>{{ `${row.thickness} * ${row.width} * ${row.length}` }}</span>
+        <el-tooltip :content="specTip(row)" placement="top">
+          <span>{{ specFormat(row) }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
@@ -30,12 +28,13 @@
         <span>{{ row.width }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="120px" :label="`颜色`" />
+    <el-table-column prop="color" align="center" width="120px" :label="`颜色`" />
   </template>
 </template>
 
 <script setup>
 import { defineProps } from 'vue'
+import { specFormat, specTip } from '@/utils/wms/spec-format'
 
 const props = defineProps({
   specMerge: {

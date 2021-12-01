@@ -17,7 +17,7 @@
           <el-input class="input-underline" v-model="form.licensePlate" placeholder="请输入车牌号" style="width: 125px" />
         </el-form-item>
         <el-form-item
-          v-if="orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
+          v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
           :label="`过磅重量(千克)`"
           label-width="120px"
           prop="loadingWeight"
@@ -66,7 +66,8 @@
 
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
-import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick } from 'vue'
+import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick, inject } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
@@ -88,6 +89,7 @@ const props = defineProps({
   }
 })
 
+const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { cu, form, FORM } = regExtra() // 表单
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff() // 过磅重量超出理论重量处理
 
@@ -142,7 +144,15 @@ function handleClear() {
 
 function init() {
   trainsDiff.value = {}
-  form.logistics = {}
+  // 清除选中
+  const trigger = watchEffect(() => {
+    if (matSpecRef.value) {
+      matSpecRef.value.clear()
+      nextTick(() => {
+        trigger()
+      })
+    }
+  })
 }
 
 // 采购订单id变更

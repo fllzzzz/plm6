@@ -8,6 +8,8 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import steelPlate from './module/steel-plate.vue'
 import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
+import auxMat from './module/aux-mat.vue'
+import gas from './module/gas.vue'
 import rawMat from './module/raw-mat.vue'
 
 const props = defineProps({
@@ -25,8 +27,8 @@ const comp = computed(() => {
     case rawMatClsEnum.STEEL_PLATE.V: return steelPlate
     case rawMatClsEnum.SECTION_STEEL.V: return sectionSteel
     case rawMatClsEnum.STEEL_COIL.V: return steelCoil
-    case rawMatClsEnum.MATERIAL.V: return steelPlate
-    case rawMatClsEnum.GAS.V: return steelPlate
+    case rawMatClsEnum.MATERIAL.V: return auxMat
+    case rawMatClsEnum.GAS.V: return gas
     default: return rawMat
   }
 })

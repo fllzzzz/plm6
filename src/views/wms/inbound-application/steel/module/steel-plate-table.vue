@@ -48,10 +48,10 @@
         <el-input-number v-model="row.length" :max="999999" :controls="false" :min="0" :precision="0" size="mini" placeholder="长" />
       </template>
     </el-table-column>
-    <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+    <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
         <el-input-number
-          v-model="row.number"
+          v-model="row.quantity"
           :min="1"
           :max="999999999"
           controls-position="right"
@@ -128,7 +128,7 @@ const emit = defineEmits(['calc-weight'])
 // 当前物料基础类型
 const basicClass = matClsEnum.STEEL_PLATE.V
 
-const matSpecRef = inject('matSpecRef') // 调用兄弟组件matSpecRef
+const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
@@ -144,7 +144,7 @@ const tableRules = {
     { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' }
   ],
   length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
-  number: [{ required: true, message: '请填写数量', trigger: 'blur' }]
+  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验
@@ -165,7 +165,7 @@ function rowInit(row) {
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
-    number: undefined, // 数量
+    quantity: undefined, // 数量
     thickness: undefined, // 厚度
     length: undefined, // 长度
     width: undefined, // 宽度
@@ -186,7 +186,7 @@ function rowWatch(row) {
   // 计算单件理论重量
   watch([() => row.length, () => row.width, () => row.thickness, baseUnit], () => calcTheoryWeight(row))
   // 计算总重
-  watch([() => row.theoryWeight, () => row.number], () => calcTotalWeight(row))
+  watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
   // 钢材总重计算
   watch(
     () => row.weighingTotalWeight,
@@ -213,9 +213,9 @@ function calcTheoryWeight(row) {
 
 // 计算总重
 function calcTotalWeight(row) {
-  if (isNotBlank(row.theoryWeight) && row.number) {
-    row.theoryTotalWeight = row.theoryWeight * row.number
-    row.weighingTotalWeight = row.theoryWeight * row.number
+  if (isNotBlank(row.theoryWeight) && row.quantity) {
+    row.theoryTotalWeight = row.theoryWeight * row.quantity
+    row.weighingTotalWeight = row.theoryWeight * row.quantity
   } else {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined

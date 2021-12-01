@@ -18,7 +18,7 @@ import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
 import { setEmptyArr2Undefined, tree2list } from '@/utils/data-type/tree'
-import { isBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
 
@@ -323,10 +323,9 @@ const actions = {
     const classifySpec = state.classifySpec
     for (const id of classifyIds) {
       const ps = getFinalMatClsById(id).then((res) => {
-        const clsSimple = {
-          id: id,
-          name: res.name,
-          fullName: res.fullName,
+        const clsBrief = { // 简要信息
+          id: id, // 科目id
+          name: res.name, // 名称
           serialNumber: res.serialNumber, // 编码
           measureUnit: res.measureUnit, // 计量单位
           accountingUnit: res.accountingUnit, // 核算单位
@@ -335,9 +334,16 @@ const actions = {
           outboundUnit: res.outboundUnit, // 出库方式
           basicClass: res.basicClass
         }
+        clsBrief.fullNameArr = res.fullName.split('>') // 全称全路径 数组
+        clsBrief.fullName = clsBrief.fullNameArr.join(' > ') // 全称
+
         const matCls = {
-          ...clsSimple,
-          specConfig: res.specConfig.map((sc, ci) => {
+          ...clsBrief,
+          specConfig: [],
+          specKV: {}
+        }
+        if (isNotBlank(res.specConfig)) {
+          matCls.specConfig = res.specConfig.map((sc, ci) => {
             return {
               id: sc.id,
               name: sc.name,
@@ -355,10 +361,9 @@ const actions = {
                 return spec
               })
             }
-          }),
-          specKV: {}
+          })
         }
-        classifySpec[id].specList = getSpecList(clsSimple, matCls.specConfig)
+        classifySpec[id].specList = getSpecList(clsBrief, matCls.specConfig)
         Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
         Object.assign(classifySpec[id], matCls)
         Object.assign(classifySpec.specKV, matCls.specKV)
@@ -371,7 +376,20 @@ const actions = {
 
 // 获取规格列表（将后端的规格转换为各种常用格式）
 function getSpecList(classify, specConfig) {
-  if (isBlank(specConfig)) return []
+  if (isBlank(specConfig)) {
+    // 为空则插入无规格选项
+    return [{
+      classify,
+      index: [0],
+      specificationLabels: '无规格',
+      arr: [],
+      spec: '',
+      specKV: {},
+      specNameKV: {},
+      specArrKV: [],
+      sn: classify.id + '_' + '-1'
+    }]
+  }
   const specLengthArr = []
   const arrLength = specConfig.reduce((res, cur) => {
     specLengthArr.push(cur.list.length)

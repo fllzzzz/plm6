@@ -11,7 +11,7 @@
   >
     <template #titleAfter>
       <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
-      <el-tag v-if="order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
+      <el-tag v-if="props.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
         {{ `过磅重量：${form.loadingWeight}` }}
       </el-tag>
       <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
@@ -30,7 +30,7 @@
         row-key="uid"
       >
         <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
-        <el-expand-table-column :data="form.steelPlateList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+        <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
           <template #default="{ row }">
             <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" />
             <p>
@@ -65,6 +65,7 @@
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
 import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { STEEL_ENUM } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
@@ -128,12 +129,7 @@ const amount = ref() // 金额
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
-const { inboundFillWayCfg } = useWmsConfig(() => {
-  // 回调后，设置金额时，设置form.logistics为空，草稿及修改状态下已经存在则不用设置
-  if (showAmount.value && isBlank(form.logistics)) {
-    form.logistics = {}
-  }
-})
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 订单信息
 const order = computed(() => {
@@ -165,9 +161,9 @@ provide('ditto', ditto)
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 watch(
-  () => form.list,
-  (nVal) => {
-    setDitto(nVal) // 在list变化时设置同上
+  () => props.modelValue,
+  (visible) => {
+    if (visible) setDitto(form.list) // 在list变化时设置同上
   },
   { immediate: true }
 )
@@ -200,9 +196,6 @@ FORM.HOOK.beforeSubmit = () => {
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
   handleClose()
-  if (showAmount.value) {
-    form.logistics = {}
-  }
 }
 
 function closeHook() {

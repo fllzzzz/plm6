@@ -112,11 +112,37 @@ const getFinalMatClsByIdForSteelCoil = {
   }
 }
 
+// 气体
+const getFinalMatClsByIdForGas = {
+  url: RegExp('/api/config/classification/final-material/' + '[9][0-9][0-9]'),
+  method: 'get',
+  // timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data:
+        {
+          'id|1-100': 1,
+          name: '丙烷',
+          fullName: '快乐气体>丙烷',
+          serialNumber: /[0-9]{10}/,
+          measureUnit: '瓶', // 计量单位
+          accountingUnit: '升', // 核算单位
+          accountingPrecision: 0, // 核算单位小数精度
+          measurePrecision: 0, // 计量单位小数精度
+          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          basicClass: matClsEnum.STEEL_COIL.V
+        }
+    }
+  }
+}
+
 // 根据id, 获取末级物料分类
 const getFinalMatClsById = {
   url: RegExp('/api/config/classification/final-material/' + '[1-9][0-9]*'),
   method: 'get',
-  timeout: 500,
+  // timeout: 500,
   response: () => {
     return {
       code: 20000,
@@ -177,5 +203,6 @@ export default [
   getFinalMatClsByIdForSteelPlate,
   getFinalMatClsByIdForSectionSteel,
   getFinalMatClsByIdForSteelCoil,
+  getFinalMatClsByIdForGas,
   getFinalMatClsById
 ]

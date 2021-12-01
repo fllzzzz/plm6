@@ -30,3 +30,18 @@ export function auxMatInboundApplication(data) {
   })
 }
 
+/**
+ * 辅材入库申请
+ *
+ * @export
+ * @returns
+ */
+export function gasInboundApplication(data) {
+  return request({
+    module: 'wms',
+    url: 'inbound/application/gas',
+    method: 'post',
+    data
+  })
+}
+

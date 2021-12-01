@@ -54,6 +54,7 @@
           :basic-class="steelBasicClassKV[currentBasicClass].V"
           :table-width="350"
           auto-selected
+          expand-query
         />
       </template>
     </common-drawer>
@@ -103,6 +104,7 @@ const defaultForm = {
   purchaseId: null, // 申购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  logistics: {}, // 物流信息
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
   sectionSteelList: [], // 型钢列表
@@ -153,7 +155,9 @@ const useDraftCallback = (form) => {
             // 初始化选中数据，执行一次后取消当前监听
             initSelectedTrigger[key] = watchEffect(() => {
               if (matSpecRef.value) {
-                matSpecRef.value.initSelected(form[key].map((v) => v.sn))
+                matSpecRef.value.initSelected(form[key].map((v) => {
+                  return { sn: v.sn, classifyId: v.classifyId }
+                }))
                 nextTick(() => {
                   initSelectedTrigger[key]()
                 })
