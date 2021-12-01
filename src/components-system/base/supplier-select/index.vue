@@ -29,10 +29,10 @@
         </span>
       </template>
     </common-select>
-    <el-popover placement="top" width="450">
+    <el-popover v-model:visible="addVisible" placement="top" width="450">
       <add-supplier @close="handlePopoverClose" />
       <template #reference>
-        <span v-if="props.logisticsCreateable" class="add-icon pointer" @click.stop="addVisible = true">
+        <span v-if="props.logisticsCreateable" class="add-icon pointer" @click.stop="addVisible = !addVisible ">
           <el-icon v-permission="permission.add" color="#1881ef">
             <el-icon-plus />
           </el-icon>
