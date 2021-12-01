@@ -5,7 +5,7 @@
  * @author duhh
  */
 // 备注：增加了每项内容的margin
-import { toThousandFilter, emptyTextFormatter, isNotBlank, convertUnits } from '@/utils'
+import { toThousand, emptyTextFormatter, isNotBlank, convertUnits } from '@/utils'
 import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from './enum'
 import { convertColumns, delNotDisplayed, getLastColumns } from './page-handle'
 import enumOperate, { projectNameArrangementModeEnum } from '@/utils/enum'
@@ -899,8 +899,8 @@ function amountFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -924,8 +924,8 @@ function weightFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -948,8 +948,8 @@ function lengthFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -972,8 +972,8 @@ function thicknessFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -994,8 +994,8 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
     // 是否显示单位
     if (format.showUnit) {
@@ -1043,8 +1043,8 @@ function quantityFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val

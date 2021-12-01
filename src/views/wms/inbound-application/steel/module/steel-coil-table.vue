@@ -122,7 +122,7 @@ import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 const emit = defineEmits(['calc-weight'])
 
 // 当前物料基础类型
-const basicClass = matClsEnum.STEEL_PLATE.V
+const basicClass = matClsEnum.STEEL_COIL.V
 
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],

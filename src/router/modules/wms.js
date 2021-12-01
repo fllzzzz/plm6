@@ -20,18 +20,25 @@ export default {
           meta: { title: '钢材入库', icon: 'project', noCache: true }
         },
         {
-          name: 'auxMatInboundApplication',
+          name: 'AuxMatInboundApplication',
           path: 'auxiliary-material',
           hidden: false,
           component: '/wms/inbound-application/auxiliary-material/index',
           meta: { title: '辅材入库', icon: 'project', noCache: true }
         },
         {
-          name: 'gasInboundApplication',
+          name: 'GasInboundApplication',
           path: 'gas',
           hidden: false,
           component: '/wms/inbound-application/gas/index',
           meta: { title: '气体入库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatInboundApplicationRecord',
+          path: 'raw-mat-record',
+          hidden: false,
+          component: '/wms/inbound-application-record/raw-mat/index',
+          meta: { title: '原材料-入库申请记录', icon: 'project', noCache: true }
         }
       ]
     },

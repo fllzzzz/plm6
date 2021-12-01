@@ -4,7 +4,7 @@
  * @author duhh
  */
 import { emptyTextFormatter, isNotBlank } from '@data-type/index'
-import { toThousandFilter } from '@data-type/number'
+import { toThousand } from '@data-type/number'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import { projectNameFormatter } from '@/utils/project'
 import { alignEnum, fieldTypeEnum as typeEnum, printModeEnum as PrintMode } from '../enum'
@@ -509,8 +509,8 @@ function amountFormat(val, format) {
     _val = (+val).toFixed(format.decimal)
   }
   // 1000 => 1,000
-  if (format.toThousandFilter) {
-    _val = toThousandFilter(val)
+  if (format.toThousand) {
+    _val = toThousand(val)
   }
   return _val
 }

@@ -9,7 +9,7 @@ function meteWithUnit({ header, table = [], footer, qrCode }) {
       basicClass: row.basicClass,
       precision: 5,
       returnNewObj: true,
-      isNum: true
+      toNum: true
     })
     return row
   })

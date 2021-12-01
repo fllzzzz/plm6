@@ -19,7 +19,7 @@ const getList = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
             inboundSN: '21/11/25/R-001', // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
-            plateNumber: patternLicensePlate, // 车牌号
+            licensePlate: patternLicensePlate, // 车牌号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -45,7 +45,7 @@ const getList = {
             id: 2, // 订单id
             'basicClass|1-16': 1, // 采购物料基础类型
             purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
-            plateNumber: patternLicensePlate, // 车牌号
+            licensePlate: patternLicensePlate, // 车牌号
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
             inboundSN: '21/11/25/R-002', // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号

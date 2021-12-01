@@ -30,7 +30,7 @@ const state = {
   manufClsTree: [], // 制成品科目树
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
-  unit: { ALL: [], GROUP: [] }, // 单位列表 ALL，WEIGHT...
+  unit: { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
   factoryKV: {}, // 工厂id:value 格式
   warehouse: [], // 存储仓库
@@ -200,7 +200,7 @@ const actions = {
   async fetchUnit({ commit }) {
     const res = (await getAllUnit()) || []
     // 单位分为分类列表与全单位列表
-    const unit = { ALL: [], GROUP: [], KS: new Map() }
+    const unit = { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }
     Object.keys(unitTypeEnum.ENUM).forEach((key) => {
       unit[key] = []
     })
@@ -212,8 +212,9 @@ const actions = {
         symbol: v.symbol
       }
       unit.ALL.push(n)
-      unit.KS.set(v.name, v.symbol || v.name)
-      unit[unitTypeEnum.VK[v.type]].push(n)
+      unit.MAP.set(n.name, n)
+      unit.KS.set(n.name, n.symbol || n.name)
+      unit[unitTypeEnum.VK[n.type]].push(n)
     })
     Object.keys(unitTypeEnum.ENUM).forEach((key) => {
       unit.GROUP.push({

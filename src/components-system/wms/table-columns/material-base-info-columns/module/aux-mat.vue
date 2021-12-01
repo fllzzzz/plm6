@@ -1,5 +1,10 @@
 <template>
-  <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
+  <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" >
+    <template #default="{ row }">
+      <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
+      <span>{{ row.serialNumber }}</span>
+    </template>
+  </el-table-column>
   <el-table-column prop="classifyFullName" label="物料种类" align="center" min-width="180px" fixed="left" />
   <template v-if="props.specMerge">
     <el-table-column prop="specification" label="规格" align="center" min-width="180px" fixed="left">
@@ -33,6 +38,10 @@ const props = defineProps({
   },
   basicClass: {
     type: Number
+  },
+  showFactory: {
+    type: Boolean,
+    default: false
   }
 })
 </script>

@@ -4,6 +4,7 @@
     "cparagraph",
     "createable",
     "Customizeable",
+    "daterange",
     "detailable",
     "Dittoable",
     "qrcode",
@@ -12,6 +13,8 @@
     "submenu",
     "syscomp",
     "Tmpl",
+    "UNDIGIT",
+    "UNREVIEWED",
     "vite"
   ]
 }

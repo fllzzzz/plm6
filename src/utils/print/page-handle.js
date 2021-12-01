@@ -1,6 +1,6 @@
 import { MIN_UNIT } from '@/settings/config'
 import { emptyTextFormatter, isNotBlank } from '@data-type/index'
-import { toThousandFilter } from '@data-type/number'
+import { toThousand } from '@data-type/number'
 import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import { amountUnitEnum, alignEnum, verticleAlignEnum, dataSourceEnum, fieldTypeEnum, pageFormatEnum } from '@/utils/print/enum'
@@ -657,8 +657,8 @@ const setting = {
         _val = (+_val).toFixed(format.precision)
       }
       // 1000 => 1,000
-      if (format.toThousandFilter) {
-        _val = toThousandFilter(_val)
+      if (format.toThousand) {
+        _val = toThousand(_val)
       }
     }
     return _val
@@ -682,8 +682,8 @@ const setting = {
         _val = (+_val).toFixed(format.precision)
       }
       // 1000 => 1,000
-      if (format.toThousandFilter) {
-        _val = toThousandFilter(_val)
+      if (format.toThousand) {
+        _val = toThousand(_val)
       }
     }
     return _val
@@ -706,8 +706,8 @@ const setting = {
         _val = (+_val).toFixed(format.precision)
       }
       // 1000 => 1,000
-      if (format.toThousandFilter) {
-        _val = toThousandFilter(_val)
+      if (format.toThousand) {
+        _val = toThousand(_val)
       }
     }
     return _val
@@ -730,8 +730,8 @@ const setting = {
         _val = (+_val).toFixed(format.precision)
       }
       // 1000 => 1,000
-      if (format.toThousandFilter) {
-        _val = toThousandFilter(_val)
+      if (format.toThousand) {
+        _val = toThousand(_val)
       }
     }
     return _val
@@ -754,8 +754,8 @@ const setting = {
         _val = (+_val).toFixed(format.precision)
       }
       // 1000 => 1,000
-      if (format.toThousandFilter) {
-        _val = toThousandFilter(_val)
+      if (format.toThousand) {
+        _val = toThousand(_val)
       }
       // 是否显示单位
       if (format.showUnit) {
@@ -803,8 +803,8 @@ const setting = {
         _val = (+_val).toFixed(format.precision)
       }
       // 1000 => 1,000
-      if (format.toThousandFilter) {
-        _val = toThousandFilter(_val)
+      if (format.toThousand) {
+        _val = toThousand(_val)
       }
     }
     return _val

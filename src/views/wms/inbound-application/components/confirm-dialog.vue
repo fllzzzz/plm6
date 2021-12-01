@@ -12,7 +12,7 @@
     <template #titleAfter>
       <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
       <el-tag v-if="props.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-        {{ `过磅重量：${form.loadingWeight}` }}
+        {{ `过磅重量：${form.loadingWeight}kg` }}
       </el-tag>
       <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
@@ -46,16 +46,16 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
         <!-- 金额设置 -->
-        <template v-if="showAmount">
-          <price-set-columns @amount-change="handleAmountChange" />
-        </template>
+        <price-set-columns v-if="showAmount" @amount-change="handleAmountChange" />
         <!-- 仓库设置 -->
-        <template v-if="showWarehouse">
-          <warehouse-set-columns />
-        </template>
+        <warehouse-set-columns v-if="showWarehouse" />
       </common-table>
       <!-- 物流信息设置 -->
-      <logistics-form :disabled="cu.status.edit === FORM.STATUS.PROCESSING" class="logistics-form-content" v-if="showAmount && form.logistics" />
+      <logistics-form
+        :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+        class="logistics-form-content"
+        v-if="showAmount && form.logistics"
+      />
     </el-form>
     <common-footer class="footer" unit="元" :total-value="amount" :show-total="showAmount" is-submit />
   </common-dialog>
@@ -85,6 +85,7 @@ import priceSetColumns from './price-set-columns.vue'
 import warehouseSetColumns from './warehouse-set-columns.vue'
 import commonFooter from './common-footer.vue'
 import { isBlank } from '@/utils/data-type'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 // TODO:处理申购单与项目之间的关联
 // TODO: 标签打印提示
 
@@ -170,16 +171,26 @@ watch(
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  if (props.basicClass <= 7) {
-    if (form.steelPlateList) form.steelPlateList = await numFmtByBasicClass(form.steelPlateList, { toSmallest: true, isNum: true })
-    if (form.sectionSteelList) form.sectionSteelList = await numFmtByBasicClass(form.sectionSteelList, { toSmallest: true, isNum: true })
-    if (form.steelCoilList) form.steelCoilList = await numFmtByBasicClass(form.steelCoilList, { toSmallest: true, isNum: true })
-    cleanUpData(form.steelPlateList)
-    cleanUpData(form.sectionSteelList)
-    cleanUpData(form.steelCoilList)
-  } else {
-    cleanUpData(form.list)
-    form.list = await numFmtByBasicClass(form.list, { toSmallest: true, isNum: true })
+  cleanUpData(form.list)
+  form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
+  if (props.basicClass <= STEEL_ENUM) {
+    // 钢材拆分为三个数组传递给服务端
+    form.steelPlateList = []
+    form.sectionSteelList = []
+    form.steelCoilList = []
+    form.list.forEach((v) => {
+      switch (v.basicClass) {
+        case matClsEnum.STEEL_PLATE.V:
+          form.steelPlateList.push(v)
+          break
+        case matClsEnum.SECTION_STEEL.V:
+          form.sectionSteelList.push(v)
+          break
+        case matClsEnum.STEEL_COIL.V:
+          form.steelCoilList.push(v)
+          break
+      }
+    })
   }
   return form
 }

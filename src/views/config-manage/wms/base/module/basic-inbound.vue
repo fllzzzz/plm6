@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item label="打印标签提示场景">
         <el-checkbox v-model="form.printLabelTipWay.afterApplication" label="入库申请提交后" size="mini"></el-checkbox>
-        <el-checkbox v-model="form.printLabelTipWay.afterAudit" label="入库单审核后" size="mini"></el-checkbox>
+        <el-checkbox v-model="form.printLabelTipWay.afterReview" label="入库单审核后" size="mini"></el-checkbox>
         <el-form-item>
           <span class="form-item-tip">勾选后，会在对应的场景弹窗提示用户打印此次入库物料的标签。</span>
         </el-form-item>
@@ -55,7 +55,7 @@ const dataSource = ref({
   // 标签打印提示场景
   printLabelTipWay: {
     afterApplication: undefined,
-    afterAudit: undefined
+    afterReview: undefined
   }
 })
 // 表单
