@@ -14,3 +14,19 @@ export function steelInboundApplication(data) {
     data
   })
 }
+
+/**
+ * 辅材入库申请
+ *
+ * @export
+ * @returns
+ */
+export function auxMatInboundApplication(data) {
+  return request({
+    module: 'wms',
+    url: 'inbound/application/auxiliary-material',
+    method: 'post',
+    data
+  })
+}
+

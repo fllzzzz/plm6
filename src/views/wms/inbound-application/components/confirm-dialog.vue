@@ -174,12 +174,15 @@ watch(
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  cleanUpData(form.list)
   if (props.basicClass <= 7) {
     if (form.steelPlateList) form.steelPlateList = await numFmtByBasicClass(form.steelPlateList, { toSmallest: true, isNum: true })
     if (form.sectionSteelList) form.sectionSteelList = await numFmtByBasicClass(form.sectionSteelList, { toSmallest: true, isNum: true })
     if (form.steelCoilList) form.steelCoilList = await numFmtByBasicClass(form.steelCoilList, { toSmallest: true, isNum: true })
+    cleanUpData(form.steelPlateList)
+    cleanUpData(form.sectionSteelList)
+    cleanUpData(form.steelCoilList)
   } else {
+    cleanUpData(form.list)
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, isNum: true })
   }
   return form

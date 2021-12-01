@@ -195,7 +195,6 @@ function rowWatch(row) {
     },
     { immediate: true }
   )
-  console.log('log')
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量

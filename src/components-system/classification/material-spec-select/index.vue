@@ -124,12 +124,12 @@ const query = ref({
   spec: undefined
 })
 
-const tagContainerStyle = ref({})
+const tagContainerStyle = ref({}) // 标签样式
 const extraQueryOpened = ref(false) // 规格配置查询打开
-const matCls = ref({})
-const selected = ref({})
-const curClsId = ref()
-const list = ref([])
+const matCls = ref({}) // 科目分类集合
+const selected = ref({}) // 算中的sn
+const curClsId = ref() // 当前科目id
+const list = ref([]) // 选中列
 const calcFinish = ref(true) // 计算完成后再渲染，避免debounce延时导致的切换抖动
 // const calcSpecWidth = calcWidth // 计算规格列表处规格的宽度
 const calcSpecWidth = () => {
@@ -257,10 +257,22 @@ function rowInit(row) {
   }
 }
 
+// 初始化选中
+function initSelected(snArr) {
+  snArr.forEach(sn => {
+    if (isBlank(selected.value[sn])) {
+      selected.value[sn] = 1
+    } else {
+      selected.value[sn]++
+    }
+  })
+}
+
 /**
  * selector 模式
  */
 function handleSelectChange(sn) {
+  // TODO: 改为 0 1 不使用true，false,统一
   selected.value[sn] = !selected.value[sn]
   const status = selected.value[sn]
   if (!status) {
@@ -317,6 +329,19 @@ function delListItem(sn, index) {
   }
   emit('update:modelValue', list.value)
   emit('change', list.value)
+}
+
+// 根据基础分类清除
+function clearByBasicClass(basicClass) {
+  const snArr = Object.keys(selected.value)
+  const delArr = []
+  snArr.forEach(sn => {
+    const snInfo = matClsSpecKV.value[sn]
+    if (snInfo && snInfo.classify && (snInfo.classify.basicClass & basicClass)) {
+      delArr.push(sn)
+    }
+  })
+  handleClear(delArr)
 }
 
 // 清空当前科目的所有规格
@@ -392,7 +417,9 @@ function calcWidth() {
 defineExpose({
   delListItem,
   init,
+  initSelected,
   clear,
+  clearByBasicClass,
   clearCurrentClassify
 })
 </script>

@@ -210,6 +210,11 @@ function init() {
   specRef.value && specRef.value.init
 }
 
+// 初始化选中
+function initSelected(snArr) {
+  specRef.value && specRef.value.initSelected(snArr)
+}
+
 // 删除
 function delListItem(sn, index) {
   specRef.value && specRef.value.delListItem(sn, index)
@@ -220,10 +225,17 @@ function clear() {
   specRef.value && specRef.value.clear
 }
 
+// 根据物料分类清除
+function clearByBasicClass(basicClass) {
+  specRef.value && specRef.value.clearByBasicClass(basicClass)
+}
+
 defineExpose({
   delListItem,
   init,
-  clear
+  initSelected,
+  clear,
+  clearByBasicClass
 })
 </script>
 

@@ -63,7 +63,7 @@
 <script setup>
 // TODO: 编辑，反向赋值
 import { steelInboundApplication } from '@/api/wms/inbound/application'
-import { defineProps, ref, computed, watch, provide, nextTick, reactive } from 'vue'
+import { defineProps, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
@@ -136,6 +136,11 @@ const useDraftCallback = (form) => {
     sectionSteelList: null,
     steelCoilList: null
   }
+  const initSelectedTrigger = {
+    steelPlateList: null,
+    sectionSteelList: null,
+    steelCoilList: null
+  }
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
   list.forEach((key) => {
     if (isNotBlank(form[key])) {
@@ -145,6 +150,15 @@ const useDraftCallback = (form) => {
           if (ref[key]) {
             // 初始化数据监听，执行一次后取消当前监听
             form[key].forEach((v) => ref[key].rowWatch(v))
+            // 初始化选中数据，执行一次后取消当前监听
+            initSelectedTrigger[key] = watchEffect(() => {
+              if (matSpecRef.value) {
+                matSpecRef.value.initSelected(form[key].map((v) => v.sn))
+                nextTick(() => {
+                  initSelectedTrigger[key]()
+                })
+              }
+            })
             nextTick(() => {
               trigger[key]()
             })
@@ -344,6 +358,16 @@ function handleOrderInfoChange(orderInfo) {
       if (steelBasicClassKV[k].V & orderInfo.basicClass) {
         if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
         disabledBasicClass.value[k] = false
+      } else {
+        form[k] = []
+        const trigger = watchEffect(() => {
+          if (matSpecRef.value) {
+            matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
+            nextTick(() => {
+              trigger()
+            })
+          }
+        })
       }
     })
     // 默认赋值

@@ -29,6 +29,7 @@
       <supplier-select
         v-model="query.supplierId"
         :type="supplierTypeEnum.LOGISTICS.V"
+        logistics-createable
         clearable
         class="filter-item"
         @change="crud.toQuery"

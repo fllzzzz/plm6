@@ -35,7 +35,7 @@
         v-model="row.requisitionsSN"
         :options="getRequisitionsSNOptions($index, row)"
         :dataStructure="{ key: 'serialNumber', label: 'serialNumber', value: 'serialNumber' }"
-        :show-extra="$index !== 0 && row.requisitionsDittoable"
+        :show-extra="$index !== 0 || row.requisitionsDittoable"
         type="other"
         placeholder="申购单"
         clearable

@@ -63,7 +63,7 @@ const props = defineProps({
   logisticsCreateable: {
     // 可创建物流供应商
     type: Boolean,
-    default: true
+    default: false
   },
   type: {
     type: Number,
