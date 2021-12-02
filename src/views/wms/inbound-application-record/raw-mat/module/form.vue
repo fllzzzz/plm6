@@ -2,6 +2,7 @@
   <common-drawer
     ref="drawerRef"
     :visible="crud.status.cu > CRUD.STATUS.NORMAL"
+    :content-loading="crud.editDetailLoading"
     :before-close="crud.cancelCU"
     :title="crud.status.title"
     :show-close="true"
@@ -9,24 +10,24 @@
     custom-class="raw-mat-inbound-application-record-form"
   >
     <template #content>
-      <component v-if="loaded" :is="comp" :detail="form" edit @success="crud.cancelCU" />
+      <component :is="comp" :detail="form" edit @success="crud.cancelCU" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { regForm } from '@compos/use-crud'
-import SteelApplication from '@/views/wms/inbound-application/steel/index.vue'
-import AuxMatApplication from '@/views/wms/inbound-application/auxiliary-material/index.vue'
-import GasApplication from '@/views/wms/inbound-application/gas/index.vue'
-import { matClsEnum } from '@/utils/enum/modules/classification'
 import { STEEL_ENUM } from '@/settings/config'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
+import SteelApplication from '@/views/wms/inbound-application/steel/index.vue'
+import AuxMatApplication from '@/views/wms/inbound-application/auxiliary-material/index.vue'
+import GasApplication from '@/views/wms/inbound-application/gas/index.vue'
+
 const { CRUD, crud, form } = regForm()
-const loaded = ref(false)
 
 const comp = computed(() => {
   switch (form.basicClass) {
@@ -44,16 +45,11 @@ const comp = computed(() => {
   }
 })
 
-CRUD.HOOK.beforeToEdit = async () => {
-  loaded.value = false
-  form.list = await numFmtByBasicClass(form.list, {
+CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
+  await setSpecInfoToList(detail.list)
+  detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
     toNum: true
   })
-  await setSpecInfoToList(form.list)
-}
-
-CRUD.HOOK.afterToEdit = async () => {
-  loaded.value = true
 }
 </script>

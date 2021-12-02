@@ -1,5 +1,6 @@
 <template>
   <el-drawer
+    ref="drawerRef"
     v-model="drawerVisible"
     :append-to-body="props.appendToBody"
     :lock-scroll="props.lockScroll"
@@ -31,7 +32,7 @@
         <div class="drawer-title">
           <span class="title-left">
             <span class="title-text">{{ props.title }}</span>
-            <span class="child-mr-6"><slot name="titleAfter" /></span>
+            <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
           <span>
             <slot name="titleRight" />
@@ -40,16 +41,14 @@
         </div>
       </slot>
     </template>
-
-    <div v-show="contentVisible">
-      <slot v-if="loaded" name="content" />
-    </div>
+      <slot v-if="!props.contentLoading" name="content" />
   </el-drawer>
 </template>
 
 <script setup>
 import { watch, computed, defineProps, defineEmits, defineExpose, ref } from 'vue'
 import { isNotBlank } from '@data-type/index'
+import { ElLoading } from 'element-plus'
 
 const emit = defineEmits(['open', 'opened', 'close', 'closed', 'update:modelValue'])
 
@@ -62,6 +61,10 @@ const props = defineProps({
     // crud 使用
     type: Boolean,
     default: undefined
+  },
+  contentLoading: {
+    type: Boolean,
+    default: false
   },
   showClose: {
     type: Boolean,
@@ -138,25 +141,17 @@ const props = defineProps({
   wrapperClosable: {
     type: Boolean,
     default: true
-  },
-  showDelay: {
-    type: Number,
-    default: 0
-  },
-  loadDelay: {
-    type: Number,
-    default: 300
   }
 })
 
+// 加载
+let loading
+
+const drawerRef = ref()
 // 自定义类名
 const customClass = `${props.customClass || ''} common-drawer`
 
 const drawerVisible = ref(false)
-// 内容是否显示
-const contentVisible = ref(false)
-// 是否已加载
-const loaded = ref(false)
 
 // 是否使用prop:visible 控制
 const isVisibleProp = computed(() => isNotBlank(props.visible))
@@ -166,33 +161,32 @@ watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
 })
 
 watch(
-  () => drawerVisible.value,
-  (flag) => {
-    if (flag) {
-      if (props.showDelay) {
-        setTimeout(() => {
-          contentVisible.value = true
-        }, props.showDelay)
-      } else {
-        contentVisible.value = true
-      }
-    } else {
-      contentVisible.value = false
+  () => props.contentLoading,
+  (foo) => {
+    if (!foo) {
+      loading && loading.close()
     }
   }
 )
 
-watch(contentVisible, (flag) => {
-  if (flag && !loaded.value) {
-    if (props.loadDelay) {
-      setTimeout(() => {
-        loaded.value = true
-      }, props.loadDelay)
-    } else {
-      loaded.value = true
-    }
+watch(drawerVisible, (foo) => {
+  if (foo && props.contentLoading) {
+    openFullScreen()
+  } else {
+    loading && loading.close()
   }
 })
+
+function openFullScreen() {
+  let el
+  if (drawerRef.value) el = drawerRef.value.drawerRef
+  loading = ElLoading.service({
+    target: el,
+    lock: true,
+    text: '数据加载中，请稍后',
+    fullscreen: false
+  })
+}
 
 function handleClose() {
   if (typeof props.beforeClose === 'function') {
@@ -225,7 +219,7 @@ function closed() {
 }
 
 defineExpose({
-  loaded,
+  loaded: drawerVisible,
   handleClose
 })
 </script>
@@ -248,29 +242,29 @@ defineExpose({
   justify-content: space-between;
 
   .title-left {
-      display: flex;
-      align-items: center;
-      position: relative;
-      padding-left: 10px;
-      margin-right: 15px;
-      box-sizing: border-box;
-      .title-text {
-        font-weight: bold;
-        font-size: 18px;
-        color: #000;
-      }
-      &::before {
-        content: '';
-        width: 4px;
-        height: 15px;
-        border-radius: 10px;
-        background: #1890ff;
-        position: absolute;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-      }
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 10px;
+    margin-right: 15px;
+    box-sizing: border-box;
+    .title-text {
+      font-weight: bold;
+      font-size: 18px;
+      color: #000;
     }
+    &::before {
+      content: '';
+      width: 4px;
+      height: 15px;
+      border-radius: 10px;
+      background: #1890ff;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+  }
 
   ::v-deep(.el-button + .el-button) {
     margin-left: 6px;

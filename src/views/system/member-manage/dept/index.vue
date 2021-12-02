@@ -27,7 +27,7 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <udOperation :data="scope.row" :permission="permission"  del-prompt="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！" :disabled-dle="scope.row.id === 1"/>
+          <udOperation :data="scope.row" :permission="permission"  del-prompt="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！" :disabled-del="scope.row.id === 1"/>
         </template>
       </el-table-column>
     </common-table>

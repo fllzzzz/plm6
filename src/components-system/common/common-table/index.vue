@@ -45,7 +45,7 @@
     @cell-contextmenu="cellContext"
     @row-click="rowClick"
     @row-contextmenu="rowContextmenu"
-    @row-dblclick="rowDblClick"
+    @row-dblclick="rowDblclick"
     @header-click="headerClick"
     @header-contextmenu="headerContextmenu"
     @sort-change="sortChange"
@@ -83,7 +83,7 @@ const emit = defineEmits([
   'cellContext',
   'rowClick',
   'rowContextmenu',
-  'rowDblClick',
+  'rowDblclick',
   'headerClick',
   'headerContextmenu',
   'sortChange',
@@ -362,8 +362,8 @@ function rowContextmenu(row, column, event) {
 }
 
 // 当某一行被双击时会触发该事件
-function rowDblClick(row, column, event) {
-  emit('rowDblClick', row, column, event)
+function rowDblclick(row, column, event) {
+  emit('rowDblclick', row, column, event)
 }
 
 // 当某一列的表头被点击时会触发该事件
