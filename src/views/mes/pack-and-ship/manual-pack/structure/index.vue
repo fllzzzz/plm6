@@ -60,7 +60,11 @@
         :show-overflow-tooltip="true"
         label="规格"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.specification }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -83,7 +87,11 @@
         :show-overflow-tooltip="true"
         label="材质"
         min-width="80px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.material }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('netWeight')"
         key="netWeight"

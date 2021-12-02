@@ -1,7 +1,7 @@
 <!-- 枚举类型通用单选按钮：单选按钮 -->
 <template>
   <el-radio-group class="inline-block" v-model="copyValue" :size="size" :disabled="disabled" @change="selectChange">
-    <el-radio-button v-if="showOptionAll" :label="0">全部</el-radio-button>
+    <el-radio-button v-if="showOptionAll" :label="optionAllValue">全部</el-radio-button>
     <template v-for="item in options">
       <el-radio-button
         v-if="unshowVal.indexOf(item[DS.value]) === -1"
@@ -52,6 +52,10 @@ const props = defineProps({
   showOptionAll: {
     type: Boolean,
     default: false
+  },
+  optionAllValue: {
+    type: [Number, String, Boolean],
+    default: 0
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用

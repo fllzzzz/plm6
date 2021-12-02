@@ -51,12 +51,11 @@
         key="productType"
         prop="productType"
         label="装载类型"
-        align="center"
-        min-width="80"
+        width="165"
       >
         <template v-slot="scope">
-          <el-tag :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T" effect="light" disable-transitions>{{
-            packTypeEnum.VL[scope.row.productType]
+          <el-tag v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))" style="margin-right:5px;" :key="item" :type="packTypeEnum[packTypeEnum.VK[item]].T" effect="light" disable-transitions>{{
+            packTypeEnum.VL[item]
           }}</el-tag>
         </template>
       </el-table-column>
@@ -201,6 +200,8 @@ import { ref } from 'vue'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
+import { cleanArray } from '@/utils/data-type/array'
+import EO from '@enum'
 import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import checkPermission from '@/utils/system/check-permission'

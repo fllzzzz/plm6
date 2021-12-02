@@ -26,7 +26,7 @@ const getShipList = {
           },
           'auditTime': '@datetime',
           'manufactureType|1': [0, 1],
-          'productType|1': [2, 4, 8],
+          'productType|1': [2, 4, 6, 8, 10, 12, 14],
           'serialNumber': '@datetime("yyyy-MM-dd")',
           'licensePlate': patternLicensePlate,
           'driverName': '@cname',

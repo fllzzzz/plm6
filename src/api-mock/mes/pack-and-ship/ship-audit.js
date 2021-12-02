@@ -43,7 +43,7 @@ const getShipAuditList = {
           'actualUserName': '@cname',
           'auditUserName': '@cname',
           'checkStatus|1': [1, 2],
-          'productType|1': [2, 4, 8]
+          'productType|1': [2, 4, 6, 8, 10, 12, 14]
         }]
       }
     }

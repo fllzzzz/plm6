@@ -127,17 +127,12 @@
         key="productType"
         prop="productType"
         label="装载类型"
-        align="center"
-        min-width="80"
+        width="165"
       >
         <template v-slot="scope">
-          <el-tag
-            v-if="scope.row.productType"
-            :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T"
-            effect="light"
-            disable-transitions
-            >{{ packTypeEnum.VL[scope.row.productType] }}</el-tag
-          >
+          <el-tag v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))" style="margin-right:5px;" :key="item" :type="packTypeEnum[packTypeEnum.VK[item]].T" effect="light" disable-transitions>{{
+            packTypeEnum.VL[item]
+          }}</el-tag>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -187,21 +182,51 @@
     <pagination />
     <m-detail v-model:visible="detailVisible" isShowPrice :detail-info="shipInfo" title="发运审核" :detailFunc="detail">
       <template #titleRight v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V">
-        <common-button type="primary" :loading="loading.passLoading" size="mini" @click="auditIt(shipAuditEnum.PASS,'passLoading')">同意发运</common-button>
-        <common-button type="danger" :loading="loading.noPassLoading" size="mini" @click="auditIt(shipAuditEnum.NO_PASS,'noPassLoading')">不同意发运</common-button>
+        <common-button
+type="primary"
+:loading="loading.passLoading"
+size="mini"
+@click="auditIt(shipAuditEnum.PASS, 'passLoading')"
+          >同意发运</common-button
+        >
+        <common-button
+type="danger"
+:loading="loading.noPassLoading"
+size="mini"
+@click="auditIt(shipAuditEnum.NO_PASS, 'noPassLoading')"
+          >不同意发运</common-button
+        >
       </template>
       <template v-slot:contract="data">
-        <el-descriptions :column="2" border style="margin-bottom: 10px;" v-if="data.contract" >
+        <el-descriptions :column="2" border style="margin-bottom: 10px" v-if="data.contract">
           <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ data.contract.name }}</el-descriptions-item>
           <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ data.contract.licensePlate }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="本次发货额">{{ toFixed(data.contract.deliveryAmount, DP.YUAN) }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="安全余额">{{ toFixed(data.contract.safeAmount, DP.YUAN) }} </el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="合同额">{{ toFixed(data.contract.contractAmount, DP.YUAN) }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="累计收款">{{ toFixed(data.contract.totalCollectionAmount, DP.YUAN) }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="累计发运">{{ toFixed(data.contract.totalDeliveryAmount, DP.YUAN) }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="累计发运额">{{ toFixed(data.contract.totalDeliveryAmount, DP.YUAN) }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="合同应收">{{ toFixed(data.contract.contractAmount, DP.YUAN) }}</el-descriptions-item>
-          <el-descriptions-item label-class-name="contractLabel" label="开票应收">{{ toFixed(data.contract.contractAmount, DP.YUAN) }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="本次发货额">{{
+            toFixed(data.contract.deliveryAmount, DP.YUAN)
+          }}</el-descriptions-item>
+          <el-descriptions-item
+label-class-name="contractLabel"
+label="安全余额"
+            >{{ toFixed(data.contract.safeAmount, DP.YUAN) }}
+          </el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="合同额">{{
+            toFixed(data.contract.contractAmount, DP.YUAN)
+          }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计收款">{{
+            toFixed(data.contract.totalCollectionAmount, DP.YUAN)
+          }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计发运">{{
+            toFixed(data.contract.totalDeliveryAmount, DP.YUAN)
+          }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="累计发运额">{{
+            toFixed(data.contract.totalDeliveryAmount, DP.YUAN)
+          }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="合同应收">{{
+            toFixed(data.contract.contractAmount, DP.YUAN)
+          }}</el-descriptions-item>
+          <el-descriptions-item label-class-name="contractLabel" label="开票应收">{{
+            toFixed(data.contract.contractAmount, DP.YUAN)
+          }}</el-descriptions-item>
         </el-descriptions>
       </template>
     </m-detail>
@@ -216,6 +241,8 @@ import { ElNotification } from 'element-plus'
 import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
 import { weightMeasurementModeEnum as measureModeEnum } from '@enum-ms/finance'
 import { DP } from '@/settings/config'
+import { cleanArray } from '@/utils/data-type/array'
+import EO from '@enum'
 // import { convertUnits } from '@/utils/convert/unit'
 import { toFixed } from '@/utils/data-type'
 import { projectNameFormatter } from '@/utils/project'
@@ -294,7 +321,7 @@ async function auditIt(status, loadingLabel) {
 </script>
 
 <style>
-.contractLabel{
+.contractLabel {
   width: 100px;
 }
 </style>

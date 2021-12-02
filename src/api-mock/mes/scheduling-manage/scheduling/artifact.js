@@ -1,3 +1,5 @@
+import { artifactListInfo } from '../../common-mock-data/product-type-data'
+
 const getArtifact = {
   url: '/api/mes/building/artifact/scheduling/page',
   method: 'get',
@@ -74,6 +76,14 @@ const getArtifact = {
           'districtName': '区域1',
           'packageQuantity': null,
           'unPackageQuantity': null
+        }, {
+          ...artifactListInfo,
+          'boolStatusEnum': true,
+          'schedulingProductionLineDTOS': [],
+          'totalSchedulingQuantity|1-100': 0,
+          'totalTaskQuantity|1-100': 0,
+          'packageQuantity|1-100': 1,
+          'unPackageQuantity|1-100': 1
         }]
       }
     }

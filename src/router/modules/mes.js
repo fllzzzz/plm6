@@ -188,93 +188,94 @@ export default {
       }
     ]
   },
-  // {
-  //   path: '/mes/production-manage',
-  //   component: 'Layout',
-  //   hidden: false,
-  //   name: 'MesProductionManage',
-  //   alwaysShow: false,
-  //   redirect: '/mes/production-manage/report',
-  //   meta: { title: '生产管理', icon: 'contract', noCache: true },
-  //   children: [
-  //     {
-  //       name: 'MesProductionReport',
-  //       path: 'report',
-  //       hidden: false,
-  //       redirect: '/mes/production-manage/report/artifact',
-  //       meta: { title: '生产报表', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesProductionReportArtifact',
-  //           path: 'artifact',
-  //           hidden: false,
-  //           component: '/mes/production-manage/report/artifact/index',
-  //           meta: { title: '结构报表', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesProductionReportContourPlate',
-  //           path: 'contour-plate',
-  //           hidden: false,
-  //           component: '/mes/production-manage/report/contour-plate/index',
-  //           meta: { title: '压型板报表', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesProductionReportBearingPlate',
-  //           path: 'bearing-plate',
-  //           hidden: false,
-  //           component: '/mes/production-manage/report/bearing-plate/index',
-  //           meta: { title: '楼承板报表', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesProductionReportCoreBoard',
-  //           path: 'core-board',
-  //           hidden: false,
-  //           component: '/mes/production-manage/report/core-board/index',
-  //           meta: { title: '夹芯板报表', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesProductionReportFoldingPiece',
-  //           path: 'folding-piece',
-  //           hidden: false,
-  //           component: '/mes/production-manage/report/folding-piece/index',
-  //           meta: { title: '折边件报表', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       name: 'MesProductionDashboard',
-  //       path: 'dashboard',
-  //       hidden: false,
-  //       redirect: '/mes/production-manage/dashboard/project-state',
-  //       meta: { title: '项目看板', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesProductionDashboardProjectState',
-  //           path: 'project-state',
-  //           hidden: false,
-  //           component: '/mes/production-manage/dashboard/project-state/index',
-  //           meta: { title: '项目状态', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       name: 'MesProductionAnalysis',
-  //       path: 'analysis',
-  //       hidden: false,
-  //       redirect: '/mes/production-manage/analysis/project-state/production-statistics',
-  //       meta: { title: '生产分析', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesProductionAnalysisStatistics',
-  //           path: 'production-statistics',
-  //           hidden: false,
-  //           component: '/mes/production-manage/dashboard/project-state/production-statistics/index',
-  //           meta: { title: '生产统计', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // },
+  {
+    path: '/mes/production-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesProductionManage',
+    alwaysShow: false,
+    redirect: '/mes/production-manage/report',
+    meta: { title: '生产管理', icon: 'contract', noCache: true },
+    children: [
+      {
+        name: 'MesProductionReport',
+        path: 'report',
+        hidden: false,
+        redirect: '/mes/production-manage/report/artifact',
+        meta: { title: '生产报表', icon: 'project', noCache: false },
+        children: [
+          {
+            name: 'MesProductionReportArtifact',
+            path: 'artifact',
+            hidden: false,
+            component: '/mes/production-manage/report/artifact/index',
+            meta: { title: '结构报表', icon: 'project', noCache: true }
+          },
+          {
+            name: 'MesProductionReportPressedPlate',
+            path: 'pressed-plate',
+            hidden: false,
+            component: '/mes/production-manage/report/pressed-plate/index',
+            meta: { title: '压型板报表', icon: 'project', noCache: true }
+          },
+          {
+            name: 'MesProductionReportSandwichBoard',
+            path: 'sandwich-board',
+            hidden: false,
+            component: '/mes/production-manage/report/sandwich-board/index',
+            meta: { title: '夹芯板报表', icon: 'project', noCache: true }
+          },
+          {
+            name: 'MesProductionReportFloorPlate',
+            path: 'floor-plate',
+            hidden: false,
+            component: '/mes/production-manage/report/floor-plate/index',
+            meta: { title: '楼承板报表', icon: 'project', noCache: true }
+          },
+
+          {
+            name: 'MesProductionReportFoldingPiece',
+            path: 'folding-piece',
+            hidden: false,
+            component: '/mes/production-manage/report/folding-piece/index',
+            meta: { title: '折边件报表', icon: 'project', noCache: true }
+          }
+        ]
+      },
+      {
+        name: 'MesProductionDashboard',
+        path: 'dashboard',
+        hidden: false,
+        redirect: '/mes/production-manage/dashboard/project-state',
+        meta: { title: '项目看板', icon: 'project', noCache: true },
+        children: [
+          {
+            name: 'MesProductionDashboardProjectState',
+            path: 'project-state',
+            hidden: false,
+            component: '/mes/production-manage/dashboard/project-state/index',
+            meta: { title: '项目状态', icon: 'project', noCache: true }
+          }
+        ]
+      },
+      {
+        name: 'MesProductionAnalysis',
+        path: 'analysis',
+        hidden: false,
+        redirect: '/mes/production-manage/analysis/production-statistics',
+        meta: { title: '生产分析', icon: 'project', noCache: true },
+        children: [
+          {
+            name: 'MesProductionAnalysisStatistics',
+            path: 'production-statistics',
+            hidden: false,
+            component: '/mes/production-manage/analysis/production-statistics/index',
+            meta: { title: '生产统计', icon: 'project', noCache: true }
+          }
+        ]
+      }
+    ]
+  },
   // {
   //   path: '/mes/business-manage',
   //   component: 'Layout',

@@ -142,19 +142,12 @@
         align="center"
         min-width="100"
       />
-       <el-table-column
-        v-if="columns.visible('auditTime')"
-        key="auditTime"
-        prop="auditTime"
-        sortable="custom"
-        label="发运日期"
-        width="120"
-      >
+      <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="发运日期" width="120">
         <template v-slot="scope">
           <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</span>
         </template>
       </el-table-column>
-       <el-table-column
+      <el-table-column
         v-if="columns.visible('auditReceiptTime')"
         key="auditReceiptTime"
         prop="auditReceiptTime"
@@ -187,9 +180,9 @@
     <m-detail v-model:visible="detailVisible" :detail-info="receiptInfo" title="装车详情" :detailFunc="detail">
       <template #tip>
         <el-tag effect="plain" size="medium" style="margin-left: 5px" type="danger">车次：{{ receiptInfo.serialNumber }}</el-tag>
-        <el-tag effect="plain" size="medium" style="margin-left: 5px">项目：{{ receiptInfo.project && receiptInfo.project.shortName }}</el-tag>
-        <el-tag effect="plain" size="medium" style="margin-left: 5px" type="success">发运人：{{ receiptInfo.auditUserName }}</el-tag>
-        <el-tag effect="plain" size="medium" style="margin-left: 5px" type="success">收货人：{{ receiptInfo.receiptName }}</el-tag>
+        <el-tag effect="plain" size="medium">项目：{{ receiptInfo.project && receiptInfo.project.shortName }}</el-tag>
+        <el-tag effect="plain" size="medium" type="success">发运人：{{ receiptInfo.auditUserName }}</el-tag>
+        <el-tag effect="plain" size="medium" type="success">收货人：{{ receiptInfo.receiptName }}</el-tag>
       </template>
     </m-detail>
   </div>
