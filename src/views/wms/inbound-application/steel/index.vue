@@ -4,6 +4,7 @@
       :basicClass="STEEL_ENUM"
       :total-value="totalWeight"
       :validate="validate"
+      :edit="props.edit"
       unit="t"
       total-name="总量合计"
       @purchase-order-change="handleOrderInfoChange"
@@ -32,7 +33,7 @@
         </div>
       </div>
       <el-form ref="formRef" :model="form">
-        <component ref="steelRef" :max-height="tableMaxHeight" :is="comp" :key="Math.random()" @calc-weight="calcWeight" />
+        <component ref="steelRef" :max-height="tableMaxHeight" :is="comp" @calc-weight="calcWeight" />
       </el-form>
     </common-wrapper>
     <common-drawer
@@ -64,7 +65,8 @@
 <script setup>
 // TODO: 编辑，反向赋值
 import { steelInboundApplication } from '@/api/wms/inbound/application'
-import { defineProps, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
+import { edit as editInboundApplication } from '@/api/wms/inbound/raw-mat-application-record'
+import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
@@ -79,6 +81,9 @@ import steelCoilTable from './module/steel-coil-table.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
+import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
+
+const emit = defineEmits(['success'])
 
 const props = defineProps({
   edit: {
@@ -101,7 +106,7 @@ const steelBasicClassKV = {
 }
 
 const defaultForm = {
-  purchaseId: null, // 申购单id
+  purchaseId: null, // 采购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
   logistics: {}, // 物流信息
@@ -132,7 +137,7 @@ const steelRefList = reactive({
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 // 使用草稿时，为数据设置监听
-const useDraftCallback = (form) => {
+const setFormCallback = (form) => {
   const trigger = {
     steelPlateList: null,
     sectionSteelList: null,
@@ -146,6 +151,7 @@ const useDraftCallback = (form) => {
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
   list.forEach((key) => {
     if (isNotBlank(form[key])) {
+      form[key] = form[key].map(v => reactive(v))
       trigger[key] = watch(
         steelRefList,
         (ref) => {
@@ -155,9 +161,11 @@ const useDraftCallback = (form) => {
             // 初始化选中数据，执行一次后取消当前监听
             initSelectedTrigger[key] = watchEffect(() => {
               if (matSpecRef.value) {
-                matSpecRef.value.initSelected(form[key].map((v) => {
-                  return { sn: v.sn, classifyId: v.classifyId }
-                }))
+                matSpecRef.value.initSelected(
+                  form[key].map((v) => {
+                    return { sn: v.sn, classifyId: v.classifyId }
+                  })
+                )
                 nextTick(() => {
                   initSelectedTrigger[key]()
                 })
@@ -181,11 +189,12 @@ const { cu, form, FORM } = useForm(
     formStoreKey: 'WMS_INBOUND_APPLICATION_STEEL',
     permission: permission,
     defaultForm: defaultForm,
-    useDraftCallback: useDraftCallback,
+    useDraftCallback: setFormCallback,
     clearDraftCallback: init,
-    api: steelInboundApplication
+    api: props.edit ? editInboundApplication : steelInboundApplication
   },
-  formRef
+  formRef,
+  props.detail
 )
 
 // 物料选择组件高度
@@ -201,14 +210,29 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
   () => drawerRef.value.loaded
 )
 
-// 表格高度
-const { maxHeight: tableMaxHeight } = useMaxHeight({
-  mainBox: '.steel-inbound-application-container',
-  extraBox: ['.filter-container', '.inbound-application-header', '.inbound-application-footer'],
-  navbar: true,
-  minHeight: 300,
-  extraHeight: 20
-})
+let tableHeightConfig = {}
+if (props.edit) {
+  // 修改时，是drawer弹窗
+  tableHeightConfig = {
+    mainBox: '.raw-mat-inbound-application-record-form',
+    extraBox: ['.el-drawer__header', '.filter-container', '.inbound-application-header', '.inbound-application-footer'],
+    wrapperBox: ['.el-drawer__body'],
+    clientHRepMainH: true,
+    navbar: false,
+    minHeight: 300,
+    extraHeight: 20
+  }
+} else {
+  // 非修改时
+  tableHeightConfig = {
+    mainBox: '.steel-inbound-application-container',
+    extraBox: ['.filter-container', '.inbound-application-header', '.inbound-application-footer'],
+    navbar: true,
+    minHeight: 300,
+    extraHeight: 20
+  }
+}
+const { maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
 
 // 当前使用的组件
 const comp = computed(() => {
@@ -245,8 +269,22 @@ watch(list, (val) => {
 // 初始化
 init()
 
+FORM.HOOK.beforeToEdit = async (crud, form) => {
+  if (!props.edit) return
+  // 采购单id
+  form.purchaseId = form.purchaseOrder.id
+  if (!form.logistics) form.logistics = {}
+  // 修改的情况下，数据预处理
+  await steelInboundFormFormat(form)
+  // 设置监听等
+  setFormCallback(form)
+}
+
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
+  if (props.edit) {
+    emit('success')
+  }
   init()
 }
 

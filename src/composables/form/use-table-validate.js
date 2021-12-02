@@ -83,6 +83,19 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
     if (list.length === 0) {
       flag = false
     }
+
+    // 设置空行
+    const _blankRow = {}
+    ditto.forEach((value, key) => {
+      _blankRow[key] = value
+    })
+
+    // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
+    for (let i = list.length; i < copyList.length; i++) {
+      if (i === 0) list.push({})
+      // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
+      list.push(lodash.cloneDeep(_blankRow))
+    }
   } else {
     flag = false
   }
@@ -91,17 +104,12 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
     ElMessage({ message, type: 'error' })
   }
 
-  // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
-  for (let i = list.length; i < copyList.length; i++) {
-    // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
-    list.push(lodash.cloneDeep(copyList[blankRowsIndex[0]]))
-  }
-
   return { dealList: list, validResult: flag }
 }
 
 // 处理表格变色 el-table cell-class-name
 export function wrongCellMask({ row, column }, tableRules) {
+  if (!row) return
   const rules = getRules(tableRules)
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {

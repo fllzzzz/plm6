@@ -1,6 +1,6 @@
 <template>
   <div class="inbound-application-container" :style="heightStyle">
-    <common-header :basicClass="props.basicClass" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
+    <common-header :basicClass="props.basicClass" :edit="props.edit" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
     <div class="main-content">
       <slot />
     </div>
@@ -53,13 +53,24 @@ const props = defineProps({
   showTotal: {
     type: Boolean,
     default: true
+  },
+  edit: {
+    type: Boolean,
+    default: false
   }
 })
 
 const headerRef = ref()
 const previewVisible = ref(false)
 
-const { heightStyle } = useMaxHeight({ extraBox: null, wrapperBox: null })
+let heightCfg = {}
+if (props.edit) {
+  heightCfg = { mainBox: '.raw-mat-inbound-application-record-form', extraBox: ['.el-drawer__header'], wrapperBox: ['.el-drawer__body'], clientHRepMainH: true, navbar: false }
+} else {
+  heightCfg = { extraBox: null, wrapperBox: null }
+}
+
+const { heightStyle } = useMaxHeight(heightCfg)
 
 // 表单提交（预览）
 async function submit() {
@@ -92,7 +103,7 @@ function handleOrderInfoChange(val) {
   }
 
   .main-content {
-    padding: 0 20px 10px 20px;
+    padding: 0 20px 0px 20px;
   }
 }
 </style>

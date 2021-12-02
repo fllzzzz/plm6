@@ -32,7 +32,7 @@ const validatorDomain = /^(?=^.{3,255}$)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.
 const validatorInvoiceNo = /^[0-9!#$%&@',.*+-/=?^_`{|}~]+$/
 
 // 车牌号（新能源 + 非新能源）TODO:正则有问题 浙A·88888 输入浙A88888，自动转换成浙A·88888
-const patternLicensePlate = /^[京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新][ABCDEFGHJKLMNPQRSTUVWXY]·?[A-Z0-9]{5,}[挂学警港澳]?$/
+const patternLicensePlate = /^[京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新][ABCDEFGHJKLMNPQRSTUVWXY]·?[A-Z0-9]{5}[挂学警港澳]?$/
 
 // ----------------------------  数字 start  ---------------------------------------
 

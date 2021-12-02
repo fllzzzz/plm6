@@ -10,7 +10,8 @@
     prop="classifyFullName"
     label="物料种类"
     align="center"
-    :min-width="props.basicClass > STEEL_ENUM ? 180 : 100"
+    :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined"
+    :width="props.basicClass > STEEL_ENUM ? undefined : 100"
     fixed="left"
   />
   <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip :min-width="180" fixed="left">
@@ -28,7 +29,6 @@ import { specFormat, specTip } from '@/utils/wms/spec-format'
 import { STEEL_ENUM } from '@/settings/config'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
-// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   specMerge: {
     type: Boolean,

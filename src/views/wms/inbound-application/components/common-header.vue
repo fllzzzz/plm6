@@ -45,7 +45,7 @@
       </el-form>
     </div>
     <div class="child-mr-7">
-      <store-operation type="cu" @clear="handleClear" />
+      <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
       <el-tooltip content="请先选择订单号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
@@ -86,6 +86,10 @@ const props = defineProps({
   },
   basicClass: {
     type: Number
+  },
+  edit: {
+    type: Boolean,
+    default: false
   }
 })
 

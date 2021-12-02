@@ -614,6 +614,10 @@ function addCrudBusinessMethod(crud) {
   }
 
   const toEdit = async (data) => {
+    if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
+      // 如果查询项不为id，则可改造方法，在crud中传入自定义字段
+      data = await crud.crudApi.detail(data.id)
+    }
     crud.resetForm(JSON.parse(JSON.stringify(data)))
     if (!((await callVmHook(crud, CRUD.HOOK.beforeToEdit, crud.form)) && (await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form)))) {
       return
@@ -1062,7 +1066,7 @@ function addCrudFeatureMethod(crud, data) {
       // 设置默认值，因此重置放在顶部
       ref.resetFields()
     }
-    const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm())
+    const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : {})
     const crudFrom = crud.form
     for (const key in crudFrom) {
       crudFrom[key] = undefined

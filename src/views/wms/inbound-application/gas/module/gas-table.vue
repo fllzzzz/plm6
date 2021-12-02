@@ -120,7 +120,11 @@ function rowInit(row) {
 
 // 删除行
 function delRow(sn, $index) {
-  matSpecRef.value.delListItem(sn, $index)
+  if (matSpecRef.value) {
+    matSpecRef.value.delListItem(sn, $index)
+  } else {
+    form.list.splice($index, 1)
+  }
 }
 
 // 校验

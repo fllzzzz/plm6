@@ -7,6 +7,7 @@ import suffix from '@/directive/suffix'
 import arrJoin from '@/directive/arr-join'
 import toFixed from '@/directive/to-fixed'
 import toThousand from '@/directive/to-thousand'
+import convertWeight from '@/directive/convert-weight'
 
 const directive = new Map([
   ['permission', checkPermission],
@@ -17,7 +18,8 @@ const directive = new Map([
   ['suffix', suffix],
   ['arr-join', arrJoin],
   ['to-fixed', toFixed],
-  ['thousand', toThousand]
+  ['thousand', toThousand],
+  ['convert-weight', convertWeight]
 
 ])
 

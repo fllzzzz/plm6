@@ -2,6 +2,7 @@ import { pickUpModeEnum, purchaseOrderPaymentModeEnum, orderSupplyTypeEnum, base
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { patternLicensePlate } from '@/utils/validate/pattern'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 
 // 入库申请列表
 const get = {
@@ -60,7 +61,8 @@ const get = {
               id: 1,
               name: '杭州艾哈有限公司'
             },
-            reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
+            reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
@@ -71,6 +73,35 @@ const get = {
           },
           {
             id: 3, // 入库单id
+            basicClass: 16, // 采购物料基础类型
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+            purchaseSN: 'CG-211125-123213', // 采购单号
+            licensePlate: patternLicensePlate, // 车牌号
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            supplier: {
+              // 供应商
+              id: 1,
+              name: '杭州艾哈有限公司'
+            },
+            reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            approvalComments: '@csentence',
+            founderName: '@cname', // 创建人（填写入库的人）
+            editorName: '@cname', // 编辑人（最后编辑的用户）
+            reviewerName: '@cname', // 审核人（审核的人）
+            createTime: '@datetime(T)', // 创建时间
+            updateTime: '@datetime(T)', // 修改时间
+            userUpdateTime: '@datetime(T)', // 用户修改时间
+            reviewTime: '@datetime(T)' // 审核时间
+          },
+          {
+            id: 4, // 入库单id
             basicClass: 8, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
@@ -80,7 +111,8 @@ const get = {
               id: 1,
               name: '吖丫丫有限公司'
             },
-            reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
+            approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
@@ -96,7 +128,7 @@ const get = {
   }
 }
 
-// 详情
+// 钢材详情
 const detail_id1 = {
   url: '/api/wms/inbound/application/record/raw-materials/1',
   method: 'get',
@@ -133,35 +165,14 @@ const detail_id1 = {
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
         licensePlate: patternLicensePlate, // 车牌号
-        loadingWeight: 2000.00, // 过磅重量
+        loadingWeight: 2000.0, // 过磅重量
         list: [
           {
-            // uid: 'kn28o9u2rn00',
-            // theoryWeight: 78.5,
-            // theoryTotalWeight: 785,
-            // weighingTotalWeight: 800,
-            // hasOver: false,
-            // overNum: 15,
-            // weight: 800000,
-            // requisitionsDittoable: true,
-            // projectId
-            // disabledProjectId: [2],
-            // warehouseId: 1
             id: 1,
-            sn: '103_0',
-            specificationLabels: '材质',
             serialNumber: '3192520223',
             classifyId: 103,
-            classifyFullName: '中厚板',
             basicClass: 1,
             specification: 'Q325B',
-            specificationMap: {
-              1: 'Q325B'
-            },
-            measureUnit: '张',
-            accountingUnit: '千克',
-            accountingPrecision: 2,
-            measurePrecision: 0,
             quantity: 10,
             thickness: 10,
             length: 1000,
@@ -189,20 +200,9 @@ const detail_id1 = {
           },
           {
             id: 2,
-            sn: '103_1',
-            specificationLabels: '材质',
-            serialNumber: '3642583234',
-            classifyId: 103,
-            classifyFullName: '中厚板',
             basicClass: 1,
+            classifyId: 103,
             specification: 'Q235B',
-            specificationMap: {
-              1: 'Q235B'
-            },
-            measureUnit: '张',
-            accountingUnit: '千克',
-            accountingPrecision: 2,
-            measurePrecision: 0,
             quantity: 5,
             thickness: 20,
             length: 1500,
@@ -232,18 +232,9 @@ const detail_id1 = {
             id: 3,
             sn: '110_0',
             specificationLabels: 'GB-06',
-            serialNumber: '8762450508',
-            classifyId: 110,
-            classifyFullName: '工字钢',
-            basicClass: 2,
             specification: '57*21*3*9',
-            specificationMap: {
-              1: '57*21*3*9'
-            },
-            measureUnit: '根',
-            accountingUnit: '千克',
-            accountingPrecision: 2,
-            measurePrecision: 0,
+            classifyId: 110,
+            basicClass: 2,
             unitWeight: 15.29,
             quantity: 1,
             length: 10000,
@@ -271,18 +262,10 @@ const detail_id1 = {
           },
           {
             uid: 4,
-            sn: '110_1',
+            // sn: '110_1',
             specificationLabels: 'GB-06',
-            serialNumber: '8762450508',
-            classifyId: 110,
-            classifyFullName: '工字钢',
-            basicClass: 2,
             specification: '68*1*2*554',
-            specificationMap: {
-              1: '68*1*2*554'
-            },
-            measureUnit: '根',
-            accountingUnit: '千克',
+            classifyId: 110,
             accountingPrecision: 2,
             measurePrecision: 0,
             unitWeight: 28.84,
@@ -311,23 +294,10 @@ const detail_id1 = {
             }
           },
           {
-            // theoryLength: 3907.62,
-            // weighingTotalWeight: 10,
             id: 5,
-            sn: '120_0',
-            specificationLabels: '材质',
-            serialNumber: '0416441874',
             classifyId: 120,
-            classifyFullName: '镀锌彩卷',
             basicClass: 4,
             specification: 'DC51D+Z',
-            specificationMap: {
-              1: 'DC51D+Z'
-            },
-            measureUnit: '卷',
-            accountingUnit: '千克',
-            accountingPrecision: 2,
-            measurePrecision: 0,
             quantity: 1,
             color: '天蓝',
             brand: '武钢',
@@ -352,6 +322,149 @@ const detail_id1 = {
             warehouse: {
               id: 4,
               name: '668号仓库'
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+// 气体详情
+const detail_id2 = {
+  url: '/api/wms/inbound/application/record/raw-materials/2',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        purchaseOrder: {
+          id: 3, // 订单id
+          purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
+          supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+          basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
+          serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+          'projects|2': [
+            {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            }
+          ], // 项目id
+          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+          purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+          weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+          supplier: {
+            id: 1,
+            name: '杭州天马钢材有限公司'
+          }
+        },
+        id: 2, // 入库单id
+        basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        licensePlate: patternLicensePlate, // 车牌号
+        loadingWeight: 2000.0, // 过磅重量
+        list: [
+          {
+            id: 1,
+            classifyId: 204,
+            specification: 'M27*60',
+            color: '天蓝',
+            basicClass: 1,
+            quantity: 10,
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 800000,
+            unitPrice: 0.01,
+            amount: 8000,
+            priceExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factoryId: 1,
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+// 辅材详情
+const detail_id3 = {
+  url: '/api/wms/inbound/application/record/raw-materials/3',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        purchaseOrder: {
+          id: 4, // 订单id
+          purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
+          supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+          basicClass: matClsEnum.GAS.V, // 采购物料基础类型
+          serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+          'projects|2': [
+            {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            }
+          ], // 项目id
+          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+          purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+          weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+          supplier: {
+            id: 1,
+            name: '杭州天马钢材有限公司'
+          }
+        },
+        id: 3, // 入库单id
+        basicClass: matClsEnum.GAS.V, // 采购物料基础类型
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        licensePlate: patternLicensePlate, // 车牌号
+        loadingWeight: 2000.0, // 过磅重量
+        list: [
+          {
+            id: 1,
+            classifyId: 901,
+            // specification: '',
+            basicClass: 1,
+            quantity: 10,
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 222,
+            unitPrice: 0.01,
+            amount: 8000,
+            priceExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factoryId: 1,
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
             }
           }
         ]
@@ -386,4 +499,4 @@ const del = {
   }
 }
 
-export default [get, edit, del, detail_id1]
+export default [get, edit, del, detail_id1, detail_id2, detail_id3]

@@ -60,7 +60,7 @@
               v-model="row.type"
               :options="warehouseTypeEnum.ENUM"
               :show-extra="$index !== 0"
-              :extra-val="dittos.get('type')"
+              :extra-val="ditto.get('type')"
               clearable
               type="enum"
               placeholder="仓库类型"
@@ -127,7 +127,7 @@ const defaultRow = {
 }
 
 // 同上的选项与值
-const dittos = new Map([
+const ditto = new Map([
   ['type', -1]
 ])
 
@@ -136,8 +136,8 @@ const formRef = ref()
 const { CRUD, crud, form, ADD_FORM } = regBatchForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.bStatus.cu > CRUD.STATUS.NORMAL)
 
-const { init, addRow, removeRow } = useTableOperate(defaultRow, 10, dittos)
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, dittos })
+const { init, addRow, removeRow } = useTableOperate(defaultRow, 10, ditto)
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 const { maxHeight } = useMaxHeight(
   {

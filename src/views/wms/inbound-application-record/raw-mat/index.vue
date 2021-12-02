@@ -15,9 +15,13 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <!-- TODO:入库单增加备注？ -->
           <!-- <p>
             备注：<span v-empty-text>{{ row.remark }}</span>
           </p> -->
+          <p>
+            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
+          </p>
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -45,7 +49,7 @@
         prop="licensePlate"
         label="车牌号"
         align="left"
-        min-width="100"
+        width="100"
       />
       <el-table-column
         v-if="columns.visible('materialTypeText')"
@@ -53,7 +57,7 @@
         :show-overflow-tooltip="true"
         prop="materialTypeText"
         label="物料种类"
-        min-width="170"
+        width="120"
       >
         <template #default="{ row }">
           <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
@@ -161,6 +165,8 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
+    <!-- 编辑 -->
+    <m-form />
   </div>
 </template>
 
@@ -177,6 +183,7 @@ import mHeader from './module/header'
 import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
+import mForm from './module/form.vue'
 
 // crud交由presenter持有
 const permission = {
