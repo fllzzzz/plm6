@@ -10,5 +10,5 @@ export default {
 function resolve(el, binding) {
   const { value } = binding
   const { innerText } = el
-  el.innerText = parseTime(innerText, value)
+  el.innerText = parseTime(innerText, value || '{y}-{m}-{d} {h}:{i}')
 }

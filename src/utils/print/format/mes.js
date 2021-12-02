@@ -8,7 +8,7 @@ function materialType({ header, table = [], footer, qrCode }) {
       type: row.materialType,
       precision: 5,
       returnNewObj: true,
-      isNum: true
+      toNum: true
     }
     if (header) {
       config.enclosureSettlementType = header.enclosurePriceType
@@ -31,7 +31,7 @@ function materialListType({ header, table = [], footer, qrCode }) {
       type: row.materialListType,
       precision: 5,
       returnNewObj: true,
-      isNum: true
+      toNum: true
     }
     if (header) {
       config.enclosureSettlementType = header.enclosurePriceType
@@ -54,7 +54,7 @@ function steelDosageFormat({ header, table = [], footer, qrCode }) {
       basicClass: row.basicClass,
       field: ['modelMete', 'outboundMete', 'diff'],
       returnNewObj: true,
-      isNum: true
+      toNum: true
     })
     row.diffRate = row.diffRate * 100
     return row

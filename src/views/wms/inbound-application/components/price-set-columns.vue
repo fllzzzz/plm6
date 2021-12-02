@@ -1,5 +1,5 @@
 <template>
-  <el-table-column prop="unitPrice" align="center" width="115px" label="单价">
+  <el-table-column prop="unitPrice" align="center" width="115px" label="含税单价">
     <template #default="{ row }">
       <el-input-number
         v-model="row.unitPrice"
@@ -9,7 +9,7 @@
         :step="5"
         :precision="2"
         size="mini"
-        placeholder="单价"
+        placeholder="含税单价"
         @change="handleUnitPriceChange($event, row)"
       />
     </template>
@@ -35,7 +35,7 @@
         v-model="row.requisitionsSN"
         :options="getRequisitionsSNOptions($index, row)"
         :dataStructure="{ key: 'serialNumber', label: 'serialNumber', value: 'serialNumber' }"
-        :show-extra="$index !== 0 || row.requisitionsDittoable"
+        :show-extra="$index !== 0 && row.requisitionsDittoable"
         type="other"
         placeholder="申购单"
         clearable
@@ -165,7 +165,7 @@ onMounted(() => {
   emit('amount-change')
 })
 
-// 处理单价变化
+// 处理含税单价变化
 function handleUnitPriceChange(val, row) {
   row.amount = toFixed(val * row.mete, 2, { toNum: true })
   emit('amount-change')

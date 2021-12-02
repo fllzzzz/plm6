@@ -21,7 +21,7 @@
             <span>{{ data.name }}</span>
           </span>
           <span>
-            <span class="extra-label">
+            <span v-if="props.showType" class="extra-label">
               <span class="title">类型：</span>
               <span v-parse-enum="{ e: supplierTypeEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
             </span>
@@ -64,6 +64,10 @@ const props = defineProps({
     // 可创建物流供应商
     type: Boolean,
     default: false
+  },
+  showType: {
+    type: Boolean,
+    default: true
   },
   type: {
     type: Number,

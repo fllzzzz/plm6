@@ -29,8 +29,9 @@
     <template #title>
       <slot name="title">
         <div class="drawer-title">
-          <span class="title">
-            <span>{{ props.title }}</span>
+          <span class="title-left">
+            <span class="title-text">{{ props.title }}</span>
+            <span class="child-mr-6"><slot name="titleAfter" /></span>
           </span>
           <span>
             <slot name="titleRight" />
@@ -246,29 +247,30 @@ defineExpose({
   align-items: center;
   justify-content: space-between;
 
-  .title {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    font-size: 18px;
-    margin-right: 15px;
-    color: #000;
-    position: relative;
-    padding-left: 10px;
-    box-sizing: border-box;
-
-    &::before {
-      content: '';
-      width: 4px;
-      height: 15px;
-      border-radius: 10px;
-      background: #1890ff;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
+  .title-left {
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-left: 10px;
+      margin-right: 15px;
+      box-sizing: border-box;
+      .title-text {
+        font-weight: bold;
+        font-size: 18px;
+        color: #000;
+      }
+      &::before {
+        content: '';
+        width: 4px;
+        height: 15px;
+        border-radius: 10px;
+        background: #1890ff;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
     }
-  }
 
   ::v-deep(.el-button + .el-button) {
     margin-left: 6px;

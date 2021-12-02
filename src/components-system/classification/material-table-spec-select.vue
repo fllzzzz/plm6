@@ -47,6 +47,7 @@
       :mode="props.mode"
       :show-classify="false"
       :max-height="props.maxHeight"
+      :expand-query="props.expandQuery"
       @accumulate-change="handleAccumulateChange"
       @select-change="handleSelectChange"
       @change="handleChange"
@@ -88,6 +89,10 @@ const props = defineProps({
     type: Number
   },
   autoSelected: {
+    type: Boolean,
+    default: false
+  },
+  expandQuery: {
     type: Boolean,
     default: false
   },
@@ -211,8 +216,14 @@ function init() {
 }
 
 // 初始化选中
-function initSelected(snArr) {
-  specRef.value && specRef.value.initSelected(snArr)
+function initSelected(row) {
+  if (isNotBlank(row)) {
+    row.forEach(({ classifyId }) => {
+      const id = classifyId
+      counter.value[id] = counter.value[id] ? counter.value[id] + 1 : 1
+    })
+  }
+  specRef.value && specRef.value.initSelected(row.map(v => v.sn))
 }
 
 // 删除
@@ -222,7 +233,7 @@ function delListItem(sn, index) {
 
 // 清空
 function clear() {
-  specRef.value && specRef.value.clear
+  specRef.value && specRef.value.clear()
 }
 
 // 根据物料分类清除
@@ -297,7 +308,7 @@ defineExpose({
         padding: 0 10px;
         &:nth-child(1) {
           display: inline-block;
-          width: 39%;
+          width: 150px;
           border-right: 1px solid rgb(228, 231, 237);
         }
       }

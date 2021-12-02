@@ -59,6 +59,7 @@
           placeholder="可选择供应商搜索"
           style="width: 250px"
           logistics-createable
+          :show-type="false"
           clearable
         />
       </el-form-item>

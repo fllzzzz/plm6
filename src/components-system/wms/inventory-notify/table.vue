@@ -134,3 +134,14 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
   })
 }
 </script>
+
+<style lang="scss" scoped>
+.inventory-notify-list {
+  .el-table {
+    ::v-deep(.cell) {
+      height: 28px;
+      line-height: 28px;
+    }
+  }
+}
+</style>

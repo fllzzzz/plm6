@@ -1,4 +1,21 @@
 <template>
   <el-table-column prop="brand" label="品牌" align="left" min-width="100px" />
   <el-table-column prop="heatNoAndBatchNo" label="炉批号/卷号" align="left" min-width="150px" />
+  <el-table-column v-if="props.showProject" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
+    <template #default="{ row }">
+      <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
+    </template>
+  </el-table-column>
 </template>
+
+<script setup>
+import { defineProps } from 'vue'
+
+const props = defineProps({
+  showProject: {
+    type: Boolean,
+    default: false
+  }
+})
+
+</script>

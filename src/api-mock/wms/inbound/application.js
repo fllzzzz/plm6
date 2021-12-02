@@ -25,4 +25,16 @@ const auxMatInboundApplication = {
   }
 }
 
-export default [steelInboundApplication, auxMatInboundApplication]
+// 气体入库申请
+const gasInboundApplication = {
+  url: '/api/wms/inbound/application/gas',
+  method: 'post',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+export default [steelInboundApplication, auxMatInboundApplication, gasInboundApplication]

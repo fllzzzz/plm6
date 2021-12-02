@@ -11,7 +11,7 @@ const getInboundBasicConf = {
       code: 20000,
       message: '成功',
       data: {
-        'amountFillWay': inboundFillWayEnum.AUDITING.V,
+        'amountFillWay': inboundFillWayEnum.REVIEWING.V,
         'warehouseFillWay': inboundFillWayEnum.APPLICATION.V
       }
     }

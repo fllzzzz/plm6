@@ -11,8 +11,8 @@
   >
     <template #titleAfter>
       <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
-      <el-tag v-if="order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-        {{ `过磅重量：${form.loadingWeight}` }}
+      <el-tag v-if="props.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
+        {{ `过磅重量：${form.loadingWeight}kg` }}
       </el-tag>
       <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
@@ -30,7 +30,7 @@
         row-key="uid"
       >
         <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
-        <el-expand-table-column :data="form.steelPlateList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+        <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
           <template #default="{ row }">
             <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" />
             <p>
@@ -46,16 +46,16 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
         <!-- 金额设置 -->
-        <template v-if="showAmount">
-          <price-set-columns @amount-change="handleAmountChange" />
-        </template>
+        <price-set-columns v-if="showAmount" @amount-change="handleAmountChange" />
         <!-- 仓库设置 -->
-        <template v-if="showWarehouse">
-          <warehouse-set-columns />
-        </template>
+        <warehouse-set-columns v-if="showWarehouse" />
       </common-table>
       <!-- 物流信息设置 -->
-      <logistics-form :disabled="cu.status.edit === FORM.STATUS.PROCESSING" class="logistics-form-content" v-if="showAmount && form.logistics" />
+      <logistics-form
+        :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+        class="logistics-form-content"
+        v-if="showAmount && form.logistics"
+      />
     </el-form>
     <common-footer class="footer" unit="元" :total-value="amount" :show-total="showAmount" is-submit />
   </common-dialog>
@@ -65,6 +65,7 @@
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
 import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { STEEL_ENUM } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
@@ -84,6 +85,7 @@ import priceSetColumns from './price-set-columns.vue'
 import warehouseSetColumns from './warehouse-set-columns.vue'
 import commonFooter from './common-footer.vue'
 import { isBlank } from '@/utils/data-type'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 // TODO:处理申购单与项目之间的关联
 // TODO: 标签打印提示
 
@@ -128,12 +130,7 @@ const amount = ref() // 金额
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
-const { inboundFillWayCfg } = useWmsConfig(() => {
-  // 回调后，设置金额时，设置form.logistics为空，草稿及修改状态下已经存在则不用设置
-  if (showAmount.value && isBlank(form.logistics)) {
-    form.logistics = {}
-  }
-})
+const { inboundFillWayCfg } = useWmsConfig()
 
 // 订单信息
 const order = computed(() => {
@@ -165,25 +162,35 @@ provide('ditto', ditto)
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 watch(
-  () => form.list,
-  (nVal) => {
-    setDitto(nVal) // 在list变化时设置同上
+  () => props.modelValue,
+  (visible) => {
+    if (visible) setDitto(form.list) // 在list变化时设置同上
   },
   { immediate: true }
 )
 
 // 表单提交数据清理
 cu.submitFormFormat = async (form) => {
-  if (props.basicClass <= 7) {
-    if (form.steelPlateList) form.steelPlateList = await numFmtByBasicClass(form.steelPlateList, { toSmallest: true, isNum: true })
-    if (form.sectionSteelList) form.sectionSteelList = await numFmtByBasicClass(form.sectionSteelList, { toSmallest: true, isNum: true })
-    if (form.steelCoilList) form.steelCoilList = await numFmtByBasicClass(form.steelCoilList, { toSmallest: true, isNum: true })
-    cleanUpData(form.steelPlateList)
-    cleanUpData(form.sectionSteelList)
-    cleanUpData(form.steelCoilList)
-  } else {
-    cleanUpData(form.list)
-    form.list = await numFmtByBasicClass(form.list, { toSmallest: true, isNum: true })
+  cleanUpData(form.list)
+  form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
+  if (props.basicClass <= STEEL_ENUM) {
+    // 钢材拆分为三个数组传递给服务端
+    form.steelPlateList = []
+    form.sectionSteelList = []
+    form.steelCoilList = []
+    form.list.forEach((v) => {
+      switch (v.basicClass) {
+        case matClsEnum.STEEL_PLATE.V:
+          form.steelPlateList.push(v)
+          break
+        case matClsEnum.SECTION_STEEL.V:
+          form.sectionSteelList.push(v)
+          break
+        case matClsEnum.STEEL_COIL.V:
+          form.steelCoilList.push(v)
+          break
+      }
+    })
   }
   return form
 }
@@ -200,9 +207,6 @@ FORM.HOOK.beforeSubmit = () => {
 // 表单提交后：关闭预览窗口
 FORM.HOOK.afterSubmit = () => {
   handleClose()
-  if (showAmount.value) {
-    form.logistics = {}
-  }
 }
 
 function closeHook() {

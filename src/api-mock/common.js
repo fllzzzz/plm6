@@ -1,7 +1,6 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import { supplierClassEnum, supplierIsHideEnum, supplierTypeEnum } from '@enum-ms/supplier'
 
-
 const downloadAttachment = {
   url: RegExp('/api/common/attachment/download/' + '.*'),
   method: 'get',
