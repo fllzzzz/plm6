@@ -17,7 +17,7 @@
           <el-input class="input-underline" v-model="form.licensePlate" placeholder="请输入车牌号" style="width: 125px" />
         </el-form-item>
         <el-form-item
-          v-if="orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
+          v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
           :label="`过磅重量(千克)`"
           label-width="120px"
           prop="loadingWeight"
@@ -44,27 +44,30 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="child-mr-6">
-      <common-button type="primary" size="small" @click="openRequisitionsView">查看申购单</common-button>
+    <div class="child-mr-7">
+      <store-operation type="cu" @clear="handleClear" />
+      <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
       <el-tooltip content="请先选择订单号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"
-          btn-size="small"
+          btn-size="mini"
           btn-type="success"
           :disabled="!form.purchaseId"
           @success="handleExcelSuccess"
         />
       </el-tooltip>
       <el-tooltip :content="`入库记录`" :show-after="1000" effect="light" placement="bottom">
-        <common-button icon="el-icon-time" type="info" size="small" @click="toInboundRecord" />
+        <common-button icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
       </el-tooltip>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, defineExpose, ref, computed, watch } from 'vue'
+import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
+import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick, inject } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
@@ -72,6 +75,8 @@ import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
+import { isBlank } from '@/utils/data-type'
+import StoreOperation from '@crud/STORE.operation.vue'
 
 const emit = defineEmits(['update:purchaseId', 'purchase-order-change'])
 
@@ -84,6 +89,7 @@ const props = defineProps({
   }
 })
 
+const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { cu, form, FORM } = regExtra() // 表单
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff() // 过磅重量超出理论重量处理
 
@@ -118,16 +124,35 @@ const orderInfo = computed(() => {
   return purchaseOrderInfo.value || {}
 })
 
-watch(
-  [() => form.loadingWeight, () => cu.props.totalWeight],
-  ([loadW, totalW]) => {
-    trainsDiff.value = weightOverDiff(loadW, totalW) || {}
-  }
-)
+watchEffect(() => {
+  trainsDiff.value = weightOverDiff(form.loadingWeight, cu.props.totalWeight)
+})
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
   formRef.value.resetFields()
+  init()
+}
+
+// 重置表单
+function handleClear() {
+  nextTick(() => {
+    formRef.value.clearValidate()
+    init()
+  })
+}
+
+function init() {
+  trainsDiff.value = {}
+  // 清除选中
+  const trigger = watchEffect(() => {
+    if (matSpecRef.value) {
+      matSpecRef.value.clear()
+      nextTick(() => {
+        trigger()
+      })
+    }
+  })
 }
 
 // 采购订单id变更
@@ -137,7 +162,25 @@ function handlePurchaseIdChange(val) {
 
 // 订单详情变更
 function handleOrderInfoChange(val) {
+  cu.props.requisitions = {} // 初始化申购单
+  // 获取申购单详情
+  if (val && val.requisitionsSN) {
+    fetchRequisitionsDetail(val.requisitionsSN)
+  }
   emit('purchase-order-change', val)
+}
+
+// 加载申购单
+async function fetchRequisitionsDetail(snArr) {
+  if (isBlank(snArr)) return
+  const allInterFace = []
+  snArr.forEach(sn => {
+    const promiseItem = getRequisitionsDetailBySN(sn).then((detail) => {
+      cu.props.requisitions[sn] = detail
+    })
+    allInterFace.push(promiseItem)
+  })
+  await Promise.all(allInterFace)
 }
 
 // 解析导入表格

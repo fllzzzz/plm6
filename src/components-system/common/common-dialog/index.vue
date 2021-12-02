@@ -25,8 +25,8 @@
     <template #title>
       <slot name="title">
         <div class="dialog-title">
-          <span class="title">
-            <span>{{ props.title }}</span>
+          <span class="title-left">
+            <span class="title-text">{{ props.title }}</span>
             <span class="child-mr-6"><slot name="titleAfter" /></span>
           </span>
           <span class="dialog-title-right">
@@ -186,17 +186,18 @@ function closed() {
     align-items: center;
     justify-content: space-between;
 
-    .title {
+    .title-left {
       display: flex;
       align-items: center;
-      font-weight: bold;
-      font-size: 18px;
-      margin-right: 15px;
-      color: #000;
       position: relative;
       padding-left: 10px;
+      margin-right: 15px;
       box-sizing: border-box;
-
+      .title-text {
+        font-weight: bold;
+        font-size: 18px;
+        color: #000;
+      }
       &::before {
         content: '';
         width: 4px;

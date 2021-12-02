@@ -19,6 +19,7 @@
 
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue'
+
 import useMaxHeight from '@/composables/use-max-height'
 import commonHeader from '../components/common-header.vue'
 import commonFooter from '../components/common-footer.vue'

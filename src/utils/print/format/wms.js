@@ -10,7 +10,7 @@ function preparesCustomSummary({ header, table = [], footer, qrCode }) {
       field: ['value'],
       unit: ['unit'],
       returnNewObj: true,
-      isNum: true
+      toNum: true
     })
     return row
   })
@@ -30,7 +30,7 @@ function valueFormat({ header, table = [], footer, qrCode }) {
       basicClass: row.basicClass,
       field: ['value', 'returnValue'],
       returnNewObj: true,
-      isNum: true
+      toNum: true
     })
     return row
   })
@@ -49,7 +49,7 @@ function checkUnitFormat({ header, table = [], footer, qrCode }) {
       basicClass: row.basicClass,
       field: ['value'],
       returnNewObj: true,
-      isNum: true
+      toNum: true
     })
     row.checkUnit = getBasicClassUnit(row.basicClass, false)
     return row

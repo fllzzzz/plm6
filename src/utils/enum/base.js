@@ -10,6 +10,7 @@ export function constantize(obj) {
   const KV = {}
   const VL = {}
   const VK = {}
+  const V = {}
   const KEYS = Object.keys(obj)
   obj.ENUM = Object.assign({}, obj)
   KEYS.forEach(key => {
@@ -18,10 +19,12 @@ export function constantize(obj) {
     KV[key] = value
     VL[value] = label
     VK[value] = key
+    V[value] = obj[key]
   })
   obj.KV = KV // key - value
   obj.VL = VL // value : label
   obj.VK = VK // value : key
+  obj.V = V // value : item
   obj.KEYS = KEYS // keys
   // Object.freeze(obj)
   // Object.keys(obj).forEach((key, i) => {

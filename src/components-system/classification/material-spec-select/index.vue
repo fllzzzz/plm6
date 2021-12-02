@@ -1,5 +1,5 @@
 <template>
-  <div id="material-spec-select" class="material-spec-select" :style="{ 'max-height': `${props.maxHeight}px` }">
+  <div ref="materialSpecRef" class="material-spec-select" :style="{ 'max-height': `${props.maxHeight}px` }" :key="Math.random()">
     <div class="operate-container">
       <div v-if="showClassify" class="cls-container">
         <div class="container-prepend">科目</div>
@@ -51,7 +51,7 @@
                 @click.self="handleAccChange(item.sn)"
                 class="pointer"
               >
-                {{ item.spec }}
+                {{ item.spec || unspecifiedName }}
               </el-tag>
             </div>
           </template>
@@ -113,19 +113,31 @@ const props = defineProps({
   maxHeight: {
     type: Number,
     default: 600
+  },
+  visible: {
+    // 用于当前组件父组件可能被隐藏的情况下，无法正常计算规格tag的宽度
+    type: Boolean,
+    default: true
+  },
+  expandQuery: {
+    type: Boolean,
+    default: false
   }
 })
+
+const unspecifiedName = '无规格'
 
 const query = ref({
   spec: undefined
 })
 
-const tagContainerStyle = ref({})
-const extraQueryOpened = ref(false) // 规格配置查询打开
-const matCls = ref({})
-const selected = ref({})
-const curClsId = ref()
-const list = ref([])
+const materialSpecRef = ref()
+const tagContainerStyle = ref({}) // 标签样式
+const extraQueryOpened = ref(props.expandQuery) // 规格配置查询打开
+const matCls = ref({}) // 科目分类集合
+const selected = ref({}) // 算中的sn
+const curClsId = ref() // 当前科目id
+const list = ref([]) // 选中列
 const calcFinish = ref(true) // 计算完成后再渲染，避免debounce延时导致的切换抖动
 // const calcSpecWidth = calcWidth // 计算规格列表处规格的宽度
 const calcSpecWidth = () => {
@@ -180,24 +192,17 @@ watch(
 )
 
 // 规格列表参数变更时，重新计算宽度
-watch(
-  () => matCls.value.specList,
-  () => {
+watch([() => props.visible, () => matCls.value.specList], ([visible]) => {
+  if (visible) {
     calcSpecWidth()
   }
-)
-
-// 监听material-spec-select，避免当页面被隐藏时，classify变化导致规格列表更新却并没有重新计算宽度的情况
-const observer = new MutationObserver(calcSpecWidth)
+})
 
 onMounted(() => {
-  const targetNode = document.getElementById('material-spec-select')
-  targetNode ? observer.observe(targetNode, { attributes: true }) : ''
   window.addEventListener('resize', calcSpecWidth, { passive: false })
 })
 
 onBeforeUnmount(() => {
-  observer.disconnect() // 关闭监听
   window.removeEventListener('resize', calcSpecWidth)
 })
 
@@ -251,10 +256,22 @@ function rowInit(row) {
   }
 }
 
+// 初始化选中
+function initSelected(snArr) {
+  snArr.forEach((sn) => {
+    if (isBlank(selected.value[sn])) {
+      selected.value[sn] = 1
+    } else {
+      selected.value[sn]++
+    }
+  })
+}
+
 /**
  * selector 模式
  */
 function handleSelectChange(sn) {
+  // TODO: 改为 0 1 不使用true，false,统一
   selected.value[sn] = !selected.value[sn]
   const status = selected.value[sn]
   if (!status) {
@@ -313,6 +330,19 @@ function delListItem(sn, index) {
   emit('change', list.value)
 }
 
+// 根据基础分类清除
+function clearByBasicClass(basicClass) {
+  const snArr = Object.keys(selected.value)
+  const delArr = []
+  snArr.forEach((sn) => {
+    const snInfo = matClsSpecKV.value[sn]
+    if (snInfo && snInfo.classify && snInfo.classify.basicClass & basicClass) {
+      delArr.push(sn)
+    }
+  })
+  handleClear(delArr)
+}
+
 // 清空当前科目的所有规格
 function clearCurrentClassify(classifyId) {
   console.log(matClsSpec.value[classifyId])
@@ -351,23 +381,25 @@ function init() {
 }
 
 function clear() {
-  selected.value = {}
+  // selected.value = {}
+  handleClear(Object.keys(selected.value))
 }
 
 // 计算tag宽度
 function calcWidth() {
-  if (isNotBlank(matCls.value.specList)) {
+  const list = matCls.value.specList
+  if (isNotBlank(list)) {
+    const firstSpec = list[0].spec || unspecifiedName
     // tag间距
     const actualSpacing = 10
     // 为避免出现规格长宽差别稍大的情况，每个tag额外增加20px。
     // TODO: 这样处理仍会有字符串过长，超出tag的情况，暂时未找到好的方式处理
     const tagWidth =
       20 +
-      getTextDomWidth(matCls.value.specList[0].spec, {
+      getTextDomWidth(firstSpec, {
         attribute: new Map([['class', 'el-tag el-tag--info el-tag--medium el-tag--plain']])
       })
-    const dom = document.getElementById('material-spec-select')
-    const domWidth = style2Num(getStyle(dom, 'width')) - 10
+    const domWidth = style2Num(getStyle(materialSpecRef.value, 'width')) - 10
     let number = Math.floor(domWidth / tagWidth)
     const spacing = domWidth % tagWidth
     if (number > 1 && spacing / number < actualSpacing) {
@@ -386,7 +418,9 @@ function calcWidth() {
 defineExpose({
   delListItem,
   init,
+  initSelected,
   clear,
+  clearByBasicClass,
   clearCurrentClassify
 })
 </script>

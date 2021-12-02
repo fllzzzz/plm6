@@ -104,7 +104,7 @@ const SUPPLIER_INVOICE_DETAIL = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'orderNo', title: '订单号：', width: 150, type: typeEnum.GUID.K },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
@@ -205,9 +205,9 @@ const SUPPLIER_INVOICE_DETAIL = {
       { show: false, key: 'applicationDept', title: '申请部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K },
       { show: true, key: 'applicantName', title: '申请人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 17, type: typeEnum.USER_NAME.K },
       { show: true, key: 'invoiceType', title: '发票类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
-      { show: true, key: 'invoiceAmount', title: '发票金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'invoiceAmount', title: '发票金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'taxRate', title: '税率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
-      { show: true, key: 'tax', title: '税额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: false },
+      { show: true, key: 'tax', title: '税额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: false },
       { show: true, key: 'invoiceCompany', title: '开票方', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'receiptCompany', title: '收票方', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
       { show: false, key: 'handlerName', title: '确认人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 17, type: typeEnum.USER_NAME.K }

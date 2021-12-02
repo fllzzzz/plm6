@@ -228,16 +228,16 @@ const getClassificationTree = {
           'code': '02'
         }]
       }, {
-        'id': 1131,
+        'id': 900,
         'name': '气体',
         'code': '24',
         'basicClass': 16,
         'children': [{
-          'id': 2147,
+          'id': 901,
           'name': '丙烷',
           'code': '01'
         }, {
-          'id': 2148,
+          'id': 902,
           'name': '液氧',
           'code': '02'
         }]
@@ -476,16 +476,16 @@ const getMatClsTree = {
           'code': '02'
         }]
       }, {
-        'id': 1131,
-        'name': '气体',
+        'id': 900,
+        'name': '快乐气体',
         'code': '24',
         'basicClass': 16,
         'children': [{
-          'id': 2147,
+          'id': 901,
           'name': '丙烷',
           'code': '01'
         }, {
-          'id': 2148,
+          'id': 902,
           'name': '液氧',
           'code': '02'
         }]

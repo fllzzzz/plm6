@@ -1,6 +1,6 @@
 import { MIN_UNIT } from '@/settings/config'
 import { emptyTextFormatter, isNotBlank } from '@data-type/index'
-import { toThousandFilter } from '@data-type/number'
+import { toThousand } from '@data-type/number'
 import { createUniqueString } from '@data-type/string'
 import { projectNameFormatter } from '@/utils/project'
 // import { getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
@@ -1366,8 +1366,8 @@ function amountFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -1391,8 +1391,8 @@ function weightFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -1415,8 +1415,8 @@ function lengthFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -1439,8 +1439,8 @@ function thicknessFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val
@@ -1461,8 +1461,8 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
     // 是否显示单位
     if (format.showUnit) {
@@ -1510,8 +1510,8 @@ function quantityFormat(val, format = {}) {
       _val = (+_val).toFixed(format.precision)
     }
     // 1000 => 1,000
-    if (format.toThousandFilter) {
-      _val = toThousandFilter(_val)
+    if (format.toThousand) {
+      _val = toThousand(_val)
     }
   }
   return _val

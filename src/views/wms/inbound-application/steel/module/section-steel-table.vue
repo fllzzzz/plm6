@@ -26,14 +26,14 @@
         <el-input-number v-model="row.length" :max="999999" :controls="false" :min="0" :precision="0" size="mini" placeholder="长" />
       </template>
     </el-table-column>
-    <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
+    <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
         <el-input-number
-          v-model="row.number"
+          v-model="row.quantity"
+          :min="1"
           :max="999999999"
           controls-position="right"
           :controls="false"
-          :min="1"
           :step="5"
           :precision="0"
           size="mini"
@@ -59,10 +59,10 @@
         >
           <el-input-number
             v-model="row.weighingTotalWeight"
+            :min="0"
             :max="999999999"
             controls-position="right"
             :controls="false"
-            :min="0"
             :precision="baseUnit.weight.precision"
             size="mini"
             placeholder="重量"
@@ -92,6 +92,7 @@
 <script setup>
 import { defineEmits, defineExpose, ref, inject, watchEffect, reactive, watch } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -100,14 +101,13 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
-import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['calc-weight'])
 
 // 当前物料基础类型
 const basicClass = matClsEnum.SECTION_STEEL.V
 
-const matSpecRef = inject('matSpecRef') // 调用兄弟组件matSpecRef
+const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { baseUnit } = useMatBaseUnit(basicClass) // 当前分类基础单位
 const { form } = regExtra() // 表单
 const expandRowKeys = ref([]) // 展开行key
@@ -118,7 +118,7 @@ const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(ba
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   length: [{ required: true, message: '请填写定尺长度', trigger: 'blur' }],
-  number: [{ required: true, message: '请填写数量', trigger: 'blur' }],
+  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
     { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' }
@@ -144,7 +144,7 @@ function rowInit(row) {
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
     unitWeight: row.unitWeight, // 单位重量 kg/m
-    number: undefined, // 数量
+    quantity: undefined, // 数量
     length: undefined, // 定尺长度
     totalLength: undefined, // 总长度
     theoryWeight: undefined, // 理论单件重量
@@ -152,17 +152,31 @@ function rowInit(row) {
     weighingTotalWeight: undefined, // 过磅重量
     hasOver: false // 是否超出理论重量
   })
-  watchEffect(() => calcTheoryWeight(_row))
-  watchEffect(() => calcTotalWeight(_row))
-  watchEffect(() => calcTotalLength(_row))
-  watchEffect(() => weightOverDiff(_row))
+
+  rowWatch(_row)
+  return _row
+}
+
+// 行监听
+// 使用watch 监听方法，优点：初始化时表单数据时，可以不立即执行（惰性），可以避免“草稿/修改”状态下重量被自动修改；缺点：初始化时需要指定监听参数
+function rowWatch(row) {
+  // watchEffect(() => calcTheoryWeight(_row))
+  // watchEffect(() => calcTotalWeight(_row))
+  // watchEffect(() => calcTotalLength(_row))
+  watchEffect(() => weightOverDiff(row))
+  // 计算单件理论重量
+  watch([() => row.length, () => row.unitWeight, baseUnit], () => calcTheoryWeight(row))
+  // 计算总重
+  watch([() => row.theoryWeight, () => row.quantity], () => calcTotalWeight(row))
+  // 计算总长度
+  watch([() => row.length, () => row.quantity], () => calcTotalLength(row))
+  // 钢材总重计算
   watch(
-    () => _row.weighingTotalWeight,
+    () => row.weighingTotalWeight,
     () => {
       emit('calc-weight')
     }
   )
-  return _row
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -179,10 +193,10 @@ function calcTheoryWeight(row) {
 
 // 计算总长
 function calcTotalLength(row) {
-  if (isNotBlank(row.length) && row.number) {
+  if (isNotBlank(row.length) && row.quantity) {
     row.totalLength = calcSectionSteelTotalLength({
       length: row.length, // 长度
-      number: row.number // 数量
+      quantity: row.quantity // 数量
     })
   } else {
     row.totalLength = undefined
@@ -191,9 +205,9 @@ function calcTotalLength(row) {
 
 // 计算总重
 function calcTotalWeight(row) {
-  if (isNotBlank(row.theoryWeight) && row.number) {
-    row.theoryTotalWeight = row.theoryWeight * row.number
-    row.weighingTotalWeight = row.theoryWeight * row.number
+  if (isNotBlank(row.theoryWeight) && row.quantity) {
+    row.theoryTotalWeight = row.theoryWeight * row.quantity
+    row.weighingTotalWeight = row.theoryWeight * row.quantity
   } else {
     row.theoryTotalWeight = undefined
     row.weighingTotalWeight = undefined
@@ -208,6 +222,7 @@ function delRow(sn, $index) {
 
 // 校验
 function validate() {
+  if (isBlank(form.sectionSteelList)) return true
   const { validResult, dealList } = tableValidate(form.sectionSteelList)
   form.sectionSteelList = dealList
   return validResult
@@ -215,6 +230,7 @@ function validate() {
 
 defineExpose({
   rowInit,
+  rowWatch,
   validate
 })
 </script>

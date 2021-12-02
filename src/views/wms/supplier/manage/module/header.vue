@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <common-radio-button
-      v-model="query.enabled"
+      v-model="query.boolHide"
       :options="supplierIsHideEnum.ENUM"
       type="enum"
       showOptionAll
@@ -31,7 +31,7 @@ import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   name: undefined,
-  enabled: supplierIsHideEnum.FALSE.V
+  boolHide: supplierIsHideEnum.FALSE.V
 }
 
 const { crud, query } = regHeader(defaultQuery)

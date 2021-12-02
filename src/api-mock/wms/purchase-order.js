@@ -1,5 +1,6 @@
 import { baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { invoiceTypeEnum, settlementStatusEnum, weightMeasurementModeEnum } from '@enum-ms/finance'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 
 // 获取采购订单
 const getPurchaseOrder = {
@@ -120,14 +121,37 @@ const getPurchasingPurchaseOrderBrief = {
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             supplier: {
               id: 1,
-              name: '杭州天马物流有限公司'
+              name: '杭州天马钢材有限公司'
             }
           },
           {
             id: 2, // 订单id
+            purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
+            supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+            basicClass: 6, // 采购物料基础类型
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+            weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+            supplier: {
+              id: 1,
+              name: '杭州天马钢材有限公司'
+            }
+          },
+          {
+            id: 3, // 订单id
             purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
             supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
-            basicClass: 32, // 采购物料基础类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
             'projects|2': [
               {
@@ -145,7 +169,32 @@ const getPurchasingPurchaseOrderBrief = {
             requisitionsSN: ['AFTER-Q-123456', 'AFTER-Q-133456'], // 采购申请单
             supplier: { // 供应商
               id: 1,
-              name: '杭州天马物流有限公司'
+              name: '杭州天天向上有限公司'
+            }
+          },
+          {
+            id: 4, // 订单id
+            purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
+            supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
+            basicClass: matClsEnum.GAS.V, // 采购物料基础类型
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+            weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+            strucAreaIds: [1, 5], // 构件区域id
+            enclAreaIds: [2], // 围护区域id
+            requisitionsSN: ['AFTER-Q-123456'], // 采购申请单
+            supplier: { // 供应商
+              id: 1,
+              name: '杭州决明子有限公司'
             }
           }
         ],

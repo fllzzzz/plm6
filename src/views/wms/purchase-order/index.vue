@@ -15,9 +15,7 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="serialNumber">
         <template #default="{ row }">
-          <p>
-            关联项目：<span v-empty-text>{{ row.projectStr }}</span>
-          </p>
+          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
             关联申购单：<span v-empty-text>{{ row.requisitionsSNStr }}</span>
           </p>
@@ -67,11 +65,9 @@
         label="物料种类"
         min-width="170px"
       />
-      <el-table-column v-if="columns.visible('projects')" key="projects" prop="projects" label="关联项目" min-width="170px">
+      <el-table-column v-if="columns.visible('projects')" show-overflow-tooltip key="projects" prop="projects" label="关联项目" min-width="170">
         <template #default="{ row }">
-          <span class="ellipsis-text">
-            <span v-for="item in row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
-          </span>
+          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
         </template>
       </el-table-column>
       <el-table-column
@@ -210,7 +206,6 @@ import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
-import { projectNameFormatter } from '@/utils/project'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
@@ -273,7 +268,6 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
-    v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
     v.projectIds = v.projects ? v.projects.map((v) => v.id) : []
     return v
   })

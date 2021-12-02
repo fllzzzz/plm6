@@ -58,7 +58,11 @@ export const MIN_UNIT = {
   WEIGHT: 'g',
   WEIGHT_DP: 3,
   THICKNESS: 'mm',
-  THICKNESS_DP: 3
+  THICKNESS_DP: 3,
+  AREA: 'mm²',
+  AREA_DP: 0,
+  VOLUME: 'mm³',
+  VOLUME_DP: 0
 }
 
 export const QR_SCAN_F_TYPE = {

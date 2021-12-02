@@ -11,30 +11,38 @@ export function specFormat(row) {
     case rawMatClsEnum.STEEL_COIL.V:
       return steelCoilSpec(row)
     case rawMatClsEnum.MATERIAL.V:
-      return steelCoilSpec(row)
+      return auxMatSpec(row)
     case rawMatClsEnum.GAS.V:
-      return steelCoilSpec(row)
+      return gasSpec(row)
     default:
-      return ''
+      return row.spec
   }
 }
 
 // 规格格式化
 export function specTip(row) {
+  let tip = ''
   switch (row.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
-      return steelPlateSpecTip(row)
+      tip = steelPlateSpecTip(row)
+      break
     case rawMatClsEnum.SECTION_STEEL.V:
-      return sectionSteelSpecTip(row)
+      tip = sectionSteelSpecTip(row)
+      break
     case rawMatClsEnum.STEEL_COIL.V:
-      return steelCoilSpecTip(row)
+      tip = steelCoilSpecTip(row)
+      break
     case rawMatClsEnum.MATERIAL.V:
-      return steelCoilSpecTip(row)
+      tip = auxMatSpecTip(row)
+      break
     case rawMatClsEnum.GAS.V:
-      return steelCoilSpecTip(row)
+      tip = gasSpecTip(row)
+      break
     default:
-      return ''
+      tip = row.specificationLabels
+      break
   }
+  return tip || '无规格'
 }
 
 // 钢板规格
@@ -62,6 +70,19 @@ function steelCoilSpec(row) {
   return spec.join(' | ')
 }
 
+// 辅材规格
+function auxMatSpec(row) {
+  const spec = []
+  if (isNotBlank(row.specification)) spec.push(row.specification)
+  if (isNotBlank(row.color)) spec.push(row.color)
+  return spec.join(' | ')
+}
+
+// 气体规格
+function gasSpec(row) {
+  return row.specification
+}
+
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // 钢板规格提示
@@ -87,4 +108,17 @@ function steelCoilSpecTip(row) {
   if (isNotBlank(row.color)) tip.push('颜色')
   if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm) * 长(mm)')
   return tip.join(' | ')
+}
+
+// 辅材规格
+function auxMatSpecTip(row) {
+  const tip = []
+  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
+  if (isNotBlank(row.color)) tip.push('颜色')
+  return tip.join(' | ')
+}
+
+// 气体规格
+function gasSpecTip(row) {
+  return row.specificationLabels
 }

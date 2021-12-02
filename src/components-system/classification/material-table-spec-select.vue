@@ -41,11 +41,13 @@
       ref="specRef"
       class="right-container spec-select"
       v-model="list"
+      :visible="props.visible"
       :classifyId="classify.id"
       :row-init-fn="props.rowInitFn"
       :mode="props.mode"
       :show-classify="false"
       :max-height="props.maxHeight"
+      :expand-query="props.expandQuery"
       @accumulate-change="handleAccumulateChange"
       @select-change="handleSelectChange"
       @change="handleChange"
@@ -89,6 +91,14 @@ const props = defineProps({
   autoSelected: {
     type: Boolean,
     default: false
+  },
+  expandQuery: {
+    type: Boolean,
+    default: false
+  },
+  visible: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -205,6 +215,17 @@ function init() {
   specRef.value && specRef.value.init
 }
 
+// 初始化选中
+function initSelected(row) {
+  if (isNotBlank(row)) {
+    row.forEach(({ classifyId }) => {
+      const id = classifyId
+      counter.value[id] = counter.value[id] ? counter.value[id] + 1 : 1
+    })
+  }
+  specRef.value && specRef.value.initSelected(row.map(v => v.sn))
+}
+
 // 删除
 function delListItem(sn, index) {
   specRef.value && specRef.value.delListItem(sn, index)
@@ -212,13 +233,20 @@ function delListItem(sn, index) {
 
 // 清空
 function clear() {
-  specRef.value && specRef.value.clear
+  specRef.value && specRef.value.clear()
+}
+
+// 根据物料分类清除
+function clearByBasicClass(basicClass) {
+  specRef.value && specRef.value.clearByBasicClass(basicClass)
 }
 
 defineExpose({
   delListItem,
   init,
-  clear
+  initSelected,
+  clear,
+  clearByBasicClass
 })
 </script>
 
@@ -280,7 +308,7 @@ defineExpose({
         padding: 0 10px;
         &:nth-child(1) {
           display: inline-block;
-          width: 39%;
+          width: 150px;
           border-right: 1px solid rgb(228, 231, 237);
         }
       }

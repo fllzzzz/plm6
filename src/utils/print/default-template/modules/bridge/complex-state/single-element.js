@@ -208,13 +208,13 @@ const BRIDGE_MES_COMPLEX_STATE_SINGLE_ELEMENT = {
       { show: false, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
       { show: false, key: 'width', title: '宽度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
       { show: false, key: 'height', title: '高度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: true, key: 'weight', title: '单重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousandFilter: false, precision: 3, unit: weightUnitEnum.KG.V }},
-      { show: true, key: 'totalWeight', title: '总重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousandFilter: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
-      { show: true, key: 'inboundQuantity', title: '入库数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: true, key: 'outboundQuantity', title: '出库数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: true, key: 'receiptQuantity', title: '收货数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: true, key: 'installationQuantity', title: '安装数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true }
+      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'weight', title: '单重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'totalWeight', title: '总重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
+      { show: true, key: 'inboundQuantity', title: '入库数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'outboundQuantity', title: '出库数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'receiptQuantity', title: '收货数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'installationQuantity', title: '安装数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true }
     ]
   }
 }

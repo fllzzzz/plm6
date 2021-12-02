@@ -109,17 +109,17 @@ const options = computed(() => {
 
 watch(
   showAll,
-  (allable) => {
+  (displayable) => {
     let cv = copyValue.value
     if (Array.isArray(copyValue.value)) {
-      if (allable) {
+      if (displayable) {
         cv = projects.value.map(v => v.id).filter(v => copyValue.value.includes(v))
       } else {
         cv = processProjects.value.map(v => v.id).filter(v => copyValue.value.includes(v))
       }
     } else {
       let isExit = false
-      if (allable) {
+      if (displayable) {
         isExit = projects.value.some(v => v.id === copyValue.value)
       } else {
         isExit = processProjects.value.some(v => v.id === copyValue.value)

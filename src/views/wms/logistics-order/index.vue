@@ -11,13 +11,10 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
-      style="width: 100%"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>
-            关联项目：<span v-empty-text>{{ row.projectStr }}</span>
-          </p>
+          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
             备注：<span v-empty-text>{{ row.remark }}</span>
           </p>
@@ -38,19 +35,24 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('plateNumber')"
-        key="plateNumber"
+        v-if="columns.visible('licensePlate')"
+        key="licensePlate"
         :show-overflow-tooltip="true"
-        prop="plateNumber"
+        prop="licensePlate"
         label="车牌号"
         align="left"
         min-width="100"
       />
-      <el-table-column v-if="columns.visible('projects')" key="projects" prop="projects" label="关联项目" min-width="170">
+      <el-table-column
+        v-if="columns.visible('projects')"
+        show-overflow-tooltip
+        key="projects"
+        prop="projects"
+        label="关联项目"
+        min-width="170"
+      >
         <template #default="{ row }">
-          <span class="ellipsis-text">
-            <span v-for="item in row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
-          </span>
+          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
         </template>
       </el-table-column>
       <el-table-column
@@ -196,7 +198,6 @@ import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
-import { projectNameFormatter } from '@/utils/project'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -241,7 +242,6 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.materialTypeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
-    v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     return v
   })

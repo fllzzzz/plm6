@@ -22,6 +22,24 @@ export default {
       ]
     },
     {
+      path: '/project-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'ProjectConfig',
+      alwaysShow: false,
+      redirect: '/config-manage/project-config/number-config',
+      meta: { title: '工程配置', icon: 'config-2', noCache: true },
+      children: [
+        {
+          name: 'NumberConfig',
+          path: 'number-config',
+          hidden: false,
+          component: '/config-manage/project-config/number-config/index',
+          meta: { title: '编号配置', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/classification-manage',
       component: 'Layout',
       hidden: false,

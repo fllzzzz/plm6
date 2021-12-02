@@ -48,11 +48,10 @@ export function getFirstLeafNode(tree) {
 
 function getNode(tree) {
   for (let i = 0; i < tree.length; i++) {
-    if (tree[i].isLeaf) {
+    if (isNotBlank(tree[i].children)) { // tree[i].isLeaf
+      return getNode(tree[i].children)
+    } else {
       return tree[i]
-    }
-    if (isNotBlank(tree[i].children)) {
-      getNode(tree)
     }
   }
 }

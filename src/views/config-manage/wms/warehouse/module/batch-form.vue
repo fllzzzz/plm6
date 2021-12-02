@@ -30,9 +30,9 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="仓库位置" width="220">
-          <template v-slot="scope">
+          <template #default="{ row }">
             <el-input
-              v-model.trim="scope.row.name"
+              v-model.trim="row.name"
               type="text"
               clearable
               placeholder="仓库位置"
@@ -42,9 +42,9 @@
           </template>
         </el-table-column>
         <el-table-column key="materialType" prop="materialType" :show-overflow-tooltip="true" label="可存储材料类型" min-width="160">
-          <template v-slot="scope">
+          <template #default="{ row }">
             <common-select
-              v-model="scope.row.materialType"
+              v-model="row.materialType"
               :options="matClsEnum.ENUM"
               multiple
               clearable
@@ -55,11 +55,11 @@
           </template>
         </el-table-column>
         <el-table-column key="type" prop="type" :show-overflow-tooltip="true" label="仓库类型" width="125">
-          <template v-slot="scope">
+          <template #default="{ row, $index }">
             <common-select
-              v-model="scope.row.type"
+              v-model="row.type"
               :options="warehouseTypeEnum.ENUM"
-              show-extra
+              :show-extra="$index !== 0"
               :extra-val="dittos.get('type')"
               clearable
               type="enum"
@@ -69,9 +69,9 @@
           </template>
         </el-table-column>
         <el-table-column key="sort" prop="sort" :show-overflow-tooltip="true" label="排序" align="center" width="100">
-          <template v-slot="scope">
+          <template #default="{ row }">
             <el-input-number
-              v-model="scope.row.sort"
+              v-model="row.sort"
               type="text"
               maxlength="3"
               size="small"
@@ -87,8 +87,8 @@
           align="center"
           fixed="right"
         >
-          <template v-slot="scope">
-            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, scope.$index)" />
+          <template #default="{ $index }">
+            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, $index)" />
           </template>
         </el-table-column>
       </common-table>

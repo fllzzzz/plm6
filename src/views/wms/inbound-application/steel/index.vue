@@ -48,11 +48,13 @@
           v-if="currentBasicClass"
           ref="matSpecRef"
           v-model="list"
+          :visible="materialSelectVisible"
           :row-init-fn="rowInit"
           :max-height="specSelectMaxHeight"
           :basic-class="steelBasicClassKV[currentBasicClass].V"
           :table-width="350"
           auto-selected
+          expand-query
         />
       </template>
     </common-drawer>
@@ -61,8 +63,8 @@
 
 <script setup>
 // TODO: 编辑，反向赋值
-import { steelInboundApplication } from '@/api/wms/supplier/inbound/application'
-import { ref, computed, watch, provide, nextTick } from 'vue'
+import { steelInboundApplication } from '@/api/wms/inbound/application'
+import { defineProps, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
@@ -78,6 +80,16 @@ import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
 
+const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
+  detail: {
+    type: Object
+  }
+})
+
 // 权限
 const permission = ['wms_steelInboundApplication:submit']
 
@@ -92,6 +104,7 @@ const defaultForm = {
   purchaseId: null, // 申购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  logistics: {}, // 物流信息
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
   sectionSteelList: [], // 型钢列表
@@ -108,21 +121,68 @@ const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = ref() // 当前基础分类
 const list = ref([]) // 当前操作的表格list
 const totalWeight = ref() // 总重
-const steelRefList = {
-  // 钢材三个组件的ref列表
-  steelPlateList: undefined,
-  sectionSteelList: undefined,
-  steelCoilList: undefined
-}
+
+// 钢材三个组件的ref列表
+const steelRefList = reactive({
+  steelPlateList: null,
+  sectionSteelList: null,
+  steelCoilList: null
+})
+
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
+
+// 使用草稿时，为数据设置监听
+const useDraftCallback = (form) => {
+  const trigger = {
+    steelPlateList: null,
+    sectionSteelList: null,
+    steelCoilList: null
+  }
+  const initSelectedTrigger = {
+    steelPlateList: null,
+    sectionSteelList: null,
+    steelCoilList: null
+  }
+  const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
+  list.forEach((key) => {
+    if (isNotBlank(form[key])) {
+      trigger[key] = watch(
+        steelRefList,
+        (ref) => {
+          if (ref[key]) {
+            // 初始化数据监听，执行一次后取消当前监听
+            form[key].forEach((v) => ref[key].rowWatch(v))
+            // 初始化选中数据，执行一次后取消当前监听
+            initSelectedTrigger[key] = watchEffect(() => {
+              if (matSpecRef.value) {
+                matSpecRef.value.initSelected(form[key].map((v) => {
+                  return { sn: v.sn, classifyId: v.classifyId }
+                }))
+                nextTick(() => {
+                  initSelectedTrigger[key]()
+                })
+              }
+            })
+            nextTick(() => {
+              trigger[key]()
+            })
+          }
+        },
+        { immediate: true, deep: true }
+      )
+    }
+  })
+}
 
 const { cu, form, FORM } = useForm(
   {
     title: '钢材入库',
-    formStore: true,
+    formStore: !props.edit,
     formStoreKey: 'WMS_INBOUND_APPLICATION_STEEL',
     permission: permission,
     defaultForm: defaultForm,
+    useDraftCallback: useDraftCallback,
+    clearDraftCallback: init,
     api: steelInboundApplication
   },
   formRef
@@ -167,17 +227,19 @@ watch(
   currentBasicClass,
   (k) => {
     list.value = form[k]
-    nextTick(() => {
-      // nextTick 后 steelRef.value 才会发生变化
-      if (!steelRefList[k]) steelRefList[k] = steelRef.value
-    })
+    if (k) {
+      nextTick(() => {
+        // nextTick 后 steelRef.value 才会发生变化
+        if (!steelRefList[k]) steelRefList[k] = steelRef.value
+      })
+    }
   },
   { immediate: true }
 )
 
 // 监听list变更,为对应的钢材清单赋值，监听地址即可
 watch(list, (val) => {
-  form[currentBasicClass] = val
+  form[currentBasicClass.value] = val
 })
 
 // 初始化
@@ -197,7 +259,7 @@ function validate() {
   const tableValidateRes = validateTable()
   if (tableValidateRes) {
     form.list = [...form.steelPlateList, ...form.sectionSteelList, ...form.steelCoilList]
-    form.list.forEach(v => {
+    form.list.forEach((v) => {
       v.mete = v.weighingTotalWeight
       v.weight = v.weighingTotalWeight
     })
@@ -298,13 +360,31 @@ function handleOrderInfoChange(orderInfo) {
   if (orderInfo) {
     Object.keys(steelBasicClassKV).forEach((k) => {
       if (steelBasicClassKV[k].V & orderInfo.basicClass) {
-        if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K
+        if (!currentBasicClass.value) currentBasicClass.value = steelBasicClassKV[k].K // 为空则赋值
         disabledBasicClass.value[k] = false
+      } else {
+        form[k] = []
+        const trigger = watchEffect(() => {
+          if (matSpecRef.value) {
+            matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
+            nextTick(() => {
+              trigger()
+            })
+          }
+        })
       }
     })
+    // 默认赋值
+    nextTick(() => {
+      steelRefList[currentBasicClass.value] = steelRef.value
+    })
+  } else {
+    nextTick(() => {
+      steelRefList.steelPlateList = null
+      steelRefList.sectionSteelList = null
+      steelRefList.steelCoilList = null
+    })
   }
-  // 默认赋值
-  steelRefList[currentBasicClass.value] = steelRef.value
 }
 
 // 信息初始化

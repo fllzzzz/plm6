@@ -1,5 +1,5 @@
 import { isNotBlank } from '@data-type/index'
-import { toThousandFilter } from '@data-type/number'
+import { toThousand } from '@data-type/number'
 /*eslint no-extend-native: ["error", { "exceptions": ["Array", 'Number', 'String'] }]*/
 
 // 判断两个数组是否相等（包括数组里的键值是否相等）
@@ -72,7 +72,7 @@ Object.defineProperty(Array.prototype, 'maxIndex', { enumerable: false })
 
 // 10000 => "10,000"
 Number.prototype.toThousand = function () {
-  return toThousandFilter(this)
+  return toThousand(this)
 }
 Object.defineProperty(Number.prototype, 'toThousand', { enumerable: false })
 
@@ -82,6 +82,6 @@ Number.prototype.toFloor = function (num) {
 Object.defineProperty(Number.prototype, 'toFloor', { enumerable: false })
 
 String.prototype.toThousand = function (num) {
-  return toThousandFilter(num)
+  return toThousand(num)
 }
 Object.defineProperty(String.prototype, 'toThousand', { enumerable: false })

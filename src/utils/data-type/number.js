@@ -185,13 +185,13 @@ export function dightLowercase(num) {
  * 10000 => "10,000"
  * @param {number/string} num
  */
-export function toThousandFilter(num) {
+export function toThousand(num, precision = 2) {
   if (num === '') {
     return num
   }
   if (isNaN(+num)) {
     return num
   } else {
-    return (+num || 0).toString().replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
+    return (+num || 0).toFixed(precision).replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
   }
 }

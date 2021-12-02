@@ -7,17 +7,17 @@ import { ElMessage } from 'element-plus'
  * form-table-校验
  * @param {array} list 校验列表
  * @param {object} rules 校验规则
- * @param {map} dittos=[] 含“同上”选项或值的字段。例： { name：'id', value: -1 }
+ * @param {map} ditto=[] 含“同上”选项或值的字段。例： { name：'id', value: -1 }
  */
-export default function useTableValidate({ rules = {}, dittos = new Map(), errorMsg = '请修正表格中标红的信息' }) {
+export default function useTableValidate({ rules = {}, ditto = new Map(), errorMsg = '请修正表格中标红的信息' }) {
   return {
-    tableValidate: (list) => tableValidate(list, rules, dittos, errorMsg),
+    tableValidate: (list) => tableValidate(list, rules, ditto, errorMsg),
     wrongCellMask: (tableInfo) => wrongCellMask(tableInfo, rules),
-    cleanUpData: (list) => cleanUpData(list, dittos)
+    cleanUpData: (list) => cleanUpData(list, ditto)
   }
 }
 
-function tableValidate(list, tableRules, dittos, errorMsg) {
+function tableValidate(list, tableRules, ditto, errorMsg) {
   const rules = getRules(tableRules)
   let flag = true
   let message = '请填写数据'
@@ -34,7 +34,7 @@ function tableValidate(list, tableRules, dittos, errorMsg) {
       // 为了不删除有数据row的同上字段，因此拷贝一个row
       const rowCopy = JSON.parse(JSON.stringify(row))
 
-      dittos.forEach((val, name) => {
+      ditto.forEach((val, name) => {
         if (rowCopy[name] === val) {
           delete rowCopy[name] // 删除同上
         }
@@ -52,7 +52,7 @@ function tableValidate(list, tableRules, dittos, errorMsg) {
       // 首行处理, 只删除首行的同上
       if (isFirstRow) {
         // 处理首行"同上"问题，若首行填写“同上”则视为未填写
-        dittos.forEach((val, name) => {
+        ditto.forEach((val, name) => {
           if (row[name] === val) {
             delete row[name] // 删除同上
           }
@@ -157,12 +157,12 @@ export function validate(rules, value, row = {}) {
 }
 
 // 清理数据
-export function cleanUpData(list, dittos = new Map()) {
+export function cleanUpData(list, ditto = new Map()) {
   const copyList = lodash.cloneDeep(list)
   list.length = 0
   // 清空数组, 保留数组地址不变
   copyList.forEach((row, index) => {
-    dittos.forEach((val, name) => {
+    ditto.forEach((val, name) => {
       if (row[name] === val) {
         delete row[name] // 删除同上
       }
@@ -180,7 +180,7 @@ export function cleanUpData(list, dittos = new Map()) {
   const prevAttr = new Map()
   list.forEach((v) => {
     delete v.verify
-    dittos.forEach((val, key) => {
+    ditto.forEach((val, key) => {
       if (isBlank(v[key])) {
         v[key] = prevAttr.get(key)
       } else {

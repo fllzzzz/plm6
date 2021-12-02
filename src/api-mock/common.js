@@ -1,7 +1,6 @@
 import { validatorPhone } from '@/utils/validate/pattern'
 import { supplierClassEnum, supplierIsHideEnum, supplierTypeEnum } from '@enum-ms/supplier'
 
-
 const downloadAttachment = {
   url: RegExp('/api/common/attachment/download/' + '.*'),
   method: 'get',
@@ -980,12 +979,14 @@ const uploadAttachment = {
     return {
       code: 20000,
       data: [{
-        'createTime': 1637226476143,
-        'fileName': '1637226476143_文件.png',
-        'id': 1,
-        'mediaType': 'image/png',
-        'name': '文件.png',
-        'type': 7
+        'id': 3,
+        'name': '-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
+        'imageUrl': 'http://wfxhxg.natappfree.cc/files\\supplier\\1637723900129_-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
+        'tinyImageUrl': 'http://wfxhxg.natappfree.cc/files\\supplier\\1637723900129_-7Q5-gty6XeZ3uT3cS1hc-u0_256.jpg',
+        'createUserId': 1,
+        'createUserName': 'xxx',
+        'type': 50,
+        'createTime': 1637723901000
       }],
       message: '操作成功'
     }

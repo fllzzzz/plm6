@@ -122,6 +122,9 @@
       min-width: 40px;
       width: 100%;
     }
+    .el-select {
+      width:100%
+    }
   }
 } 
 
@@ -277,6 +280,10 @@ body .el-table th.gutter {
     border: none!important;
     background: none!important;
   }
+}
+
+.el-divider__text {
+  background-color: unset!important;
 }
 
 // card 标题
