@@ -1,5 +1,5 @@
 <template>
-  <div ref="materialSpecRef" class="material-spec-select" :style="{ 'max-height': `${props.maxHeight}px` }" :key="Math.random()">
+  <div ref="materialSpecRef" class="material-spec-select" :style="{ 'max-height': `${props.maxHeight}px` }">
     <div class="operate-container">
       <div v-if="showClassify" class="cls-container">
         <div class="container-prepend">科目</div>
@@ -39,6 +39,7 @@
         <el-icon class="is-loading"><el-icon-loading /></el-icon>
         科目加载中
       </el-tag>
+      <el-tag v-else-if="matCls.hasUnitConfig === false" class="tip-tag" type="danger" size="medium" effect="plain">请先在“配置管理-计量配置”中进行该科目的核算单位配置</el-tag>
       <div v-else-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
         <template v-if="props.mode === 'accumulator'">
           <template v-for="item in specList" :key="item.sn">
@@ -70,8 +71,7 @@
           </template>
         </template>
       </div>
-      <el-tag class="tip-tag" v-else-if="curClsId" type="danger" size="medium" effect="plain"> * 当前科目未配置规格</el-tag>
-
+      <!-- <el-tag class="tip-tag" v-else-if="curClsId" type="danger" size="medium" effect="plain"> * 当前科目未配置规格</el-tag> -->
       <el-tag class="tip-tag" v-else type="warning" size="medium" effect="plain"> * 请先选择科目</el-tag>
     </div>
   </div>

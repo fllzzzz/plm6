@@ -10,14 +10,19 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
+      @row-dblclick="(row) => crud.toDetail(row)"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <!-- TODO:入库单增加备注？ -->
           <!-- <p>
             备注：<span v-empty-text>{{ row.remark }}</span>
           </p> -->
+          <p>
+            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
+          </p>
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -45,7 +50,7 @@
         prop="licensePlate"
         label="车牌号"
         align="left"
-        min-width="100"
+        width="100"
       />
       <el-table-column
         v-if="columns.visible('materialTypeText')"
@@ -53,13 +58,20 @@
         :show-overflow-tooltip="true"
         prop="materialTypeText"
         label="物料种类"
-        min-width="170"
+        width="120"
       >
         <template #default="{ row }">
           <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('projects')" show-overflow-tooltip key="projects" prop="projects" label="关联项目" min-width="170">
+      <el-table-column
+        v-if="columns.visible('projects')"
+        show-overflow-tooltip
+        key="projects"
+        prop="projects"
+        label="关联项目"
+        min-width="170"
+      >
         <template #default="{ row }">
           <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
         </template>
@@ -151,9 +163,9 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.edit" label="操作" width="200px" align="center" fixed="right">
+      <el-table-column v-permission="permission.edit" label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :disabled-edit="!row.editable" :data="row" show-detail />
+          <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -161,6 +173,8 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
+    <!-- 编辑 -->
+    <m-form />
   </div>
 </template>
 
@@ -177,6 +191,7 @@ import mHeader from './module/header'
 import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
+import mForm from './module/form.vue'
 
 // crud交由presenter持有
 const permission = {
@@ -196,7 +211,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'reviewerName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

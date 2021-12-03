@@ -29,6 +29,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 const props = defineProps({
   specMerge: {

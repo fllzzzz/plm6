@@ -28,7 +28,7 @@ const getList = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            loadingWeight: 1000.00, // 装载重量（kg）TODO:入库过磅重量较好?
+            loadingWeight: 666666, // 装载重量（g）TODO:入库过磅重量较好?
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             taxRate: 3, // 税率（百分比）
             freight: 1200, // 运费

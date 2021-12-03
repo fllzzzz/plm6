@@ -20,7 +20,7 @@ async function getBaseUnit() {
 async function getUnit() {
   const _unit = store.state.config.loaded.unit
   if (isNotBlank(_unit)) {
-    return _unit
+    return store.state.config.unit.MAP
   } else {
     await store.dispatch('wms/fetchUnit')
   }

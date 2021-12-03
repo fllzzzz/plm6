@@ -1,6 +1,12 @@
 <template>
   <div v-permission="permission" class="gas-inbound-application-container">
-    <common-wrapper :basicClass="currentBasicClass" :validate="validate" :show-total="false" @purchase-order-change="handleOrderInfoChange">
+    <common-wrapper
+      :basicClass="currentBasicClass"
+      :validate="validate"
+      :edit="props.edit"
+      :show-total="false"
+      @purchase-order-change="handleOrderInfoChange"
+    >
       <div class="filter-container">
         <div class="filter-right-box">
           <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!currentBasicClass">
@@ -40,8 +46,10 @@
 
 <script setup>
 // TODO: 编辑，反向赋值
+
 import { gasInboundApplication } from '@/api/wms/inbound/application'
-import { defineProps, ref, watch, provide, nextTick, watchEffect } from 'vue'
+import { edit as editInboundApplication } from '@/api/wms/inbound/raw-mat-application-record'
+import { defineProps, defineEmits, ref, watch, provide, nextTick, watchEffect, reactive } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useForm from '@/composables/form/use-form'
@@ -49,6 +57,8 @@ import useMaxHeight from '@compos/use-max-height'
 import commonWrapper from '../components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import gasTable from './module/gas-table.vue'
+
+const emit = defineEmits(['success'])
 
 const props = defineProps({
   edit: {
@@ -64,7 +74,7 @@ const props = defineProps({
 const permission = ['wms_gasInboundApplication:submit']
 
 const defaultForm = {
-  purchaseId: null, // 申购单id
+  purchaseId: null, // 采购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
   logistics: {}, // 物流信息
@@ -82,8 +92,9 @@ const currentBasicClass = matClsEnum.GAS.V // 当前基础分类
 
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
-// 使用草稿时，为数据设置监听
-const useDraftCallback = (form) => {
+// 使用草稿/修改时，为数据设置监听
+const setFormCallback = (form) => {
+  form.list = form.list.map(v => reactive(v))
   const trigger = watch(
     tableRef,
     (ref) => {
@@ -117,11 +128,12 @@ const { cu, form, FORM } = useForm(
     formStoreKey: 'WMS_INBOUND_APPLICATION_GAS',
     permission: permission,
     defaultForm: defaultForm,
-    useDraftCallback: useDraftCallback,
+    useDraftCallback: setFormCallback,
     clearDraftCallback: init,
-    api: gasInboundApplication
+    api: props.edit ? editInboundApplication : gasInboundApplication
   },
-  formRef
+  formRef,
+  props.detail
 )
 
 // 物料选择组件高度
@@ -137,20 +149,47 @@ const { maxHeight: specSelectMaxHeight } = useMaxHeight(
   () => drawerRef.value.loaded
 )
 
-// 表格高度
-const { maxHeight: tableMaxHeight } = useMaxHeight({
-  mainBox: '.gas-inbound-application-container',
-  extraBox: ['.filter-container', '.inbound-application-header', '.inbound-application-footer'],
-  navbar: true,
-  minHeight: 300,
-  extraHeight: 20
-})
+let tableHeightConfig = {}
+if (props.edit) {
+  // 修改时，是drawer弹窗
+  tableHeightConfig = {
+    mainBox: '.raw-mat-inbound-application-record-form',
+    extraBox: ['.el-drawer__header', '.filter-container', '.inbound-application-header', '.inbound-application-footer'],
+    wrapperBox: ['.el-drawer__body'],
+    clientHRepMainH: true,
+    navbar: false,
+    minHeight: 300,
+    extraHeight: 20
+  }
+} else {
+  // 非修改时
+  tableHeightConfig = {
+    mainBox: '.gas-inbound-application-container',
+    extraBox: ['.filter-container', '.inbound-application-header', '.inbound-application-footer'],
+    navbar: true,
+    minHeight: 300,
+    extraHeight: 20
+  }
+}
+const { maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
 
 // 初始化
 init()
 
+FORM.HOOK.beforeToEdit = async (crud, form) => {
+  if (!props.edit) return
+  // 采购单id
+  form.purchaseId = form.purchaseOrder.id
+  if (!form.logistics) form.logistics = {}
+  // 设置监听等
+  setFormCallback(form)
+}
+
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
+  if (props.edit) {
+    emit('success')
+  }
   init()
 }
 

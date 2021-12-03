@@ -19,44 +19,47 @@
       <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
     </template>
-    <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
-      <common-table
-        :data="form.list"
-        :max-height="maxHeight"
-        show-summary
-        :cell-class-name="wrongCellMask"
-        :summary-method="getSummaries"
-        :expand-row-keys="expandRowKeys"
-        row-key="uid"
-      >
-        <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
-        <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-          <template #default="{ row }">
-            <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" />
-            <p>
-              备注：<span v-empty-text>{{ row.remark }}</span>
-            </p>
-          </template>
-        </el-expand-table-column>
-        <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
-        <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="props.basicClass" />
-        <!-- 单位及其数量 -->
-        <material-unit-quantity-columns :basic-class="props.basicClass" />
-        <!-- 次要信息 -->
-        <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
-        <!-- 金额设置 -->
-        <price-set-columns v-if="showAmount" @amount-change="handleAmountChange" />
-        <!-- 仓库设置 -->
-        <warehouse-set-columns v-if="showWarehouse" />
-      </common-table>
-      <!-- 物流信息设置 -->
-      <logistics-form
-        :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
-        class="logistics-form-content"
-        v-if="showAmount && form.logistics"
-      />
-    </el-form>
+    <!-- 不刷新组件无法正常更新 -->
+    <template v-if="dialogVisible">
+      <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
+        <common-table
+          :data="form.list"
+          :max-height="maxHeight"
+          show-summary
+          :cell-class-name="wrongCellMask"
+          :summary-method="getSummaries"
+          :expand-row-keys="expandRowKeys"
+          row-key="uid"
+        >
+          <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
+          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+            <template #default="{ row }">
+              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" />
+              <p>
+                备注：<span v-empty-text>{{ row.remark }}</span>
+              </p>
+            </template>
+          </el-expand-table-column>
+          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
+          <!-- 基础信息 -->
+          <material-base-info-columns :basic-class="props.basicClass" />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns :basic-class="props.basicClass" />
+          <!-- 次要信息 -->
+          <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
+          <!-- 金额设置 -->
+          <price-set-columns v-if="showAmount" @amount-change="handleAmountChange" />
+          <!-- 仓库设置 -->
+          <warehouse-set-columns v-if="showWarehouse" />
+        </common-table>
+        <!-- 物流信息设置 -->
+        <logistics-form
+          :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+          class="logistics-form-content"
+          v-if="showAmount && form.logistics"
+        />
+      </el-form>
+    </template>
     <common-footer class="footer" unit="元" :total-value="amount" :show-total="showAmount" is-submit />
   </common-dialog>
 </template>
@@ -84,7 +87,7 @@ import logisticsForm from './logistics-form.vue'
 import priceSetColumns from './price-set-columns.vue'
 import warehouseSetColumns from './warehouse-set-columns.vue'
 import commonFooter from './common-footer.vue'
-import { isBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 // TODO:处理申购单与项目之间的关联
 // TODO: 标签打印提示
@@ -164,7 +167,14 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 watch(
   () => props.modelValue,
   (visible) => {
-    if (visible) setDitto(form.list) // 在list变化时设置同上
+    if (visible) {
+      setDitto(form.list) // 在list变化时设置同上
+      form.list.forEach((v) => {
+        if (isNotBlank(v.unitPrice) && isNotBlank(v.mete)) {
+          v.amount = toFixed(v.unitPrice * v.mete, 2, { toNum: true })
+        }
+      })
+    }
   },
   { immediate: true }
 )
@@ -247,14 +257,14 @@ function setDitto(list) {
 
 // 金额变化
 function handleAmountChange() {
-  amount.value = form.list.reduce((sum, cur) => {
+  amount.value = toFixed(form.list.reduce((sum, cur) => {
     const value = Number(cur.amount)
     if (!isNaN(value)) {
       return sum + cur.amount
     } else {
       return sum
     }
-  }, 0)
+  }, 0), 2)
 }
 
 // 合计
