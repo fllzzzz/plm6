@@ -61,6 +61,24 @@ export default {
       ]
     },
     {
+      path: '/wms/requisitions-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSRequisitions',
+      alwaysShow: false,
+      redirect: '/wms/requisitions',
+      meta: { title: '申购订单管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'requisitions',
+          path: 'requisitions',
+          hidden: false,
+          component: '/wms/requisitions/index',
+          meta: { title: '申购订单', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/wms/logistics-manage',
       component: 'Layout',
       hidden: false,
