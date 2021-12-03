@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    ref="dialogRef"
     v-model="dialogVisible"
     :title="props.title"
     :width="props.width"
@@ -27,18 +28,18 @@
         <div class="dialog-title">
           <span class="title-left">
             <span class="title-text">{{ props.title }}</span>
-            <span class="child-mr-6"><slot name="titleAfter" /></span>
+            <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
-          <span class="dialog-title-right">
+          <span class="dialog-title-right" v-if="!props.contentLoading">
             <slot name="titleRight" />
             <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>
         </div>
       </slot>
     </template>
-    <slot />
+    <slot v-if="!props.contentLoading" />
     <template v-if="slots.footer" #footer>
-      <slot name="footer" />
+      <slot v-if="!props.contentLoading" name="footer" />
     </template>
   </el-dialog>
 </template>
@@ -46,6 +47,7 @@
 <script setup>
 import { watch, computed, defineProps, defineEmits, ref, useSlots } from 'vue'
 import { isNotBlank } from '@data-type/index'
+import { ElLoading } from 'element-plus'
 
 const slots = useSlots()
 
@@ -65,6 +67,10 @@ const props = defineProps({
   showClose: {
     type: Boolean,
     default: true
+  },
+  contentLoading: {
+    type: Boolean,
+    default: false
   },
   closeBtnType: {
     type: String,
@@ -133,6 +139,11 @@ const props = defineProps({
   }
 })
 
+// 加载
+let loading
+
+const dialogRef = ref()
+
 // 自定义类名
 const customClass = `${props.customClass || ''} common-dialog`
 
@@ -144,6 +155,34 @@ const isVisibleProp = computed(() => isNotBlank(props.visible))
 watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
   dialogVisible.value = isVisibleProp.value ? v : mv
 })
+
+watch(
+  () => props.contentLoading,
+  (foo) => {
+    if (!foo) {
+      loading && loading.close()
+    }
+  }
+)
+
+watch(dialogVisible, (foo) => {
+  if (foo && props.contentLoading) {
+    openFullScreen()
+  } else {
+    loading && loading.close()
+  }
+})
+
+function openFullScreen() {
+  let el
+  if (dialogRef.value) el = dialogRef.value.dialogRef
+  loading = ElLoading.service({
+    target: el,
+    lock: true,
+    text: '数据加载中，请稍后',
+    fullscreen: false
+  })
+}
 
 function handleClose() {
   if (typeof props.beforeClose === 'function') {

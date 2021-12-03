@@ -199,15 +199,12 @@ function rowWatch(row) {
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-function calcTheoryWeight(row) {
-  row.theoryWeight = calcSteelPlateWeight({
+async function calcTheoryWeight(row) {
+  row.theoryWeight = await calcSteelPlateWeight({
     name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
     length: row.length,
     width: row.width,
-    thickness: row.thickness,
-    lengthUnit: baseUnit.value.length.unit,
-    weightUnit: baseUnit.value.weight.unit,
-    precision: baseUnit.value.weight.precision
+    thickness: row.thickness
   })
 }
 
@@ -224,7 +221,11 @@ function calcTotalWeight(row) {
 
 // 删除行
 function delRow(sn, $index) {
-  matSpecRef.value.delListItem(sn, $index)
+  if (matSpecRef.value) {
+    matSpecRef.value.delListItem(sn, $index)
+  } else {
+    form.steelPlateList.splice($index, 1)
+  }
   emit('calc-weight')
 }
 

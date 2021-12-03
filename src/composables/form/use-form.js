@@ -1,4 +1,4 @@
-import { provide, inject, reactive, getCurrentInstance, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
+import { provide, inject, reactive, getCurrentInstance, onBeforeUnmount, onMounted, onUnmounted, nextTick } from 'vue'
 import * as lodash from 'lodash'
 
 import useFormLocalStorage from '@/composables/form/use-form-local-storage'
@@ -14,13 +14,13 @@ const FORM = {} // crud公共信息处理
  * @param {*} tableRef 非必填 (由于执行顺序问题，无法直接从实例中获取该值，需要传入)
  * @param {*} registerForm= true 是否注册主组件，若不注册可之后调用registerForm方法注册
  */
-export default function useForm(options, formRef, registerForm = true) {
+export default function useForm(options, formRef, formData, registerForm = true) {
   // 获取crud实例
   const crud = getCrud(options)
   // 不能添加新属性，也不能重新配置或者删除任何现有属性（但是可以修改属性的值）
   Object.seal(crud)
   if (registerForm) {
-    const data = register(crud, formRef)
+    const data = register(crud, formRef, formData)
     return data
   }
   return { crud }
@@ -32,7 +32,7 @@ export default function useForm(options, formRef, registerForm = true) {
  * @param {*} tableRef
  * @returns { columns, crud } = { 显示的列, crud }
  */
-export function register(crud, formRef) {
+export function register(crud, formRef, data) {
   const internalInstance = getCurrentInstance()
   // 注册组件
   const vmInfo = crud.registerVM(FORM.VM_TYPE.FORM, internalInstance, 2)
@@ -49,7 +49,10 @@ export function register(crud, formRef) {
     })
     fmStore = store
   }
-  crud.toEdit()
+
+  onMounted(() => {
+    crud.toEdit(data)
+  })
 
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)

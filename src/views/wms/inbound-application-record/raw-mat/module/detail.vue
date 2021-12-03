@@ -2,6 +2,7 @@
   <common-drawer
     ref="drawerRef"
     :visible="crud.detailVisible"
+    :content-loading="crud.detailLoading"
     :before-close="crud.cancelDetail"
     :title="drawerTitle"
     :show-close="true"
@@ -45,7 +46,7 @@
         <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns />
-          <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip/>
+          <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
           <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
             <template #default="{ row }">
               <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
@@ -65,6 +66,7 @@ import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { STEEL_ENUM } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -93,7 +95,7 @@ const { maxHeight } = useMaxHeight(
     minHeight: 300,
     extraHeight: 10
   },
-  () => drawerRef.value.loaded
+  () => computed(() => !crud.detailLoading)
 )
 
 // 显示金额
@@ -101,11 +103,14 @@ const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inbo
 // 显示仓库
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
 // 标题
-const drawerTitle = computed(() => `订单：${order.value.serialNumber}（${order.value.supplier ? order.value.supplier.name : ''}）`)
+const drawerTitle = computed(() =>
+  crud.detailLoading ? '订单' : `订单：${order.value.serialNumber}（${order.value.supplier ? order.value.supplier.name : ''}）`
+)
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
-// TODO: 辅材气体最小单位转换, //一旦单位使用，只能在同种单位中转换
-CRUD.HOOK.beforeToDetail = async (crud, detail) => {
+
+CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
+  await setSpecInfoToList(detail.list)
   detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
     toNum: true

@@ -6,6 +6,7 @@ export function getFinalMatClsById(id) {
   return request({
     module: 'config',
     url: `classification/final-material/${id}`,
-    method: 'get'
+    method: 'get',
+    cancelKey: false
   })
 }

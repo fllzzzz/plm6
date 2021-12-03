@@ -73,7 +73,7 @@
         align="right"
       >
         <template #default="{ row }">
-          <span v-empty-text v-to-fixed>{{ row.loadingWeight }}</span>
+          <span v-empty-text v-convert-weight>{{ row.loadingWeight }}</span>
         </template>
       </el-table-column>
 

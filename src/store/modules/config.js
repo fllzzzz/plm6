@@ -333,7 +333,8 @@ const actions = {
           accountingPrecision: res.accountingPrecision, // 核算单位小数精度
           measurePrecision: res.measurePrecision, // 计量单位小数精度
           outboundUnit: res.outboundUnit, // 出库方式
-          basicClass: res.basicClass
+          basicClass: res.basicClass,
+          hasUnitConfig: !!res.accountingUnit
         }
         clsBrief.fullNameArr = res.fullName.split('>') // 全称全路径 数组
         clsBrief.fullName = clsBrief.fullNameArr.join(' > ') // 全称
@@ -364,7 +365,10 @@ const actions = {
             }
           })
         }
+        classifySpec[id].fullSpecKV = new Map()
         classifySpec[id].specList = getSpecList(clsBrief, matCls.specConfig)
+        // fullSpecMap：可通过classifyId及“全规格（例：M27*60）”，获取规格的详细信息
+        classifySpec[id].fullSpecMap = new Map(classifySpec[id].specList.map(v => [v.spec, v]))
         Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
         Object.assign(classifySpec[id], matCls)
         Object.assign(classifySpec.specKV, matCls.specKV)

@@ -9,7 +9,7 @@ import * as lodash from 'lodash'
 import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
 import useBatchAddFormLocalStorage from '@/composables/form/use-crud-add-batch-form-local-storage'
 
-import { ElNotification } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 
 const CRUD = {} // crud公共信息处理
 // TODO: 关闭修改或添加窗口，由于状态信息的及时变更，会导致窗口未关闭，标题直接发生变化
@@ -397,8 +397,12 @@ function addSystemOptions(options) {
       total: 0,
       hasNextPage: true
     },
-    // 详情加载
+    // 详情显示
     detailVisible: false,
+    // 详情加载
+    detailLoading: false,
+    // 详情加载
+    editDetailLoading: false,
     // 首次加载
     firstLoaded: false,
     // 整体loading
@@ -581,11 +585,25 @@ function addCrudBusinessMethod(crud) {
 
   // 打开详情
   const toDetail = async (data) => {
+    // 避免detailLoading未正确重置为false的情况，因此在头部初始化
+    crud.detailLoading = false
     if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
-      // 如果查询项不为id，则可改造方法，在crud中传入自定义字段
-      data = await crud.crudApi.detail(data.id)
+      crud.detailLoading = true
+      // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
+      crud.crudApi.detail(data.id).then((val) => {
+        crud.resetRowDetail(val)
+        callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
+          crud.detailLoading = false
+        })
+      }).catch(() => {
+        cancelDetail()
+        ElMessage.error('加载失败')
+        crud.detailLoading = false
+      })
+    } else {
+      crud.resetRowDetail(data)
     }
-    crud.resetRowDetail(data)
+    // crud.resetRowDetail(data)
     if (!(await callVmHook(crud, CRUD.HOOK.beforeToDetail, crud.rowDetail))) {
       return
     }
@@ -614,7 +632,24 @@ function addCrudBusinessMethod(crud) {
   }
 
   const toEdit = async (data) => {
-    crud.resetForm(JSON.parse(JSON.stringify(data)))
+    // 避免editDetailLoading未正确重置为false的情况，因此在头部初始化
+    crud.editDetailLoading = false
+    if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
+      crud.editDetailLoading = true
+      // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
+      crud.crudApi.detail(data.id).then((val) => {
+        crud.resetForm(JSON.parse(JSON.stringify(val)))
+        callVmHook(crud, CRUD.HOOK.beforeEditDetailLoaded, crud.form).then(() => {
+          crud.editDetailLoading = false
+        })
+      }).catch(() => {
+        cancelCU()
+        ElMessage.error('加载失败')
+        crud.editDetailLoading = false
+      })
+    } else {
+      crud.resetForm(JSON.parse(JSON.stringify(data)))
+    }
     if (!((await callVmHook(crud, CRUD.HOOK.beforeToEdit, crud.form)) && (await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form)))) {
       return
     }
@@ -1062,7 +1097,7 @@ function addCrudFeatureMethod(crud, data) {
       // 设置默认值，因此重置放在顶部
       ref.resetFields()
     }
-    const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm())
+    const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : {})
     const crudFrom = crud.form
     for (const key in crudFrom) {
       crudFrom[key] = undefined
@@ -1413,6 +1448,8 @@ CRUD.HOOK = {
   beforeToDetail: 'beforeToDetail',
   /** 详情 - 之后 */
   afterToDetail: 'afterToDetail',
+  /** 详情加载后 */
+  beforeDetailLoaded: 'beforeDetailLoaded',
   /** 详情关闭 - 之前 */
   beforeDetailCancel: 'beforeDetailCancel',
   /** 详情关闭 - 之后 */
@@ -1421,6 +1458,8 @@ CRUD.HOOK = {
   beforeToAdd: 'beforeToAdd',
   /** 新建 - 之后 */
   afterToAdd: 'afterToAdd',
+  /** 编辑时详情加载后 */
+  beforeEditDetailLoaded: 'beforeEditDetailLoaded',
   /** 编辑 - 之前 */
   beforeToEdit: 'beforeToEdit',
   /** 编辑 - 之后 */

@@ -181,8 +181,8 @@ function rowWatch(row) {
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-function calcTheoryWeight(row) {
-  row.theoryWeight = calcSectionSteelWeight({
+async function calcTheoryWeight(row) {
+  row.theoryWeight = await calcSectionSteelWeight({
     length: row.length, // 长度
     unitWeight: row.unitWeight, // 单位重量
     lengthUnit: baseUnit.value.length.unit, // 长度单位
@@ -216,7 +216,11 @@ function calcTotalWeight(row) {
 
 // 删除行
 function delRow(sn, $index) {
-  matSpecRef.value.delListItem(sn, $index)
+  if (matSpecRef.value) {
+    matSpecRef.value.delListItem(sn, $index)
+  } else {
+    form.sectionSteelList.splice($index, 1)
+  }
   emit('calc-weight')
 }
 

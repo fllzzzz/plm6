@@ -183,8 +183,8 @@ function rowWatch(row) {
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
-function calcTheoryLength(row) {
-  row.theoryLength = calcSteelCoilLength({
+async function calcTheoryLength(row) {
+  row.theoryLength = await calcSteelCoilLength({
     weight: row.weighingTotalWeight,
     width: row.width,
     thickness: row.thickness,
@@ -206,7 +206,11 @@ function calcTotalLength(row) {
 
 // 删除行
 function delRow(sn, $index) {
-  matSpecRef.value.delListItem(sn, $index)
+  if (matSpecRef.value) {
+    matSpecRef.value.delListItem(sn, $index)
+  } else {
+    form.steelCoilList.splice($index, 1)
+  }
   emit('calc-weight')
 }
 

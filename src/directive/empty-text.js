@@ -4,9 +4,6 @@ import { emptyTextFormatter } from '@/utils/data-type'
 export default {
   mounted(el, binding) {
     resolve(el, binding)
-  },
-  updated(el, binding) {
-    resolve(el, binding)
   }
 }
 
