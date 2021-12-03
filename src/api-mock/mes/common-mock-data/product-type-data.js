@@ -30,10 +30,7 @@ export const artifactListInfo = {
   'quantity|1-100': 10
 }
 
-import {
-  mesEnclosureTypeEnum
-} from '@enum-ms/mes'
-const enclosure = {
+export const enclosureListInfo = {
   'createTime': '@datetime',
   'id|+1': 1,
   'project': {
@@ -66,27 +63,4 @@ const enclosure = {
   'brand': '@cword(2,10)',
   'type': 4,
   'capacity|1-10000.1-8': 1
-}
-
-export const enclosureListInfo = {
-  [mesEnclosureTypeEnum.FLOOR_PLATE.V]: {
-    'category': mesEnclosureTypeEnum.FLOOR_PLATE.V,
-    ...enclosure
-  },
-  [mesEnclosureTypeEnum.SANDWICH_BOARD.V]: {
-    'category': mesEnclosureTypeEnum.SANDWICH_BOARD.V,
-    ...enclosure
-  },
-  [mesEnclosureTypeEnum.PRESSED_PLATE.V]: {
-    'category': mesEnclosureTypeEnum.PRESSED_PLATE.V,
-    ...enclosure
-  },
-  [mesEnclosureTypeEnum.FOLDING_PIECE.V]: {
-    'category': mesEnclosureTypeEnum.FOLDING_PIECE.V,
-    ...enclosure
-  },
-  [mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V]: {
-    'category': mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V,
-    ...enclosure
-  }
 }

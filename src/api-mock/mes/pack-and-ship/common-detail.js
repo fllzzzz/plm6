@@ -95,7 +95,9 @@ export default {
       'serialNumber': '2121212',
       'shortName': 'xm001',
       'totalCollectionAmount|1-10000.1-8': 0,
-      'totalDeliveryAmount|1-10000.1-8': 0
+      'totalDeliveryAmount|1-10000.1-8': 0,
+      'contractReceivableAmount|1-10000.1-8': 0,
+      'billingReceivableAmount|1-10000.1-8': 0
     },
     'remark': 'remark',
     'status': false

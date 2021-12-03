@@ -54,6 +54,8 @@ const getters = {
   token: state => state.user.token,
   // 用户信息
   user: state => state.user.user,
+  // 请求地址
+  requestUrl: state => state.user.requestUrl,
   // 库存预警权限
   inventoryNotifyPerm: state => state.user.user.inventoryNotifyPerm,
   // 用户权限

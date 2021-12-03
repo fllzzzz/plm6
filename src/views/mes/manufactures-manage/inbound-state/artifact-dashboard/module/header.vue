@@ -2,8 +2,7 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <factory-select
-        ref="factorySelect"
-        v-model:value="query.factoryId"
+        v-model="query.factoryId"
         show-all
         class="filter-item"
         style="width: 200px"

@@ -58,7 +58,11 @@
         :show-overflow-tooltip="true"
         label="编号"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('color')"
         key="color"
@@ -67,7 +71,11 @@
         :show-overflow-tooltip="true"
         label="颜色"
         min-width="100px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.color }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('material')"
         key="material"
@@ -76,7 +84,11 @@
         :show-overflow-tooltip="true"
         label="材质"
         min-width="120px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.material }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -167,7 +179,11 @@
         :show-overflow-tooltip="true"
         label="备注"
         min-width="120px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.remark }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"

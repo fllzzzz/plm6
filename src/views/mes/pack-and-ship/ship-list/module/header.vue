@@ -109,7 +109,7 @@
       <template v-slot:viewLeft>
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
           累计发运重量（查询）：
-          <span v-if="!summaryLoading">{{ toThousandFilter(convertUnits(shipWeight,'kg','t',DP.COM_WT__T)) }} t</span>
+          <span v-if="!summaryLoading">{{ convertUnits(shipWeight,'kg','t',DP.COM_WT__T) }} t</span>
           <i v-else class="el-icon-loading" />
         </el-tag>
       </template>
@@ -126,7 +126,6 @@ import { packTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
-import { toThousandFilter } from '@data-type/number'
 // import { isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'

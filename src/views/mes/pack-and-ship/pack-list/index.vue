@@ -283,7 +283,7 @@ async function printLabel(row) {
 }
 
 function previewLabel(row) {
-  currentLabel.value = headerRef.value.getlabelInfo(row)
+  currentLabel.value = headerRef.value.getLabelInfo(row)
   labelVisible.value = true
 }
 

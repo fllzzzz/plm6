@@ -30,8 +30,8 @@ const getLogisticsList = {
             'price|1-1000.1-8': 10.00000000
           },
           'totalPrice|1-1000.1-8': 0,
-          'manufactureType|1': [0, 1],
-          'productType|1': [2, 4, 8],
+          'manufactureType|1': [1, 2],
+          'productType|1': [2, 4, 6, 8, 10, 12, 14],
           'serialNumber': '@datetime("yyyy-MM-dd")',
           'licensePlate': patternLicensePlate,
           'driverName': '@cname',

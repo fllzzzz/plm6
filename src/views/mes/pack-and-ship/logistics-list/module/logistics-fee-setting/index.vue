@@ -64,7 +64,7 @@
         >
           <template v-slot="scope">
             <el-tag :type="logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[scope.row.priceType]].T" style="width: 100%" effect="plain">
-              <span>{{ toThousandFilter(toFixed(scope.row.price, DP.YUAN)) }}</span>
+              <span>{{ toFixed(scope.row.price, DP.YUAN)}}</span>
               <span style="margin-left: 3px">{{ logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[scope.row.priceType]].unit }}</span>
             </el-tag>
           </template>
@@ -130,7 +130,6 @@ import { logisticsPriceTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
 import { toFixed, emptyTextFormatter } from '@/utils/data-type'
-import { toThousandFilter } from '@data-type/number'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'

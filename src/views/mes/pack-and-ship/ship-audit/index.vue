@@ -222,10 +222,10 @@ label="安全余额"
             toFixed(data.contract.totalDeliveryAmount, DP.YUAN)
           }}</el-descriptions-item>
           <el-descriptions-item label-class-name="contractLabel" label="合同应收">{{
-            toFixed(data.contract.contractAmount, DP.YUAN)
+            toFixed(data.contract.contractReceivableAmount, DP.YUAN)
           }}</el-descriptions-item>
           <el-descriptions-item label-class-name="contractLabel" label="开票应收">{{
-            toFixed(data.contract.contractAmount, DP.YUAN)
+            toFixed(data.contract.billingReceivableAmount, DP.YUAN)
           }}</el-descriptions-item>
         </el-descriptions>
       </template>

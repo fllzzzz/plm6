@@ -13,7 +13,8 @@ const getEnclosure = {
         'hasNextPage': false,
         'totalElements': 2,
         'content|1-100': [{
-          ...enclosureListInfo[Number(res.query.category)],
+          ...enclosureListInfo,
+          // 'category': Number(res.query.category),
           'printedQuantity|1-100': 1
         }]
       }

@@ -127,7 +127,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/floor-plate/index',
         meta: {
-          title: '围护-开闭口楼承板排产',
+          title: '围护-压型楼承板排产',
           icon: 'project',
           noCache: true
         }
@@ -225,14 +225,27 @@ export default {
             component: '/mes/production-manage/report/sandwich-board/index',
             meta: { title: '夹芯板报表', icon: 'project', noCache: true }
           },
+          // {
+          //   name: 'MesProductionReportFloorPlate',
+          //   path: 'floor-plate',
+          //   hidden: false,
+          //   component: '/mes/production-manage/report/floor-plate/index',
+          //   meta: { title: '楼承板报表', icon: 'project', noCache: true }
+          // },
           {
-            name: 'MesProductionReportFloorPlate',
-            path: 'floor-plate',
+            name: 'MesProductionReportTrussFloorPlate',
+            path: 'truss-floor-plate',
             hidden: false,
-            component: '/mes/production-manage/report/floor-plate/index',
-            meta: { title: '楼承板报表', icon: 'project', noCache: true }
+            component: '/mes/production-manage/report/truss-floor-plate/index',
+            meta: { title: '桁架式楼承板报表', icon: 'project', noCache: true }
           },
-
+          {
+            name: 'MesProductionReportPressedFloorPlate',
+            path: 'pressed-floor-plate',
+            hidden: false,
+            component: '/mes/production-manage/report/pressed-floor-plate/index',
+            meta: { title: '压型楼承板报表', icon: 'project', noCache: true }
+          },
           {
             name: 'MesProductionReportFoldingPiece',
             path: 'folding-piece',
@@ -333,75 +346,77 @@ export default {
   //     }
   //   ]
   // },
-  // {
-  //   path: '/mes/team-report',
-  //   component: 'Layout',
-  //   hidden: false,
-  //   name: 'MesTeamReport',
-  //   alwaysShow: false,
-  //   redirect: '/mes/team-report/artifact-team',
-  //   meta: { title: '班组报表', icon: 'contract', noCache: true },
-  //   children: [
-  //     {
-  //       name: 'MesTeamReportArtifact',
-  //       path: 'artifact-team',
-  //       hidden: false,
-  //       component: '/mes/team-report/artifact-team/index',
-  //       meta: { title: '结构班组', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesTeamReportEnclosure',
-  //       path: 'enclosure-team',
-  //       hidden: false,
-  //       component: '/mes/team-report/enclosure-team/index',
-  //       meta: { title: '围护班组', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesTeamReportInStaffPayroll',
-  //       path: 'in-staff-payroll',
-  //       hidden: false,
-  //       redirect: '/mes/team-report/in-staff-payroll/payroll',
-  //       meta: { title: '班组工资表-编内', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesTeamReportInStaffPayrollPayroll',
-  //           path: 'payroll',
-  //           hidden: false,
-  //           component: '/mes/team-report/in-staff-payroll/payroll/index',
-  //           meta: { title: '工资结算', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesTeamReportInStaffPayrollWageAdjust',
-  //           path: 'wage-adjust',
-  //           hidden: false,
-  //           component: '/mes/team-report/in-staff-payroll/wage-adjust/index',
-  //           meta: { title: '工价调整', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       name: 'MesTeamReportOffStaffPayroll',
-  //       path: 'off-staff-payroll',
-  //       hidden: false,
-  //       redirect: '/mes/team-report/off-staff-payroll/payroll',
-  //       meta: { title: '班组工资表-编外', icon: 'project', noCache: true },
-  //       children: [
-  //         {
-  //           name: 'MesTeamReportWageAdjust',
-  //           path: 'wage-adjust',
-  //           hidden: false,
-  //           component: '/mes/team-report/off-staff-payroll/wage-adjust/index',
-  //           meta: { title: '工价定额', icon: 'project', noCache: true }
-  //         },
-  //         {
-  //           name: 'MesTeamReportWageAdjust',
-  //           path: 'payroll',
-  //           hidden: false,
-  //           component: '/mes/team-report/off-staff-payroll/payroll/index',
-  //           meta: { title: '工资结算', icon: 'project', noCache: true }
-  //         }
-  //       ]
-  //     }
+  {
+    path: '/mes/team-report',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesTeamReport',
+    alwaysShow: false,
+    redirect: '/mes/team-report/artifact-team',
+    meta: { title: '班组报表', icon: 'contract', noCache: true },
+    children: [
+      {
+        name: 'MesTeamReportArtifact',
+        path: 'artifact-team',
+        hidden: false,
+        component: '/mes/team-report/artifact-team/index',
+        meta: { title: '结构班组', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesTeamReportEnclosure',
+        path: 'enclosure-team',
+        hidden: false,
+        component: '/mes/team-report/enclosure-team/index',
+        meta: { title: '围护班组', icon: 'project', noCache: true }
+      }
+      //     {
+      //       name: 'MesTeamReportInStaffPayroll',
+      //       path: 'in-staff-payroll',
+      //       hidden: false,
+      //       redirect: '/mes/team-report/in-staff-payroll/payroll',
+      //       meta: { title: '班组工资表-编内', icon: 'project', noCache: true },
+      //       children: [
+      //         {
+      //           name: 'MesTeamReportInStaffPayrollPayroll',
+      //           path: 'payroll',
+      //           hidden: false,
+      //           component: '/mes/team-report/in-staff-payroll/payroll/index',
+      //           meta: { title: '工资结算', icon: 'project', noCache: true }
+      //         },
+      //         {
+      //           name: 'MesTeamReportInStaffPayrollWageAdjust',
+      //           path: 'wage-adjust',
+      //           hidden: false,
+      //           component: '/mes/team-report/in-staff-payroll/wage-adjust/index',
+      //           meta: { title: '工价调整', icon: 'project', noCache: true }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       name: 'MesTeamReportOffStaffPayroll',
+      //       path: 'off-staff-payroll',
+      //       hidden: false,
+      //       redirect: '/mes/team-report/off-staff-payroll/payroll',
+      //       meta: { title: '班组工资表-编外', icon: 'project', noCache: true },
+      //       children: [
+      //         {
+      //           name: 'MesTeamReportWageAdjust',
+      //           path: 'wage-adjust',
+      //           hidden: false,
+      //           component: '/mes/team-report/off-staff-payroll/wage-adjust/index',
+      //           meta: { title: '工价定额', icon: 'project', noCache: true }
+      //         },
+      //         {
+      //           name: 'MesTeamReportWageAdjust',
+      //           path: 'payroll',
+      //           hidden: false,
+      //           component: '/mes/team-report/off-staff-payroll/payroll/index',
+      //           meta: { title: '工资结算', icon: 'project', noCache: true }
+      //         }
+      //       ]
+      //     }
+    ]
+  },
   {
     path: '/mes/QHSE-manage',
     component: 'Layout',
@@ -427,8 +442,38 @@ export default {
       // }
     ]
   },
-  //   ]
-  // },
+  {
+    path: '/mes/label-print',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesLabelPrint',
+    alwaysShow: false,
+    redirect: '/mes/label-print/artifact',
+    meta: { title: '产品标签', icon: 'project', noCache: true },
+    children: [
+      {
+        name: 'MesLabelPrintArtifact',
+        path: 'artifact',
+        hidden: false,
+        component: '/mes/label-print/artifact/index',
+        meta: { title: '构件', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesLabelPrintFoldingPiece',
+        path: 'enclosure',
+        hidden: false,
+        component: '/mes/label-print/folding-piece/index',
+        meta: { title: '折边件', icon: 'project', noCache: true }
+      }
+      //     {
+      //       name: 'MesLabelPrintingAuxiliaryMaterial',
+      //       path: 'auxiliary-material',
+      //       hidden: false,
+      //       component: '/mes/label-printing/auxiliary-material/index',
+      //       meta: { title: '辅材', icon: 'project', noCache: true }
+      //     }
+    ]
+  },
   {
     path: '/mes/manufactures-manage',
     component: 'Layout',

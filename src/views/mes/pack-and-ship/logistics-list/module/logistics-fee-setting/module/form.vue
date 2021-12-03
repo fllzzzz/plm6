@@ -63,7 +63,7 @@ import { DP } from '@/settings/config'
 
 import { regForm } from '@compos/use-crud'
 import projectCascader from '@comp-base/project-cascader.vue'
-import supplierSelect from '@comp-base/supplier-select.vue'
+import supplierSelect from '@comp-base/supplier-select/index.vue'
 
 const formRef = ref()
 const defaultForm = {

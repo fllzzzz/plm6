@@ -53,18 +53,17 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('productType')"
-        key="productType"
-        prop="productType"
-        label="装载类型"
-        align="center"
-        min-width="80"
-      >
+      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
         <template v-slot="scope">
-          <el-tag :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T" effect="light" disable-transitions>{{
-            packTypeEnum.VL[scope.row.productType]
-          }}</el-tag>
+          <el-tag
+            v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
+            style="margin-right: 5px"
+            :key="item"
+            :type="packTypeEnum[packTypeEnum.VK[item]].T"
+            effect="light"
+            disable-transitions
+            >{{ packTypeEnum.VL[item] }}</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column
@@ -104,7 +103,7 @@
           <!-- <el-tag v-if="scope.row.supplier" style="margin-right:5px;" :type="logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[scope.row.supplier.priceType]].T" effect="plain">{{
             logisticsPriceTypeEnum.VL[scope.row.supplier.priceType]
           }}</el-tag> -->
-          <span>{{ scope.row.supplier && toThousandFilter(toFixed(scope.row.supplier.price, DP.YUAN)) }}</span>
+          <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, DP.YUAN) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -116,7 +115,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span>{{ toThousandFilter(toFixed(scope.row.totalPrice, DP.YUAN)) }}</span>
+          <span>{{ toFixed(scope.row.totalPrice, DP.YUAN) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -167,8 +166,9 @@ import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { DP } from '@/settings/config'
+import { cleanArray } from '@/utils/data-type/array'
+import EO from '@enum'
 import { toFixed } from '@/utils/data-type'
-import { toThousandFilter } from '@data-type/number'
 import { convertUnits } from '@/utils/convert/unit'
 
 import useMaxHeight from '@compos/use-max-height'

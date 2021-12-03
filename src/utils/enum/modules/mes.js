@@ -68,7 +68,8 @@ constantize(wageQuotaTypeEnum)
 // 楼承板子类型
 const floorPlateTypeEnum = {
   TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
-  OPEN_CLOSED_FLOOR_PLATE: { L: '开闭口楼承板', K: 'OPEN_CLOSED_FLOOR_PLATE', V: 1 << 4 }
+  PRESSED_FLOOR_PLATE: { L: '压型楼承板', K: 'PRESSED_FLOOR_PLATE', V: 1 << 4 }
+  // OPEN_CLOSED_FLOOR_PLATE: { L: '开闭口楼承板', K: 'OPEN_CLOSED_FLOOR_PLATE', V: 1 << 4 }
 }
 constantize(floorPlateTypeEnum)
 
@@ -76,8 +77,10 @@ constantize(floorPlateTypeEnum)
 const mesEnclosureTypeEnum = {
   PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 1 << 1 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
+  TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
+  PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,
   FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 1 << 5 },
-  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.OPEN_CLOSED_FLOOR_PLATE.V }
+  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.PRESSED_FLOOR_PLATE.V }
 }
 constantize(mesEnclosureTypeEnum)
 

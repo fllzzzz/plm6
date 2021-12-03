@@ -12,8 +12,30 @@
     <template #titleRight>
       <slot name="titleRight" />
     </template>
-    <div class="head-container" v-if="!isShowPrice">
+    <div class="head-container">
+      <slot name="contract" :contract="contract"></slot>
+      <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
+        <el-radio-button
+          v-if="packTypeEnum.STRUCTURE.V & productType"
+          :label="packTypeEnum.STRUCTURE.V"
+          :disabled="artifactList.length == 0"
+          >{{ packTypeEnum.STRUCTURE.L }}({{ artifactList.length }})</el-radio-button
+        >
+        <el-radio-button
+          v-if="packTypeEnum.ENCLOSURE.V & productType"
+          :label="packTypeEnum.ENCLOSURE.V"
+          :disabled="enclosureList.length == 0"
+          >{{ packTypeEnum.ENCLOSURE.L }}({{ enclosureList.length }})</el-radio-button
+        >
+        <el-radio-button
+          v-if="packTypeEnum.AUXILIARY_MATERIAL.V & productType"
+          :label="packTypeEnum.AUXILIARY_MATERIAL.V"
+          :disabled="auxList.length == 0"
+          >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxList.length }})</el-radio-button
+        >
+      </el-radio-group>
       <common-radio-button
+        v-if="!isShowPrice"
         v-model="monomerStatus"
         :options="SummaryStatusEnum"
         type="enum"
@@ -21,7 +43,6 @@
         class="filter-item"
       />
     </div>
-    <slot name="contract" :contract="contract"></slot>
     <component
       :is="currentView"
       v-loading="tableLoading"
@@ -35,10 +56,12 @@
 
 <script setup>
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
+import { ElRadioGroup } from 'element-plus'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
+import EO from '@enum'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -98,15 +121,19 @@ const artifactList = ref([])
 const enclosureList = ref([])
 const auxList = ref([])
 const contract = ref({})
+const curProductType = ref()
 
 const productType = computed(() => {
   return props.detailInfo && props.detailInfo.productType
+})
+const productTypeBits = computed(() => {
+  return EO.getBits(packTypeEnum, productType.value, 'V')
 })
 const detailId = computed(() => {
   return (props.detailInfo && props.detailInfo.id) || undefined
 })
 const currentView = computed(() => {
-  switch (productType.value) {
+  switch (curProductType.value) {
     case packTypeEnum.STRUCTURE.V:
       return structureTable
     case packTypeEnum.ENCLOSURE.V:
@@ -118,7 +145,7 @@ const currentView = computed(() => {
   }
 })
 const list = computed(() => {
-  switch (productType.value) {
+  switch (curProductType.value) {
     case packTypeEnum.STRUCTURE.V:
       return (
         artifactList.value &&
@@ -168,6 +195,7 @@ watch(
 async function fetchDetail() {
   try {
     tableLoading.value = true
+    curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
     artifactList.value = data.artifactList || []
     enclosureList.value = data.enclosureList || []

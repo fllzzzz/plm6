@@ -76,7 +76,11 @@
         :show-overflow-tooltip="true"
         label="编号"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('specification')"
         key="specification"
@@ -85,7 +89,11 @@
         :show-overflow-tooltip="true"
         label="规格"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.specification }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -108,7 +116,11 @@
         :show-overflow-tooltip="true"
         label="材质"
         min-width="80px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.material }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('netWeight')"
         key="netWeight"
@@ -173,7 +185,11 @@
         :show-overflow-tooltip="true"
         label="图号"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.drawingNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('area')"
         key="area"
@@ -194,7 +210,11 @@
         :show-overflow-tooltip="true"
         label="备注"
         min-width="120px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.remark }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('quantity')"
         key="quantity"
@@ -278,6 +298,8 @@ const { crud, columns } = useCRUD(
   },
   tableRef
 )
+
+console.log('label artifact init')
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
