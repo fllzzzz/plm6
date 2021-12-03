@@ -25,45 +25,52 @@ export default {
       }
     }]
   },
-  // {
-  //   path: '/mes/changed-manage',
-  //   component: 'Layout',
-  //   hidden: false,
-  //   name: 'MesChangedManage',
-  //   alwaysShow: false,
-  //   redirect: '/mes/changed-manage/artifact',
-  //   meta: { title: '变更管理', icon: 'contract', noCache: true },
-  //   children: [
-  //     {
-  //       name: 'MesArtifactChanged',
-  //       path: 'artifact',
-  //       hidden: false,
-  //       component: '/mes/changed-manage/artifact/index',
-  //       meta: { title: '构件变更', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesChangedListManage',
-  //       path: 'changed-list',
-  //       hidden: false,
-  //       component: '/mes/changed-manage/changed-list/index',
-  //       meta: { title: '变更清单列表', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesScrappedListManage',
-  //       path: 'scrapped-list',
-  //       hidden: false,
-  //       component: '/mes/changed-manage/scrapped-list/index',
-  //       meta: { title: '报废清单列表', icon: 'project', noCache: true }
-  //     },
-  //     {
-  //       name: 'MesReusedListManage',
-  //       path: 'reused-list',
-  //       hidden: false,
-  //       component: '/mes/changed-manage/reused-list/index',
-  //       meta: { title: '二次利用清单列表', icon: 'project', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/mes/changed-manage',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesChangedManage',
+    alwaysShow: false,
+    redirect: '/mes/changed-manage/artifact',
+    meta: { title: '变更管理', icon: 'project', noCache: true },
+    children: [
+      {
+        name: 'MesArtifactChanged',
+        path: 'artifact',
+        hidden: false,
+        component: '/mes/changed-manage/artifact/index',
+        meta: { title: '构件变更', icon: 'project', noCache: true }
+      },
+      {
+        name: 'MesMachinePartChanged',
+        path: 'machine-part',
+        hidden: false,
+        component: '/mes/changed-manage/machine-part/index',
+        meta: { title: '零件变更', icon: 'project', noCache: true }
+      }
+      //     {
+      //       name: 'MesChangedListManage',
+      //       path: 'changed-list',
+      //       hidden: false,
+      //       component: '/mes/changed-manage/changed-list/index',
+      //       meta: { title: '变更清单列表', icon: 'project', noCache: true }
+      //     },
+      //     {
+      //       name: 'MesScrappedListManage',
+      //       path: 'scrapped-list',
+      //       hidden: false,
+      //       component: '/mes/changed-manage/scrapped-list/index',
+      //       meta: { title: '报废清单列表', icon: 'project', noCache: true }
+      //     },
+      //     {
+      //       name: 'MesReusedListManage',
+      //       path: 'reused-list',
+      //       hidden: false,
+      //       component: '/mes/changed-manage/reused-list/index',
+      //       meta: { title: '二次利用清单列表', icon: 'project', noCache: true }
+      //     }
+    ]
+  },
   {
     path: '/mes/scheduling-manage',
     component: 'Layout',
