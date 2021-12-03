@@ -7,7 +7,7 @@
     :title="drawerTitle"
     :show-close="true"
     size="100%"
-    custom-class="raw-mat-inbound-application-record-detail"
+    custom-class="raw-mat-inbound-application-review-detail"
   >
     <template #titleAfter>
       <el-tag effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
@@ -30,7 +30,7 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="detail.basicClass" :row="row" />
+            <expand-secondary-info v-if="showAmount" :basic-class="detail.basicClass" :row="row" />
             <p>
               备注：<span v-empty-text>{{ row.remark }}</span>
             </p>
@@ -42,18 +42,18 @@
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
-        <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="detail.basicClass" />
+        <material-secondary-info-columns v-if="!showAmount" :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns />
           <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
-          <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
-            <template #default="{ row }">
-              <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-            </template>
-          </el-table-column>
         </template>
-        <warehouse-info-columns v-if="showWarehouse" />
+        <warehouse-info-columns />
+        <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
+          </template>
+        </el-table-column>
       </common-table>
     </template>
   </common-drawer>
@@ -88,7 +88,7 @@ const { inboundFillWayCfg } = useWmsConfig()
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.raw-mat-inbound-application-record-detail',
+    mainBox: '.raw-mat-inbound-application-record-preview',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
@@ -99,9 +99,9 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 显示金额
-const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
+const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示仓库
-const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
+const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `入库单：${detail.serialNumber}`
@@ -125,7 +125,7 @@ function getSummaries(param) {
 </script>
 
 <style lang="scss" scoped>
-.raw-mat-inbound-application-record-detail {
+.raw-mat-inbound-application-review-detail {
   .el-drawer__header .el-tag {
     min-width: 70px;
     text-align: center;

@@ -38,7 +38,25 @@ export default {
           path: 'raw-mat-record',
           hidden: false,
           component: '/wms/inbound-application-record/raw-mat/index',
-          meta: { title: '原材料-入库申请记录', icon: 'project', noCache: true }
+          meta: { title: '原材料-入库申请', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/inbound-and-outbound-review',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSInboundAndOutboundReview',
+      alwaysShow: false,
+      redirect: '/wms/inbound-application-review/raw-mat/index',
+      meta: { title: '入库审核', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'RawMatInboundApplicationReview',
+          path: 'raw-mat-record',
+          hidden: false,
+          component: '/wms/inbound-application-review/raw-mat/index',
+          meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
         }
       ]
     },

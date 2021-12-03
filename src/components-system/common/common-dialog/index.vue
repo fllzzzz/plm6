@@ -141,12 +141,11 @@ const props = defineProps({
 
 // 加载
 let loading
-
+// ref
 const dialogRef = ref()
-
 // 自定义类名
 const customClass = `${props.customClass || ''} common-dialog`
-
+// 显示状态
 const dialogVisible = ref(false)
 
 // 是否使用prop:visible 控制
@@ -157,31 +156,32 @@ watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
 })
 
 watch(
-  () => props.contentLoading,
-  (foo) => {
-    if (!foo) {
+  [dialogVisible, () => props.contentLoading],
+  ([visible, ld]) => {
+    if (visible && ld) {
+      openLoading()
+    } else {
       loading && loading.close()
     }
-  }
+  },
+  { immediate: true }
 )
 
-watch(dialogVisible, (foo) => {
-  if (foo && props.contentLoading) {
-    openFullScreen()
-  } else {
-    loading && loading.close()
+function openLoading() {
+  if (loading) {
+    loading.visible = true
   }
-})
-
-function openFullScreen() {
-  let el
-  if (dialogRef.value) el = dialogRef.value.dialogRef
-  loading = ElLoading.service({
-    target: el,
-    lock: true,
-    text: '数据加载中，请稍后',
-    fullscreen: false
-  })
+  {
+    let el
+    if (dialogRef.value) el = dialogRef.value.dialogRef
+    loading = ElLoading.service({
+      target: el,
+      lock: true,
+      text: '数据加载中，请稍后',
+      fullscreen: false,
+      background: 'rgba(255, 255, 255, 0.5)'
+    })
+  }
 }
 
 function handleClose() {
@@ -214,12 +214,8 @@ function closed() {
   emit('closed')
 }
 </script>
-<style></style>
-<style lang="scss">
+<style lang="scss" scoped>
 .common-dialog {
-  // ::v-deep(.el-dialog__header){
-  //   padding-bottom: 0px!important;
-  // }
   .dialog-title {
     display: flex;
     align-items: center;

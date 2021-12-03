@@ -60,16 +60,38 @@
 </template>
 
 <script setup>
-import { defineEmits, computed, watch, onMounted, watchEffect } from 'vue'
-import { regExtra } from '@/composables/form/use-form'
+import { defineEmits, defineProps, computed, watch, onMounted, watchEffect, ref } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 
+const props = defineProps({
+  order: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  requisitions: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  },
+  form: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  }
+})
+
 // TODO:优化由于“同上导致的需要计算代码”
 const emit = defineEmits(['amount-change'])
-const { cu, form } = regExtra() // 表单
+const currentForm = ref({ list: [] })
+
+watchEffect(() => { currentForm.value = props.form })
 
 const {
   initScopeList: initProjectScopeList,
@@ -85,8 +107,8 @@ const {
 
 // 申购单选择
 const requisitionsSNOptions = computed(() => {
-  if (isNotBlank(cu.props.order) && isNotBlank(cu.props.order.requisitionsSN)) {
-    return cu.props.order.requisitionsSN.map((v) => {
+  if (isNotBlank(props.order) && isNotBlank(props.order.requisitionsSN)) {
+    return props.order.requisitionsSN.map((v) => {
       return { serialNumber: v }
     })
   } else {
@@ -96,7 +118,7 @@ const requisitionsSNOptions = computed(() => {
 
 // 项目选择
 const projectOptions = computed(() => {
-  const order = cu.props.order
+  const order = props.order
   if (isNotBlank(order) && isNotBlank(order.projects)) {
     return order.projects.map((p) => {
       return { id: p.id, name: projectNameFormatter(p, { showSerialNumber: false }) }
@@ -108,8 +130,8 @@ const projectOptions = computed(() => {
 
 watchEffect(
   () => {
-    initReqScopeList(form.list || [])
-    initProjectScopeList(form.list || [])
+    initReqScopeList(currentForm.value.list || [])
+    initProjectScopeList(currentForm.value.list || [])
   }
 )
 
@@ -117,7 +139,7 @@ watchEffect(
 watch(
   projectOptions,
   (opts) => {
-    if (opts && opts.length === 1 && form.list[0]) form.list[0].projectId = opts[0].id
+    if (opts && opts.length === 1 && currentForm.value.list[0]) currentForm.value.list[0].projectId = opts[0].id
   },
   { immediate: true }
 )
@@ -127,9 +149,9 @@ function handleRequisitionsSNChange(sn, row, index) {
   handleReqChange(sn, index)
   const realSN = getReqVal(index)
   if (realSN) {
-    const req = cu.props.requisitions
+    const req = props.requisitions
     row.projectId = req ? req[realSN].projectId : undefined
-    row.disabledProjectId = cu.props.order.projectIds.filter((v) => v !== row.projectId)
+    row.disabledProjectId = props.order.projectIds.filter((v) => v !== row.projectId)
   } else {
     row.disabledProjectId = []
   }
@@ -140,12 +162,12 @@ function getRequisitionsSNOptions(index, row) {
   let _SN = []
   const projectId = getProjectVal(index)
   if (isBlank(projectId)) {
-    _SN = cu.props.order.requisitionsSN.map((v) => {
+    _SN = props.order.requisitionsSN.map((v) => {
       return { serialNumber: v }
     })
   } else {
-    Object.keys(cu.props.requisitions).forEach((sn) => {
-      if (cu.props.requisitions[sn].projectId === projectId) {
+    Object.keys(props.requisitions).forEach((sn) => {
+      if (props.requisitions[sn].projectId === projectId) {
         _SN.push({ serialNumber: sn })
       }
     })

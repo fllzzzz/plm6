@@ -54,7 +54,7 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
-import commonWrapper from '../components/common-wrapper.vue'
+import commonWrapper from '@/views/wms/inbound-application/components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import gasTable from './module/gas-table.vue'
 

@@ -141,8 +141,11 @@ const { visible, handleClose } = useVisible({ emit, props })
 watch(
   () => props.detailId,
   (val) => {
-    getDetail(val)
-  }
+    if (val) {
+      getDetail(val)
+    }
+  },
+  { immediate: true }
 )
 
 // 加载详情

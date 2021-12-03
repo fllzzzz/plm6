@@ -157,15 +157,15 @@
         prop="reviewStatus"
         label="状态"
         align="center"
+        width="80"
       >
         <template #default="{ row }">
-          <el-tag :type="reviewStatusEnum.V[row.reviewStatus].TAG">{{ reviewStatusEnum.VL[row.reviewStatus] }}</el-tag>
-        </template>
-      </el-table-column>
-      <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit,...permission.del]" label="操作" width="120px" align="center" fixed="right">
-        <template #default="{ row }">
-          <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" />
+          <template v-if="row.reviewStatus === reviewStatusEnum.UNREVIEWED.V && checkPermission(permission.review)">
+            <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
+          </template>
+          <template v-else>
+            <el-tag :type="reviewStatusEnum.V[row.reviewStatus].TAG">{{ reviewStatusEnum.VL[row.reviewStatus] }}</el-tag>
+          </template>
         </template>
       </el-table-column>
     </common-table>
@@ -173,31 +173,30 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 编辑 -->
-    <m-form />
+    <!-- 审核 -->
+    <review v-model="reviewVisible" :data="currentRow" @refresh="crud.refresh" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import crudApi from '@/api/wms/inbound/raw-mat-application-record'
+import crudApi from '@/api/wms/inbound/raw-mat-application-review'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import mHeader from './module/header'
-import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
-import mForm from './module/form.vue'
+import review from './module/review.vue'
 
 // crud交由presenter持有
 const permission = {
-  get: ['wms_inboundApplication_record:get'],
-  edit: ['wms_inboundApplication_record:edit'],
-  del: ['wms_inboundApplication_record:del']
+  get: ['wms_inboundApplication_review:get'],
+  review: ['wms_inboundApplication_review:review']
 }
 
 const optShow = {
@@ -220,6 +219,8 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
+const currentRow = ref({})
+const reviewVisible = ref(false)
 const expandRowKeys = ref([])
 const { maxHeight } = useMaxHeight({ paginate: true })
 
@@ -227,5 +228,11 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.editable = v.reviewStatus !== reviewStatusEnum.PASS.V // 可编辑的
   })
+}
+
+// 打开审核
+function toReview(row) {
+  currentRow.value = row
+  reviewVisible.value = true
 }
 </script>

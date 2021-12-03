@@ -22,7 +22,6 @@ const directive = new Map([
   ['to-fixed', toFixed],
   ['thousand', toThousand],
   ['convert-weight', convertWeight]
-
 ])
 
 export default (app) => {

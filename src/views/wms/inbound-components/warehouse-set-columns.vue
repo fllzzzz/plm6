@@ -24,15 +24,25 @@
 </template>
 
 <script setup>
-import { computed, watchEffect } from 'vue'
+import { defineProps, computed, watchEffect, ref } from 'vue'
 
-import { regExtra } from '@/composables/form/use-form'
 import factorySelect from '@/components-system/base/factory-select.vue'
 import warehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 import { isBlank } from '@/utils/data-type'
 
-const { form } = regExtra() // 表单
+const props = defineProps({
+  form: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  }
+})
+const currentForm = ref({ list: [] })
+
+watchEffect(() => { currentForm.value = props.form })
+
 const {
   getNotDittoArr: getFactoryNotDittoArr,
   initScopeList: initFactoryScopeList,
@@ -44,7 +54,7 @@ const warehouseDittoableIndex = computed(() => {
   return getFactoryNotDittoArr()
 })
 
-watchEffect(() => initFactoryScopeList(form.list || []))
+watchEffect(() => initFactoryScopeList(currentForm.value.list || []))
 
 function handleFactoryChange(val, index, row) {
   handleFactoryChangeForValue(val, index)

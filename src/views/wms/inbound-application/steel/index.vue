@@ -73,7 +73,7 @@ import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 
 import useForm from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
-import commonWrapper from '../components/common-wrapper.vue'
+import commonWrapper from '@/views/wms/inbound-application/components/common-wrapper.vue'
 import materialTableSpecSelect from '@/components-system/classification/material-table-spec-select.vue'
 import steelPlateTable from './module/steel-plate-table.vue'
 import sectionSteelTable from './module/section-steel-table.vue'

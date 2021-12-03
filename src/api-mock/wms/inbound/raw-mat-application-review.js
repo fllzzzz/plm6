@@ -4,9 +4,49 @@ import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
+// 待审核入库单id列表
+const getPendingReviewIdList = {
+  url: '/api/wms/inbound/application/review/raw-materials/pending/ids',
+  method: 'get',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: [1, 2, 3] // 待审核入库单id列表
+    }
+  }
+}
+
+// 审核通过
+const reviewPassed = {
+  url: '/api/wms/inbound/application/review/raw-materials/passed',
+  method: 'put',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
+// 审核退回
+const reviewReturned = {
+  url: '/api/wms/inbound/application/review/raw-materials/returned',
+  method: 'put',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 // 入库申请列表
 const get = {
-  url: '/api/wms/inbound/application/record/raw-materials',
+  url: '/api/wms/inbound/application/review/raw-materials',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -130,7 +170,7 @@ const get = {
 
 // 钢材详情
 const detail_id1 = {
-  url: '/api/wms/inbound/application/record/raw-materials/1',
+  url: '/api/wms/inbound/application/review/raw-materials/1',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -330,7 +370,7 @@ const detail_id1 = {
 
 // 气体详情
 const detail_id2 = {
-  url: '/api/wms/inbound/application/record/raw-materials/2',
+  url: '/api/wms/inbound/application/review/raw-materials/2',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -402,7 +442,7 @@ const detail_id2 = {
 
 // 辅材详情
 const detail_id3 = {
-  url: '/api/wms/inbound/application/record/raw-materials/3',
+  url: '/api/wms/inbound/application/review/raw-materials/3',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -470,31 +510,4 @@ const detail_id3 = {
     }
   }
 }
-
-// 修改采购订单
-const edit = {
-  url: '/api/wms/inbound/application/record/raw-materials',
-  method: 'put',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-// 删除采购订单
-const del = {
-  url: '/api/wms/inbound/application/record/raw-materials',
-  method: 'delete',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-export default [get, edit, del, detail_id1, detail_id2, detail_id3]
+export default [get, reviewReturned, reviewPassed, getPendingReviewIdList, detail_id1, detail_id2, detail_id3]

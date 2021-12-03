@@ -10,6 +10,7 @@
       :type="props.type"
       :disabled="props.disabled"
       :loading="loading"
+      :auto-insert-space="autoInsertSpace"
       @click="handleClick"
     >
       <span @click.stop="handleClick"><slot /></span>
@@ -23,6 +24,7 @@
       :type="props.type"
       :disabled="props.disabled"
       :loading="loading"
+      :auto-insert-space="autoInsertSpace"
       @click.stop="handleClick"
     />
     <el-button
@@ -34,6 +36,7 @@
       :type="props.type"
       :disabled="props.disabled"
       :loading="loading"
+      :auto-insert-space="autoInsertSpace"
       @click="handleClick"
     >
       <span @click.stop="handleClick"><slot /></span>
@@ -47,6 +50,7 @@
       :type="props.type"
       :disabled="props.disabled"
       :loading="loading"
+      :auto-insert-space="autoInsertSpace"
       @click="handleClick"
     />
 </template>
@@ -88,7 +92,11 @@ const props = defineProps({
     type: String
   },
   icon: {
-    type: String
+    type: [String, Object]
+  },
+  autoInsertSpace: {
+    // 自动在两个中文字符之间插入空格
+    type: Boolean
   }
 })
 

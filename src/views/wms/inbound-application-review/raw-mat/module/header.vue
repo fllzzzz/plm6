@@ -34,6 +34,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <br />
       <supplier-select
         v-model="query.supplierId"
         :type="supplierTypeEnum.RAW_MATERIAL.V"
@@ -44,7 +45,6 @@
         show-hide
         style="width: 250px"
       />
-      <br />
       <el-input
         v-model.trim="query.purchaseSN"
         clearable
@@ -99,7 +99,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   basicClass: undefined, // 采购类型
-  reviewStatus: undefined, // 审核状态
+  reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   purchaseSN: undefined, // 采购单号
   serialNumber: undefined, // 入库单号

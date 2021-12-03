@@ -1,0 +1,26 @@
+<template>
+  <common-button v-bind="$attrs" @click="openDetail">{{ props.btnName }}</common-button>
+  <m-detail v-if="props.purchaseId" v-model="visible" :detail-id="props.purchaseId" />
+</template>
+
+<script setup>
+import { defineProps, ref } from 'vue'
+import mDetail from '@/components-system/wms/purchase-sn-select/module/detail.vue'
+
+const visible = ref(false)
+
+const props = defineProps({
+  purchaseId: {
+    type: Number
+  },
+  btnName: {
+    type: String,
+    default: '采购单详情'
+  }
+})
+
+function openDetail() {
+  if (!props.purchaseId) return
+  visible.value = true
+}
+</script>

@@ -21,8 +21,8 @@
 import { defineProps, defineEmits, ref } from 'vue'
 
 import useMaxHeight from '@/composables/use-max-height'
-import commonHeader from '../components/common-header.vue'
-import commonFooter from '../components/common-footer.vue'
+import commonHeader from '@/views/wms/inbound-application/components/common-header.vue'
+import commonFooter from '@/views/wms/inbound-application/components/common-footer.vue'
 import confirmDialog from './confirm-dialog.vue'
 
 const emit = defineEmits(['purchase-order-change', 'submit'])

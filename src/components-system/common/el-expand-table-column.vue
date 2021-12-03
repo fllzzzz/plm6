@@ -18,13 +18,15 @@ const emit = defineEmits(['update:expandRowKeys'])
 
 const props = defineProps({
   data: {
-    type: Array
+    type: Array,
+    default: () => []
   },
   rowKey: {
     type: [Function, String]
   },
   expandRowKeys: {
-    type: Array
+    type: Array,
+    default: () => []
   }
 })
 

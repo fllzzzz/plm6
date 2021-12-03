@@ -5,16 +5,15 @@
       <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-  <!-- 钢材宽度100， 其他180-->
+  <!-- 钢材宽度100， 其他180 :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined"-->
   <el-table-column
     prop="classifyFullName"
     label="物料种类"
     align="center"
-    :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined"
-    :width="props.basicClass > STEEL_ENUM ? undefined : 100"
+    :width="props.basicClass > STEEL_ENUM ? 250 : 100"
     fixed="left"
   />
-  <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip :min-width="180" fixed="left">
+  <el-table-column prop="specification" label="规格" align="center" show-overflow-tooltip width="270" fixed="left">
     <template #default="{ row }">
       <el-tooltip :content="specTip(row)" placement="top">
         <span>{{ specFormat(row) }}</span>
