@@ -374,7 +374,6 @@ async function returned() {
 function handleAfterSubmit() {
   try {
     ++operateRecordNumber.value
-    console.log('reviewNext.value', reviewNext.value)
     // 继续审核
     if (reviewNext.value || reviewConvenientRef.value) {
       reviewConvenientRef.value.removeCurrent()
@@ -427,6 +426,7 @@ function setDitto(list) {
 
 // 金额变化
 function handleAmountChange() {
+  if (!form.value.list) return
   amount.value = toFixed(
     form.value.list.reduce((sum, cur) => {
       const value = Number(cur.amount)

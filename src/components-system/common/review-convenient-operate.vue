@@ -47,10 +47,8 @@ const reviewList = ref([])
 
 watch(() => props.modelValue,
   () => {
-    console.log(props.modelValue, currentValue.value)
     if (props.modelValue !== currentValue.value) {
       const index = props.list.findIndex(v => props.modelValue === v)
-      console.log('index', props.list, index)
       currentValue.value = props.modelValue
       ci.value = index
     }
@@ -59,7 +57,9 @@ watch(() => props.modelValue,
 watchEffect(() => { reviewList.value = props.list })
 
 watchEffect(() => {
-  ci.value = props.currentIndex
+  if (props.currentIndex) {
+    ci.value = props.currentIndex
+  }
 })
 
 watchEffect(() => {
@@ -86,7 +86,6 @@ function getCurrentValue() {
     // 返回列表已空
     emit('blank')
   }
-  console.log('ci.value', ci.value, currentValue.value, props.modelValue)
   handleIndexChange(ci.value)
   handleCurrentValueChange(currentValue.value)
 }

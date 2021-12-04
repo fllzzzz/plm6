@@ -160,7 +160,7 @@
         width="80"
       >
         <template #default="{ row }">
-          <template v-if="row.reviewStatus === reviewStatusEnum.UNREVIEWED.V && checkPermission(permission.review)">
+          <template v-if="row.reviewable">
             <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
           </template>
           <template v-else>
@@ -226,7 +226,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
-    v.editable = v.reviewStatus !== reviewStatusEnum.PASS.V // 可编辑的
+    v.reviewable = v.reviewStatus === reviewStatusEnum.UNREVIEWED.V && checkPermission(permission.review)
   })
 }
 

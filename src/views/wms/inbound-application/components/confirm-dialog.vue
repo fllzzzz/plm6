@@ -279,6 +279,7 @@ function setDitto(list) {
 
 // 金额变化
 function handleAmountChange() {
+  if (!form.list) return
   amount.value = toFixed(
     form.list.reduce((sum, cur) => {
       const value = Number(cur.amount)
