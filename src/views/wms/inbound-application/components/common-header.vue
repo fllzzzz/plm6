@@ -7,7 +7,7 @@
             class="input-underline"
             v-model="form.purchaseId"
             v-model:info="purchaseOrderInfo"
-            :basicClass="props.basicClass"
+            :basic-class="props.basicClass"
             @change="handlePurchaseIdChange"
             @info-change="handleOrderInfoChange"
             style="width: 300px"

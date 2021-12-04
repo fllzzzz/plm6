@@ -1,7 +1,7 @@
 <template>
   <div v-permission="permission" class="steel-inbound-application-container">
     <common-wrapper
-      :basicClass="STEEL_ENUM"
+      :basic-class="STEEL_ENUM"
       :total-value="totalWeight"
       :validate="validate"
       :edit="props.edit"

@@ -1,6 +1,6 @@
 <template>
   <div class="inbound-application-container" :style="heightStyle">
-    <common-header :basicClass="props.basicClass" :edit="props.edit" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
+    <common-header :basic-class="props.basicClass" :edit="props.edit" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
     <div class="main-content">
       <slot />
     </div>
@@ -13,7 +13,7 @@
       :btn-name="props.btnName"
       @submit="submit"
     />
-    <confirm-dialog v-model="previewVisible" :basicClass="props.basicClass" />
+    <confirm-dialog v-model="previewVisible" :basic-class="props.basicClass" />
   </div>
 </template>
 

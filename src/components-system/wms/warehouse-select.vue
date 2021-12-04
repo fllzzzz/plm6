@@ -47,6 +47,12 @@ const props = defineProps({
     // 工厂id
     type: [Array, Number]
   },
+  // 在不传入工厂的时候查所有，不包含被禁用的
+  showAll: {
+    type: Boolean,
+    default: false
+  },
+  // 显示禁用的工厂
   showForbidden: {
     type: Boolean,
     default: false
@@ -112,7 +118,7 @@ const options = computed(() => {
       list = warehouse.value.filter((v) => props.factoryId === v.factoryId)
     }
   } else {
-    return []
+    list = props.showAll ? list : []
   }
   // 筛选物料分类
   if (props.basicClass) {

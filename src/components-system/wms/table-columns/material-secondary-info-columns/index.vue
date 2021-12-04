@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" />
+  <component :is="comp" :columns="props.columns" />
 </template>
 
 <script setup>
@@ -12,6 +12,9 @@ import gas from './module/gas.vue'
 const props = defineProps({
   basicClass: {
     type: Number
+  },
+  columns: {
+    type: Object
   }
 })
 
@@ -19,11 +22,14 @@ const comp = computed(() => {
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
-    case rawMatClsEnum.STEEL_COIL.V: return steel
-    case rawMatClsEnum.MATERIAL.V: return auxMat
-    case rawMatClsEnum.GAS.V: return gas
-    default: return steel
+    case rawMatClsEnum.STEEL_COIL.V:
+      return steel
+    case rawMatClsEnum.MATERIAL.V:
+      return auxMat
+    case rawMatClsEnum.GAS.V:
+      return gas
+    default:
+      return steel
   }
 })
-
 </script>

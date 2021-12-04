@@ -61,6 +61,42 @@ export default {
       ]
     },
     {
+      path: '/wms/material-inventory',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSMaterialInventory',
+      alwaysShow: false,
+      redirect: '/wms/material-inventory/steel/index',
+      meta: { title: '物料仓', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'WMSSteelMaterialInventory',
+          path: 'steel',
+          hidden: false,
+          component: '/wms/material-inventory/steel/index',
+          meta: { title: '钢材', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/outbound-',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSInboundAndOutboundReview',
+      alwaysShow: false,
+      redirect: '/wms/inbound-application-review/raw-mat/index',
+      meta: { title: '入库审核', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'RawMatInboundApplicationReview',
+          path: 'raw-mat-record',
+          hidden: false,
+          component: '/wms/inbound-application-review/raw-mat/index',
+          meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/wms/purchase-manage',
       component: 'Layout',
       hidden: false,

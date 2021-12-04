@@ -99,7 +99,7 @@ function steelFormat(
     width = ['width'],
     weight = ['mete', 'weight', 'totalWeight'],
     thickness = ['thickness'],
-    amount = ['unitPrice'],
+    amount = ['unitPrice', 'unitPriceExcludingVAT'],
     unit = ['accountingUnit']
   } = {}
 ) {

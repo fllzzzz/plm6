@@ -188,7 +188,7 @@ const detail_id1 = {
             mete: 800000,
             unitPrice: 0.01,
             amount: 8000,
-            priceExcludingVAT: 7079.64,
+            amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
@@ -218,7 +218,7 @@ const detail_id1 = {
             weight: 2355000,
             unitPrice: 0.02,
             amount: 47100,
-            priceExcludingVAT: 41681.42,
+            amountExcludingVAT: 41681.42,
             inputVAT: 5418.58,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
@@ -248,7 +248,7 @@ const detail_id1 = {
           //   weight: 152900,
           //   unitPrice: 0.03,
           //   amount: 4587,
-          //   priceExcludingVAT: 4059.29,
+          //   amountExcludingVAT: 4059.29,
           //   requisitionsSN: 'SG-AFTER-123456',
           //   inputVAT: 527.71,
           //   project: {
@@ -277,7 +277,7 @@ const detail_id1 = {
           //   weight: 150000,
           //   unitPrice: 0.04,
           //   amount: 6000,
-          //   priceExcludingVAT: 5000,
+          //   amountExcludingVAT: 5000,
           //   inputVAT: 1000,
           //   project: {
           //     'id|+1': 1,
@@ -308,7 +308,7 @@ const detail_id1 = {
             weight: 10000,
             unitPrice: 0.05,
             amount: 500,
-            priceExcludingVAT: 450,
+            amountExcludingVAT: 450,
             inputVAT: 50,
             project: {
               'id|+1': 1,
@@ -379,7 +379,7 @@ const detail_id2 = {
             mete: 800000,
             unitPrice: 0.01,
             amount: 8000,
-            priceExcludingVAT: 7079.64,
+            amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
@@ -450,7 +450,7 @@ const detail_id3 = {
             mete: 222,
             unitPrice: 0.01,
             amount: 8000,
-            priceExcludingVAT: 7079.64,
+            amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {

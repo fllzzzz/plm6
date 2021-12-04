@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" />
+  <component :is="comp" :columns="props.columns" :basic-class="props.basicClass" :showUnit="props.showUnit" />
 </template>
 
 <script setup>
@@ -10,6 +10,13 @@ import rawMat from './module/raw-mat.vue'
 const props = defineProps({
   basicClass: {
     type: Number
+  },
+  showUnit: {
+    type: Boolean,
+    default: true
+  },
+  columns: {
+    type: Object
   }
 })
 

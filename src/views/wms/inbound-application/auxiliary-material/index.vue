@@ -1,7 +1,7 @@
 <template>
   <div v-permission="permission" class="aux-mat-inbound-application-container">
     <common-wrapper
-      :basicClass="currentBasicClass"
+      :basic-class="currentBasicClass"
       :validate="validate"
       :edit="props.edit"
       :show-total="false"

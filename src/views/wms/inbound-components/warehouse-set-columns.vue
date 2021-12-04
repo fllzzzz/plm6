@@ -15,7 +15,7 @@
       <warehouse-select
         v-model="row.warehouseId"
         :factory-id="getFactoryVal($index)"
-        :basicClass="row.basicClass"
+        :basic-class="row.basicClass"
         :show-extra="!warehouseDittoableIndex.includes($index)"
         placeholder="存储位置"
       />

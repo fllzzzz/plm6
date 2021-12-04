@@ -32,7 +32,7 @@ const getList = {
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             taxRate: 3, // 税率（百分比）
             freight: 1200, // 运费
-            priceExcludingVAT: 1165.05, // 不含税金额
+            amountExcludingVAT: 1165.05, // 不含税金额
             inputVAT: 34.95, // 进项税
             remark: '@cparagraph', // 备注
             supplierId: 1, // 供应商id
@@ -61,7 +61,7 @@ const getList = {
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
             taxRate: 3, // 税率（百分比）
             freight: 2600, // 运费
-            priceExcludingVAT: 2524.37, // 不含税金额
+            amountExcludingVAT: 2524.37, // 不含税金额
             inputVAT: 75.63, // 进项税
             remark: '@cparagraph', // 备注
             supplierId: 2, // 供应商id

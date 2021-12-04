@@ -99,7 +99,7 @@
             <el-form-item class="el-form-item-7" label="选择供应商" prop="supplierId">
               <supplier-select
                 v-model="form.supplierId"
-                :basicClass="form.basicClass"
+                :basic-class="form.basicClass"
                 :type="form.purchaseType"
                 :disabled="form.boolUsed"
                 mode="contain"

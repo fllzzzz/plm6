@@ -21,6 +21,20 @@ const warehouseTypeEnum = {
 }
 constantize(warehouseTypeEnum)
 
+// 项目仓库类型
+const projectWarehouseTypeEnum = {
+  PUBLIC: { L: '公共库', K: 'COMMON', V: 1 << 0 },
+  PROJECT: { L: '项目库', K: 'PROJECT', V: 1 << 1 }
+}
+constantize(projectWarehouseTypeEnum)
+
+// 物料类型仓库（整料|余料）
+const materialIsWholeEnum = {
+  WHOLE: { L: '整料', K: 'WHOLE ', V: 1 << 0 },
+  ODDMENT: { L: '余料', K: 'ODDMENT', V: 1 << 1 }
+}
+constantize(materialIsWholeEnum)
+
 // 订单供货类型
 const orderSupplyTypeEnum = {
   SELF: { L: '自采物料', K: 'SELF', V: 1 << 0 },
@@ -61,6 +75,8 @@ export {
   inboundFillWayEnum,
   measureTypeEnum,
   warehouseTypeEnum,
+  projectWarehouseTypeEnum,
+  materialIsWholeEnum,
   orderSupplyTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
@@ -72,6 +88,8 @@ export default {
   inboundFillWayEnum,
   measureTypeEnum,
   warehouseTypeEnum,
+  projectWarehouseTypeEnum,
+  materialIsWholeEnum,
   orderSupplyTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,

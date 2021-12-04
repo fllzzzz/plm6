@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :basicClass="props.basicClass" :spec-merge="props.specMerge" :show-factory="props.showFactory" />
+  <component :is="comp" :columns="props.columns" :basic-class="props.basicClass" :spec-merge="props.specMerge" :show-factory="props.showFactory" />
 </template>
 
 <script setup>
@@ -19,6 +19,9 @@ const props = defineProps({
   },
   basicClass: {
     type: Number
+  },
+  columns: {
+    type: Object
   },
   showFactory: {
     type: Boolean,
