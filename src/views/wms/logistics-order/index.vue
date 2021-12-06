@@ -117,16 +117,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('priceExcludingVAT')"
-        key="priceExcludingVAT"
+        v-if="columns.visible('amountExcludingVAT')"
+        key="amountExcludingVAT"
         :show-overflow-tooltip="true"
-        prop="priceExcludingVAT"
+        prop="amountExcludingVAT"
         label="不含税金额"
         min-width="90"
         align="right"
       >
         <template #default="{ row }">
-          <span v-to-fixed>{{ row.priceExcludingVAT }}</span>
+          <span v-to-fixed>{{ row.amountExcludingVAT }}</span>
         </template>
       </el-table-column>
       <el-table-column

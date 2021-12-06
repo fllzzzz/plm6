@@ -1,11 +1,11 @@
 <template>
   <div class="logistics-form">
     <el-divider><span class="title">物流信息</span></el-divider>
-    <el-form ref="formRef" :model="form.logistics" :disabled="props.disabled" :rules="rules" size="small" inline label-position="right" label-width="80px">
+    <el-form ref="formRef" :model="currentForm" :disabled="props.disabled" :rules="rules" size="small" inline label-position="right" label-width="80px">
       <el-form-item label="运费" prop="freight" label-width="50px">
         <el-input-number
           class="input-underline"
-          v-model="form.logistics.freight"
+          v-model="currentForm.freight"
           type="text"
           :min="0"
           :max="999999999"
@@ -18,7 +18,7 @@
       <!-- <el-form-item label="装车费" prop="loadingFee">
         <el-input-number
           class="input-underline"
-          v-model="form.logistics.entruckPrice"
+          v-model="currentForm.entruckPrice"
           :min="0"
           :max="999999999"
           :precision="2"
@@ -31,7 +31,7 @@
       <el-form-item label="其他杂费" prop="otherFees">
         <el-input-number
           class="input-underline"
-          v-model="form.logistics.entruckPrice"
+          v-model="currentForm.entruckPrice"
           :min="0"
           :max="999999999"
           :precision="2"
@@ -44,9 +44,9 @@
       <el-form-item class="el-form-item-10" label="发票及税率" prop="invoiceType" label-width="100px">
         <invoice-type-select
           class="input-underline"
-          v-model:invoiceType="form.logistics.invoiceType"
-          v-model:taxRate="form.logistics.taxRate"
-          :disabled="form.boolUsed"
+          v-model:invoiceType="currentForm.invoiceType"
+          v-model:taxRate="currentForm.taxRate"
+          :disabled="currentForm.boolUsed"
           default
           :classification="supplierClassEnum.LOGISTICS.V"
         />
@@ -54,7 +54,7 @@
       <el-form-item label="物流单位" prop="supplierId">
         <supplier-select
           class="input-underline"
-          v-model="form.logistics.supplierId"
+          v-model="currentForm.supplierId"
           :type="supplierTypeEnum.LOGISTICS.V"
           placeholder="可选择供应商搜索"
           style="width: 250px"
@@ -71,10 +71,9 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, defineExpose, watchEffect } from 'vue'
 import { supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
 
-import { regExtra } from '@/composables/form/use-form'
 import supplierSelect from '@/components-system/base/supplier-select/index.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
@@ -83,21 +82,29 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  form: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
 
 const formRef = ref()
-const { form, FORM } = regExtra() // 表单
+const currentForm = ref({})
+
+watchEffect(() => { currentForm.value = props.form })
 
 const validateFreight = (rule, value, callback) => {
-  if (isNotBlank(form.logistics.supplierId) && isBlank(form.logistics.freight)) {
+  if (isNotBlank(currentForm.value.supplierId) && isBlank(currentForm.value.freight)) {
     callback(new Error('请输入运费'))
   }
   callback()
 }
 
 const validateSupplierId = (rule, value, callback) => {
-  if (isNotBlank(form.logistics.freight) && isBlank(form.logistics.supplierId)) {
+  if (isNotBlank(currentForm.value.freight) && isBlank(currentForm.value.supplierId)) {
     callback(new Error('请选择供应商'))
   }
   callback()
@@ -108,11 +115,11 @@ const rules = {
   supplierId: [{ validator: validateSupplierId, trigger: 'change' }]
 }
 
-// 表单提交前校验
-FORM.HOOK.beforeSubmit = async () => {
-  const res = await validate()
-  return res
-}
+// // 表单提交前校验
+// FORM.HOOK.beforeSubmit = async () => {
+//   const res = await validate()
+//   return res
+// }
 
 // 表单校验
 async function validate() {
@@ -127,10 +134,14 @@ async function validate() {
     return false
   }
 }
+
+defineExpose({
+  validate
+})
 </script>
 
 <style lang="scss" scoped>
-.logistics-form {
-    width: 100%;
-}
+// form {
+//     width: 100%;
+// }
 </style>

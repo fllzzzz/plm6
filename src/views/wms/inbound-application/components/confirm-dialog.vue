@@ -19,6 +19,9 @@
       <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
       <el-tag v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
     </template>
+    <template #titleRight>
+      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+    </template>
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
@@ -48,15 +51,23 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
           <!-- 金额设置 -->
-          <price-set-columns v-if="showAmount" @amount-change="handleAmountChange" />
+          <price-set-columns
+            v-if="showAmount"
+            :order="order"
+            :form="form"
+            :requisitions="cu.props.requisitions"
+            @amount-change="handleAmountChange"
+          />
           <!-- 仓库设置 -->
-          <warehouse-set-columns v-if="showWarehouse" />
+          <warehouse-set-columns :form="form" v-if="showWarehouse" />
         </common-table>
         <!-- 物流信息设置 -->
         <logistics-form
-          :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
-          class="logistics-form-content"
           v-if="showAmount && form.logistics"
+          ref="logisticsRef"
+          class="logistics-form-content"
+          :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
+          :form="form.logistics"
         />
       </el-form>
     </template>
@@ -82,10 +93,11 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 
-import logisticsForm from './logistics-form.vue'
-import priceSetColumns from './price-set-columns.vue'
-import warehouseSetColumns from './warehouse-set-columns.vue'
+import logisticsForm from '@/views/wms/inbound-components/logistics-form.vue'
+import priceSetColumns from '@/views/wms/inbound-components/price-set-columns.vue'
+import warehouseSetColumns from '@/views/wms/inbound-components/warehouse-set-columns.vue'
 import commonFooter from './common-footer.vue'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -103,6 +115,8 @@ const props = defineProps({
     type: Number
   }
 })
+
+const logisticsRef = ref()
 
 // 显示金额
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
@@ -170,8 +184,13 @@ watch(
     if (visible) {
       setDitto(form.list) // 在list变化时设置同上
       form.list.forEach((v) => {
-        if (isNotBlank(v.unitPrice) && isNotBlank(v.mete)) {
-          v.amount = toFixed(v.unitPrice * v.mete, 2, { toNum: true })
+        if (isNotBlank(v.amount) && isNotBlank(v.mete)) {
+          // 量发生变化，清空金额
+          const unitPrice = toFixed(v.amount / v.mete, 2, { toNum: true })
+          if (v.unitPrice !== unitPrice) {
+            v.unitPrice = undefined
+            v.amount = undefined
+          }
         }
       })
     }
@@ -206,12 +225,16 @@ cu.submitFormFormat = async (form) => {
 }
 
 // 表单提交前校验
-FORM.HOOK.beforeSubmit = () => {
+FORM.HOOK.beforeSubmit = async () => {
   const { validResult, dealList } = tableValidate(form.list)
   if (validResult) {
     form.list = dealList
   }
-  return validResult
+  let logisticsValidResult = true
+  if (showAmount.value && logisticsRef.value) {
+    logisticsValidResult = await logisticsRef.value.validate()
+  }
+  return validResult && logisticsValidResult
 }
 
 // 表单提交后：关闭预览窗口
@@ -252,19 +275,22 @@ function setDitto(list) {
       warehouseDittoableIdex.push(i)
     }
   }
-  cu.props.warehouseDittoableIndex = warehouseDittoableIdex
 }
 
 // 金额变化
 function handleAmountChange() {
-  amount.value = toFixed(form.list.reduce((sum, cur) => {
-    const value = Number(cur.amount)
-    if (!isNaN(value)) {
-      return sum + cur.amount
-    } else {
-      return sum
-    }
-  }, 0), 2)
+  if (!form.list) return
+  amount.value = toFixed(
+    form.list.reduce((sum, cur) => {
+      const value = Number(cur.amount)
+      if (!isNaN(value)) {
+        return sum + cur.amount
+      } else {
+        return sum
+      }
+    }, 0),
+    2
+  )
 }
 
 // 合计
@@ -279,6 +305,7 @@ function getSummaries(param) {
   .el-dialog__header .el-tag {
     min-width: 70px;
   }
+
   .logistics-form-content {
     padding: 0 30px;
     position: absolute;

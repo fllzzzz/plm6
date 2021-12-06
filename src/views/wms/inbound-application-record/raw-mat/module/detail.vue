@@ -88,9 +88,9 @@ const { inboundFillWayCfg } = useWmsConfig()
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.inbound-application-preview',
-    extraBox: ['.el-dialog__header'],
-    wrapperBox: ['.el-dialog__body'],
+    mainBox: '.raw-mat-inbound-application-record-detail',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
     extraHeight: 10
@@ -104,7 +104,8 @@ const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inbo
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? '订单' : `订单：${order.value.serialNumber}（${order.value.supplier ? order.value.supplier.name : ''}）`
+  crud.detailLoading ? `入库单：${detail.serialNumber}`
+    : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
@@ -119,12 +120,16 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['number', 'mete', 'amount', 'priceExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, { props: ['number', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
 }
 </script>
 
 <style lang="scss" scoped>
 .raw-mat-inbound-application-record-detail {
+  .el-drawer__header .el-tag {
+    min-width: 70px;
+    text-align: center;
+  }
   .el-table {
     ::v-deep(.cell) {
       height: 28px;

@@ -186,6 +186,7 @@ watch(
     } else {
       selectValue.value = value
     }
+    setDefault()
   },
   { immediate: true }
 )
@@ -218,6 +219,7 @@ watch(
           cv = undefined
         }
       }
+      selectValue.value = cv
       if (isBlank(cv)) {
         setDefault()
       } else {

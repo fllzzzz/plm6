@@ -18,7 +18,7 @@ const getFinalMatClsByIdForSteelPlate = {
           serialNumber: /[0-9]{10}/,
           measureUnit: '张', // 计量单位
           accountingUnit: '千克', // 核算单位
-          accountingPrecision: 0, // 核算单位小数精度
+          accountingPrecision: 2, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.STEEL_PLATE.V,
@@ -91,7 +91,7 @@ const getFinalMatClsByIdForSteelCoil = {
           serialNumber: /[0-9]{10}/,
           measureUnit: '卷', // 计量单位
           accountingUnit: '千克', // 核算单位
-          accountingPrecision: 0, // 核算单位小数精度
+          accountingPrecision: 2, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.STEEL_COIL.V,
@@ -128,11 +128,11 @@ const getFinalMatClsByIdForGas = {
           fullName: '快乐气体>丙烷',
           serialNumber: /[0-9]{10}/,
           measureUnit: '瓶', // 计量单位
-          accountingUnit: '升', // 核算单位
+          accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
-          basicClass: matClsEnum.STEEL_COIL.V
+          basicClass: matClsEnum.GAS.V
         }
     }
   }
@@ -154,7 +154,7 @@ const getFinalMatClsById = {
           fullName: '紧固件>高强螺栓>大六角',
           serialNumber: /[0-9]{10}/,
           measureUnit: '套', // 计量单位
-          accountingUnit: '套', // 核算单位
+          accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
           outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式

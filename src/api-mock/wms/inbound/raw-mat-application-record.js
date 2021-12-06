@@ -37,7 +37,7 @@ const get = {
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
-            reviewerName: '@cname', // 审核人（审核的人）
+            // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间
@@ -161,6 +161,11 @@ const detail_id1 = {
             name: '杭州天马钢材有限公司'
           }
         },
+        'requisitionsList|2': [{
+          'basicClass|1-16': 1,
+          'serialNumber|+1': ['SG-AFTER-123456', 'SG-AFTER-133456'],
+          'projectId|+1': 1
+        }],
         id: 1, // 入库单id
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
@@ -183,7 +188,7 @@ const detail_id1 = {
             mete: 800000,
             unitPrice: 0.01,
             amount: 8000,
-            priceExcludingVAT: 7079.64,
+            amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
@@ -213,7 +218,7 @@ const detail_id1 = {
             weight: 2355000,
             unitPrice: 0.02,
             amount: 47100,
-            priceExcludingVAT: 41681.42,
+            amountExcludingVAT: 41681.42,
             inputVAT: 5418.58,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
@@ -228,71 +233,64 @@ const detail_id1 = {
               name: '666号仓库'
             }
           },
-          {
-            id: 3,
-            sn: '110_0',
-            specificationLabels: 'GB-06',
-            specification: '57*21*3*9',
-            classifyId: 110,
-            basicClass: 2,
-            unitWeight: 15.29,
-            quantity: 1,
-            length: 10000,
-            totalLength: 10,
-            brand: '马钢',
-            heatNoAndBatchNo: 'ooopp',
-            mete: 152900,
-            weight: 152900,
-            unitPrice: 0.03,
-            amount: 4587,
-            priceExcludingVAT: 4059.29,
-            requisitionsSN: 'SG-AFTER-123456',
-            inputVAT: 527.71,
-            project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factoryId: 1,
-            warehouse: {
-              id: 1,
-              name: '666号仓库'
-            }
-          },
-          {
-            uid: 4,
-            // sn: '110_1',
-            specificationLabels: 'GB-06',
-            specification: '68*1*2*554',
-            classifyId: 110,
-            accountingPrecision: 2,
-            measurePrecision: 0,
-            unitWeight: 28.84,
-            quantity: 2,
-            length: 2500,
-            totalLength: 5,
-            brand: '鞍钢',
-            heatNoAndBatchNo: 'qqwww',
-            requisitionsSN: 'SG-AFTER-123456',
-            mete: 150000,
-            weight: 150000,
-            unitPrice: 0.04,
-            amount: 6000,
-            priceExcludingVAT: 5000,
-            inputVAT: 1000,
-            project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factoryId: 1,
-            warehouse: {
-              id: 1,
-              name: '666号仓库'
-            }
-          },
+          // {
+          //   id: 3,
+          //   sn: '110_0',
+          //   specification: '57*21*3*9',
+          //   classifyId: 110,
+          //   basicClass: 2,
+          //   quantity: 1,
+          //   length: 10000,
+          //   totalLength: 10,
+          //   brand: '马钢',
+          //   heatNoAndBatchNo: 'ooopp',
+          //   mete: 152900,
+          //   weight: 152900,
+          //   unitPrice: 0.03,
+          //   amount: 4587,
+          //   amountExcludingVAT: 4059.29,
+          //   requisitionsSN: 'SG-AFTER-123456',
+          //   inputVAT: 527.71,
+          //   project: {
+          //     'id|+1': 1,
+          //     'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+          //     'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+          //     serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          //   },
+          //   factoryId: 1,
+          //   warehouse: {
+          //     id: 1,
+          //     name: '666号仓库'
+          //   }
+          // },
+          // {
+          //   uid: 4,
+          //   // sn: '110_1',
+          //   classifyId: 110,
+          //   quantity: 2,
+          //   length: 2500,
+          //   totalLength: 5,
+          //   brand: '鞍钢',
+          //   heatNoAndBatchNo: 'qqwww',
+          //   requisitionsSN: 'SG-AFTER-123456',
+          //   mete: 150000,
+          //   weight: 150000,
+          //   unitPrice: 0.04,
+          //   amount: 6000,
+          //   amountExcludingVAT: 5000,
+          //   inputVAT: 1000,
+          //   project: {
+          //     'id|+1': 1,
+          //     'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+          //     'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+          //     serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          //   },
+          //   factoryId: 1,
+          //   warehouse: {
+          //     id: 1,
+          //     name: '666号仓库'
+          //   }
+          // },
           {
             id: 5,
             classifyId: 120,
@@ -310,7 +308,7 @@ const detail_id1 = {
             weight: 10000,
             unitPrice: 0.05,
             amount: 500,
-            priceExcludingVAT: 450,
+            amountExcludingVAT: 450,
             inputVAT: 50,
             project: {
               'id|+1': 1,
@@ -381,7 +379,7 @@ const detail_id2 = {
             mete: 800000,
             unitPrice: 0.01,
             amount: 8000,
-            priceExcludingVAT: 7079.64,
+            amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
@@ -452,7 +450,7 @@ const detail_id3 = {
             mete: 222,
             unitPrice: 0.01,
             amount: 8000,
-            priceExcludingVAT: 7079.64,
+            amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {

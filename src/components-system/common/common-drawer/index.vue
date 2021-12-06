@@ -34,9 +34,9 @@
             <span class="title-text">{{ props.title }}</span>
             <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
-          <span>
+          <span class="title-right-content">
             <slot name="titleRight" />
-            <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
+            <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关 闭</common-button>
           </span>
         </div>
       </slot>
@@ -146,11 +146,11 @@ const props = defineProps({
 
 // 加载
 let loading
-
+// ref
 const drawerRef = ref()
 // 自定义类名
 const customClass = `${props.customClass || ''} common-drawer`
-
+// 显示状态
 const drawerVisible = ref(false)
 
 // 是否使用prop:visible 控制
@@ -160,32 +160,28 @@ watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
   drawerVisible.value = isVisibleProp.value ? v : mv
 })
 
-watch(
-  () => props.contentLoading,
-  (foo) => {
-    if (!foo) {
-      loading && loading.close()
-    }
-  }
-)
-
-watch(drawerVisible, (foo) => {
-  if (foo && props.contentLoading) {
-    openFullScreen()
+watch([drawerVisible, () => props.contentLoading], ([visible, ld]) => {
+  if (visible && ld) {
+    openLoading()
   } else {
     loading && loading.close()
   }
-})
+}, { immediate: true })
 
-function openFullScreen() {
-  let el
-  if (drawerRef.value) el = drawerRef.value.drawerRef
-  loading = ElLoading.service({
-    target: el,
-    lock: true,
-    text: '数据加载中，请稍后',
-    fullscreen: false
-  })
+function openLoading() {
+  if (loading) {
+    loading.visible = true
+  } {
+    let el
+    if (drawerRef.value) el = drawerRef.value.drawerRef
+    loading = ElLoading.service({
+      target: el,
+      lock: true,
+      text: '数据加载中，请稍后',
+      fullscreen: false,
+      background: 'rgba(255, 255, 255, 0.5)'
+    })
+  }
 }
 
 function handleClose() {
@@ -242,7 +238,7 @@ defineExpose({
   justify-content: space-between;
 
   .title-left {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     position: relative;
     padding-left: 10px;
@@ -264,6 +260,11 @@ defineExpose({
       left: 0;
       transform: translateY(-50%);
     }
+  }
+
+  .title-right-content {
+    display: inline-flex;
+    align-items: center;
   }
 
   ::v-deep(.el-button + .el-button) {

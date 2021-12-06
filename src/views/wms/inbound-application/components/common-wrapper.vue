@@ -1,6 +1,6 @@
 <template>
   <div class="inbound-application-container" :style="heightStyle">
-    <common-header :basicClass="props.basicClass" :edit="props.edit" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
+    <common-header :basic-class="props.basicClass" :edit="props.edit" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
     <div class="main-content">
       <slot />
     </div>
@@ -13,7 +13,7 @@
       :btn-name="props.btnName"
       @submit="submit"
     />
-    <confirm-dialog v-model="previewVisible" :basicClass="props.basicClass" />
+    <confirm-dialog v-model="previewVisible" :basic-class="props.basicClass" />
   </div>
 </template>
 
@@ -21,8 +21,8 @@
 import { defineProps, defineEmits, ref } from 'vue'
 
 import useMaxHeight from '@/composables/use-max-height'
-import commonHeader from '../components/common-header.vue'
-import commonFooter from '../components/common-footer.vue'
+import commonHeader from '@/views/wms/inbound-application/components/common-header.vue'
+import commonFooter from '@/views/wms/inbound-application/components/common-footer.vue'
 import confirmDialog from './confirm-dialog.vue'
 
 const emit = defineEmits(['purchase-order-change', 'submit'])

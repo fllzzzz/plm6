@@ -163,7 +163,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.edit" label="操作" width="120px" align="center" fixed="right">
+      <el-table-column v-permission="[...permission.edit,...permission.del]" label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
           <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" />
         </template>
@@ -196,7 +196,8 @@ import mForm from './module/form.vue'
 // crud交由presenter持有
 const permission = {
   get: ['wms_inboundApplication_record:get'],
-  edit: ['wms_inboundApplication_record:edit']
+  edit: ['wms_inboundApplication_record:edit'],
+  del: ['wms_inboundApplication_record:del']
 }
 
 const optShow = {

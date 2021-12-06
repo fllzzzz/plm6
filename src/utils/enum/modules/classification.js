@@ -34,6 +34,14 @@ const rawMatClsEnum = {
 }
 constantize(rawMatClsEnum)
 
+// 钢材物料分类
+const steelClsEnum = {
+  STEEL_PLATE: matClsEnum.STEEL_PLATE,
+  SECTION_STEEL: matClsEnum.SECTION_STEEL,
+  STEEL_COIL: matClsEnum.STEEL_COIL
+}
+constantize(steelClsEnum)
+
 // 制成品基础分类
 const manufClsEnum = {
   STRUC_MANUFACTURED: classificationEnum.STRUC_MANUFACTURED,
@@ -45,12 +53,14 @@ export {
   classificationEnum,
   matClsEnum,
   rawMatClsEnum,
-  manufClsEnum
+  manufClsEnum,
+  steelClsEnum
 }
 
 export default {
   classificationEnum,
   matClsEnum,
   rawMatClsEnum,
-  manufClsEnum
+  manufClsEnum,
+  steelClsEnum
 }

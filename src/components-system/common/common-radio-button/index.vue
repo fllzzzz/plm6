@@ -19,6 +19,7 @@
 import { defineProps, defineEmits, ref, watchEffect } from 'vue'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 import { ElRadioGroup } from 'element-plus'
+import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
@@ -31,6 +32,10 @@ const props = defineProps({
   options: {
     type: [Object, Array, Number],
     required: true
+  },
+  default: {
+    type: Boolean,
+    default: false
   },
   disabled: {
     type: Boolean,
@@ -66,6 +71,7 @@ const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 watchEffect(() => {
   copyValue.value = props.modelValue || 0
+  setDefault()
 })
 
 function selectChange(val) {
@@ -73,5 +79,14 @@ function selectChange(val) {
   if (val === props.modelValue) return
   emit('update:modelValue', val)
   emit('change', val)
+}
+
+function setDefault() {
+  if (props.default && !copyValue.value && isNotBlank(props.options)) {
+    for (const i in props.options) {
+      copyValue.value = props.options[i][DS.value]
+      return
+    }
+  }
 }
 </script>
