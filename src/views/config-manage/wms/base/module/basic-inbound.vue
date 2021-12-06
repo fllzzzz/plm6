@@ -17,12 +17,19 @@
         </common-tip-button>
       </div>
     </template>
-    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="120px">
+    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="130px">
       <el-form-item label="金额填写场景">
         <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
       </el-form-item>
-      <el-form-item label="工厂填写场景">
-        <common-radio v-model="form.factoryFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
+      <el-form-item label="存储位置填写场景">
+        <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
+      </el-form-item>
+      <el-form-item label="打印标签提示场景">
+        <el-checkbox v-model="form.printLabelTipWay.afterApplication" label="入库申请提交后" size="mini"></el-checkbox>
+        <el-checkbox v-model="form.printLabelTipWay.afterReview" label="入库单审核后" size="mini"></el-checkbox>
+        <el-form-item>
+          <span class="form-item-tip">勾选后，会在对应的场景弹窗提示用户打印此次入库物料的标签。</span>
+        </el-form-item>
       </el-form-item>
     </el-form>
   </el-card>
@@ -44,7 +51,12 @@ const dataSource = ref({
   // 金额填写方式
   amountFillWay: undefined,
   // 工厂填写方式
-  factoryFillWay: undefined
+  warehouseFillWay: undefined,
+  // 标签打印提示场景
+  printLabelTipWay: {
+    afterApplication: undefined,
+    afterReview: undefined
+  }
 })
 // 表单
 const form = ref(dataSource.value)
@@ -65,11 +77,10 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const { amountFillWay, factoryFillWay } = await getInboundBasicConf()
-    form.value.amountFillWay = amountFillWay
-    form.value.factoryFillWay = factoryFillWay
+    const res = await getInboundBasicConf()
+    form.value = deepClone(res)
 
-    dataSource.value = { amountFillWay, factoryFillWay }
+    dataSource.value = res
   } catch (error) {
     console.log('wms基础配置', error)
   } finally {

@@ -206,8 +206,8 @@ const STEEL_MES_REPORT_TEAM_OUTPUT_ENCLOSURE = {
       { show: false, key: 'area', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'plateType', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },
-      { show: true, key: 'completeQuantity', title: '完成数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: true, key: 'totalLength', title: '总长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousandFilter: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: true, key: 'completeQuantity', title: '完成数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'totalLength', title: '总长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
       { show: true, key: 'reportTime', title: '上报日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'oldProductionLineName', title: '原生产线', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 22, type: typeEnum.PRODUCTION_LINE.K }
     ]

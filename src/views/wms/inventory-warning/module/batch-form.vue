@@ -19,7 +19,7 @@
       <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
     </template>
     <div class="flex-rss">
-      <material-spec-select ref="specRef" class="spec-select" @accumulate-change="handleAccumulateChange" :max-height="maxHeight + 42" />
+      <material-spec-select ref="specRef" class="spec-select" v-model="form.list" :row-init-fn="rowInit" :max-height="maxHeight + 42" />
       <div style="width: 100%">
         <div class="setting-container">
           <div class="setting-item">
@@ -75,19 +75,19 @@
               min-width="200"
             />
             <el-table-column key="unitType" :show-overflow-tooltip="true" prop="unitType" label="单位配置" align="center" width="140">
-              <template v-slot="scope">
+              <template #default="{ row }">
                 <common-radio-button
-                  v-model="scope.row.unitType"
+                  v-model="row.unitType"
                   :options="measureTypeEnum.ENUM"
-                  :disabled-val="scope.row.unitTypeDisabled"
+                  :disabled-val="row.unitTypeDisabled"
                   type="enum"
                   size="small"
                 />
               </template>
             </el-table-column>
             <el-table-column key="unit" :show-overflow-tooltip="true" prop="unit" label="单位" align="center" width="70">
-              <template v-slot="scope">
-                {{ scope.row.unitType === measureTypeEnum.MEASURE.V ? scope.row.measureUnit : scope.row.accountingUnit }}
+              <template #default="{ row }">
+                {{ row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit }}
               </template>
             </el-table-column>
             <el-table-column
@@ -98,13 +98,13 @@
               align="center"
               min-width="120"
             >
-              <template v-slot="scope">
+              <template #default="{ row }">
                 <el-input-number
-                  v-model="scope.row.minimumInventory"
+                  v-model="row.minimumInventory"
                   :min="0"
                   :max="999999"
                   :step="1"
-                  :precision="scope.row.unitType === measureTypeEnum.MEASURE.V ? scope.row.measurePrecision : scope.row.accountingPrecision"
+                  :precision="row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision"
                   size="small"
                   controls-position="right"
                   style="width: 100%; max-width: 200px"
@@ -112,13 +112,13 @@
               </template>
             </el-table-column>
             <el-table-column key="factoryId" prop="factoryId" label="工厂" align="center" min-width="160">
-              <template v-slot="scope">
-                <factory-select v-model="scope.row.factoryId" placeholder="可选择工厂" clearable style="width: 100%" />
+              <template #default="{ row }">
+                <factory-select v-model="row.factoryId" placeholder="可选择工厂" clearable style="width: 100%" />
               </template>
             </el-table-column>
             <el-table-column key="operate" :show-overflow-tooltip="true" prop="operate" label="操作" align="center" width="70">
-              <template v-slot="scope">
-                <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(scope.row.sn, scope.$index)" />
+              <template #default="{ row, $index }">
+                <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
               </template>
             </el-table-column>
           </common-table>
@@ -132,7 +132,6 @@
 import { reactive, ref, computed } from 'vue'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
-import { mapGetters } from '@/store/lib'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -154,7 +153,6 @@ const batch = reactive({
 const tableRef = ref()
 const formRef = ref()
 const specRef = ref()
-const { matClsSpecKV } = mapGetters('matClsSpecKV')
 
 const { CRUD, crud, form } = regBatchForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.bStatus.cu > CRUD.STATUS.NORMAL)
@@ -210,19 +208,6 @@ function specInit() {
   specRef.value && specRef.value.init()
 }
 
-// 处理选择变化
-function handleAccumulateChange({ addList, cancelList }) {
-  if (isNotBlank(addList)) {
-    addList.forEach((sn) => {
-      const row = rowInit(matClsSpecKV.value[sn])
-      if (row) form.list.push(row)
-    })
-  }
-  if (isNotBlank(cancelList)) {
-    form.list = form.list.filter((l) => !cancelList.includes(l.sn))
-  }
-}
-
 // 行初始化
 function rowInit(row) {
   const _row = {
@@ -251,8 +236,7 @@ function rowInit(row) {
 
 // 删除行
 function delRow(sn, index) {
-  form.list.splice(index, 1)
-  specRef.value.accReduce(sn)
+  specRef.value.delListItem(sn, index)
 }
 
 // 批量设置预警数量

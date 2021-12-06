@@ -1,7 +1,7 @@
 /**
  * 树形结构工具类
  */
-import { deepClone } from '@/utils/data-type'
+import { deepClone, isNotBlank } from '@/utils/data-type'
 
 /**
  *
@@ -23,6 +23,25 @@ export function removeTreeEmptyFiled(tree, emptyFiled = 'children') {
   })
 
   return treeCopy
+}
+
+/**
+ * 树转数组,list-item为树的每个叶子节点
+ * @param {*} tree
+ */
+export function tree2list(tree = []) {
+  const resArr = []
+  tree.forEach(node => {
+    if (isNotBlank(node.children)) {
+      const child = tree2list(node.children)
+      if (isNotBlank(child)) {
+        resArr.push.apply(resArr, child)
+      }
+    } else {
+      resArr.push(node)
+    }
+  })
+  return resArr
 }
 
 /**

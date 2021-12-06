@@ -206,7 +206,7 @@ const STEEL_MES_REPORT_OUTBOUND_PROJECT_AUXILIARY_MATERIAL = {
       { show: true, key: 'fullClassifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
       { show: true, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COLOR.K },
-      { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }}
+      { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }}
     ]
   }
 }

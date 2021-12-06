@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    ref="dialogRef"
     v-model="dialogVisible"
     :title="props.title"
     :width="props.width"
@@ -25,20 +26,20 @@
     <template #title>
       <slot name="title">
         <div class="dialog-title">
-          <span class="title">
-            <span>{{ props.title }}</span>
-            <slot name="tip" />
+          <span class="title-left">
+            <span class="title-text">{{ props.title }}</span>
+            <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
-          <span class="dialog-title-right">
+          <span class="dialog-title-right" v-if="!props.contentLoading">
             <slot name="titleRight" />
             <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>
         </div>
       </slot>
     </template>
-    <slot />
+    <slot v-if="!props.contentLoading" />
     <template v-if="slots.footer" #footer>
-      <slot name="footer" />
+      <slot v-if="!props.contentLoading" name="footer" />
     </template>
   </el-dialog>
 </template>
@@ -46,6 +47,7 @@
 <script setup>
 import { watch, computed, defineProps, defineEmits, ref, useSlots } from 'vue'
 import { isNotBlank } from '@data-type/index'
+import { ElLoading } from 'element-plus'
 
 const slots = useSlots()
 
@@ -65,6 +67,10 @@ const props = defineProps({
   showClose: {
     type: Boolean,
     default: true
+  },
+  contentLoading: {
+    type: Boolean,
+    default: false
   },
   closeBtnType: {
     type: String,
@@ -133,9 +139,13 @@ const props = defineProps({
   }
 })
 
+// 加载
+let loading
+// ref
+const dialogRef = ref()
 // 自定义类名
 const customClass = `${props.customClass || ''} common-dialog`
-
+// 显示状态
 const dialogVisible = ref(false)
 
 // 是否使用prop:visible 控制
@@ -144,6 +154,35 @@ const isVisibleProp = computed(() => isNotBlank(props.visible))
 watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
   dialogVisible.value = isVisibleProp.value ? v : mv
 })
+
+watch(
+  [dialogVisible, () => props.contentLoading],
+  ([visible, ld]) => {
+    if (visible && ld) {
+      openLoading()
+    } else {
+      loading && loading.close()
+    }
+  },
+  { immediate: true }
+)
+
+function openLoading() {
+  if (loading) {
+    loading.visible = true
+  }
+  {
+    let el
+    if (dialogRef.value) el = dialogRef.value.dialogRef
+    loading = ElLoading.service({
+      target: el,
+      lock: true,
+      text: '数据加载中，请稍后',
+      fullscreen: false,
+      background: 'rgba(255, 255, 255, 0.5)'
+    })
+  }
+}
 
 function handleClose() {
   if (typeof props.beforeClose === 'function') {
@@ -175,28 +214,25 @@ function closed() {
   emit('closed')
 }
 </script>
-<style></style>
-<style lang="scss">
+<style lang="scss" scoped>
 .common-dialog {
-  // ::v-deep(.el-dialog__header){
-  //   padding-bottom: 0px!important;
-  // }
   .dialog-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    .title {
+    .title-left {
       display: flex;
       align-items: center;
-      font-weight: bold;
-      font-size: 18px;
-      margin-right: 15px;
-      color: #000;
       position: relative;
       padding-left: 10px;
+      margin-right: 15px;
       box-sizing: border-box;
-
+      .title-text {
+        font-weight: bold;
+        font-size: 18px;
+        color: #000;
+      }
       &::before {
         content: '';
         width: 4px;

@@ -214,7 +214,7 @@ function setCascader(tree) {
       classification.treeOrigin = tree
 
       // 根据基础材料类型 筛选一级科目
-      classification.tree = dataFormat(tree.filter((v) => !props.basicClass || v.basicClass === props.basicClass))
+      classification.tree = dataFormat(tree.filter((v) => !props.basicClass || v.basicClass & props.basicClass))
       // 加入额外的选项
       if (props.extraOption) {
         classification.tree.unshift(props.extraOption)

@@ -15,9 +15,16 @@ function treeFormat(tree, parent, deep = 1) {
       id: node.id,
       name: node.name,
       code: node.code,
-      basicClass: deep === 1 ? node.basicClass : parent.basicClass,
-      basicClassName: deep === 1 ? classificationEnum.VL[node.basicClass] : parent.basicClassName,
       serialNumber: `${isNotBlank(parent) ? parent.code : ''}${node.code}`
+    }
+    if (deep === 1) { // 是否为根节点
+      n.fullNamePath = [node.name]
+      n.basicClass = node.basicClass
+      n.basicClassName = classificationEnum.VL[node.basicClass]
+    } else {
+      n.fullNamePath = [...parent.fullNamePath, node.name]
+      n.basicClass = parent.basicClass
+      n.basicClassName = parent.basicClassName
     }
 
     if (isNotBlank(node.children)) {
@@ -41,11 +48,10 @@ export function getFirstLeafNode(tree) {
 
 function getNode(tree) {
   for (let i = 0; i < tree.length; i++) {
-    if (tree[i].isLeaf) {
+    if (isNotBlank(tree[i].children)) { // tree[i].isLeaf
+      return getNode(tree[i].children)
+    } else {
       return tree[i]
-    }
-    if (isNotBlank(tree[i].children)) {
-      getNode(tree)
     }
   }
 }

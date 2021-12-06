@@ -211,8 +211,8 @@ const WMS_LOGISTICS_DELIVERY_METE = {
      */
     fields: [
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.LICENSE_PLATE.K },
-      { show: true, key: 'totalMete', title: '装载量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.METE.K, format: { toThousandFilter: false, precision: 3, showUnit: true }, sum: true },
-      { show: true, key: 'freightPrice', title: '运费总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'totalMete', title: '装载量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.METE.K, format: { toThousand: false, precision: 3, showUnit: true }, sum: true },
+      { show: true, key: 'freightPrice', title: '运费总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 25, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'logisticName', title: '运输单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 30, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'handlerName', title: '办理人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K }
     ]

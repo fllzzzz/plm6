@@ -1,9 +1,10 @@
-import { provide, inject, reactive, getCurrentInstance, onBeforeUnmount, onUnmounted, nextTick } from 'vue'
+import { provide, inject, reactive, getCurrentInstance, onBeforeUnmount, onMounted, onUnmounted, nextTick } from 'vue'
 import * as lodash from 'lodash'
 
 import useFormLocalStorage from '@/composables/form/use-form-local-storage'
 
 import { ElNotification } from 'element-plus'
+import { isNotBlank } from '@/utils/data-type'
 
 const FORM = {} // crud公共信息处理
 
@@ -13,13 +14,13 @@ const FORM = {} // crud公共信息处理
  * @param {*} tableRef 非必填 (由于执行顺序问题，无法直接从实例中获取该值，需要传入)
  * @param {*} registerForm= true 是否注册主组件，若不注册可之后调用registerForm方法注册
  */
-export default function useForm(options, formRef, registerForm = true) {
+export default function useForm(options, formRef, formData, registerForm = true) {
   // 获取crud实例
   const crud = getCrud(options)
   // 不能添加新属性，也不能重新配置或者删除任何现有属性（但是可以修改属性的值）
   Object.seal(crud)
   if (registerForm) {
-    const data = register(crud, formRef)
+    const data = register(crud, formRef, formData)
     return data
   }
   return { crud }
@@ -31,7 +32,7 @@ export default function useForm(options, formRef, registerForm = true) {
  * @param {*} tableRef
  * @returns { columns, crud } = { 显示的列, crud }
  */
-export function register(crud, formRef) {
+export function register(crud, formRef, data) {
   const internalInstance = getCurrentInstance()
   // 注册组件
   const vmInfo = crud.registerVM(FORM.VM_TYPE.FORM, internalInstance, 2)
@@ -42,9 +43,16 @@ export function register(crud, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useFormLocalStorage(crud.formStoreKey, crud, vmInfo.FORM)
+    const store = useFormLocalStorage(crud.formStoreKey, crud, vmInfo.FORM, {
+      useDraftCallback: crud.useDraftCallback,
+      clearDraftCallback: crud.clearDraftCallback
+    })
     fmStore = store
   }
+
+  onMounted(() => {
+    crud.toEdit(data)
+  })
 
   onBeforeUnmount(() => {
     crud.unregisterVM(internalInstance)
@@ -120,6 +128,10 @@ function getDefaultOption() {
     formStoreKey: '',
     // 表单缓存
     formStore: false,
+    // 使用草稿后回调
+    useDraftCallback: null,
+    // 清除草稿回调
+    clearDraftCallback: null,
     // 提交时必填字段
     requiredSubmitField: [],
     // 提交回调结果
@@ -165,7 +177,7 @@ function addCrudDefaultInfo(crud, data) {
     // 表格列
     tableColumns: {},
     status: {
-      edit: FORM.STATUS.NORMAL
+      edit: FORM.STATUS.PREPARED
     }
   })
 }
@@ -178,53 +190,28 @@ function addCrudBusinessMethod(crud) {
   }
 
   const toEdit = async (data) => {
-    crud.resetForm(JSON.parse(JSON.stringify(data)))
-    if (!(await callVmHook(crud, FORM.HOOK.beforeToEdit, crud.form) && await callVmHook(crud, FORM.HOOK.beforeToCU, crud.form))) {
+    crud.resetForm(isNotBlank(data) ? JSON.parse(JSON.stringify(data)) : undefined)
+    if (!((await callVmHook(crud, FORM.HOOK.beforeToEdit, crud.form)) && (await callVmHook(crud, FORM.HOOK.beforeToCU, crud.form)))) {
       return
     }
-    crud.status.edit = FORM.STATUS.PREPARED
     crud.submitResult = null
     await callVmHook(crud, FORM.HOOK.afterToEdit, crud.form)
     await callVmHook(crud, FORM.HOOK.afterToCU, crud.form)
   }
 
-  /**
-     * 取消新增/编辑
-     */
-  const cancelCU = async () => {
-    const editStatus = crud.status.edit
-
-    if (editStatus === FORM.STATUS.PREPARED) {
-      if (!await callVmHook(crud, FORM.HOOK.beforeEditCancel, crud.form)) {
-        return
-      }
-      crud.status.edit = FORM.STATUS.NORMAL
-    }
-    crud.resetForm()
-    if (editStatus === FORM.STATUS.PREPARED) {
-      await callVmHook(crud, FORM.HOOK.afterEditCancel, crud.form)
-    }
-    // 清除表单验证
-    if (crud.ref.form) {
-      nextTick(() => {
-        crud.ref.form.clearValidate()
-      })
-    }
-  }
-
   // 提交新增/编辑
-  const submitCU = async () => {
+  const submit = async () => {
     if (!verifySubmit()) {
       return
     }
-    if (!await callVmHook(crud, FORM.HOOK.beforeValidateCU)) {
+    if (!(await callVmHook(crud, FORM.HOOK.beforeValidateCU))) {
       return
     }
     crud.ref.form.validate(async (valid) => {
       if (!valid) {
         return
       }
-      if (!await callVmHook(crud, FORM.HOOK.afterValidateCU)) {
+      if (!(await callVmHook(crud, FORM.HOOK.afterValidateCU))) {
         return
       }
       if (crud.status.edit === FORM.STATUS.PREPARED) {
@@ -235,15 +222,15 @@ function addCrudBusinessMethod(crud) {
 
   // 执行编辑
   const doEdit = async () => {
-    if (!await callVmHook(crud, FORM.HOOK.beforeSubmit)) {
+    if (!(await callVmHook(crud, FORM.HOOK.beforeSubmit))) {
       return
     }
     try {
       crud.status.edit = FORM.STATUS.PROCESSING
-      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
+      const data = await crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.api(data)
-      await callVmHook(crud, FORM.HOOK.afterAddSuccess)
-      crud.status.edit = FORM.STATUS.NORMAL
+      await callVmHook(crud, FORM.HOOK.afterEditSuccess)
+      crud.status.edit = FORM.STATUS.PREPARED
       crud.submitSuccessNotify()
       crud.resetForm()
       // 清除表单验证
@@ -253,7 +240,6 @@ function addCrudBusinessMethod(crud) {
         })
       }
       await callVmHook(crud, FORM.HOOK.afterSubmit)
-      crud.refresh()
     } catch (error) {
       console.log('编辑', error)
       crud.status.edit = FORM.STATUS.PREPARED
@@ -262,15 +248,14 @@ function addCrudBusinessMethod(crud) {
   }
 
   const verifySubmit = () => {
-    const result = crud.requiredSubmitField.some(v => crud.form[v] === null || crud.form[v] === undefined)
+    const result = crud.requiredSubmitField.some((v) => crud.form[v] === null || crud.form[v] === undefined)
     return !result
   }
 
   Object.assign(crud, {
     submitSuccessNotify, // 表单提交成功通知
     toEdit, // 启动编辑
-    cancelCU, // 取消新增/编辑
-    submitCU // 提交新增/编辑
+    submit // 提交新增/编辑
   })
 }
 
@@ -339,13 +324,14 @@ function addCrudMethod(crud, data) {
   // 初始化crud
   const init = () => {
     Object.assign(crud, lodash.cloneDeep(data))
-    crud.status.edit = FORM.STATUS.NORMAL
+    crud.status.edit = FORM.STATUS.PREPARED
   }
 
   // 注册组件
   const registerVM = (type, vm, index = -1) => {
     const vmInfo = {
-      uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
+      uid: vm.uid,
+      uuid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
       FORM: {
@@ -367,13 +353,16 @@ function addCrudMethod(crud, data) {
 
   // 注销组件
   const unregisterVM = (vm) => {
-    const del = crud.vms.splice(crud.vms.findIndex(e => e && e.uid === vm.uid), 1)
+    const del = crud.vms.splice(
+      crud.vms.findIndex((e) => e && e.uid === vm.uid),
+      1
+    )
     return del
   }
 
   // 查找组件
   const findVM = (val, field = 'type') => {
-    return crud.vms.find(vm => vm && vm[field] === val).vm
+    return crud.vms.find((vm) => vm && vm[field] === val).vm
   }
 
   Object.assign(crud, {
@@ -386,7 +375,8 @@ function addCrudMethod(crud, data) {
 
 // hook回调
 async function callVmHook(crud, hook) {
-  if (crud.debug) { // 可查看hook调用情况
+  if (crud.debug) {
+    // 可查看hook调用情况
     console.log('callVmHook: ' + hook)
   }
   let result = true // 回调结果
@@ -413,7 +403,7 @@ async function callVmHook(crud, hook) {
  */
 function mergeOptions(source, rewrite) {
   const opts = { ...source }
-  Object.keys(source).forEach(key => {
+  Object.keys(source).forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(rewrite, key)) {
       opts[key] = rewrite[key]
     }
@@ -456,14 +446,12 @@ FORM.HOOK = {
   beforeValidateCU: 'beforeValidateCU',
   /** "新建/编辑" 验证 - 之后 */
   afterValidateCU: 'afterValidateCU',
-  /** 编辑取消 - 之前 */
-  beforeEditCancel: 'beforeEditCancel',
-  /** 编辑取消 - 之后 */
-  afterEditCancel: 'afterEditCancel',
   /** 提交 - 之前 */
   beforeSubmit: 'beforeSubmit',
   /** 提交 - 之后 */
   afterSubmit: 'afterSubmit',
   /** 编辑失败 - 之后 */
-  afterEditError: 'afterEditError'
+  afterEditError: 'afterEditError',
+  /** 编辑成功 - 之后 */
+  afterEditSuccess: 'afterEditSuccess'
 }

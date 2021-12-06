@@ -37,28 +37,28 @@
           label="上级科目"
           min-width="150"
         >
-          <template v-slot="scope">
+          <template #default="{ row }">
             <cls-cascader
-              v-model="scope.row.parentId"
+              v-model="row.parentId"
               :deep="form.currentLevel - 1"
               show-all-levels
               separator=" > "
               clearable
               placeholder="上级科目"
-              :extra-option="{ name: '同上', id: dittos.get('parentId') }"
+              :extra-option="{ name: '同上', id: ditto.get('parentId') }"
               size="small"
               style="width: 100%"
             />
           </template>
         </el-table-column>
         <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="科目名称" min-width="150">
-          <template v-slot="scope">
-            <el-input v-model.trim="scope.row.name" type="text" clearable placeholder="科目名称" size="small" style="width: 100%" />
+          <template #default="{ row }">
+            <el-input v-model.trim="row.name" type="text" clearable placeholder="科目名称" size="small" style="width: 100%" />
           </template>
         </el-table-column>
         <el-table-column key="code" prop="code" :show-overflow-tooltip="true" label="科目代码" width="125">
-          <template v-slot="scope">
-            <el-input v-model.trim="scope.row.code" type="text" maxlength="3" size="small" placeholder="科目代码" style="width: 100%" />
+          <template #default="{ row }">
+            <el-input v-model.trim="row.code" type="text" maxlength="3" size="small" placeholder="科目代码" style="width: 100%" />
           </template>
         </el-table-column>
         <el-table-column
@@ -69,11 +69,11 @@
           label="材料类型"
           width="128"
         >
-          <template v-slot="scope">
+          <template #default="{ row, $index }">
             <common-select
-              v-model="scope.row.basicClass"
+              v-model="row.basicClass"
               :options="rawMatClsEnum.ENUM"
-              show-extra
+              :show-extra="$index !== 0"
               type="enum"
               placeholder="材料类型"
               style="width: 105px"
@@ -81,13 +81,13 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="70px" align="center" fixed="right">
-          <template v-slot="scope">
+          <template #default="{ $index }">
             <common-button
               type="danger"
               icon="el-icon-delete"
               size="mini"
               style="padding: 6px"
-              @click.stop="removeRow(form.list, scope.$index)"
+              @click.stop="removeRow(form.list, $index)"
             />
           </template>
         </el-table-column>
@@ -164,14 +164,14 @@ const rules = {
 const currentRules = computed(() => rules[`LV${form.currentLevel}`])
 
 // 同上的选项与值
-const dittos = new Map([
+const ditto = new Map([
   ['basicClass', -1],
   ['parentId', -1]
 ])
 
 const { visible, handleClose } = useVisible({ emit, props })
-const { init, addRow, removeRow } = useTableOperate({}, 10, dittos)
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: currentRules, dittos })
+const { init, addRow, removeRow } = useTableOperate({}, 10, ditto)
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: currentRules, ditto })
 const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form.list, visible)
 
 ADD_FORM.init = () => init(form.list)

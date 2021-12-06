@@ -15,7 +15,7 @@ ADD_FORM.TYPE = {
   browserClose: 2 // 浏览器关闭保存
 }
 
-export default function useCrudAddFormLocalStorage(key, crud, FORM) {
+export default function useFormLocalStorage(key, crud, FORM, { useDraftCallback, clearDraftCallback } = {}) {
   const ls = reactive({
     key: key,
     expired: 604800000,
@@ -25,22 +25,22 @@ export default function useCrudAddFormLocalStorage(key, crud, FORM) {
     isRegister: false, // 是否注册的
     saveStoreForm: () => {
       // 保存草稿并退出
-      saveFormToStorage(ls)
-      crud.cancelCU()
+      return saveFormToStorage(ls)
     },
     resetForm: () => {
       // 清除内容
       crud.resetForm()
       ls.init && ls.init()
+      if (typeof clearDraftCallback === 'function') clearDraftCallback()
     }
   })
 
   // crud添加的钩子中，尽量不要写除了ADD_FORM.init 的其他方法初始方法
   // 在打开后开启缓存
-  FORM.HOOK.afterToEdit = () => openStore(ls)
+  FORM.HOOK.afterToEdit = () => openStore(ls, useDraftCallback)
 
   // 在退出后关闭缓存
-  FORM.HOOK.beforeEditCancel = () => closeStore(ls)
+  // FORM.HOOK.beforeEditCancel = () => closeStore(ls)
 
   // 在添加成功后清除缓存
   FORM.HOOK.afterEditSuccess = () => {
@@ -59,7 +59,7 @@ export default function useCrudAddFormLocalStorage(key, crud, FORM) {
     abnormalClose(ls, crud)
   }
 
-  provide('fmStore', ls)
+  provide('cuFmStore', ls)
   return ls
 }
 
@@ -70,7 +70,7 @@ function componentInit(ls) {
 }
 
 // 打开记录本地缓存
-function openStore(ls) {
+function openStore(ls, useDraftCallback) {
   const storageFormInfo = getFormByStorage(ls.key)
   if (isBlank(storageFormInfo)) {
     // 如果缓存为空，则调用初始化方法
@@ -79,6 +79,7 @@ function openStore(ls) {
     // 如果当前表单缓存不为空，则将原表单覆盖
     const storageForm = storageFormInfo.content
     setFormContent(ls.form, storageForm)
+    if (typeof useDraftCallback === 'function') useDraftCallback(ls.form)
   }
   ls.initForm = lodash.cloneDeep(ls.form)
   ls.isRegister = true
@@ -102,12 +103,17 @@ function setFormContent(form, storageForm) {
 
 // 保存表单
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
-  if (!ls.isRegister) return
+  if (!ls.isRegister) return false
   const _form = form || ls.form
-  storage.set(`${ADD_FORM.KEY_PREFIX}_${ls.key}`, {
-    type: type,
-    content: _form
-  }, ls.expired)
+  storage.set(
+    `${ADD_FORM.KEY_PREFIX}_${ls.key}`,
+    {
+      type: type,
+      content: _form
+    },
+    ls.expired
+  )
+  return true
 }
 
 function clearFormStorage(ls) {

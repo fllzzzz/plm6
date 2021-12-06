@@ -108,6 +108,24 @@
   td {
     overflow: hidden;
   }
+  .el-table__cell {
+    .el-input {
+      min-width: 40px;
+      width: 100%;
+    }
+    .el-input-number {
+      min-width: 40px;
+      width: 100%;
+
+    }
+    .el-input__inner {
+      min-width: 40px;
+      width: 100%;
+    }
+    .el-select {
+      width:100%
+    }
+  }
 } 
 
 .el-range-editor--medium .el-range-separator {
@@ -262,6 +280,10 @@ body .el-table th.gutter {
     border: none!important;
     background: none!important;
   }
+}
+
+.el-divider__text {
+  background-color: unset!important;
 }
 
 // card 标题

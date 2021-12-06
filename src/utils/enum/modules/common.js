@@ -28,13 +28,21 @@ const processingEnum = {
 }
 constantize(processingEnum)
 
-// 商务审核状态
+// TODO: 废弃（请勿使用）商务审核状态
 const businessAuditStatusEnum = {
   AUDIT_NOT_PASS: { L: '未审核', K: 'AUDIT_NOT_PASS', V: 0 },
   AUDIT_PASS: { L: '已通过', K: 'AUDIT_PASS', V: 1 },
   AUDIT_REFUSE: { L: '已拒绝', K: 'AUDIT_REFUSE', V: 2 }
 }
 constantize(businessAuditStatusEnum)
+
+// 审核状态
+const reviewStatusEnum = {
+  UNREVIEWED: { L: '未审核', K: 'UNREVIEWED', V: 1 << 0, TAG: '' },
+  PASS: { L: '已通过', K: 'PASS', V: 1 << 1, TAG: 'success' },
+  REFUSE: { L: '已拒绝', K: 'REFUSE', V: 1 << 2, TAG: 'danger' }
+}
+constantize(reviewStatusEnum)
 
 // 安装审核状态
 const installationAuditStatusEnum = {
@@ -100,6 +108,7 @@ export {
   numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型
   unitTypeEnum, // 单位类型
+  reviewStatusEnum, // 审核状态
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
   operationTypeEnum // 操作类型
@@ -114,6 +123,7 @@ export default {
   numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型
   unitTypeEnum, // 单位类型
+  reviewStatusEnum, // 审核状态
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
   operationTypeEnum // 操作类型

@@ -14,7 +14,7 @@ const getAllUnit = {
         { id: 2, 'name': '米', 'symbol': 'm', 'type': unitTypeEnum.LENGTH.V },
         { id: 3, 'name': '平方米', 'symbol': '㎡', 'type': unitTypeEnum.AREA.V },
         { id: 4, 'name': '立方米', 'symbol': 'm³', 'type': unitTypeEnum.VOLUME.V },
-        { id: 5, 'name': '千克', 'symbol': '㎏', 'type': unitTypeEnum.WEIGHT.V },
+        { id: 5, 'name': '千克', 'symbol': 'kg', 'type': unitTypeEnum.WEIGHT.V },
         { id: 6, 'name': '张', 'symbol': '', 'type': unitTypeEnum.DIGIT.V },
         { id: 7, 'name': '卷', 'symbol': '', 'type': unitTypeEnum.DIGIT.V },
         { id: 8, 'name': '桶', 'symbol': '', 'type': unitTypeEnum.DIGIT.V },

@@ -10,24 +10,47 @@ import convert from 'convert-units'
  * @param {string} to 转换后单位
  * @param {number} decimals 小数
  * @param {boolean} showUnit 是否显示单位
- * @param {boolean} isNum 是否转为数字
+ * @param {boolean} toNum 是否转为数字
  */
-export function convertUnits(num, from, to, decimals = 10, showUnit = false, isNum = true) {
+export function convertUnits(num, from, to, decimals = 10, { showUnit = false, toNum = true } = {}) {
   if (num === undefined || num === null || isNaN(+num)) return num
   if (!from || !to) return num
-  const _to = to === 't' ? 'mt' : to
-  const _from = from === 't' ? 'mt' : from
+  const _to = getUsableUnit(to)
+  const _from = getUsableUnit(from)
   num = convert(+num)
     .from(_from)
     .to(_to)
   num = num.toFixed(decimals)
-  if (isNum) {
+  if (toNum) {
     num = +num
   }
   if (showUnit) {
     num += ` ${to}`
   }
   return num
+}
+
+// 获取可用来转换的单位
+export function getUsableUnit(unit) {
+  switch (unit) {
+    case '㎏': return 'kg'
+    case 't' : return 'mt' // 国内的t等于国外的mt
+    case 'mm²' : return 'mm2'
+    case 'cm²' : return 'cm2'
+    case '㎡' : return 'm2'
+    case 'km²' : return 'km2'
+    case 'sq.in' : return 'in2'
+    case 'sq.ft' : return 'ft2'
+    case 'sq.mi' : return 'mi2'
+    case 'mm³' : return 'mm3'
+    case 'cm³' : return 'cm3'
+    case 'm³' : return 'm3'
+    case 'km³' : return 'km3'
+    case 'cu in' : return 'in3'
+    case 'cu ft' : return 'ft3'
+    case 'tcu yd' : return 'yd3'
+    default: return unit
+  }
 }
 
 /**

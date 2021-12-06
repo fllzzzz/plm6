@@ -2,8 +2,8 @@ import { constantize } from '../base'
 
 // 入库填写方式（金额及工厂在什么阶段填写）
 const inboundFillWayEnum = {
-  AUDITING: { L: '入库审核时填写', K: 'AUDITING', V: 1 << 0 },
-  APPLICATION: { L: '入库提交时填写', K: 'APPLICATION', V: 1 << 1 }
+  APPLICATION: { L: '入库提交时填写', K: 'APPLICATION', V: 1 << 0 },
+  REVIEWING: { L: '入库审核时填写', K: 'REVIEWING', V: 1 << 1 }
 }
 constantize(inboundFillWayEnum)
 
@@ -20,6 +20,20 @@ const warehouseTypeEnum = {
   WORKSHOP: { L: '车间', K: 'WORKSHOP', V: 1 << 1 }
 }
 constantize(warehouseTypeEnum)
+
+// 项目仓库类型
+const projectWarehouseTypeEnum = {
+  PUBLIC: { L: '公共库', K: 'COMMON', V: 1 << 0 },
+  PROJECT: { L: '项目库', K: 'PROJECT', V: 1 << 1 }
+}
+constantize(projectWarehouseTypeEnum)
+
+// 物料类型仓库（整料|余料）
+const materialIsWholeEnum = {
+  WHOLE: { L: '整料', K: 'WHOLE ', V: 1 << 0 },
+  ODDMENT: { L: '余料', K: 'ODDMENT', V: 1 << 1 }
+}
+constantize(materialIsWholeEnum)
 
 // 订单供货类型
 const orderSupplyTypeEnum = {
@@ -61,6 +75,8 @@ export {
   inboundFillWayEnum,
   measureTypeEnum,
   warehouseTypeEnum,
+  projectWarehouseTypeEnum,
+  materialIsWholeEnum,
   orderSupplyTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
@@ -72,6 +88,8 @@ export default {
   inboundFillWayEnum,
   measureTypeEnum,
   warehouseTypeEnum,
+  projectWarehouseTypeEnum,
+  materialIsWholeEnum,
   orderSupplyTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,

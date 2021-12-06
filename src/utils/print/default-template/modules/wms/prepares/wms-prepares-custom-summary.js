@@ -212,7 +212,7 @@ const WMS_PREPARES_CUSTOM_SUMMARY = {
       { show: false, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'className', title: '物料类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
-      { show: true, key: 'value', title: '采购量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousandFilter: false, precision: 3 }, sum: true },
+      { show: true, key: 'value', title: '采购量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true },
       { show: true, key: 'remark', title: '备注', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18 }
     ]
   }

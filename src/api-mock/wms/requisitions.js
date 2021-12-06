@@ -31,4 +31,22 @@ const getUnclosedRequisitionsBrief = {
   }
 }
 
-export default [getUnclosedRequisitionsBrief]
+// 获取申购单详情
+const getRequisitionsDetailBySN = {
+  url: RegExp('/api/wms/requisitions/serial-number/' + '.*'),
+  method: 'get',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '操作成功',
+      data: {
+        'basicClass|1-16': 1,
+        'serialNumber|+1': ['SG-AFTER-123456', 'SG-AFTER-133456'],
+        'projectId|+1': 1
+      }
+    }
+  }
+}
+
+export default [getUnclosedRequisitionsBrief, getRequisitionsDetailBySN]

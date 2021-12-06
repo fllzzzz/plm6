@@ -17,10 +17,16 @@
       @change="handleChange"
     >
       <template #view="{ data }">
-        <span class="option-item">
+        <span class="customize-option-item">
           <span class="flex-rsc label">
             <el-tooltip content="点击可查看详情" placement="left" :show-after="1000">
-              <el-icon v-if="props.detailable" v-permission="permission.get" @click.stop="openDetail(data.id)" class="pointer" color="#1881ef">
+              <el-icon
+                v-if="props.detailable"
+                v-permission="permission.get"
+                @click.stop="openDetail(data.id)"
+                class="pointer"
+                color="#1881ef"
+              >
                 <el-icon-view />
               </el-icon>
             </el-tooltip>
@@ -45,7 +51,12 @@
         </span>
       </template>
     </common-select>
-    <span v-if="props.detailable" class="detail-icon pointer" :class="{'not-allowed': !selectValue }"  @click.stop="openDetail(selectValue)">
+    <span
+      v-if="props.detailable"
+      class="detail-icon pointer"
+      :class="{ 'not-allowed': !selectValue }"
+      @click.stop="openDetail(selectValue)"
+    >
       <el-icon v-permission="permission.get" :color="selectValue ? '#1881ef' : '#c1c2c5'">
         <el-icon-view />
       </el-icon>
@@ -103,6 +114,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  onlyOneDefault: {
+    type: Boolean,
+    default: false
+  },
   placeholder: {
     type: String,
     default: '选择采购订单'
@@ -144,12 +159,7 @@ watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    emitInfo(value)
-    // 有默认值的情况，并且value为空，则给value赋值
-    if (props.default && isBlank(value) && isNotBlank(options.value)) {
-      selectValue.value = options.value[0].value
-      handleChange(selectValue.value)
-    }
+    setDefault()
   },
   { immediate: true }
 )
@@ -183,13 +193,34 @@ function emitInfo(val) {
 function loadedCallBack() {
   purchaseOrderKV.value = {}
   if (isNotBlank(options.value)) {
-    options.value.forEach(v => {
+    options.value.forEach((v) => {
       purchaseOrderKV.value[v.id] = v
     })
   }
-  if (isNotBlank(options.value) && props.default && !selectValue.value) {
+  if (isNotBlank(selectValue.value)) {
+    emitInfo(selectValue.value)
+  } else {
+    setDefault()
+  }
+}
+
+/**
+ * 设置默认值
+ * 有默认值的情况，并且value为空，则给value赋值
+ */
+function setDefault() {
+  if (isBlank(options.value) || selectValue.value) {
+    return
+  }
+  if (props.onlyOneDefault && options.value.length === 1) {
     selectValue.value = options.value[0].value
     handleChange(selectValue.value)
+    return
+  }
+  if (props.default) {
+    selectValue.value = options.value[0].value
+    handleChange(selectValue.value)
+    return
   }
 }
 </script>
@@ -202,55 +233,25 @@ function loadedCallBack() {
   .purchase-sn-select {
     width: 100%;
   }
-
 }
 
 .show-detail-icon {
-    .detail-icon {
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translate(0, -50%);
-      border: none;
-      user-select: none;
-      font-size: 14px;
-      margin: 0 5px;
-    }
+  .detail-icon {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translate(0, -50%);
+    border: none;
+    user-select: none;
+    font-size: 14px;
+    margin: 0 5px;
+  }
 
-    ::v-deep(.el-input__inner) {
-      padding-right: 50px;
-    }
-    ::v-deep(.el-input__suffix) {
-      right: 35px;
-    }
+  ::v-deep(.el-input__inner) {
+    padding-right: 50px;
   }
-.option-item {
-  width: 100%;
-  display: inline-flex;
-  justify-content: space-between;
-  .label {
-    > .el-icon {
-      margin-right: 10px;
-    }
-  }
-  .extra-label {
-    margin-right: 10px;
-    &:last-child {
-      margin: 0;
-    }
-  }
-}
-
-.option-item > span:nth-child(1) {
-  flex: none;
-  margin-right: 15px;
-}
-.option-item > span:nth-child(2) {
-  // flex: auto;
-  color: #8492a6;
-  font-size: 13px;
-  .title {
-    color: #9b6161;
+  ::v-deep(.el-input__suffix) {
+    right: 35px;
   }
 }
 </style>

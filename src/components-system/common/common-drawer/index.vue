@@ -1,5 +1,6 @@
 <template>
   <el-drawer
+    ref="drawerRef"
     v-model="drawerVisible"
     :append-to-body="props.appendToBody"
     :lock-scroll="props.lockScroll"
@@ -29,26 +30,25 @@
     <template #title>
       <slot name="title">
         <div class="drawer-title">
-          <span class="title">
-            <span>{{ props.title }}</span>
+          <span class="title-left">
+            <span class="title-text">{{ props.title }}</span>
+            <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
-          <span>
+          <span class="title-right-content">
             <slot name="titleRight" />
-            <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
+            <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关 闭</common-button>
           </span>
         </div>
       </slot>
     </template>
-
-    <div v-show="contentVisible">
-      <slot v-if="loaded" name="content" />
-    </div>
+      <slot v-if="!props.contentLoading" name="content" />
   </el-drawer>
 </template>
 
 <script setup>
 import { watch, computed, defineProps, defineEmits, defineExpose, ref } from 'vue'
 import { isNotBlank } from '@data-type/index'
+import { ElLoading } from 'element-plus'
 
 const emit = defineEmits(['open', 'opened', 'close', 'closed', 'update:modelValue'])
 
@@ -61,6 +61,10 @@ const props = defineProps({
     // crud 使用
     type: Boolean,
     default: undefined
+  },
+  contentLoading: {
+    type: Boolean,
+    default: false
   },
   showClose: {
     type: Boolean,
@@ -137,25 +141,17 @@ const props = defineProps({
   wrapperClosable: {
     type: Boolean,
     default: true
-  },
-  showDelay: {
-    type: Number,
-    default: 0
-  },
-  loadDelay: {
-    type: Number,
-    default: 300
   }
 })
 
+// 加载
+let loading
+// ref
+const drawerRef = ref()
 // 自定义类名
 const customClass = `${props.customClass || ''} common-drawer`
-
+// 显示状态
 const drawerVisible = ref(false)
-// 内容是否显示
-const contentVisible = ref(false)
-// 是否已加载
-const loaded = ref(false)
 
 // 是否使用prop:visible 控制
 const isVisibleProp = computed(() => isNotBlank(props.visible))
@@ -164,34 +160,29 @@ watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
   drawerVisible.value = isVisibleProp.value ? v : mv
 })
 
-watch(
-  () => drawerVisible.value,
-  (flag) => {
-    if (flag) {
-      if (props.showDelay) {
-        setTimeout(() => {
-          contentVisible.value = true
-        }, props.showDelay)
-      } else {
-        contentVisible.value = true
-      }
-    } else {
-      contentVisible.value = false
-    }
+watch([drawerVisible, () => props.contentLoading], ([visible, ld]) => {
+  if (visible && ld) {
+    openLoading()
+  } else {
+    loading && loading.close()
   }
-)
+}, { immediate: true })
 
-watch(contentVisible, (flag) => {
-  if (flag && !loaded.value) {
-    if (props.loadDelay) {
-      setTimeout(() => {
-        loaded.value = true
-      }, props.loadDelay)
-    } else {
-      loaded.value = true
-    }
+function openLoading() {
+  if (loading) {
+    loading.visible = true
+  } {
+    let el
+    if (drawerRef.value) el = drawerRef.value.drawerRef
+    loading = ElLoading.service({
+      target: el,
+      lock: true,
+      text: '数据加载中，请稍后',
+      fullscreen: false,
+      background: 'rgba(255, 255, 255, 0.5)'
+    })
   }
-})
+}
 
 function handleClose() {
   if (typeof props.beforeClose === 'function') {
@@ -224,7 +215,7 @@ function closed() {
 }
 
 defineExpose({
-  loaded,
+  loaded: drawerVisible,
   handleClose
 })
 </script>
@@ -246,17 +237,18 @@ defineExpose({
   align-items: center;
   justify-content: space-between;
 
-  .title {
-    display: flex;
+  .title-left {
+    display: inline-flex;
     align-items: center;
-    font-weight: bold;
-    font-size: 18px;
-    margin-right: 15px;
-    color: #000;
     position: relative;
     padding-left: 10px;
+    margin-right: 15px;
     box-sizing: border-box;
-
+    .title-text {
+      font-weight: bold;
+      font-size: 18px;
+      color: #000;
+    }
     &::before {
       content: '';
       width: 4px;
@@ -268,6 +260,11 @@ defineExpose({
       left: 0;
       transform: translateY(-50%);
     }
+  }
+
+  .title-right-content {
+    display: inline-flex;
+    align-items: center;
   }
 
   ::v-deep(.el-button + .el-button) {

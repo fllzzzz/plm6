@@ -203,7 +203,7 @@ const STEEL_MES_PACK_RECEIPT = {
       { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, key: 'deliveryTime', title: '发货日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'materialType', title: '装载货物', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'packTypeEnum', key: 'L' }},
-      { show: true, key: 'weight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousandFilter: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
+      { show: true, key: 'weight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
       { show: true, key: 'operatorName', title: '发货人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'consigneeName', title: '驾驶员', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },

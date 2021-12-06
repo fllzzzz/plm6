@@ -1,6 +1,6 @@
 <template>
   <common-dialog title="分配预览" v-model="dialogVisible" fullscreen :before-close="handleClose" top="5vh" :center="false">
-    <template #tip>
+    <template #titleAfter>
       <el-tooltip
         effect="light"
         :content="`预览定义：\n

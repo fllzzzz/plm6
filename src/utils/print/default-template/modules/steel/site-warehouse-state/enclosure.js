@@ -207,15 +207,15 @@ const STEEL_MES_SITE_WAREHOUSE_STATE_ENCLOSURE = {
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
       { show: false, key: 'plateType', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },
       { show: false, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COLOR.K },
-      { show: true, key: 'thickness', title: '厚度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.THICKNESS.K, format: { toThousandFilter: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
+      { show: true, key: 'thickness', title: '厚度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.THICKNESS.K, format: { toThousand: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
       { show: true, key: 'effectiveWidth', title: '有效宽度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
-      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousandFilter: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }},
+      { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
       { show: false, key: 'totalLength', title: '总长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
-      { show: true, key: 'totalArea', title: '总面积', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousandFilter: false, precision: 3 }, sum: true },
-      { show: true, key: 'receiptQuantity', title: '收货数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: true, key: 'installationQuantity', title: '安装数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true },
-      { show: false, key: 'siteStockQuantity', title: '工地存量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }, sum: true }
+      { show: true, key: 'totalArea', title: '总面积', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true },
+      { show: true, key: 'receiptQuantity', title: '收货数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'installationQuantity', title: '安装数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: false, key: 'siteStockQuantity', title: '工地存量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true }
     ]
   }
 }

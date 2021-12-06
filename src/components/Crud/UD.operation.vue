@@ -27,7 +27,7 @@
       <template #reference>
         <common-button
           :loading="crud.dataStatus[data.id].delete === 2"
-          :disabled="props.disabledDle"
+          :disabled="props.disabledDel"
           type="danger"
           icon="el-icon-delete"
           size="mini"
@@ -56,7 +56,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  disabledDle: {
+  disabledDel: {
     type: Boolean,
     default: false
   },

@@ -8,9 +8,9 @@
       -->
       <router-view v-slot="{ Component, route }">
         <transition :name="route.meta.transition ? route.meta.transition : 'fade-transform'" mode="out-in">
-          <keep-alive :include="cachedViews">
+          <!-- <keep-alive :include="cachedViews"> -->
             <component :is="Component" :key="key" />
-          </keep-alive>
+          <!-- </keep-alive> -->
         </transition>
       </router-view>
     </template>
@@ -34,6 +34,7 @@ import { mapGetters } from '@/store/lib'
 const route = useRoute()
 
 // 全局projectId, 缓存页面
+// eslint-disable-next-line no-unused-vars
 const { globalProjectId, cachedViews } = mapGetters(['globalProjectId', 'cachedViews'])
 
 // 路由key值

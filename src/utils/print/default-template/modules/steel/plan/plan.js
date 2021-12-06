@@ -208,7 +208,7 @@ const STEEL_MES_AREA_PLAN = {
       { show: true, key: 'manufactureType', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 18, type: typeEnum.ENUM.K, format: { enum: 'manufactureTypeEnum', key: 'L' }},
       { show: true, key: 'startDate', title: '开始时间', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'endDate', title: '结束时间', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: true, key: 'day', title: '天数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 14, type: typeEnum.QUANTITY.K, format: { toThousandFilter: false, precision: 0 }},
+      { show: true, key: 'day', title: '天数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
       { show: true, key: 'remark', title: '备注', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.OTHER.K }
     ]
   }

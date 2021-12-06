@@ -1,7 +1,7 @@
 <!-- 枚举类型通用单选按钮：单选按钮 -->
 <template>
   <el-radio-group class="inline-block" v-model="copyValue" :size="size" :disabled="disabled" @change="selectChange">
-    <el-radio-button v-if="showOptionAll" :label="undefined">全部</el-radio-button>
+    <el-radio-button v-if="showOptionAll" :label="0">全部</el-radio-button>
     <template v-for="item in options">
       <el-radio-button
         v-if="unshowVal.indexOf(item[DS.value]) === -1"
@@ -16,13 +16,15 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, watch, ref } from 'vue'
+import { defineProps, defineEmits, ref, watchEffect } from 'vue'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
+import { ElRadioGroup } from 'element-plus'
+import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
-  modelValue: [Number, String, Boolean],
+  modelValue: [Number, String, Boolean, undefined],
   size: {
     type: String,
     default: 'small'
@@ -30,6 +32,10 @@ const props = defineProps({
   options: {
     type: [Object, Array, Number],
     required: true
+  },
+  default: {
+    type: Boolean,
+    default: false
   },
   disabled: {
     type: Boolean,
@@ -63,14 +69,24 @@ const copyValue = ref()
 // 数据结构
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
-watch(
-  () => props.modelValue,
-  (value) => { copyValue.value = value },
-  { immediate: true }
-)
+watchEffect(() => {
+  copyValue.value = props.modelValue || 0
+  setDefault()
+})
 
 function selectChange(val) {
+  if (val === 0) val = undefined
+  if (val === props.modelValue) return
   emit('update:modelValue', val)
   emit('change', val)
+}
+
+function setDefault() {
+  if (props.default && !copyValue.value && isNotBlank(props.options)) {
+    for (const i in props.options) {
+      copyValue.value = props.options[i][DS.value]
+      return
+    }
+  }
 }
 </script>

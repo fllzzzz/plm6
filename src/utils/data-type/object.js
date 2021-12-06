@@ -17,6 +17,9 @@ export function isObjectValueEqual(a, b) {
   for (var i = 0; i < aProps.length; i++) {
     var propName = aProps[i]
     if (propName !== '__ob__' && a[propName] !== b[propName]) {
+      if (typeof a[propName] === 'object') {
+        return isObjectValueEqual(a[propName], b[propName])
+      }
       return false
     }
   }

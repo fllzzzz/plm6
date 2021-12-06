@@ -150,12 +150,12 @@ div:focus {
 }
 
 .not-allowed {
-  cursor: not-allowed
+  cursor: not-allowed;
 }
 
 .text-clickable {
   cursor: pointer;
-  color:#1881ef
+  color: #1881ef;
 }
 
 // TODO: 改为inline-block
@@ -308,16 +308,80 @@ div:focus {
   z-index: 1000 !important;
 }
 
-.child-mr-10 >:nth-child(n) {
+.child-mr-10 > :nth-child(n) {
+  margin-left: 0!important;
   margin-right: 10px;
 }
 
-.child-mr-10 >:last-child {
+.child-mr-10 > :last-child {
+  margin-right: 0;
+}
+
+.child-mr-7 > :nth-child(n) {
+  margin-left: 0!important;
+  margin-right: 7px;
+}
+
+.child-mr-7 > :last-child {
+  margin-right: 0;
+}
+
+
+.child-mr-6 > :nth-child(n) {
+  margin-left: 0!important;
+  margin-right: 6px;
+}
+
+.child-mr-6 > :last-child {
   margin-right: 0;
 }
 
 .pre-wrap {
   white-space: pre-wrap;
+}
+
+.number-badge {
+  display: inline-block;
+  color: white;
+  background-color: red;
+  font-size: 12px;
+  height: 16px;
+  min-width: 20px; 
+  line-height: 16px;
+  text-align: center;
+  border-radius: 15px;
+  padding: 0 4px;
+}
+
+// 自定义options-item
+.customize-option-item {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  .label {
+    > .el-icon {
+      margin-right: 10px;
+    }
+  }
+  .extra-label {
+    margin-right: 10px;
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.customize-option-item > span:nth-child(1) {
+  flex: none;
+  margin-right: 15px;
+}
+.customize-option-item > span:nth-child(2) {
+  // flex: auto;
+  color: #8492a6;
+  font-size: 13px;
+  .title {
+    color: #9b6161;
+  }
 }
 
 // TODO:遮罩

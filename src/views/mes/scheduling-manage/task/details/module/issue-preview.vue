@@ -1,6 +1,6 @@
 <template>
   <common-dialog title="任务下发预览" v-model="dialogVisible" append-to-body :before-close="handleClose" :width="'70%'">
-    <template #tip>
+    <template #titleAfter>
       <el-tooltip
         effect="light"
         :content="`预览定义：\n

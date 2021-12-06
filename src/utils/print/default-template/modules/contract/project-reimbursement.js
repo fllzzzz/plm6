@@ -106,7 +106,7 @@ const PROJECT_REIMBURSEMENT = {
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 390, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
@@ -208,8 +208,8 @@ const PROJECT_REIMBURSEMENT = {
       { show: false, key: 'applicationDept', title: '申请部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K },
       { show: true, key: 'applicantName', title: '申请人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 29, minWidth: 29, type: typeEnum.USER_NAME.K },
       { show: true, key: 'reimbursementType', title: '报销类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 29, minWidth: 29, type: typeEnum.REIMBURSEMENT_TYPE.K },
-      { show: true, key: 'applicationAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, width: 29, minWidth: 29, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'paymentAmount', title: '实付金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, width: 29, minWidth: 29, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'applicationAmount', title: '报销金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, width: 29, minWidth: 29, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'paymentAmount', title: '实付金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, width: 29, minWidth: 29, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'payer', title: '付款方', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 29, minWidth: 29, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'paymentDepositBank', title: '付款开户行', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.BANK.K },
       { show: true, key: 'paymentBankAccount', title: '付款账号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.BANK_ACCOUNT.K },

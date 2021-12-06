@@ -71,7 +71,7 @@ export const inStorageList_SteelPlate = {
     purchasePriceS: '__EMPTY_7', // 单价
     calcTotalAmount: '__EMPTY_8', // 总价
     brand: '__EMPTY_9', // 品牌
-    furnaceLotNumber: '__EMPTY_10', // 炉批号
+    heatNoAndBatchNo: '__EMPTY_10', // 炉批号
     remark: '__EMPTY_11' // 备注
   }
 }

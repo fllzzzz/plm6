@@ -246,7 +246,6 @@ CRUD.HOOK.beforeToQuery = () => {
   crud.query.date = moment(props.details.date).valueOf()
   crud.query.processType = processType.value
   crud.query.productType = productType.value
-  console.log(crud.query)
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

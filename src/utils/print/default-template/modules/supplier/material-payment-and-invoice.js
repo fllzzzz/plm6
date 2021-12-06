@@ -202,10 +202,10 @@ const MATERIAL_PAYMENT_AND_INVOICE = {
       { show: true, key: 'signingDate', title: '签订日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'supplierName', title: '供应商名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 30, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'basicClassName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_NAME.K },
-      { show: true, key: 'contractAmount', title: '合同额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'paymentAmount', title: '已支付', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'contractAmount', title: '合同额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'paymentAmount', title: '已支付', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'paymentAmountRate', title: '支付率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.RATE.K, format: { precision: 2 }},
-      { show: true, key: 'invoiceAmount', title: '已开票', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'invoiceAmount', title: '已开票', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'invoiceAmountRate', title: '开票率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.RATE.K, format: { precision: 2 }}
     ]
   }

@@ -206,9 +206,9 @@ const BRIDGE_MES_LOGISTICS_SUMMARY = {
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
       { show: false, key: 'driverName', title: '司机名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'driverPhone', title: '司机电话', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 25, type: typeEnum.PHONE.K },
-      { show: true, key: 'actualWeight', title: '装载重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousandFilter: false, precision: 3, unit: weightUnitEnum.KG.V }},
-      { show: true, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: true, key: 'totalPrice', title: '总计', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousandFilter: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'actualWeight', title: '装载重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }},
+      { show: true, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'totalPrice', title: '总计', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: true, key: 'deliveryTime', title: '发运日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'supplierName', title: '物流单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 22, type: typeEnum.COMPANY_NAME.K }
     ]

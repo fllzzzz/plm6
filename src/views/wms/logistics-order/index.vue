@@ -11,23 +11,15 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
-      style="width: 100%"
     >
-      <el-table-column type="expand">
-        <template #header>
-          <el-icon class="pointer" @click="handleExpandAll"><el-arrow-down v-if="expandAll" /><el-arrow-right v-else /></el-icon>
+      <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
+        <template #default="{ row }">
+          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <p>
+            备注：<span v-empty-text>{{ row.remark }}</span>
+          </p>
         </template>
-        <template #default="scope">
-          <div class="table-expand-container">
-            <p>
-              关联项目：<span v-empty-text>{{ scope.row.projectStr }}</span>
-            </p>
-            <p>
-              备注：<span v-empty-text>{{ scope.row.remark }}</span>
-            </p>
-          </div>
-        </template>
-      </el-table-column>
+      </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('createTime')"
@@ -38,24 +30,29 @@
         align="center"
         width="100"
       >
-        <template #default="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
+        <template #default="{ row }">
+          <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('plateNumber')"
-        key="plateNumber"
+        v-if="columns.visible('licensePlate')"
+        key="licensePlate"
         :show-overflow-tooltip="true"
-        prop="plateNumber"
+        prop="licensePlate"
         label="车牌号"
         align="left"
         min-width="100"
       />
-      <el-table-column v-if="columns.visible('projects')" key="projects" prop="projects" label="关联项目" min-width="170">
-        <template #default="scope">
-          <span class="ellipsis-text">
-            <span v-for="item in scope.row.projects" :key="item.id"> 【{{ item.shortName }}】 </span>
-          </span>
+      <el-table-column
+        v-if="columns.visible('projects')"
+        show-overflow-tooltip
+        key="projects"
+        prop="projects"
+        label="关联项目"
+        min-width="170"
+      >
+        <template #default="{ row }">
+          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
         </template>
       </el-table-column>
       <el-table-column
@@ -75,8 +72,8 @@
         min-width="120"
         align="right"
       >
-        <template #default="scope">
-          <span v-empty-text v-to-fixed>{{ scope.row.loadingWeight }}</span>
+        <template #default="{ row }">
+          <span v-empty-text v-convert-weight>{{ row.loadingWeight }}</span>
         </template>
       </el-table-column>
 
@@ -89,8 +86,8 @@
         align="center"
         min-width="130"
       >
-        <template #default="scope">
-          <span v-parse-enum="{ e: invoiceTypeEnum, v: scope.row.invoiceType }" />
+        <template #default="{ row }">
+          <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -102,8 +99,8 @@
         align="right"
         width="70"
       >
-        <template #default="scope">
-          <span v-empty-text>{{ scope.row.taxRate ? `${scope.row.taxRate}%` : undefined }}</span>
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.taxRate ? `${row.taxRate}%` : undefined }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -115,21 +112,21 @@
         align="right"
         min-width="90"
       >
-        <template #default="scope">
-          <span v-to-fixed>{{ scope.row.freight }}</span>
+        <template #default="{ row }">
+          <span v-to-fixed>{{ row.freight }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('priceExcludingVAT')"
-        key="priceExcludingVAT"
+        v-if="columns.visible('amountExcludingVAT')"
+        key="amountExcludingVAT"
         :show-overflow-tooltip="true"
-        prop="priceExcludingVAT"
+        prop="amountExcludingVAT"
         label="不含税金额"
         min-width="90"
         align="right"
       >
-        <template #default="scope">
-          <span v-to-fixed>{{ scope.row.priceExcludingVAT }}</span>
+        <template #default="{ row }">
+          <span v-to-fixed>{{ row.amountExcludingVAT }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -141,8 +138,8 @@
         align="right"
         min-width="80"
       >
-        <template #default="scope">
-          <span v-to-fixed>{{ scope.row.inputVAT }}</span>
+        <template #default="{ row }">
+          <span v-to-fixed>{{ row.inputVAT }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -163,8 +160,8 @@
         align="center"
         min-width="170"
       >
-        <template #default="scope">
-          <span class="text-clickable" @click="openInboundDetailView">{{ scope.row.inboundSN }}</span>
+        <template #default="{ row }">
+          <span class="text-clickable" @click="openInboundDetailView">{{ row.inboundSN }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -176,8 +173,8 @@
         align="center"
         min-width="170"
       >
-        <template #default="scope">
-          <span class="text-clickable" @click="openInboundDetailView">{{ scope.row.inboundSN }}</span>
+        <template #default="{ row }">
+          <span class="text-clickable" @click="openInboundDetailView">{{ row.inboundSN }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -201,13 +198,13 @@ import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
-import { projectNameFormatter } from '@/utils/project'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useSuppliers from '@compos/store/use-suppliers'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
 const permission = {
   get: ['wms_logisticsOrder:get'],
@@ -238,7 +235,6 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const expandRowKeys = ref([])
-const expandAll = computed(() => expandRowKeys.value.length === crud.data.length)
 const { loaded, supplierKV } = useSuppliers()
 const { maxHeight } = useMaxHeight({ paginate: true })
 
@@ -246,7 +242,6 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.materialTypeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
-    v.projectStr = v.projects ? v.projects.map((v) => projectNameFormatter(v, null, false)).join('　、　') : ''
     v.supplier = computed(() => supplierKV.value[v.supplierId])
     return v
   })
@@ -254,13 +249,4 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
 // TODO:打开入库详情窗口
 function openInboundDetailView() {}
-
-// 展开所有行
-function handleExpandAll() {
-  if (!expandAll.value) {
-    expandRowKeys.value = crud.data.map((v) => v.id)
-  } else {
-    expandRowKeys.value = []
-  }
-}
 </script>

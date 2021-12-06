@@ -9,7 +9,7 @@ import * as lodash from 'lodash'
 import useAddFormLocalStorage from '@/composables/form/use-crud-add-form-local-storage'
 import useBatchAddFormLocalStorage from '@/composables/form/use-crud-add-batch-form-local-storage'
 
-import { ElNotification } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 
 const CRUD = {} // crud公共信息处理
 // TODO: 关闭修改或添加窗口，由于状态信息的及时变更，会导致窗口未关闭，标题直接发生变化
@@ -63,30 +63,33 @@ export function regPresenter(crud, tableRef) {
       // TODO:toQuery本来是放在created中查询，因钩子写在组件中，此时触发无法触发钩子的函数，故移入mounted，等待created完成再执行(错误)
       crud.toQuery()
     }
-    watch( // TODO:正确情况不需要监听，当table在弹出框（dlg，drawer）中的时候需要监听。是否在监听一次后就取消，看后期业务。
-      tableRef,
-      () => {
-        if (tableRef && tableRef.value) {
-          const tableColumns = tableRef.value.getColumns()
-          nextTick(() => {
-            // 获得table的所有列
-            tableColumns.forEach(e => {
-              if (!e.property || e.type !== 'default') {
-                return
-              }
-              columns.value[e.property] = {
-                label: e.label,
-                visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
-              }
+    if (tableRef) {
+      watch(
+        // TODO:正确情况不需要监听，当table在弹出框（dlg，drawer）中的时候需要监听。是否在监听一次后就取消，看后期业务。
+        tableRef,
+        () => {
+          if (tableRef && tableRef.value) {
+            const tableColumns = tableRef.value.getColumns()
+            nextTick(() => {
+              // 获得table的所有列
+              tableColumns.forEach((e) => {
+                if (!e.property || e.type !== 'default') {
+                  return
+                }
+                columns.value[e.property] = {
+                  label: e.label,
+                  visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+                }
+              })
             })
-          })
 
-          // 显示列的方法
-          crud.tableColumns = columns
-        }
-      },
-      { immediate: true }
-    )
+            // 显示列的方法
+            crud.tableColumns = columns
+          }
+        },
+        { immediate: true }
+      )
+    }
   })
   columns.value = crud.obColumns(columns)
   return { CRUD: vmInfo.CRUD, crud, columns }
@@ -152,7 +155,10 @@ export function regForm(defaultForm, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useAddFormLocalStorage(crud.formStoreKey)
+    const store = useAddFormLocalStorage(crud.formStoreKey, {
+      useDraftCallback: crud.useFormDraftCallback,
+      clearDraftCallback: crud.clearFormDraftCallback
+    })
     fmStore = store
   }
 
@@ -182,7 +188,10 @@ export function regBatchForm(defaultForm, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useBatchAddFormLocalStorage(crud.formStoreKey)
+    const store = useBatchAddFormLocalStorage(crud.formStoreKey, {
+      useDraftCallback: crud.useBatchFormDraftCallback,
+      clearDraftCallback: crud.clearBatchFormDraftCallback
+    })
     fmStore = store
   }
 
@@ -296,6 +305,8 @@ function getDefaultOption() {
     params: {},
     // 当前行详情
     rowDetail: {},
+    // 详情通过接口加载
+    detailFormApi: true,
     // Form 表单
     form: {},
     // 批量添加表单
@@ -308,6 +319,14 @@ function getDefaultOption() {
     formStoreKey: '',
     // 表单缓存
     formStore: false,
+    // 表单使用草稿后的回调
+    useFormDraftCallback: null,
+    // 清除草稿的回调
+    clearFormDraftCallback: null,
+    // 批量表单使用草稿后的回调
+    useBatchFormDraftCallback: null,
+    // 清除草稿的回调
+    clearBatchFormDraftCallback: null,
     // 默认隐藏列
     invisibleColumns: ['createTime', 'updateTime'],
     // 提交时必填字段
@@ -378,8 +397,12 @@ function addSystemOptions(options) {
       total: 0,
       hasNextPage: true
     },
-    // 详情加载
+    // 详情显示
     detailVisible: false,
+    // 详情加载
+    detailLoading: false,
+    // 详情加载
+    editDetailLoading: false,
     // 首次加载
     firstLoaded: false,
     // 整体loading
@@ -407,7 +430,8 @@ function addCrudDefaultInfo(crud, data) {
     ref: {},
     // 表格列
     tableColumns: {},
-    status: { // status 需要放在深拷贝之后加入，因此放在该对象中
+    status: {
+      // status 需要放在深拷贝之后加入，因此放在该对象中
       add: CRUD.STATUS.NORMAL,
       edit: CRUD.STATUS.NORMAL,
       // 添加或编辑状态
@@ -426,7 +450,8 @@ function addCrudDefaultInfo(crud, data) {
         return this.add > CRUD.STATUS.NORMAL ? `新增${data.title}` : this.edit > CRUD.STATUS.NORMAL ? `编辑${data.title}` : ''
       }
     },
-    bStatus: { // bStatus 需要放在深拷贝之后加入，因此放在该对象中
+    bStatus: {
+      // bStatus 需要放在深拷贝之后加入，因此放在该对象中
       batchAdd: CRUD.STATUS.NORMAL,
       batchEdit: CRUD.STATUS.NORMAL,
       // 添加或编辑状态
@@ -467,18 +492,18 @@ function addCrudBusinessMethod(crud) {
 
   // 校验
   const verifyQuery = () => {
-    const result = crud.requiredQuery.some(v => crud.query[v] === null || crud.query[v] === undefined)
+    const result = crud.requiredQuery.some((v) => crud.query[v] === null || crud.query[v] === undefined)
     return !result
   }
 
   const verifySubmit = () => {
-    const result = crud.requiredSubmitField.some(v => crud.form[v] === null || crud.form[v] === undefined)
+    const result = crud.requiredSubmitField.some((v) => crud.form[v] === null || crud.form[v] === undefined)
     return !result
   }
 
   // 校验批量提交
   const verifyBatchSubmit = () => {
-    const result = crud.requiredBatchSubmitField.some(v => crud.batchForm[v] === null || crud.batchForm[v] === undefined)
+    const result = crud.requiredBatchSubmitField.some((v) => crud.batchForm[v] === null || crud.batchForm[v] === undefined)
     return !result
   }
 
@@ -486,7 +511,7 @@ function addCrudBusinessMethod(crud) {
   const toQuery = async () => {
     // TODO:【考虑删除】若不等待加载完vm完毕后再查询，钩子可能会无法触发(例：首次加载通过watch,immediate:true触发),因此在下方加入settimeout，还需优化
     const vmSet = new Set()
-    crud.vms.forEach(vm => vm && vmSet.add(vm.vm))
+    crud.vms.forEach((vm) => vm && vmSet.add(vm.vm))
     if (!vmSet.size) {
       setTimeout(() => {
         crud.toQuery()
@@ -501,7 +526,8 @@ function addCrudBusinessMethod(crud) {
     }
     const now = Date.now()
     // TODO: 存在问题，待优化，当queryTime时间呗，第二次进入的参数传的不一样时，会被拦截的问题
-    const flag = (crud.firstQueryTime && (now - crud.firstQueryTime) > CRUD.QUERY_DEBOUNCE_TIME) || (!crud.firstQueryTime && crud.firstQueryTime !== 0)
+    const flag =
+      (crud.firstQueryTime && now - crud.firstQueryTime > CRUD.QUERY_DEBOUNCE_TIME) || (!crud.firstQueryTime && crud.firstQueryTime !== 0)
     if (flag) {
       if (!crud.firstQueryTime) {
         _toQuery()
@@ -518,7 +544,7 @@ function addCrudBusinessMethod(crud) {
       return
     }
     crud.emptyText = '加载中'
-    if (!await callVmHook(crud, CRUD.HOOK.beforeRefresh) && !verifyQuery()) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeRefresh)) && !verifyQuery()) {
       crud.data = []
       crud.page.total = 0
       crud.emptyText = '重新加载'
@@ -559,11 +585,25 @@ function addCrudBusinessMethod(crud) {
 
   // 打开详情
   const toDetail = async (data) => {
-    if (typeof crud.crudApi.detail === 'function') {
-      // 如果查询项不为id，则可改造方法，在crud中传入自定义字段
-      data = await crud.crudApi.detail(data.id)
+    // 避免detailLoading未正确重置为false的情况，因此在头部初始化
+    crud.detailLoading = false
+    if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
+      crud.detailLoading = true
+      // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
+      crud.crudApi.detail(data.id).then((val) => {
+        crud.resetRowDetail(val)
+        callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
+          crud.detailLoading = false
+        })
+      }).catch(() => {
+        cancelDetail()
+        ElMessage.error('加载失败')
+        crud.detailLoading = false
+      })
+    } else {
+      crud.resetRowDetail(data)
     }
-    crud.resetRowDetail(data)
+    // crud.resetRowDetail(data)
     if (!(await callVmHook(crud, CRUD.HOOK.beforeToDetail, crud.rowDetail))) {
       return
     }
@@ -573,7 +613,7 @@ function addCrudBusinessMethod(crud) {
 
   // 关闭详情
   const cancelDetail = async (data) => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeDetailCancel, data)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeDetailCancel, data))) {
       return
     }
     crud.detailVisible = false
@@ -582,7 +622,7 @@ function addCrudBusinessMethod(crud) {
 
   // 打开添加
   const toAdd = async () => {
-    if (!(await callVmHook(crud, CRUD.HOOK.beforeToAdd, crud.form) && await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form))) {
+    if (!((await callVmHook(crud, CRUD.HOOK.beforeToAdd, crud.form)) && (await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form)))) {
       return
     }
     crud.status.add = CRUD.STATUS.PREPARED
@@ -592,8 +632,25 @@ function addCrudBusinessMethod(crud) {
   }
 
   const toEdit = async (data) => {
-    crud.resetForm(JSON.parse(JSON.stringify(data)))
-    if (!(await callVmHook(crud, CRUD.HOOK.beforeToEdit, crud.form) && await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form))) {
+    // 避免editDetailLoading未正确重置为false的情况，因此在头部初始化
+    crud.editDetailLoading = false
+    if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
+      crud.editDetailLoading = true
+      // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
+      crud.crudApi.detail(data.id).then((val) => {
+        crud.resetForm(JSON.parse(JSON.stringify(val)))
+        callVmHook(crud, CRUD.HOOK.beforeEditDetailLoaded, crud.form).then(() => {
+          crud.editDetailLoading = false
+        })
+      }).catch(() => {
+        cancelCU()
+        ElMessage.error('加载失败')
+        crud.editDetailLoading = false
+      })
+    } else {
+      crud.resetForm(JSON.parse(JSON.stringify(data)))
+    }
+    if (!((await callVmHook(crud, CRUD.HOOK.beforeToEdit, crud.form)) && (await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form)))) {
       return
     }
     crud.status.edit = CRUD.STATUS.PREPARED
@@ -605,7 +662,12 @@ function addCrudBusinessMethod(crud) {
 
   // 打开批量添加
   const toBatchAdd = async () => {
-    if (!(await callVmHook(crud, CRUD.HOOK.beforeToBatchAdd, crud.batchForm) && await callVmHook(crud, CRUD.HOOK.beforeToBCU, crud.batchForm))) {
+    if (
+      !(
+        (await callVmHook(crud, CRUD.HOOK.beforeToBatchAdd, crud.batchForm)) &&
+        (await callVmHook(crud, CRUD.HOOK.beforeToBCU, crud.batchForm))
+      )
+    ) {
       return
     }
     crud.bStatus.batchAdd = CRUD.STATUS.PREPARED
@@ -617,7 +679,12 @@ function addCrudBusinessMethod(crud) {
   // 打开批量修改
   const toBatchEdit = async (data) => {
     crud.resetBatchForm(JSON.parse(JSON.stringify(data)))
-    if (!(await callVmHook(crud, CRUD.HOOK.beforeToBatchEdit, crud.batchForm) && await callVmHook(crud, CRUD.HOOK.beforeToBCU, crud.batchForm))) {
+    if (
+      !(
+        (await callVmHook(crud, CRUD.HOOK.beforeToBatchEdit, crud.batchForm)) &&
+        (await callVmHook(crud, CRUD.HOOK.beforeToBCU, crud.batchForm))
+      )
+    ) {
       return
     }
     crud.bStatus.edit = CRUD.STATUS.PREPARED
@@ -634,7 +701,7 @@ function addCrudBusinessMethod(crud) {
 
   // 取消删除
   const cancelDelete = async (data) => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeDeleteCancel, data)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeDeleteCancel, data))) {
       return
     }
     crud.getDataStatus(data.id).delete = CRUD.STATUS.NORMAL
@@ -642,19 +709,19 @@ function addCrudBusinessMethod(crud) {
   }
 
   /**
-     * 取消新增/编辑
-     */
+   * 取消新增/编辑
+   */
   const cancelCU = async () => {
     const addStatus = crud.status.add
     const editStatus = crud.status.edit
     if (addStatus === CRUD.STATUS.PREPARED) {
-      if (!await callVmHook(crud, CRUD.HOOK.beforeAddCancel, crud.form)) {
+      if (!(await callVmHook(crud, CRUD.HOOK.beforeAddCancel, crud.form))) {
         return
       }
       crud.status.add = CRUD.STATUS.NORMAL
     }
     if (editStatus === CRUD.STATUS.PREPARED) {
-      if (!await callVmHook(crud, CRUD.HOOK.beforeEditCancel, crud.form)) {
+      if (!(await callVmHook(crud, CRUD.HOOK.beforeEditCancel, crud.form))) {
         return
       }
       crud.status.edit = CRUD.STATUS.NORMAL
@@ -676,19 +743,19 @@ function addCrudBusinessMethod(crud) {
   }
 
   /**
-     * 取消批量新增/编辑
-     */
+   * 取消批量新增/编辑
+   */
   const cancelBCU = async () => {
     const addStatus = crud.bStatus.batchAdd
     const editStatus = crud.bStatus.batchEdit
     if (addStatus === CRUD.STATUS.PREPARED) {
-      if (!await callVmHook(crud, CRUD.HOOK.beforeBatchAddCancel, crud.batchForm)) {
+      if (!(await callVmHook(crud, CRUD.HOOK.beforeBatchAddCancel, crud.batchForm))) {
         return
       }
       crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
     }
     if (editStatus === CRUD.STATUS.PREPARED) {
-      if (!await callVmHook(crud, CRUD.HOOK.beforeBatchEditCancel, crud.batchForm)) {
+      if (!(await callVmHook(crud, CRUD.HOOK.beforeBatchEditCancel, crud.batchForm))) {
         return
       }
       crud.bStatus.batchEdit = CRUD.STATUS.NORMAL
@@ -714,14 +781,14 @@ function addCrudBusinessMethod(crud) {
     if (!verifySubmit()) {
       return
     }
-    if (!await callVmHook(crud, CRUD.HOOK.beforeValidateCU)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeValidateCU))) {
       return
     }
     crud.ref.form.validate(async (valid) => {
       if (!valid) {
         return
       }
-      if (!await callVmHook(crud, CRUD.HOOK.afterValidateCU)) {
+      if (!(await callVmHook(crud, CRUD.HOOK.afterValidateCU))) {
         return
       }
       if (crud.status.add === CRUD.STATUS.PREPARED) {
@@ -737,14 +804,14 @@ function addCrudBusinessMethod(crud) {
     if (!verifyBatchSubmit()) {
       return
     }
-    if (!await callVmHook(crud, CRUD.HOOK.beforeValidateBCU)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeValidateBCU))) {
       return
     }
     crud.ref.batchForm.validate(async (valid) => {
       if (!valid) {
         return
       }
-      if (!await callVmHook(crud, CRUD.HOOK.afterValidateBCU)) {
+      if (!(await callVmHook(crud, CRUD.HOOK.afterValidateBCU))) {
         return
       }
       if (crud.bStatus.batchAdd === CRUD.STATUS.PREPARED) {
@@ -757,7 +824,7 @@ function addCrudBusinessMethod(crud) {
 
   // 执行添加
   const doAdd = async () => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeSubmit)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeSubmit))) {
       return
     }
     try {
@@ -785,7 +852,7 @@ function addCrudBusinessMethod(crud) {
 
   // 执行编辑
   const doEdit = async () => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeSubmit)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeSubmit))) {
       return
     }
     try {
@@ -813,7 +880,7 @@ function addCrudBusinessMethod(crud) {
 
   // 执行批量添加
   const doBatchAdd = async () => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeBatchSubmit)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeBatchSubmit))) {
       return
     }
     try {
@@ -836,7 +903,7 @@ function addCrudBusinessMethod(crud) {
 
   // 执行编辑
   const doBatchEdit = async () => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeBatchSubmit)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeBatchSubmit))) {
       return
     }
     try {
@@ -863,48 +930,55 @@ function addCrudBusinessMethod(crud) {
     const ids = []
     if (data instanceof Array) {
       delAll = true
-      data.forEach(val => {
+      data.forEach((val) => {
         ids.push(val.id)
       })
     } else {
       ids.push(data.id)
       dataStatus = crud.getDataStatus(data.id)
     }
-    if (!await callVmHook(crud, CRUD.HOOK.beforeDelete, data)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeDelete, data))) {
       return
     }
     if (!delAll) {
       dataStatus.delete = CRUD.STATUS.PROCESSING
     }
     // TODO:查看代码逻辑是否有问题
-    return crud.crudApi.del(ids).then(async () => {
-      if (delAll) {
-        crud.delAllLoading = false
-      } else dataStatus.delete = CRUD.STATUS.PREPARED
-      crud.dleChangePage(1)
-      crud.delSuccessNotify()
-      await callVmHook(crud, CRUD.HOOK.afterDelete, data)
-      crud.refresh()
-    }).catch(() => {
-      if (delAll) {
-        crud.delAllLoading = false
-      } else dataStatus.delete = CRUD.STATUS.PREPARED
-    })
+    return crud.crudApi
+      .del(ids)
+      .then(async () => {
+        if (delAll) {
+          crud.delAllLoading = false
+        } else dataStatus.delete = CRUD.STATUS.PREPARED
+        crud.dleChangePage(1)
+        crud.delSuccessNotify()
+        await callVmHook(crud, CRUD.HOOK.afterDelete, data)
+        crud.refresh()
+      })
+      .catch(() => {
+        if (delAll) {
+          crud.delAllLoading = false
+        } else dataStatus.delete = CRUD.STATUS.PREPARED
+      })
   }
 
-  const _toQueryByDebounce = debounce(async () => {
-    _toQuery()
-  }, CRUD.QUERY_DEBOUNCE_TIME, false)
+  const _toQueryByDebounce = debounce(
+    async () => {
+      _toQuery()
+    },
+    CRUD.QUERY_DEBOUNCE_TIME,
+    false
+  )
 
   const _toQuery = async () => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeToQuery)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeToQuery))) {
       return
     }
     crud.page.page = 1
     crud.page.hasNextPage = true
     crud.firstLoaded = false
     crud.refresh()
-    if (!await callVmHook(crud, CRUD.HOOK.afterToQuery)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.afterToQuery))) {
       return
     }
   }
@@ -977,16 +1051,16 @@ function addCrudFeatureMethod(crud, data) {
 
   // 重置查询参数,重置后进行查询操作
   const resetQuery = async (toQuery = true) => {
-    if (!await callVmHook(crud, CRUD.HOOK.beforeResetQuery, data)) {
+    if (!(await callVmHook(crud, CRUD.HOOK.beforeResetQuery, data))) {
       return
     }
     const defaultQuery = JSON.parse(JSON.stringify(crud.defaultQuery))
     const query = crud.query
-    Object.keys(query).forEach(key => {
+    Object.keys(query).forEach((key) => {
       if (defaultQuery[key]) {
         // 字段是否可重置
-        if (defaultQuery[key].resetAble) {
-          query[key] = defaultQuery[key].value
+        if (typeof defaultQuery[key] === 'object') {
+          if (defaultQuery[key].resetAble) query[key] = defaultQuery[key].value
         } else {
           query[key] = defaultQuery[key]
         }
@@ -1023,7 +1097,7 @@ function addCrudFeatureMethod(crud, data) {
       // 设置默认值，因此重置放在顶部
       ref.resetFields()
     }
-    const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : crud.defaultForm())
+    const form = data || (typeof crud.defaultForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultForm)) : {})
     const crudFrom = crud.form
     for (const key in crudFrom) {
       crudFrom[key] = undefined
@@ -1049,7 +1123,8 @@ function addCrudFeatureMethod(crud, data) {
       // 设置默认值，因此重置放在顶部
       ref.resetFields()
     }
-    const form = data || (typeof crud.defaultBatchForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultBatchForm)) : crud.defaultBatchForm())
+    const form =
+      data || (typeof crud.defaultBatchForm === 'object' ? JSON.parse(JSON.stringify(crud.defaultBatchForm)) : crud.defaultBatchForm())
     const crudBatchForm = crud.batchForm
     for (const key in crudBatchForm) {
       crudBatchForm[key] = undefined
@@ -1083,7 +1158,7 @@ function addCrudFeatureMethod(crud, data) {
   const resetDataStatus = () => {
     const dataStatus = {}
     function resetStatus(datas = []) {
-      datas.forEach(e => {
+      datas.forEach((e) => {
         dataStatus[e.id] = {
           delete: 0,
           edit: 0,
@@ -1109,13 +1184,13 @@ function addCrudFeatureMethod(crud, data) {
   }
 
   /**
-     * 用于树形表格多选, 选中所有
-     * @param selection
-     */
+   * 用于树形表格多选, 选中所有
+   * @param selection
+   */
   const selectAllChange = (selection) => {
     // 如果选中的数目与请求到的数目相同就选中子节点，否则就清空选中
     if (selection && selection.length === crud.data.length) {
-      selection.forEach(val => {
+      selection.forEach((val) => {
         crud.selectChange(selection, val)
       })
     } else {
@@ -1129,9 +1204,13 @@ function addCrudFeatureMethod(crud, data) {
    */
   const selectChange = (selection, row) => {
     // 如果selection中存在row代表是选中，否则是取消选中
-    if (selection.find(val => { return val.id === row.id })) {
+    if (
+      selection.find((val) => {
+        return val.id === row.id
+      })
+    ) {
       if (row.children) {
-        row.children.forEach(val => {
+        row.children.forEach((val) => {
           // TODO: 待改待测
           crud.ref.table.toggleRowSelection(val, true)
           selection.push(val)
@@ -1147,7 +1226,7 @@ function addCrudFeatureMethod(crud, data) {
   // 切换选中状态
   const toggleRowSelection = (selection, data) => {
     if (data.children) {
-      data.children.forEach(val => {
+      data.children.forEach((val) => {
         crud.ref.table.toggleRowSelection(val, false)
         for (const i in selection) {
           if (selection[i].id === val.id) {
@@ -1238,7 +1317,8 @@ function addCrudMethod(crud, data) {
   // 注册组件
   const registerVM = (type, vm, index = -1) => {
     const vmInfo = {
-      uid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
+      uid: vm.uid,
+      uuid: `${vm.uid}_${new Date().getTime()}_${crud.vms.length}`,
       type,
       vm,
       CRUD: {
@@ -1260,13 +1340,16 @@ function addCrudMethod(crud, data) {
 
   // 注销组件
   const unregisterVM = (vm) => {
-    const del = crud.vms.splice(crud.vms.findIndex(e => e && e.uid === vm.uid), 1)
+    const del = crud.vms.splice(
+      crud.vms.findIndex((e) => e && e.uid === vm.uid),
+      1
+    )
     return del
   }
 
   // 查找组件
   const findVM = (val, field = 'type') => {
-    return crud.vms.find(vm => vm && vm[field] === val).vm
+    return crud.vms.find((vm) => vm && vm[field] === val).vm
   }
 
   Object.assign(crud, {
@@ -1279,7 +1362,8 @@ function addCrudMethod(crud, data) {
 
 // hook回调
 async function callVmHook(crud, hook) {
-  if (crud.debug) { // 可查看hook调用情况
+  if (crud.debug) {
+    // 可查看hook调用情况
     console.log('callVmHook: ' + hook)
   }
   let result = true // 回调结果
@@ -1306,7 +1390,7 @@ async function callVmHook(crud, hook) {
  */
 function mergeOptions(source, rewrite) {
   const opts = { ...source }
-  Object.keys(source).forEach(key => {
+  Object.keys(source).forEach((key) => {
     if (Object.prototype.hasOwnProperty.call(rewrite, key)) {
       opts[key] = rewrite[key]
     }
@@ -1364,6 +1448,8 @@ CRUD.HOOK = {
   beforeToDetail: 'beforeToDetail',
   /** 详情 - 之后 */
   afterToDetail: 'afterToDetail',
+  /** 详情加载后 */
+  beforeDetailLoaded: 'beforeDetailLoaded',
   /** 详情关闭 - 之前 */
   beforeDetailCancel: 'beforeDetailCancel',
   /** 详情关闭 - 之后 */
@@ -1372,6 +1458,8 @@ CRUD.HOOK = {
   beforeToAdd: 'beforeToAdd',
   /** 新建 - 之后 */
   afterToAdd: 'afterToAdd',
+  /** 编辑时详情加载后 */
+  beforeEditDetailLoaded: 'beforeEditDetailLoaded',
   /** 编辑 - 之前 */
   beforeToEdit: 'beforeToEdit',
   /** 编辑 - 之后 */

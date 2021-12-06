@@ -7,17 +7,17 @@ import { ElMessage } from 'element-plus'
  * form-table-校验
  * @param {array} list 校验列表
  * @param {object} rules 校验规则
- * @param {map} dittos=[] 含“同上”选项或值的字段。例： { name：'id', value: -1 }
+ * @param {map} ditto=[] 含“同上”选项或值的字段。例： { name：'id', value: -1 }
  */
-export default function useTableValidate({ rules = {}, dittos = new Map() }) {
+export default function useTableValidate({ rules = {}, ditto = new Map(), errorMsg = '请修正表格中标红的信息' }) {
   return {
-    tableValidate: (list) => tableValidate(list, rules, dittos),
+    tableValidate: (list) => tableValidate(list, rules, ditto, errorMsg),
     wrongCellMask: (tableInfo) => wrongCellMask(tableInfo, rules),
-    cleanUpData: (list) => cleanUpData(list, dittos)
+    cleanUpData: (list) => cleanUpData(list, ditto)
   }
 }
 
-function tableValidate(list, tableRules, dittos) {
+function tableValidate(list, tableRules, ditto, errorMsg) {
   const rules = getRules(tableRules)
   let flag = true
   let message = '请填写数据'
@@ -34,7 +34,7 @@ function tableValidate(list, tableRules, dittos) {
       // 为了不删除有数据row的同上字段，因此拷贝一个row
       const rowCopy = JSON.parse(JSON.stringify(row))
 
-      dittos.forEach((val, name) => {
+      ditto.forEach((val, name) => {
         if (rowCopy[name] === val) {
           delete rowCopy[name] // 删除同上
         }
@@ -52,7 +52,7 @@ function tableValidate(list, tableRules, dittos) {
       // 首行处理, 只删除首行的同上
       if (isFirstRow) {
         // 处理首行"同上"问题，若首行填写“同上”则视为未填写
-        dittos.forEach((val, name) => {
+        ditto.forEach((val, name) => {
           if (row[name] === val) {
             delete row[name] // 删除同上
           }
@@ -62,7 +62,7 @@ function tableValidate(list, tableRules, dittos) {
 
       row.verify = {}
       for (const rule in rules) {
-        row.verify[rule] = validate(rules[rule], row[rule])
+        row.verify[rule] = validate(rules[rule], row[rule], row)
         if (!row.verify[rule]) {
           flag = false
         }
@@ -76,12 +76,25 @@ function tableValidate(list, tableRules, dittos) {
     }
 
     if (!flag) {
-      message = '请修正表格中标红的信息'
+      message = errorMsg
     }
 
     // 数据为空(全部空行的情况)
     if (list.length === 0) {
       flag = false
+    }
+
+    // 设置空行
+    const _blankRow = {}
+    ditto.forEach((value, key) => {
+      _blankRow[key] = value
+    })
+
+    // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
+    for (let i = list.length; i < copyList.length; i++) {
+      if (i === 0) list.push({})
+      // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
+      list.push(lodash.cloneDeep(_blankRow))
     }
   } else {
     flag = false
@@ -91,22 +104,17 @@ function tableValidate(list, tableRules, dittos) {
     ElMessage({ message, type: 'error' })
   }
 
-  // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
-  for (let i = list.length; i < copyList.length; i++) {
-    // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
-    list.push(lodash.cloneDeep(copyList[blankRowsIndex[0]]))
-  }
-
   return { dealList: list, validResult: flag }
 }
 
 // 处理表格变色 el-table cell-class-name
 export function wrongCellMask({ row, column }, tableRules) {
+  if (!row) return
   const rules = getRules(tableRules)
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(rules[column.property], row[column.property])
+      flag = validate(rules[column.property], row[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -137,20 +145,12 @@ export function validate(rules, value, row = {}) {
       }
     }
     const required = rule.required
-    if (required === true) {
-      if (typeof value !== 'string' && !value) {
-        flag = false
-      }
-      if (typeof value !== 'number' && (!value && value !== 0)) {
-        flag = false
-      }
-      if (value instanceof Array && (!value || value.length === 0)) {
-        flag = false
-      }
+    if (required === true && isBlank(value)) {
+      flag = false
       break
     }
     const type = rule.type
-    if (type && (typeof value !== type)) {
+    if (type && typeof value !== type) {
       flag = false
       break
     }
@@ -165,12 +165,12 @@ export function validate(rules, value, row = {}) {
 }
 
 // 清理数据
-export function cleanUpData(list, dittos) {
+export function cleanUpData(list, ditto = new Map()) {
   const copyList = lodash.cloneDeep(list)
   list.length = 0
   // 清空数组, 保留数组地址不变
   copyList.forEach((row, index) => {
-    dittos.forEach((val, name) => {
+    ditto.forEach((val, name) => {
       if (row[name] === val) {
         delete row[name] // 删除同上
       }
@@ -188,7 +188,7 @@ export function cleanUpData(list, dittos) {
   const prevAttr = new Map()
   list.forEach((v) => {
     delete v.verify
-    dittos.forEach((val, key) => {
+    ditto.forEach((val, key) => {
       if (isBlank(v[key])) {
         v[key] = prevAttr.get(key)
       } else {
@@ -204,9 +204,11 @@ function getRules(rules) {
   let _rules
   switch (rules.constructor.name) {
     case 'RefImpl':
-    case 'ComputedRefImpl': _rules = rules.value
+    case 'ComputedRefImpl':
+      _rules = rules.value
       break
-    default: _rules = rules
+    default:
+      _rules = rules
       break
   }
   return _rules

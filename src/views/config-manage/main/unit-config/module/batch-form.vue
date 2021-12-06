@@ -30,9 +30,9 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="150">
-          <template v-slot="scope">
+          <template #default="{ row }">
             <el-input
-              v-model.trim="scope.row.name"
+              v-model.trim="row.name"
               type="text"
               clearable
               placeholder="名称"
@@ -42,9 +42,9 @@
           </template>
         </el-table-column>
         <el-table-column key="symbol" prop="symbol" :show-overflow-tooltip="true" label="符号" width="125">
-          <template v-slot="scope">
+          <template #default="{ row }">
             <el-input
-              v-model.trim="scope.row.symbol"
+              v-model.trim="row.symbol"
               type="text"
               maxlength="3"
               size="small"
@@ -54,12 +54,12 @@
           </template>
         </el-table-column>
         <el-table-column key="type" prop="type" label="类型" width="192">
-          <template v-slot="scope">
+          <template #default="{ row, $index }">
             <common-select
-              v-model="scope.row.type"
+              v-model="row.type"
               :options="unitTypeEnum.ENUM"
-              show-extra
-              :extra-val="dittos.get('type')"
+              :show-extra="$index !== 0"
+              :extra-val="ditto.get('type')"
               type="enum"
               placeholder="类型"
               style="width: 170px;"
@@ -72,8 +72,8 @@
           align="center"
           fixed="right"
         >
-          <template v-slot="scope">
-            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, scope.$index)" />
+          <template #default="{ $index }">
+            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, $index)" />
           </template>
         </el-table-column>
       </common-table>
@@ -107,7 +107,7 @@ const defaultRow = {
 }
 
 // 同上的选项与值
-const dittos = new Map([
+const ditto = new Map([
   ['type', -1]
 ])
 
@@ -116,8 +116,8 @@ const formRef = ref()
 const { CRUD, crud, form, ADD_FORM } = regBatchForm(defaultForm, formRef)
 const dialogVisible = computed(() => crud.bStatus.cu > CRUD.STATUS.NORMAL)
 
-const { init, addRow, removeRow } = useTableOperate(defaultRow, 10, dittos)
-const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, dittos })
+const { init, addRow, removeRow } = useTableOperate(defaultRow, 10, ditto)
+const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
 
 const { maxHeight } = useMaxHeight(
   {

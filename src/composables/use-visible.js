@@ -19,7 +19,7 @@ export default function useVisible({ emit, props, field = 'modelValue', closeHoo
 
   // 关闭dlg
   const handleClose = () => {
-    if (typeof closeHook === 'function')closeHook()
+    if (typeof closeHook === 'function') closeHook()
     emit(`update:${[field]}`, false)
   }
 

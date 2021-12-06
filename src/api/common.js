@@ -37,15 +37,6 @@ export function getDeptAllSimple(hasRoot = true) {
   })
 }
 
-// 获取科目信息
-export function getFinalMatClsById(id) {
-  return request({
-    module: 'config',
-    url: `classification/final-material/${id}`,
-    method: 'get'
-  })
-}
-
 // 获取所有用户,带部门
 export function getUserTree() {
   return request({

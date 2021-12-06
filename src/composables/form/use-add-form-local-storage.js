@@ -23,7 +23,7 @@ ADD_FORM.TYPE = {
  * @param {*} trigger 触发器,适用于添加在Dialog/Drawer(弹窗)中的情景
  * @returns
  */
-export default function useAddFormLocalStorage(key, pendingForm, trigger) {
+export default function useAddFormLocalStorage(key, pendingForm, trigger, { useDraftCallback, clearDraftCallback } = {}) {
   const ls = reactive({
     key: key,
     expired: 604800000,
@@ -31,11 +31,14 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger) {
     initForm: undefined, // 初始的表单
     init: undefined, // 初始化方法
     isRegister: false, // 是否注册的
-    saveStoreForm: () => saveFormToStorage(ls),
+    saveStoreForm: () => {
+      return saveFormToStorage(ls)
+    },
     resetForm: () => {
       // 清除内容
       ls.form.length = 0
       ls.init && ls.init()
+      if (typeof clearDraftCallback === 'function') clearDraftCallback()
     }
   })
 
@@ -54,14 +57,14 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger) {
       _trigger,
       (flag) => {
         if (flag) {
-          openStore(ls)
+          openStore(ls, useDraftCallback)
         } else {
-          closeStore(ls)
+          closeStore(ls, useDraftCallback)
         }
       }
     )
   } else {
-    openStore(ls)
+    openStore(ls, useDraftCallback)
   }
 
   // 卸载时判断是否需要记录
@@ -81,10 +84,12 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger) {
     ADD_FORM: ls,
     openStore: (form) => {
       if (form) ls.form = form
-      openStore(ls)
+      openStore(ls, useDraftCallback)
     },
     closeStore: () => closeStore(ls),
-    saveStoreForm: (form) => saveFormToStorage(ls, form),
+    saveStoreForm: (form) => {
+      return saveFormToStorage(ls, form)
+    },
     clearFormStorage: () => clearFormStorage(ls)
   }
 }
@@ -96,7 +101,7 @@ function componentInit(ls) {
 }
 
 // 打开记录本地缓存
-function openStore(ls) {
+function openStore(ls, useDraftCallback) {
   const storageFormInfo = getFormByStorage(ls.key)
   if (isBlank(storageFormInfo)) {
     // 如果缓存为空，则调用初始化方法
@@ -105,6 +110,7 @@ function openStore(ls) {
     // 如果当前表单缓存不为空，则将原表单覆盖
     const storageForm = storageFormInfo.content
     setFormContent(ls.form, storageForm)
+    if (typeof useDraftCallback === 'function') useDraftCallback(ls.form)
   }
   ls.initForm = lodash.cloneDeep(ls.form)
   ls.isRegister = true
@@ -128,14 +134,13 @@ function setFormContent(form, storageForm) {
 
 // 保存表单
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
-  if (!ls.isRegister) return
+  if (!ls.isRegister) return false
   const _form = form || ls.form
-  console.log('ls.form', ls.form)
-  console.log('form', form)
   storage.set(`${ADD_FORM.KEY_PREFIX}_${ls.key}`, {
     type: type,
     content: _form
   }, ls.expired)
+  return true
 }
 
 function clearFormStorage(ls) {

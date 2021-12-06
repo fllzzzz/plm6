@@ -2,6 +2,38 @@ import { isObjectValueEqual } from './object'
 import { compareArray } from './array'
 
 /**
+ * 是否json数据
+ * @param {*} str
+ * @returns
+ */
+export function isJSON(str) {
+  if (typeof str === 'string') {
+    try {
+      var obj = JSON.parse(str)
+      if (typeof obj === 'object' && obj) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      console.log('error：' + str + ',' + e)
+      return false
+    }
+  }
+}
+
+/**
+ * 添加后缀
+ * @param {*} value 值
+ * @param {*} suffix 后缀
+ * @returns
+ */
+export function addSuffix(value, suffix) {
+  if (isBlank(value)) return value
+  return value + suffix
+}
+
+/**
  * 空值显示
  * @export
  * @param {*} val 值
@@ -21,10 +53,14 @@ export function emptyTextFormatter(val, sign = '-') {
  * @param {number} num
  * @param {number} precision 精确度
  */
-export function toFixed(num, precision) {
+export function toFixed(num, precision, { toNum = false } = {}) {
   if (num === undefined || num === null || isNaN(+num)) return num
   // isNaN(num) 字符串类型的数字是false，所以使用 +num 转为数字,但为了保险在上面的isNaN中的num也使用+num
-  return (+num).toFixed(precision)
+  if (toNum) {
+    return +((+num).toFixed(precision))
+  } else {
+    return (+num).toFixed(precision)
+  }
 }
 
 /**
@@ -58,6 +94,7 @@ export function judgeSameValue(a, b) {
 
 // 1.判断是否为空
 // TODO: 待修改：不支持判断el(列如getElementById获得的数据)
+// 不能用于部分解析后为 { } 的对象
 export function isNotBlank(...arr) {
   if (!arr.length) {
     throw new Error('No parameters passed in')

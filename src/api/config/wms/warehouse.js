@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 获取仓库位置（简要的）
+export function getWarehouseBrief() {
+  return request({
+    module: 'wms',
+    url: 'config/material/warehouse/all/brief',
+    method: 'get'
+  })
+}
+
 export function get(params) {
   return request({
     module: 'wms',

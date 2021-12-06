@@ -99,7 +99,7 @@
             <el-form-item class="el-form-item-7" label="选择供应商" prop="supplierId">
               <supplier-select
                 v-model="form.supplierId"
-                :basicClass="form.basicClass"
+                :basic-class="form.basicClass"
                 :type="form.purchaseType"
                 :disabled="form.boolUsed"
                 mode="contain"
@@ -214,7 +214,7 @@ import { regForm } from '@compos/use-crud'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import unitSelect from '@comp-common/unit-select/index.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
-import supplierSelect from '@comp-base/supplier-select.vue'
+import supplierSelect from '@comp-base/supplier-select/index.vue'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'

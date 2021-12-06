@@ -25,13 +25,17 @@ export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {
   return res | cur
 }, 0)
 
+// 基础配置，钢材误差单位g
+export const STEEL_DIFF_UNIT = 'g'
+
 // 物料基础单位
 export const MAT_BASE_UNIT = {}
 MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V] = {
   measure: { unit: '张', precision: 0 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
-  width: { unit: 'mm', precision: 0 }
+  width: { unit: 'mm', precision: 0 },
+  thickness: { unit: 'mm', precision: 2 }
 }
 MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   measure: { unit: '根', precision: 0 },
@@ -43,7 +47,8 @@ MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
   measure: { unit: '卷', precision: 0 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
-  width: { unit: 'mm', precision: 0 }
+  width: { unit: 'mm', precision: 0 },
+  thickness: { unit: 'mm', precision: 3 }
 }
 
 // 系统最小单位（默认）
@@ -53,7 +58,11 @@ export const MIN_UNIT = {
   WEIGHT: 'g',
   WEIGHT_DP: 3,
   THICKNESS: 'mm',
-  THICKNESS_DP: 3
+  THICKNESS_DP: 3,
+  AREA: 'mm²',
+  AREA_DP: 0,
+  VOLUME: 'mm³',
+  VOLUME_DP: 0
 }
 
 // mes系统单位
