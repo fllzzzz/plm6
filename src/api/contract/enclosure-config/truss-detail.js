@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { TechnologyTypeEnum } from '@enum-ms/contract'
 
 export function get(params) {
   return request({
@@ -12,7 +13,7 @@ export function get(params) {
 export function edit(data) {
   return request({
     module: 'contract',
-    url: 'enclosure/dictionaries/dictDetailSave/type/3',
+    url: `enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V}`,
     method: 'post',
     data
   })

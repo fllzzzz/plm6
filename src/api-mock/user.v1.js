@@ -53,6 +53,12 @@ const userInfo = {
             'redirect': 'base-config'
           },
           {
+            'id': 1377,
+            'name': '计划管理',
+            'icon': 'config',
+            'redirect': 'OverallPlanInfo'
+          },
+          {
             'id': 4,
             'name': '项目管理',
             'icon': 'config',

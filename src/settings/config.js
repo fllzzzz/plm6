@@ -109,7 +109,9 @@ export const DP = {
   MES_ENCLOSURE_L__MM: 0, // mes_围护_长度（mm）
   MES_ENCLOSURE_L__M: 2, // mes_围护_长度（m）
   MES_ENCLOSURE_W__MM: 0, // mes_围护_有效宽度（mm）
-  MES_ENCLOSURE_T__MM: 3 // mes_围护_厚度（mm）
+  MES_ENCLOSURE_T__MM: 3, // mes_围护_厚度（mm）
+  YUAN: 2,
+  ACCOUNTING: 2 // 会计算法小数点保留2位
 }
 
 export const PICKER_OPTIONS_SHORTCUTS = [

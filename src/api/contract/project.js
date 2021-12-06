@@ -19,3 +19,132 @@ export function getUserProjects(params) {
     params
   })
 }
+
+//获取项目内容
+export function getContentInfo(params) {
+  return request({
+    module: 'contract',
+    url: `project/getAllType`,
+    method: 'get',
+    params
+  })
+}
+
+export function get(params) {
+  return request({
+    module: 'contract',
+    url: 'project/listAllProject',
+    method: 'get',
+    params
+  })
+}
+
+export function add(data) {
+  return request({
+    module: 'contract',
+    url: 'project',
+    method: 'post',
+    data
+  })
+}
+
+export function editContract(data) {
+  return request({
+    module: 'contract',
+    url: 'project/updateProject',
+    method: 'post',
+    data
+  })
+}
+
+export function del(ids) {
+  return request({
+    module: 'contract',
+    url: 'project',
+    method: 'delete',
+    data: ids
+  })
+}
+
+export function editStatus(projectId,status) {
+  return request({
+    module: 'contract',
+    url: `project/${projectId}/status/${status}`,
+    method: 'put'
+  })
+}
+
+// export function editUsers(data) {
+//   return request({
+//     module: 'contract',
+//     url: 'project',
+//     method: 'put',
+//     data
+//   })
+// }
+
+/**
+ * 获取围护配置信息列表
+ */
+export function getEnclosureDictList(type) {
+  return request({
+    url: '/api/project/listByType/' + type,
+    method: 'get'
+  })
+}
+
+
+// 获取项目所有用户
+export function getUserAllSimpleByProject(id) {
+  return request({
+    module: 'contract',
+    url: `user/project/${id}/all/simple`,
+    method: 'get'
+  })
+}
+
+// 获取项目基本信息
+export function getContractBase(projectId) {
+  return request({
+    module: 'contract',
+    url: `project/${projectId}/base`,
+    method: 'get'
+  })
+}
+
+// 获取项目商务信息
+export function getContractBusiness(projectId) {
+  return request({
+    module: 'contract',
+    url: `project/${projectId}/business`,
+    method: 'get'
+  })
+}
+
+// 获取项目客户信息
+export function getContractCustomer(projectId) {
+  return request({
+    module: 'contract',
+    url: `project/${projectId}/customer`,
+    method: 'get'
+  })
+}
+
+// 获取项目技术交底
+export function getContractTechInfo(projectId) {
+  return request({
+    module: 'contract',
+    url: `project/techDisclosure/${projectId}`,
+    method: 'get'
+  })
+}
+
+// 获取所有分公司
+export function getBranchCompanyAllSimple() {
+  return request({
+    module: 'contract',
+    url: 'branchCompany/all/simple',
+    method: 'get'
+  })
+}
+export default { get, add, del }

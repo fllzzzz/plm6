@@ -118,7 +118,7 @@ const getTrussDetail = {
 }
 
 const editTrussDetail = {
-  url: '/api/enclosure/dictionaries/dictDetailSave/type/3',
+  url: `/api/enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V}`,
   method: 'post',
   timeout: 1000,
   response: () => {

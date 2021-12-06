@@ -3,6 +3,8 @@ import configRouter from '@/router/modules/config'
 import mesRouter from '@/router/modules/mes'
 import projectRouter from '@/router/modules/project'
 import wmsRouter from '@/router/modules/wms'
+import planRouter from '@/router/modules/plan'
+import contractRouter from '@/router/modules/contract'
 
 // 用户登录（获取token）
 const userLogin = {
@@ -43,6 +45,12 @@ const userInfo = {
         'permissions': [],
         'menus': [
           {
+            'id': 3,
+            'name': '合同管理',
+            'icon': 'config',
+            'redirect': '/contract/contract-center/record'
+          },
+          {
             'id': 475,
             'name': 'WMS',
             'icon': 'wms-wms',
@@ -55,6 +63,12 @@ const userInfo = {
             'redirect': 'mes-project'
           },
           {
+            'id': 1377,
+            'name': '计划管理',
+            'icon': 'config',
+            'redirect': 'OverallPlanInfo'
+          },
+          {
             'id': 1,
             'name': '配置管理',
             'icon': 'config',
@@ -64,7 +78,7 @@ const userInfo = {
             'id': 4,
             'name': '项目管理',
             'icon': 'config',
-            'redirect': 'project-manage'
+            'redirect': 'project-manage/data-manage'
           },
           {
             'id': 3,
@@ -103,7 +117,9 @@ const userMenu = {
           projectRouter,
           wmsRouter,
           mesRouter,
-          projectRouter
+          projectRouter,
+          planRouter,
+          contractRouter
         ]
       }
     }
