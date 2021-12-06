@@ -44,7 +44,7 @@ MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   width: { unit: 'mm', precision: 0 }
 }
 MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
-  measure: { unit: '卷', precision: 0 },
+  measure: { unit: 'm', precision: 2 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 },

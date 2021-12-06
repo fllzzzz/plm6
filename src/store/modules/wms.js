@@ -7,7 +7,7 @@ const state = {
   baseUnit: MAT_BASE_UNIT, // 基础单位
   inboundSteelCfg: {}, // 入库钢材配置
   inboundFillWayCfg: {}, //  入库配置
-  outboundAuxMatWayCfg: null, // 辅材出库方式
+  outboundCfg: {}, // 辅材出库方式
   loaded: {
     // 接口是否加载
     config: false
@@ -42,7 +42,7 @@ const actions = {
     const { inbound, outbound } = await getWmsConfig()
     commit('SET_INBOUND_STEEL_CFG', inbound.steel)
     commit('SET_INBOUND_FILL_WAY_CFG', inbound.fillWay)
-    commit('SET_OUTBOUND_AUX_MAT_WAY_CFG', outbound.boolAuxMatToWorkShopWay)
+    commit('SET_OUTBOUND_AUX_MAT_WAY_CFG', outbound.outboundCfg)
     commit('SET_LOADED', { key: 'config' })
   }
 }

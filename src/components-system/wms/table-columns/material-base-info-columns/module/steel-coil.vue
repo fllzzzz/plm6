@@ -33,11 +33,11 @@
         <span v-empty-text>{{ row.width }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showLength" prop="length" align="center" width="120px" :label="`长 (mm)`">
+    <!-- <el-table-column v-if="showLength" prop="length" align="center" width="120px" :label="`长 (mm)`">
       <template #default="{ row }">
         <span v-empty-text>{{ row.length }}</span>
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column  v-if="showColor" prop="color" align="center" width="120px" :label="`颜色`" />
   </template>
 </template>
@@ -70,6 +70,6 @@ const showClassifyFullName = computed(() => isBlank(props.columns) || props.colu
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))
 const showThickness = computed(() => isBlank(props.columns) || props.columns.visible('thickness'))
 const showWidth = computed(() => isBlank(props.columns) || props.columns.visible('width'))
-const showLength = computed(() => isBlank(props.columns) || props.columns.visible('length'))
+// const showLength = computed(() => isBlank(props.columns) || props.columns.visible('length'))
 const showColor = computed(() => isBlank(props.columns) || props.columns.visible('color'))
 </script>

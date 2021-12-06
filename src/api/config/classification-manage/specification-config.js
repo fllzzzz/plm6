@@ -15,7 +15,7 @@ export function get(params) {
  * 添加规格
  * @param {number} classification|required 科目id
  * @param {string} name|required 名称
- * @param {boolean} boolWeightMean|required 是否计算加权平均价
+ * @param {boolean} boolWeightedAverage|required 是否计算加权平均价
  * @param {Array} list [{code, value}]
  */
 export function add(data) {
@@ -31,7 +31,7 @@ export function add(data) {
  * 编辑规格
  * @param {number} id|required id
  * @param {string} name|required 名称
- * @param {boolean} boolWeightMean|required 是否计算加权平均价
+ * @param {boolean} boolWeightedAverage|required 是否计算加权平均价
  * @param {Array} list [{id, code, value}]
  */
 export function edit(data) {

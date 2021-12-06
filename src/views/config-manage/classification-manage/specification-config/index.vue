@@ -35,7 +35,7 @@
             <div class="clearfix">
               <span style="line-height: 29px">
                 {{ item.name }}
-                <el-tag v-if="item.boolWeightMean" type="success" effect="plain" size="mini">加权</el-tag>
+                <el-tag v-if="item.boolWeightedAverage" type="success" effect="plain" size="mini">加权</el-tag>
                 <!-- <el-tag v-if="item.boolCustomizeable" style="margin-right: 4px" type="success" effect="plain" size="mini">可自定义</el-tag> -->
               </span>
               <ud-operation style="float: right" :data="item" />
@@ -74,7 +74,7 @@ const permission = {
   add: ['config_specConfig:add'],
   edit: ['config_specConfig:edit'],
   del: ['config_specConfig:del'],
-  weightMean: ['config_specConfig:weightMean']
+  weightedAverage: ['config_specConfig:weightedAverage']
 }
 
 const optShow = {

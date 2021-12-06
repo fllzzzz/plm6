@@ -4,7 +4,7 @@
       <span v-empty-text>{{ row.measureUnit }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showQuantity" prop="quantity" label="数量" align="right" width="90px">
+  <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" width="100px">
     <template #default="{ row }">
       <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
     </template>
@@ -49,6 +49,21 @@ const mateLabel = computed(() => {
     case rawMatClsEnum.GAS.V:
     default:
       return '核算量'
+  }
+})
+
+const quantityLabel = computed(() => {
+  switch (props.basicClass) {
+    case rawMatClsEnum.STEEL_PLATE.V:
+      return '数量（张）'
+    case rawMatClsEnum.SECTION_STEEL.V:
+      return '数量（根）'
+    case rawMatClsEnum.STEEL_COIL.V:
+      return '长度（mm）'
+    case rawMatClsEnum.MATERIAL.V:
+    case rawMatClsEnum.GAS.V:
+    default:
+      return '数量'
   }
 })
 

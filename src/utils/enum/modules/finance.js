@@ -1,11 +1,11 @@
 
 import { constantize } from '../base'
 
-const boolWeightMeanEnum = {
+const boolWeightedAverageEnum = {
   TRUE: { L: '加权平均', K: 'TRUE', V: true },
   FALSE: { L: '不加权平均', K: 'FALSE', V: false }
 }
-constantize(boolWeightMeanEnum)
+constantize(boolWeightedAverageEnum)
 
 // 重量计量方式
 const weightMeasurementModeEnum = {
@@ -62,7 +62,7 @@ const paymentFineModeEnum = {
 constantize(paymentFineModeEnum)
 
 export default {
-  boolWeightMeanEnum, // 是否加权平均
+  boolWeightedAverageEnum, // 是否加权平均
   invoiceTypeEnum, // 票据类型
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
@@ -73,7 +73,7 @@ export default {
 }
 
 export {
-  boolWeightMeanEnum, // 是否加权平均
+  boolWeightedAverageEnum, // 是否加权平均
   invoiceTypeEnum, // 票据类型
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式

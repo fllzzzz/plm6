@@ -3,6 +3,12 @@
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery">
+        <template #firstLineRight>
+            <el-badge :value="outboundListNumber" :hidden="outboundListNumber <= 0" style="margin-right: 15px">
+              <common-button icon="el-icon-tickets" size="mini" type="success" @click="openOutboundList">出库清单</common-button>
+            </el-badge>
+            <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+        </template>
         <template #afterProjectWarehouseType>
           <common-radio-button
             v-model="query.basicClass"
@@ -20,19 +26,28 @@
       <!-- TODO:打印 -->
       <template #optLeft>
         <common-button class="filter-item" v-permission="permission.outbound" type="primary" size="mini" @click="toBatchOutbound">
-         <svg-icon icon-class="wms-outbound" /> 批量出库
+          <svg-icon icon-class="wms-outbound" /> 批量出库
         </common-button>
         <common-button class="filter-item" v-permission="permission.transfer" type="warning" size="mini" @click="toBatchTransfer">
           <svg-icon icon-class="wms-transfer" /> 批量调拨
         </common-button>
       </template>
       <template #viewLeft>
-        <common-button v-permission="permission.get"  class="filter-item" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords">
+        <common-button
+          v-permission="permission.get"
+          class="filter-item"
+          type="info"
+          size="mini"
+          icon="el-icon-lock"
+          @click="openFreezeRecords"
+        >
           冻结记录
         </common-button>
         <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button>
         <el-badge :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0">
-          <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">新入库标签打印</common-button>
+          <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">
+            新入库标签打印
+          </common-button>
         </el-badge>
       </template>
     </crud-operation>
@@ -40,7 +55,9 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { getDetailNumberByCurrentUser } from '@/api/wms/outbound/raw-mat-outbound-list'
+import { inject, onMounted, ref } from 'vue'
+import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 import { regHeader } from '@compos/use-crud'
 import RrOperation from '@crud/RR.operation'
@@ -56,17 +73,44 @@ const defaultQuery = {
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
 
+// 未打印的标签数量
 const notPrintedMaterialQuantity = ref(0)
+// 出库清单中的记录的数量
+const outboundListNumber = ref(0)
 
-CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  notPrintedMaterialQuantity.value = data.notPrintedMaterialQuantity || 0
-}
+onMounted(async () => {
+  // notPrintedMaterialQuantity.value = await getDetailNumberByCurrentUser()
+  outboundListNumber.value = await getDetailNumberByCurrentUser()
+})
+
+// CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+//   notPrintedMaterialQuantity.value = data.notPrintedMaterialQuantity || 0
+// }
 
 // 基础类型发生变化
-async function handleBasicClassChange() {
+async function handleBasicClassChange(val) {
+  switch (val) {
+    case steelClsEnum.STEEL_PLATE.V:
+      crud.crudApi.get = getSteelPlateInventory
+      break
+    case steelClsEnum.SECTION_STEEL.V:
+      crud.crudApi.get = getSectionSteelInventory
+      break
+    case steelClsEnum.STEEL_COIL.V:
+      crud.crudApi.get = getSteelCoilInventory
+      break
+  }
   await crud.resetQuery()
   crud.data = []
+  crud.setColumns()
 }
+
+// TODO:
+// 打开出库清单
+function openOutboundList() {}
+
+// 去出库记录
+function toOutboundRecord() {}
 
 // 批量出库
 function toBatchOutbound() {}
@@ -78,12 +122,8 @@ function toBatchTransfer() {}
 function toBatchPrint() {}
 
 // 打印 未打印标签的物料
-function toPrintNotPrintedLabel() {
-
-}
+function toPrintNotPrintedLabel() {}
 
 // 打开冻结记录
-function openFreezeRecords() {
-
-}
+function openFreezeRecords() {}
 </script>

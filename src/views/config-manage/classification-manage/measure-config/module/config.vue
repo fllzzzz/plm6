@@ -163,11 +163,11 @@
               <div v-else>{{ emptyTextFormatter(scope.row.sourceAccountingPrecision) }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="outboundUnit" prop="outboundUnit" :show-overflow-tooltip="true" label="出库单位" min-width="100px" align="center">
+          <el-table-column key="outboundUnitType" prop="outboundUnitType" :show-overflow-tooltip="true" label="出库单位" min-width="100px" align="center">
         <template v-slot="scope">
           <common-select
             v-if="isEditMode"
-            v-model="scope.row.outboundUnit"
+            v-model="scope.row.outboundUnitType"
             :options="measureTypeEnum.ENUM"
             :disabled="scope.row.disabled"
             text-align="center"
@@ -176,7 +176,7 @@
             style="width: 100%;"
             clearable
           />
-          <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnit]) }}</div>
+          <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnitType]) }}</div>
         </template>
       </el-table-column>
         </common-table>

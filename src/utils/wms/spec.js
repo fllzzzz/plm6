@@ -1,5 +1,6 @@
 import store from '@/store'
 import { isBlank, isNotBlank } from '../data-type'
+import { measureTypeEnum } from '../enum/modules/wms'
 
 // 为列表设置规格
 export async function setSpecInfoToList(list) {
@@ -21,6 +22,9 @@ export async function setSpecInfoToList(list) {
           row.accountingUnit = info.classify.accountingUnit // 核算单位
           row.accountingPrecision = info.classify.accountingPrecision // 核算单位小数精度
           row.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
+          row.outboundUnitType = info.classify.outboundUnitType // 出库方式
+          row.outboundUnit = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
+          row.outboundUnitPrecision = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
           // row.basicClass = info.classify.basicClass // 基础类型
           // row.specification = info.spec // 规格
           row.specificationMap = info.specKV // 规格KV格式

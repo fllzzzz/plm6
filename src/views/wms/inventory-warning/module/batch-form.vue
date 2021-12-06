@@ -216,7 +216,7 @@ function rowInit(row) {
     classifyFullName: row.classify.fullName, // 全路径名称
     specification: row.spec, // 规格
     specificationMap: row.specKV, // 规格KV格式
-    unitType: row.classify.outboundUnit, // 单位配置
+    unitType: row.classify.outboundUnitType, // 单位配置
     unitTypeDisabled: [], // 禁用单位
     measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位

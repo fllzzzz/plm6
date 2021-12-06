@@ -39,7 +39,7 @@ const sourceMap = new Map([
   ['measurePrecision', 'sourceMeasurePrecision'],
   ['accountingUnit', 'sourceAccountingUnit'],
   ['accountingPrecision', 'sourceAccountingPrecision'],
-  ['outboundUnit', 'sourceOutboundUnit']
+  ['outboundUnitType', 'sourceOutboundUnitType']
 ])
 provide('sourceMap', sourceMap)
 

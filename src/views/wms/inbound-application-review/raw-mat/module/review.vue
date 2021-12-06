@@ -171,9 +171,9 @@ const reviewConvenientRef = ref() // 连续审核
 const drawerRef = ref() // 当前drawer
 const logisticsRef = ref() // 物流表单
 
-const returnedLoading = ref(false) // 退回loading
-const detailLoading = ref(false) // 通过loading
+const detailLoading = ref(false) // 详情loading
 const passedLoading = ref(false) // 提交loading
+const returnedLoading = ref(false) // 退回loading
 
 const expandRowKeys = ref([]) // 展开
 const amount = ref() // 金额变化
@@ -375,7 +375,7 @@ function handleAfterSubmit() {
   try {
     ++operateRecordNumber.value
     // 继续审核
-    if (reviewNext.value || reviewConvenientRef.value) {
+    if (reviewNext.value && reviewConvenientRef.value) {
       reviewConvenientRef.value.removeCurrent()
     } else {
       handleClose()
