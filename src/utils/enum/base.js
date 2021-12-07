@@ -74,7 +74,6 @@ export function toArr(obj, newObj = true) {
  * @returns 枚举值数组
  */
 export function getBits(enumerate, value, type) {
-  console.log('enumerate, value,', enumerate, value)
   const bitArr = []
   for (const i in enumerate) {
     if (enumerate[i].V & value) {
