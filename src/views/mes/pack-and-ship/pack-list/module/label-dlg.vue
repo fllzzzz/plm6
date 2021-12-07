@@ -1,12 +1,12 @@
 <template>
-  <common-dialog :title="`${packageInfo.packageNumber}`" v-model="dialogVisible" width="640px" :before-close="handleClose">
+  <common-dialog :title="`${packageInfo.serialNumber}`" v-model="dialogVisible" width="640px" :before-close="handleClose">
     <table border="1" bordercolor="#000000">
       <tr>
         <td colspan="3">{{ packageInfo.projectName }}</td>
       </tr>
       <tr>
         <td colspan="3">
-          <span style="font-size: 18pt; font-weight: bold">{{ packageInfo.packageNumber }}</span>
+          <span style="font-size: 18pt; font-weight: bold">{{ packageInfo.serialNumber }}</span>
           <span style="font-size: 16px; float: right; margin-top: 4px">{{ packageInfo.materialTypeNames }}</span>
         </td>
       </tr>
@@ -18,7 +18,7 @@
         <td colspan="2">打包：{{ packageInfo.packerName }} {{ packageInfo.createTime }}</td>
         <td rowspan="3">
           <div class="qr-content">
-            <!-- <vue-qr :text="labelData.qrCode" :size="180" /> -->
+              <qrcode-vue :value="labelData.qrCode" :size="180" :margin="2" />
           </div>
         </td>
       </tr>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-// import vueQr from 'vue-qr'
+import QrcodeVue from 'qrcode.vue'
 
 import { computed, defineEmits, defineProps } from 'vue'
 

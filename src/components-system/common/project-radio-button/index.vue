@@ -8,6 +8,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
+import { ElRadioGroup } from 'element-plus'
 
 const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({

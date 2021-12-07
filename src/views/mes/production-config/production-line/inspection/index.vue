@@ -14,7 +14,7 @@
         v-loading="crud.loading"
         :data="crud.data"
         :empty-text="crud.emptyText"
-        :max-height="maxHeight"
+        :max-height="maxHeight+42"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -56,11 +56,10 @@
 
 <script setup>
 import crudApi from '@/api/mes/production-config/production-line-inspection'
-import { defineExpose, ref, defineProps, watch, computed } from 'vue'
+import { defineExpose, ref, defineProps, watch, computed, inject } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -87,11 +86,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.team-card',
-  paginate: true,
-  extraHeight: 157
-})
+const maxHeight = inject('maxHeight')
 
 const props = defineProps({
   line: {

@@ -57,3 +57,19 @@ export function getAllPackage(params) {
     params
   })
 }
+
+/**
+ * 获取区域下有任务的生产线idsArr
+ * @param {number} monomerId 单体id
+ * @param {number} areaId 区域id
+ * @param {number} type 物料清单类型
+ * @returns
+ */
+export function getHasTaskLine({ districtId, monomerId, type }) {
+  return request({
+    module: 'mes',
+    url: 'productionLine/hasTask',
+    method: 'get',
+    params: { districtId, monomerId, type }
+  })
+}

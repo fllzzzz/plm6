@@ -11,7 +11,6 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      :cell-class-name="handelCellClassName"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
     >
@@ -30,14 +29,19 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('packageNumber')"
-        key="packageNumber"
-        prop="packageNumber"
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
+        prop="serialNumber"
         :show-overflow-tooltip="true"
         label="包单号"
         align="center"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <table-cell-tag :show="scope.row.printType" name="已打印" color="#e64242" />
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('productType')"
         key="productType"
@@ -47,9 +51,13 @@
         width="100px"
       >
         <template v-slot="scope">
-          <el-tag style="margin-right: 5px" :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T" effect="light">{{
-            packTypeEnum.VL[scope.row.productType]
-          }}</el-tag>
+          <el-tag
+            style="margin-right: 5px"
+            v-if="scope.row.productType"
+            :type="packTypeEnum[packTypeEnum.VK[scope.row.productType]].T"
+            effect="light"
+            >{{ packTypeEnum.VL[scope.row.productType] }}</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column
@@ -103,7 +111,9 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" min-width="100">
         <template v-slot="scope">
-          <el-tag :type="packStatusTypeEnum[packStatusTypeEnum.VK[scope.row.status]].T">{{ packStatusTypeEnum.VL[scope.row.status] }}</el-tag>
+          <el-tag :type="packStatusTypeEnum[packStatusTypeEnum.VK[scope.row.status]].T" effect="plain">{{
+            packStatusTypeEnum.VL[scope.row.status]
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -174,7 +184,11 @@
     <!--分页组件-->
     <pagination />
     <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
-    <m-detail v-model:visible="detailVisible" :package-info="packageInfo" :weight-type="weightTypeEnum.GROSS.V" />
+    <m-detail v-model:visible="detailVisible" :detail-info="packageInfo" title="打包清单" quantityFelid="packageQuantity" :detailFunc="detail">
+      <template #tip>
+        <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
+      </template>
+    </m-detail>
     <printed-record-drawer v-model:visible="recordVisible" :package-id="printedRecordId" />
   </div>
 </template>
@@ -186,7 +200,6 @@ import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
 
 import { packTypeEnum, packStatusTypeEnum } from '@enum-ms/mes'
-import { weightTypeEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
@@ -198,8 +211,9 @@ import { debounce } from '@/utils'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
+import tableCellTag from '@comp-common/table-cell-tag/index'
 import mHeader from './module/header'
-import mDetail from './module/detail'
+import mDetail from '../components/common-detail'
 import labelDlg from './module/label-dlg'
 import printedRecordDrawer from './module/printed-record-drawer'
 
@@ -237,7 +251,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: false })
+const { maxHeight } = useMaxHeight({ paginate: true })
 
 const recordVisible = ref(false)
 const labelVisible = ref(false)
@@ -269,25 +283,13 @@ async function printLabel(row) {
 }
 
 function previewLabel(row) {
-  currentLabel.value = headerRef.value.getlabelInfo(row)
+  currentLabel.value = headerRef.value.getLabelInfo(row)
   labelVisible.value = true
 }
 
 function openRecordView(row) {
   printedRecordId.value = row.id
   recordVisible.value = true
-}
-
-function handelCellClassName({ row, column, rowIndex, columnIndex }) {
-  const markColumn = ['packageNumber'] // 标记字段
-  let className = ''
-  if (markColumn.includes(column.property)) {
-    if (column.property === 'packageNumber' && row['printedQuantity']) {
-      className = 'printed-mark'
-    }
-    // className += ' marked'
-  }
-  return className
 }
 
 function handleDataFormat({ artifactList, enclosureList, auxList }) {
@@ -343,38 +345,9 @@ const del = debounce(
 </script>
 
 <style lang="scss" scoped>
-$default-cell-mask-color: #ff000021 !default;
 table {
   .common-button + .common-button {
     margin-left: 5px;
-  }
-}
-::v-deep(.printed-mark) {
-  overflow: hidden !important;
-  .cell {
-    &:after {
-      content: '已打印';
-      background: #e64242;
-      transform: rotate(-45deg);
-      color: white;
-      font-weight: 100;
-      position: absolute;
-      top: 5px;
-      left: -20px;
-      right: 0;
-      width: 70px;
-      height: 20px;
-      font-size: 11px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      pointer-events: none; // 穿透
-    }
-  }
-}
-::v-deep(.marked) {
-  .cell {
-    padding-left: 0px;
   }
 }
 </style>
