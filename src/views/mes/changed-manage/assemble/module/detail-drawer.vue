@@ -1,17 +1,17 @@
 <template>
-  <common-drawer ref="drawerRef" title="零件详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
+  <common-drawer ref="drawerRef" title="组立详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
     <template #content>
       <div class="tip">
         <span>* 注意：</span>
         <span>
-          可修改的零件数量总和为{{
+          可修改的组立数量总和为{{
             info.canHandleTotalMete
           }}，请谨慎操作！</span
         >
       </div>
       <common-table ref="tableRef" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="零件编号">
+        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="组立编号">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { taskList } from '@/api/mes/changed-manage/machine-part'
+import { taskList } from '@/api/mes/changed-manage/assemble'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'

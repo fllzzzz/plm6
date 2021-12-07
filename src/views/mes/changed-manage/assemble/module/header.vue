@@ -6,7 +6,7 @@
         <el-date-picker v-model="date" type="date" size="small" class="filter-item" placeholder="请选择变更日期" @change="crud.toQuery" />
         <el-input
           v-model.trim="query.name"
-          placeholder="输入零件编号搜索"
+          placeholder="输入组立编号搜索"
           class="filter-item"
           style="width: 200px"
           size="small"
@@ -44,7 +44,7 @@ CRUD.HOOK.beforeToQuery = () => {
   } else {
     query.date = undefined
   }
-  query.productType = componentTypeEnum.MACHINE_PART.V
+  query.productType = componentTypeEnum.ASSEMBLE.V
 }
 
 </script>

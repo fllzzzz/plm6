@@ -47,7 +47,7 @@
         key="serialNumber"
         prop="serialNumber"
         :show-overflow-tooltip="true"
-        label="零件编号"
+        label="组立编号"
       >
         <template v-slot="scope">
           <span>{{ emptyTextFormatter(scope.row.serialNumber) }}</span>
@@ -58,7 +58,7 @@
         key="oldQuantity"
         prop="oldQuantity"
         :show-overflow-tooltip="true"
-        label="零件总数"
+        label="组立总数"
         align="center"
       >
         <template v-slot="scope">
@@ -106,7 +106,7 @@
         key="newQuantity"
         prop="newQuantity"
         :show-overflow-tooltip="true"
-        label="还需零件数"
+        label="还需组立数"
         align="center"
       >
         <template v-slot="scope">
@@ -170,7 +170,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '零件变更',
+    title: '组立变更',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

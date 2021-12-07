@@ -1,13 +1,13 @@
 <template>
-  <common-drawer ref="drawerRef" title="零件处理列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
+  <common-drawer ref="drawerRef" title="组立处理列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
     <template #content>
       <div class="tip">
         <span>* 注意：</span>
-        <span> 可修改的零件数量总和为{{ canHandleTotalMete }}，请谨慎操作！</span>
+        <span> 可修改的组立数量总和为{{ canHandleTotalMete }}，请谨慎操作！</span>
       </div>
       <common-table ref="tableRef" v-loading="tableLoading" :data="canHandleList" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="零件编号">
+        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="组立编号">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { taskList, change } from '@/api/mes/changed-manage/machine-part'
+import { taskList, change } from '@/api/mes/changed-manage/assemble'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
@@ -159,7 +159,7 @@ async function submit(row) {
       quantity: row.quantity
     })
     ElNotification({
-      title: '零件变更处理成功',
+      title: '组立变更处理成功',
       type: 'success',
       duration: 2500
     })
