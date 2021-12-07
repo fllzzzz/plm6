@@ -332,7 +332,7 @@ const actions = {
           accountingUnit: res.accountingUnit, // 核算单位
           accountingPrecision: res.accountingPrecision, // 核算单位小数精度
           measurePrecision: res.measurePrecision, // 计量单位小数精度
-          outboundUnit: res.outboundUnit, // 出库方式
+          outboundUnitType: res.outboundUnitType, // 出库方式
           basicClass: res.basicClass,
           hasUnitConfig: !!res.accountingUnit
         }

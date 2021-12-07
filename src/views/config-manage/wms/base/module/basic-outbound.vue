@@ -27,7 +27,31 @@
         />
       </el-form-item>
        <el-form-item>
-        <span class="form-item-tip">在辅材入库到类型为“车间”的仓库时，直接出库。</span>
+        <span class="form-item-tip">在辅材入库到类型为“车间”的仓库时，无需办理，直接出库。</span>
+      </el-form-item>
+
+      <el-form-item label="气体即入即出">
+        <el-switch
+          v-model="form.boolGasOutAfterInbound"
+          :active-value="whetherEnum.TRUE.V"
+          :inactive-value="whetherEnum.FALSE.V"
+          class="drawer-switch"
+        />
+      </el-form-item>
+       <el-form-item>
+        <span class="form-item-tip">“气体”在通过入库审核后，无需办理，直接出库。</span>
+      </el-form-item>
+
+      <el-form-item label="项目仓物料可出库到其他项目">
+        <el-switch
+          v-model="form.boolCanOutToOtherProject"
+          :active-value="whetherEnum.TRUE.V"
+          :inactive-value="whetherEnum.FALSE.V"
+          class="drawer-switch"
+        />
+      </el-form-item>
+       <el-form-item>
+        <span class="form-item-tip">在项目仓中可以选择原材料出库到其他项目, 在仓管确认出库后，会生成已审核的物料调拨单（审核人为确认出库的用户）。</span>
       </el-form-item>
     </el-form>
   </el-card>
@@ -46,7 +70,11 @@ const permission = inject('permission')
 // 数据源
 const dataSource = ref({
   // 辅材出库到车间的配置
-  boolAuxMatToWorkShopWay: undefined
+  boolAuxMatToWorkShopWay: undefined,
+  // 气体入库直接出库
+  boolGasOutAfterInbound: undefined,
+  // 项目仓可以出库给其他项目
+  boolCanOutToOtherProject: undefined
 })
 // 表单
 const form = ref(dataSource.value)
@@ -67,10 +95,10 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const { boolAuxMatToWorkShopWay } = await getOutboundBasicConf()
-    form.value.boolAuxMatToWorkShopWay = boolAuxMatToWorkShopWay
+    const { boolAuxMatToWorkShopWay, boolGasOutAfterInbound, boolCanOutToOtherProject } = await getOutboundBasicConf()
 
-    dataSource.value = { boolAuxMatToWorkShopWay }
+    form.value = { boolAuxMatToWorkShopWay, boolGasOutAfterInbound, boolCanOutToOtherProject }
+    dataSource.value = { boolAuxMatToWorkShopWay, boolGasOutAfterInbound, boolCanOutToOtherProject }
   } catch (error) {
     console.log('出库基础配置', error)
   } finally {

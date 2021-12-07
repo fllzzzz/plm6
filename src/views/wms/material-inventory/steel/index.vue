@@ -42,13 +42,14 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 查看详情 -->
+    <!-- 出库办理表单 -->
+    <outbound-handling-form v-model="outboundHandlingVisible" :basic-class="basicClass" :material="currentRow" />
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
-import { getSteelMaterialWarehouse } from '@/api/wms/material-inventory'
+import { getSteelPlateInventory } from '@/api/wms/material-inventory'
 import { matClsEnum } from '@enum-ms/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -61,8 +62,10 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import outboundHandlingForm from '@/views/wms/outbound-components/outbound-handling-form/index.vue'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
 // crud交由presenter持有
 const permission = {
@@ -87,25 +90,47 @@ const { CRUD, crud, columns } = useCRUD(
     requiredQuery: ['basicClass'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { get: getSteelMaterialWarehouse }
+    crudApi: { get: getSteelPlateInventory }
   },
   tableRef
 )
 
 const currentRow = ref({})
 const expandRowKeys = ref([])
+// 出库办理显示
+const outboundHandlingVisible = ref(false)
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 基础类型
 const basicClass = computed(() => crud.query.basicClass || matClsEnum.STEEL_PLATE.V)
 
+// 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content, {
     toSmallest: false,
     toNum: false
   })
+  data.content.forEach(v => {
+    v.operableQuantity = v.quantity - v.frozenQuantity
+    v.operableMete = v.mete - v.frozenMete
+    if (v.outboundUnitType === measureTypeEnum.MEASURE.V) {
+      // 实际在出库中使用的数量
+      v.corQuantity = v.quantity
+      v.corFrozenQuantity = v.frozenQuantity
+      v.corOperableQuantity = v.operableQuantity
+    } else {
+      v.corQuantity = v.mete
+      v.corFrozenQuantity = v.frozenMete
+      v.corOperableQuantity = v.operableMete
+    }
+  })
 }
 
+// 进行出库办理
+function toOutHandle(row) {
+  currentRow.value = row
+  outboundHandlingVisible.value = true
+}
 </script>

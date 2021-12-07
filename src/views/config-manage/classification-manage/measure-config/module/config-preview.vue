@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column label="出库单位" align="center">
         <template v-slot="scope">
-          <cell-change-preview :old="scope.row.sourceOutboundUnit" :new="scope.row.outboundUnit" :enum="measureTypeEnum" />
+          <cell-change-preview :old="scope.row.sourceOutboundUnitType" :new="scope.row.outboundUnitType" :enum="measureTypeEnum" />
         </template>
       </el-table-column>
     </common-table>
@@ -111,7 +111,7 @@ async function submit() {
         accountingUnit: v.accountingUnit,
         accountingPrecision: v.accountingPrecision,
         measurePrecision: v.measurePrecision,
-        outboundUnit: v.outboundUnit
+        outboundUnitType: v.outboundUnitType
       }
     })
     await save(details)

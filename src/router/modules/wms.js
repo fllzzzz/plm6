@@ -75,27 +75,34 @@ export default {
           hidden: false,
           component: '/wms/material-inventory/steel/index',
           meta: { title: '钢材', icon: 'project', noCache: true }
-        }
-      ]
-    },
-    {
-      path: '/wms/outbound-',
-      component: 'Layout',
-      hidden: false,
-      name: 'WMSInboundAndOutboundReview',
-      alwaysShow: false,
-      redirect: '/wms/inbound-application-review/raw-mat/index',
-      meta: { title: '入库审核', icon: 'contract', noCache: true },
-      children: [
+        },
         {
-          name: 'RawMatInboundApplicationReview',
-          path: 'raw-mat-record',
+          name: 'WMSRawMatOutboundList',
+          path: 'outbound-list/raw-mat',
           hidden: false,
-          component: '/wms/inbound-application-review/raw-mat/index',
-          meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+          component: '/wms/outbound-list/raw-mat/index',
+          meta: { title: '原材料-出库清单', icon: 'project', noCache: true }
         }
       ]
     },
+    // {
+    //   path: '/wms/outbound-',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'WMSInboundAndOutboundReview',
+    //   alwaysShow: false,
+    //   redirect: '/wms/inbound-application-review/raw-mat/index',
+    //   meta: { title: '入库审核', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'RawMatInboundApplicationReview',
+    //       path: 'raw-mat-record',
+    //       hidden: false,
+    //       component: '/wms/inbound-application-review/raw-mat/index',
+    //       meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // },
     {
       path: '/wms/purchase-manage',
       component: 'Layout',

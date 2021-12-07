@@ -1,34 +1,40 @@
 <template>
-  <common-radio-button
-    v-model="queryVO.projectWarehouseType"
-    :options="projectWarehouseTypeEnum.ENUM"
-    default
-    type="enum"
-    size="small"
-    class="filter-item"
-    @change="toQuery"
-  />
-  <common-radio-button
-    v-model="queryVO.materialIsWhole"
-    :options="materialIsWholeEnum.ENUM"
-    show-option-all
-    type="enum"
-    size="small"
-    class="filter-item"
-    @change="toQuery"
-  />
-  <slot name="afterProjectWarehouseType" />
-  <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" />
-  <warehouse-select
-    v-model="queryVO.warehouseId"
-    :factory-id="queryVO.factoryId"
-    :basic-class="props.basicClass"
-    placeholder="存储位置"
-    class="filter-item"
-    show-all
-    @change="toQuery"
-  />
-  <br />
+  <div class="first-line flex-rbc">
+    <div>
+      <common-radio-button
+        v-model="queryVO.projectWarehouseType"
+        :options="projectWarehouseTypeEnum.ENUM"
+        default
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="toQuery"
+      />
+      <common-radio-button
+        v-model="queryVO.materialIsWhole"
+        :options="materialIsWholeEnum.ENUM"
+        show-option-all
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="toQuery"
+      />
+      <slot name="afterProjectWarehouseType" />
+      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" />
+      <warehouse-select
+        v-model="queryVO.warehouseId"
+        :factory-id="queryVO.factoryId"
+        :basic-class="props.basicClass"
+        placeholder="存储位置"
+        class="filter-item"
+        show-all
+        @change="toQuery"
+      />
+    </div>
+    <div>
+      <slot name="firstLineRight" />
+    </div>
+  </div>
   <material-cascader
     v-model="queryVO.classifyId"
     :basic-class="props.basicClass"
@@ -109,3 +115,8 @@ function toQuery() {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.first-line {
+}
+</style>

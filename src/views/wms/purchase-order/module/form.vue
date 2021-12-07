@@ -65,8 +65,7 @@
                 v-model="form.projectIds"
                 clearable
                 :disabled="form.boolUsed"
-                :multiple="true"
-                :initial="false"
+                multiple
                 class="input-underline"
               />
             </el-form-item>

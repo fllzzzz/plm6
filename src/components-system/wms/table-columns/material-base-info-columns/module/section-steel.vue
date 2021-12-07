@@ -6,29 +6,30 @@
     </template>
   </el-table-column>
   <el-table-column v-if="showClassifyFullName" prop="classifyFullName" label="物料种类" align="center" width="120px" fixed="left" />
-  <template v-if="props.specMerge">
-    <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" width="200px" fixed="left">
+  <!-- <template v-if="props.specMerge"> -->
+    <el-table-column v-if="props.specMerge && showSpecification" prop="specification" label="规格" align="center" width="200px" fixed="left">
       <template #default="{ row }">
         <el-tooltip :content="specTip(row)" placement="top">
           <span v-empty-text>{{ specFormat(row) }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
-  </template>
-  <template v-else>
-    <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" width="200px" fixed="left">
+  <!-- </template> -->
+  <!-- <template v-else> -->
+    <!-- <template></template> 会导致包含两个el-table-column的情况下，对其中的el-table-column操作会报错 -->
+    <el-table-column v-if="!props.specMerge && showSpecification" prop="specification" label="规格" align="center" width="200px" fixed="left">
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" :disabled="!row.specificationLabels" placement="top">
           <span v-empty-text>{{ row.specification }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column v-if="showLength" prop="length" align="center" width="120px" :label="`长 (mm)`">
+    <el-table-column v-if="!props.specMerge && showLength" prop="length" align="center" width="120px" :label="`长 (mm)`">
       <template #default="{ row }">
         <span v-empty-text>{{ row.length }}</span>
       </template>
     </el-table-column>
-  </template>
+  <!-- </template> -->
 </template>
 
 <script setup>

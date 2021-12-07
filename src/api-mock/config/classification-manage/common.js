@@ -20,7 +20,7 @@ const getFinalMatClsByIdForSteelPlate = {
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 2, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
-          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.STEEL_PLATE.V,
           specConfig: [
             {
@@ -58,14 +58,18 @@ const getFinalMatClsByIdForSectionSteel = {
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 2, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
-          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.SECTION_STEEL.V,
           specConfig: [
             {
               id: 1,
               name: 'GB-06',
-              'list|20': [
-                { code: '01', name: /(\d{1,3}\*){3}\d{1,3}/, 'unitWeight|10-30.1-2': 1 }
+              list: [
+                { code: '01', name: '10*10*200*500', 'unitWeight|10-30.1-2': 1 },
+                { code: '02', name: '12*10*200*500', 'unitWeight|10-30.1-2': 1 },
+                { code: '03', name: '13*10*200*500', 'unitWeight|10-30.1-2': 1 },
+                { code: '04', name: '13*10*100*200', 'unitWeight|10-30.1-2': 1 },
+                { code: '05', name: '15*15*110*300', 'unitWeight|10-30.1-2': 1 }
               ]
             }
           ]
@@ -89,11 +93,11 @@ const getFinalMatClsByIdForSteelCoil = {
           name: '镀锌彩卷',
           fullName: '镀锌彩卷',
           serialNumber: /[0-9]{10}/,
-          measureUnit: '卷', // 计量单位
+          measureUnit: '毫米', // 计量单位
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 2, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
-          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.STEEL_COIL.V,
           specConfig: [
             {
@@ -131,7 +135,7 @@ const getFinalMatClsByIdForGas = {
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
-          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.GAS.V
         }
     }
@@ -157,7 +161,7 @@ const getFinalMatClsById = {
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
           measurePrecision: 0, // 计量单位小数精度
-          outboundUnit: measureTypeEnum.MEASURE.V, // 出库方式
+          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
           basicClass: matClsEnum.MATERIAL.V,
           specConfig: [
             {

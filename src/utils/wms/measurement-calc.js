@@ -164,8 +164,9 @@ export async function steelInboundFormFormat(form) {
           width: row.width,
           thickness: row.thickness
         }).then((val) => {
-          row.theoryLength = val
-          row.length = row.theoryWeight * row.quantity // 理论总重量
+          row.theoryLength = val // 理论总长
+          // row.length = row.theoryWeight // 理论总重量
+          row.quantity = row.length
           form.steelCoilList.push(row)
         })
         break

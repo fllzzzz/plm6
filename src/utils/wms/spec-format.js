@@ -66,7 +66,8 @@ function steelCoilSpec(row) {
   const spec = []
   if (isNotBlank(row.specification)) spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness} * ${row.width} * ${row.length}`)
+  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness} * ${row.width} * ${row.length}`)
+  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness} * ${row.width}`)
   return spec.join(' | ')
 }
 
@@ -106,7 +107,8 @@ function steelCoilSpecTip(row) {
   const tip = []
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm) * 长(mm)')
+  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm) * 长(mm)')
+  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm)')
   return tip.join(' | ')
 }
 
