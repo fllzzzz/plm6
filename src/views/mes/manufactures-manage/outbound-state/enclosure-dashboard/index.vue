@@ -50,7 +50,7 @@ import { ref } from 'vue'
 
 import { DP } from '@/settings/config'
 
-import useDashboardIndex from '@compos/mes/manufactures-manage/use-dashboard-index'
+import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'

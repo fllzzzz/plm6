@@ -26,13 +26,14 @@
           单净重：${item.netWeight.toFixed(DP.COM_WT__KG)} kg\n
           单毛重：${item.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
           图号：${item.drawingNumber}\n
-          ${item.quantityInfo}\n`"
+          清单数量：${item.quantity}\n
+          ${crud.query.factoryId ? '任务数量：' + item.assignQuantity + '\n\n':''}${item.processInfo}`"
           placement="left-start"
         >
           <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.outWarehouseQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.completedQuantity }}/{{ item.compareQuantity }}</span>
           </div>
         </el-tooltip>
       </template>

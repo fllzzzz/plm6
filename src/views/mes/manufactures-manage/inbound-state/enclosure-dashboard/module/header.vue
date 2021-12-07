@@ -89,7 +89,7 @@ import { ref, defineExpose, reactive, defineEmits } from 'vue'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 
-import useDashboardHeader from '@compos/mes/manufactures-manage/use-dashboard-header'
+import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -117,7 +117,7 @@ let summaryInfo = reactive({
   inboundRate: undefined
 })
 
-const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitle: '入库', emit, crud, fetchSummaryInfo })
+const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['未入库', '部分入库', '全部入库'], emit, crud, fetchSummaryInfo })
 
 async function fetchSummaryInfo() {
   if (!query.monomerId) {

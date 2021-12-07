@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader ref="headRef" @load="load" />
+    <mHeader ref="headRef" @load="load" :isIndeterminate="checkedIds.length > 0 && checkedIds.length !== boardList" @checkedAll="handleCheckedAll"/>
     <!--看板渲染-->
     <div
       v-if="crud.firstLoaded"
@@ -26,13 +26,19 @@
           单净重：${item.netWeight.toFixed(DP.COM_WT__KG)} kg\n
           单毛重：${item.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
           图号：${item.drawingNumber}\n
-          ${item.quantityInfo}\n`"
+          清单数量：${item.quantity}\n
+          `"
           placement="left-start"
         >
-          <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
+          <div class="board-box" style="position: relative" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @click="showStatus">
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.outWarehouseQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.quantity }}</span>
+            <el-checkbox
+              style="position: absolute; right: 10px; bottom: 0px"
+              v-model="item.checked"
+              @change="handleCheckedChange($event, item)"
+            ></el-checkbox>
           </div>
         </el-tooltip>
       </template>
@@ -42,7 +48,9 @@
         <i class="el-icon-loading" />
       </div>
     </div>
+    <partProductionStatus v-model:visible="statusVisible"></partProductionStatus>
   </div>
+
 </template>
 
 <script setup>
@@ -55,6 +63,7 @@ import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import partProductionStatus from './module/part-production-status.vue'
 
 const permission = {
   get: ['artifactInboundStateDashboard:get']
@@ -72,7 +81,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '构件看板',
+    title: '总装匹配',
     permission: { ...permission },
     crudApi: { get },
     optShow: { ...optShow }
@@ -84,6 +93,27 @@ const { crud, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
+
+const checkedIds = ref([])
+function handleCheckedChange(value, item) {
+  const _checkedIndex = checkedIds.value.indexOf(item.id)
+  if (value) {
+    if (_checkedIndex === -1) checkedIds.value.push(item.id)
+  } else {
+    if (_checkedIndex > -1) checkedIds.value.splice(_checkedIndex, 1)
+  }
+}
+function handleCheckedAll(val) {
+  boardList.value.forEach((v) => {
+    v.checked = val
+    handleCheckedChange(val, v)
+  })
+}
+
+const statusVisible = ref(false)
+function showStatus() {
+  statusVisible.value = true
+}
 </script>
 
 <style lang="scss" scoped>

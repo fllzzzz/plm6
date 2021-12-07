@@ -287,7 +287,8 @@ async function handlePack({ bagId, isNew, selectBagId }) {
       remark: remark.value,
       packageLinks: [],
       productType: packType.value,
-      projectId: projectId.value
+      // projectId: projectId.value
+      projectId: 1
     }
     const _list = listObj[packTypeEnum.VK[packType.value]]
     params.packageLinks = _list.map((v) => {

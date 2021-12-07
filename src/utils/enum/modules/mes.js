@@ -79,10 +79,16 @@ const mesEnclosureTypeEnum = {
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
   TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
   PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,
-  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 1 << 5 },
-  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.PRESSED_FLOOR_PLATE.V }
+  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 1 << 5 }
+  // FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.PRESSED_FLOOR_PLATE.V }
 }
 constantize(mesEnclosureTypeEnum)
+
+const projectComponentTypeEnum = {
+  ARTIFACT: { L: '结构', K: 'ARTIFACT', V: 1 << 0 },
+  ...mesEnclosureTypeEnum.ENUM
+}
+constantize(projectComponentTypeEnum)
 
 // 任务下发状态类型
 const taskIssueTypeEnum = {
@@ -183,7 +189,8 @@ export {
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
-  improveStatusEnum
+  improveStatusEnum,
+  projectComponentTypeEnum
 }
 
 export default {
@@ -206,5 +213,6 @@ export default {
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
-  improveStatusEnum
+  improveStatusEnum,
+  projectComponentTypeEnum
 }

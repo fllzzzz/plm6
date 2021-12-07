@@ -5,7 +5,7 @@
     v-model="dialogVisible"
     :title="title"
     top="5vh"
-    width="85vw"
+    width="65vw"
     @closed="handleClose"
   >
     <template #titleAfter> <slot name="tip"></slot> </template>
@@ -13,6 +13,36 @@
       <slot name="titleRight" />
     </template>
     <div class="head-container">
+      <el-descriptions :column="2" border style="margin-bottom: 10px" v-loading="tableLoading" v-if="contract">
+        <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="本次发货额">{{
+          toFixed(contract.deliveryAmount, DP.YUAN)
+        }}</el-descriptions-item>
+        <el-descriptions-item
+label-class-name="contractLabel"
+label="安全余额"
+          >{{ toFixed(contract.safeAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="合同额">{{
+          toFixed(contract.contractAmount, DP.YUAN)
+        }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="累计收款">{{
+          toFixed(contract.totalCollectionAmount, DP.YUAN)
+        }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="累计发运">{{
+          toFixed(contract.totalDeliveryAmount, DP.YUAN)
+        }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="累计发运额">{{
+          toFixed(contract.totalDeliveryAmount, DP.YUAN)
+        }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="合同应收">{{
+          toFixed(contract.contractReceivableAmount, DP.YUAN)
+        }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="开票应收">{{
+          toFixed(contract.billingReceivableAmount, DP.YUAN)
+        }}</el-descriptions-item>
+      </el-descriptions>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button
           v-if="packTypeEnum.STRUCTURE.V & productType"
@@ -33,31 +63,27 @@
           >{{ packTypeEnum.AUXILIARY_MATERIAL.L }}({{ auxList.length }})</el-radio-button
         >
       </el-radio-group>
-      <common-radio-button
-        v-model="monomerStatus"
-        :options="SummaryStatusEnum"
-        type="enum"
-        size="small"
-        class="filter-item"
-      />
     </div>
     <component
       :is="currentView"
+      :measureUnit="contract?.enclosureMeasureMode === 2 ? '㎡' : 'm'"
       v-loading="tableLoading"
       :maxHeight="maxHeight"
       :list="list"
-      :isSuspend="monomerStatus === SummaryStatusEnum.SUSPEND.V"
     />
   </common-dialog>
 </template>
 
 <script setup>
+// TODO:MeasureModeENUM
 import { defineProps, ref, defineEmits, watch, computed } from 'vue'
 import { ElRadioGroup } from 'element-plus'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { weightTypeEnum } from '@enum-ms/common'
 import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
+import { toFixed } from '@/utils/data-type'
 import EO from '@enum'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -65,11 +91,6 @@ import useVisible from '@compos/use-visible'
 import structureTable from './module/structure'
 import enclosureTable from './module/enclosure'
 import auxiliaryMaterialTable from './module/auxiliary-material'
-
-const SummaryStatusEnum = {
-  PROCESS: { L: '单体汇总', K: 'PROCESS', V: 0 },
-  SUSPEND: { L: '区域汇总', K: 'SUSPEND', V: 1 }
-}
 
 const emit = defineEmits(['update:visible'])
 const props = defineProps({
@@ -101,18 +122,18 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-dialog__header'],
+    extraBox: ['.el-dialog__header', '.head-container'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true
   },
   dialogVisible
 )
 
-const monomerStatus = ref(SummaryStatusEnum.PROCESS.V)
 const tableLoading = ref(false)
 const artifactList = ref([])
 const enclosureList = ref([])
 const auxList = ref([])
+const contract = ref({})
 const curProductType = ref()
 
 const productType = computed(() => {
@@ -144,7 +165,11 @@ const list = computed(() => {
         artifactList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
-          v.totalWeight = convertUnits(v.weight * v.showQuantity, 'kg', 't')
+          v.totalMete =
+            contract.value.structureMeasureMode === 2
+              ? convertUnits(v.totalWeight, 'kg', 't')
+              : convertUnits(v.weight * v.showQuantity, 'kg', 't')
+          v.totalPrice = v.unitPrice * v.totalMete || 0
           return v
         })
       )
@@ -153,7 +178,11 @@ const list = computed(() => {
         enclosureList.value &&
         enclosureList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
-          v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
+          v.totalMete =
+            contract.value.enclosureMeasureMode === 2
+              ? toFixed(v.totalArea, DP.COM_AREA__M2)
+              : convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+          v.totalPrice = v.unitPrice * v.totalMete || 0
           return v
         })
       )
@@ -163,6 +192,7 @@ const list = computed(() => {
         auxList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
+          v.totalPrice = v.unitPrice * v.showQuantity || 0
           return v
         })
       )
@@ -180,14 +210,24 @@ watch(
   }
 )
 
+function init() {
+  artifactList.value = []
+  enclosureList.value = []
+  auxList.value = []
+  contract.value = {}
+  curProductType.value = undefined
+}
+
 async function fetchDetail() {
   try {
+    init()
     tableLoading.value = true
     curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
     artifactList.value = data.artifactList || []
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []
+    contract.value = data.review || {}
   } catch (error) {
     console.log('详情', error)
   } finally {

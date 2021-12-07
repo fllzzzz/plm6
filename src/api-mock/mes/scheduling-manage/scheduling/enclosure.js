@@ -8,7 +8,7 @@ const getEnclosure = {
   timeout: 1000,
   response: (res) => {
     switch (Number(res.query.category)) {
-      case mesEnclosureTypeEnum.FLOOR_PLATE.V:
+      case mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V:
         return {
           'code': 20000,
           'message': '成功',

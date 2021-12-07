@@ -58,23 +58,6 @@
         />
       </template>
       <template #viewLeft>
-        <span v-permission="crud.permission.get">
-          <el-tag effect="plain" class="filter-item">
-            <span>{{ query.factoryId ? '任务量' : '清单量' }}：</span>
-            <span v-if="!summaryLoading">{{ toFixed(summaryInfo.mete,DP.COM_WT__KG) }} kg</span>
-            <i v-else class="el-icon-loading" />
-          </el-tag>
-          <el-tag effect="plain" class="filter-item">
-            <span>入库量：</span>
-            <span v-if="!summaryLoading">{{ toFixed( summaryInfo.inboundMete,DP.COM_WT__KG) }} kg</span>
-            <i v-else class="el-icon-loading" />
-          </el-tag>
-          <el-tag effect="plain" class="filter-item" type="success">
-            <span>完成率：</span>
-            <span v-if="!summaryLoading">{{ summaryInfo.inboundRate }}</span>
-            <i v-else class="el-icon-loading" />
-          </el-tag>
-        </span>
         <scale class="filter-item" v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
       </template>
     </crudOperation>
@@ -82,11 +65,7 @@
 </template>
 
 <script setup>
-import { getSummaryForArtifact as getSummary } from '@/api/mes/manufactures-manage/inbound'
-import { ref, defineExpose, reactive, defineEmits } from 'vue'
-
-import { DP } from '@/settings/config'
-import { toFixed } from '@data-type'
+import { ref, defineExpose, defineEmits } from 'vue'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
@@ -112,49 +91,25 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 const emit = defineEmits('load')
 
 const boxScale = ref(1)
-const summaryLoading = ref(false)
-let summaryInfo = reactive({
-  mete: undefined,
-  inboundMete: undefined,
-  inboundRate: undefined
-})
-
-const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['未入库', '部分入库', '全部入库'], emit, crud, fetchSummaryInfo })
-
-async function fetchSummaryInfo() {
-  if (!query.monomerId) {
-    return
-  }
-  summaryLoading.value = true
-  try {
-    const params = {
-      monomerId: query.monomerId,
-      factoryId: query.factoryId
-    }
-    const { mete = 0, inboundMete = 0 } = await getSummary(params)
-    summaryInfo = {
-      mete,
-      inboundMete,
-      inboundRate: mete ? ((inboundMete / mete) * 100).toFixed(1) + '%' : 0
-    }
-  } catch (error) {
-    console.log('获取汇总数据', error)
-  } finally {
-    summaryLoading.value = false
-  }
-}
+const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成'], emit, crud })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.compareQuantity = crud.query.factoryId ? v.taskQuantity : v.quantity
-    v.quantityInfo = `-------------------------\n\n清单数量：${v.quantity}\n\n`
-    if (crud.query.factoryId) {
-      v.quantityInfo += `任务数量：${v.taskQuantity}\n\n`
-    }
-    v.quantityInfo += `入库数量：${v.intWarehouseQuantity}\n
-        出库数量：${v.outWarehouseQuantity}\n
-        库存数量：${v.intWarehouseQuantity - v.outWarehouseQuantity}\n`
-    v.boxColor = getColor(v, { quantity: 'intWarehouseQuantity', compare: 'compareQuantity' })
+    v.processInfo = '-----------------------\n\n生产上报 / 已质检\n\n'
+    const processList = v.process || []
+    v.compareQuantity = crud.query.factoryId ? v.assignQuantity : v.quantity
+    processList.forEach(process => {
+      const _p = this.processMap[process.id]
+      if (_p) {
+        const _completed = v.compareQuantity === process.quantity && process.quantity === process.inspectionQuantity
+        const _processInfo = _completed ? `√` : `${process.quantity} / ${process.inspectionQuantity}`
+        v.processInfo += `${_p.name}：${_processInfo}\n\n`
+        if (process.quantity) {
+          v.started = true
+        }
+      }
+    })
+    v.boxColor = getColor(v, { quantity: 'completedQuantity', compare: 'compareQuantity' })
     return v
   })
 }
