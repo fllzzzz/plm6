@@ -442,7 +442,7 @@ function handleAmountChange() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['number', 'mete'] })
+  return tableSummary(param, { props: ['quantity', 'mete'] })
 }
 </script>
 

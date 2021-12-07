@@ -63,7 +63,7 @@ export function reviewPassed(id) {
  * 获取当前用户的出库单
  * @returns
  */
-export function getByCurrentUser() {
+export function getDetailByCurrentUser() {
   return request({
     module: 'wms',
     url: 'outbound/application/review/raw-materials/current-user',

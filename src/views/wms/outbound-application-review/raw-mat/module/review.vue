@@ -7,10 +7,12 @@
     :title="drawerTitle"
     :show-close="true"
     size="90%"
-    custom-class="raw-mat-outbound-list-review-form"
+    custom-class="raw-mat-application-review-form"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
+      <el-tag effect="plain">{{
+        `出库申请时间：${parseTime(form.userUpdateTime)}`
+      }}</el-tag>
     </template>
     <template #titleRight>
       <review-convenient-operate
@@ -32,7 +34,14 @@
           @confirm="passed"
         >
           <template #reference>
-            <common-button :loading="submitOptLoading" type="primary" size="mini" icon="el-icon-s-promotion"> 确认出库 </common-button>
+            <common-button
+              :loading="submitOptLoading"
+              type="primary"
+              size="mini"
+              icon="el-icon-s-promotion"
+            >
+              确认出库
+            </common-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -44,12 +53,27 @@
           @confirm="returned"
         >
           <template #reference>
-            <common-button :loading="submitOptLoading" size="mini" icon="el-icon-document-delete" type="danger"> 删 除 </common-button>
+            <common-button
+              :loading="submitOptLoading"
+              size="mini"
+              icon="el-icon-document-delete"
+              type="danger"
+            >
+              删 除
+            </common-button>
           </template>
         </el-popconfirm>
       </template>
       <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
-        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="nextRecord">打印/下载完毕</common-button>
+      <!-- TODO:打印按钮 -->
+        <common-button
+          :loading="submitOptLoading"
+          size="mini"
+          icon="el-icon-print"
+          type="success"
+          @click="nextRecord"
+          >打印/下载完毕</common-button
+        >
       </template>
     </template>
     <template #content>
@@ -62,12 +86,27 @@
           :expand-row-keys="expandRowKeys"
           row-key="id"
         >
-          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+          <el-expand-table-column
+            :data="form.list"
+            v-model:expand-row-keys="expandRowKeys"
+            row-key="id"
+            fixed="left"
+          >
             <template #default="{ row }">
-              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark />
+              <expand-secondary-info
+                :basic-class="row.basicClass"
+                :row="row"
+                show-remark
+              />
             </template>
           </el-expand-table-column>
-          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
+          <el-table-column
+            label="序号"
+            type="index"
+            align="center"
+            width="50"
+            fixed="left"
+          />
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="form.basicClass" show-factory />
           <!-- 次要信息 -->
@@ -76,7 +115,24 @@
           <material-unit-quantity-columns />
           <!-- 仓库设置 -->
           <warehouse-info-columns show-project />
-          <el-table-column v-permission="permission.edit" v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V" label="操作" width="70px" align="left">
+          <el-table-column label="领用人" width="100px" align="center">
+            <template #default="{ row }">
+              <el-tooltip
+              placement="top"
+                effect="light"
+                :content="`${row.recipient.deptName}`"
+              >
+                <span v-if="row.recipient">{{ row.recipient.name }}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-permission="permission.edit"
+            v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
+            label="操作"
+            width="70px"
+            align="left"
+          >
             <template #default="{ row, $index }">
               <el-popconfirm
                 confirm-button-text="确定"
@@ -87,7 +143,12 @@
                 @confirm="delItem(row, $index)"
               >
                 <template #reference>
-                  <common-button :loading="submitOptLoading" type="danger" icon="el-icon-delete" size="mini" />
+                  <common-button
+                    :loading="submitOptLoading"
+                    type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                  />
                 </template>
               </el-popconfirm>
             </template>
@@ -99,7 +160,13 @@
 </template>
 
 <script setup>
-import { getPendingReviewIdList, detail, reviewPassed, reviewReturned, delMaterial } from '@/api/wms/outbound/raw-mat-outbound-list'
+import {
+  getPendingReviewIdList,
+  detail,
+  reviewPassed,
+  reviewReturned,
+  delMaterial
+} from '@/api/wms/outbound/raw-mat-application-review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -139,20 +206,18 @@ const submitOptLoading = ref(false) // 操作loading
 const detailLoading = ref(false) // 通过loading
 
 const expandRowKeys = ref([]) // 展开
-const amount = ref() // 金额变化
 const form = ref({})
 const operateRecordNumber = ref(0) // 操作记录条数
 const reviewNext = ref(false) // 当前记录审核完成后，直接审核下一条
 const pendingReviewIdList = ref([]) // 待审核列表
-// const currentReviewIndex = ref(0) // 当前审核下标
 const currentInboundId = ref() // 当前id
 
 // 表单禁止操作
 const formDisabled = computed(() => submitOptLoading.value)
 // 标题
 const drawerTitle = computed(() => {
-  if (form.value && form.value.recipient) {
-    return `出库单 领用人：${form.value.recipient.name} | ${form.value.recipient.deptName}`
+  if (form.value && form.value.applicant) {
+    return `出库单 申请人：${form.value.applicant.name} | ${form.value.applicant.deptName}`
   } else {
     return '出库单'
   }
@@ -161,17 +226,20 @@ const drawerTitle = computed(() => {
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.raw-mat-outbound-list-review-form',
+    mainBox: '.raw-mat-application-review-form',
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
-    minHeight: 300,
-    extraHeight: 10
+    minHeight: 300
   },
   () => computed(() => !detailLoading.value)
 )
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
+const { visible: drawerVisible, handleClose } = useVisible({
+  emit,
+  props,
+  closeHook: closeHook
+})
 
 // 监听数据变化
 watch(
@@ -194,7 +262,6 @@ function init() {
   submitOptLoading.value = false // 退回loading
   submitOptLoading.value = false // 通过loading
   expandRowKeys.value = [] // 展开
-  amount.value = undefined // 金额变化
   form.value = {} // 表单重置
 }
 
@@ -214,7 +281,6 @@ async function fetchDetail(id) {
   try {
     detailLoading.value = true
     const data = await detail(id)
-    data.logistics = {}
     form.value = await detailFormat(data)
   } catch (error) {
     console.log('加载失败', error)
@@ -256,7 +322,7 @@ async function delItem(row, index) {
 async function passed() {
   try {
     submitOptLoading.value = true
-    await reviewPassed(currentInboundId.value)
+    await reviewPassed(form.value.id)
     // 审核通过后设置审核状态
     form.value.reviewStatus = reviewStatusEnum.PASS.V
     ++operateRecordNumber.value
@@ -271,7 +337,7 @@ async function passed() {
 async function returned() {
   try {
     submitOptLoading.value = true
-    await reviewReturned(currentInboundId.value)
+    await reviewReturned(form.value.id)
     nextRecord()
   } catch (error) {
     console.log('退回', error)
@@ -310,7 +376,7 @@ function getSummaries(param) {
 </script>
 
 <style lang="scss" scoped>
-.raw-mat-outbound-list-review-form {
+.raw-mat-application-review-form {
   .el-drawer__header .el-tag {
     min-width: 120px;
     text-align: center;

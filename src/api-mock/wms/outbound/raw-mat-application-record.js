@@ -4,7 +4,7 @@ import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
 // 原材料出库清单列表
 const get = {
-  url: '/api/wms/outbound/application/review/raw-materials',
+  url: '/api/wms/outbound/application/record/raw-materials',
   method: 'get',
   timeout: 500,
   response: () => {
@@ -16,7 +16,9 @@ const get = {
           {
             'id|+1': 1,
             'basicClass|1-31': 1,
-            recipientName: '@cname',
+            applicantName: '@cname',
+            reviewerName: '@cname',
+            reviewTime: '@datetime(T)',
             userUpdateTime: '@datetime(T)',
             createTime: '@datetime(T)'
           }
@@ -27,76 +29,9 @@ const get = {
   }
 }
 
-// 待审核出库单id列表
-const getPendingReviewIdList = {
-  url: '/api/wms/outbound/application/review/raw-materials/pending/ids',
-  method: 'get',
-  timeout: 500,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功',
-      data: [1, 2] // 待审核出库单id列表
-    }
-  }
-}
-
-// 获取当前用户的出库单的详情数量
-const getDetailNumberByCurrentUser = {
-  url: '/api/wms/outbound/application/review/raw-materials/current-user/detail-number',
-  method: 'get',
-  timeout: 500,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功',
-      data: 2
-    }
-  }
-}
-
-// 删除出库单单条物料
-const delMaterial = {
-  url: '/api/wms/outbound/application/review/raw-materials/material-del',
-  method: 'put',
-  timeout: 500,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-// 审核通过
-const reviewPassed = {
-  url: RegExp('/api/wms/outbound/application/review/raw-materials/' + '[1-9][0-9]*' + '/passed'),
-  method: 'put',
-  timeout: 500,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-// 审核退回
-const reviewReturned = {
-  url: RegExp('/api/wms/outbound/application/review/raw-materials/' + '[1-9][0-9]*' + '/returned'),
-  method: 'put',
-  timeout: 500,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
 // 出库单详情
 const detail_id1 = {
-  url: '/api/wms/outbound/application/review/raw-materials/1',
+  url: '/api/wms/outbound/application/record/raw-materials/1',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -107,12 +42,14 @@ const detail_id1 = {
         id: 1, // 入库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
-        recipient: {
+        reviewTime: '@datetime(T)',
+        applicant: {
           name: '@cname',
           deptName: '生产部'
         },
+
         basicClass: 7, // 采购物料基础类型
-        reviewStatus: reviewStatusEnum.UNREVIEWED.V,
+        reviewStatus: reviewStatusEnum.PASS.V,
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
         list: [
           {
@@ -129,6 +66,10 @@ const detail_id1 = {
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
             remark: '66666',
             mete: 800000,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -154,6 +95,10 @@ const detail_id1 = {
             brand: '哈哈',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
             mete: 2355000,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -178,6 +123,10 @@ const detail_id1 = {
             brand: '马钢',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
             mete: 152900,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -204,6 +153,10 @@ const detail_id1 = {
             length: 3907,
             width: 1000,
             mete: 10000,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -224,7 +177,7 @@ const detail_id1 = {
 
 // 出库单详情
 const detail_id2 = {
-  url: '/api/wms/outbound/application/review/raw-materials/2',
+  url: '/api/wms/outbound/application/record/raw-materials/2',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -235,12 +188,13 @@ const detail_id2 = {
         id: 2, // 入库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
-        recipient: {
+        reviewTime: '@datetime(T)',
+        applicant: {
           name: '@cname',
           deptName: '生产部'
         },
         basicClass: 31, // 采购物料基础类型
-        reviewStatus: reviewStatusEnum.UNREVIEWED.V,
+        reviewStatus: reviewStatusEnum.PASS.V,
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
         list: [
           {
@@ -257,6 +211,10 @@ const detail_id2 = {
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
             remark: '66666',
             mete: 800000,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -281,6 +239,10 @@ const detail_id2 = {
             brand: '马钢',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
             mete: 152900,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -307,6 +269,10 @@ const detail_id2 = {
             length: 3907,
             width: 1000,
             mete: 10000,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -329,6 +295,10 @@ const detail_id2 = {
             brand: '嘻嘻',
             remark: '66666',
             mete: 800000,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '你脸红个泡泡茶壶666号主路',
@@ -350,6 +320,10 @@ const detail_id2 = {
             brand: '嘻嘻',
             remark: '66666',
             mete: 222,
+            recipient: {
+              name: '@cname',
+              deptName: '生产部'
+            },
             project: {
               id: 1,
               name: '你脸红个泡泡茶壶666号主路',
@@ -368,4 +342,4 @@ const detail_id2 = {
   }
 }
 
-export default [get, detail_id1, detail_id2, delMaterial, getPendingReviewIdList, reviewPassed, reviewReturned, getDetailNumberByCurrentUser]
+export default [get, detail_id1, detail_id2]
