@@ -37,9 +37,9 @@
       :disabled="props.disabled"
       :loading="loading"
       :auto-insert-space="autoInsertSpace"
-      @click.self="handleClick"
+      @click="handleClick"
     >
-      <span @click="handleClick"><slot /></span>
+      <slot />
     </el-button>
     <el-button
       v-else-if="!props.disabled && !slotDefault"

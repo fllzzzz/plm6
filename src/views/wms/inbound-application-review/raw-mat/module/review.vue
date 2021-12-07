@@ -68,7 +68,7 @@
         >
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount" :basic-class="form.basicClass" :row="row" />
+              <expand-secondary-info v-if="showAmount" :basic-class="form.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>

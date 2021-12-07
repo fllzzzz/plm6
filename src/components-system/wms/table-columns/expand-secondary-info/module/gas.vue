@@ -1,5 +1,5 @@
 <template>
-  <p>
+  <p v-if="showBrand">
     品牌：<span v-empty-text>{{ props.row.brand }}</span>
   </p>
   <p v-if="showRemark">
@@ -18,6 +18,10 @@ const props = defineProps({
     }
   },
   showRemark: {
+    type: Boolean,
+    default: false
+  },
+  showBrand: {
     type: Boolean,
     default: false
   }

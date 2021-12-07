@@ -37,7 +37,7 @@
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" />
+              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>

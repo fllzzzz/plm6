@@ -6,12 +6,11 @@
     :before-close="handleClose"
     :title="drawerTitle"
     :show-close="true"
-    size="100%"
+    size="90%"
     custom-class="raw-mat-outbound-list-review-form"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{ `出库申请时间：${detail.userUpdateTime}` }}</el-tag>
-      <el-tag v-if="detail.user" type="warning" effect="plain">{{ `领用人：${detail.user.name} | d${detail.user.deptName}` }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <review-convenient-operate
@@ -23,30 +22,35 @@
         @change="handleConvenientChange"
         class="convenient-operation"
       />
-      <el-popconfirm
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        icon="el-icon-info"
-        icon-color="green"
-        title="确认通过？"
-        @confirm="passed"
-      >
-        <template #reference>
-          <common-button :loading="passedLoading" type="primary" size="mini" icon="el-icon-s-promotion"> 确认出库 </common-button>
-        </template>
-      </el-popconfirm>
-      <el-popconfirm
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        icon="el-icon-info"
-        icon-color="red"
-        title="确认删除？"
-        @confirm="returned"
-      >
-        <template #reference>
-          <common-button :loading="returnedLoading" size="mini" icon="el-icon-document-delete" type="danger"> 删 除 </common-button>
-        </template>
-      </el-popconfirm>
+      <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
+        <el-popconfirm
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          icon="el-icon-info"
+          icon-color="green"
+          title="确认通过？"
+          @confirm="passed"
+        >
+          <template #reference>
+            <common-button :loading="submitOptLoading" type="primary" size="mini" icon="el-icon-s-promotion"> 确认出库 </common-button>
+          </template>
+        </el-popconfirm>
+        <el-popconfirm
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          icon="el-icon-info"
+          icon-color="red"
+          title="确认删除？"
+          @confirm="returned"
+        >
+          <template #reference>
+            <common-button :loading="submitOptLoading" size="mini" icon="el-icon-document-delete" type="danger"> 删 除 </common-button>
+          </template>
+        </el-popconfirm>
+      </template>
+      <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
+        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="nextRecord">打印/下载完毕</common-button>
+      </template>
     </template>
     <template #content>
       <el-form class="form" :disabled="formDisabled">
@@ -54,26 +58,40 @@
           :data="form.list"
           :max-height="maxHeight"
           show-summary
-          :cell-class-name="wrongCellMask"
           :summary-method="getSummaries"
           :expand-row-keys="expandRowKeys"
           row-key="id"
         >
-          <!-- <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount" :basic-class="form.basicClass" :row="row" />
+              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark />
             </template>
-          </el-expand-table-column> -->
+          </el-expand-table-column>
           <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" :show-factory="showWarehouse" />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="form.basicClass" />
+          <material-base-info-columns :basic-class="form.basicClass" show-factory />
           <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="!showAmount" :basic-class="form.basicClass" show-project />
+          <material-secondary-info-columns />
+          <!-- 单位及其数量 -->
+          <material-unit-quantity-columns />
           <!-- 仓库设置 -->
-          <warehouse-set-columns :form="form" />
-          <warehouse-info-columns />
+          <warehouse-info-columns show-project />
+          <el-table-column v-permission="permission.edit" v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V" label="操作" width="70px" align="left">
+            <template #default="{ row, $index }">
+              <el-popconfirm
+                confirm-button-text="确定"
+                cancel-button-text="取消"
+                icon="el-icon-info"
+                icon-color="red"
+                :title="`确认删除当前${row.classifyFullName}吗?`"
+                @confirm="delItem(row, $index)"
+              >
+                <template #reference>
+                  <common-button :loading="submitOptLoading" type="danger" icon="el-icon-delete" size="mini" />
+                </template>
+              </el-popconfirm>
+            </template>
+          </el-table-column>
         </common-table>
       </el-form>
     </template>
@@ -81,23 +99,23 @@
 </template>
 
 <script setup>
-import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/outbound/raw-mat-outbound-list'
-import { computed, ref, defineEmits, defineProps, watch } from 'vue'
+import { getPendingReviewIdList, detail, reviewPassed, reviewReturned, delMaterial } from '@/api/wms/outbound/raw-mat-outbound-list'
+import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { parseTime } from '@/utils/date'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import reviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
-
-import warehouseSetColumns from '@/views/wms/inbound-components/warehouse-set-columns.vue'
-
+import { reviewStatusEnum } from '@/utils/enum/modules/common'
 const emit = defineEmits(['refresh', 'update:modelValue'])
 
 const props = defineProps({
@@ -113,12 +131,12 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const reviewConvenientRef = ref() // 连续审核
 const drawerRef = ref() // 当前drawer
 
-const returnedLoading = ref(false) // 退回loading
+const submitOptLoading = ref(false) // 操作loading
 const detailLoading = ref(false) // 通过loading
-const passedLoading = ref(false) // 提交loading
 
 const expandRowKeys = ref([]) // 展开
 const amount = ref() // 金额变化
@@ -130,7 +148,15 @@ const pendingReviewIdList = ref([]) // 待审核列表
 const currentInboundId = ref() // 当前id
 
 // 表单禁止操作
-const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
+const formDisabled = computed(() => submitOptLoading.value)
+// 标题
+const drawerTitle = computed(() => {
+  if (form.value && form.value.recipient) {
+    return `出库单 领用人：${form.value.recipient.name} | ${form.value.recipient.deptName}`
+  } else {
+    return '出库单'
+  }
+})
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -165,8 +191,8 @@ watch(
 // 初始化
 function init() {
   detailLoading.value = false // 详情loading
-  returnedLoading.value = false // 退回loading
-  passedLoading.value = false // 通过loading
+  submitOptLoading.value = false // 退回loading
+  submitOptLoading.value = false // 通过loading
   expandRowKeys.value = [] // 展开
   amount.value = undefined // 金额变化
   form.value = {} // 表单重置
@@ -207,40 +233,56 @@ async function detailFormat(form) {
   return form
 }
 
+// 删除出库单中的物料，删除也需要更新页面，避免材料类型发生变化，或者，当前出库单已不存在物料被自动删除
+async function delItem(row, index) {
+  try {
+    submitOptLoading.value = true
+    await delMaterial({ listId: form.value.id, materialId: row.id })
+    form.value.list.splice(index, 1)
+    // 如果list被清空，等同于当前出库单审核完成
+    if (form.value.list.length === 0) {
+      nextRecord()
+    } else {
+      ++operateRecordNumber.value
+    }
+  } catch (error) {
+    console.log('删除', error)
+  } finally {
+    submitOptLoading.value = false
+  }
+}
+
 // 通过提交
 async function passed() {
   try {
-    passedLoading.value = true
-    // await reviewPassed(nForm)
-    handleAfterSubmit()
+    submitOptLoading.value = true
+    await reviewPassed(currentInboundId.value)
+    // 审核通过后设置审核状态
+    form.value.reviewStatus = reviewStatusEnum.PASS.V
+    ++operateRecordNumber.value
   } catch (error) {
     console.log('通过提交', error)
   } finally {
-    passedLoading.value = false
+    submitOptLoading.value = false
   }
 }
 
 // 退回
 async function returned() {
   try {
-    returnedLoading.value = true
-    const data = {
-      id: form.value.id,
-      approvalComments: form.value.approvalComments
-    }
-    await reviewReturned(data)
-    handleAfterSubmit()
+    submitOptLoading.value = true
+    await reviewReturned(currentInboundId.value)
+    nextRecord()
   } catch (error) {
     console.log('退回', error)
   } finally {
-    returnedLoading.value = false
+    submitOptLoading.value = false
   }
 }
 
 // 提交后处理
-function handleAfterSubmit() {
+function nextRecord() {
   try {
-    ++operateRecordNumber.value
     // 继续审核
     if (reviewNext.value && reviewConvenientRef.value) {
       reviewConvenientRef.value.removeCurrent()
@@ -263,12 +305,12 @@ function closeHook() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['number', 'mete'] })
+  return tableSummary(param, { props: ['quantity', 'mete'] })
 }
 </script>
 
 <style lang="scss" scoped>
-.raw-mat-inbound-application-review-form {
+.raw-mat-outbound-list-review-form {
   .el-drawer__header .el-tag {
     min-width: 120px;
     text-align: center;

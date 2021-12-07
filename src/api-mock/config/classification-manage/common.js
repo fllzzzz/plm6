@@ -69,7 +69,8 @@ const getFinalMatClsByIdForSectionSteel = {
                 { code: '02', name: '12*10*200*500', 'unitWeight|10-30.1-2': 1 },
                 { code: '03', name: '13*10*200*500', 'unitWeight|10-30.1-2': 1 },
                 { code: '04', name: '13*10*100*200', 'unitWeight|10-30.1-2': 1 },
-                { code: '05', name: '15*15*110*300', 'unitWeight|10-30.1-2': 1 }
+                { code: '05', name: '15*15*110*300', 'unitWeight|10-30.1-2': 1 },
+                { code: '06', name: '57*21*3*9', 'unitWeight|10-30.1-2': 1 }
               ]
             }
           ]

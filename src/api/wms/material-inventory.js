@@ -4,12 +4,12 @@ import request from '@/utils/request'
  * 钢板库存
  * @returns
  */
-export function getSteelPlateInventory(data) {
+export function getSteelPlateInventory(params) {
   return request({
     module: 'wms',
     url: 'material-inventory/steel-plate',
     method: 'get',
-    data
+    params
   })
 }
 
@@ -17,12 +17,12 @@ export function getSteelPlateInventory(data) {
  * 型钢库存
  * @returns
  */
-export function getSectionSteelInventory(data) {
+export function getSectionSteelInventory(params) {
   return request({
     module: 'wms',
     url: 'material-inventory/section-steel',
     method: 'get',
-    data
+    params
   })
 }
 
@@ -30,12 +30,12 @@ export function getSectionSteelInventory(data) {
  * 钢卷库存
  * @returns
  */
-export function getSteelCoilInventory(data) {
+export function getSteelCoilInventory(params) {
   return request({
     module: 'wms',
     url: 'material-inventory/steel-coil',
     method: 'get',
-    data
+    params
   })
 }
 
@@ -43,12 +43,12 @@ export function getSteelCoilInventory(data) {
  * 辅材库存
  * @returns
  */
-export function getAuxMatInventory(data) {
+export function getAuxMatInventory(params) {
   return request({
     module: 'wms',
     url: 'material-inventory/auxiliary-material',
     method: 'get',
-    data
+    params
   })
 }
 
@@ -56,11 +56,11 @@ export function getAuxMatInventory(data) {
  * 气体库存
  * @returns
  */
-export function getGasInventory(data) {
+export function getGasInventory(params) {
   return request({
     module: 'wms',
     url: 'material-inventory/gas',
     method: 'get',
-    data
+    params
   })
 }

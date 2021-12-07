@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, watchEffect, ref } from 'vue'
+import { defineEmits, defineProps, computed, watchEffect, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 
@@ -65,6 +65,8 @@ import SteelCoil from './module/steel-coil.vue'
 import AuxMat from './module/aux-mat.vue'
 import Gas from './module/gas.vue'
 import RawMat from './module/raw-mat.vue'
+
+const emit = defineEmits(['to-query'])
 
 const props = defineProps({
   basicClass: {
@@ -99,6 +101,7 @@ const comp = computed(() => {
 })
 
 const queryVO = ref({})
+
 watchEffect(() => {
   queryVO.value = props.query
 })
@@ -107,12 +110,9 @@ watchEffect(() => {
 function toQuery() {
   if (typeof props.toQuery === 'function') {
     // 规格去空格后再返回
-    if (queryVO.value.spec) {
-      const specArr = queryVO.value.spec.split('*')
-      queryVO.value.specification = specArr.map((s) => s.trim()).join('*')
-    }
     props.toQuery()
   }
+  emit('to-query')
 }
 </script>
 

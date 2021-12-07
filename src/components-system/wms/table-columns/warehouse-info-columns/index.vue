@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="props.columns" />
+  <component :is="comp" :columns="columns" :show-project="showProject" />
 </template>
 
 <script setup>
@@ -13,7 +13,7 @@ const props = defineProps({
   },
   showProject: {
     type: Boolean,
-    default: true
+    default: false
   },
   columns: {
     type: Object

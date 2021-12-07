@@ -74,7 +74,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import review from './module/review.vue'
-
 // crud交由presenter持有
 const permission = {
   get: ['wms_supplier:get'],

@@ -84,7 +84,7 @@ const get = {
           },
           {
             id: 2, // 入库单id
-            basicClass: 8, // 采购物料基础类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -113,7 +113,7 @@ const get = {
           },
           {
             id: 3, // 入库单id
-            basicClass: 16, // 采购物料基础类型
+            basicClass: matClsEnum.GAS.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -142,7 +142,7 @@ const get = {
           },
           {
             id: 4, // 入库单id
-            basicClass: 8, // 采购物料基础类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
             licensePlate: patternLicensePlate, // 车牌号
@@ -216,7 +216,7 @@ const detail_id1 = {
             id: 1,
             serialNumber: '3192520223',
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             quantity: 10,
             thickness: 10,
@@ -245,7 +245,7 @@ const detail_id1 = {
           },
           {
             id: 2,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             classifyId: 103,
             specification: 'Q235B',
             quantity: 5,
@@ -278,7 +278,7 @@ const detail_id1 = {
           //   sn: '110_0',
           //   specification: '57*21*3*9',
           //   classifyId: 110,
-          //   basicClass: 2,
+          //   basicClass: matClsEnum.SECTION_STEEL.V,
           //   quantity: 1,
           //   length: 10000,
           //   totalLength: 10,
@@ -334,7 +334,7 @@ const detail_id1 = {
           {
             id: 5,
             classifyId: 120,
-            basicClass: 4,
+            basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             quantity: 1,
             color: '天蓝',
@@ -412,7 +412,7 @@ const detail_id2 = {
             classifyId: 204,
             specification: 'M27*60',
             color: '天蓝',
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',
@@ -483,7 +483,7 @@ const detail_id3 = {
             id: 1,
             classifyId: 901,
             // specification: '',
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',
