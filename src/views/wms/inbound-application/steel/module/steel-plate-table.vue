@@ -97,9 +97,9 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column prop="heatNoAndBatchNo" label="炉批号/卷号" align="center" min-width="150px">
+    <el-table-column prop="heatNoAndBatchNo" label="炉批号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号/卷号" />
+        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号" />
       </template>
     </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">

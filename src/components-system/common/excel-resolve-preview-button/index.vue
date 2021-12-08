@@ -13,24 +13,9 @@
       :auto-upload="false"
       :show-file-list="false"
     >
-      <common-button
-        v-if="props.disabled"
-        :loading="resolveLoading"
-        :disabled="props.disabled"
-        :icon="props.icon"
-        :size="props.btnSize"
-        :type="props.btnType"
-        >{{ props.btnName }}</common-button
-      >
-      <el-button
-        v-else
-        :loading="resolveLoading"
-        :disabled="props.disabled"
-        :icon="props.icon"
-        :size="props.btnSize"
-        :type="props.btnType"
-        >{{ props.btnName }}</el-button
-      >
+      <common-button :loading="resolveLoading" :disabled="props.disabled" :icon="props.icon" :size="props.btnSize" :type="props.btnType">
+        {{ props.btnName }}
+      </common-button>
     </el-upload>
     <common-dialog
       :title="props.title"
@@ -68,7 +53,7 @@ import { defineEmits, defineProps, ref } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
-import { ElUpload, ElMessage, ElButton } from 'element-plus'
+import { ElUpload, ElMessage } from 'element-plus'
 import { resolveExcel, fileVerification, formatExcelData } from '@/utils/file'
 
 const emit = defineEmits(['success'])
@@ -158,7 +143,7 @@ async function submit() {
   try {
     const { validResult, dealList } = tableValidate(list.value)
     if (validResult) {
-      await props.submitFn ? props.submitFn(cleanUpData(dealList)) : props.template.submit(cleanUpData(dealList))
+      (await props.submitFn) ? props.submitFn(cleanUpData(dealList)) : props.template.submit(cleanUpData(dealList))
       emit('success', dealList)
       handleClose()
     }
@@ -191,14 +176,22 @@ async function handleChange(file, fileList) {
   try {
     previewVisible.value = true
     resolveLoading.value = true
-    // TODO: 清空无效
-    // uploadRef.value.clearFiles()
     const resolveData = await resolveExcel(file.raw)
     list.value = formatExcelData(resolveData, props.template)
   } catch (error) {
     console.log('excel文件解析', error)
   } finally {
     resolveLoading.value = false
+    handleClear()
+  }
+}
+
+// 清空
+function handleClear() {
+  // TODO: 清空无效
+  // uploadRef.value.clearFiles()
+  if (uploadRef.value && uploadRef.value.uploadRef) {
+    uploadRef.value.uploadRef.fileList.length = 0
   }
 }
 
@@ -214,7 +207,7 @@ function handleExceed(files, fileList) {
   ::v-deep(.el-upload) {
     width: 100%;
     .el-button {
-      width:100%
+      width: 100%;
     }
   }
 }

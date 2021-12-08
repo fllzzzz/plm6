@@ -4,9 +4,7 @@
       <!-- 物料查询相关 -->
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery">
         <template #firstLineRight>
-            <el-badge :value="outboundListNumber" :hidden="outboundListNumber <= 0" style="margin-right: 15px">
-              <common-button icon="el-icon-tickets" size="mini" type="success" @click="openOutboundList">出库清单</common-button>
-            </el-badge>
+            <current-user-outbound-list />
             <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
         </template>
         <template #afterProjectWarehouseType>
@@ -55,7 +53,6 @@
 </template>
 
 <script setup>
-import { getDetailNumberByCurrentUser } from '@/api/wms/outbound/raw-mat-outbound-list'
 import { inject, onMounted, ref } from 'vue'
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
@@ -63,6 +60,7 @@ import { regHeader } from '@compos/use-crud'
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
+import CurrentUserOutboundList from '@/views/wms/outbound-components/current-user-outbound-list/index.vue'
 
 const permission = inject('permission')
 
@@ -75,12 +73,9 @@ const { CRUD, crud, query } = regHeader(defaultQuery)
 
 // 未打印的标签数量
 const notPrintedMaterialQuantity = ref(0)
-// 出库清单中的记录的数量
-const outboundListNumber = ref(0)
 
 onMounted(async () => {
   // notPrintedMaterialQuantity.value = await getDetailNumberByCurrentUser()
-  outboundListNumber.value = await getDetailNumberByCurrentUser()
 })
 
 // CRUD.HOOK.handleRefresh = async (crud, { data }) => {
@@ -106,8 +101,6 @@ async function handleBasicClassChange(val) {
 }
 
 // TODO:
-// 打开出库清单
-function openOutboundList() {}
 
 // 去出库记录
 function toOutboundRecord() {}

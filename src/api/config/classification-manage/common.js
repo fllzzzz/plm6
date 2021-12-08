@@ -7,6 +7,7 @@ export function getFinalMatClsById(id) {
     module: 'config',
     url: `classification/final-material/${id}`,
     method: 'get',
+    // cancelKey: `classification/final-material/${id}`
     cancelKey: false
   })
 }

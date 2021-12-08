@@ -10,6 +10,8 @@ import {
   // ElButton,  // 非必要不使用ElButton，在禁用后点击按钮内文字仍可触发点击事件（使用common-button）
   // ElButtonGroup,
   // ElCalendar,
+  ElDescriptions,
+  ElDescriptionsItem,
   ElCard,
   ElCarousel,
   ElCarouselItem,
@@ -97,6 +99,8 @@ const components = [
   // ElButton,
   // ElButtonGroup,
   // ElCalendar,
+  ElDescriptions,
+  ElDescriptionsItem,
   ElCard,
   ElCarousel,
   ElCarouselItem,

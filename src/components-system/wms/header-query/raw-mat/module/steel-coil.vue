@@ -1,6 +1,6 @@
 <template>
   <el-input
-    v-model.trim="queryVO.spec"
+    v-model.trim="queryVO.specification"
     clearable
     style="width: 130px"
     size="small"

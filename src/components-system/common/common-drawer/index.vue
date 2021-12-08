@@ -248,6 +248,7 @@ defineExpose({
       font-weight: bold;
       font-size: 18px;
       color: #000;
+      margin-right: 10px;
     }
     &::before {
       content: '';

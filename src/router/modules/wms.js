@@ -35,7 +35,7 @@ export default {
         },
         {
           name: 'RawMatInboundApplicationRecord',
-          path: 'raw-mat-record',
+          path: 'inbound-application-record/raw-mat',
           hidden: false,
           component: '/wms/inbound-application-record/raw-mat/index',
           meta: { title: '原材料-入库申请', icon: 'project', noCache: true }
@@ -53,7 +53,7 @@ export default {
       children: [
         {
           name: 'RawMatInboundApplicationReview',
-          path: 'raw-mat-record',
+          path: 'inbound-application-review/raw-mat',
           hidden: false,
           component: '/wms/inbound-application-review/raw-mat/index',
           meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
@@ -77,11 +77,18 @@ export default {
           meta: { title: '钢材', icon: 'project', noCache: true }
         },
         {
-          name: 'WMSRawMatOutboundList',
-          path: 'outbound-list/raw-mat',
+          name: 'WMSOutboundReview',
+          path: 'outbound-application-review/raw-mat',
           hidden: false,
-          component: '/wms/outbound-list/raw-mat/index',
-          meta: { title: '原材料-出库清单', icon: 'project', noCache: true }
+          component: '/wms/outbound-application-review/raw-mat/index',
+          meta: { title: '原材料-出库审核', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSOutboundRecord',
+          path: 'outbound-application-record/raw-mat',
+          hidden: false,
+          component: '/wms/outbound-application-record/raw-mat/index',
+          meta: { title: '原材料-出库记录', icon: 'project', noCache: true }
         }
       ]
     },

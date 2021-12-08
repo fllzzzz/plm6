@@ -103,11 +103,10 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/mes/production-config/production-line'
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, inject } from 'vue'
 import { enabledEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -146,11 +145,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.line-box',
-  paginate: true,
-  extraHeight: 157
-})
+const maxHeight = inject('maxHeight')
 
 async function changeStatus(data, val) {
   try {

@@ -15,7 +15,7 @@
     >
       <!-- <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
-          <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="basicClass" :row="row" />
+          <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="basicClass" :row="row" show-brand />
         </template>
       </el-expand-table-column> -->
       <el-table-column type="selection" width="55" align="center" />
@@ -36,7 +36,7 @@
           <common-button v-permission="permission.transfer" type="warning" size="mini" @click="toTransfer(row)">
             <svg-icon icon-class="wms-transfer" />
           </common-button>
-          <common-button icon="el-icon-printer" type="success" size="mini" @click="toPrintLabel(row)"/>
+          <common-button icon="el-icon-printer" type="success" size="mini" @click="toPrintLabel(row)" />
         </template>
       </el-table-column>
     </common-table>
@@ -112,10 +112,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     toSmallest: false,
     toNum: false
   })
-  data.content.forEach(v => {
+  data.content.forEach((v) => {
     v.operableQuantity = v.quantity - v.frozenQuantity
     v.operableMete = v.mete - v.frozenMete
-    if (v.outboundUnitType === measureTypeEnum.MEASURE.V) {
+    if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
       // 实际在出库中使用的数量
       v.corQuantity = v.quantity
       v.corFrozenQuantity = v.frozenQuantity

@@ -110,7 +110,7 @@ async function fetch() {
     _options = content.map((o) => {
       return {
         value: o.id,
-        label: `${o.packageNumber}`,
+        label: `${o.serialNumber}`,
         productType: o.productType
       }
     })

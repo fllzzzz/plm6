@@ -14,7 +14,13 @@
     <template #content>
       <div class="el-drawer-container">
         <div class="table-content">
-          <common-table ref="table" :data="assignAbleList" empty-text="暂无数据" @selection-change="handleSelectionChange">
+          <common-table
+            ref="table"
+            :max-height="maxHeight"
+            :data="assignAbleList"
+            empty-text="暂无数据"
+            @selection-change="handleSelectionChange"
+          >
             <el-table-column fixed type="selection" width="55" align="center" />
             <el-table-column fixed label="序号" type="index" align="center" width="60" />
             <!-- <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目" width="120px" />
@@ -98,11 +104,12 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.common-drawer',
     extraBox: ['.el-drawer__header'],
-    wrapperBox: ['.el-drawer__body'],
+    wrapperBox: ['.el-drawer__body', '.el-drawer-container'],
     navbar: false,
-    clientHRepMainH: true,
-    minHeight: 300
+    extraHeight: 130,
+    clientHRepMainH: true
   },
   drawerRef
 )

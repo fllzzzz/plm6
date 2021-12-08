@@ -11,7 +11,7 @@
     prop="classifyFullName"
     label="物料种类"
     align="center"
-    :width="props.basicClass > STEEL_ENUM ? 250 : 100"
+    :width="classifyFullNameWidth"
     fixed="left"
   />
   <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" show-overflow-tooltip width="270" fixed="left">
@@ -47,6 +47,11 @@ const props = defineProps({
   }
 })
 
+// 物料全名宽度
+const classifyFullNameWidth = computed(() => {
+  // 基础分类不存在，或基础分类不为钢材，则宽度为100
+  return !props.basicClass || props.basicClass > STEEL_ENUM ? 250 : 100
+})
 const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))
 const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible('classifyFullName'))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))

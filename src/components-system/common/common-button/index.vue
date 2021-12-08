@@ -39,7 +39,7 @@
       :auto-insert-space="autoInsertSpace"
       @click="handleClick"
     >
-      <span @click.stop="handleClick"><slot /></span>
+      <slot />
     </el-button>
     <el-button
       v-else-if="!props.disabled && !slotDefault"

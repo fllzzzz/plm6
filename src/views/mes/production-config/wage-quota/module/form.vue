@@ -15,11 +15,14 @@
         {{ form.name }}
       </el-form-item>
       <el-form-item label="工序" prop="processId">
-        <common-radio-button
+        <common-select
           v-model="form.processId"
           :options="form.processOption || []"
           size="small"
           type="other"
+          clearable
+          style="width: 250px"
+          placeholder="请选择工序"
           @change="processChange"
         />
       </el-form-item>
@@ -121,7 +124,9 @@ CRUD.HOOK.beforeSubmit = async () => {
     ElMessage.warning('请勾选的一种单价作为工资结算依据')
     return false
   }
-  form.processOption[form.processId].wageQuota.wageQuotaType = checkedKey ? wageQuotaTypeEnum[checkedKey].V : wageQuotaTypeEnum[priceKey[0]].V
+  form.processOption[form.processId].wageQuota.wageQuotaType = checkedKey
+    ? wageQuotaTypeEnum[checkedKey].V
+    : wageQuotaTypeEnum[priceKey[0]].V
   const { areaPice, lengthPrice, weightPrice, wageQuotaType } = form.processOption[form.processId].wageQuota
   const { productProcessId } = form.processOption[form.processId]
   form.value = Object.assign(form, { areaPice, lengthPrice, weightPrice, wageQuotaType, productProcessId })

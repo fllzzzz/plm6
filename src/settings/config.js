@@ -65,6 +65,16 @@ export const MIN_UNIT = {
   VOLUME_DP: 0
 }
 
+export const QR_SCAN_F_TYPE = {
+  MEW_PRODUCTION: 1,
+  MES_PACKAGE_SHIP: 2
+}
+
+export const QR_SCAN_TYPE = {
+  MES_PACKAGE: 1,
+  MES_SHIP_LIST: 2
+}
+
 // mes系统单位
 export const MES_MATERIAL_UNIT = {}
 MES_MATERIAL_UNIT[componentTypeEnum.STRUCTURE.V] = { unit: 'kg', normal: 'kg', smallest: 'g', precision: 3 }
@@ -104,6 +114,7 @@ MES_MATERIAL_UNIT[componentListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum
 MES_MATERIAL_UNIT[componentListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 
 export const DP = {
+  YUAN: 2,
   COM_WT__T: 2, // 通用_重量（t）
   COM_WT__KG: 2, // 通用_重量（kg）
   COM_WT__G: 3, // 通用_重量（kg）

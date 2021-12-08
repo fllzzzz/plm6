@@ -154,6 +154,24 @@ export default {
       ]
     },
     {
+      path: '/mes-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'MesConfigManage',
+      alwaysShow: true,
+      redirect: '/mes-config/base',
+      meta: { title: 'MES-配置管理', icon: 'project', noCache: true },
+      children: [
+        {
+          name: 'MesBaseConfig',
+          path: 'base',
+          hidden: false,
+          component: '/config-manage/mes/base/index',
+          meta: { title: '基础配置', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/mes/production-config',
       component: 'Layout',
       hidden: false,
