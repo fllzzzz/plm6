@@ -38,7 +38,7 @@
       :project-id="globalProjectId"
       :factory-id="factoryId"
       :monomer-id="monomerId"
-      :district-id="districtId"
+      :area-id="areaId"
       @add="addIn"
     />
     <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :edit-data="editData" @handleSuccess="handleSuccess" />
@@ -69,7 +69,7 @@ const { globalProjectId } = mapGetters(['globalProjectId'])
 const packType = ref(packTypeEnum.STRUCTURE.V)
 const factoryId = ref()
 const monomerId = ref()
-const districtId = ref()
+const areaId = ref()
 // 编辑信息（打包记录页面传过来的参数）
 const editData = ref({})
 const bagId = ref()

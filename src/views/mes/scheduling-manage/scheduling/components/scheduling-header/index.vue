@@ -8,14 +8,14 @@
     <crudOperation>
       <template v-slot:optRight>
         <!-- 任务录入按钮 -->
-        <template v-if="true || (query.districtId && checkPermission(permission.save))">
+        <template v-if="true || (query.areaId && checkPermission(permission.save))">
           <template v-if="modifying">
             <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
             <common-button type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
           </template>
           <common-button v-else type="primary" size="mini" @click.stop="handelModifying(true)">任务录入</common-button>
           <el-popover
-            v-if="true || (query.districtId && checkPermission(permission.clear))"
+            v-if="true || (query.areaId && checkPermission(permission.clear))"
             v-model:visible="clearPopVisible"
             placement="top"
             width="600"
@@ -35,7 +35,7 @@
           </el-popover>
         </template>
         <common-button
-          v-if="true || (query.districtId && checkPermission(permission.save))"
+          v-if="true || (query.areaId && checkPermission(permission.save))"
           type="warning"
           size="mini"
           @click.stop="openQuicklyAssignDlg"
@@ -72,7 +72,7 @@ import mPreview from '../scheduling-preview'
 const defaultQuery = {
   serialNumber: '',
   monomerId: { value: undefined, resetAble: false },
-  districtId: { value: undefined, resetAble: false }
+  areaId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const permission = inject('permission')
@@ -179,9 +179,9 @@ function handelModifying(modifying, reset = false) {
   emit('update:modifying', modifying)
 }
 
-// function fetchMonomerAndArea({ monomerId, districtId }) {
+// function fetchMonomerAndArea({ monomerId, areaId }) {
 //   query.monomerId = monomerId
-//   query.districtId = districtId
+//   query.areaId = areaId
 //   crud.toQuery()
 // }
 </script>

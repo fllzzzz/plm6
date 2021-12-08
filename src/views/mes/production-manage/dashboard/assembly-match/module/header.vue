@@ -87,7 +87,7 @@ const defaultQuery = {
   material: '',
   processingStatus: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
-  districtId: { value: undefined, resetAble: false },
+  areaId: { value: undefined, resetAble: false },
   factoryId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false }
 }

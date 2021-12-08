@@ -75,7 +75,7 @@ const { crud, CRUD } = useCRUD(
     permission: { ...permission },
     crudApi: { get },
     optShow: { ...optShow }
-    // requiredQuery: ['districtId'],
+    // requiredQuery: ['areaId'],
     // queryOnPresenterCreated: false
   },
   tableRef

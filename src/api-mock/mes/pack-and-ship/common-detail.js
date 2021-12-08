@@ -14,7 +14,7 @@ export default {
         'id': 1,
         'name': '单体' + '@cword(2,15)'
       },
-      'district': {
+      'area': {
         'id': 1,
         'name': '区域' + '@cword(2,15)'
       },
@@ -53,7 +53,7 @@ export default {
         'id': 1,
         'name': '单体' + '@cword(2,15)'
       },
-      'district': {
+      'area': {
         'id': 1,
         'name': '区域' + '@cword(2,15)'
       },

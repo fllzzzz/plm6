@@ -319,7 +319,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['districtId'],
+    // requiredQuery: ['areaId'],
     invisibleColumns: ['districtName', 'length', 'thickness', 'width', 'totalArea', 'totalLength', 'weight', 'remark']
     // queryOnPresenterCreated: false
   },

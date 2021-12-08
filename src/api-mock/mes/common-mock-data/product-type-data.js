@@ -11,7 +11,7 @@ export const artifactListInfo = {
     'id': 1,
     'name': '单体1'
   },
-  'district': {
+  'area': {
     'id': 1,
     'name': '区域'
   },
@@ -24,7 +24,7 @@ export const artifactListInfo = {
   'totalNetWeight|1-10000.1-8': 4135.82000000,
   'grossWeight|1-10000.1-8': 4135.82000000,
   'totalGrossWeight|1-10000.1-8': 4135.82000000,
-  'area|1-10000.1-8': 12.00000000,
+  'surfaceArea|1-10000.1-8': 12.00000000,
   'drawingNumber': '@word(2,6)',
   'remark': '@cword(2,60)',
   'quantity|1-100': 10
@@ -43,7 +43,7 @@ export const enclosureListInfo = {
     'id': 1,
     'name': '单体1'
   },
-  'district': {
+  'area': {
     'id': 1,
     'name': '区域'
   },
