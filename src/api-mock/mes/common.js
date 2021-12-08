@@ -7,9 +7,9 @@ const getFactorySimple = {
       'code': 20000,
       'data': {
         'content|1-100': [{
-          'id|+1': 3,
-          'name': '@cword(2,5)',
-          'shortName': '@cword(2)',
+          'id|+1': 1,
+          'name|+1': ['一号工厂', '二号工厂', '三号工厂'],
+          'shortName|+1': ['一工', '二工', '三工'],
           'tagColor': '@color'
         }]
       },

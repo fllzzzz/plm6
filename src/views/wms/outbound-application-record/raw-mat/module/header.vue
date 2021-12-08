@@ -10,7 +10,7 @@
       @change="crud.toQuery"
     />
     <el-date-picker
-      v-model="query.createTime"
+      v-model="query.userUpdateTime"
       :default-time="defaultTime"
       type="daterange"
       range-separator=":"
@@ -18,15 +18,15 @@
       value-format="x"
       :shortcuts="PICKER_OPTIONS_SHORTCUTS"
       unlink-panels
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
+      start-placeholder="申请开始日期"
+      end-placeholder="申请结束日期"
       style="width: 240px"
       class="filter-item"
       @change="crud.toQuery"
     />
     <el-input
-      v-model="query.recipientName"
-      placeholder="可输入领用人名称搜索"
+      v-model="query.operatorName"
+      placeholder="可输入操作人名称搜索"
       class="filter-item"
       style="width: 200px"
       size="small"
@@ -50,8 +50,8 @@ import rrOperation from '@crud/RR.operation'
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
-  createTime: [], // [开始日期，结束日期]
-  recipientName: undefined, // 领用人姓名
+  userUpdateTime: [], // [开始日期，结束日期]
+  operatorName: undefined, // 操作人姓名 含领用人/申请人/审核人
   basicClass: undefined // 基础类型
 }
 

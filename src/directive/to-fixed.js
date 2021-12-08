@@ -15,7 +15,7 @@ function resolve(el, binding) {
   const { innerText } = el
   let val
   let precision
-  if (typeof value === 'object') {
+  if (value && typeof value === 'object') {
     val = value.val
     precision = value.dp
   } else {

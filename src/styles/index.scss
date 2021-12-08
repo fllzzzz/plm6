@@ -123,6 +123,12 @@ div:focus {
   align-items: center;
 }
 
+.flex-rbs {
+  @extend .flex-r;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
 .flex-rss {
   @extend .flex-r;
   justify-content: flex-start;

@@ -43,7 +43,7 @@ export function reviewReturned(id) {
   return request({
     module: 'wms',
     url: `outbound/application/review/raw-materials/${id}/returned`,
-    method: 'delete'
+    method: 'put'
   })
 }
 
@@ -63,7 +63,7 @@ export function reviewPassed(id) {
  * 获取当前用户的出库单
  * @returns
  */
-export function getByCurrentUser() {
+export function getDetailByCurrentUser() {
   return request({
     module: 'wms',
     url: 'outbound/application/review/raw-materials/current-user',
@@ -85,13 +85,15 @@ export function getDetailNumberByCurrentUser() {
 
 /**
  * 删除出库清单中的物料
+ * @param {object} listId 出库清单id, materialId 单条物料id
  * @returns
  */
-export function delMaterial(materialId) {
+export function delMaterial(data) {
   return request({
     module: 'wms',
-    url: `outbound/application/review/raw-materials/material/${materialId}/del`,
-    method: 'put'
+    url: `outbound/application/review/raw-materials/material-del`,
+    method: 'put',
+    data
   })
 }
 

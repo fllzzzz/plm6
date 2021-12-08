@@ -8,6 +8,7 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import steel from './module/steel.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
+import rawMat from './module/raw-mat.vue'
 
 const props = defineProps({
   basicClass: {
@@ -29,7 +30,7 @@ const comp = computed(() => {
     case rawMatClsEnum.GAS.V:
       return gas
     default:
-      return steel
+      return rawMat
   }
 })
 </script>

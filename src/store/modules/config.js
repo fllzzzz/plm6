@@ -330,8 +330,8 @@ const actions = {
           serialNumber: res.serialNumber, // 编码
           measureUnit: res.measureUnit, // 计量单位
           accountingUnit: res.accountingUnit, // 核算单位
-          accountingPrecision: res.accountingPrecision, // 核算单位小数精度
-          measurePrecision: res.measurePrecision, // 计量单位小数精度
+          accountingPrecision: res.accountingPrecision || 0, // 核算单位小数精度
+          measurePrecision: res.measurePrecision || 0, // 计量单位小数精度
           outboundUnitType: res.outboundUnitType, // 出库方式
           basicClass: res.basicClass,
           hasUnitConfig: !!res.accountingUnit

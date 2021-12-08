@@ -176,14 +176,22 @@ async function handleChange(file, fileList) {
   try {
     previewVisible.value = true
     resolveLoading.value = true
-    // TODO: 清空无效
-    // uploadRef.value.clearFiles()
     const resolveData = await resolveExcel(file.raw)
     list.value = formatExcelData(resolveData, props.template)
   } catch (error) {
     console.log('excel文件解析', error)
   } finally {
     resolveLoading.value = false
+    handleClear()
+  }
+}
+
+// 清空
+function handleClear() {
+  // TODO: 清空无效
+  // uploadRef.value.clearFiles()
+  if (uploadRef.value && uploadRef.value.uploadRef) {
+    uploadRef.value.uploadRef.fileList.length = 0
   }
 }
 
