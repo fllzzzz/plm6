@@ -29,7 +29,7 @@ export function setOverweightSMSRecipient({ id, phone, maxWeight }) {
  */
 export function getSafetyFactor() {
   return request({
-    url: 'api/config/safetyFactor',
+    url: 'api/config/safety/factor',
     method: 'get'
   })
 }
@@ -38,11 +38,11 @@ export function getSafetyFactor() {
  * 设置安全余额系数
  * @param {number} safetyFactor 安全系数
  */
-export function setSafetyFactor(safetyFactor) {
+export function setSafetyFactor({ safetyFactor }) {
   return request({
-    url: 'api/config/safetyFactor',
+    url: 'api/config/safety/factor',
     method: 'put',
-    data: safetyFactor
+    data: { safetyFactor }
   })
 }
 

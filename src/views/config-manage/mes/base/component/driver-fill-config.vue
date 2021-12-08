@@ -31,6 +31,7 @@
 <script setup>
 import { getDriverConfig as getConfig, setDriverConfig as setConfig } from '@/api/config/mes/base'
 import { ref, computed, onMounted, inject } from 'vue'
+import { ElRadioGroup } from 'element-plus'
 
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
