@@ -25,7 +25,8 @@
 import { ref, defineEmits, defineProps } from 'vue'
 
 import { getToken } from '@/utils/storage'
-import { getFileSuffix, downloadFileForResponse } from '@/utils/file'
+// import { getFileSuffix, downloadFileForResponse } from '@/utils/file'
+import { getFileSuffix } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
 
 import { ElUpload, ElMessage } from 'element-plus'

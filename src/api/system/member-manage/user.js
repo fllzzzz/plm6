@@ -36,4 +36,12 @@ export function del(ids) {
   })
 }
 
+export function editStatus(data) {
+  return request({
+    module: 'system',
+    url: 'user/enabled',
+    method: 'put',
+    data
+  })
+}
 export default { add, edit, del, get }

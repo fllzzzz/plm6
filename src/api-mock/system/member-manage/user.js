@@ -890,9 +890,23 @@ const delUser = {
     }
   }
 }
+
+const editUserStatus = {
+  url: '/api/user/enabled',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      'code': 20000,
+      'message': '操作成功',
+      'data': 10
+    }
+  }
+}
 export default [
   getUser,
   addUser,
   editUser,
-  delUser
+  delUser,
+  editUserStatus
 ]

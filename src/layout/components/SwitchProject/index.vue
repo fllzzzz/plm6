@@ -26,12 +26,16 @@
         class="project-cascader"
         style="width: 100%"
       />
-      <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#c1c2c5'}"> All </span>
+      <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#dcdfe6'}"> All </span>
     </span>
     <el-tooltip class="item" effect="dark" content="刷新项目列表" placement="right">
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
       <i v-else class="el-icon-loading" />
     </el-tooltip>
+    <div style="font-size:13px;margin-left:15px;color:#333;">
+      <el-tag v-if="currentProject && currentProject.endDate" type="info" effect="plain">完成日期:<span v-parse-time="'{y}-{m}-{d}'">{{ currentProject.endDate }}</span> | 工期:{{ dateDifference(currentProject.startDate, currentProject.endDate) }}天</el-tag>
+      <el-tag v-if="currentProject && currentProject.businessType" type="info" effect="plain" style="margin-left:5px;">{{ businessTypeEnum.VL[currentProject.businessType] }}</el-tag>
+    </div>
   </div>
 </template>
 
@@ -41,10 +45,11 @@ import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 import { allPT } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
-import { projectTypeEnum } from '@enum-ms/contract'
+import { projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 
 import useUserProjects from '@compos/store/use-user-projects'
 import { getBitwiseBack } from '@/utils/data-type/number'
+import { dateDifference } from '@/utils/date'
 
 const store = useStore()
 
@@ -95,7 +100,7 @@ const currentProjectId = ref()
 const refreshLoading = ref(false)
 let currentProjectChange = false
 
-const { routeProjectType, currentProjectType, globalProjectId } = mapGetters(['routeProjectType', 'currentProjectType', 'globalProjectId'])
+const { routeProjectType, currentProjectType, globalProjectId, currentProject } = mapGetters(['routeProjectType', 'currentProjectType', 'globalProjectId', 'currentProject'])
 
 // 是否显示
 const showable = computed(() => isNotBlank(routeProjectType))
@@ -178,7 +183,6 @@ watch(
 
 // 处理项目类型变更
 async function handleTypeChange(val) {
-  console.log('val', val)
   try {
     // ++this.cascaderKey
     await store.dispatch('project/changeProjectType', val)
@@ -191,7 +195,9 @@ async function handleTypeChange(val) {
 async function projectChange(val) {
   currentProjectChange = true
   try {
+    const current = projects.value.find(v => v.id === val)
     await store.dispatch('project/setProjectId', val)
+    await store.dispatch('project/setCurrentProject', current)
     // if (val && loginPath.indexOf(this.$route.path) === -1) {
     //   this.refreshSelectedTag()
     // } else {
@@ -233,7 +239,6 @@ function refreshProjectList() {
     border: none;
     user-select: none;
     font-size: 14px;
-    // font-weight: bold;
     margin: 0 5px;
   }
 
