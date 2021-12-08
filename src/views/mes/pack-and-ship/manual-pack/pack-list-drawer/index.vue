@@ -41,7 +41,7 @@ v-for="item in packTypeEnum.ENUM"
         <template v-if="packType === packTypeEnum.STRUCTURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.factory" :name="scope.row.factory.shortName" :color="scope.row.factory.tagColor" />
+              <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -84,7 +84,7 @@ v-for="item in packTypeEnum.ENUM"
         <template v-if="packType === packTypeEnum.ENCLOSURE.V">
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="120px">
             <template v-slot="scope">
-              <table-cell-tag v-if="scope.row.factory" :name="scope.row.factory.shortName" :color="scope.row.factory.tagColor" />
+              <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
@@ -164,7 +164,13 @@ v-for="item in packTypeEnum.ENUM"
       />
     </template>
   </common-drawer>
-  <chose-add-method-dialog ref="choseDialogRef" v-model:visible="choseVisible" :packType="packType" :packLoading="packLoading" @handlePack="handlePack" />
+  <chose-add-method-dialog
+    ref="choseDialogRef"
+    v-model:visible="choseVisible"
+    :packType="packType"
+    :packLoading="packLoading"
+    @handlePack="handlePack"
+  />
 </template>
 
 <script setup>
@@ -179,7 +185,7 @@ import { toFixed } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import factorySelect from '@comp-base/factory-select'
-import tableCellTag from '@comp-common/table-cell-tag/index'
+import factoryTableCellTag from '@comp-common/factory-table-cell-tag/index'
 import choseAddMethodDialog from '../chose-add-method-dialog'
 
 const drawerRef = ref()
@@ -287,8 +293,7 @@ async function handlePack({ bagId, isNew, selectBagId }) {
       remark: remark.value,
       packageLinks: [],
       productType: packType.value,
-      // projectId: projectId.value
-      projectId: 1
+      projectId: projectId.value
     }
     const _list = listObj[packTypeEnum.VK[packType.value]]
     params.packageLinks = _list.map((v) => {
