@@ -4,8 +4,8 @@
       <!-- 物料查询相关 -->
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery">
         <template #firstLineRight>
-            <current-user-outbound-list />
-            <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+          <current-user-outbound-list ref="currentUserOutboundListRef" />
+          <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
         </template>
         <template #afterProjectWarehouseType>
           <common-radio-button
@@ -49,30 +49,61 @@
         </el-badge>
       </template>
     </crud-operation>
+    <batch-outbound-handling-form
+      v-model:visible="batchOutboundHandlingVisible"
+      :project-warehouse-type="query.projectWarehouseType"
+      :basic-class="query.basicClass"
+      :material-list="crud.selections"
+      @success="handleBatchOutbound"
+    />
   </div>
 </template>
 
 <script setup>
-import { inject, onMounted, ref } from 'vue'
+import { defineExpose, inject, watch, onMounted, ref } from 'vue'
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+
 import { regHeader } from '@compos/use-crud'
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import CurrentUserOutboundList from '@/views/wms/outbound-components/current-user-outbound-list/index.vue'
+import batchOutboundHandlingForm from '@/views/wms/outbound-components/batch-outbound-handling-form/index.vue'
+import { mapGetters } from '@/store/lib'
 
 const permission = inject('permission')
 
 // 查询参数
 const defaultQuery = {
+  projectId: { value: undefined, resetAble: false }, // 项目id
+  projectWarehouseType: { value: projectWarehouseTypeEnum.PUBLIC.V, resetAble: false },
   basicClass: { value: steelClsEnum.STEEL_PLATE.V, resetAble: false }
 }
 
-const { CRUD, crud, query } = regHeader(defaultQuery)
+const { crud, query } = regHeader(defaultQuery)
+
+// 出库清单组件
+const currentUserOutboundListRef = ref()
+const batchOutboundHandlingVisible = ref(false)
 
 // 未打印的标签数量
 const notPrintedMaterialQuantity = ref(0)
+
+// 全局项目id
+const { globalProjectId } = mapGetters('globalProjectId')
+// 选中项目库时， 根据项目id的变化刷新列表
+watch(
+  globalProjectId,
+  (val) => {
+    if (query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
+      crud.query.projectId = val
+      crud.toQuery()
+    }
+  },
+  { immediate: true }
+)
 
 onMounted(async () => {
   // notPrintedMaterialQuantity.value = await getDetailNumberByCurrentUser()
@@ -106,7 +137,15 @@ async function handleBasicClassChange(val) {
 function toOutboundRecord() {}
 
 // 批量出库
-function toBatchOutbound() {}
+function toBatchOutbound() {
+  batchOutboundHandlingVisible.value = true
+}
+
+// 批量出库成功
+function handleBatchOutbound() {
+  updateListNumber()
+  crud.toQuery()
+}
 
 // 批量调拨
 function toBatchTransfer() {}
@@ -119,4 +158,13 @@ function toPrintNotPrintedLabel() {}
 
 // 打开冻结记录
 function openFreezeRecords() {}
+
+// 更新出库清单
+function updateListNumber() {
+  currentUserOutboundListRef.value && currentUserOutboundListRef.value.updateListNumber()
+}
+
+defineExpose({
+  updateListNumber
+})
 </script>

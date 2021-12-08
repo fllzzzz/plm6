@@ -50,7 +50,7 @@ const getDetailNumberByCurrentUser = {
     return {
       code: 20000,
       message: '成功',
-      data: 2
+      data: 5
     }
   }
 }
@@ -121,6 +121,7 @@ const getDetailByCurrentUser = {
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 10,
             thickness: 10,
             length: 1000,
@@ -139,6 +140,12 @@ const getDetailByCurrentUser = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             factoryId: 1,
             warehouse: {
               id: 1,
@@ -151,6 +158,7 @@ const getDetailByCurrentUser = {
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 1,
             length: 10000,
             totalLength: 10,
@@ -165,6 +173,12 @@ const getDetailByCurrentUser = {
               id: 1,
               name: '长安街666666号辅路',
               shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factoryId: 1,
@@ -374,6 +388,7 @@ const detail_id1 = {
             basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 2207,
             color: '天蓝',
             brand: '武钢',
@@ -390,6 +405,12 @@ const detail_id1 = {
               id: 1,
               name: '长安街666666号辅路',
               shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factoryId: 1,
@@ -431,6 +452,7 @@ const detail_id2 = {
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 10,
             thickness: 10,
             length: 1000,
@@ -447,6 +469,12 @@ const detail_id2 = {
               id: 1,
               name: '长安街666666号辅路',
               shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factoryId: 1,

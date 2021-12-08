@@ -9,8 +9,8 @@
         </template>
         <template #afterBrand>
           <el-form-item label="炉批号">
-        <span>{{ material.heatNoAndBatchNo }}</span>
-      </el-form-item>
+            <span>{{ material.heatNoAndBatchNo }}</span>
+          </el-form-item>
         </template>
       </common-material-info>
     </div>
@@ -73,14 +73,15 @@ const validateHalfSize = (rule, value, callback) => {
 }
 
 const rules = {
+  projectId: [{ required: true, message: '请选择出库项目', trigger: 'blur' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'blur' }],
   halfMode: [{ required: true, message: '请选择物料半出方式', trigger: 'blur' }],
   halfSize: [
-    { required: true, message: '请填写半出尺寸', trigger: 'change' },
+    { required: true, message: '请填写半出尺寸', trigger: 'blur' },
     { validator: validateHalfSize, trigger: 'change' }
   ],
-  quantity: [
-    { required: true, message: '请填写数量', trigger: 'change' },
+  quantity: [ // 点击加减按钮为change,因此将两种trigger方式都包含
+    { required: true, message: '请填写数量', trigger: 'blur' },
     { validator: validateQuantity, trigger: 'change' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
@@ -139,12 +140,18 @@ async function submit() {
 
 // 重置表单
 function resetForm() {
-  formRef.value.resetFields()
+  formRef.value && formRef.value.resetFields()
+}
+
+// 清空校验
+function clearValidate() {
+  formRef.value && formRef.value.clearValidate()
 }
 
 defineExpose({
   submit,
-  resetForm
+  resetForm,
+  clearValidate
 })
 </script>
 

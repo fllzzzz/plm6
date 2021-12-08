@@ -63,13 +63,18 @@ const comp = computed(() => {
 
 const outboundFormRef = ref()
 const submitLoading = ref(false)
-const { visible, handleClose } = useVisible({ emit, props, closeHook: dlgCloseHook })
+const { visible, handleClose } = useVisible({ emit, props, showHook: clearValidate })
 const { outboundCfg } = useWmsConfig()
 provide('outboundCfg', outboundCfg)
 
-// 关闭回调
-function dlgCloseHook() {
+// 重置表单
+function resetForm() {
   outboundFormRef.value && outboundFormRef.value.resetForm()
+}
+
+// 清空校验
+function clearValidate() {
+  outboundFormRef.value && outboundFormRef.value.clearValidate()
 }
 
 // 表单提交
@@ -77,7 +82,9 @@ async function submit() {
   try {
     submitLoading.value = true
     await outboundFormRef.value.submit()
+    emit('success')
     handleClose()
+    resetForm()
   } catch (error) {
     console.log('出库办理', error)
   } finally {

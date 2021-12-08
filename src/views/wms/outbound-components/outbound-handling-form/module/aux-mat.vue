@@ -41,7 +41,7 @@ const validateQuantity = (rule, value, callback) => {
 
 const rules = {
   quantity: [
-    { required: true, message: '请填写数量', trigger: 'change' },
+    { required: true, message: '请填写数量', trigger: 'blur' },
     { validator: validateQuantity, trigger: 'change' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
@@ -90,9 +90,15 @@ function resetForm() {
   formRef.value.resetFields()
 }
 
+// 清空校验
+function clearValidate() {
+  formRef.value && formRef.value.clearValidate()
+}
+
 defineExpose({
   submit,
-  resetForm
+  resetForm,
+  clearValidate
 })
 </script>
 

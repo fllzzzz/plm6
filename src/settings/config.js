@@ -8,6 +8,9 @@ export const TAG_FACTORY_DEF_COLOR = '#1682e6'
 // 甲供标签默认颜色
 export const TAG_PARTY_DEF_COLOR = '#e64242'
 
+// 调拨标签默认颜色
+export const TAG_TRANSFER_COLOR = '#e64242'
+
 // 标签默认颜色
 export const TAG_DEF_COLOR = '#1682e6'
 

@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-project="showProject" :show-transfer="showTransfer" />
+  <component :is="comp" :columns="props.columns" :basic-class="props.basicClass" :showUnit="props.showUnit" />
 </template>
 
 <script setup>
@@ -11,15 +11,11 @@ const props = defineProps({
   basicClass: {
     type: Number
   },
-  showProject: { // 显示项目
+  showUnit: {
     type: Boolean,
-    default: false
+    default: true
   },
-  showTransfer: { // 项目标签 显示调拨
-    type: Boolean,
-    default: false
-  },
-  columns: { // 用于crud组件的列显隐
+  columns: {
     type: Object
   }
 })

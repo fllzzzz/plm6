@@ -14,21 +14,52 @@ const getSteelPlate = {
             classifyId: 103,
             basicClass: 1,
             specification: 'Q325B',
-            quantity: 10,
-            frozenMete: 5000, // 冻结量
+            mete: 800000, // 核算量
+            frozenMete: 400000, // 冻结量
+            quantity: 10, // 数量
             frozenQuantity: 5, // 冻结数量
             thickness: 10,
             length: 1000,
             width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
-            mete: 800000,
-            // project: {
-            //   'id|+1': 1,
-            //   'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-            //   'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-            //   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            // },
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          },
+          {
+            id: 2,
+            serialNumber: /([0-9]{8})/,
+            classifyId: 103,
+            basicClass: 1,
+            specification: 'Q325B',
+            mete: 500000, // 核算量
+            frozenMete: 400000, // 冻结量
+            quantity: 5, // 数量
+            frozenQuantity: 4, // 冻结数量
+            thickness: 10,
+            length: 1500,
+            width: 1500,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             factory: {
               id: 1,
               name: '一号工厂',
@@ -69,9 +100,9 @@ const getSectionSteel = {
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
             length: 3907.62,
             project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factory: {
@@ -117,7 +148,7 @@ const getSteelCoil = {
             width: 1000,
             mete: 10000,
             project: {
-              id: 1,
+              id: 2,
               name: '你脸红个泡泡茶壶666号主路',
               shortName: '你脸红个泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
