@@ -54,7 +54,6 @@
             </expand-secondary-info>
           </template>
         </el-expand-table-column>
-        <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" show-factory />
         <!-- 单位及其数量 -->
@@ -157,7 +156,7 @@ const form = ref({
 // 提交loading
 const submitLoading = ref(false)
 // 显示
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook: dlgCloseHook })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
 // 表格最大高度
 const { maxHeight } = useMaxHeight(
   {
@@ -184,7 +183,7 @@ const showProjectSelect = computed(() => {
 // 备注输入框大小
 const remarkTextSize = computed(() => {
   if (props.basicClass === matClsEnum.STEEL_PLATE.V) {
-    return { minRows: 3, maxRows: 3 }
+    return { minRows: 2, maxRows: 2 }
   }
   return { minRows: 1, maxRows: 1 }
 })
@@ -204,17 +203,18 @@ watch(
 
 // 监听传入的列表
 watchEffect(() => {
+  // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
   form.value.list = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
 })
 
 // 表单初始化
 function formInit() {
   form.value = { list: [] }
-  formRef.value && formRef.value.resetField()
+  formRef.value && formRef.value.resetFields()
 }
 
 // 关闭回调
-function dlgCloseHook() {
+function clearValidate() {
   formRef.value && formRef.value.clearValidate()
 }
 
@@ -256,7 +256,9 @@ async function submit() {
     await submitApi(data)
     emit('success')
     handleClose()
-    formInit()
+    setTimeout(() => {
+      formInit()
+    }, 0)
   } catch (error) {
     console.log('出库办理', error)
   } finally {

@@ -44,3 +44,11 @@ function handleExpandAll() {
   }
 }
 </script>
+
+<style lang="scss" >
+th.el-table__expand-column {
+  .cell {
+    line-height: 13px;
+  }
+}
+</style>

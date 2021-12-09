@@ -9,10 +9,31 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      style="width: 100%"
+      :default-expand-all="false"
+      :expand-row-keys="expandRowKeys"
       @row-dblclick="(row) => crud.toDetail(row)"
+      row-key="id"
+      style="width: 100%"
     >
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
+        <template #default="{ row }">
+          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+        </template>
+      </el-expand-table-column>
+      <el-table-column label="序号" type="index" align="center" width="70">
+        <template #default="{ row, $index }">
+          <table-cell-tag :show="row.boolPrinted" name="已打印" :color="TAG_PRINTED_DEF_COLOR" />
+          <span>{{ $index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
+        :show-overflow-tooltip="true"
+        prop="serialNumber"
+        width="160"
+        label="出库单号"
+      />
       <el-table-column
         v-if="columns.visible('basicClass')"
         key="basicClass"
@@ -23,6 +44,18 @@
       >
         <template #default="{ row }">
           <span v-parse-enum="{ e: matClsEnum.ENUM, v: row.basicClass, bit: true }" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('projects')"
+        show-overflow-tooltip
+        key="projects"
+        prop="projects"
+        label="关联项目"
+        min-width="170"
+      >
+        <template #default="{ row }">
+          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
         </template>
       </el-table-column>
       <el-table-column
@@ -87,14 +120,17 @@
 <script setup>
 import crudApi from '@/api/wms/outbound/raw-mat-application-record'
 import { ref } from 'vue'
+import { TAG_PRINTED_DEF_COLOR } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
-import udOperation from '@crud/UD.operation.vue'
-import mHeader from './module/header'
-import mDetail from './module/detail.vue'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
+import Pagination from '@crud/Pagination'
+import UdOperation from '@crud/UD.operation.vue'
+import MHeader from './module/header'
+import MDetail from './module/detail.vue'
 // crud交由presenter持有
 const permission = {
   get: ['wms_outboundApplication_record:get']
@@ -108,6 +144,7 @@ const optShow = {
   download: false
 }
 
+const expandRowKeys = ref([])
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {

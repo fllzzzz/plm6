@@ -10,63 +10,41 @@
     custom-class="raw-mat-inbound-application-record-detail"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{
-        `出库申请时间：${parseTime(detail.userUpdateTime)}`
-      }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.userUpdateTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <!-- TODO:打印按钮 -->
     </template>
     <template #content>
-        <common-table
-          :data="detail.list"
-          :max-height="maxHeight"
-          show-summary
-          :summary-method="getSummaries"
-          :expand-row-keys="expandRowKeys"
-          row-key="id"
-        >
-          <el-expand-table-column
-            :data="detail.list"
-            v-model:expand-row-keys="expandRowKeys"
-            row-key="id"
-            fixed="left"
-          >
-            <template #default="{ row }">
-              <expand-secondary-info
-                :basic-class="row.basicClass"
-                :row="row"
-                show-remark
-              />
-            </template>
-          </el-expand-table-column>
-          <el-table-column
-            label="序号"
-            type="index"
-            align="center"
-            width="50"
-            fixed="left"
-          />
-          <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="detail.basicClass" show-factory />
-          <!-- 次要信息 -->
-          <material-secondary-info-columns />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns />
-          <!-- 仓库设置 -->
-          <warehouse-info-columns show-project />
-          <el-table-column label="领用人" width="100px" align="center">
-            <template #default="{ row }">
-              <el-tooltip
-              placement="top"
-                effect="light"
-                :content="`${row.recipient.deptName}`"
-              >
-                <span v-if="row.recipient">{{ row.recipient.name }}</span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-        </common-table>
+      <common-table
+        :data="detail.list"
+        :max-height="maxHeight"
+        show-summary
+        :summary-method="getSummaries"
+        :expand-row-keys="expandRowKeys"
+        row-key="id"
+      >
+        <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+          <template #default="{ row }">
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark />
+          </template>
+        </el-expand-table-column>
+        <!-- 基础信息 -->
+        <material-base-info-columns :basic-class="detail.basicClass" show-factory />
+        <!-- 次要信息 -->
+        <material-secondary-info-columns />
+        <!-- 单位及其数量 -->
+        <material-unit-quantity-columns />
+        <!-- 仓库设置 -->
+        <warehouse-info-columns show-project />
+        <el-table-column label="领用人" width="100px" align="center">
+          <template #default="{ row }">
+            <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
+              <span v-if="row.recipient">{{ row.recipient.name }}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </common-table>
     </template>
   </common-drawer>
 </template>
@@ -80,12 +58,12 @@ import { parseTime } from '@/utils/date'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
+import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
+import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([])

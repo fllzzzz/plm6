@@ -207,6 +207,7 @@ const optShow = {
   download: false
 }
 
+const expandRowKeys = ref([])
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -220,7 +221,6 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const expandRowKeys = ref([])
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {

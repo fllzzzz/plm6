@@ -13,13 +13,18 @@
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-expand-table-column v-if="basicClass === matClsEnum.STEEL_PLATE.V" :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+      <el-expand-table-column
+        v-if="basicClass === matClsEnum.STEEL_PLATE.V"
+        :data="crud.data"
+        v-model:expand-row-keys="expandRowKeys"
+        row-key="id"
+        fixed="left"
+      >
         <template #default="{ row }">
           <expand-secondary-info :basic-class="row.basicClass" :row="row" :show-batch-no="false" />
         </template>
       </el-expand-table-column>
-      <el-table-column type="selection" width="55" align="center" fixed="left"/>
-      <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
+      <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="basicClass" show-factory />
       <!-- 单位及其数量 -->
@@ -30,12 +35,15 @@
       <!--编辑与删除-->
       <el-table-column label="操作" width="180px" align="center" fixed="right">
         <template #default="{ row }">
+          <!--出库-->
           <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
             <svg-icon icon-class="wms-outbound" />
           </common-button>
+          <!--调拨-->
           <common-button v-permission="permission.transfer" type="warning" size="mini" @click="toTransfer(row)">
             <svg-icon icon-class="wms-transfer" />
           </common-button>
+          <!--打印-->
           <common-button icon="el-icon-printer" type="success" size="mini" @click="toPrintLabel(row)" />
         </template>
       </el-table-column>
@@ -43,7 +51,18 @@
     <!--分页组件-->
     <pagination />
     <!-- 出库办理表单 -->
-    <outbound-handling-form v-model="outboundHandlingVisible" :basic-class="basicClass" :material="currentRow" @success="handleOutboundSuccess" />
+    <outbound-handling-form
+      v-model:visible="outboundHandlingVisible"
+      :basic-class="basicClass"
+      :material="currentRow"
+      @success="handleOutboundSuccess"
+    />
+    <transfer-handling-form
+      v-model:visible="transferHandlingVisible"
+      :basic-class="basicClass"
+      :material="currentRow"
+      @success="handleTransferSuccess"
+    />
   </div>
 </template>
 
@@ -51,21 +70,22 @@
 import { computed, ref } from 'vue'
 import { getSteelPlateInventory } from '@/api/wms/material-inventory'
 import { matClsEnum } from '@enum-ms/classification'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
-import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
-import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import outboundHandlingForm from '@/views/wms/outbound-components/outbound-handling-form/index.vue'
-import mHeader from './module/header'
-import pagination from '@crud/Pagination'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
+import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
+import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import OutboundHandlingForm from '@/views/wms/outbound-components/outbound-handling-form/index.vue'
+import TransferHandlingForm from '@/views/wms/transfer-components/transfer-handling-form/index.vue'
+import MHeader from './module/header'
+import Pagination from '@crud/Pagination'
 
 // crud交由presenter持有
 const permission = {
@@ -104,6 +124,8 @@ const currentRow = ref({})
 const expandRowKeys = ref([])
 // 出库办理显示
 const outboundHandlingVisible = ref(false)
+// 调拨办理显示
+const transferHandlingVisible = ref(false)
 // 表格高度
 const { maxHeight } = useMaxHeight({ paginate: true })
 
@@ -125,7 +147,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       v.corQuantity = v.quantity // 数量
       v.corFrozenQuantity = v.frozenQuantity // 冻结数量
       v.corOperableQuantity = v.operableQuantity // 可操作数量
-    } else { // 核算量
+    } else {
+      // 核算量
       v.corQuantity = v.mete
       v.corFrozenQuantity = v.frozenMete
       v.corOperableQuantity = v.operableMete
@@ -139,9 +162,20 @@ function toOutHandle(row) {
   outboundHandlingVisible.value = true
 }
 
+// 进行调拨办理
+function toTransfer(row) {
+  currentRow.value = row
+  transferHandlingVisible.value = true
+}
+
 // 出库成功处理
 function handleOutboundSuccess() {
   headerRef.value && headerRef.value.updateListNumber()
+  crud.toQuery()
+}
+
+// 调拨成功
+function handleTransferSuccess() {
   crud.toQuery()
 }
 </script>

@@ -10,6 +10,7 @@ const getSteelPlate = {
         content: [
           {
             id: 1,
+            boolPartyA: true, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: 1,
@@ -41,6 +42,7 @@ const getSteelPlate = {
           },
           {
             id: 2,
+            boolPartyA: false, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: 1,

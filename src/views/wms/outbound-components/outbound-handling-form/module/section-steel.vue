@@ -31,8 +31,9 @@
 <script setup>
 import { sectionSteelOutboundHandling } from '@/api/wms/outbound/outbound-handling'
 import { defineProps, defineExpose, computed, ref, watch } from 'vue'
-import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
 import { mapGetters } from '@/store/lib'
+import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
+import { isBlank } from '@/utils/data-type'
 
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
@@ -49,36 +50,40 @@ const props = defineProps({
 })
 
 const validateQuantity = (rule, value, callback) => {
+  if (isBlank(value)) {
+    return callback(new Error('请填写数量'))
+  }
   if (value <= 0) {
-    callback(new Error('数量必须大于0'))
+    return callback(new Error('数量必须大于0'))
   }
   if (value > material.value.corOperableQuantity) {
-    callback(new Error('数量不可超过可操作数量'))
-    return
+    return callback(new Error('数量不可超过可操作数量'))
   }
   callback()
 }
 
 const validateHalfSize = (rule, value, callback) => {
+  if (isBlank(value)) {
+    return callback(new Error('请填写半出尺寸'))
+  }
   if (value <= 0) {
-    callback(new Error('半出尺寸必须大于0'))
+    return callback(new Error('半出尺寸必须大于0'))
   }
   if (value > material.value.length) {
-    callback(new Error('半出尺寸不可超过当前物料定尺长度'))
+    return callback(new Error('半出尺寸不可超过当前物料定尺长度'))
   }
   callback()
 }
 
 const rules = {
-  projectId: [{ required: true, message: '请选择出库项目', trigger: 'blur' }],
-  materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'blur' }],
-  halfMode: [{ required: true, message: '请选择物料半出方式', trigger: 'blur' }],
+  projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
+  materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
   halfSize: [
-    { required: true, message: '请填写半出尺寸', trigger: 'blur' },
+    { required: true, validator: validateHalfSize, trigger: 'blur' },
     { validator: validateHalfSize, trigger: 'change' }
   ],
   quantity: [
-    { required: true, message: '请填写数量', trigger: 'blur' },
+    { required: true, validator: validateQuantity, trigger: 'blur' },
     { validator: validateQuantity, trigger: 'change' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]

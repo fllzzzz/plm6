@@ -61,7 +61,6 @@
               </expand-secondary-info>
             </template>
           </el-expand-table-column>
-          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="form.basicClass" show-factory />
           <!-- 次要信息 -->
@@ -119,7 +118,7 @@ import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-se
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 const emit = defineEmits(['refresh', 'update:visible'])
 

@@ -56,6 +56,14 @@ const orderSupplyTypeEnum = {
 }
 constantize(orderSupplyTypeEnum)
 
+// 调拨类型
+const transferTypeEnum = {
+  PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
+  PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
+  RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 }
+}
+constantize(transferTypeEnum)
+
 // 基础材料类型/采购类型
 const baseMaterialTypeEnum = {
   RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
@@ -97,7 +105,8 @@ export {
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
-  pickUpModeEnum
+  pickUpModeEnum,
+  transferTypeEnum
 }
 
 export default {
@@ -112,5 +121,6 @@ export default {
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
-  pickUpModeEnum
+  pickUpModeEnum,
+  transferTypeEnum
 }

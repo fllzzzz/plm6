@@ -49,19 +49,27 @@
         </el-badge>
       </template>
     </crud-operation>
-    <batch-outbound-handling-form
+    <outbound-batch-handling-form
       v-model:visible="batchOutboundHandlingVisible"
       :project-warehouse-type="query.projectWarehouseType"
       :basic-class="query.basicClass"
       :material-list="crud.selections"
       @success="handleBatchOutbound"
     />
+    <transfer-batch-handling-form
+      v-model:visible="batchTransferHandlingVisible"
+      :basic-class="query.basicClass"
+      :material-list="crud.selections"
+      @success="handleTransferOutbound"
+    />
   </div>
 </template>
 
 <script setup>
-import { defineExpose, inject, watch, onMounted, ref } from 'vue'
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
+import { defineExpose, inject, watch, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { mapGetters } from '@/store/lib'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
@@ -70,9 +78,10 @@ import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import CurrentUserOutboundList from '@/views/wms/outbound-components/current-user-outbound-list/index.vue'
-import batchOutboundHandlingForm from '@/views/wms/outbound-components/batch-outbound-handling-form/index.vue'
-import { mapGetters } from '@/store/lib'
+import OutboundBatchHandlingForm from '@/views/wms/outbound-components/outbound-batch-handling-form/index.vue'
+import TransferBatchHandlingForm from '@/views/wms/transfer-components/transfer-batch-handling-form/index.vue'
 
+const router = useRouter()
 const permission = inject('permission')
 
 // 查询参数
@@ -86,7 +95,10 @@ const { crud, query } = regHeader(defaultQuery)
 
 // 出库清单组件
 const currentUserOutboundListRef = ref()
+// 显示批量出库
 const batchOutboundHandlingVisible = ref(false)
+// 显示批量调拨
+const batchTransferHandlingVisible = ref(false)
 
 // 未打印的标签数量
 const notPrintedMaterialQuantity = ref(0)
@@ -134,7 +146,9 @@ async function handleBasicClassChange(val) {
 // TODO:
 
 // 去出库记录
-function toOutboundRecord() {}
+function toOutboundRecord() {
+  router.push({ name: 'WMSOutboundRecord' })
+}
 
 // 批量出库
 function toBatchOutbound() {
@@ -148,7 +162,14 @@ function handleBatchOutbound() {
 }
 
 // 批量调拨
-function toBatchTransfer() {}
+function toBatchTransfer() {
+  batchTransferHandlingVisible.value = true
+}
+
+// 批量调拨成功
+function handleTransferOutbound() {
+  crud.toQuery()
+}
 
 // 批量打印
 function toBatchPrint() {}
