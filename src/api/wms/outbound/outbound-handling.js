@@ -7,7 +7,7 @@ import request from '@/utils/request'
 export function steelPlateOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/steel-plate',
+    url: 'outbound/application/steel-plate',
     method: 'put',
     data
   })
@@ -20,7 +20,7 @@ export function steelPlateOutboundHandling(data) {
 export function sectionSteelOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/section-steel',
+    url: 'outbound/application/section-steel',
     method: 'put',
     data
   })
@@ -33,7 +33,7 @@ export function sectionSteelOutboundHandling(data) {
 export function steelCoilOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/steel-coil',
+    url: 'outbound/application/steel-coil',
     method: 'put',
     data
   })
@@ -46,7 +46,7 @@ export function steelCoilOutboundHandling(data) {
 export function auxMatOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/auxiliary-material',
+    url: 'outbound/application/auxiliary-material',
     method: 'put',
     data
   })
@@ -59,7 +59,7 @@ export function auxMatOutboundHandling(data) {
 export function gasOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/gas',
+    url: 'outbound/application/gas',
     method: 'put',
     data
   })
@@ -73,7 +73,7 @@ export function gasOutboundHandling(data) {
 export function steelPlateBatchOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/steel-plate/batch',
+    url: 'outbound/application/steel-plate/batch',
     method: 'put',
     data
   })
@@ -86,7 +86,7 @@ export function steelPlateBatchOutboundHandling(data) {
 export function sectionSteelBatchOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/section-steel/batch',
+    url: 'outbound/application/section-steel/batch',
     method: 'put',
     data
   })
@@ -99,7 +99,7 @@ export function sectionSteelBatchOutboundHandling(data) {
 export function steelCoilBatchOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/steel-coil/batch',
+    url: 'outbound/application/steel-coil/batch',
     method: 'put',
     data
   })
@@ -112,7 +112,7 @@ export function steelCoilBatchOutboundHandling(data) {
 export function auxMatBatchOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/auxiliary-material/batch',
+    url: 'outbound/application/auxiliary-material/batch',
     method: 'put',
     data
   })
@@ -125,7 +125,7 @@ export function auxMatBatchOutboundHandling(data) {
 export function gasBatchOutboundHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-outbound/gas/batch',
+    url: 'outbound/application/gas/batch',
     method: 'put',
     data
   })
