@@ -110,13 +110,12 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/mes/production-config/workshop'
-import { ref, defineProps, computed, watch } from 'vue'
+import { ref, defineProps, computed, watch, inject } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import checkPermission from '@/utils/system/check-permission'
 
 import { enabledEnum } from '@enum-ms/common'
 
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -153,8 +152,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
-
+const maxHeight = inject('maxHeight')
 const props = defineProps({
   factory: {
     type: Object,

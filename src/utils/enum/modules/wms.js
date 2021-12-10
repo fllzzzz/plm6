@@ -35,12 +35,34 @@ const materialIsWholeEnum = {
 }
 constantize(materialIsWholeEnum)
 
+// 物料出库方式（整料整出， 整料半出）
+const materialOutboundModeEnum = {
+  WHOLE: { L: '整料整出', K: 'WHOLE ', V: 1 << 0 },
+  HALF: { L: '整料半出', K: 'HALF', V: 1 << 1 }
+}
+constantize(materialOutboundModeEnum)
+
+// 钢板半出方式
+const steelPlateHalfModeEnum = {
+  LENGTH: { L: '取长', K: 'LENGTH ', V: 1 << 0 },
+  WIDTH: { L: '取宽', K: 'WIDTH', V: 1 << 1 }
+}
+constantize(steelPlateHalfModeEnum)
+
 // 订单供货类型
 const orderSupplyTypeEnum = {
   SELF: { L: '自采物料', K: 'SELF', V: 1 << 0 },
   PARTY_A: { L: '甲供物料', K: 'PARTY_A', V: 1 << 1 }
 }
 constantize(orderSupplyTypeEnum)
+
+// 调拨类型
+const transferTypeEnum = {
+  PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
+  PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
+  RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 }
+}
+constantize(transferTypeEnum)
 
 // 基础材料类型/采购类型
 const baseMaterialTypeEnum = {
@@ -77,11 +99,14 @@ export {
   warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
+  materialOutboundModeEnum,
+  steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
-  pickUpModeEnum
+  pickUpModeEnum,
+  transferTypeEnum
 }
 
 export default {
@@ -90,9 +115,12 @@ export default {
   warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
+  materialOutboundModeEnum,
+  steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
-  pickUpModeEnum
+  pickUpModeEnum,
+  transferTypeEnum
 }

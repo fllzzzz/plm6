@@ -2,14 +2,20 @@ import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import { componentListTypeEnum, componentTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
 import { matClsEnum } from '@enum-ms/classification'
 
+// 标签默认颜色
+export const TAG_DEF_COLOR = '#1682e6'
+
 // 工厂标签默认颜色
 export const TAG_FACTORY_DEF_COLOR = '#1682e6'
 
 // 甲供标签默认颜色
 export const TAG_PARTY_DEF_COLOR = '#e64242'
 
-// 标签默认颜色
-export const TAG_DEF_COLOR = '#1682e6'
+// 调拨标签默认颜色
+export const TAG_TRANSFER_COLOR = '#e64242'
+
+// 打印标签默认颜色
+export const TAG_PRINTED_DEF_COLOR = '#0f9747'
 
 // 钢板密度
 export const STEEL_DENSITY = 7.85
@@ -44,7 +50,7 @@ MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   width: { unit: 'mm', precision: 0 }
 }
 MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
-  measure: { unit: '卷', precision: 0 },
+  measure: { unit: 'm', precision: 2 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 },
@@ -63,6 +69,16 @@ export const MIN_UNIT = {
   AREA_DP: 0,
   VOLUME: 'mm³',
   VOLUME_DP: 0
+}
+
+export const QR_SCAN_F_TYPE = {
+  MEW_PRODUCTION: 1,
+  MES_PACKAGE_SHIP: 2
+}
+
+export const QR_SCAN_TYPE = {
+  MES_PACKAGE: 1,
+  MES_SHIP_LIST: 2
 }
 
 // mes系统单位
@@ -104,6 +120,7 @@ MES_MATERIAL_UNIT[componentListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum
 MES_MATERIAL_UNIT[componentListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 
 export const DP = {
+  YUAN: 2,
   COM_WT__T: 2, // 通用_重量（t）
   COM_WT__KG: 2, // 通用_重量（kg）
   COM_WT__G: 3, // 通用_重量（kg）

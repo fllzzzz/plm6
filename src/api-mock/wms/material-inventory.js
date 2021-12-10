@@ -1,5 +1,5 @@
 const getSteelPlate = {
-  url: '/api/wms/material-inventory/steel/1',
+  url: '/api/wms/material-inventory/steel-plate',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -10,24 +10,63 @@ const getSteelPlate = {
         content: [
           {
             id: 1,
+            boolPartyA: true, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: 1,
             specification: 'Q325B',
-            quantity: 10,
+            mete: 800000, // 核算量
+            frozenMete: 400000, // 冻结量
+            quantity: 10, // 数量
+            frozenQuantity: 5, // 冻结数量
             thickness: 10,
             length: 1000,
             width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
-            mete: 800000,
             project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          },
+          {
+            id: 2,
+            boolPartyA: false, // 甲供材料
+            serialNumber: /([0-9]{8})/,
+            classifyId: 103,
+            basicClass: 1,
+            specification: 'Q325B',
+            mete: 500000, // 核算量
+            frozenMete: 400000, // 冻结量
+            quantity: 5, // 数量
+            frozenQuantity: 4, // 冻结数量
+            thickness: 10,
+            length: 1500,
+            width: 1500,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
             warehouse: {
               id: 1,
               name: '666号仓库'
@@ -41,7 +80,7 @@ const getSteelPlate = {
 }
 
 const getSectionSteel = {
-  url: '/api/wms/material-inventory/steel/2',
+  url: '/api/wms/material-inventory/section-steel',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -51,22 +90,28 @@ const getSectionSteel = {
       data: {
         content: [
           {
-            id: 5,
-            classifyId: 120,
-            basicClass: 4,
-            specification: '10*20*40*200',
-            quantity: 1,
+            id: 4,
+            classifyId: 110,
+            basicClass: 2,
+            specification: '10*10*200*500',
+            quantity: 10,
+            frozenQuantity: 5, // 冻结数量
+            mete: 10000,
+            frozenMete: 5000, // 冻结量
             brand: '武钢',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
             length: 3907.62,
-            mete: 10000,
             project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
             warehouse: {
               id: 4,
               name: '668号仓库'
@@ -80,7 +125,7 @@ const getSectionSteel = {
 }
 
 const getSteelCoil = {
-  url: '/api/wms/material-inventory/steel/4',
+  url: '/api/wms/material-inventory/steel-coil',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -94,24 +139,30 @@ const getSteelCoil = {
             classifyId: 120,
             basicClass: 4,
             specification: 'DC51D+Z',
-            quantity: 1,
+            quantity: 3907,
+            frozenMete: 5000, // 冻结量
+            frozenQuantity: 2000, // 冻结数量
             color: '天蓝',
             brand: '武钢',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
             thickness: 0.326,
-            length: 3907.62,
+            length: 3907,
             width: 1000,
             mete: 10000,
             project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '你脸红个泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
             warehouse: {
               id: 4,
-              name: '668号仓库'
+              name: '622号仓库'
             }
           }
         ],

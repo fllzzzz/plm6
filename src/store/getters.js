@@ -54,6 +54,8 @@ const getters = {
   token: state => state.user.token,
   // 用户信息
   user: state => state.user.user,
+  // 请求地址
+  requestUrl: state => state.user.requestUrl,
   // 库存预警权限
   inventoryNotifyPerm: state => state.user.user.inventoryNotifyPerm,
   // 用户权限
@@ -70,6 +72,8 @@ const getters = {
 
   // 系统当前项目id（Navbar）
   globalProjectId: state => state.project.id,
+  // 系统当前项目
+  globalProject: state => state.project.curProject,
   // 系统当前项目类型（Navbar）
   currentProjectType: state => state.project.projectType,
   //当前项目信息

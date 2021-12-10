@@ -8,16 +8,7 @@ import store from '@/store'
  * 获取项目信息
  * @param {number} id 项目id
  */
-export function getProjectById(id) {
-  if (!id) return
-  const projects = store.getters.projects
-  for (const project of projects) {
-    if (project.id === id) {
-      return project
-    }
-  }
-  return
-}
+export function getProjectInfo() {}
 
 /**
  * 项目名称格式转化

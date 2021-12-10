@@ -65,13 +65,22 @@ const wageQuotaTypeEnum = {
 }
 constantize(wageQuotaTypeEnum)
 
+// 楼承板子类型
+const floorPlateTypeEnum = {
+  TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
+  PRESSED_FLOOR_PLATE: { L: '压型楼承板', K: 'PRESSED_FLOOR_PLATE', V: 1 << 4 }
+  // OPEN_CLOSED_FLOOR_PLATE: { L: '开闭口楼承板', K: 'OPEN_CLOSED_FLOOR_PLATE', V: 1 << 4 }
+}
+constantize(floorPlateTypeEnum)
+
 // 围护产品类型
 const mesEnclosureTypeEnum = {
-  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 },
-  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 2 },
-  FLOOR_PLATE: { L: '开闭口楼承板', K: 'FLOOR_PLATE', V: 4 },
-  TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 3 },
-  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 6 }
+  PRESSED_PLATE: { L: '压型板', K: 'PRESSED_PLATE', V: 1 << 1 },
+  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
+  TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
+  PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,
+  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 1 << 5 },
+  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.PRESSED_FLOOR_PLATE.V }
 }
 constantize(mesEnclosureTypeEnum)
 
@@ -90,11 +99,6 @@ const packTypeEnum = {
 }
 constantize(packTypeEnum)
 
-const qrCodeTypeEnum = {
-  PACKAGE: { L: '包', K: 'PACKAGE', V: 11 }
-}
-constantize(qrCodeTypeEnum)
-
 // 打包清单状态
 const packStatusTypeEnum = {
   // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
@@ -104,6 +108,60 @@ const packStatusTypeEnum = {
   ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: true, T: 'warning' }
 }
 constantize(packStatusTypeEnum)
+
+// 收货状态
+const receiptStatusEnum = {
+  RECEIVED: { L: '已收货', K: 'RECEIVED', V: 1, COLOR: '#40ed8d', T: 'success' },
+  UNRECEIVED: { L: '未收货', K: 'UNRECEIVED', V: 2, COLOR: '#f5f7fa', T: 'warning' }
+}
+constantize(receiptStatusEnum)
+
+// 物流计价方式
+const logisticsPriceTypeEnum = {
+  WEIGHT: { L: '重量', K: 'WEIGHT', V: 1, T: '', unit: '元/吨' },
+  TRAINS: { L: '车次', K: 'TRAINS', V: 2, T: 'warning', unit: '元/车' }
+}
+constantize(logisticsPriceTypeEnum)
+
+// 发运审核状态
+const shipAuditStatusEnum = {
+  UNCHECKED: { L: '未审核', K: 'UNCHECKED', V: 1, T: 'warning' },
+  CHECKED: { L: '已审核', K: 'CHECKED', V: 2, T: 'success' }
+}
+constantize(shipAuditStatusEnum)
+
+// 变更异常处理状态
+const abnormalHandleStatusEnum = {
+  PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0 },
+  PROCESSING: { L: '处理中', K: 'PROCESSING', V: 1 << 1 },
+  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2 }
+}
+constantize(abnormalHandleStatusEnum)
+
+// 变更上报类型状态
+const abnormalReportTypeEnum = {
+  NORMAL: { L: '正常上报', K: 'NORMAL', V: 0 },
+  ABNORMAL: { L: '异常上报', K: 'ABNORMAL', V: 1 }
+}
+constantize(abnormalReportTypeEnum)
+
+// 变更变更类型状态
+const abnormalChangeTypeEnum = {
+  ARTIFACT_REDUCE: { L: '构件减少', K: 'ARTIFACT_REDUCE', V: 1 << 0 },
+  ARTIFACT_DELETE: { L: '构件删除', K: 'ARTIFACT_DELETE', V: 1 << 1 },
+  ASSEMBLE_REDUCE: { L: '组立减少', K: 'ASSEMBLE_REDUCE', V: 1 << 2 },
+  ASSEMBLE_DELETE: { L: '组立删除', K: 'ASSEMBLE_DELETE', V: 1 << 3 },
+  MACHINE_PART_REDUCE: { L: '零件减少', K: 'MACHINE_PART_REDUCE', V: 1 << 4 },
+  MACHINE_PART_DELETE: { L: '零件删除', K: 'MACHINE_PART_DELETE', V: 1 << 5 }
+}
+constantize(abnormalChangeTypeEnum)
+
+// 问题整改状态
+const improveStatusEnum = {
+  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 1, T: 'danger' },
+  RECTIFIED: { L: '已整改', K: 'RECTIFIED', V: 1 << 0, T: 'success' }
+}
+constantize(improveStatusEnum)
 
 export {
   teamTypeEnum,
@@ -115,10 +173,17 @@ export {
   processReportTypeEnum,
   wageQuotaTypeEnum,
   mesEnclosureTypeEnum,
+  floorPlateTypeEnum,
   taskIssueTypeEnum,
   packTypeEnum,
-  qrCodeTypeEnum,
-  packStatusTypeEnum
+  packStatusTypeEnum,
+  receiptStatusEnum,
+  logisticsPriceTypeEnum,
+  shipAuditStatusEnum,
+  abnormalHandleStatusEnum,
+  abnormalReportTypeEnum,
+  abnormalChangeTypeEnum,
+  improveStatusEnum
 }
 
 export default {
@@ -131,8 +196,15 @@ export default {
   processReportTypeEnum,
   wageQuotaTypeEnum,
   mesEnclosureTypeEnum,
+  floorPlateTypeEnum,
   taskIssueTypeEnum,
   packTypeEnum,
-  qrCodeTypeEnum,
-  packStatusTypeEnum
+  packStatusTypeEnum,
+  receiptStatusEnum,
+  logisticsPriceTypeEnum,
+  shipAuditStatusEnum,
+  abnormalHandleStatusEnum,
+  abnormalReportTypeEnum,
+  abnormalChangeTypeEnum,
+  improveStatusEnum
 }

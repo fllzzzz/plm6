@@ -23,6 +23,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
+    <el-table-column v-if="showColumn"></el-table-column>
     <el-table-column v-if="showLength" prop="length" align="center" width="120px" :label="`长 (mm)`">
       <template #default="{ row }">
         <span v-empty-text>{{ row.length }}</span>
@@ -32,7 +33,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, ref, nextTick } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
@@ -52,6 +53,12 @@ const props = defineProps({
   columns: {
     type: Object
   }
+})
+
+// TODO:等待vue或element修复bug，此处不加入空列处理会导致dom结构错误，原因未知
+const showColumn = ref(true)
+nextTick(() => {
+  showColumn.value = false
 })
 
 const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))

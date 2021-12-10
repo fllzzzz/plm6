@@ -1,10 +1,11 @@
 <template>
-  <p>
+  <p v-if="showBrand">
     品牌：<span v-empty-text>{{ props.row.brand }}</span>
   </p>
   <p v-if="showRemark">
     备注：<span v-empty-text>{{ props.row.remark }}</span>
   </p>
+  <slot />
 </template>
 
 <script setup>
@@ -18,6 +19,10 @@ const props = defineProps({
     }
   },
   showRemark: {
+    type: Boolean,
+    default: false
+  },
+  showBrand: {
     type: Boolean,
     default: false
   }

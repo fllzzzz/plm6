@@ -1,6 +1,6 @@
 <template>
   <el-input
-    v-model.trim="queryVO.spec"
+    v-model.trim="queryVO.specification"
     clearable
     style="width: 130px"
     size="small"
@@ -18,7 +18,7 @@
     @keyup.enter="toQuery"
   />
   <el-input
-    v-model.trim="queryVO.theoryThickness"
+    v-model.trim="queryVO.width"
     clearable
     style="width: 130px"
     size="small"
@@ -27,7 +27,7 @@
     @keyup.enter="toQuery"
   />
   <el-input
-    v-model.trim="queryVO.theoryThickness"
+    v-model.trim="queryVO.length"
     clearable
     style="width: 130px"
     size="small"

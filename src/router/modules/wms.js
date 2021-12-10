@@ -35,7 +35,7 @@ export default {
         },
         {
           name: 'RawMatInboundApplicationRecord',
-          path: 'raw-mat-record',
+          path: 'inbound-application-record/raw-mat',
           hidden: false,
           component: '/wms/inbound-application-record/raw-mat/index',
           meta: { title: '原材料-入库申请', icon: 'project', noCache: true }
@@ -53,7 +53,7 @@ export default {
       children: [
         {
           name: 'RawMatInboundApplicationReview',
-          path: 'raw-mat-record',
+          path: 'inbound-application-review/raw-mat',
           hidden: false,
           component: '/wms/inbound-application-review/raw-mat/index',
           meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
@@ -75,27 +75,41 @@ export default {
           hidden: false,
           component: '/wms/material-inventory/steel/index',
           meta: { title: '钢材', icon: 'project', noCache: true }
-        }
-      ]
-    },
-    {
-      path: '/wms/outbound-',
-      component: 'Layout',
-      hidden: false,
-      name: 'WMSInboundAndOutboundReview',
-      alwaysShow: false,
-      redirect: '/wms/inbound-application-review/raw-mat/index',
-      meta: { title: '入库审核', icon: 'contract', noCache: true },
-      children: [
+        },
         {
-          name: 'RawMatInboundApplicationReview',
-          path: 'raw-mat-record',
+          name: 'WMSOutboundReview',
+          path: 'outbound-application-review/raw-mat',
           hidden: false,
-          component: '/wms/inbound-application-review/raw-mat/index',
-          meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+          component: '/wms/outbound-application-review/raw-mat/index',
+          meta: { title: '原材料-出库审核', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSOutboundRecord',
+          path: 'outbound-application-record/raw-mat',
+          hidden: false,
+          component: '/wms/outbound-application-record/raw-mat/index',
+          meta: { title: '原材料-出库记录', icon: 'project', noCache: true }
         }
       ]
     },
+    // {
+    //   path: '/wms/outbound-',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'WMSInboundAndOutboundReview',
+    //   alwaysShow: false,
+    //   redirect: '/wms/inbound-application-review/raw-mat/index',
+    //   meta: { title: '入库审核', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'RawMatInboundApplicationReview',
+    //       path: 'raw-mat-record',
+    //       hidden: false,
+    //       component: '/wms/inbound-application-review/raw-mat/index',
+    //       meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // },
     {
       path: '/wms/purchase-manage',
       component: 'Layout',

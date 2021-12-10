@@ -19,14 +19,13 @@ export const projectNameShowConfig = {
   showSerialNumber: true
 }
 /**
-   * @description 显示选择项目下拉框的的组件
-   * @param {string} component 路由路径
-   * @param {number} type 项目类型，projectType。未填写type时视为包含所有类型
-   * @param {boolean} required 该页面是否必须选择项目才能正常使用
-   */
+ * @description 显示选择项目下拉框的的组件
+ * @param {string} component 路由路径
+ * @param {number} type 项目类型，projectType。未填写type时视为包含所有类型
+ * @param {boolean} required 该页面是否必须选择项目才能正常使用
+ */
 export const showProjectSearch = [
   { component: '/mes/projects/index' },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/wms/purchase-order/index', type: allPT, required: false }
 ]
-

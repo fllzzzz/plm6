@@ -6,51 +6,21 @@ const getProductionLine = {
     return {
       'code': 20000,
       'data': {
-        'content': [
+        'content|1-100': [
           {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:16:20',
-            'factoryId': 3,
-            'id': 4,
-            'name': '一号生产线',
-            'remark': '11',
-            'shortName': '一线',
-            'sort': 1,
-            'updateTime': '2021-10-08T10:48:24',
+            'boolDeleteEnum|1-2': false,
+            'boolEnabledEnum|1-2': true,
+            'createTime': '@datetime',
+            'factoryId|1-10': 1,
+            'id|+1': 1,
+            'name': '@cword(2,5)',
+            'remark': '@cword(4,60)',
+            'shortName': '@cword(2,5)',
+            'sort|+1': 1,
+            'updateTime': '@datetime',
             'userId': 1,
             'version': 1,
-            'workshopId': 4
-          },
-          {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:16:20',
-            'factoryId': 3,
-            'id': 5,
-            'name': '二号生产线',
-            'remark': '22',
-            'shortName': '二线',
-            'sort': 1,
-            'updateTime': '2021-10-08T10:48:24',
-            'userId': 1,
-            'version': 1,
-            'workshopId': 4
-          },
-          {
-            'boolDeleteEnum': false,
-            'boolEnabledEnum': true,
-            'createTime': '2021-10-08T10:16:20',
-            'factoryId': 3,
-            'id': 6,
-            'name': '三号生产线',
-            'remark': '33',
-            'shortName': '三线',
-            'sort': 1,
-            'updateTime': '2021-10-08T10:48:24',
-            'userId': 1,
-            'version': 1,
-            'workshopId': 4
+            'workshopId|1-10': 1
           }
         ],
         'hasNextPage': false,

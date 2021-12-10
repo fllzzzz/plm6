@@ -69,22 +69,7 @@ export function regPresenter(crud, tableRef) {
         tableRef,
         () => {
           if (tableRef && tableRef.value) {
-            const tableColumns = tableRef.value.getColumns()
-            nextTick(() => {
-              // 获得table的所有列
-              tableColumns.forEach((e) => {
-                if (!e.property || e.type !== 'default') {
-                  return
-                }
-                columns.value[e.property] = {
-                  label: e.label,
-                  visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
-                }
-              })
-            })
-
-            // 显示列的方法
-            crud.tableColumns = columns
+            crud.setColumns()
           }
         },
         { immediate: true }
@@ -92,6 +77,7 @@ export function regPresenter(crud, tableRef) {
     }
   })
   columns.value = crud.obColumns(columns)
+  crud.tableColumns = columns
   return { CRUD: vmInfo.CRUD, crud, columns }
 }
 
@@ -552,6 +538,8 @@ function addCrudBusinessMethod(crud) {
     }
 
     let data = []
+    // 刷新时清空选中
+    crud.selectAllChange()
     try {
       crud.loading = true
       data = await crud.crudApi.get(crud.getQueryParams())
@@ -1021,6 +1009,31 @@ function addCrudFeatureMethod(crud, data) {
       crud.downloadLoading = false
     }
   }
+
+  // 设置列
+  const setColumns = () => {
+    if (!crud.ref.table) return
+    const columns = crud.tableColumns
+    Object.keys(columns).forEach(key => {
+      if (key !== 'visible') delete columns[key]
+    })
+    const tableColumns = crud.ref.table.getColumns()
+    nextTick(() => {
+      // 获得table的所有列
+      tableColumns.forEach((e) => {
+        if (!e.property || e.type !== 'default') {
+          return
+        }
+        columns[e.property] = {
+          label: e.label,
+          visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+        }
+      })
+    })
+
+    // // 显示列的方法
+    // crud.tableColumns = columns
+  }
   // 获取查询参数
   const getQueryParams = () => {
     return {
@@ -1194,7 +1207,7 @@ function addCrudFeatureMethod(crud, data) {
         crud.selectChange(selection, val)
       })
     } else {
-      crud.ref.table.clearSelection()
+      crud.ref.table && crud.ref.table.clearSelection()
     }
   }
   /**
@@ -1298,6 +1311,7 @@ function addCrudFeatureMethod(crud, data) {
     toggleRowSelection, // 切换选中状态
     handleSortChange, // 处理排序方式改变
     notify,
+    setColumns, // 获取列
     obColumns, // 获取显示的列
     updateProp // 设置自定义扩展参数
   })

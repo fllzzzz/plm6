@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10" style="margin-bottom: 10px">
+    <el-row :gutter="10" id="production-line-content">
+      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" style="margin-bottom: 10px">
         <line-config @click-line="handleChangeline" />
       </el-col>
-      <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="14">
+      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
         <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
             <common-radio-button v-model="teamType" :disabled="!currentLine.name" size="mini" type="enum" :options="teamTypeEnum.ENUM" />
@@ -43,14 +43,24 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { provide, reactive, ref } from 'vue'
 
 import { teamTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 
+import useMaxHeight from '@compos/use-max-height'
 import lineConfig from './line'
 import teamConfig from './team'
 import inspectionConfig from './inspection'
+
+const { maxHeight } = useMaxHeight({
+  wrapperBox: ['.app-container', '#production-line-content'],
+  extraBox: ['.head-container', '.el-card__header'],
+  paginate: true,
+  extraHeight: 55
+})
+
+provide('maxHeight', maxHeight)
 
 const teamType = ref(teamTypeEnum.TEAM.V)
 const teamRef = ref()

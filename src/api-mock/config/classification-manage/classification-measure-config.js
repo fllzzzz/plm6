@@ -16,7 +16,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克', // 核算单位
           'accountingPrecision': 2, // 核算单位小数精度
           'measurePrecision': 0, // 计量单位小数精度
-          'outboundUnit': 1, // 出库方式
+          'outboundUnitType': 1, // 出库方式
           'code': '1', // 编码
           'basicClass': rawMatClsEnum.STEEL_PLATE.V // 基础分类
         }, {
@@ -26,7 +26,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '2',
           'basicClass': rawMatClsEnum.STEEL_PLATE.V
         }, {
@@ -36,7 +36,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '3',
           'basicClass': rawMatClsEnum.STEEL_PLATE.V
         }, {
@@ -46,7 +46,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '4',
           'basicClass': rawMatClsEnum.STEEL_PLATE.V
         }, {
@@ -56,7 +56,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '5',
           'basicClass': rawMatClsEnum.STEEL_PLATE.V
         }, {
@@ -66,7 +66,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '6',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -76,7 +76,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '7',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -86,7 +86,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '8',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -96,7 +96,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '9',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -106,7 +106,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '10',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -116,7 +116,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '11',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -126,7 +126,7 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '12',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
@@ -136,57 +136,57 @@ const getMaterialMeasure = {
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '13',
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 116,
           'name': '镀锌彩卷',
-          'measureUnit': '卷',
+          'measureUnit': '毫米',
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '14',
           'basicClass': 3
         }, {
           'id': 117,
           'name': '镀锌钢带',
-          'measureUnit': '卷',
+          'measureUnit': '毫米',
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '15',
           'basicClass': 3
         }, {
           'id': 118,
           'name': '热轧卷',
-          'measureUnit': '卷',
+          'measureUnit': '毫米',
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '16',
           'basicClass': 3
         }, {
           'id': 119,
           'name': '不锈钢热轧卷',
-          'measureUnit': '卷',
+          'measureUnit': '毫米',
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '17',
           'basicClass': 3
         }, {
           'id': 120,
           'name': '不锈钢冷轧卷',
-          'measureUnit': '卷',
+          'measureUnit': '毫米',
           'accountingUnit': '千克',
           'accountingPrecision': 2,
           'measurePrecision': 0,
-          'outboundUnit': 1,
+          'outboundUnitType': 1,
           'code': '18',
           'basicClass': 3
         },
@@ -204,7 +204,7 @@ const getMaterialMeasure = {
         //       'accountingUnit': '千克',
         //       'accountingPrecision': 2,
         //       'measurePrecision': 0,
-        //       'outboundUnit': 1,
+        //       'outboundUnitType': 1,
         //       'code': '01',
         //       'level': 2
         //     },
@@ -215,7 +215,7 @@ const getMaterialMeasure = {
         //       'accountingUnit': '千克',
         //       'accountingPrecision': 2,
         //       'measurePrecision': 0,
-        //       'outboundUnit': 1,
+        //       'outboundUnitType': 1,
         //       'code': '02',
         //       'level': 2
         //     },
@@ -226,7 +226,7 @@ const getMaterialMeasure = {
         //       'accountingUnit': '千克',
         //       'accountingPrecision': 2,
         //       'measurePrecision': 0,
-        //       'outboundUnit': 1,
+        //       'outboundUnitType': 1,
         //       'code': '03',
         //       'level': 2
         //     }
@@ -243,7 +243,7 @@ const getMaterialMeasure = {
         //       'id': 1220,
         //       'name': '压型彩钢板',
         //       'measureUnit': '张',
-        //       'accountingUnit': '米',
+        //       'accountingUnit': '毫米',
         //       'accountingPrecision': 2,
         //       'measurePrecision': 0,
         //       'code': '01',
@@ -253,7 +253,7 @@ const getMaterialMeasure = {
         //       'id': 1221,
         //       'name': '楼承板',
         //       'measureUnit': '张',
-        //       'accountingUnit': '米',
+        //       'accountingUnit': '毫米',
         //       'accountingPrecision': 2,
         //       'measurePrecision': 0,
         //       'code': '02',
@@ -263,7 +263,7 @@ const getMaterialMeasure = {
         //       'id': 1222,
         //       'name': '采光带',
         //       'measureUnit': '条',
-        //       'accountingUnit': '米',
+        //       'accountingUnit': '毫米',
         //       'accountingPrecision': 2,
         //       'measurePrecision': 0,
         //       'code': '03',

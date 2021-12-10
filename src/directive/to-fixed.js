@@ -13,6 +13,15 @@ export default {
 function resolve(el, binding) {
   const { value } = binding
   const { innerText } = el
-  const precision = isNotBlank(value) ? value : 2
-  el.innerText = toFixed(innerText, precision)
+  let val
+  let precision
+  if (value && typeof value === 'object') {
+    val = value.val
+    precision = value.dp
+  } else {
+    val = innerText
+    precision = value
+  }
+  precision = isNotBlank(precision) ? precision : 2
+  el.innerText = toFixed(val, precision)
 }

@@ -94,9 +94,9 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
-    <el-table-column prop="heatNoAndBatchNo" label="炉批号/卷号" align="center" min-width="150px">
+    <el-table-column prop="heatNoAndBatchNo" label="卷号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="炉批号/卷号" />
+        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="卷号" />
       </template>
     </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">
@@ -129,8 +129,8 @@ const tableRules = {
   width: [{ required: true, message: '请填写宽度', trigger: 'blur' }],
   thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
   weighingTotalWeight: [{ required: true, message: '请填写重量', trigger: 'blur' }],
-  length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
+  length: [{ required: true, message: '请填写长度', trigger: 'blur' }]
+  // quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
@@ -156,7 +156,7 @@ function rowInit(row) {
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
-    quantity: 1, // 数量
+    quantity: undefined, // 数量（毫米，计量单位对应的值）
     color: undefined, // 颜色
     brand: undefined, // 品牌
     heatNoAndBatchNo: undefined, // 炉批号
@@ -178,7 +178,7 @@ function rowWatch(row) {
   // 计算理论长度
   watch([() => row.weighingTotalWeight, () => row.width, () => row.thickness, baseUnit], () => calcTheoryLength(row))
   // 计算总长度
-  watch([() => row.theoryLength, () => row.quantity], () => calcTotalLength(row))
+  watch([() => row.theoryLength], () => calcTotalLength(row))
 }
 
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
@@ -195,13 +195,14 @@ async function calcTheoryLength(row) {
   })
 }
 
-// 计算总长
+// 计算总长(没有数量概念，可以直接和calcTheoryLength合并)
 function calcTotalLength(row) {
-  if (isNotBlank(row.theoryLength) && row.quantity) {
-    row.length = row.theoryLength * row.quantity
+  if (isNotBlank(row.theoryLength)) {
+    row.length = row.theoryLength * 1
   } else {
     row.length = undefined
   }
+  row.quantity = row.length
 }
 
 // 删除行

@@ -37,13 +37,12 @@
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" />
+              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>
             </template>
           </el-expand-table-column>
-          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="props.basicClass" />
           <!-- 单位及其数量 -->
@@ -295,7 +294,7 @@ function handleAmountChange() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['number', 'mete'] })
+  return tableSummary(param, { props: ['quantity', 'mete'] })
 }
 </script>
 

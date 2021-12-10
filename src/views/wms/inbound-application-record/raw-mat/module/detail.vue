@@ -30,13 +30,12 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="detail.basicClass" :row="row" />
+            <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="detail.basicClass" :row="row" show-brand />
             <p>
               备注：<span v-empty-text>{{ row.remark }}</span>
             </p>
           </template>
         </el-expand-table-column>
-        <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="detail.basicClass" :show-factory="showWarehouse" />
         <!-- 单位及其数量 -->
@@ -120,7 +119,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['number', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, { props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
 }
 </script>
 

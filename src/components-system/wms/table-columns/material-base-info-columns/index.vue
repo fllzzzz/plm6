@@ -1,10 +1,18 @@
 <template>
+  <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" fixed="left" >
+    <template #default="{ row, $index }">
+      <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+      <span>{{ $index + 1 }}</span>
+    </template>
+  </el-table-column>
   <component :is="comp" :columns="props.columns" :basic-class="props.basicClass" :spec-merge="props.specMerge" :show-factory="props.showFactory" />
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import steelPlate from './module/steel-plate.vue'
 import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
@@ -23,9 +31,17 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  showFactory: {
+  showFactory: { // 显示 “工厂”
     type: Boolean,
     default: false
+  },
+  showIndex: { // 显示 “序号”
+    type: Boolean,
+    default: true
+  },
+  showPartyA: { // 显示 “甲供”
+    type: Boolean,
+    default: true
   }
 })
 

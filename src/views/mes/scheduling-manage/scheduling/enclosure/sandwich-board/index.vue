@@ -11,15 +11,6 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
-        <el-input
-          v-model="crud.query.serialNumber"
-          size="small"
-          placeholder="输入编号搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
       </template>
     </mHeader>
     <!--表格渲染-->
@@ -65,7 +56,6 @@
         label="板型"
         width="120px"
       />
-
       <el-table-column
         v-if="columns.visible('thickness')"
         key="thickness"

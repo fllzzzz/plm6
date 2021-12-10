@@ -34,7 +34,11 @@ const getWmsConfig = {
         },
         outbound: {
           // 辅材出库方式
-          boolAuxMatToWorkShopWay: whetherEnum.FALSE.V
+          boolAuxMatToWorkShopWay: whetherEnum.FALSE.V,
+          // 气体入库直接出库
+          boolGasOutAfterInbound: whetherEnum.TRUE.V,
+          // 项目仓可以出库给其他项目
+          boolCanOutToOtherProject: whetherEnum.TRUE.V
         }
       }
     }
@@ -123,7 +127,12 @@ const getOutboundBasicConf = {
       code: 20000,
       message: '成功',
       data: {
-        'boolAuxMatToWorkShopWay': whetherEnum.FALSE.V
+        // 辅材出库到车间的配置
+        boolAuxMatToWorkShopWay: whetherEnum.FALSE.V,
+        // 气体入库直接出库
+        boolGasOutAfterInbound: whetherEnum.TRUE.V,
+        // 项目仓可以出库给其他项目
+        boolCanOutToOtherProject: whetherEnum.TRUE.V
       }
     }
   }

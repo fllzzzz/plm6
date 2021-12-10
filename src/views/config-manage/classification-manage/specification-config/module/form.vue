@@ -31,11 +31,11 @@
               <el-radio-button :label="0">否</el-radio-button>
             </el-radio-group>
           </el-form-item> -->
-          <el-form-item label="加权平均" prop="boolWeightMean">
+          <el-form-item label="加权平均" prop="boolWeightedAverage">
             <common-radio-button
-              v-model="form.boolWeightMean"
+              v-model="form.boolWeightedAverage"
               :disabled="!checkPermission(permission.weightedAverage)"
-              :options="boolWeightMeanEnum.ENUM"
+              :options="boolWeightedAverageEnum.ENUM"
               type="enum"
             />
           </el-form-item>
@@ -97,7 +97,7 @@
 
 <script setup>
 import { inject, ref } from 'vue'
-import { boolWeightMeanEnum } from '@enum-ms/finance'
+import { boolWeightedAverageEnum } from '@enum-ms/finance'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regForm } from '@compos/use-crud'
@@ -112,7 +112,7 @@ const permission = inject('permission')
 const defaultForm = {
   name: '', // 规格名称
   classificationId: undefined, // 科目id
-  boolWeightMean: boolWeightMeanEnum.TRUE.V, // 是否参加加权平均
+  boolWeightedAverage: boolWeightedAverageEnum.TRUE.V, // 是否参加加权平均
   list: [] // 具体规格列表
 }
 
@@ -125,7 +125,7 @@ const defaultRow = {
 
 const rules = {
   name: [{ required: true, message: '请输入规格名称', trigger: 'blur' }],
-  boolWeightMean: [{ required: true, message: '请选择是否参加加权平均', trigger: 'change' }]
+  boolWeightedAverage: [{ required: true, message: '请选择是否参加加权平均', trigger: 'change' }]
 }
 
 const tableRules = {

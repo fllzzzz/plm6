@@ -2,9 +2,8 @@
   <span class="table-cell-tag-container" :style="{'margin-left': `${props.offset}px`}">
     <span v-if="show" class="table-cell-tag" :style="tagStyle">
       <el-tooltip
-        :disabled="props.name.length > 4"
+        :disabled="props.name.length <= 4"
         :open-delay="300"
-        :hide-after="10000"
         effect="light"
         :content="props.name"
         :placement="props.placement"

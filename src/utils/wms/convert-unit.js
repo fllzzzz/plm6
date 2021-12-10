@@ -2,7 +2,6 @@ import { MIN_UNIT, STEEL_ENUM } from '@/settings/config'
 import store from '@/store'
 import { convertUnits } from '../convert/unit'
 import { deepClone, isBlank, isNotBlank, toFixed } from '../data-type'
-import { matClsEnum } from '../enum/modules/classification'
 import { unitTypeEnum } from '../enum/modules/common'
 import { patternNumerical } from '../validate/pattern'
 
@@ -65,19 +64,21 @@ export async function numFmtByBasicClass(
     if (!basicClass) _basicClass = row.basicClass
     const _d = newObj ? deepClone(row) : row
     if (_basicClass <= STEEL_ENUM) {
+      // 长宽厚换算
       steelFormat(_d, baseUnitCfg, { basicClass: _basicClass, toNum, showUnit, toSmallest }, fieldsConfig)
-    } else {
-      measureUnit = measureUnit || _d.measureUnit
-      accountingUnit = accountingUnit || _d.accountingUnit
-      accountingPrecision = accountingPrecision || _d.accountingPrecision
-      measurePrecision = measurePrecision || _d.measurePrecision
-      otherRawMatFormat(
-        _d,
-        unitCfg,
-        { measureUnit, accountingUnit, accountingPrecision, measurePrecision, toNum, showUnit, toSmallest },
-        fieldsConfig
-      )
     }
+
+    // 金额及量换算
+    measureUnit = measureUnit || _d.measureUnit
+    accountingUnit = accountingUnit || _d.accountingUnit
+    accountingPrecision = accountingPrecision || _d.accountingPrecision
+    measurePrecision = measurePrecision || _d.measurePrecision
+    otherRawMatFormat(
+      _d,
+      unitCfg,
+      { measureUnit, accountingUnit, accountingPrecision, measurePrecision, toNum, showUnit, toSmallest },
+      fieldsConfig
+    )
     return _d
   }
   if (Array.isArray(data)) {
@@ -97,7 +98,7 @@ function steelFormat(
   {
     length = ['length', 'totalLength'],
     width = ['width'],
-    weight = ['mete', 'weight', 'totalWeight'],
+    weight = ['weight', 'totalWeight'],
     thickness = ['thickness'],
     amount = ['unitPrice', 'unitPriceExcludingVAT'],
     unit = ['accountingUnit']
@@ -154,30 +155,30 @@ function steelFormat(
     }
   }
   // 金额
-  if (amount && amount instanceof Array) {
-    let curUnit
-    let fmtUnit
-    const precision = 2
-    if (basicClass & STEEL_ENUM) {
-      // 元/g
-      curUnit = toSmallest ? unitCfg[basicClass].weight.unit : MIN_UNIT.WEIGHT
-      fmtUnit = toSmallest ? MIN_UNIT.WEIGHT : unitCfg[basicClass].weight.unit
-    }
-    if (basicClass & matClsEnum.ENCL_MANUFACTURED.V) {
-      // 元/mm
-      curUnit = toSmallest ? unitCfg[basicClass].length.unit : MIN_UNIT.LENGTH
-      fmtUnit = toSmallest ? MIN_UNIT.LENGTH : unitCfg[basicClass].length.unit
-    }
-    amount.forEach((at) => {
-      if (patternNumerical.test(data[at])) {
-        if (!(basicClass & matClsEnum.MATERIAL.V)) {
-          data[at] = convertUnits(data[at], fmtUnit, curUnit, precision, { showUnit, toNum })
-        } else {
-          data[at] = data[at].toFixed(precision)
-        }
-      }
-    })
-  }
+  // if (amount && amount instanceof Array) {
+  //   let curUnit
+  //   let fmtUnit
+  //   const precision = 2
+  //   if (basicClass & STEEL_ENUM) {
+  //     // 元/g
+  //     curUnit = toSmallest ? unitCfg[basicClass].weight.unit : MIN_UNIT.WEIGHT
+  //     fmtUnit = toSmallest ? MIN_UNIT.WEIGHT : unitCfg[basicClass].weight.unit
+  //   }
+  //   if (basicClass & matClsEnum.ENCL_MANUFACTURED.V) {
+  //     // 元/mm
+  //     curUnit = toSmallest ? unitCfg[basicClass].length.unit : MIN_UNIT.LENGTH
+  //     fmtUnit = toSmallest ? MIN_UNIT.LENGTH : unitCfg[basicClass].length.unit
+  //   }
+  //   amount.forEach((at) => {
+  //     if (patternNumerical.test(data[at])) {
+  //       if (!(basicClass & matClsEnum.MATERIAL.V)) {
+  //         data[at] = convertUnits(data[at], fmtUnit, curUnit, precision, { showUnit, toNum })
+  //       } else {
+  //         data[at] = data[at].toFixed(precision)
+  //       }
+  //     }
+  //   })
+  // }
   // // 核算单位
   // if (unit && unit instanceof Array) {
   //   let fmtUnit
@@ -208,7 +209,7 @@ function otherRawMatFormat(
   data,
   unitCfg,
   { measureUnit, measurePrecision, accountingUnit, accountingPrecision, toNum = false, showUnit = false, toSmallest = false } = {},
-  { mete = ['mete'], quantity = ['quantity'], amount = ['unitPrice'] } = {}
+  { mete = ['mete', 'frozenMete'], quantity = ['quantity', 'frozenQuantity'], amount = ['unitPrice', 'unitPriceExcludingVAT'] } = {}
 ) {
   // 计量
   const _measureUnit = unitCfg.get(measureUnit)
@@ -243,15 +244,15 @@ function otherRawMatFormat(
       })
     }
 
-    // 金额
+    // 金额 金额的大小转换与量相反
     if (isNotBlank(amount)) {
       fieldsFormat({
         data,
         fields: amount,
         symbol: _accountingUnit.symbol,
-        unitPrecision: accountingPrecision,
+        unitPrecision: !toSmallest ? 8 : 2,
         type: _accountingUnit.type,
-        toSmallest,
+        toSmallest: !toSmallest,
         showUnit,
         toNum
       })

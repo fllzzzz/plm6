@@ -1,5 +1,5 @@
 <template>
-  <el-card id="factory-container">
+  <el-card>
     <template v-slot:header>
       <span style="line-height: 1.7">{{ crud.title }}列表</span>
       <!-- 新增 -->
@@ -111,14 +111,13 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/mes/production-config/factory'
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, inject } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import { enabledEnum } from '@enum-ms/common'
 import { TAG_FACTORY_DEF_COLOR } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
@@ -156,7 +155,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const maxHeight = inject('maxHeight')
 
 async function changeStatus(data, val) {
   try {

@@ -1,34 +1,40 @@
 <template>
-  <common-radio-button
-    v-model="queryVO.projectWarehouseType"
-    :options="projectWarehouseTypeEnum.ENUM"
-    default
-    type="enum"
-    size="small"
-    class="filter-item"
-    @change="toQuery"
-  />
-  <common-radio-button
-    v-model="queryVO.materialIsWhole"
-    :options="materialIsWholeEnum.ENUM"
-    show-option-all
-    type="enum"
-    size="small"
-    class="filter-item"
-    @change="toQuery"
-  />
-  <slot name="afterProjectWarehouseType" />
-  <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" />
-  <warehouse-select
-    v-model="queryVO.warehouseId"
-    :factory-id="queryVO.factoryId"
-    :basic-class="props.basicClass"
-    placeholder="存储位置"
-    class="filter-item"
-    show-all
-    @change="toQuery"
-  />
-  <br />
+  <div class="first-line flex-rbc">
+    <div>
+      <common-radio-button
+        v-model="queryVO.projectWarehouseType"
+        :options="projectWarehouseTypeEnum.ENUM"
+        default
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="toQuery"
+      />
+      <common-radio-button
+        v-model="queryVO.materialIsWhole"
+        :options="materialIsWholeEnum.ENUM"
+        show-option-all
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="toQuery"
+      />
+      <slot name="afterProjectWarehouseType" />
+      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" />
+      <warehouse-select
+        v-model="queryVO.warehouseId"
+        :factory-id="queryVO.factoryId"
+        :basic-class="props.basicClass"
+        placeholder="存储位置"
+        class="filter-item"
+        show-all
+        @change="toQuery"
+      />
+    </div>
+    <div>
+      <slot name="firstLineRight" />
+    </div>
+  </div>
   <material-cascader
     v-model="queryVO.classifyId"
     :basic-class="props.basicClass"
@@ -46,7 +52,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, watchEffect, ref } from 'vue'
+import { defineEmits, defineProps, computed, watchEffect, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 
@@ -59,6 +65,8 @@ import SteelCoil from './module/steel-coil.vue'
 import AuxMat from './module/aux-mat.vue'
 import Gas from './module/gas.vue'
 import RawMat from './module/raw-mat.vue'
+
+const emit = defineEmits(['to-query'])
 
 const props = defineProps({
   basicClass: {
@@ -93,6 +101,7 @@ const comp = computed(() => {
 })
 
 const queryVO = ref({})
+
 watchEffect(() => {
   queryVO.value = props.query
 })
@@ -101,11 +110,13 @@ watchEffect(() => {
 function toQuery() {
   if (typeof props.toQuery === 'function') {
     // 规格去空格后再返回
-    if (queryVO.value.spec) {
-      const specArr = queryVO.value.spec.split('*')
-      queryVO.value.specification = specArr.map((s) => s.trim()).join('*')
-    }
     props.toQuery()
   }
+  emit('to-query')
 }
 </script>
+
+<style lang="scss" scoped>
+.first-line {
+}
+</style>

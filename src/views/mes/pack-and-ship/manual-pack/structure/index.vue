@@ -60,7 +60,11 @@
         :show-overflow-tooltip="true"
         label="规格"
         min-width="140px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.specification }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -83,7 +87,11 @@
         :show-overflow-tooltip="true"
         label="材质"
         min-width="80px"
-      />
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.material }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('netWeight')"
         key="netWeight"
@@ -199,14 +207,14 @@ import tableCellTag from '@comp-common/table-cell-tag/index'
 // crud交由presenter持有
 const permission = {
   get: ['structureManualPack:get'],
-  pack: ['manualPack:pack'],
+  pack: ['manualPack:pack']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -219,7 +227,7 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get },
     invisibleColumns: ['drawingNumber'],
     queryOnPresenterCreated: false,
-    hasPagination: false,
+    hasPagination: false
   },
   tableRef
 )
@@ -231,20 +239,20 @@ const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {
     type: [String, Number],
-    default: undefined,
+    default: undefined
   },
   factoryId: {
     type: [String, Number],
-    default: undefined,
+    default: undefined
   },
   monomerId: {
     type: [String, Number],
-    default: undefined,
+    default: undefined
   },
   districtId: {
     type: [String, Number],
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 const packData = inject('packData')
@@ -272,7 +280,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 defineExpose({
-  refresh: crud.toQuery,
+  refresh: crud.toQuery
 })
 </script>
 

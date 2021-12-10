@@ -20,13 +20,13 @@
 
 <script setup>
 import { ref } from 'vue'
+import moment from 'moment'
 
 import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
-import moment from 'moment'
 
 const defaultQuery = {}
 

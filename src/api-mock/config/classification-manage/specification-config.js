@@ -10,7 +10,7 @@ const getSpecification = {
         'content|0-3': [{
           'id|+1': 1,
           'name|+1': ['直径', '长度', '材质'],
-          'boolWeightMean|1-2': false,
+          'boolWeightedAverage|1-2': false,
           'boolCustomizeable|1-2': false,
           'list|11-14': [{
             'id': 1,

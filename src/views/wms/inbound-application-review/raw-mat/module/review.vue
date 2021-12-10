@@ -68,13 +68,12 @@
         >
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount" :basic-class="form.basicClass" :row="row" />
+              <expand-secondary-info v-if="showAmount" :basic-class="form.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>
             </template>
           </el-expand-table-column>
-          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="form.basicClass" :show-factory="showWarehouse" />
           <!-- 单位及其数量 -->
@@ -171,9 +170,9 @@ const reviewConvenientRef = ref() // 连续审核
 const drawerRef = ref() // 当前drawer
 const logisticsRef = ref() // 物流表单
 
-const returnedLoading = ref(false) // 退回loading
-const detailLoading = ref(false) // 通过loading
+const detailLoading = ref(false) // 详情loading
 const passedLoading = ref(false) // 提交loading
+const returnedLoading = ref(false) // 退回loading
 
 const expandRowKeys = ref([]) // 展开
 const amount = ref() // 金额变化
@@ -375,7 +374,7 @@ function handleAfterSubmit() {
   try {
     ++operateRecordNumber.value
     // 继续审核
-    if (reviewNext.value || reviewConvenientRef.value) {
+    if (reviewNext.value && reviewConvenientRef.value) {
       reviewConvenientRef.value.removeCurrent()
     } else {
       handleClose()
@@ -442,7 +441,7 @@ function handleAmountChange() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['number', 'mete'] })
+  return tableSummary(param, { props: ['quantity', 'mete'] })
 }
 </script>
 

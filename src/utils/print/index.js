@@ -202,7 +202,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
             </tr>
             <tr>
                 <td class="col-3" colspan="3">
-                  <span style="font-size: 18pt;font-weight:bold">${packageInfo.packageNumber}</span>
+                  <span style="font-size: 18pt;font-weight:bold">${packageInfo.serialNumber}</span>
                   <span style="font-size: 10pt;float: right;margin-top: 5pt;">${packageInfo.materialTypeNames}</span>
                 </td>
             </tr>
