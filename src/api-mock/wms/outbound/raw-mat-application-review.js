@@ -16,6 +16,15 @@ const get = {
           {
             'id|+1': 1,
             'basicClass|1-31': 1,
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            applicationSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库申请编号
             applicantName: '@cname',
             userUpdateTime: '@datetime(T)',
             createTime: '@datetime(T)'
@@ -50,7 +59,7 @@ const getDetailNumberByCurrentUser = {
     return {
       code: 20000,
       message: '成功',
-      data: 2
+      data: 5
     }
   }
 }
@@ -104,7 +113,7 @@ const getDetailByCurrentUser = {
       code: 20000,
       message: '成功',
       data: {
-        id: 2, // 入库单id
+        id: 2, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         applicant: {
@@ -113,14 +122,16 @@ const getDetailByCurrentUser = {
         },
         basicClass: 31, // 采购物料基础类型
         reviewStatus: reviewStatusEnum.UNREVIEWED.V,
-        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
         list: [
           {
             id: 1,
+            boolPartyA: true, // 甲供材料
             classifyId: 103,
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 10,
             thickness: 10,
             length: 1000,
@@ -139,6 +150,12 @@ const getDetailByCurrentUser = {
               shortName: '长安街',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             factoryId: 1,
             warehouse: {
               id: 1,
@@ -147,10 +164,12 @@ const getDetailByCurrentUser = {
           },
           {
             id: 3,
+            boolPartyA: true, // 甲供材料
             specification: '57*21*3*9',
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 1,
             length: 10000,
             totalLength: 10,
@@ -165,6 +184,12 @@ const getDetailByCurrentUser = {
               id: 1,
               name: '长安街666666号辅路',
               shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factoryId: 1,
@@ -270,7 +295,7 @@ const detail_id1 = {
       code: 20000,
       message: '成功',
       data: {
-        id: 1, // 入库单id
+        id: 1, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         applicant: {
@@ -279,7 +304,7 @@ const detail_id1 = {
         },
         basicClass: 7, // 采购物料基础类型
         reviewStatus: reviewStatusEnum.UNREVIEWED.V,
-        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
         list: [
           {
             id: 1,
@@ -374,6 +399,7 @@ const detail_id1 = {
             basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 2207,
             color: '天蓝',
             brand: '武钢',
@@ -390,6 +416,12 @@ const detail_id1 = {
               id: 1,
               name: '长安街666666号辅路',
               shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factoryId: 1,
@@ -414,7 +446,7 @@ const detail_id2 = {
       code: 20000,
       message: '成功',
       data: {
-        id: 2, // 入库单id
+        id: 2, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         applicant: {
@@ -423,7 +455,7 @@ const detail_id2 = {
         },
         basicClass: 31, // 采购物料基础类型
         reviewStatus: reviewStatusEnum.UNREVIEWED.V,
-        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
         list: [
           {
             id: 1,
@@ -431,6 +463,7 @@ const detail_id2 = {
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             outboundUnitType: measureTypeEnum.MEASURE.V,
+            boolTransfer: true,
             quantity: 10,
             thickness: 10,
             length: 1000,
@@ -447,6 +480,12 @@ const detail_id2 = {
               id: 1,
               name: '长安街666666号辅路',
               shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            sourceProject: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             factoryId: 1,

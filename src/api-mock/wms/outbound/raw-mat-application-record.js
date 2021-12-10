@@ -15,12 +15,22 @@ const get = {
         'content|20': [
           {
             'id|+1': 1,
-            'basicClass|1-31': 1,
-            applicantName: '@cname',
-            reviewerName: '@cname',
-            reviewTime: '@datetime(T)',
-            userUpdateTime: '@datetime(T)',
-            createTime: '@datetime(T)'
+            'basicClass|1-31': 1, // 基础类型
+            'boolPrinted|1-2': true, // 是否打印
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
+            applicantName: '@cname', // 申请人名称
+            reviewerName: '@cname', // 审核人名称
+            reviewTime: '@datetime(T)', // 审核时间
+            userUpdateTime: '@datetime(T)', // 用户修改时间
+            createTime: '@datetime(T)' // 创建时间
           }
         ],
         totalElements: 20
@@ -39,7 +49,7 @@ const detail_id1 = {
       code: 20000,
       message: '成功',
       data: {
-        id: 1, // 入库单id
+        id: 1, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         reviewTime: '@datetime(T)',
@@ -50,10 +60,11 @@ const detail_id1 = {
 
         basicClass: 7, // 采购物料基础类型
         reviewStatus: reviewStatusEnum.PASS.V,
-        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
         list: [
           {
             id: 1,
+            boolPartyA: true, // 甲供材料
             classifyId: 103,
             basicClass: 1,
             specification: 'Q325B',
@@ -84,6 +95,7 @@ const detail_id1 = {
           },
           {
             id: 2,
+            boolPartyA: true, // 甲供材料
             basicClass: matClsEnum.STEEL_PLATE.V,
             classifyId: 103,
             specification: 'Q235B',
@@ -185,7 +197,7 @@ const detail_id2 = {
       code: 20000,
       message: '成功',
       data: {
-        id: 2, // 入库单id
+        id: 2, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         reviewTime: '@datetime(T)',
@@ -195,7 +207,7 @@ const detail_id2 = {
         },
         basicClass: 31, // 采购物料基础类型
         reviewStatus: reviewStatusEnum.PASS.V,
-        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
         list: [
           {
             id: 1,

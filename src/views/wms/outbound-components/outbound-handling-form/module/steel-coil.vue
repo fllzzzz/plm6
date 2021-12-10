@@ -24,6 +24,7 @@
 import { steelCoilOutboundHandling } from '@/api/wms/outbound/outbound-handling'
 import { defineProps, defineExpose, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
+import { isBlank } from '@/utils/data-type'
 
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
@@ -40,19 +41,22 @@ const props = defineProps({
 })
 
 const validateQuantity = (rule, value, callback) => {
+  if (isBlank(value)) {
+    return callback(new Error('请填写数量'))
+  }
   if (value <= 0) {
-    callback(new Error('长度必须大于0'))
+    return callback(new Error('数量必须大于0'))
   }
   if (value > material.value.corOperableQuantity) {
-    callback(new Error('长度不可超过可操作长度'))
-    return
+    return callback(new Error('数量不可超过可操作数量'))
   }
   callback()
 }
 
 const rules = {
+  projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   quantity: [
-    { required: true, message: '请填写长度', trigger: 'change' },
+    { required: true, validator: validateQuantity, trigger: 'blur' },
     { validator: validateQuantity, trigger: 'change' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
@@ -101,9 +105,15 @@ function resetForm() {
   formRef.value.resetFields()
 }
 
+// 清空校验
+function clearValidate() {
+  formRef.value && formRef.value.clearValidate()
+}
+
 defineExpose({
   submit,
-  resetForm
+  resetForm,
+  clearValidate
 })
 </script>
 

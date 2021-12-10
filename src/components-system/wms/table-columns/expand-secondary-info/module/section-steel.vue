@@ -2,12 +2,13 @@
   <p v-if="showBrand">
     品牌：<span v-empty-text>{{ props.row.brand }}</span>
   </p>
-  <p>
+  <p v-if="showBatchNo">
     炉批号：<span v-empty-text>{{ props.row.heatNoAndBatchNo }}</span>
   </p>
   <p v-if="showRemark">
     备注：<span v-empty-text>{{ props.row.remark }}</span>
   </p>
+  <slot />
 </template>
 
 <script setup>
@@ -27,6 +28,11 @@ const props = defineProps({
   showBrand: {
     type: Boolean,
     default: false
+  },
+  showBatchNo: {
+    // 显示炉批号
+    type: Boolean,
+    default: true
   }
 })
 </script>

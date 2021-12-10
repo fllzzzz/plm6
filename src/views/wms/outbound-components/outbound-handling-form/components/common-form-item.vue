@@ -10,7 +10,7 @@
     <span class="text-clickable set-max-text" @click="setMaxQuantity">全部出库</span>
   </el-form-item>
   <el-form-item v-if="showProjectSelect" label="项目" prop="projectId">
-    <project-cascader v-model="currentForm.projectId" clearable :disabled="form.boolUsed" style="width: 100%" />
+    <project-cascader v-model="currentForm.projectId" clearable style="width: 100%" />
   </el-form-item>
   <el-form-item label="领用人" prop="recipientId">
     <user-dept-cascader

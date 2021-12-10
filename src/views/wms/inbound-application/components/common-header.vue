@@ -14,7 +14,7 @@
           />
         </el-form-item>
         <el-form-item label="车牌号" prop="licensePlate" label-width="70px">
-          <el-input class="input-underline" v-model="form.licensePlate" placeholder="请输入车牌号" style="width: 125px" />
+          <el-input class="input-underline" v-model.trim="form.licensePlate" placeholder="请输入车牌号" style="width: 125px" />
         </el-form-item>
         <el-form-item
           v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"

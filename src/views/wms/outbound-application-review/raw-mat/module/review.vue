@@ -10,9 +10,7 @@
     custom-class="raw-mat-application-review-form"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{
-        `出库申请时间：${parseTime(form.userUpdateTime)}`
-      }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <review-convenient-operate
@@ -34,14 +32,7 @@
           @confirm="passed"
         >
           <template #reference>
-            <common-button
-              :loading="submitOptLoading"
-              type="primary"
-              size="mini"
-              icon="el-icon-s-promotion"
-            >
-              确认出库
-            </common-button>
+            <common-button :loading="submitOptLoading" type="primary" size="mini" icon="el-icon-s-promotion"> 确认出库 </common-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
@@ -53,27 +44,15 @@
           @confirm="returned"
         >
           <template #reference>
-            <common-button
-              :loading="submitOptLoading"
-              size="mini"
-              icon="el-icon-document-delete"
-              type="danger"
-            >
-              删 除
-            </common-button>
+            <common-button :loading="submitOptLoading" size="mini" icon="el-icon-document-delete" type="danger"> 删 除 </common-button>
           </template>
         </el-popconfirm>
       </template>
       <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
-      <!-- TODO:打印按钮 -->
-        <common-button
-          :loading="submitOptLoading"
-          size="mini"
-          icon="el-icon-print"
-          type="success"
-          @click="nextRecord"
-          >打印/下载完毕</common-button
-        >
+        <!-- TODO:打印按钮 -->
+        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="nextRecord">
+          打印/下载完毕
+        </common-button>
       </template>
     </template>
     <template #content>
@@ -86,42 +65,31 @@
           :expand-row-keys="expandRowKeys"
           row-key="id"
         >
-          <el-expand-table-column
-            :data="form.list"
-            v-model:expand-row-keys="expandRowKeys"
-            row-key="id"
-            fixed="left"
-          >
+          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info
-                :basic-class="row.basicClass"
-                :row="row"
-                show-remark
-              />
+              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark>
+                <p v-if="row.boolTransfer">
+                  调拨：
+                  <span>（来源）</span>
+                  <span style="color: brown" v-parse-project="{ project: row.sourceProject }" v-empty-text />
+                  <span> ▶ </span>
+                  <span>（目的）</span>
+                  <span style="color: #3a8ee6" v-parse-project="{ project: row.project }" v-empty-text />
+                </p>
+              </expand-secondary-info>
             </template>
           </el-expand-table-column>
-          <el-table-column
-            label="序号"
-            type="index"
-            align="center"
-            width="50"
-            fixed="left"
-          />
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="form.basicClass" show-factory />
           <!-- 次要信息 -->
           <material-secondary-info-columns />
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns />
-          <!-- 仓库设置 -->
-          <warehouse-info-columns show-project />
+          <!-- 仓库信息 -->
+          <warehouse-info-columns show-project show-transfer />
           <el-table-column label="领用人" width="100px" align="center">
             <template #default="{ row }">
-              <el-tooltip
-              placement="top"
-                effect="light"
-                :content="`${row.recipient.deptName}`"
-              >
+              <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
                 <span v-if="row.recipient">{{ row.recipient.name }}</span>
               </el-tooltip>
             </template>
@@ -143,12 +111,7 @@
                 @confirm="delItem(row, $index)"
               >
                 <template #reference>
-                  <common-button
-                    :loading="submitOptLoading"
-                    type="danger"
-                    icon="el-icon-delete"
-                    size="mini"
-                  />
+                  <common-button :loading="submitOptLoading" type="danger" icon="el-icon-delete" size="mini" />
                 </template>
               </el-popconfirm>
             </template>
@@ -160,13 +123,7 @@
 </template>
 
 <script setup>
-import {
-  getPendingReviewIdList,
-  detail,
-  reviewPassed,
-  reviewReturned,
-  delMaterial
-} from '@/api/wms/outbound/raw-mat-application-review'
+import { getPendingReviewIdList, detail, reviewPassed, reviewReturned, delMaterial } from '@/api/wms/outbound/raw-mat-application-review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'

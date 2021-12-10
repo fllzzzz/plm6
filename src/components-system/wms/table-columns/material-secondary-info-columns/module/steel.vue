@@ -14,9 +14,14 @@ import { isBlank } from '@/utils/data-type'
 const props = defineProps({
   columns: {
     type: Object
+  },
+  showBatchNo: {
+    // 显示炉批号
+    type: Boolean,
+    default: true
   }
 })
 
 const showBrand = computed(() => isBlank(props.columns) || props.columns.visible('brand'))
-const showHeatNoAndBatchNo = computed(() => isBlank(props.columns) || props.columns.visible('heatNoAndBatchNo'))
+const showHeatNoAndBatchNo = computed(() => props.showBatchNo && (isBlank(props.columns) || props.columns.visible('heatNoAndBatchNo')))
 </script>

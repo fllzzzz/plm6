@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     title="出库办理"
-    v-model="visible"
+    v-model="dialogVisible"
     width="830px"
     :before-close="handleClose"
     :show-close="true"
@@ -27,10 +27,10 @@ import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import useWmsConfig from '@/composables/store/use-wms-config'
 
-const emit = defineEmits(['success', 'update:modelValue'])
+const emit = defineEmits(['success', 'update:visible'])
 
 const props = defineProps({
-  modelValue: {
+  visible: {
     type: Boolean,
     require: true
   },
@@ -39,7 +39,7 @@ const props = defineProps({
     type: Number
   },
   material: {
-    // 物料出库信息
+    // 物料信息
     type: Object
   }
 })
@@ -63,13 +63,18 @@ const comp = computed(() => {
 
 const outboundFormRef = ref()
 const submitLoading = ref(false)
-const { visible, handleClose } = useVisible({ emit, props, closeHook: dlgCloseHook })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
 const { outboundCfg } = useWmsConfig()
 provide('outboundCfg', outboundCfg)
 
-// 关闭回调
-function dlgCloseHook() {
+// 重置表单
+function resetForm() {
   outboundFormRef.value && outboundFormRef.value.resetForm()
+}
+
+// 清空校验
+function clearValidate() {
+  outboundFormRef.value && outboundFormRef.value.clearValidate()
 }
 
 // 表单提交
@@ -77,7 +82,9 @@ async function submit() {
   try {
     submitLoading.value = true
     await outboundFormRef.value.submit()
+    emit('success')
     handleClose()
+    resetForm()
   } catch (error) {
     console.log('出库办理', error)
   } finally {
