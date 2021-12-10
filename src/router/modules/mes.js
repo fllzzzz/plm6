@@ -756,22 +756,22 @@ export default {
         icon: 'project',
         noCache: true
       }
-    }
-      //     {
-      //       name: 'MesWarehouseStateAuxiliaryMaterial',
-      //       path: 'auxiliary-material',
-      //       hidden: false,
-      //       component: '/mes/manufactures-manage/warehouse-state/auxiliary-material/index',
-      //       meta: { title: '辅材', icon: 'project', noCache: true }
-      //     }
+    },
+    //     {
+    //       name: 'MesWarehouseStateAuxiliaryMaterial',
+    //       path: 'auxiliary-material',
+    //       hidden: false,
+    //       component: '/mes/manufactures-manage/warehouse-state/auxiliary-material/index',
+    //       meta: { title: '辅材', icon: 'project', noCache: true }
+    //     }
 
-      // {
-      //   name: 'MesManufacturesReport',
-      //   path: 'report',
-      //   hidden: false,
-      //   component: '/mes/manufactures-manage/warehouse-state/report/index',
-      //   meta: { title: '入发存报表', icon: 'project', noCache: true }
-      // }
+    {
+      name: 'MesManufacturesReport',
+      path: 'report',
+      hidden: false,
+      component: '/mes/manufactures-manage/report/index',
+      meta: { title: '入发存报表', icon: 'project', noCache: true }
+    }
     ]
   },
   {

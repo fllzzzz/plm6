@@ -70,8 +70,8 @@
 </template>
 
 <script setup>
-import { getSummaryForArtifact as getSummary } from '@/api/mes/manufactures-manage/inbound'
-import { ref, defineExpose, reactive, defineEmits } from 'vue'
+import { getBoardForArtifactSummary as getSummary } from '@/api/mes/manufactures-manage/common'
+import { ref, defineExpose, defineEmits } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
@@ -103,7 +103,7 @@ const emit = defineEmits('load')
 
 const boxScale = ref(1)
 const summaryLoading = ref(false)
-let summaryInfo = reactive({
+const summaryInfo = ref({
   mete: undefined,
   inboundMete: undefined,
   inboundRate: undefined
@@ -127,7 +127,7 @@ async function fetchSummaryInfo() {
       factoryId: query.factoryId
     }
     const { mete = 0, inboundMete = 0 } = await getSummary(params)
-    summaryInfo = {
+    summaryInfo.value = {
       mete,
       inboundMete,
       inboundRate: mete ? ((inboundMete / mete) * 100).toFixed(1) + '%' : 0

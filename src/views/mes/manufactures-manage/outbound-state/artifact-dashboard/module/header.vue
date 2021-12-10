@@ -53,13 +53,13 @@
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item">
-            <span>入库量：</span>
-            <span v-if="!summaryLoading">{{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg</span>
+            <span>出库量：</span>
+            <span v-if="!summaryLoading">{{ toFixed(summaryInfo.outboundMete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item" type="success">
             <span>完成率：</span>
-            <span v-if="!summaryLoading">{{ summaryInfo.inboundRate }}</span>
+            <span v-if="!summaryLoading">{{ summaryInfo.outboundRate }}</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
         </span>
@@ -70,8 +70,8 @@
 </template>
 
 <script setup>
-import { getSummaryForArtifact as getSummary } from '@/api/mes/manufactures-manage/outbound'
-import { ref, defineExpose, reactive, defineEmits } from 'vue'
+import { getBoardForArtifactSummary as getSummary } from '@/api/mes/manufactures-manage/common'
+import { ref, defineExpose, defineEmits } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
@@ -103,10 +103,10 @@ const emit = defineEmits('load')
 
 const boxScale = ref(1)
 const summaryLoading = ref(false)
-let summaryInfo = reactive({
+const summaryInfo = ref({
   mete: undefined,
-  inboundMete: undefined,
-  inboundRate: undefined
+  outboundMete: undefined,
+  outboundRate: undefined
 })
 
 const { colors, boxZoomOut, getColor } = useDashboardHeader({
@@ -126,11 +126,11 @@ async function fetchSummaryInfo() {
       monomerId: query.monomerId,
       factoryId: query.factoryId
     }
-    const { mete = 0, inboundMete = 0 } = await getSummary(params)
-    summaryInfo = {
+    const { mete = 0, outboundMete = 0 } = await getSummary(params)
+    summaryInfo.value = {
       mete,
-      inboundMete,
-      inboundRate: mete ? ((inboundMete / mete) * 100).toFixed(1) + '%' : 0
+      outboundMete,
+      outboundRate: mete ? ((outboundMete / mete) * 100).toFixed(1) + '%' : 0
     }
   } catch (error) {
     console.log('获取汇总数据', error)

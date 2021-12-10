@@ -95,8 +95,8 @@ v-if="!summaryLoading"
 </template>
 
 <script setup>
-import { getSummary } from '@/api/mes/manufactures-manage/warehouse/artifact'
-import { ref, watch, reactive } from 'vue'
+import { getBoardForArtifactSummary as getSummary } from '@/api/mes/manufactures-manage/common'
+import { ref, watch } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
@@ -122,7 +122,7 @@ const defaultQuery = {
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
-let summaryInfo = reactive({
+const summaryInfo = ref({
   quantity: 0,
   inboundQuantity: 0,
   outboundQuantity: 0,
@@ -174,7 +174,7 @@ async function fetchSummaryInfo() {
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
-    summaryInfo = {
+    summaryInfo.value = {
       quantity,
       inboundQuantity,
       outboundQuantity,

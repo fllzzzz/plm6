@@ -1,3 +1,10 @@
+<!--
+ * @Description:
+ * @Author: SYJ
+ * @Date: 2021-11-22 14:41:35
+ * @LastEditors: SYJ
+ * @LastEditTime: 2021-12-10 17:32:51
+-->
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
@@ -66,7 +73,7 @@
             <span>{{ query.factoryId ? '任务量' : '清单量' }}：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.quantity }} 张 | {{ convertUnits(summaryInfo.mete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              >{{ summaryInfo.quantity }} 张 | {{ convertUnits(summaryInfo.mete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -75,7 +82,7 @@ v-if="!summaryLoading"
             <span
 v-if="!summaryLoading"
               >{{ summaryInfo.inboundQuantity }} 张 |
-              {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -84,7 +91,7 @@ v-if="!summaryLoading"
             <span
 v-if="!summaryLoading"
               >{{ summaryInfo.outboundQuantity }} 张 |
-              {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -92,7 +99,7 @@ v-if="!summaryLoading"
             <span>库存量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.stockQuantity }} 张 | {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              >{{ summaryInfo.stockQuantity }} 张 | {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -103,8 +110,8 @@ v-if="!summaryLoading"
 </template>
 
 <script setup>
-import { getSummary } from '@/api/mes/manufactures-manage/warehouse/enclosure'
-import { ref, watch, reactive } from 'vue'
+import { getBoardForEnclosureSummary as getSummary } from '@/api/mes/manufactures-manage/common'
+import { ref, watch } from 'vue'
 
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
@@ -130,7 +137,7 @@ const defaultQuery = {
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
-let summaryInfo = reactive({
+const summaryInfo = ref({
   quantity: 0,
   inboundQuantity: 0,
   outboundQuantity: 0,
@@ -182,7 +189,7 @@ async function fetchSummaryInfo() {
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
-    summaryInfo = {
+    summaryInfo.value = {
       quantity,
       inboundQuantity,
       outboundQuantity,
