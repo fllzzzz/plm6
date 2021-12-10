@@ -96,6 +96,13 @@ export default {
           hidden: false,
           component: '/wms/outbound-application-record/raw-mat/index',
           meta: { title: '原材料-出库记录', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSPartyABorrowManage',
+          path: 'party-a-borrow-manage',
+          hidden: false,
+          component: '/wms/party-a-borrow-manage/index',
+          meta: { title: '甲供材料借出管理', icon: 'project', noCache: true }
         }
       ]
     },

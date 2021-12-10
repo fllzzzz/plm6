@@ -1,5 +1,5 @@
 <template>
-  <!-- 钢材宽度100， 其他180 :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined"-->
+  <!-- 钢材宽度100， 其他180 :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined" -->
   <el-table-column
     v-if="showClassifyFullName"
     prop="classifyFullName"
@@ -8,7 +8,7 @@
     :width="classifyFullNameWidth"
     fixed="left"
   />
-  <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" show-overflow-tooltip width="270" fixed="left">
+  <el-table-column v-if="showSpecification" prop="specification" label="规格" width="270" align="center" fixed="left">
     <template #default="{ row }">
       <el-tooltip :content="specTip(row)" placement="top">
         <span v-empty-text>{{ specFormat(row) }}</span>
