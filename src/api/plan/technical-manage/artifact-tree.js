@@ -63,12 +63,12 @@ export function listUpload(data) {
 }
 
 /**
- * 下载构件技术清单模板
+ * 下载零构件技术清单模板
  */
-export function downloadArtifactTemplate() {
+export function downloadArtifactTreeTemplate() {
   return request({
     module: 'plan',
-    url: 'artifact/template/export',
+    url: 'artifactMachinePart/template/export',
     responseType: 'blob',
     method: 'get'
   })

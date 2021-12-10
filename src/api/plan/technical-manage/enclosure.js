@@ -53,10 +53,10 @@ export function listUpload(data) {
 /**
  * 下载围护模板
  */
-export function downloadEnclosureTemplate(category) {
+export function downloadEnclosureTemplate(params) {
   return request({
     module: 'plan',
-    url: 'enclosure/download/' + category,
+    url: `enclosure/download/${params.category}`,
     responseType: 'blob',
     method: 'get'
   })
@@ -65,7 +65,7 @@ export function downloadEnclosureTemplate(category) {
 /**
  * 下载围护数据
  */
-export function downloadEnclosureData(areaId, category, params) {
+export function downloadEnclosureData(params) {
   return request({
     module: 'plan',
     url: `enclosure/export/${params.areaId}/${params.category}`,

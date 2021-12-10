@@ -85,7 +85,7 @@ watch(
       fetchData()
     }
   },
-  { immediate: true }
+  { deep: true, immediate: true }
 )
 
 watch(
@@ -101,9 +101,7 @@ watch(
 watch(
   () => selectValue.value,
   (val) => {
-    if (val) {
-      selectChange(val)
-    }
+    selectChange(val)
   }
 )
 

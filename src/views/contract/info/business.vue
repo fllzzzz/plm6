@@ -247,15 +247,15 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose } from 'vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { projectTypeEnumN, businessTypeEnum, paymentModeEnum, invoiceTypeEnum, isTaxEnum, engineerSettlementTypeEnumN, enclosureSettlementTypeEnum, transportModeEnum, TechnologyTypeEnum } from '@enum-ms/contract'
 import { ElMessage, ElLoading } from 'element-plus'
 import { isNotBlank } from '@data-type/index'
-import enclosureShow from '@/views/contract/project-manage/module/enclosure-show'
-import enclosureForm from '@/views/contract/project-manage/module//enclosure-form'
+import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show'
+import EnclosureForm from '@/views/contract/project-manage/module/enclosure-form'
 import { getContractBusiness, getContractTechInfo, getContentInfo } from '@/api/contract/project'
 
 const businessRef = ref()
@@ -412,9 +412,6 @@ function enclosureSave() {
 async function validateForm() {
   try {
     const valid = await businessRef.value.validate()
-    if (valid) {
-      Object.assign(props.formData, JSON.parse(JSON.stringify(form.value)))
-    }
     return valid
   } catch (error) {
     console.log('error', error)
@@ -485,6 +482,12 @@ async function fetchDetail() {
   }
 }
 
+defineExpose({
+  form,
+  validateForm,
+  fetchDetail,
+  resetForm
+})
 // import { mapGetters } from 'vuex'
 // import { getBusinessInfo as getDetail, downloadSettlementAttachments, getTechInfo } from '@/api/contract/info'
 // import branchCompanySelect from '@/views/components/base/branch-company-select'

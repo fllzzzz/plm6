@@ -1,24 +1,26 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-      <common-radio-button
-        v-model="query.status"
-        :options="projectStatusEnum.ENUM"
-        show-option-all
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <common-radio-button
-        v-model="query.settlementStatus"
-        :options="settlementStatusEnum.ENUM"
-        show-option-all
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
+      <el-radio-group v-model="query.status" size="small" class="filter-item"  @change="crud.toQuery">
+        <el-radio-button :label="undefined">全部</el-radio-button>
+        <el-radio-button
+          v-for="item in projectStatusEnum.ENUM"
+          :key="item.V"
+          :label="item.V"
+        >
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
+      <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
+        <el-radio-button :label="undefined">全部</el-radio-button>
+        <el-radio-button
+          v-for="item in settlementStatusEnum.ENUM"
+          :key="item.V"
+          :label="item.V"
+        >
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
       <el-date-picker
         v-model="query.year"
         type="year"
@@ -108,6 +110,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { projectStatusEnum, settlementStatusEnum, projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
 import { getContentInfo } from '@/api/contract/project'
+import { ElRadioGroup } from 'element-plus'
 
 const projectContentOption = ref([])
 let projectContent1 = []

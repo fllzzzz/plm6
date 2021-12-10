@@ -10,9 +10,9 @@
   >
     <div>
       <div class="form-row">
-        <el-form-item label="合同编号" prop="contractNo">
+        <el-form-item label="合同编号" prop="serialNumber">
           <el-input
-            v-model.trim="form.contractNo"
+            v-model.trim="form.serialNumber"
             class="input-underline"
             placeholder="合同编号"
             style="width:200px"
@@ -210,8 +210,8 @@
           />
         </el-form-item>
         <el-form-item label="币种" prop="currencyType">
-          <!-- <common-select
-            :value.sync="form.currencyType"
+          <common-select
+            v-model="form.currencyType"
             :options="dict.currency_type"
             type="dict"
             size="small"
@@ -219,7 +219,7 @@
             placeholder="币种"
             class="input-underline"
             style="width:200px"
-          /> -->
+          />
         </el-form-item>
       </div>
     </div>
@@ -251,7 +251,7 @@ const dict = useDict(['margin_type','currency_type'])
 
 const defaultForm = {
   id: undefined,
-  contractNo: undefined, // 合同编号
+  serialNumber: undefined, // 合同编号
   name: undefined, // 项目名称
   shortName: undefined, // 项目简称
   region: [], // 项目省市区
@@ -277,7 +277,7 @@ const defaultForm = {
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 
 const rules= {
-  contractNo: [
+  serialNumber: [
     { required: true, message: '请填写合同编号', trigger: 'blur' },
     { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
   ],
@@ -328,7 +328,6 @@ const managementFee=computed(()=>{
 function resetForm(data) {
   // 清除表单信息
   if (baseRef.value) {
-    // TODO: 无法清除问题
     baseRef.value.resetFields()
   }
   let formkey

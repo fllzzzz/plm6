@@ -57,7 +57,7 @@ const TechnologyTypeAllEnum = {
   TRUSSFLOORPLATE: { L: '桁架楼承板', K: 'TRUSSFLOORPLATE', V: 1<<3 },
   PRESSUREBEARINGPLATE: { L: '压型楼承板', K: 'PRESSUREBEARINGPLATE', V: 1<<4 },
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1<<2 },
-  BENDING: { L: '折边件', K: 'BENDING', V: 6 }
+  BENDING: { L: '折边件', K: 'BENDING', V: 1<<4 }
 }
 constantize(TechnologyTypeAllEnum)
 
@@ -130,6 +130,14 @@ const auditTypeEnum = {
 }
 constantize(auditTypeEnum)
 
+// 变更类型
+const contractChangeTypeEnum = {
+  CONTRACTINFO: { L: '变更合同信息', K: 'CONTRACTINFO', V: 1 },
+  CONTRACTAMOUNT: { L: '变更合同金额', K: 'CONTRACTAMOUNT', V: 2 },
+  CONTRACTSETTLE: { L: '项目结算', K: 'CONTRACTSETTLE', V: 3 }
+}
+constantize(contractChangeTypeEnum)
+
 // 围护结算类型
 const enclosureSettlementTypeEnum = {
   LENGTH: { L: '按长度计价', SL: '长度', K: 'LENGTH', V: 1 },
@@ -143,6 +151,21 @@ const transportModeEnum = {
   SELF_DELIVERY: { L: '客户自提', SL: '自提', K: 'SELF_DELIVERY', V: 1 << 1 }
 }
 constantize(transportModeEnum)
+
+// TODO: 系统
+const systemTypeEnum = {
+  PC: { L: '当前系统', K: 'PC', V: 1 },
+  DING: { L: '钉钉', K: 'DING', V: 2 }
+}
+constantize(systemTypeEnum)
+
+// TODO: 时间类型
+const contractDateTypeEnum = {
+  UPDATEDATE: { L: '填报日期', K: 'UPDATEDATE', V: 1 },
+  AUDITDATE: { L: '审核日期', K: 'AUDITDATE', V: 2 },
+  INVOICEDATE: { L: '开票日期', K: 'INVOICEDATE', V: 3 },
+}
+constantize(contractDateTypeEnum )
 
 export {
   projectStatusEnum, // 项目状态
@@ -159,7 +182,10 @@ export {
   enclosureSettlementTypeEnum, // 围护结算类型
   transportModeEnum,
   auditTypeEnum, //审核状态
-  TechnologyTypeAllEnum
+  TechnologyTypeAllEnum,
+  contractChangeTypeEnum,
+  systemTypeEnum,
+  contractDateTypeEnum
 }
 
 export default {
@@ -176,5 +202,8 @@ export default {
   enclosureSettlementTypeEnum, // 围护结算类型
   transportModeEnum,
   auditTypeEnum, //审核状态
-  TechnologyTypeAllEnum
+  TechnologyTypeAllEnum,
+  contractChangeTypeEnum,
+  systemTypeEnum,
+  contractDateTypeEnum
 }

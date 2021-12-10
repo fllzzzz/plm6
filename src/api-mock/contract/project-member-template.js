@@ -1,5 +1,5 @@
 const getMemberTemplate ={
-  url: '/api/deploy/project/templates',
+  url: '/api/deploy/project/template',
   method: 'get',
   timeout: 1000,
   response: () => {

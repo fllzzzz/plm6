@@ -55,10 +55,13 @@ service.interceptors.request.use(
     if (getToken()) {
       config.headers['Authorization'] = getToken()
     }
-
-    if (isBlank(config.data)) config.data = {}
-    if (isBlank(config.params)) config.params = {}
-
+    if (config.headers['Content-Type'] === 'multipart/form-data') {
+      if (config.data === null || config.data === undefined) config.data = {}
+      if (config.params === null || config.params === undefined) config.params = {}
+    } else {
+      if (isBlank(config.data)) config.data = {}
+      if (isBlank(config.params)) config.params = {}
+    }
     // 格式化数据
     if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
       config.data = Qs.stringify(config.data)

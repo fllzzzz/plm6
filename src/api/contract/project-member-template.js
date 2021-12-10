@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get() {
   return request({
     module: 'contract',
-    url: 'deploy/project/templates',
+    url: 'deploy/project/template',
     method: 'get'
   })
 }

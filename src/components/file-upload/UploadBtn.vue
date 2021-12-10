@@ -114,7 +114,7 @@ function handleSuccess(response, file, fileList) {
     const f = response.data
     const files = [...props.files]
     files.push(Object.assign(f, { uid: file.uid }))
-    emit('update:files', props.files)
+    emit('update:files', files)
     emit('change')
     ElMessage.success(props.successMessage)
   } else {
@@ -155,6 +155,9 @@ function beforeRemove(file, fileList) {
 }
 
 function clearFiles() {
-  upload.value.clearFiles()
+  if (upload.value && upload.value.upload) {
+    upload.value.upload.fileList.length = 0
+  }
+  // upload.value.clearFiles()
 }
 </script>

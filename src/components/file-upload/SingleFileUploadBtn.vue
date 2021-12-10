@@ -117,7 +117,7 @@ async function handleRequest(file) {
     console.log(error)
   } finally {
     uploadLoading.value = false
-    upload.value.clearFiles()
+    handleClear()
   }
 }
 
@@ -138,11 +138,19 @@ function handleBefore(file) {
   return true
 }
 
+function handleClear() {
+  // TODO: 清空无效
+  // upload.value.clearFiles()
+  if (upload.value && upload.value.upload) {
+    upload.value.upload.fileList.length = 0
+  }
+}
+
 function handleSuccess(response) {
   if (props.uploadFun) {
     return false
   }
-  upload.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   if (response && response.code === 20000) {
     ElMessage.success({
@@ -161,7 +169,7 @@ function handleError() {
   if (props.uploadFun) {
     return false
   }
-  upload.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   ElMessage.error(`上传失败`)
 }

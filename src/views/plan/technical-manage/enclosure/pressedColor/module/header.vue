@@ -60,9 +60,22 @@
           class="filter-item"
           @success="crud.toQuery"
         />
-        <!-- <common-button v-if="currentArea && currentArea.id" icon="el-icon-download" type="warning" size="mini" @click="downloadData">清单(按查询条件)</common-button>
-        <common-button icon="el-icon-download" type="warning" size="mini" @click="downloadTemplate">模板下载</common-button>
-        <common-button type="primary" size="mini" @click="checkTech">技术参数</common-button> -->
+        <export-button
+          v-if="currentArea && currentArea.id"
+          :fn="downloadEnclosureData"
+          :params="exportParam"
+          show-btn-text
+          btn-text="清单（按构件条件查询）"
+          class="filter-item"
+        />
+        <export-button
+          :fn="downloadEnclosureTemplate"
+          :params="{category:crud.query.category}"
+          show-btn-text
+          btn-text="模板下载"
+          class="filter-item"
+        />
+        <!-- <common-button type="primary" size="mini" @click="checkTech">技术参数</common-button> -->
       </template>
     </crudOperation>
   </div>
@@ -81,6 +94,8 @@ import { processingEnum } from '@enum-ms/plan'
 import { TechnologyTypeEnum } from '@enum-ms/contract'
 import uploadBtn from '@/components/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/enclosure'
+import ExportButton from '@comp-common/export-button/index.vue'
+import { downloadEnclosureData,downloadEnclosureTemplate } from '@/api/plan/technical-manage/enclosure'
 
 const router = useRouter()
 
@@ -108,6 +123,11 @@ const props = defineProps({
 
 const carryParam = computed(()=>{
   return { areaId: crud.query.areaId, category: TechnologyTypeEnum.ENUM.PROFILEDPLATE.V }
+})
+
+const exportParam = computed(()=>{
+  const param = { ...crud.query }
+  return param
 })
 
 function tabClick(val) {

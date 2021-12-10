@@ -58,20 +58,20 @@
           class="filter-item"
           @success="crud.toQuery"
         />
-        <!-- <export-button
+        <export-button
           v-if="currentArea && currentArea.id"
-          :fn="downloadAssembly"
-          :params="query.areaId"
+          :fn="downloadAssemble"
+          :params="exportParam"
           show-btn-text
           btn-text="下载组立清单"
           class="filter-item"
         />
         <export-button
-          :fn="downloadAssemblyTemplate"
+          :fn="downloadAssembleTemplate"
           show-btn-text
           btn-text="组立清单模板"
           class="filter-item"
-        /> -->
+        />
       </template>
     </crudOperation>
   </div>
@@ -88,6 +88,8 @@ import { monomerDetail } from '@/api/plan/monomer'
 import { processingEnum } from '@enum-ms/plan'
 import uploadBtn from '@/components/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/assembly'
+import ExportButton from '@comp-common/export-button/index.vue'
+import { downloadAssemble, downloadAssembleTemplate } from '@/api/plan/technical-manage/assembly'
 
 const router = useRouter()
 
@@ -109,6 +111,11 @@ const props = defineProps({
     type: [Number, String],
     default: undefined
   }
+})
+
+const exportParam = computed(()=>{
+  const param = { ...crud.query }
+  return param
 })
 
 const carryParam=computed(()=>{

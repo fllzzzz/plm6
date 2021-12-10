@@ -176,7 +176,6 @@ const contractInfoVisible = ref(false)
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '合同档案',
-    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

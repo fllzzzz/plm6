@@ -16,15 +16,14 @@
       <template #optLeft>
         <upload-btn
           ref="bluePrintRef"
-          v-permission="crud.permission.import"
           :upload-fun="upload"
           :data="carryParam"
-          btn-name="文件上传"
-          btn-type="warning"
-          btn-size="mini"
+          :btn-name="'文件上传'"
+          :btn-type="'warning'"
+          :btn-size="'mini'"
           :data-type="crud.query.type"
-          icon="el-icon-upload"
-          accept=".zip"
+          :icon="'el-icon-upload'"
+          :accept="'.zip'"
           class="filter-item"
           @success="crud.toQuery"
         />
@@ -54,6 +53,7 @@ import crudOperation from '@crud/CRUD.operation'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import uploadBtn from '../../components/drawing-upload-btn'
 import { upload } from '@/api/plan/technical-data-manage/other'
+import { ElUpload, ElMessage, ElMessageBox } from 'element-plus'
 
 const defaultQuery = {
   type: technicalDataTypeEnum.BLUEPRINT.V // 类型 1蓝图 2变更文件 3模型 4其他文件
