@@ -13,6 +13,12 @@
         :color="partyAMatTransferEnum.V[row.partyATransferType].COLOR"
         :offset="15"
       />
+      <table-cell-tag
+        v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
+        :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
+        :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
+        :offset="15"
+      />
       <span v-empty-text>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
@@ -29,7 +35,7 @@
 import { defineProps, computed } from 'vue'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { partyAMatTransferEnum } from '@/utils/enum/modules/wms'
+import { materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
 import { isBlank } from '@/utils/data-type'
 
 import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
@@ -64,6 +70,11 @@ const props = defineProps({
   },
   showPartyATransfer: {
     // 显示 甲供调拨类型
+    type: Boolean,
+    default: false
+  },
+  showOutboundMode: {
+    // 显示 出库方式 （整料半出）
     type: Boolean,
     default: false
   }

@@ -62,7 +62,7 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" />
+          <material-base-info-columns :basic-class="form.basicClass" show-outbound-mode />
           <!-- 次要信息 -->
           <material-secondary-info-columns />
           <!-- 单位及其数量 -->

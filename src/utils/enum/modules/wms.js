@@ -37,8 +37,8 @@ constantize(materialIsWholeEnum)
 
 // 物料出库方式（整料整出， 整料半出）
 const materialOutboundModeEnum = {
-  WHOLE: { L: '整料整出', K: 'WHOLE ', V: 1 << 0 },
-  HALF: { L: '整料半出', K: 'HALF', V: 1 << 1 }
+  WHOLE: { L: '整料整出', K: 'WHOLE ', V: 1 << 0, COLOR: '#3a8ee6' },
+  HALF: { L: '整料半出', K: 'HALF', V: 1 << 1, COLOR: '#e6a23c' }
 }
 constantize(materialOutboundModeEnum)
 

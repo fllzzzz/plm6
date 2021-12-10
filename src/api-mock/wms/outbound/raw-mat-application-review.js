@@ -1,6 +1,6 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { materialOutboundModeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 
 // 原材料出库清单列表
 const get = {
@@ -128,6 +128,7 @@ const getDetailByCurrentUser = {
             id: 1,
             boolPartyA: true, // 甲供材料
             classifyId: 103,
+            materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             outboundUnitType: measureTypeEnum.MEASURE.V,
@@ -167,6 +168,7 @@ const getDetailByCurrentUser = {
             boolPartyA: true, // 甲供材料
             specification: '57*21*3*9',
             classifyId: 110,
+            materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
             boolTransfer: true,
@@ -311,6 +313,7 @@ const detail_id1 = {
             classifyId: 103,
             basicClass: 1,
             specification: 'Q325B',
+            materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             outboundUnitType: measureTypeEnum.MEASURE.V,
             quantity: 10,
             thickness: 10,
