@@ -31,7 +31,7 @@
           <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.outWarehouseQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.outboundQuantity }}/{{ item.compareQuantity }}</span>
           </div>
         </el-tooltip>
       </template>

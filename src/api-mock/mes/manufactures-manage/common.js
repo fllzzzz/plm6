@@ -41,8 +41,8 @@ const getBoardForArtifact = {
           'areaName': '@cword(2,10)',
           'packageQuantity|1-10000': 1,
           'unPackageQuantity|1-10000': 1,
-          'intWarehouseQuantity|1-10000': 1,
-          'outWarehouseQuantity|1-10000': 1,
+          'inboundQuantity|1-10000': 1,
+          'outboundQuantity|1-10000': 1,
           'taskQuantity|1-10000': 1
         }]
       }
@@ -93,8 +93,8 @@ const getBoardForEnclosure = {
           'projectName': '@cword(2,10)',
           'monomerName': '@cword(2,10)',
           'areaName': '@cword(2,10)',
-          'intWarehouseQuantity|1-10000': 1,
-          'outWarehouseQuantity|1-10000': 1,
+          'inboundQuantity|1-10000': 1,
+          'outboundQuantity|1-10000': 1,
           'taskQuantity|1-10000': 1
         }]
       }

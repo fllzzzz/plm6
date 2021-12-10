@@ -74,7 +74,7 @@ v-if="!summaryLoading"
             <span>入库量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.intWarehouseQuantity }} 张 |
+              >{{ summaryInfo.inboundQuantity }} 张 |
               {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
             >
             <i v-else class="el-icon-loading" />
@@ -83,7 +83,7 @@ v-if="!summaryLoading"
             <span>出库量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.outWarehouseQuantity }} 张 |
+              >{{ summaryInfo.outboundQuantity }} 张 |
               {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
             >
             <i v-else class="el-icon-loading" />
@@ -132,8 +132,8 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 const { globalProjectId } = mapGetters(['globalProjectId'])
 let summaryInfo = reactive({
   quantity: 0,
-  intWarehouseQuantity: 0,
-  outWarehouseQuantity: 0,
+  inboundQuantity: 0,
+  outboundQuantity: 0,
   stockQuantity: 0,
   mete: 0,
   inboundMete: 0,
@@ -154,9 +154,9 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.length = v.length || 0
     v.totalLength = v.length * v.quantity
-    v.stockQuantity = v.intWarehouseQuantity - v.outWarehouseQuantity || 0
-    v.inboundLength = v.intWarehouseQuantity * v.length
-    v.outboundLength = v.outWarehouseQuantity * v.length
+    v.stockQuantity = v.inboundQuantity - v.outboundQuantity || 0
+    v.inboundLength = v.inboundQuantity * v.length
+    v.outboundLength = v.outboundQuantity * v.length
     v.stockLength = v.stockQuantity * v.length
     return v
   })
@@ -174,8 +174,8 @@ async function fetchSummaryInfo() {
     }
     const {
       quantity = 0,
-      intWarehouseQuantity = 0,
-      outWarehouseQuantity = 0,
+      inboundQuantity = 0,
+      outboundQuantity = 0,
       stockQuantity = 0,
       mete = 0,
       outboundMete = 0,
@@ -184,8 +184,8 @@ async function fetchSummaryInfo() {
     } = await getSummary(params)
     summaryInfo = {
       quantity,
-      intWarehouseQuantity,
-      outWarehouseQuantity,
+      inboundQuantity,
+      outboundQuantity,
       stockQuantity,
       mete,
       inboundMete,

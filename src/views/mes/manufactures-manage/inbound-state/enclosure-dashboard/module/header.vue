@@ -146,10 +146,10 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     if (crud.query.factoryId) {
       v.quantityInfo += `任务数量：${v.taskQuantity}\n\n`
     }
-    v.quantityInfo += `入库数量：${v.intWarehouseQuantity}\n
-        出库数量：${v.outWarehouseQuantity}\n
-        库存数量：${v.intWarehouseQuantity - v.outWarehouseQuantity}\n`
-    v.boxColor = getColor(v, { quantity: 'intWarehouseQuantity', compare: 'compareQuantity' })
+    v.quantityInfo += `入库数量：${v.inboundQuantity}\n
+        出库数量：${v.outboundQuantity}\n
+        库存数量：${v.inboundQuantity - v.outboundQuantity}\n`
+    v.boxColor = getColor(v, { quantity: 'inboundQuantity', compare: 'compareQuantity' })
     return v
   })
 }
