@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <!-- <monomerAreaTabs :project-id="projectId" @change="fetchMonomerAndArea" /> -->
+      <monomer-select-area-tabs :project-id="projectId" @change="fetchMonomerAndArea" />
       <slot name="customSearch" />
       <rrOperation />
     </div>
@@ -65,6 +65,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productionLineDrawer from '../production-line-drawer'
 import quicklyAssignDrawer from '../quickly-assign-drawer'
 import mPreview from '../scheduling-preview'
@@ -179,9 +180,9 @@ function handelModifying(modifying, reset = false) {
   emit('update:modifying', modifying)
 }
 
-// function fetchMonomerAndArea({ monomerId, areaId }) {
-//   query.monomerId = monomerId
-//   query.areaId = areaId
-//   crud.toQuery()
-// }
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
+}
 </script>

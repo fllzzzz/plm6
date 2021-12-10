@@ -1,6 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
@@ -107,11 +108,13 @@ import { ref, watch, reactive } from 'vue'
 
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
+import { mapGetters } from '@/store/lib'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
 const defaultQuery = {
@@ -126,6 +129,7 @@ const defaultQuery = {
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+const { globalProjectId } = mapGetters(['globalProjectId'])
 let summaryInfo = reactive({
   quantity: 0,
   intWarehouseQuantity: 0,
@@ -150,7 +154,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.length = v.length || 0
     v.totalLength = v.length * v.quantity
-    v.stockQuantity = (v.intWarehouseQuantity - v.outWarehouseQuantity) || 0
+    v.stockQuantity = v.intWarehouseQuantity - v.outWarehouseQuantity || 0
     v.inboundLength = v.intWarehouseQuantity * v.length
     v.outboundLength = v.outWarehouseQuantity * v.length
     v.stockLength = v.stockQuantity * v.length
@@ -193,5 +197,11 @@ async function fetchSummaryInfo() {
   } finally {
     summaryLoading.value = false
   }
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
 }
 </script>

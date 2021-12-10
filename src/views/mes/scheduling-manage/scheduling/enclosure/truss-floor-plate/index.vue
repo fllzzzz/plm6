@@ -278,7 +278,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['areaId'],
+    requiredQuery: ['areaId'],
     invisibleColumns: [
       'areaName',
       'length',
@@ -286,8 +286,8 @@ const { crud, columns, CRUD } = useCRUD(
       'totalArea',
       'totalLength',
       'remark'
-    ]
-    // queryOnPresenterCreated: false
+    ],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

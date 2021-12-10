@@ -1,13 +1,8 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <factory-select
-        v-model="query.factoryId"
-        show-all
-        class="filter-item"
-        style="width: 200px"
-        @change="crud.toQuery"
-      />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
         size="small"
@@ -48,25 +43,18 @@
     </div>
     <crudOperation :show-grid="false" :show-refresh="false">
       <template #optRight>
-        <color-card
-          class="filter-item"
-          v-model:value="query.status"
-          :colors="colors"
-          color-border
-          select-able
-          @change="crud.toQuery"
-        />
+        <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border select-able @change="crud.toQuery" />
       </template>
       <template #viewLeft>
         <span v-permission="crud.permission.get">
           <el-tag effect="plain" class="filter-item">
             <span>{{ query.factoryId ? '任务量' : '清单量' }}：</span>
-            <span v-if="!summaryLoading">{{ toFixed(summaryInfo.mete,DP.COM_WT__KG) }} kg</span>
+            <span v-if="!summaryLoading">{{ toFixed(summaryInfo.mete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item">
             <span>入库量：</span>
-            <span v-if="!summaryLoading">{{ toFixed( summaryInfo.inboundMete,DP.COM_WT__KG) }} kg</span>
+            <span v-if="!summaryLoading">{{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item" type="success">
@@ -87,6 +75,7 @@ import { ref, defineExpose, reactive, defineEmits } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
+import { mapGetters } from '@/store/lib'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
@@ -94,6 +83,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
 const defaultQuery = {
@@ -108,6 +98,7 @@ const defaultQuery = {
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+const { globalProjectId } = mapGetters(['globalProjectId'])
 const emit = defineEmits('load')
 
 const boxScale = ref(1)
@@ -118,7 +109,12 @@ let summaryInfo = reactive({
   inboundRate: undefined
 })
 
-const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['未出库', '部分出库', '全部出库'], emit, crud, fetchSummaryInfo })
+const { colors, boxZoomOut, getColor } = useDashboardHeader({
+  colorCardTitles: ['未出库', '部分出库', '全部出库'],
+  emit,
+  crud,
+  fetchSummaryInfo
+})
 
 async function fetchSummaryInfo() {
   if (!query.monomerId) {
@@ -156,6 +152,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.boxColor = getColor(v, { quantity: 'outWarehouseQuantity', compare: 'compareQuantity' })
     return v
   })
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
 }
 
 defineExpose({

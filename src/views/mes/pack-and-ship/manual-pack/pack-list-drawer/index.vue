@@ -176,7 +176,7 @@ v-for="item in packTypeEnum.ENUM"
 <script setup>
 import { pack, editPack, additionalPack } from '@/api/mes/pack-and-ship/manual-pack'
 import { defineProps, defineEmits, ref, watch, inject, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElRadioGroup } from 'element-plus'
 
 import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
@@ -185,7 +185,7 @@ import { toFixed } from '@data-type/index'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import factorySelect from '@comp-base/factory-select'
-import factoryTableCellTag from '@comp-common/factory-table-cell-tag/index'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
 import choseAddMethodDialog from '../chose-add-method-dialog'
 
 const drawerRef = ref()

@@ -312,9 +312,9 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['areaId'],
-    invisibleColumns: ['areaName', 'length', 'totalArea', 'totalLength', 'brand', 'type', 'capacity', 'remark']
-    // queryOnPresenterCreated: false
+    requiredQuery: ['areaId'],
+    invisibleColumns: ['areaName', 'length', 'totalArea', 'totalLength', 'brand', 'type', 'capacity', 'remark'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

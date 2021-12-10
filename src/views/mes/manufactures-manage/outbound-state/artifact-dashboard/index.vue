@@ -75,9 +75,9 @@ const { crud, CRUD } = useCRUD(
     title: '构件看板',
     permission: { ...permission },
     crudApi: { get },
-    optShow: { ...optShow }
-    // requiredQuery: ['areaId'],
-    // queryOnPresenterCreated: false
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

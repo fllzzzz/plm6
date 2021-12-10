@@ -348,7 +348,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['areaId'],
+    requiredQuery: ['areaId'],
     invisibleColumns: [
       'areaName',
       'length',
@@ -359,8 +359,8 @@ const { crud, columns } = useCRUD(
       'drawingNumber',
       'surfaceArea',
       'remark'
-    ]
-    // queryOnPresenterCreated: false
+    ],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

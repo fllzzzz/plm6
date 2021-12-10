@@ -14,6 +14,7 @@
           v-model="query.processType"
           :options="processTypeEnum.ENUM"
           size="small"
+          default
           class="filter-item"
           type="enum"
           @change="crud.toQuery"
