@@ -16,24 +16,16 @@
     >
       <template v-for="item in boardList" :key="item.id">
         <el-tooltip
-          :open-delay="300"
+          :show-after="300"
           class="item"
           effect="light"
-          :content="`${item.name} ${item.serialNumber}\n
-          规格：${item.specification}\n
-          长度：${item.length} mm\n
-          材质：${item.material}\n
-          单净重：${item.netWeight.toFixed(DP.COM_WT__KG)} kg\n
-          单毛重：${item.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
-          图号：${item.drawingNumber}\n
-          清单数量：${item.quantity}\n
-          ${crud.query.factoryId ? '任务数量：' + item.assignQuantity + '\n\n':''}${item.processInfo}`"
+          :content="`${item.detailLoading ? '正在加载中...' : `${item.processInfo}`}`"
           placement="left-start"
         >
-          <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
-            <span class="ellipsis-text">{{ item.name }}</span>
+          <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
+            <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.completedQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
           </div>
         </el-tooltip>
       </template>
@@ -47,9 +39,11 @@
 </template>
 
 <script setup>
-import { getBoardForArtifact as get } from '@/api/mes/manufactures-manage/common'
+import { productDashboard as get } from '@/api/mes/production-manage/dashboard/common'
+import { artifactDetail, assembleDetail } from '@/api/mes/production-manage/dashboard/artifact'
 import { ref } from 'vue'
 
+import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
@@ -85,6 +79,68 @@ const { crud, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
+
+async function getDetail(item) {
+  if (crud.query.productType === componentTypeEnum.ARTIFACT.V) {
+    getArtifactDetail(item)
+  } else {
+    getAssembleDetail(item)
+  }
+}
+
+async function getArtifactDetail(item) {
+  if (item.hasDetail) return
+  try {
+    item.detailLoading = true
+    const _data = await artifactDetail({ id: item.id })
+    item.hasDetail = true
+    _data.processInfo = `${_data.name} ${_data.serialNumber}\n
+          规格：${_data.specification}\n
+          长度：${_data.length} mm\n
+          材质：${_data.material}\n
+          单净重：${_data.netWeight && _data.netWeight.toFixed(DP.COM_WT__KG)} kg\n
+          单毛重：${_data.grossWeight && _data.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
+          图号：${_data.drawingNumber}\n
+          清单数量：${_data.quantity}\n`
+    _data.processInfo += '-----------------------\n\n生产上报 / 已质检\n\n'
+    const processList = _data.processSummaryDetailsList || []
+    processList.forEach((process) => {
+      const _completed = _data.quantity === process.completeQuantity && process.quantity === process.inspectionQuantity
+      const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
+      _data.processInfo += `${process.name}：${_processInfo}\n\n`
+    })
+    item = Object.assign(item, { processInfo: _data.processInfo })
+  } catch (error) {
+    console.log('获取详情失败', error)
+  } finally {
+    item.detailLoading = false
+  }
+}
+
+async function getAssembleDetail(item) {
+  if (item.hasDetail) return
+  try {
+    item.detailLoading = true
+    const _data = await assembleDetail({ id: item.id })
+    item.hasDetail = true
+    _data.processInfo = `${_data.serialNumber}\n
+          清单数量：${_data.quantity}\n
+          已生产数量：${_data.producedQuantity}\n
+          已使用数量：${_data.usedQuantity}\n`
+    _data.processInfo += '-----------------------\n\n生产上报 / 已质检\n\n'
+    const processList = _data.processSummaryDetailsList || []
+    processList.forEach((process) => {
+      const _completed = _data.quantity === process.completeQuantity && process.quantity === process.inspectionQuantity
+      const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
+      _data.processInfo += `${process.name}：${_processInfo}\n\n`
+    })
+    item = Object.assign(item, { processInfo: _data.processInfo })
+  } catch (error) {
+    console.log('获取详情失败', error)
+  } finally {
+    item.detailLoading = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -25,7 +25,7 @@
             <el-table-column fixed label="序号" type="index" align="center" width="60" />
             <!-- <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目" width="120px" />
             <el-table-column prop="monomerName" :show-overflow-tooltip="true" label="单体" width="120px" />
-            <el-table-column prop="districtName" :show-overflow-tooltip="true" label="区域" width="120px" /> -->
+            <el-table-column prop="areaName" :show-overflow-tooltip="true" label="区域" width="120px" /> -->
             <template v-for="item in needTableColumns" :key="item.field">
               <el-table-column
                 v-if="item.toFixed"

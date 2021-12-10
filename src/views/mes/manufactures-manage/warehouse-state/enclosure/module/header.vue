@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <factory-select v-model:value="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
+      <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
         size="small"

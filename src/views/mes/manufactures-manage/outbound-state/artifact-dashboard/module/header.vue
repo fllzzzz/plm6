@@ -2,8 +2,7 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <factory-select
-        ref="factorySelect"
-        v-model:value="query.factoryId"
+        v-model="query.factoryId"
         show-all
         class="filter-item"
         style="width: 200px"
@@ -51,7 +50,7 @@
       <template #optRight>
         <color-card
           class="filter-item"
-          v-model:value="query.processingStatus"
+          v-model:value="query.status"
           :colors="colors"
           color-border
           select-able
@@ -102,11 +101,10 @@ const defaultQuery = {
   serialNumber: '',
   specification: '',
   material: '',
-  processingStatus: { value: undefined, resetAble: false },
+  status: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  factoryId: { value: undefined, resetAble: false },
-  status: { value: undefined, resetAble: false }
+  factoryId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 

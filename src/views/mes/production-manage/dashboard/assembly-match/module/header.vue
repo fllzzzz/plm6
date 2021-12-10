@@ -57,7 +57,6 @@
             v-model:value="query.processingStatus"
             :colors="colors"
             color-border
-            select-able
             @change="crud.toQuery"
           />
         </div>
@@ -93,16 +92,17 @@ const defaultQuery = {
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
-const emit = defineEmits(['load', 'checkedAll'])
+const emit = defineEmits(['load', 'checkedAll', 'batchMatch'])
 
 const boxScale = ref(1)
-const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['不具备', '部分具备', '完全具备'], emit, crud })
+const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({ colorCardTitles: ['不具备', '部分具备', '完全具备'], emit, crud })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.checked = false
     v.compareQuantity = crud.query.factoryId ? v.assignQuantity : v.quantity
-    v.boxColor = getColor(v, { quantity: 'completedQuantity', compare: 'compareQuantity' })
+    v.boxColor = getColorByValue(v, { field: 'type' })
+    v.tagType = getTagByValue(v, { field: 'type' })
     return v
   })
 }
@@ -113,11 +113,14 @@ defineProps({
     default: false
   }
 })
+
 const checkAll = ref(false)
 function handleCheckAllChange(val) {
   emit('checkedAll', val)
 }
-function batchMatch() {}
+function batchMatch() {
+  emit('batchMatch')
+}
 
 defineExpose({
   boxScale

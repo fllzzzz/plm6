@@ -38,7 +38,7 @@ const getBoardForArtifact = {
           'totalTaskQuantity|1-10000': 1,
           'projectName': '@cword(2,10)',
           'monomerName': '@cword(2,10)',
-          'districtName': '@cword(2,10)',
+          'areaName': '@cword(2,10)',
           'packageQuantity|1-10000': 1,
           'unPackageQuantity|1-10000': 1,
           'intWarehouseQuantity|1-10000': 1,
@@ -92,7 +92,7 @@ const getBoardForEnclosure = {
           'totalTaskQuantity|1-100': 1,
           'projectName': '@cword(2,10)',
           'monomerName': '@cword(2,10)',
-          'districtName': '@cword(2,10)',
+          'areaName': '@cword(2,10)',
           'intWarehouseQuantity|1-10000': 1,
           'outWarehouseQuantity|1-10000': 1,
           'taskQuantity|1-10000': 1

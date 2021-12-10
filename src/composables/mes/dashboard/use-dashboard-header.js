@@ -43,6 +43,22 @@ export default function useDashboardHeader({ colorCardTitles = ['未入库', '�
     return processingColorsEnum.ABNORMAL.COLOR
   }
 
+  function getColorByValue(row, { field = 'type' }) {
+    const _KEY = processingColorsEnum.VK[row[field]]
+    if (_KEY) {
+      return processingColorsEnum[_KEY].COLOR
+    }
+    return processingColorsEnum.ABNORMAL.COLOR
+  }
+
+  function getTagByValue(row, { field = 'type' }) {
+    const _KEY = processingColorsEnum.VK[row[field]]
+    if (_KEY) {
+      return processingColorsEnum[_KEY].T
+    }
+    return processingColorsEnum.ABNORMAL.T
+  }
+
   function boxZoomOut() {
     if (crud.page.hasNextPage) {
       emit('load')
@@ -51,6 +67,8 @@ export default function useDashboardHeader({ colorCardTitles = ['未入库', '�
   return {
     colors,
     boxZoomOut,
-    getColor
+    getColor,
+    getColorByValue,
+    getTagByValue
   }
 }

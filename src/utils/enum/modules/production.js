@@ -8,10 +8,10 @@ const manufactureTypeEnum = {
 constantize(manufactureTypeEnum)
 
 const processingColorsEnum = {
-  UNSTART: { L: '未开始', K: 'NORMAL', V: 1 << 0, COLOR: '#f5f7fa' },
-  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 1, COLOR: '#ffba00' },
-  COMPLETE: { L: '已完成', K: 'NORMAL', V: 1 << 2, COLOR: '#40ed8d' },
-  ABNORMAL: { L: '异常', K: 'ABNORMAL', V: 1 << 3, COLOR: '#e64242' }
+  UNSTART: { L: '未开始', K: 'NORMAL', V: 1 << 0, T: 'info', COLOR: '#f5f7fa' },
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 1, T: 'warning', COLOR: '#ffba00' },
+  COMPLETE: { L: '已完成', K: 'NORMAL', V: 1 << 2, T: 'success', COLOR: '#40ed8d' },
+  ABNORMAL: { L: '异常', K: 'ABNORMAL', V: 1 << 3, T: 'danger', COLOR: '#e64242' }
 }
 constantize(processingColorsEnum)
 

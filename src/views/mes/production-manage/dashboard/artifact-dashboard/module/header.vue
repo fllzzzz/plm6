@@ -1,13 +1,15 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <factory-select
-        v-model="query.factoryId"
-        show-all
+      <common-radio-button
+        v-model="query.productType"
+        :options="artifactProcessEnum.ENUM"
+        size="small"
         class="filter-item"
-        style="width: 200px"
+        type="enum"
         @change="crud.toQuery"
       />
+      <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
         size="small"
@@ -67,6 +69,8 @@
 <script setup>
 import { ref, defineExpose, defineEmits } from 'vue'
 
+import { artifactProcessEnum } from '@enum-ms/mes'
+
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -76,15 +80,16 @@ import Scale from '@comp/Scale'
 import factorySelect from '@comp-base/factory-select'
 
 const defaultQuery = {
-  name: '',
-  serialNumber: '',
-  specification: '',
-  material: '',
+  name: undefined,
+  serialNumber: undefined,
+  specification: undefined,
+  material: undefined,
   processingStatus: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   factoryId: { value: undefined, resetAble: false },
-  status: { value: undefined, resetAble: false }
+  status: { value: undefined, resetAble: false },
+  productType: artifactProcessEnum.ONCE.V
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
@@ -95,21 +100,10 @@ const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: [
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.processInfo = '-----------------------\n\n生产上报 / 已质检\n\n'
-    const processList = v.process || []
-    v.compareQuantity = crud.query.factoryId ? v.assignQuantity : v.quantity
-    processList.forEach(process => {
-      const _p = this.processMap[process.id]
-      if (_p) {
-        const _completed = v.compareQuantity === process.quantity && process.quantity === process.inspectionQuantity
-        const _processInfo = _completed ? `√` : `${process.quantity} / ${process.inspectionQuantity}`
-        v.processInfo += `${_p.name}：${_processInfo}\n\n`
-        if (process.quantity) {
-          v.started = true
-        }
-      }
-    })
-    v.boxColor = getColor(v, { quantity: 'completedQuantity', compare: 'compareQuantity' })
+    v.detailLoading = false
+    v.hasDetail = false
+    v.compareQuantity = v.taskQuantity
+    v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
     return v
   })
 }

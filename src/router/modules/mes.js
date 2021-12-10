@@ -10,7 +10,7 @@ export default {
     redirect: '/mes-project/projects',
     meta: {
       title: '项目列表',
-      icon: 'contract',
+      icon: 'project',
       noCache: true
     },
     children: [{
@@ -261,7 +261,7 @@ export default {
     redirect: '/mes/production-manage/report',
     meta: {
       title: '生产管理',
-      icon: 'contract',
+      icon: 'project',
       noCache: true
     },
     children: [{
@@ -350,50 +350,95 @@ export default {
         icon: 'project',
         noCache: true
       },
-      children: [{
-        name: 'MesProductionDashboardMainMaterialTrack',
-        path: 'main-material-track',
-        hidden: false,
-        component: '/mes/production-manage/dashboard/main-material-track/index',
-        meta: {
-          title: '主材跟踪',
-          icon: 'project',
-          noCache: true
+      children: [
+        {
+          name: 'MesProductionDashboardProjectPlan',
+          path: 'project-plan',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/project-plan/index',
+          meta: {
+            title: '项目计划',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardMainMaterialTrack',
+          path: 'main-material-track',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/main-material-track/index',
+          meta: {
+            title: '主材跟踪',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardProjectState',
+          path: 'project-state',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/project-state/index',
+          meta: {
+            title: '项目状态',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardArtifactDashboard',
+          path: 'artifact-dashboard',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/artifact-dashboard/index',
+          meta: {
+            title: '结构看板',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardEnclosureDashboard',
+          path: 'enclosure-dashboard',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/enclosure-dashboard/index',
+          meta: {
+            title: '围护看板',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardProjectReport',
+          path: 'project-report',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/project-report/index',
+          meta: {
+            title: '项目报表',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardAssemblyMatch',
+          path: 'assembly-match',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/assembly-match/index',
+          meta: {
+            title: '总装匹配',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionDashboardPainting',
+          path: 'painting',
+          hidden: false,
+          component: '/mes/production-manage/dashboard/painting/index',
+          meta: {
+            title: '涂装计算',
+            icon: 'project',
+            noCache: true
+          }
         }
-      },
-      {
-        name: 'MesProductionDashboardProjectState',
-        path: 'project-state',
-        hidden: false,
-        component: '/mes/production-manage/dashboard/project-state/index',
-        meta: {
-          title: '项目状态',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesProductionDashboardArtifactDashboard',
-        path: 'artifact-dashboard',
-        hidden: false,
-        component: '/mes/production-manage/dashboard/artifact-dashboard/index',
-        meta: {
-          title: '结构看板',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesProductionDashboardAssemblyMatch',
-        path: 'assembly-match',
-        hidden: false,
-        component: '/mes/production-manage/dashboard/assembly-match/index',
-        meta: {
-          title: '总装匹配',
-          icon: 'project',
-          noCache: true
-        }
-      }
       ]
     },
     {
@@ -427,7 +472,7 @@ export default {
   //   name: 'MesBusinessManage',
   //   alwaysShow: false,
   //   redirect: '/mes/business-manage/business-entry',
-  //   meta: { title: '商务管理', icon: 'contract', noCache: true },
+  //   meta: { title: '商务管理', icon: 'project', noCache: true },
   //   children: [
   //     {
   //       name: 'MesBusinessEntry',
@@ -466,7 +511,7 @@ export default {
   //   name: 'MesAbnormalManage',
   //   alwaysShow: false,
   //   redirect: '/mes/component-abnormal',
-  //   meta: { title: '异常清单管理', icon: 'contract', noCache: true },
+  //   meta: { title: '异常清单管理', icon: 'project', noCache: true },
   //   children: [
   //     {
   //       name: 'MesAbnormalList',
@@ -486,7 +531,7 @@ export default {
     redirect: '/mes/team-report/artifact-team',
     meta: {
       title: '班组报表',
-      icon: 'contract',
+      icon: 'project',
       noCache: true
     },
     children: [{
@@ -568,7 +613,7 @@ export default {
     redirect: '/mes/QHSE-manage/disclosure',
     meta: {
       title: 'QHSE管理',
-      icon: 'contract',
+      icon: 'project',
       noCache: true
     },
     children: [{
@@ -823,7 +868,7 @@ export default {
     //   name: 'MesProductionState',
     //   alwaysShow: false,
     //   redirect: '/mes/production-state/artifact-process',
-    //   meta: { title: '生产看板', icon: 'contract', noCache: true },
+    //   meta: { title: '生产看板', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesProductionStateArtifactProcess',
@@ -904,7 +949,7 @@ export default {
     //   name: 'MesReceiptState',
     //   alwaysShow: false,
     //   redirect: '/mes/receipt-state/artifact-dashboard',
-    //   meta: { title: '收货看板', icon: 'contract', noCache: true },
+    //   meta: { title: '收货看板', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesReceiptStateArtifactDashboard',
@@ -936,7 +981,7 @@ export default {
     //   name: 'MesReportManage',
     //   alwaysShow: false,
     //   redirect: '/mes/report-manage/installation-report',
-    //   meta: { title: '填报管理', icon: 'contract', noCache: true },
+    //   meta: { title: '填报管理', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesInstallationReport',
@@ -954,7 +999,7 @@ export default {
     //   name: 'MesInstallationState',
     //   alwaysShow: false,
     //   redirect: '/mes/installation-state/artifact-dashboard',
-    //   meta: { title: '安装看板', icon: 'contract', noCache: true },
+    //   meta: { title: '安装看板', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesInstallationStateArtifactDashboard',
@@ -979,7 +1024,7 @@ export default {
     //   name: 'MesSiteWarehouseState',
     //   alwaysShow: false,
     //   redirect: '/mes/site-warehouse-state/artifact',
-    //   meta: { title: '收安综合看板', icon: 'contract', noCache: true },
+    //   meta: { title: '收安综合看板', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesArtifactSiteWarehouseState',
@@ -1011,7 +1056,7 @@ export default {
     //   name: 'MesComplexState',
     //   alwaysShow: false,
     //   redirect: '/mes/complex-state/artifact',
-    //   meta: { title: '总看板', icon: 'contract', noCache: true },
+    //   meta: { title: '总看板', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesArtifactComplexState',
@@ -1043,7 +1088,7 @@ export default {
     //   name: 'MesDosageStatistical',
     //   alwaysShow: false,
     //   redirect: '/mes/dosage-statistical/steel',
-    //   meta: { title: '标准用量统计', icon: 'contract', noCache: true },
+    //   meta: { title: '标准用量统计', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesSteelDosage',
@@ -1061,7 +1106,7 @@ export default {
     //   name: 'MesReport',
     //   alwaysShow: false,
     //   redirect: '/mes/report/all/base-statistics',
-    //   meta: { title: '报表', icon: 'contract', noCache: true },
+    //   meta: { title: '报表', icon: 'project', noCache: true },
     //   children: [
     //     {
     //       name: 'MesAllBaseStatistics',

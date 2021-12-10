@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader ref="headRef" @load="load" :isIndeterminate="checkedIds.length > 0 && checkedIds.length !== boardList" @checkedAll="handleCheckedAll"/>
+    <mHeader
+      ref="headRef"
+      @load="load"
+      :isIndeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
+      @checkedAll="handleCheckedAll"
+      @batchMatch="handleBatchMatch"
+    />
     <!--看板渲染-->
     <div
       v-if="crud.firstLoaded"
@@ -25,18 +31,23 @@
           材质：${item.material}\n
           单净重：${item.netWeight.toFixed(DP.COM_WT__KG)} kg\n
           单毛重：${item.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
-          图号：${item.drawingNumber}\n
           清单数量：${item.quantity}\n
           `"
           placement="left-start"
         >
-          <div class="board-box" style="position: relative" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @click="showStatus">
+          <div
+            class="board-box"
+            style="position: relative;cursor: pointer;"
+            :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }"
+            @click="showStatus(item)"
+          >
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
             <span class="ellipsis-text">{{ item.quantity }}</span>
             <el-checkbox
               style="position: absolute; right: 10px; bottom: 0px"
               v-model="item.checked"
+              @click.stop
               @change="handleCheckedChange($event, item)"
             ></el-checkbox>
           </div>
@@ -48,14 +59,14 @@
         <i class="el-icon-loading" />
       </div>
     </div>
-    <partProductionStatus v-model:visible="statusVisible"></partProductionStatus>
+    <partProductionStatus v-model:visible="statusVisible" :ids="detailIds" :names="detailNames"></partProductionStatus>
   </div>
-
 </template>
 
 <script setup>
-import { getBoardForArtifact as get } from '@/api/mes/manufactures-manage/common'
+import crudApi from '@/api/mes/production-manage/dashboard/assembly-match'
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { DP } from '@/settings/config'
 
@@ -83,7 +94,7 @@ const { crud, CRUD } = useCRUD(
   {
     title: '总装匹配',
     permission: { ...permission },
-    crudApi: { get },
+    crudApi: { ...crudApi },
     optShow: { ...optShow }
     // requiredQuery: ['areaId'],
     // queryOnPresenterCreated: false
@@ -94,16 +105,20 @@ const { maxHeight } = useMaxHeight({ paginate: false })
 
 const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
 
-const checkedIds = ref([])
+const checkAll = ref(false)
+const detailIds = ref([])
+const detailNames = ref()
+const checkedNodes = ref([])
 function handleCheckedChange(value, item) {
-  const _checkedIndex = checkedIds.value.indexOf(item.id)
+  const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {
-    if (_checkedIndex === -1) checkedIds.value.push(item.id)
+    if (_checkedIndex === -1) checkedNodes.value.push(item)
   } else {
-    if (_checkedIndex > -1) checkedIds.value.splice(_checkedIndex, 1)
+    if (_checkedIndex > -1) checkedNodes.value.splice(_checkedIndex, 1)
   }
 }
 function handleCheckedAll(val) {
+  checkAll.value = val
   boardList.value.forEach((v) => {
     v.checked = val
     handleCheckedChange(val, v)
@@ -111,7 +126,21 @@ function handleCheckedAll(val) {
 }
 
 const statusVisible = ref(false)
-function showStatus() {
+function showStatus(item) {
+  detailIds.value = [item.id]
+  detailNames.value = [{ name: item.serialNumber, tagType: item.tagType }]
+  statusVisible.value = true
+}
+
+function handleBatchMatch() {
+  if (checkedNodes.value.length <= 0) {
+    ElMessage.warning('至少选择一个构件进行匹配查询')
+    return
+  }
+  detailIds.value = checkedNodes.value.map((v) => v.id)
+  detailNames.value = checkedNodes.value.map((v) => {
+    return { name: v.serialNumber, tagType: v.tagType }
+  })
   statusVisible.value = true
 }
 </script>
