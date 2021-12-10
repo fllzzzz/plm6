@@ -65,11 +65,11 @@ export function getAllPackage(params) {
  * @param {number} type 物料清单类型
  * @returns
  */
-export function getHasTaskLine({ districtId, monomerId, type }) {
+export function getHasTaskLine({ areaId, monomerId, type }) {
   return request({
     module: 'mes',
     url: 'productionLine/hasTask',
     method: 'get',
-    params: { districtId, monomerId, type }
+    params: { areaId, monomerId, type }
   })
 }

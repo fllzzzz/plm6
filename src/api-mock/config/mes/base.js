@@ -61,6 +61,35 @@ const setDriverConfig = {
   }
 }
 
+// 获取安全余额系数
+const getSafetyFactor = {
+  url: '/api/config/safety/factor',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        'safetyFactor|1-99.1-2': 0
+      }
+    }
+  }
+}
+
+// 设置安全余额系数
+const setSafetyFactor = {
+  url: '/api/config/safety/factor',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 // 获取车型配置
 const getCarModelConfig = {
   url: '/api/config/car/model',
@@ -95,6 +124,8 @@ export default [
   setOverweightSMSRecipient,
   getDriverConfig,
   setDriverConfig,
+  getSafetyFactor,
+  setSafetyFactor,
   getCarModelConfig,
   setCarModelConfig
 ]

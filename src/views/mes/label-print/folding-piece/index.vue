@@ -304,7 +304,7 @@ function getLabelInfo(row) {
   const component = {
     projectName: row.project.shortName,
     monomerName: printConfig.showMonomer ? row.monomer.name : '',
-    areaName: printConfig.showArea ? row.district.name : '',
+    areaName: printConfig.showArea ? row.area.name : '',
     name: row.name,
     serialNumber: row.serialNumber,
     quantity: row.quantity,

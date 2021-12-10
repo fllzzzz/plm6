@@ -32,22 +32,44 @@ export default {
     name: 'MesChangedManage',
     alwaysShow: false,
     redirect: '/mes/changed-manage/artifact',
-    meta: { title: '变更管理', icon: 'project', noCache: true },
-    children: [
-      {
-        name: 'MesArtifactChanged',
-        path: 'artifact',
-        hidden: false,
-        component: '/mes/changed-manage/artifact/index',
-        meta: { title: '构件变更', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesMachinePartChanged',
-        path: 'machine-part',
-        hidden: false,
-        component: '/mes/changed-manage/machine-part/index',
-        meta: { title: '零件变更', icon: 'project', noCache: true }
+    meta: {
+      title: '变更管理',
+      icon: 'project',
+      noCache: true
+    },
+    children: [{
+      name: 'MesArtifactChanged',
+      path: 'artifact',
+      hidden: false,
+      component: '/mes/changed-manage/artifact/index',
+      meta: {
+        title: '构件变更',
+        icon: 'project',
+        noCache: true
       }
+    },
+    {
+      name: 'MesMachinePartChanged',
+      path: 'machine-part',
+      hidden: false,
+      component: '/mes/changed-manage/machine-part/index',
+      meta: {
+        title: '零件变更',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesAssembleChanged',
+      path: 'assemble',
+      hidden: false,
+      component: '/mes/changed-manage/assemble/index',
+      meta: {
+        title: '组立变更',
+        icon: 'project',
+        noCache: true
+      }
+    }
       //     {
       //       name: 'MesChangedListManage',
       //       path: 'changed-list',
@@ -77,20 +99,29 @@ export default {
     hidden: false,
     name: 'MesSchedulingManage',
     alwaysShow: false,
-    redirect: '/mes/scheduling-manage/scheduling/artifact/assemble',
+    redirect: '/mes/scheduling-manage/scheduling/artifact',
     meta: {
       title: '排产管理',
       icon: 'project',
       noCache: true
     },
-    children: [
-      {
+    children: [{
+      name: 'MesSchedulingArtifact',
+      path: 'scheduling/artifact',
+      hidden: false,
+      redirect: '/mes/task-manage/scheduling/artifact/assemble',
+      meta: {
+        title: '构件排产',
+        icon: 'project',
+        noCache: true
+      },
+      children: [{
         name: 'MesSchedulingArtifactAssemble',
         path: 'assemble',
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/assemble/index',
         meta: {
-          title: '构件-一次排产',
+          title: '一次排产',
           icon: 'project',
           noCache: true
         }
@@ -101,7 +132,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/artifact/index',
         meta: {
-          title: '构件-二次排产',
+          title: '二次排产',
           icon: 'project',
           noCache: true
         }
@@ -112,18 +143,30 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/machine-part/index',
         meta: {
-          title: '构件-零件排产',
+          title: '零件排产',
           icon: 'project',
           noCache: true
         }
+      }
+      ]
+    },
+    {
+      name: 'MesSchedulingEnclosure',
+      path: 'scheduling/enclosure',
+      hidden: false,
+      redirect: '/mes/task-manage/scheduling/enclosure/contour-plate',
+      meta: {
+        title: '围护排产',
+        icon: 'project',
+        noCache: true
       },
-      {
+      children: [{
         name: 'MesSchedulingPressedPlate',
         path: 'pressed-plate',
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/pressed-plate/index',
         meta: {
-          title: '围护-压型板排产',
+          title: '压型板排产',
           icon: 'project',
           noCache: true
         }
@@ -134,7 +177,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/floor-plate/index',
         meta: {
-          title: '围护-压型楼承板排产',
+          title: '压型楼承板排产',
           icon: 'project',
           noCache: true
         }
@@ -145,7 +188,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index',
         meta: {
-          title: '围护-桁架式楼承板排产',
+          title: '桁架式楼承板排产',
           icon: 'project',
           noCache: true
         }
@@ -156,7 +199,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/sandwich-board/index',
         meta: {
-          title: '围护-夹芯板排产',
+          title: '夹芯板排产',
           icon: 'project',
           noCache: true
         }
@@ -167,32 +210,46 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/folding-piece/index',
         meta: {
-          title: '围护-折边件排产',
+          title: '折边件排产',
           icon: 'project',
           noCache: true
         }
-      },
-      {
-        name: 'MesTaskArtifact',
-        path: 'task/artifact',
-        hidden: false,
-        component: '/mes/scheduling-manage/task/artifact/index',
-        meta: { title: '构件任务', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesTaskMachinePart',
-        path: 'task/machine-part',
-        hidden: false,
-        component: '/mes/scheduling-manage/task/machine-part/index',
-        meta: { title: '零件任务', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesTaskEnclosure',
-        path: 'task/enclosure',
-        hidden: false,
-        component: '/mes/scheduling-manage/task/enclosure/index',
-        meta: { title: '围护任务', icon: 'project', noCache: true }
       }
+      ]
+    },
+    {
+      name: 'MesTaskArtifact',
+      path: 'task/artifact',
+      hidden: false,
+      component: '/mes/scheduling-manage/task/artifact/index',
+      meta: {
+        title: '构件任务',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesTaskMachinePart',
+      path: 'task/machine-part',
+      hidden: false,
+      component: '/mes/scheduling-manage/task/machine-part/index',
+      meta: {
+        title: '零件任务',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesTaskEnclosure',
+      path: 'task/enclosure',
+      hidden: false,
+      component: '/mes/scheduling-manage/task/enclosure/index',
+      meta: {
+        title: '围护任务',
+        icon: 'project',
+        noCache: true
+      }
+    }
     ]
   },
   {
@@ -202,98 +259,165 @@ export default {
     name: 'MesProductionManage',
     alwaysShow: false,
     redirect: '/mes/production-manage/report',
-    meta: { title: '生产管理', icon: 'contract', noCache: true },
-    children: [
-      {
-        name: 'MesProductionReport',
-        path: 'report',
+    meta: {
+      title: '生产管理',
+      icon: 'contract',
+      noCache: true
+    },
+    children: [{
+      name: 'MesProductionReport',
+      path: 'report',
+      hidden: false,
+      redirect: '/mes/production-manage/report/artifact',
+      meta: {
+        title: '生产报表',
+        icon: 'project',
+        noCache: false
+      },
+      children: [{
+        name: 'MesProductionReportArtifact',
+        path: 'artifact',
         hidden: false,
-        redirect: '/mes/production-manage/report/artifact',
-        meta: { title: '生产报表', icon: 'project', noCache: false },
-        children: [
-          {
-            name: 'MesProductionReportArtifact',
-            path: 'artifact',
-            hidden: false,
-            component: '/mes/production-manage/report/artifact/index',
-            meta: { title: '结构报表', icon: 'project', noCache: true }
-          },
-          {
-            name: 'MesProductionReportPressedPlate',
-            path: 'pressed-plate',
-            hidden: false,
-            component: '/mes/production-manage/report/pressed-plate/index',
-            meta: { title: '压型板报表', icon: 'project', noCache: true }
-          },
-          {
-            name: 'MesProductionReportSandwichBoard',
-            path: 'sandwich-board',
-            hidden: false,
-            component: '/mes/production-manage/report/sandwich-board/index',
-            meta: { title: '夹芯板报表', icon: 'project', noCache: true }
-          },
-          // {
-          //   name: 'MesProductionReportFloorPlate',
-          //   path: 'floor-plate',
-          //   hidden: false,
-          //   component: '/mes/production-manage/report/floor-plate/index',
-          //   meta: { title: '楼承板报表', icon: 'project', noCache: true }
-          // },
-          {
-            name: 'MesProductionReportTrussFloorPlate',
-            path: 'truss-floor-plate',
-            hidden: false,
-            component: '/mes/production-manage/report/truss-floor-plate/index',
-            meta: { title: '桁架式楼承板报表', icon: 'project', noCache: true }
-          },
-          {
-            name: 'MesProductionReportPressedFloorPlate',
-            path: 'pressed-floor-plate',
-            hidden: false,
-            component: '/mes/production-manage/report/pressed-floor-plate/index',
-            meta: { title: '压型楼承板报表', icon: 'project', noCache: true }
-          },
-          {
-            name: 'MesProductionReportFoldingPiece',
-            path: 'folding-piece',
-            hidden: false,
-            component: '/mes/production-manage/report/folding-piece/index',
-            meta: { title: '折边件报表', icon: 'project', noCache: true }
-          }
-        ]
+        component: '/mes/production-manage/report/artifact/index',
+        meta: {
+          title: '结构报表',
+          icon: 'project',
+          noCache: true
+        }
       },
       {
-        name: 'MesProductionDashboard',
-        path: 'dashboard',
+        name: 'MesProductionReportEnclosure',
+        path: 'enclosure',
         hidden: false,
-        redirect: '/mes/production-manage/dashboard/project-state',
-        meta: { title: '项目看板', icon: 'project', noCache: true },
-        children: [
-          {
-            name: 'MesProductionDashboardProjectState',
-            path: 'project-state',
-            hidden: false,
-            component: '/mes/production-manage/dashboard/project-state/index',
-            meta: { title: '项目状态', icon: 'project', noCache: true }
-          }
-        ]
-      },
-      {
-        name: 'MesProductionAnalysis',
-        path: 'analysis',
-        hidden: false,
-        redirect: '/mes/production-manage/analysis/production-statistics',
-        meta: { title: '生产分析', icon: 'project', noCache: true },
-        children: [
-          {
-            name: 'MesProductionAnalysisStatistics',
-            path: 'production-statistics',
-            hidden: false,
-            component: '/mes/production-manage/analysis/production-statistics/index',
-            meta: { title: '生产统计', icon: 'project', noCache: true }
-          }
-        ]
+        component: '/mes/production-manage/report/enclosure/index',
+        meta: {
+          title: '围护报表',
+          icon: 'project',
+          noCache: true
+        }
       }
+        // {
+        //   name: 'MesProductionReportPressedPlate',
+        //   path: 'pressed-plate',
+        //   hidden: false,
+        //   component: '/mes/production-manage/report/pressed-plate/index',
+        //   meta: { title: '压型板报表', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'MesProductionReportSandwichBoard',
+        //   path: 'sandwich-board',
+        //   hidden: false,
+        //   component: '/mes/production-manage/report/sandwich-board/index',
+        //   meta: { title: '夹芯板报表', icon: 'project', noCache: true }
+        // },
+        // // {
+        // //   name: 'MesProductionReportFloorPlate',
+        // //   path: 'floor-plate',
+        // //   hidden: false,
+        // //   component: '/mes/production-manage/report/floor-plate/index',
+        // //   meta: { title: '楼承板报表', icon: 'project', noCache: true }
+        // // },
+        // {
+        //   name: 'MesProductionReportTrussFloorPlate',
+        //   path: 'truss-floor-plate',
+        //   hidden: false,
+        //   component: '/mes/production-manage/report/truss-floor-plate/index',
+        //   meta: { title: '桁架式楼承板报表', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'MesProductionReportPressedFloorPlate',
+        //   path: 'pressed-floor-plate',
+        //   hidden: false,
+        //   component: '/mes/production-manage/report/pressed-floor-plate/index',
+        //   meta: { title: '压型楼承板报表', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'MesProductionReportFoldingPiece',
+        //   path: 'folding-piece',
+        //   hidden: false,
+        //   component: '/mes/production-manage/report/folding-piece/index',
+        //   meta: { title: '折边件报表', icon: 'project', noCache: true }
+        // }
+      ]
+    },
+    {
+      name: 'MesProductionDashboard',
+      path: 'dashboard',
+      hidden: false,
+      redirect: '/mes/production-manage/dashboard/project-state',
+      meta: {
+        title: '项目看板',
+        icon: 'project',
+        noCache: true
+      },
+      children: [{
+        name: 'MesProductionDashboardMainMaterialTrack',
+        path: 'main-material-track',
+        hidden: false,
+        component: '/mes/production-manage/dashboard/main-material-track/index',
+        meta: {
+          title: '主材跟踪',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProductionDashboardProjectState',
+        path: 'project-state',
+        hidden: false,
+        component: '/mes/production-manage/dashboard/project-state/index',
+        meta: {
+          title: '项目状态',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProductionDashboardArtifactDashboard',
+        path: 'artifact-dashboard',
+        hidden: false,
+        component: '/mes/production-manage/dashboard/artifact-dashboard/index',
+        meta: {
+          title: '结构看板',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesProductionDashboardAssemblyMatch',
+        path: 'assembly-match',
+        hidden: false,
+        component: '/mes/production-manage/dashboard/assembly-match/index',
+        meta: {
+          title: '总装匹配',
+          icon: 'project',
+          noCache: true
+        }
+      }
+      ]
+    },
+    {
+      name: 'MesProductionAnalysis',
+      path: 'analysis',
+      hidden: false,
+      redirect: '/mes/production-manage/analysis/production-statistics',
+      meta: {
+        title: '生产分析',
+        icon: 'project',
+        noCache: true
+      },
+      children: [{
+        name: 'MesProductionAnalysisStatistics',
+        path: 'production-statistics',
+        hidden: false,
+        component: '/mes/production-manage/analysis/production-statistics/index',
+        meta: {
+          title: '生产统计',
+          icon: 'project',
+          noCache: true
+        }
+      }]
+    }
     ]
   },
   // {
@@ -360,22 +484,33 @@ export default {
     name: 'MesTeamReport',
     alwaysShow: false,
     redirect: '/mes/team-report/artifact-team',
-    meta: { title: '班组报表', icon: 'contract', noCache: true },
-    children: [
-      {
-        name: 'MesTeamReportArtifact',
-        path: 'artifact-team',
-        hidden: false,
-        component: '/mes/team-report/artifact-team/index',
-        meta: { title: '结构班组', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesTeamReportEnclosure',
-        path: 'enclosure-team',
-        hidden: false,
-        component: '/mes/team-report/enclosure-team/index',
-        meta: { title: '围护班组', icon: 'project', noCache: true }
+    meta: {
+      title: '班组报表',
+      icon: 'contract',
+      noCache: true
+    },
+    children: [{
+      name: 'MesTeamReportArtifact',
+      path: 'artifact-team',
+      hidden: false,
+      component: '/mes/team-report/artifact-team/index',
+      meta: {
+        title: '结构班组',
+        icon: 'project',
+        noCache: true
       }
+    },
+    {
+      name: 'MesTeamReportEnclosure',
+      path: 'enclosure-team',
+      hidden: false,
+      component: '/mes/team-report/enclosure-team/index',
+      meta: {
+        title: '围护班组',
+        icon: 'project',
+        noCache: true
+      }
+    }
       //     {
       //       name: 'MesTeamReportInStaffPayroll',
       //       path: 'in-staff-payroll',
@@ -431,15 +566,22 @@ export default {
     name: 'MesQHSEManage',
     alwaysShow: false,
     redirect: '/mes/QHSE-manage/disclosure',
-    meta: { title: 'QHSE管理', icon: 'contract', noCache: true },
-    children: [
-      {
-        name: 'MesQHSEManageDisclosure',
-        path: 'disclosure',
-        hidden: false,
-        component: '/mes/QHSE-manage/disclosure/index',
-        meta: { title: '问题曝光', icon: 'project', noCache: true }
+    meta: {
+      title: 'QHSE管理',
+      icon: 'contract',
+      noCache: true
+    },
+    children: [{
+      name: 'MesQHSEManageDisclosure',
+      path: 'disclosure',
+      hidden: false,
+      component: '/mes/QHSE-manage/disclosure/index',
+      meta: {
+        title: '问题曝光',
+        icon: 'project',
+        noCache: true
       }
+    }
       // {
       //   name: 'MesQHSEManageExFactoryData',
       //   path: 'ex-factory-data',
@@ -456,22 +598,33 @@ export default {
     name: 'MesLabelPrint',
     alwaysShow: false,
     redirect: '/mes/label-print/artifact',
-    meta: { title: '产品标签', icon: 'project', noCache: true },
-    children: [
-      {
-        name: 'MesLabelPrintArtifact',
-        path: 'artifact',
-        hidden: false,
-        component: '/mes/label-print/artifact/index',
-        meta: { title: '构件', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesLabelPrintFoldingPiece',
-        path: 'enclosure',
-        hidden: false,
-        component: '/mes/label-print/folding-piece/index',
-        meta: { title: '折边件', icon: 'project', noCache: true }
+    meta: {
+      title: '产品标签',
+      icon: 'project',
+      noCache: true
+    },
+    children: [{
+      name: 'MesLabelPrintArtifact',
+      path: 'artifact',
+      hidden: false,
+      component: '/mes/label-print/artifact/index',
+      meta: {
+        title: '构件',
+        icon: 'project',
+        noCache: true
       }
+    },
+    {
+      name: 'MesLabelPrintFoldingPiece',
+      path: 'enclosure',
+      hidden: false,
+      component: '/mes/label-print/folding-piece/index',
+      meta: {
+        title: '折边件',
+        icon: 'project',
+        noCache: true
+      }
+    }
       //     {
       //       name: 'MesLabelPrintingAuxiliaryMaterial',
       //       path: 'auxiliary-material',
@@ -488,50 +641,77 @@ export default {
     name: 'MesManufacturesManage',
     alwaysShow: false,
     redirect: '/mes/manufactures-manage/inbound-state/artifact-dashboard',
-    meta: { title: '制成品管理', icon: 'project', noCache: true },
-    children: [
-      {
-        name: 'MesInboundStateArtifactDashboard',
-        path: 'inbound-state/artifact-dashboard',
-        hidden: false,
-        component: '/mes/manufactures-manage/inbound-state/artifact-dashboard/index',
-        meta: { title: '入库看板-构件', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesInboundStateEnclosureDashboard',
-        path: 'inbound-state/enclosure-dashboard',
-        hidden: false,
-        component: '/mes/manufactures-manage/inbound-state/enclosure-dashboard/index',
-        meta: { title: '入库看板-围护', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesOutboundStateArtifactDashboard',
-        path: 'outbound-state/artifact-dashboard',
-        hidden: false,
-        component: '/mes/manufactures-manage/outbound-state/artifact-dashboard/index',
-        meta: { title: '出库看板-构件', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesOutboundStateEnclosureDashboard',
-        path: 'outbound-state/enclosure-dashboard',
-        hidden: false,
-        component: '/mes/manufactures-manage/outbound-state/enclosure-dashboard/index',
-        meta: { title: '出库看板-围护', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesWarehouseStateArtifact',
-        path: 'warehouse-state/artifact',
-        hidden: false,
-        component: '/mes/manufactures-manage/warehouse-state/artifact/index',
-        meta: { title: '出入库状态-构件', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesWarehouseStateEnclosure',
-        path: 'warehouse-state/enclosure',
-        hidden: false,
-        component: '/mes/manufactures-manage/warehouse-state/enclosure/index',
-        meta: { title: '出入库状态-围护', icon: 'project', noCache: true }
+    meta: {
+      title: '制成品管理',
+      icon: 'project',
+      noCache: true
+    },
+    children: [{
+      name: 'MesInboundStateArtifactDashboard',
+      path: 'inbound-state/artifact-dashboard',
+      hidden: false,
+      component: '/mes/manufactures-manage/inbound-state/artifact-dashboard/index',
+      meta: {
+        title: '入库看板-构件',
+        icon: 'project',
+        noCache: true
       }
+    },
+    {
+      name: 'MesInboundStateEnclosureDashboard',
+      path: 'inbound-state/enclosure-dashboard',
+      hidden: false,
+      component: '/mes/manufactures-manage/inbound-state/enclosure-dashboard/index',
+      meta: {
+        title: '入库看板-围护',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesOutboundStateArtifactDashboard',
+      path: 'outbound-state/artifact-dashboard',
+      hidden: false,
+      component: '/mes/manufactures-manage/outbound-state/artifact-dashboard/index',
+      meta: {
+        title: '出库看板-构件',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesOutboundStateEnclosureDashboard',
+      path: 'outbound-state/enclosure-dashboard',
+      hidden: false,
+      component: '/mes/manufactures-manage/outbound-state/enclosure-dashboard/index',
+      meta: {
+        title: '出库看板-围护',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesWarehouseStateArtifact',
+      path: 'warehouse-state/artifact',
+      hidden: false,
+      component: '/mes/manufactures-manage/warehouse-state/artifact/index',
+      meta: {
+        title: '出入库状态-构件',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesWarehouseStateEnclosure',
+      path: 'warehouse-state/enclosure',
+      hidden: false,
+      component: '/mes/manufactures-manage/warehouse-state/enclosure/index',
+      meta: {
+        title: '出入库状态-围护',
+        icon: 'project',
+        noCache: true
+      }
+    }
       //     {
       //       name: 'MesWarehouseStateAuxiliaryMaterial',
       //       path: 'auxiliary-material',
@@ -556,50 +736,77 @@ export default {
     name: 'MesPackAndShip',
     alwaysShow: false,
     redirect: '/mes/pack-and-ship/pack-list',
-    meta: { title: '打包与发运', icon: 'project', noCache: true },
-    children: [
-      {
-        name: 'MesManualPack',
-        path: 'manual-pack',
-        hidden: false,
-        component: '/mes/pack-and-ship/manual-pack/index',
-        meta: { title: '手工打包', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesPackList',
-        path: 'pack-list',
-        hidden: false,
-        component: '/mes/pack-and-ship/pack-list/index',
-        meta: { title: '打包记录', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesShipList',
-        path: 'ship-list',
-        hidden: false,
-        component: '/mes/pack-and-ship/ship-list/index',
-        meta: { title: '发运记录', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesReceiptStatus',
-        path: 'receipt-status',
-        hidden: false,
-        component: '/mes/pack-and-ship/receipt-status/index',
-        meta: { title: '收货状态', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesLogisticsList',
-        path: 'logistics-list',
-        hidden: false,
-        component: '/mes/pack-and-ship/logistics-list/index',
-        meta: { title: '物流记录', icon: 'project', noCache: true }
-      },
-      {
-        name: 'MesShipAudit',
-        path: 'ship-audit',
-        hidden: false,
-        component: '/mes/pack-and-ship/ship-audit/index',
-        meta: { title: '发运审核', icon: 'project', noCache: true }
+    meta: {
+      title: '打包与发运',
+      icon: 'project',
+      noCache: true
+    },
+    children: [{
+      name: 'MesManualPack',
+      path: 'manual-pack',
+      hidden: false,
+      component: '/mes/pack-and-ship/manual-pack/index',
+      meta: {
+        title: '手工打包',
+        icon: 'project',
+        noCache: true
       }
+    },
+    {
+      name: 'MesPackList',
+      path: 'pack-list',
+      hidden: false,
+      component: '/mes/pack-and-ship/pack-list/index',
+      meta: {
+        title: '打包记录',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesShipList',
+      path: 'ship-list',
+      hidden: false,
+      component: '/mes/pack-and-ship/ship-list/index',
+      meta: {
+        title: '发运记录',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesReceiptStatus',
+      path: 'receipt-status',
+      hidden: false,
+      component: '/mes/pack-and-ship/receipt-status/index',
+      meta: {
+        title: '收货状态',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesLogisticsList',
+      path: 'logistics-list',
+      hidden: false,
+      component: '/mes/pack-and-ship/logistics-list/index',
+      meta: {
+        title: '物流记录',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesShipAudit',
+      path: 'ship-audit',
+      hidden: false,
+      component: '/mes/pack-and-ship/ship-audit/index',
+      meta: {
+        title: '发运审核',
+        icon: 'project',
+        noCache: true
+      }
+    }
       // {
       //   name: 'MesLimitList',
       //   path: 'limit-list',

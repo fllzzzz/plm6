@@ -4,19 +4,19 @@ import {
   processingColorsEnum
 } from '@enum-ms/production'
 
-export default function useDashboardHeader({ colorCardTitle = '入库', emit, crud, fetchSummaryInfo }) {
+export default function useDashboardHeader({ colorCardTitles = ['未入库', '部分入库', '全部入库'], emit, crud, fetchSummaryInfo }) {
   const colors = [{
-    title: '未' + colorCardTitle,
+    title: colorCardTitles[0],
     color: processingColorsEnum.UNSTART.COLOR,
     value: processingColorsEnum.UNSTART.V
   },
   {
-    title: '部分' + colorCardTitle,
+    title: colorCardTitles[1],
     color: processingColorsEnum.PROCESS.COLOR,
     value: processingColorsEnum.PROCESS.V
   },
   {
-    title: '全部' + colorCardTitle,
+    title: colorCardTitles[2],
     color: processingColorsEnum.COMPLETE.COLOR,
     value: processingColorsEnum.COMPLETE.V
   }
@@ -25,7 +25,7 @@ export default function useDashboardHeader({ colorCardTitle = '入库', emit, cr
   watch(
     [() => crud.query.monomerId, () => crud.query.factoryId],
     () => {
-      fetchSummaryInfo()
+      if (typeof fetchSummaryInfo === 'function') fetchSummaryInfo()
     },
     { immediate: true }
   )

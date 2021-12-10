@@ -191,16 +191,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('area')"
-        key="area"
-        prop="area"
+        v-if="columns.visible('surfaceArea')"
+        key="surfaceArea"
+        prop="surfaceArea"
         sortable="custom"
         :label="`面积\n(㎡)`"
         align="left"
         min-width="80px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.area, DP.COM_AREA__M2) }}
+          {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -294,7 +294,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'area', 'remark']
+    invisibleColumns: ['totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
   },
   tableRef
 )
@@ -333,7 +333,7 @@ function getLabelInfo(row) {
   const component = {
     projectName: row.project.shortName,
     monomerName: printConfig.showMonomer ? row.monomer.name : '',
-    areaName: printConfig.showArea ? row.district.name : '',
+    areaName: printConfig.showArea ? row.area.name : '',
     name: row.name,
     serialNumber: row.serialNumber,
     quantity: row.quantity,

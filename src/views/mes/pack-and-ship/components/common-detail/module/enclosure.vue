@@ -3,7 +3,7 @@
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" />
     <el-table-column :show-overflow-tooltip="true" prop="monomer.name" label="单体" />
-    <el-table-column v-if="isSuspend" :show-overflow-tooltip="true" prop="district.name" label="区域" />
+    <el-table-column v-if="isSuspend" :show-overflow-tooltip="true" prop="area.name" label="区域" />
     <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" />
     <el-table-column :show-overflow-tooltip="true" prop="plate" label="板型" />
     <el-table-column :show-overflow-tooltip="true" prop="color" label="颜色" />
@@ -28,18 +28,6 @@
         {{ toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}
       </template>
     </el-table-column>
-        <template v-if="isShowPrice">
-      <el-table-column :show-overflow-tooltip="true" prop="unitPrice" :label="`单价\n（元）`" align="center">
-        <template v-slot="scope">
-          {{ toFixed(scope.row.unitPrice, DP.YUAN) }}
-        </template>
-      </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" prop="totalPrice" :label="`总价\n（元）`" align="center">
-        <template v-slot="scope">
-          {{ toFixed(scope.row.totalPrice, DP.YUAN) }}
-        </template>
-      </el-table-column>
-    </template>
   </common-table>
 </template>
 
@@ -61,10 +49,6 @@ defineProps({
   maxHeight: {
     type: [String, Number],
     default: undefined
-  },
-  isShowPrice: {
-    type: Boolean,
-    default: false
   }
 })
 </script>

@@ -97,7 +97,7 @@ import { ElMessage } from 'element-plus'
 const defaultQuery = {
   serialNumber: '',
   monomerId: { value: undefined, resetAble: false },
-  districtId: { value: undefined, resetAble: false }
+  areaId: { value: undefined, resetAble: false }
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
@@ -196,9 +196,9 @@ function handleCopiesChange(val) {
   }
 }
 
-// function fetchMonomerAndArea({ monomerId, districtId }) {
+// function fetchMonomerAndArea({ monomerId, areaId }) {
 //   query.monomerId = monomerId
-//   query.districtId = districtId
+//   query.areaId = areaId
 //   crud.toQuery()
 // fetchHasTaskLine()
 // }
@@ -212,7 +212,7 @@ async function fetchHasTaskLine() {
   selectedAbleLineLoading.value = true
   query.productionLineId = undefined
   try {
-    const { ids } = await getHasTaskLine({ districtId: query.districtId, type: 1 })
+    const { ids } = await getHasTaskLine({ areaId: query.areaId, type: 1 })
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]

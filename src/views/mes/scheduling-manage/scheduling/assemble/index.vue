@@ -288,7 +288,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['districtId'],
+    // requiredQuery: ['areaId'],
     invisibleColumns: ['specification', 'material', 'length', 'netWeight', 'totalNetWeight', 'drawingNumber', 'remark']
     // queryOnPresenterCreated: false
   },

@@ -319,7 +319,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['districtId'],
+    // requiredQuery: ['areaId'],
     invisibleColumns: ['districtName', 'length', 'thickness', 'width', 'totalArea', 'totalLength', 'weight', 'remark']
     // queryOnPresenterCreated: false
   },
@@ -331,7 +331,7 @@ const { globalProjectId } = mapGetters(['globalProjectId'])
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.category = mesEnclosureTypeEnum.FLOOR_PLATE.V
+  crud.query.category = mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V
 }
 </script>
 

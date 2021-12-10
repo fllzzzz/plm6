@@ -267,7 +267,7 @@ async function submit() {
         list.push({
           productId: i.id,
           projectId: i.projectId,
-          districtId: i.districtId,
+          areaId: i.areaId,
           monomerId: i.monomerId,
           productType: productType,
           processType: processType,

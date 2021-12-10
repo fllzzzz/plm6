@@ -24,7 +24,7 @@
         width="120px"
       >
         <template v-slot="scope">
-          <table-cell-tag v-if="scope.row.factory" :name="scope.row.factory.shortName" :color="scope.row.factory.tagColor" />
+          <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
@@ -36,14 +36,7 @@
         align="center"
         width="100px"
       />
-      <el-table-column
-        v-if="columns.visible('district.name')"
-        prop="district.name"
-        label="区域"
-        sortable="custom"
-        align="center"
-        width="100px"
-      />
+      <el-table-column v-if="columns.visible('area.name')" prop="area.name" label="区域" sortable="custom" align="center" width="100px" />
       <el-table-column
         v-if="columns.visible('serialNumber')"
         prop="serialNumber"
@@ -208,19 +201,19 @@ import { packTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import tableCellTag from '@comp-common/table-cell-tag/index'
+import factoryTableCellTag from '@comp-common/factory-table-cell-tag'
 
 // crud交由presenter持有
 const permission = {
   get: ['structureManualPack:get'],
-  pack: ['manualPack:pack'],
+  pack: ['manualPack:pack']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -233,7 +226,7 @@ const { crud, columns, CRUD } = useCRUD(
     crudApi: { get },
     invisibleColumns: ['drawingNumber'],
     queryOnPresenterCreated: false,
-    hasPagination: false,
+    hasPagination: false
   },
   tableRef
 )
@@ -245,20 +238,20 @@ const emit = defineEmits(['add'])
 const props = defineProps({
   projectId: {
     type: [String, Number],
-    default: undefined,
+    default: undefined
   },
   factoryId: {
     type: [String, Number],
-    default: undefined,
+    default: undefined
   },
   monomerId: {
     type: [String, Number],
-    default: undefined,
+    default: undefined
   },
-  districtId: {
+  areaId: {
     type: [String, Number],
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 const packData = inject('packData')
@@ -267,7 +260,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.factoryId, props.monomerId, props.districtId],
+  () => [props.projectId, props.factoryId, props.monomerId, props.areaId],
   () => {
     crud.toQuery()
   },
@@ -286,7 +279,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 defineExpose({
-  refresh: crud.toQuery,
+  refresh: crud.toQuery
 })
 </script>
 

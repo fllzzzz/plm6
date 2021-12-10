@@ -24,7 +24,7 @@
         width="120px"
       >
         <template v-slot="scope">
-          <table-cell-tag v-if="scope.row.factory" :name="scope.row.factory.shortName" :color="scope.row.factory.tagColor" />
+          <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
@@ -36,14 +36,7 @@
         align="center"
         width="100px"
       />
-      <el-table-column
-        v-if="columns.visible('district.name')"
-        prop="district.name"
-        label="区域"
-        sortable="custom"
-        align="center"
-        width="100px"
-      />
+      <el-table-column v-if="columns.visible('area.name')" prop="area.name" label="区域" sortable="custom" align="center" width="100px" />
       <el-table-column
         v-if="columns.visible('serialNumber')"
         prop="serialNumber"
@@ -202,7 +195,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import tableCellTag from '@comp-common/table-cell-tag/index'
+import factoryTableCellTag from '@comp-common/factory-table-cell-tag/index'
 
 // crud交由presenter持有
 const permission = {
@@ -249,7 +242,7 @@ const props = defineProps({
     type: [String, Number],
     default: undefined
   },
-  districtId: {
+  areaId: {
     type: [String, Number],
     default: undefined
   }
@@ -261,7 +254,7 @@ const ids = computed(() => {
 })
 
 watch(
-  () => [props.projectId, props.factoryId, props.monomerId, props.districtId],
+  () => [props.projectId, props.factoryId, props.monomerId, props.areaId],
   () => {
     crud.toQuery()
   },

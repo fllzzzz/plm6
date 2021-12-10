@@ -179,9 +179,9 @@
         width="140px"
       />
       <el-table-column
-        v-if="columns.visible('area')"
-        key="area"
-        prop="area"
+        v-if="columns.visible('surfaceArea')"
+        key="surfaceArea"
+        prop="surfaceArea"
         sortable="custom"
         fixed
         :label="`面积\n(㎡)`"
@@ -189,7 +189,7 @@
         width="80px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.area, DP.COM_AREA__M2) }}
+          {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -336,7 +336,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['districtId'],
+    // requiredQuery: ['areaId'],
     invisibleColumns: [
       'districtName',
       'length',
@@ -345,7 +345,7 @@ const { crud, columns } = useCRUD(
       'totalNetWeight',
       'totalGrossWeight',
       'drawingNumber',
-      'area',
+      'surfaceArea',
       'remark'
     ]
     // queryOnPresenterCreated: false
