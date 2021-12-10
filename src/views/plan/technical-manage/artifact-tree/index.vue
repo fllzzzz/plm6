@@ -188,16 +188,6 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 157
 })
 
-watch(
-  () => globalProjectId,
-  (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
 
 function changeIndex(val) {
   if (val.children) {

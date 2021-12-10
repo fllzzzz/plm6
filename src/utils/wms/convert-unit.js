@@ -209,7 +209,7 @@ function otherRawMatFormat(
   data,
   unitCfg,
   { measureUnit, measurePrecision, accountingUnit, accountingPrecision, toNum = false, showUnit = false, toSmallest = false } = {},
-  { mete = ['mete'], quantity = ['quantity'], amount = ['unitPrice', 'unitPriceExcludingVAT'] } = {}
+  { mete = ['mete', 'frozenMete'], quantity = ['quantity', 'frozenQuantity'], amount = ['unitPrice', 'unitPriceExcludingVAT'] } = {}
 ) {
   // 计量
   const _measureUnit = unitCfg.get(measureUnit)
@@ -244,15 +244,15 @@ function otherRawMatFormat(
       })
     }
 
-    // 金额
+    // 金额 金额的大小转换与量相反
     if (isNotBlank(amount)) {
       fieldsFormat({
         data,
         fields: amount,
         symbol: _accountingUnit.symbol,
-        unitPrecision: accountingPrecision,
+        unitPrecision: !toSmallest ? 8 : 2,
         type: _accountingUnit.type,
-        toSmallest,
+        toSmallest: !toSmallest,
         showUnit,
         toNum
       })

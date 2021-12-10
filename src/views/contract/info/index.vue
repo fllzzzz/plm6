@@ -37,38 +37,43 @@
         </div>
         <el-tabs v-model="activeName" v-if="projectId">
           <el-tab-pane label="基础信息" name="baseInfo">
-            <base-info  ref="baseRef" class="tab-content" :project-id="projectId" :is-modify="isModify" @changeStatus="changeEditStatus" />
+            <base-info  ref="baseRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
           </el-tab-pane>
           <el-tab-pane label="商务信息" name="businessInfo">
-            <business-info class="tab-content" :project-id="projectId" :is-modify="isModify" @changeStatus="changeEditStatus" />
+            <business-info ref="businessRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
           </el-tab-pane>
           <el-tab-pane label="客户信息" name="customerInfo">
-            <customer-info class="tab-content" :project-id="projectId" :is-modify="isModify" @changeStatus="changeEditStatus" />
+            <customer-info ref="customerRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
           </el-tab-pane>
           <el-tab-pane label="项目成员" name="memberInfo">
-            <members v-if="projectId" ref="membersList" :project-id="projectId" :is-modify="isModify" @changeStatus="changeEditStatus" />
+            <members ref="memberRef" v-if="projectId" :project-id="projectId" :is-modify="isModify" />
           </el-tab-pane>
         </el-tabs>
       </div>
     </transition>
-    <!-- <transition name="el-fade-in">
-      <change-log v-if="showName=='changeLog'" style="margin-top:10px;" />
-    </transition> -->
+    <transition name="el-fade-in">
+      <change-audit-log v-if="showName=='changeLog'" style="margin-top:10px;" :project-id="projectId" />
+    </transition>
     <!-- 金额变更 -->
-    <money-form :audit-staus="auditStaus" :project-id="projectId" @changestaus="changeMoneyStaus" v-model="moneyVisible" :contract-info="baseInfoValue"/>
+    <money-form ref="moneyRef" :audit-staus="auditStaus" :project-id="projectId" v-model="moneyVisible" :contract-info="baseInfoValue"/>
     <!-- 结算填报 -->
-    <!-- <settle-form :visible.sync="settleVisible" :audit-staus="auditStaus" :project-id="projectId" @changestaus="changeSettleStaus" /> -->
+    <settle-form ref="settleRef" :audit-staus="auditStaus" :project-id="projectId" v-model="settleVisible" :contract-info="baseInfoValue"/>
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, watch, computed } from 'vue'
-import { ElTabs, ElTabPane } from 'element-plus'
+import { ElMessage, ElTabs, ElTabPane, ElRadioGroup, ElMessageBox, ElNotification } from 'element-plus'
+import { contractChangeTypeEnum } from '@enum-ms/contract'
 import baseInfo from './base'
 import businessInfo from './business'
 import customerInfo from './customer'
 import members from './members'
 import moneyForm from './money-form'
+import settleForm from './settle-form'
+import changeAuditLog from './change-audit-log'
+import { editContract } from '@/api/contract/project'
+
 const props = defineProps({
   projectId: {
     type: [Number, String],
@@ -87,32 +92,104 @@ const showName = ref('contract')
 const activeName = ref('baseInfo')
 const isModify = ref(false)
 const moneyVisible = ref(false)
+const settleVisible = ref(false)
 const submitLoading = ref(false)
 const auditStaus = ref()
 const baseRef = ref()
+const businessRef = ref()
+const customerRef = ref()
+const memberRef = ref()
 const baseInfoValue = ref()
+const moneyRef =  ref()
+const settleRef = ref()
+
+
+watch(
+  () => props.projectId,
+  (val) => {
+    if (val) {
+      showName.value = 'contract'
+    }
+  },
+  { deep: true, immediate: true }
+)
+
 function confirmSettle(){
-
+  baseInfoValue.value = baseRef.value.detail
+  if (props.projectStaus === 0) {
+    ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      settleVisible.value = true
+    }).catch(() => {
+    })
+  } else {
+    settleVisible.value = true
+  }
 }
 
-function changeMoneyStaus(){
-
-}
-
-function changeSettleStaus(){
-
-}
-
-function changeEditStatus(){
-  
-}
 function moneyChange(){
   moneyVisible.value=true
   baseInfoValue.value = baseRef.value.detail
 }
 
-function submit(){
-  isModify.value = false
+const validateData=[
+  {name:'baseInfo', label: '基础信息'},
+  {name:'businessInfo', label: '商务信息'},
+  {name:'customerInfo', label: '客户信息'}
+]
+
+function nextStepValidate(index){
+  switch(index){
+    case 0:
+      return baseRef.value.validateForm();
+    case 1:
+      return businessRef.value.validateForm();
+    case 2:
+      return customerRef.value.validateForm();
+  }
+}
+async function submit(){
+  const baseValidate = await baseRef.value.validateForm()
+  const businessValidate = await businessRef.value.validateForm()
+  const customerValidate = await customerRef.value.validateForm()
+  const validateArr = [ baseValidate, businessValidate, customerValidate ]
+  for (let i=0;i<validateArr.length;i++) {
+    if (!validateArr[i]) {
+      activeName.value=validateData[i].name
+      ElMessage.error(validateData[i].label+'请完善!')
+      return 
+    }
+  }
+  const userData =  memberRef.value.getUser()
+  let submitform = {
+    projectId: props.projectId,
+    type: contractChangeTypeEnum.ENUM.CONTRACTINFO.V,
+    projectUpdateDTOParam: {
+      baseUpdateDTOParam: baseRef.value.form,
+      businessUpdateDTOParam: businessRef.value.form,
+      customerUpdateDTOParam: customerRef.value.form,
+      userIdList: memberRef.value.checkedList
+    }
+  }
+  try {
+    await editContract(submitform)
+    // await baseRef.value.fetchDetail()
+    // await businessRef.value.fetchDetail()
+    // await customerRef.value.fetchDetail()
+    // await memberRef.value.fetchMembers()
+    ElNotification({ title: '提交成功', type: 'success' })
+  } catch (error) {
+    console.log('合同信息更新失败', error)
+  } finally {
+    baseRef.value.resetForm()
+    businessRef.value.resetForm()
+    customerRef.value.resetForm()
+    memberRef.value.fetchMembers()
+    isModify.value = false
+  }
 }
 // import baseInfo from './base'
 // import businessInfo from './business'

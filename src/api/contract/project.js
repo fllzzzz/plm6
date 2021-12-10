@@ -147,4 +147,18 @@ export function getBranchCompanyAllSimple() {
     method: 'get'
   })
 }
+
+/**
+ * 下载合同基础附件
+ * @param {*} id 文件id
+ */
+ export function downloadBaseAttachments({ id }) {
+  return request({
+    module: 'contract',
+    url: `common​/attachment​/download​/${id}`,
+    method: 'get',
+    timeout: 6000000,
+    responseType: 'blob'
+  })
+}
 export default { get, add, del }

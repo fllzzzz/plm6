@@ -2,14 +2,20 @@ import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import { componentListTypeEnum, componentTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
 import { matClsEnum } from '@enum-ms/classification'
 
+// 标签默认颜色
+export const TAG_DEF_COLOR = '#1682e6'
+
 // 工厂标签默认颜色
 export const TAG_FACTORY_DEF_COLOR = '#1682e6'
 
 // 甲供标签默认颜色
 export const TAG_PARTY_DEF_COLOR = '#e64242'
 
-// 标签默认颜色
-export const TAG_DEF_COLOR = '#1682e6'
+// 调拨标签默认颜色
+export const TAG_TRANSFER_COLOR = '#e64242'
+
+// 打印标签默认颜色
+export const TAG_PRINTED_DEF_COLOR = '#0f9747'
 
 // 钢板密度
 export const STEEL_DENSITY = 7.85

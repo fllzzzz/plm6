@@ -24,6 +24,7 @@
 <script setup>
 import { ref, defineProps, watch, computed } from 'vue'
 import { TechnologyTypeEnum } from '@enum-ms/contract'
+import { ElRadioGroup } from 'element-plus'
 import sandwichTable from './enclosure-table/sandwich-table'
 import pressedColorTable from './enclosure-table/pressed-color-table'
 import pressedSupportTable from './enclosure-table/pressed-support-table'

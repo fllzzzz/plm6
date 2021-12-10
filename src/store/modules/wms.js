@@ -27,8 +27,8 @@ const mutations = {
   SET_INBOUND_FILL_WAY_CFG(state, config) {
     state.inboundFillWayCfg = config
   },
-  SET_OUTBOUND_AUX_MAT_WAY_CFG(state, config) {
-    state.outboundAuxMatWayCfg = config
+  SET_OUTBOUND_CFG(state, config) {
+    state.outboundCfg = config
   }
 }
 
@@ -42,7 +42,7 @@ const actions = {
     const { inbound, outbound } = await getWmsConfig()
     commit('SET_INBOUND_STEEL_CFG', inbound.steel)
     commit('SET_INBOUND_FILL_WAY_CFG', inbound.fillWay)
-    commit('SET_OUTBOUND_AUX_MAT_WAY_CFG', outbound.outboundCfg)
+    commit('SET_OUTBOUND_CFG', outbound)
     commit('SET_LOADED', { key: 'config' })
   }
 }

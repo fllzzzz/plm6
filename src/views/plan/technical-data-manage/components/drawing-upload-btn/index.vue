@@ -128,6 +128,7 @@ const uploadZipLoading = ref(false)
 const dialogVisible = ref(false)
 const tip = ref()
 const currentFile = ref()
+const uploadRef = ref()
 
 watch(
   () => props.materialType,
@@ -167,9 +168,18 @@ async function handleRequest(file) {
     console.log(error)
   } finally {
     uploadLoading.value = false
-    uploadRef.value.clearFiles() // 清空文件
+    handleClear() // 清空文件
   }
 }
+
+function handleClear() {
+  // TODO: 清空无效
+  // uploadRef.value.clearFiles()
+  if (uploadRef.value && uploadRef.value.uploadRef) {
+    uploadRef.value.uploadRef.fileList.length = 0
+  }
+}
+
 function handleBefore(file) {
   const suffix = `.${getFileSuffix(file.name)}`.toLowerCase()
   const sizeM = file.size / 1024 / 1024

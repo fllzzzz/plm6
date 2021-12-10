@@ -105,7 +105,7 @@ async function nextStep() {
 }
 
 CRUD.HOOK.beforeToCU= (crud,form)=>{
-  stepActive.value = 1
+  stepActive.value = 0
 }
 
 // 保存  手动输入不存在的配置信息

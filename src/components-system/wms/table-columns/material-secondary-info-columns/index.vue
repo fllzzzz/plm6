@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="props.columns" />
+  <component :is="comp" :columns="columns" :show-batch-no="showBatchNo" />
 </template>
 
 <script setup>
@@ -16,6 +16,11 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  showBatchNo: {
+    // 显示炉批号
+    type: Boolean,
+    default: true
   }
 })
 

@@ -25,11 +25,11 @@
 import { ref, defineEmits, defineProps } from 'vue'
 
 import { getToken } from '@/utils/storage'
-// import { getFileSuffix, downloadFileForResponse } from '@/utils/file'
-import { getFileSuffix } from '@/utils/file'
+import { getFileSuffix, downloadFileByResponse } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
 
 import { ElUpload, ElMessage } from 'element-plus'
+import axios from 'axios'
 
 const emit = defineEmits(['success'])
 
@@ -99,7 +99,7 @@ const uploadLoading = ref(false)
 const fileList = ref([])
 
 function handleExceed(files, fileList) {
-  ElMessage.warning(`当前限制选择 ${props.limit} 个文件，本次选择了 ${props.files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+  ElMessage.warning(`当前限制选择 ${props.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
 }
 
 async function handleRequest(file) {
@@ -128,7 +128,7 @@ async function handleRequest(file) {
       if (status) {
         emit('success', true)
       } else {
-        await downloadFileForResponse(res)
+        await downloadFileByResponse(res)
       }
     } else {
       ElMessage.error(`上传失败`)
@@ -137,10 +137,20 @@ async function handleRequest(file) {
     console.log(error)
   } finally {
     uploadLoading.value = false
-    upload.value.clearFiles()
+    if(upload.value & upload.value.upload){
+      upload.value.upload.fileList.length = 0
+    }
+    // handleClear()
   }
 }
 
+function handleClear() {
+  // TODO: 清空无效
+  // upload.value.clearFiles()
+  if (upload.value && upload.value.upload) {
+    upload.value.upload.fileList.length = 0
+  }
+}
 function handleBefore(file) {
   if (props.accept) {
     const typeFlag = props.accept.split(',').indexOf(`.${getFileSuffix(file.name).toLowerCase()}`) > -1
@@ -162,7 +172,7 @@ function handleSuccess(response) {
   if (props.uploadFun) {
     return false
   }
-  upload.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   if (response && response.code === 20000) {
     emit('success', true)
@@ -176,7 +186,7 @@ function handleError() {
   if (props.uploadFun) {
     return false
   }
-  upload.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   ElMessage.error('上传失败')
 }

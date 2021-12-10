@@ -9,39 +9,49 @@
     :center="false"
   >
     <template #title>
-      <span style="margin-right:5px;">合同金额变更</span>
-      <common-button v-if="auditStaus" size="mini" :type="auditStaus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStaus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
+      <div class="dialog-title">
+        <span class="title-left">合同金额变更</span>
+        <common-button v-if="auditStaus" size="mini" :type="auditStaus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStaus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
           {{ auditStaus==auditTypeEnum.ENUM.REJECT.V?'已驳回':(auditStaus==auditTypeEnum.ENUM.PASS.V?'已通过':'审核中') }}
-      </common-button>
-      <common-button size="mini"  @click="handleClose">关闭</common-button>
+        </common-button>
+        <span style="position:absolute;right:20px;">
+          <template v-if="auditStaus">
+            <common-button v-if="auditStaus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
+            <common-button v-if="auditStaus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
+          </template>
+          <template v-else>
+            <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+          </template>
+          <common-button size="small"  @click="handleClose">关闭</common-button>
+        </span>
+      </div>
     </template>
-    <el-form ref="form" :model="form" :rules="rules" size="small" label-width="110px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
       <el-form-item label="合同编号" prop="serialNumber">
         <el-input
           v-if="!auditStaus"
-          v-model="contractInfo.serialNumber"
-          placeholder="合同编号"
-          style="width: 420px;"
+          v-model="contractName"
+          style="width: 320px;"
           disabled
         />
-        <span v-else>{{ contractInfo.serialNumber }}</span>
+        <span v-else>{{ contractName }}</span>
       </el-form-item>
-      <el-form-item label="项目名称" prop="contractNo">
+      <el-form-item label="项目名称" prop="serialNumber">
         <el-input
           v-if="!auditStaus"
           v-model="contractInfo.name"
           placeholder="项目名称"
-          style="width: 420px;"
+          style="width: 320px;"
           disabled
         />
         <span v-else>{{ contractInfo.name }}</span>
       </el-form-item>
-      <el-form-item label="合同金额" prop="contractNo">
+      <el-form-item label="合同金额" prop="serialNumber">
         <el-input
           v-if="!auditStaus"
           v-model="contractInfo.contractAmount"
           placeholder="项目金额"
-          style="width: 420px;"
+          style="width: 320px;"
           disabled
         />
         <span v-else>{{ contractInfo.contractAmount }}</span>
@@ -51,35 +61,34 @@
           v-if="!auditStaus"
           v-model="form.changeContent"
           placeholder="变更内容"
-          style="width: 420px;"
+          style="width: 320px;"
         />
         <span v-else>{{ form.changeContent }}</span>
       </el-form-item>
-      <el-form-item label="变更金额" prop="changeAmount">
+      <el-form-item label="变更金额" prop="changeMoney">
         <el-input-number
           v-if="!auditStaus"
-          v-model="form.changeAmount"
-          :step="100"
+          v-model="form.changeMoney"
           :max="9999999999"
+          :min="-contractInfo.contractAmount"
+          :step="100"
           :precision="DP.YUAN"
           controls-position="right"
           placeholder="变更金额(元)"
-          style="width: 420px;"
+          style="width: 320px;"
         />
         <span v-else>{{ form.changeAmount }}</span>
       </el-form-item>
-      <el-form-item label="变更后合同金额（元）" prop="contractNo">
+      <el-form-item label="变更后合同金额(元)" prop="newAmount">
         <el-input-number
           v-if="!auditStaus"
           v-model="newAmount"
-          :step="10000"
-          :min="1"
           :max="9999999999"
           :precision="DP.YUAN"
           controls-position="right"
           placeholder="变更合同金额"
           disabled
-          style="width: 420px;"
+          style="width: 320px;"
         />
         <span v-else>{{ newAmount }}</span>
       </el-form-item>
@@ -90,11 +99,11 @@
           type="date"
           value-format="x"
           placeholder="变更日期"
-          style="width: 420px;"
+          style="width: 320px;"
         />
         <span v-else v-parse-time="'{y}-{m}-{d}'">{{ form.changeDate }}</span>
       </el-form-item>
-      <el-form-item label="负责人" prop="leaderIds">
+      <el-form-item label="负责人" prop="userList">
         <user-dept-cascader
           v-if="!auditStaus"
           v-model="form.userList"
@@ -103,47 +112,40 @@
           clearable
           show-all-levels
           placeholder="负责人"
-          style="width: 420px;"
+          style="width: 320px;"
         />
         <span v-else>{{ form.userList }}</span>
       </el-form-item>
-      <el-form-item label="描述" prop="remark">
+      <el-form-item label="描述" prop="changeDesc">
         <el-input
           v-if="!auditStaus"
           v-model="form.changeDesc"
           type="textarea"
-          :autosize="{ minRows: 8, maxRows: 8}"
+          :autosize="{ minRows: 2, maxRows: 8}"
           placeholder="请填写描述"
-          style="width: 420px;"
+          style="width: 320px;"
+          :maxlength="500"
         />
         <span v-else>{{ form.changeDesc }}</span>
       </el-form-item>
       <el-form-item label="附件">
-        <upload-btn v-if="!auditStaus" ref="upload" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" />
+        <upload-btn v-if="!auditStaus" ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
         <span v-else />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <common-button size="small" plain @click="handleClose">取消</common-button>
-      <template v-if="auditStaus">
-        <common-button v-if="auditStaus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
-        <common-button v-if="auditStaus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
-      </template>
-      <template v-else>
-        <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
-      </template>
-    </div>
   </common-dialog>
 </template>
 
 <script setup>
 import { ref, defineProps, computed, watch } from 'vue'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, contractChangeTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import useVisible from '@compos/use-visible'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import UploadBtn from '@/components/file-upload/UploadBtn'
 import { DP } from '@/settings/config'
+import { editContract } from '@/api/contract/project'
+import { isNotBlank } from '@data-type/index'
 const props=defineProps({
   projectId: [Number, String],
   auditStaus: [Number, String],
@@ -160,243 +162,123 @@ const props=defineProps({
  const defaultForm = {
   id: undefined,
   projectId: '',
-  contractNo: undefined,
-  name: undefined,
-  contractAmount: '',
-  deadline: undefined,
-  leaderIds: undefined,
-  remark: undefined
+  changeMoney: undefined,
+  changeAmount: undefined,
+  changeContent: undefined,
+  changeDate: '',
+  userList: [],
+  changeDesc: undefined,
+  attachments: undefined,
+  attachmentIds: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const rules = {
+const formRef = ref()
+const uploadRef = ref()
+const contractName = ref()
+const validateLength = (rule, value, callback) => {
+  if (!value.length) {
+    callback(new Error('请选择负责人'))
+  } else {
+    callback()
+  }
+}
 
+const rules = {
+  changeMoney: { required: true, message: '请填写变更金额', trigger: 'change' },
+  userList: { required: true, validator: validateLength, trigger: 'change' },
+  changeDate: { required: true, message: '请选择变更日期', trigger: 'blur' },
 }
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
+watch(
+  () => visible.value,
+  (val) => {
+    if (val) {
+      resetForm()
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  () => props.contractInfo,
+  (val) => {
+    contractName.value = isNotBlank(val) ? props.contractInfo.serialNumber+' '+props.contractInfo.shortName :''
+  },
+  { deep: true, immediate: true }
+)
+
 const newAmount = computed(()=>{
-  if(props.contractInfo.contractAmount && form.changeAmount){
-    return props.contractInfo.contractAmount+form.changeAmount
+  if(props.contractInfo.contractAmount && form.value.changeMoney){
+    return props.contractInfo.contractAmount + form.value.changeMoney
   }
 })
-function onSubmit(){
 
+function resetForm(data){
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  let formkey
+  if (data && Object.keys(data).length > 0) {
+    formkey = data
+  } else {
+    formkey = JSON.parse(JSON.stringify(defaultForm))
+  }
+  const crudFrom = form.value
+  for (const key in crudFrom) {
+    crudFrom[key] = undefined
+  }
+  for (const key in formkey) {
+    crudFrom[key] = formkey[key]
+  }
 }
-// import { getContractFinanceSimpleInfo } from '@/api/contract/info'
-// import enumOperate, { enabledEnum, engineerSettlementTypeEnum as settlementTypeEnum, fileClassifyEnum } from '@/utils/enum/index'
-// import userDeptCascader from '@/views/components/base/user-dept-cascader'
-// import { mapGetters } from 'vuex'
-// import UploadBtn from '@/components/FileUpload/UploadBtn'
-// import checkPermission from '@/utils/permission'
-// import { debounce } from '@/utils'
-// import { getBaseInfo as getDetail } from '@/api/contract/info'
-// const settlementTypeEnumV = enumOperate.getVal(settlementTypeEnum)
 
-// const defaultForm = {
-//   id: undefined,
-//   projectId: '',
-//   contractNo: undefined,
-//   name: undefined,
-//   contractAmount: '',
-//   deadline: undefined,
-//   leaderIds: undefined,
-//   remark: undefined
-// }
-// // crud交由presenter持有
-// const permission = {
-//   get: ['contract:detail']
-// }
-
-// export default {
-//   components: { userDeptCascader, UploadBtn },
-//   // mixins: [form(defaultForm)],
-//   props: {
-//     visible: {
-//       type: Boolean,
-//       required: true
-//     },
-//     auditStaus: {
-//       type: [Number, String],
-//       default: undefined
-//     },
-//     projectId: {
-//       type: [Number, String],
-//       default: undefined
-//     }
-//   },
-//   data() {
-//     return {
-//       fileClassifyEnum,
-//       form: {
-//         files: []
-//       },
-//       checkStatus: 0,
-//       enabledEnum,
-//       settlementTypeEnum,
-//       settlementTypeEnumV,
-//       contractAmount: undefined,
-//       project: undefined,
-//       projectInfoLoading: false,
-//       innerVisible: false,
-//       rules: {
-//         projectId: [
-//           { required: true, message: '请选择项目', trigger: 'change' }
-//         ],
-//         leaderIds: [
-//           { required: true, message: '请选择负责人', trigger: 'change' }
-//         ],
-//         deadline: [
-//           { required: true, message: '请选择计划完成时间', trigger: 'change' }
-//         ],
-//         amount: [
-//           { required: true, message: '请填写收款金额', trigger: 'change', type: 'number' }
-//         ],
-//         remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
-//       },
-//       innerform: {
-//         status: 0
-//       },
-//       rules1: {}
-//       // avatar: ''
-//     }
-//   },
-//   computed: {
-//     ...mapGetters(['globalProjectId']),
-//     currentProjectId() {
-//       return this.projectId || this.globalProjectId
-//     },
-//     isEditing() {
-//       return this.visible
-//     }
-//   },
-//   watch: {
-//     currentProjectId: {
-//       handler(val) {
-//         this.fetchDetail()
-//       }
-//     }
-//   },
-//   created() {
-//     this.fetchDetail()
-//   },
-//   methods: {
-//     fetchDetail: debounce(async function() {
-//       if (!checkPermission(permission.get) || !this.currentProjectId) {
-//         return
-//       }
-//       const loading = this.$loading({
-//         target: '#pageContainer',
-//         lock: true,
-//         text: '请稍后，正在加载合同基础信息',
-//         fullscreen: false
-//       })
-//       let _detail = {}
-//       try {
-//         const res = await getDetail(this.currentProjectId)
-//         _detail = JSON.parse(JSON.stringify(res))
-//       } catch (error) {
-//         console.log('error', error)
-//       } finally {
-//         this.resetForm(defaultForm)
-//         this.form.contractNo = _detail.contractNo
-//         this.form.name = _detail.name
-//         this.form.contractAmount = _detail.contractAmount
-//         // this.detail = _detail
-//         loading.close()
-//       }
-//     }, 100, false),
-//     handleClose() {
-//       this.$emit('changestaus', false)
-//     },
-//     handleCloseInner() {
-//       this.innerVisible = false
-//     },
-//     passConfirm(val) {
-//       this.innerform.status = val
-//       this.innerVisible = true
-//     },
-//     async onSubmit() {
-//       try {
-//         const valid = await this.$refs.form.validate()
-//         if (valid) {
-//           this.handleClose()
-//         }
-//       } catch (error) {
-//         console.log('error', error)
-//       }
-//     },
-//     // [CRUD.HOOK.afterToCU](crud, form) {
-//     //   if (crud.status.add === CRUD.STATUS.PREPARED) {
-//     //     form.projectId = crud.query.projectId
-//     //   }
-//     //   if (crud.status.edit === CRUD.STATUS.PREPARED) {
-//     //     form.projectId = (form.project && form.project.id)
-//     //   }
-//     //   this.handleProjectChange(form.projectId)
-//     //   if (this.$refs[crud.formName]) {
-//     //     this.$nextTick(() => {
-//     //       this.$refs[crud.formName].clearValidate()
-//     //     })
-//     //   }
-//     // },
-//     async handleProjectChange(val) {
-//       let project = {}
-//       try {
-//         if (!val) {
-//           throw new Error('没有项目id')
-//         }
-//         this.projectInfoLoading = true
-//         project = await getContractFinanceSimpleInfo(val) || {}
-//       } catch (error) {
-//         console.log('获取额外项目信息', error)
-//       } finally {
-//         this.project = project
-//         this.projectInfoLoading = false
-//         if (this.form.amount) {
-//           this.calcProportion()
-//         }
-//       }
-//     },
-//     calcProportion() {
-//       this.form.proportion = this.form.amount && this.project.contractAmount
-//         ? +(this.form.amount / this.project.contractAmount * 100).toFixed(this.$DP.ACCOUNTING) : undefined
-//     },
-//     calcAmount() {
-//       this.form.amount = this.form.proportion && this.project.contractAmount
-//         ? +(this.form.proportion * this.project.contractAmount / 100).toFixed(this.$DP.YUAN) : undefined
-//     },
-//     resetForm(data) {
-//       // 清除表单信息
-//       if (this.$refs['form']) {
-//         // TODO: 无法清除问题
-//         this.$refs['form'].resetFields()
-//       }
-//       let form
-//       if (data && Object.keys(data).length > 0) {
-//         form = data
-//       } else {
-//         form = JSON.parse(JSON.stringify(defaultForm))
-//       }
-//       // const form = data || JSON.parse(JSON.stringify(defaultForm))
-//       const crudFrom = this.form
-//       for (const key in crudFrom) {
-//         crudFrom[key] = undefined
-//       }
-//       for (const key in form) {
-//         if (crudFrom.hasOwnProperty(key)) {
-//           crudFrom[key] = form[key]
-//         } else {
-//           this.$set(crudFrom, key, form[key])
-//         }
-//       }
-//     }
-//   }
-// }
+async function onSubmit(){
+  const valid = await formRef.value.validate()
+  if(!valid){
+    return
+  }
+  form.value.projectId = props.projectId
+  form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
+  form.value.changeAmount = newAmount
+  const submitform={
+    type: contractChangeTypeEnum.ENUM.CONTRACTAMOUNT.V,
+    ...form.value
+  }
+  try {
+    await editContract(submitform)
+    ElNotification({ title: '提交成功', type: 'success' })
+  } catch (error) {
+    console.log('金额变更失败', error)
+  } finally {
+    handleClose()
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   ::v-deep(.el-input-number .el-input__inner) {
     text-align: left;
   }
+  .title-left {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 10px;
+    margin-right: 15px;
+    box-sizing: border-box;
+  }
+  .title-left::before {
+    content: "";
+    width: 4px;
+    height: 15px;
+    border-radius: 10px;
+    background: #1890ff;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
 </style>

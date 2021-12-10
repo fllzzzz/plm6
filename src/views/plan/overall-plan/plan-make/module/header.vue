@@ -49,22 +49,22 @@ const props = defineProps({
 })
 const emit = defineEmits(['monomerChangeType'])
 
-watch(
-  () => route.params.monomerId,
-  (val) => {
-    if (val) {
-      crud.query.projectId = props.projectId
-      queryMonomerId.value = +route.params.monomerId
-      console.log(route.params.productType)
-      if (queryMonomerId.value) {
-        crud.query.monomerId =  queryMonomerId.value
-        crud.query.productType = route.params.productType
-        monomerChange()
-      }
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => route.params.monomerId,
+//   (val) => {
+//     if (val) {
+//       crud.query.projectId = props.projectId
+//       queryMonomerId.value = +route.params.monomerId
+//       console.log(route.params.productType)
+//       if (queryMonomerId.value) {
+//         crud.query.monomerId =  queryMonomerId.value
+//         crud.query.productType = route.params.productType
+//         monomerChange()
+//       }
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 async function monomerChange() {
   try {
@@ -75,6 +75,8 @@ async function monomerChange() {
     }
   } catch (e) {
     console.log(e)
+  }finally{
+    crud.toQuery()
   }
 }
 

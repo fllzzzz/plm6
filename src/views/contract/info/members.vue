@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, watch } from 'vue'
+import { ref, defineProps, computed, watch, defineExpose } from 'vue'
 import { getUserAllSimpleByProject as getAllUser } from '@/api/contract/project'
 import useUserDeptTree from '@compos/store/use-user-dept-tree'
 import { isNotBlank } from '@data-type/index'
@@ -149,21 +149,34 @@ function cancelEdit() {
   isEditing.value = false
   resetChecked()
 }
-async function submit() {
-  try {
-    submitLoading.value = true
-    let checkedNodes = tree.value.getCheckedKeys(true)
-    checkedNodes = checkedNodes.filter(v => v > 0)
-    checkedList.value = checkedNodes
-  } catch (error) {
-    console.log('提交用户', error)
-  } finally {
-    submitLoading.value = false
-  }
+
+function getUser(){
+  let checkedNodes = tree.value.getCheckedKeys(true)
+  checkedNodes = checkedNodes.filter(v => v > 0)
+  checkedList.value = checkedNodes
 }
+// async function submit() {
+//   try {
+//     submitLoading.value = true
+//     let checkedNodes = tree.value.getCheckedKeys(true)
+//     checkedNodes = checkedNodes.filter(v => v > 0)
+//     checkedList.value = checkedNodes
+//   } catch (error) {
+//     console.log('提交用户', error)
+//   } finally {
+//     submitLoading.value = false
+//   }
+// }
+
 function resetChecked() {
   tree.value.setCheckedKeys(checkedList.value)
 }
+
+defineExpose({
+  getUser,
+  checkedList,
+  fetchMembers
+})
 </script>
 
 <style lang="scss" scoped>

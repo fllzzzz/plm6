@@ -170,7 +170,7 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? toThousandFilter(detail.contractAmount.toFixed(DP.YUAN)):'' }}</span>
+              <span>{{ detail.contractAmount? toThousand(detail.contractAmount.toFixed(DP.YUAN)):'' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -188,7 +188,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.prepayments? toThousandFilter(detail.prepayments.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ detail.prepayments? toThousand(detail.prepayments.toFixed(DP.YUAN)): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -201,7 +201,7 @@
                 placeholder="先输入费率"
               />
               <template v-else>
-                <span>{{ detail.managementFee? toThousandFilter(detail.managementFee.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ managementFee? toThousand(managementFee): '' }}</span>
               </template>
             </div>
             <div class="input-underline" style="display:inline-block;width:130px">
@@ -238,49 +238,51 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? toThousandFilter(detail.marginAmount.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ detail.marginAmount? toThousand(detail.marginAmount.toFixed(DP.YUAN)): '' }}</span>
               </template>
             </div>
           </el-form-item>
           <el-form-item label="保证金类型" prop="marginType">
             <div class="input-underline">
-              <!-- <common-select
+              <common-select
                 v-if="isModify"
-                :value.sync="form.marginType"
+                v-model="form.marginType"
                 :options="dict.margin_type"
                 type="dict"
                 size="small"
                 clearable
                 placeholder="保证金类型"
-                style="width:100%"
+                class="input-underline"
+                style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.marginType">{{ dict.label['margin_type'][detail.marginType] }}</span>
-              </template> -->
+                <span v-if="detail.marginType && dict && dict.label">{{ dict.label['margin_type'][detail.marginType] }}</span>
+              </template>
             </div>
           </el-form-item>
           <el-form-item label="币种" prop="currencyType">
             <div class="input-underline">
-              <!-- <common-select
+              <common-select
                 v-if="isModify"
-                :value.sync="form.currencyType"
+                v-model="form.currencyType"
                 :options="dict.currency_type"
                 type="dict"
                 size="small"
                 clearable
                 placeholder="币种"
-                style="width:100%"
+                class="input-underline"
+                style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.currencyType">{{ dict.label['currency_type'][detail.currencyType]}}</span>
-              </template> -->
+                <span v-if="detail.currencyType && dict && dict.label">{{ dict.label['currency_type'][detail.currencyType]}}</span>
+              </template>
             </div>
           </el-form-item>
         </div>
       </div>
       <el-divider><span class="title">合同附件</span></el-divider>
       <div class="table-box">
-        <!-- <upload-list
+        <upload-list
           v-if="!isModify"
           :show-download="!isModify"
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
@@ -297,17 +299,17 @@
           :download-fn="downloadBaseAttachments"
           :uploadable="isModify"
           empty-text="暂未上传合同附件"
-        /> -->
+        />
       </div>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose } from 'vue'
 import { dateDifference } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
-import { toThousandFilter } from '@data-type/number'
+import { toThousand } from '@data-type/number'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
@@ -316,9 +318,10 @@ import uploadList from '@/components/file-upload/uploadList'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 import { ElLoading } from 'element-plus'
-import { getContractBase } from '@/api/contract/project'
+import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 
 const baseRef = ref()
+const dict = useDict(['margin_type','currency_type'])
 const defaultForm = {
   id: undefined,
   serialNumber: undefined, // 合同编号
@@ -393,7 +396,7 @@ watch(
   () => props.isModify,
   (val) => {
     if(val){
-      resetForm(detail.value)
+      resetForm()
     }
   },
   { deep: true, immediate: true }
@@ -415,25 +418,12 @@ const managementFee=computed(()=>{
 /**
  * 重置表单
  */
-function resetForm(data) {
-  // 清除表单信息
+function resetForm() {
   if (baseRef.value) {
-    // TODO: 无法清除问题
     baseRef.value.resetFields()
   }
-  let formkey
-  if (data && Object.keys(data).length > 0) {
-    formkey = data
-  } else {
-    formkey = JSON.parse(JSON.stringify(defaultForm))
-  }
-  const crudFrom = form.value
-  for (const key in crudFrom) {
-    crudFrom[key] = undefined
-  }
-  for (const key in formkey) {
-    crudFrom[key] = formkey[key]
-  }
+  form.value  = JSON.parse(JSON.stringify(detail.value))
+  useWatchFormValidate(baseRef, form.value)
   useWatchFormValidate(baseRef, form.value)
 }
 
@@ -442,8 +432,7 @@ async function validateForm() {
     const valid = await baseRef.value.validate()
     if (valid) {
       const data = JSON.parse(JSON.stringify(form.value))
-      data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
-      Object.assign(props.formData, data)
+      // data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
     }
     return valid
   } catch (error) {
@@ -505,12 +494,17 @@ async function fetchDetail() {
     console.log('error', error)
   } finally {
     detail.value = _detail
+    resetForm(detail.value)
     // loading.close()
   }
 }
 
 defineExpose({
-  detail
+  detail,
+  form,
+  validateForm,
+  fetchDetail,
+  resetForm
 })
 </script>
 <style lang="scss" scoped>

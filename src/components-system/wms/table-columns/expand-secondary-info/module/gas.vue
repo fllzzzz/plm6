@@ -5,6 +5,7 @@
   <p v-if="showRemark">
     备注：<span v-empty-text>{{ props.row.remark }}</span>
   </p>
+  <slot />
 </template>
 
 <script setup>

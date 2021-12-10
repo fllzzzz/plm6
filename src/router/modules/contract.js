@@ -39,6 +39,24 @@ export default {
         }
       ]
     },
+    {
+      path: '/contract/collection-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'ContractCollectionManage',
+      alwaysShow: false,
+      redirect: '/contract/collection-manage/collection-and-invoice',
+      meta: { title: '收款管理', icon: 'contract2', noCache: true },
+      children: [
+        {
+          name: 'ContractCollectionAndInvoice',
+          path: 'collection-and-invoice',
+          hidden: false,
+          component: '/contract/collection-and-invoice/index',
+          meta: { title: '收款与开票', icon: 'contract2', noCache: true }
+        }
+      ]
+    },
     // {
     //   path: '/contract/project-execution',
     //   component: 'Layout',
@@ -54,57 +72,6 @@ export default {
     //       hidden: false,
     //       component: '/contract/project-execution-ledger/index',
     //       meta: { title: '项目执行台帐', icon: 'contract2', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/contract/project-audit',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'projectAudit',
-    //   alwaysShow: false,
-    //   redirect: '/contract/project-audit/contract-audit-list',
-    //   meta: { title: '项目执行台帐', icon: 'contract2', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'ContractAuditList',
-    //       path: 'contract-audit-list',
-    //       hidden: false,
-    //       component: '/contract/audit-list/index',
-    //       meta: { title: '发运审核', icon: 'contract2', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/contract/info',
-    //   // path: 'contract',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'ContractInfoManage',
-    //   alwaysShow: false,
-    //   redirect: '/contract/info/base',
-    //   meta: { title: '合同信息', icon: 'contract2', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'ContractBaseInfo',
-    //       path: 'project',
-    //       hidden: false,
-    //       component: '/contract/info/base',
-    //       meta: { title: '基本信息', icon: 'contract2', noCache: true }
-    //     },
-    //     {
-    //       name: 'ContractBusinessInfo',
-    //       path: 'business',
-    //       hidden: false,
-    //       component: '/contract/info/business',
-    //       meta: { title: '商务信息', icon: 'contract2', noCache: true }
-    //     },
-    //     {
-    //       name: 'ContractCustomerInfo',
-    //       path: 'customer',
-    //       hidden: false,
-    //       component: '/contract/info/customer',
-    //       meta: { title: '客户信息', icon: 'contract2', noCache: true }
     //     }
     //   ]
     // },

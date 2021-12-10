@@ -167,7 +167,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose } from 'vue'
 import regionCascader from '@comp-base/region-cascader'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/validate/pattern'
@@ -259,9 +259,6 @@ function handleRegionChange(val) {
 async function validateForm() {
   try {
     const valid = await customerRef.value.validate()
-    if (valid) {
-      Object.assign(props.formData, JSON.parse(JSON.stringify(form.value)))
-    }
     return valid
   } catch (error) {
     console.log('error', error)
@@ -269,11 +266,11 @@ async function validateForm() {
   }
 }
 
-function resetForm(data) {
+function resetForm() {
   if (customerRef.value) {
     customerRef.value.resetFields()
   }
-  form.value = JSON.parse(JSON.stringify(data))
+  form.value = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(customerRef, form.value)
 }
 
@@ -296,12 +293,16 @@ async function fetchDetail() {
     console.log('error', error)
   } finally {
     detail.value = _detail
+    resetForm(detail.value)
     // loading.close()
   }
 }
 
 defineExpose({
-  validateForm
+  form,
+  validateForm,
+  fetchDetail,
+  resetForm
 })
 </script>
 <style lang="scss" scoped>

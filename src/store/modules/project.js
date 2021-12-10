@@ -12,12 +12,16 @@ const projectTypeEnumArr = EO.toArr(projectTypeEnum)
 const state = {
   // 项目id
   id: storage.get('projectId'),
+  // 当前项目
+  curProject: storage.get('curProject'),
   // 当前路由项目类型
   routeProjectType: storage.get('routeProjectType'),
   // 当前项目类型
   projectType: storage.get('projectType') || allPT,
   // 用户项目列表(当前项目类型的项目列表)
   userProjects: [],
+  // 用户项目KV K:id, V:项目详情
+  userProjectKV: {},
   // 用户项目列表（当前项目类型的项目列表，且处于进行中的状态）
   userProcessProjects: [],
   // 用户项目级联列表(当前项目类型的级联列表)
@@ -37,7 +41,9 @@ const mutations = {
   },
   SET_PROJECT_ID: (state, id) => {
     state.id = id
+    state.curProject = state.userProjectKV[id]
     storage.set('projectId', id)
+    storage.set('curProject', state.curProject)
   },
   SET_CURRENT_PROJECT: (state, project) => {
     state.currentProject = project
@@ -54,6 +60,10 @@ const mutations = {
   SET_USER_PROJECTS: (state, projects) => {
     state.userProjects = projects
     state.userProcessProjects = projects.filter(v => v.status === projectStatusEnum.PROCESS.V)
+    state.userProjectKV = {}
+    projects.forEach(p => {
+      state.userProjectKV[p.id] = p
+    })
   },
   SET_USER_PROJECTS_MAP: (state, map) => {
     state.userProjectsMap = map

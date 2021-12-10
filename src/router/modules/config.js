@@ -116,41 +116,19 @@ export default {
           meta: { title: '仓库设置', icon: 'Steve-Jobs', noCache: true }
         },
         {
+          name: 'ScrapDefinition',
+          path: 'scrap-definition',
+          hidden: false,
+          component: '/config-manage/wms/scrap-definition/index',
+          meta: { title: '废料定义', icon: 'Steve-Jobs', noCache: true }
+        },
+        {
           name: 'CommonTaxRate',
           path: 'common-tax-rate',
           hidden: false,
           component: '/config-manage/wms/common-tax-rate/index',
           meta: { title: '常用税率', icon: 'Steve-Jobs', noCache: true }
         }
-        // {
-        //   name: 'InventoryWarning',
-        //   path: 'inventory-warning',
-        //   hidden: false,
-        //   component: '/wms-config/inventory-warning/index',
-        //   meta: { title: '库存预警', icon: 'project', noCache: true }
-        // },
-        // {
-        //   name: 'UnitConfig',
-        //   path: 'unit-config',
-        //   hidden: false,
-        //   component: '/wms-config/unit-config/index',
-        //   meta: { title: '单位配置', icon: 'project', noCache: true }
-        // },
-        // {
-        //   name: 'MesConfigFactory',
-        //   path: 'factory',
-        //   hidden: false,
-        //   component: '/wms-config/factory/index',
-        //   meta: { title: '工厂管理', icon: 'factory', noCache: true }
-        // },
-
-        // {
-        //   name: 'ConfigSectionSteelLibrary',
-        //   path: 'profile-spec',
-        //   hidden: false,
-        //   component: '/wms-config/profile-spec/index',
-        //   meta: { title: '型材库', icon: 'warehouse', noCache: true }
-        // }
       ]
     },
     {

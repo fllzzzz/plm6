@@ -538,6 +538,8 @@ function addCrudBusinessMethod(crud) {
     }
 
     let data = []
+    // 刷新时清空选中
+    crud.selectAllChange()
     try {
       crud.loading = true
       data = await crud.crudApi.get(crud.getQueryParams())
@@ -1205,7 +1207,7 @@ function addCrudFeatureMethod(crud, data) {
         crud.selectChange(selection, val)
       })
     } else {
-      crud.ref.table.clearSelection()
+      crud.ref.table && crud.ref.table.clearSelection()
     }
   }
   /**

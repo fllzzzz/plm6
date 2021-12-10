@@ -25,8 +25,17 @@
       @change="crud.toQuery"
     />
     <el-input
+      v-model="query.serialNumber"
+      placeholder="出库单号"
+      class="filter-item"
+      style="width: 200px"
+      size="small"
+      clearable
+      @keyup.enter="crud.toQuery"
+    />
+    <el-input
       v-model="query.operatorName"
-      placeholder="可输入操作人名称搜索"
+      placeholder="领用人/申请人/审核人"
       class="filter-item"
       style="width: 200px"
       size="small"
@@ -44,16 +53,20 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { regHeader } from '@compos/use-crud'
+import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
+  projectId: { value: undefined, resetAble: false }, // 项目id
   userUpdateTime: [], // [开始日期，结束日期]
+  serialNumber: undefined, // 出库单号
   operatorName: undefined, // 操作人姓名 含领用人/申请人/审核人
   basicClass: undefined // 基础类型
 }
 
 const { crud, query } = regHeader(defaultQuery)
+useGlobalProjectIdChangeToQuery(crud)
 </script>

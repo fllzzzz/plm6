@@ -74,7 +74,6 @@
               </p>
             </template>
           </el-expand-table-column>
-          <el-table-column label="序号" type="index" align="center" width="50" fixed="left" />
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="form.basicClass" :show-factory="showWarehouse" />
           <!-- 单位及其数量 -->

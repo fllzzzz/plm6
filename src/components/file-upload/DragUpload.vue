@@ -112,7 +112,7 @@ async function downloadFile(index) {
 }
 
 function handleSuccess(response) {
-  upload.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   if (response && response.code === 20000) {
     const data = response.data
@@ -124,8 +124,16 @@ function handleSuccess(response) {
   }
 }
 
+function handleClear() {
+  // TODO: 清空无效
+  // upload.value.clearFiles()
+  if (upload.value && upload.value.upload) {
+    upload.value.upload.fileList.length = 0
+  }
+}
+
 function handleError() {
-  upload.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   ElMessage.error('上传失败')
 }
