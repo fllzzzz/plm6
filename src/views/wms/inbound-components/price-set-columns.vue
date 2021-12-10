@@ -1,5 +1,5 @@
 <template>
-  <el-table-column prop="unitPrice" align="center" width="115px" label="含税单价">
+  <el-table-column v-if="!boolPartyA" prop="unitPrice" align="center" width="115px" label="含税单价">
     <template #default="{ row }">
       <el-input-number
         v-model="row.unitPrice"
@@ -14,7 +14,7 @@
       />
     </template>
   </el-table-column>
-  <el-table-column prop="amount" align="center" width="135px" label="金额">
+  <el-table-column v-if="!boolPartyA" prop="amount" align="center" width="135px" label="金额">
     <template #default="{ row }">
       <el-input-number
         v-model="row.amount"
@@ -65,6 +65,7 @@ import { defineEmits, defineProps, computed, watch, onMounted, watchEffect, ref 
 import { projectNameFormatter } from '@/utils/project'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 const props = defineProps({
   order: {
@@ -90,6 +91,9 @@ const props = defineProps({
 // TODO:优化由于“同上导致的需要计算代码”
 const emit = defineEmits(['amount-change'])
 const currentForm = ref({ list: [] })
+
+// 是否“甲供”
+const boolPartyA = computed(() => props.order.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 
 watchEffect(() => { currentForm.value = props.form })
 
@@ -189,13 +193,13 @@ onMounted(() => {
 
 // 处理含税单价变化
 function handleUnitPriceChange(val, row) {
-  row.amount = toFixed(val * row.mete, 2, { toNum: true })
+  row.amount = isNotBlank(val) ? toFixed(val * row.mete, 2, { toNum: true }) : undefined
   emit('amount-change')
 }
 
 // 处理金额变化
 function handleAmountChange(val, row) {
-  row.unitPrice = toFixed(val / row.mete, 2, { toNum: true })
+  row.unitPrice = isNotBlank(val) ? toFixed(val / row.mete, 2, { toNum: true }) : undefined
   emit('amount-change')
 }
 </script>

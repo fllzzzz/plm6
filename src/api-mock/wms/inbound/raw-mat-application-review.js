@@ -162,7 +162,7 @@ const get = {
             reviewTime: '@datetime(T)' // 审核时间
           }
         ],
-        totalElements: 2
+        totalElements: 4
       }
     }
   }
@@ -192,7 +192,7 @@ const detail_id1 = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             }
           ], // 项目id
-          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          pickUpMode: pickUpModeEnum.SUPPLIER.V, // 提货方式
           requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
           purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式

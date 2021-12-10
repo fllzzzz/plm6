@@ -15,11 +15,6 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
-          <!-- TODO:入库单增加备注？ -->
-          <!-- <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
-          </p> -->
           <p>
             审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
           </p>
@@ -27,30 +22,13 @@
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('purchaseSN')"
-        key="purchaseSN"
-        :show-overflow-tooltip="true"
-        prop="purchaseSN"
-        label="采购单号"
-        min-width="155"
-      />
-      <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
         :show-overflow-tooltip="true"
         prop="serialNumber"
-        min-width="160"
-        label="入库单号"
+        width="160"
+        label="调拨单号"
         align="left"
-      />
-      <el-table-column
-        v-if="columns.visible('licensePlate')"
-        key="licensePlate"
-        :show-overflow-tooltip="true"
-        prop="licensePlate"
-        label="车牌号"
-        align="left"
-        width="100"
       />
       <el-table-column
         v-if="columns.visible('materialTypeText')"
@@ -58,32 +36,64 @@
         :show-overflow-tooltip="true"
         prop="materialTypeText"
         label="物料种类"
-        width="120"
+        width="100"
+        align="center"
       >
         <template #default="{ row }">
+          <!-- 目前调拨只支持单种物料的调拨 -->
           <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('projects')"
+        v-if="columns.visible('transferType')"
         show-overflow-tooltip
-        key="projects"
-        prop="projects"
-        label="关联项目"
-        min-width="170"
+        key="transferType"
+        prop="transferType"
+        label="调拨类型"
+        width="90"
+        align="center"
       >
         <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
+          <span v-parse-enum="{ e: transferTypeEnum, v: row.transferType }" />
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('source')" show-overflow-tooltip key="projects" prop="projects" label="来源" min-width="170">
+        <template #default="{ row }">
+          <template v-for="(item, si) in row.source" :key="si">
+            <span
+              class="project-ware-text"
+              v-if="item.project"
+              v-parse-project="{ project: item.project, onlyShortName: true }"
+              v-empty-text
+            />
+            <span class="public-ware-text" v-else>公共库</span>
+            <span v-if="item.factory">（{{ item.factory.name }}）</span>
+            <span v-if="si !== row.source.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
+          </template>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('supplier.name')"
-        key="supplier.name"
-        :show-overflow-tooltip="true"
-        prop="supplier.name"
-        label="供应商"
-        min-width="200"
-      />
+        v-if="columns.visible('direction')"
+        show-overflow-tooltip
+        key="projects"
+        prop="projects"
+        label="目的"
+        min-width="170"
+      >
+        <template #default="{ row }">
+          <template v-if="row.transferType !== transferTypeEnum.RETURN_PARTY_A.V">
+            <span
+              class="project-ware-text"
+              v-if="row.direction.project"
+              v-parse-project="{ project: row.direction.project, onlyShortName: true }"
+              v-empty-text
+            />
+            <span class="public-ware-text" v-else>公共库</span>
+            <span v-if="row.direction.factory">（{{ row.direction.factory.name }}）</span>
+          </template>
+          <span v-else v-empty-text />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('founderName')"
         key="founderName"
@@ -91,7 +101,7 @@
         prop="founderName"
         label="申请人"
         align="center"
-        min-width="100"
+        width="110"
       />
       <el-table-column
         v-if="columns.visible('editorName')"
@@ -100,7 +110,7 @@
         prop="editorName"
         label="编辑人"
         align="center"
-        min-width="100"
+        width="110"
       />
       <el-table-column
         v-if="columns.visible('reviewerName')"
@@ -109,14 +119,14 @@
         prop="reviewerName"
         label="审核人"
         align="center"
-        min-width="100"
+        width="110"
       />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
         :show-overflow-tooltip="true"
         prop="createTime"
-        label="创建日期"
+        label="申请日期"
         align="center"
         width="140"
       >
@@ -157,15 +167,15 @@
         prop="reviewStatus"
         label="状态"
         align="center"
+        width="80"
       >
         <template #default="{ row }">
-          <el-tag :type="reviewStatusEnum.V[row.reviewStatus].TAG">{{ reviewStatusEnum.VL[row.reviewStatus] }}</el-tag>
-        </template>
-      </el-table-column>
-      <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit,...permission.del]" label="操作" width="120px" align="center" fixed="right">
-        <template #default="{ row }">
-          <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" />
+          <template v-if="row.reviewable">
+            <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
+          </template>
+          <template v-else>
+            <el-tag :type="reviewStatusEnum.V[row.reviewStatus].TAG">{{ reviewStatusEnum.VL[row.reviewStatus] }}</el-tag>
+          </template>
         </template>
       </el-table-column>
     </common-table>
@@ -173,31 +183,31 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 编辑 -->
-    <m-form />
+    <!-- 审核 -->
+    <review v-model:visible="reviewVisible" :data="currentRow" @refresh="crud.refresh" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import crudApi from '@/api/wms/inbound/raw-mat-application-record'
+import crudApi from '@/api/wms/transfer/raw-mat-application-review'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { transferTypeEnum } from '@/utils/enum/modules/wms'
 import { reviewStatusEnum } from '@enum-ms/common'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import mHeader from './module/header'
-import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
-import mForm from './module/form.vue'
+import review from './module/review.vue'
 
 // crud交由presenter持有
 const permission = {
-  get: ['wms_inboundApplication_record:get'],
-  edit: ['wms_inboundApplication_record:edit'],
-  del: ['wms_inboundApplication_record:del']
+  get: ['wms_inboundApplication_review:get'],
+  review: ['wms_inboundApplication_review:review']
 }
 
 const optShow = {
@@ -207,13 +217,12 @@ const optShow = {
   download: false
 }
 
-const expandRowKeys = ref([])
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: ['editorName', 'userUpdateTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
@@ -221,11 +230,29 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
+const currentRow = ref({})
+const reviewVisible = ref(false)
+const expandRowKeys = ref([])
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
-    v.editable = v.reviewStatus !== reviewStatusEnum.PASS.V // 可编辑的
+    v.reviewable = v.reviewStatus === reviewStatusEnum.UNREVIEWED.V && checkPermission(permission.review)
   })
 }
+
+// 打开审核
+function toReview(row) {
+  currentRow.value = row
+  reviewVisible.value = true
+}
 </script>
+
+<style lang="scss" scoped>
+.project-ware-text {
+  color: darkgoldenrod;
+}
+.public-ware-text {
+  color: brown;
+}
+</style>

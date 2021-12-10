@@ -7,7 +7,7 @@ import request from '@/utils/request'
 export function steelPlateTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/steel-plate',
+    url: 'transfer/application/steel-plate',
     method: 'put',
     data
   })
@@ -20,7 +20,7 @@ export function steelPlateTransferHandling(data) {
 export function sectionSteelTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/section-steel',
+    url: 'transfer/application/section-steel',
     method: 'put',
     data
   })
@@ -33,7 +33,7 @@ export function sectionSteelTransferHandling(data) {
 export function steelCoilTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/steel-coil',
+    url: 'transfer/application/steel-coil',
     method: 'put',
     data
   })
@@ -46,7 +46,7 @@ export function steelCoilTransferHandling(data) {
 export function auxMatTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/auxiliary-material',
+    url: 'transfer/application/auxiliary-material',
     method: 'put',
     data
   })
@@ -59,7 +59,7 @@ export function auxMatTransferHandling(data) {
 export function gasTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/gas',
+    url: 'transfer/application/gas',
     method: 'put',
     data
   })
@@ -73,7 +73,7 @@ export function gasTransferHandling(data) {
 export function steelPlateBatchTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/steel-plate/batch',
+    url: 'transfer/application/steel-plate/batch',
     method: 'put',
     data
   })
@@ -86,7 +86,7 @@ export function steelPlateBatchTransferHandling(data) {
 export function sectionSteelBatchTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/section-steel/batch',
+    url: 'transfer/application/section-steel/batch',
     method: 'put',
     data
   })
@@ -99,7 +99,7 @@ export function sectionSteelBatchTransferHandling(data) {
 export function steelCoilBatchTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/steel-coil/batch',
+    url: 'transfer/application/steel-coil/batch',
     method: 'put',
     data
   })
@@ -112,7 +112,7 @@ export function steelCoilBatchTransferHandling(data) {
 export function auxMatBatchTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/auxiliary-material/batch',
+    url: 'transfer/application/auxiliary-material/batch',
     method: 'put',
     data
   })
@@ -125,7 +125,7 @@ export function auxMatBatchTransferHandling(data) {
 export function gasBatchTransferHandling(data) {
   return request({
     module: 'wms',
-    url: 'material-transfer/gas/batch',
+    url: 'transfer/application/gas/batch',
     method: 'put',
     data
   })

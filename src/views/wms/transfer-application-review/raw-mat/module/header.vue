@@ -35,31 +35,21 @@
         @change="crud.toQuery"
       />
       <br />
-      <supplier-select
-        v-model="query.supplierId"
-        :type="supplierTypeEnum.RAW_MATERIAL.V"
+      <common-radio-button
+        type="enum"
+        v-model="query.transferType"
+        :options="transferTypeEnum.ENUM"
+        show-option-all
         clearable
         class="filter-item"
         @change="crud.toQuery"
-        placeholder="可选择供应商搜索"
-        show-hide
-        style="width: 250px"
-      />
-      <el-input
-        v-model.trim="query.purchaseSN"
-        clearable
-        style="width: 200px"
-        size="small"
-        placeholder="按采购订单号搜索"
-        class="filter-item"
-        @keyup.enter="crud.toQuery"
       />
       <el-input
         v-model.trim="query.serialNumber"
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按入库单号搜索"
+        placeholder="按调拨单号搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -84,15 +74,14 @@
 <script setup>
 import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { transferTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import supplierSelect from '@comp-base/supplier-select/index.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -101,9 +90,7 @@ const defaultQuery = {
   basicClass: undefined, // 采购类型
   reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
   projectId: { value: undefined, resetAble: false }, // 项目id
-  purchaseSN: undefined, // 采购单号
-  serialNumber: undefined, // 入库单号
-  supplierId: undefined, // 供应商id
+  serialNumber: undefined, // 调拨单号
   operatorName: undefined // 创建人
 }
 

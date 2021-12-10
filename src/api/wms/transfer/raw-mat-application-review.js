@@ -1,11 +1,10 @@
 import request from '@/utils/request'
 
 /**
- * 原材料入库申请列表
+ * 原材料调拨申请列表
  *
- * @param {String} serialNumber 订单号/合同号
+ * @param {String} serialNumber 调拨单号
  * @param {Array} createTime  创建时间
- * @param {String} supplierName 供应商名称
  * @param {Number} page 页码
  * @param {Number} size 每页数量
  * @returns
@@ -13,20 +12,20 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'wms',
-    url: 'inbound/application/review/raw-materials',
+    url: 'transfer/application/review/raw-materials',
     method: 'get',
     params
   })
 }
 
 /**
- * 订单详情
+ * 调拨详情
  * @param {*} id 详情id
  */
 export function detail(id) {
   return request({
     module: 'wms',
-    url: `inbound/application/review/raw-materials/${id}`,
+    url: `transfer/application/review/raw-materials/${id}`,
     method: 'get'
   })
 }
@@ -37,7 +36,7 @@ export function detail(id) {
 export function getPendingReviewIdList() {
   return request({
     module: 'wms',
-    url: `inbound/application/review/raw-materials/pending/ids`,
+    url: `transfer/application/review/raw-materials/pending/ids`,
     method: 'get'
   })
 }
@@ -49,7 +48,7 @@ export function getPendingReviewIdList() {
 export function reviewReturned(data) {
   return request({
     module: 'wms',
-    url: `inbound/application/review/raw-materials/returned`,
+    url: `transfer/application/review/raw-materials/returned`,
     method: 'put',
     data
   })
@@ -62,7 +61,7 @@ export function reviewReturned(data) {
 export function reviewPassed(data) {
   return request({
     module: 'wms',
-    url: `inbound/application/review/raw-materials/passed`,
+    url: `transfer/application/review/raw-materials/passed`,
     method: 'put',
     data
   })

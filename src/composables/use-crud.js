@@ -604,6 +604,7 @@ function addCrudBusinessMethod(crud) {
     if (!(await callVmHook(crud, CRUD.HOOK.beforeDetailCancel, data))) {
       return
     }
+    crud.resetRowDetail() // 关闭详情时，清空detail
     crud.detailVisible = false
     await callVmHook(crud, CRUD.HOOK.afterDetailCancel, data)
   }

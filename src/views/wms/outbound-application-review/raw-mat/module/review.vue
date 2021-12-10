@@ -67,7 +67,7 @@
         >
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark>
+              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark  show-graphics>
                 <p v-if="row.boolTransfer">
                   调拨：
                   <span>（来源）</span>
@@ -80,7 +80,7 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" show-factory />
+          <material-base-info-columns :basic-class="form.basicClass" />
           <!-- 次要信息 -->
           <material-secondary-info-columns />
           <!-- 单位及其数量 -->
@@ -295,6 +295,7 @@ async function returned() {
   try {
     submitOptLoading.value = true
     await reviewReturned(form.value.id)
+    ++operateRecordNumber.value
     nextRecord()
   } catch (error) {
     console.log('退回', error)

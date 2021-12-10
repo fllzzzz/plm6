@@ -1,0 +1,111 @@
+<template>
+  <el-table-column v-if="!boolPublicTransferType" prop="partyATransferType" align="center" width="140px">
+    <template #header>
+      <common-radio-button
+        type="enum"
+        v-model="allPartyATransferType"
+        :options="partyAMatTransferEnum.ENUM"
+        @change="setAllPartyATransfer"
+        size="mini"
+      />
+    </template>
+    <template #default="{ row }">
+      <common-radio-button
+        v-if="row.boolPartyA"
+        type="enum"
+        v-model="row.partyATransferType"
+        :options="partyAMatTransferEnum.ENUM"
+        size="mini"
+      />
+      <span v-else v-empty-text />
+    </template>
+  </el-table-column>
+
+  <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="115px" label="含税单价">
+    <template #default="{ row }">
+      <el-input-number
+        v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+        v-model="row.unitPrice"
+        :min="0"
+        :max="9999999"
+        :controls="false"
+        :step="1"
+        :precision="2"
+        size="mini"
+        placeholder="含税单价"
+        @change="handleUnitPriceChange($event, row)"
+      />
+      <span v-else v-empty-text />
+    </template>
+  </el-table-column>
+  <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
+    <template #default="{ row }">
+      <el-input-number
+        v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+        v-model="row.amount"
+        :min="0"
+        :max="999999999"
+        :controls="false"
+        :step="1"
+        :precision="2"
+        size="mini"
+        placeholder="金额"
+        @change="handleAmountChange($event, row)"
+      />
+      <span v-else v-empty-text />
+    </template>
+  </el-table-column>
+</template>
+
+<script setup>
+import { ref, defineProps, watchEffect, computed } from 'vue'
+import { isNotBlank, toFixed } from '@/utils/data-type'
+import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
+const props = defineProps({
+  form: {
+    type: Object,
+    default: () => {
+      return {}
+    }
+  }
+})
+
+const formList = ref([])
+// 默认甲供调拨类型：“借用”
+const allPartyATransferType = ref(partyAMatTransferEnum.BORROW.V)
+// 调拨到“公共库”时，不可借用
+const boolPublicTransferType = computed(() => props.form.transferType === transferTypeEnum.PUBLIC_WARE.V)
+// 显示价格设置
+const showPriceSet = computed(() =>
+  formList.value.some((row) => row.boolPartyA && row.partyATransferType === partyAMatTransferEnum.BUY_IN.V)
+)
+
+watchEffect(() => {
+  // 监听list变化，并初始化甲供调拨类型
+  formList.value = props.form.list
+  // 公共库为买入
+  if (boolPublicTransferType.value) {
+    allPartyATransferType.value = boolPublicTransferType.value ? partyAMatTransferEnum.BUY_IN.V : partyAMatTransferEnum.BORROW.V
+  }
+  setAllPartyATransfer(allPartyATransferType.value)
+})
+
+// 处理全局甲供类型变化
+function setAllPartyATransfer(val) {
+  // 遍历设置甲供物料调拨类型
+  formList.value.forEach((row) => {
+    if (row.boolPartyA) {
+      row.partyATransferType = val
+    }
+  })
+}
+// 处理含税单价变化
+function handleUnitPriceChange(val, row) {
+  row.amount = isNotBlank(val) ? toFixed(val * row.mete, 2, { toNum: true }) : undefined
+}
+
+// 处理金额变化
+function handleAmountChange(val, row) {
+  row.unitPrice = isNotBlank(val) ? toFixed(val / row.mete, 2, { toNum: true }) : undefined
+}
+</script>

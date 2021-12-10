@@ -21,12 +21,12 @@
         fixed="left"
       >
         <template #default="{ row }">
-          <expand-secondary-info :basic-class="row.basicClass" :row="row" :show-batch-no="false" />
+          <expand-secondary-info :basic-class="row.basicClass" :row="row" :show-batch-no="false" show-graphics />
         </template>
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-factory />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" :show-unit="false" />
       <!-- 次要信息 -->

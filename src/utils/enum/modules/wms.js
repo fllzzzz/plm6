@@ -56,6 +56,13 @@ const orderSupplyTypeEnum = {
 }
 constantize(orderSupplyTypeEnum)
 
+// 甲供材料调拨方式
+const partyAMatTransferEnum = {
+  BORROW: { L: '借用', K: 'BORROW', V: 1 << 0, COLOR: '#ffa216' },
+  BUY_IN: { L: '买入', K: 'BUY_IN', V: 1 << 1, COLOR: '#0f9747' }
+}
+constantize(partyAMatTransferEnum)
+
 // 调拨类型
 const transferTypeEnum = {
   PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
@@ -102,6 +109,7 @@ export {
   materialOutboundModeEnum,
   steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
+  partyAMatTransferEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
@@ -118,6 +126,7 @@ export default {
   materialOutboundModeEnum,
   steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
+  partyAMatTransferEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,

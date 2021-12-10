@@ -98,7 +98,7 @@
         key="editorName"
         :show-overflow-tooltip="true"
         prop="editorName"
-        label="修改人"
+        label="编辑人"
         align="center"
         min-width="100"
       />
@@ -116,7 +116,7 @@
         key="createTime"
         :show-overflow-tooltip="true"
         prop="createTime"
-        label="创建日期"
+        label="申请日期"
         align="center"
         width="140"
       >
@@ -147,7 +147,7 @@
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time v-empty-text>{{ row.reviewTime }}</span>
+          <span v-parse-time>{{ row.reviewTime }}</span>
         </template>
       </el-table-column>
       <el-table-column

@@ -1,10 +1,4 @@
 <template>
-  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" fixed="left">
-    <template #default="{ row }">
-      <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
-      <span v-empty-text>{{ row.serialNumber }}</span>
-    </template>
-  </el-table-column>
   <!-- 钢材宽度100， 其他180 :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined"-->
   <el-table-column
     v-if="showClassifyFullName"
@@ -28,7 +22,6 @@ import { defineProps, computed } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
 import { STEEL_ENUM } from '@/settings/config'
-import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 const props = defineProps({
   specMerge: {
@@ -37,10 +30,6 @@ const props = defineProps({
   },
   basicClass: {
     type: Number
-  },
-  showFactory: {
-    type: Boolean,
-    default: false
   },
   columns: {
     type: Object
@@ -52,7 +41,6 @@ const classifyFullNameWidth = computed(() => {
   // 基础分类不存在，或基础分类不为钢材，则宽度为100
   return !props.basicClass || props.basicClass > STEEL_ENUM ? 250 : 100
 })
-const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))
 const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible('classifyFullName'))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))
 </script>

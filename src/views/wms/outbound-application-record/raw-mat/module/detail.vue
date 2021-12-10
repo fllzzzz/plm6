@@ -26,11 +26,11 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark />
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark show-graphics />
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" show-factory />
+        <material-base-info-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns />
         <!-- 单位及其数量 -->

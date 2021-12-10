@@ -4,11 +4,12 @@ import request from '@/utils/request'
  * 获取出库清单列表
  * @returns
  */
-export function get() {
+export function get(params) {
   return request({
     module: 'wms',
     url: 'outbound/application/review/raw-materials',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -91,6 +92,7 @@ export function getDetailNumberByCurrentUser() {
 export function delMaterial(data) {
   return request({
     module: 'wms',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     url: `outbound/application/review/raw-materials/material-del`,
     method: 'put',
     data
