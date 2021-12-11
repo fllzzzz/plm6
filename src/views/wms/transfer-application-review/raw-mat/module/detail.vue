@@ -97,7 +97,7 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 标题
-const drawerTitle = computed(() => (crud.detailLoading ? `调拨单：` : `调拨单：${detail.serialNumber}`))
+const drawerTitle = computed(() => (crud.detailLoading ? `调拨单：` : `调拨单：${detail.serialNumber || ''}`))
 
 // 详情加载之前
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {

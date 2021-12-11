@@ -63,11 +63,20 @@ const partyAMatTransferEnum = {
 }
 constantize(partyAMatTransferEnum)
 
+// 普通调拨类型
+const transferNormalTypeEnum = {
+  PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
+  PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
+  RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 }
+}
+constantize(transferNormalTypeEnum)
+
 // 调拨类型
 const transferTypeEnum = {
   PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
   PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
-  RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 }
+  RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 },
+  BORROW_RETURN: { L: '借用归还', K: 'BORROW_RETURN', V: 1 << 3 }
 }
 constantize(transferTypeEnum)
 
@@ -114,6 +123,7 @@ export {
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
   pickUpModeEnum,
+  transferNormalTypeEnum,
   transferTypeEnum
 }
 
@@ -131,5 +141,6 @@ export default {
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
   pickUpModeEnum,
+  transferNormalTypeEnum,
   transferTypeEnum
 }

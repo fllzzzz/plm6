@@ -70,6 +70,12 @@
             <span v-if="item.factory">（{{ item.factory.name }}）</span>
             <span v-if="si !== row.source.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
           </template>
+          <template v-if="row.boolBorrowReturnNotSelf">
+            <span class="borrow-direction-icon">▶</span>
+            <el-tooltip content="实际借用项目" placement="top">
+              <span class="project-ware-text" v-parse-project="{ project: row.borrowProject, onlyShortName: true }" v-empty-text />
+            </el-tooltip>
+          </template>
         </template>
       </el-table-column>
       <el-table-column
@@ -254,5 +260,14 @@ function toReview(row) {
 }
 .public-ware-text {
   color: brown;
+}
+
+.borrow-direction-icon {
+  color: #f00;
+  margin-right: 8px;
+}
+
+.borrow-direction-icon + span {
+  color: #f00;
 }
 </style>

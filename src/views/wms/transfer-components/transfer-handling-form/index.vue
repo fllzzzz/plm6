@@ -41,7 +41,7 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
-import { transferTypeEnum } from '@/utils/enum/modules/wms'
+import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -108,10 +108,10 @@ watch(
 watch(
   () => form.value.transferType,
   () => {
-    if (form.value.transferType !== transferTypeEnum.PROJECT_WARE.V) {
+    if (form.value.transferType !== transferNormalTypeEnum.PROJECT_WARE.V) {
       clearValidate('projectId')
     }
-    if (form.value.transferType === transferTypeEnum.RETURN_PARTY_A.V) {
+    if (form.value.transferType === transferNormalTypeEnum.RETURN_PARTY_A.V) {
       clearValidate('factoryId')
       clearValidate('warehouseId')
     }
@@ -124,7 +124,7 @@ function formInit(data) {
     materialId: data.id, // 物料id
     outboundUnit: data.outboundUnit, // 出库单位
     outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
-    transferType: transferTypeEnum.PROJECT_WARE.V, // 默认项目调拨
+    transferType: transferNormalTypeEnum.PROJECT_WARE.V, // 默认项目调拨
     factoryId: data.factory ? data.factory.id : undefined, // 工厂
     warehouseId: data.warehouse ? data.warehouse.id : undefined, // 仓库
     quantity: undefined, // 数量

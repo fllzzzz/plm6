@@ -65,3 +65,22 @@ export function setOutboundBasicConf(data) {
     data
   })
 }
+
+// 获取甲供材料归还基础配置
+export function getPartyABorrowReturnConf() {
+  return request({
+    module: 'wms',
+    url: 'config/transfer/party-a-borrow-return',
+    method: 'get'
+  })
+}
+
+// 保存甲供材料归还基础配置
+export function setPartyABorrowReturnConf(data) {
+  return request({
+    module: 'wms',
+    url: 'config/transfer/party-a-borrow-return',
+    method: 'put',
+    data
+  })
+}

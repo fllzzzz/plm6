@@ -11,7 +11,7 @@ const getPendingReviewIdList = {
     return {
       code: 20000,
       message: '成功',
-      data: [1, 2] // 待审核调拨单id列表
+      data: [6, 1, 2] // 待审核调拨单id列表
     }
   }
 }
@@ -53,6 +53,56 @@ const get = {
       message: '成功',
       data: {
         content: [
+          {
+            id: 6, // 调拨单id
+            basicClass: rawMatClsEnum.STEEL_PLATE.V, // 采购物料基础类型
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
+            source: [
+              {
+                factory: {
+                  id: 1,
+                  name: '彩虹3号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '62号仓库'
+                }
+              }
+            ],
+            direction: {
+              project: {
+                // 项目
+                id: 3,
+                name: '长沙五一广场',
+                shortName: '五一广场',
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              factory: {
+                id: 1,
+                name: '长江2号工厂'
+              },
+              warehouse: {
+                id: 1,
+                name: '662号仓库'
+              }
+            },
+            borrowProject: { // 借用项目
+              id: 2,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            boolBorrowReturnNotSelf: true, // 是否其他项目借用归还
+            transferType: transferTypeEnum.BORROW_RETURN.V, // 调拨类型
+            reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
+            founderName: '@cname', // 创建人（填写调拨的人）
+            editorName: '@cname', // 编辑人（最后编辑的用户）
+            // reviewerName: '@cname', // 审核人（审核的人）
+            // reviewTime: '@datetime(T)', // 审核时间
+            createTime: '@datetime(T)', // 创建时间
+            updateTime: '@datetime(T)', // 修改时间
+            userUpdateTime: '@datetime(T)' // 用户修改时间
+          },
           {
             id: 1, // 调拨单id
             basicClass: rawMatClsEnum.STEEL_PLATE.V, // 采购物料基础类型
@@ -308,7 +358,7 @@ const get = {
             reviewTime: '@datetime(T)' // 审核时间
           }
         ],
-        totalElements: 5
+        totalElements: 6
       }
     }
   }
@@ -695,7 +745,7 @@ const detail_id4 = {
   }
 }
 
-// 调拨详情3
+// 调拨详情5
 const detail_id5 = {
   url: '/api/wms/transfer/application/review/raw-materials/5',
   method: 'get',
@@ -773,4 +823,115 @@ const detail_id5 = {
     }
   }
 }
-export default [get, reviewReturned, reviewPassed, getPendingReviewIdList, detail_id1, detail_id2, detail_id3, detail_id4, detail_id5]
+
+// 调拨详情6
+const detail_id6 = {
+  url: '/api/wms/transfer/application/review/raw-materials/6',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        id: 1, // 调拨单id
+        basicClass: rawMatClsEnum.STEEL_PLATE.V, // 采购物料基础类型
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
+        source: [
+          {
+            factory: {
+              id: 1,
+              name: '彩虹3号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '62号仓库'
+            }
+          }
+        ],
+        direction: {
+          project: {
+            // 项目
+            id: 3,
+            name: '长沙五一广场',
+            shortName: '五一广场',
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          },
+          factory: {
+            id: 1,
+            name: '长江2号工厂'
+          },
+          warehouse: {
+            id: 1,
+            name: '662号仓库'
+          }
+        },
+        borrowProject: { // 借用项目
+          id: 2,
+          name: '长安街666666号辅路',
+          shortName: '长安街',
+          serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+        },
+        boolBorrowReturnNotSelf: true, // 是否其他项目借用归还
+        transferType: transferTypeEnum.BORROW_RETURN.V, // 调拨类型
+        reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
+        list: [
+          {
+            id: 1,
+            serialNumber: '3192520223',
+            classifyId: 103,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            boolPartyA: true, // 甲供材料
+            specification: 'Q325B',
+            quantity: 10,
+            thickness: 10,
+            length: 1000,
+            width: 1000,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: 'aaff',
+            remark: '66666',
+            mete: 800000,
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factoryId: 1,
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          },
+          {
+            id: 2,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            classifyId: 103,
+            specification: 'Q235B',
+            quantity: 5,
+            thickness: 20,
+            length: 1500,
+            width: 2000,
+            brand: '哈哈',
+            heatNoAndBatchNo: 'fddfd',
+            mete: 2355000,
+            weight: 2355000,
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factoryId: 1,
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+export default [get, reviewReturned, reviewPassed, getPendingReviewIdList, detail_id1, detail_id2, detail_id3, detail_id4, detail_id5, detail_id6]

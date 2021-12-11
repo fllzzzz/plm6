@@ -35,8 +35,10 @@ const get = {
               shortName: '你脸红个泡泡茶壶',
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            transferorName: '@cname',
-            transferTime: '@datetime(T)'
+            transferId: 1, // 调拨id
+            transferSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
+            transferorName: '@cname', // 调拨人
+            transferTime: '@datetime(T)' // 调拨时间
           }
         ],
         'totalElements': 5

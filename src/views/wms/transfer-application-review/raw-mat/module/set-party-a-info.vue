@@ -1,60 +1,62 @@
 <template>
-  <el-table-column v-if="!boolPublicTransferType" prop="partyATransferType" align="center" width="140px">
-    <template #header>
-      <common-radio-button
-        type="enum"
-        v-model="allPartyATransferType"
-        :options="partyAMatTransferEnum.ENUM"
-        @change="setAllPartyATransfer"
-        size="mini"
-      />
-    </template>
-    <template #default="{ row }">
-      <common-radio-button
-        v-if="row.boolPartyA"
-        type="enum"
-        v-model="row.partyATransferType"
-        :options="partyAMatTransferEnum.ENUM"
-        size="mini"
-      />
-      <span v-else v-empty-text />
-    </template>
-  </el-table-column>
+  <template v-if="boolNotBorrowReturn">
+    <el-table-column v-if="!boolPublicTransferType" prop="partyATransferType" align="center" width="140px">
+      <template #header>
+        <common-radio-button
+          type="enum"
+          v-model="allPartyATransferType"
+          :options="partyAMatTransferEnum.ENUM"
+          @change="setAllPartyATransfer"
+          size="mini"
+        />
+      </template>
+      <template #default="{ row }">
+        <common-radio-button
+          v-if="row.boolPartyA"
+          type="enum"
+          v-model="row.partyATransferType"
+          :options="partyAMatTransferEnum.ENUM"
+          size="mini"
+        />
+        <span v-else v-empty-text />
+      </template>
+    </el-table-column>
 
-  <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="115px" label="含税单价">
-    <template #default="{ row }">
-      <el-input-number
-        v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
-        v-model="row.unitPrice"
-        :min="0"
-        :max="9999999"
-        :controls="false"
-        :step="1"
-        :precision="2"
-        size="mini"
-        placeholder="含税单价"
-        @change="handleUnitPriceChange($event, row)"
-      />
-      <span v-else v-empty-text />
-    </template>
-  </el-table-column>
-  <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
-    <template #default="{ row }">
-      <el-input-number
-        v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
-        v-model="row.amount"
-        :min="0"
-        :max="999999999"
-        :controls="false"
-        :step="1"
-        :precision="2"
-        size="mini"
-        placeholder="金额"
-        @change="handleAmountChange($event, row)"
-      />
-      <span v-else v-empty-text />
-    </template>
-  </el-table-column>
+    <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="115px" label="含税单价">
+      <template #default="{ row }">
+        <el-input-number
+          v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+          v-model="row.unitPrice"
+          :min="0"
+          :max="9999999"
+          :controls="false"
+          :step="1"
+          :precision="2"
+          size="mini"
+          placeholder="含税单价"
+          @change="handleUnitPriceChange($event, row)"
+        />
+        <span v-else v-empty-text />
+      </template>
+    </el-table-column>
+    <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
+      <template #default="{ row }">
+        <el-input-number
+          v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+          v-model="row.amount"
+          :min="0"
+          :max="999999999"
+          :controls="false"
+          :step="1"
+          :precision="2"
+          size="mini"
+          placeholder="金额"
+          @change="handleAmountChange($event, row)"
+        />
+        <span v-else v-empty-text />
+      </template>
+    </el-table-column>
+  </template>
 </template>
 
 <script setup>
@@ -65,12 +67,16 @@ const props = defineProps({
   form: {
     type: Object,
     default: () => {
-      return {}
+      return {
+        list: []
+      }
     }
   }
 })
 
 const formList = ref([])
+// 调拨不是“借用归还的情况”
+const boolNotBorrowReturn = computed(() => props.form.transferType !== transferTypeEnum.BORROW_RETURN.V)
 // 默认甲供调拨类型：“借用”
 const allPartyATransferType = ref(partyAMatTransferEnum.BORROW.V)
 // 调拨到“公共库”时，不可借用
@@ -82,7 +88,7 @@ const showPriceSet = computed(() =>
 
 watchEffect(() => {
   // 监听list变化，并初始化甲供调拨类型
-  formList.value = props.form.list
+  formList.value = props.form.list || []
   // 公共库为买入
   if (boolPublicTransferType.value) {
     allPartyATransferType.value = boolPublicTransferType.value ? partyAMatTransferEnum.BUY_IN.V : partyAMatTransferEnum.BORROW.V

@@ -61,7 +61,7 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="!showAmount" :basic-class="form.basicClass" />
           <!-- 甲供设置 -->
-          <set-party-a-info v-if="showAmount" :form="form" />
+          <set-party-a-info v-if="showAmount && form && form.list" :form="form" />
           <!-- 仓库设置 -->
           <warehouse-info-columns show-project />
         </common-table>
@@ -135,7 +135,7 @@ const showAmount = ref(false) // 显示金额，只有“买入甲供材料才�
 // 表单禁止操作
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
-const drawerTitle = computed(() => (detailLoading.value ? `调拨单：` : `调拨单：${form.value.serialNumber}`))
+const drawerTitle = computed(() => (detailLoading.value ? `调拨单：` : `调拨单：${form.value.serialNumber || ''}`))
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -221,7 +221,6 @@ async function detailFormat(form) {
   } else {
     showAmount.value = false
   }
-  console.log('showAmount', showAmount.value)
   return form
 }
 

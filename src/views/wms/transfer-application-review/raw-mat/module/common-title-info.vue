@@ -1,7 +1,22 @@
 <template>
-  <el-tag v-parse-enum="{ e: transferTypeEnum, v: detail.transferType }" effect="plain" style="margin-right: 20px" />
+  <el-tag
+    v-if="detail.transferType"
+    v-parse-enum="{ e: transferTypeEnum, v: detail.transferType }"
+    effect="plain"
+    :type="detail.boolBorrowReturnNotSelf ? 'danger' : undefined"
+    style="margin-right: 20px"
+  />
+  <span v-if="detail.borrowProject" class="borrow-info">
+    <span class="label">借用项目：</span>
+    <span
+      class="project-ware-text"
+      v-if="detail.direction.project"
+      v-parse-project="{ project: detail.borrowProject, onlyShortName: true }"
+      v-empty-text
+    />
+  </span>
   <span v-if="showDirection" class="direction-text">
-    <span>调拨至：</span>
+    <span class="label">调拨至：</span>
     <span
       class="project-ware-text"
       v-if="detail.direction.project"
@@ -37,6 +52,9 @@ const showDirection = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.label {
+  color:#333;
+}
 .direction-text {
   font-weight: bold;
   font-size: 13px;
@@ -46,5 +64,10 @@ const showDirection = computed(() => {
 }
 .public-ware-text {
   color: brown;
+}
+.borrow-info {
+  font-weight: bold;
+  font-size: 13px;
+  margin-right: 20px;
 }
 </style>

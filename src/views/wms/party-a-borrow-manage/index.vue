@@ -4,6 +4,7 @@
     <m-header />
     <!--表格渲染-->
     <common-table
+      :key="`party_a_borrow_${crud.query.basicClass}`"
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
@@ -11,37 +12,54 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      @sort-change="crud.handleSortChange"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
-          <!-- <p>关联项目：<span v-parse-project="{ project: row.project }" v-empty-text /></p> -->
-          <p>
-            调拨备注：<span v-empty-text>{{ row.remark }}</span>
-          </p>
+          <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics>
+            <p>
+              调拨备注：<span v-empty-text>{{ row.remark }}</span>
+            </p>
+          </expand-secondary-info>
         </template>
       </el-expand-table-column>
-      <!-- <el-table-column label="序号" type="index" align="center" width="60" /> -->
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" />
       <!-- 单位及其数量 -->
-      <material-unit-quantity-columns :columns="columns" />
+      <material-unit-quantity-columns :columns="columns" outbound-type-mode />
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="原项目" min-width="170">
         <template #default="{ row }">
           <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('project')"
+        v-if="columns.visible('borrowProject')"
         show-overflow-tooltip
-        key="project"
-        prop="project"
+        key="borrowProject"
+        prop="borrowProject"
         label="借用项目"
         min-width="170"
       >
         <template #default="{ row }">
-          <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
+          <span v-parse-project="{ project: row.borrowProject, onlyShortName: true }" v-empty-text />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('transferSN')"
+        key="transferSN"
+        :show-overflow-tooltip="true"
+        prop="transferSN"
+        label="调拨单号"
+        align="center"
+        width="170"
+      >
+        <template #default="{ row }">
+          <clickable-permission-span :permission="permission.transferDetail" @click="openTransferDetailView(row.transferId)">
+            {{ row.transferSN }}
+          </clickable-permission-span>
+          <!-- <span class="text-clickable" @click="openTransferDetailView(row.transferId)">{{ row.transferSN }}</span> -->
         </template>
       </el-table-column>
       <el-table-column
@@ -61,32 +79,48 @@
         label="调拨日期"
         align="center"
         width="100"
+        sortable="custom"
       >
         <template #default="{ row }">
           <span v-parse-time="'{y}-{m}-{d}'">{{ row.transferTime }}</span>
         </template>
       </el-table-column>
+      <!-- 归还 -->
+      <el-table-column label="操作" width="80px" align="center" fixed="right">
+        <template #default="{ row }">
+          <common-button type="primary" size="mini" @click="toReturn(row)">归还</common-button>
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
+    <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
+      <transfer-detail />
+    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/wms/transfer/party-a-borrow-manage'
+import { detail as getTransferDetail } from '@/api/wms/transfer/raw-mat-application-review'
+
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import pagination from '@crud/Pagination'
-import mHeader from './module/header'
+import Pagination from '@crud/Pagination'
+import DetailWrapper from '@crud/detail-wrapper.vue'
+import MHeader from './module/header'
 
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
+import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
+import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
+import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
+import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 
 const permission = {
   get: ['wms_partyABorrow:get'],
@@ -102,12 +136,13 @@ const optShow = {
   download: false
 }
 
+const transferDetailRef = ref()
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供物料借出管理',
     sort: ['id.desc'],
-    invisibleColumns: [],
+    invisibleColumns: ['transferorName', 'transferTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
@@ -126,6 +161,11 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   })
 }
 
-// TODO:打开入库详情窗口
-// function openInboundDetailView() {}
+// 打开入库详情窗口
+function openTransferDetailView(transferId) {
+  transferDetailRef.value.toDetail(transferId)
+}
+
+// 归还
+function toReturn() {}
 </script>

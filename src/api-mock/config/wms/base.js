@@ -151,6 +151,38 @@ const setOutboundBasicConf = {
   }
 }
 
+// 获取甲供材料归还基础配置
+const getPartyABorrowReturnConf = {
+  url: '/api/wms/config/transfer/party-a-borrow-return',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        boolReturnByOtherProject: true, // 可从非借用项目归还
+        steelPlateSideLengthDiff: 0, // 钢板-长宽长度误差(mm)
+        sectionSteelLengthDiff: 0, // 型钢-长度误差(mm)
+        steelCoilLengthDiff: 0 // 钢卷-长度误差(mm)
+      }
+    }
+  }
+}
+
+// 保存甲供材料归还基础配置
+const setPartyABorrowReturnConf = {
+  url: '/api/wms/config/transfer/party-a-borrow-return',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 export default [
   getWmsConfig,
   getInboundBasicConf,
@@ -158,5 +190,7 @@ export default [
   getInboundSteelConf,
   setInboundSteelConf,
   getOutboundBasicConf,
-  setOutboundBasicConf
+  setOutboundBasicConf,
+  getPartyABorrowReturnConf,
+  setPartyABorrowReturnConf
 ]
