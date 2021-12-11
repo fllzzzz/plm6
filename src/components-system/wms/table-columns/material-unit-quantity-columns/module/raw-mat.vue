@@ -1,11 +1,11 @@
 <template>
   <template v-if="outboundTypeMode">
-    <el-table-column prop="outboundUnit" label="单位" align="center" width="70px">
+    <el-table-column v-if="showOutboundUnit" prop="outboundUnit" label="单位" align="center" width="70px">
       <template #default="{ row }">
         <span v-empty-text>{{ row.outboundUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="quantity" label="数量" align="right" width="100px">
+    <el-table-column v-if="showCurQuantity" prop="curQuantity" label="数量" align="right" width="100px">
       <template #default="{ row }">
         <span v-empty-text v-to-fixed="row.outboundUnitPrecision">
           {{ row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete }}
@@ -103,4 +103,7 @@ const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns)
 const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
+
+const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
+const showCurQuantity = computed(() => isBlank(props.columns) || props.columns.visible('curQuantity'))
 </script>

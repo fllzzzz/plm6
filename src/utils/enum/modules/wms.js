@@ -80,6 +80,14 @@ const transferTypeEnum = {
 }
 constantize(transferTypeEnum)
 
+// 借用归还状态
+const borrowReturnStatusEnum = {
+  NOT_RETURNED: { L: '未归还完', K: 'SELF', V: 1 << 0 },
+  // PENDING_REVIEW: { L: '待审核', K: 'PENDING_REVIEW', V: 1 << 1, TAG: 'warning' },
+  RETURNED: { L: '已归还', K: 'RETURNED', V: 1 << 1, TAG: 'success' }
+}
+constantize(borrowReturnStatusEnum)
+
 // 基础材料类型/采购类型
 const baseMaterialTypeEnum = {
   RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
@@ -119,6 +127,7 @@ export {
   steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
   partyAMatTransferEnum,
+  borrowReturnStatusEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
@@ -137,6 +146,7 @@ export default {
   steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
   partyAMatTransferEnum,
+  borrowReturnStatusEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,

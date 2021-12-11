@@ -3,6 +3,15 @@
     <div v-if="crud.searchToggle">
       <common-radio-button
         type="enum"
+        v-model="query.returnStatus"
+        :options="borrowReturnStatusEnum.ENUM"
+        show-option-all
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
+        type="enum"
         v-model="query.basicClass"
         :options="rawMatClsEnum.ENUM"
         show-option-all
@@ -73,6 +82,7 @@
 import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { borrowReturnStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
@@ -82,6 +92,7 @@ import projectCascader from '@comp-base/project-cascader.vue'
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
+  returnStatus: borrowReturnStatusEnum.NOT_RETURNED.V, // 归还状态
   transferTime: [], // [借用开始日期，借用结束日期]
   projectId: undefined, // 原项目id
   borrowProjectId: undefined, // 借用项目id

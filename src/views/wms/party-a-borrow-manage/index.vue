@@ -18,7 +18,21 @@
         <template #default="{ row }">
           <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics>
             <p>
-              调拨备注：<span v-empty-text>{{ row.remark }}</span>
+              借用调拨备注：<span v-empty-text>{{ row.remark }}</span>
+            </p>
+            <p>
+              归还调拨单号：
+              <template v-if="row.returnTransfers && row.returnTransfers.length > 0">
+                <template v-for="(transfer, ri) in row.returnTransfers" :key="transfer.id">
+                  <clickable-permission-span
+                    :permission="permission.transferDetail"
+                    @click="openTransferDetailView(transfer.id)"
+                    :text="transfer.serialNumber"
+                  />
+                  <span v-if="ri !== row.returnTransfers.length - 1"> / </span>
+                </template>
+              </template>
+              <template v-else><span v-empty-text /></template>
             </p>
           </expand-secondary-info>
         </template>
@@ -28,7 +42,17 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" />
       <!-- 单位及其数量 -->
-      <material-unit-quantity-columns :columns="columns" outbound-type-mode />
+      <el-table-column v-if="columns.visible('outboundUnit')" prop="outboundUnit" label="单位" align="center" width="70px">
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.outboundUnit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('quantity')" prop="quantity" label="已还/总数" align="right" width="110px">
+        <template #default="{ row }">
+          <span class="returned-number" v-empty-text v-to-fixed="row.outboundUnitPrecision">{{ row.corReturnedQuantity || 0 }}</span> /
+          <span v-empty-text v-to-fixed="row.outboundUnitPrecision">{{ row.corQuantity }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="原项目" min-width="170">
         <template #default="{ row }">
           <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
@@ -47,19 +71,43 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('transferSN')"
-        key="transferSN"
+        v-if="columns.visible('borrowTransferSN')"
+        key="borrowTransferSN"
         :show-overflow-tooltip="true"
-        prop="transferSN"
-        label="调拨单号"
+        prop="borrowTransferSN"
+        label="借用调拨单号"
         align="center"
-        width="170"
+        min-width="120"
       >
         <template #default="{ row }">
-          <clickable-permission-span :permission="permission.transferDetail" @click="openTransferDetailView(row.transferId)">
-            {{ row.transferSN }}
-          </clickable-permission-span>
-          <!-- <span class="text-clickable" @click="openTransferDetailView(row.transferId)">{{ row.transferSN }}</span> -->
+          <clickable-permission-span
+            v-if="row.borrowTransfer"
+            :permission="permission.transferDetail"
+            @click="openTransferDetailView(row.borrowTransfer.id)"
+            :text="row.borrowTransfer.serialNumber"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('returnTransferSN')"
+        key="returnTransferSN"
+        :show-overflow-tooltip="true"
+        prop="returnTransferSN"
+        label="归还调拨单号"
+        align="center"
+        min-width="120"
+      >
+        <template #default="{ row }">
+          <template v-if="row.returnTransfers && row.returnTransfers.length > 0">
+            <template v-for="(transfer, ri) in row.returnTransfers" :key="transfer.id">
+              <clickable-permission-span
+                :permission="permission.transferDetail"
+                @click="openTransferDetailView(transfer.id)"
+                :text="transfer.serialNumber"
+              />
+              <span v-if="ri !== row.returnTransfers.length - 1"> / </span>
+            </template>
+          </template>
         </template>
       </el-table-column>
       <el-table-column
@@ -67,7 +115,7 @@
         key="transferorName"
         :show-overflow-tooltip="true"
         prop="transferorName"
-        label="调拨人"
+        label="借用调拨人"
         align="center"
         width="90"
       />
@@ -76,7 +124,7 @@
         key="transferTime"
         :show-overflow-tooltip="true"
         prop="transferTime"
-        label="调拨日期"
+        label="借用日期"
         align="center"
         width="100"
         sortable="custom"
@@ -85,10 +133,29 @@
           <span v-parse-time="'{y}-{m}-{d}'">{{ row.transferTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column
+        v-if="columns.visible('returneeTime')"
+        key="returneeTime"
+        :show-overflow-tooltip="true"
+        prop="returneeTime"
+        label="归还日期"
+        align="center"
+        width="100"
+        sortable="custom"
+      >
+        <template #default="{ row }">
+          <span v-parse-time="'{y}-{m}-{d}'">{{ row.returneeTime }}</span>
+        </template>
+      </el-table-column>
       <!-- 归还 -->
       <el-table-column label="操作" width="80px" align="center" fixed="right">
         <template #default="{ row }">
-          <common-button type="primary" size="mini" @click="toReturn(row)">归还</common-button>
+          <template v-if="checkPermission(permission.return) && row.returnStatus === borrowReturnStatusEnum.NOT_RETURNED.V">
+            <common-button type="primary" size="mini" @click="toReturn(row)">归还</common-button>
+          </template>
+          <template v-else>
+            <el-tag :type="borrowReturnStatusEnum.V[row.returnStatus].TAG">{{ borrowReturnStatusEnum.VL[row.returnStatus] }}</el-tag>
+          </template>
         </template>
       </el-table-column>
     </common-table>
@@ -107,6 +174,8 @@ import { detail as getTransferDetail } from '@/api/wms/transfer/raw-mat-applicat
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { borrowReturnStatusEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
+import checkPermission from '@/utils/permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -117,11 +186,9 @@ import MHeader from './module/header'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-
 const permission = {
   get: ['wms_partyABorrow:get'],
   return: ['wms_partyABorrow:return'],
@@ -142,7 +209,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供物料借出管理',
     sort: ['id.desc'],
-    invisibleColumns: ['transferorName', 'transferTime'],
+    invisibleColumns: ['transferorName', 'transferTime', 'returnTransferSN', 'returneeTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
@@ -159,6 +226,20 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     toSmallest: false,
     toNum: false
   })
+  data.content.forEach((v) => {
+    v.pendingQuantity = v.quantity - v.returnedQuantity
+    v.pendingMete = v.mete - v.returnedMete
+    if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+      v.corQuantity = v.quantity // 数量
+      v.corReturnedQuantity = v.returnedQuantity // 已还数量
+      v.corPendingQuantity = v.pendingQuantity // 待还数量
+    } else {
+      // 核算量
+      v.corQuantity = v.mete
+      v.corReturnedQuantity = v.returnedMete
+      v.corPendingQuantity = v.pendingMete
+    }
+  })
 }
 
 // 打开入库详情窗口
@@ -169,3 +250,9 @@ function openTransferDetailView(transferId) {
 // 归还
 function toReturn() {}
 </script>
+
+<style lang="scss" scoped>
+.returned-number {
+  color: green;
+}
+</style>
