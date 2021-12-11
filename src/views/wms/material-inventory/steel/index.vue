@@ -5,6 +5,7 @@
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
+      :key="`material_inventory_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
       :max-height="maxHeight"
