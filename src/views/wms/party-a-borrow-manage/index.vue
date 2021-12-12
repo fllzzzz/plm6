@@ -164,6 +164,8 @@
     <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
       <transfer-detail />
     </detail-wrapper>
+    <!-- -->
+    <retrun-material v-model:visible="returnMaterialVisible" :detail="currentRow" @success="crud.toQuery" />
   </div>
 </template>
 
@@ -189,6 +191,7 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import retrunMaterial from './module/return-material.vue'
 const permission = {
   get: ['wms_partyABorrow:get'],
   return: ['wms_partyABorrow:return'],
@@ -203,7 +206,15 @@ const optShow = {
   download: false
 }
 
+// 展开行
+const expandRowKeys = ref([])
+// 归还物料窗口显示
+const returnMaterialVisible = ref(false)
+// 当前行
+const currentRow = ref()
+// 调拨详情ref
 const transferDetailRef = ref()
+// 表格ref
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -217,7 +228,6 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const expandRowKeys = ref([])
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
@@ -233,11 +243,13 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       v.corQuantity = v.quantity // 数量
       v.corReturnedQuantity = v.returnedQuantity // 已还数量
       v.corPendingQuantity = v.pendingQuantity // 待还数量
+      v.corUnderReviewQuantity = v.underReviewQuantity // 审核中的数量
     } else {
       // 核算量
       v.corQuantity = v.mete
       v.corReturnedQuantity = v.returnedMete
       v.corPendingQuantity = v.pendingMete
+      v.corUnderReviewQuantity = v.underReviewMete
     }
   })
 }
@@ -248,7 +260,10 @@ function openTransferDetailView(transferId) {
 }
 
 // 归还
-function toReturn() {}
+function toReturn(row) {
+  returnMaterialVisible.value = true
+  currentRow.value = row
+}
 </script>
 
 <style lang="scss" scoped>
