@@ -95,6 +95,14 @@ const baseMaterialTypeEnum = {
 }
 constantize(baseMaterialTypeEnum)
 
+// 冻结类型
+const materialFreezeTypeEnum = {
+  REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 1 << 0, DOC: '申购单' },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 << 1, DOC: '出库申请单' },
+  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 1 << 2, DOC: '调拨单' }
+}
+constantize(materialFreezeTypeEnum)
+
 // 提货方式
 const pickUpModeEnum = {
   SELF: { L: '自提', K: 'SELF', V: 1 << 0 },
@@ -131,6 +139,7 @@ export {
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
+  materialFreezeTypeEnum,
   pickUpModeEnum,
   transferNormalTypeEnum,
   transferTypeEnum
@@ -150,6 +159,7 @@ export default {
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
+  materialFreezeTypeEnum,
   pickUpModeEnum,
   transferNormalTypeEnum,
   transferTypeEnum

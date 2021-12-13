@@ -43,7 +43,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" show-party-a-transfer />
+        <material-base-info-columns :basic-class="detail.basicClass" show-party-a-transfer fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->

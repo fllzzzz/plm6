@@ -1,0 +1,28 @@
+import request from '@/utils/request'
+
+/**
+ * 冻结原材料列表
+ * @returns
+ */
+export function get(params) {
+  return request({
+    module: 'wms',
+    url: 'freeze/raw-material',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 解冻
+ */
+export function unfreezeHandling(data) {
+  return request({
+    module: 'wms',
+    url: 'freeze/raw-material/unfreeze',
+    method: 'put',
+    data
+  })
+}
+
+export default { get }

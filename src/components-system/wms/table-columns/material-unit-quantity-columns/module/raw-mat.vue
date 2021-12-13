@@ -8,7 +8,7 @@
     <el-table-column v-if="showCurQuantity" prop="curQuantity" label="数量" align="right" width="100px">
       <template #default="{ row }">
         <span v-empty-text v-to-fixed="row.outboundUnitPrecision">
-          {{ row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete }}
+          {{ row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField] }}
         </span>
       </template>
     </el-table-column>
@@ -19,9 +19,9 @@
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" width="100px">
+    <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px">
       <template #default="{ row }">
-        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
+        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px">
@@ -29,9 +29,9 @@
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showMete" prop="mete" :label="mateLabel" align="right" width="100px">
+    <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px">
       <template #default="{ row }">
-        <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row.mete }}</span>
+        <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
       </template>
     </el-table-column>
   </template>
@@ -60,49 +60,65 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  labelPrefix: { // 数量label前缀
+    type: String
+  },
+  quantityField: { // 数量字段
+    type: String,
+    default: 'quantity'
+  },
+  meteField: { // 核算量字段
+    type: String,
+    default: 'mete'
   }
 })
 
 const mateLabel = computed(() => {
+  let label = ''
   if (props.showUnit) {
-    return '核算量'
+    label = '核算量'
   } else {
     switch (props.basicClass) {
       case rawMatClsEnum.STEEL_PLATE.V:
       case rawMatClsEnum.SECTION_STEEL.V:
       case rawMatClsEnum.STEEL_COIL.V:
-        return '重量（kg）'
+        label = '重量(kg)'
+        break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
-      default:
-        return '核算量'
+      default: label = '核算量'
+        break
     }
   }
+  return (props.labelPrefix || '') + label
 })
 
 const quantityLabel = computed(() => {
+  let label = ''
   if (props.showUnit) {
-    return '数量'
+    label = '数量'
   } else {
     switch (props.basicClass) {
-      case rawMatClsEnum.STEEL_PLATE.V:
-        return '数量（张）'
-      case rawMatClsEnum.SECTION_STEEL.V:
-        return '数量（根）'
-      case rawMatClsEnum.STEEL_COIL.V:
-        return '长度（mm）'
+      case rawMatClsEnum.STEEL_PLATE.V: label = '数量(张)'
+        break
+      case rawMatClsEnum.SECTION_STEEL.V: label = '数量(根)'
+        break
+      case rawMatClsEnum.STEEL_COIL.V: label = '长度(mm)'
+        break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
-      default:
-        return '数量'
+      default: label = '数量'
+        break
     }
   }
+  return (props.labelPrefix || '') + label
 })
 
 const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('measureUnit')))
 const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
-const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
-const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
+const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(props.quantityField))
+const showMete = computed(() => isBlank(props.columns) || props.columns.visible(props.meteField))
 
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
 const showCurQuantity = computed(() => isBlank(props.columns) || props.columns.visible('curQuantity'))

@@ -106,24 +106,24 @@ export default {
         }
       ]
     },
-    // {
-    //   path: '/wms/outbound-',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'WMSInboundAndOutboundReview',
-    //   alwaysShow: false,
-    //   redirect: '/wms/inbound-application-review/raw-mat/index',
-    //   meta: { title: '入库审核', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'RawMatInboundApplicationReview',
-    //       path: 'raw-mat-record',
-    //       hidden: false,
-    //       component: '/wms/inbound-application-review/raw-mat/index',
-    //       meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
+    {
+      path: '/wms/freeze-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSFreezeManage',
+      alwaysShow: false,
+      redirect: '/wms/freeze-manage/raw-mat/index',
+      meta: { title: '冻结管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'RawMatFreezeManage',
+          path: 'raw-mat-record',
+          hidden: false,
+          component: '/wms/freeze-manage/raw-mat/index',
+          meta: { title: '原材料-冻结列表', icon: 'project', noCache: true }
+        }
+      ]
+    },
     {
       path: '/wms/purchase-manage',
       component: 'Layout',

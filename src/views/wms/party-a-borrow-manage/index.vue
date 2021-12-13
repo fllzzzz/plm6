@@ -38,7 +38,7 @@
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" />
+      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" fixed="left" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" />
       <!-- 单位及其数量 -->
@@ -161,11 +161,12 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- 调拨详情 -->
     <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
       <transfer-detail />
     </detail-wrapper>
     <!-- -->
-    <retrun-material v-model:visible="returnMaterialVisible" :detail="currentRow" @success="crud.toQuery" />
+    <return-material v-model:visible="returnMaterialVisible" :detail="currentRow" @success="crud.toQuery" />
   </div>
 </template>
 
@@ -191,7 +192,7 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-import retrunMaterial from './module/return-material.vue'
+import returnMaterial from './module/return-material.vue'
 const permission = {
   get: ['wms_partyABorrow:get'],
   return: ['wms_partyABorrow:return'],
@@ -254,7 +255,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   })
 }
 
-// 打开入库详情窗口
+// 打开调拨详情窗口
 function openTransferDetailView(transferId) {
   transferDetailRef.value.toDetail(transferId)
 }

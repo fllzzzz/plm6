@@ -80,7 +80,7 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" show-outbound-mode />
+          <material-base-info-columns :basic-class="form.basicClass" show-outbound-mode fixed="left" />
           <!-- 次要信息 -->
           <material-secondary-info-columns />
           <!-- 单位及其数量 -->

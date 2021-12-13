@@ -1,35 +1,29 @@
 <template>
   <common-dialog
-    title="调拨办理"
+    title="解冻办理"
     v-model="dialogVisible"
     width="900px"
     :before-close="handleClose"
     :show-close="true"
-    custom-class="wms-transfer-handling"
+    custom-class="wms-unfreeze-handling"
     top="10vh"
   >
     <template #titleRight>
-      <common-button :loading="submitLoading" size="mini" type="primary" @click="submit"> 提 交 </common-button>
+      <common-button :loading="submitLoading" size="mini" type="primary" @click="submit"> 确认解冻 </common-button>
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
       <div class="material-info">
-        <component :is="comp" :material="props.material" />
+        <component :is="comp" :material="material" />
       </div>
       <div class="form-info">
-        <common-form-item :material="material" :form="form" />
+        <common-form-item :record="record" :form="form" />
       </div>
     </el-form>
   </common-dialog>
 </template>
 
 <script setup>
-import {
-  steelPlateTransferHandling,
-  sectionSteelTransferHandling,
-  steelCoilTransferHandling,
-  auxMatTransferHandling,
-  gasTransferHandling
-} from '@/api/wms/transfer/transfer-handling'
+import { unfreezeHandling } from '@/api/wms/freeze/raw-mat'
 import { defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
@@ -41,7 +35,6 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
-import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -57,6 +50,10 @@ const props = defineProps({
   material: {
     // 物料信息
     type: Object
+  },
+  record: {
+    // 冻结记录信息
+    type: Object
   }
 })
 
@@ -70,7 +67,7 @@ const validateQuantity = (rule, value, callback) => {
   if (value <= 0) {
     return callback(new Error('数量必须大于0'))
   }
-  if (value > material.value.corOperableQuantity) {
+  if (value > props.material.corOperableQuantity) {
     return callback(new Error('数量不可超过可操作数量'))
   }
   callback()
@@ -93,44 +90,26 @@ const rules = {
 const formRef = ref()
 // 表单
 const form = ref({})
-// 材料
-const material = computed(() => props.material || {})
 // 监听物料变化，在物料发生变化时，初始化form表单
 watch(
-  material,
+  () => props.record,
   (val) => {
     formInit(val)
   },
   { immediate: true, deep: true }
 )
 
-// 监听调拨类型
-watch(
-  () => form.value.transferType,
-  () => {
-    if (form.value.transferType !== transferNormalTypeEnum.PROJECT_WARE.V) {
-      clearValidate('projectId')
-    }
-    if (form.value.transferType === transferNormalTypeEnum.RETURN_PARTY_A.V) {
-      clearValidate('factoryId')
-      clearValidate('warehouseId')
-    }
-  }
-)
-
 // 表单初始化
 function formInit(data) {
   const newForm = {
-    materialId: data.id, // 物料id
-    outboundUnit: data.outboundUnit, // 出库单位
-    outboundUnitPrecision: data.outboundUnitPrecision, // 出库单位精度
-    transferType: transferNormalTypeEnum.PROJECT_WARE.V, // 默认项目调拨
-    factoryId: data.factory ? data.factory.id : undefined, // 工厂
-    warehouseId: data.warehouse ? data.warehouse.id : undefined, // 仓库
     quantity: undefined, // 数量
     remark: undefined // 备注
   }
+  if (data) {
+    newForm.id = data.id
+  }
   form.value = newForm
+  clearValidate()
 }
 
 // 重置表单
@@ -142,8 +121,9 @@ function resetForm() {
 
 // 清空校验
 function clearValidate(field) {
-  nextTick(() => {})
-  formRef.value && formRef.value.clearValidate(field)
+  nextTick(() => {
+    formRef.value && formRef.value.clearValidate(field)
+  })
 }
 
 // 表单提交
@@ -152,8 +132,7 @@ async function submit() {
     submitLoading.value = true
     const valid = await formRef.value.validate()
     if (!valid) return false
-    const submitApi = getApi(props.basicClass)
-    await submitApi(form.value)
+    await unfreezeHandling(form.value)
     emit('success')
     handleClose()
     resetForm()
@@ -166,7 +145,7 @@ async function submit() {
 
 // 组件
 const comp = computed(() => {
-  switch (props.basicClass) {
+  switch (props.material.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
       return steelPlate
     case rawMatClsEnum.SECTION_STEEL.V:
@@ -181,24 +160,6 @@ const comp = computed(() => {
       return auxMat
   }
 })
-
-// 批量出库api
-function getApi(basicClass) {
-  switch (basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
-      return steelPlateTransferHandling
-    case rawMatClsEnum.SECTION_STEEL.V:
-      return sectionSteelTransferHandling
-    case rawMatClsEnum.STEEL_COIL.V:
-      return steelCoilTransferHandling
-    case rawMatClsEnum.MATERIAL.V:
-      return auxMatTransferHandling
-    case rawMatClsEnum.GAS.V:
-      return gasTransferHandling
-    default:
-      return null
-  }
-}
 </script>
 
 <style lang="scss" scoped>
