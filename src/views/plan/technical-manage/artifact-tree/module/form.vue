@@ -25,7 +25,7 @@
             <span>{{ form.quantity }}</span>
           </el-form-item>
           <el-form-item label="生产数量">
-            <span>{{ form.producedQuantity }}</span>
+            <span>{{ form.productionQuantity }}</span>
           </el-form-item>
           <el-form-item label="关联组立号">
             <span>{{ form.name }}</span>
@@ -39,6 +39,7 @@
                 type="text"
                 placeholder="请填写构件规格"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -49,6 +50,7 @@
                 type="text"
                 placeholder="请填写构件材质"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -63,6 +65,7 @@
                 placeholder="请填写构件毛重"
                 controls-position="right"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -78,6 +81,7 @@
                 placeholder="请填写构件面积"
                 controls-position="right"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -92,6 +96,7 @@
                 placeholder="请填写构件长度"
                 controls-position="right"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -106,6 +111,7 @@
                 placeholder="请填写构件净重"
                 controls-position="right"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -118,6 +124,7 @@
                 type="text"
                 placeholder="请填写构件图号"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
@@ -125,13 +132,16 @@
             <div style="width:270px;">
               <el-input-number
                 v-model.number="form.newQuantity"
-                :min="0"
+                :min="minQuantity"
                 :max="maxNubmer"
                 :step="1"
                 step-strictly
                 placeholder="不变更无需填写"
                 controls-position="right"
                 style="width: 270px;"
+                @change="quantityChange"
+                @blur="quantityChange"
+                :disabled="form.changeAbleStatus===0"
               />
             </div>
           </el-form-item>
@@ -141,19 +151,21 @@
                 v-model.trim="form.remark"
                 type="textarea"
                 :autosize="{ minRows: 1, maxRows: 6}"
+                :maxlength="500"
                 placeholder="请填写备注"
                 style="width: 270px;"
+                :disabled="form.changeAbleStatus!=4"
               />
             </div>
           </el-form-item>
         </div>
         <div style="height:50px;">
           <div class="item-name" style="float:left;">零件信息</div>
-          <template v-if="!form.producedQuantity">
+          <template v-if="form.changeAbleStatus === 4">
             <div style="float:right;margin-top:10px;margin-right:20px;">
               <template v-if="!isdisable">
                 <common-button size="mini" type="primary" :disabled="editing" @click="handleAdd">新增</common-button>
-                <common-button size="mini" type="danger" :disabled="editing">删除</common-button>
+                <common-button size="mini" type="danger" :disabled="editing" @click="deleteItems">删除</common-button>
                 <common-button size="mini" type="success" @click="handleEdit">修改</common-button>
               </template>
               <template v-else>
@@ -165,16 +177,16 @@
         </div>
         <div style="padding:0 20px;">
           <common-table
-            ref="table"
+            ref="machinePartRef"
             border
-            :data="form.children"
+            :data="form.machinePartDTOList"
             :max-height="300"
             style="width: 100%;"
             class="table-form"
             :cell-class-name="wrongCellMask"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55" />
+            <el-table-column type="selection" width="55" :disabled="form.changeAbleStatus != 3"/>
             <el-table-column label="序号" type="index" align="center" width="60" />
             <el-table-column key="serialNumber" prop="serialNumber" label="*零件编号" min-width="100">
               <template v-slot="scope">
@@ -207,14 +219,16 @@
                 <el-input-number
                   v-if="scope.row.add || editing"
                   v-model.number="scope.row.quantity"
-                  :min="0"
+                  :min="totalQuantity"
                   :max="maxNubmer"
-                  :step="form.quantity"
+                  :step="totalQuantity"
                   step-strictly
                   placeholder="请填写"
                   controls-position="right"
                   style="width:140px;"
                   size="mini"
+                  @change="partQuantityChange(scope.row)"
+                  @blur="partQuantityChange(scope.row)"
                 />
                 <span v-else style="cursor: pointer;">{{ scope.row.quantity }}</span>
               </template>
@@ -288,11 +302,11 @@
                 <span v-else>{{ scope.row.grossWeight? scope.row.grossWeight.toFixed(DP.COM_WT__KG): '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="shearType" prop="shearType" :show-overflow-tooltip="true" label="类型" align="center" width="100">
+            <el-table-column key="type" prop="type" :show-overflow-tooltip="true" label="类型" align="center" width="100">
               <template v-slot="scope">
                 <common-select
                   v-if="scope.row.add || editing"
-                  v-model="scope.row.shearType"
+                  v-model="scope.row.type"
                   :options="shearTypeEnum.ENUM"
                   type="enum"
                   size="mini"
@@ -300,25 +314,25 @@
                   placeholder="类型"
                   style="width:100%"
                 />
-                <span v-else>{{ scope.row.shearType }}</span>
-                <!-- <span v-else>{{ isNotBlank(scope.row.shearType)? shearTypeEnum.VL(scope.row.shearType) : '-' }}</span> -->
+                <span v-else>{{ scope.row.type? shearTypeEnum.VL[scope.row.type] : '-' }}</span>
               </template>
             </el-table-column>
           </common-table>
         </div>
         <div class="item-name">其他信息</div>
-        <el-form-item label="原因描述" prop="remark">
+        <el-form-item label="原因描述" prop="changeReason">
           <el-input
-            v-model.trim="form.otherRemark"
+            v-model.trim="form.changeReason"
             type="textarea"
             :autosize="{ minRows: 4, maxRows: 6}"
+            :maxlength="500"
             placeholder="请填写原因描述"
             style="width: 320px;"
+            :disabled="form.changeAbleStatus!=4"
           />
         </el-form-item>
-        <el-form-item label="附件上传" prop="files" style="position:relative;">
-          <!-- <upload-btn ref="upload" :files.sync="form.files" :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V" /> -->
-          <common-button size="small" type="danger" plain style="position:absolute;top:0;left:160px;" @click="resetUpload()">重置</common-button>
+        <el-form-item label="附件上传" prop="files" style="position:relative;width:45%;">
+          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V" :limit="1" :disabled="form.changeAbleStatus!=4" />
         </el-form-item>
       </el-form>
     </template>
@@ -330,10 +344,12 @@ import { ref, defineProps, watch, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import IconSelect from '@comp/iconSelect/index.vue'
 import { isNotBlank } from '@data-type/index'
+import { fileClassifyEnum } from '@enum-ms/file'
 import { shearTypeEnum } from '@enum-ms/plan'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
-// import UploadBtn from '@/components/FileUpload/UploadBtn'
+import UploadBtn from '@/components/file-upload/UploadBtn'
+import { ElMessage } from 'element-plus'
 
 const formRef = ref()
 const editing = ref(false)
@@ -347,37 +363,30 @@ const props = defineProps({
   }
 })
 const defaultForm = {
-  id: undefined,
-  name: '',
-  specification: '',
-  material: '',
-  // quantity: null,
-  netWeight: undefined,
+  changeReason: undefined,
+  drawingNumber: undefined,
   grossWeight: undefined,
-  drawingNumber: '',
-  surfaceArea: undefined,
+  id: '',
   length: undefined,
-  children:[],
-  remark: '',
-  otherRemark: '',
-  files: []
+  material: undefined,
+  netWeight: undefined,
+  quantity: undefined,
+  newQuantity: undefined,
+  remark: undefined,
+  serialNumber: undefined,
+  specification: undefined,
+  surfaceArea: undefined,
+  machinePartDTOList: undefined,
+  files: undefined,
+  attachmentIds: undefined
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
-
-const checkOtherDate = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请选择完成时间'))
-  } else {
-    if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
-      const val = props.typeInfo.find(v => v.no === crud.form.productType)
-      if( value > val.date){
-        callback(new Error("不能超过产品类型完成时间"))
-      } else {
-        callback()
-      }
-    }
-  }
-}
+const totalQuantity=ref()
+const machinePartRef = ref()
+const choseVal = ref([])
+const preVal = ref()
+const uploadRef = ref()
+const minQuantity = ref(0)
 const rules = {
   name: [
     { required: true, message: '请填写构件名称', trigger: 'blur' },
@@ -400,14 +409,14 @@ const rules = {
   length: [{ required: true, message: '请填写构件长度', trigger: 'blur', type: 'number' }],
   netWeight: [{ required: true, message: '请填写构件净重', trigger: 'blur', type: 'number' }],
   grossWeight: [{ required: true, message: '请填写构件毛重', trigger: 'blur', type: 'number' }],
-  surfaceArea: [{ message: '请填写构件面积', trigger: 'blur', type: 'number' }]
+  surfaceArea: [{ message: '请填写构件面积', trigger: 'blur', type: 'number' }],
+  changeReason: [{ required: true, max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
 }
 
 const tableRules = {
   serialNumber: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   specification: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   quantity: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  // producedQuantity: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   length: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   grossWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
@@ -416,32 +425,27 @@ const tableRules = {
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 function handleAdd() {
-  originData.value = JSON.parse(JSON.stringify(crud.form.children))
-  crud.form.children.unshift({
-    areaId: undefined,
-    drawingNumber: undefined,
+  originData.value = JSON.parse(JSON.stringify(crud.form.machinePartDTOList))
+  crud.form.machinePartDTOList.push({
     grossWeight: undefined,
+    id: undefined,
     length: undefined,
-    matched: undefined,
     material: undefined,
     netWeight: undefined,
-    outboundQuantity: undefined,
-    producedQuantity: undefined,
     quantity: undefined,
-    remark: '',
-    reuseIngQuantity: undefined,
-    scrappedQuantity: undefined,
-    serialNumber: '',
-    shearType: undefined,
-    specification: '',
-    status: undefined,
-    add: true
+    remark: undefined,
+    serialNumber: undefined,
+    specification: undefined,
+    type: undefined,
+    add: true,
+    unitData: undefined,
+    dataIndex: crud.form.machinePartDTOList.length
   })
   isdisable.value = true
 }
 function handleEdit() {
   editing.value = true
-  originData.value = JSON.parse(JSON.stringify(crud.form.children))
+  originData.value = JSON.parse(JSON.stringify(crud.form.machinePartDTOList))
   isdisable.value = true
 }
 function closeEdit() {
@@ -449,13 +453,13 @@ function closeEdit() {
   originData.value.map(v => {
     v.add = false
   })
-  crud.form.children = originData.value
+  crud.form.machinePartDTOList = originData.value
   isdisable.value = false
 }
 function saveEdit() {
-  const { validResult, dealList } = tableValidate(crud.form.children)
+  const { validResult, dealList } = tableValidate(crud.form.machinePartDTOList)
   if (validResult) {
-    crud.form.children = dealList
+    crud.form.machinePartDTOList = dealList
   } else {
     return validResult
   }
@@ -463,27 +467,77 @@ function saveEdit() {
   originData.value.map(v => {
     v.add = false
   })
-  crud.form.children.map(v => {
-    v.add = false
-  })
+  weigthChange()
   isdisable.value = false
 }
 
+function weigthChange(){
+  let grossWeight=0
+  let netWeight=0
+  crud.form.machinePartDTOList.map(v => {
+    if(!v.unitData){
+      v.unitData = v.quantity/ totalQuantity.value
+    }
+    grossWeight += v.grossWeight*v.unitData
+    netWeight += v.netWeight*v.unitData
+    v.add = false
+  })
+  crud.form.grossWeight = grossWeight
+  crud.form.netWeight = netWeight
+}
+
 function handleSelectionChange(val){
-
+  choseVal.value = val
 }
 
-function resetUpload(){
-
+function deleteItems(){
+  if(choseVal.value && choseVal.value.length>0){
+    choseVal.value.forEach(i=>{
+      if(i.id){
+        let idIndex = crud.form.machinePartDTOList.findIndex(v=>v.id===i.id)
+        crud.form.machinePartDTOList.splice(idIndex, 1)
+      }else{
+        crud.form.machinePartDTOList.splice(i.dataIndex, 1)
+      }
+    })
+  }else{
+    ElMessage.error('请先勾选选项')
+    return
+  }
+  weigthChange()
+  machinePartRef.value.clearSelection()
 }
 
-CRUD.HOOK.afterToAdd = (crud, form) => {
-  crud.form.productType = crud.query.productType
+function quantityChange(){
+  if( crud.form.newQuantity != preVal.value){
+    crud.form.machinePartDTOList.map(val=>{
+      val.quantity = val.unitData * crud.form.newQuantity
+    })
+    preVal.value = crud.form.newQuantity
+    totalQuantity.value = crud.form.newQuantity
+    weigthChange()
+  }
+}
+
+function partQuantityChange(row){
+  if(row.quantity){
+    row.unitData = row.quantity/totalQuantity.value
+  }
+}
+
+CRUD.HOOK.afterToEdit = (crud, form) => {
+  totalQuantity.value = crud.form.quantity
+  preVal.value = crud.form.quantity
+  crud.form.machinePartDTOList.map(val=>{
+    if(crud.form.quantity && val.quantity){
+      val.unitData = val.quantity/crud.form.quantity
+    }
+  })
+  minQuantity.value = crud.form.changeAbleStatus===1? curd.form.quantity : crud.form.productionQuantity
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
-  crud.form.monomerId = crud.query.monomerId
-  return !!crud.form.monomerId
+  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : undefined
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>

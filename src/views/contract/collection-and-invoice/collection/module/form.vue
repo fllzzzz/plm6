@@ -19,7 +19,6 @@
             v-model="form.projectId"
             style="width:250px"
             class="filter-item"
-            @change="handleProjectChange"
           />
         </el-form-item>
         <el-form-item label="收款日期" prop="collectionDate">
@@ -35,26 +34,32 @@
       <div class="form-row" style="display:flex;">
         <el-form-item label="合同金额(元)" prop="contractAmount">
           <el-input
-            v-model="form.contractAmount"
+            v-model="contractInfo.contractAmount"
             type="text"
             placeholder="合同金额"
             style="width: 250px;"
             disabled
           />
         </el-form-item>
-        <el-form-item label="收款单位" prop="collectionUnit">
-          <el-input
-            v-model="form.collectionUnit"
-            type="text"
+        <el-form-item label="收款单位" prop="collectionUnitId">
+          <common-select
+            v-model="form.collectionUnitId"
+            :options="contractInfo.companyBankAccountList"
+            :type="'other'"
+            :dataStructure="typeProp"
+            size="small"
+            clearable
+            class="filter-item"
             placeholder="收款单位"
-            style="width: 250px;"
+            style="width:250px"
+            @change="collectionCompanyChange"
           />
         </el-form-item>
       </div>
       <div class="form-row" style="display:flex;">
         <el-form-item label="已收款额(元)">
           <el-input
-            v-model="form.contractAmount1"
+            v-model="contractInfo.collectionSumAmount"
             type="text"
             placeholder="已收款额"
             style="width: 250px;"
@@ -95,7 +100,7 @@
       <div class="form-row" style="display:flex;">
         <el-form-item label="收款金额大写" prop="paymentAmount1">
           <el-input
-            v-model="form.paymentAmount1"
+            v-model="upperYuan"
             placeholder="收款金额大写"
             style="width: 250px;"
             disabled
@@ -236,16 +241,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import projectCascader from '@comp-base/project-cascader'
 import useDict from '@compos/store/use-dict'
 import { DP } from '@/settings/config'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
+import { digitUppercase } from '@/utils/data-type/number'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])
+const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }
 const defaultForm = {
   id: undefined,
   collectionAmount: undefined,
@@ -254,6 +261,7 @@ const defaultForm = {
   collectionDepositBank: undefined,
   collectionReason: undefined,
   collectionUnit: undefined,
+  collectionUnitId: undefined,
   paymentBankAccount: undefined,
   paymentDepositBank: undefined,
   paymentUnit: undefined,
@@ -263,19 +271,56 @@ const defaultForm = {
 
 const { crud, form } = regForm(defaultForm, formRef)
 
+const contractInfo = ref({})
+
 const rules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   collectionAmount: [{ required: true, message: '请输入本次收款金额', trigger: 'change', type: 'number' }],
   collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
-  collectionUnit: [{ required: true, message: '请选择收款单位', trigger: 'change' }],
-  paymentUnit: [{ required: true, message: '请选择付款单位', trigger: 'blur' }]
+  collectionUnitId: [{ required: true, message: '请选择收款单位', trigger: 'change' }],
+  paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
+}
+const upperYuan = computed(()=>{
+  return form.collectionAmount? digitUppercase(form.collectionAmount): ''
+})
+watch(
+  () => form.projectId,
+  (val) => {
+    if (val) {
+      getContractInfo(val)
+    }else{
+      contractInfo.value = {}
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+async function getContractInfo(id){
+  let data = {}
+  try{
+    data = await contractCollectionInfo({projectId:id})
+  }catch(e){
+    console.log('获取合同信息',e)
+  }finally{
+    contractInfo.value = data
+    form.paymentBankAccount = contractInfo.value.customerBankCode
+    form.paymentDepositBank = contractInfo.value.customerBankName
+    form.paymentUnit = contractInfo.value.customerUnit
+  }
 }
 
-function handleProjectChange(val){
+function collectionCompanyChange(val){
   if(val){
-
+    const collectionVal = contractInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+    form.collectionBankAccount = collectionVal.account
+    form.collectionDepositBank = collectionVal.depositBank
+    form.collectionUnit = collectionVal.companyName
+  } else {
+    form.collectionBankAccount = ''
+    form.collectionDepositBank = ''
+    form.collectionUnit = ''
   }
 }
 

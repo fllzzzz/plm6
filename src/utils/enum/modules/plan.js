@@ -34,8 +34,8 @@ constantize(overallPlanStatusEnum)
 
 // 零件剪板类型
 const shearTypeEnum = {
-  SHEARING: { L: '剪板', K: 'SHEARING', V: 0 },
-  CNC: { L: '数控', K: 'CNC', V: 1 }
+  SHEARING: { L: '剪板', K: 'SHEARING', V: 1 },
+  CNC: { L: '数控', K: 'CNC', V: 2 }
 }
 constantize(shearTypeEnum)
 
