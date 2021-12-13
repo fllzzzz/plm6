@@ -26,7 +26,7 @@
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" sortable="custom" :show-overflow-tooltip="true" label="材质" min-width="80px">
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
