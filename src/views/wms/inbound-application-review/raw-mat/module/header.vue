@@ -28,9 +28,9 @@
         value-format="x"
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         unlink-panels
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        style="width: 240px"
+        start-placeholder="申请开始日期"
+        end-placeholder="申请结束日期"
+        style="width: 270px"
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -68,7 +68,7 @@
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按操作人搜索"
+        placeholder="申请人/编辑人/审核人"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />

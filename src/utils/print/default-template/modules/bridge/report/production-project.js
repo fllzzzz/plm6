@@ -104,7 +104,7 @@ const BRIDGE_MES_REPORT_PROJECT_PRODUCTION = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 180, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 180, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '类别：', width: 130, type: typeEnum.ENUM.K, format: { enum: 'brMaterialTypeEnum', key: 'L' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 60, type: typeEnum.DATES.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 130, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
@@ -202,7 +202,7 @@ const BRIDGE_MES_REPORT_PROJECT_PRODUCTION = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: false, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: false, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, key: 'factory', title: '工厂', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.FACTORY_NAME.K },
       { show: true, key: 'monomer', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
       { show: true, key: 'area', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },

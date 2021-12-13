@@ -14,7 +14,7 @@
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
         <el-form-item label="项目" prop="projectId" label-width="55px">
-          <project-cascader v-if="showProjectSelect" v-model="form.projectId" clearable class="input-underline" style="width: 300px" />
+          <project-cascader v-if="showProjectSelect" v-model="form.projectId" clearable class="input-underline" style="width: 300px" @change="handleProjectChange" />
           <span v-else v-parse-project="{ project: globalProject }" v-empty-text />
         </el-form-item>
         <el-form-item label="领用人" prop="recipientId">
@@ -40,7 +40,7 @@
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info :basic-class="row.basicClass" :row="row">
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics>
               <p>项目：<span v-if="row.project" v-parse-project="{ project: row.project }" v-empty-text /></p>
               <el-input
                 v-model="row.remark"
@@ -55,7 +55,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" show-factory />
+        <material-base-info-columns :basic-class="basicClass" />
         <!-- 单位及其数量 -->
         <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
         <!-- 次要信息 -->
@@ -149,6 +149,8 @@ const rules = computed(() => {
 const formRef = ref()
 // 表格展开key列表
 const expandRowKeys = ref([])
+// 过滤后的材料列表
+const materialList = ref([])
 // 提交表单
 const form = ref({
   list: []
@@ -204,7 +206,8 @@ watch(
 // 监听传入的列表
 watchEffect(() => {
   // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
-  form.value.list = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+  materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+  form.value.list = materialList.value
 })
 
 // 表单初始化
@@ -263,6 +266,19 @@ async function submit() {
     console.log('出库办理', error)
   } finally {
     submitLoading.value = false
+  }
+}
+
+// 项目发生变化
+function handleProjectChange(val) {
+  if (val) {
+    form.value.list = materialList.value.filter(v => {
+      // 甲供无法跨项目出库，因此过滤不是当前项目的甲供材料
+      const flag = v.boolPartyA !== true || (v.boolPartyA === true && v.project.id === val)
+      return flag
+    })
+  } else {
+    form.value.list = materialList.value
   }
 }
 

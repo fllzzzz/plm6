@@ -68,7 +68,7 @@
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按操作人搜索"
+        placeholder="申请人/编辑人/审核人"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />

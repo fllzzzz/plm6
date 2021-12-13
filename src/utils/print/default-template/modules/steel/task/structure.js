@@ -104,7 +104,7 @@ const STEEL_MES_TASK_STRUCTURE = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer', title: '单体：', width: 190, type: typeEnum.MONOMER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'productionLine', title: '生产线：', width: 150, type: typeEnum.PRODUCTION_LINE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'tabulationDate', title: '制表时间：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },

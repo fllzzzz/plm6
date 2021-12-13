@@ -16,7 +16,7 @@
         <el-form-item label="类型" prop="transferType" label-width="55px">
           <common-radio
             v-model="form.transferType"
-            :options="transferTypeEnum.ENUM"
+            :options="transferNormalTypeEnum.ENUM"
             :disabled-val="disabledTransferType"
             type="enum"
             size="small"
@@ -65,7 +65,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" show-factory />
+        <material-base-info-columns :basic-class="basicClass" />
         <!-- 单位及其数量 -->
         <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
         <!-- 次要信息 -->
@@ -117,7 +117,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import { transferTypeEnum } from '@/utils/enum/modules/wms'
+import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
@@ -157,7 +157,7 @@ const materialList = ref([])
 // 提交表单
 const form = ref({
   list: [],
-  transferType: transferTypeEnum.PROJECT_WARE.V
+  transferType: transferNormalTypeEnum.PROJECT_WARE.V
 })
 // 提交loading
 const submitLoading = ref(false)
@@ -178,12 +178,12 @@ const { maxHeight } = useMaxHeight(
 
 // 显示项目选择 ：项目仓，且配置为可出库到其他项目的情况下可选择
 const showProjectSelect = computed(() => {
-  return form.value.transferType === transferTypeEnum.PROJECT_WARE.V
+  return form.value.transferType === transferNormalTypeEnum.PROJECT_WARE.V
 })
 
 // 显示仓库位置选择：归还甲方的情况下无需选择
 const showFactoryAndWare = computed(() => {
-  return form.value.transferType !== transferTypeEnum.RETURN_PARTY_A.V
+  return form.value.transferType !== transferNormalTypeEnum.RETURN_PARTY_A.V
 })
 
 // 备注输入框大小
@@ -206,7 +206,7 @@ watchEffect(() => {
   if (partyANum) {
     disabledTransferType.value = []
   } else {
-    disabledTransferType.value = [transferTypeEnum.RETURN_PARTY_A.V]
+    disabledTransferType.value = [transferNormalTypeEnum.RETURN_PARTY_A.V]
   }
 })
 
@@ -214,7 +214,7 @@ watchEffect(() => {
 function formInit() {
   form.value = {
     list: [],
-    transferType: transferTypeEnum.PROJECT_WARE.V
+    transferType: transferNormalTypeEnum.PROJECT_WARE.V
   }
   formRef.value && formRef.value.resetFields()
 }
@@ -276,7 +276,7 @@ async function submit() {
 
 // 调拨类型发生变化
 function handleTypeChange(type) {
-  if (type === transferTypeEnum.RETURN_PARTY_A.V) {
+  if (type === transferNormalTypeEnum.RETURN_PARTY_A.V) {
     // 归还甲方，筛选为甲供的类型
     form.value.list = materialList.value.filter(v => v.boolPartyA)
   } else {

@@ -19,6 +19,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  showFactory: { // 显示工厂
+    type: Boolean,
+    default: true
+  },
   columns: { // 用于crud组件的列显隐
     type: Object
   }

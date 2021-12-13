@@ -112,7 +112,7 @@ const BRIDGE_MES_PACK = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }}, { show: true, source: dataSourceEnum.SYSTEM.V, key: 'bagSerial', title: '包单号：', width: 190, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }}, { show: true, source: dataSourceEnum.SYSTEM.V, key: 'bagSerial', title: '包单号：', width: 190, type: typeEnum.GUID.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'packUserName', title: '打包人：', width: 135, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'packDate', title: '打包时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },

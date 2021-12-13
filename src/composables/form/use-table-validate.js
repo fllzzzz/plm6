@@ -28,7 +28,7 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
 
     for (const i in list) {
       const row = list[i]
-      delete row.verify // 删除验证字段，避免切换科目级别产生规则混淆，以及进行空行处理
+      delete row.verify // 删除验证字段，以及进行空行处理
 
       // ------ 空行处理 start ------
       // 为了不删除有数据row的同上字段，因此拷贝一个row

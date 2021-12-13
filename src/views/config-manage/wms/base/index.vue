@@ -8,15 +8,18 @@
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <basic-outbound v-permission="permission.steelInboundGet" class="card" />
       </el-col>
+      <el-col :xs="24" :sm="24" :md="12" :lg="8">
+        <party-a-borrow-return v-permission="permission.partyABorrowReturnGet" class="card" />
+      </el-col>
     </el-row>
   </div>
 </template>
 
 <script setup>
-import basicInbound from './module/basic-inbound.vue'
-import steelInbound from './module/steel-inbound.vue'
-import basicOutbound from './module/basic-outbound.vue'
-
+import BasicInbound from './module/basic-inbound.vue'
+import SteelInbound from './module/steel-inbound.vue'
+import BasicOutbound from './module/basic-outbound.vue'
+import PartyABorrowReturn from './module/party-a-borrow-return.vue'
 import { provide } from 'vue'
 
 const permission = {
@@ -25,7 +28,9 @@ const permission = {
   steelInboundGet: ['config_wms_steelInbound:get'],
   steelInboundEdit: ['config_wms_steelInbound:edit'],
   basicOutboundGet: ['config_wms_basicOutbound:get'],
-  basicOutboundEdit: ['config_wms_basicOutbound:edit']
+  basicOutboundEdit: ['config_wms_basicOutbound:edit'],
+  partyABorrowReturnGet: ['config_wms_partyABorrowReturn:get'],
+  partyABorrowReturnEdit: ['config_wms_partyABorrowReturn:edit']
 }
 
 provide('permission', permission)

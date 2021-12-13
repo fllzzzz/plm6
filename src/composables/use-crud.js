@@ -604,6 +604,7 @@ function addCrudBusinessMethod(crud) {
     if (!(await callVmHook(crud, CRUD.HOOK.beforeDetailCancel, data))) {
       return
     }
+    crud.resetRowDetail() // 关闭详情时，清空detail
     crud.detailVisible = false
     await callVmHook(crud, CRUD.HOOK.afterDetailCancel, data)
   }
@@ -1010,7 +1011,7 @@ function addCrudFeatureMethod(crud, data) {
     }
   }
 
-  // 设置列
+  // 设置列 TODO:当设置查询默认值，table通过该默认值设置key的情况下，会出现问题，例：甲供材料借出管理
   const setColumns = () => {
     if (!crud.ref.table) return
     const columns = crud.tableColumns

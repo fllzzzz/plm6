@@ -4,11 +4,12 @@ import request from '@/utils/request'
  * 获取出库记录列表
  * @returns
  */
-export function get() {
+export function get(params) {
   return request({
     module: 'wms',
     url: 'outbound/application/record/raw-materials',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

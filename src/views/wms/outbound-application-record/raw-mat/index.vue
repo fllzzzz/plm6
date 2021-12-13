@@ -100,7 +100,7 @@
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time v-empty-text>{{ row.reviewTime }}</span>
+          <span v-parse-time>{{ row.reviewTime }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->

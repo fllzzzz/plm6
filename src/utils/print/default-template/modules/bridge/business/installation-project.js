@@ -105,7 +105,7 @@ const BRIDGE_MES_BUSINESS_INSTALLATION_PROJECT = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 70, type: typeEnum.DATES.K, format: 'YY/MM/DD' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '类别：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'brMaterialTypeEnum', key: 'L' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'settlementType', title: '结算方式：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'weightMeasurementModeEnum', key: 'SL' }},

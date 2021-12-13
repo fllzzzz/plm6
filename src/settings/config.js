@@ -34,6 +34,9 @@ export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {
 // 基础配置，钢材误差单位g
 export const STEEL_DIFF_UNIT = 'g'
 
+// 基础配置，钢材尺寸误差单位mm
+export const STEEL_SIZE_DIFF_UNIT = 'mm'
+
 // 物料基础单位
 export const MAT_BASE_UNIT = {}
 MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V] = {

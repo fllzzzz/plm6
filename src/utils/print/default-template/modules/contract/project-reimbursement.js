@@ -104,7 +104,7 @@ const PROJECT_REIMBURSEMENT = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 390, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 390, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 50, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
@@ -203,7 +203,7 @@ const PROJECT_REIMBURSEMENT = {
      */
     fields: [
       { show: true, key: 'project.contractNo', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 29, minWidth: 29, type: typeEnum.CONTRACT_NO.K },
-      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 29, minWidth: 29, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: false, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, key: 'project', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, width: 29, minWidth: 29, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, key: 'applicationDate', title: '申请日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 29, minWidth: 29, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, key: 'applicationDept', title: '申请部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K },
       { show: true, key: 'applicantName', title: '申请人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 29, minWidth: 29, type: typeEnum.USER_NAME.K },

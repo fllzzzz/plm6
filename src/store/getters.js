@@ -16,8 +16,6 @@ const getters = {
   sidebarLogo: state => state.settings.sidebarLogo,
   // 项目名称显示方式
   projectNameShowConfig: state => state.settings.projectNameShowConfig,
-  // 项目名称是否显示合同编号
-  projectNameShowContractNo: state => state.settings.projectNameShowContractNo,
   // 显示用户风格设置窗口
   showSettings: state => state.settings.showSettings,
   // 显示标签页

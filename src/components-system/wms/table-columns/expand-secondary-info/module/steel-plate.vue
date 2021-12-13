@@ -13,7 +13,7 @@
       <slot />
     </div>
     <div class="square-content">
-      <steel-plate-square :width="row.width" :length="row.length" />
+      <steel-plate-square v-if="showGraphics" :width="row.width" :length="row.length" />
     </div>
   </div>
 </template>
@@ -41,6 +41,10 @@ const props = defineProps({
     // 显示炉批号
     type: Boolean,
     default: true
+  },
+  showGraphics: { // 显示钢板图形
+    type: Boolean,
+    default: false
   }
 })
 </script>

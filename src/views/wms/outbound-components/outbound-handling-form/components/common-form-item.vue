@@ -68,7 +68,7 @@ const outboundCfg = inject('outboundCfg')
 
 // 显示项目选择 ：项目仓，且配置为可出库到其他项目的情况下可选择
 const showProjectSelect = computed(() => {
-  return !props.material.project || outboundCfg.value.boolCanOutToOtherProject === true
+  return !props.material.project || (outboundCfg.value.boolCanOutToOtherProject === true && props.material.boolPartyA !== true)
 })
 
 // 设置最大数量
