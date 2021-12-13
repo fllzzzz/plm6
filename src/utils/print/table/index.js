@@ -833,7 +833,7 @@ function enumFormat(val, format) {
 function projectNameFormat(val, format = {}) {
   if (!isNotBlank(format)) {
     // 默认只显示项目简称
-    format = { showProjectFullName: false, showContractNo: false, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }
+    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }
   }
   return projectNameFormatter(val, format, format.lineBreak)
 }

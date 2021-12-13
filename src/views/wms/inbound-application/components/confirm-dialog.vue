@@ -62,7 +62,7 @@
         </common-table>
         <!-- 物流信息设置 -->
         <logistics-form
-          v-if="showAmount && form.logistics"
+          v-if="showLogistics"
           ref="logisticsRef"
           class="logistics-form-content"
           :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
@@ -115,13 +115,6 @@ const props = defineProps({
   }
 })
 
-const logisticsRef = ref()
-
-// 显示金额
-const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
-// 显示仓库
-const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
-
 // 表格校验
 const warehouseRules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
@@ -147,6 +140,15 @@ const amount = ref() // 金额
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, closeHook: closeHook })
 const { cu, form, FORM } = regExtra() // 表单
 const { inboundFillWayCfg } = useWmsConfig()
+
+// 物流组件ref
+const logisticsRef = ref()
+// 显示金额
+const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
+// 显示仓库
+const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
+// 显示物流信息
+const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
 
 // 订单信息
 const order = computed(() => {
@@ -230,7 +232,7 @@ FORM.HOOK.beforeSubmit = async () => {
     form.list = dealList
   }
   let logisticsValidResult = true
-  if (showAmount.value && logisticsRef.value) {
+  if (showLogistics.value && logisticsRef.value) {
     logisticsValidResult = await logisticsRef.value.validate()
   }
   return validResult && logisticsValidResult

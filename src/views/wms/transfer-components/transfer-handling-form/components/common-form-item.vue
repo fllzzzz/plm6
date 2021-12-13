@@ -2,7 +2,7 @@
   <el-form-item label="类型" prop="transferType">
     <common-radio
       v-model="currentForm.transferType"
-      :options="transferTypeEnum.ENUM"
+      :options="transferNormalTypeEnum.ENUM"
       :disabled-val="disabledTransferType"
       type="enum"
       size="small"
@@ -51,7 +51,7 @@
 
 <script setup>
 import { defineProps, computed, watchEffect, ref } from 'vue'
-import { transferTypeEnum } from '@/utils/enum/modules/wms'
+import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import FactorySelect from '@/components-system/base/factory-select.vue'
@@ -88,16 +88,16 @@ const disabledTransferType = computed(() => {
   if (props.material && props.material.boolPartyA) {
     return []
   }
-  return [transferTypeEnum.RETURN_PARTY_A.V]
+  return [transferNormalTypeEnum.RETURN_PARTY_A.V]
 })
 
 // 显示项目选择 ：项目仓，且配置为可出库到其他项目的情况下可选择
 const showProjectSelect = computed(() => {
-  return currentForm.value.transferType === transferTypeEnum.PROJECT_WARE.V
+  return currentForm.value.transferType === transferNormalTypeEnum.PROJECT_WARE.V
 })
 
 const showFactoryAndWare = computed(() => {
-  return currentForm.value.transferType !== transferTypeEnum.RETURN_PARTY_A.V
+  return currentForm.value.transferType !== transferNormalTypeEnum.RETURN_PARTY_A.V
 })
 
 // 设置最大数量

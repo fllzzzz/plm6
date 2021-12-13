@@ -1,5 +1,9 @@
 <template>
   <el-form-item label="物料">
+    <template #label>
+      <span>物料</span>
+    <el-tag v-if="material.boolPartyA" type="danger" style="margin-left: 10px;">甲供</el-tag>
+    </template>
     <span v-empty="{ val: material.classifyFullName }" />
   </el-form-item>
   <el-form-item v-if="material.specificationLabels" label="规格">

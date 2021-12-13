@@ -75,7 +75,7 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" :show-factory="showWarehouse" />
+          <material-base-info-columns :basic-class="form.basicClass"/>
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="form.basicClass" />
           <!-- 次要信息 -->
@@ -112,7 +112,7 @@
         <!-- 物流信息设置 -->
         <logistics-form
           ref="logisticsRef"
-          v-if="showAmount && form.logistics"
+          v-if="showLogistics"
           class="logistics-form-content"
           :disabled="formDisabled"
           :form="form.logistics"
@@ -189,6 +189,8 @@ const { inboundFillWayCfg } = useWmsConfig()
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示仓库
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
+// 显示物流信息
+const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
 // 采购订单信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息
@@ -322,7 +324,7 @@ async function validate(form) {
     form.list = dealList
   }
   let logisticsValidResult = true
-  if (showAmount.value && logisticsRef.value) {
+  if (showLogistics.value && logisticsRef.value) {
     logisticsValidResult = await logisticsRef.value.validate()
   }
   return validResult && logisticsValidResult

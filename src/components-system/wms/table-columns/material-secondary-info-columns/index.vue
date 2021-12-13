@@ -9,6 +9,7 @@ import steel from './module/steel.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import rawMat from './module/raw-mat.vue'
+import { STEEL_ENUM } from '@/settings/config'
 
 const props = defineProps({
   basicClass: {
@@ -25,6 +26,9 @@ const props = defineProps({
 })
 
 const comp = computed(() => {
+  if (props.basicClass & STEEL_ENUM) {
+    return steel
+  }
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:

@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :row="row" :show-remark="showRemark" :show-brand="showBrand" :show-batch-no="showBatchNo">
+  <component :is="comp" :row="row" :show-remark="showRemark" :show-brand="showBrand">
     <slot />
   </component>
 </template>
@@ -33,12 +33,16 @@ const props = defineProps({
     // 显示备注
     type: Boolean,
     default: false
-  },
-  showBatchNo: {
-    // 显示炉批号
-    type: Boolean,
-    default: true
   }
+  // showBatchNo: {
+  //   // 显示炉批号
+  //   type: Boolean,
+  //   default: true
+  // },
+  // showGraphics: { // 显示钢板图形
+  //   type: Boolean,
+  //   default: false
+  // }
 })
 
 const comp = computed(() => {

@@ -57,6 +57,13 @@ export default {
           hidden: false,
           component: '/wms/inbound-application-review/raw-mat/index',
           meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatTransferApplicationReview',
+          path: 'transfer-application-review/raw-mat',
+          hidden: false,
+          component: '/wms/transfer-application-review/raw-mat/index',
+          meta: { title: '原材料-调拨审核', icon: 'project', noCache: true }
         }
       ]
     },
@@ -89,6 +96,13 @@ export default {
           hidden: false,
           component: '/wms/outbound-application-record/raw-mat/index',
           meta: { title: '原材料-出库记录', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSPartyABorrowManage',
+          path: 'party-a-borrow-manage',
+          hidden: false,
+          component: '/wms/party-a-borrow-manage/index',
+          meta: { title: '甲供材料借出管理', icon: 'project', noCache: true }
         }
       ]
     },

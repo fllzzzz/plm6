@@ -37,14 +37,14 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" :show-factory="showWarehouse" />
+        <material-base-info-columns :basic-class="detail.basicClass"/>
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
-          <amount-info-columns />
+          <amount-info-columns v-if="!boolPartyA" />
           <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
           <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
             <template #default="{ row }">
@@ -97,23 +97,25 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
+// 采购订单信息
+const order = computed(() => detail.purchaseOrder || {})
 // 显示金额
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
 // 显示仓库
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
+// 是否甲供订单
+const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `入库单：${detail.serialNumber}`
     : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
-// 采购订单信息
-const order = computed(() => detail.purchaseOrder || {})
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.list)
   detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
-    toNum: true
+    toNum: false
   })
 }
 

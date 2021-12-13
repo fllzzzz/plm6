@@ -1,6 +1,6 @@
 // 钢板出库办理
 const steelPlateTransferHandling = {
-  url: '/api/wms/material-transfer/steel-plate',
+  url: '/api/wms/transfer/application/steel-plate',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -13,7 +13,7 @@ const steelPlateTransferHandling = {
 
 // 型钢出库办理
 const sectionSteelTransferHandling = {
-  url: '/api/wms/material-transfer/section-steel',
+  url: '/api/wms/transfer/application/section-steel',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -26,7 +26,7 @@ const sectionSteelTransferHandling = {
 
 // 钢卷出库办理
 const steelCoilTransferHandling = {
-  url: '/api/wms/material-transfer/steel-coil',
+  url: '/api/wms/transfer/application/steel-coil',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -39,7 +39,7 @@ const steelCoilTransferHandling = {
 
 // 辅材出库办理
 const auxMatTransferHandling = {
-  url: '/api/wms/material-transfer/auxiliary-material',
+  url: '/api/wms/transfer/application/auxiliary-material',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -52,7 +52,7 @@ const auxMatTransferHandling = {
 
 // 气体出库办理
 const gasTransferHandling = {
-  url: '/api/wms/material-transfer/gas',
+  url: '/api/wms/transfer/application/gas',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -65,7 +65,7 @@ const gasTransferHandling = {
 
 // 钢板批量出库办理
 const steelPlateBatchTransferHandling = {
-  url: '/api/wms/material-transfer/steel-plate/batch',
+  url: '/api/wms/transfer/application/steel-plate/batch',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -78,7 +78,7 @@ const steelPlateBatchTransferHandling = {
 
 // 型钢批量出库办理
 const sectionSteelBatchTransferHandling = {
-  url: '/api/wms/material-transfer/section-steel/batch',
+  url: '/api/wms/transfer/application/section-steel/batch',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -91,7 +91,7 @@ const sectionSteelBatchTransferHandling = {
 
 // 钢卷批量出库办理
 const steelCoilBatchTransferHandling = {
-  url: '/api/wms/material-transfer/steel-coil/batch',
+  url: '/api/wms/transfer/application/steel-coil/batch',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -104,7 +104,7 @@ const steelCoilBatchTransferHandling = {
 
 // 辅材批量出库办理
 const auxMatBatchTransferHandling = {
-  url: '/api/wms/material-transfer/auxiliary-material/batch',
+  url: '/api/wms/transfer/application/auxiliary-material/batch',
   method: 'put',
   timeout: 1000,
   response: () => {
@@ -117,7 +117,7 @@ const auxMatBatchTransferHandling = {
 
 // 气体批量出库办理
 const gasBatchTransferHandling = {
-  url: '/api/wms/material-transfer/gas/batch',
+  url: '/api/wms/transfer/application/gas/batch',
   method: 'put',
   timeout: 1000,
   response: () => {
