@@ -31,7 +31,7 @@
           <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.outWarehouseQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.outboundQuantity }}/{{ item.compareQuantity }}</span>
           </div>
         </el-tooltip>
       </template>
@@ -50,7 +50,7 @@ import { ref } from 'vue'
 
 import { DP } from '@/settings/config'
 
-import useDashboardIndex from '@compos/mes/manufactures-manage/use-dashboard-index'
+import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
@@ -74,9 +74,9 @@ const { crud, CRUD } = useCRUD(
     title: '围护看板',
     permission: { ...permission },
     crudApi: { get },
-    optShow: { ...optShow }
-    // requiredQuery: ['districtId'],
-    // queryOnPresenterCreated: false
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

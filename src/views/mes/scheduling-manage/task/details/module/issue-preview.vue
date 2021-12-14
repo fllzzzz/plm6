@@ -34,9 +34,9 @@ type="primary"
           <span>{{ emptyTextFormatter(scope.row.projectName) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="districtName" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
+      <el-table-column prop="areaName" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.districtName) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.areaName) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="productSerialNumber" :show-overflow-tooltip="true" label="编号" min-width="100px">

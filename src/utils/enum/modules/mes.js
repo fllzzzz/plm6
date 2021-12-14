@@ -49,6 +49,13 @@ const componentTypeEnum = {
 }
 constantize(componentTypeEnum)
 
+// 构件工序
+const artifactProcessEnum = {
+  ONCE: { L: '一次工序', K: 'ONCE', V: componentTypeEnum.ASSEMBLE.V },
+  TWICE: { L: '二次工序', K: 'TWICE', V: componentTypeEnum.ARTIFACT.V }
+}
+constantize(artifactProcessEnum)
+
 // 含有工序的材料类型
 const processMaterialListTypeEnum = {
   ARTIFACT: { L: '构件', K: 'ARTIFACT', V: componentTypeEnum.ARTIFACT.V, T: '' },
@@ -79,10 +86,16 @@ const mesEnclosureTypeEnum = {
   SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
   TRUSS_FLOOR_PLATE: floorPlateTypeEnum.TRUSS_FLOOR_PLATE,
   PRESSED_FLOOR_PLATE: floorPlateTypeEnum.PRESSED_FLOOR_PLATE,
-  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 1 << 5 },
-  FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.PRESSED_FLOOR_PLATE.V }
+  FOLDING_PIECE: { L: '折边件', K: 'FOLDING_PIECE', V: 1 << 5 }
+  // FLOOR_PLATE: { L: '楼承板', K: 'FLOOR_PLATE', V: floorPlateTypeEnum.TRUSS_FLOOR_PLATE.V | floorPlateTypeEnum.PRESSED_FLOOR_PLATE.V }
 }
 constantize(mesEnclosureTypeEnum)
+
+const projectComponentTypeEnum = {
+  ARTIFACT: { L: '结构', K: 'ARTIFACT', V: 1 << 0 },
+  ...mesEnclosureTypeEnum.ENUM
+}
+constantize(projectComponentTypeEnum)
 
 // 任务下发状态类型
 const taskIssueTypeEnum = {
@@ -163,6 +176,14 @@ const improveStatusEnum = {
 }
 constantize(improveStatusEnum)
 
+// 油漆类型
+const paintingTypeEnum = {
+  PRIMER: { L: '底漆', K: 'PRIMER', V: 1 << 0 },
+  INTERMEDIATE_PAINT: { L: '中间漆', K: 'INTERMEDIATE_PAINT', V: 1 << 1 },
+  TOPCOAT: { L: '面漆', K: 'TOPCOAT', V: 1 << 2 }
+}
+constantize(paintingTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -183,7 +204,10 @@ export {
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
-  improveStatusEnum
+  improveStatusEnum,
+  projectComponentTypeEnum,
+  artifactProcessEnum,
+  paintingTypeEnum
 }
 
 export default {
@@ -206,5 +230,8 @@ export default {
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
-  improveStatusEnum
+  improveStatusEnum,
+  projectComponentTypeEnum,
+  artifactProcessEnum,
+  paintingTypeEnum
 }

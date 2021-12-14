@@ -1,11 +1,11 @@
 <template>
-  <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" fixed="left">
+  <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
       <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" fixed="left">
+  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" :fixed="fixed">
     <template #default="{ row }">
       <table-cell-tag
         v-if="showPartyATransfer && row.partyATransferType"
@@ -28,6 +28,7 @@
     :basic-class="props.basicClass"
     :spec-merge="props.specMerge"
     :show-factory="props.showFactory"
+    :fixed="fixed"
   />
 </template>
 
@@ -77,6 +78,9 @@ const props = defineProps({
     // 显示 出库方式 （整料半出）
     type: Boolean,
     default: false
+  },
+  fixed: { // 定位
+    type: String
   }
 })
 

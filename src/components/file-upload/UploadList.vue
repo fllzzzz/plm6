@@ -161,7 +161,7 @@ function toDelete(index) {
 }
 
 function handleSuccess(response) {
-  uploadRef.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   if (response && response.code === 20000) {
     const data = response.data
@@ -173,8 +173,16 @@ function handleSuccess(response) {
   }
 }
 
+function handleClear() {
+  // TODO: 清空无效
+  // uploadRef.value.clearFiles()
+  if (uploadRef.value && uploadRef.value.upload) {
+    uploadRef.value.uploadRef.fileList.length = 0
+  }
+}
+
 function handleError() {
-  uploadRef.value.clearFiles()
+  handleClear()
   uploadLoading.value = false
   ElMessage.error('上传失败')
 }

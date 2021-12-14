@@ -66,15 +66,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('producedMete')"
-        key="producedMete"
-        prop="producedMete"
+        v-if="columns.visible('totalInProductionQuantity')"
+        key="totalInProductionQuantity"
+        prop="totalInProductionQuantity"
         :show-overflow-tooltip="true"
         label="已生产量"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.producedMete) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.totalInProductionQuantity) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -90,15 +90,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('changeType')"
-        key="changeType"
-        prop="changeType"
+        v-if="columns.visible('changTypeText')"
+        key="changTypeText"
+        prop="changTypeText"
         :show-overflow-tooltip="true"
         label="变更类型"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.changeType) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.changTypeText) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -132,16 +132,16 @@
         </template>
       </el-table-column>
     </common-table>
-    <handle-drawer v-model:visible="handleVisible" :info="detailInfo" />
+    <handle-drawer v-model:visible="handleVisible" :info="detailInfo" @refresh="crud.toQuery"/>
     <detail-drawer v-model:visible="detailVisible" :info="detailInfo" />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/mes/changed-manage/artifact'
+import crudApi from '@/api/mes/changed-manage/common'
 import { reactive, ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
 
+import { abnormalChangeTypeEnum } from '@enum-ms/mes'
 import { emptyTextFormatter } from '@data-type/index'
 import { projectNameFormatter } from '@/utils/project'
 import { parseTime } from '@/utils/date'
@@ -175,7 +175,8 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: false,
+    dataPath: ''
   },
   tableRef
 )
@@ -187,36 +188,15 @@ const detailVisible = ref(false)
 let detailInfo = reactive({})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
-    // 未生产数总和 = 任务数量 - 已生产数量
-    v.unproducedMete = v.taskMete - v.producedMete || 0
-    // 需要减少的任务数 = 任务数量 - 变更后的数量
-    v.needDecreaseTaskMete = v.taskMete - v.newQuantity || 0
-    // 条件一: 未生产数总和 >= 需要减少的任务数 => 进行减少任务操作(处理总数=需要减少的任务数)
-    if (v.unproducedMete >= v.needDecreaseTaskMete) {
-      v.canHandleTotalMete = v.needDecreaseTaskMete
-    }
-    // 条件二: 未生产数总和 < 需要减少的任务数 => 进行异常处理（可报废或二次利用）操作
-    if (v.unproducedMete < v.needDecreaseTaskMete) {
-      // 异常处理总数 = 已生产数量 - 变更后的数量
-      v.canHandleTotalMete = v.producedMete - v.newQuantity
-    }
+  res.data = res.data.map((v) => {
+    v.changTypeText = abnormalChangeTypeEnum.VL[v.changeType]
+    v.canHandleTotalMete = v.newQuantity - v.totalInProductionQuantity
     return v
   })
 }
 
 function toHandle(row) {
-  if (row.isFirst) {
-    ElMessageBox.confirm('处理异常前请通知车间将相关构件进行异常上报后再进行异常处理！', '提示', {
-      confirmButtonText: '仍要处理',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      openDrawer(handleVisible, row)
-    })
-  } else {
-    openDrawer(handleVisible, row)
-  }
+  openDrawer(handleVisible, row)
 }
 
 function toDetail(row) {

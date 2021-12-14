@@ -19,7 +19,7 @@ const getArtifactPackList = {
             'id': 1,
             'name': '单体1'
           },
-          'district': {
+          'area': {
             'id': 1,
             'name': '区域'
           },
@@ -53,7 +53,7 @@ const getArtifactPackList = {
             'id': 1,
             'name': '单体1'
           },
-          'district': {
+          'area': {
             'id': 1,
             'name': '区域'
           },
@@ -104,7 +104,7 @@ const getEnclosurePackList = {
             'id': 1,
             'name': '单体1'
           },
-          'district': {
+          'area': {
             'id': 1,
             'name': '区域'
           },

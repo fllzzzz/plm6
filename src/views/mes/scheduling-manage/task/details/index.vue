@@ -32,14 +32,14 @@
       </template>
     </el-table-column>
     <el-table-column
-      v-if="columns.visible('districtName')"
-      prop="districtName"
+      v-if="columns.visible('areaName')"
+      prop="areaName"
       :show-overflow-tooltip="true"
       label="单体区域"
       min-width="140px"
     >
       <template v-slot="scope">
-        <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.districtName) }}</span>
+        <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.areaName) }}</span>
       </template>
     </el-table-column>
     <template v-for="item in needTableColumns" :key="item.field">

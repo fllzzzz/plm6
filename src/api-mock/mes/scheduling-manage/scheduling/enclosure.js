@@ -8,7 +8,7 @@ const getEnclosure = {
   timeout: 1000,
   response: (res) => {
     switch (Number(res.query.category)) {
-      case mesEnclosureTypeEnum.FLOOR_PLATE.V:
+      case mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V:
         return {
           'code': 20000,
           'message': '成功',
@@ -21,7 +21,7 @@ const getEnclosure = {
               'id': 1,
               'projectId': 39,
               'monomerId': 5,
-              'districtId': 8,
+              'areaId': 8,
               'boolStatusEnum': true,
               'category': 4,
               'name': '开口式楼层板',
@@ -47,7 +47,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -62,7 +62,7 @@ const getEnclosure = {
               'id': 3,
               'projectId': 39,
               'monomerId': 5,
-              'districtId': 8,
+              'areaId': 8,
               'boolStatusEnum': true,
               'category': 1,
               'name': '韩德板',
@@ -88,7 +88,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -103,7 +103,7 @@ const getEnclosure = {
               'id': 4,
               'projectId': 39,
               'monomerId': 5,
-              'districtId': 8,
+              'areaId': 8,
               'boolStatusEnum': true,
               'category': 2,
               'name': '屋面板',
@@ -129,7 +129,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -144,7 +144,7 @@ const getEnclosure = {
               'id': 6,
               'projectId': 39,
               'monomerId': 5,
-              'districtId': 8,
+              'areaId': 8,
               'boolStatusEnum': true,
               'category': 6,
               'name': '窗台度',
@@ -170,7 +170,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -185,7 +185,7 @@ const getEnclosure = {
               'id': 8,
               'projectId': 39,
               'monomerId': 5,
-              'districtId': 8,
+              'areaId': 8,
               'boolStatusEnum': true,
               'category': 3,
               'name': '桁架式楼承板',
@@ -211,7 +211,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }

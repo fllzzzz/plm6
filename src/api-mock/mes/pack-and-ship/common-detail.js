@@ -14,7 +14,7 @@ export default {
         'id': 1,
         'name': '单体' + '@cword(2,15)'
       },
-      'district': {
+      'area': {
         'id': 1,
         'name': '区域' + '@cword(2,15)'
       },
@@ -32,6 +32,7 @@ export default {
       'totalNetWeight|1-100000.1-8': 10.00000000,
       'grossWeight|1-100000.1-8': 20.00000000,
       'totalGrossWeight|1-100000.1-8': 1.00000000,
+      'totalWeight|1-100000.1-8': 1.00000000,
       'quantity|1-100': 1,
       'shipQuantity|1-100': 1,
       'inQuantity|1-100': 1,
@@ -52,7 +53,7 @@ export default {
         'id': 1,
         'name': '单体' + '@cword(2,15)'
       },
-      'district': {
+      'area': {
         'id': 1,
         'name': '区域' + '@cword(2,15)'
       },
@@ -65,6 +66,8 @@ export default {
       'serialNumber': '@word(2,15)',
       'specification': '@word',
       'length|1-100000.1-8': 100.00000000,
+      'totalLength|1-100000.1-8': 100.00000000,
+      'totalArea|1-100000.1-8': 100.00000000,
       'width|1-100000.1-8': 100.00000000,
       'thickness|1-100000.1-8': 100.00000000,
       'material': 'Q335B',
@@ -97,7 +100,9 @@ export default {
       'totalCollectionAmount|1-10000.1-8': 0,
       'totalDeliveryAmount|1-10000.1-8': 0,
       'contractReceivableAmount|1-10000.1-8': 0,
-      'billingReceivableAmount|1-10000.1-8': 0
+      'billingReceivableAmount|1-10000.1-8': 0,
+      'structureMeasureMode|1': [1, 2],
+      'enclosureMeasureMode|1': [1, 2]
     },
     'remark': 'remark',
     'status': false

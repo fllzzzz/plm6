@@ -20,7 +20,7 @@ import { ElRadioGroup } from 'element-plus'
 const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
-  modelValue: [Number, String],
+  modelValue: [Number, String, Boolean],
   type: {
     // dict , enum, other
     type: String,

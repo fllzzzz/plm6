@@ -23,6 +23,8 @@
 import { ref } from 'vue'
 import moment from 'moment'
 
+import { componentTypeEnum } from '@enum-ms/mes'
+
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
@@ -42,5 +44,7 @@ CRUD.HOOK.beforeToQuery = () => {
   } else {
     query.date = undefined
   }
+  query.productType = componentTypeEnum.MACHINE_PART.V
 }
+
 </script>

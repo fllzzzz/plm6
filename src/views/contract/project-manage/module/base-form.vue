@@ -1,0 +1,416 @@
+<template>
+  <el-form
+    ref="baseRef"
+    :model="form"
+    :rules="rules"
+    inline
+    size="small"
+    label-position="right"
+    label-width="104px"
+  >
+    <div>
+      <div class="form-row">
+        <el-form-item label="合同编号" prop="serialNumber">
+          <el-input
+            v-model.trim="form.serialNumber"
+            class="input-underline"
+            placeholder="合同编号"
+            style="width:200px"
+          />
+        </el-form-item>
+        <el-form-item label="项目名称" prop="name">
+          <el-input
+            v-model.trim="form.name"
+            class="input-underline"
+            placeholder="项目名称"
+            style="width:200px"
+          />
+        </el-form-item>
+        <el-form-item label="项目简称" prop="shortName">
+          <el-input
+            v-model.trim="form.shortName"
+            class="input-underline"
+            placeholder="项目简称"
+          />
+        </el-form-item>
+      </div>
+      <div class="form-row">
+        <el-form-item label="开工时间" prop="startDate">
+          <el-date-picker
+            v-model="form.startDate"
+            type="date"
+            class="input-underline"
+            value-format="x"
+            placeholder="选择约定开工日期"
+            style="width:200px"
+            disabled
+          />
+        </el-form-item>
+        <el-form-item label="完工日期" prop="endDate">
+          <el-date-picker
+            v-model="form.endDate"
+            type="date"
+            class="input-underline"
+            value-format="x"
+            placeholder="选择约定完成日期"
+            style="width:200px"
+            :disabledDate="endDateOption"
+          />
+        </el-form-item>
+        <el-form-item label="总工期(天)" prop="totalDuration">
+          <span v-if="form.startDate && form.endDate">{{dateDifference(form.startDate, form.endDate)}}</span>
+        </el-form-item>
+      </div>
+      <div class="form-row">
+        <el-form-item label="项目省市区" prop="region">
+          <region-cascader
+            class="input-underline"
+            ref="region"
+            style="width:200px"
+            v-model="form.region"
+            clearable
+            filterable
+            @change="handleRegionChange"
+          />
+          <!-- <region-cascader
+            class="input-underline"
+            :value.sync="form.region"
+            clearable
+            filterable
+            style="width:200px"
+            placeholder="项目省市区"
+            @change="handleRegionChange"
+          /> -->
+        </el-form-item>
+        <el-form-item label="详细地址" prop="address" label-width="80px">
+          <el-input
+            v-model="form.address"
+            placeholder="项目详细地址"
+            class="input-underline"
+            style="width:520px"
+          />
+        </el-form-item>
+      </div>
+      <el-divider><span class="title">负责人</span></el-divider>
+      <div class="form-row">
+        <el-form-item label="项目经理" prop="projectManagerId">
+          <user-dept-cascader
+            v-model="form.projectManagerId"
+            filterable
+            :collapse-tags="false"
+            clearable
+            show-all-levels
+            class="input-underline"
+            style="width:200px"
+            placeholder="项目经理"
+          />
+        </el-form-item>
+        <el-form-item label="业务负责人1" prop="businessLeaderIId">
+          <user-dept-cascader
+            v-model="form.businessLeaderId"
+            filterable
+            :collapse-tags="false"
+            clearable
+            show-all-levels
+            class="input-underline"
+            style="width:200px"
+            placeholder="业务负责人1"
+          />
+        </el-form-item>
+        <el-form-item label="业务负责人2" prop="businessLeaderIIId">
+          <user-dept-cascader
+            v-model="form.businessLeaderTwoId"
+            filterable
+            :collapse-tags="false"
+            clearable
+            show-all-levels
+            class="input-underline"
+            style="width:200px"
+            placeholder="业务负责人2"
+          />
+        </el-form-item>
+      </div>
+      <el-divider><span class="title">合同金额</span></el-divider>
+      <div class="form-row">
+        <el-form-item label="合同金额(元)" prop="contractAmount">
+          <el-input-number
+            v-model="form.contractAmount"
+            :step="1"
+            :min="0"
+            :max="999999999999"
+            :precision="DP.YUAN"
+            :controls="false"
+            controls-position="right"
+            class="input-underline"
+            style="width:200px"
+            placeholder="合同金额(元)"
+          />
+        </el-form-item>
+        <el-form-item label="预付款(元)" prop="prepayments">
+          <el-input-number
+            v-model="form.prepayments"
+            :step="1"
+            :min="0"
+            :max="999999999999"
+            :precision="DP.YUAN"
+            :controls="false"
+            controls-position="right"
+            class="input-underline"
+            style="width:200px"
+            placeholder="预付款(元)"
+          />
+        </el-form-item>
+        <el-form-item label="管理费(元)" prop="managementFeeRate">
+          <el-input
+            v-model="managementFee"
+            class="input-underline"
+            :readonly="true"
+            style="width:110px"
+            placeholder="先输入费率"
+          />
+          <el-input-number
+            v-model="form.managementFeeRate"
+            :step="1"
+            :min="0"
+            :max="100"
+            :precision="DP.ACCOUNTING"
+            :controls="false"
+            controls-position="right"
+            class="input-underline"
+            style="width:80px"
+            placeholder="0-100"
+          />%
+        </el-form-item>
+      </div>
+      <div class="form-row">
+        <el-form-item label="保证金(元)" prop="marginAmount">
+          <el-input-number
+            v-model="form.marginAmount"
+            :step="1"
+            :min="0"
+            :max="999999999999"
+            :precision="DP.YUAN"
+            :controls="false"
+            controls-position="right"
+            class="input-underline"
+            style="width:200px"
+            placeholder="保证金(元)"
+          />
+        </el-form-item>
+        <el-form-item label="保证金类型" prop="marginType">
+          <common-select
+            v-model="form.marginType"
+            :options="dict.margin_type"
+            type="dict"
+            size="small"
+            clearable
+            placeholder="保证金类型"
+            class="input-underline"
+            style="width:200px"
+          />
+        </el-form-item>
+        <el-form-item label="币种" prop="currencyType">
+          <common-select
+            v-model="form.currencyType"
+            :options="dict.currency_type"
+            type="dict"
+            size="small"
+            clearable
+            placeholder="币种"
+            class="input-underline"
+            style="width:200px"
+          />
+        </el-form-item>
+      </div>
+    </div>
+    <el-divider><span class="title">合同附件</span></el-divider>
+    <div class="upload-box">
+      <upload-list
+        :show-download="!!form.id"
+        :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
+        v-model:files="form.attachments"
+        empty-text="暂未上传合同附件"
+      />
+    </div>
+  </el-form>
+</template>
+
+<script setup>
+import { ref, defineProps, watch, computed } from 'vue'
+import { dateDifference } from '@/utils/date'
+import regionCascader from '@comp-base/region-cascader'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import useDict from '@compos/store/use-dict'
+import { fileClassifyEnum } from '@enum-ms/file'
+import uploadList from '@/components/file-upload/uploadList'
+import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+import { DP } from '@/settings/config'
+
+const baseRef = ref()
+const dict = useDict(['margin_type','currency_type'])
+
+const defaultForm = {
+  id: undefined,
+  serialNumber: undefined, // 合同编号
+  name: undefined, // 项目名称
+  shortName: undefined, // 项目简称
+  region: [], // 项目省市区
+  countryId: undefined, // 国家
+  provinceId: undefined, // 省
+  cityId: undefined, // 市
+  regionId: undefined, // 区
+  address: undefined, // 项目详细地址
+  startDate: String(new Date().getTime()), // 项目开始时间
+  endDate: undefined, // 项目结束时间
+  contractAmount: undefined, // 合同金额
+  prepayments: undefined, // 预付款
+  managementFeeRate: undefined, // 管理费率
+  marginAmount: undefined, // 保证金额
+  marginType: undefined, // 保证金类型
+  currencyType: undefined, // 币种
+  projectManagerId: undefined, // 项目经理
+  businessLeaderId: undefined, // 业务负责人1
+  businessLeaderTwoId: undefined, // 业务负责人2
+  attachments: [] // 附件
+}
+
+const form = ref(JSON.parse(JSON.stringify(defaultForm)))
+
+const rules= {
+  serialNumber: [
+    { required: true, message: '请填写合同编号', trigger: 'blur' },
+    { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
+  ],
+  name: [
+    { required: true, message: '请填写项目名称', trigger: 'blur' },
+    { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
+  ],
+  shortName: [
+    { required: true, message: '请填写项目简称', trigger: 'blur' },
+    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+  ],
+  contractAmount: [
+    { required: true, message: '请填写合同金额', trigger: 'blur' }
+  ],
+  address: [
+    { max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }
+  ],
+  signingAddress: [
+    { max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }
+  ]
+}
+
+const props = defineProps({
+  formData: {
+    type: Object,
+    default: () => {}
+  }
+})
+
+watch(
+  () => props.formData,
+  (val) => {
+    resetForm(val)
+  },
+  { deep: true, immediate: true }
+)
+
+const managementFee=computed(()=>{
+  if (form.value.managementFeeRate && form.value.contractAmount) {
+    return (form.value.managementFeeRate * form.value.contractAmount / 100).toFixed(DP.YUAN)
+  }
+  return undefined
+})
+
+/**
+ * 重置表单
+ */
+function resetForm(data) {
+  // 清除表单信息
+  if (baseRef.value) {
+    baseRef.value.resetFields()
+  }
+  let formkey
+  if (data && Object.keys(data).length > 0) {
+    formkey = data
+  } else {
+    formkey = JSON.parse(JSON.stringify(defaultForm))
+  }
+  const crudFrom = form.value
+  for (const key in crudFrom) {
+    crudFrom[key] = undefined
+  }
+  for (const key in formkey) {
+    crudFrom[key] = formkey[key]
+  }
+  useWatchFormValidate(baseRef, form.value)
+}
+
+async function validateForm() {
+  try {
+    const valid = await baseRef.value.validate()
+    if (valid) {
+      const data = JSON.parse(JSON.stringify(form.value))
+      data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
+      Object.assign(props.formData, data)
+    }
+    return valid
+  } catch (error) {
+    console.log('error', error)
+    return false
+  }
+}
+
+function endDateOption(time) {
+  if (form.value.startDate) {
+    return time.getTime() - 8.64e6 < form.value.startDate
+  } else {
+    return false
+  }
+}
+
+function handleRegionChange(val) {
+  form.value.countryId = undefined
+  form.value.provinceId = undefined
+  form.value.cityId = undefined
+  form.value.regionId = undefined
+  val && val.forEach((v, i) => {
+    if (i === 0) {
+      form.value.countryId = v
+    }
+    if (i === 1) {
+      form.value.provinceId = v
+    }
+    if (i === 2) {
+      form.value.cityId = v
+    }
+    if (i === 3) {
+      form.value.regionId = v
+    }
+  })
+}
+
+defineExpose({
+  validateForm
+})
+</script>
+<style lang="scss" scoped>
+.upload-box {
+  box-sizing: border-box;
+  padding: 0 25px;
+}
+>>>.input-underline {
+  // width: calc((95vw - 40px)/3);
+  width: 200px;
+  margin-right: 0;
+  input{
+    border-top:0;
+    border-left:0;
+    border-right:0;
+    border-radius: 0;
+  }
+}
+.form-row {
+  width:100%
+}
+</style>

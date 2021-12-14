@@ -55,7 +55,7 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass" />
+          <material-base-info-columns :basic-class="form.basicClass" fixed="left" />
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="form.basicClass" />
           <!-- 次要信息 -->

@@ -1,17 +1,10 @@
 <template>
-  <common-drawer
-    ref="drawerRef"
-    title="零件详情"
-    v-model="drawerVisible"
-    direction="rtl"
-    :before-close="handleClose"
-    size="40%"
-  >
+  <common-drawer ref="drawerRef" title="零件详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
     <template #content>
       <div class="tip">
         <span>* 注意：</span>
         <span>
-          可操作的零件数量总和为{{
+          可修改的零件数量总和为{{
             info.canHandleTotalMete
           }}，请谨慎操作！</span
         >
@@ -28,9 +21,14 @@
             <span>{{ scope.row.lineName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="productionMete" :show-overflow-tooltip="true" label="已生产">
+        <el-table-column prop="taskQuantity" :show-overflow-tooltip="true" label="任务数" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.productionMete }}</span>
+            <span>{{ scope.row.taskQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="producedQuantity" :show-overflow-tooltip="true" label="已生产" align="center">
+          <template v-slot="scope">
+            <span>{{ scope.row.producedQuantity }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -39,7 +37,7 @@
 </template>
 
 <script setup>
-import { extraTaskList } from '@/api/mes/changed-manage/artifact'
+import { taskList } from '@/api/mes/changed-manage/machine-part'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -94,7 +92,7 @@ async function fetchList() {
   let _list = []
   try {
     tableLoading.value = true
-    const { content } = await extraTaskList()
+    const { content } = await taskList()
     _list = content
   } catch (error) {
     console.log('获取处理列表失败')

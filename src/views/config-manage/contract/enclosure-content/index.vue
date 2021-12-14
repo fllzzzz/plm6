@@ -8,10 +8,10 @@
         <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
             <span style="margin-right:5px;">详情</span>
-            <el-tag v-if="currentLine.type!=3 && currentLine.remark" size="medium">{{currentLine.remark}}</el-tag>
-            <el-tag v-if="currentLine.type===3 && currentLine.code" size="medium">{{currentLine.code}}</el-tag>
+            <el-tag v-if="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V && currentLine.remark" size="medium">{{currentLine.remark}}</el-tag>
+            <el-tag v-if="currentLine.type===TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V && currentLine.code" size="medium">{{currentLine.code}}</el-tag>
             <common-button
-              v-if="currentLine.type!=3 && currentLine.name && dictDetailRef && checkPermission(dictDetailRef.permission.add)"
+              v-if="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V && currentLine.name && dictDetailRef && checkPermission(dictDetailRef.permission.add)"
               size="mini"
               style="float: right; padding: 6px 10px; margin-bottom: 0px"
               type="primary"
@@ -21,8 +21,8 @@
               新增
             </common-button>
           </template>
-          <trussDetailConfig v-show="currentLine.type===3" ref="trussRef" :line="currentLine" />
-          <dictDetailConfig v-show="currentLine.type!=3" ref="dictDetailRef" :line="currentLine" />
+          <trussDetailConfig v-show="currentLine.type===TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V" ref="trussRef" :line="currentLine" />
+          <dictDetailConfig v-show="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V" ref="dictDetailRef" :line="currentLine" />
         </el-card>
       </el-col>
     </el-row>
@@ -32,7 +32,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
-
+import { TechnologyTypeEnum } from '@enum-ms/contract'
 import dictConfig from './dict'
 import trussDetailConfig from './truss-detail'
 import dictDetailConfig from './dict-detail'

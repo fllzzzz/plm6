@@ -25,3 +25,29 @@ export function getBoardForEnclosure(params) {
     params
   })
 }
+
+/**
+ *
+ * 构件-出入库
+ */
+export function getBoardForArtifactSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'warehouse/artifact/summary',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 围护-出入库
+ */
+export function getBoardForEnclosureSummary(params) {
+  return request({
+    module: 'mes',
+    url: 'warehouse/enclosure/summary',
+    method: 'get',
+    params
+  })
+}

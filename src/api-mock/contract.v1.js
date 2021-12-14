@@ -17,7 +17,27 @@ const allProjectSimple = {
             'name': '牙牙乐生产工厂',
             'projectType': projectTypeEnum.STEEL.V,
             'shortName': '牙牙乐',
-            'status': projectStatusEnum.PROCESS.V
+            'status': projectStatusEnum.PROCESS.V,
+            'startDate': 1633881600000,
+            'endDate': 1640880000000,
+            'businessType': 1,
+            'projectContentList': [{
+              'no': 5,
+              'name': '主结构加工',
+              'id': 1
+            }, {
+              'no': 6,
+              'name': '檩条加工',
+              'id': 2
+            }, {
+              'no': 3,
+              'name': '桁架楼承板加工',
+              'id': 5
+            }, {
+              'no': 4,
+              'name': '压型楼承板加工',
+              'id': 6
+            }]
           },
           {
             'contractNo': '@guid',
@@ -36,7 +56,7 @@ const allProjectSimple = {
             'projectType': projectTypeEnum.ENCLOSURE.V,
             'shortName': '美的电器加工车间',
             'status': projectStatusEnum.PROCESS.V
-          }
+          },
         ],
         totalElements: 3
       }
@@ -61,7 +81,27 @@ const projectSimple = {
             'name': '牙牙乐生产工厂',
             'projectType': projectTypeEnum.STEEL.V,
             'shortName': '牙牙乐',
-            'status': projectStatusEnum.PROCESS.V
+            'status': projectStatusEnum.PROCESS.V,
+            'startDate': 1633881600000,
+            'endDate': 1640880000000,
+            'businessType': 1,
+            'projectContentList': [{
+              'no': 5,
+              'name': '主结构加工',
+              'id': 1
+            }, {
+              'no': 6,
+              'name': '檩条加工',
+              'id': 2
+            }, {
+              'no': 3,
+              'name': '桁架楼承板加工',
+              'id': 5
+            }, {
+              'no': 4,
+              'name': '压型楼承板加工',
+              'id': 6
+            }]
           },
           {
             'contractNo': '@guid',
@@ -80,7 +120,7 @@ const projectSimple = {
             'projectType': projectTypeEnum.ENCLOSURE.V,
             'shortName': '美的电器加工车间',
             'status': projectStatusEnum.SUSPEND.V
-          }
+          },
         ],
         totalElements: 3
       }

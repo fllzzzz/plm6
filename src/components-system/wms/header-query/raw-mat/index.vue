@@ -1,7 +1,9 @@
 <template>
   <div class="first-line flex-rbc">
     <div>
+      <slot name="firstItem" />
       <common-radio-button
+        v-if="showProjectWarehouseType"
         v-model="queryVO.projectWarehouseType"
         :options="projectWarehouseTypeEnum.ENUM"
         default
@@ -80,6 +82,10 @@ const props = defineProps({
   },
   toQuery: {
     type: Function
+  },
+  showProjectWarehouseType: {
+    type: Boolean,
+    default: false
   }
 })
 

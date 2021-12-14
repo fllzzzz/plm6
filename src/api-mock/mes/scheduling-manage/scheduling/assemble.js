@@ -15,7 +15,7 @@ const getAssemble = {
           'id': 3,
           'projectId': 1,
           'monomerId': 1,
-          'districtId': 1,
+          'areaId': 1,
           'serialNumber': 'L-115',
           'quantity': 3,
           'producedQuantity': 0,
@@ -34,13 +34,13 @@ const getAssemble = {
           ],
           'projectName': 'fsfsfsfs',
           'monomerName': '单体一',
-          'districtName': '区域一'
+          'areaName': '区域一'
         }, {
           'createTime': null,
           'id': 4,
           'projectId': 1,
           'monomerId': 1,
-          'districtId': 1,
+          'areaId': 1,
           'serialNumber': 'L-116',
           'quantity': 2,
           'producedQuantity': 0,
@@ -51,13 +51,13 @@ const getAssemble = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'fsfsfsfs',
           'monomerName': '单体一',
-          'districtName': '区域一'
+          'areaName': '区域一'
         }, {
           'createTime': null,
           'id': 11,
           'projectId': 38,
           'monomerId': 3,
-          'districtId': 4,
+          'areaId': 4,
           'serialNumber': 'L-115',
           'quantity': 3,
           'producedQuantity': 0,
@@ -68,13 +68,13 @@ const getAssemble = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'hgg',
           'monomerName': '单体#1',
-          'districtName': '结构区域1'
+          'areaName': '结构区域1'
         }, {
           'createTime': null,
           'id': 12,
           'projectId': 38,
           'monomerId': 3,
-          'districtId': 4,
+          'areaId': 4,
           'serialNumber': 'L-116',
           'quantity': 5,
           'producedQuantity': 0,
@@ -85,7 +85,7 @@ const getAssemble = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'hgg',
           'monomerName': '单体#1',
-          'districtName': '结构区域1'
+          'areaName': '结构区域1'
         }]
       }
     }

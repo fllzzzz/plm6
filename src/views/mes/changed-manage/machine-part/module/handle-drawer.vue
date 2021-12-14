@@ -1,13 +1,9 @@
 <template>
-  <common-drawer ref="drawerRef" title="处理列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
-    <template #titleRight>
-      <common-button size="mini" type="primary" :loading="submitLoading" @click="submit">提交</common-button>
-      <common-button size="mini" type="warning" @click="reset">重置</common-button>
-    </template>
+  <common-drawer ref="drawerRef" title="零件处理列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
     <template #content>
       <div class="tip">
         <span>* 注意：</span>
-        <span> 可操作的零件数量总和为{{ info.canHandleTotalMete }}，请谨慎操作！</span>
+        <span> 可修改的零件数量总和为{{ canHandleTotalMete }}，请谨慎操作！</span>
       </div>
       <common-table ref="tableRef" v-loading="tableLoading" :data="canHandleList" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -21,20 +17,42 @@
             <span>{{ scope.row.lineName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="teamName" :show-overflow-tooltip="true" label="班组">
+        <el-table-column prop="taskQuantity" :show-overflow-tooltip="true" label="任务数" align="center" min-width="150px">
           <template v-slot="scope">
-            <span>{{ scope.row.teamName }}</span>
+            <div v-if="scope.row.isEdit">
+              <el-input-number
+                class="align-left"
+                v-model="scope.row.quantity"
+                placeholder="请输入任务数"
+                controls-position="right"
+                style="width: 100%"
+                size="mini"
+                :min="scope.row.taskQuantity - Math.min(canHandleTotalMete, scope.row.taskQuantity - scope.row.producedQuantity)"
+                :max="scope.row.taskQuantity"
+              />
+            </div>
+            <span v-else>{{ scope.row.taskQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column prop="producedQuantity" :show-overflow-tooltip="true" label="已生产" align="center">
           <template v-slot="scope">
+            <span>{{ scope.row.producedQuantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="170">
+          <template v-slot="scope">
+            <template v-if="scope.row.isEdit">
+              <common-button :loading="submitLoading" :disabled="scope.row.taskQuantity === scope.row.quantity" size="mini" type="success" @click="submit(scope.row)"> 确认 </common-button>
+              <common-button size="mini" type="warning" @click="cancelIt(scope.row)"> 取消 </common-button>
+            </template>
             <common-button
+              v-else
               type="primary"
               size="mini"
-              icon="el-icon-arrow-right"
-              :disabled="remainHandleMete <= 0"
-              @click="addRow(scope.$index, scope.row)"
-            />
+              :disabled="canHandleTotalMete <= 0 || scope.row.taskQuantity - scope.row.producedQuantity <= 0 || hasEdit"
+              @click="editIt(scope.row)"
+              >修改</common-button
+            >
           </template>
         </el-table-column>
       </common-table>
@@ -43,8 +61,8 @@
 </template>
 
 <script setup>
-import { exceptionList, extraTaskList, change } from '@/api/mes/changed-manage/artifact'
-import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
+import { taskList, change } from '@/api/mes/changed-manage/machine-part'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { deepClone } from '@data-type/index'
@@ -54,7 +72,7 @@ import useVisible from '@compos/use-visible'
 
 const tableRef = ref()
 const drawerRef = ref()
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -80,15 +98,16 @@ const { maxHeight } = useMaxHeight(
 )
 const tableLoading = ref(false)
 const submitLoading = ref(false)
-const originList = ref([])
+const hasEdit = ref(false)
 const canHandleList = ref([])
-const previewList = ref([])
+const canHandleTotalMete = ref()
 
 watch(
   () => props.visible,
   (visible) => {
     if (visible) {
       fetchList()
+      canHandleTotalMete.value = props.info.canHandleTotalMete
     } else {
       init()
     }
@@ -96,70 +115,58 @@ watch(
   { immediate: true }
 )
 
-const alreadyHandleMete = computed(() => {
-  return previewList.value.reduce((pre, curr) => {
-    if (curr.dealMete) {
-      return pre + curr.dealMete
-    } else {
-      return pre
-    }
-  }, 0)
-})
-
-const remainHandleMete = computed(() => {
-  return props.info.canHandleTotalMete - alreadyHandleMete.value
-})
-
 function init() {
   canHandleList.value = []
-  previewList.value = []
-}
-
-function reset() {
-  canHandleList.value = deepClone(originList.value)
-  previewList.value = []
+  if (canHandleTotalMete.value !== props.info.canHandleTotalMete) {
+    emit('refresh')
+  }
 }
 
 async function fetchList() {
   let _list = []
   try {
     tableLoading.value = true
-    const { content } = await extraTaskList()
+    const { content } = await taskList()
     _list = content.map((v) => {
-      v.canHandleMete = v.extraQuantity
+      v.submitLoading = false
+      v.isEdit = false
       return v
     })
   } catch (error) {
     console.log('获取处理列表失败', error)
   } finally {
-    originList.value = deepClone(_list)
     canHandleList.value = deepClone(_list)
     tableLoading.value = false
   }
 }
 
-function addRow(index, row) {
-  const _quantity = row.canHandleMete || 0
-  if (_quantity > remainHandleMete.value) {
-    row.dealMete = remainHandleMete.value
-  } else {
-    row.dealMete = _quantity
-  }
-  previewList.value.push({ ...row })
-  canHandleList.value.splice(index, 1)
+function editIt(row) {
+  row.isEdit = true
+  row.quantity = row.taskQuantity
+  hasEdit.value = true
 }
 
-async function submit() {
+function cancelIt(row) {
+  row.isEdit = false
+  hasEdit.value = false
+}
+
+async function submit(row) {
   try {
     submitLoading.value = true
-    const data = {}
-    await change(data)
+    await change({
+      abnormalId: row.id,
+      quantity: row.quantity
+    })
     ElNotification({
       title: '零件变更处理成功',
       type: 'success',
       duration: 2500
     })
-    handleClose()
+    row.isEdit = false
+    hasEdit.value = false
+    canHandleTotalMete.value = canHandleTotalMete.value - (row.taskQuantity - row.quantity)
+    row.taskQuantity = row.quantity
   } catch (error) {
     console.log('变更处理失败', error)
   } finally {

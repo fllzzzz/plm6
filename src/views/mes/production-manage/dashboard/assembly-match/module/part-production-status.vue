@@ -1,0 +1,106 @@
+<template>
+  <common-drawer
+    ref="drawerRef"
+    title="零件生产状态"
+    v-model="drawerVisible"
+    :contentLoading="tableLoading"
+    direction="rtl"
+    :before-close="handleClose"
+    size="50%"
+  >
+    <template #content>
+      <div>
+        <span>构件：</span>
+        <span v-for="n in names" :key="n.name">
+          <el-tag :type="n.tagType" effect="plain" style="margin-right:5px;margin-bottom:5px;">{{ n.name }}</el-tag>
+        </span>
+      </div>
+      <common-table :data="list" :max-height="maxHeight" style="width: 100%;margin-top:10px;">
+        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="140">
+          <template v-slot="scope">
+            <span>{{ scope.row.serialNumber }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140">
+          <template v-slot="scope">
+            <span>{{ scope.row.specification }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="100">
+          <template v-slot="scope">
+            <span>{{ scope.row.quantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="producedQuantity" prop="producedQuantity" :show-overflow-tooltip="true" label="已生产" min-width="100">
+          <template v-slot="scope">
+            <span>{{ scope.row.producedQuantity }}</span>
+          </template>
+        </el-table-column>
+      </common-table>
+    </template>
+  </common-drawer>
+</template>
+
+<script setup>
+import { detail } from '@/api/mes/production-manage/dashboard/assembly-match'
+import { defineProps, defineEmits, ref, watch } from 'vue'
+
+import useMaxHeight from '@compos/use-max-height'
+import useVisible from '@compos/use-visible'
+
+const drawerRef = ref()
+const emit = defineEmits(['update:visible'])
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false
+  },
+  ids: {
+    type: Array,
+    default: () => []
+  },
+  names: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+
+// 高度
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    clientHRepMainH: true
+  },
+  drawerRef
+)
+
+watch(
+  () => props.visible,
+  (visible) => {
+    if (visible) {
+      fetchList()
+    }
+  },
+  { immediate: true }
+)
+
+const tableLoading = ref(false)
+const list = ref([])
+
+async function fetchList() {
+  try {
+    tableLoading.value = true
+    const data = await detail({ ids: props.ids })
+    list.value = data
+  } catch (error) {
+    console.log('获取零件生产状态', error)
+  } finally {
+    tableLoading.value = false
+  }
+}
+</script>

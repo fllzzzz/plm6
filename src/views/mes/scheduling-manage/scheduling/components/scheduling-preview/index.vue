@@ -77,7 +77,7 @@ type="primary"
       <el-table-column fixed label="序号" type="index" align="center" width="60" />
       <!-- <el-table-column prop="projectName" fixed :show-overflow-tooltip="true" label="项目" width="120px" />
       <el-table-column prop="monomerName" fixed :show-overflow-tooltip="true" label="单体" width="120px" />
-      <el-table-column prop="districtName" fixed :show-overflow-tooltip="true" label="区域" width="120px" /> -->
+      <el-table-column prop="areaName" fixed :show-overflow-tooltip="true" label="区域" width="120px" /> -->
       <template v-for="item in needTableColumns" :key="item.field">
         <el-table-column
           v-if="item.toFixed"
@@ -267,7 +267,7 @@ async function submit() {
         list.push({
           productId: i.id,
           projectId: i.projectId,
-          districtId: i.districtId,
+          areaId: i.areaId,
           monomerId: i.monomerId,
           productType: productType,
           processType: processType,

@@ -9,6 +9,8 @@ import configRouter from '@/router/modules/config'
 import mesRouter from '@/router/modules/mes'
 // import projectRouter from '@/router/modules/project'
 import wmsRouter from '@/router/modules/wms'
+import planRouter from '@/router/modules/plan'
+import contractRouter from '@/router/modules/contract'
 
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
@@ -115,7 +117,7 @@ const loadMenus = async (next, to) => {
   try {
     // 菜单：content
     // const { content = [] } = await fetchMenus()
-    const content = [configRouter, wmsRouter, mesRouter]
+    const content = [configRouter, wmsRouter, mesRouter, planRouter, contractRouter]
     await store.dispatch('permission/generateRoutes', content)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

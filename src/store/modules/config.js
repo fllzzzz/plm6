@@ -21,6 +21,7 @@ import { setEmptyArr2Undefined, tree2list } from '@/utils/data-type/tree'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
+import { monomerAll } from '@/api/plan/monomer'
 
 // TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
@@ -46,6 +47,7 @@ const state = {
   taxRateKV: {}, // 税率列表KV  key:基础分类，value：税率列表
   unclosedRequisitions: [], // 未关闭的申购单
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
+  monomers: {}, //单体
   loaded: {
     // 接口是否加载
     factories: false,
@@ -376,7 +378,13 @@ const actions = {
       allInterFace.push(ps)
     }
     await Promise.all(allInterFace)
-  }
+  },
+  //单体
+  async fetchMonomer({ state }, projectId) {
+    const monomers = state.monomers
+    const { content = [] } = await monomerAll(projectId)
+    monomers[projectId] = content
+  },
 }
 
 // 获取规格列表（将后端的规格转换为各种常用格式）

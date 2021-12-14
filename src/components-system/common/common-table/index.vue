@@ -67,10 +67,11 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, defineEmits, computed, ref } from 'vue'
+import { defineExpose, defineProps, defineEmits, watch, computed, ref } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { ElTable } from 'element-plus'
+import { isNotBlank } from '@/utils/data-type'
 
 const emit = defineEmits([
   'select',
@@ -266,8 +267,25 @@ const tableRef = ref()
 
 const { tableBorder, tableStripe } = mapGetters(['tableBorder', 'tableStripe'])
 
-const tBorder = computed(() => (props.border ? props.border : tableBorder.value))
-const tStripe = computed(() => (props.stripe ? props.stripe : tableStripe.value))
+const tBorder = computed(() => (isNotBlank(props.border) ? props.border : tableBorder.value))
+const tStripe = computed(() => (isNotBlank(props.stripe) ? props.stripe : tableStripe.value))
+
+// 监听表格初始化时，是否展开所有行
+watch(
+  [() => props.defaultExpandAll, () => props.data],
+  ([all, data]) => {
+    if (props.expandRowKeys) {
+      const keys = props.expandRowKeys
+      keys.length = 0
+      if (all && Array.isArray(data)) {
+        data.forEach((row) => {
+          keys.push(row[props.rowKey])
+        })
+      }
+    }
+  },
+  { immediate: true }
+)
 
 // 获取表格中的列
 // 不能直接 const colums = tableRef.value.$refs.tableHeader.columns.setup时，ref里面还是空的
@@ -397,7 +415,8 @@ function headerDragend(newWidth, oldWidth, column, event) {
 }
 
 // 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
-function expandChange(row, expandedRowsOrExpanded) { // 配合组件el-expand-table-column 使用
+function expandChange(row, expandedRowsOrExpanded) {
+  // 配合组件el-expand-table-column 使用
   const keys = props.expandRowKeys
   const index = keys.indexOf(row[props.rowKey])
   if (index > -1) {

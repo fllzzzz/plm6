@@ -1,0 +1,114 @@
+<template>
+  <div class="head-container">
+    <div v-show="crud.searchToggle">
+      <common-radio-button
+        v-model="query.productType"
+        :options="artifactProcessEnum.ENUM"
+        size="small"
+        class="filter-item"
+        type="enum"
+        @change="crud.toQuery"
+      />
+      <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
+      <el-input
+        v-model="query.name"
+        size="small"
+        placeholder="输入名称搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.serialNumber"
+        size="small"
+        placeholder="输入编号搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.specification"
+        size="small"
+        placeholder="输入规格搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model="query.material"
+        size="small"
+        placeholder="输入材质搜索"
+        style="width: 170px"
+        class="filter-item"
+        clearable
+        @keyup.enter="crud.toQuery"
+      />
+      <rrOperation />
+    </div>
+    <crudOperation :show-grid="false" :show-refresh="false">
+      <template #optRight>
+        <color-card
+          class="filter-item"
+          v-model:value="query.processingStatus"
+          :colors="colors"
+          color-border
+          select-able
+          @change="crud.toQuery"
+        />
+      </template>
+      <template #viewLeft>
+        <scale class="filter-item" v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
+      </template>
+    </crudOperation>
+  </div>
+</template>
+
+<script setup>
+import { ref, defineExpose, defineEmits } from 'vue'
+
+import { artifactProcessEnum } from '@enum-ms/mes'
+
+import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
+import { regHeader } from '@compos/use-crud'
+import crudOperation from '@crud/CRUD.operation'
+import rrOperation from '@crud/RR.operation'
+import ColorCard from '@comp/ColorCard'
+import Scale from '@comp/Scale'
+import factorySelect from '@comp-base/factory-select'
+
+const defaultQuery = {
+  name: undefined,
+  serialNumber: undefined,
+  specification: undefined,
+  material: undefined,
+  processingStatus: { value: undefined, resetAble: false },
+  monomerId: { value: undefined, resetAble: false },
+  areaId: { value: undefined, resetAble: false },
+  factoryId: { value: undefined, resetAble: false },
+  status: { value: undefined, resetAble: false },
+  productType: artifactProcessEnum.ONCE.V
+}
+const { crud, query, CRUD } = regHeader(defaultQuery)
+
+const emit = defineEmits('load')
+
+const boxScale = ref(1)
+const { colors, boxZoomOut, getColor } = useDashboardHeader({ colorCardTitles: ['未生产', '生产中', '已完成'], emit, crud })
+
+CRUD.HOOK.handleRefresh = (crud, res) => {
+  res.data.content = res.data.content.map((v) => {
+    v.detailLoading = false
+    v.hasDetail = false
+    v.compareQuantity = v.taskQuantity
+    v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
+    return v
+  })
+}
+
+defineExpose({
+  boxScale
+})
+</script>

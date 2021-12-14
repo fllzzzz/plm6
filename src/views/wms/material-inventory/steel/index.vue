@@ -27,7 +27,7 @@
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" fixed="left" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" :show-unit="false" />
       <!-- 次要信息 -->
@@ -108,9 +108,9 @@ const tableRef = ref()
 const headerRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '入库记录',
+    title: '钢材物料仓',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: [],
     requiredQuery: ['basicClass'],
     permission: { ...permission },
     optShow: { ...optShow },

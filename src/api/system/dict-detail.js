@@ -15,6 +15,7 @@ export function getAll(name) {
     module: 'system',
     url: 'dictDetail/all',
     method: 'get',
+    cancelKey: false,
     params
   })
 }

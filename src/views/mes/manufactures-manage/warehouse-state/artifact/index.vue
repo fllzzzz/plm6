@@ -101,16 +101,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('area')"
-        key="area"
-        prop="area"
+        v-if="columns.visible('surfaceArea')"
+        key="surfaceArea"
+        prop="surfaceArea"
         sortable="custom"
         :label="`面积\n(㎡)`"
         align="left"
         min-width="80px"
       >
         <template v-slot="scope">
-          {{ toFixed(scope.row.area, DP.COM_AREA__M2) }}
+          {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -138,18 +138,18 @@
         min-width="100px"
       />
       <el-table-column
-        v-if="columns.visible('intWarehouseQuantity')"
-        key="intWarehouseQuantity"
-        prop="intWarehouseQuantity"
+        v-if="columns.visible('inboundQuantity')"
+        key="inboundQuantity"
+        prop="inboundQuantity"
         :show-overflow-tooltip="true"
         label="入库数量"
         align="center"
         min-width="100px"
       />
       <el-table-column
-        v-if="columns.visible('outWarehouseQuantity')"
-        key="outWarehouseQuantity"
-        prop="outWarehouseQuantity"
+        v-if="columns.visible('outboundQuantity')"
+        key="outboundQuantity"
+        prop="outboundQuantity"
         :show-overflow-tooltip="true"
         label="出库数量"
         align="center"
@@ -244,9 +244,9 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    // requiredQuery: ['districtId'],
-    invisibleColumns: ['area', 'drawingNumber']
-    // queryOnPresenterCreated: false
+    requiredQuery: ['areaId'],
+    invisibleColumns: ['surfaceArea', 'drawingNumber'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

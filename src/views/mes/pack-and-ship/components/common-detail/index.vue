@@ -13,7 +13,6 @@
       <slot name="titleRight" />
     </template>
     <div class="head-container">
-      <slot name="contract" :contract="contract"></slot>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button
           v-if="packTypeEnum.STRUCTURE.V & productType"
@@ -35,7 +34,6 @@
         >
       </el-radio-group>
       <common-radio-button
-        v-if="!isShowPrice"
         v-model="monomerStatus"
         :options="SummaryStatusEnum"
         type="enum"
@@ -48,7 +46,6 @@
       v-loading="tableLoading"
       :maxHeight="maxHeight"
       :list="list"
-      :isShowPrice="isShowPrice"
       :isSuspend="monomerStatus === SummaryStatusEnum.SUSPEND.V"
     />
   </common-dialog>
@@ -99,10 +96,6 @@ const props = defineProps({
   quantityFelid: {
     type: String,
     default: 'shipQuantity'
-  },
-  isShowPrice: {
-    type: Boolean,
-    default: false
   }
 })
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -120,7 +113,6 @@ const tableLoading = ref(false)
 const artifactList = ref([])
 const enclosureList = ref([])
 const auxList = ref([])
-const contract = ref({})
 const curProductType = ref()
 
 const productType = computed(() => {
@@ -153,7 +145,6 @@ const list = computed(() => {
           v.showQuantity = v[props.quantityFelid]
           v.weight = (props.weightType === weightTypeEnum.NET.V ? v.netWeight : v.grossWeight) || 0
           v.totalWeight = convertUnits(v.weight * v.showQuantity, 'kg', 't')
-          if (props.isShowPrice) v.totalPrice = v.unitPrice * v.weight || 0
           return v
         })
       )
@@ -162,9 +153,7 @@ const list = computed(() => {
         enclosureList.value &&
         enclosureList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
-          v.processingPrice = v.processingPrice || v.processingPrice === 0 ? v.processingPrice : undefined
           v.totalLength = convertUnits(v.length * v.showQuantity, 'mm', 'm')
-          if (props.isShowPrice) v.totalPrice = v.unitPrice * v.length || 0
           return v
         })
       )
@@ -174,7 +163,6 @@ const list = computed(() => {
         auxList.value.map((v) => {
           v.showQuantity = v[props.quantityFelid]
           v.fullClassName = `${v.firstName}/${v.secondName}/${v.thirdName}`
-          if (props.isShowPrice) v.totalPrice = v.unitPrice * v.showQuantity || 0
           return v
         })
       )
@@ -200,7 +188,6 @@ async function fetchDetail() {
     artifactList.value = data.artifactList || []
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []
-    contract.value = data.review || {}
   } catch (error) {
     console.log('详情', error)
   } finally {
