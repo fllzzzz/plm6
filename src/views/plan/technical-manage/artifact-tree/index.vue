@@ -208,14 +208,14 @@ function handleRowClassName({ row, rowIndex }) {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   let index = 1
   data.data.content = data.data.content.map(v => {
-    v.type = 1
+    v.dataType = 1
     v.rowKey = `${v.id}`
     v.index = index
     index++
     let childIndex = 1
     if (v.machinePartDTOList && v.machinePartDTOList.length > 0) {
       v.children = v.machinePartDTOList.map(child => {
-        child.type = 2
+        child.dataType = 2
         child.rowKey = `${v.id}__${child.id}`
         child.childIndex = childIndex
         childIndex++

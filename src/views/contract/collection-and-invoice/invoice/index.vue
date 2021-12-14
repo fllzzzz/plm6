@@ -20,7 +20,7 @@
         <div>{{ scope.row.shortName }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="250">
+    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="150">
       <template v-slot="scope">
         <span class="project-name">{{ scope.row.contractAmount }}</span>
       </template>
@@ -146,6 +146,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
+import useDict from '@compos/store/use-dict'
 import { projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
 
 // crud交由presenter持有
@@ -162,6 +163,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '开票填报',
@@ -170,7 +172,8 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({

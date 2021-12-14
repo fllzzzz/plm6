@@ -170,7 +170,7 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? toThousand(detail.contractAmount.toFixed(DP.YUAN)):'' }}</span>
+              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -188,7 +188,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.prepayments? toThousand(detail.prepayments.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ detail.prepayments? detail.prepayments.toThousand(): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -201,7 +201,7 @@
                 placeholder="先输入费率"
               />
               <template v-else>
-                <span>{{ managementFee? toThousand(managementFee): '' }}</span>
+                <span>{{ managementFee? managementFee.toThousand(): '' }}</span>
               </template>
             </div>
             <div class="input-underline" style="display:inline-block;width:130px">
@@ -238,7 +238,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? toThousand(detail.marginAmount.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -256,7 +256,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.marginType && dict && dict.label">{{ dict.label['margin_type'][detail.marginType] }}</span>
+                <span v-if="detail.marginType && dict && dict.label && dict.label['margin_type']">{{ dict.label['margin_type'][detail.marginType] }}</span>
               </template>
             </div>
           </el-form-item>
@@ -274,7 +274,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.currencyType && dict && dict.label">{{ dict.label['currency_type'][detail.currencyType]}}</span>
+                <span v-if="detail.currencyType && dict && dict.label && dict.label['currency_type']">{{ dict.label['currency_type'][detail.currencyType]}}</span>
               </template>
             </div>
           </el-form-item>
