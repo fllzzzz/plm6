@@ -308,6 +308,8 @@ async function getContractInfo(id){
     form.paymentBankAccount = contractInfo.value.customerBankCode
     form.paymentDepositBank = contractInfo.value.customerBankName
     form.paymentUnit = contractInfo.value.customerUnit
+    form.collectionUnitId = ''
+    collectionCompanyChange(form.collectionUnitId)
   }
 }
 
@@ -326,7 +328,7 @@ function collectionCompanyChange(val){
 
 function handelCellClassName(){
 
-}
+} 
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

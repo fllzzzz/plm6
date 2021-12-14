@@ -13,6 +13,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" sortable="custom" :show-overflow-tooltip="true" label="名称" min-width="120" />

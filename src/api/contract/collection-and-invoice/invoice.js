@@ -18,4 +18,14 @@ export function add(data) {
   })
 }
 
+
+//审核
+export function editStatus(id,status) {
+  return request({
+    module: 'contract',
+    url: `contract/invoice/audit/invoiceId/${id}/status/${status}`,
+    method: 'put'
+  })
+}
+
 export default { get, add }
