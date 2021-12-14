@@ -24,7 +24,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="150">
       <template v-slot="scope">
-        <span>{{ scope.row.project? scope.row.project.contractAmount: '' }}</span>
+        <span>{{ scope.row.contractAmount? scope.row.contractAmount.toThousand(): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('haveCollectionAmount')" key="haveCollectionAmount" prop="haveCollectionAmount" label="已收款金额(元)" align="center" min-width="120">
@@ -104,7 +104,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('auditStatus')" key="auditStatus" prop="auditStatus" label="状态" align="center" width="110px">
       <template v-slot="scope">
-        <!-- <div>{{ auditTypeEnum.ENUM.VL[scope.row.auditStatus] }}</div> -->
+        <div>{{ scope.row.auditStatus? auditTypeEnum.VL[scope.row.auditStatus]: ''}}</div>
       </template>
     </el-table-column>
     <!--编辑与删除-->
@@ -116,7 +116,7 @@
     >
       <template v-slot="scope">
         <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
-        <common-button icon="el-icon-s-check" type="primary" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')"/>
+        <common-button icon="el-icon-s-check" type="primary" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V"/>
       </template>
     </el-table-column>
   </common-table>
@@ -147,7 +147,7 @@ import { toThousand } from '@/utils/data-type/number'
 
 // crud交由presenter持有
 const permission = {
-  get: ['collection:add'],
+  get: ['collection:get'],
   add: ['collection:add'],
   edit: ['collection:edit'],
   audit: ['collection:audit']
@@ -189,6 +189,14 @@ function openDetail(row,type){
   showType.value = type
   detailVisble.value = true
 }
+
+CRUD.HOOK.handleRefresh = (crud,data)=>{
+  data.data.content = data.data.content.map(v => {
+    v.projectId = v.project.id
+    return v
+  })
+}
+
 </script>
 
 <style lang="scss" scoped>

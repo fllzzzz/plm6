@@ -17,6 +17,7 @@
       row-key="rowKey"
       default-expand-all
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column key="selection" type="selection" width="55" />

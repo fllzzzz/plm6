@@ -9,7 +9,7 @@
     size="80%"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
+      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU" v-if="form.changeAbleStatus!=1">确认</common-button>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px">
@@ -65,7 +65,7 @@
                 placeholder="请填写构件毛重"
                 controls-position="right"
                 style="width: 270px;"
-                :disabled="form.changeAbleStatus!=4"
+                disabled
               />
             </div>
           </el-form-item>
@@ -111,7 +111,7 @@
                 placeholder="请填写构件净重"
                 controls-position="right"
                 style="width: 270px;"
-                :disabled="form.changeAbleStatus!=4"
+                disabled
               />
             </div>
           </el-form-item>
@@ -328,11 +328,11 @@
             :maxlength="500"
             placeholder="请填写原因描述"
             style="width: 320px;"
-            :disabled="form.changeAbleStatus!=4"
+            :disabled="form.changeAbleStatu==1"
           />
         </el-form-item>
         <el-form-item label="附件上传" prop="files" style="position:relative;width:45%;">
-          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V" :limit="1" :disabled="form.changeAbleStatus!=4" />
+          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V" :limit="1" :disabled="form.changeAbleStatus==1" />
         </el-form-item>
       </el-form>
     </template>
@@ -509,7 +509,7 @@ function deleteItems(){
 }
 
 function quantityChange(){
-  if( crud.form.newQuantity != preVal.value){
+  if( crud.form.newQuantity && crud.form.newQuantity != preVal.value){
     crud.form.machinePartDTOList.map(val=>{
       val.quantity = val.unitData * crud.form.newQuantity
     })

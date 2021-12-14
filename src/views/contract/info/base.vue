@@ -424,7 +424,6 @@ function resetForm() {
   }
   form.value  = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(baseRef, form.value)
-  useWatchFormValidate(baseRef, form.value)
 }
 
 async function validateForm() {
