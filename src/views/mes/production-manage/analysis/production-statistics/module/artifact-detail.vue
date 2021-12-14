@@ -1,18 +1,11 @@
 <template>
-  <common-drawer
-    ref="drawerRef"
-    :title="`生产线：${info.workshop?.name}>${info.productionLine?.name}`"
-    v-model="drawerVisible"
-    direction="rtl"
-    :before-close="handleClose"
-    size="70%"
-  >
-    <template #titleRight> </template>
+  <common-drawer ref="drawerRef" title="生产统计明细-构件" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
     <template #content>
       <common-table
         v-loading="tableLoading"
-        show-summary
         :summary-method="getSummaries"
+        show-summary
+        v-if="drawerVisible"
         :data="list"
         :max-height="maxHeight"
         style="width: 100%"
@@ -23,42 +16,59 @@
             <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="120px">
+        <el-table-column key="monomer.name" prop="monomer.name" :show-overflow-tooltip="true" label="单体">
+          <template v-slot="scope">
+            <span>{{ scope.row.monomer.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称">
           <template v-slot="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="plate" prop="plate" :show-overflow-tooltip="true" label="板型" min-width="120px">
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号">
           <template v-slot="scope">
-            <span>{{ scope.row.plate }}</span>
+            <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`单长(mm)`" align="center" min-width="80px">
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质">
           <template v-slot="scope">
-            <span>{{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column key="completeQuantity" prop="completeQuantity" label="数量" align="center" min-width="80px" />
-        <el-table-column key="completeArea" prop="completeArea" :label="`总面积(㎡)`" align="center" min-width="80px">
-          <template v-slot="scope">
-            <span>{{ convertUnits(scope.row.completeArea,'mm²','㎡', DP.COM_AREA__M2) }}</span>
+            <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          key="completeLength"
-          prop="completeLength"
+          key="totalQuantity"
+          prop="totalQuantity"
           :show-overflow-tooltip="true"
-          :label="`总长度(m)`"
+          :label="`任务总数`"
           align="center"
-          min-width="80px"
+          width="90"
         >
           <template v-slot="scope">
-            <span>{{ convertUnits(scope.row.completeLength,'mm','m', DP.MES_ENCLOSURE_L__M) }}</span>
+            <span>{{ scope.row.totalQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="completeTime" prop="completeTime" :show-overflow-tooltip="true" label="生产日期" align="center" width="160px">
+        <el-table-column
+          key="totalMete"
+          prop="totalMete"
+          :show-overflow-tooltip="true"
+          :label="`任务总量`"
+          align="center"
+          width="90"
+        >
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.completeTime }}</span>
+            <span>{{ scope.row.totalMete }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          key="processSequence"
+          prop="processSequence"
+          :show-overflow-tooltip="true"
+          label="【工序 │ 数量】"
+          min-width="400px"
+        >
+          <template v-slot="scope">
+            <span v-html="scope.row.processSequence" />
           </template>
         </el-table-column>
       </common-table>
@@ -67,14 +77,13 @@
 </template>
 
 <script setup>
-import { detail } from '@/api/mes/team-report/enclosure-team'
+import { getDetail as detail } from '@/api/mes/production-manage/analysis/production-statistics'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
-import { projectNameFormatter } from '@/utils/project'
-import { deepClone } from '@data-type/index'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
-import { convertUnits } from '@/utils/convert/unit'
+// import { convertUnits } from '@/utils/convert/unit'
+import { projectNameFormatter } from '@/utils/project'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -85,10 +94,6 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
-  },
-  info: {
-    type: Object,
-    default: () => {}
   }
 })
 
@@ -105,36 +110,19 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
+const query = inject('query')
+const tableLoading = ref(false)
+const list = ref([])
+
 watch(
-  () => [props.visible, props.info],
-  ([visible]) => {
+  () => props.visible,
+  (visible) => {
     if (visible) {
       fetchList()
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 )
-
-const query = inject('query')
-const tableLoading = ref(false)
-const list = ref([])
-async function fetchList() {
-  try {
-    tableLoading.value = true
-    const _query = Object.assign(deepClone(query), {
-      factoryId: props.info.factory?.id,
-      productType: props.info.productType,
-      productionLineId: props.info.productionLine?.id,
-      projectId: props.info.project?.id
-    })
-    const content = await detail(_query)
-    list.value = content
-  } catch (error) {
-    console.log('获取围护班组详情', error)
-  } finally {
-    tableLoading.value = false
-  }
-}
 
 function getSummaries(param) {
   const { columns, data } = param
@@ -144,7 +132,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (['completeQuantity'].includes(column.property)) {
+    if (index === 6 && index === 7) {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
@@ -159,5 +147,26 @@ function getSummaries(param) {
     }
   })
   return sums
+}
+
+async function fetchList() {
+  try {
+    tableLoading.value = true
+    const { artifactDetailsAnalysisDTOList } = await detail(query)
+    list.value = artifactDetailsAnalysisDTOList.map((v) => {
+      v.totalQuantity = v.surplusTaskQuantity + v.taskQuantity
+      v.totalMete = toFixed(v.surplusNetWeight + v.taskNetWeight, DP.COM_WT__KG)
+      v.processSequence = v.processSummaryList
+        .map((v) => {
+          return `<span>【${v.name} │ <span style="color: #67C23A;">${v.completeQuantity}</span>】</span>`
+        })
+        .join('<span>→</span>')
+      return v
+    })
+  } catch (error) {
+    console.log('分组获取生产统计', error)
+  } finally {
+    tableLoading.value = false
+  }
 }
 </script>

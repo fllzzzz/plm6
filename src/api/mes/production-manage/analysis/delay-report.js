@@ -2,12 +2,12 @@ import request from '@/utils/request'
 
 /**
  *
- * 获取班组报表-围护
+ * 获取生产统计汇总
  */
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'team_form/enclosure',
+    url: 'analysis/hysteresis',
     method: 'get',
     params
   })
@@ -15,12 +15,12 @@ export function get(params) {
 
 /**
  *
- * 获取班组报表-围护-详情
+ * 获取生产统计详情
  */
-export function detail(params) {
+export function getDetail(params) {
   return request({
     module: 'mes',
-    url: 'team_form/enclosure/details',
+    url: 'analysis/hysteresis/details',
     method: 'get',
     params
   })

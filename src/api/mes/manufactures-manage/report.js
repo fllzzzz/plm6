@@ -2,30 +2,24 @@ import request from '@/utils/request'
 
 /**
  *
- * 获取班组报表-围护
+ * 入发存报表
  */
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'team_form/enclosure',
+    url: 'warehouse/report',
     method: 'get',
     params
   })
 }
 
-/**
- *
- * 获取班组报表-围护-详情
- */
-export function detail(params) {
+export function getSummary(params) {
   return request({
     module: 'mes',
-    url: 'team_form/enclosure/details',
+    url: 'warehouse/report/summary',
     method: 'get',
     params
   })
 }
 
-export default {
-  get
-}
+export default { get }

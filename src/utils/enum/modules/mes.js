@@ -97,6 +97,13 @@ const projectComponentTypeEnum = {
 }
 constantize(projectComponentTypeEnum)
 
+// 报表展示 结构、围护
+const reportComponentTypeEnum = {
+  ARTIFACT: { L: '结构', K: 'ARTIFACT', V: componentTypeEnum.ARTIFACT.V },
+  ENCLOSURE: componentTypeEnum.ENCLOSURE
+}
+constantize(reportComponentTypeEnum)
+
 // 任务下发状态类型
 const taskIssueTypeEnum = {
   NOT_ISSUED: { L: '未下发', K: 'NOT_ISSUED', V: false, T: 'danger' },
@@ -207,7 +214,8 @@ export {
   improveStatusEnum,
   projectComponentTypeEnum,
   artifactProcessEnum,
-  paintingTypeEnum
+  paintingTypeEnum,
+  reportComponentTypeEnum
 }
 
 export default {
@@ -233,5 +241,6 @@ export default {
   improveStatusEnum,
   projectComponentTypeEnum,
   artifactProcessEnum,
-  paintingTypeEnum
+  paintingTypeEnum,
+  reportComponentTypeEnum
 }

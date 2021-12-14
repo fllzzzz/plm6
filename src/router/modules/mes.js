@@ -461,6 +461,17 @@ export default {
           icon: 'project',
           noCache: true
         }
+      },
+      {
+        name: 'MesProductionDelayReport',
+        path: 'delay-report',
+        hidden: false,
+        component: '/mes/production-manage/analysis/delay-report/index',
+        meta: {
+          title: '迟滞报表',
+          icon: 'project',
+          noCache: true
+        }
       }]
     }
     ]
@@ -555,6 +566,13 @@ export default {
         icon: 'project',
         noCache: true
       }
+    },
+    {
+      name: 'MesTeamReportWagesAdjust',
+      path: 'wages-adjust',
+      hidden: false,
+      component: '/mes/team-report/wages-adjust/index',
+      meta: { title: '工价调整', icon: 'project', noCache: true }
     }
       //     {
       //       name: 'MesTeamReportInStaffPayroll',
