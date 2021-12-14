@@ -116,6 +116,7 @@ const getDetailByCurrentUser = {
         id: 2, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
+        applicationSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库申请编号
         applicant: {
           name: '@cname',
           deptName: '生产部'
@@ -300,6 +301,7 @@ const detail_id1 = {
         id: 1, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
+        applicationSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库申请编号
         applicant: {
           name: '@cname',
           deptName: '生产部'
@@ -452,6 +454,7 @@ const detail_id2 = {
         id: 2, // 出库单id
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
+        applicationSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库申请编号
         applicant: {
           name: '@cname',
           deptName: '生产部'

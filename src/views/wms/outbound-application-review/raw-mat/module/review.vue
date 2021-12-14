@@ -10,6 +10,7 @@
     custom-class="raw-mat-application-review-form"
   >
     <template #titleAfter>
+      <el-tag v-if="form.applicant" type="success" effect="dark">{{`申请人：${form.applicant.name} | ${form.applicant.deptName}`}}</el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
     </template>
     <template #titleRight>
@@ -173,10 +174,10 @@ const currentInboundId = ref() // 当前id
 const formDisabled = computed(() => submitOptLoading.value)
 // 标题
 const drawerTitle = computed(() => {
-  if (form.value && form.value.applicant) {
-    return `出库单 申请人：${form.value.applicant.name} | ${form.value.applicant.deptName}`
+  if (form.value && form.value.applicationSN) {
+    return `出库申请单：${form.value.applicationSN}`
   } else {
-    return '出库单'
+    return '出库申请单'
   }
 })
 

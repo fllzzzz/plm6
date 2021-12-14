@@ -94,10 +94,10 @@ const { maxHeight } = useMaxHeight(
 
 // 标题
 const drawerTitle = computed(() => {
-  if (detail && detail.serialNumber) {
-    return `出库单：${detail.serialNumber}`
+  if (detail && detail.applicationSN) {
+    return `出库申请单：${detail.applicationSN}`
   } else {
-    return '出库单'
+    return '出库申请单'
   }
 })
 
