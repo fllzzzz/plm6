@@ -28,7 +28,7 @@
             </el-form-item>
 
             <el-form-item label="供应商" prop="supplierId">
-              {{ detail.supplier.name }}
+              <span v-if="detail.supplier">{{ detail.supplier.name }}</span>
             </el-form-item>
 
             <template v-if="detail.supplyType == orderSupplyTypeEnum.SELF.V">

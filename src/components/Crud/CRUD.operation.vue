@@ -192,8 +192,10 @@ function handleCheckedTableColumnsChange(item) {
   let totalCount = 0
   let selectedCount = 0
   for (const key in crud.tableColumns) {
-    ++totalCount
-    selectedCount += crud.tableColumns[key].visible ? 1 : 0
+    if (key !== 'visible') {
+      ++totalCount
+      selectedCount += crud.tableColumns[key].visible ? 1 : 0
+    }
   }
   if (selectedCount === 0) {
     crud.notify('请至少选择一列', CRUD.NOTIFICATION_TYPE.WARNING)

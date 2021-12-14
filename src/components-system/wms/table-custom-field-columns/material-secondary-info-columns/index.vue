@@ -1,13 +1,14 @@
 <template>
-  <component :is="comp" :columns="columns" :show-batch-no="showBatchNo" />
+  <component :is="comp" :columns="columns" :show-batch-no="showBatchNo" :field="field" />
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, provide } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { isBlank } from '@/utils/data-type'
 import steel from './module/steel.vue'
 import rawMat from './module/raw-mat.vue'
-import { STEEL_ENUM } from '@/settings/config'
 
 const props = defineProps({
   basicClass: {
@@ -20,6 +21,11 @@ const props = defineProps({
     // 显示炉批号
     type: Boolean,
     default: true
+  },
+  field: {
+    // 字段
+    type: String,
+    default: 'material'
   }
 })
 
@@ -38,4 +44,12 @@ const comp = computed(() => {
       return rawMat
   }
 })
+
+// 根据传入的物料字段获取信息
+function getInfo(row, field) {
+  const materialField = props.field
+  if (isBlank(row) || isBlank(row[materialField])) return
+  return !field ? row[materialField] : row[materialField][field]
+}
+provide('getInfo', getInfo)
 </script>

@@ -36,7 +36,7 @@
                   <span v-if="materialFreezeTypeEnum.V[record.freezeType]">{{ materialFreezeTypeEnum.V[record.freezeType].DOC }}</span>
                 </template>
               </el-table-column>
-              <el-table-column key="docSN" :show-overflow-tooltip="true" prop="document" label="单据编号" align="center" min-width="120">
+              <el-table-column key="document" :show-overflow-tooltip="true" prop="document" label="单据编号" align="center" min-width="120">
                 <template #default="{ row: record }">
                   <clickable-permission-span
                     v-if="record.document && record.document.serialNumber"
@@ -113,10 +113,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import crudApi from '@/api/wms/freeze/raw-mat'
 import { detail as getTransferDetail } from '@/api/wms/transfer/raw-mat-application-review'
 import { detail as getOutboundDetail } from '@/api/wms/outbound/raw-mat-application-review'
-import crudApi from '@/api/wms/freeze/raw-mat'
+import { computed, ref } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { materialFreezeTypeEnum, measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'

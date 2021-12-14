@@ -1037,7 +1037,6 @@ function addCrudFeatureMethod(crud, data) {
         }
       })
     })
-
     // // 显示列的方法
     // crud.tableColumns = columns
   }
