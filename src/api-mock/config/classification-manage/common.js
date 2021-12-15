@@ -158,11 +158,11 @@ const getFinalMatClsById = {
           name: '大六角',
           fullName: '紧固件>高强螺栓>大六角',
           serialNumber: /[0-9]{10}/,
-          measureUnit: '套', // 计量单位
-          accountingUnit: '千克', // 核算单位
+          // measureUnit: '套', // 计量单位
+          accountingUnit: '套', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
-          measurePrecision: 0, // 计量单位小数精度
-          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
+          // measurePrecision: 0, // 计量单位小数精度
+          outboundUnitType: measureTypeEnum.ACCOUNTING.V, // 出库方式
           basicClass: matClsEnum.MATERIAL.V,
           specConfig: [
             {

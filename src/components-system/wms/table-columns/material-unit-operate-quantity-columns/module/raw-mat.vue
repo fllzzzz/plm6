@@ -6,9 +6,12 @@
   </el-table-column>
   <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" min-width="150px">
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
-      /
-      <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
+      <template v-if="row.measureUnit">
+        <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+        /
+        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
+      </template>
+      <span v-else v-empty-text />
     </template>
   </el-table-column>
   <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px">

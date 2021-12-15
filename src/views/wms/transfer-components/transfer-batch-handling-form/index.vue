@@ -2,7 +2,7 @@
   <common-dialog
     title="调拨办理"
     v-model="dialogVisible"
-    width="1600px"
+    width="90%"
     :before-close="handleClose"
     :show-close="true"
     custom-class="wms-batch-transfer-handling"

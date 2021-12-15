@@ -1,3 +1,4 @@
+// 钢板库存
 const getSteelPlate = {
   url: '/api/wms/material-inventory/steel-plate',
   method: 'get',
@@ -83,6 +84,7 @@ const getSteelPlate = {
   }
 }
 
+// 型材库存
 const getSectionSteel = {
   url: '/api/wms/material-inventory/section-steel',
   method: 'get',
@@ -128,6 +130,7 @@ const getSectionSteel = {
   }
 }
 
+// 钢卷库存
 const getSteelCoil = {
   url: '/api/wms/material-inventory/steel-coil',
   method: 'get',
@@ -176,4 +179,83 @@ const getSteelCoil = {
   }
 }
 
-export default [getSteelPlate, getSectionSteel, getSteelCoil]
+// 辅材库存
+const getAuxMatInventory = {
+  url: '/api/wms/material-inventory/auxiliary-material',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        content: [
+          {
+            id: 1,
+            classifyId: 204,
+            specification: 'M27*60',
+            color: '天蓝',
+            basicClass: 1,
+            quantity: 10,
+            frozenMete: 1, // 冻结量
+            frozenQuantity: 1, // 冻结数量
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 10,
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 4,
+              name: '622号仓库'
+            }
+          }
+        ],
+        totalElements: 1
+      }
+    }
+  }
+}
+
+// 气体库存
+const getGasInventory = {
+  url: '/api/wms/material-inventory/gas',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        content: [
+          {
+            id: 1,
+            classifyId: 901,
+            // specification: '',
+            basicClass: 1,
+            quantity: 10,
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 250000,
+            frozenMete: 25000, // 冻结量
+            frozenQuantity: 1, // 冻结数量
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 4,
+              name: '622号仓库'
+            }
+          }
+        ],
+        totalElements: 1
+      }
+    }
+  }
+}
+
+export default [getSteelPlate, getSectionSteel, getSteelCoil, getAuxMatInventory, getGasInventory]

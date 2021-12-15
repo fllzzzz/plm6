@@ -2,7 +2,7 @@
   <common-dialog
     title="出库办理"
     v-model="dialogVisible"
-    width="1600px"
+    width="90%"
     :before-close="handleClose"
     :show-close="true"
     custom-class="wms-batch-outbound-handling"
