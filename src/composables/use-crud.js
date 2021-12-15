@@ -578,16 +578,19 @@ function addCrudBusinessMethod(crud) {
     if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
       crud.detailLoading = true
       // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
-      crud.crudApi.detail(data.id).then((val) => {
-        crud.resetRowDetail(val)
-        callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
+      crud.crudApi
+        .detail(data.id)
+        .then((val) => {
+          crud.resetRowDetail(val)
+          callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
+            crud.detailLoading = false
+          })
+        })
+        .catch(() => {
+          cancelDetail()
+          ElMessage.error('加载失败')
           crud.detailLoading = false
         })
-      }).catch(() => {
-        cancelDetail()
-        ElMessage.error('加载失败')
-        crud.detailLoading = false
-      })
     } else {
       crud.resetRowDetail(data)
     }
@@ -626,16 +629,19 @@ function addCrudBusinessMethod(crud) {
     if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
       crud.editDetailLoading = true
       // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
-      crud.crudApi.detail(data.id).then((val) => {
-        crud.resetForm(JSON.parse(JSON.stringify(val)))
-        callVmHook(crud, CRUD.HOOK.beforeEditDetailLoaded, crud.form).then(() => {
+      crud.crudApi
+        .detail(data.id)
+        .then((val) => {
+          crud.resetForm(JSON.parse(JSON.stringify(val)))
+          callVmHook(crud, CRUD.HOOK.beforeEditDetailLoaded, crud.form).then(() => {
+            crud.editDetailLoading = false
+          })
+        })
+        .catch(() => {
+          cancelCU()
+          ElMessage.error('加载失败')
           crud.editDetailLoading = false
         })
-      }).catch(() => {
-        cancelCU()
-        ElMessage.error('加载失败')
-        crud.editDetailLoading = false
-      })
     } else {
       crud.resetForm(JSON.parse(JSON.stringify(data)))
     }
@@ -1014,12 +1020,12 @@ function addCrudFeatureMethod(crud, data) {
   // 设置列 TODO:当设置查询默认值，table通过该默认值设置key的情况下，会出现问题，例：甲供材料借出管理
   const setColumns = () => {
     if (!crud.ref.table) return
-    const columns = crud.tableColumns
-    Object.keys(columns).forEach(key => {
-      if (key !== 'visible') delete columns[key]
-    })
-    const tableColumns = crud.ref.table.getColumns()
     nextTick(() => {
+      const columns = crud.tableColumns
+      Object.keys(columns).forEach((key) => {
+        if (key !== 'visible') delete columns[key]
+      })
+      const tableColumns = crud.ref.table.getColumns()
       // 获得table的所有列
       tableColumns.forEach((e) => {
         if (!e.property || e.type !== 'default') {
@@ -1031,7 +1037,6 @@ function addCrudFeatureMethod(crud, data) {
         }
       })
     })
-
     // // 显示列的方法
     // crud.tableColumns = columns
   }

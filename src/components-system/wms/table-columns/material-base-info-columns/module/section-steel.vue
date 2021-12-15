@@ -1,7 +1,7 @@
 <template>
-  <el-table-column v-if="showClassifyFullName" prop="classifyFullName" label="物料种类" align="center" width="120px" fixed="left" />
+  <el-table-column v-if="showClassifyFullName" prop="classifyFullName" label="物料种类" align="center" width="120px" :fixed="fixed" />
   <template v-if="props.specMerge">
-    <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" width="200px" fixed="left">
+    <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" width="200px" :fixed="fixed">
       <template #default="{ row }">
         <el-tooltip :content="specTip(row)" placement="top">
           <span v-empty-text>{{ specFormat(row) }}</span>
@@ -10,7 +10,7 @@
     </el-table-column>
   </template>
   <template v-else>
-    <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" width="200px" fixed="left">
+    <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" width="200px" :fixed="fixed">
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" :disabled="!row.specificationLabels" placement="top">
           <span v-empty-text>{{ row.specification }}</span>
@@ -40,6 +40,9 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  fixed: { // 定位
+    type: String
   }
 })
 

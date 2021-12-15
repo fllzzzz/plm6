@@ -9,7 +9,9 @@
     top="10vh"
   >
     <template #titleRight>
-      <common-button :loading="submitLoading" :disabled="!returnedTotalQuantity" size="mini" type="primary" @click="submit"> 提 交 </common-button>
+      <common-button :loading="submitLoading" :disabled="!returnedTotalQuantity" size="mini" type="primary" @click="submit">
+        提 交
+      </common-button>
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
@@ -29,21 +31,15 @@
             style="width: 200px"
           />
         </el-form-item>
-        <br/>
+        <br />
         <div class="flex-rbc">
           <el-form-item label="类型">
-            <common-radio-button
-              type="enum"
-              v-model="filterParams.type"
-              :options="projectWareTypeEnum"
-              show-option-all
-              clearable
-            />
+            <common-radio-button type="enum" v-model="filterParams.type" :options="projectWareTypeEnum" show-option-all clearable />
           </el-form-item>
           <div>
             <el-form-item label="只看填写归还数量的材料" label-width="170px">
-            <el-checkbox v-model="filterParams.hasReturnedQuantity" size="mini"></el-checkbox>
-          </el-form-item>
+              <el-checkbox v-model="filterParams.hasReturnedQuantity" size="mini"></el-checkbox>
+            </el-form-item>
             <el-form-item label="本次归还统计" label-width="100px">
               <span class="returned-number">{{ returnedTotalQuantity }}</span>
               <span>{{ ` / ${detail.corPendingQuantity} ${detail.outboundUnit}` }}</span>
@@ -80,7 +76,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" />
+        <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
         <!-- 次要信息 -->
@@ -95,7 +91,7 @@
                 :precision="row.outboundUnitPrecision"
                 :max="row.operableQuantity"
                 controls-position="right"
-                @change="handleQuantityChange($event,row)"
+                @change="handleQuantityChange($event, row)"
               />
               <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
             </span>
@@ -203,17 +199,17 @@ const filterMatList = computed(() => {
   const list = filterParams.value.hasReturnedQuantity ? returnList.value : returnableMatList.value
   if (!filterParams.value.type) return list
   if (filterParams.value.type === projectWareTypeEnum.PUBLIC.V) {
-    return list.filter(row => !row.project || !row.project.id)
+    return list.filter((row) => !row.project || !row.project.id)
   }
   if (filterParams.value.type === projectWareTypeEnum.CUR_PROJECT.V) {
-    return list.filter(row => {
+    return list.filter((row) => {
       // 与当前借用项目相同
       const flag = row.project && props.detail.borrowProject && row.project.id === props.detail.borrowProject.id
       return flag
     })
   }
   if (filterParams.value.type === projectWareTypeEnum.OTHER_PROJECT.V) {
-    return list.filter(row => {
+    return list.filter((row) => {
       // 与当前借用项目不相同
       const flag = row.project && props.detail.borrowProject && row.project.id && row.project.id !== props.detail.borrowProject.id
       return flag
@@ -237,7 +233,8 @@ const remarkTextSize = computed(() => {
   return { minRows: 1, maxRows: 1 }
 })
 
-watch(() => props.detail,
+watch(
+  () => props.detail,
   (detail) => {
     // 初始化并查询列表
     init()
@@ -275,12 +272,12 @@ async function fetchReturnableMatList(id) {
       v.operableQuantity = v.quantity - v.frozenQuantity
       v.operableMete = v.mete - v.frozenMete
       if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
-      // 实际在出库中使用的数量
+        // 实际在出库中使用的数量
         v.corQuantity = v.quantity // 数量
         v.corFrozenQuantity = v.frozenQuantity // 冻结数量
         v.corOperableQuantity = v.operableQuantity // 可操作数量
       } else {
-      // 核算量
+        // 核算量
         v.corQuantity = v.mete
         v.corFrozenQuantity = v.frozenMete
         v.corOperableQuantity = v.operableMete
@@ -295,7 +292,7 @@ async function fetchReturnableMatList(id) {
 
 // 处理数量变化
 function handleQuantityChange(val, row) {
-  const index = returnList.value.findIndex(item => item.id === row.id)
+  const index = returnList.value.findIndex((item) => item.id === row.id)
   // 当val为0或空，且row在归还列表中时，移除归还列表
   if (index > -1 && !val) {
     returnList.value.splice(index, 1)
@@ -322,7 +319,7 @@ async function submit() {
       id: props.detail.id, // 当前归还id
       factoryId: form.value.factoryId, // 工厂id
       warehouseId: form.value.warehouseId, // 仓库id
-      list: returnList.value.map(row => {
+      list: returnList.value.map((row) => {
         return {
           id: row.id,
           quantity: row.returnedQuantity,
@@ -350,7 +347,7 @@ async function submit() {
 </script>
 
 <style lang="scss" scoped>
-.el-form-item{
+.el-form-item {
   align-items: center;
   ::v-deep(.el-form-item__content) {
     line-height: unset;

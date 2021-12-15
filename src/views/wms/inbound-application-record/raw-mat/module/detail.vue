@@ -10,14 +10,7 @@
     custom-class="raw-mat-inbound-application-record-detail"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
-      <el-tag v-if="detail.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-        {{ `过磅重量：${detail.loadingWeight}kg` }}
-      </el-tag>
-      <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
+      <title-after-info :order="order" :detail="detail" />
     </template>
     <template #content>
       <common-table
@@ -37,7 +30,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass"/>
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left"/>
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
@@ -60,9 +53,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
-import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { STEEL_ENUM } from '@/settings/config'
+import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -77,6 +68,7 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
@@ -107,7 +99,7 @@ const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay ==
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `入库单：${detail.serialNumber}`
+  crud.detailLoading ? `入库单`
     : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 
@@ -127,10 +119,6 @@ function getSummaries(param) {
 
 <style lang="scss" scoped>
 .raw-mat-inbound-application-record-detail {
-  .el-drawer__header .el-tag {
-    min-width: 70px;
-    text-align: center;
-  }
   .el-table {
     ::v-deep(.cell) {
       height: 28px;

@@ -65,7 +65,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" />
+        <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
         <!-- 次要信息 -->

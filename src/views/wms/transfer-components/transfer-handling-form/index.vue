@@ -30,7 +30,7 @@ import {
   auxMatTransferHandling,
   gasTransferHandling
 } from '@/api/wms/transfer/transfer-handling'
-import { defineEmits, defineProps, watch, computed, ref } from 'vue'
+import { defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
 
@@ -135,11 +135,14 @@ function formInit(data) {
 
 // 重置表单
 function resetForm() {
-  formRef.value && formRef.value.resetFields()
+  nextTick(() => {
+    formRef.value && formRef.value.resetFields()
+  })
 }
 
 // 清空校验
 function clearValidate(field) {
+  nextTick(() => {})
   formRef.value && formRef.value.clearValidate(field)
 }
 

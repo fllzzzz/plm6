@@ -10,14 +10,7 @@
     custom-class="raw-mat-inbound-application-review-form"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
-      <el-tag v-if="form.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-        {{ `过磅重量：${form.loadingWeight}kg` }}
-      </el-tag>
-      <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
+      <title-after-info :order="order" :detail="form" />
     </template>
     <template #titleRight>
       <review-convenient-operate
@@ -30,30 +23,13 @@
         class="convenient-operation"
       />
       <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
-      <el-popconfirm
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        icon="el-icon-info"
-        icon-color="green"
-        title="确认通过？"
-        @confirm="passed"
-      >
-        <template #reference>
-          <common-button :loading="passedLoading" type="primary" size="mini" icon="el-icon-s-promotion"> 通 过 </common-button>
-        </template>
-      </el-popconfirm>
-      <el-popconfirm
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        icon="el-icon-info"
-        icon-color="red"
-        title="确认退回？"
-        @confirm="returned"
-      >
-        <template #reference>
-          <common-button :loading="returnedLoading" size="mini" icon="el-icon-document-delete" type="danger"> 退 回 </common-button>
-        </template>
-      </el-popconfirm>
+      <!-- 审核按钮 -->
+      <review-confirm-button
+        :passed-loading="passedLoading"
+        :returned-loading="returnedLoading"
+        :passed-fn="passed"
+        :returned-fn="returned"
+      />
     </template>
     <template #content>
       <el-form class="form" :disabled="formDisabled">
@@ -75,7 +51,7 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="form.basicClass"/>
+          <material-base-info-columns :basic-class="form.basicClass" fixed="left" />
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="form.basicClass" />
           <!-- 次要信息 -->
@@ -125,12 +101,11 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/inbound/raw-mat-application-review'
 import { computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
-import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { STEEL_ENUM } from '@/settings/config'
+import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -145,11 +120,12 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 import reviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
+import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
 
 import logisticsForm from '@/views/wms/inbound-components/logistics-form.vue'
 import priceSetColumns from '@/views/wms/inbound-components/price-set-columns.vue'
 import warehouseSetColumns from '@/views/wms/inbound-components/warehouse-set-columns.vue'
-import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
 
 const emit = defineEmits(['refresh', 'update:modelValue'])
 
@@ -191,6 +167,8 @@ const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inbo
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示物流信息
 const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
+// 是否“甲供”
+const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 采购订单信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息
@@ -204,21 +182,27 @@ const drawerTitle = computed(() =>
     : `入库单：${props.data.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 
-// 表格校验
+// 仓管填写的信息（工厂及仓库）
 const warehouseRules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
 }
 
+// 采购填写的信息（金额、申购单及项目）
 const amountRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
 }
 
+// 甲供不填写金额方面的信息
+const partyAAmountRules = {
+  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
+}
+
 const tableRules = computed(() => {
   const rules = {}
-  if (showAmount.value) Object.assign(rules, amountRules)
+  if (showAmount.value) Object.assign(rules, boolPartyA.value ? partyAAmountRules : amountRules)
   if (showWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
@@ -449,11 +433,6 @@ function getSummaries(param) {
 
 <style lang="scss" scoped>
 .raw-mat-inbound-application-review-form {
-  .el-drawer__header .el-tag {
-    min-width: 70px;
-    text-align: center;
-  }
-
   .form {
     height: 100%;
     width: 100%;

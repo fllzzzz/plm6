@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <!-- 物料查询相关 -->
-      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery">
+      <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
         <template #firstLineRight>
           <current-user-outbound-list ref="currentUserOutboundListRef" />
           <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>

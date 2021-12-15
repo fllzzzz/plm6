@@ -1,4 +1,5 @@
 import store from '@/store'
+import { isBlank } from './data-type'
 
 /**
  * @param {Array} value
@@ -6,7 +7,11 @@ import store from '@/store'
  * @example see @/views/permission/directive.vue
  */
 export default function checkPermission(value) {
-  if (value && value instanceof Array && value.length > 0) {
+  if (isBlank(value)) {
+    console.log('权限解析为空')
+    return true
+  }
+  if (Array.isArray(value) && value.length > 0) {
     const roles = store.getters && store.getters.roles
     const permissionRoles = ['admin', ...value]
     const hasPermission = roles.some(role => {

@@ -6,9 +6,9 @@
     label="物料种类"
     align="center"
     :width="classifyFullNameWidth"
-    fixed="left"
+    :fixed="fixed"
   />
-  <el-table-column v-if="showSpecification" prop="specification" label="规格" width="270" align="center" fixed="left">
+  <el-table-column v-if="showSpecification" prop="specification" label="规格" width="270" align="center" :fixed="fixed">
     <template #default="{ row }">
       <el-tooltip :content="specTip(row)" placement="top">
         <span v-empty-text>{{ specFormat(row) }}</span>
@@ -33,6 +33,9 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  fixed: { // 定位
+    type: String
   }
 })
 
