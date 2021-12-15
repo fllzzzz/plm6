@@ -41,7 +41,7 @@
         </div>
       </slot>
     </template>
-      <slot v-if="!props.contentLoading" name="content" />
+    <slot v-if="!props.contentLoading" name="content" />
   </el-drawer>
 </template>
 
@@ -160,18 +160,23 @@ watch([() => props.visible, () => props.modelValue], ([v, mv]) => {
   drawerVisible.value = isVisibleProp.value ? v : mv
 })
 
-watch([drawerVisible, () => props.contentLoading], ([visible, ld]) => {
-  if (visible && ld) {
-    openLoading()
-  } else {
-    loading && loading.close()
-  }
-}, { immediate: true })
+watch(
+  [drawerVisible, () => props.contentLoading],
+  ([visible, ld]) => {
+    if (visible && ld) {
+      openLoading()
+    } else {
+      loading && loading.close()
+    }
+  },
+  { immediate: true }
+)
 
 function openLoading() {
   if (loading) {
     loading.visible = true
-  } {
+  }
+  {
     let el
     if (drawerRef.value) el = drawerRef.value.drawerRef
     loading = ElLoading.service({
@@ -244,6 +249,10 @@ defineExpose({
     padding-left: 10px;
     margin-right: 15px;
     box-sizing: border-box;
+    .child-mr-6 {
+      display: inline-flex;
+      align-items: center;
+    }
     .title-text {
       font-weight: bold;
       font-size: 18px;

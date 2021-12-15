@@ -36,11 +36,11 @@
                   <span v-if="materialFreezeTypeEnum.V[record.freezeType]">{{ materialFreezeTypeEnum.V[record.freezeType].DOC }}</span>
                 </template>
               </el-table-column>
-              <el-table-column key="docSN" :show-overflow-tooltip="true" prop="document" label="单据编号" align="center" min-width="120">
+              <el-table-column key="document" :show-overflow-tooltip="true" prop="document" label="单据编号" align="center" min-width="120">
                 <template #default="{ row: record }">
                   <clickable-permission-span
                     v-if="record.document && record.document.serialNumber"
-                    :permission="unfreezePermission(record.freezeType)"
+                    :permission="openDetailPermission(record.freezeType)"
                     @click="openDocumentDetail(record.freezeType, record.document.id)"
                     :text="record.document.serialNumber"
                   />
@@ -73,8 +73,8 @@
                 </template>
               </el-table-column>
               <el-table-column label="操作" width="80px" align="center">
-                <template #default="{ $index, row: record }">
-                  <!-- TODO: 此处$index 会等于-1-->
+                <template #default="{ row: record }">
+                  <!-- TODO: element bug ? 待修复，此处$index 会等于-1-->
                   <common-button
                     v-if="checkUnFreezePermission(record.freezeType)"
                     type="primary"
@@ -106,13 +106,17 @@
     <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
       <transfer-detail />
     </detail-wrapper>
+    <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
+      <outbound-detail />
+    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { detail as getTransferDetail } from '@/api/wms/transfer/raw-mat-application-review'
 import crudApi from '@/api/wms/freeze/raw-mat'
+import { detail as getTransferDetail } from '@/api/wms/transfer/raw-mat-application-review'
+import { detail as getOutboundDetail } from '@/api/wms/outbound/raw-mat-application-review'
+import { computed, ref } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { materialFreezeTypeEnum, measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -131,6 +135,7 @@ import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
+import OutboundDetail from '@/views/wms/outbound-application-review/raw-mat/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import UnfreezeForm from '../components/unfreeze/index.vue'
 
@@ -139,7 +144,10 @@ const permission = {
   get: ['wms_raw_mat_freeze_list:get'],
   requisitionsUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_requisitions'],
   outboundUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_outbound'],
-  transferUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_transfer']
+  transferUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_transfer'],
+  transferDetail: ['wms_transferApplication_review:detail'],
+  outboundDetail: ['wms_outboundApplication_review:detail'],
+  requisitionsDetail: ['wms_requisitions:detail']
 }
 
 const optShow = {
@@ -163,6 +171,8 @@ const currentRecord = ref()
 const currentMaterial = ref()
 // 调拨详情组件
 const transferDetailRef = ref()
+// 出库详情组件
+const outboundDetailRef = ref()
 
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -224,6 +234,18 @@ function unfreezePermission(freezeType) {
   }
 }
 
+// 查看详情权限
+function openDetailPermission(freezeType) {
+  switch (freezeType) {
+    case materialFreezeTypeEnum.REQUISITIONS.V:
+      return permission.requisitionsDetail
+    case materialFreezeTypeEnum.OUTBOUND.V:
+      return permission.outboundDetail
+    case materialFreezeTypeEnum.TRANSFER.V:
+      return permission.transferDetail
+  }
+}
+
 // 过滤记录
 function filterRecord(list) {
   if (crud.query.freezeType) {
@@ -238,7 +260,7 @@ function openDocumentDetail(freezeType, id) {
     case materialFreezeTypeEnum.REQUISITIONS.V:
       break
     case materialFreezeTypeEnum.OUTBOUND.V:
-      // return checkPermission(permission.outboundUnFreeze)
+      outboundDetailRef.value.toDetail(id)
       break
     case materialFreezeTypeEnum.TRANSFER.V:
       // 打开调拨详情

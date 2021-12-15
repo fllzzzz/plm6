@@ -104,7 +104,8 @@ import Review from './module/review.vue'
 // crud交由presenter持有
 const permission = {
   get: ['wms_outboundApplication_review:get'],
-  review: ['wms_outboundApplication_review:review']
+  review: ['wms_outboundApplication_review:review'],
+  detail: ['wms_outboundApplication_review:detail']
 }
 
 const optShow = {

@@ -49,6 +49,7 @@ export function reviewReturned(data) {
   return request({
     module: 'wms',
     url: `transfer/application/review/raw-materials/returned`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     method: 'put',
     data
   })

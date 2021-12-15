@@ -10,14 +10,7 @@
     fullscreen
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{ `车牌：${form.licensePlate}` }}</el-tag>
-      <el-tag v-if="props.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-        {{ `过磅重量：${form.loadingWeight}kg` }}
-      </el-tag>
-      <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
+      <title-after-info :order="order" :detail="form" />
     </template>
     <template #titleRight>
       <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
@@ -76,11 +69,12 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
-import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
@@ -97,9 +91,8 @@ import purchaseDetailButton from '@/components-system/wms/purchase-detail-button
 import logisticsForm from '@/views/wms/inbound-components/logistics-form.vue'
 import priceSetColumns from '@/views/wms/inbound-components/price-set-columns.vue'
 import warehouseSetColumns from '@/views/wms/inbound-components/warehouse-set-columns.vue'
+import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
 import commonFooter from './common-footer.vue'
-import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { matClsEnum } from '@/utils/enum/modules/classification'
 // TODO:处理申购单与项目之间的关联
 // TODO: 标签打印提示
 
@@ -115,21 +108,27 @@ const props = defineProps({
   }
 })
 
-// 表格校验
+// 仓管填写的信息（工厂及仓库）
 const warehouseRules = {
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
 }
 
+// 采购填写的信息（金额、申购单及项目）
 const amountRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
 }
 
+// 甲供不填写金额方面的信息
+const partyAAmountRules = {
+  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
+}
+
 const tableRules = computed(() => {
   const rules = {}
-  if (showAmount.value) Object.assign(rules, amountRules)
+  if (showAmount.value) Object.assign(rules, boolPartyA.value ? partyAAmountRules : amountRules)
   if (showWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
@@ -143,17 +142,16 @@ const { inboundFillWayCfg } = useWmsConfig()
 
 // 物流组件ref
 const logisticsRef = ref()
+// 订单信息
+const order = computed(() => cu.props.order || {})
 // 显示金额
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
 // 显示仓库
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
 // 显示物流信息
 const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
-
-// 订单信息
-const order = computed(() => {
-  return cu.props.order || {}
-})
+// 是否“甲供”
+const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(

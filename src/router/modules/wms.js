@@ -121,6 +121,13 @@ export default {
           hidden: false,
           component: '/wms/freeze-manage/raw-mat/index',
           meta: { title: '原材料-冻结列表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatUnfreezeRecord',
+          path: 'raw-mat-unfreeze-record',
+          hidden: false,
+          component: '/wms/freeze-manage/raw-mat-unfreeze-record/index',
+          meta: { title: '原材料-解冻记录', icon: 'project', noCache: true }
         }
       ]
     },

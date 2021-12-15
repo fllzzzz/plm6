@@ -22,7 +22,7 @@
         @change="toQuery"
       />
       <slot name="afterProjectWarehouseType" />
-      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" />
+      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
       <warehouse-select
         v-model="queryVO.warehouseId"
         :factory-id="queryVO.factoryId"
@@ -30,6 +30,7 @@
         placeholder="存储位置"
         class="filter-item"
         show-all
+        clearable
         @change="toQuery"
       />
     </div>

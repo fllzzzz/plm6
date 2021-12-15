@@ -10,6 +10,9 @@
     custom-class="raw-mat-application-review-form"
   >
     <template #titleAfter>
+      <el-tag v-if="form.applicant" type="success" effect="dark">{{
+        `申请人：${form.applicant.name} | ${form.applicant.deptName}`
+      }}</el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
     </template>
     <template #titleRight>
@@ -23,30 +26,13 @@
         class="convenient-operation"
       />
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
-        <el-popconfirm
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          icon="el-icon-info"
-          icon-color="green"
-          title="确认通过？"
-          @confirm="passed"
-        >
-          <template #reference>
-            <common-button :loading="submitOptLoading" type="primary" size="mini" icon="el-icon-s-promotion"> 确认出库 </common-button>
-          </template>
-        </el-popconfirm>
-        <el-popconfirm
-          confirm-button-text="确定"
-          cancel-button-text="取消"
-          icon="el-icon-info"
-          icon-color="red"
-          title="确认删除？"
-          @confirm="returned"
-        >
-          <template #reference>
-            <common-button :loading="submitOptLoading" size="mini" icon="el-icon-document-delete" type="danger"> 删 除 </common-button>
-          </template>
-        </el-popconfirm>
+        <!-- 审核按钮 -->
+        <review-confirm-button
+          :passed-loading="submitOptLoading"
+          :returned-loading="submitOptLoading"
+          :passed-fn="passed"
+          :returned-fn="returned"
+        />
       </template>
       <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
         <!-- TODO:打印按钮 -->
@@ -67,7 +53,7 @@
         >
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark  show-graphics>
+              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark show-graphics>
                 <p v-if="row.boolTransfer">
                   调拨：
                   <span>（来源）</span>
@@ -125,6 +111,7 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned, delMaterial } from '@/api/wms/outbound/raw-mat-application-review'
 import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
+import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -139,7 +126,8 @@ import materialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import reviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
-import { reviewStatusEnum } from '@/utils/enum/modules/common'
+import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
+
 const emit = defineEmits(['refresh', 'update:modelValue'])
 
 const props = defineProps({
@@ -173,10 +161,10 @@ const currentInboundId = ref() // 当前id
 const formDisabled = computed(() => submitOptLoading.value)
 // 标题
 const drawerTitle = computed(() => {
-  if (form.value && form.value.applicant) {
-    return `出库单 申请人：${form.value.applicant.name} | ${form.value.applicant.deptName}`
+  if (form.value && form.value.applicationSN) {
+    return `出库申请单：${form.value.applicationSN}`
   } else {
-    return '出库单'
+    return '出库申请单'
   }
 })
 
