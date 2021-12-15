@@ -168,7 +168,7 @@ const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay ==
 // 显示物流信息
 const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
 // 是否“甲供”
-const boolPartyA = computed(() => props.order.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 采购订单信息
 const order = computed(() => form.value.purchaseOrder || {})
 // 申购单信息

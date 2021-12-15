@@ -74,7 +74,7 @@ const copyValue = ref()
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 watchEffect(() => {
-  copyValue.value = props.modelValue || 0
+  copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : 0
   setDefault()
 })
 
