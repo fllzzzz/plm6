@@ -154,7 +154,7 @@ CRUD.HOOK.beforeSubmit = () => {
 // import udOperation from '@crud/UD.operation'
 // import mHeader from './module/header'
 // import mForm from './module/form'
-// import checkPermission from '@/utils/permission'
+// import checkPermission from '@/utils/system/check-permission'
 
 // // crud交由presenter持有
 // const permission = {

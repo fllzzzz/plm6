@@ -6,7 +6,8 @@
   </el-table-column>
   <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" min-width="150px">
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="row.measurePrecision">{{ row.operableQuantity }}</span> /
+      <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+      /
       <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
     </template>
   </el-table-column>
@@ -17,7 +18,8 @@
   </el-table-column>
   <el-table-column v-if="showMete" prop="mete" :label="mateLabel" align="right" min-width="150px">
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="row.accountingPrecision">{{ row.operableMete }}</span> /
+      <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+      /
       <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row.mete }}</span>
     </template>
   </el-table-column>
@@ -38,6 +40,16 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  operableQuantityField: {
+    // 可操作数量字段
+    type: String,
+    default: 'operableQuantity'
+  },
+  operableMeteField: {
+    // 可操作核算量量字段
+    type: String,
+    default: 'operableMete'
   }
 })
 
@@ -73,7 +85,6 @@ const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns)
 const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
-
 </script>
 
 <style lang="scss" scoped>

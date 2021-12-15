@@ -3,3 +3,23 @@ span.project-name {
   white-space: pre-line;
 }
 
+%table-cell-triangle {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  color: white;
+  font-weight: 100;
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 45px;
+  height: 7px;
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+span.table-cell-triangle-frozen {
+  @extend %table-cell-triangle;
+  background-color: #409eff;
+}

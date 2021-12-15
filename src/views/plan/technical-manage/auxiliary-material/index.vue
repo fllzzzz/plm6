@@ -98,7 +98,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 // import delForm from './module/del'
 import enumOperate, { processingEnum } from '@/utils/enum/index'
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 // crud交由presenter持有
 const permission = {
   get: ['auxiliaryMaterial:get'],

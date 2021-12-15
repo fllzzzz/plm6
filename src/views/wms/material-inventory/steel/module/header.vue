@@ -4,8 +4,19 @@
       <!-- 物料查询相关 -->
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
         <template #firstLineRight>
+          <span class="child-mr-6">
           <current-user-outbound-list ref="currentUserOutboundListRef" />
           <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+          <common-button
+            v-permission="permission.freezeList"
+            type="info"
+            size="mini"
+            icon="el-icon-lock"
+            @click="openFreezeRecords"
+          >
+            冻结记录
+          </common-button>
+          </span>
         </template>
         <template #afterProjectWarehouseType>
           <common-radio-button
@@ -31,16 +42,6 @@
         </common-button>
       </template>
       <template #viewLeft>
-        <common-button
-          v-permission="permission.get"
-          class="filter-item"
-          type="info"
-          size="mini"
-          icon="el-icon-lock"
-          @click="openFreezeRecords"
-        >
-          冻结记录
-        </common-button>
         <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button>
         <el-badge :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0">
           <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">
@@ -178,7 +179,9 @@ function toBatchPrint() {}
 function toPrintNotPrintedLabel() {}
 
 // 打开冻结记录
-function openFreezeRecords() {}
+function openFreezeRecords() {
+  router.push({ name: 'WMSRawMatFreezeList' })
+}
 
 // 更新出库清单
 function updateListNumber() {

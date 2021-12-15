@@ -1,5 +1,4 @@
 <template>
-  <el-table-column v-if="showClassifyFullName" prop="classifyFullName" label="物料种类" align="center" min-width="180px" :fixed="fixed" />
   <template v-if="props.specMerge">
     <el-table-column v-if="showSpecification" prop="specification" label="规格" align="center" min-width="180px" :fixed="fixed">
       <template #default="{ row }">
@@ -36,11 +35,11 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  fixed: { // 定位
+  fixed: {
+    // 定位
     type: String
   }
 })
 
-const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible('classifyFullName'))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))
 </script>

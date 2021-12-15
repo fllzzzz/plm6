@@ -1,5 +1,12 @@
 <template>
-  <component :is="comp" :columns="props.columns" :basic-class="props.basicClass" :showUnit="props.showUnit" />
+  <component
+    :is="comp"
+    :columns="columns"
+    :basic-class="basicClass"
+    :showUnit="showUnit"
+    :operable-quantity-field="operableQuantityField"
+    :operable-mete-field="operableMeteField"
+  />
 </template>
 
 <script setup>
@@ -17,6 +24,16 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  operableQuantityField: {
+    // 可操作数量字段
+    type: String,
+    default: 'operableQuantity'
+  },
+  operableMeteField: {
+    // 可操作核算量量字段
+    type: String,
+    default: 'operableMete'
   }
 })
 

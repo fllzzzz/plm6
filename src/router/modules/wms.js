@@ -116,14 +116,14 @@ export default {
       meta: { title: '冻结管理', icon: 'contract', noCache: true },
       children: [
         {
-          name: 'RawMatFreezeManage',
+          name: 'WMSRawMatFreezeList',
           path: 'raw-mat-record',
           hidden: false,
           component: '/wms/freeze-manage/raw-mat/index',
           meta: { title: '原材料-冻结列表', icon: 'project', noCache: true }
         },
         {
-          name: 'RawMatUnfreezeRecord',
+          name: 'WMSRawMatUnfreezeRecord',
           path: 'raw-mat-unfreeze-record',
           hidden: false,
           component: '/wms/freeze-manage/raw-mat-unfreeze-record/index',

@@ -10,7 +10,8 @@ const getSteelPlate = {
         content: [
           {
             id: 1,
-            boolPartyA: true, // 甲供材料
+            boolPartyA: false, // 甲供材料
+            boolHasFrozen: true, // 有冻结
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: 1,
@@ -24,6 +25,9 @@ const getSteelPlate = {
             width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
+            projectFrozen: [// 针对不同项目可出库的冻结数量（目前只针对申购冻结）
+              { projectId: 1, quantity: 2, mete: 200000 }
+            ],
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -42,7 +46,7 @@ const getSteelPlate = {
           },
           {
             id: 2,
-            boolPartyA: false, // 甲供材料
+            boolPartyA: true, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: 1,

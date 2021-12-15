@@ -27,7 +27,7 @@
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" fixed="left" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="crud.toQuery" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" :show-unit="false" />
       <!-- 次要信息 -->
@@ -92,7 +92,8 @@ import Pagination from '@crud/Pagination'
 const permission = {
   get: ['wms_matWarehouse_steel:get'],
   outbound: ['wms_matWarehouse_steel:outbound'],
-  transfer: ['wms_matWarehouse_steel:transfer']
+  transfer: ['wms_matWarehouse_steel:transfer'],
+  freezeList: ['wms_raw_mat_freeze_list:get']
 }
 
 const optShow = {
@@ -140,7 +141,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     toSmallest: false,
     toNum: false
   })
-  data.content.forEach((v) => {
+  // TODO:后期考虑由服务端处理
+  data.content.forEach(async (v) => {
     v.operableQuantity = v.quantity - v.frozenQuantity
     v.operableMete = v.mete - v.frozenMete
     if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
@@ -153,6 +155,25 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       v.corQuantity = v.mete
       v.corFrozenQuantity = v.frozenMete
       v.corOperableQuantity = v.operableMete
+    }
+    if (Array.isArray(v.projectFrozen)) {
+      v.projectFrozenKV = {}
+      v.projectFrozenForUnitKV = {}
+      // 数据转换
+      v.projectFrozen = await numFmtByBasicClass(v.projectFrozen, {
+        measureUnit: v.measureUnit,
+        accountingUnit: v.accountingUnit,
+        accountingPrecision: v.accountingPrecision,
+        measurePrecision: v.measurePrecision,
+        toSmallest: false,
+        toNum: true
+      })
+      v.projectFrozen.forEach(pf => {
+        // 用于普通出库
+        v.projectFrozenForUnitKV[pf.projectId] = v.curOutboundUnitType === measureTypeEnum.MEASURE.V ? pf.quantity : pf.mete
+        // 用于批量出库
+        v.projectFrozenKV[pf.projectId] = pf
+      })
     }
   })
 }

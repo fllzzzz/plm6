@@ -59,7 +59,7 @@
 import rrOperation from '@crud/RR.operation'
 import CRUD, { header } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 import enumOperate, { invoiceTypeEnum } from '@/utils/enum/index'
 
 const invoiceTypeEnumV = enumOperate.getVal(invoiceTypeEnum)

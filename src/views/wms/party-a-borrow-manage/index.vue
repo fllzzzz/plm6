@@ -178,7 +178,7 @@ import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { borrowReturnStatusEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -193,6 +193,7 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import returnMaterial from './module/return-material.vue'
+
 const permission = {
   get: ['wms_partyABorrow:get'],
   return: ['wms_partyABorrow:return'],

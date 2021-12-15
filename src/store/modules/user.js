@@ -2,7 +2,7 @@ import { addRoutes, resetRouter } from '@/router'
 import { login, logout, getInfo, fetchMenus } from '@/api/user'
 import { repairStartSymbol } from '@/utils'
 import { getToken, setToken, removeToken, getRequestUrl, setRequestUrl as storeSetRequestUrl, removeRequestUrl } from '@/utils/storage' // get token from cookie
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 
 const state = {
   requestUrl: getRequestUrl(), // 请求地址

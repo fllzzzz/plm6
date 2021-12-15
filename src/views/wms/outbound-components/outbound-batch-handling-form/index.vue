@@ -14,7 +14,14 @@
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
         <el-form-item label="项目" prop="projectId" label-width="55px">
-          <project-cascader v-if="showProjectSelect" v-model="form.projectId" clearable class="input-underline" style="width: 300px" @change="handleProjectChange" />
+          <project-cascader
+            v-if="showProjectSelect"
+            v-model="form.projectId"
+            clearable
+            class="input-underline"
+            style="width: 300px"
+            @change="handleProjectChange"
+          />
           <span v-else v-parse-project="{ project: globalProject }" v-empty-text />
         </el-form-item>
         <el-form-item label="领用人" prop="recipientId">
@@ -57,7 +64,12 @@
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
-        <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
+        <material-unit-operate-quantity-columns
+          :operable-quantity-field="boolPublicWare ? 'projectOperableQuantity' : undefined"
+          :operable-mete-field="boolPublicWare ? 'projectOperableMete' : undefined"
+          :basic-class="basicClass"
+          :show-unit="!(basicClass & STEEL_ENUM)"
+        />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
@@ -65,6 +77,7 @@
           <template #header>
             <span>出库数量</span>
             <span class="text-clickable" style="margin-left: 10px" @click="setMaxQuantity">全部出库</span>
+            <span class="text-clickable" style="margin-left: 10px" @click="clearQuantity">清空</span>
           </template>
           <template #default="{ row }">
             <span class="flex-rbc">
@@ -72,7 +85,7 @@
                 v-model="row.batchOutboundQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
-                :max="row.operableQuantity"
+                :max="row.corProjectOperableQuantity"
                 controls-position="right"
               />
               <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
@@ -107,7 +120,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
+import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { mapGetters } from '@/store/lib'
 import { ElMessage } from 'element-plus'
 
@@ -177,9 +190,11 @@ const { outboundCfg } = useWmsConfig()
 // 全局项目
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
+const boolPublicWare = computed(() => props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V)
+
 // 显示项目选择组件(false:显示项目名称)： 公共库 或者 配置=>项目库可以出库给其他项目
 const showProjectSelect = computed(() => {
-  return props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V || outboundCfg.value.boolCanOutToOtherProject === true
+  return boolPublicWare.value || outboundCfg.value.boolCanOutToOtherProject === true
 })
 
 // 备注输入框大小
@@ -208,6 +223,7 @@ watchEffect(() => {
   // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
   materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
   form.value.list = materialList.value
+  dataFormat()
 })
 
 // 表单初始化
@@ -224,7 +240,14 @@ function clearValidate() {
 // 设置最大数量
 function setMaxQuantity() {
   form.value.list.forEach((v) => {
-    v.batchOutboundQuantity = v.corOperableQuantity
+    v.batchOutboundQuantity = boolPublicWare.value ? v.corProjectOperableQuantity : v.corOperableQuantity
+  })
+}
+
+// 清空数量
+function clearQuantity() {
+  form.value.list.forEach((v) => {
+    v.batchOutboundQuantity = undefined
   })
 }
 
@@ -272,13 +295,34 @@ async function submit() {
 // 项目发生变化
 function handleProjectChange(val) {
   if (val) {
-    form.value.list = materialList.value.filter(v => {
+    form.value.list = materialList.value.filter((v) => {
       // 甲供无法跨项目出库，因此过滤不是当前项目的甲供材料
       const flag = v.boolPartyA !== true || (v.boolPartyA === true && v.project.id === val)
       return flag
     })
   } else {
     form.value.list = materialList.value
+  }
+  dataFormat()
+}
+
+function dataFormat() {
+  if (props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V) {
+    // 公共库的情况，重新计算最大数量
+    form.value.list.forEach((v) => {
+      // 最大数量换算
+      const hasProjectFrozen = !form.value.projectId || !v.projectFrozenKV || !v.projectFrozenKV[form.value.projectId]
+      if (hasProjectFrozen) {
+        v.projectOperableQuantity = v.operableQuantity
+        v.projectOperableMete = v.operableMete
+        v.corProjectOperableQuantity = v.corOperableQuantity
+      } else {
+        const projectFrozen = v.projectFrozenKV[form.value.projectId]
+        v.projectOperableQuantity = v.operableQuantity + (projectFrozen.quantity || 0)
+        v.projectOperableMete = v.operableMete + (projectFrozen.mete || 0)
+      }
+      v.corProjectOperableQuantity = v.curOutboundUnitType === measureTypeEnum.MEASURE.V ? v.projectOperableQuantity : v.projectOperableMete
+    })
   }
 }
 
