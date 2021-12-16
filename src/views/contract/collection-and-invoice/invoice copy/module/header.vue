@@ -121,7 +121,7 @@ import { editSettlementStatus } from '@/api/contract/collection/index'
 import rrOperation from '@crud/RR.operation'
 import CRUD, { header } from '@crud/crud'
 import crudOperation from '@crud/CRUD.operation'
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 import enumOperate, { settlementStatusEnum, invoiceTypeEnum } from '@/utils/enum/index'
 // import popConfirmBtn from '@/views/components/common/pop-confirm-btn'
 

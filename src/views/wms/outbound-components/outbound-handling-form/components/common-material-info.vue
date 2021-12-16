@@ -26,7 +26,7 @@
     <span v-empty="{ val: warehouseName }" />
   </el-form-item>
   <el-form-item label="可出库/库存">
-    <span style="color: green" v-to-fixed="{ val: material.corOperableQuantity, dp: material.outboundUnitPrecision }" />
+    <span style="color: green" v-to-fixed="{ val: maxQuantity, dp: material.outboundUnitPrecision }" />
     /
     <span v-to-fixed="{ val: material.corQuantity, dp: material.outboundUnitPrecision }" />
     <span style="margin-left: 10px">{{ material.outboundUnit }}</span>
@@ -34,14 +34,19 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, inject } from 'vue'
 
 const props = defineProps({
   material: {
     // 物料出库信息
     type: Object
+  },
+  form: {
+    // 物料出库信息
+    type: Object
   }
 })
+const maxQuantity = inject('maxQuantity')
 
 const warehouseName = computed(() => {
   const fcName = props.material.factory ? props.material.factory.name : ''

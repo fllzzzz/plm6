@@ -21,7 +21,8 @@
     </el-table-column>
     <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px">
       <template #default="{ row }">
-        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+        <span v-if="row.measureUnit" v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+        <span v-else v-empty-text />
       </template>
     </el-table-column>
     <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px">
@@ -61,14 +62,17 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  labelPrefix: { // 数量label前缀
+  labelPrefix: {
+    // 数量label前缀
     type: String
   },
-  quantityField: { // 数量字段
+  quantityField: {
+    // 数量字段
     type: String,
     default: 'quantity'
   },
-  meteField: { // 核算量字段
+  meteField: {
+    // 核算量字段
     type: String,
     default: 'mete'
   }
@@ -87,7 +91,8 @@ const mateLabel = computed(() => {
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
-      default: label = '核算量'
+      default:
+        label = '核算量'
         break
     }
   }
@@ -100,15 +105,19 @@ const quantityLabel = computed(() => {
     label = '数量'
   } else {
     switch (props.basicClass) {
-      case rawMatClsEnum.STEEL_PLATE.V: label = '数量(张)'
+      case rawMatClsEnum.STEEL_PLATE.V:
+        label = '数量(张)'
         break
-      case rawMatClsEnum.SECTION_STEEL.V: label = '数量(根)'
+      case rawMatClsEnum.SECTION_STEEL.V:
+        label = '数量(根)'
         break
-      case rawMatClsEnum.STEEL_COIL.V: label = '长度(mm)'
+      case rawMatClsEnum.STEEL_COIL.V:
+        label = '长度(mm)'
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
-      default: label = '数量'
+      default:
+        label = '数量'
         break
     }
   }

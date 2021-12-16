@@ -141,7 +141,7 @@ import mCheck from './module/check'
 import mDetail from './module/detail'
 import CRUD, { presenter } from '@crud/crud'
 // import udOperation from '@crud/UD.operation'
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 import enumOperate, { dataSourceSysEnum, settlementStatusEnum } from '@/utils/enum/index'
 import { validatorInvoiceNo } from '@/utils/validatePattern'
 

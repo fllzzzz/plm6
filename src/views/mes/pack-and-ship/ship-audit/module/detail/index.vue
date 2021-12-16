@@ -16,32 +16,30 @@
       <el-descriptions :column="2" border style="margin-bottom: 10px" v-loading="tableLoading" v-if="contract">
         <el-descriptions-item label-class-name="contractLabel" label="项目名称">{{ contract.name }}</el-descriptions-item>
         <el-descriptions-item label-class-name="contractLabel" label="车牌号">{{ contract.licensePlate }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="本次发货额">{{
-          toFixed(contract.deliveryAmount, DP.YUAN)
-        }}</el-descriptions-item>
-        <el-descriptions-item
-label-class-name="contractLabel"
-label="安全余额"
-          >{{ toFixed(contract.safeAmount, DP.YUAN) }}
+        <el-descriptions-item label-class-name="contractLabel" label="本次发货额">
+          {{ toFixed(contract.deliveryAmount, DP.YUAN) }}
         </el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="合同额">{{
-          toFixed(contract.contractAmount, DP.YUAN)
-        }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="累计收款">{{
-          toFixed(contract.totalCollectionAmount, DP.YUAN)
-        }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="累计发运">{{
-          toFixed(contract.totalDeliveryAmount, DP.YUAN)
-        }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="累计发运额">{{
-          toFixed(contract.totalDeliveryAmount, DP.YUAN)
-        }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="合同应收">{{
-          toFixed(contract.contractReceivableAmount, DP.YUAN)
-        }}</el-descriptions-item>
-        <el-descriptions-item label-class-name="contractLabel" label="开票应收">{{
-          toFixed(contract.billingReceivableAmount, DP.YUAN)
-        }}</el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="安全余额">
+          {{ toFixed(contract.safeAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="合同额">
+          {{ toFixed(contract.contractAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="累计收款">
+          {{ toFixed(contract.totalCollectionAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="累计发运">
+          {{ toFixed(contract.totalDeliveryAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="累计发运额">
+          {{ toFixed(contract.totalDeliveryAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="合同应收">
+          {{ toFixed(contract.contractReceivableAmount, DP.YUAN) }}
+        </el-descriptions-item>
+        <el-descriptions-item label-class-name="contractLabel" label="开票应收">
+          {{ toFixed(contract.billingReceivableAmount, DP.YUAN) }}
+        </el-descriptions-item>
       </el-descriptions>
       <el-radio-group v-model="curProductType" v-if="productTypeBits.length > 1" size="small" class="filter-item">
         <el-radio-button

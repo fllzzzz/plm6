@@ -25,4 +25,18 @@ export function unfreezeHandling(data) {
   })
 }
 
+/**
+ * 获取物料冻结详情
+ * @param {*} materialId 物料id
+ * @returns
+ */
+export function getMaterialFreezeRecordById(materialId) {
+  return request({
+    module: 'wms',
+    url: `freeze/raw-material/record`,
+    method: 'get',
+    params: { materialId }
+  })
+}
+
 export default { get }

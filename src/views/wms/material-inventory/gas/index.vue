@@ -14,22 +14,11 @@
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
     >
-      <el-expand-table-column
-        v-if="basicClass === matClsEnum.STEEL_PLATE.V"
-        :data="crud.data"
-        v-model:expand-row-keys="expandRowKeys"
-        row-key="id"
-        fixed="left"
-      >
-        <template #default="{ row }">
-          <expand-secondary-info :basic-class="row.basicClass" :row="row" :show-batch-no="false" show-graphics />
-        </template>
-      </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="crud.toQuery" />
       <!-- 单位及其数量 -->
-      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" :show-unit="false" />
+      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <warehouse-info-columns :columns="columns" />
@@ -69,13 +58,11 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getSteelPlateInventory } from '@/api/wms/material-inventory'
-import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
+import { getGasInventory } from '@/api/wms/material-inventory'
+import { rawMatClsEnum } from '@enum-ms/classification'
 
-import useCRUD from '@compos/use-crud'
 import useMainInfo from '../compos/useMainInfo'
-import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import useCRUD from '@compos/use-crud'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
@@ -87,9 +74,9 @@ import Pagination from '@crud/Pagination'
 
 // crud交由presenter持有
 const permission = {
-  get: ['wms_matWarehouse_steel:get'],
-  outbound: ['wms_matWarehouse_steel:outbound'],
-  transfer: ['wms_matWarehouse_steel:transfer'],
+  get: ['wms_matWarehouse_gas:get'],
+  outbound: ['wms_matWarehouse_gas:outbound'],
+  transfer: ['wms_matWarehouse_gas:transfer'],
   freezeList: ['wms_raw_mat_freeze_list:get']
 }
 
@@ -104,13 +91,13 @@ const optShow = {
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '钢材物料仓',
+    title: '气体物料仓',
     sort: ['id.desc'],
     invisibleColumns: [],
     requiredQuery: ['basicClass'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { get: getSteelPlateInventory }
+    crudApi: { get: getGasInventory }
   },
   tableRef
 )
@@ -126,5 +113,5 @@ const {
   toOutHandle,
   handleOutboundSuccess,
   handleTransferSuccess
-} = useMainInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
+} = useMainInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.GAS.V })
 </script>

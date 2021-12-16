@@ -6,8 +6,14 @@
   </el-table-column>
   <el-table-column v-if="showQuantity" :prop="`${field}.quantity`" :label="quantityLabel" align="right" min-width="150px">
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">{{ getInfo(row, 'operableQuantity') }}</span> /
-      <span v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">{{ getInfo(row, 'quantity') }}</span>
+      <template v-if="getInfo(row, 'measureUnit')">
+        <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
+          {{ getInfo(row, 'operableQuantity') }}
+        </span>
+        /
+        <span v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">{{ getInfo(row, 'quantity') }}</span>
+      </template>
+      <span v-else v-empty-text />
     </template>
   </el-table-column>
   <el-table-column v-if="showAccountingUnit" :prop="`${field}.accountingUnit`" label="核算单位" align="center" width="70px">
@@ -17,7 +23,8 @@
   </el-table-column>
   <el-table-column v-if="showMete" :prop="`${field}.mete`" :label="mateLabel" align="right" min-width="150px">
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, 'operableMete') }}</span> /
+      <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, 'operableMete') }}</span>
+      /
       <span v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, 'mete') }}</span>
     </template>
   </el-table-column>
@@ -77,10 +84,11 @@ const quantityLabel = computed(() => {
 })
 
 const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible(`${props.field}.measureUnit`)))
-const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible(`${props.field}.accountingUnit`)))
+const showAccountingUnit = computed(
+  () => props.showUnit && (isBlank(props.columns) || props.columns.visible(`${props.field}.accountingUnit`))
+)
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.quantity`))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.mete`))
-
 </script>
 
 <style lang="scss" scoped>

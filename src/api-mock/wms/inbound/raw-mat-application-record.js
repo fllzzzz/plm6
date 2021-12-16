@@ -447,7 +447,7 @@ const detail_id3 = {
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',
-            mete: 222,
+            mete: 250000,
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,

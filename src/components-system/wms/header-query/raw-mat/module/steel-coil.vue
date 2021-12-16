@@ -9,6 +9,15 @@
     @keyup.enter="toQuery"
   />
   <el-input
+    v-model.trim="queryVO.color"
+    clearable
+    style="width: 130px"
+    size="small"
+    placeholder="颜色"
+    class="filter-item"
+    @keyup.enter="toQuery"
+  />
+  <el-input
     v-model.trim="queryVO.theoryThickness"
     clearable
     style="width: 130px"

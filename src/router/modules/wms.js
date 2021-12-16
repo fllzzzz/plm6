@@ -81,7 +81,21 @@ export default {
           path: 'steel',
           hidden: false,
           component: '/wms/material-inventory/steel/index',
-          meta: { title: '钢材', icon: 'project', noCache: true }
+          meta: { title: '钢材仓库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSAuxMaterialMaterialInventory',
+          path: 'aux-material',
+          hidden: false,
+          component: '/wms/material-inventory/aux-material/index',
+          meta: { title: '辅材仓库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSGasMaterialInventory',
+          path: 'gas',
+          hidden: false,
+          component: '/wms/material-inventory/gas/index',
+          meta: { title: '气体仓库', icon: 'project', noCache: true }
         },
         {
           name: 'WMSOutboundReview',
@@ -116,14 +130,14 @@ export default {
       meta: { title: '冻结管理', icon: 'contract', noCache: true },
       children: [
         {
-          name: 'RawMatFreezeManage',
+          name: 'WMSRawMatFreezeList',
           path: 'raw-mat-record',
           hidden: false,
           component: '/wms/freeze-manage/raw-mat/index',
           meta: { title: '原材料-冻结列表', icon: 'project', noCache: true }
         },
         {
-          name: 'RawMatUnfreezeRecord',
+          name: 'WMSRawMatUnfreezeRecord',
           path: 'raw-mat-unfreeze-record',
           hidden: false,
           component: '/wms/freeze-manage/raw-mat-unfreeze-record/index',
