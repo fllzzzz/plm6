@@ -13,13 +13,18 @@
       <common-title-info :detail="detail" />
     </template>
     <template #titleRight>
+      <span class="invoice-type-info" v-if="showAmount && isNotBlank(detail.invoiceType)">
+        <span v-parse-enum="{ e: invoiceTypeEnum, v: detail.invoiceType }" />
+        <span v-if="detail.invoiceType !== invoiceTypeEnum.RECEIPT.V">（{{ detail.taxRate }}%）</span>
+      </span>
       <el-tag
         v-if="isNotBlank(detail.reviewStatus)"
         :type="reviewStatusEnum.V[detail.reviewStatus].TAG"
         size="medium"
         style="margin-right: 10px"
-        >{{ reviewStatusEnum.VL[detail.reviewStatus] }}</el-tag
       >
+        {{ reviewStatusEnum.VL[detail.reviewStatus] }}
+      </el-tag>
     </template>
     <template #content>
       <common-table
@@ -66,6 +71,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -136,6 +142,11 @@ function getSummaries(param) {
       height: 28px;
       line-height: 28px;
     }
+  }
+
+  .invoice-type-info {
+    font-weight: bold;
+    color: brown;
   }
 }
 </style>
