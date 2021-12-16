@@ -106,7 +106,7 @@ const getArtifactProcessDetail = {
 }
 
 const getArtifactDetail = {
-  url: '/api/mes/building/team/report/artifact/detail/process',
+  url: '/api/mes/building/team_form/artifact_assemble/process',
   method: 'get',
   timeout: 1000,
   response: () => {

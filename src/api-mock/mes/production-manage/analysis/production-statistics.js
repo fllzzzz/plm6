@@ -79,7 +79,39 @@ const getByGroup = {
           'completeQuantity': 4,
           'completeLength': null,
           'completeArea': 34356000
+        }],
+        'artifactAnalysisDTOList': [{
+          'areaDetail': {
+            'id': null,
+            'name': '区域'
+          },
+          'completeGrossWeight': 20000,
+          'completeNetWeight': 4135,
+          'completeQuantity': 1,
+          'inProductionGrossWeight': 140000,
+          'inProductionNetWeight': 28950,
+          'inProductionQuantity': 7,
+          'material': 'Q355B',
+          'monomer': {
+            'id': null,
+            'name': '单体#1'
+          },
+          'name': '焊接H钢柱',
+          'project': {
+            'contractNo': 'hggggggg',
+            'id': null,
+            'name': 'hgg',
+            'shortName': 'hghghgh',
+            'type': null
+          },
+          'surplusGrossWeight': 0,
+          'surplusNetWeight': 0,
+          'surplusTaskQuantity': 0,
+          'taskGrossWeight': 1000000,
+          'taskNetWeight': 206791,
+          'taskQuantity': 50
         }]
+
       }
     }
   }
@@ -132,7 +164,50 @@ const getDetail = {
             'inspectionQuantity': null
           }]
         }],
-        'artifactDetailsAnalysisDTOList': [{}]
+        'artifactDetailsAnalysisDTOList': [{
+          'areaDetail': {
+            'id': null,
+            'name': '区域'
+          },
+          'completeGrossWeight': 20000,
+          'completeNetWeight': 4135,
+          'completeQuantity': 1,
+          'id': 1,
+          'inProductionGrossWeight': 140000,
+          'inProductionNetWeight': 28950,
+          'inProductionQuantity': 7,
+          'material': 'Q355B',
+          'monomer': {
+            'id': null,
+            'name': '单体#1'
+          },
+          'name': '焊接H钢柱',
+          'processSummaryList': [{
+            'completeQuantity': 2,
+            'inspectionQuantity': null,
+            'name': '构件1'
+          },
+          {
+            'completeQuantity': 1,
+            'inspectionQuantity': null,
+            'name': '构件2'
+          }
+          ],
+          'project': {
+            'contractNo': 'hggggggg',
+            'id': null,
+            'name': 'hgg',
+            'shortName': 'hghghgh',
+            'type': null
+          },
+          'serialNumber': 'GZ1-3',
+          'surplusGrossWeight': 0,
+          'surplusNetWeight': 0,
+          'surplusTaskQuantity': 0,
+          'taskGrossWeight': 1000000,
+          'taskNetWeight': 206791,
+          'taskQuantity': 50
+        }]
       }
     }
   }

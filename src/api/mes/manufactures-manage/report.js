@@ -22,4 +22,22 @@ export function getSummary(params) {
   })
 }
 
+export function getEnclosureDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'warehouse/report/enclosure',
+    method: 'get',
+    params
+  })
+}
+
+export function getArtifactDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'warehouse/report/artifact',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

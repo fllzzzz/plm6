@@ -5,7 +5,6 @@
         <common-radio-button
           v-model="query.sequenceType"
           :options="typeEnum.ENUM"
-          :unshow-val="[typeEnum.MACHINE_PART.V]"
           class="filter-item"
           type="enum"
           size="small"
@@ -29,7 +28,7 @@
           clearable
           @keyup.enter="crud.toQuery"
         />
-        <rrOperation/>
+        <rrOperation />
       </div>
     </template>
   </crudOperation>

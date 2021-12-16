@@ -31,129 +31,124 @@
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          key="totalQuantity"
-          prop="totalQuantity"
-          :show-overflow-tooltip="true"
-          :label="`任务总数(${showUnit})`"
-          align="center"
-          width="90"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.totalQuantity }}</span>
-          </template>
+        <el-table-column :label="`任务总数(${showUnit})`" align="center">
+          <el-table-column
+            key="totalQuantity"
+            prop="totalQuantity"
+            :show-overflow-tooltip="true"
+            :label="`任务总数(${showUnit})`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.totalQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="totalMete"
+            prop="totalMete"
+            :show-overflow-tooltip="true"
+            :label="`任务总数(${showUnit})`"
+            align="center"
+            width="120"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.totalMete }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column
-          key="totalMete"
-          prop="totalMete"
-          :show-overflow-tooltip="true"
-          :label="`任务总数(${showUnit})`"
-          align="center"
-          width="120"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.totalMete }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          key="completeQuantity"
-          prop="completeQuantity"
-          :show-overflow-tooltip="true"
-          :label="`已完成(${showUnit})`"
-          align="center"
-          width="90"
-        >
+        <el-table-column :label="`已完成(${showUnit})`" align="center">
           <template #header>
-            <common-button
-              size="mini"
-              type="text"
-              style="margin-left: 5px"
-              icon="el-icon-view"
-            >已完成({{ showUnit }})</common-button>
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+              已完成({{ showUnit }})
+            </common-button>
           </template>
-          <template v-slot="scope">
-            <span class="tc-success">{{ scope.row.completeQuantity }}</span>
-          </template>
+          <el-table-column
+            key="completeQuantity"
+            prop="completeQuantity"
+            :show-overflow-tooltip="true"
+            :label="`已完成(${showUnit})`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span class="tc-success">{{ scope.row.completeQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="completeMete"
+            prop="completeMete"
+            :show-overflow-tooltip="true"
+            :label="`已完成(${showUnit})`"
+            align="center"
+            width="120"
+          >
+            <template v-slot="scope">
+              <span class="tc-success">{{ scope.row.completeMete }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column
-          key="completeMete"
-          prop="completeMete"
-          :show-overflow-tooltip="true"
-          :label="`已完成(${showUnit})`"
-          align="center"
-          width="120"
-        >
-          <template v-slot="scope">
-            <span class="tc-success">{{ scope.row.completeMete }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          key="inProductionQuantity"
-          prop="inProductionQuantity"
-          :show-overflow-tooltip="true"
-          :label="`在制品(${showUnit})`"
-          align="center"
-          width="90"
-        >
+        <el-table-column :label="`在制品(${showUnit})`" align="center">
           <template #header>
-            <span>在制品({{ showUnit }})</span>
-            <common-button
-              size="mini"
-              type="primary"
-              style="margin-left: 5px"
-              icon="el-icon-view"
-              @click="handleHeaderClick"
-            ></common-button>
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+              在制品({{ showUnit }})
+            </common-button>
           </template>
-          <template v-slot="scope">
-            <span class="tc-warning">{{ scope.row.inProductionQuantity }}</span>
-          </template>
+          <el-table-column
+            key="inProductionQuantity"
+            prop="inProductionQuantity"
+            :show-overflow-tooltip="true"
+            :label="`在制品(${showUnit})`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span class="tc-warning">{{ scope.row.inProductionQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="inProductionMete"
+            prop="inProductionMete"
+            :show-overflow-tooltip="true"
+            :label="`在制品(${showUnit})`"
+            align="center"
+            width="120"
+          >
+            <template v-slot="scope">
+              <span class="tc-warning">{{ scope.row.inProductionMete }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column
-          key="inProductionMete"
-          prop="inProductionMete"
-          :show-overflow-tooltip="true"
-          :label="`在制品(${showUnit})`"
-          align="center"
-          width="120"
-        >
-          <template v-slot="scope">
-            <span class="tc-warning">{{ scope.row.inProductionMete }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          key="unProducedQuantity"
-          prop="unProducedQuantity"
-          :show-overflow-tooltip="true"
-          :label="`未生产(${showUnit})`"
-          align="center"
-          width="90"
-        >
+        <el-table-column :label="`未生产(${showUnit})`" align="center">
           <template #header>
-            <span>未生产({{ showUnit }})</span>
-            <common-button
-              size="mini"
-              type="primary"
-              style="margin-left: 5px"
-              icon="el-icon-view"
-              @click="handleHeaderClick"
-            ></common-button>
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+              未生产({{ showUnit }})
+            </common-button>
           </template>
-          <template v-slot="scope">
-            <span class="tc-danger">{{ scope.row.unProducedQuantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          key="unProducedMete"
-          prop="unProducedMete"
-          :show-overflow-tooltip="true"
-          :label="`未生产(${showUnit})`"
-          align="center"
-          width="120"
-        >
-          <template v-slot="scope">
-            <span class="tc-danger">{{ scope.row.unProducedMete }}</span>
-          </template>
+          <el-table-column
+            key="unProducedQuantity"
+            prop="unProducedQuantity"
+            :show-overflow-tooltip="true"
+            :label="`未生产(${showUnit})`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span class="tc-danger">{{ scope.row.unProducedQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="unProducedMete"
+            prop="unProducedMete"
+            :show-overflow-tooltip="true"
+            :label="`未生产(${showUnit})`"
+            align="center"
+            width="120"
+          >
+            <template v-slot="scope">
+              <span class="tc-danger">{{ scope.row.unProducedMete }}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
       </common-table>
       <m-detail v-model:visible="detailVisible"></m-detail>
@@ -204,13 +199,17 @@ const list = ref([])
 // 设置表头合并
 function setColSpan() {
   // 获取表头的所有单元格
+  // const table = document.getElementById('groupArtifactTable')
+  // const x = table.getElementsByClassName('el-table__header')[0].rows[0].cells
+  // const needSetSpan = [5, 7, 9, 11]
+  // for (let i = 0; i < needSetSpan.length; i++) {
+  //   x[needSetSpan[i]].colSpan = 2
+  //   x[needSetSpan[i]].onClick = handleHeaderClick
+  //   x[needSetSpan[i] + 1].style.display = 'none'
+  // }
   const table = document.getElementById('groupArtifactTable')
-  const x = table.getElementsByClassName('el-table__header')[0].rows[0].cells
-  const needSetSpan = [5, 7, 9, 11]
-  for (let i = 0; i < needSetSpan.length; i++) {
-    x[needSetSpan[i]].colSpan = 2
-    x[needSetSpan[i] + 1].style.display = 'none'
-  }
+  const x = table.getElementsByClassName('el-table__header')[0].rows[1]
+  x.style.display = 'none'
 }
 
 function getSummaries(param) {

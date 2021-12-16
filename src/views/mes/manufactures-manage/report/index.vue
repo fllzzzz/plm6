@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader />
+      <mHeader @showDetail="showDetailSummary" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -50,7 +50,15 @@
           <span v-empty-text>{{ componentTypeEnum.VL[scope.row.productType] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('unit')" key="unit" prop="unit" :show-overflow-tooltip="true" label="单位" align="center" width="100">
+      <el-table-column
+        v-if="columns.visible('unit')"
+        key="unit"
+        prop="unit"
+        :show-overflow-tooltip="true"
+        label="单位"
+        align="center"
+        width="100"
+      >
         <template v-slot="scope">
           <span v-empty-text>{{ scope.row.unit }}</span>
         </template>
@@ -112,6 +120,7 @@
         </template>
       </el-table-column>
     </common-table>
+    <mDetail v-model:visible="detailVisible" :report-type="reportType" :item-info="itemInfo" :is-summary="isSummary" />
   </div>
 </template>
 
@@ -120,10 +129,12 @@ import crudApi from '@/api/mes/manufactures-manage/report'
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
+import { constantize } from '@enum/base'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import mDetail from './module/detail/index'
 
 const reportTypeEnum = {
   INBOUND: { L: '入库', K: 'INBOUND', V: 0 },
@@ -131,7 +142,7 @@ const reportTypeEnum = {
   BEGIN: { L: '期初库存', K: 'BEGIN', V: 2 },
   END: { L: '期末库存', K: 'END', V: 4 }
 }
-
+constantize(reportTypeEnum)
 provide('reportTypeEnum', reportTypeEnum)
 
 // crud交由presenter持有
@@ -156,16 +167,36 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: false,
+    dataPath: ''
   },
   tableRef
 )
+provide('query', crud.query)
 
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data = res.data.map((v) => {
     return v
   })
+}
+
+const detailVisible = ref(false)
+const reportType = ref()
+const itemInfo = ref({})
+const isSummary = ref(false)
+
+function showDetail(row, type) {
+  detailVisible.value = true
+  reportType.value = type
+  itemInfo.value = row
+  isSummary.value = false
+}
+function showDetailSummary(type) {
+  detailVisible.value = true
+  reportType.value = type
+  itemInfo.value = {}
+  isSummary.value = true
 }
 </script>

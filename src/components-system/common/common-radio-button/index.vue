@@ -10,6 +10,7 @@
         :disabled="disabledVal.indexOf(item[DS.value]) > -1"
       >
         {{ item[DS.label] }}
+        <slot name="suffix" :item="item"></slot>
       </el-radio-button>
     </template>
   </el-radio-group>

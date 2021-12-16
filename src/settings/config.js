@@ -75,13 +75,13 @@ export const MIN_UNIT = {
 }
 
 export const QR_SCAN_F_TYPE = {
-  MEW_PRODUCTION: 1,
-  MES_PACKAGE_SHIP: 2
+  MEW_PRODUCTION: 1, // 建钢产品
+  MES_PACKAGE_SHIP: 2// 建钢打包发运
 }
 
 export const QR_SCAN_TYPE = {
-  MES_PACKAGE: 1,
-  MES_SHIP_LIST: 2
+  MES_PACKAGE: 1, // 建钢包
+  MES_SHIP_LIST: 2// 建钢发运清单
 }
 
 // mes系统单位

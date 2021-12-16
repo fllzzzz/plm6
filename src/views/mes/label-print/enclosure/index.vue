@@ -226,9 +226,8 @@
 import crudApi from '@/api/mes/label-print/enclosure'
 import { ref, provide } from 'vue'
 
-import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
+import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
 import { printArtifact as printComponent } from '@/utils/print/index'
@@ -260,7 +259,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '产品标签-折边件',
+    title: '产品标签-围护',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
@@ -310,11 +309,13 @@ function getLabelInfo(row) {
     areaName: printConfig.showArea ? row.area.name : '',
     name: row.name,
     serialNumber: row.serialNumber,
+    color: row.color,
+    plateType: row.plate,
+    thickness: row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM),
+    length: convertUnits(row.length, 'mm', 'm', DP.MES_ARTIFACT_L__M),
     quantity: row.quantity,
     specification: row.specification,
-    drawingNumber: row.drawingNumber,
-    weight: printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
-    length: convertUnits(row.length, 'mm', 'm', DP.MES_ARTIFACT_L__M)
+    drawingNumber: row.drawingNumber
   }
   // 生产线信息
   const productionLine = getLine()
@@ -325,6 +326,7 @@ function getLabelInfo(row) {
     manufacturerName: printConfig.manufacturerName,
     qrCode: spliceQrCodeUrl(`${baseUrl}/#${QR_SCAN_PATH.ARTIFACT_TASK}`, {
       id: row.id, // id
+      ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION.V,
       factoryId: productionLine.factoryId, // 工厂id
       taskId: row.taskId, // 任务id
       type: componentTypeEnum.ARTIFACT.V, // 类型

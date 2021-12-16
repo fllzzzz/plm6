@@ -3,7 +3,7 @@
     <template #content>
       <common-table ref="table" v-loading="loading" :data="recordList" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column :show-overflow-tooltip="true" prop="operator" label="操作人" min-width="110px" />
+        <el-table-column :show-overflow-tooltip="true" prop="userName" label="操作人" min-width="110px" />
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="80px" />
         <el-table-column :show-overflow-tooltip="true" prop="time" label="打印时间" min-width="300px">
           <template v-slot="scope"> {{ parseTime(scope.row.startTime) }} ~ {{ parseTime(scope.row.endTime) }} </template>
