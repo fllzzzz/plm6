@@ -134,17 +134,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('returneeTime')"
-        key="returneeTime"
+        v-if="columns.visible('returnTime')"
+        key="returnTime"
         :show-overflow-tooltip="true"
-        prop="returneeTime"
+        prop="returnTime"
         label="归还日期"
         align="center"
         width="100"
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.returneeTime }}</span>
+          <span v-parse-time="'{y}-{m}-{d}'">{{ row.returnTime }}</span>
         </template>
       </el-table-column>
       <!-- 归还 -->
@@ -222,7 +222,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供物料借出管理',
     sort: ['id.desc'],
-    invisibleColumns: ['transferorName', 'transferTime', 'returnTransferSN', 'returneeTime'],
+    invisibleColumns: ['transferorName', 'transferTime', 'returnTransferSN', 'returnTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

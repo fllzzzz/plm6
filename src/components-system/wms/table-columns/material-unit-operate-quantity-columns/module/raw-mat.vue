@@ -30,16 +30,24 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 const props = defineProps({
   basicClass: {
+    // 基础分类
     type: Number
   },
   showUnit: {
+    // 是否显示单位
     type: Boolean,
     default: true
+  },
+  showSteelUnit: {
+    // 是否显示钢材单位
+    type: Boolean,
+    default: false
   },
   columns: {
     type: Object
@@ -84,8 +92,17 @@ const quantityLabel = computed(() => {
   }
 })
 
-const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('measureUnit')))
-const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
+// 是否显示单位
+const showUnit = computed(() => {
+  if (props.basicClass & STEEL_ENUM) {
+    return props.showSteelUnit && props.showUnit
+  } else {
+    return props.showUnit
+  }
+})
+
+const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
+const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
 </script>

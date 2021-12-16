@@ -6,7 +6,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import useMaxHeight from '@compos/use-max-height'
 
-export default function useMainInfo({ CRUD, crud, defaultBasicClass }) {
+export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
   // 展开keys
   const expandRowKeys = ref([])
 

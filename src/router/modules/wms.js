@@ -121,6 +121,24 @@ export default {
       ]
     },
     {
+      path: '/wms/scrap-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSScrapManage',
+      alwaysShow: true,
+      redirect: '/wms/scrap-manage/steel/index',
+      meta: { title: '废料管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'WMSSteelScrapList',
+          path: 'steel-list',
+          hidden: false,
+          component: '/wms/scrap-manage/steel/index',
+          meta: { title: '钢材列表', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/wms/freeze-manage',
       component: 'Layout',
       hidden: false,
@@ -142,6 +160,31 @@ export default {
           hidden: false,
           component: '/wms/freeze-manage/raw-mat-unfreeze-record/index',
           meta: { title: '原材料-解冻记录', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/report',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSReport',
+      alwaysShow: false,
+      redirect: '/wms/report/return-to-party-a',
+      meta: { title: '报表中心', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'WMSReturnToPartyARecord',
+          path: 'return-to-party-a',
+          hidden: false,
+          component: '/wms/operate-record/return-to-party-a/index',
+          meta: { title: '归还甲方', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSPartyABuyInRecord',
+          path: 'party-a-buy-in',
+          hidden: false,
+          component: '/wms/operate-record/party-a-buy-in/index',
+          meta: { title: '甲供买入', icon: 'project', noCache: true }
         }
       ]
     },

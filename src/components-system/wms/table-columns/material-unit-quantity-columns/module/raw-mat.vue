@@ -40,6 +40,7 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
@@ -53,6 +54,11 @@ const props = defineProps({
     // 是否显示单位
     type: Boolean,
     default: true
+  },
+  showSteelUnit: {
+    // 是否显示钢材单位
+    type: Boolean,
+    default: false
   },
   outboundTypeMode: {
     // 出库单位 模式（显示出库单位对应的数量及单位）
@@ -80,7 +86,7 @@ const props = defineProps({
 
 const mateLabel = computed(() => {
   let label = ''
-  if (props.showUnit) {
+  if (props.showUnit && props.showSteelUnit) {
     label = '核算量'
   } else {
     switch (props.basicClass) {
@@ -101,7 +107,7 @@ const mateLabel = computed(() => {
 
 const quantityLabel = computed(() => {
   let label = ''
-  if (props.showUnit) {
+  if (props.showUnit && props.showSteelUnit) {
     label = '数量'
   } else {
     switch (props.basicClass) {
@@ -124,8 +130,17 @@ const quantityLabel = computed(() => {
   return (props.labelPrefix || '') + label
 })
 
-const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('measureUnit')))
-const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
+// 是否显示单位
+const showUnit = computed(() => {
+  if (props.basicClass & STEEL_ENUM) {
+    return props.showSteelUnit && props.showUnit
+  } else {
+    return props.showUnit
+  }
+})
+
+const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
+const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(props.quantityField))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(props.meteField))
 

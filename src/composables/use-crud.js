@@ -1033,8 +1033,18 @@ function addCrudFeatureMethod(crud, data) {
         }
         columns[e.property] = {
           label: e.label,
-          visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+          // visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
+          visible: true
         }
+      })
+      nextTick(() => {
+        // 避免在极其特殊的情况下，table.getColumns()读取字段时，dom已经被v-if display：none掉
+        // 不使用nextTick, 归还甲方-默认隐藏炉批号可触发该问题
+        crud.invisibleColumns.forEach(property => {
+          if (columns[property]) {
+            columns[property].visible = false
+          }
+        })
       })
     })
     // // 显示列的方法
