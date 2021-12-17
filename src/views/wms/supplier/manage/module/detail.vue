@@ -15,13 +15,13 @@
       </span>
     </template>
     <div class="form">
-      <el-form ref="formRef" size="small" label-width="100px" class="demo-form">
+      <el-form  v-loading="crud.detailLoading" ref="formRef" size="small" label-width="100px" class="demo-form">
         <div class="rule-row">
           <el-form-item label="供应商名称" prop="name">
             <span>{{ detail.name }}</span>
           </el-form-item>
-          <el-form-item label="供应商分类" prop="supplierClass">
-            <div>{{ detail.supplierClassificationLable }}</div>
+          <el-form-item label="供应商分类" prop="supplierClassificationLabel">
+            <div>{{ detail.supplierClassificationLabel }}</div>
           </el-form-item>
           <el-form-item label="主营业务" prop="mainBusiness">
             <div>{{ detail.mainBusiness }}</div>
@@ -107,7 +107,6 @@ import { ref } from 'vue'
 
 import { supplierClassEnum } from '@enum-ms/supplier'
 import { fileClassifyEnum } from '@enum-ms/file'
-import { getBitwiseBack } from '@data-type/number'
 import { getLabelByBit } from '@/utils/enum/base'
 
 import { regDetail } from '@compos/use-crud'
@@ -119,18 +118,18 @@ const formRef = ref()
 const dict = useDict(['enterprise_type'])
 const { crud, detail, CRUD } = regDetail()
 
-CRUD.HOOK.beforeToDetail = async (crud, form) => {
+// 详情加载后
+CRUD.HOOK.beforeDetailLoaded = async (crud) => {
   try {
-    const supplierDetail = { ...form }
+    const supplierDetail = { ...detail }
     const list = [supplierDetail.countryId, supplierDetail.provinceId, supplierDetail.cityId, supplierDetail.regionId]
     supplierDetail.area = list.filter(val => {
       return !(!val || val === '')
     })
     supplierDetail.files = supplierDetail.attachments || []
-    supplierDetail.supplierClass = getBitwiseBack(supplierDetail.supplierClassification)
-    supplierDetail.supplierClassificationLable = getLabelByBit(supplierClassEnum, supplierDetail.supplierClassification, '、')
-    Object.assign(crud.form, supplierDetail)
-    getEnterpriseTypeName(crud.detail.enterpriseType)
+    supplierDetail.supplierClassificationLabel = getLabelByBit(supplierClassEnum, supplierDetail.supplierClassification, '、')
+    Object.assign(detail, supplierDetail)
+    getEnterpriseTypeName(detail.enterpriseType)
   } catch (error) {
     crud.notify('获取供应商详情失败', CRUD.NOTIFICATION_TYPE.ERROR)
   }
@@ -139,7 +138,7 @@ CRUD.HOOK.beforeToDetail = async (crud, form) => {
 // 获取企业类型名称
 function getEnterpriseTypeName(type) {
   dict.value.enterprise_type.forEach(item => {
-    if (item.value === type) crud.detail.enterpriseTypeName = item.label
+    if (item.value === type) detail.enterpriseTypeName = item.label
   })
 }
 </script>

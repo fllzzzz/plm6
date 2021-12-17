@@ -1,3 +1,29 @@
+const getDictDetailAll = {
+  url: '/api/dictDetail/all',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      'code': 20000,
+      'message': '操作成功',
+      'data': {
+        'content|1-3': [
+          {
+            createTime: '@datetime(T)',
+            'id|+1': 1,
+            'label|+1': ['保函', '现金', '支票'],
+            'name': 'margin_type',
+            'remark': '合同-保证金类型',
+            'sort|+1': 1,
+            updateTime: '@datetime(T)',
+            'value|+1': 1
+          }
+        ]
+      }
+    }
+  }
+}
+
 const getDictDetail = {
   url: '/api/dictDetail',
   method: 'get',
@@ -79,6 +105,7 @@ const ediDictDetail = {
 }
 
 export default [
+  getDictDetailAll,
   getDictDetail,
   addDictDetail,
   delDictDetail,
