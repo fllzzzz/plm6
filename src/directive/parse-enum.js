@@ -13,14 +13,14 @@ export default {
 }
 
 function resolve(el, binding) {
-  const { value: { e, v, bit = false, split = '、', emptyText, extra = '' }} = binding
+  const { value: { e, v, f = 'L', bit = false, split = '、', emptyText, extra = '' }} = binding
   let text
   if (Array.isArray(v)) {
-    text = v.map(v => e.VL[v]).join(split)
+    text = v.map(v => e.V[v][f]).join(split)
   } else if (bit) {
-    text = cleanArray(EO.getBits(e, v, 'L')).join(split)
+    text = cleanArray(EO.getBits(e, v, f)).join(split)
   } else {
-    text = e.VL[v] || ''
+    text = e.V[v][f] || ''
   }
   if (!text) return
   text += extra

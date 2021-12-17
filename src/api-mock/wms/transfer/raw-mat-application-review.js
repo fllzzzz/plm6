@@ -1,6 +1,7 @@
 import { transferTypeEnum, partyAMatTransferEnum } from '@enum-ms/wms'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { matClsEnum, rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 // 待审核调拨单id列表
 const getPendingReviewIdList = {
@@ -758,6 +759,8 @@ const detail_id5 = {
         id: 5, // 调拨单id
         basicClass: rawMatClsEnum.GAS.V, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
+        invoiceType: invoiceTypeEnum.SPECIAL.V,
+        taxRate: 13,
         source: [
           {
             factory: {

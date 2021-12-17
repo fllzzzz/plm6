@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" />
+  <component :is="comp" :columns="columns" :show-invoice-type="showInvoiceType" :show-tax-rate="showTaxRate" />
 </template>
 
 <script setup>
@@ -13,6 +13,16 @@ const props = defineProps({
   },
   columns: { // 用于crud组件的列显隐
     type: Object
+  },
+  // 显示票据类型
+  showInvoiceType: {
+    type: Boolean,
+    default: false
+  },
+  // 显示税率
+  showTaxRate: {
+    type: Boolean,
+    default: false
   }
 })
 

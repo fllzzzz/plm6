@@ -1,11 +1,11 @@
-import { inject, watch, ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { mapGetters } from '@/store/lib'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
+import useProjectChangeByWarehouseType from '@/composables/wms/use-project-change-by-warehouse-type'
 
-export default function useMainInfo({ defaultBasicClass }) {
+export default function useIndexInfo({ defaultBasicClass }) {
   const router = useRouter()
   const permission = inject('permission')
 
@@ -25,19 +25,7 @@ export default function useMainInfo({ defaultBasicClass }) {
   // 显示批量调拨
   const batchTransferHandlingVisible = ref(false)
 
-  // 全局项目id
-  const { globalProjectId } = mapGetters('globalProjectId')
-  // 选中项目库时， 根据项目id的变化刷新列表
-  watch(
-    globalProjectId,
-    (val) => {
-      if (query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-        crud.query.projectId = val
-        crud.toQuery()
-      }
-    },
-    { immediate: true }
-  )
+  useProjectChangeByWarehouseType({ crud })
 
   // 去出库记录
   function toOutboundRecord() {

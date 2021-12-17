@@ -46,7 +46,7 @@
 import { defineExpose } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
-import useHeaderInfo from '../../compos/useHeaderInfo'
+import useHeaderInfo from '../../compos/use-header-info'
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'

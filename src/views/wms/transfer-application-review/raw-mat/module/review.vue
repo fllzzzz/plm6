@@ -32,7 +32,7 @@
       />
     </template>
     <template #content>
-      <el-form class="form" :disabled="formDisabled" size="mini">
+      <el-form ref="formRef" class="form" :model="form" :rules="rules" :disabled="formDisabled" label-position="left" size="mini">
         <common-table
           :data="form.list"
           :max-height="maxHeight"
@@ -65,16 +65,27 @@
           <!-- 仓库设置 -->
           <warehouse-info-columns show-project />
         </common-table>
-        <el-input
-          class="approval-comments"
-          v-model="form.approvalComments"
-          :rows="2"
-          :max="1000"
-          type="textarea"
-          show-word-limit
-          placeholder="审核意见"
-          style="margin-top: 5px"
-        />
+        <div class="flex-rss footer-info">
+          <el-form-item v-if="showPriceSet" class="invoice-type-item" label="发票及税率" prop="invoiceType" label-width="95px">
+            <invoice-type-select
+              class="input-underline"
+              v-model:invoiceType="form.invoiceType"
+              v-model:taxRate="form.taxRate"
+              :classification="form.basicClass"
+              default
+            />
+          </el-form-item>
+          <el-input
+            class="approval-comments"
+            v-model="form.approvalComments"
+            :rows="2"
+            :max="1000"
+            type="textarea"
+            show-word-limit
+            placeholder="审核意见"
+            style="margin-top: 5px"
+          />
+        </div>
       </el-form>
     </template>
   </common-drawer>
@@ -82,12 +93,12 @@
 
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/transfer/raw-mat-application-review'
-import { computed, ref, defineEmits, defineProps, watch } from 'vue'
+import { computed, ref, defineEmits, defineProps, watch, nextTick } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
-import { transferTypeEnum } from '@/utils/enum/modules/wms'
+import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 
 import useTableValidate from '../composables/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -100,8 +111,11 @@ import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import ReviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
 import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
+import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
+
 import commonTitleInfo from './common-title-info.vue'
 import setPartyAInfo from './set-party-a-info.vue'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 const emit = defineEmits(['refresh', 'update:visible'])
 
 const props = defineProps({
@@ -119,6 +133,7 @@ const props = defineProps({
 
 const reviewConvenientRef = ref() // 连续审核
 const drawerRef = ref() // 当前drawer
+const formRef = ref() // 当前form
 
 const detailLoading = ref(false) // 详情loading
 const passedLoading = ref(false) // 提交loading
@@ -153,6 +168,39 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 // 表格校验
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate()
+
+// 税率设置（价格设置时，可设置）
+const showPriceSet = computed(() =>
+  form.value.list.some((row) => row.boolPartyA && row.partyATransferType === partyAMatTransferEnum.BUY_IN.V)
+)
+
+const validateInvoiceType = (rule, value, callback) => {
+  if (form.value.invoiceType || form.value.invoiceType === 0) {
+    if (form.value.invoiceType === invoiceTypeEnum.SPECIAL.V && !form.value.taxRate) {
+      callback(new Error('请选择税率'))
+      return
+    } else {
+      callback()
+    }
+  } else {
+    callback(new Error('请选择发票及税率'))
+    return
+  }
+}
+
+const invoiceRules = {
+  invoiceType: [
+    { required: true, validator: validateInvoiceType, trigger: 'change' }
+  ]
+}
+
+const rules = computed(() => {
+  nextTick(() => {
+    // 清除所有校验，rules
+    formRef.value && formRef.value.clearValidate()
+  })
+  return showPriceSet.value ? invoiceRules : {}
+})
 
 // 监听数据变化
 watch(
@@ -230,7 +278,8 @@ async function validate(form) {
   if (validResult) {
     form.list = dealList
   }
-  return validResult
+  const formValidate = await formRef.value.validate()
+  return validResult && formValidate
 }
 
 // 表单提交数据清理
@@ -340,6 +389,10 @@ function getSummaries(param) {
       min-height: 28px;
       line-height: 28px;
     }
+  }
+
+  .invoice-type-item {
+    margin: 14px 15px 0 0;
   }
 }
 </style>

@@ -29,7 +29,7 @@
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="crud.toQuery" />
       <!-- 单位及其数量 -->
-      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" :show-unit="false" />
+      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <warehouse-info-columns :columns="columns" />
@@ -73,7 +73,7 @@ import { getSteelPlateInventory } from '@/api/wms/material-inventory'
 import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 
 import useCRUD from '@compos/use-crud'
-import useMainInfo from '../compos/useMainInfo'
+import useIndexInfo from '../compos/use-index-info'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -126,5 +126,5 @@ const {
   toOutHandle,
   handleOutboundSuccess,
   handleTransferSuccess
-} = useMainInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
+} = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
 </script>

@@ -57,7 +57,7 @@ const get = {
             //     serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 归还调拨单号
             //   }
             // ],
-            // returneeTime: '@datetime(T)', // 归还时间（归还调拨审核通过时间）
+            // returnTime: '@datetime(T)', // 归还时间（归还调拨审核通过时间）
             transferorName: '@cname', // 调拨人
             transferTime: '@datetime(T)' // 调拨时间
           },
@@ -104,7 +104,7 @@ const get = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 归还调拨单号
               }
             ],
-            // returneeTime: '@datetime(T)', // 归还时间（归还调拨审核通过）
+            // returnTime: '@datetime(T)', // 归还时间（归还调拨审核通过）
             transferorName: '@cname', // 调拨人
             transferTime: '@datetime(T)' // 调拨时间
           }

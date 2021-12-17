@@ -1,10 +1,10 @@
 <template>
-  <span class="invoice-type-select child-mr-10">
+  <span class="invoice-type-select flex-rsc child-mr-10">
     <common-select
       v-model="copyInvoiceType"
       :options="invoiceTypeEnum.ENUM"
       type="enum"
-      clearable
+      :clearable="props.clearable"
       :disabled="props.disabled"
       style="width: 150px"
       placeholder="选择票据类型"
@@ -20,7 +20,7 @@
         allow-create
         style="width: 80px"
         default
-        clearable
+        :clearable="props.clearable"
         filterable
         placeholder="税率"
         @blur="selectBlur"
@@ -59,6 +59,10 @@ const props = defineProps({
     default: false
   },
   disabled: {
+    type: Boolean,
+    default: false
+  },
+  clearable: {
     type: Boolean,
     default: false
   }

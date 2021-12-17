@@ -68,7 +68,6 @@
           :operable-quantity-field="boolPublicWare ? 'projectOperableQuantity' : undefined"
           :operable-mete-field="boolPublicWare ? 'projectOperableMete' : undefined"
           :basic-class="basicClass"
-          :show-unit="!(basicClass & STEEL_ENUM)"
         />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />

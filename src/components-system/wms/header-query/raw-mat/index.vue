@@ -12,8 +12,9 @@
         class="filter-item"
         @change="toQuery"
       />
+      <slot name="afterProjectWarehouseType" />
       <common-radio-button
-        v-if="basicClass & STEEL_ENUM"
+        v-if="showMaterialIsWhole && (basicClass & STEEL_ENUM)"
         v-model="queryVO.materialIsWhole"
         :options="materialIsWholeEnum.ENUM"
         show-option-all
@@ -22,7 +23,6 @@
         class="filter-item"
         @change="toQuery"
       />
-      <slot name="afterProjectWarehouseType" />
       <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
       <warehouse-select
         v-model="queryVO.warehouseId"
@@ -34,6 +34,7 @@
         clearable
         @change="toQuery"
       />
+      <slot name="afterWarehouse" />
     </div>
     <div>
       <slot name="firstLineRight" />
@@ -88,6 +89,10 @@ const props = defineProps({
   showProjectWarehouseType: {
     type: Boolean,
     default: false
+  },
+  showMaterialIsWhole: {
+    type: Boolean,
+    default: true
   }
 })
 

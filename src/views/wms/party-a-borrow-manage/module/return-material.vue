@@ -78,7 +78,7 @@
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
-        <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
+        <material-unit-operate-quantity-columns :basic-class="basicClass"  />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns show-project />
@@ -106,7 +106,6 @@
 import { returnMaterial, getReturnableMatListById } from '@/api/wms/transfer/party-a-borrow-manage'
 import { defineEmits, defineProps, ref, watch, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { STEEL_ENUM } from '@/settings/config'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 

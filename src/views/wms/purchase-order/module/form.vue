@@ -61,13 +61,7 @@
             </el-form-item>
 
             <el-form-item label="选择项目" class="el-form-item-4" prop="projectIds">
-              <project-cascader
-                v-model="form.projectIds"
-                clearable
-                :disabled="form.boolUsed"
-                multiple
-                class="input-underline"
-              />
+              <project-cascader v-model="form.projectIds" clearable :disabled="form.boolUsed" multiple class="input-underline" />
             </el-form-item>
             <el-form-item class="el-form-item-20" prop="areaIds">
               <area-table-tree
@@ -253,7 +247,7 @@ const validateInvoiceType = (rule, value, callback) => {
       callback()
     }
   } else {
-    callback(new Error('请选择订单税率'))
+    callback(new Error('请选择发票及税率'))
     return
   }
 }
@@ -270,32 +264,34 @@ const validateArea = (rule, value, callback) => {
   callback()
 }
 
+// 基础校验
 const baseRules = {
   serialNumber: [{ max: 30, message: '订单编号长度不可超过30位', trigger: 'blur' }],
-
   supplyType: [{ required: true, message: '请选择供货类型', trigger: 'change' }],
   purchaseType: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   basicClass: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
   supplierId: [{ required: true, message: '请选择供应商', trigger: 'change' }]
 }
 
+// 自采物料校验
 const selfRules = {
   weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
   pickUpMode: [{ required: true, message: '请选择提货方式', trigger: 'change' }],
   purchaseOrderPaymentMode: [{ required: true, message: '请选择订单类型', trigger: 'change' }],
-  invoiceType: [
-    { required: true, message: '请选择发票类型', trigger: 'change' },
-    { validator: validateInvoiceType, trigger: 'change' }
-  ],
+  invoiceType: [{ required: true, validator: validateInvoiceType, trigger: 'change' }],
   taxRate: [{ max: 2, message: '请输入税率', trigger: 'blur' }],
   mete: [{ required: true, message: '请填写合同量', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写合同额', trigger: 'blur' }]
 }
 
-const rawMatRules = {
-
+// 甲供校验
+const partyARules = {
+  projectIds: [{ required: true, message: '请选择项目', trigger: 'change' }]
 }
 
+const rawMatRules = {}
+
+// 制成品校验
 const manufRules = {
   projectIds: [{ required: true, message: '请选择项目', trigger: 'change' }],
   areaIds: [
@@ -316,11 +312,14 @@ const rules = computed(() => {
   if (form.supplyType === orderSupplyTypeEnum.SELF.V) {
     Object.assign(r, selfRules)
   }
+  if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
+    Object.assign(r, partyARules)
+  }
   // const newFields = Object.keys(r)
   // const clearFields = oldFields.filter(v => !newFields.includes(v))
   // 清除被删除的rules
   nextTick(() => {
-  // 清除所有校验，rules
+    // 清除所有校验，rules
     formRef.value && formRef.value.clearValidate()
   })
   return r

@@ -61,7 +61,7 @@ import { ref } from 'vue'
 import { getAuxMatInventory } from '@/api/wms/material-inventory'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
-import useMainInfo from '../compos/useMainInfo'
+import useIndexInfo from '../compos/use-index-info'
 import useCRUD from '@compos/use-crud'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
@@ -113,5 +113,5 @@ const {
   toOutHandle,
   handleOutboundSuccess,
   handleTransferSuccess
-} = useMainInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.MATERIAL.V })
+} = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.MATERIAL.V })
 </script>
