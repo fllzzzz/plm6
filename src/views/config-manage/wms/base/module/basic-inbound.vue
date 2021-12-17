@@ -79,7 +79,6 @@ async function fetchData() {
   try {
     const res = await getInboundBasicConf()
     form.value = deepClone(res)
-
     dataSource.value = res
   } catch (error) {
     console.log('wms基础配置', error)

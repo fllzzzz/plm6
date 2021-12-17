@@ -26,6 +26,7 @@ import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { isBlank } from '@/utils/data-type'
 
+import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 
@@ -56,8 +57,7 @@ const validateQuantity = (rule, value, callback) => {
 const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' },
-    { validator: validateQuantity, trigger: 'change' }
+    { required: true, validator: validateQuantity, trigger: 'blur' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
@@ -65,6 +65,9 @@ const rules = {
 const formRef = ref()
 // 表单
 const form = ref({})
+
+// 监听校验
+useWatchFormValidate(formRef, form, ['quantity'])
 // 当前用户
 const { user } = mapGetters('user')
 // 材料

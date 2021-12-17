@@ -35,6 +35,7 @@ import { mapGetters } from '@/store/lib'
 import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
 import { isBlank } from '@/utils/data-type'
 
+import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 
@@ -96,7 +97,8 @@ const form = ref({})
 const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
-
+// 监听校验
+useWatchFormValidate(formRef, form, ['quantity', 'halfSize'])
 // 最大数量
 const maxQuantity = computed(() => {
   if (!form.value || !form.value.projectId || !material.value.projectFrozenForUnitKV) return material.value.corOperableQuantity

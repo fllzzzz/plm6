@@ -141,14 +141,15 @@ onMounted(() => {
   fetchData()
 })
 
+useWatchFormValidate(formRef, form)
+
 // 加载数据
 async function fetchData() {
   dataLoading.value = true
   try {
     const res = await getInboundSteelConf()
+    form.value = deepClone(res)
     dataSource.value = res
-    Object.assign(form.value, res)
-    useWatchFormValidate(formRef, form.value)
   } catch (error) {
     console.log('获取入库钢材配置', error)
   } finally {
