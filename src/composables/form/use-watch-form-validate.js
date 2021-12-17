@@ -9,7 +9,8 @@ import { watch, nextTick } from 'vue'
  */
 export default function useWatchFormValidate(formRef, form, fields) {
   nextTick(() => {
-    const fls = fields || Object.keys(form)
+    const fls = fields || Object.keys(form.value)
+    console.log(formRef, form, fields)
     fls.forEach(field => {
       let _wField
       let _vField
@@ -17,19 +18,19 @@ export default function useWatchFormValidate(formRef, form, fields) {
         if (Array.isArray(field[1])) {
           _wField = []
           field[1].forEach(v => {
-            _wField.push(() => form[v])
+            _wField.push(() => form.value[v])
           })
         } else {
-          _wField = () => form[_wField]
+          _wField = () => form.value[_wField]
         }
         _vField = field[0] // 校验字段
       } else {
-        _wField = () => form[_wField]
         _vField = field
+        _wField = () => form.value[_vField]
       }
       watch(
         _wField,
-        (val) => {
+        () => {
           formRef.value && formRef.value.validateField(_vField)
         })
     })
