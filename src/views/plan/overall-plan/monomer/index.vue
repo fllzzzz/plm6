@@ -158,26 +158,20 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     no: TechnologyTypeAllEnum.ENUM.BENDING.V,
   }
 ]
-data.data.content.forEach(v=>{
-  if(v.monomerDetailList.length>0){
-    originOption.forEach(val=>{
-      const choseVal = v.monomerDetailList.find(k=>k.type===val.no)
-      if(choseVal){
-        v[val.key] = choseVal.mete
-        v[val.key+'Date'] = String(choseVal.date)
-      }else{
-        v[val.key] = undefined
-        v[val.key+'Date'] = undefined
-      }
-    })
-  }
-  return v
-})
-  // const arr= ['date', 'mainStructureDate', 'contourPlateDate', 'trussFloorPlateDate', 'battenBoardDate', 'pressureBearingPlateDate', 'flangingPieceDate']
-  // data.data.content.forEach(v=>{
-  //   arr.forEach(k=>{
-  //     v[k]=String(v[k])
-  //   })
-  // })
+  data.data.content.forEach(v=>{
+    if(v.monomerDetailList.length>0){
+      originOption.forEach(val=>{
+        const choseVal = v.monomerDetailList.find(k=>k.type===val.no)
+        if(choseVal){
+          v[val.key] = choseVal.mete
+          v[val.key+'Date'] = String(choseVal.date)
+        }else{
+          v[val.key] = undefined
+          v[val.key+'Date'] = undefined
+        }
+      })
+    }
+    return v
+  })
 }
 </script>
