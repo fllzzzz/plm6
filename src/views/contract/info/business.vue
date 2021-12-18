@@ -123,23 +123,23 @@
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="工程结算方式" prop="settlementType">
+            <el-form-item label="工程结算方式" prop="structureMeasureMode">
               <common-radio
                 v-if="isModify"
-                v-model="form.settlementType"
+                v-model="form.structureMeasureMode"
                 :options="engineerSettlementTypeEnumN.ENUM"
                 type="enum"
               />
-              <span v-else>{{ isNotBlank(detail.settlementType)? engineerSettlementTypeEnumN.VL[detail.settlementType] : '' }}</span>
+              <span v-else>{{ isNotBlank(detail.structureMeasureMode)? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : '' }}</span>
             </el-form-item>
-            <el-form-item label="围护结算方式" prop="enclosurePriceType">
+            <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
               <common-radio
                 v-if="isModify"
-                v-model="form.enclosurePriceType"
+                v-model="form.enclosureMeasureMode"
                 :options="enclosureSettlementTypeEnum.ENUM"
                 type="enum"
               />
-              <span v-else>{{ isNotBlank(detail.enclosurePriceType)? enclosureSettlementTypeEnum.VL[detail.enclosurePriceType] : '' }}</span>
+              <span v-else>{{ isNotBlank(detail.enclosureMeasureMode)? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : '' }}</span>
             </el-form-item>
           </div>
           <div class="form-row">
@@ -152,14 +152,14 @@
               />
               <span v-else>{{ isNotBlank(detail.transportMode)? transportModeEnum.VL[detail.transportMode] : '' }}</span>
             </el-form-item>
-            <el-form-item label="支付方式" prop="paymentMode">
+            <el-form-item label="支付方式" prop="payType">
               <common-radio
                 v-if="isModify"
-                v-model="form.paymentMode"
+                v-model="form.payType"
                 :options="paymentModeEnum.ENUM"
                 type="enum"
               />
-              <span v-else>{{ isNotBlank(detail.paymentMode)? paymentModeEnum.VL[detail.paymentMode] : '' }}</span>
+              <span v-else>{{ isNotBlank(detail.payType)? paymentModeEnum.VL[detail.payType] : '' }}</span>
             </el-form-item>
           </div>
           <div class="form-row">
@@ -277,10 +277,10 @@ const defaultForm = {
   singerId: undefined, // 签约人
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
-  settlementType: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
-  enclosurePriceType: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
+  structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
+  enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
-  paymentMode: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
+  payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
   isTaxInclusive: true, // 是否含税
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   paymentDescription: undefined, // 付款方式描述
@@ -432,8 +432,8 @@ async function fetchDetail() {
   let _detail = {}
   try {
     const res = await getContractBusiness(props.projectId)
-    if (!res.enclosurePriceType) {
-      res.enclosurePriceType = enclosureSettlementTypeEnum.LENGTH.V
+    if (!res.enclosureMeasureMode) {
+      res.enclosureMeasureMode = enclosureSettlementTypeEnum.LENGTH.V
     }
     _detail = JSON.parse(JSON.stringify(res))
     const data = await getContractTechInfo(props.projectId)
@@ -494,7 +494,7 @@ defineExpose({
 // // import UploadList from '@/components/FileUpload/UploadList'
 // // import ExcelUploadResolve from '@/components/FileUpload/ExcelUploadResolve'
 // import { debounce } from '@/utils'
-// import enumOperate, { fileClassifyEnum, paymentModeEnum, invoiceTypeEnum, engineerSettlementTypeEnum, transportModeEnum, enclosureSettlementTypeEnum, projectTypeEnumN, businessTypeEnum, projectContent, projectContentME, TechnologyTypeEnum as enclosureTypeEnum } from '@/utils/enum/index'
+// import enumOperate, { fileClassifyEnum, payTypeEnum, invoiceTypeEnum, engineerSettlementTypeEnum, transportModeEnum, enclosureSettlementTypeEnum, projectTypeEnumN, businessTypeEnum, projectContent, projectContentME, TechnologyTypeEnum as enclosureTypeEnum } from '@/utils/enum/index'
 // import { tableValidate } from '@/utils/other'
 // import checkPermission from '@/utils/permission'
 // import enclosureShow from '@/views/contract/project/module/enclosure-show'
@@ -510,7 +510,7 @@ defineExpose({
 // }
 
 // const projectTypeEnumV = enumOperate.getVal(projectTypeEnumN)
-// const paymentModeEnumV = enumOperate.getVal(paymentModeEnum)
+// const payTypeEnumV = enumOperate.getVal(payTypeEnum)
 // const invoiceTypeEnumV = enumOperate.getVal(invoiceTypeEnum)
 // const engineerSettlementTypeEnumV = enumOperate.getVal(engineerSettlementTypeEnum)
 // const transportModeEnumV = enumOperate.getVal(transportModeEnum)
@@ -521,11 +521,11 @@ defineExpose({
 
 // const defaultForm = {
 //   contractSignBodyId: undefined, // 合同签订主体
-//   settlementType: engineerSettlementTypeEnum.THEORY.V, // 工程结算方式
-//   enclosurePriceType: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
+//   structureMeasureMode: engineerSettlementTypeEnum.THEORY.V, // 工程结算方式
+//   enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
 //   // otherSettlement: undefined, // 其他结算方式
 //   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
-//   paymentMode: paymentModeEnum.PUBLIC_TRANSFER.V, // 收款方式
+//   payType: payTypeEnum.PUBLIC_TRANSFER.V, // 收款方式
 //   isTaxInclusive: true, // 是否含税
 //   invoiceType: invoiceTypeEnum.SPECIAL_INVOICE.V, // 发票类型
 //   paymentDescription: undefined, // 付款方式描述
@@ -558,8 +558,8 @@ defineExpose({
 //     return {
 //       permission,
 //       fileClassifyEnum,
-//       paymentModeEnum,
-//       paymentModeEnumV,
+//       payTypeEnum,
+//       payTypeEnumV,
 //       invoiceTypeEnum,
 //       invoiceTypeEnumV,
 //       transportModeEnum,
@@ -750,8 +750,8 @@ defineExpose({
 //       let _detail = {}
 //       try {
 //         const res = await getDetail(this.currentProjectId)
-//         if (!res.enclosurePriceType) {
-//           res.enclosurePriceType = enclosureSettlementTypeEnum.LENGTH.V
+//         if (!res.enclosureMeasureMode) {
+//           res.enclosureMeasureMode = enclosureSettlementTypeEnum.LENGTH.V
 //         }
 //         _detail = JSON.parse(JSON.stringify(res))
 //         _detail.settlementAttachments = _detail.settlementAttachments || []

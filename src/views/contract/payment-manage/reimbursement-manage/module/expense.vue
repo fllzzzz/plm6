@@ -1,8 +1,8 @@
 <!-- 项目：部门人员列表 -->
 <template>
   <el-cascader
-    ref="userDeptCascaderRef"
-    class="user-dept-cascader"
+    ref="expenseRef"
+    class="expense-cascader"
     v-model="copyValue"
     :placeholder="placeholder"
     :options="options"
@@ -20,8 +20,7 @@
 <script setup>
 import { defineExpose, defineProps, defineEmits, computed, watch, ref } from 'vue'
 import { isNotBlank, isBlank, deepClone, judgeSameValue } from '@data-type/index'
-
-import useUserDeptTree from '@compos/store/use-user-dept-tree'
+import { get as getExpense } from '@/api/contract/expense-config'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
@@ -32,11 +31,6 @@ const props = defineProps({
   },
   // 禁用值 id
   disabledVal: {
-    type: Array,
-    default: () => [],
-  },
-  // 部门id
-  deptIds: {
     type: Array,
     default: () => [],
   },
@@ -58,7 +52,7 @@ const props = defineProps({
   // 输入框显示全路径
   showAllLevels: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   // 分隔符
   separator: {
@@ -68,7 +62,7 @@ const props = defineProps({
   // 提示
   placeholder: {
     type: String,
-    default: '请选择用户',
+    default: '请选择',
   },
   // 多选
   multiple: {
@@ -77,7 +71,7 @@ const props = defineProps({
   },
   checkStrictly: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   // 返回结果全路径
   emitPath: {
@@ -89,20 +83,21 @@ const props = defineProps({
     type: Object,
     require: false,
   },
+  dataIndex: {
+    type: Number,
+  },
 })
 
-const userDeptCascaderRef = ref()
+const expenseRef = ref()
 const copyValue = ref()
 
 const options = ref([])
-
-const { userDeptTree } = useUserDeptTree()
 
 const cascaderProps = computed(() => {
   return {
     value: 'id',
     label: 'label',
-    children: 'children',
+    children: 'links',
     expandTrigger: 'hover',
     emitPath: props.emitPath,
     multiple: props.multiple,
@@ -110,14 +105,31 @@ const cascaderProps = computed(() => {
   }
 })
 
-// 监听全局科目选项
-watch(
-  [userDeptTree, () => props.deptIds],
-  ([list]) => {
-    setOptions(list)
-  },
-  { deep: true, immediate: true }
-)
+getExpenseData()
+
+async function getExpenseData() {
+  let data = []
+  try {
+    const { content = [] } = await getExpense()
+    if (content && content.length > 0) {
+      content.forEach((v) => {
+        v.label = v.name
+        v.type = 1
+        if (v.links.length > 0) {
+          v.links.forEach((val) => {
+            val.parentId = v.id
+            val.type = 2
+          })
+        }
+      })
+    }
+    data = content
+  } catch (e) {
+    console.log('获取报销类别', e)
+  } finally {
+    options.value = data.length > 0 ? data : []
+  }
+}
 
 watch(
   () => props.modelValue,
@@ -149,50 +161,22 @@ function handleChange(val) {
 
   if (isChange && !allBlank) {
     emit('update:modelValue', val)
-    emit('change', val)
+    const choseVal = getNodeInfo()
+    if (isNotBlank(choseVal)) {
+      choseVal.dataIndex = props.dataIndex
+    }
+    emit('change', choseVal)
     return true
   }
   return false
-}
-
-// 设置级联数据
-function setOptions(tree) {
-  options.value = []
-  try {
-    if (tree) {
-      // 过滤空部门
-      options.value = filterBlankDept(deepClone(tree))
-      // 加入额外的选项
-      if (props.extraOption) {
-        options.value.unshift(props.extraOption)
-      }
-    }
-  } catch (error) {
-    console.log('获取人员部门树失败', error)
-  }
-}
-
-// 过滤空部门
-function filterBlankDept(tree) {
-  return tree.filter((node) => {
-    if (isNotBlank(node.children)) {
-      node.children.forEach((v) => {
-        v.parentDeptId = node.id
-        v.parentDeptName = node.label
-      })
-      node.children = filterBlankDept(node.children)
-      return isNotBlank(node.children)
-    }
-    return node.isUser
-  })
 }
 
 // 设置禁用的节点
 function setNodeDisabled(list) {
   list.forEach((v) => {
     v.disabled = props.disabledVal.includes(v.id)
-    if (isNotBlank(v.children)) {
-      setNodeDisabled(v.children)
+    if (isNotBlank(v.links)) {
+      setNodeDisabled(v.links)
     }
     return v
   })
@@ -200,27 +184,17 @@ function setNodeDisabled(list) {
 
 // 单选 获取选中节点信息
 function getNodeInfo() {
-  const node = userDeptCascaderRef.value.getCheckedNodes(true)
+  const node = expenseRef.value.getCheckedNodes()
   return node.length ? node[0].data : {}
-}
-
-// 获取选中子节点的顶级父节点
-function getParentNode(node) {
-  if (node.parent) {
-    return getParentNode(node.parent)
-  } else {
-    return node
-  }
 }
 
 defineExpose({
   getNodeInfo,
-  getParentNode,
 })
 </script>
 
 <style lang="scss" scoped>
-.user-dept-cascader {
+.expense-cascader {
   width: 220px;
 }
 </style>

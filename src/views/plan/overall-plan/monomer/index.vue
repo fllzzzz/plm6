@@ -1,25 +1,25 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length>0">
+    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader />
       </div>
       <!--表格渲染-->
       <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :empty-text="crud.emptyText"
-      :max-height="maxHeight"
-      style="width: 100%"
-      row-key="id"
-      @selection-change="crud.selectionChangeHandler"
-    >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="单体名称" />
-      <el-table-column v-if="columns.visible('mainStructure')" key="mainStructure" prop="mainStructure" :show-overflow-tooltip="true" label="构件(t)">
+        ref="tableRef"
+        v-loading="crud.loading"
+        :data="crud.data"
+        :empty-text="crud.emptyText"
+        :max-height="maxHeight"
+        style="width: 100%"
+        row-key="id"
+        @selection-change="crud.selectionChangeHandler"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="单体名称" />
+        <el-table-column v-if="columns.visible('mainStructure')" key="mainStructure" prop="mainStructure" :show-overflow-tooltip="true" label="构件(t)">
         <template v-slot="scope">
           {{ scope.row.mainStructure.toFixed(DP.COM_WT__KG) }}
         </template>
@@ -49,27 +49,27 @@
           {{ scope.row.pressureBearingPlate.toFixed(DP.COM_WT__KG) }}
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" />
-      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" />
-      <!--编辑与删除-->
-      <el-table-column
-        v-if="checkPermission([...permission.edit, ...permission.del])"
-        label="操作"
-        width="130px"
-        align="center"
-        fixed="right"
-      >
-        <template v-slot="scope">
-          <udOperation :data="scope.row" :permission="permission" />
-        </template>
-      </el-table-column>
-    </common-table>
+        <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" />
+        <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" />
+        <!--编辑与删除-->
+        <el-table-column
+          v-if="checkPermission([...permission.edit, ...permission.del])"
+          label="操作"
+          width="130px"
+          align="center"
+          fixed="right"
+        >
+          <template v-slot="scope">
+            <udOperation :data="scope.row" :permission="permission" />
+          </template>
+        </el-table-column>
+      </common-table>
       <!--分页组件-->
       <pagination />
       <mForm :project-id="globalProjectId" :current-project="currentProject" />
     </template>
     <template v-else>
-      <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
+      <div style="color: red; font-size: 14px">*请先前去合同管理模块添加项目内容</div>
     </template>
   </div>
 </template>
@@ -135,61 +135,49 @@ watch(
 )
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
-  const arr= ['date', 'mainStructureDate', 'contourPlateDate', 'trussFloorPlateDate', 'battenBoardDate', 'pressureBearingPlateDate', 'flangingPieceDate']
-  data.data.content.forEach(v=>{
-    arr.forEach(k=>{
-      v[k]=v[k]+''
+  const originOption = [
+  { key: 'mainStructure', no: TechnologyTypeAllEnum.ENUM.STRUCTURE.V},
+  {
+    key: 'contourPlate',
+    no: TechnologyTypeAllEnum.ENUM.PROFILEDPLATE.V,
+  },
+  {
+    key: 'trussFloorPlate',
+    no: TechnologyTypeAllEnum.ENUM.TRUSSFLOORPLATE.V,
+  },
+  {
+    key: 'battenBoard',
+    no: TechnologyTypeAllEnum.ENUM.SANDWICH_BOARD.V,
+  },
+  {
+    key: 'pressureBearingPlate',
+    no: TechnologyTypeAllEnum.ENUM.PRESSUREBEARINGPLATE.V,
+  },
+  {
+    key: 'flangingPiece',
+    no: TechnologyTypeAllEnum.ENUM.BENDING.V,
+  }
+]
+data.data.content.forEach(v=>{
+  if(v.monomerDetailList.length>0){
+    originOption.forEach(val=>{
+      const choseVal = v.monomerDetailList.find(k=>k.type===val.no)
+      if(choseVal){
+        v[val.key] = choseVal.mete
+        v[val.key+'Date'] = String(choseVal.date)
+      }else{
+        v[val.key] = undefined
+        v[val.key+'Date'] = undefined
+      }
     })
-  })
+  }
+  return v
+})
+  // const arr= ['date', 'mainStructureDate', 'contourPlateDate', 'trussFloorPlateDate', 'battenBoardDate', 'pressureBearingPlateDate', 'flangingPieceDate']
+  // data.data.content.forEach(v=>{
+  //   arr.forEach(k=>{
+  //     v[k]=String(v[k])
+  //   })
+  // })
 }
-
-CRUD.HOOK.beforeSubmit = () => {
-  crud.form.projectId = globalProjectId
-  return !!crud.form.projectId
-}
-// import { mapGetters } from 'vuex'
-// import crudMethod from '@/api/mes-plan/overall-plan/monomer'
-// import CRUD, { presenter } from '@crud/crud'
-// import pagination from '@crud/Pagination'
-// import udOperation from '@crud/UD.operation'
-// import mHeader from './module/header'
-// import mForm from './module/form'
-// import checkPermission from '@/utils/permission'
-
-// // crud交由presenter持有
-// const permission = {
-//   get: ['monomer:get'],
-//   add: ['monomer:add'],
-//   edit: ['monomer:edit'],
-//   del: ['monomer:del']
-// }
-
-// const crud = CRUD({
-//   title: '单体',
-//   sort: ['sort.asc', 'id.desc'],
-//   permission: { ...permission },
-//   crudMethod: { ...crudMethod },
-//   requiredQuery: ['projectId']
-// })
-
-// export default {
-//   name: 'MesMonomerManage',
-//   components: { mHeader, mForm, pagination, udOperation },
-//   mixins: [presenter(crud)],
-//   inject: ['$_tableMaxHeight'],
-//   data() {
-//     return {
-//       permission
-//     }
-//   },
-//   computed: {
-//     ...mapGetters([
-//       'globalProjectId',
-//       'currentProject'
-//     ])
-//   },
-//   methods: {
-//     checkPermission
-//   }
-// }
 </script>

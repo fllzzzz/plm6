@@ -275,18 +275,13 @@ function resetForm() {
 }
 
 async function fetchDetail() {
-  if (props.projectId) {
+  if (!props.projectId) {
     return
   }
-  // const loading = this.$loading({
-  //   target: '#pageContainer',
-  //   lock: true,
-  //   text: '请稍后，正在加载合同基础信息',
-  //   fullscreen: false
-  // })
   let _detail = {}
   try {
     const res = await getContractCustomer(props.projectId)
+    console.log(res)
     _detail = JSON.parse(JSON.stringify(res))
     _detail.region = cleanArray([_detail.customerCountryId, _detail.customerProvinceId, _detail.customerCityId, _detail.customerRegionId])
   } catch (error) {
@@ -294,7 +289,6 @@ async function fetchDetail() {
   } finally {
     detail.value = _detail
     resetForm(detail.value)
-    // loading.close()
   }
 }
 

@@ -91,16 +91,16 @@
         </div>
         <div class="form-row">
         <!-- <div v-if="!(props.projectType & projectTypeEnumN.ENUM.ENCLOSURE.V)" class="form-row"> -->
-          <el-form-item label="工程结算方式" prop="settlementType">
+          <el-form-item label="工程结算方式" prop="structureMeasureMode">
             <common-radio
-              v-model="form.settlementType"
+              v-model="form.structureMeasureMode"
               :options="engineerSettlementTypeEnumN.ENUM"
               type="enum"
             />
           </el-form-item>
-          <el-form-item label="围护结算方式" prop="enclosurePriceType">
+          <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
             <common-radio
-              v-model="form.enclosurePriceType"
+              v-model="form.enclosureMeasureMode"
               :options="enclosureSettlementTypeEnum.ENUM"
               type="enum"
             />
@@ -114,9 +114,9 @@
               type="enum"
             />
           </el-form-item>
-          <el-form-item label="支付方式" prop="paymentMode">
+          <el-form-item label="支付方式" prop="payType">
             <common-radio
-              v-model="form.paymentMode"
+              v-model="form.payType"
               :options="paymentModeEnum.ENUM"
               type="enum"
             />
@@ -179,7 +179,7 @@
           @click="handleAddEnclosure"
         >添加</common-button>
       </div>
-      <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" />
+      <!-- <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" /> -->
       <!--围护产品数据弹窗  -->
       <common-drawer
         :visible.sync="enclosureVisible"
@@ -243,10 +243,10 @@ const defaultForm = {
   singerId: undefined, // 签约人
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
-  settlementType: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
-  enclosurePriceType: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
+  structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
+  enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
-  paymentMode: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
+  payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
   isTaxInclusive: true, // 是否含税
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   paymentDescription: undefined, // 付款方式描述
@@ -292,20 +292,14 @@ function resetForm(data) {
   if (businessRef.value) {
     businessRef.value.resetFields()
   }
-  let formKey
+  let formVal
   if (data && Object.keys(data).length > 0) {
-    formKey = data
+    formVal = JSON.parse(JSON.stringify(data))
   } else {
-    formKey = JSON.parse(JSON.stringify(defaultForm))
+    formVal = JSON.parse(JSON.stringify(defaultForm))
     Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   }
-  const crudFrom = form.value
-  for (const key in crudFrom) {
-    crudFrom[key] = undefined
-  }
-  for (const key in formKey) {
-    crudFrom[key] = formKey[key]
-  }
+  form.value = JSON.parse(JSON.stringify(formVal))
   useWatchFormValidate(businessRef, form.value)
 }
 
@@ -422,355 +416,6 @@ async function validateForm() {
 defineExpose({
   validateForm
 })
-// import enclosureForm from './enclosure-form'
-// import enclosureShow from './enclosure-show'
-// import branchCompanySelect from '@/views/components/base/branch-company-select'
-// import userDeptCascader from '@/views/components/base/user-dept-cascader'
-// import { paymentModeEnum, projectTypeEnum, invoiceTypeEnum, engineerSettlementTypeEnum, transportModeEnum, enclosureSettlementTypeEnum, projectTypeEnumN, businessTypeEnum, projectContent, projectContentME, TechnologyTypeEnum as typeEnum } from '@/utils/enum/index'
-// import { tableValidate } from '@/utils/other'
-// import { getContentInfo } from '@/api/contract/project'
-
-// const defaultForm = {
-//   contractSignBodyId: undefined, // 合同签订主体
-//   businessType: undefined, // 业务类型
-//   projectType: undefined, // 项目类型
-//   projectContent: [], // 项目内容
-//   singerId: undefined, // 签约人
-//   signingDate: undefined, // 签约日期
-//   signingAddress: undefined, // 签约地址
-//   paymentMode: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
-//   isTaxInclusive: true, // 是否含税
-//   invoiceType: invoiceTypeEnum.SPECIAL_INVOICE.V, // 发票类型
-//   paymentDescription: undefined, // 付款方式描述
-//   enclosureInfo: {},
-//   structureSaveRequestVOS: [],
-//   profiledPlateSaveRequestVOS: [],
-//   pressureBearingPlateSaveVOS: [],
-//   trussFloorPlateSaveRequestVOS: [],
-//   sandwichBoardSaveRequestVOS: []
-// }
-// const techForm = {
-//   enclosureInfo: {},
-//   structureSaveRequestVOS: [],
-//   profiledPlateSaveRequestVOS: [],
-//   pressureBearingPlateSaveVOS: [],
-//   trussFloorPlateSaveRequestVOS: [],
-//   sandwichBoardSaveRequestVOS: []
-// }
-// const excelField = {
-//   productCategory: '__EMPTY', // 产品种类
-//   engineeringMete: '__EMPTY_1', // 工程量
-//   unit: '__EMPTY_2', // 单位
-//   unitPrice: '__EMPTY_3', // 单价
-//   remark: '__EMPTY_5' // 备注
-// }
-
-// export default {
-//   components: { branchCompanySelect, userDeptCascader, enclosureForm, enclosureShow },
-//   inject: ['permission'],
-//   props: {
-//     formData: {
-//       type: Object,
-//       default: () => {}
-//     },
-//     projectType: {
-//       type: Number,
-//       default: undefined
-//     }
-//   },
-//   data() {
-//     return {
-//       paymentModeEnum,
-//       invoiceTypeEnum,
-//       transportModeEnum,
-//       projectTypeEnum,
-//       engineerSettlementTypeEnum,
-//       enclosureSettlementTypeEnum,
-//       projectTypeEnumN,
-//       businessTypeEnum,
-//       projectContent,
-//       projectContentME,
-//       projectContent1: [],
-//       projectContent2: [],
-//       projectContentOption: [],
-//       maxNubmer: 99999999999,
-//       form: {},
-//       rules: {
-//         paymentDescription: [
-//           { max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }
-//         ],
-//         businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
-//         projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
-//         projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
-//         contractSignBodyId: [{ required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }]
-//       },
-//       tableRules: {
-//         productCategory: [{ required: true, max: 100, message: '不能超过 100 个字符', trigger: 'blur' }],
-//         engineeringMete: [{ required: true, message: '请填写工程量', trigger: 'blur', type: 'number' }],
-//         unit: [{ required: true, max: 10, message: '不能超过 10 个字符', trigger: 'blur' }],
-//         unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur', type: 'number' }],
-//         remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
-//       },
-//       enclosureVisible: false,
-//       showItem: [],
-//       showCategory: [],
-//       originConstruct: []
-//     }
-//   },
-//   watch: {
-//     formData: {
-//       handler(val) {
-//         this.resetForm(val)
-//         this.contentInfo()
-//       },
-//       deep: true
-//     }
-//   },
-//   created() {
-//     this.resetForm()
-//     this.resetForm(this.formData)
-//     this.contentInfo()
-//   },
-//   methods: {
-//     async contentInfo() {
-//       try {
-//         const options = []
-//         this.originConstruct = []
-//         const data1 = await getContentInfo({ businessType: 1 })
-//         const data2 = await getContentInfo({ businessType: 2 })
-//         if (data1 && data1.projectContentVOList.length > 0) {
-//           data1.projectContentVOList.forEach(v => {
-//             if (v.contentList.length > 0) {
-//               v.contentList.forEach(k => {
-//                 k.alias = v.type
-//                 options.push(k)
-//                 if (k.alias === 'STRUCTURE') {
-//                   if (this.originConstruct.indexOf(k) < 0) {
-//                     this.originConstruct.push(k)
-//                   }
-//                 }
-//               })
-//             }
-//           })
-//         }
-//         this.projectContent1 = options || []
-//         this.projectContent2 = data2.projectContentVOList || []
-//       } catch (error) {
-//         console.log(error)
-//       }
-//     },
-//     getshowItem(val) {
-//       this.showItem = []
-//       this.showCategory = []
-//       const totalArr = [1, 2, 3, 4]
-//       if (val.length > 0) {
-//         val.map(v => {
-//           if (this.form.businessType === 1) {
-//             const val = this.projectContent1.find(k => k.id === v)
-//             if (val.alias === 'STRUCTURE') {
-//               if (this.showItem.indexOf(5) < 0) {
-//                 this.showItem.push(5)
-//               }
-//               this.showCategory.push(val)
-//             } else {
-//               if (totalArr.indexOf(Number(val.no)) > -1 && this.showItem.indexOf(Number(val.no)) < 0) {
-//                 this.showItem.push(Number(val.no))
-//               }
-//             }
-//           } else {
-//             const val = this.projectContent2.find(k => k.id === v)
-//             if (val.alias) {
-//               if (val.alias === 'STRUCTURE') {
-//                 if (this.showItem.indexOf(5) < 0) {
-//                   this.showItem.push(5)
-//                   this.showCategory = this.originConstruct
-//                 }
-//               } else if (val.alias === 'ENCLOSURE') {
-//                 this.showItem = [...this.showItem, ...totalArr]
-//               }
-//             }
-//           }
-//         })
-//       }
-//     },
-//     handleAddEnclosure() {
-//       if (!this.form.projectContent || this.form.projectContent.length === 0) {
-//         this.$message.error('请先选择项目内容')
-//         return
-//       }
-//       this.enclosureVisible = true
-//     },
-//     businessChange() {
-//       this.projectContentOption = []
-//       this.form.projectContent = []
-//       this.showItem = []
-//       this.showCategory = []
-//       Object.assign(this.form, JSON.parse(JSON.stringify(techForm)))
-//       if (this.form.businessType) {
-//         this.projectContentOption = this.form.businessType === 1 ? this.projectContent1 : this.projectContent2
-//       }
-//     },
-//     // 围护保存
-//     enclosureSave() {
-//       const info = this.$refs.enclosureForm.tableData
-//       this.form = {
-//         ...this.form,
-//         enclosureInfo: info,
-//         structureSaveRequestVOS: info[typeEnum.STRUCTURE.V],
-//         profiledPlateSaveRequestVOS: info[typeEnum.PROFILEDPLATE.V],
-//         pressureBearingPlateSaveVOS: info[typeEnum.PRESSUREBEARINGPLATE.V],
-//         trussFloorPlateSaveRequestVOS: info[typeEnum.TRUSSFLOORPLATE.V],
-//         sandwichBoardSaveRequestVOS: info[typeEnum.SANDWICH_BOARD.V]
-//       }
-//       this.enclosureVisible = false
-//     },
-//     calcTotalAmount(row) {
-//       row.totalAmount = (row.engineeringMete || 0) * (row.unitPrice || 0).toFixed(this.$DP.YUAN)
-//     },
-//     getSummaries(param) {
-//       const { columns, data } = param
-//       const sums = []
-//       columns.forEach((column, index) => {
-//         if (index === 0) {
-//           sums[index] = '合计'
-//           return
-//         }
-//         if ([1, 2, 3, 4, 6, 7].includes(index)) { // 种类 备注 操作
-//           sums[index] = 'N/A'
-//           return
-//         }
-//         const values = data.map(item => Number(item[column.property]))
-//         if (!values.every(value => isNaN(+value))) {
-//           sums[index] = values.reduce((prev, curr) => {
-//             const value = Number(curr)
-//             if (!isNaN(value)) {
-//               return prev + curr
-//             } else {
-//               return prev
-//             }
-//           }, 0)
-//           sums[index]
-//         } else {
-//           sums[index] = 'N/A'
-//         }
-//       })
-
-//       return sums
-//     },
-//     handleExcelSuccess(val) {
-//       if (val && val.length > 3) {
-//         const data = val.slice(2, val.length - 1) || []
-//         data.map(v => {
-//           if (v) {
-//             const obj = {}
-//             for (const key in excelField) {
-//               obj[key] = v[excelField[key]]
-//             }
-//             this.calcTotalAmount(obj)
-//             this.form.businessList.push(obj)
-//           }
-//         })
-//       }
-//     },
-//     handleTaxChage(val) {
-//       if (val) {
-//         this.form.invoiceType = invoiceTypeEnum.SPECIAL_INVOICE.V
-//       } else {
-//         this.form.invoiceType = undefined
-//       }
-//     },
-//     async validate() {
-//       try {
-//         const valid = await this.$refs.form.validate()
-//         const tableValid = this.validateTable()
-//         if (valid && tableValid) {
-//           Object.assign(this.formData, JSON.parse(JSON.stringify(this.form)))
-//         }
-//         return valid && tableValid
-//       } catch (error) {
-//         console.log('error', error)
-//         return false
-//       }
-//     },
-//     // 添加行
-//     addRow: function() {
-//       this.form.businessList.push({ verify: {}})
-//     },
-//     // 删除行
-//     deleteRow: function(index) {
-//       this.form.businessList.splice(index, 1)
-//     },
-//     excelImport: function() {
-//       console.log('excel导入')
-//     },
-//     /**
-//      * 重置表单
-//      * @param {Array} data 数据
-//      */
-//     resetForm(data) {
-//       // 清除表单信息
-//       if (this.$refs['form']) {
-//         this.$refs['form'].resetFields()
-//       }
-//       let form
-//       if (data && Object.keys(data).length > 0) {
-//         form = data
-//       } else {
-//         form = JSON.parse(JSON.stringify(defaultForm))
-//         Object.assign(this.form, JSON.parse(JSON.stringify(techForm)))
-//       }
-//       // const form = data || JSON.parse(JSON.stringify(defaultForm))
-//       const crudFrom = this.form
-//       for (const key in crudFrom) {
-//         crudFrom[key] = undefined
-//       }
-//       for (const key in form) {
-//         if (crudFrom.hasOwnProperty(key)) {
-//           crudFrom[key] = form[key]
-//         } else {
-//           this.$set(crudFrom, key, form[key])
-//         }
-//       }
-//     },
-//     validateTable() {
-//       let flag = true
-//       const list = this.form.businessList
-//       let message = '请填写数据'
-//       if (list && list.length > 0) {
-//         // TODO: 考虑封装
-//         list.forEach(row => {
-//           for (const rule in this.tableRules) {
-//             row.verify = row.verify ? row.verify : {}
-//             row.verify[rule] = tableValidate(this.tableRules[rule], row[rule])
-//             if (!row.verify[rule]) {
-//               flag = false
-//             }
-//           }
-//         })
-//         if (!flag) {
-//           this.form.businessList = Object.assign([], list)
-//           message = '请修正表格中标红的信息, 填写限制请参照下方“商务信息列表填写须知”'
-//         }
-//       }
-//       if (!flag) {
-//         this.$message({ message, type: 'error' })
-//       }
-//       return flag
-//     },
-//     handelCellClassName({ row, column, rowIndex, columnIndex }) {
-//       let flag = true
-//       if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
-//         if (row.verify[column.property] === false) {
-//           flag = tableValidate(this.tableRules[column.property], row[column.property])
-//         }
-//         if (flag) {
-//           row.verify[column.property] = true
-//         }
-//       }
-//       return flag ? '' : 'mask-td'
-//     }
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>

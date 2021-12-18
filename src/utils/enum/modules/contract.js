@@ -42,22 +42,22 @@ constantize(projectTypeEnum)
 
 // 技术交底类型
 const TechnologyTypeEnum = {
-  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1<<0 },
-  PROFILEDPLATE: { L: '压型彩板', K: 'PROFILEDPLATE', V: 1<<1 },
-  TRUSSFLOORPLATE: { L: '桁架楼承板', K: 'TRUSSFLOORPLATE', V: 1<<3 },
-  PRESSUREBEARINGPLATE: { L: '压型楼承板', K: 'PRESSUREBEARINGPLATE', V: 1<<4 },
-  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1<<2 }
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 0 },
+  PROFILEDPLATE: { L: '压型彩板', K: 'PROFILEDPLATE', V: 1 << 1 },
+  TRUSSFLOORPLATE: { L: '桁架楼承板', K: 'TRUSSFLOORPLATE', V: 1 << 3 },
+  PRESSUREBEARINGPLATE: { L: '压型楼承板', K: 'PRESSUREBEARINGPLATE', V: 1 << 4 },
+  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 }
 }
 constantize(TechnologyTypeEnum)
 
 // all技术交底类型
 const TechnologyTypeAllEnum = {
-  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1<<0 },
-  PROFILEDPLATE: { L: '压型彩板', K: 'PROFILEDPLATE', V: 1<<1 },
-  TRUSSFLOORPLATE: { L: '桁架楼承板', K: 'TRUSSFLOORPLATE', V: 1<<3 },
-  PRESSUREBEARINGPLATE: { L: '压型楼承板', K: 'PRESSUREBEARINGPLATE', V: 1<<4 },
-  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1<<2 },
-  BENDING: { L: '折边件', K: 'BENDING', V: 1<<4 }
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 0 },
+  PROFILEDPLATE: { L: '压型彩板', K: 'PROFILEDPLATE', V: 1 << 1 },
+  TRUSSFLOORPLATE: { L: '桁架楼承板', K: 'TRUSSFLOORPLATE', V: 1 << 3 },
+  PRESSUREBEARINGPLATE: { L: '压型楼承板', K: 'PRESSUREBEARINGPLATE', V: 1 << 4 },
+  SANDWICH_BOARD: { L: '夹芯板', K: 'SANDWICH_BOARD', V: 1 << 2 },
+  BENDING: { L: '折边件', K: 'BENDING', V: 1 << 5 }
 }
 constantize(TechnologyTypeAllEnum)
 
@@ -110,8 +110,8 @@ constantize(invoiceTypeEnum)
 
 // 是否含税
 const isTaxEnum = {
-  YES: { L: '是',  K: 'YES', V: true },
-  NO: { L: '否',  K: 'NO', V: false }
+  YES: { L: '是', K: 'YES', V: true },
+  NO: { L: '否', K: 'NO', V: false }
 }
 constantize(isTaxEnum)
 
@@ -124,11 +124,19 @@ constantize(engineerSettlementTypeEnumN)
 
 // 审核类型
 const auditTypeEnum = {
-  AUDITING: { L: '审核中', K: 'AUDITING', V: 1<<0 },
+  AUDITING: { L: '审核中', K: 'AUDITING', V: 1 << 0 },
   PASS: { L: '通过', K: 'PASS', V: 1 << 1 },
   REJECT: { L: '驳回', K: 'REJECT', V: 1 << 2 }
 }
 constantize(auditTypeEnum)
+
+// 报销审核类型
+const reimbursementTypeEnum = {
+  AUDITING: { L: '确认中', K: 'AUDITING', V: 1 << 0 },
+  PASS: { L: '已确认', K: 'PASS', V: 1 << 1 },
+  REJECT: { L: '已退回', K: 'REJECT', V: 1 << 2 }
+}
+constantize(reimbursementTypeEnum)
 
 // 变更类型
 const contractChangeTypeEnum = {
@@ -159,13 +167,73 @@ const systemTypeEnum = {
 }
 constantize(systemTypeEnum)
 
-// TODO: 时间类型
+// TODO: 开票时间类型
 const contractDateTypeEnum = {
   UPDATEDATE: { L: '填报日期', K: 'UPDATEDATE', V: 1 },
   AUDITDATE: { L: '审核日期', K: 'AUDITDATE', V: 2 },
   INVOICEDATE: { L: '开票日期', K: 'INVOICEDATE', V: 3 },
 }
-constantize(contractDateTypeEnum )
+constantize(contractDateTypeEnum)
+
+// TODO: 付款属性
+const supplierPayMentTypeEnum = {
+  MATERIAL: { L: '原材料采购', K: 'MATERIAL', V: 1 << 0 },
+  PRODUCT: { L: '制成品采购', K: 'PRODUCT', V: 1 << 1 },
+  MATERIALTRANSPORT: { L: '原材料运输', K: 'MATERIALTRANSPORT', V: 1 << 2 },
+  PRODUCTTRANSPORT: { L: '制成品运输', K: 'PRODUCTTRANSPORT', V: 1 << 3 },
+  SUBCONTRACT: { L: '专业分包', K: 'SUBCONTRACT', V: 1 << 4 }
+}
+constantize(supplierPayMentTypeEnum)
+
+// TODO: 付款时间类型
+const contractPayDateTypeEnum = {
+  UPDATEDATE: { L: '填报日期', K: 'UPDATEDATE', V: 1 },
+  AUDITDATE: { L: '审核日期', K: 'AUDITDATE', V: 2 },
+  INVOICEDATE: { L: '付款日期', K: 'INVOICEDATE', V: 3 },
+}
+constantize(contractPayDateTypeEnum)
+
+// TODO: 收票时间类型
+const contractReceiveDateTypeEnum = {
+  UPDATEDATE: { L: '填报日期', K: 'UPDATEDATE', V: 1 },
+  AUDITDATE: { L: '审核日期', K: 'AUDITDATE', V: 2 },
+  INVOICEDATE: { L: '收票日期', K: 'INVOICEDATE', V: 3 },
+}
+constantize(contractReceiveDateTypeEnum)
+
+// TODO: 报销时间类型
+const contractReimbursementDateEnum = {
+  UPDATEDATE: { L: '填报日期', K: 'UPDATEDATE', V: 1 },
+  AUDITDATE: { L: '确认日期', K: 'AUDITDATE', V: 2 },
+  APPLYDATE: { L: '申请日期', K: 'APPLYDATE', V: 3 },
+}
+constantize(contractReimbursementDateEnum)
+
+// TODO: 费用类别
+const contractPayForEnum = {
+  GOODSFEE: { L: '货款', K: 'GOODSFEE', V: 1 },
+  TRANSPORTFEE: { L: '运费', K: 'TRANSPORTFEE', V: 2 }
+}
+constantize(contractPayForEnum)
+
+// 供应商付款方式
+const supplierPayModeEnum = {
+  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
+  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
+  ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 2 },
+  TRANSFER_CHECK: { L: '转账支票', K: 'TRANSFER_CHECK', V: 1 << 3 },
+
+}
+constantize(supplierPayModeEnum)
+
+// TODO: 付款属性
+const supplierPayTypeEnum = {
+  MATERIAL: { L: '原材料采购', K: 'MATERIAL', V: 1 },
+  PRODUCT: { L: '制成品采购', K: 'PRODUCT', V: 2 },
+  TRANSPORT: { L: '原材料运输', K: 'MATERIALTRANSPORT', V: 3 },
+  SUBCONTRACT: { L: '专业分包', K: 'SUBCONTRACT', V: 4 }
+}
+constantize(supplierPayTypeEnum)
 
 export {
   projectStatusEnum, // 项目状态
@@ -185,7 +253,15 @@ export {
   TechnologyTypeAllEnum,
   contractChangeTypeEnum,
   systemTypeEnum,
-  contractDateTypeEnum
+  contractDateTypeEnum,
+  supplierPayMentTypeEnum,
+  contractPayDateTypeEnum,
+  contractReceiveDateTypeEnum,
+  contractPayForEnum,
+  supplierPayModeEnum,
+  supplierPayTypeEnum,
+  contractReimbursementDateEnum,
+  reimbursementTypeEnum
 }
 
 export default {
@@ -205,5 +281,13 @@ export default {
   TechnologyTypeAllEnum,
   contractChangeTypeEnum,
   systemTypeEnum,
-  contractDateTypeEnum
+  contractDateTypeEnum,
+  supplierPayMentTypeEnum,
+  contractPayDateTypeEnum,
+  contractReceiveDateTypeEnum,
+  contractPayForEnum,
+  supplierPayModeEnum,
+  supplierPayTypeEnum,
+  contractReimbursementDateEnum,
+  reimbursementTypeEnum
 }
