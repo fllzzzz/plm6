@@ -1,7 +1,15 @@
+<!--
+ * @Description:
+ * @Author: SYJ
+ * @Date: 2021-11-22 14:41:35
+ * @LastEditors: SYJ
+ * @LastEditTime: 2021-12-10 17:32:51
+-->
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <factory-select v-model:value="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
         size="small"
@@ -65,7 +73,7 @@
             <span>{{ query.factoryId ? '任务量' : '清单量' }}：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.quantity }} 张 | {{ convertUnits(summaryInfo.mete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              >{{ summaryInfo.quantity }} 张 | {{ convertUnits(summaryInfo.mete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -73,8 +81,8 @@ v-if="!summaryLoading"
             <span>入库量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.intWarehouseQuantity }} 张 |
-              {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              >{{ summaryInfo.inboundQuantity }} 张 |
+              {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -82,8 +90,8 @@ v-if="!summaryLoading"
             <span>出库量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.outWarehouseQuantity }} 张 |
-              {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              >{{ summaryInfo.outboundQuantity }} 张 |
+              {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -91,7 +99,7 @@ v-if="!summaryLoading"
             <span>库存量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.stockQuantity }} 张 | {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }}</span
+              >{{ summaryInfo.stockQuantity }} 张 | {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -102,16 +110,18 @@ v-if="!summaryLoading"
 </template>
 
 <script setup>
-import { getSummary } from '@/api/mes/manufactures-manage/warehouse/enclosure'
-import { ref, watch, reactive } from 'vue'
+import { getBoardForEnclosureSummary as getSummary } from '@/api/mes/manufactures-manage/common'
+import { ref, watch } from 'vue'
 
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
+import { mapGetters } from '@/store/lib'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
 const defaultQuery = {
@@ -126,10 +136,11 @@ const defaultQuery = {
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
-let summaryInfo = reactive({
+const { globalProjectId } = mapGetters(['globalProjectId'])
+const summaryInfo = ref({
   quantity: 0,
-  intWarehouseQuantity: 0,
-  outWarehouseQuantity: 0,
+  inboundQuantity: 0,
+  outboundQuantity: 0,
   stockQuantity: 0,
   mete: 0,
   inboundMete: 0,
@@ -150,9 +161,9 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.length = v.length || 0
     v.totalLength = v.length * v.quantity
-    v.stockQuantity = (v.intWarehouseQuantity - v.outWarehouseQuantity) || 0
-    v.inboundLength = v.intWarehouseQuantity * v.length
-    v.outboundLength = v.outWarehouseQuantity * v.length
+    v.stockQuantity = v.inboundQuantity - v.outboundQuantity || 0
+    v.inboundLength = v.inboundQuantity * v.length
+    v.outboundLength = v.outboundQuantity * v.length
     v.stockLength = v.stockQuantity * v.length
     return v
   })
@@ -170,18 +181,18 @@ async function fetchSummaryInfo() {
     }
     const {
       quantity = 0,
-      intWarehouseQuantity = 0,
-      outWarehouseQuantity = 0,
+      inboundQuantity = 0,
+      outboundQuantity = 0,
       stockQuantity = 0,
       mete = 0,
       outboundMete = 0,
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
-    summaryInfo = {
+    summaryInfo.value = {
       quantity,
-      intWarehouseQuantity,
-      outWarehouseQuantity,
+      inboundQuantity,
+      outboundQuantity,
       stockQuantity,
       mete,
       inboundMete,
@@ -193,5 +204,11 @@ async function fetchSummaryInfo() {
   } finally {
     summaryLoading.value = false
   }
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
 }
 </script>

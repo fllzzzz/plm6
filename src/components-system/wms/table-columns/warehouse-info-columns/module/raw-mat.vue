@@ -7,6 +7,7 @@
   </el-table-column>
   <el-table-column v-if="showWarehouse" prop="warehouse" label="仓库" align="left" min-width="110px">
     <template #default="{ row }">
+      <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
       <span v-empty-text>{{ typeof row.warehouse === 'object' ? row.warehouse.name : row.warehouse }}</span>
     </template>
   </el-table-column>
@@ -16,6 +17,7 @@
 import { defineProps, computed } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { TAG_TRANSFER_COLOR } from '@/settings/config'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
 import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 const props = defineProps({
@@ -26,6 +28,10 @@ const props = defineProps({
   showTransfer: { // 项目标签 显示调拨
     type: Boolean,
     default: false
+  },
+  showFactory: { // 显示工厂
+    type: Boolean,
+    default: true
   },
   columns: { // 用于crud组件的列显隐
     type: Object

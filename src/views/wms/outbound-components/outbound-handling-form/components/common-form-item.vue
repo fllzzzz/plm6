@@ -4,7 +4,7 @@
       v-model="currentForm.quantity"
       :min="0"
       :precision="material.outboundUnitPrecision"
-      :max="material.operableQuantity"
+      :max="maxQuantity"
       controls-position="right"
     />
     <span class="text-clickable set-max-text" @click="setMaxQuantity">全部出库</span>
@@ -65,15 +65,17 @@ watchEffect(() => { currentForm.value = props.form })
 
 // 出库配置
 const outboundCfg = inject('outboundCfg')
+// 最大数量
+const maxQuantity = inject('maxQuantity')
 
 // 显示项目选择 ：项目仓，且配置为可出库到其他项目的情况下可选择
 const showProjectSelect = computed(() => {
-  return !props.material.project || outboundCfg.value.boolCanOutToOtherProject === true
+  return !props.material.project || (outboundCfg.value.boolCanOutToOtherProject === true && props.material.boolPartyA !== true)
 })
 
 // 设置最大数量
 function setMaxQuantity() {
-  currentForm.value.quantity = props.material.corOperableQuantity
+  currentForm.value.quantity = maxQuantity.value
 }
 </script>
 

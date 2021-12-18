@@ -195,7 +195,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import factoryTableCellTag from '@comp-common/factory-table-cell-tag/index'
+import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
 
 // crud交由presenter持有
 const permission = {

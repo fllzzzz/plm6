@@ -1,7 +1,9 @@
 <template>
   <div class="first-line flex-rbc">
     <div>
+      <slot name="firstItem" />
       <common-radio-button
+        v-if="showProjectWarehouseType"
         v-model="queryVO.projectWarehouseType"
         :options="projectWarehouseTypeEnum.ENUM"
         default
@@ -10,7 +12,9 @@
         class="filter-item"
         @change="toQuery"
       />
+      <slot name="afterProjectWarehouseType" />
       <common-radio-button
+        v-if="showMaterialIsWhole && (basicClass & STEEL_ENUM)"
         v-model="queryVO.materialIsWhole"
         :options="materialIsWholeEnum.ENUM"
         show-option-all
@@ -19,8 +23,7 @@
         class="filter-item"
         @change="toQuery"
       />
-      <slot name="afterProjectWarehouseType" />
-      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" />
+      <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
       <warehouse-select
         v-model="queryVO.warehouseId"
         :factory-id="queryVO.factoryId"
@@ -28,8 +31,10 @@
         placeholder="存储位置"
         class="filter-item"
         show-all
+        clearable
         @change="toQuery"
       />
+      <slot name="afterWarehouse" />
     </div>
     <div>
       <slot name="firstLineRight" />
@@ -53,6 +58,7 @@
 
 <script setup>
 import { defineEmits, defineProps, computed, watchEffect, ref } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 
@@ -65,7 +71,6 @@ import SteelCoil from './module/steel-coil.vue'
 import AuxMat from './module/aux-mat.vue'
 import Gas from './module/gas.vue'
 import RawMat from './module/raw-mat.vue'
-
 const emit = defineEmits(['to-query'])
 
 const props = defineProps({
@@ -80,6 +85,14 @@ const props = defineProps({
   },
   toQuery: {
     type: Function
+  },
+  showProjectWarehouseType: {
+    type: Boolean,
+    default: false
+  },
+  showMaterialIsWhole: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -116,7 +129,3 @@ function toQuery() {
 }
 </script>
 
-<style lang="scss" scoped>
-.first-line {
-}
-</style>

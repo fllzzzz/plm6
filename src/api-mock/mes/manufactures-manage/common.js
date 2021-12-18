@@ -38,11 +38,11 @@ const getBoardForArtifact = {
           'totalTaskQuantity|1-10000': 1,
           'projectName': '@cword(2,10)',
           'monomerName': '@cword(2,10)',
-          'districtName': '@cword(2,10)',
+          'areaName': '@cword(2,10)',
           'packageQuantity|1-10000': 1,
           'unPackageQuantity|1-10000': 1,
-          'intWarehouseQuantity|1-10000': 1,
-          'outWarehouseQuantity|1-10000': 1,
+          'inboundQuantity|1-10000': 1,
+          'outboundQuantity|1-10000': 1,
           'taskQuantity|1-10000': 1
         }]
       }
@@ -92,9 +92,9 @@ const getBoardForEnclosure = {
           'totalTaskQuantity|1-100': 1,
           'projectName': '@cword(2,10)',
           'monomerName': '@cword(2,10)',
-          'districtName': '@cword(2,10)',
-          'intWarehouseQuantity|1-10000': 1,
-          'outWarehouseQuantity|1-10000': 1,
+          'areaName': '@cword(2,10)',
+          'inboundQuantity|1-10000': 1,
+          'outboundQuantity|1-10000': 1,
           'taskQuantity|1-10000': 1
         }]
       }
@@ -102,7 +102,53 @@ const getBoardForEnclosure = {
   }
 }
 
+const getBoardForArtifactSummary = {
+  url: '/api/mes/building/warehouse/artifact/summary',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      'code': 20000,
+      'message': '成功',
+      'data': {
+        'quantity': 200,
+        'inboundQuantity': 130,
+        'outboundQuantity': 3,
+        'stockQuantity': 127,
+        'mete': 40000,
+        'inboundMete': 29000,
+        'outboundMete': 500,
+        'stockMete': 28500
+      }
+    }
+  }
+}
+
+const getBoardForEnclosureSummary = {
+  url: '/api/mes/building/warehouse/enclosure/summary',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      'code': 20000,
+      'message': '成功',
+      'data': {
+        'quantity': 100,
+        'inboundQuantity': 10,
+        'outboundQuantity': 1,
+        'stockQuantity': 9,
+        'mete': 10000,
+        'inboundMete': 1000,
+        'outboundMete': 100,
+        'stockMete': 900
+      }
+    }
+  }
+}
+
 export default [
   getBoardForArtifact,
-  getBoardForEnclosure
+  getBoardForEnclosure,
+  getBoardForArtifactSummary,
+  getBoardForEnclosureSummary
 ]

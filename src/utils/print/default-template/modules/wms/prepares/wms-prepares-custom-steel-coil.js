@@ -105,7 +105,7 @@ const WMS_PREPARES_CUSTOM_STEEL_COIL = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 150, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 150, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'createUserName', title: '定制人：', width: 40, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'purchaseNo', title: '申购单号：', width: 150, type: typeEnum.GUID.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'createTime', title: '制表日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },

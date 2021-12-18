@@ -23,7 +23,7 @@
   <crudOperation>
     <template v-slot:optLeft>
       <template v-if="modifying">
-        <el-tag type="info" style="margin-right:5px;">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
+        <el-tag type="info" style="margin-right:5px;" size="medium">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
         <common-button type="success" size="mini" @click="previewIt">预览并保存</common-button>
         <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消</common-button>
       </template>
@@ -41,7 +41,7 @@
     </template>
     <template v-slot:viewLeft>
       <template v-if="modifying">
-        <el-tag type="info" style="margin-right:5px;">快捷操作</el-tag>
+        <el-tag type="info" style="margin-right:5px;" size="medium">快捷操作</el-tag>
         <el-date-picker style="margin-right:5px;" v-model="askCompleteTime" type="date" size="mini" placeholder="需求完成日期" />
         <common-button type="success" size="mini" @click.stop="applyAll">全部应用</common-button>
       </template>

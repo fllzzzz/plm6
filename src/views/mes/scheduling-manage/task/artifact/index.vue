@@ -84,8 +84,6 @@
     <!-- 详情 -->
     <common-drawer
       v-model:visible="drawerVisible"
-      :load-delay="200"
-      :show-delay="300"
       :title="`${parseTime(detailRow.date, '{y}年{m}月{d}日')} ：排产详情`"
       direction="rtl"
       size="100%"

@@ -36,9 +36,9 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column
-        v-if="columns.visible('districtName')"
-        key="districtName"
-        prop="districtName"
+        v-if="columns.visible('areaName')"
+        key="areaName"
+        prop="areaName"
         fixed
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -278,16 +278,16 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['areaId'],
+    requiredQuery: ['areaId'],
     invisibleColumns: [
-      'districtName',
+      'areaName',
       'length',
       'width',
       'totalArea',
       'totalLength',
       'remark'
-    ]
-    // queryOnPresenterCreated: false
+    ],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

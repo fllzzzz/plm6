@@ -34,6 +34,9 @@ export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {
 // 基础配置，钢材误差单位g
 export const STEEL_DIFF_UNIT = 'g'
 
+// 基础配置，钢材尺寸误差单位mm
+export const STEEL_SIZE_DIFF_UNIT = 'mm'
+
 // 物料基础单位
 export const MAT_BASE_UNIT = {}
 MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V] = {
@@ -120,11 +123,12 @@ MES_MATERIAL_UNIT[componentListTypeEnum.ENCLOSURE.V][enclosureSettlementTypeEnum
 MES_MATERIAL_UNIT[componentListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 
 export const DP = {
-  YUAN: 2,
   COM_WT__T: 2, // 通用_重量（t）
   COM_WT__KG: 2, // 通用_重量（kg）
   COM_WT__G: 3, // 通用_重量（kg）
   COM_AREA__M2: 2, // 通用_面积（㎡）
+  COM_VOLUME__L: 2, // 通用_容积—（L）
+  COM_T__MM: 3, // 通用_厚度（mm）
   COM_UNIT__KG_M3: 2, // 通用_单位净重（kg/m³）
   COM_UNIT__KG_M2: 2, // 通用_单位净重（kg/㎡）
   COM_UNIT__KG_M: 2, // 通用_单位净重（kg/m）

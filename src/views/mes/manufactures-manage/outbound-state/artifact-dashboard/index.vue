@@ -32,7 +32,7 @@
           <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }">
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.outWarehouseQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.outboundQuantity }}/{{ item.compareQuantity }}</span>
           </div>
         </el-tooltip>
       </template>
@@ -75,9 +75,9 @@ const { crud, CRUD } = useCRUD(
     title: '构件看板',
     permission: { ...permission },
     crudApi: { get },
-    optShow: { ...optShow }
-    // requiredQuery: ['areaId'],
-    // queryOnPresenterCreated: false
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

@@ -104,7 +104,7 @@ const STEEL_MES_AREA_PLAN = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 150, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showContractNo: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 150, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'materialType', title: '类别：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'componentTypeEnum', key: 'L' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer', title: '单体：', width: 150, type: typeEnum.MONOMER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '计划：', width: 40, type: typeEnum.ENUM.K, format: { enum: 'overallPlanTypeEnum', key: 'L' }},

@@ -27,9 +27,9 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column
-        v-if="columns.visible('districtName')"
-        key="districtName"
-        prop="districtName"
+        v-if="columns.visible('areaName')"
+        key="areaName"
+        prop="areaName"
         fixed
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -274,7 +274,7 @@ const optShow = {
 }
 
 provide('needTableColumns', [
-  { label: '区域', width: '140px', field: 'districtName' },
+  { label: '区域', width: '140px', field: 'areaName' },
   { label: '组立号', width: '140px', field: 'serialNumber' }
 ])
 provide('productType', componentTypeEnum.ASSEMBLE.V)
@@ -288,9 +288,9 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    // requiredQuery: ['areaId'],
-    invisibleColumns: ['specification', 'material', 'length', 'netWeight', 'totalNetWeight', 'drawingNumber', 'remark']
-    // queryOnPresenterCreated: false
+    requiredQuery: ['areaId'],
+    invisibleColumns: ['specification', 'material', 'length', 'netWeight', 'totalNetWeight', 'drawingNumber', 'remark'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

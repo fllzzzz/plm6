@@ -37,8 +37,8 @@ constantize(materialIsWholeEnum)
 
 // 物料出库方式（整料整出， 整料半出）
 const materialOutboundModeEnum = {
-  WHOLE: { L: '整料整出', K: 'WHOLE ', V: 1 << 0 },
-  HALF: { L: '整料半出', K: 'HALF', V: 1 << 1 }
+  WHOLE: { L: '整料整出', K: 'WHOLE ', V: 1 << 0, COLOR: '#3a8ee6' },
+  HALF: { L: '整料半出', K: 'HALF', V: 1 << 1, COLOR: '#e6a23c' }
 }
 constantize(materialOutboundModeEnum)
 
@@ -56,13 +56,37 @@ const orderSupplyTypeEnum = {
 }
 constantize(orderSupplyTypeEnum)
 
-// 调拨类型
-const transferTypeEnum = {
+// 甲供材料调拨方式
+const partyAMatTransferEnum = {
+  BORROW: { L: '借用', K: 'BORROW', V: 1 << 0, COLOR: '#ffa216' },
+  BUY_IN: { L: '买入', K: 'BUY_IN', V: 1 << 1, COLOR: '#0f9747' }
+}
+constantize(partyAMatTransferEnum)
+
+// 普通调拨类型
+const transferNormalTypeEnum = {
   PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
   PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
   RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 }
 }
+constantize(transferNormalTypeEnum)
+
+// 调拨类型
+const transferTypeEnum = {
+  PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
+  PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
+  RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 },
+  BORROW_RETURN: { L: '借用归还', K: 'BORROW_RETURN', V: 1 << 3 }
+}
 constantize(transferTypeEnum)
+
+// 借用归还状态
+const borrowReturnStatusEnum = {
+  NOT_RETURNED: { L: '未归还完', K: 'SELF', V: 1 << 0 },
+  // PENDING_REVIEW: { L: '待审核', K: 'PENDING_REVIEW', V: 1 << 1, TAG: 'warning' },
+  RETURNED: { L: '已归还', K: 'RETURNED', V: 1 << 1, TAG: 'success' }
+}
+constantize(borrowReturnStatusEnum)
 
 // 基础材料类型/采购类型
 const baseMaterialTypeEnum = {
@@ -70,6 +94,15 @@ const baseMaterialTypeEnum = {
   MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 1 << 1 }
 }
 constantize(baseMaterialTypeEnum)
+
+// 冻结类型
+const materialFreezeTypeEnum = {
+  REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 1 << 0, DOC: '申购单' },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 << 1, DOC: '出库申请单' },
+  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 1 << 2, DOC: '调拨单' },
+  REJECTED: { L: '退货', K: 'REJECTED', V: 1 << 4, DOC: '退货单' }
+}
+constantize(materialFreezeTypeEnum)
 
 // 提货方式
 const pickUpModeEnum = {
@@ -102,10 +135,14 @@ export {
   materialOutboundModeEnum,
   steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
+  partyAMatTransferEnum,
+  borrowReturnStatusEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
+  materialFreezeTypeEnum,
   pickUpModeEnum,
+  transferNormalTypeEnum,
   transferTypeEnum
 }
 
@@ -118,9 +155,13 @@ export default {
   materialOutboundModeEnum,
   steelPlateHalfModeEnum,
   orderSupplyTypeEnum,
+  partyAMatTransferEnum,
+  borrowReturnStatusEnum,
   baseMaterialTypeEnum,
   purchaseStatusEnum,
   purchaseOrderPaymentModeEnum,
+  materialFreezeTypeEnum,
   pickUpModeEnum,
+  transferNormalTypeEnum,
   transferTypeEnum
 }

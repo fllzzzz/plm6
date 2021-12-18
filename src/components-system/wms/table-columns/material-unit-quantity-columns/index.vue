@@ -1,5 +1,12 @@
 <template>
-  <component :is="comp" :columns="props.columns" :basic-class="props.basicClass" :showUnit="props.showUnit" />
+  <component
+    :is="comp"
+    :columns="props.columns"
+    :basic-class="props.basicClass"
+    :showUnit="props.showUnit"
+    :outbound-type-mode="outboundTypeMode"
+    :label-prefix="props.labelPrefix"
+  />
 </template>
 
 <script setup>
@@ -12,11 +19,28 @@ const props = defineProps({
     type: Number
   },
   showUnit: {
+    // 是否显示单位
     type: Boolean,
     default: true
   },
+  outboundTypeMode: {
+    // 出库单位 模式（显示出库单位对应的数量及单位）
+    type: Boolean,
+    default: false
+  },
   columns: {
     type: Object
+  },
+  labelPrefix: { // 数量label前缀
+    type: String
+  },
+  quantityField: { // 数量字段
+    type: String,
+    default: 'quantity'
+  },
+  meteField: { // 核算量字段
+    type: String,
+    default: 'mete'
   }
 })
 

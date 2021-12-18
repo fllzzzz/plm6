@@ -41,7 +41,7 @@ const getArtifact = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'content测试',
           'monomerName': '单体1',
-          'districtName': '区域1',
+          'areaName': '区域1',
           'packageQuantity': null,
           'unPackageQuantity': null
         }, {
@@ -73,7 +73,7 @@ const getArtifact = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'content测试',
           'monomerName': '单体1',
-          'districtName': '区域1',
+          'areaName': '区域1',
           'packageQuantity': null,
           'unPackageQuantity': null
         }, {

@@ -496,7 +496,7 @@ defineExpose({
 // import { debounce } from '@/utils'
 // import enumOperate, { fileClassifyEnum, payTypeEnum, invoiceTypeEnum, engineerSettlementTypeEnum, transportModeEnum, enclosureSettlementTypeEnum, projectTypeEnumN, businessTypeEnum, projectContent, projectContentME, TechnologyTypeEnum as enclosureTypeEnum } from '@/utils/enum/index'
 // import { tableValidate } from '@/utils/other'
-// import checkPermission from '@/utils/permission'
+// import checkPermission from '@/utils/system/check-permission'
 // import enclosureShow from '@/views/contract/project/module/enclosure-show'
 // import enclosureForm from '@/views/contract/project/module//enclosure-form'
 // import userDeptCascader from '@/views/components/base/user-dept-cascader'

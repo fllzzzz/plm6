@@ -15,6 +15,7 @@
 
 <script setup>
 import { defineProps, defineEmits, defineExpose, ref, inject } from 'vue'
+import { ElRadioGroup } from 'element-plus'
 
 import useVisible from '@compos/use-visible'
 import packSelect from '@comp-mes/pack-select'

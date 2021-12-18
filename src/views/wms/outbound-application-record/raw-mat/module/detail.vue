@@ -10,6 +10,7 @@
     custom-class="raw-mat-inbound-application-record-detail"
   >
     <template #titleAfter>
+      <el-tag v-if="detail.applicant" type="success" effect="dark">{{`申请人：${detail.applicant.name} | ${detail.applicant.deptName}`}}</el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.userUpdateTime)}` }}</el-tag>
     </template>
     <template #titleRight>
@@ -26,17 +27,26 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark />
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark show-graphics>
+              <p v-if="row.boolTransfer">
+                调拨：
+                <span>（来源）</span>
+                <span style="color: brown" v-parse-project="{ project: row.sourceProject }" v-empty-text />
+                <span> ▶ </span>
+                <span>（目的）</span>
+                <span style="color: #3a8ee6" v-parse-project="{ project: row.project }" v-empty-text />
+              </p>
+            </expand-secondary-info>
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" show-factory />
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" show-outbound-mode />
         <!-- 次要信息 -->
         <material-secondary-info-columns />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns />
         <!-- 仓库设置 -->
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns show-project show-transfer />
         <el-table-column label="领用人" width="100px" align="center">
           <template #default="{ row }">
             <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
@@ -84,8 +94,8 @@ const { maxHeight } = useMaxHeight(
 
 // 标题
 const drawerTitle = computed(() => {
-  if (detail.value && detail.value.applicant) {
-    return `出库单 申请人：${detail.value.applicant.name} | ${detail.value.applicant.deptName}`
+  if (detail && detail.serialNumber) {
+    return `出库单：${detail.serialNumber}`
   } else {
     return '出库单'
   }

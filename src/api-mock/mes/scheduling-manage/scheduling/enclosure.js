@@ -47,7 +47,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -88,7 +88,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -129,7 +129,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -170,7 +170,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }
@@ -211,7 +211,7 @@ const getEnclosure = {
               'schedulingProductionLineDTOS': [],
               'projectName': 'content测试',
               'monomerName': '单体1',
-              'districtName': '区域1'
+              'areaName': '区域1'
             }]
           }
         }

@@ -138,18 +138,18 @@
         min-width="100px"
       />
       <el-table-column
-        v-if="columns.visible('intWarehouseQuantity')"
-        key="intWarehouseQuantity"
-        prop="intWarehouseQuantity"
+        v-if="columns.visible('inboundQuantity')"
+        key="inboundQuantity"
+        prop="inboundQuantity"
         :show-overflow-tooltip="true"
         label="入库数量"
         align="center"
         min-width="100px"
       />
       <el-table-column
-        v-if="columns.visible('outWarehouseQuantity')"
-        key="outWarehouseQuantity"
-        prop="outWarehouseQuantity"
+        v-if="columns.visible('outboundQuantity')"
+        key="outboundQuantity"
+        prop="outboundQuantity"
         :show-overflow-tooltip="true"
         label="出库数量"
         align="center"
@@ -244,9 +244,9 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    // requiredQuery: ['areaId'],
-    invisibleColumns: ['surfaceArea', 'drawingNumber']
-    // queryOnPresenterCreated: false
+    requiredQuery: ['areaId'],
+    invisibleColumns: ['surfaceArea', 'drawingNumber'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

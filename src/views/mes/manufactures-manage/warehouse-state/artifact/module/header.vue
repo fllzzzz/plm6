@@ -1,13 +1,8 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <factory-select
-        v-model:value="query.factoryId"
-        show-all
-        class="filter-item"
-        style="width: 200px"
-        @change="crud.toQuery"
-      />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
         size="small"
@@ -76,7 +71,7 @@
             <span>入库量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.intWarehouseQuantity }} 件 | {{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg</span
+              >{{ summaryInfo.inboundQuantity }} 件 | {{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -84,7 +79,7 @@ v-if="!summaryLoading"
             <span>出库量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.outWarehouseQuantity }} 件 | {{ toFixed(summaryInfo.outboundMete, DP.COM_WT__KG) }} kg</span
+              >{{ summaryInfo.outboundQuantity }} 件 | {{ toFixed(summaryInfo.outboundMete, DP.COM_WT__KG) }} kg</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -100,16 +95,18 @@ v-if="!summaryLoading"
 </template>
 
 <script setup>
-import { getSummary } from '@/api/mes/manufactures-manage/warehouse/artifact'
-import { ref, watch, reactive } from 'vue'
+import { getBoardForArtifactSummary as getSummary } from '@/api/mes/manufactures-manage/common'
+import { ref, watch } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
+import { mapGetters } from '@/store/lib'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
 const defaultQuery = {
@@ -124,10 +121,11 @@ const defaultQuery = {
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
-let summaryInfo = reactive({
+const { globalProjectId } = mapGetters(['globalProjectId'])
+const summaryInfo = ref({
   quantity: 0,
-  intWarehouseQuantity: 0,
-  outWarehouseQuantity: 0,
+  inboundQuantity: 0,
+  outboundQuantity: 0,
   stockQuantity: 0,
   mete: 0,
   inboundMete: 0,
@@ -148,9 +146,9 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.weight = v.grossWeight || 0
     v.totalWeight = v.weight * v.quantity
-    v.stockQuantity = v.intWarehouseQuantity - v.outWarehouseQuantity || 0
-    v.inboundWeight = v.intWarehouseQuantity * v.weight
-    v.outboundWeight = v.outWarehouseQuantity * v.weight
+    v.stockQuantity = v.inboundQuantity - v.outboundQuantity || 0
+    v.inboundWeight = v.inboundQuantity * v.weight
+    v.outboundWeight = v.outboundQuantity * v.weight
     v.stockWeight = v.stockQuantity * v.weight
     return v
   })
@@ -168,18 +166,18 @@ async function fetchSummaryInfo() {
     }
     const {
       quantity = 0,
-      intWarehouseQuantity = 0,
-      outWarehouseQuantity = 0,
+      inboundQuantity = 0,
+      outboundQuantity = 0,
       stockQuantity = 0,
       mete = 0,
       outboundMete = 0,
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
-    summaryInfo = {
+    summaryInfo.value = {
       quantity,
-      intWarehouseQuantity,
-      outWarehouseQuantity,
+      inboundQuantity,
+      outboundQuantity,
       stockQuantity,
       mete,
       inboundMete,
@@ -191,5 +189,11 @@ async function fetchSummaryInfo() {
   } finally {
     summaryLoading.value = false
   }
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
 }
 </script>

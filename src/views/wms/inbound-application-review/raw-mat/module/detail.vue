@@ -10,14 +10,7 @@
     custom-class="raw-mat-inbound-application-review-detail"
   >
     <template #titleAfter>
-      <el-tag effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
-      <el-tag v-if="detail.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-        {{ `过磅重量：${detail.loadingWeight}kg` }}
-      </el-tag>
-      <el-tag v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: weightMeasurementModeEnum, v: order.weightMeasurementMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: purchaseOrderPaymentModeEnum, v: order.purchaseOrderPaymentMode }" type="info" effect="plain" />
-      <el-tag v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
+      <title-after-info :order="order" :detail="detail" />
     </template>
     <template #content>
       <common-table
@@ -37,22 +30,17 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" :show-factory="showWarehouse" />
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left"/>
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns v-if="!showAmount" :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
-          <amount-info-columns />
+          <amount-info-columns v-if="!boolPartyA" />
           <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
         </template>
-        <warehouse-info-columns />
-        <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
-          <template #default="{ row }">
-            <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-          </template>
-        </el-table-column>
+        <warehouse-info-columns show-project />
       </common-table>
     </template>
   </common-drawer>
@@ -60,9 +48,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
-import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { STEEL_ENUM } from '@/settings/config'
+import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -77,11 +63,11 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
-
 const { inboundFillWayCfg } = useWmsConfig()
 
 // 表格高度处理
@@ -97,23 +83,25 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
+// 采购订单信息
+const order = computed(() => detail.purchaseOrder || {})
 // 显示金额
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示仓库
-const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
+// const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
+// 是否甲供订单
+const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `入库单：${detail.serialNumber}`
+  crud.detailLoading ? `入库单`
     : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
-// 采购订单信息
-const order = computed(() => detail.purchaseOrder || {})
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.list)
   detail.list = await numFmtByBasicClass(detail.list, {
     toSmallest: false,
-    toNum: true
+    toNum: false
   })
 }
 
@@ -125,10 +113,6 @@ function getSummaries(param) {
 
 <style lang="scss" scoped>
 .raw-mat-inbound-application-review-detail {
-  .el-drawer__header .el-tag {
-    min-width: 70px;
-    text-align: center;
-  }
   .el-table {
     ::v-deep(.cell) {
       height: 28px;

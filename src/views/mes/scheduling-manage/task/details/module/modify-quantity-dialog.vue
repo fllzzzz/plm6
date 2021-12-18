@@ -25,7 +25,7 @@
         <span>{{ emptyTextFormatter(details.projectName) }}</span>
       </el-form-item>
       <el-form-item label="单体区域">
-        <span>{{ emptyTextFormatter(details.monomerName) }}>{{ emptyTextFormatter(details.districtName) }}</span>
+        <span>{{ emptyTextFormatter(details.monomerName) }}>{{ emptyTextFormatter(details.areaName) }}</span>
       </el-form-item>
       <el-form-item label="编号">
         <span>{{ emptyTextFormatter(details.productSerialNumber) }}</span>

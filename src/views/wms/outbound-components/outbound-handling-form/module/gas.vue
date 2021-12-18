@@ -1,7 +1,7 @@
 <template>
   <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
     <div class="material-info">
-      <common-material-info :material="material" />
+      <common-material-info :material="material" :form="form" />
     </div>
     <div class="form-info">
       <common-form-item :material="material" :form="form" />
@@ -11,10 +11,11 @@
 
 <script setup>
 import { gasOutboundHandling } from '@/api/wms/outbound/outbound-handling'
-import { defineProps, defineExpose, computed, ref, watch } from 'vue'
+import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { isBlank } from '@/utils/data-type'
 
+import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 
@@ -36,7 +37,7 @@ const validateQuantity = (rule, value, callback) => {
   if (value <= 0) {
     return callback(new Error('数量必须大于0'))
   }
-  if (value > material.value.corOperableQuantity) {
+  if (value > maxQuantity.value) {
     return callback(new Error('数量不可超过可操作数量'))
   }
   callback()
@@ -57,6 +58,15 @@ const form = ref({})
 const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
+// 监听校验
+useWatchFormValidate(formRef, form, ['quantity'])
+
+// 最大数量
+const maxQuantity = computed(() => {
+  if (!form.value || !form.value.projectId || !material.value.projectFrozenForUnitKV) return material.value.corOperableQuantity
+  return material.value.corOperableQuantity + (material.value.projectFrozenForUnitKV[form.value.projectId] || 0)
+})
+provide('maxQuantity', maxQuantity)
 
 watch(
   material,

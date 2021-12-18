@@ -8,7 +8,16 @@
   >
     <el-expand-table-column :data="form.sectionSteelList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
-        <el-input v-model="row.remark" :rows="1" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
+        <el-input
+          v-model="row.remark"
+          :rows="1"
+          :autosize="{ minRows: 1, maxRows: 1 }"
+          type="textarea"
+          placeholder="备注"
+          maxlength="200"
+          show-word-limit
+          style="width:400px"
+        />
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />

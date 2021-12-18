@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 原材料入库申请列表 和记录中是同一个接口
+ * 原材料入库申请列表
  *
  * @param {String} serialNumber 订单号/合同号
  * @param {Array} createTime  创建时间
@@ -56,7 +56,7 @@ export function reviewReturned(data) {
 }
 
 /**
- * 审核退回
+ * 审核通过
  * @param {*} id 详情id
  */
 export function reviewPassed(data) {

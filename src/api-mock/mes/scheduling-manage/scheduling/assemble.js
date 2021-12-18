@@ -34,7 +34,7 @@ const getAssemble = {
           ],
           'projectName': 'fsfsfsfs',
           'monomerName': '单体一',
-          'districtName': '区域一'
+          'areaName': '区域一'
         }, {
           'createTime': null,
           'id': 4,
@@ -51,7 +51,7 @@ const getAssemble = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'fsfsfsfs',
           'monomerName': '单体一',
-          'districtName': '区域一'
+          'areaName': '区域一'
         }, {
           'createTime': null,
           'id': 11,
@@ -68,7 +68,7 @@ const getAssemble = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'hgg',
           'monomerName': '单体#1',
-          'districtName': '结构区域1'
+          'areaName': '结构区域1'
         }, {
           'createTime': null,
           'id': 12,
@@ -85,7 +85,7 @@ const getAssemble = {
           'schedulingProductionLineDTOS': [],
           'projectName': 'hgg',
           'monomerName': '单体#1',
-          'districtName': '结构区域1'
+          'areaName': '结构区域1'
         }]
       }
     }

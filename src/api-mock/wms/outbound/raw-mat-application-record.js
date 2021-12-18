@@ -1,6 +1,6 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { materialOutboundModeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 
 // 原材料出库清单列表
 const get = {
@@ -65,6 +65,7 @@ const detail_id1 = {
           {
             id: 1,
             boolPartyA: true, // 甲供材料
+            materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             classifyId: 103,
             basicClass: 1,
             specification: 'Q325B',

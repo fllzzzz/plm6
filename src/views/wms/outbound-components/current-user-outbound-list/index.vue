@@ -1,5 +1,5 @@
 <template>
-    <el-badge :value="outboundListNumber" :hidden="outboundListNumber <= 0" style="margin-right: 10px">
+    <el-badge :value="outboundListNumber" :hidden="outboundListNumber <= 0" style="margin-right: 6px">
       <common-button v-bind="$attrs" icon="el-icon-tickets" size="mini" type="success" @click="openOutboundList">出库清单</common-button>
     </el-badge>
     <list v-model:visible="outboundListVisible" />

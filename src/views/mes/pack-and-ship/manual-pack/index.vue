@@ -11,21 +11,7 @@
             clearable
             style="width: 200px"
           />
-          <!-- <monomer-area-cascader
-            v-model="monomerAndArea"
-            :project-id="globalProjectId"
-            :disabled="!globalProjectId"
-            :material-type="packType"
-            show-all-levels
-            check-strictly
-            emit-path
-            clearable
-            filterable
-            size="small"
-            class="filter-item"
-            style="width:355px"
-            @change="handleMonomerAreaChange"
-          /> -->
+          <monomer-select v-model="monomerId" clearable :project-id="globalProjectId" class="filter-item" />
         </div>
         <div class="filter-right-box">
           <common-button type="primary" size="mini" :disabled="isEmpty" @click="packVisible = true">打包列表</common-button>
@@ -59,6 +45,7 @@ import structureTable from './structure'
 import enclosureTable from './enclosure'
 import auxiliaryMaterialTable from './auxiliary-material'
 import packListDrawer from './pack-list-drawer'
+import monomerSelect from '@/components-system/plan/monomer-select'
 
 const route = useRoute()
 const permission = {

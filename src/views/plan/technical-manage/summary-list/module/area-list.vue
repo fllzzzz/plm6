@@ -1,7 +1,7 @@
 <template>
   <el-drawer
     title="区域详情"
-    :visible.sync="drawerVisible"
+    v-model:visible="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
     size="50%"
@@ -47,7 +47,7 @@
 import { getSummaryListForArea as getSummary } from '@/api/mes-plan/technical-manage/common'
 import sizeCalc from '@/mixins/sizeCalc'
 import { materialListTypeEnum as typeEnum } from '@/utils/enum/index'
-import checkPermission from '@/utils/permission'
+import checkPermission from '@/utils/system/check-permission'
 import { debounce } from '@/utils'
 
 // crud交由presenter持有
@@ -113,7 +113,7 @@ export default {
     handleClose() {
       this.$emit('update:visible', false)
     },
-    fetchSummary: debounce(async function() {
+    fetchSummary: debounce(async function () {
       if (!checkPermission(permission.get) || !this.monomerId) {
         return
       }
