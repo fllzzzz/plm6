@@ -6,7 +6,7 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
-       @change="monomerChange"
+        @change="monomerChange"
       />
       <common-radio-button
         v-model="query.productType"
@@ -14,14 +14,14 @@
         :type="'other'"
         :dataStructure="typeProp"
         class="filter-item"
-        @change="crud.toQuery"
+        @change="typeChange"
       />
       <div>
         <el-input
           v-model="query.serialNumber"
           placeholder="输入编号搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter.native="crud.toQuery"
@@ -30,12 +30,12 @@
           v-model="query.fileName"
           placeholder="输入文件名搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter.native="crud.toQuery"
         />
-        <rrOperation/>
+        <rrOperation />
       </div>
     </div>
     <crudOperation>
@@ -56,6 +56,14 @@
           :material-type="crud.query.type"
           @success="crud.toQuery"
         />
+        <!-- <common-button
+          v-if="query.type === planTypeEnum.ENCLOSURE.V"
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          class="filter-item"
+          @click="draw"
+        >绘制图纸</common-button> -->
       </template>
       <!-- <template #viewLeft>
         <common-button
@@ -82,18 +90,19 @@ import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import { monomerDetail } from '@/api/plan/monomer'
-import { processingEnum } from '@enum-ms/plan'
-import { planTypeEnum } from '@enum-ms/plan'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { processingEnum, planTypeEnum } from '@enum-ms/plan'
 import uploadBtn from '../../components/drawing-upload-btn'
 import { upload } from '@/api/plan/technical-data-manage/deepen'
-
 
 const router = useRouter()
 
 const defaultQuery = {
-  drawingNumber: undefined, serialNumber: undefined, fileName: undefined,
+  drawingNumber: undefined,
+  serialNumber: undefined,
+  fileName: undefined,
   monomerId: { value: undefined, resetAble: false },
-  type: { value: planTypeEnum.ARTIFACT.V, resetAble: false }
+  type: { value: planTypeEnum.ARTIFACT.V, resetAble: false },
 }
 
 const monomerSelectRef = ref()
@@ -108,8 +117,8 @@ const deepenRef = ref()
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
 async function monomerChange() {
@@ -132,17 +141,19 @@ async function getTypeInfo() {
     typeOption.value = []
     const option = []
     if (productTypeList && productTypeList.length > 0) {
-      productTypeList.forEach(v => {
-        if (v.no !== 5) {
+      productTypeList.forEach((v) => {
+        if (v.no !== TechnologyTypeAllEnum.ENUM.STRUCTURE.V) {
           option.push(v)
         }
       })
       typeOption.value = option
-      typeOption.value.unshift({
-        name: '构件',
-        no: 7
-      }, { name: '零件',
-        no: 8 })
+      typeOption.value.unshift(
+        {
+          name: '构件',
+          no: 7,
+        },
+        { name: '零件', no: 9 }
+      )
     }
     crud.query.productType = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
     typeChange(crud.query.productType)
@@ -158,7 +169,7 @@ function typeChange(val) {
         crud.query.type = 0
         crud.query.enclosureCategory = 0
         break
-      case 8:
+      case 9:
         crud.query.type = 1
         crud.query.enclosureCategory = 0
         break
@@ -170,7 +181,7 @@ function typeChange(val) {
     carryParam.value = {
       monomerId: crud.query.monomerId,
       type: crud.query.type,
-      enclosureCategory: crud.query.enclosureCategory
+      enclosureCategory: crud.query.enclosureCategory,
     }
     crud.toQuery()
   } else {
@@ -179,7 +190,7 @@ function typeChange(val) {
   }
 }
 
-const accept=computed(()=>{
+const accept = computed(() => {
   if (crud.query.type === planTypeEnum.ENCLOSURE.V) {
     return '.pdf,.zip,.jpg,.jpeg,.png'
   } else {

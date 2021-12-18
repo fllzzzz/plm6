@@ -1,26 +1,18 @@
 <template>
   <div id="businessContainer" class="app-container">
-    <el-form
-      ref="businessRef"
-      :model="form"
-      :rules="rules"
-      inline
-      size="small"
-      label-position="right"
-      label-width="130px"
-    >
+    <el-form ref="businessRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
       <div>
         <div id="baseInfo">
           <div class="form-row">
             <el-form-item label="合同签订主体" prop="contractSignBodyId">
-              <div class="input-underline" style="width:550px">
+              <div class="input-underline" style="width: 550px">
                 <branch-company-select
                   v-if="isModify"
                   v-model="form.contractSignBodyId"
                   default
                   class="input-underline"
                   placeholder="合同签订主体"
-                  style="width:550px"
+                  style="width: 550px"
                 />
                 <span v-else>{{ detail.signingMainBodyName }}</span>
               </div>
@@ -28,7 +20,7 @@
           </div>
           <div class="form-row">
             <el-form-item label="业务类型" prop="businessType">
-              <div style="width:200px">
+              <div style="width: 200px">
                 <common-select
                   v-if="isModify"
                   v-model="form.businessType"
@@ -44,7 +36,7 @@
               </div>
             </el-form-item>
             <el-form-item label="项目类型" prop="projectType">
-              <div style="width:200px">
+              <div style="width: 200px">
                 <common-select
                   v-if="isModify"
                   v-model="form.projectType"
@@ -53,21 +45,24 @@
                   size="small"
                   clearable
                   placeholder="项目类型"
-                  style="width:200px"
+                  style="width: 200px"
                   class="input-underline"
                 />
                 <span v-else>{{ detail.projectTypeDesc }}</span>
               </div>
             </el-form-item>
             <el-form-item label="项目内容" prop="content">
-              <div style="width:200px">
-                <el-select v-if="isModify" v-model="form.projectContent" multiple placeholder="项目内容,可多选" class="input-underline" style="width:320px" @change="getshowItem">
-                  <el-option
-                    v-for="item in projectContentOption"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  />
+              <div style="width: 200px">
+                <el-select
+                  v-if="isModify"
+                  v-model="form.projectContent"
+                  multiple
+                  placeholder="项目内容,可多选"
+                  class="input-underline"
+                  style="width: 320px"
+                  @change="getshowItem"
+                >
+                  <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
                 <template v-else>
                   <span v-for="item in detail.projectContentList" :key="item.id">{{ item.name }}&nbsp;</span>
@@ -77,7 +72,7 @@
           </div>
           <div class="form-row">
             <el-form-item label="签约人" prop="singerId">
-              <div style="width:200px">
+              <div style="width: 200px">
                 <template v-if="isModify">
                   <user-dept-cascader
                     v-model="form.singerId"
@@ -86,7 +81,7 @@
                     clearable
                     show-all-levels
                     class="input-underline"
-                    style="width:200px"
+                    style="width: 200px"
                     placeholder="签约人"
                   />
                 </template>
@@ -94,7 +89,7 @@
               </div>
             </el-form-item>
             <el-form-item label="签订日期" prop="signingDate">
-              <div style="width:200px">
+              <div style="width: 200px">
                 <el-date-picker
                   v-if="isModify"
                   v-model="form.signingDate"
@@ -102,7 +97,7 @@
                   value-format="x"
                   placeholder="选择签订日期"
                   class="input-underline"
-                  style="width:200px"
+                  style="width: 200px"
                 />
                 <template v-else>
                   <span v-parse-time="'{y}-{m}-{d}'">{{ detail.signingDate }}</span>
@@ -110,13 +105,13 @@
               </div>
             </el-form-item>
             <el-form-item label="签约地址" prop="signingAddress">
-              <div style="width:200px">
+              <div style="width: 200px">
                 <el-input
                   v-if="isModify"
                   v-model="form.signingAddress"
                   class="input-underline"
                   placeholder="签约地址"
-                  style="width:200px"
+                  style="width: 200px"
                 />
                 <span v-else>{{ detail.signingAddress }}</span>
               </div>
@@ -124,58 +119,37 @@
           </div>
           <div class="form-row">
             <el-form-item label="工程结算方式" prop="structureMeasureMode">
-              <common-radio
-                v-if="isModify"
-                v-model="form.structureMeasureMode"
-                :options="engineerSettlementTypeEnumN.ENUM"
-                type="enum"
-              />
-              <span v-else>{{ isNotBlank(detail.structureMeasureMode)? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : '' }}</span>
+              <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
+              <span v-else>{{
+                isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
+              }}</span>
             </el-form-item>
             <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-              <common-radio
-                v-if="isModify"
-                v-model="form.enclosureMeasureMode"
-                :options="enclosureSettlementTypeEnum.ENUM"
-                type="enum"
-              />
-              <span v-else>{{ isNotBlank(detail.enclosureMeasureMode)? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : '' }}</span>
+              <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
+              <span v-else>{{
+                isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
+              }}</span>
             </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="运输方式" prop="transportMode">
-              <common-radio
-                v-if="isModify"
-                v-model="form.transportMode"
-                :options="transportModeEnum.ENUM"
-                type="enum"
-              />
-              <span v-else>{{ isNotBlank(detail.transportMode)? transportModeEnum.VL[detail.transportMode] : '' }}</span>
+              <common-radio v-if="isModify" v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" />
+              <span v-else>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
             </el-form-item>
             <el-form-item label="支付方式" prop="payType">
-              <common-radio
-                v-if="isModify"
-                v-model="form.payType"
-                :options="paymentModeEnum.ENUM"
-                type="enum"
-              />
-              <span v-else>{{ isNotBlank(detail.payType)? paymentModeEnum.VL[detail.payType] : '' }}</span>
+              <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
+              <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
             </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="合同含税" prop="isTaxInclusive">
-              <div style="width:200px">
-                <common-radio
-                  v-if="isModify"
-                  v-model="form.isTaxInclusive"
-                  :options="isTaxEnum.ENUM"
-                  type="enum"
-                />
-                <span v-else>{{ detail.isTaxInclusive?isTaxEnum.VL[detail.isTaxInclusive] : '否' }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.isTaxInclusive" :options="isTaxEnum.ENUM" type="enum" />
+                <span v-else>{{ detail.isTaxInclusive ? isTaxEnum.VL[detail.isTaxInclusive] : '否' }}</span>
               </div>
             </el-form-item>
             <el-form-item label="发票类型" prop="invoiceType">
-              <div class="input-underline form-row" style="width:200px">
+              <div class="input-underline form-row" style="width: 200px">
                 <template v-if="isModify">
                   <common-select
                     type="enum"
@@ -185,7 +159,7 @@
                     :disabled="!form.isTaxInclusive"
                     class="input-underline"
                     placeholder="选择发票类型"
-                    style="width: 200px;"
+                    style="width: 200px"
                   />
                 </template>
                 <template v-else>
@@ -196,12 +170,12 @@
           </div>
           <div class="form-row">
             <el-form-item label="付款方式描述" prop="paymentDescription">
-              <div class="input-underline" style="width:550px">
+              <div class="input-underline" style="width: 550px">
                 <el-input
                   v-if="isModify"
                   v-model="form.paymentDescription"
                   type="textarea"
-                  :autosize="{ minRows: 4, maxRows: 4}"
+                  :autosize="{ minRows: 4, maxRows: 4 }"
                   placeholder="付款方式描述"
                 />
                 <span v-else>{{ detail.paymentDescription }}</span>
@@ -210,16 +184,12 @@
           </div>
         </div>
         <el-divider><span class="title">技术交底</span></el-divider>
-        <div style="text-align:right;margin-right:20px;">
-          <common-button
-            v-if="isModify"
-            style="margin-left:20px;"
-            type="success"
-            size="small"
-            @click="enclosureVisible= true"
-          >添加</common-button>
+        <div style="text-align: right; margin-right: 20px">
+          <common-button v-if="isModify" style="margin-left: 20px" type="success" size="small" @click="enclosureVisible = true"
+            >添加</common-button
+          >
         </div>
-        <enclosure-show :table-data="!isModify?detail.enclosureInfo:form.enclosureInfo" :show-item="showItem" />
+        <enclosure-show :table-data="!isModify ? detail.enclosureInfo : form.enclosureInfo" :show-item="showItem" />
         <!--围护产品数据弹窗  -->
         <common-drawer
           :visible.sync="enclosureVisible"
@@ -228,7 +198,11 @@
           :wrapper-closable="false"
           direction="rtl"
           size="80%"
-          :before-close="() => {enclosureVisible = false}"
+          :before-close="
+            () => {
+              enclosureVisible = false
+            }
+          "
         >
           <template #title>
             <span class="line-title">添加技术交底</span>
@@ -251,7 +225,17 @@ import { ref, defineProps, watch, computed, defineExpose } from 'vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
-import { projectTypeEnumN, businessTypeEnum, paymentModeEnum, invoiceTypeEnum, isTaxEnum, engineerSettlementTypeEnumN, enclosureSettlementTypeEnum, transportModeEnum, TechnologyTypeEnum } from '@enum-ms/contract'
+import {
+  projectTypeEnumN,
+  businessTypeEnum,
+  paymentModeEnum,
+  invoiceTypeEnum,
+  isTaxEnum,
+  engineerSettlementTypeEnumN,
+  enclosureSettlementTypeEnum,
+  transportModeEnum,
+  TechnologyTypeEnum,
+} from '@enum-ms/contract'
 import { ElMessage, ElLoading } from 'element-plus'
 import { isNotBlank } from '@data-type/index'
 import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show'
@@ -273,7 +257,7 @@ const defaultForm = {
   businessType: undefined, // 业务类型
   projectType: undefined, // 项目类型
   projectContent: [], // 项目内容
-  projectContentList:[],
+  projectContentList: [],
   singerId: undefined, // 签约人
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
@@ -289,7 +273,7 @@ const defaultForm = {
   profiledPlateSaveRequestVOS: [],
   pressureBearingPlateSaveVOS: [],
   trussFloorPlateSaveRequestVOS: [],
-  sandwichBoardSaveRequestVOS: []
+  sandwichBoardSaveRequestVOS: [],
 }
 const techForm = {
   enclosureInfo: {},
@@ -297,31 +281,31 @@ const techForm = {
   profiledPlateSaveRequestVOS: [],
   pressureBearingPlateSaveVOS: [],
   trussFloorPlateSaveRequestVOS: [],
-  sandwichBoardSaveRequestVOS: []
+  sandwichBoardSaveRequestVOS: [],
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
 
-const rules= {
-  paymentDescription: [
-    { max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }
-  ],
+const rules = {
+  paymentDescription: [{ max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
   projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
   projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
-  contractSignBodyId: [{ required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }]
+  contractSignBodyId: [
+    { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' },
+  ],
 }
 
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined
+    default: undefined,
   },
   isModify: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 watch(
@@ -337,7 +321,7 @@ function resetForm() {
   if (businessRef.value) {
     businessRef.value.resetFields()
   }
-  form.value  = JSON.parse(JSON.stringify(detail.value))
+  form.value = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(businessRef, form.value)
 }
 
@@ -363,11 +347,16 @@ function handleAddEnclosure() {
 function getshowItem(val) {
   showItem.value = []
   showCategory.value = []
-  const totalArr = [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V, TechnologyTypeEnum.ENUM.PROFILEDPLATE.V, TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V, TechnologyTypeEnum.ENUM.PRESSUREBEARINGPLATE.V]
+  const totalArr = [
+    TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V,
+    TechnologyTypeEnum.ENUM.PROFILEDPLATE.V,
+    TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V,
+    TechnologyTypeEnum.ENUM.PRESSUREBEARINGPLATE.V,
+  ]
   if (val.length > 0) {
-    val.map(v => {
+    val.map((v) => {
       if (form.value.businessType === businessTypeEnum.ENUM.MACHINING.V) {
-        const val = projectContent1.find(k => k.id === v)
+        const val = projectContent1.find((k) => k.id === v)
         if (val.alias === 'STRUCTURE') {
           if (showItem.value.indexOf(TechnologyTypeEnum.ENUM.STRUCTURE.V) < 0) {
             showItem.value.push(TechnologyTypeEnum.ENUM.STRUCTURE.V)
@@ -379,7 +368,7 @@ function getshowItem(val) {
           }
         }
       } else {
-        const val = projectContent2.find(k => k.id === v)
+        const val = projectContent2.find((k) => k.id === v)
         if (val.alias) {
           if (val.alias === 'STRUCTURE') {
             if (showItem.value.indexOf(TechnologyTypeEnum.ENUM.STRUCTURE.V) < 0) {
@@ -404,7 +393,7 @@ function enclosureSave() {
     profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.PROFILEDPLATE.V],
     pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.ENUM.PRESSUREBEARINGPLATE.V],
     trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V],
-    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]
+    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V],
   }
   enclosureVisible.value = false
 }
@@ -442,16 +431,16 @@ async function fetchDetail() {
       [TechnologyTypeEnum.ENUM.PROFILEDPLATE.V]: data.profiledPlateList ? data.profiledPlateList : [],
       [TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V]: data.trussFloorPlateList ? data.trussFloorPlateList : [],
       [TechnologyTypeEnum.ENUM.PRESSUREBEARINGPLATE.V]: data.pressureBearingPlateList ? data.pressureBearingPlateList : [],
-      [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: data.sandwichBoardList ? data.sandwichBoardList : []
+      [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: data.sandwichBoardList ? data.sandwichBoardList : [],
     }
     const options = []
     originConstruct = []
     const data1 = await getContentInfo({ businessType: businessTypeEnum.ENUM.MACHINING.V })
     const data2 = await getContentInfo({ businessType: businessTypeEnum.ENUM.INSTALLATION.V })
     if (data1 && data1.projectContentVOList.length > 0) {
-      data1.projectContentVOList.forEach(v => {
+      data1.projectContentVOList.forEach((v) => {
         if (v.contentList.length > 0) {
-          v.contentList.forEach(k => {
+          v.contentList.forEach((k) => {
             k.alias = v.type
             options.push(k)
             if (k.alias === 'STRUCTURE') {
@@ -473,7 +462,7 @@ async function fetchDetail() {
     form.value.projectContent = []
     projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.INSTALLATION.V ? projectContent2 : projectContent1
     if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
-      detail.value.projectContentList.forEach(v => {
+      detail.value.projectContentList.forEach((v) => {
         form.value.projectContent.push(v.id)
       })
     }
@@ -486,7 +475,7 @@ defineExpose({
   form,
   validateForm,
   fetchDetail,
-  resetForm
+  resetForm,
 })
 // import { mapGetters } from 'vuex'
 // import { getBusinessInfo as getDetail, downloadSettlementAttachments, getTechInfo } from '@/api/contract/info'
@@ -951,7 +940,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.app-container{
+.app-container {
   position: relative;
   .operate-btn {
     position: absolute;
@@ -970,25 +959,25 @@ defineExpose({
   align-items: center;
   margin-top: 20px;
 }
->>>.input-underline {
+>>> .input-underline {
   // width: calc((95vw - 40px)/3);
   width: 200px;
   margin-right: 0;
-  input{
-    border-top:0;
-    border-left:0;
-    border-right:0;
+  input {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
     border-radius: 0;
   }
 }
->>>.el-input-number .el-input__inner {
+>>> .el-input-number .el-input__inner {
   text-align: left;
 }
 .form-row {
-  width:100%
+  width: 100%;
 }
 span {
   // color:#4482ff #1682e6
-  color:#82848a
+  color: #82848a;
 }
 </style>

@@ -24,6 +24,14 @@ const overallPlanTypeEnum = {
 }
 constantize(overallPlanTypeEnum)
 
+// 部门计划类型
+const areaPlanTypeEnum = {
+  DEEPEN: { L: '深化计划', K: 'DEEPEN', V: 1 << 0 },
+  PROCESS: { L: '加工计划', K: 'PROCESS', V: 1 << 1 },
+  INSTALL: { L: '安装计划', K: 'INSTALL', V: 1 << 2 }
+}
+constantize(areaPlanTypeEnum)
+
 // 计划状态
 const overallPlanStatusEnum = {
   PROCESS: { L: '进行中', K: 'PROCESS', V: 0 },
@@ -70,7 +78,8 @@ export {
   shearTypeEnum, // 零件剪板类型
   processingEnum,
   planTypeEnum,
-  technicalDataTypeEnum
+  technicalDataTypeEnum,
+  areaPlanTypeEnum
 }
 
 export default {
@@ -80,5 +89,6 @@ export default {
   shearTypeEnum, // 零件剪板类型
   processingEnum,
   planTypeEnum,
-  technicalDataTypeEnum
+  technicalDataTypeEnum,
+  areaPlanTypeEnum
 }

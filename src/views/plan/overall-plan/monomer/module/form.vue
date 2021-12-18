@@ -74,42 +74,15 @@ import { DP } from '@/settings/config'
 import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
 
 const formRef = ref()
-const originOption = [
-  { label: '构件(t)', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.ENUM.STRUCTURE.V, alias: 'STRUCTURE' },
-  {
-    label: '压型板(t)',
-    key: 'contourPlate',
-    dateKey: 'contourPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.PROFILEDPLATE.V,
-    alias: 'ENCLOSURE',
-  },
-  {
-    label: '桁架楼承板(t)',
-    key: 'trussFloorPlate',
-    dateKey: 'trussFloorPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.TRUSSFLOORPLATE.V,
-    alias: 'ENCLOSURE',
-  },
-  {
-    label: '夹芯板(t)',
-    key: 'battenBoard',
-    dateKey: 'battenBoardDate',
-    no: TechnologyTypeAllEnum.ENUM.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE',
-  },
-  {
-    label: '压型楼承板(t)',
-    key: 'pressureBearingPlate',
-    dateKey: 'pressureBearingPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.PRESSUREBEARINGPLATE.V,
-    alias: 'ENCLOSURE',
-  },
-]
 const currentOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined,
+  },
+  originOption: {
+    type: Array,
+    default: () => [],
   },
   currentProject: {
     type: Object,
@@ -194,15 +167,15 @@ watch(
       currentOption.value = []
       val.projectContentList.forEach((v) => {
         if (val.businessType === businessTypeEnum.ENUM.MACHINING.V) {
-          if (v.no && originOption.findIndex((k) => k.no == v.no) > -1) {
-            const optionVal = originOption.find((k) => k.no == v.no)
+          if (v.no && props.originOption.findIndex((k) => k.no == v.no) > -1) {
+            const optionVal = props.originOption.find((k) => k.no == v.no)
             currentOption.value.push(optionVal)
           }
         } else if (val.businessType === businessTypeEnum.ENUM.INSTALLATION.V) {
           if (v.childrenList && v.childrenList.length > 0) {
             v.childrenList.forEach((value) => {
-              if (value.no && originOption.findIndex((k) => k.no == value.no) > -1) {
-                const optionVal = originOption.find((k) => k.no == value.no)
+              if (value.no && props.originOption.findIndex((k) => k.no == value.no) > -1) {
+                const optionVal = props.originOption.find((k) => k.no == value.no)
                 currentOption.value.push(optionVal)
               }
             })

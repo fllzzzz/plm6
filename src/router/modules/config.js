@@ -210,6 +210,13 @@ export default {
           hidden: false,
           component: '/config-manage/contract/enclosure-content/index',
           meta: { title: '围护信息配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MemberConfig',
+          path: 'member-config',
+          hidden: false,
+          component: '/config-manage/contract/setting-config/info-manage/index',
+          meta: { title: '项目成员配置', icon: 'project', noCache: true }
         }
       ]
     }

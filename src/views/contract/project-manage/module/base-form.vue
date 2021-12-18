@@ -329,20 +329,21 @@ function handleRegionChange(val) {
   form.value.provinceId = undefined
   form.value.cityId = undefined
   form.value.regionId = undefined
-  val && val.forEach((v, i) => {
-    if (i === 0) {
-      form.value.countryId = v
-    }
-    if (i === 1) {
-      form.value.provinceId = v
-    }
-    if (i === 2) {
-      form.value.cityId = v
-    }
-    if (i === 3) {
-      form.value.regionId = v
-    }
-  })
+  val &&
+    val.forEach((v, i) => {
+      if (i === 0) {
+        form.value.countryId = v
+      }
+      if (i === 1) {
+        form.value.provinceId = v
+      }
+      if (i === 2) {
+        form.value.cityId = v
+      }
+      if (i === 3) {
+        form.value.regionId = v
+      }
+    })
 }
 
 defineExpose({

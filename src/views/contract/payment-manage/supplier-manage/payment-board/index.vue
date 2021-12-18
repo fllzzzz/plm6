@@ -137,9 +137,7 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <span>{{
-              scope.row.amount && scope.row.amount > 0 ? scope.row.amount.toThousand() : scope.row.amount
-            }}</span>
+            <span>{{ scope.row.amount && scope.row.amount > 0 ? scope.row.amount.toThousand() : scope.row.amount }}</span>
           </template>
         </el-table-column>
       </template>
@@ -154,9 +152,7 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <span>{{
-              scope.row.freight && scope.row.freight > 0 ? scope.row.freight.toThousand() : scope.row.freight
-            }}</span>
+            <span>{{ scope.row.freight && scope.row.freight > 0 ? scope.row.freight.toThousand() : scope.row.freight }}</span>
           </template>
         </el-table-column>
       </template>
@@ -172,7 +168,9 @@
         >
           <template v-slot="scope">
             <span>{{
-              scope.row.settlementAmount && scope.row.settlementAmount > 0 ? scope.row.settlementAmount.toThousand() : scope.row.settlementAmount
+              scope.row.settlementAmount && scope.row.settlementAmount > 0
+                ? scope.row.settlementAmount.toThousand()
+                : scope.row.settlementAmount
             }}</span>
           </template>
         </el-table-column>
@@ -202,9 +200,7 @@
         min-width="100"
       >
         <template v-slot="scope">
-          <span>{{
-            scope.row.payRate
-          }}</span>
+          <span>{{ scope.row.payRate }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -232,9 +228,7 @@
         min-width="100"
       >
         <template v-slot="scope">
-          <span>{{
-            scope.row.invoiceRate
-          }}</span>
+          <span>{{ scope.row.invoiceRate }}</span>
         </template>
       </el-table-column>
       <template v-if="crud.query.type == supplierPayTypeEnum.MATERIAL.V || crud.query.type == supplierPayTypeEnum.PRODUCT.V">
@@ -264,8 +258,8 @@
           min-width="80"
         >
           <template v-slot="scope">
-            <template v-if="scope.row.projectList && scope.row.projectList.length>0">
-              <div v-for="item in scope.row.projectList" :key="item.id">{{ item.serialNumber+' '+item.shortName }}</div>
+            <template v-if="scope.row.projectList && scope.row.projectList.length > 0">
+              <div v-for="item in scope.row.projectList" :key="item.id">{{ item.serialNumber + ' ' + item.shortName }}</div>
             </template>
           </template>
         </el-table-column>

@@ -125,7 +125,8 @@
                 <el-table-column label="操作" align="center">
                   <template v-slot="scope">
                     <common-button v-if="scope.row.add" type="primary" size="mini" plain @click="addArtifact(scope.row)">保存</common-button>
-                    <el-popover
+                    <common-button type="danger" size="mini" plain @click="deleteRow(scope.row,scope.$index)">删除</common-button>
+                    <!-- <el-popover
                       v-model:visible="scope.row.popoverVisible"
                       :key="scope.row.id"
                       placement="top"
@@ -139,7 +140,7 @@
                       <template  #reference>
                         <common-button type="danger" size="mini" @click="scope.row.popoverVisible=true">删除</common-button>
                       </template>
-                    </el-popover>
+                    </el-popover> -->
                   </template>
                 </el-table-column>
               </common-table>
