@@ -90,6 +90,7 @@ import { enabledEnum } from '@enum-ms/common'
 import { mapGetters } from '@/store/lib'
 import { validatorPhone, validatorUsername } from '@/utils/validate/pattern'
 import { isNotBlank } from '@data-type/index'
+import { ElRadioGroup } from 'element-plus'
 const { user } = mapGetters(['user'])
 
 const formRef = ref()
