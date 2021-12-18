@@ -74,19 +74,19 @@ const mutations = {
   },
   SET_TAX_RATE(state, list = []) {
     state.taxRateKV = {}
-    list.forEach(v => {
+    list.forEach((v) => {
       state.taxRateKV[v.classification] = v.taxRateList
     })
   },
   SET_MAT_CLS_TREE(state, tree = []) {
     state.matClsTree = tree
-    state.rawMatClsTree = tree.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
-    state.manufClsTree = tree.filter(t => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsTree = tree.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsTree = tree.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
   SET_MAT_CLS_LIST(state, list = []) {
     state.matClsList = list
-    state.rawMatClsList = list.filter(t => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
-    state.manufClsList = list.filter(t => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsList = list.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsList = list.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
   SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
@@ -239,7 +239,7 @@ const actions = {
   },
   // 仓库
   async fetchWarehouse({ commit }) {
-    const content = await getWarehouseBrief() || []
+    const content = (await getWarehouseBrief()) || []
     commit('SET_WAREHOUSE', content)
     commit('SET_LOADED', { key: 'warehouse' })
     return content
@@ -297,7 +297,7 @@ const actions = {
   },
   // 省市区
   async fetchRegional({ commit }) {
-    const regional = await getRegionalCascade() || []
+    const regional = (await getRegionalCascade()) || []
     setEmptyArr2Undefined(regional)
     commit('SET_REGIONAL', regional)
     commit('SET_LOADED', { key: 'regional' })
@@ -313,8 +313,8 @@ const actions = {
   // 加载未关闭的申购单
   async fetchUnclosedPurchaseOrder({ commit }) {
     const { content = [] } = await getPurchasingPurchaseOrderBrief()
-    content.forEach(v => {
-      if (v.projects) v.projectIds = v.projects.map(v => v.id)
+    content.forEach((v) => {
+      if (v.projects) v.projectIds = v.projects.map((v) => v.id)
     })
     commit('SET_UNCLOSED_PURCHASE_ORDER', content)
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
@@ -326,7 +326,8 @@ const actions = {
     const classifySpec = state.classifySpec
     for (const id of classifyIds) {
       const ps = getFinalMatClsById(id).then((res) => {
-        const clsBrief = { // 简要信息
+        const clsBrief = {
+          // 简要信息
           id: id, // 科目id
           name: res.name, // 名称
           serialNumber: res.serialNumber, // 编码
@@ -359,7 +360,7 @@ const actions = {
                   name: v.name
                 }
                 // 型材加入单位净重
-                if (res.basicClass === matClsEnum.SECTION_STEEL.V) {
+                if (res.basicClass === matClsEnum.SECTION_STEEL.V && isNotBlank(v.unitWeight)) {
                   spec.unitWeight = v.unitWeight
                 }
                 return spec
@@ -370,7 +371,7 @@ const actions = {
         classifySpec[id].fullSpecKV = new Map()
         classifySpec[id].specList = getSpecList(clsBrief, matCls.specConfig)
         // fullSpecMap：可通过classifyId及“全规格（例：M27*60）”，获取规格的详细信息
-        classifySpec[id].fullSpecMap = new Map(classifySpec[id].specList.map(v => [v.spec, v]))
+        classifySpec[id].fullSpecMap = new Map(classifySpec[id].specList.map((v) => [v.spec, v]))
         Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
         Object.assign(classifySpec[id], matCls)
         Object.assign(classifySpec.specKV, matCls.specKV)
@@ -391,17 +392,19 @@ const actions = {
 function getSpecList(classify, specConfig) {
   if (isBlank(specConfig)) {
     // 为空则插入无规格选项
-    return [{
-      classify,
-      index: [0],
-      specificationLabels: '无规格',
-      arr: [],
-      spec: '',
-      specKV: {},
-      specNameKV: {},
-      specArrKV: [],
-      sn: classify.id + '_' + '-1'
-    }]
+    return [
+      {
+        classify,
+        index: [0],
+        specificationLabels: '无规格',
+        arr: [],
+        spec: '',
+        specKV: {},
+        specNameKV: {},
+        specArrKV: [],
+        sn: classify.id + '_' + '-1'
+      }
+    ]
   }
   const specLengthArr = []
   const arrLength = specConfig.reduce((res, cur) => {
@@ -430,7 +433,7 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
-          if (classify.basicClass === matClsEnum.SECTION_STEEL.V) {
+          if (classify.basicClass === matClsEnum.SECTION_STEEL.V && isNotBlank(spec.unitWeight)) {
             arr[currentIndex].unitWeight = spec.unitWeight
           }
         }
@@ -439,10 +442,10 @@ function getSpecList(classify, specConfig) {
     prevLength = prevLength * specLengthArr[i]
   }
   arr.forEach((v) => {
-    v.spec = v.arr.join('*') // 规格
+    v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}
-    v.specificationLabels = specConfig.map(v => v.name).join(' * ')
+    v.specificationLabels = specConfig.map((v) => v.name).join(' * ')
     v.specNameKV = {}
     v.specArrKV = []
     v.arr.forEach((c, i) => {

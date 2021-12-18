@@ -97,7 +97,6 @@ import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 
 const permission = {
   get: ['wms_partyABorrow:get'],
-  return: ['wms_partyABorrow:return'],
   transferDetail: ['wms_transferApplication_review:detail']
 }
 

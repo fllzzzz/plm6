@@ -1,6 +1,6 @@
 <template>
   <div class="first-line flex-rbc">
-    <div>
+    <span class="child-mr-6">
       <slot name="firstItem" />
       <common-radio-button
         v-if="showProjectWarehouseType"
@@ -14,7 +14,7 @@
       />
       <slot name="afterProjectWarehouseType" />
       <common-radio-button
-        v-if="showMaterialIsWhole && (basicClass & STEEL_ENUM)"
+        v-if="showMaterialIsWhole && basicClass & STEEL_ENUM"
         v-model="queryVO.materialIsWhole"
         :options="materialIsWholeEnum.ENUM"
         show-option-all
@@ -35,11 +35,12 @@
         @change="toQuery"
       />
       <slot name="afterWarehouse" />
-    </div>
-    <div>
+    </span>
+    <span>
       <slot name="firstLineRight" />
-    </div>
+    </span>
   </div>
+  <slot name="secondLineFirstItem" class="child-mr-6" />
   <material-cascader
     v-model="queryVO.classifyId"
     :basic-class="props.basicClass"
@@ -54,6 +55,7 @@
     @change="toQuery"
   />
   <component :is="comp" :query="query" :basic-class="props.basicClass" @to-query="toQuery" />
+  <slot name="secondLineLastItem" />
 </template>
 
 <script setup>
@@ -128,4 +130,3 @@ function toQuery() {
   emit('to-query')
 }
 </script>
-

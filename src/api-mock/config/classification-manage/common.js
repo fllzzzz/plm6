@@ -63,6 +63,16 @@ const getFinalMatClsByIdForSectionSteel = {
           specConfig: [
             {
               id: 1,
+              name: '材质',
+              list: [
+                { code: '01', name: 'Q325B' },
+                { code: '02', name: 'Q235B' },
+                { code: '03', name: 'Q235A' },
+                { code: '04', name: 'Q235C' }
+              ]
+            },
+            {
+              id: 2,
               name: 'GB-06',
               list: [
                 { code: '01', name: '10*10*200*500', 'unitWeight|10-30.1-2': 1 },

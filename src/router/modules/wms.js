@@ -43,6 +43,24 @@ export default {
       ]
     },
     {
+      path: '/wms/return-application',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSReturnApplication',
+      alwaysShow: false,
+      redirect: '/wms/return-application/steel-plate/index',
+      meta: { title: '入库办理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'SteelPlateReturnApplication',
+          path: 'steel-plate',
+          hidden: false,
+          component: '/wms/return-application/steel-plate/index',
+          meta: { title: '钢板退库', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/wms/inbound-and-outbound-review',
       component: 'Layout',
       hidden: false,

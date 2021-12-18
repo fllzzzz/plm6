@@ -1,10 +1,10 @@
 <template>
-  <el-table-column v-if="showBrand" prop="brand" label="品牌" align="left" min-width="100px">
+  <el-table-column v-if="showBrand" prop="brand" label="品牌" align="left" min-width="100px" :fixed="fixed">
     <template #default="{ row }">
       <span v-empty-text>{{ row.brand }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showHeatNoAndBatchNo" prop="heatNoAndBatchNo" label="炉批号/卷号" align="left" min-width="150px" >
+  <el-table-column v-if="showHeatNoAndBatchNo" prop="heatNoAndBatchNo" label="炉批号/卷号" align="left" min-width="150px" :fixed="fixed">
     <template #default="{ row }">
       <span v-empty-text>{{ row.heatNoAndBatchNo }}</span>
     </template>
@@ -23,6 +23,10 @@ const props = defineProps({
     // 显示炉批号
     type: Boolean,
     default: true
+  },
+  fixed: {
+    // 定位
+    type: String
   }
 })
 

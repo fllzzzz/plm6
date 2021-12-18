@@ -80,6 +80,13 @@ const transferTypeEnum = {
 }
 constantize(transferTypeEnum)
 
+// 调拨创建方式
+const transferCreateTypeEnum = {
+  NORMAL: { L: '手动调拨', K: 'NORMAL', V: 1 << 0 },
+  OUTBOUND: { L: '出库调拨', K: 'OUTBOUND', V: 1 << 1 }
+}
+constantize(transferCreateTypeEnum)
+
 // 借用归还状态
 const borrowReturnStatusEnum = {
   NOT_RETURNED: { L: '未归还完', K: 'SELF', V: 1 << 0 },
@@ -143,7 +150,8 @@ export {
   materialFreezeTypeEnum,
   pickUpModeEnum,
   transferNormalTypeEnum,
-  transferTypeEnum
+  transferTypeEnum,
+  transferCreateTypeEnum
 }
 
 export default {
@@ -163,5 +171,6 @@ export default {
   materialFreezeTypeEnum,
   pickUpModeEnum,
   transferNormalTypeEnum,
-  transferTypeEnum
+  transferTypeEnum,
+  transferCreateTypeEnum
 }
