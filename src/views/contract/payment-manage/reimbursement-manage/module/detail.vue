@@ -390,6 +390,11 @@ function resetForm() {
   }
   let DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.applyDate = String(DataValue.applyDate)
+  if(DataValue.detailList && DataValue.detailList.length>0){
+    DataValue.detailList.map(v=>{
+      v.choseId = v.dictionaryId? v.dictionaryId : v.expenseTypeId
+    })
+  }
   form.value = DataValue
   useWatchFormValidate(formRef, form)
 }
