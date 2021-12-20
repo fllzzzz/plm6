@@ -89,7 +89,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/plan/technical-manage/artifact-tree'
+import crudApi from '@/api/plan/technical-manage/artifact'
 import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'

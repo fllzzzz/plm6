@@ -17,15 +17,16 @@
         :show-type="2"
         @tab-click="tabClick"
       />
-      <common-radio-button
-        v-model="query.status"
-        :options="processingEnum.ENUM"
-        show-option-all
-        type="enum"
-        style="margin-left:0;margin-right:6px;"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
+      <el-radio-group v-model="query.status" size="small" class="filter-item"  @change="crud.toQuery">
+        <el-radio-button :label="undefined">全部</el-radio-button>
+        <el-radio-button
+          v-for="item in processingEnum.ENUM"
+          :key="item.V"
+          :label="item.V"
+        >
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
       <el-input
         v-model="query.mame"
         size="small"
@@ -96,6 +97,7 @@ import uploadBtn from '@/components/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/enclosure'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { downloadEnclosureData,downloadEnclosureTemplate } from '@/api/plan/technical-manage/enclosure'
+import { ElRadioGroup } from 'element-plus'
 
 const router = useRouter()
 

@@ -100,7 +100,6 @@ async function getTypeInfo() {
     } else {
       crud.query.productType = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
     }
-    console.log(crud.query.productType)
   } catch (e) {
     console.log(e)
   }

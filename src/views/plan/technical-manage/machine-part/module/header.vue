@@ -16,15 +16,16 @@
         :default-tab="defaultTab"
         @tab-click="tabClick"
       />
-      <common-radio-button
-        v-model="query.status"
-        :options="processingEnum.ENUM"
-        show-option-all
-        type="enum"
-        style="margin-left:0;margin-right:6px;"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
+      <el-radio-group v-model="query.status" size="small" class="filter-item"  @change="crud.toQuery">
+        <el-radio-button :label="undefined">全部</el-radio-button>
+        <el-radio-button
+          v-for="item in processingEnum.ENUM"
+          :key="item.V"
+          :label="item.V"
+        >
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
       <common-radio-button
         v-model="query.shearType"
         :options="shearTypeEnum.ENUM"
@@ -75,6 +76,7 @@ import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import { monomerDetail } from '@/api/plan/monomer'
 import { processingEnum, shearTypeEnum } from '@enum-ms/plan'
+import { ElRadioGroup } from 'element-plus'
 
 const router = useRouter()
 

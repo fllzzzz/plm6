@@ -473,12 +473,6 @@ async function fetchDetail() {
   if (!props.projectId) {
     return
   }
-  // const loading = ElLoading.service({
-  //   target: '#baseContainer',
-  //   lock: true,
-  //   text: '请稍后，正在加载合同基础信息',
-  //   fullscreen: false
-  // })
   let _detail = {}
   try {
     const res = await getContractBase(props.projectId)
@@ -494,7 +488,6 @@ async function fetchDetail() {
   } finally {
     detail.value = _detail
     resetForm(detail.value)
-    // loading.close()
   }
 }
 
