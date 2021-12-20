@@ -27,9 +27,9 @@
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" fixed="left" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="crud.toQuery" />
       <!-- 单位及其数量 -->
-      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" :show-unit="false" />
+      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <warehouse-info-columns :columns="columns" />
@@ -68,15 +68,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { getSteelPlateInventory } from '@/api/wms/material-inventory'
-import { matClsEnum } from '@enum-ms/classification'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { setSpecInfoToList } from '@/utils/wms/spec'
+import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 
 import useCRUD from '@compos/use-crud'
-import useMaxHeight from '@compos/use-max-height'
+import useIndexInfo from '../compos/use-index-info'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -92,7 +89,8 @@ import Pagination from '@crud/Pagination'
 const permission = {
   get: ['wms_matWarehouse_steel:get'],
   outbound: ['wms_matWarehouse_steel:outbound'],
-  transfer: ['wms_matWarehouse_steel:transfer']
+  transfer: ['wms_matWarehouse_steel:transfer'],
+  freezeList: ['wms_raw_mat_freeze_list:get']
 }
 
 const optShow = {
@@ -104,8 +102,6 @@ const optShow = {
 
 // 表格ref
 const tableRef = ref()
-// header ref
-const headerRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '钢材物料仓',
@@ -119,64 +115,16 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-// 当前处理行
-const currentRow = ref({})
-// 展开keys
-const expandRowKeys = ref([])
-// 出库办理显示
-const outboundHandlingVisible = ref(false)
-// 调拨办理显示
-const transferHandlingVisible = ref(false)
-// 表格高度
-const { maxHeight } = useMaxHeight({ paginate: true })
-
-// 基础类型
-const basicClass = computed(() => crud.query.basicClass || matClsEnum.STEEL_PLATE.V)
-
-// 处理刷新
-CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  await setSpecInfoToList(data.content)
-  data.content = await numFmtByBasicClass(data.content, {
-    toSmallest: false,
-    toNum: false
-  })
-  data.content.forEach((v) => {
-    v.operableQuantity = v.quantity - v.frozenQuantity
-    v.operableMete = v.mete - v.frozenMete
-    if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
-      // 实际在出库中使用的数量
-      v.corQuantity = v.quantity // 数量
-      v.corFrozenQuantity = v.frozenQuantity // 冻结数量
-      v.corOperableQuantity = v.operableQuantity // 可操作数量
-    } else {
-      // 核算量
-      v.corQuantity = v.mete
-      v.corFrozenQuantity = v.frozenMete
-      v.corOperableQuantity = v.operableMete
-    }
-  })
-}
-
-// 进行出库办理
-function toOutHandle(row) {
-  currentRow.value = row
-  outboundHandlingVisible.value = true
-}
-
-// 进行调拨办理
-function toTransfer(row) {
-  currentRow.value = row
-  transferHandlingVisible.value = true
-}
-
-// 出库成功处理
-function handleOutboundSuccess() {
-  headerRef.value && headerRef.value.updateListNumber()
-  crud.toQuery()
-}
-
-// 调拨成功
-function handleTransferSuccess() {
-  crud.toQuery()
-}
+const {
+  expandRowKeys,
+  maxHeight,
+  basicClass,
+  currentRow,
+  outboundHandlingVisible,
+  transferHandlingVisible,
+  toTransfer,
+  toOutHandle,
+  handleOutboundSuccess,
+  handleTransferSuccess
+} = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
 </script>

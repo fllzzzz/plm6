@@ -95,10 +95,9 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const { boolAuxMatToWorkShopWay, boolGasOutAfterInbound, boolCanOutToOtherProject } = await getOutboundBasicConf()
-
-    form.value = { boolAuxMatToWorkShopWay, boolGasOutAfterInbound, boolCanOutToOtherProject }
-    dataSource.value = { boolAuxMatToWorkShopWay, boolGasOutAfterInbound, boolCanOutToOtherProject }
+    const res = await getOutboundBasicConf()
+    form.value = deepClone(res)
+    dataSource.value = res
   } catch (error) {
     console.log('出库基础配置', error)
   } finally {

@@ -1,58 +1,58 @@
 <!-- 普通按钮, 避免使用el-button 时产生, disabled后仍可通过点击按钮中的文字触发click事件的BUG -->
 <!-- 部分功能需要捕获click（列：el-upload上传）, 因此在未禁用（disabled）的情况下不使用.stop修饰符 -->
 <template>
-    <el-button
-      class="common-button"
-      v-if="slotDefault && props.disabled"
-      v-bind="$attrs"
-      :icon="icon"
-      :size="props.size"
-      :type="props.type"
-      :disabled="props.disabled"
-      :loading="loading"
-      :auto-insert-space="autoInsertSpace"
-      @click="handleClick"
-    >
-      <span @click.stop="handleClick"><slot /></span>
-    </el-button>
-    <el-button
-      v-else-if="!slotDefault && props.disabled"
-      class="common-button"
-      v-bind="$attrs"
-      :icon="icon"
-      :size="props.size"
-      :type="props.type"
-      :disabled="props.disabled"
-      :loading="loading"
-      :auto-insert-space="autoInsertSpace"
-      @click.stop="handleClick"
-    />
-    <el-button
-      v-else-if="!props.disabled && slotDefault"
-      class="common-button"
-      v-bind="$attrs"
-      :icon="icon"
-      :size="props.size"
-      :type="props.type"
-      :disabled="props.disabled"
-      :loading="loading"
-      :auto-insert-space="autoInsertSpace"
-      @click.self="handleClick"
-    >
-    <span @click.self="handleClick"><slot /></span>
-    </el-button>
-    <el-button
-      v-else-if="!props.disabled && !slotDefault"
-      class="common-button"
-      v-bind="$attrs"
-      :icon="icon"
-      :size="props.size"
-      :type="props.type"
-      :disabled="props.disabled"
-      :loading="loading"
-      :auto-insert-space="autoInsertSpace"
-      @click="handleClick"
-    />
+  <el-button
+    class="common-button"
+    v-if="slotDefault && props.disabled"
+    v-bind="$attrs"
+    :icon="icon"
+    :size="props.size"
+    :type="props.type"
+    :disabled="props.disabled"
+    :loading="loading"
+    :auto-insert-space="autoInsertSpace"
+    @click="handleClick"
+  >
+    <span @click.stop="handleClick"><slot /></span>
+  </el-button>
+  <el-button
+    v-else-if="!slotDefault && props.disabled"
+    class="common-button"
+    v-bind="$attrs"
+    :icon="icon"
+    :size="props.size"
+    :type="props.type"
+    :disabled="props.disabled"
+    :loading="loading"
+    :auto-insert-space="autoInsertSpace"
+    @click.stop="handleClick"
+  />
+  <el-button
+    v-else-if="!props.disabled && slotDefault"
+    class="common-button"
+    v-bind="$attrs"
+    :icon="icon"
+    :size="props.size"
+    :type="props.type"
+    :disabled="props.disabled"
+    :loading="loading"
+    :auto-insert-space="autoInsertSpace"
+    @click="handleClick"
+  >
+    <slot />
+  </el-button>
+  <el-button
+    v-else-if="!props.disabled && !slotDefault"
+    class="common-button"
+    v-bind="$attrs"
+    :icon="icon"
+    :size="props.size"
+    :type="props.type"
+    :disabled="props.disabled"
+    :loading="loading"
+    :auto-insert-space="autoInsertSpace"
+    @click="handleClick"
+  />
 </template>
 
 <script setup>

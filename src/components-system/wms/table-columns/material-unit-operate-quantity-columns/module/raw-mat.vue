@@ -4,10 +4,22 @@
       <span v-empty-text>{{ row.measureUnit }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" min-width="150px">
+  <el-table-column
+    v-if="showQuantity"
+    prop="quantity"
+    :label="quantityLabel"
+    align="right"
+    :min-width="showOperableQuantity ? '150px' : '70px'"
+  >
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="row.measurePrecision">{{ row.operableQuantity }}</span> /
-      <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
+      <template v-if="row.measureUnit">
+        <template v-if="showOperableQuantity">
+          <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+          /
+        </template>
+        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
+      </template>
+      <span v-else v-empty-text />
     </template>
   </el-table-column>
   <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px">
@@ -17,7 +29,8 @@
   </el-table-column>
   <el-table-column v-if="showMete" prop="mete" :label="mateLabel" align="right" min-width="150px">
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="row.accountingPrecision">{{ row.operableMete }}</span> /
+      <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+      /
       <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row.mete }}</span>
     </template>
   </el-table-column>
@@ -25,19 +38,42 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 const props = defineProps({
   basicClass: {
+    // 基础分类
     type: Number
   },
   showUnit: {
+    // 是否显示单位
     type: Boolean,
     default: true
   },
+  showSteelUnit: {
+    // 是否显示钢材单位
+    type: Boolean,
+    default: false
+  },
   columns: {
     type: Object
+  },
+  operableQuantityField: {
+    // 可操作数量字段
+    type: String,
+    default: 'operableQuantity'
+  },
+  operableMeteField: {
+    // 可操作核算量量字段
+    type: String,
+    default: 'operableMete'
+  },
+  showOperableQuantity: {
+    // 显示可操作数量
+    type: Boolean,
+    default: true
   }
 })
 
@@ -69,11 +105,19 @@ const quantityLabel = computed(() => {
   }
 })
 
-const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('measureUnit')))
-const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
+// 是否显示单位
+const showUnit = computed(() => {
+  if (props.basicClass & STEEL_ENUM) {
+    return props.showSteelUnit && props.showUnit
+  } else {
+    return props.showUnit
+  }
+})
+
+const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
+const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
-
 </script>
 
 <style lang="scss" scoped>

@@ -26,7 +26,7 @@ const get = {
             },
             material: {
               id: 1,
-              boolPartyA: false, // 甲供材料
+              boolPartyA: false, // 是否甲供材料
               serialNumber: /([0-9]{8})/,
               classifyId: 103,
               basicClass: 1,
@@ -73,7 +73,7 @@ const get = {
             },
             material: {
               id: 1,
-              boolPartyA: false, // 甲供材料
+              boolPartyA: false, // 是否甲供材料
               serialNumber: /([0-9]{8})/,
               classifyId: 103,
               basicClass: 1,
@@ -120,7 +120,7 @@ const get = {
             },
             material: {
               id: 1,
-              boolPartyA: false, // 甲供材料
+              boolPartyA: false, // 是否甲供材料
               serialNumber: /([0-9]{8})/,
               classifyId: 103,
               basicClass: 1,

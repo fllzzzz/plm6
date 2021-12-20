@@ -23,7 +23,7 @@
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
     <el-table-column prop="classifyFullName" label="物料种类" align="center" width="120px" fixed="left" />
-    <el-table-column prop="specification" label="规格" align="center" width="170px" fixed="left">
+    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left">
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -193,10 +193,7 @@ function rowWatch(row) {
 async function calcTheoryWeight(row) {
   row.theoryWeight = await calcSectionSteelWeight({
     length: row.length, // 长度
-    unitWeight: row.unitWeight, // 单位重量
-    lengthUnit: baseUnit.value.length.unit, // 长度单位
-    weightUnit: baseUnit.value.weight.unit, // 重量单位
-    precision: baseUnit.value.weight.precision // 重量小数精度
+    unitWeight: row.unitWeight // 单位重量
   })
 }
 

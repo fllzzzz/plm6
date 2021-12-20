@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if="showBrand" prop="brand" label="品牌" align="left"  min-width="100px">
+  <el-table-column v-if="showBrand" prop="brand" label="品牌" align="left" min-width="100px" :fixed="fixed">
     <template #default="{ row }">
       <span v-empty-text>{{ row.brand }}</span>
     </template>
@@ -13,6 +13,10 @@ import { isBlank } from '@/utils/data-type'
 const props = defineProps({
   columns: {
     type: Object
+  },
+  fixed: {
+    // 定位
+    type: String
   }
 })
 

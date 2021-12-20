@@ -63,6 +63,16 @@ const getFinalMatClsByIdForSectionSteel = {
           specConfig: [
             {
               id: 1,
+              name: '材质',
+              list: [
+                { code: '01', name: 'Q325B' },
+                { code: '02', name: 'Q235B' },
+                { code: '03', name: 'Q235A' },
+                { code: '04', name: 'Q235C' }
+              ]
+            },
+            {
+              id: 2,
               name: 'GB-06',
               list: [
                 { code: '01', name: '10*10*200*500', 'unitWeight|10-30.1-2': 1 },
@@ -158,11 +168,11 @@ const getFinalMatClsById = {
           name: '大六角',
           fullName: '紧固件>高强螺栓>大六角',
           serialNumber: /[0-9]{10}/,
-          measureUnit: '套', // 计量单位
-          accountingUnit: '千克', // 核算单位
+          // measureUnit: '套', // 计量单位
+          accountingUnit: '套', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
-          measurePrecision: 0, // 计量单位小数精度
-          outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
+          // measurePrecision: 0, // 计量单位小数精度
+          outboundUnitType: measureTypeEnum.ACCOUNTING.V, // 出库方式
           basicClass: matClsEnum.MATERIAL.V,
           specConfig: [
             {

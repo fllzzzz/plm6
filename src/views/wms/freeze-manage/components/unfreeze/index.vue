@@ -16,7 +16,7 @@
         <component :is="comp" :material="material" />
       </div>
       <div class="form-info">
-        <common-form-item :record="record" :form="form" />
+        <common-form-item :record="record" :material="material" :form="form" />
       </div>
     </el-form>
   </common-dialog>

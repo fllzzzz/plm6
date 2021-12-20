@@ -9,16 +9,16 @@
     <span v-parse-project="{ project: record.project, onlyShortName: true }" v-empty-text />
   </el-form-item>
   <el-form-item label="冻结数量">
-    <span v-to-fixed="{ val: record.quantity, dp: record.outboundUnitPrecision }" />
-    <span style="margin-left: 10px">{{ record.outboundUnit }}</span>
+    <span v-to-fixed="{ val: record.quantity, dp: material.outboundUnitPrecision }" />
+    <span style="margin-left: 10px">{{ material.outboundUnit }}</span>
   </el-form-item>
-  <el-form-item :label="`数量(${record.outboundUnit})`" prop="quantity">
+  <el-form-item :label="`数量(${material.outboundUnit})`" prop="quantity">
     <div class="flex-rsc" style="width: 100%">
       <el-input-number
         v-model="currentForm.quantity"
         :min="0"
-        :precision="record.outboundUnitPrecision"
-        :max="record.corQuantity"
+        :precision="material.outboundUnitPrecision"
+        :max="maxQuantity"
         controls-position="right"
         style="flex: auto"
       />
@@ -39,12 +39,16 @@
 </template>
 
 <script setup>
-import { defineProps, watchEffect, ref } from 'vue'
-import { materialFreezeTypeEnum } from '@/utils/enum/modules/wms'
+import { defineProps, watchEffect, computed, ref } from 'vue'
+import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 
 const props = defineProps({
   record: {
     // 物料出库信息
+    type: Object
+  },
+  material: {
+    // 物料信息
     type: Object
   },
   form: {
@@ -64,9 +68,18 @@ watchEffect(() => {
   currentForm.value = props.form
 })
 
+// 最大可设置数量
+const maxQuantity = computed(() => {
+  if (props.material.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+    return props.record.quantity // 数量
+  } else {
+    return props.record.mete
+  }
+})
+
 // 设置最大数量
 function setMaxQuantity() {
-  currentForm.value.quantity = props.record.corQuantity
+  currentForm.value.quantity = maxQuantity.value
 }
 </script>
 

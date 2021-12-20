@@ -13,7 +13,7 @@
       </div>
       <div v-if="extraQueryOpened">
         <!-- 型材没有规格配置 -->
-        <template v-if="matCls.basicClass !== matClsEnum.SECTION_STEEL.V">
+        <!-- <template v-if="matCls.basicClass !== matClsEnum.SECTION_STEEL.V"> -->
           <template v-for="item in matCls.specConfig" :key="item.id">
             <div class="select-container">
               <div class="container-prepend">{{ item.name }}</div>
@@ -31,7 +31,7 @@
               />
             </div>
           </template>
-        </template>
+        <!-- </template> -->
       </div>
     </div>
     <div class="spec-container">
@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref, watch, defineProps, defineEmits, defineExpose, computed, onMounted, onBeforeUnmount } from 'vue'
-import { matClsEnum } from '@enum-ms/classification'
+// import { matClsEnum } from '@enum-ms/classification'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import { getTextDomWidth } from '@/utils/element'
 import { getStyle, style2Num } from '@/utils/element/style'

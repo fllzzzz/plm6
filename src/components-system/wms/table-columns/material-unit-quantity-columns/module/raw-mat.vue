@@ -21,7 +21,8 @@
     </el-table-column>
     <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px">
       <template #default="{ row }">
-        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+        <span v-if="row.measureUnit" v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+        <span v-else v-empty-text />
       </template>
     </el-table-column>
     <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px">
@@ -39,6 +40,7 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { STEEL_ENUM } from '@/settings/config'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
@@ -53,6 +55,11 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  showSteelUnit: {
+    // 是否显示钢材单位
+    type: Boolean,
+    default: false
+  },
   outboundTypeMode: {
     // 出库单位 模式（显示出库单位对应的数量及单位）
     type: Boolean,
@@ -61,14 +68,17 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  labelPrefix: { // 数量label前缀
+  labelPrefix: {
+    // 数量label前缀
     type: String
   },
-  quantityField: { // 数量字段
+  quantityField: {
+    // 数量字段
     type: String,
     default: 'quantity'
   },
-  meteField: { // 核算量字段
+  meteField: {
+    // 核算量字段
     type: String,
     default: 'mete'
   }
@@ -76,7 +86,7 @@ const props = defineProps({
 
 const mateLabel = computed(() => {
   let label = ''
-  if (props.showUnit) {
+  if (props.showUnit && props.showSteelUnit) {
     label = '核算量'
   } else {
     switch (props.basicClass) {
@@ -87,7 +97,8 @@ const mateLabel = computed(() => {
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
-      default: label = '核算量'
+      default:
+        label = '核算量'
         break
     }
   }
@@ -96,27 +107,40 @@ const mateLabel = computed(() => {
 
 const quantityLabel = computed(() => {
   let label = ''
-  if (props.showUnit) {
+  if (props.showUnit && props.showSteelUnit) {
     label = '数量'
   } else {
     switch (props.basicClass) {
-      case rawMatClsEnum.STEEL_PLATE.V: label = '数量(张)'
+      case rawMatClsEnum.STEEL_PLATE.V:
+        label = '数量(张)'
         break
-      case rawMatClsEnum.SECTION_STEEL.V: label = '数量(根)'
+      case rawMatClsEnum.SECTION_STEEL.V:
+        label = '数量(根)'
         break
-      case rawMatClsEnum.STEEL_COIL.V: label = '长度(mm)'
+      case rawMatClsEnum.STEEL_COIL.V:
+        label = '长度(mm)'
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
-      default: label = '数量'
+      default:
+        label = '数量'
         break
     }
   }
   return (props.labelPrefix || '') + label
 })
 
-const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('measureUnit')))
-const showAccountingUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
+// 是否显示单位
+const showUnit = computed(() => {
+  if (props.basicClass & STEEL_ENUM) {
+    return props.showSteelUnit && props.showUnit
+  } else {
+    return props.showUnit
+  }
+})
+
+const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
+const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(props.quantityField))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(props.meteField))
 

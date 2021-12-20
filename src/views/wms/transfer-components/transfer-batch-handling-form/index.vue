@@ -2,7 +2,7 @@
   <common-dialog
     title="调拨办理"
     v-model="dialogVisible"
-    width="1600px"
+    width="90%"
     :before-close="handleClose"
     :show-close="true"
     custom-class="wms-batch-transfer-handling"
@@ -67,7 +67,7 @@
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
-        <material-unit-operate-quantity-columns :basic-class="basicClass" :show-unit="!(basicClass & STEEL_ENUM)" />
+        <material-unit-operate-quantity-columns :basic-class="basicClass"  />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
@@ -75,6 +75,7 @@
           <template #header>
             <span>调拨数量</span>
             <span class="text-clickable" style="margin-left: 10px" @click="setMaxQuantity">全部调拨</span>
+            <span class="text-clickable" style="margin-left: 10px" @click="clearQuantity">清空</span>
           </template>
           <template #default="{ row }">
             <span class="flex-rbc">
@@ -104,7 +105,6 @@ import {
 } from '@/api/wms/transfer/transfer-handling'
 import { defineEmits, defineProps, ref, watchEffect, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { STEEL_ENUM } from '@/settings/config'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -228,6 +228,13 @@ function clearValidate() {
 function setMaxQuantity() {
   form.value.list.forEach((v) => {
     v.batchTransferQuantity = v.corOperableQuantity
+  })
+}
+
+// 清空数量
+function clearQuantity() {
+  form.value.list.forEach((v) => {
+    v.batchTransferQuantity = undefined
   })
 }
 

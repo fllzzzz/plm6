@@ -1,7 +1,7 @@
 <template>
   <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
     <div class="material-info">
-      <common-material-info :material="material">
+      <common-material-info :material="material" :form="form">
         <template #afterSpec>
           <el-form-item label="厚 * 宽 * 长">
             <span>{{ `${material.thickness}mm * ${material.width}mm * ${material.length}mm` }}</span>
@@ -33,11 +33,12 @@
 
 <script setup>
 import { steelPlateOutboundHandling } from '@/api/wms/outbound/outbound-handling'
-import { defineProps, defineExpose, computed, ref, watch } from 'vue'
+import { defineProps, defineExpose, computed, ref, watch, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { materialOutboundModeEnum, steelPlateHalfModeEnum } from '@/utils/enum/modules/wms'
 import { isBlank } from '@/utils/data-type'
 
+import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
 
@@ -59,7 +60,7 @@ const validateQuantity = (rule, value, callback) => {
   if (value <= 0) {
     return callback(new Error('数量必须大于0'))
   }
-  if (value > material.value.corOperableQuantity) {
+  if (value > maxQuantity.value) {
     return callback(new Error('数量不可超过可操作数量'))
   }
   callback()
@@ -83,23 +84,26 @@ const rules = {
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
   halfMode: [{ required: true, message: '请选择物料半出方式', trigger: 'change' }],
   halfSize: [
-    { required: true, validator: validateHalfSize, trigger: 'blur' },
-    { validator: validateHalfSize, trigger: 'change' }
+    { required: true, validator: validateHalfSize, trigger: 'blur' }
   ],
   quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' },
-    { validator: validateQuantity, trigger: 'change' }
+    { required: true, validator: validateQuantity, trigger: 'blur' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
 
 const formRef = ref()
 // 表单
-const form = ref({})
+const form = ref({
+  quantity: undefined
+})
 // 当前用户
 const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
+
+// 监听校验
+useWatchFormValidate(formRef, form, ['quantity', 'halfSize'])
 
 // 最大半出尺寸
 const maxHalfSize = computed(() => {
@@ -111,6 +115,14 @@ const maxHalfSize = computed(() => {
   }
   return 0
 })
+
+// 最大数量
+const maxQuantity = computed(() => {
+  if (!form.value || !form.value.projectId || !material.value.projectFrozenForUnitKV) return material.value.corOperableQuantity
+  return material.value.corOperableQuantity + (material.value.projectFrozenForUnitKV[form.value.projectId] || 0)
+})
+
+provide('maxQuantity', maxQuantity)
 
 watch(
   material,

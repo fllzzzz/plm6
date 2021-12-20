@@ -196,11 +196,7 @@ async function calcTheoryLength(row) {
   row.theoryLength = await calcSteelCoilLength({
     weight: row.weighingTotalWeight,
     width: row.width,
-    thickness: row.thickness,
-    weightUnit: baseUnit.value.weight.unit,
-    lengthUnit: baseUnit.value.length.unit,
-    weightPrecision: baseUnit.value.weight.precision,
-    lengthPrecision: baseUnit.value.weight.precision
+    thickness: row.thickness
   })
 }
 
