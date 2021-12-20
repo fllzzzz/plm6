@@ -2,14 +2,16 @@
     <el-badge :value="outboundListNumber" :hidden="outboundListNumber <= 0" style="margin-right: 6px">
       <common-button v-bind="$attrs" icon="el-icon-tickets" size="mini" type="success" @click="openOutboundList">出库清单</common-button>
     </el-badge>
-    <list v-model:visible="outboundListVisible" />
+    <list v-model:visible="outboundListVisible" @refresh="handleRefresh" />
 </template>
 
 <script setup>
 import { getDetailNumberByCurrentUser } from '@/api/wms/outbound/raw-mat-application-review'
-import { defineExpose, onMounted, ref } from 'vue'
+import { defineEmits, defineExpose, onMounted, ref } from 'vue'
 
 import list from './module/list.vue'
+
+const emit = defineEmits(['refresh'])
 
 // 出库清单中的记录的数量
 const outboundListNumber = ref(0)
@@ -27,6 +29,11 @@ async function getOutboundListNumber() {
 // 打开出库清单
 function openOutboundList() {
   outboundListVisible.value = true
+}
+
+function handleRefresh() {
+  getOutboundListNumber()
+  emit('refresh')
 }
 
 defineExpose({

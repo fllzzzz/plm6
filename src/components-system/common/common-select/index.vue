@@ -192,8 +192,8 @@ watch(
 )
 
 watch(
-  () => props.options,
-  (nVal, oVal) => {
+  [() => props.options, () => props.showExtra],
+  ([nVal], [oVal]) => {
     if (!props.loading) {
       let options = nVal ? deepClone(nVal) : []
       if (!Array.isArray(options)) {
@@ -204,7 +204,6 @@ watch(
         aOpt[DS.value] = allVal.value
         options.push(aOpt)
       }
-
       if (props.showExtra && props.extraOption) {
         const eOpt = {}
         eOpt[DS.value] = props.extraOption.value
@@ -212,9 +211,9 @@ watch(
       }
       let cv = selectValue.value
       if (Array.isArray(selectValue.value)) {
-        cv = options.filter(v => selectValue.value.includes(v[DS.value])).map(v => v[DS.value])
+        cv = options.filter((v) => selectValue.value.includes(v[DS.value])).map((v) => v[DS.value])
       } else {
-        const isExit = options.some(v => v[DS.value] === selectValue.value)
+        const isExit = options.some((v) => v[DS.value] === selectValue.value)
         if (!isExit) {
           cv = undefined
         }

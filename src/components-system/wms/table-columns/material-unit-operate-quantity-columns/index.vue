@@ -6,6 +6,7 @@
     :showUnit="showUnit"
     :operable-quantity-field="operableQuantityField"
     :operable-mete-field="operableMeteField"
+    :show-operable-quantity="showOperableQuantity"
   />
 </template>
 
@@ -34,6 +35,11 @@ const props = defineProps({
     // 可操作核算量量字段
     type: String,
     default: 'operableMete'
+  },
+  showOperableQuantity: {
+    // 显示可操作数量
+    type: Boolean,
+    default: true
   }
 })
 

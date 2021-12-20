@@ -20,7 +20,13 @@
           </p>
         </template>
       </el-expand-table-column>
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column label="序号" type="index" align="center" width="60">
+        <template #default="{ row, $index }">
+          <!-- 是否甲供材料 -->
+          <table-cell-tag v-if="row.transferCreateType === transferCreateTypeEnum.OUTBOUND.V" name="出库" :color="TAG_TRANSFER_OUTBOUND_COLOR" />
+          <span>{{ $index + 1 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -197,8 +203,9 @@
 <script setup>
 import { ref } from 'vue'
 import crudApi from '@/api/wms/transfer/raw-mat-application-review'
+import { TAG_TRANSFER_OUTBOUND_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
-import { transferTypeEnum } from '@/utils/enum/modules/wms'
+import { transferCreateTypeEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { reviewStatusEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -209,6 +216,7 @@ import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
 import review from './module/review.vue'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {

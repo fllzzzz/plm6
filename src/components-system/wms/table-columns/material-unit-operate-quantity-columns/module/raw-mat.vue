@@ -4,11 +4,19 @@
       <span v-empty-text>{{ row.measureUnit }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" min-width="150px">
+  <el-table-column
+    v-if="showQuantity"
+    prop="quantity"
+    :label="quantityLabel"
+    align="right"
+    :min-width="showOperableQuantity ? '150px' : '70px'"
+  >
     <template #default="{ row }">
       <template v-if="row.measureUnit">
-        <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
-        /
+        <template v-if="showOperableQuantity">
+          <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+          /
+        </template>
         <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
       </template>
       <span v-else v-empty-text />
@@ -61,6 +69,11 @@ const props = defineProps({
     // 可操作核算量量字段
     type: String,
     default: 'operableMete'
+  },
+  showOperableQuantity: {
+    // 显示可操作数量
+    type: Boolean,
+    default: true
   }
 })
 

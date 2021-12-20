@@ -69,14 +69,14 @@ export async function numFmtByBasicClass(
     }
 
     // 金额及量换算
-    measureUnit = measureUnit || _d.measureUnit
-    accountingUnit = accountingUnit || _d.accountingUnit
-    accountingPrecision = accountingPrecision || _d.accountingPrecision
-    measurePrecision = measurePrecision || _d.measurePrecision
     otherRawMatFormat(
       _d,
       unitCfg,
-      { measureUnit, accountingUnit, accountingPrecision, measurePrecision, toNum, showUnit, toSmallest },
+      { measureUnit: measureUnit || _d.measureUnit,
+        accountingUnit: accountingUnit || _d.accountingUnit,
+        accountingPrecision: accountingPrecision || _d.accountingPrecision,
+        measurePrecision: measurePrecision || _d.measurePrecision,
+        toNum, showUnit, toSmallest },
       fieldsConfig
     )
     return _d
@@ -99,9 +99,7 @@ function steelFormat(
     length = ['length', 'totalLength'],
     width = ['width'],
     weight = ['weight', 'totalWeight'],
-    thickness = ['thickness'],
-    amount = ['unitPrice', 'unitPriceExcludingVAT'],
-    unit = ['accountingUnit']
+    thickness = ['thickness']
   } = {}
 ) {
   if (!basicClass || !unitCfg[basicClass]) {

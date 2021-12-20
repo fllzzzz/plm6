@@ -99,7 +99,7 @@ const getSectionSteel = {
             id: 4,
             classifyId: 110,
             basicClass: 2,
-            specification: '10*10*200*500',
+            specification: 'Q325B * 10*10*200*500',
             quantity: 10,
             frozenQuantity: 5, // 冻结数量
             mete: 10000,
@@ -193,7 +193,7 @@ const getAuxMatInventory = {
           {
             id: 1,
             classifyId: 204,
-            specification: 'M27*60',
+            specification: 'M27 * 60',
             color: '天蓝',
             basicClass: 1,
             quantity: 10,

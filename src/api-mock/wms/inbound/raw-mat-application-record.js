@@ -236,7 +236,7 @@ const detail_id1 = {
           // {
           //   id: 3,
           //   sn: '110_0',
-          //   specification: '57*21*3*9',
+          //   specification: 'Q325B * 57*21*3*9',
           //   classifyId: 110,
           //   basicClass: 2,
           //   quantity: 1,
@@ -370,7 +370,7 @@ const detail_id2 = {
           {
             id: 1,
             classifyId: 204,
-            specification: 'M27*60',
+            specification: 'M27 * 60',
             color: '天蓝',
             basicClass: 1,
             quantity: 10,

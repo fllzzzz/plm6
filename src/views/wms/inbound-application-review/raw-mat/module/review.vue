@@ -285,7 +285,7 @@ async function fetchDetail(id) {
 
 // 详情格式转换
 async function detailFormat(form) {
-  form.purchaseOrder.projectIds = form.purchaseOrder.projects.filter((v) => v !== v.id)
+  form.purchaseOrder.projectIds = form.purchaseOrder.projects ? form.purchaseOrder.projects.filter((v) => v !== v.id) : []
   form.requisitions = {}
   if (isNotBlank(form.requisitionsList)) {
     form.requisitionsList.forEach((item) => {

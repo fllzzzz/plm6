@@ -57,7 +57,7 @@
 <script setup>
 import crudApi from '@/api/config/classification-manage/specification-config'
 import { nextTick, provide, reactive, ref, watch } from 'vue'
-import { rawMatClsEnum } from '@enum-ms/classification'
+// import { rawMatClsEnum } from '@enum-ms/classification'
 import { getFirstLeafNode } from '@/utils/system/classification'
 import * as lodash from 'lodash'
 
@@ -118,7 +118,8 @@ watch(filterText, (val) => {
 // 拉取最新的物料分类树
 async function formatTree() {
   try {
-    treeMenu.value = lodash.cloneDeep(rawMatClsTree.value.filter(v => v.basicClass !== rawMatClsEnum.SECTION_STEEL.V))
+    // treeMenu.value = lodash.cloneDeep(rawMatClsTree.value.filter(v => v.basicClass !== rawMatClsEnum.SECTION_STEEL.V))
+    treeMenu.value = lodash.cloneDeep(rawMatClsTree.value)
     const firstLeafNode = getFirstLeafNode(treeMenu.value)
     // 触发选中
     handleNodeClick(firstLeafNode)

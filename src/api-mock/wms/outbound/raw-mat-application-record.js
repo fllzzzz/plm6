@@ -126,7 +126,7 @@ const detail_id1 = {
           },
           {
             id: 3,
-            specification: '57*21*3*9',
+            specification: 'Q325B * 57*21*3*9',
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
@@ -242,7 +242,7 @@ const detail_id2 = {
           },
           {
             id: 3,
-            specification: '57*21*3*9',
+            specification: 'Q325B * 57*21*3*9',
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
@@ -301,7 +301,7 @@ const detail_id2 = {
           {
             id: 7,
             classifyId: 204,
-            specification: 'M27*60',
+            specification: 'M27 * 60',
             color: '天蓝',
             basicClass: matClsEnum.MATERIAL.V,
             quantity: 10,
