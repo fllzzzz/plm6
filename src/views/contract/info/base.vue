@@ -1,7 +1,7 @@
 <template>
   <div id="baseContainer" class="app-container">
     <el-form
-      ref="baseRef"
+      ref="formRef"
       :model="form"
       :rules="rules"
       inline
@@ -320,7 +320,7 @@ import { DP } from '@/settings/config'
 import { ElLoading } from 'element-plus'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 
-const baseRef = ref()
+const formRef = ref()
 const dict = useDict(['margin_type','currency_type'])
 const defaultForm = {
   id: undefined,
@@ -419,16 +419,16 @@ const managementFee=computed(()=>{
  * 重置表单
  */
 function resetForm() {
-  if (baseRef.value) {
-    baseRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   form.value  = JSON.parse(JSON.stringify(detail.value))
-  useWatchFormValidate(baseRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function validateForm() {
   try {
-    const valid = await baseRef.value.validate()
+    const valid = await formRef.value.validate()
     if (valid) {
       const data = JSON.parse(JSON.stringify(form.value))
       // data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []

@@ -312,7 +312,7 @@ function resetForm() {
   DataValue.invoiceUnitId = Number(DataValue.invoiceUnitId)
   DataValue.attachments = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
   form.value = DataValue
-  useWatchFormValidate(formRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function getContractInfoReset(id){

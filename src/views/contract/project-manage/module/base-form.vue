@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="baseRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="104px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="104px">
     <div>
       <div class="form-row">
         <el-form-item label="合同编号" prop="serialNumber">
@@ -213,7 +213,7 @@ import uploadList from '@/components/file-upload/uploadList'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 
-const baseRef = ref()
+const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
 
 const defaultForm = {
@@ -288,8 +288,8 @@ const managementFee = computed(() => {
  */
 function resetForm(data) {
   // 清除表单信息
-  if (baseRef.value) {
-    baseRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   let formVal
   if (data && Object.keys(data).length > 0) {
@@ -298,12 +298,12 @@ function resetForm(data) {
     formVal = JSON.parse(JSON.stringify(defaultForm))
   }
   form.value = JSON.parse(JSON.stringify(formVal))
-  useWatchFormValidate(baseRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function validateForm() {
   try {
-    const valid = await baseRef.value.validate()
+    const valid = await formRef.value.validate()
     if (valid) {
       const data = JSON.parse(JSON.stringify(form.value))
       data.attachments = data.attachments.length > 0 ? data.attachments.map((v) => v.id) : []

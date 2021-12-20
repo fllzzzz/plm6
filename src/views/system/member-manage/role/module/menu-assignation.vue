@@ -3,7 +3,6 @@
     <table-tree
       :data-source="props.menus"
       :keys="props.menuIds"
-      :props="{key: 'id', label: 'label', children: 'children'}"
       @change="onChange"
     />
   </div>
@@ -12,7 +11,7 @@
 
 <script setup>
 import { defineEmits, defineProps } from 'vue'
-import TableTree from '@/components-system/common/table-tree'
+import TableTree from './auth-tree'
 
 const props = defineProps({
   currentId: {

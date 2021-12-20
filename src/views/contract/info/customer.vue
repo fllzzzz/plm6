@@ -1,6 +1,6 @@
 <template>
   <div id="pageContainer" class="app-container">
-    <el-form ref="customerRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px">
+    <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px">
       <div>
         <div class="form-row">
           <el-form-item label="客户名称" prop="customerUnit">
@@ -120,7 +120,7 @@ import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/valida
 import { getContractCustomer } from '@/api/contract/project'
 import { cleanArray } from '@data-type/array'
 
-const customerRef = ref()
+const formRef = ref()
 const defaultForm = {
   customerUnit: undefined, // 客户名称
   socialCode: undefined, // 社会统一代码
@@ -205,7 +205,7 @@ function handleRegionChange(val) {
 
 async function validateForm() {
   try {
-    const valid = await customerRef.value.validate()
+    const valid = await formRef.value.validate()
     return valid
   } catch (error) {
     console.log('error', error)
@@ -214,11 +214,11 @@ async function validateForm() {
 }
 
 function resetForm() {
-  if (customerRef.value) {
-    customerRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
-  useWatchFormValidate(customerRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function fetchDetail() {
