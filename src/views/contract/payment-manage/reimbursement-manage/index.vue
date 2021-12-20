@@ -235,13 +235,13 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
             v.detailList.push({
               applyAmount: val.applyAmount,
               dictionaryId: val.dictionaryId,
-              expenseTypeId: 0,
-              id: 0,
-              inputTax: 0,
-              invoiceAmount: 0,
-              invoiceNo: "string",
-              invoiceType: 0,
-              taxRate: 0
+              expenseTypeId: val.expenseTypeId,
+              id: val.id,
+              inputTax: val.inputTax,
+              invoiceAmount: val.invoiceAmount,
+              invoiceNo: val.invoiceNo,
+              invoiceType: val.invoiceType,
+              taxRate: val.taxRate
             })
             val.rowKey = `${k.expenseTypeId}__${val.id}`
             k.applyAmount += val.applyAmount
