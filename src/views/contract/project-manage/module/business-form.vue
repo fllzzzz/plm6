@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="businessRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
     <div>
       <div id="baseInfo">
         <div class="form-row">
@@ -194,7 +194,7 @@ import { ElMessage } from 'element-plus'
 import enclosureForm from './enclosure-form'
 import enclosureShow from './enclosure-show'
 
-const businessRef = ref()
+const formRef = ref()
 let projectContent1 = []
 let projectContent2 = []
 let originConstruct = []
@@ -267,8 +267,8 @@ watch(
 
 function resetForm(data) {
   // 清除表单信息
-  if (businessRef.value) {
-    businessRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   let formVal
   if (data && Object.keys(data).length > 0) {
@@ -278,7 +278,7 @@ function resetForm(data) {
     Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   }
   form.value = JSON.parse(JSON.stringify(formVal))
-  useWatchFormValidate(businessRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 contentInfo()
@@ -385,7 +385,7 @@ function enclosureSave() {
 
 async function validateForm() {
   try {
-    const valid = await businessRef.value.validate()
+    const valid = await formRef.value.validate()
     if (valid) {
       Object.assign(props.formData, JSON.parse(JSON.stringify(form.value)))
     }

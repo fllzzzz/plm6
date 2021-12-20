@@ -7,20 +7,20 @@
     :before-close="closeDrawer"
     title="报销信息"
     :wrapper-closable="false"
-    size="860px"
+    size="1300px"
   >
     <template #title>
       <div class="dialog-title">
         <span style="margin-right:5px;">报销信息</span>
-        <common-button v-if="collectionInfo.auditStatus" size="mini" :type="collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.REJECT.V?'info':(collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.PASS.V?'success':'warning')">
-          {{ collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.REJECT.V?'已退回':(collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.PASS.V?'已确认':'确认中') }}
+        <common-button v-if="collectionInfo.confirmStatus" size="mini" :type="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.REJECT.V?'info':(collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.PASS.V?'success':'warning')">
+          {{ collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.REJECT.V?'已退回':(collectionInfo.confirmStatus==reimbursementTypeEnum.ENUM.PASS.V?'已确认':'确认中') }}
         </common-button>
         <span style="position:absolute;right:20px;">
-          <template v-if="collectionInfo.auditStatus">
+          <template v-if="collectionInfo.confirmStatus">
             <template v-if="!isModify">
-              <common-button v-if="collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.AUDITING.V && type==='audit'" size="small" type="info" @click="onSubmit(reimbursementTypeEnum.ENUM.REJECT.V)">退回</common-button>
-              <common-button v-if="collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.AUDITING.V && type==='audit'" size="small" type="success" @click="onSubmit(reimbursementTypeEnum.ENUM.PASS.V)">确定</common-button>
-              <common-button size="small" type="primary" @click="modifyInfo" v-if="collectionInfo.auditStatus==reimbursementTypeEnum.ENUM.REJECT.V && type==='detail'">重新编辑</common-button>
+              <common-button v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'" size="small" type="info" @click="onSubmit(reimbursementTypeEnum.ENUM.REJECT.V)">退回</common-button>
+              <common-button v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'" size="small" type="success" @click="onSubmit(reimbursementTypeEnum.ENUM.PASS.V)">确定</common-button>
+              <common-button size="small" type="primary" @click="modifyInfo" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.REJECT.V && type === 'detail'">重新编辑</common-button>
             </template>
             <template v-else>
               <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
@@ -34,69 +34,131 @@
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
         <div class="form-row" style="display: flex">
           <el-form-item label="项目" prop="projectId">
-            <project-cascader v-model="form.projectId" style="width: 320px" class="filter-item" />
+            <div style="width:360px;">
+              <project-cascader v-if="isModify" v-model="form.projectId" style="width: 320px" class="filter-item" />
+              <span v-else>{{ collectionInfo.projectName }}</span>
+            </div>
           </el-form-item>
           <el-form-item label="申请金额(元)" prop="applyAmount">
-            <el-input v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
-            <span v-if="upperYuan" style="size:12px;">{{ upperYuan }}</span>
+            <div style="width:360px;">
+              <el-input v-if="isModify" v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
+              <span v-else>{{ collectionInfo.applyAmount }}</span>
+              <span v-if="upperYuan" style="size:12px;">{{ upperYuan }}</span>
+            </div>
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
           <el-form-item label="业务类型" prop="businessType">
-            <el-input v-model="contractInfo.businessTypeName" type="text" placeholder="业务类型" style="width: 320px" disabled />
+            <div style="width:360px;">
+              <span>{{ contractInfo.businessTypeName }}</span>
+            </div>
           </el-form-item>
           <el-form-item label="申请人" prop="applyUserId">
-            <user-dept-cascader
-              ref="applyRef"
-              v-model="form.applyUserId"
-              filterable
-              clearable
-              show-all-levels
-              style="width: 320px"
-              placeholder="申请人"
-              @change="getDept"
-            />
+            <div style="width:360px;">
+              <user-dept-cascader
+                v-if="isModify"
+                ref="applyRef"
+                v-model="form.applyUserId"
+                filterable
+                clearable
+                show-all-levels
+                style="width: 320px"
+                placeholder="申请人"
+                @change="getDept"
+              />
+              <span v-else>{{ collectionInfo.applyUserName }}</span>
+            </div>
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
           <el-form-item label="收款人" prop="collectionUserId">
-            <user-dept-cascader
-              v-model="form.collectionUserId"
-              ref="collectionRef"
-              filterable
-              clearable
-              show-all-levels
-              style="width: 320px"
-              placeholder="收款人"
-              @change="getCollectionChange"
-            />
+            <div style="width:360px;">
+              <user-dept-cascader
+                v-model="form.collectionUserId"
+                ref="collectionRef"
+                filterable
+                clearable
+                show-all-levels
+                style="width: 320px"
+                placeholder="收款人"
+                @change="getCollectionChange"
+              />
+            </div>
           </el-form-item>
           <el-form-item label="申请日期" prop="applyDate">
-            <el-date-picker v-model="form.applyDate" type="date" value-format="x" placeholder="申请日期" style="width: 320px" />
+            <div style="width:360px;">
+              <el-date-picker v-if="isModify" v-model="form.applyDate" type="date" value-format="x" placeholder="申请日期" style="width: 320px" />
+              <template v-else>
+                <span v-parse-time="'{y}-{m}-{d}'">{{ collectionInfo.applyDate }}</span>
+              </template>
+            </div>
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
           <el-form-item label="收款开户行" prop="collectionDepositBank">
-            <el-input v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" />
+            <div style="width:360px;">
+              <el-input v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" />
+            </div>
           </el-form-item>
           <el-form-item label="收款账号" prop="collectionBankAccount">
-            <el-input v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" />
+            <div style="width:360px;">
+              <el-input v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" />
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row" style="display: flex" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'">
+          <el-form-item label="付款单位" prop="collectionBankAccount">
+            <div style="width:360px;">
+              <common-select
+                v-model="form.paymentUnitId"
+                :options="contractInfo.companyBankAccountList"
+                :type="'other'"
+                :dataStructure="typeProp"
+                size="small"
+                clearable
+                class="filter-item"
+                placeholder="付款单位"
+                style="width:320px"
+                @change="orderCompanyChange"
+              />
+            </div>
+          </el-form-item>
+          <el-form-item label="实付金额(元)" prop="actuallyPayAmount" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'">
+            <div style="width:360px;">
+              <el-input v-model="form.actuallyPayAmount" type="text" placeholder="实付金额(元)" style="width: 320px" disabled />
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row" style="display: flex">
+          <el-form-item label="付款开户行" prop="paymentDepositBank" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'">
+            <div style="width:360px;">
+              <el-input v-model="form.paymentDepositBank" type="text" placeholder="付款开户行" style="width: 320px" />
+            </div>
+          </el-form-item>
+          <el-form-item label="付款账号" prop="paymentBankAccount" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'">
+            <div style="width:360px;">
+              <el-input v-model="form.paymentBankAccount" type="text" placeholder="付款账号" style="width: 320px" />
+            </div>
           </el-form-item>
         </div>
         <el-form-item label="备注" prop="remark">
-          <el-input
-            v-model="form.remark"
-            type="textarea"
-            :autosize="{ minRows: 6, maxRows: 8 }"
-            :maxLength="500"
-            placeholder="可填写备注"
-            style="max-width: 500px"
-          />
+          <div style="width:360px;">
+            <el-input
+              v-if="isModify"
+              v-model="form.remark"
+              type="textarea"
+              :autosize="{ minRows: 6, maxRows: 8 }"
+              :maxLength="500"
+              placeholder="可填写备注"
+              style="max-width: 500px"
+            />
+            <span v-else>{{ collectionInfo.remark }}</span> 
+          </div>
         </el-form-item>
         <common-table
           ref="detailRef"
           border
-          :data="form.detailList"
+          :data="isModify?form.detailList:collectionInfo.detailList"
           :max-height="300"
           style="width: 100%"
           class="table-form"
@@ -120,7 +182,7 @@
                 controls-position="right"
                 placeholder="申请金额"
                 style="width: 100%; max-width: 200px"
-                @change="applyAmountChange"
+                @change="applyAmountChange(scope.row.applyAmount, scope.$index)"
               />
             </template>
           </el-table-column>
@@ -190,14 +252,30 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column prop="actuallyPayAmount" label="实付金额(元)" align="center" min-width="160" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type ==='audit'">
             <template v-slot="scope">
-              <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
+              <el-input-number
+                v-model="scope.row.actuallyPayAmount"
+                :min="1"
+                :max="99999999999"
+                :step="10000"
+                :precision="DP.YUAN"
+                size="small"
+                controls-position="right"
+                placeholder="实付金额"
+                style="width: 100%; max-width: 200px"
+                @change="actuallyPayAmountChange()"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" v-if="isModify">
+            <template v-slot="scope">
+              <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)"/>
             </template>
           </el-table-column>
         </common-table>
         <div class="add-row-box">
-          <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-right: 15px" @click="addRow()"
+          <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-right: 15px" @click="addRow()" v-if="isModify"
             >继续添加</common-button
           >
         </div>
@@ -254,6 +332,7 @@ const props = defineProps({
   }
 })
 
+const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const contractInfo = ref({})
 const isModify = ref(false)
@@ -265,6 +344,16 @@ watch(
   (val) => {
     if (val) {
       getContractInfo(val)
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+watch(
+  () => props.collectionInfo.id,
+  (val) => {
+    if (val) {
+      resetForm()
     }
   },
   { deep: true, immediate: true }
@@ -302,7 +391,7 @@ function resetForm() {
   let DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.applyDate = String(DataValue.applyDate)
   form.value = DataValue
-  useWatchFormValidate(formRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function getContractInfo(id) {
@@ -314,6 +403,19 @@ async function getContractInfo(id) {
   } finally {
     contractInfo.value = data
     contractInfo.value.businessTypeName = contractInfo.value.businessType ? businessTypeEnum.VL[contractInfo.value.businessType] : ''
+  }
+}
+
+function orderCompanyChange(val){
+  if(val){
+    const orderVal = contractInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+    form.value.paymentBankAccount = orderVal.account
+    form.value.paymentDepositBank = orderVal.depositBank
+    form.value.paymentUnit = orderVal.companyName
+  } else {
+    form.value.paymentBankAccount = ''
+    form.value.paymentDepositBank = ''
+    form.value.paymentUnit = ''
   }
 }
 
@@ -342,7 +444,10 @@ function getDept() {
   }
 }
 
-function applyAmountChange() {
+function applyAmountChange(amount, index) {
+  if (amount) {
+    form.detailList[index].invoiceAmount = amount
+  }
   if (form.detailList.length > 0) {
     let val = 0
     form.value.detailList.forEach((v) => {
@@ -352,9 +457,24 @@ function applyAmountChange() {
     })
     form.value.applyAmount = val
   } else {
-    form.value.value.applyAmount = undefined
+    form.value.applyAmount = undefined
   }
 }
+
+function actuallyPayAmountChange(){
+  if (props.collectionInfo.detailList.length > 0) {
+    let val = 0
+    props.collectionInfo.detailList.forEach((v) => {
+      if (v.applyAmount > 0) {
+        val += v.applyAmount
+      }
+    })
+    props.collectionInfo.actuallyPayAmount = val
+  } else {
+    props.collectionInfo.actuallyPayAmount = undefined
+  }
+}
+
 const upperYuan = computed(() => {
   return form.value.applyAmount ? digitUppercase(form.value.applyAmount) : ''
 })
@@ -409,8 +529,6 @@ async function onSubmit(val){
     try{
       if(props.type === 'detail'){
         const valid = await formRef.value.validate()
-        form.value.tax = rateMoney || ''
-        form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
         if (valid) {
           //修改
         }
@@ -430,5 +548,9 @@ async function onSubmit(val){
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
+}
+.add-row-box {
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

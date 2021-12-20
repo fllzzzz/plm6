@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="customerRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px">
     <div>
       <div class="form-row">
         <el-form-item label="客户名称" prop="customerUnit">
@@ -76,7 +76,7 @@ import regionCascader from '@comp-base/region-cascader'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/validate/pattern'
 
-const customerRef = ref()
+const formRef = ref()
 const defaultForm = {
   customerUnit: undefined, // 客户名称
   socialCode: undefined, // 社会统一代码
@@ -156,7 +156,7 @@ function handleRegionChange(val) {
 
 async function validateForm() {
   try {
-    const valid = await customerRef.value.validate()
+    const valid = await formRef.value.validate()
     if (valid) {
       Object.assign(props.formData, JSON.parse(JSON.stringify(form.value)))
     }
@@ -168,8 +168,8 @@ async function validateForm() {
 }
 
 function resetForm(data) {
-  if (customerRef.value) {
-    customerRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   let formKey
   if (data && Object.keys(data).length > 0) {
@@ -184,7 +184,7 @@ function resetForm(data) {
   for (const key in form) {
     crudFrom[key] = formKey[key]
   }
-  useWatchFormValidate(customerRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 defineExpose({

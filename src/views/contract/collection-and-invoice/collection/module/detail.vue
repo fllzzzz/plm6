@@ -422,7 +422,7 @@ function resetForm() {
   DataValue.collectionUnitId = Number(DataValue.collectionUnitId)
   form.value  = JSON.parse(JSON.stringify(DataValue))
   getContractInfoReset(form.value.projectId)
-  useWatchFormValidate(formRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function getContractInfoReset(id){

@@ -564,7 +564,7 @@ function resetForm() {
   DataValue.paymentUnitId = Number(DataValue.paymentUnitId)
   DataValue.attachmentIds = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
   form.value  = JSON.parse(JSON.stringify(DataValue))
-  useWatchFormValidate(formRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 watch(

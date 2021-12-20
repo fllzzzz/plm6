@@ -1,6 +1,6 @@
 <template>
   <div id="businessContainer" class="app-container">
-    <el-form ref="businessRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
+    <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
       <div>
         <div id="baseInfo">
           <div class="form-row">
@@ -242,7 +242,7 @@ import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show
 import EnclosureForm from '@/views/contract/project-manage/module/enclosure-form'
 import { getContractBusiness, getContractTechInfo, getContentInfo } from '@/api/contract/project'
 
-const businessRef = ref()
+const formRef = ref()
 let projectContent1 = []
 let projectContent2 = []
 let originConstruct = []
@@ -318,11 +318,11 @@ watch(
 
 function resetForm() {
   // 清除表单信息
-  if (businessRef.value) {
-    businessRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
-  useWatchFormValidate(businessRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 function businessChange() {
@@ -400,7 +400,7 @@ function enclosureSave() {
 
 async function validateForm() {
   try {
-    const valid = await businessRef.value.validate()
+    const valid = await formRef.value.validate()
     return valid
   } catch (error) {
     console.log('error', error)

@@ -219,6 +219,32 @@ export default {
           meta: { title: '项目成员配置', icon: 'project', noCache: true }
         }
       ]
-    }
+    },
+    {
+      path: '/system/base-config',
+      component: 'Layout',
+      hidden: false,
+      name: 'SystemConfig',
+      alwaysShow: true,
+      redirect: '/system/base-config/expense-management',
+      meta: { title: '系统配置', icon: 'config-2', noCache: true },
+      children: [
+        {
+          name: 'ExpenseManagement',
+          path: 'expense-management',
+          hidden: false,
+          component: '/config-manage/system/expense-management/index',
+          meta: { title: '费用归类', icon: 'tax', noCache: true }
+        },
+        {
+          name: 'BranchCompany',
+          path: 'branch-company',
+          hidden: false,
+          component: '/config-manage/system/branch-company/index',
+          meta: { title: '分支机构', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    
   ]
 }

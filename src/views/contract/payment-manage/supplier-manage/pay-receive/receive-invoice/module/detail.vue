@@ -389,7 +389,7 @@ function resetForm() {
   DataValue.receiveInvoiceUnitId = Number(DataValue.receiveInvoiceUnitId)
   DataValue.attachmentIds = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
   form.value = JSON.parse(JSON.stringify(DataValue))
-  useWatchFormValidate(formRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 function modifyInfo() {

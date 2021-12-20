@@ -10,7 +10,7 @@
       />
       <area-tabs
         class="filter-item"
-        style="width: calc(100% - 230px);"
+        style="width: calc(100% - 230px)"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
@@ -20,7 +20,7 @@
         v-model="query.artifactName"
         size="small"
         placeholder="输入构件名称搜索"
-        style="width: 170px;margin-left:0;"
+        style="width: 170px; margin-left: 0"
         class="filter-item"
         clearable
         @blur="crud.toQuery"
@@ -29,7 +29,7 @@
         v-model="query.artifactSerialNumber"
         size="small"
         placeholder="输入构件编号搜索"
-        style="width: 170px;"
+        style="width: 170px"
         class="filter-item"
         clearable
         @blur="crud.toQuery"
@@ -38,7 +38,7 @@
         v-model="query.machinePartSerialNumber"
         size="small"
         placeholder="输入零件编号搜索"
-        style="width: 170px;"
+        style="width: 170px"
         class="filter-item"
         clearable
         @blur="crud.toQuery"
@@ -65,12 +65,7 @@
           btn-text="零构件清单（按构件条件查询）"
           class="filter-item"
         />
-        <export-button
-          :fn="downloadArtifactTreeTemplate"
-          show-btn-text
-          btn-text="零构件清单模板"
-          class="filter-item"
-        />
+        <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" />
       </template>
     </crudOperation>
   </div>
@@ -92,12 +87,12 @@ import { downloadArtifactTree, downloadArtifactTreeTemplate } from '@/api/plan/t
 const router = useRouter()
 
 const defaultQuery = {
-  artifactName: '', 
-  artifactSerialNumber: '', 
+  artifactName: '',
+  artifactSerialNumber: '',
   machinePartSerialNumber: '',
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  projectId: { value: undefined, resetAble: false }
+  projectId: { value: undefined, resetAble: false },
 }
 
 const monomerSelectRef = ref()
@@ -110,8 +105,8 @@ const typeOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
 watch(
@@ -124,7 +119,7 @@ watch(
   },
   { immediate: true }
 )
-const carryParam = computed(()=>{
+const carryParam = computed(() => {
   const param = { ...crud.query }
   delete param.machinePartSerialNumber
   return param
@@ -134,7 +129,7 @@ function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
     id: name,
-    name: label
+    name: label,
   }
   crud.toQuery()
 }
@@ -143,11 +138,10 @@ function getAreaInfo(val) {
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
       id: areaInfo.value[0].id + '',
-      name: areaInfo.value[0].name
+      name: areaInfo.value[0].name,
     }
   } else {
     defaultTab.value = {}
   }
 }
-
 </script>
