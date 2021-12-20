@@ -147,7 +147,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         .map((v) => {
           const unit = isNotBlank(v.wageQuotaType) ? wageQuotaTypeEnum[wageQuotaTypeEnum.VK[v.wageQuotaType]].unit : ''
           return `<span>【${v.processName} │ <span style="color: #67C23A;">${
-            isNotBlank(v.wageQuota?.price) ? v.wageQuota.price + ' ' : '-'
+            isNotBlank(v.wageQuota?.price) ? v.wageQuota.price + ' ' : '0'
           }${unit}</span>】</span>`
         })
         .join('<span>→</span>')

@@ -13,8 +13,8 @@ const getArtifactChangeList = {
           'shortName': '@cword(2,9)',
           'contractNo': '@guid'
         },
-        changeTime: '@datetime',
-        changePersonName: '@cname',
+        createTime: '@datetime',
+        userName: '@cname',
         serialNumber: '@word(2,10)',
         'productId|1-100': 1,
         'productType|1': [1, 2, 16],
@@ -38,8 +38,8 @@ const getArtifactChangeList = {
           'shortName': '@cword(2,9)',
           'contractNo': '@guid'
         },
-        changeTime: '@datetime',
-        changePersonName: '@cname',
+        createTime: '@datetime',
+        userName: '@cname',
         serialNumber: '@word(2,10)',
         'productId|1-100': 1,
         'productType|1': [1, 2, 16],
@@ -58,8 +58,8 @@ const getArtifactChangeList = {
           'shortName': '@cword(2,9)',
           'contractNo': '@guid'
         },
-        changeTime: '@datetime',
-        changePersonName: '@cname',
+        createTime: '@datetime',
+        userName: '@cname',
         serialNumber: '@word(2,10)',
         'productId|1-100': 1,
         'productType|1': [1, 2, 16],
