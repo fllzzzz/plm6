@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`生产线：${info.workshop?.name}>${processTypeEnum.VL[info.processType]}>${info.productionLine?.name}`"
+    :title="`生产线：${info.workshop?.name}>${artifactProcessEnum.VL[info.productType]}>${info.productionLine?.name}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -26,7 +26,7 @@
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" sortable="custom" :show-overflow-tooltip="true" label="材质" min-width="80px">
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
@@ -49,13 +49,9 @@
           </template>
         </el-table-column>
         <template v-for="item in processList" :key="item.id">
-          <el-table-column
-            :label="item.name"
-            align="center"
-            width="100px"
-          >
+          <el-table-column :label="item.name" align="center" width="100px">
             <template v-slot="scope">
-              <span>{{ scope.row.processMap&&scope.row.processMap[item.id]?.completeQuantity }}</span>
+              <span>{{ scope.row.processMap && scope.row.processMap[item.id]?.completeQuantity }}</span>
             </template>
           </el-table-column>
         </template>
@@ -66,10 +62,11 @@
 
 <script setup>
 import { detail } from '@/api/mes/team-report/artifact-team'
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
-import { processTypeEnum } from '@enum-ms/mes'
+import { artifactProcessEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
+import { deepClone } from '@data-type/index'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 
@@ -112,13 +109,20 @@ watch(
   { immediate: true, deep: true }
 )
 
+const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
 const processList = ref([])
 async function fetchList() {
   try {
     tableLoading.value = true
-    const { content, process } = await detail(props.info.id)
+    const _query = Object.assign(deepClone(query), {
+      factoryId: props.info.factory?.id,
+      productType: props.info.productType,
+      productionLineId: props.info.productionLine?.id,
+      projectId: props.info.project?.id
+    })
+    const { content, process } = await detail(_query)
     list.value = content.map((v) => {
       const _processMap = {}
       v.process.forEach((v) => {

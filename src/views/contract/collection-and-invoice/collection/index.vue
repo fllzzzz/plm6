@@ -16,103 +16,98 @@
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="项目" min-width="250">
       <template v-slot="scope">
-        <div>{{ scope.row.serialNumber }}</div>
-        <div>{{ scope.row.shortName }}</div>
+        <template v-if="scope.row.project">
+          <div>{{ scope.row.project.serialNumber }}</div>
+          <div>{{ scope.row.project.shortName }}</div>
+        </template>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="250">
+    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="150">
       <template v-slot="scope">
-        <span class="project-name">{{ scope.row.contractAmount }}</span>
+        <span>{{ scope.row.contractAmount? scope.row.contractAmount.toThousand(): '' }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="已收款金额(元)" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('haveCollectionAmount')" key="haveCollectionAmount" prop="haveCollectionAmount" label="已收款金额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
+        <div>{{ scope.row.haveCollectionAmount && scope.row.haveCollectionAmount>0? haveCollectionAmount.toThousand(): scope.row.haveCollectionAmount }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="收款金额(元)" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="收款金额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
+        <span>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? scope.row.collectionAmount.toThousand(): scope.row.collectionAmount }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" label="收款事由" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionReason')" key="collectionReason" prop="collectionReason" label="收款事由" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</div>
+        <div>{{ scope.row.collectionReason && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.collectionReason]: '' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" label="收款方式" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionMode')" key="collectionMode" prop="collectionMode" label="收款方式" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</div>
+        <div>{{ scope.row.collectionMode? paymentFineModeEnum.VL[scope.row.collectionMode]: '' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" label="收款日期" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionDate')" key="collectionDate" prop="collectionDate" label="收款日期" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</div>
+        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.collectionDate }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="收款单位" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="收款单位" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
+        <div>{{ scope.row.collectionUnit }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="收款行" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionDepositBank')" key="collectionDepositBank" prop="collectionDepositBank" :show-overflow-tooltip="true" label="收款行" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
+        <div>{{ scope.row.collectionDepositBank }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="收款账号" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('collectionBankAccount')" key="collectionBankAccount" prop="collectionBankAccount" :show-overflow-tooltip="true" label="收款账号" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
+        <div>{{ scope.row.collectionBankAccount }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="付款单位" align="center" width="110px">
+    <el-table-column v-if="columns.visible('paymentUnit')" key="paymentUnit" prop="paymentUnit" label="付款单位" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
+        <div>{{ scope.row.paymentUnit }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="收款行" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('paymentDepositBank')" key="paymentDepositBank" prop="paymentDepositBank" :show-overflow-tooltip="true" label="付款行" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
+        <div>{{ scope.row.paymentDepositBank }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="收款账号" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('paymentBankAccount')" key="paymentBankAccount" prop="paymentBankAccount" :show-overflow-tooltip="true" label="付款账号" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
+        <div>{{ scope.row.paymentBankAccount }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="填报人" align="center" width="110px">
+    <el-table-column v-if="columns.visible('writtenByName')" key="writtenByName" prop="writtenByName" label="填报人" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
+        <div>{{ scope.row.writtenByName }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="填报日期" align="center" width="110px">
+    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="填报日期" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
+        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="审核人" align="center" width="110px">
+    <el-table-column v-if="columns.visible('auditorName')" key="auditorName" prop="auditorName" label="审核人" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
+        <div>{{ scope.row.auditorName }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="审核日期" align="center" width="110px">
+    <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" label="审核日期" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
+        <div>{{ scope.row.auditTime }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="状态" align="center" width="110px">
+    <el-table-column v-if="columns.visible('auditStatus')" key="auditStatus" prop="auditStatus" label="状态" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
+        <div>{{ scope.row.auditStatus? auditTypeEnum.VL[scope.row.auditStatus]: ''}}</div>
       </template>
     </el-table-column>
     <!--编辑与删除-->
-    <!-- <el-table-column
-      v-if="checkPermission([ ...permission.download])"
-      label="操作"
-      width="130px"
-      align="center"
-      fixed="right"
-    > -->
     <el-table-column
       label="操作"
       width="130px"
@@ -120,18 +115,15 @@
       fixed="right"
     >
       <template v-slot="scope">
-        <!-- <udOperation
-          :data="scope.row"
-          :show-edit="false"
-        /> -->
-        <!-- 下载 -->
-        <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+        <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
+        <common-button icon="el-icon-s-check" type="primary" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V"/>
       </template>
     </el-table-column>
   </common-table>
   <!--分页组件-->
   <pagination />
   <mForm />
+  <mDetail :collectionInfo="currentInfo" :type="showType"  v-model="detailVisble" @success="crud.toQuery"/>
   </div>
 </template>
 
@@ -146,13 +138,19 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
+import mDetail from './module/detail'
+import { auditTypeEnum } from '@enum-ms/contract'
+import { DP } from '@/settings/config'
+import useDict from '@compos/store/use-dict'
+import { paymentFineModeEnum } from '@enum-ms/finance'
+import { toThousand } from '@/utils/data-type/number'
 
 // crud交由presenter持有
 const permission = {
-  get: ['collection:add'],
+  get: ['collection:get'],
   add: ['collection:add'],
-  edit: ['collection:edit']
+  edit: ['collection:edit'],
+  audit: ['collection:audit']
 }
 
 const optShow = {
@@ -163,6 +161,10 @@ const optShow = {
 }
 
 const tableRef = ref()
+const currentInfo = ref({})
+const showType = ref('detail')
+const detailVisble = ref(false)
+const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '收款填报',
@@ -170,8 +172,10 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    invisibleColumns: ['haveCollectionAmount','collectionMode','collectionReason','collectionDepositBank','collectionBankAccount','paymentBankAccount','paymentDepositBank','auditorName','auditTime'],
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({
@@ -179,6 +183,19 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 157
 })
+
+function openDetail(row,type){
+  currentInfo.value = row
+  showType.value = type
+  detailVisble.value = true
+}
+
+CRUD.HOOK.handleRefresh = (crud,data)=>{
+  data.data.content = data.data.content.map(v => {
+    v.projectId = v.project.id
+    return v
+  })
+}
 
 </script>
 

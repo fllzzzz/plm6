@@ -22,7 +22,7 @@
         min-width="180px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.productionLine.name }}</span>
+          <span>{{ scope.row.productionLine?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -35,7 +35,7 @@
         min-width="140px"
       >
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.taskLength, DP.MES_ENCLOSURE_L__M) }}</span>
+          <span>{{ convertUnits(scope.row.taskLength,'mm','m', DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -48,7 +48,7 @@
         min-width="140px"
       >
         <template v-slot="scope">
-          <span>{{ toFixed(scope.row.completeLength, DP.MES_ENCLOSURE_L__M) }}</span>
+          <span>{{ convertUnits(scope.row.completeLength,'mm','m', DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -69,22 +69,20 @@
         </template>
       </el-table-column>
     </common-table>
-    <!--分页组件-->
-    <pagination />
     <mDetail v-model:visible="detailVisible" :info="detailInfo" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/mes/team-report/enclosure-team'
-import { ref, reactive } from 'vue'
+import { ref, reactive, provide } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
+import { convertUnits } from '@/utils/convert/unit'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 
@@ -116,14 +114,18 @@ const { crud, columns, CRUD } = useCRUD(
     title: '围护班组',
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    hasPagination: false,
+    dataPath: ''
   },
   tableRef
 )
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({ paginate: false })
+
+provide('query', crud.query)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data = res.data.map((v) => {
     v.completeRate = Number(toFixed((v.completeLength / v.taskLength) * 100, 2))
     return v
   })

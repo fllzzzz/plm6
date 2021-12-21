@@ -53,7 +53,7 @@ import { getToken } from '@/utils/storage'
 import { getFileSuffix } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { ElUpload, ElMessage, ElNotification } from 'element-plus'
-// import JSZip from 'jszip'
+import JSZip from 'jszip'
 
 const emit = defineEmits(['success'])
 const props = defineProps({
@@ -208,13 +208,7 @@ async function handleZip(zip) {
   const zipListData = []
   const errorListData = []
   // 获取解析zip对象
-
-  const iconv = require('iconv-lite') // 一个纯粹用javascript解码的模块iconv-lite，可以实现编码转换
-  const resolveZip = await jsZip.loadAsync(zip, {
-    decodeFileName: function(bytes) {
-      return iconv.decode(bytes, 'gbk') // 按中文编码
-    }
-  })
+  const resolveZip = await jsZip.loadAsync(zip)
   resolveZip.forEach((relativePath, zipEntry) => { // 2) print entries
     const suffix = `.${getFileSuffix(zipEntry.name)}`.toLowerCase()
     if (zipEntry.name.indexOf('.') > -1) { // 判断是否是目录
@@ -226,16 +220,16 @@ async function handleZip(zip) {
         isJPEG: suffix === '.jpeg'
       }
       if (!data.isPDF && !props.dataType && props.materialType !== 2) {
-        errorListData .push(data)
+        errorListData.push(data)
       } else if (!(data.isPDF || data.isJPG || data.isPNG || data.isJPEG) && !props.dataType && props.materialType === 2) {
-        errorListData .push(data)
+        errorListData.push(data)
       } else {
-        zipListData .push(data)
+        zipListData.push(data)
       }
     }
   })
-  zipList.value = zipList
-  errorList.value = errorList
+  zipList.value = zipListData
+  errorList.value = errorListData
   previewZip() // 预览zip
 }
 // 上传zip

@@ -36,6 +36,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="project.shortName" label="所属项目" min-width="200px">

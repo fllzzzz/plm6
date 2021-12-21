@@ -13,7 +13,7 @@ export function get(params) {
 export function edit(data) {
   return request({
     module: 'plan',
-    url: 'artifactMachinePart/updateStatus/{type}/{id}',
+    url: 'artifact/update',
     method: 'put',
     data
   })

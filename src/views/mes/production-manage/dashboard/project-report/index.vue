@@ -1,7 +1,14 @@
 <template>
   <div class="app-container">
-    <div class="head-container" style="padding-bottom:0px;">
-      <common-radio-button  class="filter-item"  v-model="commonQuery.category" :options="projectComponentTypeEnum.ENUM" type="enum" size="small" />
+    <div class="head-container" style="padding-bottom: 0px">
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <common-radio-button
+        class="filter-item"
+        v-model="commonQuery.category"
+        :options="projectComponentTypeEnum.ENUM"
+        type="enum"
+        size="small"
+      />
       <el-date-picker
         v-model="commonQuery.date"
         type="daterange"
@@ -23,10 +30,12 @@
 
 <script setup>
 import { reactive, computed, ref, provide } from 'vue'
+import { mapGetters } from '@/store/lib'
 
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { projectComponentTypeEnum } from '@enum-ms/mes'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import artifactComponent from './artifact'
 import enclosureComponent from './enclosure'
 
@@ -37,6 +46,7 @@ const commonQuery = reactive({
   endDate: moment().valueOf()
 })
 
+const { globalProjectId } = mapGetters(['globalProjectId'])
 provide('commonQuery', commonQuery)
 
 const componentRef = ref()
@@ -56,6 +66,12 @@ function handleDateChange() {
     commonQuery.startDate = undefined
     commonQuery.endDate = undefined
   }
+  componentRef.value.toQuery()
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  commonQuery.monomerId = monomerId
+  commonQuery.areaId = areaId
   componentRef.value.toQuery()
 }
 </script>

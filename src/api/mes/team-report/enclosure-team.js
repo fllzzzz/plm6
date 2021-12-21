@@ -3,15 +3,11 @@ import request from '@/utils/request'
 /**
  *
  * 获取班组报表-围护
- * @export
- * @param {*} page|required 页码
- * @param {*} size|required 页大小
- * @returns
  */
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'team/report/enclosure',
+    url: 'team_form/enclosure',
     method: 'get',
     params
   })
@@ -24,7 +20,7 @@ export function get(params) {
 export function detail(params) {
   return request({
     module: 'mes',
-    url: 'team/report/enclosure/detail',
+    url: 'team_form/enclosure/details',
     method: 'get',
     params
   })

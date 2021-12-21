@@ -13,33 +13,29 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="project.shortName" label="所属项目" min-width="250px">
-        <template v-slot="scope">
-          <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
-        </template>
-      </el-table-column>
+      <belonging-info-columns :columns="columns" showProject/>
       <el-table-column
-        v-if="columns.visible('changeTime')"
-        key="changeTime"
-        prop="changeTime"
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
         :show-overflow-tooltip="true"
         label="变更时间"
         width="170"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ parseTime(scope.row.changeTime) }}</span>
+          <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.createTime}}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('changePersonName')"
-        key="changePersonName"
-        prop="changePersonName"
+        v-if="columns.visible('userName')"
+        key="userName"
+        prop="userName"
         :show-overflow-tooltip="true"
         label="变更人"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.changePersonName) }}</span>
+          <span v-empty-text>{{ scope.row.userName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -50,7 +46,7 @@
         label="构件编号"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.serialNumber) }}</span>
+          <span v-empty-text>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -62,7 +58,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.oldQuantity) }}</span>
+          <span v-empty-text>{{ scope.row.oldQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -74,7 +70,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.totalInProductionQuantity) }}</span>
+          <span v-empty-text>{{ scope.row.totalInProductionQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -86,7 +82,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.changTypeText) }}</span>
+          <span v-empty-text>{{ scope.row.changTypeText }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -98,7 +94,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.newQuantity) }}</span>
+          <span v-empty-text>{{ scope.row.newQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="160px" align="center" fixed="right">
@@ -126,13 +122,11 @@ import { reactive, ref, provide } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import { abnormalHandleStatusEnum, abnormalChangeTypeEnum } from '@enum-ms/mes'
-import { emptyTextFormatter } from '@data-type/index'
-import { projectNameFormatter } from '@/utils/project'
-import { parseTime } from '@/utils/date'
 import EO from '@/utils/enum'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import handleDrawer from './module/handle-drawer'
 import detailDrawer from './module/detail-drawer'
@@ -156,7 +150,6 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '构件变更',
-    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

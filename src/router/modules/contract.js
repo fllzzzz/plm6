@@ -57,164 +57,91 @@ export default {
         }
       ]
     },
-    // {
-    //   path: '/contract/project-execution',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'projectExecution',
-    //   alwaysShow: false,
-    //   redirect: '/contract/project-execution/ledger',
-    //   meta: { title: '项目执行台帐', icon: 'contract2', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'projectExecutionLedger',
-    //       path: 'ledger',
-    //       hidden: false,
-    //       component: '/contract/project-execution-ledger/index',
-    //       meta: { title: '项目执行台帐', icon: 'contract2', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/contract/collection-manage',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'ContractCollectionManage',
-    //   alwaysShow: false,
-    //   redirect: '/contract/collection-manage/collection-list',
-    //   meta: { title: '收款管理', icon: 'contract2', noCache: true },
-    //   children: [
-    //     // {
-    //     //   name: 'ContractCollectionList',
-    //     //   path: 'collection-list',
-    //     //   hidden: false,
-    //     //   component: '/contract/collection-manage/collection-list',
-    //     //   meta: { title: '收款列表', icon: 'contract2', noCache: true }
-    //     // },
-    //     // {
-    //     //   name: 'ContractProjectExecutionLedger',
-    //     //   path: 'project-execution-ledger',
-    //     //   hidden: false,
-    //     //   component: '/contract/collection-manage/project-execution-ledger',
-    //     //   meta: { title: '项目执行台账', icon: 'contract2', noCache: true }
-    //     // },
-    //     // {
-    //     //   name: 'ContractArrearageWarning',
-    //     //   path: 'project',
-    //     //   hidden: false,
-    //     //   component: '/contract/collection-manage/arrearage-warning',
-    //     //   meta: { title: '欠款预警', icon: 'contract2', noCache: true }
-    //     // },
-    //     // {
-    //     //   name: 'ContractCollectionPlan',
-    //     //   path: 'collection-plan',
-    //     //   hidden: false,
-    //     //   component: '/contract/collection-manage/collection-plan',
-    //     //   meta: { title: '月收款计划', icon: 'contract2', noCache: true }
-    //     // },
-    //     // {
-    //     //   name: 'ContractCollectionPlanExecution',
-    //     //   path: 'collection-plan-execution',
-    //     //   hidden: false,
-    //     //   component: '/contract/collection-manage/collection-plan-execution',
-    //     //   meta: { title: '收款计划执行', icon: 'contract2', noCache: true }
-    //     // },
-    //     {
-    //       name: 'ContractCollectionAndInvoice',
-    //       path: 'collection-and-invoice',
-    //       hidden: false,
-    //       component: '/contract/collection-manage/collection-and-invoice',
-    //       meta: { title: '收款与开票', icon: 'contract2', noCache: true }
-    //     }
-    //     // {
-    //     //   name: 'ContractShipInfo',
-    //     //   path: 'ship-info',
-    //     //   hidden: false,
-    //     //   component: '/contract/collection-manage/ship-info',
-    //     //   meta: { title: '发运信息', icon: 'contract2', noCache: true }
-    //     // }
-    //   ]
-    // },
-    // {
-    //   path: '/supplier-payment-manage/material',
-    //   // path: 'contract',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'MaterialSupplierPaymentManage',
-    //   alwaysShow: false,
-    //   redirect: '/supplier-payment-manage/material/supplier-list',
-    //   meta: { title: '付款管理', icon: 'contract2', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'ContractReimbursementList',
-    //       path: 'reimbursement-list',
-    //       hidden: false,
-    //       component: '/contract/reimbursement-manage/reimbursement-list',
-    //       meta: { title: '报销列表', icon: 'contract2', noCache: true }
-    //     },
-    //     {
-    //       path: 'payment',
-    //       // path: 'contract',
-    //       component: '',
-    //       hidden: false,
-    //       name: 'supplierPayment',
-    //       alwaysShow: false,
-    //       redirect: '/supplier-payment-manage/material/payment/payable',
-    //       meta: { title: '供应商付款', icon: 'contract2', noCache: true },
-    //       children: [
-    //         {
-    //           name: 'MaterialSupplierPayable',
-    //           path: 'payable',
-    //           hidden: false,
-    //           component: '/contract/supplier-payment-manage/material/payable/index',
-    //           meta: { title: '应付汇总', icon: 'contract2', noCache: true }
-    //         },
-    //         {
-    //           name: 'MaterialPaymentInfo',
-    //           path: 'paymentInfo',
-    //           hidden: false,
-    //           component: '/contract/supplier-payment-manage/material/payment-info/index',
-    //           meta: { title: '应付看板', icon: 'contract2', noCache: true }
-    //         },
-    //         {
-    //           name: 'MaterialSupplierPaymentAndInvoice',
-    //           path: 'payment-and-invoice',
-    //           hidden: false,
-    //           component: '/contract/supplier-payment-manage/material/payment-and-invoice/index',
-    //           meta: { title: '付款与收票', icon: 'contract2', noCache: true }
-    //         },
-    //         {
-    //           name: 'MaterialPayList',
-    //           path: 'pay-list',
-    //           hidden: false,
-    //           component: '/contract/supplier-payment-manage/material/pay-list/index',
-    //           meta: { title: '付款台账', icon: 'contract2', noCache: true }
-    //         }
-    //       ]
-    //     }
-    //     // {
-    //     //   name: 'MaterialSupplierPaymentPurchaseOrderList',
-    //     //   path: 'supplier-list',
-    //     //   hidden: false,
-    //     //   component: '/contract/supplier-payment-manage/material/purchase-order-list',
-    //     //   meta: { title: '订单列表', icon: 'contract2', noCache: true }
-    //     // },
-    //     // {
-    //     //   name: 'MaterialSupplierPaymentAndInvoice',
-    //     //   path: 'payment-and-invoice',
-    //     //   hidden: false,
-    //     //   component: '/contract/supplier-payment-manage/material/payment-and-invoice/index',
-    //     //   meta: { title: '付款与收票', icon: 'contract2', noCache: true }
-    //     // },
-    //     // {
-    //     //   name: 'MaterialSupplierPayable',
-    //     //   path: 'payable',
-    //     //   hidden: false,
-    //     //   component: '/contract/supplier-payment-manage/material/payable/index',
-    //     //   meta: { title: '应付汇总', icon: 'contract2', noCache: true }
-    //     // }
-    //   ]
-    // },
+    {
+      path: '/supplier-payment-manage/material',
+      component: 'Layout',
+      hidden: false,
+      name: 'MaterialSupplierPaymentManage',
+      alwaysShow: false,
+      redirect: '/supplier-payment-manage/material/reimbursement',
+      meta: { title: '付款管理', icon: 'contract2', noCache: true },
+      children: [
+        {
+          name: 'ContractReimbursementList',
+          path: 'reimbursement',
+          hidden: false,
+          component: '/contract/payment-manage/reimbursement-manage/index',
+          meta: { title: '报销列表', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'supplierPayable',
+          path: 'payable',
+          hidden: false,
+          component: '/contract/payment-manage/supplier-manage/payable/index',
+          meta: { title: '供应商付款-应付汇总', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'supplierPayBoard',
+          path: 'payBoard',
+          hidden: false,
+          component: '/contract/payment-manage/supplier-manage/payment-board/index',
+          meta: { title: '供应商付款-应付看板', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'supplierPaymentInvoice',
+          path: 'payment-invoice',
+          hidden: false,
+          component: '/contract/payment-manage/supplier-manage/pay-receive/index',
+          meta: { title: '供应商付款-付款收票', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'supplierPayList',
+          path: 'pay-list',
+          hidden: false,
+          component: '/contract/payment-manage/supplier-manage/pay-list/index',
+          meta: { title: '供应商付款-付款台账', icon: 'contract2', noCache: true }
+        },
+        // {
+        //   path: 'payment',
+        //   component: '',
+        //   hidden: false,
+        //   name: 'supplierPayment',
+        //   alwaysShow: false,
+        //   redirect: '/supplier-payment-manage/material/payment/payment-invoice',
+        //   meta: { title: '供应商付款', icon: 'contract2', noCache: true },
+        //   children: [
+        //     // {
+        //     //   name: 'MaterialSupplierPayable',
+        //     //   path: 'payable',
+        //     //   hidden: false,
+        //     //   component: '/contract/supplier-payment-manage/material/payable/index',
+        //     //   meta: { title: '应付汇总', icon: 'contract2', noCache: true }
+        //     // },
+        //     {
+        //       name: 'MaterialPaymentInfo',
+        //       path: 'paymentInfo',
+        //       hidden: false,
+        //       component: '/contract/payment-manage/supplier-manage/pay-receive/index',
+        //       meta: { title: '应付看板', icon: 'contract2', noCache: true }
+        //     },
+        //     {
+        //       name: 'supplierPaymentInvoice',
+        //       path: 'payment-invoice',
+        //       hidden: false,
+        //       component: '/contract/payment-manage/supplier-manage/pay-receive/index',
+        //       meta: { title: '付款与收票', icon: 'contract2', noCache: true }
+        //     },
+        //     // {
+        //     //   name: 'MaterialPayList',
+        //     //   path: 'pay-list',
+        //     //   hidden: false,
+        //     //   component: '/contract/supplier-payment-manage/material/pay-list/index',
+        //     //   meta: { title: '付款台账', icon: 'contract2', noCache: true }
+        //     // }
+        //   ]
+        // }
+      ]
+    },
     // {
     //   path: '/contract/project-tax',
     //   component: 'Layout',

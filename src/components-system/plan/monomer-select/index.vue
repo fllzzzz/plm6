@@ -146,7 +146,7 @@ function selectChange(val) {
   } else {
     monomerVal = originOptions.value.find(k => k.id === val)
   }
-  const areaInfo = monomerVal && monomerVal.AreaSimpleList ? monomerVal.AreaSimpleList : []
+  const areaInfo = monomerVal && monomerVal.areaSimpleList ? monomerVal.areaSimpleList : []
   emit('update:modelValue', val)
   emit('change', val)
   emit('getAreaInfo', areaInfo)

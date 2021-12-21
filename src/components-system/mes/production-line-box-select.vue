@@ -18,7 +18,6 @@
                   :effect="line.id == modelValue ? 'light' : 'plain'"
                   :type="line.id == modelValue ? 'success' : 'info'"
                   :disable-transitions="true"
-                  size="medium"
                   @click="handleLineChange(line)"
                   >{{ line.name }}</el-tag
                 >

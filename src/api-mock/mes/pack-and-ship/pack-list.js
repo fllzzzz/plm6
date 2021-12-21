@@ -12,7 +12,7 @@ const getPack = {
         'hasPreviousPage': false,
         'hasNextPage': false,
         'totalElements': 1,
-        'content|1-50': [{
+        'content|1-5': [{
           'id|+1': 1,
           'project': {
             'id': 1,

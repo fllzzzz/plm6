@@ -45,12 +45,12 @@ export function del(ids) {
   })
 }
 
-export function editWageQuota({ id, processId, productProcessId, areaPice, lengthPrice, weightPrice, wageQuotaType }) {
+export function editWageQuota({ id, processId, productProcessId, price }) {
   return request({
     module: 'mes',
     url: 'wageQuota',
     method: 'put',
-    data: { id, processId, productProcessId, areaPice, lengthPrice, weightPrice, wageQuotaType }
+    data: { id, processId, productProcessId, price }
   })
 }
 

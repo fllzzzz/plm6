@@ -6,7 +6,6 @@ import { codeWait } from '@/utils'
 // 标签打印
 export default function useLabelPrint({ getPrintTotalNumber, getLabelInfo, getLoadingTextFunc, printLabelFunc, needAddPrintRecord = false, addPrintIdField = 'id', addPrintRecordReq, batchPrintSuccessHook, printFinallyHook }) {
   const printLoading = ref()
-
   async function batchPrint(rows) {
     try {
       await print(rows)
@@ -59,6 +58,7 @@ export default function useLabelPrint({ getPrintTotalNumber, getLabelInfo, getLo
     } finally {
       const endTime = new Date().getTime()
       if (needAddPrintRecord) {
+        console.log(row, row[addPrintIdField], addPrintIdField)
         addPrintRecord(row, { id: row[addPrintIdField], quantity: printedTimes, startTime, endTime })
       }
     }
@@ -67,6 +67,7 @@ export default function useLabelPrint({ getPrintTotalNumber, getLabelInfo, getLo
   async function addPrintRecord(row, { id, quantity, startTime, endTime }) {
     if (!id || !quantity) return
     try {
+      console.log('添加打印记录')
       await addPrintRecordReq({ id, quantity, startTime, endTime })
       row.printedQuantity += quantity
     } catch (error) {

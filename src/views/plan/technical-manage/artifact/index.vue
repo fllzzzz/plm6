@@ -13,6 +13,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" sortable="custom" :show-overflow-tooltip="true" label="名称" min-width="100px" />
@@ -88,7 +89,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/plan/technical-manage/artifact-tree'
+import crudApi from '@/api/plan/technical-manage/artifact'
 import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'

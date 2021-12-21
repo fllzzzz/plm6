@@ -19,27 +19,27 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('changeTime')"
-        key="changeTime"
-        prop="changeTime"
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
         :show-overflow-tooltip="true"
         label="变更时间"
         width="170"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ parseTime(scope.row.changeTime) }}</span>
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('changePersonName')"
-        key="changePersonName"
-        prop="changePersonName"
+        v-if="columns.visible('userName')"
+        key="userName"
+        prop="userName"
         :show-overflow-tooltip="true"
         label="变更人"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.changePersonName) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.userName) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -66,27 +66,27 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('totalInProductionQuantity')"
-        key="totalInProductionQuantity"
-        prop="totalInProductionQuantity"
+        v-if="columns.visible('producedQuantity')"
+        key="producedQuantity"
+        prop="producedQuantity"
         :show-overflow-tooltip="true"
         label="已生产量"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.totalInProductionQuantity) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.producedQuantity) }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('usedMete')"
-        key="usedMete"
-        prop="usedMete"
+        v-if="columns.visible('usedQuantity')"
+        key="usedQuantity"
+        prop="usedQuantity"
         :show-overflow-tooltip="true"
         label="已使用量"
         align="center"
       >
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.usedMete) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.usedQuantity) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -171,7 +171,6 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '零件变更',
-    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
@@ -190,7 +189,7 @@ let detailInfo = reactive({})
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data = res.data.map((v) => {
     v.changTypeText = abnormalChangeTypeEnum.VL[v.changeType]
-    v.canHandleTotalMete = v.newQuantity - v.totalInProductionQuantity
+    v.canHandleTotalMete = v.taskQuantity - (v.newQuantity + v.producedQuantity)
     return v
   })
 }

@@ -27,5 +27,6 @@ export const projectNameShowConfig = {
 export const showProjectSearch = [
   { component: '/mes/projects/index' },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/mes/changed-manage/artifact/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/wms/purchase-order/index', type: allPT, required: false }
 ]

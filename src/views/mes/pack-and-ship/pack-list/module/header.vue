@@ -159,7 +159,7 @@ const { batchPrint, print } = usePrintLabel({
   printFinallyHook: crud.toQuery,
   getLoadingTextFunc: (row) => `${row.serialNumber}`,
   printLabelFunc: printPackageLabel,
-  needAddPrintRecord: false,
+  needAddPrintRecord: true,
   addPrintRecordReq: packageRecordAdd
 })
 

@@ -1,5 +1,5 @@
 const getForTask = {
-  url: '/api/mes/building/print/task/record',
+  url: RegExp('/api/mes/building/print/record/task' + '[1][0][0-9]'),
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -8,7 +8,7 @@ const getForTask = {
       'data': {
         'content|1-50': [{
           'endTime': '@datetime',
-          'operator': '@cname',
+          'userName': '@cname',
           'quantity|1-100': 1,
           'startTime': '@datetime'
         }],
@@ -20,7 +20,7 @@ const getForTask = {
 }
 
 const taskAdd = {
-  url: '/api/mes/building/print/task/record',
+  url: '/api/mes/building/print/record/task',
   method: 'post',
   timeout: 1000,
   response: () => {
@@ -32,7 +32,7 @@ const taskAdd = {
 }
 
 const getForPackage = {
-  url: '/api/mes/building/print/package/record',
+  url: '/api/mes/building/print/record/package',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -41,7 +41,7 @@ const getForPackage = {
       'data': {
         'content|1-50': [{
           'endTime': '@datetime',
-          'operator': '@cname',
+          'userName': '@cname',
           'quantity|1-100': 1,
           'startTime': '@datetime'
         }],
@@ -53,7 +53,7 @@ const getForPackage = {
 }
 
 const packageRecordAdd = {
-  url: '/api/mes/building/print/package/record',
+  url: '/api/mes/building/print/record/package',
   method: 'post',
   timeout: 1000,
   response: () => {

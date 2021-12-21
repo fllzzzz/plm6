@@ -1,43 +1,23 @@
 <template>
   <div id="pageContainer" class="app-container">
-    <el-form
-      ref="customerRef"
-      :model="form"
-      :rules="rules"
-      inline
-      size="small"
-      label-position="right"
-      label-width="110px"
-    >
+    <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px">
       <div>
         <div class="form-row">
           <el-form-item label="客户名称" prop="customerUnit">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerUnit"
-                placeholder="客户名称"
-              />
+              <el-input v-if="isModify" v-model="form.customerUnit" placeholder="客户名称" />
               <span v-else>{{ detail.customerUnit }}</span>
             </div>
           </el-form-item>
           <el-form-item label="社会统一代码" prop="socialCode">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.socialCode"
-                placeholder="社会统一代码"
-              />
+              <el-input v-if="isModify" v-model="form.socialCode" placeholder="社会统一代码" />
               <span v-else>{{ detail.socialCode }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="customerUnitPhone">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerUnitPhone"
-                placeholder="联系电话"
-              />
+              <el-input v-if="isModify" v-model="form.customerUnitPhone" placeholder="联系电话" />
               <span v-else>{{ detail.customerUnitPhone }}</span>
             </div>
           </el-form-item>
@@ -49,7 +29,7 @@
                 v-if="isModify"
                 class="input-underline"
                 ref="region"
-                style="width:200px"
+                style="width: 200px"
                 v-model="form.region"
                 clearable
                 filterable
@@ -60,21 +40,13 @@
           </el-form-item>
           <el-form-item label="详细地址" prop="customerAddress">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerAddress"
-                placeholder="详细地址"
-              />
+              <el-input v-if="isModify" v-model="form.customerAddress" placeholder="详细地址" />
               <span v-else>{{ detail.customerAddress }}</span>
             </div>
           </el-form-item>
           <el-form-item label="邮箱" prop="customerEmail">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerEmail"
-                placeholder="邮箱"
-              />
+              <el-input v-if="isModify" v-model="form.customerEmail" placeholder="邮箱" />
               <span v-else>{{ detail.customerEmail }}</span>
             </div>
           </el-form-item>
@@ -96,23 +68,13 @@
           </el-form-item>
           <el-form-item label="银行账号" prop="customerBankCode">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerBankCode"
-                placeholder="银行账号"
-                :controls="false"
-                maxlength="30"
-              />
+              <el-input v-if="isModify" v-model="form.customerBankCode" placeholder="银行账号" :controls="false" maxlength="30" />
               <span v-else>{{ detail.customerBankCode }}</span>
             </div>
           </el-form-item>
           <el-form-item label="开户行" prop="customerBankName">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerBankName"
-                placeholder="开户行"
-              />
+              <el-input v-if="isModify" v-model="form.customerBankName" placeholder="开户行" />
               <span v-else>{{ detail.customerBankName }}</span>
             </div>
           </el-form-item>
@@ -120,21 +82,13 @@
         <div class="form-row">
           <el-form-item label="负责人1" prop="customerManagerOne">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerManagerOne"
-                placeholder="负责人1"
-              />
+              <el-input v-if="isModify" v-model="form.customerManagerOne" placeholder="负责人1" />
               <span v-else>{{ detail.customerManagerOne }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="customerManagerOnePhone">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model.number="form.customerManagerOnePhone"
-                placeholder="负责人1联系电话"
-              />
+              <el-input v-if="isModify" v-model.number="form.customerManagerOnePhone" placeholder="负责人1联系电话" />
               <span v-else>{{ detail.customerManagerOnePhone }}</span>
             </div>
           </el-form-item>
@@ -142,21 +96,13 @@
         <div class="form-row">
           <el-form-item label="负责人2" prop="customerManagerTwo">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.customerManagerTwo"
-                placeholder="负责人2"
-              />
+              <el-input v-if="isModify" v-model="form.customerManagerTwo" placeholder="负责人2" />
               <span v-else>{{ detail.customerManagerTwo }}</span>
             </div>
           </el-form-item>
           <el-form-item label="联系电话" prop="customerManagerTwoPhone">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model.number="form.customerManagerTwoPhone"
-                placeholder="负责人2联系电话"
-              />
+              <el-input v-if="isModify" v-model.number="form.customerManagerTwoPhone" placeholder="负责人2联系电话" />
               <span v-else>{{ detail.customerManagerTwoPhone }}</span>
             </div>
           </el-form-item>
@@ -174,7 +120,7 @@ import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/valida
 import { getContractCustomer } from '@/api/contract/project'
 import { cleanArray } from '@data-type/array'
 
-const customerRef = ref()
+const formRef = ref()
 const defaultForm = {
   customerUnit: undefined, // 客户名称
   socialCode: undefined, // 社会统一代码
@@ -191,7 +137,7 @@ const defaultForm = {
   customerManagerOne: undefined, // 负责人1名称
   customerManagerOnePhone: undefined, // 负责人1联系电话
   customerManagerTwo: undefined, // 负责人2名称
-  customerManagerTwoPhone: undefined // 负责人2联系电话
+  customerManagerTwoPhone: undefined, // 负责人2联系电话
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -200,7 +146,7 @@ const rules = {
   customerUnit: [{ max: 50, message: '长度不超过 50 个字符', trigger: 'blur' }],
   socialCode: [
     { max: 50, message: '长度不超过 30 个字符', trigger: 'blur' },
-    { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }
+    { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message },
   ],
   customerEmail: [{ type: 'email', message: '请填写正确的邮箱地址', trigger: 'blur' }],
   customerUnitPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
@@ -208,23 +154,23 @@ const rules = {
   customerBankName: [{ max: 50, message: '长度不超过 50 个字符', trigger: 'blur' }],
   customerBankCode: [
     { max: 30, message: '长度不超过 30 个字符', trigger: 'blur' },
-    { pattern: validatorNatural, message: '请输入数字', trigger: 'blur' }
+    { pattern: validatorNatural, message: '请输入数字', trigger: 'blur' },
   ],
   customerManagerOne: [{ max: 20, message: '长度不超过 20个字符', trigger: 'blur' }],
   customerManagerOnePhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
   customerManagerTwo: [{ max: 20, message: '长度不超过 20 个字符', trigger: 'blur' }],
-  customerManagerTwoPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }]
+  customerManagerTwoPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
 }
 
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined
+    default: undefined,
   },
   isModify: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 watch(
@@ -240,25 +186,26 @@ function handleRegionChange(val) {
   form.value.customerProvinceId = undefined
   form.value.customerCityId = undefined
   form.value.customerRegionId = undefined
-  val && val.forEach((v, i) => {
-    if (i === 0) {
-      form.value.customerCountryId = v
-    }
-    if (i === 1) {
-      form.value.customerProvinceId = v
-    }
-    if (i === 2) {
-      form.value.customerCityId = v
-    }
-    if (i === 3) {
-      form.value.customerRegionId = v
-    }
-  })
+  val &&
+    val.forEach((v, i) => {
+      if (i === 0) {
+        form.value.customerCountryId = v
+      }
+      if (i === 1) {
+        form.value.customerProvinceId = v
+      }
+      if (i === 2) {
+        form.value.customerCityId = v
+      }
+      if (i === 3) {
+        form.value.customerRegionId = v
+      }
+    })
 }
 
 async function validateForm() {
   try {
-    const valid = await customerRef.value.validate()
+    const valid = await formRef.value.validate()
     return valid
   } catch (error) {
     console.log('error', error)
@@ -267,26 +214,21 @@ async function validateForm() {
 }
 
 function resetForm() {
-  if (customerRef.value) {
-    customerRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
-  useWatchFormValidate(customerRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function fetchDetail() {
-  if (props.projectId) {
+  if (!props.projectId) {
     return
   }
-  // const loading = this.$loading({
-  //   target: '#pageContainer',
-  //   lock: true,
-  //   text: '请稍后，正在加载合同基础信息',
-  //   fullscreen: false
-  // })
   let _detail = {}
   try {
     const res = await getContractCustomer(props.projectId)
+    console.log(res)
     _detail = JSON.parse(JSON.stringify(res))
     _detail.region = cleanArray([_detail.customerCountryId, _detail.customerProvinceId, _detail.customerCityId, _detail.customerRegionId])
   } catch (error) {
@@ -294,7 +236,6 @@ async function fetchDetail() {
   } finally {
     detail.value = _detail
     resetForm(detail.value)
-    // loading.close()
   }
 }
 
@@ -302,11 +243,11 @@ defineExpose({
   form,
   validateForm,
   fetchDetail,
-  resetForm
+  resetForm,
 })
 </script>
 <style lang="scss" scoped>
-.app-container{
+.app-container {
   position: relative;
   .operate-btn {
     position: absolute;
@@ -321,18 +262,18 @@ defineExpose({
   // width: calc((95vw - 40px)/3);
   width: 250px;
   margin-right: 0;
-  input{
-    border-top:0;
-    border-left:0;
-    border-right:0;
+  input {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
     border-radius: 0;
   }
 }
 .form-row {
-  width:100%
+  width: 100%;
 }
 span {
   // color:#4482ff #1682e6
-  color:#82848a
+  color: #82848a;
 }
 </style>

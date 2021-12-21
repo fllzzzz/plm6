@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps, watch } from 'vue'
+import { ref, defineEmits, defineProps, watch, defineExpose } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { getToken } from '@/utils/storage'
@@ -160,4 +160,8 @@ function clearFiles() {
   }
   // upload.value.clearFiles()
 }
+
+defineExpose({
+  clearFiles
+})
 </script>

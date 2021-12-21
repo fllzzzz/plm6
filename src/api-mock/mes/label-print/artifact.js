@@ -12,7 +12,7 @@ const getArtifact = {
         'hasPreviousPage': false,
         'hasNextPage': false,
         'totalElements': 2,
-        'content|1-100': [{
+        'content|1-5': [{
           ...artifactListInfo,
           'printedQuantity|1-100': 1
         }]

@@ -26,25 +26,4 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-
-// export default {
-//   components: { rrOperation, crudOperation },
-//   mixins: [header(defaultQuery)],
-//   inject: ['permission'],
-//   props: {
-//     projectId: {
-//       type: [Number, String],
-//       required: true
-//     }
-//   },
-//   watch: {
-//     projectId(val) {
-//       this.query.projectId = val
-//       this.crud.toQuery()
-//     }
-//   },
-//   created() {
-//     this.query.projectId = this.projectId
-//   }
-// }
 </script>
