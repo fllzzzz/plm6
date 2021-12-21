@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watchEffect } from 'vue'
+import { defineProps, defineEmits, defineExpose, ref, watchEffect } from 'vue'
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
 import { ElRadioGroup } from 'element-plus'
 import { isNotBlank } from '@/utils/data-type'
@@ -90,8 +90,13 @@ function setDefault() {
   if (props.default && !copyValue.value && isNotBlank(props.options)) {
     for (const i in props.options) {
       copyValue.value = props.options[i][DS.value]
+      selectChange(copyValue.value)
       return
     }
   }
 }
+
+defineExpose({
+  selectChange
+})
 </script>
