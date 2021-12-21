@@ -52,8 +52,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { DP } from '@/settings/config'
-import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import { getUserAllSimpleByProject as getAllUser } from '@/api/contract/member-config'
 import useUserDeptTree from '@compos/store/use-user-dept-tree'
 import { isNotBlank } from '@data-type/index'
@@ -106,7 +104,7 @@ watch(
       fetchMembers(val)
     } else {
       checkedList.value = []
-      if(treeRef.value){
+      if (treeRef.value) {
         resetChecked()
       }
     }
@@ -166,7 +164,7 @@ function traversalTree(tree, disabled, parentLabel) {
 async function fetchMembers(id) {
   let userIds = []
   try {
-    const { content } = await getAllUser({id: id})
+    const { content } = await getAllUser({ id: id })
     userIds = content.map((v) => v.id)
   } catch (error) {
     console.log(error)
