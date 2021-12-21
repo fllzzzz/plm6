@@ -99,7 +99,7 @@ const getSectionSteel = {
             id: 4,
             classifyId: 110,
             basicClass: 2,
-            specification: 'Q325B * 10*10*200*500',
+            specification: '10*10*200*500 * Q325B',
             quantity: 10,
             frozenQuantity: 5, // 冻结数量
             mete: 10000,

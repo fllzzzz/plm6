@@ -236,7 +236,7 @@ const detail_id1 = {
           // {
           //   id: 3,
           //   sn: '110_0',
-          //   specification: 'Q325B * 57*21*3*9',
+          //   specification: '57*21*3*9 * Q325B',
           //   classifyId: 110,
           //   basicClass: 2,
           //   quantity: 1,

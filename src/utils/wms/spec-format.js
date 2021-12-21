@@ -48,27 +48,27 @@ export function specTip(row) {
 // 钢板规格
 function steelPlateSpec(row) {
   const spec = []
+  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness}*${row.width}*${row.length}`)
   if (isNotBlank(row.specification)) spec.push(row.specification)
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness} * ${row.width} * ${row.length}`)
-  return spec.join(' | ')
+  return spec.join(' * ')
 }
 
 // 型材规格
 function sectionSteelSpec(row) {
   const spec = []
-  if (isNotBlank(row.specification)) spec.push(row.specification)
   if (isNotBlank(row.length)) spec.push(row.length)
-  return spec.join(' | ')
+  if (isNotBlank(row.specification)) spec.push(row.specification)
+  return spec.join(' * ')
 }
 
 // 钢卷规格
 function steelCoilSpec(row) {
   const spec = []
+  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness}*${row.width}`)
   if (isNotBlank(row.specification)) spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
-  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness} * ${row.width} * ${row.length}`)
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness} * ${row.width}`)
-  return spec.join(' | ')
+  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness}*${row.width}*${row.length}`)
+  return spec.join(' * ')
 }
 
 // 辅材规格
@@ -76,7 +76,7 @@ function auxMatSpec(row) {
   const spec = []
   if (isNotBlank(row.specification)) spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
-  return spec.join(' | ')
+  return spec.join(' * ')
 }
 
 // 气体规格
@@ -89,27 +89,27 @@ function gasSpec(row) {
 // 钢板规格提示
 function steelPlateSpecTip(row) {
   const tip = []
+  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm)*宽(mm)*长(mm)')
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm) * 长(mm)')
-  return tip.join(' | ')
+  return tip.join(' * ')
 }
 
 // 型材规格提示
 function sectionSteelSpecTip(row) {
   const tip = []
-  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   if (isNotBlank(row.length)) { tip.push('长(mm)') }
-  return tip.join(' | ')
+  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
+  return tip.join(' * ')
 }
 
 // 钢卷规格提示
 function steelCoilSpecTip(row) {
   const tip = []
+  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm)*宽(mm)')
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
-  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm) * 长(mm)')
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm) * 宽(mm)')
-  return tip.join(' | ')
+  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm)*宽(mm)*长(mm)')
+  return tip.join(' * ')
 }
 
 // 辅材规格
@@ -117,7 +117,7 @@ function auxMatSpecTip(row) {
   const tip = []
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
-  return tip.join(' | ')
+  return tip.join(' * ')
 }
 
 // 气体规格

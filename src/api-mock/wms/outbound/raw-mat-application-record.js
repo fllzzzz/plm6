@@ -126,7 +126,7 @@ const detail_id1 = {
           },
           {
             id: 3,
-            specification: 'Q325B * 57*21*3*9',
+            specification: '57*21*3*9 * Q325B',
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
@@ -242,7 +242,7 @@ const detail_id2 = {
           },
           {
             id: 3,
-            specification: 'Q325B * 57*21*3*9',
+            specification: '57*21*3*9 * Q325B',
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
