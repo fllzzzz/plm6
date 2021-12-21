@@ -568,6 +568,28 @@ export default {
       }
     },
     {
+      name: 'MesTeamReportInStaffPiecework',
+      path: 'in-staff/piecework-system',
+      hidden: false,
+      component: '/mes/team-report/in-staff/piecework-system/index',
+      meta: {
+        title: '编内-计件制',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesTeamReportInStaffAllocation',
+      path: 'in-staff/allocation-system',
+      hidden: false,
+      component: '/mes/team-report/in-staff/allocation-system/index',
+      meta: {
+        title: '编内-分配制',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
       name: 'MesTeamReportWagesAdjust',
       path: 'wages-adjust',
       hidden: false,

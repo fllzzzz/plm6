@@ -30,7 +30,6 @@ watchEffect(() => {
 })
 
 function selectChange(val) {
-  console.log(val, 'dad', props.modelValue)
   if (val === 0) val = undefined
   emit('update:modelValue', val)
   emit('change', val)

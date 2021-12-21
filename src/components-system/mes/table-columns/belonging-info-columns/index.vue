@@ -11,19 +11,7 @@
       <span v-parse-project="{ project: row.project }" v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column
-    v-if="showArea && (isBlank(columns) || columns.visible('area.name'))"
-    prop="area.name"
-    :show-overflow-tooltip="true"
-    label="区域"
-    min-width="120px"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.area?.name }}</span>
-    </template>
-  </el-table-column>
-  <el-table-column
+   <el-table-column
     v-if="showMonomer && (isBlank(columns) || columns.visible('monomer.name'))"
     prop="monomer.name"
     :show-overflow-tooltip="true"
@@ -33,6 +21,18 @@
   >
     <template #default="{ row }">
       <span v-empty-text>{{ row.monomer?.name }}</span>
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="showArea && (isBlank(columns) || columns.visible('areaDetail.name'))"
+    prop="areaDetail.name"
+    :show-overflow-tooltip="true"
+    label="区域"
+    min-width="120px"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-empty-text>{{ row.areaDetail?.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -76,7 +76,7 @@
     prop="leaderName"
     :show-overflow-tooltip="true"
     label="班组"
-    width="120px"
+    min-width="100px"
     :fixed="fixed"
   >
     <template #default="{ row }">
