@@ -466,15 +466,18 @@ const tableRules = {
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
-const { crud, columns, CRUD } = useCRUD({
-  title: '组立清单',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['areaId'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '组立清单',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    crudApi: { ...crudApi },
+    hasPagination: true,
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact',

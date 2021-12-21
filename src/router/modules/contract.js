@@ -100,46 +100,7 @@ export default {
           hidden: false,
           component: '/contract/payment-manage/supplier-manage/pay-list/index',
           meta: { title: '供应商付款-付款台账', icon: 'contract2', noCache: true }
-        },
-        // {
-        //   path: 'payment',
-        //   component: '',
-        //   hidden: false,
-        //   name: 'supplierPayment',
-        //   alwaysShow: false,
-        //   redirect: '/supplier-payment-manage/material/payment/payment-invoice',
-        //   meta: { title: '供应商付款', icon: 'contract2', noCache: true },
-        //   children: [
-        //     // {
-        //     //   name: 'MaterialSupplierPayable',
-        //     //   path: 'payable',
-        //     //   hidden: false,
-        //     //   component: '/contract/supplier-payment-manage/material/payable/index',
-        //     //   meta: { title: '应付汇总', icon: 'contract2', noCache: true }
-        //     // },
-        //     {
-        //       name: 'MaterialPaymentInfo',
-        //       path: 'paymentInfo',
-        //       hidden: false,
-        //       component: '/contract/payment-manage/supplier-manage/pay-receive/index',
-        //       meta: { title: '应付看板', icon: 'contract2', noCache: true }
-        //     },
-        //     {
-        //       name: 'supplierPaymentInvoice',
-        //       path: 'payment-invoice',
-        //       hidden: false,
-        //       component: '/contract/payment-manage/supplier-manage/pay-receive/index',
-        //       meta: { title: '付款与收票', icon: 'contract2', noCache: true }
-        //     },
-        //     // {
-        //     //   name: 'MaterialPayList',
-        //     //   path: 'pay-list',
-        //     //   hidden: false,
-        //     //   component: '/contract/supplier-payment-manage/material/pay-list/index',
-        //     //   meta: { title: '付款台账', icon: 'contract2', noCache: true }
-        //     // }
-        //   ]
-        // }
+        }
       ]
     },
     // {

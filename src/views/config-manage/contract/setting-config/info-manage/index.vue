@@ -25,6 +25,7 @@
         min-width="120"
       >
         <template v-slot="scope">
+          <table-cell-tag :show="scope.row.isDefault" name="默认" />
           <div>{{ scope.row.templateName }}</div>
         </template>
       </el-table-column>
@@ -86,6 +87,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessageBox } from 'element-plus'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {

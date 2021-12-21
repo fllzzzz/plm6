@@ -113,7 +113,8 @@ const { crud, columns, CRUD } = useCRUD(
     requiredQuery: ['projectId','type'],
     crudApi: { ...crudApi },
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({

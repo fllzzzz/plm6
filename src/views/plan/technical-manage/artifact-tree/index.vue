@@ -287,15 +287,18 @@ const optShow = {
 
 const tableRef = ref()
 const typeInfo = ref([])
-const { crud, columns, CRUD } = useCRUD({
-  title: '零构件清单',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['areaId'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '零构件清单',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    crudApi: { ...crudApi },
+    hasPagination: true,
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact-tree',

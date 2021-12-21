@@ -584,74 +584,74 @@ async function getOrderInfoReset(type){
   let data = {}
   try{
     data = await orderInfo(type)
-    data = [
-      {
-        "amount": 1000, //合同额
-        "bankAccount": "1", //收款银行账户
-        "bankName": "1",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 1, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a1", //订单号
-        "supplierId": 1,
-        "supplierName": "供应商1" //供应商名称
-      },
-      {
-        "amount": 2500, //合同额
-        "bankAccount": "2", //收款银行账户
-        "bankName": "2",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 2, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a2", //订单号
-        "supplierId": 2,
-        "supplierName": "供应商2" //供应商名称
-      }
-    ]
+    // data = [
+    //   {
+    //     "amount": 1000, //合同额
+    //     "bankAccount": "1", //收款银行账户
+    //     "bankName": "1",
+    //     "basicClass": 1, //物料种类
+    //     "basicClassName": "钢", //物料种类名称
+    //     "companyBankAccountList": [
+    //       {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
+    //       {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
+    //       {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
+    //     ],
+    //     "projectList": [
+    //       {
+    //         "id": 1,
+    //         "name": "a1",
+    //         "serialNumber": "aaa",
+    //         "shortName": "a11"
+    //       },
+    //       {
+    //         "id": 2,
+    //         "name": "a2",
+    //         "serialNumber": "aaa2",
+    //         "shortName": "a22"
+    //       }
+    //     ],
+    //     "id": 1, //订单id
+    //     "inBoundAmount": 500, //累计收款
+    //     "orderProperty": 1, //订单属性
+    //     "payForType": 1,  //费用用途 1货款 2运费
+    //     "serialNumber": "a1", //订单号
+    //     "supplierId": 1,
+    //     "supplierName": "供应商1" //供应商名称
+    //   },
+    //   {
+    //     "amount": 2500, //合同额
+    //     "bankAccount": "2", //收款银行账户
+    //     "bankName": "2",
+    //     "basicClass": 1, //物料种类
+    //     "basicClassName": "钢", //物料种类名称
+    //     "companyBankAccountList": [
+    //       {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
+    //       {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
+    //       {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
+    //     ],
+    //     "projectList": [
+    //       {
+    //         "id": 1,
+    //         "name": "a1",
+    //         "serialNumber": "aaa",
+    //         "shortName": "a11"
+    //       },
+    //       {
+    //         "id": 2,
+    //         "name": "a2",
+    //         "serialNumber": "aaa2",
+    //         "shortName": "a22"
+    //       }
+    //     ],
+    //     "id": 2, //订单id
+    //     "inBoundAmount": 500, //累计收款
+    //     "orderProperty": 1, //订单属性
+    //     "payForType": 1,  //费用用途 1货款 2运费
+    //     "serialNumber": "a2", //订单号
+    //     "supplierId": 2,
+    //     "supplierName": "供应商2" //供应商名称
+    //   }
+    // ]
   }catch(e){
     console.log('获取订单信息',e)
   }finally{
@@ -664,74 +664,74 @@ async function getOrderInfo(type){
   let data = {}
   try{
     data = await orderInfo(type)
-    data = [
-      {
-        "amount": 1000, //合同额
-        "bankAccount": "1", //收款银行账户
-        "bankName": "1",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 1, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a1", //订单号
-        "supplierId": 1,
-        "supplierName": "供应商1" //供应商名称
-      },
-      {
-        "amount": 2500, //合同额
-        "bankAccount": "2", //收款银行账户
-        "bankName": "2",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 2, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a2", //订单号
-        "supplierId": 2,
-        "supplierName": "供应商2" //供应商名称
-      }
-    ]
+    // data = [
+    //   {
+    //     "amount": 1000, //合同额
+    //     "bankAccount": "1", //收款银行账户
+    //     "bankName": "1",
+    //     "basicClass": 1, //物料种类
+    //     "basicClassName": "钢", //物料种类名称
+    //     "companyBankAccountList": [
+    //       {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
+    //       {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
+    //       {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
+    //     ],
+    //     "projectList": [
+    //       {
+    //         "id": 1,
+    //         "name": "a1",
+    //         "serialNumber": "aaa",
+    //         "shortName": "a11"
+    //       },
+    //       {
+    //         "id": 2,
+    //         "name": "a2",
+    //         "serialNumber": "aaa2",
+    //         "shortName": "a22"
+    //       }
+    //     ],
+    //     "id": 1, //订单id
+    //     "inBoundAmount": 500, //累计收款
+    //     "orderProperty": 1, //订单属性
+    //     "payForType": 1,  //费用用途 1货款 2运费
+    //     "serialNumber": "a1", //订单号
+    //     "supplierId": 1,
+    //     "supplierName": "供应商1" //供应商名称
+    //   },
+    //   {
+    //     "amount": 2500, //合同额
+    //     "bankAccount": "2", //收款银行账户
+    //     "bankName": "2",
+    //     "basicClass": 1, //物料种类
+    //     "basicClassName": "钢", //物料种类名称
+    //     "companyBankAccountList": [
+    //       {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
+    //       {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
+    //       {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
+    //     ],
+    //     "projectList": [
+    //       {
+    //         "id": 1,
+    //         "name": "a1",
+    //         "serialNumber": "aaa",
+    //         "shortName": "a11"
+    //       },
+    //       {
+    //         "id": 2,
+    //         "name": "a2",
+    //         "serialNumber": "aaa2",
+    //         "shortName": "a22"
+    //       }
+    //     ],
+    //     "id": 2, //订单id
+    //     "inBoundAmount": 500, //累计收款
+    //     "orderProperty": 1, //订单属性
+    //     "payForType": 1,  //费用用途 1货款 2运费
+    //     "serialNumber": "a2", //订单号
+    //     "supplierId": 2,
+    //     "supplierName": "供应商2" //供应商名称
+    //   }
+    // ]
   }catch(e){
     console.log('获取订单信息',e)
   }finally{

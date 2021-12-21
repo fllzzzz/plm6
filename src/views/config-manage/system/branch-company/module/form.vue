@@ -26,7 +26,7 @@
           />
         </el-form-item>
         <el-form-item label="母公司" prop="isParent">
-          <template slot="label">
+          <template #label>
             <el-tooltip effect="light" content="只可选择一个公司为母公司，若选择新的母公司，原母公司会被取消" placement="left">
               <div style="display: inline-block">
                 <span>母公司</span>

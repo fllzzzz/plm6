@@ -22,7 +22,7 @@ export function edit(data) {
   return request({
     module: 'contract',
     url: 'contract/reimbursement/update',
-    method: 'post',
+    method: 'put',
     data
   })
 }

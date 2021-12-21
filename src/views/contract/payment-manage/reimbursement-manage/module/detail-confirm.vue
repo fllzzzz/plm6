@@ -84,8 +84,7 @@
         <div class="form-row" style="display: flex">
           <el-form-item label="业务类型" prop="businessType">
             <div style="width: 360px">
-              <span v-if="isModify">{{ contractInfo.businessType ? businessTypeEnum.VL[contractInfo.businessType] : '' }}</span>
-              <span v-else>{{ businessTypeName }}</span>
+              <span>{{ contractInfo.businessType ? businessTypeEnum.VL[contractInfo.businessType] : '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="申请人" prop="applyUserId">
@@ -456,12 +455,13 @@ const rules = {
   collectionUserId: [{ required: true, message: '请选择收款人', trigger: 'change' }],
   applyUserId: [{ required: true, message: '请选择申请人', trigger: 'change' }],
   applyDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
-  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }],
+  paymentUnitId: [{ required: true, message: '请选择付款单位', trigger: 'change' }]
 }
 
 const tableRules = {
   choseId: [{ required: true, message: '请选择报销种类', trigger: 'change' }],
   applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }],
+  actuallyPayAmount: [{ required: true, message: '请输入实付金额', trigger: 'change', type: 'number' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
@@ -572,10 +572,6 @@ const actuallyUpperYuan = computed(() => {
   return form.value.actuallyPayAmount ? digitUppercase(form.value.actuallyPayAmount) : ''
 })
 
-const businessTypeName = computed(() => {
-  return contractInfo.value.businessType ? businessTypeEnum.VL[contractInfo.value.businessType] : ''
-})
-
 function expenseChange(val) {
   if (val) {
     if (val.type === 1) {
@@ -619,7 +615,7 @@ function addRow() {
   })
 }
 
-function handleSuccess() {
+function handleSuccess(){
   ElNotification({ title: '提交成功', type: 'success' })
   emit('success')
   closeDrawer()
@@ -627,14 +623,14 @@ function handleSuccess() {
 
 async function onSubmit(val) {
   try {
-    if (val === reimbursementTypeEnum.ENUM.REJECT.V) {
+    if(val === reimbursementTypeEnum.ENUM.REJECT.V){
       let submitData = {
         confirmStatus: val,
-        id: form.value.id,
+        id: form.value.id
       }
       await editStatus(submitData)
       handleSuccess()
-    } else {
+    }else{
       const { validResult, dealList } = tableValidate(form.value.detailList)
       if (validResult) {
         form.value.detailList = dealList

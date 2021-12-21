@@ -16,6 +16,7 @@
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="公司名称" min-width="150">
         <template v-slot="scope">
+          <table-cell-tag :show="scope.row.isParent === systemEnabledEnum.ENUM.TRUE.V" name="母公司" />
           <div>{{ scope.row.name }}</div>
         </template>
       </el-table-column>
@@ -86,6 +87,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessageBox } from 'element-plus'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {
@@ -136,7 +138,6 @@ async function changeEnabled(data, val) {
     data.enabled = data.enabled === systemEnabledEnum.ENUM.TRUE.V ? systemEnabledEnum.ENUM.FALSE.V : systemEnabledEnum.ENUM.TRUE.V
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

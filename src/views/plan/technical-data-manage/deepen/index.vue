@@ -123,7 +123,8 @@ const { crud, columns, CRUD } = useCRUD(
     requiredQuery: ['monomerId','productType'],
     crudApi: { ...crudApi },
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({

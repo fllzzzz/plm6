@@ -143,15 +143,18 @@ const optShow = {
 
 const tableRef = ref()
 const typeInfo = ref([])
-const { crud, columns, CRUD } = useCRUD({
-  title: '区域计划',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['productType'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '区域计划',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['productType'],
+    crudApi: { ...crudApi },
+    hasPagination: true,
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.plan-make',

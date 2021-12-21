@@ -101,7 +101,7 @@
                 controls-position="right"
                 placeholder="申请金额"
                 style="width: 100%; max-width: 200px"
-                @change="applyAmountChange"
+                @change="applyAmountChange(scope.row.applyAmount,scope.$index)"
               />
             </template>
           </el-table-column>
@@ -273,7 +273,10 @@ function getDept() {
   }
 }
 
-function applyAmountChange() {
+function applyAmountChange(amount, index) {
+  if (amount) {
+    form.detailList[index].invoiceAmount = amount
+  }
   if (form.detailList.length > 0) {
     let val = 0
     form.detailList.forEach((v) => {

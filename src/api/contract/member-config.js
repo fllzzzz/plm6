@@ -35,12 +35,12 @@ export function del(id) {
   })
 }
 
-export function editStatus(data) {
+export function editStatus(params) {
   return request({
     module: 'contract',
     url: 'deploy/project/status',
-    method: 'post',
-    data
+    method: 'put',
+    params
   })
 }
 

@@ -180,15 +180,18 @@ const techOptions = [
     alias: 'ENCLOSURE',
   },
 ]
-const { crud, columns, CRUD } = useCRUD({
-  title: '单体',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['projectId'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '单体',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['projectId'],
+    crudApi: { ...crudApi },
+    hasPagination: true,
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.monomer',
