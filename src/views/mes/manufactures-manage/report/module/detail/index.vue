@@ -15,8 +15,8 @@
         <!--分页组件-->
         <el-pagination
           :total="total"
-          :current-page="queryPage.page"
-          :page-size="queryPage.size"
+          :current-page="queryPage.pageNumber"
+          :page-size="queryPage.pageSize"
           style="margin-top: 8px"
           layout="total, prev, pager, next, sizes"
           @size-change="handleSizeChange"
@@ -110,12 +110,12 @@ const queryPage = reactive({
 })
 const total = ref(0)
 function handleSizeChange(val) {
-  queryPage.page = 1
-  queryPage.size = val
+  queryPage.pageNumber = 1
+  queryPage.pageSize = val
   fetchList()
 }
 function handleCurrentChange(val) {
-  queryPage.page = val
+  queryPage.pageNumber = val
   fetchList()
 }
 
