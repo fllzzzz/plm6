@@ -6,120 +6,164 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="860px"
+    size="1200px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="类型名称" prop="name">
+        <el-form-item label="公司名称" prop="name">
+          <el-input v-model="form.name" type="text" placeholder="请填写名称" class="input-underline" style="width: 270px" />
+        </el-form-item>
+        <el-form-item label="社会统一信用代码" prop="socialCode">
           <el-input
-            v-model="form.name"
+            v-model="form.socialCode"
             type="text"
-            placeholder="请填写费用类型名称"
-            style="width: 270px;"
+            placeholder="请填写社会统一信用代码"
+            class="input-underline"
+            style="width: 270px"
           />
+        </el-form-item>
+        <el-form-item label="母公司" prop="isParent">
+          <template slot="label">
+            <el-tooltip effect="light" content="只可选择一个公司为母公司，若选择新的母公司，原母公司会被取消" placement="left">
+              <div style="display: inline-block">
+                <span>母公司</span>
+                <i class="el-icon-info" style="color: #909399" />
+              </div>
+            </el-tooltip>
+          </template>
+          <el-checkbox v-model="form.isParent" :true-label="systemEnabledEnum.ENUM.TRUE.V" :false-label="systemEnabledEnum.ENUM.FALSE.V" />
+        </el-form-item>
+        <el-form-item label="状态" prop="enabled">
+          <common-radio v-model="form.enabled" :options="systemEnabledEnum.ENUM" type="enum" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input-number
-            v-model.number="form.sort"
-            :min="1"
-            :max="999"
-            :step="1"
-            controls-position="right"
-            style="width: 270px;"
+          <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            :autosize="{ minRows: 6, maxRows: 8 }"
+            placeholder="请填写备注"
+            style="max-width: 500px"
           />
         </el-form-item>
-        <el-form-item label="费用明细" prop="dictionaryIdList">
-          <div class="process-container">
-            <div class="process-box">
-              <div v-for="(item, index) in form.dictionaryIdList" :key="index" class="process-drawer">
-                <common-select
-                  v-model="form.dictionaryIdList[index]"
-                  :options="dict.reimbursement_type"
-                  type="other"
-                  size="small"
-                  :dataStructure="typeProp"
-                  clearable
-                  class="filter-item"
-                  placeholder="费用类型"
-                  style="width: 250px"
-                  :disabled-val="form.dictionaryIdList"
-                />
-                <common-button v-show="form.dictionaryIdList && form.dictionaryIdList.length > 1" icon="el-icon-delete" size="mini" type="danger" style="margin-left: 6px" @click="delProcess(index)" />
-              </div>
-            </div>
-            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" />
-          </div>
-        </el-form-item>
+        <common-table
+          ref="detailRef"
+          border
+          :data="form.bankAccounts"
+          :max-height="300"
+          style="width: 100%"
+          class="table-form"
+          :cell-class-name="wrongCellMask"
+        >
+          <el-table-column label="序号" type="index" align="center" width="50" />
+          <el-table-column prop="depositBank" label="开户行" align="center" min-width="150">
+            <template v-slot="scope">
+              <el-input v-model="scope.row.depositBank" type="text" placeholder="开户行" style="width: 120px" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="account" label="账号" align="center" min-width="150">
+            <template v-slot="scope">
+              <el-input v-model="scope.row.account" type="text" placeholder="账号" style="width: 120px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template v-slot="scope">
+              <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
+            </template>
+          </el-table-column>
+        </common-table>
+        <div class="add-row-box">
+          <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-right: 15px" @click="addRow()"
+            >继续添加</common-button
+          >
+        </div>
       </el-form>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 import projectCascader from '@comp-base/project-cascader'
-import useDict from '@compos/store/use-dict'
 import { DP } from '@/settings/config'
-import { paymentFineModeEnum } from '@enum-ms/finance'
+import { businessTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
+import useTableValidate from '@compos/form/use-table-validate'
+import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { digitUppercase } from '@/utils/data-type/number'
+import { isNotBlank } from '@data-type/index'
+import { systemEnabledEnum } from '@enum-ms/system'
 
 const formRef = ref()
-const dict = useDict(['reimbursement_type'])
-const typeProp = { key: 'id', label: 'label', value: 'id' }
+const applyRef = ref()
+const collectionRef = ref()
+const detailRef = ref()
 const defaultForm = {
-  iid: undefined,
-  name: '',
-  sort: 1,
-  dictionaryIdList: undefined
+  bankAccounts: [
+    {
+      account: undefined,
+      depositBank: undefined,
+    },
+  ],
+  enabled: systemEnabledEnum.ENUM.TRUE.V,
+  isParent: undefined,
+  name: undefined,
+  remark: undefined,
+  socialCode: undefined,
+  sort: undefined,
 }
 
-const { crud, form } = regForm(defaultForm, formRef)
-
+const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const rules = {
-  name: [
-    { required: true, message: '请填写费用类型名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ],
-  sort: [
-    { required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }
-  ],
-  dictionaryIdList: [{ required: true, message: '请选择费用明细' }]
+  name: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
+  sort: [{ required: true, message: '请输入排序', trigger: 'blur' }],
 }
 
-function addProcess() {
-  form.dictionaryIdList.push(undefined)
+const tableRules = {
+  depositBank: [{ required: true, message: '请输入开户行', trigger: 'blur' }],
+  account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
 }
-function delProcess(index) {
-  form.dictionaryIdList.splice(index, 1)
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+
+function deleteRow(index) {
+  form.bankAccounts.splice(index, 1)
 }
 
+function addRow() {
+  form.bankAccounts.push({
+    account: undefined,
+    depositBank: undefined,
+  })
+}
+
+CRUD.HOOK.beforeValidateCU = (crud, form) => {
+  const { validResult, dealList } = tableValidate(crud.form.detailList)
+  if (validResult) {
+    crud.form.detailList = dealList
+  } else {
+    return validResult
+  }
+}
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {
   text-align: left;
 }
-.process-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-end;
-  .process-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    .process-drawer {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+.table-form {
+  ::v-deep(.el-input__inner) {
+    padding: 0;
+    padding-left: 5px;
   }
+}
+.add-row-box {
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

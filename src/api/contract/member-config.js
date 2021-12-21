@@ -35,6 +35,15 @@ export function del(id) {
   })
 }
 
+export function editStatus(data) {
+  return request({
+    module: 'contract',
+    url: 'deploy/project/status',
+    method: 'post',
+    data
+  })
+}
+
 // 获取所有项目用户
 export function getUserAllSimpleByProject(params) {
   return request({
