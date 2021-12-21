@@ -33,6 +33,7 @@
     </el-table-column>
     <!--编辑与删除-->
     <el-table-column
+      v-if="checkPermission([...permission.del, ...permission.edit])"
       label="操作"
       width="130px"
       align="center"
@@ -78,10 +79,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const currentInfo = ref({})
-const showType = ref('detail')
-const detailVisble = ref(false)
-const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '费用归类',
