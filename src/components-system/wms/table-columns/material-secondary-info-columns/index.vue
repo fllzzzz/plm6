@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-batch-no="showBatchNo" :fixed="fixed" />
+  <component :is="comp" :basicClass="basicClass" :columns="columns" :show-batch-no="showBatchNo" :fixed="fixed" />
 </template>
 
 <script setup>

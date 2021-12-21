@@ -11,6 +11,9 @@ import { defineProps, computed } from 'vue'
 import { isBlank } from '@/utils/data-type'
 
 const props = defineProps({
+  basicClass: {
+    type: Number
+  },
   columns: {
     type: Object
   },
