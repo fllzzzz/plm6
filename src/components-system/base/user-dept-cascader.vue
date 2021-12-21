@@ -28,67 +28,67 @@ const emit = defineEmits(['change', 'update:modelValue'])
 const props = defineProps({
   modelValue: {
     type: [Array, Number, String],
-    default: ''
+    default: '',
   },
   // 禁用值 id
   disabledVal: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   // 部门id
   deptIds: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   // 大小
   size: {
     type: String,
-    default: 'small'
+    default: 'small',
   },
   // 是否可清除
   clearable: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 是否禁用
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 输入框显示全路径
   showAllLevels: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 分隔符
   separator: {
     type: String,
-    default: '/'
+    default: '/',
   },
   // 提示
   placeholder: {
     type: String,
-    default: '请选择用户'
+    default: '请选择用户',
   },
   // 多选
   multiple: {
     type: Boolean,
-    default: false
+    default: false,
   },
   checkStrictly: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 返回结果全路径
   emitPath: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 额外的选项
   extraOption: {
     type: Object,
-    require: false
-  }
+    require: false,
+  },
 })
 
 const userDeptCascaderRef = ref()
@@ -106,7 +106,7 @@ const cascaderProps = computed(() => {
     expandTrigger: 'hover',
     emitPath: props.emitPath,
     multiple: props.multiple,
-    checkStrictly: props.checkStrictly
+    checkStrictly: props.checkStrictly,
   }
 })
 
@@ -176,6 +176,10 @@ function setOptions(tree) {
 function filterBlankDept(tree) {
   return tree.filter((node) => {
     if (isNotBlank(node.children)) {
+      node.children.forEach((v) => {
+        v.parentDeptId = node.id
+        v.parentDeptName = node.label
+      })
       node.children = filterBlankDept(node.children)
       return isNotBlank(node.children)
     }
@@ -211,7 +215,7 @@ function getParentNode(node) {
 
 defineExpose({
   getNodeInfo,
-  getParentNode
+  getParentNode,
 })
 </script>
 

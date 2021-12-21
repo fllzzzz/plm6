@@ -41,8 +41,6 @@
       :with-header="true"
       direction="rtl"
       size="100%"
-      :load-delay="200"
-      :show-delay="300"
       :show-close="false"
     >
       <template #title>

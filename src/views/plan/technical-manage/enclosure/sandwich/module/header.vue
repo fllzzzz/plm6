@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-           <monomer-select
+      <monomer-select
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="props.projectId"
@@ -10,27 +10,24 @@
       />
       <area-tabs
         class="filter-item"
-        style="width: calc(100% - 230px);"
+        style="width: calc(100% - 230px)"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
         :show-type="2"
         @tab-click="tabClick"
       />
-      <common-radio-button
-        v-model="query.status"
-        :options="processingEnum.ENUM"
-        show-option-all
-        type="enum"
-        style="margin-left:0;margin-right:6px;"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
+      <el-radio-group v-model="query.status" size="small" class="filter-item" @change="crud.toQuery">
+        <el-radio-button :label="undefined">全部</el-radio-button>
+        <el-radio-button v-for="item in processingEnum.ENUM" :key="item.V" :label="item.V">
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
       <el-input
         v-model="query.mame"
         size="small"
         placeholder="输入名称搜索"
-        style="width: 170px;margin-left:0;"
+        style="width: 170px; margin-left: 0"
         class="filter-item"
         clearable
         @blur="crud.toQuery"
@@ -39,12 +36,12 @@
         v-model="query.serialNumber"
         size="small"
         placeholder="输入编号搜索"
-        style="width: 170px;"
+        style="width: 170px"
         class="filter-item"
         clearable
         @keyup.enter.native="crud.toQuery"
       />
-      <rrOperation/>
+      <rrOperation />
     </div>
     <crudOperation>
       <template #optRight>
@@ -70,7 +67,7 @@
         />
         <export-button
           :fn="downloadEnclosureTemplate"
-          :params="{category:crud.query.category}"
+          :params="{ category: crud.query.category }"
           show-btn-text
           btn-text="模板下载"
           class="filter-item"
@@ -94,16 +91,18 @@ import { TechnologyTypeEnum } from '@enum-ms/contract'
 import uploadBtn from '@/components/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/enclosure'
 import ExportButton from '@comp-common/export-button/index.vue'
-import { downloadEnclosureData,downloadEnclosureTemplate } from '@/api/plan/technical-manage/enclosure'
+import { downloadEnclosureData, downloadEnclosureTemplate } from '@/api/plan/technical-manage/enclosure'
+import { ElRadioGroup } from 'element-plus'
 
 const router = useRouter()
 
 const defaultQuery = {
-  name: '', serialNumber: '',
+  name: '',
+  serialNumber: '',
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false },
-  category: { value: TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V, resetAble: false }
+  category: { value: TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V, resetAble: false },
 }
 
 const monomerSelectRef = ref()
@@ -116,15 +115,15 @@ const typeOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
-const carryParam = computed(()=>{
+const carryParam = computed(() => {
   return { areaId: crud.query.areaId, category: TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V }
 })
 
-const exportParam = computed(()=>{
+const exportParam = computed(() => {
   const param = { ...crud.query }
   return param
 })
@@ -133,7 +132,7 @@ function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
     id: name,
-    name: label
+    name: label,
   }
   crud.toQuery()
 }
@@ -142,11 +141,10 @@ function getAreaInfo(val) {
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
       id: areaInfo.value[0].id + '',
-      name: areaInfo.value[0].name
+      name: areaInfo.value[0].name,
     }
   } else {
     defaultTab.value = {}
   }
 }
-
 </script>

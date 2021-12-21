@@ -1,6 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <common-radio-button
         type="enum"
         v-model="query.category"
@@ -76,6 +77,7 @@
 import { ref, defineExpose, defineEmits } from 'vue'
 
 import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { mapGetters } from '@/store/lib'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
@@ -83,6 +85,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
 const defaultQuery = {
@@ -99,6 +102,8 @@ const defaultQuery = {
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+const { globalProjectId } = mapGetters(['globalProjectId'])
+
 const emit = defineEmits('load')
 
 const boxScale = ref(1)
@@ -113,6 +118,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
     return v
   })
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
 }
 
 defineExpose({

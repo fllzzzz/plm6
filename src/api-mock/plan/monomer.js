@@ -120,7 +120,7 @@ const monomerAll = {
             'name': '压型楼承板加工',
             'type': 4
           }],
-          'AreaSimpleList': [{
+          'areaSimpleList': [{
             'name': '放松放松',
             'id': 5,
             'type': 0,
@@ -145,7 +145,7 @@ const monomerAll = {
           'id': 5,
           'name': '1',
           'productTypeList': [],
-          'AreaSimpleList': []
+          'areaSimpleList': []
         }]
       }
     }

@@ -1052,8 +1052,8 @@ function addCrudFeatureMethod(crud, data) {
   // 获取查询参数
   const getQueryParams = () => {
     return {
-      page: crud.hasPagination ? crud.page.page : undefined,
-      size: crud.hasPagination ? crud.page.size : undefined,
+      pageNumber: crud.hasPagination ? crud.page.page : undefined,
+      pageSize: crud.hasPagination ? crud.page.size : undefined,
       sort: crud.sort,
       ...crud.query,
       ...crud.params

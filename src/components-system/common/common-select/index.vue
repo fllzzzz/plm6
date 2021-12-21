@@ -165,6 +165,7 @@ const allVal = computed(() => {
 // 数据结构
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
+// text文字水平对齐方式
 const textAlignClass = computed(() => {
   switch (props.textAlign) {
     case 'center':
@@ -178,6 +179,7 @@ const textAlignClass = computed(() => {
   }
 })
 
+// 监听modelValue，为selectValue赋值
 watch(
   () => props.modelValue,
   (value) => {
@@ -191,6 +193,7 @@ watch(
   { immediate: true }
 )
 
+// 监听options 与 是否显示额外选项。若值不存在，则设置值为空
 watch(
   [() => props.options, () => props.showExtra],
   ([nVal], [oVal]) => {
@@ -230,6 +233,7 @@ watch(
   { immediate: true }
 )
 
+// 处理值发生改变的情况
 function handleChange(val) {
   let data = val
   if (isBlank(val)) {
@@ -252,6 +256,7 @@ function handleChange(val) {
   }
 }
 
+// 处理光标离开输入框
 function handleBlur(event) {
   emit('blur', event)
 }

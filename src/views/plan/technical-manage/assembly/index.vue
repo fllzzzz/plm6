@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length>0">
+    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId"/>
+        <mHeader :project-id="globalProjectId" />
       </div>
       <!--表格渲染-->
       <common-table
@@ -25,7 +25,7 @@
                 :cell-class-name="wrongCellMask"
                 :row-class-name="handleRowClassName"
                 row-key="rowKey"
-                style="width:100%;border-color:transparent;"
+                style="width: 100%; border-color: transparent"
               >
                 <el-table-column key="serialNumber" prop="serialNumber" label="构件编号" align="center">
                   <template v-slot="scope">
@@ -34,7 +34,7 @@
                       v-model="scope.row.serialNumber"
                       type="text"
                       placeholder="构件编号"
-                      style="min-width: 100px;"
+                      style="min-width: 100px"
                       size="mini"
                     />
                     <span v-else>{{ scope.row.serialNumber }}</span>
@@ -47,7 +47,7 @@
                       v-model="scope.row.specification"
                       type="text"
                       placeholder="规格"
-                      style="min-width: 100px;"
+                      style="min-width: 100px"
                       size="mini"
                     />
                     <span v-else>{{ scope.row.specification }}</span>
@@ -60,7 +60,7 @@
                       v-model="scope.row.material"
                       type="text"
                       placeholder="材质"
-                      style="min-width: 100px;"
+                      style="min-width: 100px"
                       size="mini"
                     />
                     <span v-else>{{ scope.row.material }}</span>
@@ -77,10 +77,10 @@
                       placeholder="请填写"
                       :precision="DP.MES_ARTIFACT_L__MM"
                       controls-position="right"
-                      style="width:90px;"
+                      style="width: 90px"
                       size="mini"
                     />
-                    <span v-else>{{ scope.row.length? scope.row.length.toFixed(DP.MES_MACHINE_PART_L__MM): '-' }}</span>
+                    <span v-else>{{ scope.row.length ? scope.row.length.toFixed(DP.MES_MACHINE_PART_L__MM) : '-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column key="netWeight" prop="netWeight" label="单净重" align="center">
@@ -94,10 +94,10 @@
                       placeholder="请填写"
                       :precision="DP.COM_WT__KG"
                       controls-position="right"
-                      style="width:120px;"
+                      style="width: 120px"
                       size="mini"
                     />
-                    <span v-else>{{ scope.row.netWeight? scope.row.netWeight.toFixed(DP.COM_WT__KG): '-' }}</span>
+                    <span v-else>{{ scope.row.netWeight ? scope.row.netWeight.toFixed(DP.COM_WT__KG) : '-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column key="quantity" prop="quantity" label="数量" align="center">
@@ -111,7 +111,7 @@
                       step-strictly
                       placeholder="请填写"
                       controls-position="right"
-                      style="width:140px;"
+                      style="width: 140px"
                       size="mini"
                     />
                     <span v-else>{{ scope.row.quantity }}</span>
@@ -124,22 +124,10 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                   <template v-slot="scope">
-                    <common-button v-if="scope.row.add" type="primary" size="mini" plain @click="addArtifact(scope.row)">保存</common-button>
-                    <el-popover
-                      v-model:visible="scope.row.popoverVisible"
-                      :key="scope.row.id"
-                      placement="top"
-                      width="180"
+                    <common-button v-if="scope.row.add" type="primary" size="mini" plain @click="addArtifact(scope.row)"
+                      >保存</common-button
                     >
-                      <p>确定删除本条数据吗？</p>
-                      <div style="text-align: right; margin: 0">
-                        <common-button size="mini" type="text" @click="scope.row.popoverVisible=false">取消</common-button>
-                        <common-button type="primary" size="mini" @click="deleteRow(scope.row,scope.$index)">确定</common-button>
-                      </div>
-                      <template  #reference>
-                        <common-button type="danger" size="mini" @click="scope.row.popoverVisible=true">删除</common-button>
-                      </template>
-                    </el-popover>
+                    <common-button type="danger" size="mini" plain @click="deleteRow(scope.row, scope.$index)">删除</common-button>
                   </template>
                 </el-table-column>
               </common-table>
@@ -171,13 +159,13 @@
           <el-table-column align="center" label="编号" width="120">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input
                       v-model="scope.row.detailDTOList[0].serialNumber"
                       type="text"
                       placeholder="编号"
-                      style="width: 100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
@@ -187,13 +175,13 @@
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input
                       v-model="scope.row.detailDTOList[1].serialNumber"
                       type="text"
                       placeholder="编号"
-                      style="width: 100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
@@ -207,13 +195,13 @@
           <el-table-column align="center" label="规格" width="120">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input
                       v-model="scope.row.detailDTOList[0].specification"
                       type="text"
                       placeholder="规格"
-                      style="width: 100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
@@ -223,13 +211,13 @@
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input
                       v-model="scope.row.detailDTOList[1].specification"
                       type="text"
                       placeholder="规格"
-                      style="width: 100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
@@ -243,13 +231,13 @@
           <el-table-column align="center" label="材质" width="120">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input
                       v-model="scope.row.detailDTOList[0].material"
                       type="text"
                       placeholder="材质"
-                      style="width: 100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
@@ -259,13 +247,13 @@
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input
                       v-model="scope.row.detailDTOList[1].material"
                       type="text"
                       placeholder="材质"
-                      style="width: 100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
@@ -279,7 +267,7 @@
           <el-table-column align="center" label="长度" width="120">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input-number
                       v-model.number="scope.row.detailDTOList[0].length"
@@ -289,17 +277,17 @@
                       placeholder="长度"
                       :precision="DP.MES_ARTIFACT_L__MM"
                       controls-position="right"
-                      style="width:100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
                   <template v-else>
-                    {{ scope.row.detailDTOList[0].length? scope.row.detailDTOList[0].length.toFixed(DP.MES_ARTIFACT_L__MM): '-' }}
+                    {{ scope.row.detailDTOList[0].length ? scope.row.detailDTOList[0].length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
                   </template>
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input-number
                       v-model.number="scope.row.detailDTOList[1].length"
@@ -309,12 +297,12 @@
                       placeholder="长度"
                       :precision="DP.MES_ARTIFACT_L__MM"
                       controls-position="right"
-                      style="width:100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
                   <template v-else>
-                    {{ scope.row.detailDTOList[1].length? scope.row.detailDTOList[1].length.toFixed(DP.MES_ARTIFACT_L__MM): '-' }}
+                    {{ scope.row.detailDTOList[1].length ? scope.row.detailDTOList[1].length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
                   </template>
                 </template>
               </div>
@@ -323,7 +311,7 @@
           <el-table-column align="center" label="重量" width="120">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input-number
                       v-model.number="scope.row.detailDTOList[0].netWeight"
@@ -333,17 +321,17 @@
                       placeholder="重量"
                       :precision="DP.COM_WT__KG"
                       controls-position="right"
-                      style="width:100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
                   <template v-else>
-                    {{ scope.row.detailDTOList[0].netWeight? scope.row.detailDTOList[0].netWeight.toFixed(DP.COM_WT__KG): '-' }}
+                    {{ scope.row.detailDTOList[0].netWeight ? scope.row.detailDTOList[0].netWeight.toFixed(DP.COM_WT__KG) : '-' }}
                   </template>
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   <template v-if="scope.row.mainEdit">
                     <el-input-number
                       v-model.number="scope.row.detailDTOList[1].netWeight"
@@ -353,12 +341,12 @@
                       placeholder="重量"
                       :precision="DP.COM_WT__KG"
                       controls-position="right"
-                      style="width:100px;"
+                      style="width: 100px"
                       size="mini"
                     />
                   </template>
                   <template v-else>
-                    {{ scope.row.detailDTOList[1].netWeight? scope.row.detailDTOList[1].netWeight.toFixed(DP.COM_WT__KG): '-' }}
+                    {{ scope.row.detailDTOList[1].netWeight ? scope.row.detailDTOList[1].netWeight.toFixed(DP.COM_WT__KG) : '-' }}
                   </template>
                 </template>
               </div>
@@ -367,12 +355,12 @@
           <el-table-column align="center" label="数量">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   {{ scope.row.detailDTOList[0].quantity }}
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   {{ scope.row.detailDTOList[1].quantity }}
                 </template>
               </div>
@@ -381,12 +369,12 @@
           <el-table-column align="center" label="已使用">
             <template v-slot="scope">
               <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   {{ scope.row.detailDTOList[0].usedQuantity }}
                 </template>
               </div>
               <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length>0">
+                <template v-if="scope.row.detailDTOList.length > 0">
                   {{ scope.row.detailDTOList[1].usedQuantity }}
                 </template>
               </div>
@@ -398,8 +386,8 @@
             <span>{{ scope.row.remark }}</span>
           </template>
         </el-table-column>
-         <el-table-column
-          v-if="checkPermission([ ...permission.edit, ...permission.del ])"
+        <el-table-column
+          v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="260px"
           align="center"
@@ -408,18 +396,21 @@
           <template v-slot="scope">
             <template v-if="scope.row.mainEdit">
               <common-button type="info" size="mini" plain @click="cancelMainRow(scope.row)">取消</common-button>
-              <common-button type="primary" size="mini" @click="confirmRow(scope.row,scope.$index)">保存</common-button>
+              <common-button type="primary" size="mini" @click="confirmRow(scope.row, scope.$index)">保存</common-button>
             </template>
             <template v-else>
-              <common-button type="primary" icon="el-icon-edit" size="mini" @click="modifyRow(scope.row,scope.$index)" />
+              <common-button type="primary" icon="el-icon-edit" size="mini" @click="modifyRow(scope.row, scope.$index)" />
             </template>
-            <udOperation
-              :data="scope.row"
-              :show-edit="false"
+            <udOperation :data="scope.row" :show-edit="false" />
+            <common-button
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="addRow(scope.row, scope.$index)"
+              style="margin-left: 8px"
             />
-            <common-button type="primary" icon="el-icon-plus" size="mini" @click="addRow(scope.row,scope.$index)" style="margin-left:8px;"/>
           </template>
-      </el-table-column>
+        </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -443,7 +434,7 @@ import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject','globalProjectId'])
+const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['assembly:get'],
@@ -451,14 +442,14 @@ const permission = {
   importList: ['assembly:import'],
   del: ['assembly:del'],
   addArtifact: ['assembly:addArtifact'],
-  delArtifact: ['assembly:delArtifact']
+  delArtifact: ['assembly:delArtifact'],
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const tableRef = ref()
@@ -471,26 +462,24 @@ const tableRules = {
   quantity: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   length: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
+  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
-const { crud, columns, CRUD } = useCRUD(
-  {
-    title: '组立清单',
-    sort: [],
-    permission: { ...permission },
-    optShow: { ...optShow },
-    requiredQuery: ['areaId'],
-    crudApi: { ...crudApi },
-    hasPagination: true
-  }
-)
+const { crud, columns, CRUD } = useCRUD({
+  title: '组立清单',
+  sort: [],
+  permission: { ...permission },
+  optShow: { ...optShow },
+  requiredQuery: ['areaId'],
+  crudApi: { ...crudApi },
+  hasPagination: true,
+})
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 157,
 })
 
 watch(
@@ -524,7 +513,7 @@ async function confirmRow(val) {
   try {
     const editAssem = {
       id: val.id,
-      detailUpdateDTOParams: val.detailDTOList
+      detailUpdateDTOParams: val.detailDTOList,
     }
     await crudApi.edit(editAssem)
   } catch (e) {
@@ -550,7 +539,7 @@ function addRow(val, index) {
     specification: '',
     mainIndex: index,
     existStatus: 1,
-    add: true
+    add: true,
   })
 }
 async function addArtifact(val) {
@@ -574,7 +563,7 @@ async function deleteRow(val, index) {
     try {
       val.popoverVisible = false
       await delAssemblyArtifact(val.serialNumber, crud.data[val.mainIndex].id)
-      crud.notify("操作成功", CRUD.NOTIFICATION_TYPE.SUCCESS)
+      crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
       crud.toQuery()
     } catch (e) {
       console.log('删除构件', e)
@@ -588,7 +577,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v, index) => {
     v.mainEdit = false
     if (v.artifactDTOList && v.artifactDTOList.length > 0) {
-      v.artifactDTOList.forEach(k => {
+      v.artifactDTOList.forEach((k) => {
         k.mainIndex = index
         k.popoverVisible = false
       })
@@ -602,46 +591,47 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 ::v-deep(.abnormal-row) {
   background: #fdf5e6;
 }
-.customer-table{
-  ::v-deep(th){
-    border:none;
+.customer-table {
+  ::v-deep(th) {
+    border: none;
   }
-  ::v-deep(td){
-    border:none;
+  ::v-deep(td) {
+    border: none;
   }
-  ::v-deep(th.is-leaf){
-    border:none;
+  ::v-deep(th.is-leaf) {
+    border: none;
   }
-  ::v-deep(.el-input__inner){
+  ::v-deep(.el-input__inner) {
     padding: 0;
     padding-left: 5px;
     text-align: left;
   }
-  &::before{
+  &::before {
     width: 0;
   }
 }
-.sandwich-cell-top{
+.sandwich-cell-top {
   border-bottom: 1px solid #dfe6ec;
 }
-.sandwich-cell-top,.sandwich-cell-bottom{
-  padding:5px;
-  height:40px;
-  line-height:30px;
-  box-sizing:border-box;
-  overflow:hidden;
-  ::v-deep(.el-input__inner){
-    padding:0;
-    padding-left:2px;
+.sandwich-cell-top,
+.sandwich-cell-bottom {
+  padding: 5px;
+  height: 40px;
+  line-height: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+  ::v-deep(.el-input__inner) {
+    padding: 0;
+    padding-left: 2px;
   }
 }
-.assembly-table{
-  ::v-deep(.cell){
+.assembly-table {
+  ::v-deep(.cell) {
     padding-left: 0;
     padding-right: 0;
   }
-  ::v-deep(thead.is-group th){
-    background:#fff;
+  ::v-deep(thead.is-group th) {
+    background: #fff;
   }
 }
 </style>

@@ -10,7 +10,7 @@
       />
       <area-tabs
         class="filter-item"
-        style="width: calc(100% - 230px);"
+        style="width: calc(100% - 230px)"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
@@ -20,7 +20,7 @@
         v-model="query.serialNumber"
         size="small"
         placeholder="输入编号搜索"
-        style="width: 170px;"
+        style="width: 170px"
         class="filter-item"
         clearable
         @keyup.enter.native="crud.toQuery"
@@ -29,7 +29,7 @@
         v-model="query.specification"
         size="small"
         placeholder="输入规格搜索"
-        style="width: 170px;"
+        style="width: 170px"
         class="filter-item"
         clearable
         @keyup.enter.native="crud.toQuery"
@@ -38,7 +38,7 @@
         v-model="query.material"
         size="small"
         placeholder="输入材质搜索"
-        style="width: 170px;"
+        style="width: 170px"
         class="filter-item"
         clearable
         @keyup.enter.native="crud.toQuery"
@@ -66,19 +66,14 @@
           btn-text="下载组立清单"
           class="filter-item"
         />
-        <export-button
-          :fn="downloadAssembleTemplate"
-          show-btn-text
-          btn-text="组立清单模板"
-          class="filter-item"
-        />
+        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" />
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref,computed } from 'vue'
+import { defineProps, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -94,9 +89,12 @@ import { downloadAssemble, downloadAssembleTemplate } from '@/api/plan/technical
 const router = useRouter()
 
 const defaultQuery = {
-  name: '', serialNumber: '', specification: '', material: '',
+  name: '',
+  serialNumber: '',
+  specification: '',
+  material: '',
   monomerId: { value: undefined, resetAble: false },
-  areaId: { value: undefined, resetAble: false }
+  areaId: { value: undefined, resetAble: false },
 }
 
 const monomerSelectRef = ref()
@@ -109,16 +107,16 @@ const typeOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
-const exportParam = computed(()=>{
+const exportParam = computed(() => {
   const param = { ...crud.query }
   return param
 })
 
-const carryParam=computed(()=>{
+const carryParam = computed(() => {
   return { areaId: crud.query.areaId }
 })
 
@@ -126,7 +124,7 @@ function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
     id: name,
-    name: label
+    name: label,
   }
   crud.toQuery()
 }
@@ -135,11 +133,10 @@ function getAreaInfo(val) {
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
       id: areaInfo.value[0].id + '',
-      name: areaInfo.value[0].name
+      name: areaInfo.value[0].name,
     }
   } else {
     defaultTab.value = {}
   }
 }
-
 </script>

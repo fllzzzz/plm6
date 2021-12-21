@@ -12,7 +12,7 @@ const getEnclosure = {
         'hasPreviousPage': false,
         'hasNextPage': false,
         'totalElements': 2,
-        'content|1-100': [{
+        'content|1-5': [{
           ...enclosureListInfo,
           // 'category': Number(res.query.category),
           'printedQuantity|1-100': 1

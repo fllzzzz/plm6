@@ -1,7 +1,7 @@
 <template>
   <div class="hed-container">
     <div v-show="crud.searchToggle">
-      <!-- <monomerAreaTabs :project-id="projectId" @change="fetchMonomerAndArea" /> -->
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <slot name="customSearch" />
       <rrOperation />
     </div>
@@ -13,7 +13,6 @@
       tip="* 区域下没有含有任务的生产线"
       class="filter-item"
       @loaded="handleLinesLoaded"
-      @change="crud.toQuery"
     />
     <crudOperation>
       <template v-slot:optRight>
@@ -91,13 +90,15 @@ import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productionLineBoxSelect from '@comp-mes/production-line-box-select'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
   serialNumber: '',
   monomerId: { value: undefined, resetAble: false },
-  areaId: { value: undefined, resetAble: false }
+  areaId: { value: undefined, resetAble: false },
+  productionLineId: { value: undefined, resetAble: false }
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
@@ -112,6 +113,7 @@ const permission = inject('permission')
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    v.printedQuantity = v.printQuantity
     v.printQuantity = 1
     return v
   })
@@ -141,6 +143,7 @@ watch(
   },
   { immediate: true }
 )
+
 // 获取打印配置
 async function fetchPrintConfig() {
   try {
@@ -196,14 +199,12 @@ function handleCopiesChange(val) {
   }
 }
 
-// function fetchMonomerAndArea({ monomerId, areaId }) {
-//   query.monomerId = monomerId
-//   query.areaId = areaId
-//   crud.toQuery()
-// fetchHasTaskLine()
-// }
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+}
 
-const selectedAbleLineLoading = ref(true)
+const selectedAbleLineLoading = ref(false)
 const selectedAbleLineIds = ref([])
 const plBoxSelectRef = ref()
 const lines = ref([])
@@ -216,7 +217,6 @@ async function fetchHasTaskLine() {
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]
-      crud.toQuery()
     }
   } catch (error) {
     console.log('获取有任务的生产线', error)
@@ -227,9 +227,6 @@ async function fetchHasTaskLine() {
 function handleLinesLoaded() {
   if (plBoxSelectRef.value) {
     lines.value = plBoxSelectRef.value.getLines()
-    if (query.productionLineId) {
-      crud.toQuery()
-    }
   }
 }
 
@@ -238,7 +235,7 @@ function getLine() {
   for (const workshop of lines.value) {
     const productionLines = workshop.productionLineList || []
     for (const line of productionLines) {
-      if (line.id === this.query.productionLineId) {
+      if (line.id === query.productionLineId) {
         _line = {
           id: line.id,
           name: line.name,
@@ -252,7 +249,28 @@ function getLine() {
   return _line
 }
 
-fetchHasTaskLine()
+watch(
+  [() => query.monomerId, () => query.areaId],
+  ([monomerId, areaId]) => {
+    if (monomerId && areaId) {
+      fetchHasTaskLine()
+    }
+    if (monomerId && areaId && query.productionLineId) {
+      crud.toQuery()
+    }
+  },
+  { immediate: true }
+)
+
+watch(
+  () => query.productionLineId,
+  (productionLineId) => {
+    if (query.monomerId && query.areaId && productionLineId) {
+      crud.toQuery()
+    }
+  },
+  { immediate: true }
+)
 
 const { getLabelInfo, printLabelFunc } = inject('headerObj')
 const { batchPrint, print } = usePrintLabel({
@@ -261,7 +279,7 @@ const { batchPrint, print } = usePrintLabel({
   printFinallyHook: crud.toQuery,
   getLoadingTextFunc: (row) => `${row.name}-${row.serialNumber}`,
   printLabelFunc: printLabelFunc,
-  needAddPrintRecord: false,
+  needAddPrintRecord: true,
   addPrintIdField: 'taskId',
   addPrintRecordReq: addPrintRecord
 })

@@ -1,6 +1,6 @@
 <template>
   <div v-for="workshop in lines" :key="workshop.id" class="workshop-content">
-    <div class="workshop-titile">{{ workshop.name }}【{{ workshop.factoryName }}】</div>
+    <div class="workshop-title">{{ workshop.name }}【{{ workshop.factoryName }}】</div>
     <div class="production-lines-content">
       <template v-for="line in workshop.productionLineList" :key="line.id">
         <el-tag
@@ -49,7 +49,7 @@ function handleChange(workshop, line) {
   width: 100%;
   margin-bottom: 20px;
 
-  .workshop-titile {
+  .workshop-title {
     // color: #b54e4e;
     color: #1c75c6;
     font-weight: bold;

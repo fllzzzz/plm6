@@ -32,6 +32,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" align="center" />
@@ -263,6 +264,8 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['areaId', 'productionLineId'],
+    queryOnPresenterCreated: false,
     invisibleColumns: ['remark']
   },
   tableRef

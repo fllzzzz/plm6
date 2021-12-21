@@ -1,7 +1,7 @@
 <template>
   <div id="baseContainer" class="app-container">
     <el-form
-      ref="baseRef"
+      ref="formRef"
       :model="form"
       :rules="rules"
       inline
@@ -170,7 +170,7 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? toThousand(detail.contractAmount.toFixed(DP.YUAN)):'' }}</span>
+              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -188,7 +188,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.prepayments? toThousand(detail.prepayments.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ detail.prepayments? detail.prepayments.toThousand(): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -201,7 +201,7 @@
                 placeholder="先输入费率"
               />
               <template v-else>
-                <span>{{ managementFee? toThousand(managementFee): '' }}</span>
+                <span>{{ managementFee? managementFee.toThousand(): '' }}</span>
               </template>
             </div>
             <div class="input-underline" style="display:inline-block;width:130px">
@@ -238,7 +238,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? toThousand(detail.marginAmount.toFixed(DP.YUAN)): '' }}</span>
+                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -256,7 +256,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.marginType && dict && dict.label">{{ dict.label['margin_type'][detail.marginType] }}</span>
+                <span v-if="detail.marginType && dict && dict.label && dict.label['margin_type']">{{ dict.label['margin_type'][detail.marginType] }}</span>
               </template>
             </div>
           </el-form-item>
@@ -274,7 +274,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.currencyType && dict && dict.label">{{ dict.label['currency_type'][detail.currencyType]}}</span>
+                <span v-if="detail.currencyType && dict && dict.label && dict.label['currency_type']">{{ dict.label['currency_type'][detail.currencyType]}}</span>
               </template>
             </div>
           </el-form-item>
@@ -320,7 +320,7 @@ import { DP } from '@/settings/config'
 import { ElLoading } from 'element-plus'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 
-const baseRef = ref()
+const formRef = ref()
 const dict = useDict(['margin_type','currency_type'])
 const defaultForm = {
   id: undefined,
@@ -419,17 +419,16 @@ const managementFee=computed(()=>{
  * 重置表单
  */
 function resetForm() {
-  if (baseRef.value) {
-    baseRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
   }
   form.value  = JSON.parse(JSON.stringify(detail.value))
-  useWatchFormValidate(baseRef, form.value)
-  useWatchFormValidate(baseRef, form.value)
+  useWatchFormValidate(formRef, form)
 }
 
 async function validateForm() {
   try {
-    const valid = await baseRef.value.validate()
+    const valid = await formRef.value.validate()
     if (valid) {
       const data = JSON.parse(JSON.stringify(form.value))
       // data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
@@ -474,12 +473,6 @@ async function fetchDetail() {
   if (!props.projectId) {
     return
   }
-  // const loading = ElLoading.service({
-  //   target: '#baseContainer',
-  //   lock: true,
-  //   text: '请稍后，正在加载合同基础信息',
-  //   fullscreen: false
-  // })
   let _detail = {}
   try {
     const res = await getContractBase(props.projectId)
@@ -495,7 +488,6 @@ async function fetchDetail() {
   } finally {
     detail.value = _detail
     resetForm(detail.value)
-    // loading.close()
   }
 }
 
