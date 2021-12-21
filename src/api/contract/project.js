@@ -74,14 +74,14 @@ export function editStatus(projectId,status) {
   })
 }
 
-// export function editUsers(data) {
-//   return request({
-//     module: 'contract',
-//     url: 'project',
-//     method: 'put',
-//     data
-//   })
-// }
+export function editUsers(projectId,data) {
+  return request({
+    module: 'contract',
+    url: `project/${projectId}/users`,
+    method: 'put',
+    data
+  })
+}
 
 /**
  * 获取围护配置信息列表
