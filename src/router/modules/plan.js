@@ -1,6 +1,6 @@
 // 路由：计划管理
 export default {
-  id: 1377,
+  id: 6,
   name: '计划管理',
   children: [
     // {

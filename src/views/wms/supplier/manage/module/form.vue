@@ -16,8 +16,8 @@
         <common-button size="mini" @click="crud.cancelCU">关 闭</common-button>
       </span>
     </template>
-    <div class="form">
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
+    <div class="form" >
+      <el-form v-loading="crud.editDetailLoading" ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
         <div class="rule-row">
           <el-form-item label="供应商名称" prop="name">
             <el-input  v-model="form.name" maxlength="32" show-word-limit placeholder="请输入供应商名称" />
@@ -142,13 +142,12 @@
 </template>
 
 <script setup>
-import { detail, downloadAttachment } from '@/api/wms/supplier/manage'
+import { downloadAttachment } from '@/api/wms/supplier/manage'
 import { ref } from 'vue'
 
 import { supplierClassEnum } from '@enum-ms/supplier'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { getBitwiseBack } from '@data-type/number'
-import { getLabelByBit } from '@/utils/enum/base'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
@@ -194,18 +193,17 @@ const rules = {
   supplierClass: [{ required: true, message: '请选择供应商分类', trigger: 'blur' }]
 }
 
-CRUD.HOOK.beforeToEdit = async () => {
+// 编辑时详情加载完成后
+CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   try {
-    const supplierDetail = await detail(crud.form.id)
+    const supplierDetail = { ...form }
     const list = [supplierDetail.countryId, supplierDetail.provinceId, supplierDetail.cityId, supplierDetail.regionId]
     supplierDetail.area = list.filter(val => {
       return !(!val || val === '')
     })
     supplierDetail.files = supplierDetail.attachments || []
     supplierDetail.supplierClass = getBitwiseBack(supplierDetail.supplierClassification)
-    supplierDetail.supplierClassificationLable = getLabelByBit(supplierClassEnum, supplierDetail.supplierClassification, '、')
     Object.assign(crud.form, supplierDetail)
-    getEnterpriseTypeName(crud.form.enterpriseType)
   } catch (error) {
     crud.notify('获取供应商详情失败', CRUD.NOTIFICATION_TYPE.ERROR)
   }
@@ -217,34 +215,15 @@ CRUD.HOOK.beforeSubmit = async () => {
   crud.form.contacts = crud.form.contacts.filter(v => v.name || v.phone || v.email)
 }
 
-function handleRegionChange(val) {
-  crud.form.countryId = undefined
-  crud.form.provinceId = undefined
-  crud.form.cityId = undefined
-  crud.form.regionId = undefined
-  val && val.forEach((v, i) => {
-    if (i === 0) {
-      crud.form.countryId = v
-    }
-    if (i === 1) {
-      crud.form.provinceId = v
-    }
-    if (i === 2) {
-      crud.form.cityId = v
-    }
-    if (i === 3) {
-      crud.form.regionId = v
-    }
+// 地区选择
+function handleRegionChange(val = []) {
+  const keys = ['countryId', 'provinceId', 'cityId', 'regionId']
+  keys.forEach((key, index) => {
+    crud.form[key] = val && val[index] || undefined
   })
 }
 
-// 获取企业类型名称
-function getEnterpriseTypeName(type) {
-  dict.value.enterprise_type.forEach(item => {
-    if (item.value === type) crud.form.enterpriseTypeName = item.label
-  })
-}
-
+// 供应商分类选择
 function handleSupplierClass(val) {
   let supplierClass
   if (val) {

@@ -4,6 +4,7 @@ import { supplierIsHideEnum } from '@enum-ms/supplier'
 const getSupplierList = {
   url: '/api/wms/supplier',
   method: 'get',
+  timeout: 1000,
   response: () => {
     return {
       code: 20000,
@@ -27,6 +28,7 @@ const getSupplierList = {
 const getSupplierDetail = {
   url: RegExp('/api/wms/supplier/' + '\\d'),
   method: 'get',
+  timeout: 1000,
   response: () => {
     return {
       code: 20000,
@@ -51,7 +53,7 @@ const getSupplierDetail = {
         'countryId': null,
         'countryName': null,
         'createTime': 1624931744500,
-        'enterpriseType': null,
+        'enterpriseType': 1,
         'bankAccount': null,
         'bankName': null,
         'id': 1,
@@ -71,7 +73,7 @@ const getSupplierDetail = {
         'registrationDate': null,
         'shortName': null,
         'socialCode': null,
-        'supplierClassification': 64,
+        'supplierClassification|2-3': 3,
         'supplierCode': 'HD-2021629-02',
         'supplierNumber': 1,
         'updateTime': null,
