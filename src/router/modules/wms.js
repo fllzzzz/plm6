@@ -1,6 +1,6 @@
 // 路由：WMS
 export default {
-  id: 475,
+  id: 5,
   name: 'WMS',
   children: [
     {
