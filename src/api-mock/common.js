@@ -978,6 +978,29 @@ const uploadAttachment = {
   response: () => {
     return {
       code: 20000,
+      data: {
+        'id': 3,
+        'name': '-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
+        'imageUrl': 'http://wfxhxg.natappfree.cc/files\\supplier\\1637723900129_-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
+        'tinyImageUrl': 'http://wfxhxg.natappfree.cc/files\\supplier\\1637723900129_-7Q5-gty6XeZ3uT3cS1hc-u0_256.jpg',
+        'createUserId': 1,
+        'createUserName': 'xxx',
+        'type': 50,
+        'createTime': 1637723901000
+      },
+      message: '操作成功'
+    }
+  }
+}
+
+const uploadAttachmentList = {
+  url: '/api/common/attachment',
+  method: 'post',
+  headers: { 'Content-Type': 'multipart/form-data' },
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
       data: [{
         'id': 3,
         'name': '-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
@@ -997,6 +1020,7 @@ export default [
   getUserTree,
   getRegionalTree,
   uploadAttachment,
+  uploadAttachmentList,
   getUserAllSimple,
   getDeptAllSimple,
   getSuppliersBrief,

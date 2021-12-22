@@ -426,10 +426,10 @@ function resetForm() {
 async function validateForm() {
   try {
     const valid = await formRef.value.validate()
-    // if (valid) {
-    //   const data = JSON.parse(JSON.stringify(form.value))
-    //   data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
-    // }
+    if (valid) {
+      const data = form.value
+      data.attachments = data.attachments.length > 0 ? data.attachments.map(v => v.id) : []
+    }
     return valid
   } catch (error) {
     console.log('error', error)

@@ -56,7 +56,7 @@ export function getSuppliersBrief() {
 }
 
 /**
- * 上传公用附件
+ * 上传公用附件(返回对象)
  * @param {number} fileType 文件类型
  * @param {string} file 二进制文件
  */
@@ -64,6 +64,21 @@ export function uploadAttachment(data) {
   return request({
     module: 'common',
     url: 'attachment',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data
+  })
+}
+
+/**
+ * 批量上传公用附件(返回数组)
+ * @param {number} fileType 文件类型
+ * @param {string} file 二进制文件
+ */
+export function uploadAttachmentList(data) {
+  return request({
+    module: 'common',
+    url: 'attachment/batch',
     method: 'post',
     headers: { 'Content-Type': 'multipart/form-data' },
     data

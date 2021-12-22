@@ -11,13 +11,16 @@ const numberTypeEnum = {
   DOMESTIC_VISA: { L: '对内签证', K: 'DOMESTIC_VISA', V: 6 },
   BREACH_RECORD: { L: '违约记录', K: 'BREACH_RECORD', V: 7 },
   REQUISITIONS: { L: '申购合同', K: 'REQUISITIONS', V: 8 },
-  STORAGE: { L: '入库单', K: 'STORAGE', V: 9 },
-  OUTBOUND: { L: '出库单', K: 'OUTBOUND', V: 10 },
+  INBOUND: { L: '入库单', K: 'INBOUND', V: 9 },
+  OUTBOUND_APPLY: { L: '出库申请单', K: 'OUTBOUND_APPLY', V: 10 },
   SALES_RETURN: { L: '退货单', K: 'SALES_RETURN', V: 11 },
   MATERIAL_RETURN: { L: '退库单', K: 'MATERIAL_RETURN', V: 12 },
   WAREHOUSE_VERIFICATION: { L: '入库核销单', K: 'WAREHOUSE_VERIFICATION', V: 13 },
   WITHDRAWAL_VERIFICATION: { L: '退货核销单', K: 'WITHDRAWAL_VERIFICATION', V: 14 },
-  SUPPLIER: { L: '供应商', K: 'SUPPLIER', V: 15 }
+  LOGISTICS_ORDER: { L: '供应商', K: 'LOGISTICS_ORDER', V: 16 },
+  SUPPLIER: { L: '物流订单', K: 'SUPPLIER', V: 15 },
+  OUTBOUND_REVIEW: { L: '出库审核单', K: 'OUTBOUND_REVIEW', V: 17 },
+  TRANSFER: { L: '调拨单', K: 'TRANSFER', V: 18 }
 }
 constantize(numberTypeEnum)
 

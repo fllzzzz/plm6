@@ -8,8 +8,8 @@ const getNumber = {
       code: 20000,
       message: '成功',
       data: {
-        'totalElements': 15,
-        'content|15': [
+        'totalElements': 18,
+        'content|18': [
           {
             'type|+1': 1,
             'code': /[A-Z0-9]{1,10}/,
