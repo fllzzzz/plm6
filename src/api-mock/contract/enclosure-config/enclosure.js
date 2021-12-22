@@ -354,7 +354,7 @@ const getEnclosure = {
 }
 
 const addEnclosure = {
-  url: `/api/enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V}`,
+  url: `/api/enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V}`,
   method: 'post',
   timeout: 1000,
   response: () => {
