@@ -251,7 +251,7 @@ const permission = {
 const optShow = {
   add: true,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 

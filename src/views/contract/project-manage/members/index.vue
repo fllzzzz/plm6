@@ -87,9 +87,7 @@ const treeLoading = ref(false)
 watch(
   () => filterText.value,
   (val) => {
-    if (val) {
-      tree.value.filter(val)
-    }
+    tree.value.filter(val)
   }
 )
 

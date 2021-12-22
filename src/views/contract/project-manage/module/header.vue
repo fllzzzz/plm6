@@ -28,7 +28,8 @@
         class="date-item filter-item"
         style="width:100px!important"
         placeholder="选择年"
-        value-format="yyyy"
+        format="YYYY"
+        value-format="YYYY"
         @change="crud.toQuery"
       />
       <el-input
