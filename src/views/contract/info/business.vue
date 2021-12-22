@@ -60,7 +60,7 @@
                   placeholder="项目内容,可多选"
                   class="input-underline"
                   style="width: 320px"
-                  @change="getshowItem"
+                  @change="getShowItem"
                 >
                   <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
@@ -100,7 +100,7 @@
                   style="width: 200px"
                 />
                 <template v-else>
-                  <span v-parse-time="'{y}-{m}-{d}'">{{ detail.signingDate }}</span>
+                  <span v-if="detail.signingDate">{{ parseTime(detail.signingDate,'{y}-{m}-{d}') }}</span>
                 </template>
               </div>
             </el-form-item>
@@ -119,26 +119,34 @@
           </div>
           <div class="form-row">
             <el-form-item label="工程结算方式" prop="structureMeasureMode">
-              <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
-              <span v-else>{{
-                isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
-              }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
+                <span v-else>{{
+                  isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
+                }}</span>
+              </div>
             </el-form-item>
             <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-              <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
-              <span v-else>{{
-                isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
-              }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
+                <span v-else>{{
+                  isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
+                }}</span>
+              </div>
             </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="运输方式" prop="transportMode">
-              <common-radio v-if="isModify" v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" />
-              <span v-else>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" />
+                <span v-else>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
+              </div>
             </el-form-item>
             <el-form-item label="支付方式" prop="payType">
-              <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
-              <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
+                <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
+              </div>
             </el-form-item>
           </div>
           <div class="form-row">
@@ -245,6 +253,7 @@ import { isNotBlank } from '@data-type/index'
 import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show'
 import EnclosureForm from '@/views/contract/project-manage/module/enclosure-form'
 import { getContractBusiness, getContractTechInfo, getContentInfo } from '@/api/contract/project'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 let projectContent1 = []
@@ -320,11 +329,15 @@ watch(
   { deep: true, immediate: true }
 )
 
+// watch(
+//   () => props.isModify,
+//   (val) => {
+//     resetForm()
+//   },
+//   { deep: true, immediate: true }
+// )
+
 function resetForm() {
-  // 清除表单信息
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
   form.value = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(formRef, form)
 }
@@ -348,7 +361,7 @@ function businessChange() {
 //   enclosureVisible.value = true
 // }
 
-function getshowItem(val) {
+function getShowItem(val) {
   showItem.value = []
   showCategory.value = []
   const totalArr = [
@@ -470,7 +483,7 @@ async function fetchDetail() {
         form.value.projectContent.push(v.id)
       })
     }
-    getshowItem(form.value.projectContent)
+    getShowItem(form.value.projectContent)
     // loading.close()
   }
 }

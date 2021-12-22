@@ -6,9 +6,14 @@
           <el-input v-model="filterText" class="filter-item" placeholder="输入关键字进行过滤" style="width: 270px" />
         </div>
         <div class="filter-right-box" style="display: inline-block">
-          <common-button v-if="!isEditing" class="filter-item" size="small" type="primary" icon="el-icon-edit" @click="isEditing = true"
-            >修改</common-button
-          >
+          <common-button
+            v-if="!isEditing"
+            class="filter-item"
+            size="small"
+            type="primary"
+            icon="el-icon-edit"
+            @click="isEditing = true"
+            >修改</common-button>
           <div v-else style="display: inline-block">
             <common-button class="filter-item" size="small" type="warning" icon="el-icon-refresh" @click="cancelEdit">取消</common-button>
             <common-button
@@ -54,17 +59,17 @@ const emit = defineEmits(['success'])
 const props = defineProps({
   permission: {
     type: Object,
-    required: true,
+    required: true
   },
   projectId: {
-    type: [Number, String],
+    type: [Number, String]
   },
   refresh: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
-const { loaded, userDeptTree } = useUserDeptTree()
+const { userDeptTree } = useUserDeptTree()
 
 const tree = ref()
 const filterText = ref()
@@ -72,7 +77,7 @@ const isEditing = ref(false)
 const submitLoading = ref(false)
 const defaultProps = {
   children: 'children',
-  label: 'label',
+  label: 'label'
 }
 const disabledUser = ref([])
 const noDisabledUser = ref([])
@@ -82,9 +87,7 @@ const treeLoading = ref(false)
 watch(
   () => filterText.value,
   (val) => {
-    if (val) {
-      tree.value.filter(val)
-    }
+    tree.value.filter(val)
   }
 )
 
@@ -163,7 +166,7 @@ async function submit() {
     checkedList.value = checkedNodes
     ElMessage({
       message: '更新项目成员成功',
-      type: 'success',
+      type: 'success'
     })
     isEditing.value = false
     emit('success')

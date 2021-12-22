@@ -203,7 +203,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose } from 'vue'
 import { dateDifference } from '@/utils/date'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
@@ -238,7 +238,7 @@ const defaultForm = {
   projectManagerId: undefined, // 项目经理
   businessLeaderId: undefined, // 业务负责人1
   businessLeaderTwoId: undefined, // 业务负责人2
-  attachments: [], // 附件
+  attachments: [] // 附件
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -246,26 +246,26 @@ const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const rules = {
   serialNumber: [
     { required: true, message: '请填写合同编号', trigger: 'blur' },
-    { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' },
+    { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
   ],
   name: [
     { required: true, message: '请填写项目名称', trigger: 'blur' },
-    { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' },
+    { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
   ],
   shortName: [
     { required: true, message: '请填写项目简称', trigger: 'blur' },
-    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' },
+    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   contractAmount: [{ required: true, message: '请填写合同金额', trigger: 'blur' }],
   address: [{ max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }],
-  signingAddress: [{ max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }],
+  signingAddress: [{ max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }]
 }
 
 const props = defineProps({
   formData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 watch(
@@ -347,7 +347,7 @@ function handleRegionChange(val) {
 }
 
 defineExpose({
-  validateForm,
+  validateForm
 })
 </script>
 <style lang="scss" scoped>

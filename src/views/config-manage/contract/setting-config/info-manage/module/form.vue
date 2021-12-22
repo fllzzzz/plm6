@@ -89,9 +89,7 @@ const checkedList = ref([])
 watch(
   () => filterText.value,
   (val) => {
-    if (val) {
-      treeRef.value.filter(val)
-    }
+    treeRef.value.filter(val)
   }
 )
 

@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, defineExpose } from 'vue'
 import regionCascader from '@comp-base/region-cascader'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/validate/pattern'
@@ -93,7 +93,7 @@ const defaultForm = {
   customerManagerOne: undefined, // 负责人1名称
   customerManagerOnePhone: undefined, // 负责人1联系电话
   customerManagerTwo: undefined, // 负责人2名称
-  customerManagerTwoPhone: undefined, // 负责人2联系电话
+  customerManagerTwoPhone: undefined // 负责人2联系电话
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -101,7 +101,7 @@ const rules = {
   customerUnit: [{ max: 50, message: '长度不超过 50 个字符', trigger: 'blur' }],
   socialCode: [
     { max: 50, message: '长度不超过 30 个字符', trigger: 'blur' },
-    { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message },
+    { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }
   ],
   customerEmail: [{ type: 'email', message: '请填写正确的邮箱地址', trigger: 'blur' }],
   customerUnitPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
@@ -109,19 +109,19 @@ const rules = {
   customerBankName: [{ max: 50, message: '长度不超过 50 个字符', trigger: 'blur' }],
   customerBankCode: [
     { max: 30, message: '长度不超过 30 个字符', trigger: 'blur' },
-    { pattern: validatorNatural, message: '请输入数字', trigger: 'blur' },
+    { pattern: validatorNatural, message: '请输入数字', trigger: 'blur' }
   ],
   customerManagerOne: [{ max: 20, message: '长度不超过 20个字符', trigger: 'blur' }],
   customerManagerOnePhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
   customerManagerTwo: [{ max: 20, message: '长度不超过 20 个字符', trigger: 'blur' }],
-  customerManagerTwoPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }],
+  customerManagerTwoPhone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }]
 }
 
 const props = defineProps({
   formData: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 watch(
@@ -188,7 +188,7 @@ function resetForm(data) {
 }
 
 defineExpose({
-  validateForm,
+  validateForm
 })
 </script>
 <style lang="scss" scoped>

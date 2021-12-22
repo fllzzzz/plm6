@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, computed, watch } from 'vue'
 import { TechnologyTypeEnum } from '@enum-ms/contract'
 import { ElRadioGroup } from 'element-plus'
 import sandwichTable from './enclosure-table/sandwich-table'
@@ -52,6 +52,17 @@ const props = defineProps({
   }
 })
 const boardType = ref()
+
+watch(
+  () => props.showItem,
+  (val) => {
+    if (val.length > 0) {
+      boardType.value = props.showItem[0]
+    }
+  },
+  { deep: true, immediate: true }
+)
+
 const currentView = computed(() => {
   switch (boardType.value) {
     case TechnologyTypeEnum.STRUCTURE.V: return structureTable
@@ -62,69 +73,6 @@ const currentView = computed(() => {
     default: return ''
   }
 })
-// import sandwichTable from './enclosure-table/sandwich-table'
-// import pressedColorTable from './enclosure-table/pressed-color-table'
-// import pressedSupportTable from './enclosure-table/pressed-support-table'
-// import structureTable from './enclosure-table/structure-table'
-// import trussSupportTable from './enclosure-table/truss-support-table'
-// import { TechnologyTypeEnum as typeEnum } from '@/utils/enum/index'
-
-// export default {
-//   components: { sandwichTable, pressedColorTable, pressedSupportTable, structureTable, trussSupportTable },
-//   props: {
-//     tableData: {
-//       type: Object,
-//       default: () => {
-//         return {
-//           [typeEnum.STRUCTURE.V]: [],
-//           [typeEnum.PROFILEDPLATE.V]: [],
-//           [typeEnum.TRUSSFLOORPLATE.V]: [],
-//           [typeEnum.PRESSUREBEARINGPLATE.V]: [],
-//           [typeEnum.SANDWICH_BOARD.V]: []
-//         }
-//       }
-//     },
-//     showItem: {
-//       type: Array,
-//       default: () => {
-//         return []
-//       }
-//     }
-//   },
-//   data() {
-//     return {
-//       boardType: undefined,
-//       typeEnum
-//     }
-//   },
-//   computed: {
-//     currentView() {
-//       switch (this.boardType) {
-//         case typeEnum.STRUCTURE.V: return 'structure-table'
-//         case typeEnum.PROFILEDPLATE.V : return 'pressed-color-table'
-//         case typeEnum.TRUSSFLOORPLATE.V: return 'truss-support-table'
-//         case typeEnum.PRESSUREBEARINGPLATE.V : return 'pressed-support-table'
-//         case typeEnum.SANDWICH_BOARD.V: return 'sandwich-table'
-//         default: return ''
-//       }
-//     },
-//     copyTableData() {
-//       return JSON.parse(JSON.stringify(this.tableData))
-//     }
-//   },
-//   watch: {
-//     copyTableData(val) {
-//       if (!this.boardType) {
-//         this.boardType = typeEnum.SANDWICH_BOARD.V
-//         if (val[typeEnum.SANDWICH_BOARD.V].length) {
-//           this.boardType = typeEnum.SANDWICH_BOARD.V
-//         } else if (val[typeEnum.PRESSED_COLOR_BOARD.V].length) {
-//           this.boardType = typeEnum.PRESSED_COLOR_BOARD.V
-//         }
-//       }
-//     }
-//   }
-// }
 </script>
 
 <style lang='scss' scoped>

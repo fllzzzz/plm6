@@ -25,8 +25,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { DP } from '@/settings/config'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 const props = defineProps({
   tableData: {
     type: Array,
@@ -38,14 +37,26 @@ const props = defineProps({
   }
 })
 
+const techTableData = ref([])
+
+watch(
+  () => props.tableData,
+  (val) => {
+    techTableData.value = props.tableData
+  },
+  { deep: true, immediate: true }
+)
+
 const emit = defineEmits(['edit'])
 
-function deleteRow (index){
-  props.tableData.splice(index, 1)
+function deleteRow(index) {
+  techTableData.value.splice(index, 1)
+  // props.tableData.splice(index, 1)
 }
 
 function editRow(index, row) {
   emit('edit', row)
-  props.tableData.splice(index, 1)
+  techTableData.value.splice(index, 1)
+  // props.tableData.splice(index, 1)
 }
 </script>

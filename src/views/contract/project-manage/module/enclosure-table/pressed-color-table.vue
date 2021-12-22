@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 import { DP } from '@/settings/config'
 const props = defineProps({
   tableData: {
@@ -63,15 +63,27 @@ const props = defineProps({
   }
 })
 
+const techTableData = ref([])
+
 const emit = defineEmits(['edit'])
 
-function deleteRow (index){
-  props.tableData.splice(index, 1)
+watch(
+  () => props.tableData,
+  (val) => {
+    techTableData.value = props.tableData
+  },
+  { deep: true, immediate: true }
+)
+
+function deleteRow(index) {
+  techTableData.value.splice(index, 1)
+  // props.tableData.splice(index, 1)
 }
 
 function editRow(index, row) {
   emit('edit', row)
-  props.tableData.splice(index, 1)
+  techTableData.value.splice(index, 1)
+  // props.tableData.splice(index, 1)
 }
 
 </script>
