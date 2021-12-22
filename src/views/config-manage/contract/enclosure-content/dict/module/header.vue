@@ -4,12 +4,12 @@
       v-model="query.type"
       :options="TechnologyTypeEnum.ENUM"
       type="enum"
-      :disabled-val="[TechnologyTypeEnum.ENUM.STRUCTURE.V]"
+      :disabled-val="[TechnologyTypeEnum.STRUCTURE.V]"
       class="filter-item"
       @change="crud.toQuery"
     />
   </div>
-  <crudOperation v-if="query.type===TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V"/>
+  <crudOperation v-if="query.type===TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V"/>
 </template>
 
 <script setup>

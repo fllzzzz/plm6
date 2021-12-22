@@ -98,7 +98,7 @@ const defaultQuery = {
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false },
-  category: { value: TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V, resetAble: false }
+  category: { value: TechnologyTypeEnum.SANDWICH_BOARD.V, resetAble: false }
 }
 
 const monomerSelectRef = ref()
@@ -114,7 +114,7 @@ const props = defineProps({
 })
 
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, category: TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V }
+  return { areaId: crud.query.areaId, category: TechnologyTypeEnum.SANDWICH_BOARD.V }
 })
 
 const exportParam = computed(() => {

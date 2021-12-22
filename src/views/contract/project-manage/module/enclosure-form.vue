@@ -20,7 +20,7 @@
             :prop="item.field"
             :rules="item.rules?item.rules:[]"
           >
-            <template v-if="boardType!=TechnologyTypeEnum.ENUM.STRUCTURE.V && boardType!=TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V">
+            <template v-if="boardType!=TechnologyTypeEnum.STRUCTURE.V && boardType!=TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V">
               <el-select
                 v-model="form[item.field]"
                 filterable
@@ -41,7 +41,7 @@
             </template>
             <template v-else>
               <el-select
-                v-if="boardType==TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V"
+                v-if="boardType==TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V"
                 v-model="form[item.field]"
                 filterable
                 clearable
@@ -80,7 +80,7 @@
           </el-form-item>
         </div>
       </div>
-      <div v-if="boardType==TechnologyTypeEnum.ENUM.STRUCTURE.V">
+      <div v-if="boardType==TechnologyTypeEnum.STRUCTURE.V">
         <div class="form-title" style="margin-bottom:10px;">技术要求描述</div>
         <el-form-item prop="techDesc">
           <el-input
@@ -142,11 +142,11 @@ const props = defineProps({
 })
 const boardType = ref()
 const tableData = ref({
-  [TechnologyTypeEnum.ENUM.STRUCTURE.V]: [],
-  [TechnologyTypeEnum.ENUM.PROFILED_PLATE.V]: [],
-  [TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V]: [],
-  [TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V]: [],
-  [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: []
+  [TechnologyTypeEnum.STRUCTURE.V]: [],
+  [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+  [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+  [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+  [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
 })
 const form = ref({
   dict: {}
@@ -172,7 +172,7 @@ watch(
     if (boardType.value) {
       reset()
     }
-    if (boardType.value && boardType.value !== TechnologyTypeEnum.ENUM.STRUCTURE.V) {
+    if (boardType.value && boardType.value !== TechnologyTypeEnum.STRUCTURE.V) {
       fetchDict()
     }
   },
@@ -191,11 +191,11 @@ watch(
 
 const currentView = computed(() => {
   switch (boardType.value) {
-    case TechnologyTypeEnum.ENUM.STRUCTURE.V: return structureTable
-    case TechnologyTypeEnum.ENUM.PROFILED_PLATE.V : return pressedColorTable
-    case TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V: return trussSupportTable
-    case TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V : return pressedSupportTable
-    case TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V: return sandwichTable
+    case TechnologyTypeEnum.STRUCTURE.V: return structureTable
+    case TechnologyTypeEnum.PROFILED_PLATE.V : return pressedColorTable
+    case TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V: return trussSupportTable
+    case TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V : return pressedSupportTable
+    case TechnologyTypeEnum.SANDWICH_BOARD.V: return sandwichTable
     default: return ''
   }
 })
@@ -242,7 +242,7 @@ const validateWidth = (rule, value, callback) => {
 
 const FIELD_INFO = {
   // 结构
-  [TechnologyTypeEnum.ENUM.STRUCTURE.V]: [
+  [TechnologyTypeEnum.STRUCTURE.V]: [
     {
       type: '产品种类',
       fields: [
@@ -251,7 +251,7 @@ const FIELD_INFO = {
     }
   ],
   // 压型彩板
-  [TechnologyTypeEnum.ENUM.PROFILED_PLATE.V]: [
+  [TechnologyTypeEnum.PROFILED_PLATE.V]: [
     {
       type: '产品信息',
       fields: [
@@ -273,7 +273,7 @@ const FIELD_INFO = {
     }
   ],
   // 桁架楼承板
-  [TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V]: [
+  [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [
     {
       type: '编号',
       fields: [
@@ -282,7 +282,7 @@ const FIELD_INFO = {
     }
   ],
   // 压型楼承板
-  [TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V]: [
+  [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [
     {
       type: '产品信息',
       fields: [
@@ -303,7 +303,7 @@ const FIELD_INFO = {
     }
   ],
   // 夹芯板
-  [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: [
+  [TechnologyTypeEnum.SANDWICH_BOARD.V]: [
     {
       type: '产品信息',
       fields: [
@@ -369,7 +369,7 @@ function handleBlur(e, field, dictName) {
   form.value[field] = val
   // this.$set(this.form, field, val)
   // 储存 手动输入的值 项目保存的时候调用批量新增配置接口
-  if (boardType.value !== TechnologyTypeEnum.ENUM.STRUCTURE.V && boardType.value !== TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V) {
+  if (boardType.value !== TechnologyTypeEnum.STRUCTURE.V && boardType.value !== TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) {
     const labels = typeDict.value[dictName] && typeDict.value[dictName].map(v => v.label) || []
     if (!labels.includes(val) && val) {
       form.value.dict[dictName] = {
@@ -389,7 +389,7 @@ function addRow() {
         ElMessage({ message: '请填写数据', type: 'warning' })
         return
       }
-      if (boardType.value === TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V) {
+      if (boardType.value === TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) {
         const trussVal = trussDict.value.find(k => k.code === form.value.code)
         if (trussVal) {
           trussVal.list.map(v => {
@@ -419,14 +419,14 @@ async function fetchDict() {
   try {
     typeDict.value = {}
     trussDict.value = []
-    const { content } = boardType.value !== TechnologyTypeEnum.ENUM.STRUCTURE.V ? await getEnclosureDictList(boardType.value) : props.showCategory
-    if (boardType.value !== TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V && boardType.value !== TechnologyTypeEnum.ENUM.STRUCTURE.V) {
+    const { content } = boardType.value !== TechnologyTypeEnum.STRUCTURE.V ? await getEnclosureDictList(boardType.value) : props.showCategory
+    if (boardType.value !== TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V && boardType.value !== TechnologyTypeEnum.STRUCTURE.V) {
       content.forEach(o => {
         typeDict.value[o.name] = o.labels
         // this.$set(this.typeDict, o.name, o.labels)
       })
     }
-    trussDict.value = boardType.value === TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V ? content : []
+    trussDict.value = boardType.value === TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V ? content : []
     loading.value = false
   } catch (error) {
     loading.value = false
@@ -494,7 +494,7 @@ defineExpose({
 
 // const FIELD_INFO = {
 //   // 结构
-//   [TechnologyTypeEnum.ENUM.STRUCTURE.V]: [
+//   [TechnologyTypeEnum.STRUCTURE.V]: [
 //     {
 //       type: '产品种类',
 //       fields: [
@@ -503,7 +503,7 @@ defineExpose({
 //     }
 //   ],
 //   // 压型彩板
-//   [TechnologyTypeEnum.ENUM.PROFILED_PLATE.V]: [
+//   [TechnologyTypeEnum.PROFILED_PLATE.V]: [
 //     {
 //       type: '产品信息',
 //       fields: [
@@ -525,7 +525,7 @@ defineExpose({
 //     }
 //   ],
 //   // 桁架楼承板
-//   [TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V]: [
+//   [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [
 //     {
 //       type: '编号',
 //       fields: [
@@ -534,7 +534,7 @@ defineExpose({
 //     }
 //   ],
 //   // 压型楼承板
-//   [TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V]: [
+//   [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [
 //     {
 //       type: '产品信息',
 //       fields: [
@@ -555,7 +555,7 @@ defineExpose({
 //     }
 //   ],
 //   // 夹芯板
-//   [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: [
+//   [TechnologyTypeEnum.SANDWICH_BOARD.V]: [
 //     {
 //       type: '产品信息',
 //       fields: [
@@ -659,11 +659,11 @@ defineExpose({
 //         dict: {}
 //       },
 //       tableData: {
-//         [TechnologyTypeEnum.ENUM.STRUCTURE.V]: [],
-//         [TechnologyTypeEnum.ENUM.PROFILED_PLATE.V]: [],
-//         [TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V]: [],
-//         [TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V]: [],
-//         [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: []
+//         [TechnologyTypeEnum.STRUCTURE.V]: [],
+//         [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+//         [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+//         [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+//         [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
 //       },
 //       quantityRules: [
 //         { validator: validateQuantity, trigger: ['change', 'blur'] }
@@ -689,11 +689,11 @@ defineExpose({
 //   computed: {
 //     currentView() {
 //       switch (this.boardType) {
-//         case TechnologyTypeEnum.ENUM.STRUCTURE.V: return 'structure-table'
-//         case TechnologyTypeEnum.ENUM.PROFILED_PLATE.V : return 'pressed-color-table'
-//         case TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V: return 'truss-support-table'
-//         case TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V : return 'pressed-support-table'
-//         case TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V: return 'sandwich-table'
+//         case TechnologyTypeEnum.STRUCTURE.V: return 'structure-table'
+//         case TechnologyTypeEnum.PROFILED_PLATE.V : return 'pressed-color-table'
+//         case TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V: return 'truss-support-table'
+//         case TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V : return 'pressed-support-table'
+//         case TechnologyTypeEnum.SANDWICH_BOARD.V: return 'sandwich-table'
 //         default: return ''
 //       }
 //     }
