@@ -111,6 +111,7 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/mes/production-config/workshop'
 import { ref, defineProps, computed, watch, inject } from 'vue'
+import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -121,6 +122,8 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
+
+const store = useStore()
 
 // crud交由presenter持有
 const permission = {
@@ -187,6 +190,7 @@ async function changeStatus(data, val) {
   } catch (error) {
     console.log('变更车间状态', error)
     data.boolEnabledEnum = data.boolEnabledEnum === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
+    changeStoreLoaded()
   }
 }
 
@@ -196,6 +200,14 @@ CRUD.HOOK.beforeToQuery = () => {
 
 CRUD.HOOK.beforeSubmit = () => {
   crud.form.factoryId = factoryId
+}
+
+// 编辑之后 取消缓存的已加载设置
+CRUD.HOOK.afterSubmit = () => {
+  changeStoreLoaded()
+}
+function changeStoreLoaded() {
+  store.commit('config/SET_LOADED', { key: 'workshops', loaded: false })
 }
 </script>
 

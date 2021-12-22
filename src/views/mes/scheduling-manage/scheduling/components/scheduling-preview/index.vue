@@ -259,7 +259,6 @@ async function submit() {
     // 数据格式处理
     const list = []
     modifiedData.value.forEach((i) => {
-      console.log(i)
       const schedulingList = obj2arr(i.schedulingMap)
       // 数量不存在则填写为0
       schedulingList.forEach((s) => {
@@ -278,7 +277,6 @@ async function submit() {
         })
       })
     })
-    console.log(list)
     await save({ schedulingList: list })
     handleClose()
     emit('success', list)

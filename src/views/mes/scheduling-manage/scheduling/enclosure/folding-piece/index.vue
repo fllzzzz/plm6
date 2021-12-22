@@ -45,143 +45,12 @@
         label="区域"
         width="120px"
       />
-      <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="名称"
-        width="120px"
-      />
-      <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
-        prop="serialNumber"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="编号"
-        width="140px"
-      />
-      <el-table-column
-        v-if="columns.visible('color')"
-        key="color"
-        prop="color"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="颜色"
-        width="100px"
-      />
-      <el-table-column
-        v-if="columns.visible('material')"
-        key="material"
-        prop="material"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="材质"
-        width="120px"
-      />
-      <el-table-column
-        v-if="columns.visible('length')"
-        key="length"
-        prop="length"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`单长\n(mm)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <span>{{ toFixed(scope.row.length, DP.MES_ENCLOSURE_L__MM) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('thickness')"
-        key="thickness"
-        prop="thickness"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`板厚\n(mm)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <span>{{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('width')"
-        key="width"
-        prop="width"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`有效宽度\n(mm)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <span>{{ toFixed(scope.row.width, DP.MES_ENCLOSURE_W__MM) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalArea')"
-        key="totalArea"
-        prop="totalArea"
-        sortable="custom"
-        fixed
-        :label="`总面积\n(㎡)`"
-        align="left"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <span>{{ toFixed(scope.row.totalArea, DP.COM_AREA__M2) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalLength')"
-        key="totalLength"
-        prop="totalLength"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`总长度\n(m)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <span>{{ toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('weight')"
-        key="weight"
-        prop="weight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`重量\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          <span>{{ toFixed(scope.row.weight, DP.COM_WT__KG) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('remark')"
-        key="remark"
-        prop="remark"
-        fixed
-        :show-overflow-tooltip="true"
-        label="备注"
-        width="120px"
+      <productType-base-info-columns
+        :productType="componentTypeEnum.ENCLOSURE.V"
+        enclosureShowItem
+        :category="mesEnclosureTypeEnum.FOLDING_PIECE.V"
+        :columns="columns"
+        :fixed="'left'"
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
@@ -277,14 +146,13 @@ import { provide, ref } from 'vue'
 
 import { componentTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
-import { DP } from '@/settings/config'
-import { toFixed } from '@data-type'
 import { mapGetters } from '@/store/lib'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 
 // crud交由presenter持有
@@ -315,7 +183,6 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '折边件排产',
-    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

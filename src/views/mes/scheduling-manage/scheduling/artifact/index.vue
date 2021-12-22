@@ -63,154 +63,7 @@
         label="区域"
         width="120px"
       />
-      <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="名称"
-        width="120px"
-      />
-      <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
-        prop="serialNumber"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="编号"
-        width="140px"
-      />
-      <el-table-column
-        v-if="columns.visible('specification')"
-        key="specification"
-        prop="specification"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="规格"
-        width="140px"
-      />
-      <el-table-column
-        v-if="columns.visible('length')"
-        key="length"
-        prop="length"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`长度\n(mm)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('material')"
-        key="material"
-        prop="material"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="材质"
-        width="80px"
-      />
-      <el-table-column
-        v-if="columns.visible('netWeight')"
-        key="netWeight"
-        prop="netWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`单净重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.netWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('grossWeight')"
-        key="grossWeight"
-        prop="grossWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`单毛重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.grossWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalNetWeight')"
-        key="totalNetWeight"
-        prop="totalNetWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`总净重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.totalNetWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalGrossWeight')"
-        key="totalGrossWeight"
-        prop="totalGrossWeight"
-        sortable="custom"
-        fixed
-        :show-overflow-tooltip="true"
-        :label="`总毛重\n(kg)`"
-        align="center"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.totalGrossWeight, DP.COM_WT__KG) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('drawingNumber')"
-        key="drawingNumber"
-        prop="drawingNumber"
-        fixed
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="图号"
-        width="140px"
-      />
-      <el-table-column
-        v-if="columns.visible('surfaceArea')"
-        key="surfaceArea"
-        prop="surfaceArea"
-        sortable="custom"
-        fixed
-        :label="`面积\n(㎡)`"
-        align="left"
-        width="80px"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.surfaceArea, DP.COM_AREA__M2) }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('remark')"
-        key="remark"
-        prop="remark"
-        fixed
-        :show-overflow-tooltip="true"
-        label="备注"
-        width="120px"
-      />
+      <productType-base-info-columns :productType="componentTypeEnum.ARTIFACT.V" :columns="columns" :fixed="'left'" />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -306,13 +159,13 @@ import { provide, ref } from 'vue'
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
-import { toFixed } from '@data-type'
 import { mapGetters } from '@/store/lib'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 
 // crud交由presenter持有
@@ -344,7 +197,6 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '二次排产',
-    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

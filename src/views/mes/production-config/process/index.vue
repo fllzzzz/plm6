@@ -186,6 +186,7 @@
 <script setup>
 import crudApi from '@/api/mes/production-config/process'
 import { ref } from 'vue'
+import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 
 import {
@@ -204,6 +205,8 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
+
+const store = useStore()
 
 // crud交由presenter持有
 const permission = {
@@ -342,5 +345,10 @@ CRUD.HOOK.beforeSubmit = () => {
   if (crud.form.sequenceType === typeEnum.ENCLOSURE.V) {
     crud.form.type = processTypeEnum.TWICE.V
   }
+}
+
+// 编辑之后 取消缓存的已加载设置
+CRUD.HOOK.afterSubmit = () => {
+  store.commit('config/SET_LOADED', { key: 'process', loaded: false })
 }
 </script>

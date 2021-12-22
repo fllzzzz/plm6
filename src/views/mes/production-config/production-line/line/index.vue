@@ -104,6 +104,7 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/mes/production-config/production-line'
 import { ref, defineEmits, inject } from 'vue'
+import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -114,6 +115,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { ElMessageBox } from 'element-plus'
 
+const store = useStore()
 const emit = defineEmits(['click-line'])
 
 // crud交由presenter持有
@@ -160,6 +162,7 @@ async function changeStatus(data, val) {
   } catch (error) {
     console.log('变更生产线状态', error)
     data.boolEnabledEnum = data.boolEnabledEnum === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
+    changeStoreLoaded()
   }
 }
 
@@ -167,6 +170,14 @@ function handleCurrentChange(val) {
   if (val) {
     emit('click-line', val)
   }
+}
+
+// 编辑之后 取消缓存的已加载设置
+CRUD.HOOK.afterSubmit = () => {
+  changeStoreLoaded()
+}
+function changeStoreLoaded() {
+  store.commit('config/SET_LOADED', { key: 'productLines', loaded: false })
 }
 </script>
 

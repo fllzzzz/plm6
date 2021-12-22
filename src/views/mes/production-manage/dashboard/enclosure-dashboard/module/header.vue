@@ -114,7 +114,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.detailLoading = false
     v.hasDetail = false
-    v.compareQuantity = v.taskQuantity
+    v.compareQuantity = v.quantity
     v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
     return v
   })
