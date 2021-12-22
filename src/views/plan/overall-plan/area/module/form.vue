@@ -23,12 +23,15 @@
           />
         </el-form-item>
         <el-form-item label="制造方式" prop="type">
-          <common-radio-button
-            v-model="form.type"
-            :options="manufactureTypeEnum.ENUM"
-            type="enum"
-            size="small"
-          />
+          <el-radio-group v-model="form.type" size="small" class="filter-item"  @change="crud.toQuery">
+            <el-radio-button
+              v-for="item in manufactureTypeEnum.ENUM"
+              :key="item.V"
+              :label="item.V"
+            >
+              {{ item.L }}
+            </el-radio-button>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="区域名称" prop="name">
           <el-input
@@ -85,6 +88,7 @@
 import { ref, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { manufactureTypeEnum } from '@enum-ms/plan'
+import { ElRadioGroup } from 'element-plus'
 
 const formRef = ref()
 const props = defineProps({
