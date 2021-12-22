@@ -142,40 +142,40 @@ const optShow = {
 
 const tableRef = ref()
 const techOptions = [
-  { label: '构件(t)', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.ENUM.STRUCTURE.V, alias: 'STRUCTURE' },
+  { label: '构件(t)', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE' },
   {
     label: '压型板(t)',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.PROFILED_PLATE.V,
+    no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
     alias: 'ENCLOSURE'
   },
   {
     label: '桁架楼承板(t)',
     key: 'trussFloorPlate',
     dateKey: 'trussFloorPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.TRUSS_FLOOR_PLATE.V,
+    no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
     alias: 'ENCLOSURE'
   },
   {
     label: '夹芯板(t)',
     key: 'battenBoard',
     dateKey: 'battenBoardDate',
-    no: TechnologyTypeAllEnum.ENUM.SANDWICH_BOARD.V,
+    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
     alias: 'ENCLOSURE'
   },
   {
     label: '压型楼承板(t)',
     key: 'pressureBearingPlate',
     dateKey: 'pressureBearingPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.PRESSURE_BEARING_PLATE.V,
+    no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
     alias: 'ENCLOSURE'
   },
   {
     label: '折边件(t)',
     key: 'flangingPiece',
     dateKey: 'flangingPieceDate',
-    no: TechnologyTypeAllEnum.ENUM.BENDING.V,
+    no: TechnologyTypeAllEnum.BENDING.V,
     alias: 'ENCLOSURE'
   }
 ]

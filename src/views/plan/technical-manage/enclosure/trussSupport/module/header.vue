@@ -99,7 +99,7 @@ const defaultQuery = {
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false },
-  category: { value: TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V, resetAble: false }
+  category: { value: TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V, resetAble: false }
 }
 
 const monomerSelectRef = ref()
@@ -115,7 +115,7 @@ const props = defineProps({
 })
 
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, category: TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V }
+  return { areaId: crud.query.areaId, category: TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V }
 })
 
 const exportParam = computed(() => {

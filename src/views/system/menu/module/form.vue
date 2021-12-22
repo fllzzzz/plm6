@@ -131,7 +131,7 @@ import { menuTree } from '@/api/system/menu'
 import { systemMenusTypeEnum, systemMenusCategoryEnum } from '@enum-ms/system'
 import { permissionTypeAll } from '@/api/system/permission-type'
 import menuSelect from '@/components-system/common/tree-select.vue'
-import IconSelect from '@comp/icon-select/index.vue'
+import IconSelect from '@comp/IconSelect/index.vue'
 import { isNotBlank } from '@data-type/index'
 import { ElRadioGroup } from 'element-plus'
 

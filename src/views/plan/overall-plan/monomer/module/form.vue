@@ -187,7 +187,7 @@ watch(
           key: 'flangingPiece',
           dateKey: 'flangingPieceDate',
           alias: 'ENCLOSURE',
-          no: TechnologyTypeAllEnum.ENUM.BENDING.V
+          no: TechnologyTypeAllEnum.BENDING.V
         }
         currentOption.value.push(optionVal)
       }

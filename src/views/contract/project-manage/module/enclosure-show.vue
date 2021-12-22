@@ -36,11 +36,11 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {
-        [TechnologyTypeEnum.ENUM.STRUCTURE.V]: [],
-        [TechnologyTypeEnum.ENUM.PROFILED_PLATE.V]: [],
-        [TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V]: [],
-        [TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V]: [],
-        [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: []
+        [TechnologyTypeEnum.STRUCTURE.V]: [],
+        [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+        [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+        [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+        [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
       }
     }
   },
@@ -54,11 +54,11 @@ const props = defineProps({
 const boardType = ref()
 const currentView = computed(() => {
   switch (boardType.value) {
-    case TechnologyTypeEnum.ENUM.STRUCTURE.V: return structureTable
-    case TechnologyTypeEnum.ENUM.PROFILED_PLATE.V : return pressedColorTable
-    case TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V: return trussSupportTable
-    case TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V : return pressedSupportTable
-    case TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V: return sandwichTable
+    case TechnologyTypeEnum.STRUCTURE.V: return structureTable
+    case TechnologyTypeEnum.PROFILED_PLATE.V : return pressedColorTable
+    case TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V: return trussSupportTable
+    case TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V : return pressedSupportTable
+    case TechnologyTypeEnum.SANDWICH_BOARD.V: return sandwichTable
     default: return ''
   }
 })
