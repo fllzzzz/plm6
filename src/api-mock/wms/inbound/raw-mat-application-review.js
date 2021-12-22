@@ -276,7 +276,7 @@ const detail_id1 = {
           // {
           //   id: 3,
           //   sn: '110_0',
-          //   specification: '57*21*3*9',
+          //   specification: '57*21*3*9 * Q325B',
           //   classifyId: 110,
           //   basicClass: matClsEnum.SECTION_STEEL.V,
           //   quantity: 1,
@@ -410,7 +410,7 @@ const detail_id2 = {
           {
             id: 1,
             classifyId: 204,
-            specification: 'M27*60',
+            specification: 'M27 * 60',
             color: '天蓝',
             basicClass: matClsEnum.STEEL_PLATE.V,
             quantity: 10,

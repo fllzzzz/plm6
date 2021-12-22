@@ -138,7 +138,7 @@ const getAllPackage = {
 }
 
 const getHasTaskLine = {
-  url: '/api/mes/building/productionLine/hasTask',
+  url: '/api/mes/building/task/productionLine/hasTask',
   method: 'get',
   timeout: 1000,
   response: () => {

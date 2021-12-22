@@ -1,65 +1,48 @@
 <template>
-  <el-radio-group v-model="c_value" :size="size" @change="selectChange">
-    <el-radio-button :label="undefined"> 全部项目 </el-radio-button>
+  <el-radio-group v-model="copyValue" :size="size" @change="selectChange">
+    <el-radio-button :label="0"> 全部项目 </el-radio-button>
     <el-radio-button :label="globalProjectId || -1" :disabled="!globalProjectId"> 当前项目 </el-radio-button>
   </el-radio-group>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, watchEffect, ref } from 'vue'
 import { mapGetters } from '@/store/lib'
+import { isNotBlank } from '@/utils/data-type'
 import { ElRadioGroup } from 'element-plus'
 
 const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
   modelValue: {
-    type: Number,
+    type: [Number, undefined],
     default: undefined
   },
   size: {
     type: String,
     default: 'small'
-  },
-  // TODO: 注释
-  type: {
-    type: String,
-    default: 'default' // default / all
   }
 })
 const { globalProjectId } = mapGetters(['globalProjectId'])
-const c_value = ref()
+const copyValue = ref()
 
-watch(
-  () => props.modelValue,
-  (val) => {
-    c_value.value = val ? val.value : undefined
-  }
-)
-
-watch(
-  () => globalProjectId,
-  (val) => {
-    if (props.type === 'default' || (props.type === 'all' && props.modelValue)) {
-      c_value.value = val.value
-      selectChange(c_value.value)
-    }
-  }
-)
-
-function init() {
-  if (props.type === 'default' && !props.modelValue && globalProjectId) {
-    c_value.value = globalProjectId.value
-    selectChange(c_value.value)
-  } else {
-    c_value.value = props.modelValue
-  }
-}
+watchEffect(() => {
+  copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : 0
+})
 
 function selectChange(val) {
+  console.log(val, 'dad', props.modelValue)
+  if (val === 0) val = undefined
   emit('update:modelValue', val)
   emit('change', val)
 }
 
+function init() {
+  if (isNotBlank(globalProjectId.value)) {
+    copyValue.value = globalProjectId.value
+    selectChange(copyValue.value)
+  }
+}
 init()
+
 </script>
 

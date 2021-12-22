@@ -1,4 +1,4 @@
-import { transferTypeEnum, partyAMatTransferEnum } from '@enum-ms/wms'
+import { transferTypeEnum, partyAMatTransferEnum, transferCreateTypeEnum } from '@enum-ms/wms'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { matClsEnum, rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
@@ -165,6 +165,7 @@ const get = {
           },
           {
             id: 2, // 调拨单id
+            transferCreateType: transferCreateTypeEnum.OUTBOUND.V,
             basicClass: rawMatClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
             source: [
@@ -533,7 +534,7 @@ const detail_id2 = {
           {
             id: 1,
             classifyId: 204,
-            specification: 'M27*60',
+            specification: 'M27 * 60',
             basicClass: matClsEnum.MATERIAL.V,
             boolPartyA: true, // 甲供材料
             quantity: 10,
@@ -717,7 +718,7 @@ const detail_id4 = {
           {
             id: 1,
             classifyId: 204,
-            specification: 'M27*60',
+            specification: 'M27 * 60',
             basicClass: matClsEnum.MATERIAL.V,
             boolPartyA: true, // 甲供材料
             brand: '嘻嘻',

@@ -50,6 +50,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" align="center" />
@@ -258,7 +259,7 @@ import { ref, provide } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
+import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
 import { printArtifact as printComponent } from '@/utils/print/index'
@@ -294,12 +295,12 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['areaId', 'productionLineId'],
+    queryOnPresenterCreated: false,
     invisibleColumns: ['totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
   },
   tableRef
 )
-
-console.log('label artifact init')
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
@@ -351,11 +352,11 @@ function getLabelInfo(row) {
     manufacturerName: printConfig.manufacturerName,
     qrCode: spliceQrCodeUrl(`${baseUrl}/#${QR_SCAN_PATH.ARTIFACT_TASK}`, {
       id: row.id, // id
+      ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
       factoryId: productionLine.factoryId, // 工厂id
       taskId: row.taskId, // 任务id
       type: componentTypeEnum.ARTIFACT.V, // 类型
       wt: printConfig.weight, // 重量类型
-      mn: printConfig.manufacturerName, // 制造商名称
       sl: Number(printConfig.showProductionLine), // 显示生产线
       sa: Number(printConfig.showArea), // 显示区域
       sm: Number(printConfig.showMonomer) // 显示单体

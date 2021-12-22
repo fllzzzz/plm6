@@ -16,23 +16,31 @@
           placeholder="备注"
           maxlength="200"
           show-word-limit
-          style="width:400px"
+          style="width: 400px"
         />
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
     <el-table-column prop="classifyFullName" label="物料种类" align="center" width="120px" fixed="left" />
-    <el-table-column prop="specification" label="规格" align="center" width="170px" fixed="left">
+    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left">
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (mm)`">
+    <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
-        <el-input-number v-model="row.length" :max="999999" :controls="false" :min="0" :precision="0" size="mini" placeholder="长" />
+        <el-input-number
+          v-model="row.length"
+          :max="999999"
+          :controls="false"
+          :min="0"
+          :precision="baseUnit.length.precision"
+          size="mini"
+          placeholder="长"
+        />
       </template>
     </el-table-column>
     <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
@@ -44,7 +52,7 @@
           controls-position="right"
           :controls="false"
           :step="5"
-          :precision="0"
+          :precision="baseUnit.measure.precision"
           size="mini"
           placeholder="数量"
         />
@@ -193,10 +201,7 @@ function rowWatch(row) {
 async function calcTheoryWeight(row) {
   row.theoryWeight = await calcSectionSteelWeight({
     length: row.length, // 长度
-    unitWeight: row.unitWeight, // 单位重量
-    lengthUnit: baseUnit.value.length.unit, // 长度单位
-    weightUnit: baseUnit.value.weight.unit, // 重量单位
-    precision: baseUnit.value.weight.precision // 重量小数精度
+    unitWeight: row.unitWeight // 单位重量
   })
 }
 

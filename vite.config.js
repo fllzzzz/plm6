@@ -17,7 +17,8 @@ export default ({ command }) => {
     brotliSize: false, // 关闭计算打包时间
     server: {
       open: true,
-      host: '172.16.1.103',
+      // host: '172.16.3.4',
+      host: 'localhost',
       port: 668, // 本地服务端口
       strictPort: false // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口
       // proxy: {
@@ -45,10 +46,10 @@ export default ({ command }) => {
             } else {
               return `element-plus/packages/theme-chalk/src/${name}.scss`
             }
-          },
-          resolveComponent: (name) => {
-            return `element-plus/lib/${name}`
           }
+          // resolveComponent: (name) => {
+          //   return `element-plus/lib/${name}`
+          // }
         }]
       }),
       // SVG插件
@@ -62,9 +63,9 @@ export default ({ command }) => {
         supportTs: false, // 打开后，可以读取 ts 文件模块。 请注意，打开后将无法监视.js 文件。 默认：true
         mockPath: 'src/api-mock/',
         localEnabled: command === 'serve', // 情景配置 是否为开发模式  serve 或 build
-        prodEnabled: command !== 'serve' && import.meta.env.PROD_MOCK,
+        prodEnabled: command !== 'serve' && import.meta.env && import.meta.env.PROD_MOCK,
         injectCode: `
-          import { setupProdMockServer } from 'src/plugins/mock-prod-server';
+          import { setupProdMockServer } from '/src/plugins/mock-prod-server';
           setupProdMockServer();
         `
       })

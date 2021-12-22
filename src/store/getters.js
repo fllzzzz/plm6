@@ -74,7 +74,9 @@ const getters = {
   globalProject: state => state.project.curProject,
   // 系统当前项目类型（Navbar）
   currentProjectType: state => state.project.projectType,
-  //当前项目信息
+  // 显示所有项目
+  navbarShowAll: state => state.project.navbarShowAll,
+  // 当前项目信息
   currentProject: state => state.project.currentProject,
   // 当前页面项目类型
   routeProjectType: state => state.project.routeProjectType,

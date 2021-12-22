@@ -243,11 +243,11 @@ const { globalProjectId, currentProjectType } = mapGetters(['globalProjectId', '
 // crud交由presenter持有
 const permission = {
   get: ['contract:get'],
-  add: ['contract:add'],
+  // add: ['contract:add'],
   detail: ['contract:detail'],
   editStatus: ['contract:editStatus'],
   download: ['contract:download'],
-  editMembers: ['contract:editMembers']
+  editMembers: ['contract:editMembers'],
 }
 
 const optShow = {

@@ -131,14 +131,14 @@ const permission = {
   get: ['monomer:get'],
   add: ['monomer:add'],
   edit: ['monomer:edit'],
-  del: ['monomer:del'],
+  del: ['monomer:del']
 }
 
 const optShow = {
   add: true,
   edit: false,
   del: true,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -149,37 +149,38 @@ const techOptions = [
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
     no: TechnologyTypeAllEnum.ENUM.PROFILEDPLATE.V,
-    alias: 'ENCLOSURE',
+    alias: 'ENCLOSURE'
   },
   {
     label: '桁架楼承板(t)',
     key: 'trussFloorPlate',
     dateKey: 'trussFloorPlateDate',
     no: TechnologyTypeAllEnum.ENUM.TRUSSFLOORPLATE.V,
-    alias: 'ENCLOSURE',
+    alias: 'ENCLOSURE'
   },
   {
     label: '夹芯板(t)',
     key: 'battenBoard',
     dateKey: 'battenBoardDate',
     no: TechnologyTypeAllEnum.ENUM.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE',
+    alias: 'ENCLOSURE'
   },
   {
     label: '压型楼承板(t)',
     key: 'pressureBearingPlate',
     dateKey: 'pressureBearingPlateDate',
     no: TechnologyTypeAllEnum.ENUM.PRESSUREBEARINGPLATE.V,
-    alias: 'ENCLOSURE',
+    alias: 'ENCLOSURE'
   },
   {
     label: '折边件(t)',
     key: 'flangingPiece',
     dateKey: 'flangingPieceDate',
     no: TechnologyTypeAllEnum.ENUM.BENDING.V,
-    alias: 'ENCLOSURE',
-  },
+    alias: 'ENCLOSURE'
+  }
 ]
+
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '单体',
@@ -196,7 +197,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.monomer',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 watch(

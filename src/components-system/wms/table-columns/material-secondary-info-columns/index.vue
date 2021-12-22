@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-batch-no="showBatchNo" />
+  <component :is="comp" :basicClass="basicClass" :columns="columns" :show-batch-no="showBatchNo" :fixed="fixed" />
 </template>
 
 <script setup>
@@ -20,6 +20,10 @@ const props = defineProps({
     // 显示炉批号
     type: Boolean,
     default: true
+  },
+  fixed: {
+    // 定位
+    type: String
   }
 })
 

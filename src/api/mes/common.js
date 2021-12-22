@@ -68,7 +68,7 @@ export function getAllPackage(params) {
 export function getHasTaskLine({ areaId, monomerId, type }) {
   return request({
     module: 'mes',
-    url: 'productionLine/hasTask',
+    url: 'task/productionLine/hasTask',
     method: 'get',
     params: { areaId, monomerId, type }
   })

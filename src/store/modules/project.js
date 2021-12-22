@@ -32,6 +32,8 @@ const state = {
   userProjectsCascadeMap: {},
   // 加载状态
   loaded: false,
+  // 显示所有
+  navbarShowAll: storage.get('navbarShowAll') || false,
   currentProject: storage.get('currentProject') || {}
 }
 
@@ -73,6 +75,11 @@ const mutations = {
   },
   SET_USER_PROJECTS_CASCADE: (state, cascade) => {
     state.userProjectsCascade = cascade
+  },
+  // 设置showAll
+  SET_NAVBAR_SHOW_ALL: (state, showAll) => {
+    state.navbarShowAll = showAll
+    storage.set('navbarShowAll', showAll)
   }
 }
 

@@ -624,6 +624,7 @@ function addCrudBusinessMethod(crud) {
   }
 
   const toEdit = async (data) => {
+    crud.resetForm(JSON.parse(JSON.stringify(data)))
     // 避免editDetailLoading未正确重置为false的情况，因此在头部初始化
     crud.editDetailLoading = false
     if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
@@ -642,8 +643,6 @@ function addCrudBusinessMethod(crud) {
           ElMessage.error('加载失败')
           crud.editDetailLoading = false
         })
-    } else {
-      crud.resetForm(JSON.parse(JSON.stringify(data)))
     }
     if (!((await callVmHook(crud, CRUD.HOOK.beforeToEdit, crud.form)) && (await callVmHook(crud, CRUD.HOOK.beforeToCU, crud.form)))) {
       return
@@ -1053,8 +1052,8 @@ function addCrudFeatureMethod(crud, data) {
   // 获取查询参数
   const getQueryParams = () => {
     return {
-      page: crud.hasPagination ? crud.page.page : undefined,
-      size: crud.hasPagination ? crud.page.size : undefined,
+      pageNumber: crud.hasPagination ? crud.page.page : undefined,
+      pageSize: crud.hasPagination ? crud.page.size : undefined,
       sort: crud.sort,
       ...crud.query,
       ...crud.params

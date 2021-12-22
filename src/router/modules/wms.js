@@ -1,6 +1,6 @@
 // 路由：WMS
 export default {
-  id: 475,
+  id: 5,
   name: 'WMS',
   children: [
     {
@@ -39,6 +39,24 @@ export default {
           hidden: false,
           component: '/wms/inbound-application-record/raw-mat/index',
           meta: { title: '原材料-入库申请', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/return-application',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSReturnApplication',
+      alwaysShow: false,
+      redirect: '/wms/return-application/steel-plate/index',
+      meta: { title: '入库办理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'SteelPlateReturnApplication',
+          path: 'steel-plate',
+          hidden: false,
+          component: '/wms/return-application/steel-plate/index',
+          meta: { title: '钢板退库', icon: 'project', noCache: true }
         }
       ]
     },
@@ -203,6 +221,24 @@ export default {
           hidden: false,
           component: '/wms/purchase-order/index',
           meta: { title: '采购订单', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/requisitions-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSRequisitions',
+      alwaysShow: false,
+      redirect: '/wms/requisitions',
+      meta: { title: '申购订单管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'requisitions',
+          path: 'requisitions',
+          hidden: false,
+          component: '/wms/requisitions/index',
+          meta: { title: '申购订单', icon: 'project', noCache: true }
         }
       ]
     },

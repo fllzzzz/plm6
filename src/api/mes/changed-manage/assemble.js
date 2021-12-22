@@ -8,12 +8,3 @@ export function change(data) {
     data
   })
 }
-
-export function taskList(params) {
-  return request({
-    module: 'mes',
-    url: 'abnormal/assemble/task',
-    method: 'get',
-    params
-  })
-}

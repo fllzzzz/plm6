@@ -14,8 +14,21 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="140px" />
-      <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" label="工序次序" width="100px">
+      <el-table-column
+        v-if="columns.visible('name') && crud.query.sequenceType !== typeEnum.MACHINE_PART.V"
+        key="name"
+        prop="name"
+        :show-overflow-tooltip="true"
+        label="名称"
+        width="140px"
+      />
+      <el-table-column
+        v-if="columns.visible('processType') && crud.query.sequenceType === typeEnum.ARTIFACT.V"
+        key="processType"
+        prop="processType"
+        label="工序次序"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ processTypeEnum.VL[scope.row.processType] }}</span>
         </template>
@@ -58,10 +71,12 @@
 
 <script setup>
 import crudApi, { editWageQuota as edit } from '@/api/mes/production-config/product-process'
+import { getMachinePart } from '@/api/mes/production-config/wage-quota'
 import { ref } from 'vue'
 
 import { isNotBlank } from '@data-type/index'
 import { parseTime } from '@/utils/date'
+import { deepClone } from '@/utils/data-type'
 import { wageQuotaTypeEnum, processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -97,30 +112,46 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
+CRUD.HOOK.beforeToQuery = () => {
+  crud.crudApi.get = crud.query.sequenceType === typeEnum.MACHINE_PART.V ? getMachinePart : crudApi.get
+}
+
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map(v => {
-    v.createTime = parseTime(v.createTime)
-    v.process = JSON.parse(JSON.stringify(v.medBuildingProductProcessLinkList))
+  res.data.content = res.data.content.map((v) => {
+    if (crud.query.sequenceType === typeEnum.MACHINE_PART.V) {
+      v.processName = v.name
+      v.processId = v.id
+      v.sequenceType = typeEnum.MACHINE_PART.V
+      v.productProcessId = 0 // 零件没有总工序id
+      v.process = [{ ...v, wageQuota: deepClone(v) }]
+    } else {
+      v.createTime = parseTime(v.createTime)
+      v.process = deepClone(v.medBuildingProductProcessLinkList)
+    }
     if (v.process && v.process.length > 0) {
       v.processOption = {}
       v.totalPrice = 0
-      v.process.forEach(o => {
+      v.process.forEach((o) => {
         v.processOption[o.processId] = {
           id: o.processId,
           name: o.processName,
-          wageQuota: o.wageQuota,
+          price: o.wageQuota.price,
+          wageQuotaType: o.wageQuotaType,
           productProcessId: o.productProcessId
         }
-        v.totalPrice += o.wageQuota.weightPrice || 0
+        v.totalPrice += o.wageQuota.price || 0
       })
-      v.processSequence = v.process.map(v => {
-        const priceField = isNotBlank(v.wageQuota.wageQuotaType) ? wageQuotaTypeEnum[wageQuotaTypeEnum.VK[v.wageQuota.wageQuotaType]].F : ''
-        const unit = isNotBlank(v.wageQuota.wageQuotaType) ? wageQuotaTypeEnum[wageQuotaTypeEnum.VK[v.wageQuota.wageQuotaType]].unit : ''
-        return `<span>【${v.processName} │ <span style="color: #67C23A;">${priceField ? v.wageQuota[priceField] + ' ' : '-'}${unit}</span>】</span>`
-      }).join('<span>→</span>')
-      v.processSequenceIds = v.process.map(v => v.processId)
+      v.processSequence = v.process
+        .map((v) => {
+          const unit = isNotBlank(v.wageQuotaType) ? wageQuotaTypeEnum[wageQuotaTypeEnum.VK[v.wageQuotaType]].unit : ''
+          return `<span>【${v.processName} │ <span style="color: #67C23A;">${
+            isNotBlank(v.wageQuota?.price) ? v.wageQuota.price + ' ' : '0'
+          }${unit}</span>】</span>`
+        })
+        .join('<span>→</span>')
+      v.processSequenceIds = v.process.map((v) => v.processId)
     } else {
       v.processSequence = ''
       v.processSequenceIds = []
@@ -128,5 +159,4 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     return v
   })
 }
-
 </script>

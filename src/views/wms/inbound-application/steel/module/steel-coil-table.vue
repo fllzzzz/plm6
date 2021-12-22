@@ -10,7 +10,7 @@
           placeholder="备注"
           maxlength="200"
           show-word-limit
-          style="width:400px"
+          style="width: 400px"
         />
       </template>
     </el-expand-table-column>
@@ -45,7 +45,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (mm)`">
+    <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
         <el-input-number
           v-model="row.thickness"
@@ -59,7 +59,7 @@
         />
       </template>
     </el-table-column>
-    <el-table-column prop="width" align="center" width="135px" :label="`宽 (mm)`">
+    <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
         <el-input-number
           v-model="row.width"
@@ -67,15 +67,23 @@
           :max="999999"
           controls-position="right"
           :controls="false"
-          :precision="0"
+          :precision="baseUnit.width.precision"
           size="mini"
           placeholder="宽"
         />
       </template>
     </el-table-column>
-    <el-table-column prop="length" align="center" width="135px" :label="`长 (mm)`">
+    <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
-        <el-input-number v-model="row.length" :min="0" :max="999999" :controls="false" :precision="0" size="mini" placeholder="长" />
+        <el-input-number
+          v-model="row.length"
+          :min="0"
+          :max="999999"
+          :controls="false"
+          :precision="baseUnit.length.precision"
+          size="mini"
+          placeholder="长"
+        />
       </template>
     </el-table-column>
     <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
@@ -196,11 +204,7 @@ async function calcTheoryLength(row) {
   row.theoryLength = await calcSteelCoilLength({
     weight: row.weighingTotalWeight,
     width: row.width,
-    thickness: row.thickness,
-    weightUnit: baseUnit.value.weight.unit,
-    lengthUnit: baseUnit.value.length.unit,
-    weightPrecision: baseUnit.value.weight.precision,
-    lengthPrecision: baseUnit.value.weight.precision
+    thickness: row.thickness
   })
 }
 

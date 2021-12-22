@@ -45,8 +45,8 @@ v-for="item in packTypeEnum.ENUM"
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="monomer.name" label="单体" sortable="custom" align="center" width="100px" />
-          <el-table-column prop="area.name" label="区域" sortable="custom" align="center" width="100px" />
+          <el-table-column prop="monomer.name" label="单体" align="center" width="100px" />
+          <el-table-column prop="area.name" label="区域" align="center" width="100px" />
           <el-table-column prop="serialNumber" label="编号" align="center" width="120px" />
           <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140px" />
           <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`长度\n(mm)`" align="left" min-width="85px">

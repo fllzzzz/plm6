@@ -4,12 +4,20 @@
       <span v-empty-text>{{ row.measureUnit }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showQuantity" prop="quantity" :label="quantityLabel" align="right" min-width="150px">
+  <el-table-column
+    v-if="showQuantity"
+    prop="quantity"
+    :label="quantityLabel"
+    align="right"
+    :min-width="showOperableQuantity ? '150px' : '70px'"
+  >
     <template #default="{ row }">
       <template v-if="row.measureUnit">
-        <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
-        /
-        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row.quantity }}</span>
+        <template v-if="showOperableQuantity">
+          <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+          /
+        </template>
+        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
       </template>
       <span v-else v-empty-text />
     </template>
@@ -19,11 +27,11 @@
       <span v-empty-text>{{ row.accountingUnit }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showMete" prop="mete" :label="mateLabel" align="right" min-width="150px">
+  <el-table-column v-if="showMete" prop="mete" :label="meteLabel" align="right" min-width="150px">
     <template #default="{ row }">
       <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
       /
-      <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row.mete }}</span>
+      <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
     </template>
   </el-table-column>
 </template>
@@ -52,6 +60,25 @@ const props = defineProps({
   columns: {
     type: Object
   },
+  singleMeteMode: {
+    // 单量模式,只显示单件核算量
+    type: Boolean,
+    default: false
+  },
+  meteLabel: {
+    // 量-label
+    type: String
+  },
+  quantityField: {
+    // 数量字段
+    type: String,
+    default: 'quantity'
+  },
+  meteField: {
+    // 核算量量字段
+    type: String,
+    default: 'mete'
+  },
   operableQuantityField: {
     // 可操作数量字段
     type: String,
@@ -61,19 +88,28 @@ const props = defineProps({
     // 可操作核算量量字段
     type: String,
     default: 'operableMete'
+  },
+  showOperableQuantity: {
+    // 显示可操作数量
+    type: Boolean,
+    default: true
   }
 })
 
-const mateLabel = computed(() => {
+const meteLabel = computed(() => {
+  if (props.meteLabel) {
+    return props.meteLabel
+  }
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
+      return props.singleMeteMode ? '单重（kg）' : '重量（kg）'
     case rawMatClsEnum.STEEL_COIL.V:
       return '重量（kg）'
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
-      return '核算量'
+      return props.singleMeteMode ? '单件量（kg）' : '核算量'
   }
 })
 

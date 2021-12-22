@@ -13,6 +13,7 @@
       show-summary
       :summary-method="getSummaries"
       style="width: 100%"
+      @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
@@ -180,7 +181,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {

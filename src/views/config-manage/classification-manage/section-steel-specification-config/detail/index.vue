@@ -104,6 +104,7 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['id'],
     hasPagination: false
   },
   tableRef

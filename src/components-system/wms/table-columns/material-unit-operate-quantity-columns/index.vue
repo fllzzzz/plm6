@@ -4,8 +4,11 @@
     :columns="columns"
     :basic-class="basicClass"
     :showUnit="showUnit"
+    :mete-field="meteField"
+    :quantity-field="quantityField"
     :operable-quantity-field="operableQuantityField"
     :operable-mete-field="operableMeteField"
+    :show-operable-quantity="showOperableQuantity"
   />
 </template>
 
@@ -25,6 +28,25 @@ const props = defineProps({
   columns: {
     type: Object
   },
+  singleMeteMode: {
+    // 单量模式,只显示单件核算量
+    type: Boolean,
+    default: false
+  },
+  meteLabel: {
+    // 量-label
+    type: String
+  },
+  quantityField: {
+    // 数量字段
+    type: String,
+    default: 'quantity'
+  },
+  meteField: {
+    // 核算量量字段
+    type: String,
+    default: 'mete'
+  },
   operableQuantityField: {
     // 可操作数量字段
     type: String,
@@ -34,6 +56,11 @@ const props = defineProps({
     // 可操作核算量量字段
     type: String,
     default: 'operableMete'
+  },
+  showOperableQuantity: {
+    // 显示可操作数量
+    type: Boolean,
+    default: true
   }
 })
 

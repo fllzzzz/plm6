@@ -31,10 +31,10 @@
         prop="productionLine.name"
         :show-overflow-tooltip="true"
         label="生产线"
-        width="150px"
+        width="250px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.productionLine.name }}</span>
+          <span>{{ artifactProcessEnum.VL[scope.row.productType] }} > {{ scope.row.productionLine?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="完成状态">
@@ -44,15 +44,15 @@
               <el-progress type="circle" :percentage="item.completeRate" :stroke-width="6" :width="70" :color="colors">
                 <template #default="{ percentage }">
                   <div style="display: flex; flex-direction: column">
-                    <span class="percentage-label" style="margin-bottom: 5px">{{ item.processName }}</span>
+                    <span class="percentage-label" style="margin-bottom: 5px">{{ item.name }}</span>
                     <span class="percentage-value">{{ toFixed(percentage, 2) }}%</span>
                   </div>
                 </template>
               </el-progress>
               <div class="status-detail">
-                <div>任务量：{{ toFixed(item.taskMete, DP.COM_WT__KG) }}kg</div>
-                <div>已完成：{{ toFixed(item.completeMete, DP.COM_WT__KG) }}kg</div>
-                <common-button type="text" size="mini" @click="showItemDetail(item,scope.row)">查看详情</common-button>
+                <div>任务量：{{ scope.row.taskMete }}kg</div>
+                <div>已完成：{{ item.completeMete }}kg</div>
+                <common-button type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
               </div>
             </div>
           </div>
@@ -64,8 +64,6 @@
         </template>
       </el-table-column>
     </common-table>
-    <!--分页组件-->
-    <pagination />
     <mDetail v-model:visible="detailVisible" :info="detailInfo" />
     <item-detail v-model:visible="itemDetailVisible" :info="detailInfo" :item-info="itemDetailInfo" />
   </div>
@@ -73,14 +71,14 @@
 
 <script setup>
 import crudApi from '@/api/mes/team-report/artifact-team'
-import { ref, reactive } from 'vue'
+import { ref, reactive, provide } from 'vue'
 
+import { artifactProcessEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 import itemDetail from './module/item-detail'
@@ -112,14 +110,23 @@ const { crud, columns, CRUD } = useCRUD(
     title: '结构班组',
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    hasPagination: false
   },
   tableRef
 )
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight({ paginate: false })
+
+provide('query', crud.query)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
+    v.completeStatus = v.processSummaryList.map((o) => {
+      o.completeMete = toFixed(o.completeNetWeight, DP.COM_WT__KG)
+      o.completeRate = (o.completeNetWeight / v.taskNetWeight) * 100
+      return o
+    })
     return v
   })
 }

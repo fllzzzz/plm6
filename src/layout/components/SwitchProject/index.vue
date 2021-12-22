@@ -26,15 +26,22 @@
         class="project-cascader"
         style="width: 100%"
       />
-      <span @click="showAll = !showAll" class="all-tip" :style="{color: showAll ? 'cornflowerblue' : '#dcdfe6'}"> All </span>
+      <span @click="handleShowAllClick" class="all-tip pointer" :style="{ color: navbarShowAll ? 'cornflowerblue' : '#dcdfe6' }"> All </span>
     </span>
     <el-tooltip class="item" effect="dark" content="刷新项目列表" placement="right">
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
       <i v-else class="el-icon-loading" />
     </el-tooltip>
-    <div style="font-size:13px;margin-left:15px;color:#333;">
-      <el-tag v-if="currentProject && currentProject.endDate" type="info" effect="plain">完成日期:<span v-parse-time="'{y}-{m}-{d}'">{{ currentProject.endDate }}</span> | 工期:{{ dateDifference(currentProject.startDate, currentProject.endDate) }}天</el-tag>
-      <el-tag v-if="currentProject && currentProject.businessType" type="info" effect="plain" style="margin-left:5px;">{{ businessTypeEnum.VL[currentProject.businessType] }}</el-tag>
+    <div style="font-size: 13px; margin-left: 15px; color: #333">
+      <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain">
+        完成日期:
+        <span v-parse-time="'{y}-{m}-{d}'">{{ globalProject.endDate }}</span>
+        | 工期:
+        {{ dateDifference(globalProject.startDate, globalProject.endDate) }}天
+      </el-tag>
+      <el-tag v-if="globalProject && globalProject.businessType" type="info" effect="plain" style="margin-left: 5px">
+        {{ businessTypeEnum.VL[globalProject.businessType] }}
+      </el-tag>
     </div>
   </div>
 </template>
@@ -94,13 +101,17 @@ const props = defineProps({
 })
 
 const copyValue = ref()
-const showAll = ref(false)
 const projectType = ref(allPT)
-const currentProjectId = ref()
 const refreshLoading = ref(false)
 let currentProjectChange = false
 
-const { routeProjectType, currentProjectType, globalProjectId, currentProject } = mapGetters(['routeProjectType', 'currentProjectType', 'globalProjectId', 'currentProject'])
+const { routeProjectType, currentProjectType, globalProjectId, globalProject, navbarShowAll } = mapGetters([
+  'routeProjectType',
+  'currentProjectType',
+  'globalProjectId',
+  'globalProject',
+  'navbarShowAll'
+])
 
 // 是否显示
 const showable = computed(() => isNotBlank(routeProjectType))
@@ -108,7 +119,7 @@ const showable = computed(() => isNotBlank(routeProjectType))
 const { projectsCascade, processProjects, projects } = useUserProjects()
 
 const options = computed(() => {
-  if (showAll.value) {
+  if (navbarShowAll.value) {
     return projectsCascade.value
   }
   return processProjects.value
@@ -140,26 +151,26 @@ const disabledTypeArr = computed(() => {
 })
 
 watch(
-  showAll,
+  navbarShowAll,
   (flag) => {
     let isExit = false
     if (flag) {
-      isExit = projects.value.some(v => v.id === currentProjectId.value)
+      isExit = projects.value.some((v) => v.id === copyValue.value)
     } else {
-      isExit = processProjects.value.some(v => v.id === currentProjectId.value)
+      isExit = processProjects.value.some((v) => v.id === copyValue.value)
     }
     if (!isExit) {
       projectChange(undefined)
     }
-  },
-  { immediate: true }
+  }
+  // { immediate: true }
 )
 
 watch(
   globalProjectId,
   (val) => {
-    if (currentProjectChange) {
-      currentProjectId.value = val
+    if (!currentProjectChange) {
+      copyValue.value = val
     }
   },
   { immediate: true }
@@ -195,9 +206,7 @@ async function handleTypeChange(val) {
 async function projectChange(val) {
   currentProjectChange = true
   try {
-    const current = projects.value.find(v => v.id === val)
     await store.dispatch('project/setProjectId', val)
-    await store.dispatch('project/setCurrentProject', current)
     // if (val && loginPath.indexOf(this.$route.path) === -1) {
     //   this.refreshSelectedTag()
     // } else {
@@ -219,6 +228,11 @@ function refreshProjectList() {
   } finally {
     refreshLoading.value = false
   }
+}
+
+// 显示全部
+function handleShowAllClick() {
+  store.commit('project/SET_NAVBAR_SHOW_ALL', !navbarShowAll.value)
 }
 </script>
 
@@ -251,8 +265,8 @@ function refreshProjectList() {
   ::v-deep(.el-tag--plain) {
     color: cornflowerblue;
   }
-  ::v-deep(.el-tag--plain.el-tag--info){
-    color: var(--el-tag-font-color)
+  ::v-deep(.el-tag--plain.el-tag--info) {
+    color: var(--el-tag-font-color);
   }
 }
 

@@ -1,4 +1,6 @@
 import { isNotBlank, toFixed } from '@/utils/data-type'
+import { DP } from '@/settings/config'
+import { isString } from '@/utils/validate/index'
 
 // 时间转换
 export default {
@@ -17,10 +19,10 @@ function resolve(el, binding) {
   let precision
   if (value && typeof value === 'object') {
     val = value.val
-    precision = value.dp
+    precision = isString(value.dp) ? DP[value.dp] : value.dp
   } else {
     val = innerText
-    precision = value
+    precision = isString(value) ? DP[value] : value
   }
   precision = isNotBlank(precision) ? precision : 2
   el.innerText = toFixed(val, precision)

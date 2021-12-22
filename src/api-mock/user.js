@@ -45,16 +45,10 @@ const userInfo = {
         'permissions': [],
         'menus': [
           {
-            'id': 3,
-            'name': '合同管理',
+            'id': 1,
+            'name': '配置管理',
             'icon': 'config',
-            'redirect': '/contract/contract-center/record'
-          },
-          {
-            'id': 475,
-            'name': 'WMS',
-            'icon': 'wms-wms',
-            'redirect': 'wms'
+            'redirect': 'config-manage'
           },
           {
             'id': 2,
@@ -63,28 +57,34 @@ const userInfo = {
             'redirect': 'mes-project'
           },
           {
-            'id': 1377,
-            'name': '计划管理',
+            'id': 3,
+            'name': '合同管理',
             'icon': 'config',
-            'redirect': 'OverallPlanInfo'
-          },
-          {
-            'id': 1,
-            'name': '配置管理',
-            'icon': 'config',
-            'redirect': 'config-manage'
+            'redirect': 'contract'
           },
           {
             'id': 4,
             'name': '项目管理',
             'icon': 'config',
-            'redirect': 'project-manage/data-manage'
+            'redirect': 'project-manage'
           },
           {
-            'id': 3,
+            'id': 5,
+            'name': 'WMS',
+            'icon': 'wms-wms',
+            'redirect': 'wms'
+          },
+          {
+            'id': 6,
+            'name': '计划管理',
+            'icon': 'config',
+            'redirect': 'plan'
+          },
+          {
+            'id': 7,
             'name': '成本管理',
             'icon': 'config',
-            'redirect': 'base-config'
+            'redirect': 'cost-manage'
           }]
       }
     }
