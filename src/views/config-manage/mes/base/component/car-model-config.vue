@@ -12,7 +12,7 @@
           type="primary"
           style="float: right"
           v-if="!isEdit"
-          @click="isEdit = !isEdit"
+          @click="handleEdit"
           >编辑</common-button
         >
         <common-button size="mini" type="warning" style="float: right" v-else @click="cancel">取消编辑</common-button>
@@ -86,6 +86,13 @@ async function fetchData() {
   } finally {
     dataLoading.value = false
   }
+}
+
+function handleEdit() {
+  if (carModels.value.length === 0) {
+    add()
+  }
+  isEdit.value = !isEdit.value
 }
 
 function cancel() {

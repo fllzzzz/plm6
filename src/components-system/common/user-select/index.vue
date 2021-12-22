@@ -26,7 +26,7 @@ import { defineExpose, defineProps, defineEmits, ref, watch } from 'vue'
 import { deepClone } from '@data-type/index'
 import useUsers from '@compos/store/use-users'
 
-const emit = defineEmits(['change', 'update:value'])
+const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
   placeholder: {
@@ -54,7 +54,7 @@ const props = defineProps({
     default: 'small'
   },
   // eslint-disable-next-line vue/require-default-prop
-  value: {
+  modelValue: {
     type: [Number, Array]
   }
 })
@@ -66,7 +66,7 @@ const sourceOptions = ref([])
 const { loaded, users } = useUsers()
 
 watch(
-  () => props.value,
+  () => props.modelValue,
   (val) => {
     selectIds.value = val
     handleChange(val)
@@ -83,7 +83,7 @@ watch(
 )
 
 function handleChange(val) {
-  emit('update:value', val)
+  emit('update:modelValue', val)
   const userList = getUser(val)
   emit('change', userList)
 }
