@@ -6,6 +6,8 @@
     :showUnit="props.showUnit"
     :outbound-type-mode="outboundTypeMode"
     :label-prefix="props.labelPrefix"
+    :quantity-field="quantityField"
+    :mete-field="meteField"
   />
 </template>
 

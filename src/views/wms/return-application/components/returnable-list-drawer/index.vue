@@ -10,7 +10,7 @@
     custom-class="returnable-list-drawer"
   >
     <template #content>
-      <returnable-list :basicClass="basicClass" :select-list="selectList" is-component />
+      <returnable-list :basicClass="basicClass" :select-list="selectList" is-component @add="handleAdd" />
     </template>
   </common-drawer>
 </template>
@@ -20,7 +20,7 @@ import { defineEmits, defineProps } from 'vue'
 import useVisible from '@/composables/use-visible'
 import ReturnableList from '../../returnable-list/index.vue'
 
-const emit = defineEmits(['success', 'update:modelValue'])
+const emit = defineEmits(['add', 'update:modelValue'])
 
 const props = defineProps({
   modelValue: {
@@ -38,5 +38,9 @@ const props = defineProps({
 })
 
 const { visible, handleClose } = useVisible({ emit, props })
+
+function handleAdd(data) {
+  emit('add', data)
+}
 
 </script>

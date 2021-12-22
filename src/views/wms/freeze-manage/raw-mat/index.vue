@@ -31,7 +31,13 @@
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="basicClass" />
       <!-- 单位及其数量 -->
-      <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" label-prefix="冻结" />
+      <material-unit-quantity-columns
+        :columns="columns"
+        :basic-class="basicClass"
+        quantityField="frozenQuantity"
+        meteField="frozenMete"
+        label-prefix="冻结"
+      />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <warehouse-info-columns :columns="columns" :show-project="crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V" />

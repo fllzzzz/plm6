@@ -18,9 +18,9 @@ const get = {
             basicClass: 1,
             specification: 'Q325B',
             mete: 800000, // 核算量
-            frozenMete: 400000, // 冻结量
+            frozenMete: 600000, // 冻结量
             quantity: 10, // 数量
-            frozenQuantity: 5, // 冻结数量
+            frozenQuantity: 7, // 冻结数量
             thickness: 10,
             length: 1000,
             width: 1000,
@@ -157,9 +157,9 @@ const get = {
             basicClass: 1,
             specification: 'Q325B',
             mete: 500000, // 核算量
-            frozenMete: 400000, // 冻结量
+            frozenMete: 500000, // 冻结量
             quantity: 5, // 数量
-            frozenQuantity: 4, // 冻结数量
+            frozenQuantity: 5, // 冻结数量
             thickness: 10,
             length: 1500,
             width: 2000,

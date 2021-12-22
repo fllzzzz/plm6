@@ -22,7 +22,9 @@
       <material-unit-operate-quantity-columns
         :columns="columns"
         :basic-class="crud.query.basicClass"
-        operableMeteField="returnableMete"
+        single-mete-mode
+        meteField="singleMete"
+        operableMeteField="singleReturnableMete"
         :show-operable-quantity="false"
       />
       <!-- 仓库信息 -->
@@ -94,6 +96,8 @@ import { defineEmits, defineProps, provide, reactive, ref, watchEffect } from 'v
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
+import { createUniqueString } from '@/utils/data-type/string'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -107,8 +111,8 @@ import OutboundDetail from '@/views/wms/outbound-application-review/raw-mat/modu
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
-import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
-import { createUniqueString } from '@/utils/data-type/string'
+import { ElMessage } from 'element-plus'
+import { specFormat } from '@/utils/wms/spec-format'
 
 const emit = defineEmits(['add'])
 
@@ -179,7 +183,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       toNum: false
     },
     {
-      mete: ['mete', 'returnableMete']
+      mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
     }
   )
   // 计算理论重量
@@ -192,23 +196,28 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 // 添加退库信息
 function handleAddReturn(row) {
   const selectList = props.selectList
+  // const newData = reactive({
+  //   uid: createUniqueString(), // 当前退库记录唯一id
+  //   id: row.id, // 物料id
+  //   sn: row.sn, // 该科目规格唯一编号
+  //   specificationLabels: row.specificationLabels, // 规格中文
+  //   serialNumber: row.serialNumber, // 科目编号
+  //   classifyId: row.classifyId, // 科目id
+  //   classifyFullName: row.classifyFullName, // 全路径名称
+  //   basicClass: row.basicClass, // 基础类型
+  //   specification: row.specification, // 规格
+  //   specificationMap: row.specificationMap, // 规格KV格式
+  //   measureUnit: row.measureUnit, // 计量单位
+  //   accountingUnit: row.accountingUnit, // 核算单位
+  //   accountingPrecision: row.accountingPrecision, // 核算单位小数精度
+  //   measurePrecision: row.measurePrecision, // 计量单位小数精度
+  //   brand: row.brand, // 品牌
+  //   project: row.project // 项目
+  // })
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
     id: row.id, // 物料id
-    sn: row.sn, // 该科目规格唯一编号
-    specificationLabels: row.specificationLabels, // 规格中文
-    serialNumber: row.serialNumber, // 科目编号
-    classifyId: row.classifyId, // 科目id
-    classifyFullName: row.classifyFullName, // 全路径名称
-    basicClass: row.basicClass, // 基础类型
-    specification: row.specification, // 规格
-    specificationMap: row.specificationMap, // 规格KV格式
-    measureUnit: row.measureUnit, // 计量单位
-    accountingUnit: row.accountingUnit, // 核算单位
-    accountingPrecision: row.accountingPrecision, // 核算单位小数精度
-    measurePrecision: row.measurePrecision, // 计量单位小数精度
-    brand: row.brand, // 品牌
-    project: row.project // 项目
+    source: row
   })
   if (selectList.length > 0) {
     newData.factoryId = -1 // 工厂 同上
@@ -221,35 +230,35 @@ function handleAddReturn(row) {
   } else {
     selectList.push(newData)
   }
-  console.log('selectList', selectList)
-  emit('add')
+  ElMessage.warning(`${row.classifyFullName}-${specFormat(row)} 加入退库列表`)
+  emit('add', newData)
 }
 
 // 根据物料基础类型设置信息
 function setBasicInfoForData(row, data) {
-  switch (data.basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
-      data.thickness = row.thickness
-      data.theoryWeight = row.theoryWeight
-      data.heatNoAndBatchNo = row.heatNoAndBatchNo
-      return
-    case rawMatClsEnum.STEEL_COIL.V:
-      data.thickness = row.thickness
-      data.width = row.width
-      data.color = row.color
-      data.theoryLength = row.theoryLength
-      data.heatNoAndBatchNo = row.heatNoAndBatchNo
-      return
-    case rawMatClsEnum.SECTION_STEEL.V:
-      data.theoryWeight = row.theoryWeight
-      data.heatNoAndBatchNo = row.heatNoAndBatchNo
-      return
-    case rawMatClsEnum.MATERIAL.V:
-      data.color = row.color
-      return
-    default:
-      return
-  }
+  // switch (data.basicClass) {
+  //   case rawMatClsEnum.STEEL_PLATE.V:
+  //     data.thickness = row.thickness
+  //     data.theoryWeight = row.theoryWeight
+  //     data.heatNoAndBatchNo = row.heatNoAndBatchNo
+  //     return
+  //   case rawMatClsEnum.STEEL_COIL.V:
+  //     data.thickness = row.thickness
+  //     data.width = row.width
+  //     data.color = row.color
+  //     data.theoryLength = row.theoryLength
+  //     data.heatNoAndBatchNo = row.heatNoAndBatchNo
+  //     return
+  //   case rawMatClsEnum.SECTION_STEEL.V:
+  //     data.theoryWeight = row.theoryWeight
+  //     data.heatNoAndBatchNo = row.heatNoAndBatchNo
+  //     return
+  //   case rawMatClsEnum.MATERIAL.V:
+  //     data.color = row.color
+  //     return
+  //   default:
+  //     return
+  // }
 }
 
 // 计算退库信息

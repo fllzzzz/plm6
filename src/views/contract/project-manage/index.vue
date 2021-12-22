@@ -103,7 +103,7 @@
   >
     <template #content>
       <contract-info :project-id="contractInfoRowId" :project-staus="projectStaus" :project-name="projectName" style="padding:20px;box-sizing:border-box" />
-    </template> 
+    </template>
   </common-drawer>
   <!-- <common-dialog
     class="members-dialog"
@@ -123,7 +123,7 @@
         <span class="dialog-footer">
           <common-button type="primary" @click="membersDialogVisible = false">退 出</common-button>
         </span>
-      </template>  
+      </template>
     </common-dialog> -->
   <!--分页组件-->
   <pagination />
@@ -152,7 +152,7 @@ const { globalProjectId, currentProjectType } = mapGetters(['globalProjectId', '
 // crud交由presenter持有
 const permission = {
   get: ['contract:get'],
-  add: ['contract:add'],
+  // add: ['contract:add'],
   detail: ['contract:detail'],
   editStatus: ['contract:editStatus'],
   download: ['contract:download']
@@ -208,11 +208,11 @@ async function changeStatus(data, val) {
     crud.refresh()
   } catch (error) {
     console.log(error)
-    data.status = data.status === projectStatusEnum.ENUM.SUSPEND.V? projectStatusEnum.ENUM.PROCESS.V: projectStatusEnum.ENUM.SUSPEND.V
+    data.status = data.status === projectStatusEnum.ENUM.SUSPEND.V ? projectStatusEnum.ENUM.PROCESS.V : projectStatusEnum.ENUM.SUSPEND.V
   }
 }
 
-function openContractInfo(row){
+function openContractInfo(row) {
   contractInfoRowId.value = row.id
   projectStaus.value = row.status
   projectName.value = row.name

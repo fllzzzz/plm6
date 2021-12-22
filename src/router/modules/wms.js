@@ -1,6 +1,6 @@
 // 路由：WMS
 export default {
-  id: 475,
+  id: 5,
   name: 'WMS',
   children: [
     {
@@ -221,6 +221,24 @@ export default {
           hidden: false,
           component: '/wms/purchase-order/index',
           meta: { title: '采购订单', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/wms/requisitions-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSRequisitions',
+      alwaysShow: false,
+      redirect: '/wms/requisitions',
+      meta: { title: '申购订单管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'requisitions',
+          path: 'requisitions',
+          hidden: false,
+          component: '/wms/requisitions/index',
+          meta: { title: '申购订单', icon: 'project', noCache: true }
         }
       ]
     },

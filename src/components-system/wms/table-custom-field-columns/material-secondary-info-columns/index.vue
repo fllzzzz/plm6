@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-batch-no="showBatchNo" :field="field" />
+  <component :is="comp" :basicClass="basicClass" :columns="columns" :show-batch-no="showBatchNo" :field="field" :fixed="fixed" />
 </template>
 
 <script setup>
@@ -26,6 +26,10 @@ const props = defineProps({
     // 字段
     type: String,
     default: 'material'
+  },
+  fixed: {
+    // 定位
+    type: String
   }
 })
 

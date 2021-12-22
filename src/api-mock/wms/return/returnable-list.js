@@ -19,6 +19,8 @@ const getSteelList = {
             specification: 'Q325B',
             mete: 800000,
             returnableMete: 600000,
+            singleMete: 800000, // 单件重量
+            singleReturnableMete: 600000, // 单件可退库重量
             quantity: 1,
             thickness: 10,
             length: 1000,
@@ -53,6 +55,8 @@ const getSteelList = {
             specification: 'Q325B',
             mete: 8000000,
             returnableMete: 8000000,
+            singleMete: 800000,
+            singleReturnableMete: 800000,
             quantity: 10,
             thickness: 10,
             length: 1000,
