@@ -73,7 +73,7 @@
                 :disabledDate="endDateOption"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ detail.endDate }}</span>
+                <span v-if="detail.endDate">{{ parseTime(detail.endDate,'{y}-{m}-{d}') }}</span>
               </template>
             </div>
           </el-form-item>
@@ -317,6 +317,7 @@ import uploadList from '@/components/file-upload/uploadList'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
@@ -390,15 +391,13 @@ watch(
   { deep: true, immediate: true }
 )
 
-watch(
-  () => props.isModify,
-  (val) => {
-    if (val) {
-      resetForm()
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => props.isModify,
+//   (val) => {
+//     resetForm()
+//   },
+//   { deep: true, immediate: true }
+// )
 
 const totalDuration = computed(() => {
   if (form.value.startDate && form.value.endDate) {
@@ -417,9 +416,9 @@ const managementFee = computed(() => {
  * 重置表单
  */
 function resetForm() {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
+  // if (formRef.value) {
+  //   formRef.value.resetFields()
+  // }
   form.value = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(formRef, form)
 }

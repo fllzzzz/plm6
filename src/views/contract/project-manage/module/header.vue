@@ -38,7 +38,7 @@
         style="width: 200px;"
         class="filter-item"
         clearable
-        @keyup.enter.native="crud.toQuery"
+        @blur="crud.toQuery"
       />
       <common-select
         v-model="query.businessType"
@@ -79,7 +79,7 @@
           style="width: 120px;"
           class="filter-item"
           clearable
-          @keyup.enter.native="crud.toQuery"
+          @blur="crud.toQuery"
         />
         <rrOperation/>
       </div>
@@ -104,7 +104,6 @@
 
 <script setup>
 import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -125,7 +124,7 @@ const defaultQuery = {
 
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
-  currentProjectType:{
+  currentProjectType: {
     type: [Number, String],
     default: undefined
   }
@@ -166,7 +165,7 @@ async function contentInfo() {
   }
 }
 
-function businessChange(){
+function businessChange() {
   crud.query.projectContent = undefined
   if (crud.query.businessType) {
     projectContentOption.value = crud.query.businessType === 1 ? projectContent1 : projectContent2

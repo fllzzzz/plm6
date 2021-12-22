@@ -11,27 +11,27 @@
         <div style="position:absolute;right:0;z-index:2;">
           <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
             <template v-if="!isModify">
-              <template v-if="projectstatus==0">
+              <template v-if="projectStatus==0">
                 <el-tooltip class="item" effect="dark" content="修改" placement="top">
-                  <common-button size="mini" icon="el-icon-edit" plain class="nextbtn" @click="isModify=true;" />
+                  <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" />
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="合同金额变更" placement="top">
-                  <common-button size="mini" icon="el-icon-tickets" plain class="nextbtn" @click="moneyChange" />
+                  <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" />
                 </el-tooltip>
               </template>
               <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
-                <common-button v-if="projectstatus!=1" size="mini" icon="el-icon-money" plain class="nextbtn" @click="confirmSettle" />
+                <common-button v-if="projectStatus!=1" size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="打印" placement="top">
-                <common-button size="mini" icon="el-icon-printer" plain class="nextbtn" />
+                <common-button size="mini" icon="el-icon-printer" plain class="next_btn" />
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="下载" placement="top">
-                <common-button size="mini" icon="el-icon-download" plain class="nextbtn" />
+                <common-button size="mini" icon="el-icon-download" plain class="next_btn" />
               </el-tooltip>
             </template>
           </div>
           <div v-else>
-            <common-button size="mini" @click="isModify=false">取消</common-button>
+            <common-button size="mini" @click="ModifyCancel">取消</common-button>
             <common-button :loading="submitLoading" size="mini" type="success" @click="submit">保存</common-button>
           </div>
         </div>
@@ -108,6 +108,7 @@ watch(
   (val) => {
     if (val) {
       showName.value = 'contract'
+      activeName.value = 'baseInfo'
     }
   },
   { deep: true, immediate: true }
@@ -132,6 +133,14 @@ function confirmSettle() {
 function moneyChange() {
   moneyVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+}
+
+function ModifyCancel() {
+  baseRef.value.resetForm()
+  businessRef.value.resetForm()
+  customerRef.value.resetForm()
+  memberRef.value.fetchMembers()
+  isModify.value = false
 }
 
 const validateData = [
@@ -198,7 +207,7 @@ async function submit() {
   height: calc(100vh - 100px);
     overflow: auto;
 }
-::v-deep(.contractbtns .nextbtn){
+::v-deep(.contractbtns .next_btn){
   margin-left:0;
   border:0 none;
   background:#fff;

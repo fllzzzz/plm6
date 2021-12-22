@@ -45,7 +45,7 @@
               placeholder="项目内容,可多选"
               class="input-underline"
               style="width: 320px"
-              @change="getshowItem"
+              @change="getShowItem"
             >
               <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
@@ -143,7 +143,7 @@
       <div style="text-align: right; margin-right: 20px">
         <common-button style="margin-left: 20px" type="success" size="small" @click="handleAddEnclosure">添加</common-button>
       </div>
-      <!-- <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" /> -->
+      <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" />
       <!--围护产品数据弹窗  -->
       <common-drawer
         v-model:visible="enclosureVisible"
@@ -174,7 +174,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch, defineExpose } from 'vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -329,7 +329,7 @@ function handleAddEnclosure() {
   enclosureVisible.value = true
 }
 
-function getshowItem(val) {
+function getShowItem(val) {
   showItem.value = []
   showCategory.value = []
   const totalArr = [

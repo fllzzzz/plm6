@@ -41,13 +41,13 @@
       <el-table-column align="center" label="材质">
         <template v-slot="scope">
           <div class="sandwich-cell-top">{{ scope.row.outMaterial }}</div>
-          <div class="sandwich-cell-bottom">{{ scope.row.intMaterial | emptyTextFormatter }}</div>
+          <div class="sandwich-cell-bottom">{{ scope.row.intMaterial }}</div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="品牌">
         <template v-slot="scope">
-          <div class="sandwich-cell-top">{{ scope.row.outSteelPlateBrand | emptyTextFormatter }}</div>
-          <div class="sandwich-cell-bottom">{{ scope.row.intSteelPlateBrand | emptyTextFormatter }}</div>
+          <div class="sandwich-cell-top">{{ scope.row.outSteelPlateBrand }}</div>
+          <div class="sandwich-cell-bottom">{{ scope.row.intSteelPlateBrand }}</div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="厚度">
@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue'
 import { DP } from '@/settings/config'
 const props = defineProps({
   tableData: {
@@ -123,19 +123,31 @@ const props = defineProps({
 
 const emit = defineEmits(['edit'])
 
-function  handleSandwichCellStyle({ row, column, rowIndex, columnIndex }) {
+function handleSandwichCellStyle({ row, column, rowIndex, columnIndex }) {
   if (columnIndex >= 5 && columnIndex <= 12) {
     return 'padding:0px;'
   }
 }
 
-function deleteRow (index){
-  props.tableData.splice(index, 1)
+const techTableData = ref([])
+
+watch(
+  () => props.tableData,
+  (val) => {
+    techTableData.value = props.tableData
+  },
+  { deep: true, immediate: true }
+)
+
+function deleteRow(index) {
+  techTableData.value.splice(index, 1)
+  // props.tableData.splice(index, 1)
 }
 
 function editRow(index, row) {
   emit('edit', row)
-  props.tableData.splice(index, 1)
+  techTableData.value.splice(index, 1)
+  // props.tableData.splice(index, 1)
 }
 </script>
 
