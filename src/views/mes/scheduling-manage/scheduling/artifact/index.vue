@@ -197,6 +197,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '二次排产',
+    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

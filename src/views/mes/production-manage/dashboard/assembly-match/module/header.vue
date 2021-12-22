@@ -54,7 +54,7 @@
           >
           <color-card
             class="filter-item"
-            v-model:value="query.processingStatus"
+            v-model:value="query.status"
             :colors="colors"
             color-border
             @change="crud.toQuery"
@@ -84,7 +84,6 @@ const defaultQuery = {
   serialNumber: '',
   specification: '',
   material: '',
-  processingStatus: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   factoryId: { value: undefined, resetAble: false },

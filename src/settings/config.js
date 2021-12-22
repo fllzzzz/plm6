@@ -128,6 +128,8 @@ MES_MATERIAL_UNIT[componentListTypeEnum.AUXILIARY_MATERIAL.V] = { unit: '件' }
 export const DP = {
   COM_WT__T: 2, // 通用_重量（t）
   COM_WT__KG: 2, // 通用_重量（kg）
+  COM_L__M: 2, // 通用_长度（m）
+  COM_L__MM: 0, // 通用_长度（mm）
   COM_WT__G: 3, // 通用_重量（kg）
   COM_AREA__M2: 2, // 通用_面积（㎡）
   COM_VOLUME__L: 2, // 通用_容积—（L）

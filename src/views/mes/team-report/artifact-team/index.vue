@@ -50,8 +50,8 @@
                 </template>
               </el-progress>
               <div class="status-detail">
-                <div>任务量：{{ scope.row.taskMete }}kg</div>
-                <div>已完成：{{ item.completeMete }}kg</div>
+                <div>任务量：{{ item.taskMeteShow }}</div>
+                <div>已完成：{{ item.completeMeteShow }}</div>
                 <common-button type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
               </div>
             </div>
@@ -74,11 +74,11 @@ import crudApi from '@/api/mes/team-report/artifact-team'
 import { ref, reactive, provide } from 'vue'
 
 import { artifactProcessEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 import itemDetail from './module/item-detail'
@@ -121,10 +121,26 @@ provide('query', crud.query)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
     v.completeStatus = v.processSummaryList.map((o) => {
-      o.completeMete = toFixed(o.completeNetWeight, DP.COM_WT__KG)
-      o.completeRate = (o.completeNetWeight / v.taskNetWeight) * 100
+      o.completeMete = useProductMeteConvert({
+        productType: v.productType,
+        weight: o.completeNetWeight,
+        length: o.completeLength
+      }).convertMete
+      o.completeMeteShow = useProductMeteConvert({
+        productType: v.productType,
+        weight: o.completeNetWeight,
+        length: o.completeLength,
+        showUnit: true
+      }).convertMete
+      o.taskMete = useProductMeteConvert({ productType: v.productType, weight: o.taskNetWeight, length: o.taskLength }).convertMete
+      o.taskMeteShow = useProductMeteConvert({
+        productType: v.productType,
+        weight: o.taskNetWeight,
+        length: o.taskLength,
+        showUnit: true
+      }).convertMete
+      o.completeRate = (o.completeMete / o.taskMete) * 100
       return o
     })
     return v

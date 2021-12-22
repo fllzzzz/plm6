@@ -176,6 +176,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '夹芯板排产',
     permission: { ...permission },
+    sort: [],
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['areaId'],
