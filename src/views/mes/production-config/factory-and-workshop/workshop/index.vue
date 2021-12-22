@@ -43,14 +43,14 @@
           label="车间名称"
           min-width="140px"
         />
-        <el-table-column
+        <!-- <el-table-column
           v-if="columns.visible('shortName')"
           key="shortName"
           prop="shortName"
           :show-overflow-tooltip="true"
           label="车间简称"
           min-width="140px"
-        />
+        /> -->
         <el-table-column
           v-if="columns.visible('boolEnabledEnum')"
           key="boolEnabledEnum"
@@ -149,8 +149,8 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false,
-    invisibleColumns: ['shortName']
+    queryOnPresenterCreated: false
+    // invisibleColumns: ['shortName']
   },
   tableRef
 )
