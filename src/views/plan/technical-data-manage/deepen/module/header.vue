@@ -24,7 +24,6 @@
           style="width: 200px"
           size="small"
           clearable
-          @keyup.enter.native="crud.toQuery"
         />
         <el-input
           v-model="query.fileName"
@@ -33,7 +32,6 @@
           style="width: 200px"
           size="small"
           clearable
-          @keyup.enter.native="crud.toQuery"
         />
         <rrOperation />
       </div>
@@ -83,32 +81,25 @@
 
 <script setup>
 import { defineProps, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
-import areaTabs from '@/components-system/plan/area-tabs'
 import { monomerDetail } from '@/api/plan/monomer'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { processingEnum, planTypeEnum } from '@enum-ms/plan'
+import { planTypeEnum } from '@enum-ms/plan'
 import uploadBtn from '../../components/drawing-upload-btn'
 import { upload } from '@/api/plan/technical-data-manage/deepen'
-
-const router = useRouter()
 
 const defaultQuery = {
   drawingNumber: undefined,
   serialNumber: undefined,
   fileName: undefined,
   monomerId: { value: undefined, resetAble: false },
-  type: { value: planTypeEnum.ARTIFACT.V, resetAble: false },
+  type: { value: planTypeEnum.ARTIFACT.V, resetAble: false }
 }
 
 const monomerSelectRef = ref()
-const currentArea = ref({})
-const areaInfo = ref([])
-const defaultTab = ref({})
 const { crud, query } = regHeader(defaultQuery)
 const typeProp = { key: 'no', label: 'name', value: 'no' }
 const typeOption = ref([])
@@ -117,8 +108,8 @@ const deepenRef = ref()
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 async function monomerChange() {
@@ -150,7 +141,7 @@ async function getTypeInfo() {
       typeOption.value.unshift(
         {
           name: '构件',
-          no: 7,
+          no: 7
         },
         { name: '零件', no: 9 }
       )
@@ -181,7 +172,7 @@ function typeChange(val) {
     carryParam.value = {
       monomerId: crud.query.monomerId,
       type: crud.query.type,
-      enclosureCategory: crud.query.enclosureCategory,
+      enclosureCategory: crud.query.enclosureCategory
     }
     crud.toQuery()
   } else {

@@ -8,7 +8,7 @@
         style="width: 200px"
         size="small"
         clearable
-        @keyup.enter.native="crud.toQuery"
+        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.socialCode"
@@ -17,7 +17,7 @@
         style="width: 220px"
         size="small"
         clearable
-        @keyup.enter.native="crud.toQuery"
+         @blur="crud.toQuery"
       />
       <common-select
         v-model="query.enabled"
@@ -36,7 +36,6 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'

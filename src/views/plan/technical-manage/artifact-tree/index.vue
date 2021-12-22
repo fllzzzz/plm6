@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -256,7 +256,7 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/plan/technical-manage/artifact-tree'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -265,28 +265,26 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { manufactureTypeEnum } from '@enum-ms/plan'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['artifact-tree:get'],
   edit: ['artifact-tree:edit'],
   del: ['artifact-tree:del'],
-  importList: ['artifact-tree:import'],
+  importList: ['artifact-tree:import']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: true,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '零构件清单',
@@ -295,7 +293,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     requiredQuery: ['areaId'],
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -303,7 +301,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact-tree',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 function changeIndex(val) {
@@ -351,7 +349,7 @@ async function changeStatus(data, val) {
     await ElMessageBox.confirm('确定' + messageName + '?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editStatus(data.type, data.id)
     crud.notify(`“${data.serialNumber}”已【${messageName}】`, CRUD.NOTIFICATION_TYPE.SUCCESS)

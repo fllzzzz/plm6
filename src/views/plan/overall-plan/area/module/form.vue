@@ -82,18 +82,14 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
-import { isNotBlank } from '@data-type/index'
 import { manufactureTypeEnum } from '@enum-ms/plan'
-import { DP } from '@/settings/config'
 
 const formRef = ref()
-const currentOption = ref([])
 const props = defineProps({
   projectId: {
-    type: [ Number, String ],
+    type: [Number, String],
     default: undefined
   },
   typeInfo: {
@@ -121,8 +117,8 @@ const checkOtherDate = (rule, value, callback) => {
   } else {
     if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
       const val = props.typeInfo.find(v => v.no === crud.form.productType)
-      if( value > val.date){
-        callback(new Error("不能超过产品类型完成时间"))
+      if (value > val.date) {
+        callback(new Error('不能超过产品类型完成时间'))
       } else {
         callback()
       }
@@ -137,7 +133,7 @@ const rules = {
     { required: true, message: '请选择制造方式', trigger: 'change' }
   ],
   date: [
-    { validator:checkOtherDate, trigger: 'change' }
+    { validator: checkOtherDate, trigger: 'change' }
   ],
   sort: [
     { required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }
@@ -161,7 +157,6 @@ function dateOptionFn(time) {
     return false
   }
 }
-
 
 CRUD.HOOK.afterToAdd = (crud, form) => {
   crud.form.productType = crud.query.productType

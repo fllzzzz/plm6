@@ -88,7 +88,7 @@
         style="width:200px"
         class="filter-item"
       />
-      
+
       <el-input
         v-model="query.writtenByName"
         placeholder="填报人"
@@ -113,19 +113,16 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { supplierPayMentTypeEnum, auditTypeEnum, contractReceiveDateTypeEnum, invoiceTypeEnum } from '@enum-ms/contract'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
-import { getContentInfo } from '@/api/contract/project'
 import { receiveSum } from '@/api/contract/supplier-manage/pay-invoice/invoice'
-import { toThousand } from '@/utils/data-type/number'
 
 const defaultQuery = {
-  dateType: contractReceiveDateTypeEnum.ENUM.UPDATEDATE.V,
+  dateType: contractReceiveDateTypeEnum .ENUM.UPDATE_DATE.V,
   createTime: [],
   startDate: undefined,
   endDate: undefined,
@@ -159,7 +156,7 @@ async function getReceiveSum() {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  if(crud.query.createTime && crud.query.createTime.length>0){
+  if (crud.query.createTime && crud.query.createTime.length > 0) {
     crud.query.startDate = crud.query.createTime[0]
     crud.query.endDate = crud.query.createTime[1]
   }

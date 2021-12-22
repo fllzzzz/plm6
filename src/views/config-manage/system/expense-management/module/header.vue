@@ -8,7 +8,7 @@
         style="width: 200px"
         size="small"
         clearable
-        @keyup.enter.native="crud.toQuery"
+        @blur="crud.toQuery"
       />
       <rrOperation />
       <crudOperation />
@@ -17,13 +17,12 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
-  name: undefined,
+  name: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

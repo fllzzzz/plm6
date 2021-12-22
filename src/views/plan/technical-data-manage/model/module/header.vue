@@ -8,7 +8,6 @@
         style="width: 200px;"
         size="small"
         clearable
-        @keyup.enter.native="crud.toQuery"
       />
       <rrOperation/>
     </div>
@@ -47,7 +46,6 @@
 
 <script setup>
 import { defineProps, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -59,7 +57,6 @@ const defaultQuery = {
   type: technicalDataTypeEnum.MODEL.V // 类型 1蓝图 2变更文件 3模型 4其他文件
 }
 
-const monomerSelectRef = ref()
 const modelRef = ref()
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
@@ -69,7 +66,7 @@ const props = defineProps({
   }
 })
 
-const carryParam = computed(()=>{
+const carryParam = computed(() => {
   return { projectId: props.projectId, type: crud.query.type }
 })
 </script>

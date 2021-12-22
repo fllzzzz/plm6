@@ -8,10 +8,10 @@
         <el-card class="box-card team-card">
           <template v-slot:header class="clearfix card-header">
             <span style="margin-right:5px;">详情</span>
-            <el-tag v-if="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V && currentLine.remark" size="medium">{{currentLine.remark}}</el-tag>
-            <el-tag v-if="currentLine.type===TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V && currentLine.code" size="medium">{{currentLine.code}}</el-tag>
+            <el-tag v-if="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V && currentLine.remark" size="medium">{{currentLine.remark}}</el-tag>
+            <el-tag v-if="currentLine.type===TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V && currentLine.code" size="medium">{{currentLine.code}}</el-tag>
             <common-button
-              v-if="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V && currentLine.name && dictDetailRef && checkPermission(dictDetailRef.permission.add)"
+              v-if="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V && currentLine.name && dictDetailRef && checkPermission(dictDetailRef.permission.add)"
               size="mini"
               style="float: right; padding: 6px 10px; margin-bottom: 0px"
               type="primary"
@@ -21,8 +21,8 @@
               新增
             </common-button>
           </template>
-          <trussDetailConfig v-show="currentLine.type===TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V" ref="trussRef" :line="currentLine" />
-          <dictDetailConfig v-show="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V" ref="dictDetailRef" :line="currentLine" />
+          <trussDetailConfig v-show="currentLine.type===TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V" ref="trussRef" :line="currentLine" />
+          <dictDetailConfig v-show="currentLine.type!=TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V" ref="dictDetailRef" :line="currentLine" />
         </el-card>
       </el-col>
     </el-row>

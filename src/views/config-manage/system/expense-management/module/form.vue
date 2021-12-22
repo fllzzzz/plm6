@@ -54,14 +54,9 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import projectCascader from '@comp-base/project-cascader'
 import useDict from '@compos/store/use-dict'
-import { DP } from '@/settings/config'
-import { paymentFineModeEnum } from '@enum-ms/finance'
-import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
-import { digitUppercase } from '@/utils/data-type/number'
 
 const formRef = ref()
 const dict = useDict(['reimbursement_type'])
@@ -70,7 +65,7 @@ const defaultForm = {
   iid: undefined,
   name: '',
   sort: 1,
-  dictionaryIdList: undefined,
+  dictionaryIdList: undefined
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
@@ -78,10 +73,10 @@ const { crud, form } = regForm(defaultForm, formRef)
 const rules = {
   name: [
     { required: true, message: '请填写费用类型名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' },
+    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  dictionaryIdList: [{ required: true, message: '请选择费用明细' }],
+  dictionaryIdList: [{ required: true, message: '请选择费用明细' }]
 }
 
 function addProcess() {

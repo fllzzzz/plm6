@@ -14,7 +14,7 @@
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
-      v-if="crud.query.type!=TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V"
+      v-if="crud.query.type!=TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column

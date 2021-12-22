@@ -38,11 +38,11 @@
         </ul>
       </div>
       <template #footer>
-        <span slot="footer" class="dialog-footer">
+        <span class="dialog-footer">
           <common-button @click="handleZipDlgClose">取 消</common-button>
           <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0" @click="uploadZip">确认上传</common-button>
         </span>
-      </template> 
+      </template>
     </common-dialog>
   </div>
 </template>
@@ -117,13 +117,11 @@ const props = defineProps({
   }
 })
 
-const upload = ref()
 const headers = ref({ Authorization: getToken() })
 const uploadLoading = ref(false)
 const fileList = ref([])
 const zipList = ref([])
 const errorList = ref([])
-const extraHeight= 130
 const uploadZipLoading = ref(false)
 const dialogVisible = ref(false)
 const tip = ref()
@@ -143,9 +141,9 @@ watch(
   { deep: true, immediate: true }
 )
 
-function handleClose() {
-  dialogVisible.value = false
-}
+// function handleClose() {
+//   dialogVisible.value = false
+// }
 async function handleRequest(file) {
   try {
     uploadLoading.value = true
@@ -188,13 +186,13 @@ function handleBefore(file) {
     const typeFlag = props.accept.split(',').indexOf(suffix) > -1
     // 判断文件格式
     if (!typeFlag) {
-      ElMessage({message:`上传文件后缀需为${props.accept}格式`, type:'error'})
+      ElMessage({ message: `上传文件后缀需为${props.accept}格式`, type: 'error' })
       return false
     }
   }
   // 判断文件大小
   if (!isLimit) {
-    ElMessage({message:`上传文件大小不能超过 ${props.sizeLimit}MB!`, type:'error'})
+    ElMessage({ message: `上传文件大小不能超过 ${props.sizeLimit}MB!`, type: 'error' })
     return false
   }
   if (suffix === '.zip') { // 文件类型为zip时做处理
@@ -248,7 +246,7 @@ async function uploadZip() {
   }
 }
 function handleExceed(files, fileList) {
-  ElMessage({message:`当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`, type:'warning'})
+  ElMessage({ message: `当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`, type: 'warning' })
 }
 function previewZip() {
   dialogVisible.value = true

@@ -66,9 +66,8 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
 import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
 import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
@@ -78,16 +77,16 @@ const currentOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined,
+    default: undefined
   },
   originOption: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
-  currentProject: {
+  globalProject: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 const defaultForm = {
   id: undefined,
@@ -110,7 +109,7 @@ const defaultForm = {
   subStructureDate: undefined,
   trussFloorPlate: undefined,
   trussFloorPlateDate: undefined,
-  detailSaveDTOParamList: undefined,
+  detailSaveDTOParamList: undefined
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
@@ -118,7 +117,7 @@ const checkDate = (rule, value, callback) => {
   if (!value) {
     callback(new Error('请选择完成日期'))
   } else {
-    if (props.currentProject.endDate && value > props.currentProject.endDate) {
+    if (props.globalProject.endDate && value > props.globalProject.endDate) {
       callback(new Error('不能超过项目完成时间'))
     } else {
       callback()
@@ -155,27 +154,27 @@ const rules = {
   trussFloorPlateDate: [{ validator: checkOtherDate, trigger: 'change' }],
   name: [
     { required: true, message: '请填写单体名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' },
+    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
   ],
-  remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
+  remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }
 
 watch(
-  () => props.currentProject,
+  () => props.globalProject,
   (val) => {
     if (isNotBlank(val)) {
       currentOption.value = []
       val.projectContentList.forEach((v) => {
         if (val.businessType === businessTypeEnum.ENUM.MACHINING.V) {
-          if (v.no && props.originOption.findIndex((k) => k.no == v.no) > -1) {
-            const optionVal = props.originOption.find((k) => k.no == v.no)
+          if (v.no && props.originOption.findIndex((k) => k.no === Number(v.no)) > -1) {
+            const optionVal = props.originOption.find((k) => k.no === Number(v.no))
             currentOption.value.push(optionVal)
           }
         } else if (val.businessType === businessTypeEnum.ENUM.INSTALLATION.V) {
           if (v.childrenList && v.childrenList.length > 0) {
             v.childrenList.forEach((value) => {
-              if (value.no && props.originOption.findIndex((k) => k.no == value.no) > -1) {
-                const optionVal = props.originOption.find((k) => k.no == value.no)
+              if (value.no && props.originOption.findIndex((k) => k.no === Number(value.no)) > -1) {
+                const optionVal = props.originOption.find((k) => k.no === Number(value.no))
                 currentOption.value.push(optionVal)
               }
             })
@@ -188,7 +187,7 @@ watch(
           key: 'flangingPiece',
           dateKey: 'flangingPieceDate',
           alias: 'ENCLOSURE',
-          no: TechnologyTypeAllEnum.ENUM.BENDING.V,
+          no: TechnologyTypeAllEnum.ENUM.BENDING.V
         }
         currentOption.value.push(optionVal)
       }
@@ -197,8 +196,8 @@ watch(
   { deep: true, immediate: true }
 )
 function mainDateOptionFn(time) {
-  if (props.currentProject.endDate) {
-    return time.getTime() - 8.64e6 > props.currentProject.endDate
+  if (props.globalProject.endDate) {
+    return time.getTime() - 8.64e6 > props.globalProject.endDate
   } else {
     return false
   }
@@ -216,11 +215,10 @@ CRUD.HOOK.beforeSubmit = () => {
   console.log(currentOption.value)
   crud.form.detailSaveDTOParamList = []
   currentOption.value.forEach((v) => {
-    console.log(v.no)
     crud.form.detailSaveDTOParamList.push({
       mete: crud.form[v.key],
       date: crud.form[v.dateKey],
-      type: v.no,
+      type: v.no
     })
   })
   crud.form.projectId = props.projectId

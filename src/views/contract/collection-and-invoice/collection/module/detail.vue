@@ -57,7 +57,7 @@
               >
             </template>
             <template v-else>
-              <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+              <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
             </template>
           </template>
           <common-button size="small" @click="closeDrawer">关闭</common-button>
@@ -282,9 +282,13 @@
               </el-table-column>
             </common-table>
             <div class="add-row-box">
-              <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-right: 15px" @click="addRow()"
-                >继续添加</common-button
-              >
+              <common-button
+                size="mini"
+                icon="el-icon-circle-plus-outline"
+                type="warning"
+                style="margin-right: 15px"
+                @click="addRow()"
+                >继续添加</common-button>
               <el-tooltip
                 effect="light"
                 :content="`1.贴现利息不可超过承兑面额\n
@@ -326,7 +330,6 @@ import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { digitUppercase } from '@/utils/data-type/number'
 import useVisible from '@compos/use-visible'
 import { auditTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@/utils/data-type/number'
 import { editStatus, edit } from '@/api/contract/collection-and-invoice/collection'
 import { ElNotification } from 'element-plus'
 
@@ -346,22 +349,22 @@ const defaultForm = {
   paymentDepositBank: undefined,
   paymentUnit: undefined,
   projectId: undefined,
-  remark: undefined,
+  remark: undefined
 }
 
 const props = defineProps({
   collectionInfo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   modelValue: {
     type: Boolean,
-    require: true,
+    require: true
   },
   type: {
     type: String,
-    require: true,
-  },
+    require: true
+  }
 })
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -387,7 +390,7 @@ const rules = {
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
   collectionUnitId: [{ required: true, message: '请选择收款单位', trigger: 'change' }],
-  paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }],
+  paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
 }
 const upperYuan = computed(() => {
   if (isModify.value) {
@@ -460,7 +463,7 @@ function collectionCompanyChange(val) {
   }
 }
 
-function handleSuccess(){
+function handleSuccess() {
   ElNotification({ title: '提交成功', type: 'success' })
   emit('success')
   closeDrawer()
@@ -469,7 +472,7 @@ function handleSuccess(){
 async function onSubmit(val) {
   try {
     if (props.type === 'detail') {
-      const valid = await formRef.value.validate()
+      await formRef.value.validate()
       await edit(form.value)
       handleSuccess()
     } else {
@@ -477,6 +480,7 @@ async function onSubmit(val) {
       handleSuccess()
     }
   } catch (e) {
+    console.log('收款修改', e)
   }
 }
 </script>

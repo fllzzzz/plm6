@@ -57,7 +57,7 @@
               >
             </template>
             <template v-else>
-              <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+              <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
             </template>
           </template>
           <common-button size="small" @click="closeDrawer">关闭</common-button>
@@ -242,14 +242,12 @@
 import { ref, watch, computed, defineProps, defineEmits } from 'vue'
 import projectCascader from '@comp-base/project-cascader'
 import { DP } from '@/settings/config'
-import { paymentFineModeEnum } from '@enum-ms/finance'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { auditTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@/utils/data-type/number'
 import { editStatus, edit } from '@/api/contract/collection-and-invoice/invoice'
 import { ElNotification } from 'element-plus'
 import UploadBtn from '@/components/file-upload/UploadBtn'
@@ -270,22 +268,22 @@ const defaultForm = {
   projectId: undefined,
   remark: undefined,
   attachmentIds: [],
-  attachments: undefined,
+  attachments: undefined
 }
 
 const props = defineProps({
   collectionInfo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   modelValue: {
     type: Boolean,
-    require: true,
+    require: true
   },
   type: {
     type: String,
-    require: true,
-  },
+    require: true
+  }
 })
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -311,7 +309,7 @@ const rules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
   invoiceUnitId: [{ required: true, message: '请选择开票单位', trigger: 'change' }],
   collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }],
-  invoiceAmount: [{ required: true, message: '请输入发票面额', trigger: 'change', type: 'number' }],
+  invoiceAmount: [{ required: true, message: '请输入发票面额', trigger: 'change', type: 'number' }]
 }
 
 function modifyInfo() {
@@ -328,7 +326,7 @@ function resetForm() {
   if (formRef.value) {
     formRef.value.resetFields()
   }
-  let DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
+  const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.invoiceDate = String(DataValue.invoiceDate)
   DataValue.projectId = props.collectionInfo.project.id
   DataValue.invoiceUnitId = Number(DataValue.invoiceUnitId)
@@ -357,8 +355,8 @@ async function getContractInfo(id) {
       console.log('获取合同信息', e)
     } finally {
       contractInfo.value = data
-      form.collectionUnit = contractInfo.value.customerUnit
-      form.invoiceUnitId = ''
+      form.value.collectionUnit = contractInfo.value.customerUnit
+      form.value.invoiceUnitId = ''
     }
   }
 }
@@ -366,9 +364,9 @@ async function getContractInfo(id) {
 function invoiceCompanyChange(val) {
   if (val) {
     const invoiceVal = contractInfo.value.companyBankAccountList.find((v) => v.companyId === val)
-    form.invoiceUnit = invoiceVal.companyName
+    form.value.invoiceUnit = invoiceVal.companyName
   } else {
-    form.invoiceUnit = ''
+    form.value.invoiceUnit = ''
   }
 }
 
@@ -382,7 +380,7 @@ const rateMoney = computed(() => {
   }
 })
 
-function handleSuccess(){
+function handleSuccess() {
   ElNotification({ title: '提交成功', type: 'success' })
   emit('success')
   closeDrawer()
@@ -391,8 +389,8 @@ function handleSuccess(){
 async function onSubmit(val) {
   try {
     if (props.type === 'detail') {
-      const valid = await formRef.value.validate()
-      form.value.tax = rateMoney || ''
+      await formRef.value.validate()
+      form.value.tax = rateMoney.value || ''
       form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
       await edit(form.value)
       handleSuccess()
@@ -401,6 +399,7 @@ async function onSubmit(val) {
       handleSuccess()
     }
   } catch (e) {
+    console.log('开票修改', e)
   }
 }
 </script>

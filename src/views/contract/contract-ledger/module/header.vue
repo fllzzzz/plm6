@@ -50,7 +50,6 @@
 
 <script setup>
 import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import { settlementStatusEnum, projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
@@ -69,14 +68,13 @@ const defaultQuery = {
   projectContent: undefined
 }
 
-const monomerSelectRef = ref()
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
   },
-  currentProjectType:{
+  currentProjectType: {
     type: [Number, String],
     default: undefined
   }
@@ -117,7 +115,7 @@ async function contentInfo() {
   }
 }
 
-function businessChange(){
+function businessChange() {
   crud.query.projectContent = undefined
   if (crud.query.businessType) {
     projectContentOption.value = crud.query.businessType === businessTypeEnum.ENUM.MACHINING.V ? projectContent1 : projectContent2

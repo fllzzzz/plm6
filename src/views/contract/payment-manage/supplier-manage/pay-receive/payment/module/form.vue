@@ -121,7 +121,7 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIALTRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCTTRANSPORT.V" label="合同金额(元)" prop="contractAmount">
+          <el-form-item v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
             <div style="width:260px;">
               <el-input
                 v-model="choseOrderInfo.amount"
@@ -132,7 +132,7 @@
               />
             </div>
           </el-form-item>
-          <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIALTRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCTTRANSPORT.V " label="运费金额(元)" prop="contractAmount">
+          <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
             <div style="width:260px;">
               <el-input
                 v-model="choseOrderInfo.amount"
@@ -396,18 +396,18 @@ const rules = {
   receiveUnit: [{ required: true, message: '请输入收款单位', trigger: 'blur' }],
   paymentAmount: [{ required: true, message: '请输入付款金额', trigger: 'blur' }]
 }
-const upperYuan = computed(()=>{
-  return form.paymentAmount? digitUppercase(form.paymentAmount): ''
+const upperYuan = computed(() => {
+  return form.paymentAmount ? digitUppercase(form.paymentAmount) : ''
 })
-const paymentRate = computed(()=>{
-  return form.paymentAmount && choseOrderInfo.value.amount? (form.paymentAmount/choseOrderInfo.value.amount)*100 +'%' : ''
+const paymentRate = computed(() => {
+  return form.paymentAmount && choseOrderInfo.value.amount ? (form.paymentAmount / choseOrderInfo.value.amount) * 100 + '%' : ''
 })
 watch(
   () => form.propertyType,
   (val) => {
     if (val) {
       getOrderInfo(val)
-    }else{
+    } else {
       choseOrderInfo.value = {}
       orderListOption.value = []
     }
@@ -415,9 +415,9 @@ watch(
   { deep: true, immediate: true }
 )
 
-async function getOrderInfo(type){
+async function getOrderInfo(type) {
   let data = {}
-  try{
+  try {
     data = await orderInfo(type)
     // data = [
     //   {
@@ -487,36 +487,36 @@ async function getOrderInfo(type){
     //     "supplierName": "供应商2" //供应商名称
     //   }
     // ]
-  }catch(e){
-    console.log('获取订单信息',e)
-  }finally{
+  } catch (e) {
+    console.log('获取订单信息', e)
+  } finally {
     orderListOption.value = data
     choseOrderInfo.value = {}
     clearInfo()
   }
 }
 
-function clearInfo(){
+function clearInfo() {
   form.orderId = ''
   form.orderSerialNumber = ''
   form.receiveBank = ''
   form.receiveBankAccount = ''
   form.receiveUnit = ''
   form.supplierId = ''
-  form.supplierName =''
-  form.paymentBank =''
-  form.paymentBankAccount =''
-  form.paymentUnit =''
-  form.paymentUnitId =''
+  form.supplierName = ''
+  form.paymentBank = ''
+  form.paymentBankAccount = ''
+  form.paymentUnit = ''
+  form.paymentUnitId = ''
   form.payForType = ''
   form.payForTypeName = ''
   form.basicClass = ''
   form.basicClassName = ''
 }
 
-function orderChange(val){
-  if(val){
-    choseOrderInfo.value = orderListOption.value.find(v=>v.id===val)
+function orderChange(val) {
+  if (val) {
+    choseOrderInfo.value = orderListOption.value.find(v => v.id === val)
     form.orderSerialNumber = choseOrderInfo.value.serialNumber
     form.receiveBank = choseOrderInfo.value.bankName
     form.receiveBankAccount = choseOrderInfo.value.bankAccount
@@ -524,21 +524,21 @@ function orderChange(val){
     form.supplierId = choseOrderInfo.value.supplierId
     form.supplierName = choseOrderInfo.value.supplierName
     form.payForType = choseOrderInfo.value.payForType
-    form.payForTypeName = choseOrderInfo.value.payForType? contractPayForEnum.VL[choseOrderInfo.value.payForType] : ''
+    form.payForTypeName = choseOrderInfo.value.payForType ? contractPayForEnum.VL[choseOrderInfo.value.payForType] : ''
     form.basicClass = choseOrderInfo.value.basicClass
     form.basicClassName = choseOrderInfo.value.basicClassName
-    form.paymentBank =''
-    form.paymentBankAccount =''
-    form.paymentUnit =''
-    form.paymentUnitId =''
+    form.paymentBank = ''
+    form.paymentBankAccount = ''
+    form.paymentUnit = ''
+    form.paymentUnitId = ''
   } else {
     clearInfo()
   }
 }
 
-function orderCompanyChange(val){
-  if(val){
-    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+function orderCompanyChange(val) {
+  if (val) {
+    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v => v.companyId === val)
     form.paymentBankAccount = orderVal.account
     form.paymentBank = orderVal.depositBank
     form.paymentUnit = orderVal.companyName
@@ -549,7 +549,7 @@ function orderCompanyChange(val){
   }
 }
 
-CRUD.HOOK.beforeSubmit = (crud,form)=>{
+CRUD.HOOK.beforeSubmit = (crud, form) => {
   crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
 }
 </script>

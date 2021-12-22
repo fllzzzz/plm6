@@ -21,8 +21,6 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import { supplierPayTypeEnum } from '@enum-ms/contract'

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -87,7 +87,7 @@
             <span v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.date }}</span>
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="columns.visible('axis')"
           key="axis"
           prop="axis"
@@ -96,13 +96,13 @@
           min-width="180"
         >
           <template v-slot="scope">
-            <!-- <div style="position: relative">
+            <div style="position: relative">
               <span class="progress-left">已完成/50(t)</span>
               <el-progress :stroke-width="22" :percentage="20" :color="'#13ce66'" />
               <span class="progress-right">总工作量/100(t)</span>
-            </div> -->
+            </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -116,33 +116,28 @@
 <script setup>
 import crudApi from '@/api/plan/plan-progress'
 import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
-import { isNotBlank } from '@data-type/index'
-import { dateDifference } from '@/utils/date'
+import { areaPlanTypeEnum } from '@enum-ms/plan'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['plan:get'],
-  edit: ['plan:edit'],
+  edit: ['plan:edit']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
@@ -151,7 +146,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     requiredQuery: ['productType'],
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -159,7 +154,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.plan-make',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 watch(
@@ -173,52 +168,18 @@ watch(
   { immediate: true }
 )
 
-function handelModifying(row, modifying) {
-  row.modifying = modifying
-  if (!modifying) {
-    row.startDate = row.sourceStartDate
-    row.endDate = row.sourceEndDate
-    row.remark = row.sourceRemark
-    this.handleDateChange('', row)
-  }
-}
-
-function handleDateChange(val, row) {
-  if (row.startDate && row.endDate) {
-    row.dateDifference = dateDifference(row.startDate, row.endDate) + '天'
-  } else {
-    row.dateDifference = ''
-  }
-}
-async function submit(row) {
-  try {
-    const data = {
-      id: row.id,
-      startDate: row.startDate,
-      endDate: row.endDate,
-      remark: row.remark,
-    }
-    await crudApi.edit(data)
-    crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-  } catch (error) {
-    console.log('区域计划保存', error)
-  } finally {
-    crud.toQuery()
-  }
-}
-
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v) => {
     v.areaTraceDTOList = v.monomerDetail.areaTraceDTOList && v.monomerDetail.areaTraceDTOList.length > 0 ? v.monomerDetail.areaTraceDTOList : []
-    if(v.areaTraceDTOList.length>0){
-      v.areaTraceDTOList.map(val=>{
-        const deepVal = val.planDetailTraceDTOList.find(k=>k.type===areaPlanTypeEnum.ENUM.DEEPEN.V)
-        const processVal = val.planDetailTraceDTOList.find(k=>k.type===areaPlanTypeEnum.ENUM.PROCESS.V)
-        const installVal = val.planDetailTraceDTOList.find(k=>k.type===areaPlanTypeEnum.ENUM.INSTALL.V)
+    if (v.areaTraceDTOList.length > 0) {
+      v.areaTraceDTOList.map(val => {
+        const deepVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.DEEPEN.V)
+        const processVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.PROCESS.V)
+        const installVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.INSTALL.V)
         val.deepVal = deepVal
         val.processVal = processVal
         val.installVal = installVal
-      }) 
+      })
     }
     return v
   })

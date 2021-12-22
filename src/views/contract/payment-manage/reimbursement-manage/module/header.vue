@@ -50,19 +50,17 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { settlementStatusEnum, reimbursementTypeEnum, contractReimbursementDateEnum, invoiceTypeEnum } from '@enum-ms/contract'
+import { reimbursementTypeEnum, contractReimbursementDateEnum } from '@enum-ms/contract'
 import { reimbursementSum } from '@/api/contract/supplier-manage/reimbursement'
 import Expense from './expense'
-import { ElRadioGroup } from 'element-plus'
 
 const defaultQuery = {
   projectId: undefined,
-  dateType: contractReimbursementDateEnum.ENUM.UPDATEDATE.V,
+  dateType: contractReimbursementDateEnum.ENUM.UPDATE_DATE.V,
   createTime: [],
   startDate: undefined,
   endDate: undefined,
@@ -70,7 +68,7 @@ const defaultQuery = {
   applyUserName: undefined,
   type: undefined,
   choseId: undefined,
-  writtenByName: undefined,
+  writtenByName: undefined
 }
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
@@ -78,7 +76,7 @@ const totalSum = ref()
 getReimbursementSum()
 
 async function getReimbursementSum() {
-  let data = undefined
+  let data
   try {
     data = await reimbursementSum()
   } catch (e) {

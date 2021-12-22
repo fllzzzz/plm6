@@ -214,13 +214,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
-import projectCascader from '@comp-base/project-cascader'
 import { DP } from '@/settings/config'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
-import { supplierPayMentTypeEnum, contractPayForEnum, supplierPayModeEnum } from '@enum-ms/contract'
+import { supplierPayMentTypeEnum } from '@enum-ms/contract'
 import { orderInfo } from '@/api/contract/supplier-manage/pay-invoice/pay'
 import UploadBtn from '@/components/file-upload/UploadBtn'
 
@@ -247,7 +246,7 @@ const defaultForm = {
   supplierId: undefined,
   supplierName: undefined,
   tax: undefined,
-  taxRate: undefined 
+  taxRate: undefined
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
@@ -273,7 +272,7 @@ watch(
   (val) => {
     if (val) {
       getOrderInfo(val)
-    }else{
+    } else {
       choseOrderInfo.value = {}
       orderListOption.value = []
     }
@@ -281,9 +280,9 @@ watch(
   { deep: true, immediate: true }
 )
 
-async function getOrderInfo(type){
+async function getOrderInfo(type) {
   let data = {}
-  try{
+  try {
     data = await orderInfo(type)
     // data = [
     //   {
@@ -353,30 +352,30 @@ async function getOrderInfo(type){
     //     "supplierName": "供应商2" //供应商名称
     //   }
     // ]
-  }catch(e){
-    console.log('获取订单信息',e)
-  }finally{
+  } catch (e) {
+    console.log('获取订单信息', e)
+  } finally {
     orderListOption.value = data
     choseOrderInfo.value = {}
     clearInfo()
   }
 }
 
-function clearInfo(){
+function clearInfo() {
   form.basicClass = undefined
   form.basicClassName = undefined
   form.orderId = undefined
   form.orderSerialNumber = undefined
   form.receiveInvoiceUnit = undefined
-  form.receiveInvoiceUnitId= undefined
+  form.receiveInvoiceUnitId = undefined
   form.supplierId = undefined
   form.supplierName = undefined
   form.invoiceUnit = undefined
 }
 
-function orderChange(val){
-  if(val){
-    choseOrderInfo.value = orderListOption.value.find(v=>v.id===val)
+function orderChange(val) {
+  if (val) {
+    choseOrderInfo.value = orderListOption.value.find(v => v.id === val)
     form.orderSerialNumber = choseOrderInfo.value.serialNumber
     form.basicClass = choseOrderInfo.value.basicClass
     form.basicClassName = choseOrderInfo.value.basicClassName
@@ -384,29 +383,27 @@ function orderChange(val){
     form.supplierName = choseOrderInfo.value.supplierName
     form.invoiceUnit = choseOrderInfo.value.supplierName
     form.receiveInvoiceUnit = undefined
-    form.receiveInvoiceUnitId= undefined
+    form.receiveInvoiceUnitId = undefined
   } else {
     clearInfo()
   }
 }
 
-function orderCompanyChange(val){
-  if(val){
-    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+function orderCompanyChange(val) {
+  if (val) {
+    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v => v.companyId === val)
     form.receiveInvoiceUnit = orderVal.companyName
   } else {
     form.receiveInvoiceUnit = undefined
   }
 }
 
-const rateMoney = computed(()=>{
-  if(choseOrderInfo.value.amount && form.taxRate){
-    return ((choseOrderInfo.value.amount*form.taxRate)/100).toFixed(DP.YUAN)
-  }
+const rateMoney = computed(() => {
+  return choseOrderInfo.value.amount && form.taxRate ? ((choseOrderInfo.value.amount * form.taxRate) / 100).toFixed(DP.YUAN) : ''
 })
 
-CRUD.HOOK.beforeSubmit = (crud,form)=>{
-  crud.form.tax = rateMoney || ''
+CRUD.HOOK.beforeSubmit = (crud, form) => {
+  crud.form.tax = rateMoney.value || ''
   crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
 }
 

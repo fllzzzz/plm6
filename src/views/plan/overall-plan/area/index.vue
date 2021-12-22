@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length>0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" @monomerChangeType="monomerChange"/>
@@ -65,7 +65,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject','globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['area:get'],

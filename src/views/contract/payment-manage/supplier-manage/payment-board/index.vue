@@ -265,7 +265,7 @@
         </el-table-column>
       </template>
       <!-- 操作按钮 -->
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('paymentAmount')"
         key="paymentAmount"
         :show-overflow-tooltip="true"
@@ -274,12 +274,12 @@
         align="center"
         min-width="100"
       >
-        <template v-slot="scope">
+        <template v-slot="scope"> -->
           <!-- <span>{{
             scope.row.paymentAmount && scope.row.paymentAmount > 0 ? scope.row.paymentAmount.toThousand() : scope.row.paymentAmount
           }}</span> -->
-        </template>
-      </el-table-column>
+        <!-- </template>
+      </el-table-column> -->
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -288,47 +288,37 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payboard'
-import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
+import { ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import {
-  auditTypeEnum,
-  systemTypeEnum,
   supplierPayMentTypeEnum,
-  contractPayForEnum,
-  supplierPayModeEnum,
-  supplierPayTypeEnum,
+  supplierPayTypeEnum
 } from '@enum-ms/contract'
-import { DP } from '@/settings/config'
-import useDict from '@compos/store/use-dict'
-import { toThousand } from '@/utils/data-type/number'
 
 // crud交由presenter持有
 const permission = {
-  get: ['supplierPayList:get'],
+  get: ['supplierPayList:get']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
-const dict = useDict(['payment_reason'])
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '付款台账',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -336,7 +326,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.supplierPayList',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 </script>
 

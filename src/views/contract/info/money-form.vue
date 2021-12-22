@@ -11,16 +11,16 @@
     <template #title>
       <div class="dialog-title">
         <span class="title-left">合同金额变更</span>
-        <common-button v-if="auditStaus" size="mini" :type="auditStaus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStaus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
-          {{ auditStaus==auditTypeEnum.ENUM.REJECT.V?'已驳回':(auditStaus==auditTypeEnum.ENUM.PASS.V?'已通过':'审核中') }}
+        <common-button v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStatus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
+          {{ auditStatus==auditTypeEnum.ENUM.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.ENUM.PASS.V?'已通过':'审核中') }}
         </common-button>
         <span style="position:absolute;right:20px;">
-          <template v-if="auditStaus">
-            <common-button v-if="auditStaus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
-            <common-button v-if="auditStaus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
+          <template v-if="auditStatus">
+            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
+            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
           </template>
           <template v-else>
-            <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+            <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
           </template>
           <common-button size="small"  @click="handleClose">关闭</common-button>
         </span>
@@ -29,7 +29,7 @@
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
       <el-form-item label="合同编号" prop="serialNumber">
         <el-input
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="contractName"
           style="width: 320px;"
           disabled
@@ -37,28 +37,14 @@
         <span v-else>{{ contractName }}</span>
       </el-form-item>
       <el-form-item label="项目名称" prop="serialNumber">
-        <el-input
-          v-if="!auditStaus"
-          v-model="contractInfo.name"
-          placeholder="项目名称"
-          style="width: 320px;"
-          disabled
-        />
-        <span v-else>{{ contractInfo.name }}</span>
+        <span>{{ contractInfo.name }}</span>
       </el-form-item>
       <el-form-item label="合同金额" prop="serialNumber">
-        <el-input
-          v-if="!auditStaus"
-          v-model="contractInfo.contractAmount"
-          placeholder="项目金额"
-          style="width: 320px;"
-          disabled
-        />
-        <span v-else>{{ contractInfo.contractAmount }}</span>
+         <span>{{ contractInfo.contractAmount }}</span>
       </el-form-item>
       <el-form-item label="变更内容" prop="changeContent">
         <el-input
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="form.changeContent"
           placeholder="变更内容"
           style="width: 320px;"
@@ -67,7 +53,7 @@
       </el-form-item>
       <el-form-item label="变更金额" prop="changeMoney">
         <el-input-number
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="form.changeMoney"
           :max="9999999999"
           :min="-contractInfo.contractAmount"
@@ -81,7 +67,7 @@
       </el-form-item>
       <el-form-item label="变更后合同金额(元)" prop="newAmount">
         <el-input-number
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="newAmount"
           :max="9999999999"
           :precision="DP.YUAN"
@@ -94,7 +80,7 @@
       </el-form-item>
       <el-form-item label="变更日期" prop="changeDate">
         <el-date-picker
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="form.changeDate"
           type="date"
           value-format="x"
@@ -105,7 +91,7 @@
       </el-form-item>
       <el-form-item label="负责人" prop="userList">
         <user-dept-cascader
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="form.userList"
           multiple
           filterable
@@ -118,7 +104,7 @@
       </el-form-item>
       <el-form-item label="描述" prop="changeDesc">
         <el-input
-          v-if="!auditStaus"
+          v-if="!auditStatus"
           v-model="form.changeDesc"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 8}"
@@ -129,7 +115,7 @@
         <span v-else>{{ form.changeDesc }}</span>
       </el-form-item>
       <el-form-item label="附件">
-        <upload-btn v-if="!auditStaus" ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
+        <upload-btn v-if="!auditStatus" ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
         <span v-else />
       </el-form-item>
     </el-form>
@@ -137,7 +123,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, watch } from 'vue'
+import { ref, defineProps, computed, watch, defineEmits } from 'vue'
 import { auditTypeEnum, contractChangeTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import useVisible from '@compos/use-visible'
@@ -146,20 +132,22 @@ import UploadBtn from '@/components/file-upload/UploadBtn'
 import { DP } from '@/settings/config'
 import { editContract } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
-const props=defineProps({
+import { ElNotification } from 'element-plus'
+
+const props = defineProps({
   projectId: [Number, String],
-  auditStaus: [Number, String],
+  auditStatus: [Number, String],
   modelValue: {
     type: Boolean,
     require: true
   },
-  contractInfo:{
+  contractInfo: {
     type: Object,
     default: () => {}
   }
 })
 
- const defaultForm = {
+const defaultForm = {
   id: undefined,
   projectId: '',
   changeMoney: undefined,
@@ -187,7 +175,7 @@ const validateLength = (rule, value, callback) => {
 const rules = {
   changeMoney: { required: true, message: '请填写变更金额', trigger: 'change' },
   userList: { required: true, validator: validateLength, trigger: 'change' },
-  changeDate: { required: true, message: '请选择变更日期', trigger: 'blur' },
+  changeDate: { required: true, message: '请选择变更日期', trigger: 'blur' }
 }
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -205,18 +193,16 @@ watch(
 watch(
   () => props.contractInfo,
   (val) => {
-    contractName.value = isNotBlank(val) ? props.contractInfo.serialNumber+' '+props.contractInfo.shortName :''
+    contractName.value = isNotBlank(val) ? props.contractInfo.serialNumber + ' ' + props.contractInfo.shortName : ''
   },
   { deep: true, immediate: true }
 )
 
-const newAmount = computed(()=>{
-  if(props.contractInfo.contractAmount && form.value.changeMoney){
-    return props.contractInfo.contractAmount + form.value.changeMoney
-  }
+const newAmount = computed(() => {
+  return props.contractInfo.contractAmount && form.value.changeMoney ? props.contractInfo.contractAmount + form.value.changeMoney : undefined
 })
 
-function resetForm(data){
+function resetForm(data) {
   if (formRef.value) {
     formRef.value.resetFields()
   }
@@ -235,16 +221,16 @@ function resetForm(data){
   }
 }
 
-async function onSubmit(){
+async function onSubmit() {
   const valid = await formRef.value.validate()
-  if(!valid){
+  if (!valid) {
     return
   }
   form.value.projectId = props.projectId
   form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
   form.value.changeAmount = newAmount
-  const submitform={
-    type: contractChangeTypeEnum.ENUM.CONTRACTAMOUNT.V,
+  const submitform = {
+    type: contractChangeTypeEnum.ENUM.CONTRACT_AMOUNT.V,
     ...form.value
   }
   try {

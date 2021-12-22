@@ -64,7 +64,7 @@ const permission = {
 }
 
 const tableRef = ref()
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '权限类型',
     sort: [],
@@ -79,34 +79,4 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 157
 })
-
-// const props = defineProps({
-//   line: {
-//     type: Object,
-//     default: () => {}
-//   }
-// })
-
-// const lineName = computed(() => {
-//   return props.line && props.line.name
-// })
-
-// watch(
-//   () => lineName,
-//   (val) => {
-//     if (val.value) {
-//       crud.toQuery()
-//     }
-//   },
-//   { deep: true, immediate: true }
-// )
-
-CRUD.HOOK.beforeRefresh = () => {
-  // crud.query.name = lineName
-  // return !!crud.query.name
-}
-
-CRUD.HOOK.beforeSubmit = () => {
-  // crud.form.name = lineName
-}
 </script>

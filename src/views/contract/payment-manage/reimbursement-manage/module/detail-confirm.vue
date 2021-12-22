@@ -57,7 +57,7 @@
               >
             </template>
             <template v-else>
-              <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+              <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
             </template>
           </template>
           <common-button size="small" @click="closeDrawer">关闭</common-button>
@@ -381,10 +381,9 @@ import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { reimbursementTypeEnum, businessTypeEnum } from '@enum-ms/contract'
-import { toThousand, digitUppercase } from '@/utils/data-type/number'
+import { digitUppercase } from '@/utils/data-type/number'
 import { edit, editStatus } from '@/api/contract/supplier-manage/reimbursement'
 import { ElNotification } from 'element-plus'
-import UploadBtn from '@/components/file-upload/UploadBtn'
 import useTableValidate from '@compos/form/use-table-validate'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { isNotBlank } from '@data-type/index'
@@ -402,22 +401,22 @@ const defaultForm = {
   collectionUserId: undefined,
   detailList: [],
   projectId: undefined,
-  remark: undefined,
+  remark: undefined
 }
 
 const props = defineProps({
   collectionInfo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   modelValue: {
     type: Boolean,
-    require: true,
+    require: true
   },
   type: {
     type: String,
-    require: true,
-  },
+    require: true
+  }
 })
 
 const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }
@@ -426,7 +425,8 @@ const contractInfo = ref({})
 const isModify = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
-
+const collectionRef = ref()
+const applyRef = ref()
 watch(
   () => form.value.projectId,
   (val) => {
@@ -479,7 +479,7 @@ function resetForm() {
   if (formRef.value) {
     formRef.value.resetFields()
   }
-  let DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
+  const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.applyDate = String(DataValue.applyDate)
   form.value = DataValue
 }
@@ -611,11 +611,11 @@ function addRow() {
     invoiceNo: undefined,
     invoiceType: undefined,
     taxRate: undefined,
-    verify: {},
+    verify: {}
   })
 }
 
-function handleSuccess(){
+function handleSuccess() {
   ElNotification({ title: '提交成功', type: 'success' })
   emit('success')
   closeDrawer()
@@ -623,26 +623,26 @@ function handleSuccess(){
 
 async function onSubmit(val) {
   try {
-    if(val === reimbursementTypeEnum.ENUM.REJECT.V){
-      let submitData = {
+    if (val === reimbursementTypeEnum.ENUM.REJECT.V) {
+      const submitData = {
         confirmStatus: val,
         id: form.value.id
       }
       await editStatus(submitData)
       handleSuccess()
-    }else{
+    } else {
       const { validResult, dealList } = tableValidate(form.value.detailList)
       if (validResult) {
         form.value.detailList = dealList
       } else {
         return validResult
       }
-      const valid = await formRef.value.validate()
+      await formRef.value.validate()
       if (props.type === 'detail') {
         await edit(form.value)
         handleSuccess()
       } else {
-        let submitData = {
+        const submitData = {
           actuallyPayAmount: form.value.actuallyPayAmount,
           confirmStatus: val,
           detailConfirmDTOParamList: form.value.detailList,
@@ -650,13 +650,15 @@ async function onSubmit(val) {
           paymentBankAccount: form.value.paymentBankAccount,
           paymentDepositBank: form.value.paymentDepositBank,
           paymentUnit: form.value.paymentUnit,
-          paymentUnitId: form.value.paymentUnitId,
+          paymentUnitId: form.value.paymentUnitId
         }
         await editStatus(submitData)
         handleSuccess()
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log('报销审核', e)
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -157,29 +157,26 @@
 <script setup>
 import crudApi from '@/api/contract/change-audit-log'
 import { ref, watch, defineProps } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@/utils/data-type/number'
 
-const { globalProjectId, currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
+const { currentProjectType } = mapGetters(['currentProjectType'])
 // crud交由presenter持有
 const permission = {
   get: ['changeAuditLog:get'],
   editStatus: ['changeAuditLog:editStatus'],
-  audit: ['changeAuditLog:audit'],
+  audit: ['changeAuditLog:audit']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -190,7 +187,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -198,14 +195,14 @@ const { crud, columns, CRUD } = useCRUD(
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined,
+    default: undefined
   }
 })
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.changeAuditLog',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 watch(
@@ -219,7 +216,7 @@ watch(
   { immediate: true }
 )
 
-function openDetail(row,type){
+function openDetail(row, type) {
 
 }
 

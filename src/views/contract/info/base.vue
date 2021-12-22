@@ -309,7 +309,6 @@
 import { ref, defineProps, watch, computed, defineExpose } from 'vue'
 import { dateDifference } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
-import { toThousand } from '@data-type/number'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
@@ -317,11 +316,10 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import uploadList from '@/components/file-upload/uploadList'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
-import { ElLoading } from 'element-plus'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 
 const formRef = ref()
-const dict = useDict(['margin_type','currency_type'])
+const dict = useDict(['margin_type', 'currency_type'])
 const defaultForm = {
   id: undefined,
   serialNumber: undefined, // 合同编号
@@ -349,7 +347,7 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
-const rules= {
+const rules = {
   serialNumber: [
     { required: true, message: '请填写合同编号', trigger: 'blur' },
     { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
@@ -395,20 +393,20 @@ watch(
 watch(
   () => props.isModify,
   (val) => {
-    if(val){
+    if (val) {
       resetForm()
     }
   },
   { deep: true, immediate: true }
 )
 
-const totalDuration = computed(()=>{
+const totalDuration = computed(() => {
   if (form.value.startDate && form.value.endDate) {
     return dateDifference(form.value.startDate, form.value.endDate)
   }
   return ''
 })
-const managementFee=computed(()=>{
+const managementFee = computed(() => {
   if (form.value.managementFeeRate && form.value.contractAmount) {
     return (form.value.managementFeeRate * form.value.contractAmount / 100).toFixed(DP.YUAN)
   }
@@ -422,17 +420,17 @@ function resetForm() {
   if (formRef.value) {
     formRef.value.resetFields()
   }
-  form.value  = JSON.parse(JSON.stringify(detail.value))
+  form.value = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(formRef, form)
 }
 
 async function validateForm() {
   try {
     const valid = await formRef.value.validate()
-    if (valid) {
-      const data = JSON.parse(JSON.stringify(form.value))
-      // data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
-    }
+    // if (valid) {
+    //   const data = JSON.parse(JSON.stringify(form.value))
+    //   data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
+    // }
     return valid
   } catch (error) {
     console.log('error', error)
@@ -477,8 +475,8 @@ async function fetchDetail() {
   try {
     const res = await getContractBase(props.projectId)
     _detail = JSON.parse(JSON.stringify(res))
-    _detail.startDate =_detail.startDate? String(_detail.startDate): ''
-    _detail.endDate =_detail.endDate? String(_detail.endDate): ''
+    _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
+    _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
     _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifference(_detail.startDate, _detail.endDate) : ''
     _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? (_detail.managementFeeRate * _detail.contractAmount / 100).toFixed(DP.YUAN) : ''
     _detail.attachments = _detail.attachments || []

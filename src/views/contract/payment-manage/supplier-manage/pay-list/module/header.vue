@@ -58,7 +58,7 @@
       <el-input v-model="query.paymentUnit" placeholder="付款单位" style="width: 200px" class="filter-item" />
       <el-input v-model="query.receiveUnit" placeholder="收款单位" style="width: 200px" class="filter-item" />
       <rrOperation />
-      <crudOperation add-text="付款填报"> 
+      <crudOperation add-text="付款填报">
         <template #viewLeft>
           <el-tag type="success" v-if="totalSum" size="medium">{{ `累计付款金额：${totalSum.toThousand()}元` }}</el-tag>
         </template>
@@ -68,17 +68,14 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { supplierPayMentTypeEnum, auditTypeEnum, contractPayDateTypeEnum, contractPayForEnum } from '@enum-ms/contract'
+import { supplierPayMentTypeEnum, contractPayForEnum } from '@enum-ms/contract'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
-import { getContentInfo } from '@/api/contract/project'
 import useDict from '@compos/store/use-dict'
 import { paySum } from '@/api/contract/supplier-manage/pay-invoice/pay'
-import { toThousand } from '@/utils/data-type/number'
 
 const dict = useDict(['payment_reason'])
 const defaultQuery = {
@@ -92,7 +89,7 @@ const defaultQuery = {
   receiveUnit: undefined,
   supplierName: undefined,
   paymentReason: undefined,
-  payForType: undefined,
+  payForType: undefined
 }
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
@@ -101,7 +98,7 @@ const totalSum = ref()
 getPaySum()
 
 async function getPaySum() {
-  let data = undefined
+  let data
   try {
     data = await paySum()
   } catch (e) {

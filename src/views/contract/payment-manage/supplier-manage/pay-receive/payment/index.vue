@@ -168,6 +168,7 @@
     </el-table-column>
     <!--编辑与删除-->
     <el-table-column
+      v-if="checkPermission([...permission.edit,...permission.audit])"
       label="操作"
       width="130px"
       align="center"
@@ -188,20 +189,16 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import { auditTypeEnum, systemTypeEnum, supplierPayMentTypeEnum, contractPayForEnum, supplierPayModeEnum } from '@enum-ms/contract'
-import { DP } from '@/settings/config'
 import useDict from '@compos/store/use-dict'
-import { toThousand } from '@/utils/data-type/number'
 
 // crud交由presenter持有
 const permission = {
@@ -230,7 +227,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['serialNumber','amount', 'amount1', 'inBoundAmount', 'applyUserName', 'applyDate', 'applyAmount', 'payRate', 'paymentReason', 'payType', 'paymentBank', 'paymentBankAccount','projectList','auditUserName','auditTime'],
+    invisibleColumns: ['serialNumber', 'amount', 'amount1', 'inBoundAmount', 'applyUserName', 'applyDate', 'applyAmount', 'payRate', 'paymentReason', 'payType', 'paymentBank', 'paymentBankAccount', 'projectList', 'auditUserName', 'auditTime'],
     hasPagination: true
   },
   tableRef
@@ -242,14 +239,14 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 157
 })
 
-function openDetail(row,type){
+function openDetail(row, type) {
   currentInfo.value = row
   showType.value = type
   detailVisble.value = true
 }
 
-CRUD.HOOK.handleRefresh = (crud,data)=>{
-  // data.data.content 
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  // data.data.content
 }
 
 </script>

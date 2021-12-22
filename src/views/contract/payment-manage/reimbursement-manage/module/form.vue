@@ -178,7 +178,12 @@
           </el-table-column>
         </common-table>
         <div class="add-row-box">
-          <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-right: 15px" @click="addRow()"
+          <common-button
+size="mini"
+icon="el-icon-circle-plus-outline"
+type="warning"
+style="margin-right: 15px"
+@click="addRow()"
             >继续添加</common-button
           >
         </div>
@@ -216,23 +221,22 @@ const defaultForm = {
   collectionUserId: undefined,
   detailList: [],
   projectId: undefined,
-  remark: undefined,
+  remark: undefined
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
-const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }
 const contractInfo = ref({})
 const rules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'blur' }],
   collectionUserId: [{ required: true, message: '请选择收款人', trigger: 'change' }],
   applyUserId: [{ required: true, message: '请选择申请人', trigger: 'change' }],
-  applyDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
+  applyDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }]
 }
 
 const tableRules = {
   choseId: [{ required: true, message: '请选择报销种类', trigger: 'change' }],
-  applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }],
+  applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
@@ -341,7 +345,7 @@ function addRow() {
     invoiceNo: undefined,
     invoiceType: undefined,
     taxRate: undefined,
-    verify:{}
+    verify: {}
   })
 }
 

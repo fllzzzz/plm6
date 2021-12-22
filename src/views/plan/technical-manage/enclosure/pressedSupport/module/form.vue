@@ -87,14 +87,11 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
-import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
 
 const formRef = ref()
-const isdisable = ref(false)
 const maxNubmer = 999999999
 const defaultForm = {
   id: undefined,
@@ -106,32 +103,32 @@ const defaultForm = {
   width: undefined,
   length: undefined,
   quantity: '',
-  remark: '',
+  remark: ''
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const rules = {
   name: [
     { required: true, message: '请填写名称', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   serialNumber: [
     { required: true, message: '请填写编号', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   plate: [
     { required: true, message: '请填写版型', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   material: [
     { required: true, message: '请填写材质', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   thickness: [{ required: true, message: '请填写板厚', trigger: 'blur', type: 'number' }],
   width: [{ required: true, message: '请填写有效宽度', trigger: 'blur', type: 'number' }],
   length: [{ required: true, message: '请填写长度', trigger: 'blur', type: 'number' }],
   quantity: [{ required: true, message: '请填写数量', trigger: 'blur', type: 'number' }],
-  remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
+  remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {

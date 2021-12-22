@@ -228,7 +228,7 @@
           <div>{{ scope.row.source ? systemTypeEnum.VL[scope.row.source] : '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="260px" align="center">
+      <el-table-column v-if="checkPermission([...permission.edit,...permission.audit])" label="操作" width="260px" align="center">
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')" />
           <common-button
@@ -252,36 +252,30 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/reimbursement'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import DetailConfirm from './module/detail-confirm'
 import { reimbursementTypeEnum, systemTypeEnum, invoiceTypeEnum } from '@enum-ms/contract'
-import { DP } from '@/settings/config'
-import useDict from '@compos/store/use-dict'
-import { paymentFineModeEnum } from '@enum-ms/finance'
-import { toThousand } from '@/utils/data-type/number'
 
 // crud交由presenter持有
 const permission = {
   get: ['reimbursement:get'],
   add: ['reimbursement:add'],
   edit: ['reimbursement:edit'],
-  audit: ['reimbursement:audit'],
+  audit: ['reimbursement:audit']
 }
 
 const optShow = {
   add: true,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -289,7 +283,6 @@ const currentInfo = ref({})
 const showType = ref('detail')
 const detailVisble = ref(false)
 const confirmVisble = ref(false)
-const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '报销填报',
@@ -298,7 +291,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     invisibleColumns: ['applyDepartName', 'applyDate', 'collectionUserName', 'confirmUserName', 'confirmTime'],
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -306,7 +299,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.collection',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 function openDetail(row, type) {
@@ -346,7 +339,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
               invoiceNo: val.invoiceNo,
               invoiceType: val.invoiceType,
               taxRate: val.taxRate,
-              actuallyPayAmount: val.actuallyPayAmount ? val.actuallyPayAmount : undefined,
+              actuallyPayAmount: val.actuallyPayAmount ? val.actuallyPayAmount : undefined
             })
             val.rowKey = `${k.expenseTypeId}__${val.id}`
             k.applyAmount += val.applyAmount

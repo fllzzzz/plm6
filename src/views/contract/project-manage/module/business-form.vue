@@ -146,7 +146,7 @@
       <!-- <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" /> -->
       <!--围护产品数据弹窗  -->
       <common-drawer
-        :visible.sync="enclosureVisible"
+        v-model:visible="enclosureVisible"
         :with-header="true"
         :show-close="false"
         :wrapper-closable="false"
@@ -187,7 +187,7 @@ import {
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
-  TechnologyTypeEnum,
+  TechnologyTypeEnum
 } from '@enum-ms/contract'
 import { getContentInfo } from '@/api/contract/project'
 import { ElMessage } from 'element-plus'
@@ -197,7 +197,7 @@ import enclosureShow from './enclosure-show'
 const formRef = ref()
 let projectContent1 = []
 let projectContent2 = []
-let originConstruct = []
+const originConstruct = []
 const projectContentOption = ref([])
 const showItem = ref([])
 const showCategory = ref([])
@@ -206,12 +206,12 @@ const enclosureFormRef = ref()
 const props = defineProps({
   formData: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   projectType: {
     type: Number,
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 const defaultForm = {
   contractSignBodyId: undefined, // 合同签订主体
@@ -233,7 +233,7 @@ const defaultForm = {
   profiledPlateSaveRequestVOS: [],
   pressureBearingPlateSaveVOS: [],
   trussFloorPlateSaveRequestVOS: [],
-  sandwichBoardSaveRequestVOS: [],
+  sandwichBoardSaveRequestVOS: []
 }
 
 const techForm = {
@@ -242,7 +242,7 @@ const techForm = {
   profiledPlateSaveRequestVOS: [],
   pressureBearingPlateSaveVOS: [],
   trussFloorPlateSaveRequestVOS: [],
-  sandwichBoardSaveRequestVOS: [],
+  sandwichBoardSaveRequestVOS: []
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -252,8 +252,8 @@ const rules = {
   projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
   projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
   contractSignBodyId: [
-    { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' },
-  ],
+    { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
+  ]
 }
 
 watch(
@@ -334,9 +334,9 @@ function getshowItem(val) {
   showCategory.value = []
   const totalArr = [
     TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V,
-    TechnologyTypeEnum.ENUM.PROFILEDPLATE.V,
-    TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V,
-    TechnologyTypeEnum.ENUM.PRESSUREBEARINGPLATE.V,
+    TechnologyTypeEnum.ENUM.PROFILED_PLATE.V,
+    TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V,
+    TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V
   ]
   if (val.length > 0) {
     val.map((v) => {
@@ -375,10 +375,10 @@ function enclosureSave() {
     ...form.value,
     enclosureInfo: info,
     structureSaveRequestVOS: info[TechnologyTypeEnum.ENUM.STRUCTURE.V],
-    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.PROFILEDPLATE.V],
-    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.ENUM.PRESSUREBEARINGPLATE.V],
-    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V],
-    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V],
+    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.PROFILED_PLATE.V],
+    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V],
+    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V],
+    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]
   }
   enclosureVisible.value = false
 }
@@ -397,7 +397,7 @@ async function validateForm() {
 }
 
 defineExpose({
-  validateForm,
+  validateForm
 })
 </script>
 

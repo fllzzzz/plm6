@@ -45,22 +45,22 @@
       </template>
     </el-table-column>
     <!--编辑与删除-->
-    <el-table-column
+    <!-- <el-table-column
       v-if="checkPermission([ ...permission.download])"
       label="操作"
       width="130px"
       align="center"
       fixed="right"
     >
-      <template v-slot="scope">
+      <template v-slot="scope"> -->
         <!-- <udOperation
           :data="scope.row"
           :show-edit="false"
         /> -->
         <!-- 下载 -->
         <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
-      </template>
-    </el-table-column>
+      <!-- </template>
+    </el-table-column> -->
   </common-table>
   <!--分页组件-->
   <pagination />
@@ -69,17 +69,15 @@
 
 <script setup>
 import crudApi from '@/api/contract/contract-record'
-import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
+import { ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
 
-const { globalProjectId, currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
+const { currentProjectType } = mapGetters(['currentProjectType'])
 // crud交由presenter持有
 const permission = {
   get: ['contractRecord:get'],
@@ -94,7 +92,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '合同档案',
     sort: [],

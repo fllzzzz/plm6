@@ -76,13 +76,12 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/config/system-config/branch-company'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { systemEnabledEnum } from '@enum-ms/system'
@@ -94,14 +93,14 @@ const permission = {
   get: ['branchCompanyConfig:get'],
   add: ['branchCompanyConfig:add'],
   edit: ['branchCompanyConfig:edit'],
-  del: ['branchCompanyConfig:del'],
+  del: ['branchCompanyConfig:del']
 }
 
 const optShow = {
   add: true,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -112,7 +111,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -120,7 +119,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.branchCompanyConfig',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 async function changeEnabled(data, val) {
@@ -128,7 +127,7 @@ async function changeEnabled(data, val) {
     await ElMessageBox.confirm('此操作将 "' + systemEnabledEnum.VL[val] + '" ' + data.name + ', 是否继续？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editStatus({ id: data.id, enabled: val })
     crud.refresh()
