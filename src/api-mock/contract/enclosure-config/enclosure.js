@@ -6,7 +6,7 @@ const getEnclosure = {
   timeout: 1000,
   response: (res) => {
     switch (Number(res.query.type)) {
-      case TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V:
+      case TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V:
         return {
           'code': 20000,
           'message': '操作成功',
@@ -354,7 +354,7 @@ const getEnclosure = {
 }
 
 const addEnclosure = {
-  url: `/api/enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V}`,
+  url: `/api/enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V}`,
   method: 'post',
   timeout: 1000,
   response: () => {

@@ -133,7 +133,7 @@ async function getTypeInfo() {
     const option = []
     if (productTypeList && productTypeList.length > 0) {
       productTypeList.forEach((v) => {
-        if (v.no !== TechnologyTypeAllEnum.ENUM.STRUCTURE.V) {
+        if (v.no !== TechnologyTypeAllEnum.STRUCTURE.V) {
           option.push(v)
         }
       })

@@ -11,8 +11,6 @@ import { ElTabs, ElTabPane } from 'element-plus'
 import { isNotBlank } from '@data-type/index'
 
 const id = ref()
-const list = ref([])
-const loading = ref(false)
 const oldValue = ref()
 const emit = defineEmits(['update:modelValue', 'tab-click'])
 
@@ -55,11 +53,11 @@ watch(
 )
 
 function tabClick(type) {
-  let val={}
-  if(type==='default'){
+  let val = {}
+  if (type === 'default') {
     val = props.defaultTab
-  }else{
-    val = props.areaInfo.find(v=>v.id===Number(id.value))
+  } else {
+    val = props.areaInfo.find(v => v.id === Number(id.value))
   }
   if (isNotBlank(val) && oldValue.value !== val.id) {
     oldValue.value = val.id

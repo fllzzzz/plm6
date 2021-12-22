@@ -37,7 +37,7 @@ const loading = ref(false)
 const selectValue = ref()
 const options = ref([])
 const originOptions = ref([])
-const props =defineProps({
+const props = defineProps({
   projectId: {
     type: [Number, String]
   },
@@ -129,7 +129,7 @@ async function fetchData() {
   } finally {
     options.value = optionData
     if (props.default && isNotBlank(optionData)) {
-      selectValue.value =optionData[0].value
+      selectValue.value = optionData[0].value
       selectChange(selectValue.value)
     } else {
       selectValue.value = undefined

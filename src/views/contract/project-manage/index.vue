@@ -188,7 +188,7 @@
       <template #content>
         <contract-info
           :project-id="contractInfoRowId"
-          :project-staus="projectStaus"
+          :project-status="projectStatus"
           :project-name="projectName"
           style="padding: 20px; box-sizing: border-box"
         />
@@ -222,7 +222,7 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/project'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -232,14 +232,12 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { projectTypeEnumN, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-import { DP } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
 import members from './members'
-import { toThousand } from '@/utils/data-type/number'
 
-const { globalProjectId, currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
+const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
 // crud交由presenter持有
 const permission = {
   get: ['contract:get'],
@@ -247,25 +245,24 @@ const permission = {
   detail: ['contract:detail'],
   editStatus: ['contract:editStatus'],
   download: ['contract:download'],
-  editMembers: ['contract:editMembers'],
+  editMembers: ['contract:editMembers']
 }
 
 const optShow = {
   add: true,
   edit: false,
-  del: true,
-  download: false,
+  del: false,
+  download: false
 }
 
 const tableRef = ref()
 const currentProjectId = ref()
 const membersDialogVisible = ref(false)
 const contractInfoRowId = ref()
-const projectStaus = ref()
+const projectStatus = ref()
 const projectName = ref()
 const contractInfoVisible = ref(false)
 const membersList = ref()
-const memberDialog = ref()
 const infoDialog = ref()
 
 const { crud, columns, CRUD } = useCRUD(
@@ -274,7 +271,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -282,7 +279,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.contractProject',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 function showMemberList(id) {
@@ -290,7 +287,7 @@ function showMemberList(id) {
   membersDialogVisible.value = true
 }
 
-function memberChangeSuccess(){
+function memberChangeSuccess() {
   membersDialogVisible.value = false
 }
 
@@ -300,7 +297,7 @@ async function changeStatus(data, val) {
     await ElMessageBox.confirm(`确定${msg}“${data.name}” 项目吗 ？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editStatus(data.id, val)
     crud.notify(`“${data.name}” 变更为 “${projectStatusEnum.VL[val]}” 成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
@@ -313,7 +310,7 @@ async function changeStatus(data, val) {
 
 function openContractInfo(row) {
   contractInfoRowId.value = row.id
-  projectStaus.value = row.status
+  projectStatus.value = row.status
   projectName.value = row.name
   contractInfoVisible.value = true
 }

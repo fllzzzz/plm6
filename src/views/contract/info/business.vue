@@ -60,7 +60,7 @@
                   placeholder="项目内容,可多选"
                   class="input-underline"
                   style="width: 320px"
-                  @change="getshowItem"
+                  @change="getShowItem"
                 >
                   <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" />
                 </el-select>
@@ -100,7 +100,7 @@
                   style="width: 200px"
                 />
                 <template v-else>
-                  <span v-parse-time="'{y}-{m}-{d}'">{{ detail.signingDate }}</span>
+                  <span v-if="detail.signingDate">{{ parseTime(detail.signingDate,'{y}-{m}-{d}') }}</span>
                 </template>
               </div>
             </el-form-item>
@@ -119,26 +119,34 @@
           </div>
           <div class="form-row">
             <el-form-item label="工程结算方式" prop="structureMeasureMode">
-              <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
-              <span v-else>{{
-                isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
-              }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
+                <span v-else>{{
+                  isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
+                }}</span>
+              </div>
             </el-form-item>
             <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-              <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
-              <span v-else>{{
-                isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
-              }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
+                <span v-else>{{
+                  isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
+                }}</span>
+              </div>
             </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="运输方式" prop="transportMode">
-              <common-radio v-if="isModify" v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" />
-              <span v-else>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.transportMode" :options="transportModeEnum.ENUM" type="enum" />
+                <span v-else>{{ isNotBlank(detail.transportMode) ? transportModeEnum.VL[detail.transportMode] : '' }}</span>
+              </div>
             </el-form-item>
             <el-form-item label="支付方式" prop="payType">
-              <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
-              <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
+              <div style="width: 200px">
+                <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
+                <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
+              </div>
             </el-form-item>
           </div>
           <div class="form-row">
@@ -245,6 +253,7 @@ import { isNotBlank } from '@data-type/index'
 import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show'
 import EnclosureForm from '@/views/contract/project-manage/module/enclosure-form'
 import { getContractBusiness, getContractTechInfo, getContentInfo } from '@/api/contract/project'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 let projectContent1 = []
@@ -320,11 +329,15 @@ watch(
   { deep: true, immediate: true }
 )
 
+// watch(
+//   () => props.isModify,
+//   (val) => {
+//     resetForm()
+//   },
+//   { deep: true, immediate: true }
+// )
+
 function resetForm() {
-  // 清除表单信息
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
   form.value = JSON.parse(JSON.stringify(detail.value))
   useWatchFormValidate(formRef, form)
 }
@@ -348,22 +361,22 @@ function businessChange() {
 //   enclosureVisible.value = true
 // }
 
-function getshowItem(val) {
+function getShowItem(val) {
   showItem.value = []
   showCategory.value = []
   const totalArr = [
-    TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V,
-    TechnologyTypeEnum.ENUM.PROFILED_PLATE.V,
-    TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V,
-    TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V
+    TechnologyTypeEnum.SANDWICH_BOARD.V,
+    TechnologyTypeEnum.PROFILED_PLATE.V,
+    TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
+    TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V
   ]
   if (val.length > 0) {
     val.map((v) => {
       if (form.value.businessType === businessTypeEnum.ENUM.MACHINING.V) {
         const val = projectContent1.find((k) => k.id === v)
         if (val.alias === 'STRUCTURE') {
-          if (showItem.value.indexOf(TechnologyTypeEnum.ENUM.STRUCTURE.V) < 0) {
-            showItem.value.push(TechnologyTypeEnum.ENUM.STRUCTURE.V)
+          if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
+            showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
           }
           showCategory.value.push(val)
         } else {
@@ -375,8 +388,8 @@ function getshowItem(val) {
         const val = projectContent2.find((k) => k.id === v)
         if (val.alias) {
           if (val.alias === 'STRUCTURE') {
-            if (showItem.value.indexOf(TechnologyTypeEnum.ENUM.STRUCTURE.V) < 0) {
-              showItem.value.push(TechnologyTypeEnum.ENUM.STRUCTURE.V)
+            if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
+              showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
               showCategory.value = originConstruct
             }
           } else if (val.alias === 'ENCLOSURE') {
@@ -393,11 +406,11 @@ function enclosureSave() {
   form.value = {
     ...form.value,
     enclosureInfo: info,
-    structureSaveRequestVOS: info[TechnologyTypeEnum.ENUM.STRUCTURE.V],
-    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.PROFILED_PLATE.V],
-    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V],
-    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V],
-    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]
+    structureSaveRequestVOS: info[TechnologyTypeEnum.STRUCTURE.V],
+    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.PROFILED_PLATE.V],
+    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
+    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
+    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
   }
   enclosureVisible.value = false
 }
@@ -431,11 +444,11 @@ async function fetchDetail() {
     _detail = JSON.parse(JSON.stringify(res))
     const data = await getContractTechInfo(props.projectId)
     _detail.enclosureInfo = {
-      [TechnologyTypeEnum.ENUM.STRUCTURE.V]: data.structureList ? data.structureList : [],
-      [TechnologyTypeEnum.ENUM.PROFILED_PLATE.V]: data.profiledPlateList ? data.profiledPlateList : [],
-      [TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V]: data.trussFloorPlateList ? data.trussFloorPlateList : [],
-      [TechnologyTypeEnum.ENUM.PRESSURE_BEARING_PLATE.V]: data.pressureBearingPlateList ? data.pressureBearingPlateList : [],
-      [TechnologyTypeEnum.ENUM.SANDWICH_BOARD.V]: data.sandwichBoardList ? data.sandwichBoardList : []
+      [TechnologyTypeEnum.STRUCTURE.V]: data.structureList ? data.structureList : [],
+      [TechnologyTypeEnum.PROFILED_PLATE.V]: data.profiledPlateList ? data.profiledPlateList : [],
+      [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: data.trussFloorPlateList ? data.trussFloorPlateList : [],
+      [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: data.pressureBearingPlateList ? data.pressureBearingPlateList : [],
+      [TechnologyTypeEnum.SANDWICH_BOARD.V]: data.sandwichBoardList ? data.sandwichBoardList : []
     }
     const options = []
     originConstruct = []
@@ -470,7 +483,7 @@ async function fetchDetail() {
         form.value.projectContent.push(v.id)
       })
     }
-    getshowItem(form.value.projectContent)
+    getShowItem(form.value.projectContent)
     // loading.close()
   }
 }

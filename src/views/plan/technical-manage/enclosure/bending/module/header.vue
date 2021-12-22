@@ -99,7 +99,7 @@ const defaultQuery = {
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false },
-  category: { value: TechnologyTypeAllEnum.ENUM.BENDING.V, resetAble: false }
+  category: { value: TechnologyTypeAllEnum.BENDING.V, resetAble: false }
 }
 
 const monomerSelectRef = ref()
@@ -115,7 +115,7 @@ const props = defineProps({
 })
 
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, category: TechnologyTypeAllEnum.ENUM.BENDING.V }
+  return { areaId: crud.query.areaId, category: TechnologyTypeAllEnum.BENDING.V }
 })
 
 const exportParam = computed(() => {
