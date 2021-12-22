@@ -20,7 +20,7 @@ export function getUserProjects(params) {
   })
 }
 
-//获取项目内容
+// 获取项目内容
 export function getContentInfo(params) {
   return request({
     module: 'contract',
@@ -66,7 +66,7 @@ export function del(ids) {
   })
 }
 
-export function editStatus(projectId,status) {
+export function editStatus(projectId, status) {
   return request({
     module: 'contract',
     url: `project/${projectId}/status/${status}`,
@@ -74,7 +74,7 @@ export function editStatus(projectId,status) {
   })
 }
 
-export function editUsers(projectId,data) {
+export function editUsers(projectId, data) {
   return request({
     module: 'contract',
     url: `project/${projectId}/users`,
@@ -92,7 +92,6 @@ export function getEnclosureDictList(type) {
     method: 'get'
   })
 }
-
 
 // 获取项目所有用户
 export function getUserAllSimpleByProject(id) {
@@ -152,10 +151,10 @@ export function getBranchCompanyAllSimple() {
  * 下载合同基础附件
  * @param {*} id 文件id
  */
- export function downloadBaseAttachments({ id }) {
+export function downloadBaseAttachments({ id }) {
   return request({
     module: 'contract',
-    url: `common​/attachment​/download​/${id}`,
+    url: `common/attachment/download/${id}`,
     method: 'get',
     timeout: 6000000,
     responseType: 'blob'
