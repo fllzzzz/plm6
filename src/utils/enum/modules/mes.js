@@ -2,8 +2,8 @@ import { constantize } from '../base'
 
 // 班组类型
 const teamTypeEnum = {
-  TEAM: { L: '班组', V: 0 },
-  INSPECTION: { L: '质检', V: 1 }
+  TEAM: { L: '班组', V: 1 << 0 },
+  INSPECTION: { L: '质检', V: 1 << 1 }
 }
 constantize(teamTypeEnum)
 
