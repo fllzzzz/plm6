@@ -57,7 +57,7 @@ import useUserDeptTree from '@compos/store/use-user-dept-tree'
 import { isNotBlank } from '@data-type/index'
 import { systemEnabledEnum } from '@enum-ms/system'
 
-const { loaded, userDeptTree } = useUserDeptTree()
+const { userDeptTree } = useUserDeptTree()
 const formRef = ref()
 const defaultForm = {
   id: undefined,
@@ -65,27 +65,25 @@ const defaultForm = {
   remark: undefined,
   isDefault: false,
   userIdList: [],
-  status: systemEnabledEnum.ENUM.TRUE.V,
+  status: systemEnabledEnum.ENUM.TRUE.V
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const rules = {
   templateName: [{ required: true, message: '请输入模板名称', trigger: 'blur' }],
-  remark: [{ required: true, message: '请输入描述信息', trigger: 'change' }],
+  remark: [{ required: true, message: '请输入描述信息', trigger: 'change' }]
 }
 
 const treeRef = ref()
 const filterText = ref()
-const isEditing = ref(false)
-const submitLoading = ref(false)
+// const isEditing = ref(false)
 const defaultProps = {
   children: 'children',
-  label: 'label',
+  label: 'label'
 }
 const disabledUser = ref([])
 const noDisabledUser = ref([])
 const checkedList = ref([])
-const treeLoading = ref(false)
 // const userList = ref([])
 
 watch(
@@ -173,10 +171,10 @@ async function fetchMembers(id) {
     resetChecked()
   }
 }
-function cancelEdit() {
-  isEditing.value = false
-  resetChecked()
-}
+// function cancelEdit() {
+//   isEditing.value = false
+//   resetChecked()
+// }
 
 function getUser() {
   let checkedNodes = treeRef.value.getCheckedKeys(true)

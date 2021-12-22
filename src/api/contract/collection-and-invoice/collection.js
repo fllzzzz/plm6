@@ -18,6 +18,15 @@ export function add(data) {
   })
 }
 
+export function edit(data) {
+  return request({
+    module: 'contract',
+    url: 'contract/collection/edit',
+    method: 'post',
+    data
+  })
+}
+
 export function contractCollectionInfo(params) {
   return request({
     module: 'contract',

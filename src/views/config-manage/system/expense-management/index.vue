@@ -52,23 +52,21 @@
 
 <script setup>
 import crudApi from '@/api/contract/expense-config'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { DP } from '@/settings/config'
 
 // crud交由presenter持有
 const permission = {
   get: ['expenseConfig:get'],
   add: ['expenseConfig:add'],
   edit: ['expenseConfig:edit'],
-  del: ['expenseConfig:del'],
+  del: ['expenseConfig:del']
 }
 
 const optShow = {
@@ -97,11 +95,11 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 157
 })
 
-CRUD.HOOK.handleRefresh = (crud,data)=>{
+CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map(v => {
     v.dictionaryIdList = []
-    if(v.links && v.links.length>0){
-      v.links.map(k=>{
+    if (v.links && v.links.length > 0) {
+      v.links.map(k => {
         v.dictionaryIdList.push(k.id)
       })
     }

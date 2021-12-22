@@ -9,7 +9,7 @@
       @change="crud.toQuery"
     />
   </div>
-  <crudOperation v-if="query.type===TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V"/>
+  <crudOperation v-if="query.type===TechnologyTypeEnum.ENUM.TRUSS_FLOOR_PLATE.V"/>
 </template>
 
 <script setup>

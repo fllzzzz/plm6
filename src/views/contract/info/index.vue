@@ -11,7 +11,7 @@
         <div style="position:absolute;right:0;z-index:2;">
           <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
             <template v-if="!isModify">
-              <template v-if="projectStaus==0">
+              <template v-if="projectstatus==0">
                 <el-tooltip class="item" effect="dark" content="修改" placement="top">
                   <common-button size="mini" icon="el-icon-edit" plain class="nextbtn" @click="isModify=true;" />
                 </el-tooltip>
@@ -20,7 +20,7 @@
                 </el-tooltip>
               </template>
               <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
-                <common-button v-if="projectStaus!=1" size="mini" icon="el-icon-money" plain class="nextbtn" @click="confirmSettle" />
+                <common-button v-if="projectstatus!=1" size="mini" icon="el-icon-money" plain class="nextbtn" @click="confirmSettle" />
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="打印" placement="top">
                 <common-button size="mini" icon="el-icon-printer" plain class="nextbtn" />
@@ -55,14 +55,14 @@
       <change-audit-log v-if="showName=='changeLog'" style="margin-top:10px;" :project-id="projectId" />
     </transition>
     <!-- 金额变更 -->
-    <money-form ref="moneyRef" :audit-staus="auditStaus" :project-id="projectId" v-model="moneyVisible" :contract-info="baseInfoValue"/>
+    <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :contract-info="baseInfoValue"/>
     <!-- 结算填报 -->
-    <settle-form ref="settleRef" :audit-staus="auditStaus" :project-id="projectId" v-model="settleVisible" :contract-info="baseInfoValue"/>
+    <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :contract-info="baseInfoValue"/>
   </div>
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 import { ElMessage, ElTabs, ElTabPane, ElRadioGroup, ElMessageBox, ElNotification } from 'element-plus'
 import { contractChangeTypeEnum } from '@enum-ms/contract'
 import baseInfo from './base'
@@ -79,7 +79,7 @@ const props = defineProps({
     type: [Number, String],
     default: undefined
   },
-  projectStaus: {
+  projectStatus: {
     type: [Number, String],
     default: undefined
   },
@@ -94,15 +94,14 @@ const isModify = ref(false)
 const moneyVisible = ref(false)
 const settleVisible = ref(false)
 const submitLoading = ref(false)
-const auditStaus = ref()
+const auditStatus = ref()
 const baseRef = ref()
 const businessRef = ref()
 const customerRef = ref()
 const memberRef = ref()
 const baseInfoValue = ref()
-const moneyRef =  ref()
+const moneyRef = ref()
 const settleRef = ref()
-
 
 watch(
   () => props.projectId,
@@ -114,9 +113,9 @@ watch(
   { deep: true, immediate: true }
 )
 
-function confirmSettle(){
+function confirmSettle() {
   baseInfoValue.value = baseRef.value.detail
-  if (props.projectStaus === 0) {
+  if (props.projectStatus === 0) {
     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
@@ -130,43 +129,44 @@ function confirmSettle(){
   }
 }
 
-function moneyChange(){
-  moneyVisible.value=true
+function moneyChange() {
+  moneyVisible.value = true
   baseInfoValue.value = baseRef.value.detail
 }
 
-const validateData=[
-  {name:'baseInfo', label: '基础信息'},
-  {name:'businessInfo', label: '商务信息'},
-  {name:'customerInfo', label: '客户信息'}
+const validateData = [
+  { name: 'baseInfo', label: '基础信息' },
+  { name: 'businessInfo', label: '商务信息' },
+  { name: 'customerInfo', label: '客户信息' }
 ]
 
-function nextStepValidate(index){
-  switch(index){
-    case 0:
-      return baseRef.value.validateForm();
-    case 1:
-      return businessRef.value.validateForm();
-    case 2:
-      return customerRef.value.validateForm();
-  }
-}
-async function submit(){
+// function nextStepValidate(index) {
+//   switch (index) {
+//     case 0:
+//       return baseRef.value.validateForm()
+//     case 1:
+//       return businessRef.value.validateForm()
+//     case 2:
+//       return customerRef.value.validateForm()
+//   }
+// }
+async function submit() {
   const baseValidate = await baseRef.value.validateForm()
   const businessValidate = await businessRef.value.validateForm()
   const customerValidate = await customerRef.value.validateForm()
-  const validateArr = [ baseValidate, businessValidate, customerValidate ]
-  for (let i=0;i<validateArr.length;i++) {
+  const validateArr = [baseValidate, businessValidate, customerValidate]
+  for (let i = 0; i < validateArr.length; i++) {
     if (!validateArr[i]) {
-      activeName.value=validateData[i].name
-      ElMessage.error(validateData[i].label+'请完善!')
-      return 
+      activeName.value = validateData[i].name
+      ElMessage.error(validateData[i].label + '请完善!')
+      return
     }
   }
-  const userData =  memberRef.value.getUser()
-  let submitform = {
+  memberRef.value.getUser()
+  // const userData = memberRef.value.getUser()
+  const submitform = {
     projectId: props.projectId,
-    type: contractChangeTypeEnum.ENUM.CONTRACTINFO.V,
+    type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
     projectUpdateDTOParam: {
       baseUpdateDTOParam: baseRef.value.form,
       businessUpdateDTOParam: businessRef.value.form,
@@ -191,89 +191,6 @@ async function submit(){
     isModify.value = false
   }
 }
-// import baseInfo from './base'
-// import businessInfo from './business'
-// import customerInfo from './customer'
-// import members from './members'
-// import moneyForm from './money-form'
-// import settleForm from './settle-form'
-// import changeLog from './change-log'
-
-// export default {
-//   components: { baseInfo, businessInfo, customerInfo, members, moneyForm, settleForm, changeLog },
-//   props: {
-//     projectId: {
-//       type: [Number, String],
-//       default: undefined
-//     },
-//     projectStaus: {
-//       type: [Number, String],
-//       default: undefined
-//     },
-//     projectName: {
-//       type: String,
-//       default: undefined
-//     }
-//   },
-//   data() {
-//     return {
-//       activeName: 'baseInfo',
-//       showName: 'contract',
-//       isModify: false,
-//       moneyVisible: false,
-//       settleVisible: false,
-//       auditStaus: ''
-//       // projectId: undefined
-//     }
-//   },
-//   watch: {
-//     projectId() {
-//       this.isModify = false
-//     }
-//   },
-//   methods: {
-//     changeEditStatus(val) {
-//       this.isModify = val
-//     },
-//     changeMoneyStaus(val) {
-//       this.moneyVisible = val
-//     },
-//     changeSettleStaus(val) {
-//       this.settleVisible = val
-//     },
-//     confirmSettle() {
-//       if (this.projectStaus === 0) {
-//         this.$confirm('"' + this.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
-//           confirmButtonText: '确定',
-//           cancelButtonText: '取消',
-//           type: 'warning'
-//         }).then(() => {
-//           this.settleVisible = true
-//         }).catch(() => {
-//         })
-//       } else {
-//         this.settleVisible = true
-//       }
-//     },
-//     async print() {
-//       this.printLoading = this.$loading({
-//         target: '#printContainer',
-//         lock: true,
-//         text: '正在准备加入打印队列',
-//         spinner: 'el-icon-loading',
-//         fullscreen: false
-//       })
-//       try {
-//         await printComponent('111')
-//       } catch (error) {
-//         this.$notify({ title: '加入打印队列失败，请重试', type: 'error', duration: 2500 })
-//         throw new Error(error)
-//       } finally {
-//         this.printLoading.close()
-//       }
-//     }
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>

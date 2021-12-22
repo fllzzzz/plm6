@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -211,39 +211,41 @@ import { processingEnum } from '@enum-ms/plan'
 import mForm from './module/form'
 import { ElMessageBox } from 'element-plus'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['bending:get'],
   edit: ['bending:edit'],
   del: ['bending:del'],
   editStatus: ['bending:editStatus'],
-  importList: ['bending:import'],
+  importList: ['bending:import']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
-const { crud, columns, CRUD } = useCRUD({
-  title: '折边件清单',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['areaId'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
-const maxNubmer = 99999999
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '折边件清单',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    crudApi: { ...crudApi },
+    hasPagination: true
+  },
+  tableRef
+)
+
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.trussSupport',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 watch(
@@ -263,7 +265,7 @@ async function changeStatus(data, val) {
     await ElMessageBox.confirm('确定' + messageName + '?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editStatus(data.id)
     crud.notify(`“${data.name}”已【${messageName}】`, CRUD.NOTIFICATION_TYPE.SUCCESS)

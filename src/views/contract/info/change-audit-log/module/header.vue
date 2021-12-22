@@ -45,8 +45,6 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
@@ -58,13 +56,5 @@ const defaultQuery = {
   source: undefined,
   type: undefined
 }
-
-const monomerSelectRef = ref()
 const { crud, query } = regHeader(defaultQuery)
-const props = defineProps({
-  projectId: {
-    type: [Number, String],
-    default: undefined
-  }
-})
 </script>

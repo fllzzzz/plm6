@@ -124,14 +124,10 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
-import { isNotBlank } from '@data-type/index'
-import { DP } from '@/settings/config'
 
 const formRef = ref()
-const isdisable = ref(false)
 const maxNubmer = 999999999
 const defaultForm = {
   id: undefined,
@@ -152,7 +148,7 @@ const defaultForm = {
     width: undefined,
     coating: undefined,
     claddingMaterial: '',
-    color: '',
+    color: ''
   },
   inboard: {
     boardShape: '',
@@ -161,16 +157,16 @@ const defaultForm = {
     width: undefined,
     coating: undefined,
     claddingMaterial: '',
-    color: '',
+    color: ''
   },
-  remark: '',
+  remark: ''
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const validateLength = (message, length) => {
   return [
     { required: true, message: message, trigger: ['change', 'blur'] },
-    { max: length, message: `长度在 ${length} 个字符以内`, trigger: ['change', 'blur'] },
+    { max: length, message: `长度在 ${length} 个字符以内`, trigger: ['change', 'blur'] }
   ]
 }
 const validateThickness = (rule, value, callback) => {
@@ -219,11 +215,11 @@ const keyData = [
         placeholder: '请填写厚度',
         rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写厚度', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写厚度', trigger: ['change', 'blur'] }
         ],
         unit: 'mm',
         decimalPlace: 3,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'width',
@@ -232,10 +228,10 @@ const keyData = [
         placeholder: '请填写有效宽度',
         rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写有效宽度', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写有效宽度', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 0,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'length',
@@ -244,10 +240,10 @@ const keyData = [
         placeholder: '请填写单长',
         rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写单长', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写单长', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 0,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'quantity',
@@ -256,12 +252,12 @@ const keyData = [
         placeholder: '请填写数量',
         rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写数量', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写数量', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 0,
-        type: 'number',
-      },
-    ],
+        type: 'number'
+      }
+    ]
   },
   {
     type: '外板',
@@ -272,7 +268,7 @@ const keyData = [
         dict: 'form_inout',
         placeholder: '请填写板形状',
         rules: validateLength('请选择或填写板形状', 10),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'brand',
@@ -280,7 +276,7 @@ const keyData = [
         dict: 'brand_inout',
         placeholder: '请填写品牌',
         rules: validateLength('请选择或填写品牌', 20),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'thickness',
@@ -289,10 +285,10 @@ const keyData = [
         placeholder: '请填写厚度',
         rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写厚度', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写厚度', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 3,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'width',
@@ -301,10 +297,10 @@ const keyData = [
         placeholder: '请填写宽度',
         rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写宽度', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写宽度', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 0,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'coating',
@@ -312,7 +308,7 @@ const keyData = [
         dict: 'coating_inout',
         placeholder: '请填写涂层',
         rules: validateLength('请选择或填写涂层', 10),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'claddingMaterial',
@@ -320,7 +316,7 @@ const keyData = [
         dict: 'cladding_inout',
         placeholder: '请填写镀层',
         rules: validateLength('请选择或填写镀层', 20),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'color',
@@ -328,9 +324,9 @@ const keyData = [
         dict: 'color_inout',
         placeholder: '请填写颜色',
         rules: validateLength('请选择或填写颜色', 10),
-        type: 'text',
-      },
-    ],
+        type: 'text'
+      }
+    ]
   },
   {
     type: '内板',
@@ -341,7 +337,7 @@ const keyData = [
         dict: 'form_inout',
         placeholder: '请填写板形状',
         rules: validateLength('请选择或填写板形状', 10),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'brand',
@@ -349,7 +345,7 @@ const keyData = [
         dict: 'brand_inout',
         placeholder: '请填写品牌',
         rules: validateLength('请选择或填写品牌', 20),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'thickness',
@@ -358,10 +354,10 @@ const keyData = [
         placeholder: '请填写厚度',
         rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写厚度', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写厚度', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 3,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'width',
@@ -370,10 +366,10 @@ const keyData = [
         placeholder: '请填写宽度',
         rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写宽度', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写宽度', trigger: ['change', 'blur'] }
         ],
         decimalPlace: 0,
-        type: 'number',
+        type: 'number'
       },
       {
         field: 'coating',
@@ -381,7 +377,7 @@ const keyData = [
         dict: 'coating_inout',
         placeholder: '请填写涂层',
         rules: validateLength('请选择或填写涂层', 10),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'claddingMaterial',
@@ -389,7 +385,7 @@ const keyData = [
         dict: 'cladding_inout',
         placeholder: '请填写镀层',
         rules: validateLength('请选择或填写镀层', 20),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'color',
@@ -397,9 +393,9 @@ const keyData = [
         dict: 'color_inout',
         placeholder: '请填写颜色',
         rules: validateLength('请选择或填写颜色', 10),
-        type: 'text',
-      },
-    ],
+        type: 'text'
+      }
+    ]
   },
   {
     type: '芯材',
@@ -410,7 +406,7 @@ const keyData = [
         dict: 'kind_core',
         placeholder: '请填写种类',
         rules: validateLength('请选择或填写种类', 10),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'brand',
@@ -418,7 +414,7 @@ const keyData = [
         dict: 'brand_core',
         placeholder: '请填写品牌',
         rules: validateLength('请选择或填写品牌', 20),
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'capacity',
@@ -427,28 +423,28 @@ const keyData = [
         placeholder: '请填写容重',
         rules: [
           { validator: validateWeight, trigger: ['change', 'blur'] },
-          { required: true, message: '请填写容重', trigger: ['change', 'blur'] },
+          { required: true, message: '请填写容重', trigger: ['change', 'blur'] }
         ],
         unit: 'Kg/m³',
         decimalPlace: 2,
-        type: 'number',
-      },
-    ],
-  },
+        type: 'number'
+      }
+    ]
+  }
 ]
 
 const rules = {
   name: [
     { required: true, message: '请填写名称', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   serialNumber: [
     { required: true, message: '请填写编号', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   plate: [
     { required: true, message: '请填写板型', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   thickness: [{ required: true, message: '请填写厚度', trigger: 'blur', type: 'number' }],
   width: [{ required: true, message: '请填写有效宽度', trigger: 'blur', type: 'number' }],
@@ -456,58 +452,58 @@ const rules = {
   quantity: [{ required: true, message: '请填写数量', trigger: 'blur', type: 'number' }],
   type: [
     { required: true, message: '请填写种类', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   brand: [
     { required: true, message: '请填写品牌', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   capacity: [{ required: true, message: '请填写容重', trigger: 'blur', type: 'number' }],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
   'outboard.boardShape': [
     { required: true, message: '请填写板形状', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'outboard.brand': [
     { required: true, message: '请填写品牌', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'outboard.thickness': [{ required: true, message: '请填写厚度', trigger: 'blur', type: 'number' }],
   'outboard.width': [{ required: true, message: '请填写有效宽度', trigger: 'blur', type: 'number' }],
   'outboard.coating': [
     { required: true, message: '请填写涂层', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'outboard.claddingMaterial': [
     { required: true, message: '请填写镀层', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'outboard.color': [
     { required: true, message: '请填写颜色', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'inboard.boardShape': [
     { required: true, message: '请填写板形状', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'inboard.brand': [
     { required: true, message: '请填写品牌', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'inboard.thickness': [{ required: true, message: '请填写厚度', trigger: 'blur', type: 'number' }],
   'inboard.width': [{ required: true, message: '请填写有效宽度', trigger: 'blur', type: 'number' }],
   'inboard.coating': [
     { required: true, message: '请填写涂层', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'inboard.claddingMaterial': [
     { required: true, message: '请填写镀层', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   'inboard.color': [
     { required: true, message: '请填写颜色', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
-  ],
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
+  ]
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {

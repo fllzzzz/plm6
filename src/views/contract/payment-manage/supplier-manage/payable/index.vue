@@ -67,18 +67,12 @@
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payable'
-import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
+import { ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { auditTypeEnum, systemTypeEnum, supplierPayMentTypeEnum, contractPayForEnum, supplierPayModeEnum } from '@enum-ms/contract'
-import { DP } from '@/settings/config'
-import useDict from '@compos/store/use-dict'
-import { toThousand } from '@/utils/data-type/number'
+import { supplierPayMentTypeEnum } from '@enum-ms/contract'
 
 // crud交由presenter持有
 const permission = {
@@ -93,8 +87,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const dict = useDict(['payment_reason'])
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '应付汇总',
     sort: [],

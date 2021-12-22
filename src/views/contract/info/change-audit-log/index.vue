@@ -1,88 +1,175 @@
 <template>
-  <div class="app-container" style="padding:0;">
+  <div class="app-container" style="padding: 0">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :currentProjectType="currentProjectType"/>
+      <mHeader :currentProjectType="currentProjectType" />
     </div>
     <!--表格渲染-->
     <common-table
-    ref="tableRef"
-    v-loading="crud.loading"
-    :data="crud.data"
-    :empty-text="crud.emptyText"
-    :max-height="maxHeight"
-    style="width: 100%"
-  >
-    <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="合同编号" min-width="250">
-      <template v-slot="scope">
-        <span>{{ scope.row.serialNumber }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="项目" min-width="250">
-      <template v-slot="scope">
-        <span class="project-name">{{ scope.row.name }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="业务类型" align="center" min-width="120">
-      <template v-slot="scope">
-        <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" label="项目类型" align="center" min-width="120">
-      <template v-slot="scope">
-        <div>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="项目内容" align="center" min-width="120">
-      <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="文件份数" align="center" width="110px">
-      <template v-slot="scope">
-        <div>{{ scope.row.attachmentCount }}</div>
-      </template>
-    </el-table-column>
-    <!--编辑与删除-->
-    <el-table-column
-      label="操作"
-      width="130px"
-      align="center"
-      fixed="right"
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      style="width: 100%"
     >
-      <template v-slot="scope">
-        <!-- <udOperation
-          :data="scope.row"
-          :show-edit="false"
-        /> -->
-        <!-- 下载 -->
-        <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
-      </template>
-    </el-table-column>
-  </common-table>
-  <!--分页组件-->
-  <pagination />
+      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+      <el-table-column v-if="columns.visible('type')" key="type" prop="type" :show-overflow-tooltip="true" label="变更类型" min-width="120">
+        <template v-slot="scope">
+          <span>{{ scope.row.type ? contractChangeTypeEnum.VL[scope.row.type] : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('amount')"
+        key="amount"
+        prop="amount"
+        :show-overflow-tooltip="true"
+        label="金额(元)"
+        min-width="250"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.amount ? scope.row.amount.toThousand() : scope.row.amount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('contractAmount')"
+        key="contractAmount"
+        prop="contractAmount"
+        label="合同金额(元)"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.contractAmount ? scope.row.contractAmount.toThousand() : scope.row.contractAmount }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
+        v-if="columns.visible('leaderList')"
+        key="leaderList"
+        prop="leaderList"
+        label="负责人"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.leaderList }}</div>
+        </template>
+      </el-table-column> -->
+      <el-table-column
+        v-if="columns.visible('changeDate')"
+        key="changeDate"
+        prop="changeDate"
+        :show-overflow-tooltip="true"
+        label="变更日期"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.changeDate }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
+        :show-overflow-tooltip="true"
+        label="创建日期"
+        align="center"
+        min-width="120"
+      >
+        <template v-slot="scope">
+          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('userName')"
+        key="userName"
+        prop="userName"
+        label="创建人"
+        align="center"
+        width="110px"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.userName }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('auditTime')"
+        key="auditTime"
+        prop="auditTime"
+        label="审核日期"
+        align="center"
+        width="110px"
+      >
+        <template v-slot="scope">
+           <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('auditorName')"
+        key="auditorName"
+        prop="auditorName"
+        label="审核人"
+        align="center"
+        width="110px"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.auditorName }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('source')"
+        key="source"
+        prop="source"
+        label="来源"
+        align="center"
+        width="110px"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.source? systemTypeEnum.VL[scope.row.source]: '' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('auditStatus')"
+        key="auditStatus"
+        prop="auditStatus"
+        label="状态"
+        align="center"
+        width="110px"
+      >
+        <template v-slot="scope">
+          <div>{{ scope.row.auditStatus? auditTypeEnum.VL[scope.row.auditStatus]: '' }}</div>
+        </template>
+      </el-table-column>
+      <!--编辑与删除-->
+      <el-table-column label="操作" width="130px" align="center" fixed="right">
+        <template v-slot="scope">
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button icon="el-icon-s-check" type="primary" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V"/>
+        </template>
+      </el-table-column>
+    </common-table>
+    <!--分页组件-->
+    <pagination />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/contract/change-audit-log'
 import { ref, watch, defineProps } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
 
-const { globalProjectId, currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
+const { currentProjectType } = mapGetters(['currentProjectType'])
 // crud交由presenter持有
 const permission = {
   get: ['changeAuditLog:get'],
-  editStatus: ['changeAuditLog:editStatus']
+  editStatus: ['changeAuditLog:editStatus'],
+  audit: ['changeAuditLog:audit']
 }
 
 const optShow = {
@@ -105,7 +192,7 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef
 )
 
-const props=defineProps({
+const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
@@ -129,6 +216,10 @@ watch(
   { immediate: true }
 )
 
+function openDetail(row, type) {
+
+}
+
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
   return !!crud.query.projectId
@@ -140,9 +231,9 @@ CRUD.HOOK.beforeRefresh = () => {
   background: #e8f4ff;
 }
 ::v-deep(.hidden-select) {
-  td:nth-child(1){
-    .cell{
-      opacity:0;
+  td:nth-child(1) {
+    .cell {
+      opacity: 0;
     }
   }
 }

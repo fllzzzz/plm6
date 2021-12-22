@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader />
@@ -102,7 +102,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm :project-id="globalProjectId" :current-project="currentProject" :origin-option="techOptions" />
+      <mForm :project-id="globalProjectId" :global-project="globalProject" :origin-option="techOptions" />
     </template>
     <template v-else>
       <div style="color: red; font-size: 14px">*请先前去合同管理模块添加项目内容</div>
@@ -114,7 +114,6 @@
 import crudApi from '@/api/plan/monomer'
 import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
-import { systemMenusTypeEnum, systemMenusCategoryEnum } from '@enum-ms/system'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -125,7 +124,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { DP } from '@/settings/config'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['monomer:get'],
@@ -148,14 +147,14 @@ const techOptions = [
     label: '压型板(t)',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.PROFILEDPLATE.V,
+    no: TechnologyTypeAllEnum.ENUM.PROFILED_PLATE.V,
     alias: 'ENCLOSURE'
   },
   {
     label: '桁架楼承板(t)',
     key: 'trussFloorPlate',
     dateKey: 'trussFloorPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.TRUSSFLOORPLATE.V,
+    no: TechnologyTypeAllEnum.ENUM.TRUSS_FLOOR_PLATE.V,
     alias: 'ENCLOSURE'
   },
   {
@@ -169,7 +168,7 @@ const techOptions = [
     label: '压型楼承板(t)',
     key: 'pressureBearingPlate',
     dateKey: 'pressureBearingPlateDate',
-    no: TechnologyTypeAllEnum.ENUM.PRESSUREBEARINGPLATE.V,
+    no: TechnologyTypeAllEnum.ENUM.PRESSURE_BEARING_PLATE.V,
     alias: 'ENCLOSURE'
   },
   {
@@ -180,15 +179,19 @@ const techOptions = [
     alias: 'ENCLOSURE'
   }
 ]
-const { crud, columns, CRUD } = useCRUD({
-  title: '单体',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['projectId'],
-  crudApi: { ...crudApi },
-  hasPagination: true
-})
+
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '单体',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['projectId'],
+    crudApi: { ...crudApi },
+    hasPagination: true
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.monomer',

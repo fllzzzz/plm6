@@ -26,7 +26,7 @@
           />
         </el-form-item>
         <el-form-item label="母公司" prop="isParent">
-          <template slot="label">
+          <template #label>
             <el-tooltip effect="light" content="只可选择一个公司为母公司，若选择新的母公司，原母公司会被取消" placement="left">
               <div style="display: inline-block">
                 <span>母公司</span>
@@ -78,9 +78,13 @@
           </el-table-column>
         </common-table>
         <div class="add-row-box">
-          <common-button size="mini" icon="el-icon-circle-plus-outline" type="warning" style="margin-right: 15px" @click="addRow()"
-            >继续添加</common-button
-          >
+          <common-button
+            size="mini"
+            icon="el-icon-circle-plus-outline"
+            type="warning"
+            style="margin-right: 15px"
+            @click="addRow()"
+            >继续添加</common-button>
         </div>
       </el-form>
     </template>
@@ -88,47 +92,37 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import projectCascader from '@comp-base/project-cascader'
-import { DP } from '@/settings/config'
-import { businessTypeEnum } from '@enum-ms/contract'
-import { invoiceTypeEnum } from '@enum-ms/finance'
-import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import useTableValidate from '@compos/form/use-table-validate'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
-import { digitUppercase } from '@/utils/data-type/number'
-import { isNotBlank } from '@data-type/index'
 import { systemEnabledEnum } from '@enum-ms/system'
 
 const formRef = ref()
-const applyRef = ref()
-const collectionRef = ref()
 const detailRef = ref()
 const defaultForm = {
   bankAccounts: [
     {
       account: undefined,
-      depositBank: undefined,
-    },
+      depositBank: undefined
+    }
   ],
   enabled: systemEnabledEnum.ENUM.TRUE.V,
-  isParent: undefined,
+  isParent: systemEnabledEnum.ENUM.FALSE.V,
   name: undefined,
   remark: undefined,
   socialCode: undefined,
-  sort: undefined,
+  sort: undefined
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const rules = {
   name: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
-  sort: [{ required: true, message: '请输入排序', trigger: 'blur' }],
+  sort: [{ required: true, message: '请输入排序', trigger: 'blur' }]
 }
 
 const tableRules = {
   depositBank: [{ required: true, message: '请输入开户行', trigger: 'blur' }],
-  account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+  account: [{ required: true, message: '请输入账号', trigger: 'blur' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
@@ -139,14 +133,14 @@ function deleteRow(index) {
 function addRow() {
   form.bankAccounts.push({
     account: undefined,
-    depositBank: undefined,
+    depositBank: undefined
   })
 }
 
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
-  const { validResult, dealList } = tableValidate(crud.form.detailList)
+  const { validResult, dealList } = tableValidate(crud.form.bankAccounts)
   if (validResult) {
-    crud.form.detailList = dealList
+    crud.form.bankAccounts = dealList
   } else {
     return validResult
   }

@@ -42,7 +42,7 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
+import IconSelect from '@comp/icon-select/index.vue'
 
 const formRef = ref()
 const iconSelect = ref()

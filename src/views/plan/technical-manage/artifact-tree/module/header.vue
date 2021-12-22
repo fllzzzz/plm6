@@ -73,18 +73,14 @@
 
 <script setup>
 import { defineProps, ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import uploadBtn from '@/components/file-upload/ExcelUploadBtn'
-import { monomerDetail } from '@/api/plan/monomer'
 import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { downloadArtifactTree, downloadArtifactTreeTemplate } from '@/api/plan/technical-manage/artifact-tree'
-
-const router = useRouter()
 
 const defaultQuery = {
   artifactName: '',
@@ -92,7 +88,7 @@ const defaultQuery = {
   machinePartSerialNumber: '',
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  projectId: { value: undefined, resetAble: false },
+  projectId: { value: undefined, resetAble: false }
 }
 
 const monomerSelectRef = ref()
@@ -100,13 +96,11 @@ const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
 const { crud, query } = regHeader(defaultQuery)
-const typeProp = { key: 'no', label: 'name', value: 'no' }
-const typeOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 watch(
@@ -129,7 +123,7 @@ function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
     id: name,
-    name: label,
+    name: label
   }
   crud.toQuery()
 }
@@ -138,7 +132,7 @@ function getAreaInfo(val) {
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
       id: areaInfo.value[0].id + '',
-      name: areaInfo.value[0].name,
+      name: areaInfo.value[0].name
     }
   } else {
     defaultTab.value = {}

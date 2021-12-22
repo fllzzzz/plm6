@@ -266,7 +266,7 @@ const defaultForm = {
   paymentDepositBank: undefined,
   paymentUnit: undefined,
   projectId: undefined,
-  remark: undefined,
+  remark: undefined
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
@@ -282,28 +282,28 @@ const rules = {
   collectionUnitId: [{ required: true, message: '请选择收款单位', trigger: 'change' }],
   paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
 }
-const upperYuan = computed(()=>{
-  return form.collectionAmount? digitUppercase(form.collectionAmount): ''
+const upperYuan = computed(() => {
+  return form.collectionAmount ? digitUppercase(form.collectionAmount) : ''
 })
 watch(
   () => form.projectId,
   (val) => {
     if (val) {
       getContractInfo(val)
-    }else{
+    } else {
       contractInfo.value = {}
     }
   },
   { deep: true, immediate: true }
 )
 
-async function getContractInfo(id){
+async function getContractInfo(id) {
   let data = {}
-  try{
-    data = await contractCollectionInfo({projectId:id})
-  }catch(e){
-    console.log('获取合同信息',e)
-  }finally{
+  try {
+    data = await contractCollectionInfo({ projectId: id })
+  } catch (e) {
+    console.log('获取合同信息', e)
+  } finally {
     contractInfo.value = data
     form.paymentBankAccount = contractInfo.value.customerBankCode
     form.paymentDepositBank = contractInfo.value.customerBankName
@@ -313,9 +313,9 @@ async function getContractInfo(id){
   }
 }
 
-function collectionCompanyChange(val){
-  if(val){
-    const collectionVal = contractInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+function collectionCompanyChange(val) {
+  if (val) {
+    const collectionVal = contractInfo.value.companyBankAccountList.find(v => v.companyId === val)
     form.collectionBankAccount = collectionVal.account
     form.collectionDepositBank = collectionVal.depositBank
     form.collectionUnit = collectionVal.companyName
@@ -326,9 +326,9 @@ function collectionCompanyChange(val){
   }
 }
 
-function handelCellClassName(){
+function handelCellClassName() {
 
-} 
+}
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

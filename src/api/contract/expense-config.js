@@ -5,7 +5,8 @@ export function get(params) {
     module: 'contract',
     url: 'expenseType',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 

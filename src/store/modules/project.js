@@ -33,8 +33,8 @@ const state = {
   // 加载状态
   loaded: false,
   // 显示所有
-  navbarShowAll: storage.get('navbarShowAll') || false,
-  currentProject: storage.get('currentProject') || {}
+  navbarShowAll: storage.get('navbarShowAll') || false
+  // currentProject: storage.get('currentProject') || {}
 }
 
 const mutations = {
@@ -47,10 +47,10 @@ const mutations = {
     storage.set('projectId', id)
     storage.set('curProject', state.curProject)
   },
-  SET_CURRENT_PROJECT: (state, project) => {
-    state.currentProject = project
-    storage.set('currentProject', project)
-  },
+  // SET_CURRENT_PROJECT: (state, project) => {
+  //   state.currentProject = project
+  //   storage.set('currentProject', project)
+  // },
   SET_PROJECT_TYPE: (state, type) => {
     state.projectType = type
     storage.set('projectType', type)
@@ -87,9 +87,9 @@ const actions = {
   setProjectId({ commit }, id) {
     commit('SET_PROJECT_ID', id)
   },
-  setCurrentProject({ commit }, project) {
-    commit('SET_CURRENT_PROJECT', project)
-  },
+  // setCurrentProject({ commit }, project) {
+  //   commit('SET_CURRENT_PROJECT', project)
+  // },
   setRouteProjectByMeta({ commit }, meta) {
     const _projectType = meta && isNotBlank(meta.projectType) ? meta.projectType : undefined
     commit('SET_ROUTE_PROJECT_TYPE', _projectType)
@@ -121,7 +121,7 @@ const actions = {
     const ids = _projects && _projects.map(i => i.id) || []
     if (isBlank(ids) || ids.indexOf(state.id) === -1 || isBlank(type)) {
       commit('SET_PROJECT_ID', undefined)
-      commit('SET_CURRENT_PROJECT', {})
+      // commit('SET_CURRENT_PROJECT', {})
     }
     commit('SET_PROJECT_TYPE', _type)
     commit('SET_USER_PROJECTS', _projects)

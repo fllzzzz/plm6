@@ -22,16 +22,16 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, watch } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { monomerDetail } from '@/api/plan/monomer'
- import { useRoute } from 'vue-router'  
+import { useRoute } from 'vue-router'
 
-const route = useRoute() 
+const route = useRoute()
 const defaultQuery = {
-  projectId:undefined,
+  projectId: undefined,
   monomerId: undefined,
   productType: undefined
 }
@@ -47,7 +47,6 @@ const props = defineProps({
     default: undefined
   }
 })
-const emit = defineEmits(['monomerChangeType'])
 
 watch(
   () => route.params.monomerId,
@@ -57,7 +56,7 @@ watch(
       queryMonomerId.value = +route.params.monomerId
       console.log(route.params.productType)
       if (queryMonomerId.value) {
-        crud.query.monomerId =  queryMonomerId.value
+        crud.query.monomerId = queryMonomerId.value
         crud.query.productType = route.params.productType
         monomerChange()
       }

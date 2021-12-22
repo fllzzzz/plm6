@@ -25,6 +25,7 @@
         min-width="120"
       >
         <template v-slot="scope">
+          <table-cell-tag :show="scope.row.isDefault" name="默认" />
           <div>{{ scope.row.templateName }}</div>
         </template>
       </el-table-column>
@@ -75,31 +76,31 @@
 
 <script setup>
 import crudApi, { editDefault, editStatus } from '@/api/contract/member-config'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessageBox } from 'element-plus'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {
   get: ['memberConfig:get'],
   add: ['memberConfig:add'],
   edit: ['memberConfig:edit'],
-  del: ['memberConfig:del'],
+  del: ['memberConfig:del']
 }
 
 const optShow = {
   add: true,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -110,7 +111,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -118,7 +119,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.memberConfig',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 async function changeDefault(row) {
@@ -128,7 +129,7 @@ async function changeDefault(row) {
     await ElMessageBox.confirm(tip, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editDefault({ id: row.id, isDefault })
     crud.refresh()
@@ -143,7 +144,7 @@ async function changeStatus(data, val) {
     await ElMessageBox.confirm('此操作将 "' + systemEnabledEnum.VL[val] + '" ' + data.templateName + ', 是否继续？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     await editStatus({ id: data.id, status: val })
     crud.refresh()

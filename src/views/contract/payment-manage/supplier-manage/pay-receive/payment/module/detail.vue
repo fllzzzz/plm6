@@ -23,7 +23,7 @@
               <!-- <common-button size="small" type="primary" @click="modifyInfo" v-if="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.REJECT.V && type==='detail'">重新编辑</common-button> -->
             </template>
             <template v-else>
-              <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+              <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
             </template>
           </template>
           <common-button size="small"  @click="closeDrawer">关闭</common-button>
@@ -170,7 +170,7 @@
         </div>
         <div style="display:flex;">
           <template v-if="isModify">
-            <el-form-item v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIALTRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCTTRANSPORT.V" label="合同金额(元)" prop="contractAmount">
+            <el-form-item v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
               <div style="width:260px;">
                 <el-input
                   v-model="choseOrderInfo.amount"
@@ -181,7 +181,7 @@
                 />
               </div>
             </el-form-item>
-            <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIALTRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCTTRANSPORT.V " label="运费金额(元)" prop="contractAmount">
+            <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
               <div style="width:260px;">
                 <el-input
                   v-model="choseOrderInfo.amount"
@@ -194,12 +194,12 @@
             </el-form-item>
           </template>
           <template v-else>
-            <el-form-item v-if="paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIALTRANSPORT.V && paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCTTRANSPORT.V" label="合同金额(元)" prop="contractAmount">
+            <el-form-item v-if="paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
               <div style="width:260px;">
                 <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? choseOrderInfo.amount.toThousand(): choseOrderInfo.amount }}</span>
               </div>
             </el-form-item>
-            <el-form-item v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.MATERIALTRANSPORT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCTTRANSPORT.V " label="运费金额(元)" prop="contractAmount">
+            <el-form-item v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
               <div style="width:260px;">
                 <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? choseOrderInfo.amount.toThousand(): choseOrderInfo.amount }}</span>
               </div>
@@ -442,15 +442,13 @@
 
 <script setup>
 import { ref, watch, computed, defineProps, defineEmits } from 'vue'
-import projectCascader from '@comp-base/project-cascader'
 import useDict from '@compos/store/use-dict'
 import { DP } from '@/settings/config'
 import { orderInfo, editStatus } from '@/api/contract/supplier-manage/pay-invoice/pay'
-import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+// import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { digitUppercase } from '@/utils/data-type/number'
 import useVisible from '@compos/use-visible'
 import { supplierPayMentTypeEnum, contractPayForEnum, supplierPayModeEnum, auditTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@/utils/data-type/number'
 import { ElNotification } from 'element-plus'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@/components/file-upload/UploadBtn'
@@ -507,7 +505,6 @@ const props = defineProps({
 })
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const contractInfo = ref({})
 const isModify = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -528,51 +525,51 @@ const rules = {
   paymentAmount: [{ required: true, message: '请输入付款金额', trigger: 'blur' }]
 }
 
-const paymentRate = computed(()=>{
+const paymentRate = computed(() => {
   if (isModify.value) {
-    return form.value.paymentAmount && choseOrderInfo.value.amount? (form.value.paymentAmount/choseOrderInfo.value.amount)*100 +'%' : ''
-  }else{
-    return props.paymentDetailInfo.paymentAmount && choseOrderInfo.value.amount? (props.paymentDetailInfo.paymentAmount/choseOrderInfo.value.amount)*100 +'%' : ''
+    return form.value.paymentAmount && choseOrderInfo.value.amount ? (form.value.paymentAmount / choseOrderInfo.value.amount) * 100 + '%' : ''
+  } else {
+    return props.paymentDetailInfo.paymentAmount && choseOrderInfo.value.amount ? (props.paymentDetailInfo.paymentAmount / choseOrderInfo.value.amount) * 100 + '%' : ''
   }
 })
 
-const upperYuan = computed(()=>{
+const upperYuan = computed(() => {
   if (isModify.value) {
-    return form.value.paymentAmount? digitUppercase(form.value.valuepaymentAmount): ''
-  }else{
-    return props.paymentDetailInfo.paymentAmount? digitUppercase(props.paymentDetailInfo.paymentAmount): ''
+    return form.value.paymentAmount ? digitUppercase(form.value.valuepaymentAmount) : ''
+  } else {
+    return props.paymentDetailInfo.paymentAmount ? digitUppercase(props.paymentDetailInfo.paymentAmount) : ''
   }
 })
 
-function modifyInfo(){
-  isModify.value = true
-  resetForm()
-}
+// function modifyInfo() {
+//   isModify.value = true
+//   resetForm()
+// }
 
-function closeDrawer(){
+function closeDrawer() {
   isModify.value = false
   handleClose()
 }
 
-function resetForm() {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
-  const DataValue = JSON.parse(JSON.stringify(props.paymentDetailInfo))
-  DataValue.applyDate = String(DataValue.applyDate)
-  DataValue.paymentDate = String(DataValue.paymentDate)
-  DataValue.paymentUnitId = Number(DataValue.paymentUnitId)
-  DataValue.attachmentIds = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
-  form.value  = JSON.parse(JSON.stringify(DataValue))
-  useWatchFormValidate(formRef, form)
-}
+// function resetForm() {
+//   if (formRef.value) {
+//     formRef.value.resetFields()
+//   }
+//   const DataValue = JSON.parse(JSON.stringify(props.paymentDetailInfo))
+//   DataValue.applyDate = String(DataValue.applyDate)
+//   DataValue.paymentDate = String(DataValue.paymentDate)
+//   DataValue.paymentUnitId = Number(DataValue.paymentUnitId)
+//   DataValue.attachmentIds = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
+//   form.value = JSON.parse(JSON.stringify(DataValue))
+//   useWatchFormValidate(formRef, form)
+// }
 
 watch(
   () => props.paymentDetailInfo.propertyType,
   (val) => {
     if (val) {
       getOrderInfoReset(val)
-    }else{
+    } else {
       choseOrderInfo.value = {}
       orderListOption.value = []
     }
@@ -580,187 +577,51 @@ watch(
   { deep: true, immediate: true }
 )
 
-async function getOrderInfoReset(type){
+async function getOrderInfoReset(type) {
   let data = {}
-  try{
+  try {
     data = await orderInfo(type)
-    data = [
-      {
-        "amount": 1000, //合同额
-        "bankAccount": "1", //收款银行账户
-        "bankName": "1",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 1, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a1", //订单号
-        "supplierId": 1,
-        "supplierName": "供应商1" //供应商名称
-      },
-      {
-        "amount": 2500, //合同额
-        "bankAccount": "2", //收款银行账户
-        "bankName": "2",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 2, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a2", //订单号
-        "supplierId": 2,
-        "supplierName": "供应商2" //供应商名称
-      }
-    ]
-  }catch(e){
-    console.log('获取订单信息',e)
-  }finally{
+  } catch (e) {
+    console.log('获取订单信息', e)
+  } finally {
     orderListOption.value = data
-    choseOrderInfo.value = orderListOption.value.find(v=>v.id===props.paymentDetailInfo.orderId)
+    choseOrderInfo.value = orderListOption.value.find(v => v.id === props.paymentDetailInfo.orderId)
   }
 }
 
-async function getOrderInfo(type){
+async function getOrderInfo(type) {
   let data = {}
-  try{
+  try {
     data = await orderInfo(type)
-    data = [
-      {
-        "amount": 1000, //合同额
-        "bankAccount": "1", //收款银行账户
-        "bankName": "1",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 1, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a1", //订单号
-        "supplierId": 1,
-        "supplierName": "供应商1" //供应商名称
-      },
-      {
-        "amount": 2500, //合同额
-        "bankAccount": "2", //收款银行账户
-        "bankName": "2",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 2, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a2", //订单号
-        "supplierId": 2,
-        "supplierName": "供应商2" //供应商名称
-      }
-    ]
-  }catch(e){
-    console.log('获取订单信息',e)
-  }finally{
+  } catch (e) {
+    console.log('获取订单信息', e)
+  } finally {
     orderListOption.value = data
     choseOrderInfo.value = {}
     clearInfo()
   }
 }
 
-function clearInfo(){
+function clearInfo() {
   form.value.orderSerialNumber = ''
   form.value.receiveBank = ''
   form.value.receiveBankAccount = ''
   form.value.receiveUnit = ''
   form.value.supplierId = ''
-  form.value.supplierName =''
-  form.value.paymentBank =''
-  form.value.paymentBankAccount =''
-  form.value.paymentUnit =''
-  form.value.paymentUnitId =''
+  form.value.supplierName = ''
+  form.value.paymentBank = ''
+  form.value.paymentBankAccount = ''
+  form.value.paymentUnit = ''
+  form.value.paymentUnitId = ''
   form.value.payForType = ''
   form.value.payForTypeName = ''
   form.value.basicClass = ''
   form.value.basicClassName = ''
 }
 
-function orderChange(val){
-  if(val){
-    choseOrderInfo.value = orderListOption.value.find(v=>v.id===val)
+function orderChange(val) {
+  if (val) {
+    choseOrderInfo.value = orderListOption.value.find(v => v.id === val)
     form.value.orderSerialNumber = choseOrderInfo.value.serialNumber
     form.value.receiveBank = choseOrderInfo.value.bankName
     form.value.receiveBankAccount = choseOrderInfo.value.bankAccount
@@ -768,21 +629,21 @@ function orderChange(val){
     form.value.supplierId = choseOrderInfo.value.supplierId
     form.value.supplierName = choseOrderInfo.value.supplierName
     form.value.payForType = choseOrderInfo.value.payForType
-    form.value.payForTypeName = choseOrderInfo.value.payForType? contractPayForEnum.VL[choseOrderInfo.value.payForType] : ''
+    form.value.payForTypeName = choseOrderInfo.value.payForType ? contractPayForEnum.VL[choseOrderInfo.value.payForType] : ''
     form.value.basicClass = choseOrderInfo.value.basicClass
     form.value.basicClassName = choseOrderInfo.value.basicClassName
-    form.value.paymentBank =''
-    form.value.paymentBankAccount =''
-    form.value.paymentUnit =''
-    form.value.paymentUnitId =''
+    form.value.paymentBank = ''
+    form.value.paymentBankAccount = ''
+    form.value.paymentUnit = ''
+    form.value.paymentUnitId = ''
   } else {
     clearInfo()
   }
 }
 
-function orderCompanyChange(val){
-  if(val){
-    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+function orderCompanyChange(val) {
+  if (val) {
+    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v => v.companyId === val)
     form.value.paymentBankAccount = orderVal.account
     form.value.paymentBank = orderVal.depositBank
     form.value.paymentUnit = orderVal.companyName
@@ -793,28 +654,28 @@ function orderCompanyChange(val){
   }
 }
 
- async function onSubmit(val){
-    try{
-      if(props.type === 'detail'){
-        const valid = await formRef.value.validate()
-        if (valid) {
-          form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
-          //修改
-        }
-      }else{
-        const submitData = {
-          id: props.paymentDetailInfo.id,
-          auditStatus: val
-        }
-        await editStatus(submitData)
-        ElNotification({ title: '提交成功', type: 'success' })
-        emit('success')
+async function onSubmit(val) {
+  try {
+    if (props.type === 'detail') {
+      const valid = await formRef.value.validate()
+      if (valid) {
+        form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
+        // 修改
       }
-    }catch(e){
-      console.log('付款信息',e)
-    }finally{
-      closeDrawer()
+    } else {
+      const submitData = {
+        id: props.paymentDetailInfo.id,
+        auditStatus: val
+      }
+      await editStatus(submitData)
+      ElNotification({ title: '提交成功', type: 'success' })
+      emit('success')
     }
+  } catch (e) {
+    console.log('付款信息', e)
+  } finally {
+    closeDrawer()
+  }
 }
 
 </script>

@@ -89,8 +89,7 @@ async function getTypeInfo() {
   }
 }
 
-function goPlanView(){
-  console.log(crud.query.productType)
+function goPlanView() {
   router.push({ name: 'PlanOverallPlanManage', params: { monomerId: crud.query.monomerId, productType: crud.query.productType }})
 }
 </script>

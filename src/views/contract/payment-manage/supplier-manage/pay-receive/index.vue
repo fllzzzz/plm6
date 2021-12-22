@@ -17,60 +17,13 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
-import {  ElTabs, ElTabPane } from 'element-plus'
+import { ref } from 'vue'
+import { ElTabs, ElTabPane } from 'element-plus'
 import Payment from './payment'
 import ReceiveInvoice from './receive-invoice'
 
 const activeName = ref('collection')
-// import { mapGetters } from 'vuex'
-// import payment from './collection'
-// import Invoice from './invoice'
-// export default {
-//   name: 'ContractInvoice',
-//   components: { payment, Invoice },
-//   props: {
-//     projectId: {
-//       type: [Number, String],
-//       default: undefined
-//     },
-//     activeName: {
-//       type: String,
-//       default: 'collection'
-//     }
-//   },
-//   data() {
-//     return {
-//       unprocessedInvoiceQuantity: undefined,
-//       currentActiveName: undefined
-//     }
-//   },
-//   computed: {
-//     ...mapGetters(['globalProjectId']),
-//     currentProjectId() {
-//       return this.projectId || this.globalProjectId
-//     }
-//   },
-//   watch: {
-//     activeName: {
-//       handler(val) {
-//         this.currentActiveName = this.activeName
-//       },
-//       immediate: true
-//     }
-//   },
-//   mounted() {
-//     this.$BUS.$on('unprocessedInvoiceQuantity', (val) => {
-//       if (this.unprocessedInvoiceQuantity !== val) {
-//         this.unprocessedInvoiceQuantity = val
-//         this.$emit('change')
-//       }
-//     })
-//   },
-//   beforeDestroy() {
-//     this.$BUS.$off('unprocessedInvoiceQuantity')
-//   }
-// }
+
 </script>
 
 <style lang="scss" scoped>

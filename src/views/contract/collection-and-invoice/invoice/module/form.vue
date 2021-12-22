@@ -167,7 +167,7 @@ const defaultForm = {
   projectId: undefined,
   remark: undefined,
   attachmentIds: undefined,
-  attachments: undefined,
+  attachments: undefined
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
@@ -183,36 +183,34 @@ const rules = {
   invoiceAmount: [{ required: true, message: '请输入发票面额', trigger: 'change', type: 'number' }]
 }
 
-async function getContractInfo(id){
+async function getContractInfo(id) {
   let data = {}
-  try{
-    data = await contractCollectionInfo({projectId:id})
-  }catch(e){
-    console.log('获取合同信息',e)
-  }finally{
+  try {
+    data = await contractCollectionInfo({ projectId: id })
+  } catch (e) {
+    console.log('获取合同信息', e)
+  } finally {
     contractInfo.value = data
     form.collectionUnit = contractInfo.value.customerUnit
     form.invoiceUnitId = ''
   }
 }
 
-function invoiceCompanyChange(val){
-  if(val){
-    const invoiceVal = contractInfo.value.companyBankAccountList.find(v=>v.companyId===val)
+function invoiceCompanyChange(val) {
+  if (val) {
+    const invoiceVal = contractInfo.value.companyBankAccountList.find(v => v.companyId === val)
     form.invoiceUnit = invoiceVal.companyName
   } else {
     form.invoiceUnit = ''
   }
 }
 
-const rateMoney = computed(()=>{
-  if(contractInfo.value.contractAmount && form.taxRate){
-    return ((contractInfo.value.contractAmount*form.taxRate)/100).toFixed(DP.YUAN)
-  }
+const rateMoney = computed(() => {
+  return contractInfo.value.contractAmount && form.taxRate ? ((contractInfo.value.contractAmount * form.taxRate) / 100).toFixed(DP.YUAN) : ''
 })
 
-CRUD.HOOK.beforeSubmit = (crud,form)=>{
-  crud.form.tax = rateMoney || ''
+CRUD.HOOK.beforeSubmit = (crud, form) => {
+  crud.form.tax = rateMoney.value || ''
   crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
 }
 

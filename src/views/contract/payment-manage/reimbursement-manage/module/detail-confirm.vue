@@ -84,8 +84,7 @@
         <div class="form-row" style="display: flex">
           <el-form-item label="业务类型" prop="businessType">
             <div style="width: 360px">
-              <span v-if="isModify">{{ contractInfo.businessType ? businessTypeEnum.VL[contractInfo.businessType] : '' }}</span>
-              <span v-else>{{ businessTypeName }}</span>
+              <span>{{ contractInfo.businessType ? businessTypeEnum.VL[contractInfo.businessType] : '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="申请人" prop="applyUserId">
@@ -428,7 +427,6 @@ const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 const collectionRef = ref()
 const applyRef = ref()
-
 watch(
   () => form.value.projectId,
   (val) => {
@@ -462,7 +460,8 @@ const rules = {
 
 const tableRules = {
   choseId: [{ required: true, message: '请选择报销种类', trigger: 'change' }],
-  applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }]
+  applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }],
+  actuallyPayAmount: [{ required: true, message: '请输入实付金额', trigger: 'change', type: 'number' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
@@ -573,10 +572,6 @@ const actuallyUpperYuan = computed(() => {
   return form.value.actuallyPayAmount ? digitUppercase(form.value.actuallyPayAmount) : ''
 })
 
-const businessTypeName = computed(() => {
-  return contractInfo.value.businessType ? businessTypeEnum.VL[contractInfo.value.businessType] : ''
-})
-
 function expenseChange(val) {
   if (val) {
     if (val.type === 1) {
@@ -662,7 +657,7 @@ async function onSubmit(val) {
       }
     }
   } catch (e) {
-    console.log('报销修改', e)
+    console.log('报销审核', e)
   }
 }
 </script>

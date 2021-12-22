@@ -303,7 +303,12 @@
         </el-form-item>
         <el-form-item label="附件上传" prop="files" style="position: relative">
           <!-- <upload-btn ref="upload" :files.sync="form.files" :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V" /> -->
-          <common-button size="small" type="danger" plain style="position: absolute; top: 0; left: 160px" @click="resetUpload()"
+          <common-button
+size="small"
+type="danger"
+plain
+style="position: absolute; top: 0; left: 160px"
+@click="resetUpload()"
             >重置</common-button
           >
         </el-form-item>
@@ -313,10 +318,8 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
-import { isNotBlank } from '@data-type/index'
 import { shearTypeEnum } from '@enum-ms/plan'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -327,12 +330,6 @@ const editing = ref(false)
 const originData = ref([])
 const isdisable = ref(false)
 const maxNubmer = 999999999
-const props = defineProps({
-  projectId: {
-    type: [Number, String],
-    default: undefined,
-  },
-})
 const defaultForm = {
   id: undefined,
   name: '',
@@ -347,47 +344,33 @@ const defaultForm = {
   children: [],
   remark: '',
   otherRemark: '',
-  files: [],
+  files: []
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
-const checkOtherDate = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请选择完成时间'))
-  } else {
-    if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
-      const val = props.typeInfo.find((v) => v.no === crud.form.productType)
-      if (value > val.date) {
-        callback(new Error('不能超过产品类型完成时间'))
-      } else {
-        callback()
-      }
-    }
-  }
-}
 const rules = {
   name: [
     { required: true, message: '请填写构件名称', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   serialNumber: [
     { required: true, message: '请填写构件编号', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   specification: [
     { required: true, message: '请填写构件规格', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   material: [
     { required: true, message: '请填写构件材质', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   drawingNumber: [{ max: 64, message: '不能超过64个字符', trigger: 'blur' }],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
   length: [{ required: true, message: '请填写构件长度', trigger: 'blur', type: 'number' }],
   netWeight: [{ required: true, message: '请填写构件净重', trigger: 'blur', type: 'number' }],
   grossWeight: [{ required: true, message: '请填写构件毛重', trigger: 'blur', type: 'number' }],
-  area: [{ message: '请填写构件面积', trigger: 'blur', type: 'number' }],
+  area: [{ message: '请填写构件面积', trigger: 'blur', type: 'number' }]
 }
 
 const tableRules = {
@@ -398,7 +381,7 @@ const tableRules = {
   length: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   grossWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
+  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
@@ -422,7 +405,7 @@ function handleAdd() {
     shearType: undefined,
     specification: '',
     status: undefined,
-    add: true,
+    add: true
   })
   isdisable.value = true
 }

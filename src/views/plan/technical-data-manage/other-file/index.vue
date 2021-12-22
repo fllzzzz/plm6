@@ -30,7 +30,7 @@
           </div>
         </el-tooltip>
       </template> -->
-      <template v-slot="scope">
+      <!-- <template v-slot="scope">
         <span v-if="!scope.row.edit">{{ scope.row.remark }}</span>
         <span v-else>
           <el-input
@@ -43,7 +43,7 @@
           <common-button size="mini" type="primary" :loading="scope.row.editLoading" @click="saveIt(scope.row)">保存</common-button>
           <common-button size="mini" type="info" @click="cancelIt(scope.row)">取消</common-button>
         </span>
-      </template>
+      </template> -->
     </el-table-column>
     <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" width="200px" />
     <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="160px">
@@ -84,9 +84,8 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { DP } from '@/settings/config'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject','globalProjectId'])
+const { globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['otherFile:get'],
@@ -103,17 +102,17 @@ const optShow = {
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '其他文件',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['projectId','type'],
+    requiredQuery: ['projectId', 'type'],
     crudApi: { ...crudApi },
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({
@@ -139,27 +138,27 @@ function dbclick(row, column, event) {
   }
 }
 
-function cancelIt(row) {
-  row.remark = row.originalRemark
-  row.edit = false
-}
+// function cancelIt(row) {
+//   row.remark = row.originalRemark
+//   row.edit = false
+// }
 
-async function saveIt(row) {
-  try {
-    row.editLoading = true
-    await edit(row.id, {
-      remark: row.remark
-    })
-    this.$notify({ title: '修改成功', type: 'success', duration: 2500 })
-  } catch (error) {
-    console.log('编辑备注', error)
-  } finally {
-    row.edit = false
-    row.editLoading = false
-  }
-}
+// async function saveIt(row) {
+//   try {
+//     row.editLoading = true
+//     await edit(row.id, {
+//       remark: row.remark
+//     })
+//     this.$notify({ title: '修改成功', type: 'success', duration: 2500 })
+//   } catch (error) {
+//     console.log('编辑备注', error)
+//   } finally {
+//     row.edit = false
+//     row.editLoading = false
+//   }
+// }
 
-CRUD.HOOK.handleRefresh=(crud, data)=> {
+CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map(v => {
     v.edit = false
     v.originalRemark = v.remark

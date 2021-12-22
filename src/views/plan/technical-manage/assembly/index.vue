@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -124,9 +124,13 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                   <template v-slot="scope">
-                    <common-button v-if="scope.row.add" type="primary" size="mini" plain @click="addArtifact(scope.row)"
-                      >保存</common-button
-                    >
+                    <common-button
+                      v-if="scope.row.add"
+                      type="primary"
+                      size="mini"
+                      plain
+                      @click="addArtifact(scope.row)"
+                      >保存</common-button>
                     <common-button type="danger" size="mini" plain @click="deleteRow(scope.row, scope.$index)">删除</common-button>
                   </template>
                 </el-table-column>
@@ -135,22 +139,22 @@
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" align="center" label="组立号">
+        <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="组立号">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="quantity" :show-overflow-tooltip="true" align="center" label="总数">
+        <el-table-column v-if="columns.visible('quantity')" prop="quantity" :show-overflow-tooltip="true" align="center" label="总数">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="producedQuantity" :show-overflow-tooltip="true" align="center" label="已生产">
+        <el-table-column v-if="columns.visible('producedQuantity')" prop="producedQuantity" :show-overflow-tooltip="true" align="center" label="已生产">
           <template v-slot="scope">
             <span>{{ scope.row.producedQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="usedQuantity" :show-overflow-tooltip="true" align="center" label="已使用">
+        <el-table-column v-if="columns.visible('usedQuantity')" prop="usedQuantity" :show-overflow-tooltip="true" align="center" label="已使用">
           <template v-slot="scope">
             <span>{{ scope.row.usedQuantity }}</span>
           </template>
@@ -434,7 +438,7 @@ import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['assembly:get'],
@@ -442,18 +446,17 @@ const permission = {
   importList: ['assembly:import'],
   del: ['assembly:del'],
   addArtifact: ['assembly:addArtifact'],
-  delArtifact: ['assembly:delArtifact'],
+  delArtifact: ['assembly:delArtifact']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
 const originRow = ref({})
 const maxNubmer = 999999999
 const tableRules = {
@@ -462,24 +465,27 @@ const tableRules = {
   quantity: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   length: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
+  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
-const { crud, columns, CRUD } = useCRUD({
-  title: '组立清单',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['areaId'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
+const { crud, columns, CRUD } = useCRUD(
+  {
+    title: '组立清单',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    crudApi: { ...crudApi },
+    hasPagination: true
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 watch(
@@ -492,12 +498,6 @@ watch(
   },
   { immediate: true }
 )
-
-function handleSandwichCellStyle({ row, column, rowIndex, columnIndex }) {
-  if (columnIndex >= 5 && columnIndex <= 12) {
-    return 'padding:0px;'
-  }
-}
 
 function handleRowClassName({ row, rowIndex }) {
   return row.existStatus === 1 ? '' : 'abnormal-row'
@@ -513,7 +513,7 @@ async function confirmRow(val) {
   try {
     const editAssem = {
       id: val.id,
-      detailUpdateDTOParams: val.detailDTOList,
+      detailUpdateDTOParams: val.detailDTOList
     }
     await crudApi.edit(editAssem)
   } catch (e) {
@@ -539,7 +539,7 @@ function addRow(val, index) {
     specification: '',
     mainIndex: index,
     existStatus: 1,
-    add: true,
+    add: true
   })
 }
 async function addArtifact(val) {

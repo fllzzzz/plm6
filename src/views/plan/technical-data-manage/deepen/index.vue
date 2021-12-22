@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length>0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId"/>
@@ -93,10 +93,9 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { DP } from '@/settings/config'
 import { planTypeEnum } from '@enum-ms/plan'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject','globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['deepen:get'],
@@ -113,17 +112,17 @@ const optShow = {
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '深化图纸',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['monomerId','productType'],
+    requiredQuery: ['monomerId', 'productType'],
     crudApi: { ...crudApi },
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({

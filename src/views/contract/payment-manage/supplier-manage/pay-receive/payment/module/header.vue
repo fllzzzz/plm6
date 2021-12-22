@@ -70,18 +70,16 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { supplierPayMentTypeEnum, auditTypeEnum, contractPayDateTypeEnum } from '@enum-ms/contract'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import { paySum } from '@/api/contract/supplier-manage/pay-invoice/pay'
-import { toThousand } from '@/utils/data-type/number'
 
 const defaultQuery = {
-  dateType: contractPayDateTypeEnum.ENUM.UPDATEDATE.V,
+  dateType: contractPayDateTypeEnum.ENUM.UPDATE_DATE.V,
   createTime: [],
   startDate: undefined,
   endDate: undefined,
@@ -93,7 +91,7 @@ const defaultQuery = {
   paymentUnit: undefined,
   propertyType: undefined,
   receiveUnit: undefined,
-  supplierName: undefined,
+  supplierName: undefined
 }
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
@@ -102,7 +100,7 @@ const totalSum = ref()
 getPaySum()
 
 async function getPaySum() {
-  let data = undefined
+  let data
   try {
     data = await paySum()
   } catch (e) {

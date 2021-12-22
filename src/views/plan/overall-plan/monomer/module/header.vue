@@ -8,7 +8,6 @@
         style="width: 200px;"
         size="small"
         clearable
-        @keyup.enter.native="crud.toQuery"
       />
       <rrOperation/>
     </div>

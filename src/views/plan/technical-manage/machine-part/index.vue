@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length > 0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -210,10 +210,8 @@
 <script setup>
 import crudApi from '@/api/plan/technical-manage/machine-part'
 import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
@@ -221,35 +219,37 @@ import { DP } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
 import { shearTypeEnum } from '@enum-ms/plan'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject', 'globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
-  get: ['machine-part:get'],
+  get: ['machine-part:get']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
-const { crud, columns, CRUD } = useCRUD({
-  title: '零件清单',
-  sort: [],
-  permission: { ...permission },
-  optShow: { ...optShow },
-  requiredQuery: ['areaId'],
-  crudApi: { ...crudApi },
-  hasPagination: true,
-})
+const { crud, columns } = useCRUD(
+  {
+    title: '零件清单',
+    sort: [],
+    permission: { ...permission },
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    crudApi: { ...crudApi },
+    hasPagination: true
+  },
+  tableRef
+)
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.machine-part',
   paginate: true,
-  extraHeight: 157,
+  extraHeight: 157
 })
 
 watch(

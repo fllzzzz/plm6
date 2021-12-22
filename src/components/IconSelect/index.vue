@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import icons from './requireIcons'
+import icons from './require-icons'
 import { defineExpose, defineEmits, ref, reactive } from 'vue'
 const emit = defineEmits(['selected'])
 const name = ref()

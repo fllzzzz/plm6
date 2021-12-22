@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <template v-if="currentProject && currentProject.projectContentList && currentProject.projectContentList.length>0">
+    <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <!--工具栏-->
       <div class="head-container">
         <mHeader :project-id="globalProjectId" />
@@ -37,7 +37,7 @@
           />
           <template v-else>
             <span v-if="scope.row.startDate" v-parse-time="'{y}-{m}-{d}'">{{ scope.row.startDate }}</span>
-          </template>  
+          </template>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="结束日期" align="center" width="220px">
@@ -102,7 +102,6 @@ import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
@@ -110,7 +109,7 @@ import { manufactureTypeEnum } from '@enum-ms/plan'
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
 
-const { currentProject, globalProjectId } = mapGetters(['currentProject','globalProjectId'])
+const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
   get: ['plan:get'],
@@ -125,7 +124,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
@@ -135,7 +133,8 @@ const { crud, columns, CRUD } = useCRUD(
     requiredQuery: ['productType'],
     crudApi: { ...crudApi },
     hasPagination: true
-  }
+  },
+  tableRef
 )
 
 const { maxHeight } = useMaxHeight({
@@ -201,7 +200,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     v.sourceStartDate = v.startDate
     v.sourceEndDate = v.endDate
     v.startDate = v.startDate ? v.startDate + '' : undefined
-    v.endDate = v.endDate ? v.endDate + '': undefined
+    v.endDate = v.endDate ? v.endDate + '' : undefined
     v.modifying = false
     return v
   })

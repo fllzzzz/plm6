@@ -35,7 +35,7 @@ import { getUserAllSimpleByProject as getAllUser } from '@/api/contract/project'
 import useUserDeptTree from '@compos/store/use-user-dept-tree'
 import { isNotBlank } from '@data-type/index'
 
-const props=defineProps({
+const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
@@ -45,12 +45,11 @@ const props=defineProps({
     default: false
   }
 })
-const { loaded, userDeptTree } = useUserDeptTree()
+const { userDeptTree } = useUserDeptTree()
 
-const tree=ref()
+const tree = ref()
 const filterText = ref()
-const isEditing = ref(false)
-const submitLoading = ref(false)
+// const isEditing = ref(false)
 const defaultProps = {
   children: 'children',
   label: 'label'
@@ -86,7 +85,7 @@ watch(
 watch(
   userDeptTree,
   (list) => {
-    if(isNotBlank(userDeptTree.value)){
+    if (isNotBlank(userDeptTree.value)) {
       fetchUserTree()
       fetchMembers()
     }
@@ -94,8 +93,8 @@ watch(
   { immediate: true, deep: true }
 )
 
-const userList = computed(()=>{
-  return props.isModify? noDisabledUser.value: disabledUser.value
+const userList = computed(() => {
+  return props.isModify ? noDisabledUser.value : disabledUser.value
 })
 
 function filterNode(value, data) {
@@ -145,12 +144,12 @@ async function fetchMembers() {
     resetChecked()
   }
 }
-function cancelEdit() {
-  isEditing.value = false
-  resetChecked()
-}
+// function cancelEdit() {
+//   isEditing.value = false
+//   resetChecked()
+// }
 
-function getUser(){
+function getUser() {
   let checkedNodes = tree.value.getCheckedKeys(true)
   checkedNodes = checkedNodes.filter(v => v > 0)
   checkedList.value = checkedNodes

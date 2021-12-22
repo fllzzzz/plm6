@@ -38,7 +38,7 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @keyup.enter.native="crud.toQuery"
+        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.specification"
@@ -47,7 +47,7 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @keyup.enter.native="crud.toQuery"
+        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.material"
@@ -56,7 +56,7 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @keyup.enter.native="crud.toQuery"
+        @blur="crud.toQuery"
       />
     </div>
     <crudOperation />
@@ -70,11 +70,8 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
-import { monomerDetail } from '@/api/plan/monomer'
 import { processingEnum } from '@enum-ms/plan'
 import { ElRadioGroup } from 'element-plus'
-
-const router = useRouter()
 
 const defaultQuery = {
   name: '',
@@ -83,7 +80,7 @@ const defaultQuery = {
   material: '',
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  status: { value: undefined, resetAble: false },
+  status: { value: undefined, resetAble: false }
 }
 
 const monomerSelectRef = ref()
@@ -91,20 +88,18 @@ const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
 const { crud, query } = regHeader(defaultQuery)
-const typeProp = { key: 'no', label: 'name', value: 'no' }
-const typeOption = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
     id: name,
-    name: label,
+    name: label
   }
   crud.toQuery()
 }
@@ -113,7 +108,7 @@ function getAreaInfo(val) {
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
       id: areaInfo.value[0].id + '',
-      name: areaInfo.value[0].name,
+      name: areaInfo.value[0].name
     }
   } else {
     defaultTab.value = {}

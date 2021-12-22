@@ -19,6 +19,7 @@
        <el-table-column
         key="name"
         prop="name"
+        v-if="columns.visible('name')"
         :show-overflow-tooltip="true"
         label="名称"
         min-width="140px"
@@ -26,6 +27,7 @@
       <el-table-column
         key="remark"
         prop="remark"
+        v-if="columns.visible('remark')"
         :show-overflow-tooltip="true"
         label="描述"
         min-width="140px"

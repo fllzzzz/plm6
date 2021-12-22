@@ -23,7 +23,7 @@
               <!-- <common-button size="small" type="primary" @click="modifyInfo" v-if="collectionInfo.auditStatus==auditTypeEnum.ENUM.REJECT.V && type==='detail'">重新编辑</common-button> -->
             </template>
             <template v-else>
-              <common-button slot="reference" type="primary" size="small" @click="onSubmit">提交</common-button>
+              <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
             </template>
           </template>
           <common-button size="small"  @click="closeDrawer">关闭</common-button>
@@ -292,15 +292,13 @@
 
 <script setup>
 import { ref, watch, computed, defineProps, defineEmits } from 'vue'
-import projectCascader from '@comp-base/project-cascader'
 import { DP } from '@/settings/config'
 import { orderInfo } from '@/api/contract/supplier-manage/pay-invoice/pay'
-import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+// import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
-import { supplierPayMentTypeEnum, contractPayForEnum, supplierPayModeEnum, auditTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@/utils/data-type/number'
+import { supplierPayMentTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
 import { ElNotification } from 'element-plus'
 import UploadBtn from '@/components/file-upload/UploadBtn'
@@ -327,22 +325,22 @@ const defaultForm = {
   supplierId: undefined,
   supplierName: undefined,
   tax: undefined,
-  taxRate: undefined,
+  taxRate: undefined
 }
 
 const props = defineProps({
   collectionInfo: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
   modelValue: {
     type: Boolean,
-    require: true,
+    require: true
   },
   type: {
     type: String,
-    require: true,
-  },
+    require: true
+  }
 })
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -363,7 +361,7 @@ const rules = {
   supplierName: [{ required: true, message: '供应商必填', trigger: 'change' }],
   invoiceAmount: [{ required: true, message: '请输入发票面额', trigger: 'change', type: 'number' }],
   receiveInvoiceDate: [{ required: true, message: '请选择收票日期', trigger: 'change' }],
-  receiveInvoiceUnitId: [{ required: true, message: '请选择收票单位', trigger: 'change' }],
+  receiveInvoiceUnitId: [{ required: true, message: '请选择收票单位', trigger: 'change' }]
 }
 
 watch(
@@ -371,7 +369,7 @@ watch(
   (val) => {
     if (val) {
       getOrderInfoReset(val)
-    }else{
+    } else {
       choseOrderInfo.value = {}
       orderListOption.value = []
     }
@@ -379,106 +377,106 @@ watch(
   { deep: true, immediate: true }
 )
 
-function resetForm() {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
-  const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
-  DataValue.invoiceDate = String(DataValue.invoiceDate)
-  DataValue.receiveInvoiceDate = String(DataValue.receiveInvoiceDate)
-  DataValue.receiveInvoiceUnitId = Number(DataValue.receiveInvoiceUnitId)
-  DataValue.attachmentIds = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
-  form.value = JSON.parse(JSON.stringify(DataValue))
-  useWatchFormValidate(formRef, form)
-}
+// function resetForm() {
+//   if (formRef.value) {
+//     formRef.value.resetFields()
+//   }
+//   const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
+//   DataValue.invoiceDate = String(DataValue.invoiceDate)
+//   DataValue.receiveInvoiceDate = String(DataValue.receiveInvoiceDate)
+//   DataValue.receiveInvoiceUnitId = Number(DataValue.receiveInvoiceUnitId)
+//   DataValue.attachmentIds = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
+//   form.value = JSON.parse(JSON.stringify(DataValue))
+//   useWatchFormValidate(formRef, form)
+// }
 
-function modifyInfo() {
-  isModify.value = true
-  resetForm()
-}
+// function modifyInfo() {
+//   isModify.value = true
+//   resetForm()
+// }
 
 function closeDrawer() {
   isModify.value = false
   handleClose()
 }
 
-async function getOrderInfoReset(type){
+async function getOrderInfoReset(type) {
   let data = {}
-  try{
+  try {
     data = await orderInfo(type)
-    data = [
-      {
-        "amount": 1000, //合同额
-        "bankAccount": "1", //收款银行账户
-        "bankName": "1",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 1, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a1", //订单号
-        "supplierId": 1,
-        "supplierName": "供应商1" //供应商名称
-      },
-      {
-        "amount": 2500, //合同额
-        "bankAccount": "2", //收款银行账户
-        "bankName": "2",
-        "basicClass": 1, //物料种类
-        "basicClassName": "钢", //物料种类名称
-        "companyBankAccountList": [
-          {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
-          {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
-          {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
-        ],
-        "projectList": [
-          {
-            "id": 1,
-            "name": "a1",
-            "serialNumber": "aaa",
-            "shortName": "a11"
-          },
-          {
-            "id": 2,
-            "name": "a2",
-            "serialNumber": "aaa2",
-            "shortName": "a22"
-          }
-        ],
-        "id": 2, //订单id
-        "inBoundAmount": 500, //累计收款
-        "orderProperty": 1, //订单属性
-        "payForType": 1,  //费用用途 1货款 2运费
-        "serialNumber": "a2", //订单号
-        "supplierId": 2,
-        "supplierName": "供应商2" //供应商名称
-      }
-    ]
-  }catch(e){
-    console.log('获取订单信息',e)
-  }finally{
+    // data = [
+    //   {
+    //     "amount": 1000, //合同额
+    //     "bankAccount": "1", //收款银行账户
+    //     "bankName": "1",
+    //     "basicClass": 1, //物料种类
+    //     "basicClassName": "钢", //物料种类名称
+    //     "companyBankAccountList": [
+    //       {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
+    //       {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
+    //       {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
+    //     ],
+    //     "projectList": [
+    //       {
+    //         "id": 1,
+    //         "name": "a1",
+    //         "serialNumber": "aaa",
+    //         "shortName": "a11"
+    //       },
+    //       {
+    //         "id": 2,
+    //         "name": "a2",
+    //         "serialNumber": "aaa2",
+    //         "shortName": "a22"
+    //       }
+    //     ],
+    //     "id": 1, //订单id
+    //     "inBoundAmount": 500, //累计收款
+    //     "orderProperty": 1, //订单属性
+    //     "payForType": 1,  //费用用途 1货款 2运费
+    //     "serialNumber": "a1", //订单号
+    //     "supplierId": 1,
+    //     "supplierName": "供应商1" //供应商名称
+    //   },
+    //   {
+    //     "amount": 2500, //合同额
+    //     "bankAccount": "2", //收款银行账户
+    //     "bankName": "2",
+    //     "basicClass": 1, //物料种类
+    //     "basicClassName": "钢", //物料种类名称
+    //     "companyBankAccountList": [
+    //       {companyId: 1, companyName: "河南六建重工有限公司", depositBank: "招商银行", account: "888288828182818281212"},
+    //       {companyId: 2, companyName: "河南六建建筑集团有限公司", depositBank: "徽商银行", account: "213121423534514351451"},
+    //       {companyId: 3, companyName: "河南六建集团钢结构分公司", depositBank: "321321", account: "3213213"}
+    //     ],
+    //     "projectList": [
+    //       {
+    //         "id": 1,
+    //         "name": "a1",
+    //         "serialNumber": "aaa",
+    //         "shortName": "a11"
+    //       },
+    //       {
+    //         "id": 2,
+    //         "name": "a2",
+    //         "serialNumber": "aaa2",
+    //         "shortName": "a22"
+    //       }
+    //     ],
+    //     "id": 2, //订单id
+    //     "inBoundAmount": 500, //累计收款
+    //     "orderProperty": 1, //订单属性
+    //     "payForType": 1,  //费用用途 1货款 2运费
+    //     "serialNumber": "a2", //订单号
+    //     "supplierId": 2,
+    //     "supplierName": "供应商2" //供应商名称
+    //   }
+    // ]
+  } catch (e) {
+    console.log('获取订单信息', e)
+  } finally {
     orderListOption.value = data
-    choseOrderInfo.value = orderListOption.value.find(v=>v.id===props.collectionInfo.orderId)
+    choseOrderInfo.value = orderListOption.value.find(v => v.id === props.collectionInfo.orderId)
   }
 }
 
@@ -486,74 +484,74 @@ async function getOrderInfo(type) {
   let data = {}
   try {
     data = await orderInfo(type)
-    data = [
-      {
-        amount: 1000, //合同额
-        bankAccount: '1', //收款银行账户
-        bankName: '1',
-        basicClass: 1, //物料种类
-        basicClassName: '钢', //物料种类名称
-        companyBankAccountList: [
-          { companyId: 1, companyName: '河南六建重工有限公司', depositBank: '招商银行', account: '888288828182818281212' },
-          { companyId: 2, companyName: '河南六建建筑集团有限公司', depositBank: '徽商银行', account: '213121423534514351451' },
-          { companyId: 3, companyName: '河南六建集团钢结构分公司', depositBank: '321321', account: '3213213' },
-        ],
-        projectList: [
-          {
-            id: 1,
-            name: 'a1',
-            serialNumber: 'aaa',
-            shortName: 'a11',
-          },
-          {
-            id: 2,
-            name: 'a2',
-            serialNumber: 'aaa2',
-            shortName: 'a22',
-          },
-        ],
-        id: 1, //订单id
-        inBoundAmount: 500, //累计收款
-        orderProperty: 1, //订单属性
-        payForType: 1, //费用用途 1货款 2运费
-        serialNumber: 'a1', //订单号
-        supplierId: 1,
-        supplierName: '供应商1', //供应商名称
-      },
-      {
-        amount: 2500, //合同额
-        bankAccount: '2', //收款银行账户
-        bankName: '2',
-        basicClass: 1, //物料种类
-        basicClassName: '钢', //物料种类名称
-        companyBankAccountList: [
-          { companyId: 1, companyName: '河南六建重工有限公司', depositBank: '招商银行', account: '888288828182818281212' },
-          { companyId: 2, companyName: '河南六建建筑集团有限公司', depositBank: '徽商银行', account: '213121423534514351451' },
-          { companyId: 3, companyName: '河南六建集团钢结构分公司', depositBank: '321321', account: '3213213' },
-        ],
-        projectList: [
-          {
-            id: 1,
-            name: 'a1',
-            serialNumber: 'aaa',
-            shortName: 'a11',
-          },
-          {
-            id: 2,
-            name: 'a2',
-            serialNumber: 'aaa2',
-            shortName: 'a22',
-          },
-        ],
-        id: 2, //订单id
-        inBoundAmount: 500, //累计收款
-        orderProperty: 1, //订单属性
-        payForType: 1, //费用用途 1货款 2运费
-        serialNumber: 'a2', //订单号
-        supplierId: 2,
-        supplierName: '供应商2', //供应商名称
-      },
-    ]
+    // data = [
+    //   {
+    //     amount: 1000, //合同额
+    //     bankAccount: '1', //收款银行账户
+    //     bankName: '1',
+    //     basicClass: 1, //物料种类
+    //     basicClassName: '钢', //物料种类名称
+    //     companyBankAccountList: [
+    //       { companyId: 1, companyName: '河南六建重工有限公司', depositBank: '招商银行', account: '888288828182818281212' },
+    //       { companyId: 2, companyName: '河南六建建筑集团有限公司', depositBank: '徽商银行', account: '213121423534514351451' },
+    //       { companyId: 3, companyName: '河南六建集团钢结构分公司', depositBank: '321321', account: '3213213' },
+    //     ],
+    //     projectList: [
+    //       {
+    //         id: 1,
+    //         name: 'a1',
+    //         serialNumber: 'aaa',
+    //         shortName: 'a11',
+    //       },
+    //       {
+    //         id: 2,
+    //         name: 'a2',
+    //         serialNumber: 'aaa2',
+    //         shortName: 'a22',
+    //       },
+    //     ],
+    //     id: 1, //订单id
+    //     inBoundAmount: 500, //累计收款
+    //     orderProperty: 1, //订单属性
+    //     payForType: 1, //费用用途 1货款 2运费
+    //     serialNumber: 'a1', //订单号
+    //     supplierId: 1,
+    //     supplierName: '供应商1', //供应商名称
+    //   },
+    //   {
+    //     amount: 2500, //合同额
+    //     bankAccount: '2', //收款银行账户
+    //     bankName: '2',
+    //     basicClass: 1, //物料种类
+    //     basicClassName: '钢', //物料种类名称
+    //     companyBankAccountList: [
+    //       { companyId: 1, companyName: '河南六建重工有限公司', depositBank: '招商银行', account: '888288828182818281212' },
+    //       { companyId: 2, companyName: '河南六建建筑集团有限公司', depositBank: '徽商银行', account: '213121423534514351451' },
+    //       { companyId: 3, companyName: '河南六建集团钢结构分公司', depositBank: '321321', account: '3213213' },
+    //     ],
+    //     projectList: [
+    //       {
+    //         id: 1,
+    //         name: 'a1',
+    //         serialNumber: 'aaa',
+    //         shortName: 'a11',
+    //       },
+    //       {
+    //         id: 2,
+    //         name: 'a2',
+    //         serialNumber: 'aaa2',
+    //         shortName: 'a22',
+    //       },
+    //     ],
+    //     id: 2, //订单id
+    //     inBoundAmount: 500, //累计收款
+    //     orderProperty: 1, //订单属性
+    //     payForType: 1, //费用用途 1货款 2运费
+    //     serialNumber: 'a2', //订单号
+    //     supplierId: 2,
+    //     supplierName: '供应商2', //供应商名称
+    //   },
+    // ]
   } catch (e) {
     console.log('获取订单信息', e)
   } finally {
@@ -600,7 +598,7 @@ function orderCompanyChange(val) {
   }
 }
 
-const rateMoney = computed(() => {
+function MoneyData() {
   if (isModify.value) {
     if (choseOrderInfo.value.amount && form.value.taxRate) {
       return ((choseOrderInfo.value.amount * form.value.taxRate) / 100).toFixed(DP.YUAN)
@@ -610,17 +608,20 @@ const rateMoney = computed(() => {
       return ((choseOrderInfo.value.amount * props.collectionInfo.taxRate) / 100).toFixed(DP.YUAN)
     }
   }
-  
+}
+
+const rateMoney = computed(() => {
+  return MoneyData
 })
 
 async function onSubmit(val) {
   try {
     if (props.type === 'detail') {
       const valid = await formRef.value.validate()
-      form.value.tax = rateMoney || ''
+      form.value.tax = rateMoney.value || ''
       form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
       if (valid) {
-        //修改
+        // 修改
       }
     } else {
       const submitData = {
@@ -630,10 +631,10 @@ async function onSubmit(val) {
       await editStatus(submitData)
       ElNotification({ title: '提交成功', type: 'success' })
       emit('success')
+      closeDrawer()
     }
   } catch (e) {
-  } finally {
-    closeDrawer()
+    console.log('收票信息', e)
   }
 }
 </script>

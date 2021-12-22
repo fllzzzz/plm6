@@ -9,9 +9,13 @@
     size="80%"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU" v-if="form.changeAbleStatus != 1"
-        >确认</common-button
-      >
+      <common-button
+        :loading="crud.status.cu === 2"
+        type="primary"
+        size="mini"
+        @click="crud.submitCU"
+        v-if="form.changeAbleStatus != 1"
+      >确认</common-button>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px">
@@ -348,10 +352,8 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import IconSelect from '@comp/iconSelect/index.vue'
-import { isNotBlank } from '@data-type/index'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { shearTypeEnum } from '@enum-ms/plan'
 import { DP } from '@/settings/config'
@@ -364,12 +366,6 @@ const editing = ref(false)
 const originData = ref([])
 const isdisable = ref(false)
 const maxNubmer = 999999999
-const props = defineProps({
-  projectId: {
-    type: [Number, String],
-    default: undefined,
-  },
-})
 const defaultForm = {
   changeReason: undefined,
   drawingNumber: undefined,
@@ -386,7 +382,7 @@ const defaultForm = {
   surfaceArea: undefined,
   machinePartDTOList: undefined,
   files: undefined,
-  attachmentIds: undefined,
+  attachmentIds: undefined
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const totalQuantity = ref()
@@ -398,19 +394,19 @@ const minQuantity = ref(0)
 const rules = {
   name: [
     { required: true, message: '请填写构件名称', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   serialNumber: [
     { required: true, message: '请填写构件编号', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   specification: [
     { required: true, message: '请填写构件规格', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   material: [
     { required: true, message: '请填写构件材质', trigger: 'blur' },
-    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' },
+    { min: 1, max: 64, message: '长度在 1 到 64 个字符', trigger: 'blur' }
   ],
   drawingNumber: [{ max: 64, message: '不能超过64个字符', trigger: 'blur' }],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
@@ -418,7 +414,7 @@ const rules = {
   netWeight: [{ required: true, message: '请填写构件净重', trigger: 'blur', type: 'number' }],
   grossWeight: [{ required: true, message: '请填写构件毛重', trigger: 'blur', type: 'number' }],
   surfaceArea: [{ message: '请填写构件面积', trigger: 'blur', type: 'number' }],
-  changeReason: [{ required: true, max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
+  changeReason: [{ required: true, max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }
 
 const tableRules = {
@@ -428,7 +424,7 @@ const tableRules = {
   length: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   grossWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
-  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
+  netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
@@ -447,7 +443,7 @@ function handleAdd() {
     type: undefined,
     add: true,
     unitData: undefined,
-    dataIndex: crud.form.machinePartDTOList.length,
+    dataIndex: crud.form.machinePartDTOList.length
   })
   isdisable.value = true
 }
@@ -502,7 +498,7 @@ function deleteItems() {
   if (choseVal.value && choseVal.value.length > 0) {
     choseVal.value.forEach((i) => {
       if (i.id) {
-        let idIndex = crud.form.machinePartDTOList.findIndex((v) => v.id === i.id)
+        const idIndex = crud.form.machinePartDTOList.findIndex((v) => v.id === i.id)
         crud.form.machinePartDTOList.splice(idIndex, 1)
       } else {
         crud.form.machinePartDTOList.splice(i.dataIndex, 1)
@@ -517,7 +513,7 @@ function deleteItems() {
 }
 
 function quantityChange() {
-  if (crud.form.newQuantity && crud.form.newQuantity != preVal.value) {
+  if (crud.form.newQuantity && crud.form.newQuantity !== preVal.value) {
     crud.form.machinePartDTOList.map((val) => {
       val.quantity = val.unitData * crud.form.newQuantity
     })
@@ -541,7 +537,7 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
       val.unitData = val.quantity / crud.form.quantity
     }
   })
-  minQuantity.value = crud.form.changeAbleStatus === 1 ? curd.form.quantity : crud.form.productionQuantity
+  minQuantity.value = crud.form.changeAbleStatus === 1 ? crud.form.quantity : crud.form.productionQuantity
 }
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
