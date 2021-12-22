@@ -14,12 +14,12 @@
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="合同编号" min-width="250">
+    <el-table-column v-if="columns.visible('serialNumber')" align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="合同编号" min-width="150">
       <template v-slot="scope">
         <span>{{ scope.row.serialNumber }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="项目" min-width="250">
+    <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="项目" min-width="250">
       <template v-slot="scope">
         <span class="project-name">{{ scope.row.name }}</span>
       </template>
@@ -34,7 +34,7 @@
         <div>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="项目内容" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="项目内容" align="center" min-width="180">
       <template v-slot="scope">
         <div>{{ scope.row.projectContent }}</div>
       </template>

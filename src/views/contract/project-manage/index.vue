@@ -20,6 +20,7 @@
         prop="serialNumber"
         :show-overflow-tooltip="false"
         min-width="130"
+        align="center"
         label="合同编号"
         fixed="left"
       />
@@ -29,6 +30,7 @@
         prop="name"
         :show-overflow-tooltip="true"
         min-width="150"
+        align="center"
         label="项目名称"
       />
       <el-table-column
@@ -163,7 +165,7 @@
           <common-button
             v-if="checkPermission(permission.editStatus) && scope.row.status === projectStatusEnum.ENUM.SUSPEND.V"
             size="mini"
-            @click="changeStatus(scope.row, projectStatusEnum.PROCESS.v)"
+            @click="changeStatus(scope.row, projectStatusEnum.PROCESS.V)"
             >继续</common-button
           >
           <udOperation :data="scope.row" :show-edit="false" />

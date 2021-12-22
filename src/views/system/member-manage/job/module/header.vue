@@ -8,16 +8,17 @@
         style="width: 200px"
         size="small"
         clearable
-        @keyup.enter="crud.toQuery"
+        @blur="crud.toQuery"
       />
-      <common-radio-button
-        v-model="query.enabled"
-        :options="systemEnabledEnum.ENUM"
-        type="enum"
-        class="filter-item"
-        size="small"
-        @change="crud.toQuery"
-      />
+      <el-radio-group v-model="query.enabled" size="small" class="filter-item"  @change="crud.toQuery">
+        <el-radio-button
+          v-for="item in systemEnabledEnum.ENUM"
+          :key="item.V"
+          :label="item.V"
+        >
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
       <rrOperation />
     </div>
     <crudOperation />
@@ -29,6 +30,7 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { systemEnabledEnum } from '@enum-ms/system'
+import { ElRadioGroup } from 'element-plus'
 
 const defaultQuery = {
   name: undefined,
