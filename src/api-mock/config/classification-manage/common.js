@@ -64,6 +64,7 @@ const getFinalMatClsByIdForSectionSteel = {
             {
               id: 1,
               name: 'GB-06',
+              boolStandard: true,
               list: [
                 { code: '01', name: '10*10*200*500', 'unitWeight|10-30.1-2': 1 },
                 { code: '02', name: '12*10*200*500', 'unitWeight|10-30.1-2': 1 },

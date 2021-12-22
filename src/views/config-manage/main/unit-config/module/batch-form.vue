@@ -11,72 +11,61 @@
     top="10vh"
   >
     <template #titleRight>
-      <span style="float:right">
+      <span style="float: right">
         <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
-        <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">提 交</common-button>
+        <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">
+          提 交
+        </common-button>
         <store-operation type="crudBatch" />
         <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
       </span>
     </template>
     <div>
       <el-form ref="formRef" :model="form" :disabled="crud.bStatus.cu === CRUD.STATUS.PROCESSING">
-      <common-table
-        :data="form.list"
-        empty-text="暂无数据"
-        :max-height="maxHeight"
-        default-expand-all
-        :cell-class-name="wrongCellMask"
-        style="width: 100%;"
-      >
-        <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="150">
-          <template #default="{ row }">
-            <el-input
-              v-model.trim="row.name"
-              type="text"
-              clearable
-              placeholder="名称"
-              size="small"
-              style="width: 100%;"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column key="symbol" prop="symbol" :show-overflow-tooltip="true" label="符号" width="125">
-          <template #default="{ row }">
-            <el-input
-              v-model.trim="row.symbol"
-              type="text"
-              maxlength="3"
-              size="small"
-              placeholder="符号"
-              style="width: 100%;"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column key="type" prop="type" label="类型" width="192">
-          <template #default="{ row, $index }">
-            <common-select
-              v-model="row.type"
-              :options="unitTypeEnum.ENUM"
-              :show-extra="$index !== 0"
-              :extra-val="ditto.get('type')"
-              type="enum"
-              placeholder="类型"
-              style="width: 170px;"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="70px"
-          align="center"
-          fixed="right"
+        <common-table
+          :data="form.list"
+          empty-text="暂无数据"
+          :max-height="maxHeight"
+          default-expand-all
+          :cell-class-name="wrongCellMask"
+          style="width: 100%"
         >
-          <template #default="{ $index }">
-            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, $index)" />
-          </template>
-        </el-table-column>
-      </common-table>
+          <el-table-column label="序号" type="index" align="center" width="60" />
+          <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" min-width="150">
+            <template #default="{ row }">
+              <el-input v-model.trim="row.name" type="text" clearable placeholder="名称" size="small" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column key="symbol" prop="symbol" :show-overflow-tooltip="true" label="符号" width="125">
+            <template #default="{ row }">
+              <el-input v-model.trim="row.symbol" type="text" maxlength="3" size="small" placeholder="符号" style="width: 100%" />
+            </template>
+          </el-table-column>
+          <el-table-column key="type" prop="type" label="类型" width="192">
+            <template #default="{ row, $index }">
+              <common-select
+                :key="Math.random()"
+                v-model="row.type"
+                :options="unitTypeEnum.ENUM"
+                :show-extra="$index !== 0"
+                type="enum"
+                placeholder="类型"
+                style="width: 170px"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="70px" align="center" fixed="right">
+            <template #default="{ $index }">
+              <common-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                style="padding: 6px"
+                @click.stop="removeRow(form.list, $index)"
+              />
+            </template>
+          </el-table-column>
+        </common-table>
       </el-form>
     </div>
   </common-dialog>
@@ -107,9 +96,7 @@ const defaultRow = {
 }
 
 // 同上的选项与值
-const ditto = new Map([
-  ['type', -1]
-])
+const ditto = new Map([['type', -1]])
 
 const formRef = ref()
 

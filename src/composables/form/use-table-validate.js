@@ -92,9 +92,12 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
 
     // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
     for (let i = list.length; i < copyList.length; i++) {
-      if (i === 0) list.push({})
-      // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
-      list.push(lodash.cloneDeep(_blankRow))
+      if (i === 0) {
+        list.push({})
+      } else {
+        // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
+        list.push(lodash.cloneDeep(_blankRow))
+      }
     }
   } else {
     flag = false

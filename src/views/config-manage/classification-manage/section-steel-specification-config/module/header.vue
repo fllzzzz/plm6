@@ -26,13 +26,15 @@
 
 <script setup>
 import { batchSetStandard, delStandard } from '@/api/config/classification-manage/section-steel-spec-config'
-import { inject } from 'vue'
+import { inject, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import { ElMessage, ElMessageBox } from 'element-plus'
 // import crudOperation from '@crud/CRUD.operation'
 const defaultQuery = {
   name: undefined
 }
+
+const emit = defineEmits(['refresh'])
 
 const { crud, query } = regHeader(defaultQuery)
 const standard = inject('standard')
@@ -43,6 +45,7 @@ async function toDelStandard(id) {
     .then(() => {
       delStandard(id)
         .then(() => {
+          emit('refresh')
           ElMessage({ type: 'success', message: '删除成功!' })
         })
         .catch((error) => {
@@ -56,17 +59,22 @@ async function toDelStandard(id) {
 
 // 设置国标
 function toSetStandard(standard) {
-  ElMessageBox.confirm(`此操作会将所有勾选型材的标准设置为${standard.name}, 确认继续？`, '提示', { type: 'warning' })
-    .then(() => {
-      const sectionSteelIds = crud.selections
-      batchSetStandard(standard.id, sectionSteelIds).then(() => {
-        ElMessage({ type: 'success', message: '设置成功!' })
-        crud.selectAllChange([])
+  if (crud.selections.length > 0) {
+    ElMessageBox.confirm(`此操作会将所有勾选型材的标准设置为${standard.name}, 确认继续？`, '提示', { type: 'warning' })
+      .then(() => {
+        const sectionSteelIds = crud.selections
+        batchSetStandard(standard.id, sectionSteelIds).then(() => {
+          ElMessage({ type: 'success', message: '设置成功!' })
+          crud.selectAllChange([])
+          emit('refresh')
+        })
       })
-    })
-    .catch(() => {
-      ElMessage({ type: 'info', message: '已取消设置' })
-    })
+      .catch(() => {
+        ElMessage({ type: 'info', message: '已取消设置' })
+      })
+  } else {
+    ElMessage.warning(`操作会将所有勾选型材的标准设置为${standard.name}，请先勾选型材`)
+  }
 }
 </script>
 

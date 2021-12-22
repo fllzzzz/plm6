@@ -46,6 +46,7 @@
   <el-table-column v-if="projectOptions" prop="projectId" align="center" min-width="170px" label="所属项目">
     <template #default="{ row, $index }">
       <common-select
+        :key="Math.random()"
         v-model="row.projectId"
         :options="projectOptions"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
@@ -95,7 +96,9 @@ const currentForm = ref({ list: [] })
 // 是否“甲供”
 const boolPartyA = computed(() => props.order.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 
-watchEffect(() => { currentForm.value = props.form })
+watchEffect(() => {
+  currentForm.value = props.form
+})
 
 const {
   initScopeList: initProjectScopeList,
@@ -103,11 +106,7 @@ const {
   getRealVal: getProjectVal
 } = useDittoRealVal('projectId')
 
-const {
-  initScopeList: initReqScopeList,
-  handleValueChange: handleReqChange,
-  getRealVal: getReqVal
-} = useDittoRealVal('requisitionsSN')
+const { initScopeList: initReqScopeList, handleValueChange: handleReqChange, getRealVal: getReqVal } = useDittoRealVal('requisitionsSN')
 
 // 申购单选择
 const requisitionsSNOptions = computed(() => {
@@ -132,12 +131,10 @@ const projectOptions = computed(() => {
   }
 })
 
-watchEffect(
-  () => {
-    initReqScopeList(currentForm.value.list || [])
-    initProjectScopeList(currentForm.value.list || [])
-  }
-)
+watchEffect(() => {
+  initReqScopeList(currentForm.value.list || [])
+  initProjectScopeList(currentForm.value.list || [])
+})
 
 // 如果只有一个项目自动赋值
 watch(

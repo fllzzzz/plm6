@@ -63,7 +63,6 @@
 </template>
 
 <script setup>
-// TODO: 编辑，反向赋值
 import { steelInboundApplication } from '@/api/wms/inbound/application'
 import { edit as editInboundApplication } from '@/api/wms/inbound/raw-mat-application-record'
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'

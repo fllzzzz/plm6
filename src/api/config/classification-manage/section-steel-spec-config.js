@@ -39,7 +39,7 @@ export function delStandard(id) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     url: 'classification/material/section-steel/standard',
     method: 'delete',
-    data: id
+    data: { id }
   })
 }
 
