@@ -72,6 +72,7 @@
             :key="`${index}`"
             :label="item.name"
             :value="item.id"
+            :disabled="item.id===1"
           />
         </el-select>
       </el-form-item>

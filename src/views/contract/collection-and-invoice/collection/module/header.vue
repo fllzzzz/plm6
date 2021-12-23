@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <common-select
         v-model="query.dateType"
-        :options="contractDateTypeEnum.ENUM"
+        :options="collectionDateTypeEnum.ENUM"
         type="enum"
         size="small"
         clearable
@@ -23,7 +23,7 @@
         end-placeholder="结束日期"
         style="width:240px"
       />
-      <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
         <el-radio-button :label="undefined">全部</el-radio-button>
         <el-radio-button
@@ -51,6 +51,12 @@
         style="width:200px"
         class="filter-item"
       />
+      <el-input
+        v-model="query.auditorName"
+        placeholder="审核人"
+        style="width:200px"
+        class="filter-item"
+      />
       <rrOperation/>
       <crudOperation add-text="收款填报">
       </crudOperation>
@@ -62,17 +68,18 @@
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { settlementStatusEnum, auditTypeEnum, contractDateTypeEnum } from '@enum-ms/contract'
+import { settlementStatusEnum, auditTypeEnum, collectionDateTypeEnum } from '@enum-ms/contract'
 import { ElRadioGroup } from 'element-plus'
 
 const defaultQuery = {
   projectId: undefined,
-  dateType: contractDateTypeEnum.ENUM.UPDATE_DATE.V,
+  dateType: collectionDateTypeEnum.ENUM.UPDATE_DATE.V,
   createTime: [],
   startDate: undefined,
   endDate: undefined,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
-  writtenByName: undefined
+  writtenByName: undefined,
+  auditorName: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

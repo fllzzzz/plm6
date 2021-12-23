@@ -72,8 +72,8 @@ import useTableValidate from '@compos/form/use-table-validate'
 
 // crud交由presenter持有
 const permission = {
-  get: ['trussDetailCofing:get'],
-  edit: ['trussDetailCofing:edit']
+  get: ['trussDetailConfig:get'],
+  edit: ['trussDetailConfig:edit']
 }
 
 const tableRef = ref()

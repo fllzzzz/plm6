@@ -78,7 +78,7 @@
             placeholder="项目经理"
           />
         </el-form-item>
-        <el-form-item label="业务负责人1" prop="businessLeaderIId">
+        <!-- <el-form-item label="业务负责人1" prop="businessLeaderIId">
           <user-dept-cascader
             v-model="form.businessLeaderId"
             filterable
@@ -101,7 +101,7 @@
             style="width: 200px"
             placeholder="业务负责人2"
           />
-        </el-form-item>
+        </el-form-item> -->
       </div>
       <el-divider><span class="title">合同金额</span></el-divider>
       <div class="form-row">

@@ -44,10 +44,8 @@ const props = defineProps({
 watch(
   () => props.defaultTab,
   (val) => {
-    if (val) {
-      id.value = val.id
-      tabClick('default')
-    }
+    id.value = val.id
+    tabClick('default')
   },
   { deep: true, immediate: true }
 )
@@ -65,6 +63,14 @@ function tabClick(type) {
     emit('tab-click', {
       name: val.id,
       label: val.name
+    })
+  }
+  if (!isNotBlank(val)) {
+    oldValue.value = undefined
+    emit('update:modelValue', undefined)
+    emit('tab-click', {
+      name: undefined,
+      label: undefined
     })
   }
 }

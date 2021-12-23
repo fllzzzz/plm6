@@ -323,14 +323,14 @@ function handleRowClassName({ row, rowIndex }) {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   let index = 1
   data.data.content = data.data.content.map((v) => {
-    v.dataType = 1
+    v.dataType = 2
     v.rowKey = `${v.id}`
     v.index = index
     index++
     let childIndex = 1
     if (v.machinePartDTOList && v.machinePartDTOList.length > 0) {
       v.children = v.machinePartDTOList.map((child) => {
-        child.dataType = 2
+        child.dataType = 1
         child.rowKey = `${v.id}__${child.id}`
         child.childIndex = childIndex
         childIndex++
@@ -351,7 +351,10 @@ async function changeStatus(data, val) {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await editStatus(data.type, data.id)
+    const submitData = {
+      status: val
+    }
+    await editStatus(data.dataType, data.id, submitData)
     crud.notify(`“${data.serialNumber}”已【${messageName}】`, CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
     console.log('修改零构件状态', error)

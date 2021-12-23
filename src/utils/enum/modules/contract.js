@@ -174,6 +174,14 @@ const contractDateTypeEnum = {
 }
 constantize(contractDateTypeEnum)
 
+// TODO: 收款时间类型1
+const collectionDateTypeEnum = {
+  UPDATE_DATE: { L: '填报日期', K: 'UPDATE_DATE', V: 1 },
+  AUDIT_DATE: { L: '审核日期', K: 'AUDIT_DATE', V: 2 },
+  INVOICE_DATE: { L: '填报日期', K: 'INVOICE_DATE', V: 3 }
+}
+constantize(collectionDateTypeEnum)
+
 // TODO: 付款属性1
 const supplierPayMentTypeEnum = {
   MATERIAL: { L: '原材料采购', K: 'MATERIAL', V: 1 << 0 },
@@ -253,6 +261,7 @@ export {
   contractChangeTypeEnum,
   systemTypeEnum,
   contractDateTypeEnum,
+  collectionDateTypeEnum,
   supplierPayMentTypeEnum,
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,
@@ -281,6 +290,7 @@ export default {
   contractChangeTypeEnum,
   systemTypeEnum,
   contractDateTypeEnum,
+  collectionDateTypeEnum, // 收款日期
   supplierPayMentTypeEnum,
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,

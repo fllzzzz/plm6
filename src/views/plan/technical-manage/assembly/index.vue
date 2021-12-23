@@ -496,7 +496,7 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 function handleRowClassName({ row, rowIndex }) {
@@ -584,6 +584,10 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     }
     return v
   })
+}
+
+CRUD.HOOK.beforeSubmit = () => {
+  return !!crud.form.monomerId
 }
 </script>
 

@@ -133,7 +133,7 @@
               <span v-else>{{ detail.projectManagerFullName }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="业务负责人1" prop="businessLeaderId">
+          <!-- <el-form-item label="业务负责人1" prop="businessLeaderId">
             <div class="input-underline" style="width:300px">
               <user-dept-cascader
                 v-if="isModify"
@@ -164,7 +164,7 @@
               />
               <span v-else>{{ detail.businessLeaderTwoFullName }}</span>
             </div>
-          </el-form-item>
+          </el-form-item> -->
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
