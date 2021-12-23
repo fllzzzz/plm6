@@ -41,12 +41,12 @@
             </el-tooltip>
           </template>
           <template v-slot="scope">
-            <el-input v-model="scope.row.name" size="small" style="width:100%;" placeholder="供应商名称" clearable />
+            <el-input v-model="scope.row.name" size="small" style="width:100%;" placeholder="供应商名称" maxlength="32" clearable />
           </template>
         </el-table-column>
         <el-table-column prop="socialCode" label="社会统一代码" min-width="150">
           <template v-slot="scope">
-            <el-input v-model="scope.row.socialCode" size="small" style="width:100%;" placeholder="社会统一代码" clearable />
+            <el-input v-model="scope.row.socialCode" size="small" style="width:100%;" placeholder="社会统一代码" maxlength="18" clearable />
           </template>
         </el-table-column>
         <el-table-column prop="classification" label="供应商分类" min-width="180">

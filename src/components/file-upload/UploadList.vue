@@ -164,7 +164,7 @@ function handleSuccess(response) {
   handleClear()
   uploadLoading.value = false
   if (response && response.code === 20000) {
-    const data = response.data
+    const data = [response.data]
     emit('update:files', props.files.concat(response.data))
     currentUpload.value = currentUpload.value.concat(data.map((v) => v.id))
     ElMessage.success('上传成功')
@@ -227,8 +227,8 @@ function beforeRemove(file, fileList) {
   .upload-box {
     position: absolute;
     display: inline-block;
-    right: 10px;
-    top: 9px;
+    right: 5px;
+    top: 6px;
   }
   .attachment-content {
     position: relative;
