@@ -185,16 +185,18 @@
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="付款方式描述" prop="paymentDescription">
+            <el-form-item label="付款方式描述" prop="payTypeDesc">
               <div class="input-underline" style="width: 550px">
                 <el-input
                   v-if="isModify"
-                  v-model="form.paymentDescription"
+                  v-model="form.payTypeDesc"
                   type="textarea"
                   :autosize="{ minRows: 4, maxRows: 4 }"
+                  maxlength="200"
+                  show-word-limit
                   placeholder="付款方式描述"
                 />
-                <span v-else>{{ detail.paymentDescription }}</span>
+                <span v-else>{{ detail.payTypeDesc }}</span>
               </div>
             </el-form-item>
           </div>
@@ -289,7 +291,7 @@ const defaultForm = {
   payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
   isTax: isTaxContractEnum.YES.V, // 是否含税
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-  paymentDescription: undefined, // 付款方式描述
+  payTypeDesc: undefined, // 付款方式描述
   enclosureInfo: {},
   structureSaveRequestVOS: [],
   profiledPlateSaveRequestVOS: [],
@@ -310,7 +312,7 @@ const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
 
 const rules = {
-  paymentDescription: [{ max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }],
+  payTypeDesc: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
   projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
   projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],

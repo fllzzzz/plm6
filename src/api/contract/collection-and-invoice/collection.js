@@ -36,8 +36,7 @@ export function contractCollectionInfo(params) {
   })
 }
 
-//审核
-export function editStatus(id,status) {
+export function editStatus(id, status) {
   return request({
     module: 'contract',
     url: `contract/collection/audit/collectionId/${id}/status/${status}`,

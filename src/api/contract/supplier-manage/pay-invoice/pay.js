@@ -26,7 +26,7 @@ export function orderInfo(orderProperty) {
   })
 }
 
-//审核
+// 审核
 export function editStatus(params) {
   return request({
     module: 'contract',

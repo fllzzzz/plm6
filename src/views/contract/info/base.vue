@@ -193,19 +193,15 @@
             </div>
           </el-form-item>
           <el-form-item label="管理费(元)" prop="managementFeeRate">
-            <div class="input-underline" style="display:inline-block;width:110px">
-              <el-input
-                v-if="isModify"
-                v-model="managementFee"
-                :readonly="true"
-                placeholder="先输入费率"
-              />
-              <template v-else>
-                <span>{{ detail.managementFee? detail.managementFee.toThousand(): '' }}</span>
-              </template>
-            </div>
-            <div class="input-underline" style="display:inline-block;width:130px">
-              <div v-if="isModify">
+            <template v-if="isModify">
+              <div class="input-underline" style="display:inline-block;width:110px">
+                <el-input
+                  v-model="managementFee"
+                  :readonly="true"
+                  placeholder="先输入费率"
+                />
+              </div>
+              <div class="input-underline" style="display:inline-block;width:130px">
                 <el-input-number
                   v-model="form.managementFeeRate"
                   :step="1"
@@ -218,8 +214,11 @@
                   style="width:80px"
                 />%
               </div>
-              <span v-else>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
-            </div>
+            </template>
+            <template v-else>
+              <span>{{ detail.managementFee? detail.managementFee.toThousand(): '' }}</span>
+              <span>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
+            </template>
           </el-form-item>
         </div>
         <div class="form-row">
