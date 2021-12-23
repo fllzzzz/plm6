@@ -61,7 +61,7 @@ const props = defineProps({
   },
   optionAllValue: {
     type: [Number, String, Boolean],
-    default: 0
+    default: -999999999
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用
@@ -80,7 +80,7 @@ watchEffect(() => {
 })
 
 function selectChange(val) {
-  if (val === 0) val = undefined
+  if (val === -999999999) val = undefined
   if (val === props.modelValue) return
   emit('update:modelValue', val)
   emit('change', val)

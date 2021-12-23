@@ -40,7 +40,7 @@
 <script setup>
 import { defineProps, defineEmits, computed, watch, ref } from 'vue'
 import { getBits } from '@data-type/number'
-import { deepClone, isBlank, judgeSameValue } from '@data-type/index'
+import { deepClone, isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
 import { obj2arr } from '@/utils/convert/type'
 
 import useCommonDataStructureByType from '@compos/use-common-data-structure-by-type'
@@ -266,7 +266,7 @@ function handleBlur(event) {
  * 有默认值的情况，并且value为空，则给value赋值
  */
 function setDefault() {
-  if (isBlank(props.options) || selectValue.value) {
+  if (isBlank(props.options) || isNotBlank(selectValue.value)) {
     return
   }
   if (props.onlyOneDefault && props.options.length === 1) {

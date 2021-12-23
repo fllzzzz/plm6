@@ -378,7 +378,7 @@ function addSystemOptions(options) {
       // 页码
       page: 1,
       // 每页数据条数
-      size: tablePageSize,
+      size: tablePageSize.value,
       // 总数据条数
       total: 0,
       hasNextPage: true
