@@ -191,6 +191,13 @@ const paintingTypeEnum = {
 }
 constantize(paintingTypeEnum)
 
+const labelTypeEnum = {
+  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0 },
+  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1 },
+  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2 }
+}
+constantize(labelTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -215,7 +222,8 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  reportComponentTypeEnum
+  reportComponentTypeEnum,
+  labelTypeEnum
 }
 
 export default {
@@ -242,5 +250,6 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  reportComponentTypeEnum
+  reportComponentTypeEnum,
+  labelTypeEnum
 }

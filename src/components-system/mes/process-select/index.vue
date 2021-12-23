@@ -11,7 +11,7 @@
     placeholder="请选择工序"
     @change="handleChange"
   >
-    <el-option-group v-for="group in processOptions" :key="group.name" :label="group.name">
+    <el-option-group v-for="group in processOptions" :key="group.type" :label="group.name">
       <el-option
         v-for="item in group.options"
         :key="item.id"
@@ -31,7 +31,7 @@ import RAF from '@/utils/raf'
 
 import useProcess from '@compos/store/use-process'
 
-const emit = defineEmits(['change', 'update:value'])
+const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
   // 查询指定工序次序，不传查所有
@@ -47,7 +47,7 @@ const props = defineProps({
     default: undefined
   },
   // eslint-disable-next-line vue/require-default-prop
-  value: {
+  modelValue: {
     type: [Number, Array]
   },
   multiple: {
@@ -91,7 +91,7 @@ const processOptions = computed(() => {
 })
 
 watch(
-  () => props.value,
+  () => props.modelValue,
   (val) => {
     selectIds.value = val
     handleChange(val)
@@ -108,7 +108,7 @@ watch(
 )
 
 function handleChange(val) {
-  emit('update:value', val)
+  emit('update:modelValue', val)
   emit('change', val)
 }
 

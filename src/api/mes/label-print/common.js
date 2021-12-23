@@ -25,11 +25,11 @@ export function getPrintConfig(projectId) {
  * @param {string} manufacturerName|required 制造商
  * @returns
  */
-export function setPrintConfig({ projectId, weight, copiesQuantity, printAll, showProductionLine, manufacturerName, showArea, showMonomer }) {
+export function setPrintConfig({ projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer }) {
   return request({
     module: 'mes',
     url: 'print/config',
     method: 'post',
-    data: { projectId, weight, copiesQuantity, printAll, showProductionLine, manufacturerName, showArea, showMonomer }
+    data: { projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer }
   })
 }

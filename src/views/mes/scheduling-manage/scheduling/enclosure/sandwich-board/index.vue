@@ -42,6 +42,7 @@
         :category="mesEnclosureTypeEnum.SANDWICH_BOARD.V"
         :columns="columns"
         :fixed="'left'"
+        fixedWidth
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">

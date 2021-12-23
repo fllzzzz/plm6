@@ -17,17 +17,22 @@
     <crudOperation>
       <template v-slot:optRight>
         <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
-          <el-form ref="form" :model="printConfig" label-width="90px" size="small">
+          <el-form ref="form" :model="printConfig" label-width="90px" size="mini">
             <el-form-item label="重量">
               <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
             </el-form-item>
+            <el-form-item label="标签类型">
+              <common-radio-button v-model="printConfig.type" :options="labelTypeEnum.ENUM" type="enum" />
+            </el-form-item>
             <el-form-item label="显示">
-              <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
-              <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
-              <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" />
+              <span style="display: flex; align-items: center">
+                <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
+                <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
+                <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" />
+              </span>
             </el-form-item>
             <el-form-item label="制造商名称">
-              <el-input v-model.trim="printConfig.manufacturerName" maxlength="30" clearable size="small" style="width: 250px" />
+              <el-input v-model.trim="printConfig.manufacturerName" maxlength="30" clearable style="width: 250px" />
             </el-form-item>
             <el-form-item label="份数">
               <el-input-number
@@ -35,7 +40,6 @@
                 :step="1"
                 :min="1"
                 :max="99"
-                size="small"
                 style="width: 250px"
                 @change="handleCopiesChange"
               />
@@ -51,11 +55,12 @@
         </el-popover>
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
           <span v-if="!configLoading">{{
-            `重量：${printWeightTypeEnum.VL[sourcePrintConfig.weight]}，
+            `标签类型：${labelTypeEnum.VL[sourcePrintConfig.type]}，
+            重量：${printWeightTypeEnum.VL[sourcePrintConfig.weight]}，
             区域：${isShowText(sourcePrintConfig.showArea)}，
             工厂及生产线：${isShowText(sourcePrintConfig.showProductionLine)}，
             单体：${isShowText(sourcePrintConfig.showMonomer)}，
-            制造商名称：${sourcePrintConfig.manufacturerName}，
+            制造商名称：${sourcePrintConfig.manufacturerName || '-'}，
             份数：${sourcePrintConfig.copiesQuantity}`
           }}</span>
           <i v-else class="el-icon-loading" />
@@ -82,6 +87,7 @@ import { getHasTaskLine } from '@/api/mes/common'
 import { ref, watch, inject, reactive, defineExpose } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
+import { labelTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'
@@ -123,10 +129,11 @@ const printConfigVisible = ref(false)
 const saveLoading = ref(false)
 const configLoading = ref(false)
 let printConfig = reactive({
-  weight: printWeightTypeEnum.GROSS.V,
-  showProductionLine: true,
+  weight: printWeightTypeEnum.NET.V,
+  type: labelTypeEnum.COMMON.V,
   showArea: true,
   showMonomer: true,
+  showProductionLine: true,
   manufacturerName: '',
   copiesQuantity: 1
 })
@@ -137,7 +144,7 @@ function isShowText(bool) {
 }
 
 watch(
-  () => globalProjectId,
+  () => globalProjectId.value,
   () => {
     fetchPrintConfig()
   },
@@ -293,3 +300,12 @@ defineExpose({
   print
 })
 </script>
+
+<style lang="scss" scoped>
+.el-form-item {
+  align-items: center;
+  ::v-deep(.el-form-item__content) {
+    line-height: unset;
+  }
+}
+</style>

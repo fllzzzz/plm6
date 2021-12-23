@@ -340,107 +340,7 @@ export default {
         // }
       ]
     },
-    {
-      name: 'MesProductionDashboard',
-      path: 'dashboard',
-      hidden: false,
-      redirect: '/mes/production-manage/dashboard/project-state',
-      meta: {
-        title: '项目看板',
-        icon: 'project',
-        noCache: true
-      },
-      children: [
-        {
-          name: 'MesProductionDashboardProjectPlan',
-          path: 'project-plan',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/project-plan/index',
-          meta: {
-            title: '项目计划',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardMainMaterialTrack',
-          path: 'main-material-track',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/main-material-track/index',
-          meta: {
-            title: '主材跟踪',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardProjectState',
-          path: 'project-state',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/project-state/index',
-          meta: {
-            title: '项目状态',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardArtifactDashboard',
-          path: 'artifact-dashboard',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/artifact-dashboard/index',
-          meta: {
-            title: '结构看板',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardEnclosureDashboard',
-          path: 'enclosure-dashboard',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/enclosure-dashboard/index',
-          meta: {
-            title: '围护看板',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardProjectReport',
-          path: 'project-report',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/project-report/index',
-          meta: {
-            title: '项目报表',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardAssemblyMatch',
-          path: 'assembly-match',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/assembly-match/index',
-          meta: {
-            title: '总装匹配',
-            icon: 'project',
-            noCache: true
-          }
-        },
-        {
-          name: 'MesProductionDashboardPainting',
-          path: 'painting',
-          hidden: false,
-          component: '/mes/production-manage/dashboard/painting/index',
-          meta: {
-            title: '涂装计算',
-            icon: 'project',
-            noCache: true
-          }
-        }
-      ]
-    },
+
     {
       name: 'MesProductionAnalysis',
       path: 'analysis',
@@ -472,7 +372,108 @@ export default {
           icon: 'project',
           noCache: true
         }
-      }]
+      }
+      ]
+    }
+    ]
+  },
+  {
+    name: 'MesProductionDashboard',
+    path: 'dashboard',
+    hidden: false,
+    redirect: '/mes/production-manage/dashboard/project-state',
+    meta: {
+      title: '项目看板',
+      icon: 'project',
+      noCache: true
+    },
+    children: [{
+      name: 'MesProductionDashboardProjectPlan',
+      path: 'project-plan',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/project-plan/index',
+      meta: {
+        title: '项目计划',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardMainMaterialTrack',
+      path: 'main-material-track',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/main-material-track/index',
+      meta: {
+        title: '主材跟踪',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardProjectState',
+      path: 'project-state',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/project-state/index',
+      meta: {
+        title: '项目状态',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardArtifactDashboard',
+      path: 'artifact-dashboard',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/artifact-dashboard/index',
+      meta: {
+        title: '结构看板',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardEnclosureDashboard',
+      path: 'enclosure-dashboard',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/enclosure-dashboard/index',
+      meta: {
+        title: '围护看板',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardProjectReport',
+      path: 'project-report',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/project-report/index',
+      meta: {
+        title: '项目报表',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardAssemblyMatch',
+      path: 'assembly-match',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/assembly-match/index',
+      meta: {
+        title: '总装匹配',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesProductionDashboardPainting',
+      path: 'painting',
+      hidden: false,
+      component: '/mes/production-manage/dashboard/painting/index',
+      meta: {
+        title: '涂装计算',
+        icon: 'project',
+        noCache: true
+      }
     }
     ]
   },

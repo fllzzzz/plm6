@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentView" :columns="columns" :fixed="fixed" />
+  <component :is="currentView" :columns="columns" :fixed="fixed" :fixedWidth="fixedWidth"/>
 </template>
 
 <script setup>
@@ -33,6 +33,9 @@ const props = defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  fixedWidth: {
+    type: Boolean
   }
 })
 

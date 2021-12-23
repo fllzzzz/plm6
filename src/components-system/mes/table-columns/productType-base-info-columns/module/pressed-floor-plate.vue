@@ -4,7 +4,8 @@
     :show-overflow-tooltip="true"
     prop="name"
     label="名称"
-    width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -16,7 +17,8 @@
     :show-overflow-tooltip="true"
     prop="plate"
     label="板型"
-    width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -28,7 +30,8 @@
     :show-overflow-tooltip="true"
     prop="serialNumber"
     label="编号"
-    width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -52,7 +55,8 @@
     :show-overflow-tooltip="true"
     prop="length"
     :label="`单长\n(mm)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -65,7 +69,8 @@
     :show-overflow-tooltip="true"
     prop="thickness"
     :label="`板厚\n(mm)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -78,7 +83,8 @@
     :show-overflow-tooltip="true"
     prop="width"
     :label="`有效宽度\n(mm)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -91,7 +97,8 @@
     :show-overflow-tooltip="true"
     prop="totalArea"
     :label="`总面积\n(㎡)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -104,7 +111,8 @@
     :show-overflow-tooltip="true"
     prop="totalLength"
     :label="`总长度\n(m)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -117,7 +125,8 @@
     :show-overflow-tooltip="true"
     prop="weight"
     :label="`重量\n(kg)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -130,7 +139,8 @@
     :show-overflow-tooltip="true"
     prop="remark"
     label="备注"
-    width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -150,6 +160,9 @@ defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  fixedWidth: {
+    type: Boolean
   }
 })
 </script>
