@@ -341,7 +341,7 @@ import { supplierPayMentTypeEnum, contractPayForEnum, supplierPayModeEnum } from
 import { orderInfo } from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { digitUppercase } from '@/utils/data-type/number'
 import { fileClassifyEnum } from '@enum-ms/file'
-import UploadBtn from '@/components/file-upload/UploadBtn'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 
 const formRef = ref()

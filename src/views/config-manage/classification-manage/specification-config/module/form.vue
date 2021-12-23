@@ -104,7 +104,7 @@ import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
-import SvgIcon from '@/components/SvgIcon/index.vue'
+import SvgIcon from '@comp/SvgIcon/index.vue'
 
 const currentNode = inject('currentNode')
 const permission = inject('permission')

@@ -1,4 +1,4 @@
-import SvgIcon from '@/components/SvgIcon/index.vue'
+import SvgIcon from '@comp/SvgIcon/index.vue'
 
 // svg图标注册
 import 'vite-plugin-svg-icons/register'

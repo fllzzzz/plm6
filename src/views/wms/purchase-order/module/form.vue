@@ -211,7 +211,7 @@ import supplierSelect from '@comp-base/supplier-select/index.vue'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
 import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
-import uploadList from '@/components/file-upload/UploadList.vue'
+import uploadList from '@comp/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
 

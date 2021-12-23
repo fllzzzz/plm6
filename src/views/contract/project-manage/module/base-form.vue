@@ -209,7 +209,7 @@ import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
 import { fileClassifyEnum } from '@enum-ms/file'
-import uploadList from '@/components/file-upload/uploadList'
+import uploadList from '@comp/file-upload/uploadList'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 
