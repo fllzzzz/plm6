@@ -1,6 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
+      <monomer-select-area-tabs :project-id="projectId" @change="fetchMonomerAndArea" />
       <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
@@ -52,13 +53,7 @@
             @change="handleCheckAllChange"
             >全选</el-checkbox
           >
-          <color-card
-            class="filter-item"
-            v-model:value="query.status"
-            :colors="colors"
-            color-border
-            @change="crud.toQuery"
-          />
+          <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border @change="crud.toQuery" />
         </div>
       </template>
       <template #viewLeft>
@@ -73,11 +68,13 @@ import { ref, defineExpose, defineProps, defineEmits } from 'vue'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
+import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
 import factorySelect from '@comp-base/factory-select'
+import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 
 const defaultQuery = {
   name: '',
@@ -90,11 +87,16 @@ const defaultQuery = {
   status: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
+const projectId = useGlobalProjectIdChangeToQuery(crud)
 
 const emit = defineEmits(['load', 'checkedAll', 'batchMatch'])
 
 const boxScale = ref(1)
-const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({ colorCardTitles: ['不具备', '部分具备', '完全具备'], emit, crud })
+const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({
+  colorCardTitles: ['不具备', '部分具备', '完全具备'],
+  emit,
+  crud
+})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
@@ -104,6 +106,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.tagType = getTagByValue(v, { field: 'type' })
     return v
   })
+}
+
+function fetchMonomerAndArea({ monomerId, areaId }) {
+  query.monomerId = monomerId
+  query.areaId = areaId
+  crud.toQuery()
 }
 
 defineProps({

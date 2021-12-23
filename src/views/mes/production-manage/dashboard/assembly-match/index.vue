@@ -95,9 +95,9 @@ const { crud, CRUD } = useCRUD(
     title: '总装匹配',
     permission: { ...permission },
     crudApi: { ...crudApi },
-    optShow: { ...optShow }
-    // requiredQuery: ['areaId'],
-    // queryOnPresenterCreated: false
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )
