@@ -199,6 +199,27 @@ export function dateDifference(sDate1, sDate2) {
 }
 
 /**
+ * 计算时间差（天）不含当天
+ * TODO:可改造为，根据传入单位来计算
+ * @export
+ * @param {*} sDate1
+ * @param {*} sDate2
+ * @returns
+ */
+export function dateDifferenceReduce(sDate1, sDate2) {
+  const oneDay = 24 * 60 * 60 * 1000
+  sDate1 = new Date(+sDate1)
+  sDate2 = new Date(+sDate2)
+  sDate1 = `${sDate1.getFullYear()}-${prefixZero(sDate1.getMonth() + 1)}-${prefixZero(sDate1.getDate())}` // ie 下需要补0才能转换
+  sDate2 = `${sDate2.getFullYear()}-${prefixZero(sDate2.getMonth() + 1)}-${prefixZero(sDate2.getDate())}`
+  sDate1 = Date.parse(sDate1)
+  sDate2 = Date.parse(sDate2)
+  let dateSpan = sDate2 - sDate1
+  dateSpan = Math.abs(dateSpan)
+  const iDays = Math.floor(dateSpan / oneDay)
+  return iDays
+}
+/**
  * 格式化excel中的日期
  * @export
  * @param {*} numb

@@ -40,7 +40,7 @@
         size="small"
         clearable
         class="filter-item"
-        placeholder="项目类型"
+        placeholder="项目内容"
         style="width:200px"
       />
       <rrOperation/>

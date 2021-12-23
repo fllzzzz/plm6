@@ -170,15 +170,6 @@ export function repairStartSymbol(routePath, symbol) {
   }
 }
 
-// 随机浅色颜色
-export function getColorUndertint() {
-  return '#' +
-         (function random(color) {
-           return (color += '5678956789defdef'[Math.floor(Math.random() * 16)]) &&
-             (color.length === 6) ? color : random(color)
-         })('')
-}
-
 /**
  * @desc  函数防抖
  * @param  func 需要执行的函数

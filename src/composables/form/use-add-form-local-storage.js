@@ -48,21 +48,20 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger, { useD
     switch (trigger.constructor.name) {
       case 'Function':
       case 'RefImpl':
-      case 'ComputedRefImpl':_trigger = trigger
+      case 'ComputedRefImpl':
+        _trigger = trigger
         break
-      default: _trigger = trigger
+      default:
+        _trigger = trigger
     }
     // 传入触发器的情况下监听弹窗打开和关闭的状态
-    watch(
-      _trigger,
-      (flag) => {
-        if (flag) {
-          openStore(ls, useDraftCallback)
-        } else {
-          closeStore(ls, useDraftCallback)
-        }
+    watch(_trigger, (flag) => {
+      if (flag) {
+        openStore(ls, useDraftCallback)
+      } else {
+        closeStore(ls, useDraftCallback)
       }
-    )
+    })
   } else {
     openStore(ls, useDraftCallback)
   }
@@ -136,10 +135,14 @@ function setFormContent(form, storageForm) {
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
   if (!ls.isRegister) return false
   const _form = form || ls.form
-  storage.set(`${ADD_FORM.KEY_PREFIX}_${ls.key}`, {
-    type: type,
-    content: _form
-  }, ls.expired)
+  storage.set(
+    `${ADD_FORM.KEY_PREFIX}_${ls.key}`,
+    {
+      type: type,
+      content: _form
+    },
+    ls.expired
+  )
   return true
 }
 

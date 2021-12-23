@@ -10,7 +10,7 @@
   >
     <template #titleRight>
       <!-- <span class="drawer-title">合同立项</span> -->
-      <common-button v-if="stepActive != 0" :disabled="loading" type="warning" size="mini" @click="stepActive--">上一步</common-button>
+      <common-button v-if="stepActive != 0" :disabled="loading" type="warning" size="mini" @click="preStep">上一步</common-button>
       <common-button v-if="stepActive < 3" type="primary" size="mini" :disabled="loading" @click.stop="nextStep">下一步</common-button>
       <common-button v-else :loading="loading" type="success" size="mini" @click.stop="nextStep">提交</common-button>
     </template>
@@ -100,6 +100,17 @@ async function nextStep() {
       } else {
         stepActive.value++
       }
+    }
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+async function preStep() {
+  try {
+    const valid = await nextStepValidate()
+    if (valid) {
+      stepActive.value--
     }
   } catch (error) {
     console.log('error', error)

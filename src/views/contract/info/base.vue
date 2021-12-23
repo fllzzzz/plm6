@@ -307,7 +307,7 @@
 
 <script setup>
 import { ref, defineProps, watch, computed, defineExpose } from 'vue'
-import { dateDifference } from '@/utils/date'
+import { dateDifferenceReduce } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
@@ -401,7 +401,7 @@ watch(
 
 const totalDuration = computed(() => {
   if (form.value.startDate && form.value.endDate) {
-    return dateDifference(form.value.startDate, form.value.endDate)
+    return dateDifferenceReduce(form.value.startDate, form.value.endDate)
   }
   return ''
 })
@@ -426,10 +426,10 @@ function resetForm() {
 async function validateForm() {
   try {
     const valid = await formRef.value.validate()
-    // if (valid) {
-    //   const data = JSON.parse(JSON.stringify(form.value))
-    //   data.attachments = data.attachments.length>0 ? data.attachments.map(v => v.id): []
-    // }
+    if (valid) {
+      const data = form.value
+      data.attachments = data.attachments.length > 0 ? data.attachments.map(v => v.id) : []
+    }
     return valid
   } catch (error) {
     console.log('error', error)
@@ -476,7 +476,7 @@ async function fetchDetail() {
     _detail = JSON.parse(JSON.stringify(res))
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
-    _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifference(_detail.startDate, _detail.endDate) : ''
+    _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
     _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? (_detail.managementFeeRate * _detail.contractAmount / 100).toFixed(DP.YUAN) : ''
     _detail.attachments = _detail.attachments || []
     _detail.region = cleanArray([_detail.countryId, _detail.provinceId, _detail.cityId, _detail.regionId])

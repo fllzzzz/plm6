@@ -350,7 +350,7 @@ const actions = {
         if (isNotBlank(res.specConfig)) {
           matCls.specConfig = res.specConfig.map((sc, ci) => {
             return {
-              id: sc.id,
+              id: sc.boolStandard ? `standard_${sc.id}` : sc.id,
               name: sc.name,
               index: ci,
               list: sc.list.map((v, i) => {
@@ -359,8 +359,9 @@ const actions = {
                   code: v.code,
                   name: v.name
                 }
-                // 型材加入单位净重
-                if (res.basicClass === matClsEnum.SECTION_STEEL.V && isNotBlank(v.unitWeight)) {
+                // 型材国标加入单位净重
+                if (res.basicClass === matClsEnum.SECTION_STEEL.V && sc.boolStandard) {
+                  spec.boolStandard = sc.boolStandard
                   spec.unitWeight = v.unitWeight
                 }
                 return spec
@@ -433,8 +434,9 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
-          if (classify.basicClass === matClsEnum.SECTION_STEEL.V && isNotBlank(spec.unitWeight)) {
+          if (classify.basicClass === matClsEnum.SECTION_STEEL.V && spec.boolStandard) {
             arr[currentIndex].unitWeight = spec.unitWeight
+            arr[currentIndex].boolStandard = spec.boolStandard
           }
         }
       }

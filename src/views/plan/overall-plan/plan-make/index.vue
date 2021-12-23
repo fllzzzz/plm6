@@ -107,7 +107,7 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 import { isNotBlank } from '@data-type/index'
-import { dateDifference } from '@/utils/date'
+import { dateDifferenceReduce } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -166,7 +166,7 @@ function handelModifying(row, modifying) {
 
 function handleDateChange(val, row) {
   if (row.startDate && row.endDate) {
-    row.dateDifference = dateDifference(row.startDate, row.endDate) + '天'
+    row.dateDifference = dateDifferenceReduce(row.startDate, row.endDate) + '天'
   } else {
     row.dateDifference = ''
   }
@@ -192,7 +192,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map(v => {
     v.typeTagType = v.type === manufactureTypeEnum.HOMEMADE.V ? '' : 'warning'
     if (v.startDate && v.endDate) {
-      v.dateDifference = dateDifference(v.startDate, v.endDate) + '天'
+      v.dateDifference = dateDifferenceReduce(v.startDate, v.endDate) + '天'
     } else {
       v.dateDifference = ''
     }

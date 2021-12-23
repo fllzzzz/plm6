@@ -65,9 +65,10 @@
     </span>
     <span class="info-item">
       <span>总重({{ baseUnit.weight.unit }})</span>
-      <span class="returnable-number" :style="{ color: material.returnableMete < 0 ? 'red' : undefined }">
-        {{ material.returnableMete }}
-      </span>
+      <span
+        :style="{ color: material.returnableMete < 0 ? 'red' : '#67c23a' }"
+        v-to-fixed="{ val: material.returnableMete || 0, dp: baseUnit.weight.precision }"
+      />
       <span>&nbsp;/&nbsp;</span>
       <span>{{ material.mete }}</span>
     </span>
