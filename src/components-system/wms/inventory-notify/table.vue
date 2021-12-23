@@ -25,10 +25,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('classify.fullName')"
-        key="classify.fullName"
+        v-if="columns.visible('classifyFullName')"
+        key="classifyFullName"
         :show-overflow-tooltip="true"
-        prop="classify.fullName"
+        prop="classifyFullName"
         label="科目"
         align="left"
         min-width="180"
@@ -53,17 +53,10 @@
       >
         <template #default="{ row }">
           <span :style="{ color: row.inventory > 0 ? '#f18121' : 'red' }" style="margin-right: 5px">
-            {{
-              toFixed(
-                row.inventory,
-                row.unitType === measureTypeEnum.MEASURE.V
-                  ? row.classify.measurePrecision
-                  : row.classify.accountingPrecision
-              )
-            }}
+            {{ toFixed(row.inventory, row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision) }}
           </span>
           <span>
-            {{ row.unitType === measureTypeEnum.MEASURE.V ? row.classify.measureUnit : row.classify.accountingUnit }}
+            {{ row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit }}
           </span>
         </template>
       </el-table-column>
@@ -81,9 +74,10 @@ import { toFixed } from '@/utils/data-type'
 import useCRUD from '@compos/use-crud'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-import useMatClsSpec from '@compos/store/use-mat-cls-spec'
 import pagination from '@crud/Pagination'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -113,7 +107,6 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const { matClsSpec, fetchMatClsSpec } = useMatClsSpec()
 const { visible, handleClose } = useVisible({ emit, props })
 const { maxHeight } = useMaxHeight(
   {
@@ -127,10 +120,14 @@ const { maxHeight } = useMaxHeight(
   visible
 )
 
-CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
-  content.forEach((v) => {
-    fetchMatClsSpec(v.classifyId)
-    v.classify = matClsSpec.value[v.classifyId]
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  await setSpecInfoToList(data.content)
+  data.content = await numFmtByBasicClass(data.content, {
+    toSmallest: false,
+    toNum: false
+  })
+  data.content.forEach((row) => {
+    row.unit = row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit
   })
 }
 </script>

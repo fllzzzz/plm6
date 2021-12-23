@@ -1,5 +1,6 @@
 import { MIN_UNIT, STEEL_ENUM } from '@/settings/config'
 import store from '@/store'
+import { codeWait } from '..'
 import { convertUnits } from '../convert/unit'
 import { deepClone, isBlank, isNotBlank, toFixed } from '../data-type'
 import { unitTypeEnum } from '../enum/modules/common'
@@ -14,14 +15,22 @@ async function getBaseUnit() {
   return store.getters.baseUnit
 }
 
-// 获取单位
-async function getUnit() {
-  const _unit = store.state.config.loaded.unit
-  if (_unit) {
+// 获取单位,避免同时调用 例：库存预警页面与库存预警铃铛
+async function getUnit(pollingNumber = 1) {
+  try {
+    const _unit = store.state.config.loaded.unit
+    if (_unit) {
+      return store.state.config.unit.MAP
+    }
+    await store.dispatch('config/fetchUnit')
     return store.state.config.unit.MAP
+  } catch (error) {
+    console.log('获取单位', error)
+    if (pollingNumber && pollingNumber <= 5) {
+      await codeWait(1000)
+      return await getUnit(++pollingNumber)
+    }
   }
-  await store.dispatch('config/fetchUnit')
-  return store.state.config.unit.MAP
 }
 
 /**
