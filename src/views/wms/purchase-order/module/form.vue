@@ -6,6 +6,7 @@
     :title="crud.status.title"
     :show-close="true"
     :size="1000"
+    :close-on-click-modal="false"
     custom-class="purchase-order-form"
   >
     <template #titleRight>
@@ -351,6 +352,9 @@ CRUD.HOOK.afterToAdd = () => {}
 CRUD.HOOK.beforeToEdit = (crud, form) => {
   if (isNotBlank(form.project)) {
     form.projectIds = form.project.map((v) => v.id)
+  }
+  if (isBlank(form.attachments)) {
+    form.attachments = []
   }
 }
 

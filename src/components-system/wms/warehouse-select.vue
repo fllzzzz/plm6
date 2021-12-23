@@ -52,7 +52,7 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  // 显示禁用的工厂
+  // 显示禁用
   showForbidden: {
     type: Boolean,
     default: false

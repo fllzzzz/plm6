@@ -49,13 +49,6 @@
             <el-form-item label="提货方式" prop="pickUpMode">
               <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
             </el-form-item>
-            <el-form-item label="备注" prop="remark">
-              <span>{{ detail.remark }}</span>
-            </el-form-item>
-
-            <el-form-item label="申购单号" prop="requisitionsSN">
-              <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
-            </el-form-item>
 
             <el-form-item label="采购状态" prop="purchaseStatus">
               <span
@@ -76,6 +69,14 @@
             </el-form-item>
             <el-form-item label="最后操作人" prop="lastOperatorName">
               <span v-empty-text>{{ detail.lastOperatorName }}</span>
+            </el-form-item>
+
+            <el-form-item label="备注" prop="remark">
+              <span style="word-break: break-all;">{{ detail.remark }}</span>
+            </el-form-item>
+
+            <el-form-item label="申购单号" prop="requisitionsSN">
+              <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
             </el-form-item>
 
             <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">

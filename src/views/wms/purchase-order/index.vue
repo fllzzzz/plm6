@@ -88,7 +88,7 @@
         width="110"
       >
         <template #default="{ row }">
-          <span>{{ row.mete ? `${row.mete} ${row.meteUnit}` : '' }}</span>
+          <span>{{ row.mete ? `${row.mete || ''} ${row.meteUnit || ''}` : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -232,7 +232,7 @@ const permission = {
 
 const optShow = {
   add: true,
-  edit: true,
+  edit: false,
   del: true,
   download: false
 }

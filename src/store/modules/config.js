@@ -211,7 +211,8 @@ const actions = {
         id: v.id,
         name: v.name,
         type: v.type,
-        symbol: v.symbol
+        symbol: v.symbol,
+        enabled: v.enabled
       }
       unit.ALL.push(n)
       unit.MAP.set(n.name, n)

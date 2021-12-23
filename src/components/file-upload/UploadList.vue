@@ -40,13 +40,7 @@
         :disabled="props.disabled"
         multiple
       >
-        <common-button
-          :loading="uploadLoading"
-          :size="props.size"
-          :icon="props.icon"
-          :disabled="props.disabled"
-          :type="props.btnType"
-        >
+        <common-button :loading="uploadLoading" :size="props.size" :icon="props.icon" :disabled="props.disabled" :type="props.btnType">
           <span v-if="props.btnName">{{ props.btnName }}</span>
         </common-button>
       </el-upload>

@@ -53,13 +53,6 @@
             <el-form-item label="提货方式" prop="pickUpMode">
               <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
             </el-form-item>
-            <el-form-item label="备注" prop="remark">
-              <span>{{ detail.remark }}</span>
-            </el-form-item>
-
-            <el-form-item label="申购单号" prop="requisitionsSN">
-              <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
-            </el-form-item>
 
             <el-form-item label="采购状态" prop="purchaseStatus">
               <span
@@ -89,6 +82,12 @@
               <span v-parse-time>{{ detail.userUpdateTime }}</span>
             </el-form-item>
 
+            <el-form-item label="备注" prop="remark">
+              <span style="word-break: break-all;">{{ detail.remark }}</span>
+            </el-form-item>
+            <el-form-item label="申购单号" prop="requisitionsSN">
+              <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
+            </el-form-item>
             <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">
               <span v-if="baseMaterialTypeEnum.RAW_MATERIAL.V === detail.purchaseType" class="pre-wrap">
                 {{ detail.projects ? detail.projects.map((v) => projectNameFormatter(v, null, false)).join(`\n`) : '' }}
@@ -139,6 +138,8 @@ const { crud, detail } = regDetail()
 .form-content {
   display: flex;
   flex-wrap: wrap;
+  // width: 100%;
+  min-width: 0;
   ::v-deep(.el-form-item) {
     width: 450px;
   }
