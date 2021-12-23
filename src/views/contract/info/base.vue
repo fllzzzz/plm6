@@ -133,7 +133,7 @@
               <span v-else>{{ detail.projectManagerFullName }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="业务负责人1" prop="businessLeaderId">
+          <!-- <el-form-item label="业务负责人1" prop="businessLeaderId">
             <div class="input-underline" style="width:300px">
               <user-dept-cascader
                 v-if="isModify"
@@ -164,7 +164,7 @@
               />
               <span v-else>{{ detail.businessLeaderTwoFullName }}</span>
             </div>
-          </el-form-item>
+          </el-form-item> -->
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
@@ -193,19 +193,15 @@
             </div>
           </el-form-item>
           <el-form-item label="管理费(元)" prop="managementFeeRate">
-            <div class="input-underline" style="display:inline-block;width:110px">
-              <el-input
-                v-if="isModify"
-                v-model="managementFee"
-                :readonly="true"
-                placeholder="先输入费率"
-              />
-              <template v-else>
-                <span>{{ managementFee? managementFee.toThousand(): '' }}</span>
-              </template>
-            </div>
-            <div class="input-underline" style="display:inline-block;width:130px">
-              <div v-if="isModify">
+            <template v-if="isModify">
+              <div class="input-underline" style="display:inline-block;width:110px">
+                <el-input
+                  v-model="managementFee"
+                  :readonly="true"
+                  placeholder="先输入费率"
+                />
+              </div>
+              <div class="input-underline" style="display:inline-block;width:130px">
                 <el-input-number
                   v-model="form.managementFeeRate"
                   :step="1"
@@ -218,8 +214,11 @@
                   style="width:80px"
                 />%
               </div>
-              <span v-else>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
-            </div>
+            </template>
+            <template v-else>
+              <span>{{ detail.managementFee? detail.managementFee.toThousand(): '' }}</span>
+              <span>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
+            </template>
           </el-form-item>
         </div>
         <div class="form-row">
@@ -286,7 +285,7 @@
           v-if="!isModify"
           :show-download="!isModify"
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
-          v-model:files="detail.attachments"
+          v-model:files="detail.attachmentFiles"
           :download-fn="downloadBaseAttachments"
           :uploadable="isModify"
           empty-text="暂未上传合同附件"
@@ -295,7 +294,7 @@
           v-else
           :show-download="!isModify"
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
-          v-model:files="form.attachments"
+          v-model:files="form.attachmentFiles"
           :download-fn="downloadBaseAttachments"
           :uploadable="isModify"
           empty-text="暂未上传合同附件"
@@ -306,7 +305,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed, defineExpose } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
 import { dateDifferenceReduce } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
 import regionCascader from '@comp-base/region-cascader'
@@ -343,7 +342,8 @@ const defaultForm = {
   projectManagerId: undefined, // 项目经理
   businessLeaderId: undefined, // 业务负责人1
   businessLeaderTwoId: undefined, // 业务负责人2
-  attachments: [] // 附件
+  attachmentFiles: [], // 附件
+  attachments: []
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -416,10 +416,15 @@ const managementFee = computed(() => {
  * 重置表单
  */
 function resetForm() {
-  // if (formRef.value) {
-  //   formRef.value.resetFields()
-  // }
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
   form.value = JSON.parse(JSON.stringify(detail.value))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 
@@ -428,7 +433,7 @@ async function validateForm() {
     const valid = await formRef.value.validate()
     if (valid) {
       const data = form.value
-      data.attachments = data.attachments.length > 0 ? data.attachments.map(v => v.id) : []
+      data.attachments = data.attachmentFiles.length > 0 ? data.attachmentFiles.map(v => v.id) : []
     }
     return valid
   } catch (error) {
@@ -477,8 +482,8 @@ async function fetchDetail() {
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
     _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
-    _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? (_detail.managementFeeRate * _detail.contractAmount / 100).toFixed(DP.YUAN) : ''
-    _detail.attachments = _detail.attachments || []
+    _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? _detail.managementFeeRate * _detail.contractAmount / 100 : ''
+    _detail.attachmentFiles = _detail.attachments || []
     _detail.region = cleanArray([_detail.countryId, _detail.provinceId, _detail.cityId, _detail.regionId])
   } catch (error) {
     console.log('error', error)

@@ -127,7 +127,7 @@
               </div>
             </el-form-item>
             <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-              <div style="width: 200px">
+              <div>
                 <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
                 <span v-else>{{
                   isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
@@ -143,17 +143,25 @@
               </div>
             </el-form-item>
             <el-form-item label="支付方式" prop="payType">
-              <div style="width: 200px">
+              <div>
                 <common-radio v-if="isModify" v-model="form.payType" :options="paymentModeEnum.ENUM" type="enum" />
                 <span v-else>{{ isNotBlank(detail.payType) ? paymentModeEnum.VL[detail.payType] : '' }}</span>
               </div>
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="合同含税" prop="isTaxInclusive">
+            <el-form-item label="合同含税" prop="isTax">
               <div style="width: 200px">
-                <common-radio v-if="isModify" v-model="form.isTaxInclusive" :options="isTaxEnum.ENUM" type="enum" />
-                <span v-else>{{ detail.isTaxInclusive ? isTaxEnum.VL[detail.isTaxInclusive] : '否' }}</span>
+                 <el-radio-group v-model="form.isTax" v-if="isModify">
+                    <el-radio
+                      v-for="item in isTaxContractEnum.ENUM"
+                      :key="item.V"
+                      :label="item.V"
+                    >
+                      {{ item.L }}
+                    </el-radio>
+                  </el-radio-group>
+                <span v-else>{{ isNotBlank(detail.isTax) ? isTaxContractEnum.VL[detail.isTax] : '' }}</span>
               </div>
             </el-form-item>
             <el-form-item label="发票类型" prop="invoiceType">
@@ -164,7 +172,7 @@
                     size="small"
                     v-model="form.invoiceType"
                     :options="invoiceTypeEnum.ENUM"
-                    :disabled="!form.isTaxInclusive"
+                    :disabled="!form.isTax"
                     class="input-underline"
                     placeholder="选择发票类型"
                     style="width: 200px"
@@ -177,16 +185,18 @@
             </el-form-item>
           </div>
           <div class="form-row">
-            <el-form-item label="付款方式描述" prop="paymentDescription">
+            <el-form-item label="付款方式描述" prop="payTypeDesc">
               <div class="input-underline" style="width: 550px">
                 <el-input
                   v-if="isModify"
-                  v-model="form.paymentDescription"
+                  v-model="form.payTypeDesc"
                   type="textarea"
                   :autosize="{ minRows: 4, maxRows: 4 }"
+                  maxlength="200"
+                  show-word-limit
                   placeholder="付款方式描述"
                 />
-                <span v-else>{{ detail.paymentDescription }}</span>
+                <span v-else>{{ detail.payTypeDesc }}</span>
               </div>
             </el-form-item>
           </div>
@@ -234,16 +244,17 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineExpose } from 'vue'
+import { ref, defineProps, watch, defineExpose, nextTick } from 'vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
+import { ElRadioGroup } from 'element-plus'
 import {
   projectTypeEnumN,
   businessTypeEnum,
   paymentModeEnum,
   invoiceTypeEnum,
-  isTaxEnum,
+  isTaxContractEnum,
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
@@ -278,9 +289,9 @@ const defaultForm = {
   enclosureMeasureMode: enclosureSettlementTypeEnum.LENGTH.V, // 围护结算方式
   transportMode: transportModeEnum.HOME_DELIVERY.V, // 运输方式
   payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
-  isTaxInclusive: true, // 是否含税
+  isTax: isTaxContractEnum.YES.V, // 是否含税
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-  paymentDescription: undefined, // 付款方式描述
+  payTypeDesc: undefined, // 付款方式描述
   enclosureInfo: {},
   structureSaveRequestVOS: [],
   profiledPlateSaveRequestVOS: [],
@@ -301,7 +312,7 @@ const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
 
 const rules = {
-  paymentDescription: [{ max: 2000, message: '不能超过 2000 个字符', trigger: 'blur' }],
+  payTypeDesc: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
   projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
   projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
@@ -338,7 +349,15 @@ watch(
 // )
 
 function resetForm() {
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
   form.value = JSON.parse(JSON.stringify(detail.value))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 

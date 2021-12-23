@@ -69,7 +69,8 @@
             v-model="form.remark"
             type="textarea"
             :autosize="{ minRows: 6, maxRows: 8 }"
-            :maxLength="500"
+            :maxlength="200"
+            show-word-limit
             placeholder="可填写备注"
             style="max-width: 500px"
           />
@@ -179,11 +180,11 @@
         </common-table>
         <div class="add-row-box">
           <common-button
-size="mini"
-icon="el-icon-circle-plus-outline"
-type="warning"
-style="margin-right: 15px"
-@click="addRow()"
+            size="mini"
+            icon="el-icon-circle-plus-outline"
+            type="warning"
+            style="margin-right: 15px"
+            @click="addRow()"
             >继续添加</common-button
           >
         </div>

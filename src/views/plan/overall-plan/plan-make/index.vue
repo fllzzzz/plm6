@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
+        <mHeader :project-id="globalProjectId"  :global-project="globalProject"/>
       </div>
       <!--表格渲染-->
       <common-table
@@ -32,7 +32,7 @@
             value-format="x"
             placeholder="选择日期"
             style="width:160px"
-            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() - 8.64e6 > scope.row.endDate } else { return date.getTime() - 8.64e6 > scope.row.date }}"
+            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() - 8.64e6 < globalProject.createTime || date.getTime() - 8.64e6 > scope.row.endDate } else { return date.getTime() - 8.64e6 < globalProject.createTime || date.getTime() - 8.64e6 > scope.row.date }}"
             @change="handleDateChange($event, scope.row)"
           />
           <template v-else>
@@ -50,7 +50,7 @@
             value-format="x"
             placeholder="选择日期"
             style="width:160px"
-            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() < scope.row.startDate - 8.64e6 || date.getTime() - 8.64e6 > scope.row.date } else { return date.getTime() - 8.64e6 > scope.row.date }}"
+            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() < scope.row.startDate - 8.64e6 || date.getTime() - 8.64e6 > scope.row.date } else { return date.getTime() - 8.64e6 < globalProject.createTime || date.getTime() - 8.64e6 > scope.row.date }}"
             @change="handleDateChange($event, scope.row)"
           />
           <template v-else>
@@ -151,7 +151,7 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 function handelModifying(row, modifying) {

@@ -15,7 +15,6 @@
       class="assembly-table"
       style="width: 100%"
     >
-      <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column type="expand">
         <template #default="props">
           <div :key="`'singleTable${props.row.id}'`" style="padding: 10px 50px">
@@ -28,9 +27,9 @@
               :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
               style="width: 100%"
             >
-              <el-table-column key="dictionaryName" prop="dictionaryName" label="报销种类" align="center">
+              <el-table-column key="dictionaryLabel" prop="dictionaryLabel" label="报销种类" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.dictionaryName }}</span>
+                  <span>{{ scope.row.dictionaryLabel }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
@@ -57,6 +56,7 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('projectName')"
         prop="projectName"
@@ -320,7 +320,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     if (v.detailClassifyList && v.detailClassifyList.length > 0) {
       v.detailClassifyList.map((k) => {
         k.rowKey = k.expenseTypeId
-        k.dictionaryName = k.expenseTypeName
+        k.dictionaryLabel = k.expenseTypeName
         if (k.reimbursementDetailList && k.reimbursementDetailList.length > 0) {
           k.children = k.reimbursementDetailList
           k.applyAmount = 0
@@ -331,6 +331,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
               choseId: val.dictionaryId ? val.dictionaryId : val.expenseTypeId,
               applyAmount: val.applyAmount,
               dictionaryId: val.dictionaryId,
+              dictionaryLabel: val.dictionaryLabel,
               expenseTypeId: val.expenseTypeId,
               expenseTypeName: k.expenseTypeName,
               id: val.id,

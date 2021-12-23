@@ -165,7 +165,7 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

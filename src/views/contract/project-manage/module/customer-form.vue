@@ -171,19 +171,13 @@ function resetForm(data) {
   if (formRef.value) {
     formRef.value.resetFields()
   }
-  let formKey
+  let formVal
   if (data && Object.keys(data).length > 0) {
-    formKey = data
+    formVal = JSON.parse(JSON.stringify(data))
   } else {
-    formKey = JSON.parse(JSON.stringify(defaultForm))
+    formVal = JSON.parse(JSON.stringify(defaultForm))
   }
-  const crudFrom = form.value
-  for (const key in crudFrom) {
-    crudFrom[key] = undefined
-  }
-  for (const key in form) {
-    crudFrom[key] = formKey[key]
-  }
+  form.value = JSON.parse(JSON.stringify(formVal))
   useWatchFormValidate(formRef, form)
 }
 

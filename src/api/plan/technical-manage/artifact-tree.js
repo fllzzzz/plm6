@@ -9,7 +9,6 @@ export function get(params) {
   })
 }
 
-
 export function edit(data) {
   return request({
     module: 'plan',
@@ -19,11 +18,12 @@ export function edit(data) {
   })
 }
 
-export function editStatus(type,id) {
+export function editStatus(type, id, params) {
   return request({
     module: 'plan',
     url: `artifactMachinePart/updateStatus/${type}/${id}`,
-    method: 'put'
+    method: 'put',
+    params
   })
 }
 
@@ -52,7 +52,7 @@ export function listUpload(data) {
 /**
  * 下载零构件关联清单
  */
- export function downloadArtifactTree(params) {
+export function downloadArtifactTree(params) {
   return request({
     module: 'plan',
     url: 'artifactMachinePart/export',
