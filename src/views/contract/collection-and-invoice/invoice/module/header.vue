@@ -23,7 +23,7 @@
         end-placeholder="结束日期"
         style="width:240px"
       />
-      <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
         <el-radio-button :label="undefined">全部</el-radio-button>
         <el-radio-button

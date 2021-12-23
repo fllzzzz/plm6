@@ -23,7 +23,7 @@
         end-placeholder="结束日期"
         style="width: 200px"
       />
-      <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <expense ref="expenseRef" v-model="query.choseId" @change="expenseChange" :clearable="true"   class="filter-item" placeholder="报销种类"/>
       <el-input v-model="query.applyDepartName" placeholder="申请部门" style="width: 200px" class="filter-item" />
       <el-input v-model="query.applyUserName" placeholder="申请人" style="width: 200px" class="filter-item" />
