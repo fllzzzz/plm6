@@ -31,6 +31,7 @@
     prop="classifyFullName"
     label="物料种类"
     align="center"
+    show-overflow-tooltip
     :width="classifyFullNameWidth"
     :fixed="fixed"
   >
@@ -45,13 +46,7 @@
       <span v-else v-empty-text>{{ row.classifyFullName }}</span>
     </template>
   </el-table-column>
-  <component
-    :is="comp"
-    :columns="columns"
-    :basic-class="basicClass"
-    :spec-merge="specMerge"
-    :fixed="fixed"
-  />
+  <component :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" />
   <common-dialog
     :title="`冻结记录：${currentMaterial.classifyFullName} ${currentMaterial.specification}`"
     v-model="freezeDialogVisible"
@@ -208,7 +203,7 @@ const comp = computed(() => {
 
 <style lang="scss" scoped>
 .freeze-text {
-  color:#409eff;
+  color: #409eff;
   cursor: pointer;
 }
 </style>

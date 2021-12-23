@@ -98,7 +98,7 @@ function handleOrderInfoChange(val) {
   }
   .footer {
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
   }
 

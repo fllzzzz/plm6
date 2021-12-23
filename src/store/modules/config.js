@@ -404,6 +404,7 @@ function getSpecList(classify, specConfig) {
         specKV: {},
         specNameKV: {},
         specArrKV: [],
+        serialNumber: classify.serialNumber,
         sn: classify.id + '_' + '-1'
       }
     ]

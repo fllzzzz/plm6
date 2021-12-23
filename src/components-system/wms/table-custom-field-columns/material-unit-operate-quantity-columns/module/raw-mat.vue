@@ -1,10 +1,10 @@
 <template>
-  <el-table-column v-if="showMeasureUnit" :prop="`${field}.measureUnit`" label="计量单位" align="center" width="70px">
+  <el-table-column v-if="showMeasureUnit" :prop="`${field}.measureUnit`" label="计量单位" align="center" width="70px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showQuantity" :prop="`${field}.quantity`" :label="quantityLabel" align="right" min-width="150px">
+  <el-table-column v-if="showQuantity" :prop="`${field}.quantity`" :label="quantityLabel" align="right" min-width="150px" show-overflow-tooltip>
     <template #default="{ row }">
       <template v-if="getInfo(row, 'measureUnit')">
         <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
@@ -16,12 +16,12 @@
       <span v-else v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column v-if="showAccountingUnit" :prop="`${field}.accountingUnit`" label="核算单位" align="center" width="70px">
+  <el-table-column v-if="showAccountingUnit" :prop="`${field}.accountingUnit`" label="核算单位" align="center" width="70px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showMete" :prop="`${field}.mete`" :label="mateLabel" align="right" min-width="150px">
+  <el-table-column v-if="showMete" :prop="`${field}.mete`" :label="mateLabel" align="right" min-width="150px" show-overflow-tooltip>
     <template #default="{ row }">
       <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, 'operableMete') }}</span>
       /
