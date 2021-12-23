@@ -150,7 +150,7 @@ import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import storeOperation from '@crud/STORE.operation'
 import regionCascader from '@comp-base/region-cascader'
-import uploadList from '@comp/file-upload/uploadList'
+import uploadList from '@comp/file-upload/UploadList.vue'
 
 const formRef = ref()
 const contact = ref({ name: '', phone: '', email: '' })

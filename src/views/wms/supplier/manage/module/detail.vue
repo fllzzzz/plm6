@@ -106,7 +106,7 @@ import { getLabelByBit } from '@/utils/enum/base'
 
 import { regDetail } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
-import uploadList from '@comp/file-upload/uploadList'
+import uploadList from '@comp/file-upload/UploadList.vue'
 
 const formRef = ref()
 
