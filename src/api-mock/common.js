@@ -52,6 +52,13 @@ const getSuppliersBrief = {
             type: supplierTypeEnum.LOGISTICS.V,
             basicClass: supplierClassEnum.LOGISTICS.V,
             'boolHide|1-2': supplierIsHideEnum.FALSE.V
+          },
+          {
+            id: 5,
+            name: '辅材供应',
+            type: supplierTypeEnum.RAW_MATERIAL.V,
+            basicClass: supplierClassEnum.MATERIAL.V,
+            'boolHide': supplierIsHideEnum.FALSE.V
           }
         ]
       }

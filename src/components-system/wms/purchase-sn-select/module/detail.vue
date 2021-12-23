@@ -2,7 +2,7 @@
   <common-drawer
     ref="drawerRef"
     :visible="visible"
-    :content-loading="loading"
+    :content-loading="!clsLoaded || loading"
     :before-close="handleClose"
     title="采购订单详情"
     :show-close="true"
@@ -30,6 +30,10 @@
 
             <el-form-item label="供应商" prop="supplierId">
               {{ detail.supplier ? detail.supplier.name : '' }}
+            </el-form-item>
+
+            <el-form-item v-if="detail.basicClass & matClsEnum.MATERIAL.V" label="辅材明细" prop="auxMaterialNames" style="width: 100%; word-break: break-all">
+              <span v-arr-join>{{ detail.auxMaterialNames }}</span>
             </el-form-item>
 
             <template v-if="detail.supplyType == orderSupplyTypeEnum.SELF.V">
@@ -72,7 +76,7 @@
             </el-form-item>
 
             <el-form-item label="备注" prop="remark">
-              <span style="word-break: break-all;">{{ detail.remark }}</span>
+              <span style="word-break: break-all">{{ detail.remark }}</span>
             </el-form-item>
 
             <el-form-item label="申购单号" prop="requisitionsSN">
@@ -123,6 +127,7 @@ import { isNotBlank } from '@/utils/data-type'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import useVisible from '@/composables/use-visible'
+import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const emit = defineEmits(['success', 'update:modelValue'])
 
@@ -139,6 +144,7 @@ const props = defineProps({
 const detail = ref({})
 const loading = ref(false)
 const { visible, handleClose } = useVisible({ emit, props })
+const { loaded: clsLoaded, rawMatClsKV } = useMatClsList()
 
 watch(
   () => props.detailId,
@@ -156,6 +162,15 @@ async function getDetail(id) {
   detail.value = {}
   try {
     detail.value = await detailApi(id)
+    if (detail.value.auxMaterialIds) {
+      detail.value.auxMaterialNames = detail.value.auxMaterialIds.map((id) => {
+        const material = rawMatClsKV.value[id]
+        if (material) {
+          return material.name
+        }
+        return '-'
+      })
+    }
   } catch (error) {
     console.log('采购单详情', error)
   } finally {
@@ -171,8 +186,8 @@ async function getDetail(id) {
   ::v-deep(.el-form-item) {
     width: 450px;
   }
-  ::v-deep(.el-form-item:nth-child(even)) {
-    margin-left: 20px;
+  ::v-deep(.el-form-item__content) {
+    padding-right: 20px;
   }
 }
 </style>

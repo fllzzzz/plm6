@@ -45,10 +45,18 @@ function handleExpandAll() {
 }
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 th.el-table__expand-column {
   .cell {
     line-height: 13px;
+  }
+}
+.table-expand-container {
+  p {
+    color: brown;
+    span {
+      color: #606266;
+    }
   }
 }
 </style>

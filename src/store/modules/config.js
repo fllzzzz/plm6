@@ -17,7 +17,7 @@ import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
-import { setEmptyArr2Undefined, tree2list } from '@/utils/data-type/tree'
+import { setEmptyArr2Undefined, tree2list, tree2listForLeaf } from '@/utils/data-type/tree'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
@@ -29,6 +29,14 @@ const state = {
   matClsTree: [], // 物料科目树
   rawMatClsTree: [], // 普通物料科目树（不含制成品）
   manufClsTree: [], // 制成品科目树
+  matClsList: [], // 材料科目树列表
+  rawMatClsList: [], // 原材料科目树列表
+  manufClsList: [], // 制成品科目树列表
+  rawMatClsKV: {}, // 原材料科目树 kv k：id，v：科目信息
+  matClsLeafList: [], // 材料科目树列表 - 只包含叶子节点
+  rawMatClsLeafList: [], // 原材料科目树列表 - 只包含叶子节点
+  manufClsLeafList: [], // 制成品科目树列表 - 只包含叶子节点
+
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }, // 单位列表 ALL，WEIGHT...
@@ -82,11 +90,17 @@ const mutations = {
     state.matClsTree = tree
     state.rawMatClsTree = tree.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
     state.manufClsTree = tree.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
-  },
-  SET_MAT_CLS_LIST(state, list = []) {
+
+    const list = tree2list(tree)
     state.matClsList = list
     state.rawMatClsList = list.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
     state.manufClsList = list.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsKV = arr2obj(list, 'id')
+
+    const leafList = tree2listForLeaf(tree)
+    state.matClsLeafList = leafList
+    state.rawMatClsLeafList = leafList.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsLeafList = leafList.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
   SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
@@ -158,10 +172,7 @@ const actions = {
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
     const tree = formatClsTree(res)
-    const list = tree2list(tree)
     commit('SET_MAT_CLS_TREE', tree)
-    commit('SET_MAT_CLS_LIST', list)
-
     commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },

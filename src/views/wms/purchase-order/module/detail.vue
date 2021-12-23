@@ -2,6 +2,7 @@
   <common-drawer
     ref="drawerRef"
     :visible="crud.detailVisible"
+    :content-loading="!clsLoaded || crud.detailLoading"
     :before-close="crud.cancelDetail"
     :title="crud.detailTitle"
     :show-close="true"
@@ -29,6 +30,10 @@
 
             <el-form-item label="供应商" prop="supplier">
               <span v-if="detail.supplier">{{ detail.supplier.name }}</span>
+            </el-form-item>
+
+            <el-form-item v-if="detail.basicClass & matClsEnum.MATERIAL.V" label="辅材明细" prop="auxMaterialNames" style="width: 100%; word-break: break-all">
+              <span v-arr-join>{{ detail.auxMaterialNames }}</span>
             </el-form-item>
 
             <template v-if="detail.supplyType == orderSupplyTypeEnum.SELF.V">
@@ -83,12 +88,12 @@
             </el-form-item>
 
             <el-form-item label="备注" prop="remark">
-              <span style="word-break: break-all;">{{ detail.remark }}</span>
+              <span style="word-break: break-all">{{ detail.remark }}</span>
             </el-form-item>
             <el-form-item label="申购单号" prop="requisitionsSN">
               <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
             </el-form-item>
-            <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">
+            <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 100%">
               <span v-if="baseMaterialTypeEnum.RAW_MATERIAL.V === detail.purchaseType" class="pre-wrap">
                 {{ detail.projects ? detail.projects.map((v) => projectNameFormatter(v, null, false)).join(`\n`) : '' }}
               </span>
@@ -120,6 +125,7 @@
 </template>
 
 <script setup>
+import { watch, nextTick } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
@@ -130,21 +136,51 @@ import { isNotBlank } from '@/utils/data-type'
 import { regDetail } from '@compos/use-crud'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
+import useMatClsList from '@/composables/store/use-mat-class-list'
 
-const { crud, detail } = regDetail()
+const { CRUD, crud, detail } = regDetail()
+
+const { loaded: clsLoaded, rawMatClsKV } = useMatClsList()
+
+CRUD.HOOK.beforeDetailLoaded = (crud, detail) => {
+  const setInfo = () => {
+    if (detail.auxMaterialIds) {
+      detail.auxMaterialNames = detail.auxMaterialIds.map((id) => {
+        const material = rawMatClsKV.value[id]
+        if (material) {
+          return material.name
+        }
+        return '-'
+      })
+    }
+  }
+  if (clsLoaded.value) {
+    const trigger = watch(
+      () => clsLoaded,
+      (val) => {
+        if (val) {
+          setInfo()
+          nextTick(() => {
+            trigger()
+          })
+        }
+      }
+    )
+  } else {
+    setInfo()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .form-content {
   display: flex;
   flex-wrap: wrap;
-  // width: 100%;
-  min-width: 0;
   ::v-deep(.el-form-item) {
     width: 450px;
   }
-  ::v-deep(.el-form-item:nth-child(even)) {
-    margin-left: 20px;
+  ::v-deep(.el-form-item__content) {
+    padding-right: 20px;
   }
 }
 </style>

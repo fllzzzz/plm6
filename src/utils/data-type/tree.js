@@ -29,16 +29,34 @@ export function removeTreeEmptyFiled(tree, emptyFiled = 'children') {
  * 树转数组,list-item为树的每个叶子节点
  * @param {*} tree
  */
-export function tree2list(tree = []) {
+export function tree2listForLeaf(tree = []) {
   const resArr = []
   tree.forEach(node => {
     if (isNotBlank(node.children)) {
-      const child = tree2list(node.children)
+      const child = tree2listForLeaf(node.children)
       if (isNotBlank(child)) {
         resArr.push.apply(resArr, child)
       }
     } else {
       resArr.push(node)
+    }
+  })
+  return resArr
+}
+
+/**
+ * 树转数组,list-item为树的每个节点
+ * @param {*} tree
+ */
+export function tree2list(tree = []) {
+  const resArr = []
+  tree.forEach(node => {
+    resArr.push(node)
+    if (isNotBlank(node.children)) {
+      const child = tree2list(node.children)
+      if (isNotBlank(child)) {
+        resArr.push.apply(resArr, child)
+      }
     }
   })
   return resArr

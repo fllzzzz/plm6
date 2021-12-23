@@ -118,7 +118,7 @@ const leftWidth = computed(() => {
 })
 
 const { matClsSpecKV } = useMatClsSpec()
-const { loaded, matClsList } = useMatClsList()
+const { loaded, matClsLeafList } = useMatClsList()
 
 // 搜索过滤
 const filterOptions = computed(() => {
@@ -143,15 +143,15 @@ watch(
 watchEffect(() => setOption(props.basicClass))
 
 function setOption(basicClass) {
-  if (!matClsList.value) {
+  if (!matClsLeafList.value) {
     options.value = []
     return
   }
   let opts
   if (basicClass) {
-    opts = matClsList.value.filter((v) => basicClass & v.basicClass)
+    opts = matClsLeafList.value.filter((v) => basicClass & v.basicClass)
   } else {
-    opts = matClsList.value
+    opts = matClsLeafList.value
   }
   if (props.autoSelected && isNotBlank(opts)) {
     setSelection(opts[0])
