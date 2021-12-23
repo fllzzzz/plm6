@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
       <el-form-item label="工序" prop="processId">
-        <process-select v-model:value="form.processId" :multiple="false" style="width: 270px" />
+        <process-select v-model="form.processId" :multiple="false" style="width: 270px" />
       </el-form-item>
       <el-form-item label="质检" prop="inspectorIds">
         <user-select

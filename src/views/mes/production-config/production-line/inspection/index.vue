@@ -114,6 +114,11 @@ CRUD.HOOK.beforeRefresh = () => {
   return !!crud.query.productionLineId
 }
 
+CRUD.HOOK.beforeToQuery = () => {
+  crud.query.productionLineId = lineId
+  return !!crud.query.productionLineId
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.inspectors = v.mesBuildingInspectionTeamUserLinkDTOList.map(v => {
