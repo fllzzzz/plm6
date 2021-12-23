@@ -36,7 +36,7 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns :productType="componentTypeEnum.ASSEMBLE.V" :columns="columns" :fixed="'left'" />
+      <productType-base-info-columns :productType="componentTypeEnum.ASSEMBLE.V" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column

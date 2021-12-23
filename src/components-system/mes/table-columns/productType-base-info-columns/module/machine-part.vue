@@ -4,7 +4,8 @@
     :show-overflow-tooltip="true"
     prop="serialNumber"
     label="编号"
-    width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -16,7 +17,8 @@
     :show-overflow-tooltip="true"
     prop="specification"
     label="规格"
-    width="140px"
+    :width="fixedWidth ? '140px' : ''"
+    :min-width="!fixedWidth ? '140px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -28,7 +30,8 @@
     :show-overflow-tooltip="true"
     prop="length"
     :label="`长度\n(mm)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -41,7 +44,8 @@
     :show-overflow-tooltip="true"
     prop="material"
     label="材质"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -53,7 +57,8 @@
     :show-overflow-tooltip="true"
     prop="netWeight"
     :label="`单净重\n(kg)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -66,7 +71,8 @@
     :show-overflow-tooltip="true"
     prop="grossWeight"
     :label="`单毛重\n(kg)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -79,7 +85,8 @@
     :show-overflow-tooltip="true"
     prop="totalNetWeight"
     :label="`总净重\n(kg)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -92,7 +99,8 @@
     :show-overflow-tooltip="true"
     prop="totalGrossWeight"
     :label="`总毛重\n(kg)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -105,7 +113,8 @@
     :show-overflow-tooltip="true"
     prop="drawingNumber"
     label="图号"
-    width="140px"
+    :width="fixedWidth ? '140px' : ''"
+    :min-width="!fixedWidth ? '140px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -117,7 +126,8 @@
     :show-overflow-tooltip="true"
     prop="surfaceArea"
     :label="`面积\n(㎡)`"
-    width="80px"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
     align="center"
     :fixed="fixed"
   >
@@ -130,7 +140,8 @@
     :show-overflow-tooltip="true"
     prop="remark"
     label="备注"
-    width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -150,6 +161,9 @@ defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  fixedWidth: {
+    type: Boolean
   }
 })
 </script>

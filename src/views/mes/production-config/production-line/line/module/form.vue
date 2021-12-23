@@ -12,10 +12,10 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
       <el-form-item label="工厂" prop="factoryId">
-        <factory-select v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
+        <factory-select :disabled="isEdit" v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
       </el-form-item>
       <el-form-item label="车间" prop="workshopId">
-        <workshop-select v-model:value="form.workshopId" :factory-id="form.factoryId" placeholder="请先选择工厂" style="width: 270px" />
+        <workshop-select :disabled="isEdit" v-model:value="form.workshopId" :factory-id="form.factoryId" placeholder="请先选择工厂" style="width: 270px" />
       </el-form-item>
       <el-form-item label="生产线名称" prop="name">
         <el-input v-model="form.name" type="text" placeholder="请填写生产线名称" style="width: 270px" />
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -58,6 +58,7 @@ const defaultForm = {
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
+const isEdit = computed(() => crud.status.edit === 1)
 
 const rules = {
   workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],

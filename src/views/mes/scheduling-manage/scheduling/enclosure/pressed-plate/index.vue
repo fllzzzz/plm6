@@ -51,6 +51,7 @@
         :category="mesEnclosureTypeEnum.PRESSED_PLATE.V"
         :columns="columns"
         :fixed="'left'"
+        fixedWidth
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">

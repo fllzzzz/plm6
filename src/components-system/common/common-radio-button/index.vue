@@ -75,7 +75,7 @@ const copyValue = ref()
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 watchEffect(() => {
-  copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : 0
+  copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : -999999999
   setDefault()
 })
 
@@ -87,7 +87,7 @@ function selectChange(val) {
 }
 
 function setDefault() {
-  if (props.default && !copyValue.value && isNotBlank(props.options)) {
+  if (props.default && (copyValue.value === -999999999) && isNotBlank(props.options)) {
     for (const i in props.options) {
       copyValue.value = props.options[i][DS.value]
       selectChange(copyValue.value)
