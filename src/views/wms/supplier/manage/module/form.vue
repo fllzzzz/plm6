@@ -5,19 +5,16 @@
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
-    :show-close="false"
+    :show-close="true"
     width="80%"
     fullscreen
   >
     <template #titleRight>
-      <span style="float:right">
-        <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">提 交</common-button>
-        <store-operation type="crud" />
-        <common-button size="mini" @click="crud.cancelCU">关 闭</common-button>
-      </span>
+      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">提 交</common-button>
+      <store-operation type="crud" />
     </template>
-    <div class="form" >
-      <el-form v-loading="crud.editDetailLoading" ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
+    <div class="form">
+      <el-form v-loading="crud.editDetailLoading" :disabled="crud.status.cu === CRUD.STATUS.PROCESSING" ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">
         <div class="rule-row">
           <el-form-item label="供应商名称" prop="name">
             <el-input  v-model="form.name" maxlength="32" show-word-limit placeholder="请输入供应商名称" />
