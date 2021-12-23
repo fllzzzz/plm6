@@ -61,6 +61,14 @@ const options = computed(() => {
   )
 })
 
+const optionMap = computed(() => {
+  const _map = {}
+  process.value.forEach(v => {
+    _map[v.id] = v
+  })
+  return _map
+})
+
 watch(
   () => props.productType,
   () => {
@@ -100,6 +108,10 @@ async function getSourceData() {
   return process.value
 }
 
+function getOptionInfo(id) {
+  return optionMap.value[id]
+}
+
 async function waitLoad() {
   return new Promise((resolve, reject) => {
     RAF.setInterval(() => {
@@ -112,6 +124,7 @@ async function waitLoad() {
 }
 
 defineExpose({
-  getSourceData
+  getSourceData,
+  getOptionInfo
 })
 </script>

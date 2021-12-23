@@ -172,7 +172,7 @@ function rowInit(row) {
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
     specificationLabels: row.specificationLabels, // 规格中文
-    serialNumber: row.classify.serialNumber, // 科目编号
+    serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称
     basicClass: row.classify.basicClass, // 基础类型

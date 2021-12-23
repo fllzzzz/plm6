@@ -61,7 +61,7 @@ const props = defineProps({
   },
   optionAllValue: {
     type: [Number, String, Boolean],
-    default: 0
+    default: -999999999 // 设置默认值的原因是 label 为 undefined会报错
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用
@@ -75,12 +75,12 @@ const copyValue = ref()
 const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 watchEffect(() => {
-  copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : 0
+  copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : -999999999
   setDefault()
 })
 
 function selectChange(val) {
-  if (val === 0) val = undefined
+  if (val === -999999999) val = undefined
   if (val === props.modelValue) return
   emit('update:modelValue', val)
   emit('change', val)

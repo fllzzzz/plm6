@@ -229,7 +229,10 @@ const detail = {
           }
         ], // 项目id
         requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
-        supplierId: 1, // 供应商id
+        supplier: { // 供应商
+          id: 1,
+          name: '天马钢材有限公司'
+        },
         'mete|1000-10000.1-2': 1000, // 合同量量
         'amount|100000-1000000.1-2': 100000, // 合同金额
         meteUnit: '千克', // 单位

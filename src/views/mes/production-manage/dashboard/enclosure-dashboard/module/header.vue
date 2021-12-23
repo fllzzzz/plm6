@@ -59,7 +59,7 @@
       <template #optRight>
         <color-card
           class="filter-item"
-          v-model:value="query.processingStatus"
+          v-model:value="query.status"
           :colors="colors"
           color-border
           select-able
@@ -93,7 +93,6 @@ const defaultQuery = {
   serialNumber: '',
   plate: '',
   color: '',
-  processingStatus: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   factoryId: { value: undefined, resetAble: false },

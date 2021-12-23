@@ -47,7 +47,7 @@ const shearTypeEnum = {
 }
 constantize(shearTypeEnum)
 
-// 进行中/暂停 
+// 进行中/暂停
 const processingEnum = {
   PROCESS: { L: '进行', K: 'TRUE', V: 1 },
   PAUSE: { L: '暂停', K: 'FALSE', V: 0 }

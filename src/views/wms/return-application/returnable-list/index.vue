@@ -201,7 +201,7 @@ function handleAddReturn(row) {
   //   id: row.id, // 物料id
   //   sn: row.sn, // 该科目规格唯一编号
   //   specificationLabels: row.specificationLabels, // 规格中文
-  //   serialNumber: row.serialNumber, // 科目编号
+  //   serialNumber: row.serialNumber, // 科目编号 - 规格
   //   classifyId: row.classifyId, // 科目id
   //   classifyFullName: row.classifyFullName, // 全路径名称
   //   basicClass: row.basicClass, // 基础类型
@@ -217,7 +217,12 @@ function handleAddReturn(row) {
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
     id: row.id, // 物料id
-    source: row
+    source: row,
+    basicClass: row.basicClass, // 基础类型
+    measureUnit: row.measureUnit, // 计量单位
+    accountingUnit: row.accountingUnit, // 核算单位
+    accountingPrecision: row.accountingPrecision, // 核算单位小数精度
+    measurePrecision: row.measurePrecision // 计量单位小数精度
   })
   if (selectList.length > 0) {
     newData.factoryId = -1 // 工厂 同上
@@ -268,16 +273,14 @@ function calcReturnInfo() {
   props.selectList.forEach((scRow) => {
     if (number[scRow.id]) {
       number[scRow.id]++
-      mete[scRow.id] += scRow.mete
+      mete[scRow.id] += scRow.mete || 0
     } else {
       number[scRow.id] = 1
-      mete[scRow.id] = scRow.mete
+      mete[scRow.id] = scRow.mete || 0
     }
   })
   crud.data.forEach((row) => {
-    if (mete[row.id]) {
-      row.returnableMete = row.sourceReturnableMete - (mete[row.id] || 0)
-    }
+    row.returnableMete = row.sourceReturnableMete - (mete[row.id] || 0)
   })
   returnNumber.value = number
 }

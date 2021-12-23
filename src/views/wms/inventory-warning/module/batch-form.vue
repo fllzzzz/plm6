@@ -139,6 +139,7 @@ import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 import factorySelect from '@comp-base/factory-select.vue'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 // 未进行重复数据校验，目前由后端处理
 const tableRules = {}
@@ -185,7 +186,7 @@ CRUD.HOOK.beforeValidateBCU = () => {
 CRUD.HOOK.beforeToBCU = () => specInit()
 
 // 表单提交数据清理
-crud.submitBatchFormFormat = (form) => {
+crud.submitBatchFormFormat = async (form) => {
   cleanUpData(form.list)
   const formList = form.list.map((row) => {
     return {
@@ -193,9 +194,16 @@ crud.submitBatchFormFormat = (form) => {
       specification: row.specification,
       specificationMap: row.specificationMap,
       minimumInventory: row.minimumInventory,
+      unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
+      unitPrecision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,
       unitType: row.unitType,
       factoryId: row.factoryId
     }
+  })
+  await numFmtByUnitForList(formList, {
+    fields: ['minimumInventory'],
+    toSmallest: true,
+    toNum: true
   })
   return formList
 }

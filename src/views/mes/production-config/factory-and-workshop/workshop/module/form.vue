@@ -19,14 +19,14 @@
           style="width: 270px;"
         />
       </el-form-item>
-      <el-form-item label="车间简称" prop="shortName">
+      <!-- <el-form-item label="车间简称" prop="shortName">
         <el-input
           v-model.trim="form.shortName"
           type="text"
           placeholder="请填写简称"
           style="width: 270px;"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="排序" prop="sort">
         <el-input-number
           v-model.number="form.sort"
@@ -60,7 +60,7 @@ const defaultForm = {
   id: undefined,
   factoryId: undefined,
   name: '',
-  shortName: '',
+  // shortName: '',
   sort: 1,
   remark: ''
 }
@@ -75,10 +75,10 @@ const rules = {
     { required: true, message: '请填写车间名称', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
   ],
-  shortName: [
-    { required: true, message: '请填写车间简称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ],
+  // shortName: [
+  //   { required: true, message: '请填写车间简称', trigger: 'blur' },
+  //   { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+  // ],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }
 

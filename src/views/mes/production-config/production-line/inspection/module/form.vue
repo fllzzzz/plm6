@@ -17,7 +17,7 @@
       <el-form-item label="质检" prop="inspectorIds">
         <user-select
           ref="inspectorSelectRef"
-          v-model:value="form.inspectorIds"
+          v-model="form.inspectorIds"
           :multiple="true"
           placeholder="请选择质检人员"
           style="width: 270px"

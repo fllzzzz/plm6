@@ -5,8 +5,10 @@ export default function useWageQuotaUnit({ wageQuotaType }) {
   const unit = wageQuotaType && wageQuotaTypeEnum[wageQuotaTypeEnum.VK[wageQuotaType]].unit
   const meteUnit = wageQuotaType && wageQuotaTypeEnum[wageQuotaTypeEnum.VK[wageQuotaType]].meteUnit
   const field = wageQuotaType && wageQuotaTypeEnum[wageQuotaTypeEnum.VK[wageQuotaType]].F
+  const dp = wageQuotaType && wageQuotaTypeEnum[wageQuotaTypeEnum.VK[wageQuotaType]].DP
   return {
     UNIT,
+    dp,
     unit,
     meteUnit,
     field

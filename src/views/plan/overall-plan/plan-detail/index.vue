@@ -90,7 +90,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import { manufactureTypeEnum } from '@enum-ms/plan'
-import { dateDifference } from '@/utils/date'
+import { dateDifferenceReduce } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -141,7 +141,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map(v => {
     v.typeTagType = v.type === manufactureTypeEnum.HOMEMADE.V ? '' : 'warning'
     if (v.startDate && v.endDate) {
-      v.dateDifference = dateDifference(v.startDate, v.endDate) + '天'
+      v.dateDifference = dateDifferenceReduce(v.startDate, v.endDate) + '天'
     } else {
       v.dateDifference = ''
     }

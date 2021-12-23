@@ -20,7 +20,7 @@ export async function setSpecInfoToList(list) {
           if (info) {
             row.sn = info.sn // 该科目规格唯一编号
             row.specificationLabels = info.specificationLabels // 规格中文
-            row.serialNumber = info.classify.serialNumber // 科目编号
+            row.serialNumber = info.serialNumber // 科目编号 - 规格
             row.classifyId = info.classify.id // 科目id
             row.classifyFullName = info.classify.fullName // 全路径名称
             row.measureUnit = info.classify.measureUnit // 计量单位

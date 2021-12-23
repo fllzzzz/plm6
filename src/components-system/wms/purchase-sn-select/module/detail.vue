@@ -2,6 +2,7 @@
   <common-drawer
     ref="drawerRef"
     :visible="visible"
+    :content-loading="loading"
     :before-close="handleClose"
     title="采购订单详情"
     :show-close="true"
@@ -9,7 +10,7 @@
     custom-class="purchase-order-detail"
   >
     <template #content>
-      <div v-loading="loading" class="main-content">
+      <div class="main-content">
         <el-form :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content">
             <el-form-item label="采购订单" prop="serialNumber">

@@ -11,17 +11,17 @@
     <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('classify.serialNumber')"
-        key="classify.serialNumber"
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
         :show-overflow-tooltip="true"
-        prop="classify.serialNumber"
+        prop="serialNumber"
         label="编码"
         align="left"
         width="150"
       >
-        <template v-slot="scope">
-          <factory-table-cell-tag :id="scope.row.factoryId" />
-          <span>{{ scope.row.classify.serialNumber }}</span>
+        <template #default="{ row }">
+          <factory-table-cell-tag :id="row.factoryId" />
+          <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -51,19 +51,19 @@
         align="center"
         min-width="150"
       >
-        <template v-slot="scope">
-          <span :style="{ color: scope.row.inventory > 0 ? '#f18121' : 'red' }" style="margin-right:5px">
+        <template #default="{ row }">
+          <span :style="{ color: row.inventory > 0 ? '#f18121' : 'red' }" style="margin-right: 5px">
             {{
               toFixed(
-                scope.row.inventory,
-                scope.row.unitType === measureTypeEnum.MEASURE.V
-                  ? scope.row.classify.measurePrecision
-                  : scope.row.classify.accountingPrecision
+                row.inventory,
+                row.unitType === measureTypeEnum.MEASURE.V
+                  ? row.classify.measurePrecision
+                  : row.classify.accountingPrecision
               )
             }}
           </span>
-          <span
-            >{{ scope.row.unitType === measureTypeEnum.MEASURE.V ? scope.row.classify.measureUnit : scope.row.classify.accountingUnit }}
+          <span>
+            {{ row.unitType === measureTypeEnum.MEASURE.V ? row.classify.measureUnit : row.classify.accountingUnit }}
           </span>
         </template>
       </el-table-column>

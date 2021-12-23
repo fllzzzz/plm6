@@ -5,7 +5,7 @@ export default function useDittoRealVal(dittoKey, dittoVal = -1) {
   const scopeList = ref([])
   return {
     scopeList,
-    getNotDittoArr: () => scopeList.value.map(v => v.start),
+    getNotDittoArr: () => scopeList.value.map((v) => v.start),
     initScopeList: (list, customMethod) => initScopeList(list, customMethod, { scopeList, dittoKey, dittoVal }),
     handleValueChange: (val, index) => handleValueChange(val, index, { scopeList, dittoVal }),
     getRealVal: (index) => getRealVal(index, { scopeList })

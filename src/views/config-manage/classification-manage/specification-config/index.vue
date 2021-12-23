@@ -94,7 +94,7 @@ const { crud } = useCRUD({
 })
 
 const { maxHeight, heightStyle } = useMaxHeight({ extraHeight: 15 })
-const { loaded, rawMatClsTree } = useMatClsTree(formatTree)
+const { loaded, rawMatClsTree } = useMatClsTree(formatTree, true)
 
 const treeMenuRef = ref() // 菜单ref
 

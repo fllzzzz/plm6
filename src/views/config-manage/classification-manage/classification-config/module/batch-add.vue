@@ -14,7 +14,7 @@
       <common-button :loading="submitLoading" type="primary" size="mini" @click="submit">提 交</common-button>
       <store-operation type="normal" />
     </template>
-    <div class="heade-operate">
+    <div class="header-operate">
       <common-radio-button v-model="form.currentLevel" :options="levelOption" type="enum" size="mini" @change="handleLevelChange" />
     </div>
     <el-form ref="formRef" :model="form" :disabled="submitLoading">
@@ -37,14 +37,16 @@
           label="上级科目"
           min-width="150"
         >
-          <template #default="{ row }">
+          <template #default="{ row, $index }">
             <cls-cascader
               v-model="row.parentId"
               :deep="form.currentLevel - 1"
               show-all-levels
+              only-show-current-deep
               separator=" > "
               clearable
               placeholder="上级科目"
+              :showExtra="$index !== 0"
               :extra-option="{ name: '同上', id: ditto.get('parentId') }"
               size="small"
               style="width: 100%"
@@ -71,6 +73,7 @@
         >
           <template #default="{ row, $index }">
             <common-select
+              :key="Math.random()"
               v-model="row.basicClass"
               :options="rawMatClsEnum.ENUM"
               :show-extra="$index !== 0"
@@ -172,14 +175,14 @@ const ditto = new Map([
 const { visible, handleClose } = useVisible({ emit, props })
 const { init, addRow, removeRow } = useTableOperate({}, 10, ditto)
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: currentRules, ditto })
-const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form.list, visible)
+const { ADD_FORM, clearFormStorage } = useAddFormLocalStorage('CLASSIFICATION_CONFIG', form, visible)
 
 ADD_FORM.init = () => init(form.list)
 
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.cls-batch-add',
-    extraBox: ['.el-dialog__header', '.heade-operate'],
+    extraBox: ['.el-dialog__header', '.header-operate'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     navbar: false
@@ -241,7 +244,7 @@ async function submit() {
   ::v-deep(.el-dialog__body) {
     padding-top: 0px;
   }
-  .heade-operate {
+  .header-operate {
     margin-bottom: 15px;
   }
 }

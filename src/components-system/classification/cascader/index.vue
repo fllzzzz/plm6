@@ -108,6 +108,14 @@ const props = defineProps({
     type: Number,
     default: undefined
   },
+  onlyShowCurrentDeep: {
+    type: Boolean,
+    default: false
+  },
+  showExtra: {
+    type: Boolean,
+    default: false
+  },
   // 额外的选项
   extraOption: {
     type: Object,
@@ -216,7 +224,7 @@ function setCascader(tree) {
       // 根据基础材料类型 筛选一级科目
       classification.tree = dataFormat(tree.filter((v) => !props.basicClass || v.basicClass === props.basicClass))
       // 加入额外的选项
-      if (props.extraOption) {
+      if (props.showExtra) {
         classification.tree.unshift(props.extraOption)
       }
     } else {
@@ -233,17 +241,27 @@ function setCascader(tree) {
 // 格式转换
 function dataFormat(tree, deep = 1) {
   if (isBlank(props.deep) || deep <= props.deep) {
-    return tree.map((node) => {
+    const t = tree.map((node) => {
+      let maxDeep = 1
       const n = { id: node.id, name: node.name, disabled: false }
       // 显示层级
       if (isNotBlank(node.children)) {
         const children = dataFormat(node.children, deep + 1)
         if (isNotBlank(children)) {
+          maxDeep++
           n.children = children
         }
       }
+      n.maxDeep = maxDeep
       return n
     })
+    if (deep === 1 && props.onlyShowCurrentDeep) {
+      return t.filter((n) => {
+        return n.maxDeep >= props.deep
+      })
+    } else {
+      return t
+    }
   } else {
     return []
   }

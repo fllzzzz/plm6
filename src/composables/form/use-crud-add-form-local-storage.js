@@ -109,10 +109,14 @@ function setFormContent(form, storageForm) {
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
   if (!ls.isRegister) return false
   const _form = form || ls.form
-  storage.set(`${ADD_FORM.KEY_PREFIX}_${ls.key}`, {
-    type: type,
-    content: _form
-  }, ls.expired)
+  storage.set(
+    `${ADD_FORM.KEY_PREFIX}_${ls.key}`,
+    {
+      type: type,
+      content: _form
+    },
+    ls.expired
+  )
   return true
 }
 

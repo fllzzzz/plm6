@@ -11,8 +11,8 @@ export default {
 }
 
 function resolve(el, binding) {
-  const { value: { val, split = '-' }} = binding
+  const { value: { val, blank = '-' }} = binding
   let v = val
   if (isBlank(v)) v = undefined
-  el.innerText = emptyTextFormatter(v, split)
+  el.innerText = emptyTextFormatter(v, blank)
 }

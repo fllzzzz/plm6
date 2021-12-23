@@ -9,8 +9,9 @@ import { watch, nextTick } from 'vue'
  */
 export default function useWatchFormValidate(formRef, form, fields) {
   nextTick(() => {
-    const fls = fields || Object.keys(form.value)
-    console.log(formRef, form, fields)
+    // 获取form表单
+    const _form = getForm(form)
+    const fls = fields || Object.keys(_form)
     fls.forEach(field => {
       let _wField
       let _vField
@@ -18,15 +19,15 @@ export default function useWatchFormValidate(formRef, form, fields) {
         if (Array.isArray(field[1])) {
           _wField = []
           field[1].forEach(v => {
-            _wField.push(() => form.value[v])
+            _wField.push(() => _form[v])
           })
         } else {
-          _wField = () => form.value[_wField]
+          _wField = () => _form[_wField]
         }
         _vField = field[0] // 校验字段
       } else {
         _vField = field
-        _wField = () => form.value[_vField]
+        _wField = () => _form[_vField]
       }
       watch(
         _wField,
@@ -35,4 +36,19 @@ export default function useWatchFormValidate(formRef, form, fields) {
         })
     })
   })
+}
+
+// 获取校验规则
+function getForm(form) {
+  let _form
+  switch (form.constructor.name) {
+    case 'RefImpl':
+    case 'ComputedRefImpl':
+      _form = form.value
+      break
+    default:
+      _form = form
+      break
+  }
+  return _form
 }

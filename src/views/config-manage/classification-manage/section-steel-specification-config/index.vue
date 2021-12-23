@@ -1,7 +1,7 @@
 <template>
   <div class="app-container section-steel">
     <!--工具栏-->
-    <mHeader />
+    <mHeader @refresh="handleRefresh" />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
@@ -66,14 +66,9 @@
       >
         <template v-slot="scope">
           <div v-if="scope.row.isLeaf" style="display: flex; justify-content: flex-start">
-            <common-button
-              v-permission="permission.detail"
-              size="mini"
-              type="primary"
-              icon="el-icon-view"
-              @click="showSpec(scope.row)"
-              >查看</common-button
-            >
+            <common-button v-permission="permission.detail" size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)">
+              查看
+            </common-button>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
               <excel-resolve-preview-button
                 v-for="sd in standard"
@@ -83,7 +78,7 @@
                 :template="sectionSteelSpecITmpl"
                 :title="`${scope.row.name}：${sd.name}`"
                 :submitFn="(data) => sectionSteelSpecITmpl.submit(data, scope.row, sd)"
-                @success="handleUploadSuccess"
+                @success="handleRefresh"
               />
               <template #reference>
                 <common-button size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
@@ -193,6 +188,12 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   }
 }
 
+// 处理刷新
+function handleRefresh() {
+  crud.refresh()
+  fetchStandard()
+}
+
 // 显示型材规格详情
 function showSpec(row) {
   currentRow.value = row
@@ -210,12 +211,6 @@ async function fetchStandard() {
   } catch (error) {
     console.log('获取国标', error)
   }
-}
-
-// 处理上传成功
-function handleUploadSuccess() {
-  crud.refresh()
-  fetchStandard()
 }
 
 async function changeStandard(row, standardId) {

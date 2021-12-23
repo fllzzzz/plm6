@@ -15,7 +15,7 @@ const getFinalMatClsByIdForSteelPlate = {
           'id|1-100': 1,
           name: '中厚板',
           fullName: '中厚板',
-          serialNumber: /[0-9]{10}/,
+          serialNumber: /[0-9]{3}/,
           measureUnit: '张', // 计量单位
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 2, // 核算单位小数精度
@@ -51,7 +51,7 @@ const getFinalMatClsByIdForSectionSteel = {
       data:
         {
           'id|1-100': 1,
-          serialNumber: /[0-9]{10}/,
+          serialNumber: /[0-9]{3}/,
           name: '工字钢',
           fullName: '工字钢',
           measureUnit: '根', // 计量单位
@@ -64,6 +64,7 @@ const getFinalMatClsByIdForSectionSteel = {
             {
               id: 1,
               name: 'GB-06',
+              boolStandard: true,
               list: [
                 { code: '01', name: '10*10*200*500', 'unitWeight|10-30.1-2': 1 },
                 { code: '02', name: '12*10*200*500', 'unitWeight|10-30.1-2': 1 },
@@ -103,7 +104,7 @@ const getFinalMatClsByIdForSteelCoil = {
           'id|1-100': 1,
           name: '镀锌彩卷',
           fullName: '镀锌彩卷',
-          serialNumber: /[0-9]{10}/,
+          serialNumber: /[0-9]{3}/,
           measureUnit: '毫米', // 计量单位
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 2, // 核算单位小数精度
@@ -141,7 +142,7 @@ const getFinalMatClsByIdForGas = {
           'id|1-100': 1,
           name: '丙烷',
           fullName: '快乐气体>丙烷',
-          serialNumber: /[0-9]{10}/,
+          serialNumber: /[0-9]{6}/,
           measureUnit: '瓶', // 计量单位
           accountingUnit: '千克', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度
@@ -167,7 +168,7 @@ const getFinalMatClsById = {
           'id|1-100': 1,
           name: '大六角',
           fullName: '紧固件>高强螺栓>大六角',
-          serialNumber: /[0-9]{10}/,
+          serialNumber: /[0-9]{9}/,
           // measureUnit: '套', // 计量单位
           accountingUnit: '套', // 核算单位
           accountingPrecision: 0, // 核算单位小数精度

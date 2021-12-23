@@ -378,7 +378,7 @@ function addSystemOptions(options) {
       // 页码
       page: 1,
       // 每页数据条数
-      size: tablePageSize,
+      size: tablePageSize.value,
       // 总数据条数
       total: 0,
       hasNextPage: true
@@ -851,7 +851,7 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.edit = CRUD.STATUS.PROCESSING
-      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
+      const data = await crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.crudApi.edit(data)
       crud.status.edit = CRUD.STATUS.NORMAL
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
@@ -880,7 +880,7 @@ function addCrudBusinessMethod(crud) {
     try {
       crud.bStatus.batchAdd = CRUD.STATUS.PROCESSING
       // 深拷贝表单后转换，避免表单发生变化
-      const data = crud.submitBatchFormFormat(lodash.cloneDeep(crud.batchForm))
+      const data = await crud.submitBatchFormFormat(lodash.cloneDeep(crud.batchForm))
       crud.submitResult = await crud.crudApi.batchAdd(data)
       await callVmHook(crud, CRUD.HOOK.afterBatchAddSuccess)
       crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
@@ -1039,7 +1039,7 @@ function addCrudFeatureMethod(crud, data) {
       nextTick(() => {
         // 避免在极其特殊的情况下，table.getColumns()读取字段时，dom已经被v-if display：none掉
         // 不使用nextTick, 归还甲方-默认隐藏炉批号可触发该问题
-        crud.invisibleColumns.forEach(property => {
+        crud.invisibleColumns.forEach((property) => {
           if (columns[property]) {
             columns[property].visible = false
           }

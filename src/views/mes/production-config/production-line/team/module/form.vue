@@ -15,13 +15,9 @@
         <process-select v-model="form.processId" :size="'small'" :multiple="false" style="width: 270px" />
       </el-form-item>
       <el-form-item label="班组属性" prop="organizationType">
-        <common-select
-          type="enum"
-          v-model="form.organizationType"
-          :options="teamAttributeEnum.ENUM"
-          placeholder="请选择班组属性"
-          style="width: 270px"
-        />
+        <el-select v-model="form.organizationType" placeholder="请选择班组属性" :size="'small'" style="width: 270px" >
+          <el-option v-for="item in teamAttributeEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
+        </el-select>
       </el-form-item>
       <el-form-item label="组长" prop="leaderId">
         <user-select
