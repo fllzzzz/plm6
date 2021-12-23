@@ -2,11 +2,12 @@ import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
 // 获取物料分类树
-const useMatClsTree = (loadedCallBack) => {
+const useMatClsTree = (loadedCallBack, reload = false) => {
   const store = useStore()
   const loaded = computed(() => store.state.config.loaded.matClsTree)
   // 未加载则拉取
-  if (!loaded.value) {
+  if (!loaded.value || reload) {
+    store.commit('SET_LOADED', { key: 'matClsTree', loaded: false })
     store.dispatch('config/fetchMatClsTree')
   }
 

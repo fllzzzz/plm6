@@ -419,7 +419,8 @@ function getSpecList(classify, specConfig) {
     arr[i] = {
       classify,
       index: new Array(specLengthArr.length),
-      arr: new Array(specLengthArr.length)
+      arr: new Array(specLengthArr.length),
+      code: new Array(specLengthArr.length)
     }
   }
   // 遍历方式：按顺序将每一个【规格配置】的所有【小规格】推入数组来获得结果
@@ -434,6 +435,7 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
+          arr[currentIndex].code[i] = spec.code
           if (classify.basicClass === matClsEnum.SECTION_STEEL.V && spec.boolStandard) {
             arr[currentIndex].unitWeight = spec.unitWeight
             arr[currentIndex].boolStandard = spec.boolStandard
@@ -444,6 +446,8 @@ function getSpecList(classify, specConfig) {
     prevLength = prevLength * specLengthArr[i]
   }
   arr.forEach((v) => {
+    // 唯一编号
+    v.serialNumber = classify.serialNumber + v.code.join('')
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}
@@ -462,6 +466,7 @@ function getSpecList(classify, specConfig) {
     v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
     v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value
     v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号
+    // TODO:之所以使用index作为唯一标识，而不使用规格的code最后拼接的serialNumber, 是因为一开始未设计code
   })
   return arr
 }

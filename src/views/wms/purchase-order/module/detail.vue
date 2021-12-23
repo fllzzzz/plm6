@@ -27,7 +27,7 @@
               </div>
             </el-form-item>
 
-            <el-form-item label="供应商" prop="supplierId">
+            <el-form-item label="供应商" prop="supplier">
               <span v-if="detail.supplier">{{ detail.supplier.name }}</span>
             </el-form-item>
 

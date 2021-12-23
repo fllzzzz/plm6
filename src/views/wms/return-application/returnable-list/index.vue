@@ -201,7 +201,7 @@ function handleAddReturn(row) {
   //   id: row.id, // 物料id
   //   sn: row.sn, // 该科目规格唯一编号
   //   specificationLabels: row.specificationLabels, // 规格中文
-  //   serialNumber: row.serialNumber, // 科目编号
+  //   serialNumber: row.serialNumber, // 科目编号 - 规格
   //   classifyId: row.classifyId, // 科目id
   //   classifyFullName: row.classifyFullName, // 全路径名称
   //   basicClass: row.basicClass, // 基础类型
