@@ -33,7 +33,7 @@
             />
           </el-form-item>
           <el-form-item label="主营业务" prop="mainBusiness">
-            <el-input  v-model="form.mainBusiness" placeholder="请输入主营业务" />
+            <el-input  v-model="form.mainBusiness" placeholder="请输入主营业务" maxlength="32" />
           </el-form-item>
         </div>
         <div class="rule-row">
@@ -48,13 +48,13 @@
               />
             </el-form-item>
             <el-form-item label="详细地址" prop="address">
-              <el-input v-model="form.address" placeholder="请您输入详细地址" />
+              <el-input v-model="form.address" placeholder="请您输入详细地址" maxlength="250" />
             </el-form-item>
             <el-form-item/>
         </div>
         <div class="rule-row">
           <el-form-item label="社会统一代码" prop="socialCode">
-            <el-input  v-model="form.socialCode" placeholder="请输入社会统一代码" />
+            <el-input  v-model="form.socialCode" placeholder="请输入社会统一代码" maxlength="18" />
           </el-form-item>
           <el-form-item label="成立日期" prop="registrationDate">
             <el-date-picker
@@ -66,15 +66,15 @@
             />
           </el-form-item>
           <el-form-item label="营业期限" prop="businessTerm">
-            <el-input v-model="form.businessTerm" placeholder="请输入营业期限" />
+            <el-input v-model="form.businessTerm" placeholder="请输入营业期限" maxlength="32" />
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="法定代表人" prop="legalRepresentative">
-            <el-input v-model="form.legalRepresentative" placeholder="请输入法定代表人" />
+            <el-input v-model="form.legalRepresentative" placeholder="请输入法定代表人" maxlength="32" />
           </el-form-item>
           <el-form-item label="注册资本" prop="registeredCapital">
-            <el-input v-model="form.registeredCapital" placeholder="请输入注册资本" />
+            <el-input v-model="form.registeredCapital" placeholder="请输入注册资本" maxlength="32" />
           </el-form-item>
           <el-form-item label="企业类型" prop="enterpriseType">
             <common-select
@@ -90,33 +90,33 @@
         </div>
         <div class="rule-row">
           <el-form-item label="开户行名称" prop="bankName">
-            <el-input v-model="form.bankName" placeholder="请输入开户行名称" />
+            <el-input v-model="form.bankName" placeholder="请输入开户行名称"  maxlength="32"/>
           </el-form-item>
           <el-form-item label="银行账户" prop="bankAccount">
-            <el-input v-model="form.bankAccount" placeholder="请输入银行账户"/>
+            <el-input v-model="form.bankAccount" placeholder="请输入银行账户" maxlength="32"/>
           </el-form-item>
           <el-form-item/>
         </div>
         <div class="rule-row">
           <el-form-item label="公司官网" prop="website">
-            <el-input v-model="form.website" placeholder="请输入公司官网" />
+            <el-input v-model="form.website" placeholder="请输入公司官网网址" maxlength="64" />
           </el-form-item>
           <el-form-item label="公司邮箱" prop="companyEmail">
-            <el-input v-model="form.companyEmail" placeholder="请输入公司邮箱" />
+            <el-input v-model="form.companyEmail" placeholder="请输入公司邮箱" maxlength="64" />
           </el-form-item>
           <el-form-item label="公司电话" prop="companyPhone">
-            <el-input v-model="form.companyPhone" placeholder="请输入公司电话" />
+            <el-input v-model="form.companyPhone" placeholder="请输入公司电话" maxlength="32" />
           </el-form-item>
         </div>
         <div v-for="(item,index) in form.contacts" :key="index" class="rule-row">
           <el-form-item label="联系人">
-            <el-input v-model="item.name" placeholder="请输入联系人"  />
+            <el-input v-model="item.name" placeholder="请输入联系人"  maxlength="32" />
           </el-form-item>
-          <el-form-item label="联系电话">
-            <el-input v-model="item.phone" placeholder="请输入联系电话"  />
+          <el-form-item label="联系电话" :prop="`contacts[${index}].phone`" :rules="contactsRules.phone">
+            <el-input v-model="item.phone" placeholder="请输入联系电话"  maxlength="32" />
           </el-form-item>
-          <el-form-item label="个人邮箱">
-            <el-input v-model="item.email" placeholder="请输入个人邮箱"  />
+          <el-form-item label="个人邮箱" :prop="`contacts[${index}].email`" :rules="contactsRules.email">
+            <el-input v-model="item.email" placeholder="请输入个人邮箱"  maxlength="64" />
           </el-form-item>
           <div style="line-height: 32px;margin-left:-26px;">
             <common-button v-if="index === form.contacts.length-1" type="primary" size="mini" circle icon="el-icon-plus" @click="form.contacts.push({...contact})" />
@@ -145,6 +145,7 @@ import { ref } from 'vue'
 import { supplierClassEnum } from '@enum-ms/supplier'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { getBitwiseBack } from '@data-type/number'
+import { validatorTel, validatorWebsite, validatorEmail } from '@/utils/validate/pattern'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
@@ -187,7 +188,15 @@ const rules = {
     { required: true, message: '请输入供应商名称', trigger: 'blur' },
     { min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }
   ],
-  supplierClass: [{ required: true, message: '请选择供应商分类', trigger: 'blur' }]
+  supplierClass: [{ required: true, message: '请选择供应商分类', trigger: 'change' }],
+  website: [{ pattern: validatorWebsite, message: '请填写正确的公司官网网址', trigger: 'blur' }],
+  companyEmail: [{ pattern: validatorEmail, message: '请填写正确的公司邮箱', trigger: 'blur' }],
+  companyPhone: [{ pattern: validatorTel, message: '请填写正确的公司电话【手机号/固话】', trigger: 'blur' }]
+}
+
+const contactsRules = {
+  email: [{ pattern: validatorEmail, message: '请填写正确的个人邮箱', trigger: 'blur' }],
+  phone: [{ pattern: validatorTel, message: '请填写正确的联系电话【手机号/固话】', trigger: 'blur' }]
 }
 
 // 编辑时详情加载完成后
