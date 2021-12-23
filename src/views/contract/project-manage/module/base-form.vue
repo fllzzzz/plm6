@@ -195,7 +195,7 @@
       <upload-list
         :show-download="!!form.id"
         :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
-        v-model:files="form.attachments"
+        v-model:files="form.attachmentFiles"
         empty-text="暂未上传合同附件"
       />
     </div>
@@ -203,7 +203,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed, defineExpose } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
 import { dateDifferenceReduce } from '@/utils/date'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
@@ -238,7 +238,8 @@ const defaultForm = {
   projectManagerId: undefined, // 项目经理
   businessLeaderId: undefined, // 业务负责人1
   businessLeaderTwoId: undefined, // 业务负责人2
-  attachments: [] // 附件
+  attachmentFiles: [], // 附件
+  attachments: []
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -298,6 +299,11 @@ function resetForm(data) {
     formVal = JSON.parse(JSON.stringify(defaultForm))
   }
   form.value = JSON.parse(JSON.stringify(formVal))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 
@@ -306,7 +312,7 @@ async function validateForm() {
     const valid = await formRef.value.validate()
     if (valid) {
       const data = JSON.parse(JSON.stringify(form.value))
-      data.attachments = data.attachments.length > 0 ? data.attachments.map((v) => v.id) : []
+      data.attachments = data.attachmentFiles.length > 0 ? data.attachmentFiles.map((v) => v.id) : []
       Object.assign(props.formData, data)
     }
     return valid

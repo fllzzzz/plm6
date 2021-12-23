@@ -58,6 +58,8 @@
           type="textarea"
           :autosize="{ minRows: 4, maxRows: 6 }"
           placeholder="请填写备注"
+          :maxlength="200"
+          show-word-limit
           style="width: 320px"
         />
       </el-form-item>

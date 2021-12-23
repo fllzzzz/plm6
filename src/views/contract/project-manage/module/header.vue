@@ -35,7 +35,7 @@
       <el-input
         v-model="query.noOrProjectName"
         size="small"
-        placeholder="输入合同编号或项目类型"
+        placeholder="输入合同编号或项目简称"
         style="width: 200px;"
         class="filter-item"
         clearable

@@ -19,9 +19,11 @@
                   <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" />
                 </el-tooltip>
               </template>
-              <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
-                <common-button v-if="projectStatus!=1" size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
-              </el-tooltip>
+              <template v-if="projectStatus!=1">
+                <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
+                  <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
+                </el-tooltip>
+              </template>
               <el-tooltip class="item" effect="dark" content="打印" placement="top">
                 <common-button size="mini" icon="el-icon-printer" plain class="next_btn" />
               </el-tooltip>

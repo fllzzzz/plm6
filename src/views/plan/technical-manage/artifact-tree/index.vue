@@ -28,6 +28,15 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="columns.visible('assembleSerialNumber')"
+          key="assembleSerialNumber"
+          prop="assembleSerialNumber"
+          sortable="custom"
+          :show-overflow-tooltip="true"
+          label="组立号"
+          min-width="100px"
+        />
+        <el-table-column
           v-if="columns.visible('name')"
           key="name"
           prop="name"

@@ -114,6 +114,13 @@ const isTaxEnum = {
 }
 constantize(isTaxEnum)
 
+// 是否含税
+const isTaxContractEnum = {
+  YES: { L: '是', K: 'YES', V: 1 },
+  NO: { L: '否', K: 'NO', V: 0 }
+}
+constantize(isTaxContractEnum)
+
 // 工程结算类型新
 const engineerSettlementTypeEnumN = {
   THEORY: { L: '理计结算', SL: '理计', K: 'THEORY', V: 1 << 0, COLOR: '#1682e6' },
@@ -253,6 +260,7 @@ export {
   paymentModeEnum, // 付款方式
   invoiceTypeEnum,
   isTaxEnum,
+  isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
   enclosureSettlementTypeEnum, // 围护结算类型
   transportModeEnum,
@@ -282,6 +290,7 @@ export default {
   paymentModeEnum, // 付款方式
   invoiceTypeEnum,
   isTaxEnum,
+  isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
   enclosureSettlementTypeEnum, // 围护结算类型
   transportModeEnum,

@@ -156,18 +156,18 @@
             type="primary"
             @click="openContractInfo(scope.row)"
           />
-          <common-button
-            v-if="checkPermission(permission.editStatus) && scope.row.status === projectStatusEnum.ENUM.PROCESS.V"
-            size="mini"
-            @click="changeStatus(scope.row, projectStatusEnum.ENUM.SUSPEND.V)"
-            >暂停</common-button
-          >
-          <common-button
-            v-if="checkPermission(permission.editStatus) && scope.row.status === projectStatusEnum.ENUM.SUSPEND.V"
-            size="mini"
-            @click="changeStatus(scope.row, projectStatusEnum.PROCESS.V)"
-            >继续</common-button
-          >
+          <template v-if="checkPermission(permission.editStatus)">
+            <common-button
+              v-if="scope.row.status === projectStatusEnum.ENUM.PROCESS.V"
+              size="mini"
+              @click="changeStatus(scope.row, projectStatusEnum.ENUM.SUSPEND.V)"
+              >暂停</common-button>
+            <common-button
+              v-else-if="scope.row.status === projectStatusEnum.ENUM.SUSPEND.V"
+              size="mini"
+              @click="changeStatus(scope.row, projectStatusEnum.PROCESS.V)"
+              >继续</common-button>
+          </template>
           <udOperation :data="scope.row" :show-edit="false" />
           <!-- 下载 -->
           <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
@@ -295,7 +295,8 @@ function memberChangeSuccess() {
 
 async function changeStatus(data, val) {
   try {
-    const msg = val === projectStatusEnum.ENUM.SUSPEND.V ? '继续' : '暂停'
+    console.log(data, val)
+    const msg = val === projectStatusEnum.ENUM.SUSPEND.V ? '暂停' : '继续'
     await ElMessageBox.confirm(`确定${msg}“${data.name}” 项目吗 ？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
@@ -306,7 +307,6 @@ async function changeStatus(data, val) {
     crud.refresh()
   } catch (error) {
     console.log(error)
-    data.status = data.status === projectStatusEnum.ENUM.SUSPEND.V ? projectStatusEnum.ENUM.PROCESS.V : projectStatusEnum.ENUM.SUSPEND.V
   }
 }
 
