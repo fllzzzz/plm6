@@ -128,7 +128,7 @@ import { projectNameFormatter } from '@/utils/project'
 import { isNotBlank } from '@/utils/data-type'
 
 import { regDetail } from '@compos/use-crud'
-import uploadList from '@/components/file-upload/UploadList.vue'
+import uploadList from '@comp/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 
 const { crud, detail } = regDetail()
