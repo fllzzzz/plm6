@@ -96,7 +96,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('issueStatus')" prop="issueStatus" label="状态" align="center" width="80px">
       <template v-slot="scope">
-        <el-tag effect="plain" :disable-transitions="true" :type="taskIssueTypeEnum[taskIssueTypeEnum.VK[scope.row.issueStatus]].T">{{
+        <el-tag effect="plain" :disable-transitions="true" :type="taskIssueTypeEnum.V[scope.row.issueStatus].T">{{
           taskIssueTypeEnum.VL[scope.row.issueStatus]
         }}</el-tag>
       </template>
@@ -242,6 +242,13 @@ function refresh() {
 }
 
 CRUD.HOOK.beforeToQuery = () => {
+  modifying.value = false
+  crud.query.date = moment(props.details.date).valueOf()
+  crud.query.processType = processType.value
+  crud.query.productType = productType.value
+}
+
+CRUD.HOOK.beforeRefresh = () => {
   modifying.value = false
   crud.query.date = moment(props.details.date).valueOf()
   crud.query.processType = processType.value

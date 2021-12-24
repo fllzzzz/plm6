@@ -5,6 +5,7 @@
       <template v-for="line in workshop.productionLineList" :key="line.id">
         <el-tag
           hit
+          v-if="productType && productType === line.productType"
           :effect="isSingle ? (selectLineId === line.id ? 'light' : 'plain') : line.selected ? 'light' : 'plain'"
           :type="isSingle ? (selectLineId === line.id ? 'success' : 'info') : line.selected ? 'success' : 'info'"
           @click="handleChange(workshop, line)"
@@ -16,9 +17,11 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { inject, defineProps, defineEmits } from 'vue'
 
 const emit = defineEmits(['change'])
+
+const productType = inject('productType')
 
 defineProps({
   lines: {

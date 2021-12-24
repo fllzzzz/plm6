@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
       <el-form-item label="工序" prop="processId">
-        <process-select v-model="form.processId" :productType="productType" :size="'small'" :multiple="false" style="width: 270px" />
+        <process-select v-model="form.processId" :productType="productType" containsMachinePart :size="'small'" :multiple="false" style="width: 270px" />
       </el-form-item>
       <el-form-item label="班组属性" prop="organizationType">
         <el-select v-model="form.organizationType" placeholder="请选择班组属性" :size="'small'" style="width: 270px">
@@ -49,7 +49,7 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
-import processSelect from '@comp-mes/process-productType-select'
+import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
 import { teamAttributeEnum } from '@enum-ms/mes'
 

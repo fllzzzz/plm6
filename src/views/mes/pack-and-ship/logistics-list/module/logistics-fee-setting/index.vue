@@ -64,9 +64,9 @@
           min-width="120"
         >
           <template v-slot="scope">
-            <el-tag :type="logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[scope.row.priceType]].T" style="width: 100%" effect="plain">
+            <el-tag :type="logisticsPriceTypeEnum.V[scope.row.priceType].T" style="width: 100%" effect="plain">
               <span>{{ toFixed(scope.row.price, DP.YUAN)}}</span>
-              <span style="margin-left: 3px">{{ logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[scope.row.priceType]].unit }}</span>
+              <span style="margin-left: 3px">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
             </el-tag>
           </template>
         </el-table-column>

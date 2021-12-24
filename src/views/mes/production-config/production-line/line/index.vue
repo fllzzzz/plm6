@@ -62,7 +62,8 @@
         <template #default="{ row }">
           <table-cell-tag
             v-if="row.productType"
-            :name="componentTypeEnum.VL[row.productType]"
+            :name="componentTypeEnum.V[row.productType].SL"
+            :color="componentTypeEnum.V[row.productType].COLOR"
             :offset="15"
           />
           <span>{{ row.name }}</span>

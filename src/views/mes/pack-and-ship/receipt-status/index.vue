@@ -36,7 +36,7 @@
         min-width="80"
       >
         <template v-slot="scope">
-          <el-tag :type="manufactureTypeEnum[manufactureTypeEnum.VK[scope.row.manufactureType]].T" effect="plain" disable-transitions>{{
+          <el-tag :type="manufactureTypeEnum.V[scope.row.manufactureType].T" effect="plain" disable-transitions>{{
             manufactureTypeEnum.VL[scope.row.manufactureType]
           }}</el-tag>
         </template>
@@ -49,7 +49,7 @@
         width="165"
       >
         <template v-slot="scope">
-          <el-tag v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))" style="margin-right:5px;" :key="item" :type="packTypeEnum[packTypeEnum.VK[item]].T" effect="light" disable-transitions>{{
+          <el-tag v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))" style="margin-right:5px;" :key="item" :type="packTypeEnum.V[item].T" effect="light" disable-transitions>{{
             packTypeEnum.VL[item]
           }}</el-tag>
         </template>
@@ -77,7 +77,7 @@
         min-width="90"
       >
         <template v-slot="scope">
-          <el-tag :type="receiptStatusEnum[receiptStatusEnum.VK[scope.row.receiptStatus]].T" disable-transitions effect="plain">{{
+          <el-tag :type="receiptStatusEnum.V[scope.row.receiptStatus].T" disable-transitions effect="plain">{{
             receiptStatusEnum.VL[scope.row.receiptStatus]
           }}</el-tag>
         </template>

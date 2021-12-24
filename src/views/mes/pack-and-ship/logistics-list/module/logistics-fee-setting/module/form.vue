@@ -32,7 +32,7 @@
           placeholder="请填写单价"
           autocomplete="off"
         />
-        <span>{{ logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[form.priceType]].unit }}</span>
+        <span>{{ logisticsPriceTypeEnum.V[form.priceType].unit }}</span>
       </el-form-item>
       <el-form-item label="是否含税" prop="boolContainTaxEnum" class="form-label-require">
         <el-checkbox v-model="form.boolContainTaxEnum" label="含税"></el-checkbox>
