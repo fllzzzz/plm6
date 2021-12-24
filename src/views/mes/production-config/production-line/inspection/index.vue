@@ -49,7 +49,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
+      <mForm :productType="line.productType" />
     </div>
   </div>
 </template>

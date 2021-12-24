@@ -63,7 +63,7 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns :productType="componentTypeEnum.ARTIFACT.V" :columns="columns" :fixed="'left'" fixedWidth/>
+      <productType-base-info-columns :productType="componentTypeEnum.ARTIFACT.V" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -83,7 +83,7 @@
                 v-if="modifying"
                 v-model="scope.row.schedulingMap[line.id].quantity"
                 :step="1"
-                :min="scope.row.schedulingMap[line.id].sourceQuantity"
+                :min="scope.row.schedulingMap[line.id].sourceQuantity || 0"
                 :max="scope.row.quantity"
                 size="mini"
                 controls-position="right"

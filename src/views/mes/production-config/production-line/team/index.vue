@@ -14,7 +14,7 @@
         v-loading="crud.loading"
         :data="crud.data"
         :empty-text="crud.emptyText"
-        :max-height="maxHeight+42"
+        :max-height="maxHeight + 42"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -61,7 +61,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
+      <mForm :productType="line.productType" />
     </div>
   </div>
 </template>

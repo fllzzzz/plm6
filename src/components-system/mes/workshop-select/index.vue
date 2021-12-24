@@ -21,10 +21,10 @@ import { defineProps, defineEmits, ref, watch } from 'vue'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useWorkshop from '@compos/store/use-workshops'
 
-const emit = defineEmits(['change', 'update:value'])
+const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
-  value: {
+  modelValue: {
     type: [Number, String],
     default: undefined
   },
@@ -68,7 +68,7 @@ const options = ref([])
 const { loaded, workshops } = useWorkshop()
 
 watch(
-  () => props.value,
+  () => props.modelValue,
   (value) => {
     selectValue.value = value
     if (props.default && isBlank(value) && isNotBlank(options)) {
@@ -96,8 +96,8 @@ watch(
 )
 
 function handleChange(val) {
-  if (props.value !== val) {
-    emit('update:value', val)
+  if (props.modelValue !== val) {
+    emit('update:modelValue', val)
     emit('change', val)
   }
 }
@@ -108,8 +108,8 @@ function dataFormat() {
   try {
     if (isNotBlank(workshops.value)) {
       let list = deepClone(workshops.value)
-      if (props.factoryId) list = list.filter(v => props.factoryId === v.factoryId)
-      _options = list.map(o => {
+      if (props.factoryId) list = list.filter((v) => props.factoryId === v.factoryId)
+      _options = list.map((o) => {
         return {
           value: o.id,
           label: o.name
@@ -122,6 +122,10 @@ function dataFormat() {
     options.value = _options
     if (isNotBlank(options.value) && props.default && !selectValue.value) {
       selectValue.value = options.value[0].value
+    }
+    const isExit = options.value.some((v) => v.value === selectValue.value)
+    if (!isExit) {
+      selectValue.value = undefined
     }
     handleChange(selectValue.value)
   }
