@@ -47,7 +47,7 @@
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
-      <el-tooltip content="请先选择订单号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
+      <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"

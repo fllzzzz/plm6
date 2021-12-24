@@ -119,6 +119,7 @@ function rowInit(row) {
     specificationLabels: row.specificationLabels, // 规格中文
     serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
+    classifyFullPathId: row.classify.fullPathId, // 全路径id
     classifyFullName: row.classify.fullName, // 全路径名称
     basicClass: row.classify.basicClass, // 基础类型
     specification: row.spec, // 规格

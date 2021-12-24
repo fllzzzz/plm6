@@ -351,8 +351,9 @@ const actions = {
           basicClass: res.basicClass,
           hasUnitConfig: !!res.accountingUnit
         }
-        clsBrief.fullNameArr = res.fullName.split('>') // 全称全路径 数组
-        clsBrief.fullName = clsBrief.fullNameArr.join(' > ') // 全称
+        clsBrief.fullPathId = res.fullPathId // 全路径id
+        clsBrief.fullPathName = res.fullName.split('>') // 全称全路径 数组
+        clsBrief.fullName = clsBrief.fullPathName.join(' > ') // 全称
 
         const matCls = {
           ...clsBrief,

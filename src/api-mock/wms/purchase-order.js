@@ -176,6 +176,33 @@ const getPurchasingPurchaseOrderBrief = {
             }
           },
           {
+            id: 5, // 订单id
+            purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
+            supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
+            auxMaterialIds: [196, 197],
+            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
+            'projects|2': [
+              {
+                'id|+1': 1,
+                'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ], // 项目id
+            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
+            weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
+            strucAreaIds: [1, 5], // 构件区域id
+            enclAreaIds: [2], // 围护区域id
+            requisitionsSN: ['AFTER-Q-123456', 'AFTER-Q-133456'], // 采购申请单
+            supplier: {
+              // 供应商
+              id: 1,
+              name: '杭州天天向上有限公司'
+            }
+          },
+          {
             id: 4, // 订单id
             purchaseType: baseMaterialTypeEnum.MANUFACTURED.V, // 采购类型
             supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
@@ -202,7 +229,7 @@ const getPurchasingPurchaseOrderBrief = {
             }
           }
         ],
-        totalElements: 2
+        totalElements: 5
       },
       message: '操作成功'
     }

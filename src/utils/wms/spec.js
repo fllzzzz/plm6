@@ -22,6 +22,7 @@ export async function setSpecInfoToList(list) {
             row.specificationLabels = info.specificationLabels // 规格中文
             row.serialNumber = info.serialNumber // 科目编号 - 规格
             row.classifyId = info.classify.id // 科目id
+            row.classifyFullPathId = info.classify.fullPathId // 全路径id
             row.classifyFullName = info.classify.fullName // 全路径名称
             row.measureUnit = info.classify.measureUnit // 计量单位
             row.accountingUnit = info.classify.accountingUnit // 核算单位
