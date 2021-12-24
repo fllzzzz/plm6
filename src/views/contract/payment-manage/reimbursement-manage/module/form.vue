@@ -75,6 +75,7 @@
             style="max-width: 500px"
           />
         </el-form-item>
+        <el-divider><span class="title">报销明细</span></el-divider>
         <common-table
           ref="detailRef"
           border
@@ -122,7 +123,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" />
+              <el-input v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)"/>
             </template>
           </el-table-column>
           <el-table-column prop="invoiceAmount" label="发票面额（元）" align="center" min-width="120">
@@ -206,6 +207,7 @@ import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { digitUppercase } from '@/utils/data-type/number'
 import { isNotBlank } from '@data-type/index'
 import Expense from './expense'
+import { ElMessage } from 'element-plus'
 
 const formRef = ref()
 const applyRef = ref()
@@ -240,6 +242,7 @@ const tableRules = {
   applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+const invoiceNoArr = ref([])
 
 watch(
   () => form.projectId,
@@ -335,6 +338,27 @@ function deleteRow(index) {
   applyAmountChange()
 }
 
+function checkInvoiceNo(row, index) {
+  if (row.invoiceNo) {
+    const val = invoiceNoArr.value.find(v => v.index === index)
+    if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+      row.invoiceNo = undefined
+      if (val) {
+        val.invoiceNo = undefined
+      }
+    } else {
+      if (val) {
+        val.invoiceNo = row.invoiceNo
+      } else {
+        invoiceNoArr.value.push({
+          invoiceNo: row.invoiceNo,
+          index: index
+        })
+      }
+    }
+  }
+}
 function addRow() {
   crud.form.detailList.push({
     applyAmount: undefined,
@@ -346,11 +370,15 @@ function addRow() {
     invoiceNo: undefined,
     invoiceType: undefined,
     taxRate: undefined,
-    verify: {}
+    dataIndex: crud.form.detailList.length
   })
 }
 
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
+  if (crud.form.detailList.length <= 0) {
+    ElMessage({ message: '请先填写报销明细', type: 'error' })
+    return false
+  }
   const { validResult, dealList } = tableValidate(crud.form.detailList)
   if (validResult) {
     crud.form.detailList = dealList

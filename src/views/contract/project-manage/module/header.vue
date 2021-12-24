@@ -60,17 +60,20 @@
         class="filter-item"
         placeholder="项目类型"
         style="width:200px"
+        @change="crud.toQuery"
       />
       <common-select
-        v-model="query.projectContent"
+        v-model="query.projectContentId"
         :options="projectContentOption"
         :type="'other'"
         :dataStructure="typeProp"
         size="small"
         clearable
         class="filter-item"
+        filterable
         placeholder="项目内容"
         style="width:200px"
+        @change="crud.toQuery"
       />
       <div>
         <el-input
@@ -117,7 +120,7 @@ let projectContent1 = []
 let projectContent2 = []
 const typeProp = { key: 'id', label: 'name', value: 'id' }
 const defaultQuery = {
-  projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContent: undefined,
+  projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContentId: undefined,
   singerName: '',
   status: projectStatusEnum.PROCESS.V,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
@@ -173,5 +176,6 @@ function businessChange() {
   } else {
     projectContentOption.value = []
   }
+  crud.toQuery()
 }
 </script>

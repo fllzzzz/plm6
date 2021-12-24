@@ -99,6 +99,10 @@ const props = defineProps({
   typeInfo: {
     type: Array,
     default: () => []
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 const typeProp = { key: 'no', label: 'name', value: 'no' }
@@ -156,9 +160,9 @@ const rules = {
 function dateOptionFn(time) {
   if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
     const val = props.typeInfo.find(v => v.no === crud.form.productType)
-    return time.getTime() - 8.64e6 > val.date
+    return time.getTime() - 8.64e6 > val.date || time.getTime() - 8.64e6 < props.globalProject.createTime
   } else {
-    return false
+    return time.getTime() - 8.64e6 < props.globalProject.createTime
   }
 }
 

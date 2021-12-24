@@ -42,19 +42,19 @@
         clearable
         class="filter-item"
         placeholder="状态"
-        style="width:200px"
+        style="width:120px"
         @change="crud.toQuery"
       />
       <el-input
         v-model="query.writtenByName"
         placeholder="填报人"
-        style="width:200px"
+        style="width:120px"
         class="filter-item"
       />
       <el-input
         v-model="query.auditorName"
         placeholder="审核人"
-        style="width:200px"
+        style="width:120px"
         class="filter-item"
       />
       <rrOperation/>
@@ -78,6 +78,7 @@ const defaultQuery = {
   startDate: undefined,
   endDate: undefined,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
+  auditStatus: undefined,
   writtenByName: undefined,
   auditorName: undefined
 }

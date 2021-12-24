@@ -31,9 +31,10 @@
         class="filter-item"
         placeholder="项目类型"
         style="width:200px"
+        @change="crud.toQuery"
       />
       <common-select
-        v-model="query.projectContent"
+        v-model="query.projectContentId"
         :options="projectContentOption"
         :type="'other'"
         :dataStructure="typeProp"
@@ -42,6 +43,8 @@
         class="filter-item"
         placeholder="项目内容"
         style="width:200px"
+        filterable
+        @change="crud.toQuery"
       />
       <rrOperation/>
     </div>
@@ -65,7 +68,7 @@ const defaultQuery = {
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
   projectType: undefined,
   businessType: undefined,
-  projectContent: undefined
+  projectContentId: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
@@ -122,5 +125,6 @@ function businessChange() {
   } else {
     projectContentOption.value = []
   }
+  crud.toQuery()
 }
 </script>

@@ -3,13 +3,13 @@
     <div>
       <div class="form-row">
         <el-form-item label="客户名称" prop="customerUnit">
-          <el-input v-model="form.customerUnit" class="input-underline" placeholder="客户名称" />
+          <el-input v-model="form.customerUnit" class="input-underline" placeholder="客户名称" maxlength="20"/>
         </el-form-item>
         <el-form-item label="社会统一代码" prop="socialCode">
-          <el-input v-model="form.socialCode" class="input-underline" placeholder="社会统一代码" />
+          <el-input v-model="form.socialCode" class="input-underline" placeholder="社会统一代码" maxlength="18"/>
         </el-form-item>
         <el-form-item label="联系电话" prop="customerUnitPhone">
-          <el-input v-model="form.customerUnitPhone" class="input-underline" placeholder="联系电话" />
+          <el-input v-model="form.customerUnitPhone" class="input-underline" placeholder="联系电话"/>
         </el-form-item>
       </div>
       <div class="form-row">
@@ -24,11 +24,11 @@
             @change="handleRegionChange"
           />
         </el-form-item>
-        <el-form-item label="详细地址" prop="customerAddress">
-          <el-input v-model="form.customerAddress" placeholder="详细地址" class="input-underline" />
-        </el-form-item>
         <el-form-item label="邮箱" prop="customerEmail">
-          <el-input v-model="form.customerEmail" class="input-underline" placeholder="邮箱" />
+          <el-input v-model="form.customerEmail" class="input-underline" placeholder="邮箱" maxlength="256"/>
+        </el-form-item>
+        <el-form-item label="详细地址" prop="customerAddress">
+          <el-input v-model="form.customerAddress" placeholder="详细地址" class="input-underline" maxlength="200"/>
         </el-form-item>
       </div>
       <!--      <el-divider><span class="title">收款信息</span></el-divider>-->
@@ -38,7 +38,7 @@
             v-model="form.customerBankUserName"
             placeholder="银行账户户名"
             :controls="false"
-            maxlength="30"
+            maxlength="50"
             class="input-underline"
           />
         </el-form-item>
@@ -46,7 +46,7 @@
           <el-input v-model="form.customerBankCode" placeholder="银行账号" :controls="false" maxlength="30" class="input-underline" />
         </el-form-item>
         <el-form-item label="开户行" prop="customerBankName">
-          <el-input v-model="form.customerBankName" placeholder="开户行" class="input-underline" />
+          <el-input v-model="form.customerBankName" placeholder="开户行" class="input-underline" maxlength="30"/>
         </el-form-item>
       </div>
       <!--      <el-divider><span class="title">负责人</span></el-divider>-->
@@ -55,7 +55,7 @@
           <el-input v-model="form.customerManagerOne" placeholder="负责人1" class="input-underline" />
         </el-form-item>
         <el-form-item label="联系电话" prop="customerManagerOnePhone">
-          <el-input v-model.number="form.customerManagerOnePhone" placeholder="负责人1联系电话" class="input-underline" />
+          <el-input v-model="form.customerManagerOnePhone" placeholder="负责人1联系电话" class="input-underline" />
         </el-form-item>
       </div>
       <div class="form-row">
@@ -63,7 +63,7 @@
           <el-input v-model="form.customerManagerTwo" placeholder="负责人2" class="input-underline" />
         </el-form-item>
         <el-form-item label="联系电话" prop="customerManagerTwoPhone">
-          <el-input v-model.number="form.customerManagerTwoPhone" placeholder="负责人2联系电话" class="input-underline" />
+          <el-input v-model="form.customerManagerTwoPhone" placeholder="负责人2联系电话" class="input-underline" />
         </el-form-item>
       </div>
     </div>
@@ -98,9 +98,9 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const rules = {
-  customerUnit: [{ max: 50, message: '长度不超过 50 个字符', trigger: 'blur' }],
+  customerUnit: [{ max: 20, message: '长度不超过 20 个字符', trigger: 'blur' }],
   socialCode: [
-    { max: 50, message: '长度不超过 30 个字符', trigger: 'blur' },
+    { max: 18, message: '长度不超过 18 个字符', trigger: 'blur' },
     { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }
   ],
   customerEmail: [{ type: 'email', message: '请填写正确的邮箱地址', trigger: 'blur' }],

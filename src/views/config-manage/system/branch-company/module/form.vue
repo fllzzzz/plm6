@@ -14,7 +14,7 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
         <el-form-item label="公司名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="请填写名称" class="input-underline" style="width: 270px" />
+          <el-input v-model="form.name" type="text" placeholder="请填写名称" class="input-underline" style="width: 270px" maxlength="50"/>
         </el-form-item>
         <el-form-item label="社会统一信用代码" prop="socialCode">
           <el-input
@@ -96,6 +96,7 @@ import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
 import { systemEnabledEnum } from '@enum-ms/system'
+import { ElMessage } from 'element-plus'
 
 const formRef = ref()
 const detailRef = ref()
@@ -133,11 +134,16 @@ function deleteRow(index) {
 function addRow() {
   form.bankAccounts.push({
     account: undefined,
-    depositBank: undefined
+    depositBank: undefined,
+    dataIndex: form.bankAccounts.length
   })
 }
 
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
+  if (crud.form.bankAccounts.length <= 0) {
+    ElMessage({ message: '请先填写银行账号明细', type: 'error' })
+    return false
+  }
   const { validResult, dealList } = tableValidate(crud.form.bankAccounts)
   if (validResult) {
     crud.form.bankAccounts = dealList

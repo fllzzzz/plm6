@@ -11,45 +11,51 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      default-expand-all
       class="assembly-table"
       style="width: 100%"
+      :stripe="false"
     >
       <el-table-column type="expand">
         <template #default="props">
-          <div :key="`'singleTable${props.row.id}'`" style="padding: 10px 50px">
+          <div :key="`'singleTable${props.row.id}'`" style="width:850px;padding: 10px 50px;margin:0 auto;">
+            <el-divider><span class="title">报销明细</span></el-divider>
             <common-table
               :key="`'singleTable${props.row.id}'`"
-              :data="props.row.detailClassifyList"
+              :data="props.row.detailList"
               class="customer-table"
-              row-key="rowKey"
-              default-expand-all
-              :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-              style="width: 100%"
+              style="width: 100%;"
+              :stripe="false"
             >
-              <el-table-column key="dictionaryLabel" prop="dictionaryLabel" label="报销种类" align="center">
+              <el-table-column label="序号" type="index" align="center" width="50" />
+              <el-table-column key="dictionaryLabel" prop="dictionaryLabel" label="报销种类" align="center" min-width="120">
                 <template v-slot="scope">
-                  <span>{{ scope.row.dictionaryLabel }}</span>
+                  <span>{{ scope.row.expenseTypeName && scope.row.dictionaryLabel? scope.row.expenseTypeName + '/' + scope.row.dictionaryLabel: scope.row.expenseTypeName }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.applyAmount }}</span>
+                  <span>{{ scope.row.applyAmount? scope.row.applyAmount.toThousand(): '' }}</span>
                 </template>
               </el-table-column>
-              <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" align="center">
+              <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="100">
                 <template v-slot="scope">
-                  <span>{{ scope.row.invoiceType ? invoiceTypeEnum.VL[scope.row.invoiceType] : '' }}</span>
+                  <span>{{ scope.row.invoiceType ? invoiceTypeEnum.VL[scope.row.invoiceType] : '-' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column key="invoiceNo" prop="invoiceNo" label="发票号码" align="center"/>
+              <el-table-column prop="invoiceAmount" label="发票面额（元）" align="center" min-width="120">
+                <template v-slot="scope">
+                  <span>{{ scope.row.invoiceAmount? scope.row.invoiceAmount.toThousand(): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="inputTax" prop="inputTax" label="进项税额" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.inputTax }}</span>
+                  <span>{{ scope.row.inputTax? scope.row.inputTax.toThousand(): '' }}</span>
                 </template>
               </el-table-column>
-              <el-table-column key="taxRate" prop="taxRate" label="税率" align="center">
+              <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
                 <template v-slot="scope">
-                  <span>{{ scope.row.taxRate }}</span>
+                  <span>{{ scope.row.taxRate? scope.row.taxRate+'%': '-' }}</span>
                 </template>
               </el-table-column>
             </common-table>
@@ -69,11 +75,6 @@
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="projectName" :show-overflow-tooltip="true" align="center" label="业务类型">
-        <template v-slot="scope">
-          <span>{{ scope.row.projectName }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('applyDepartName')"
         prop="applyDepartName"
@@ -134,11 +135,6 @@
           <span>{{ scope.row.actuallyPayAmount ? scope.row.actuallyPayAmount.toThousand() : '' }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column v-if="columns.visible('confirmStatus')" prop="actuallyPayAmount" :show-overflow-tooltip="true" align="center" label="进项税额">
-        <template v-slot="scope">
-          <span>{{ scope.row.actuallyPayAmount? scope.row.actuallyPayAmount.toThousand(): '' }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('paymentUnit')"
         prop="paymentUnit"
@@ -299,7 +295,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.collection',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 50
 })
 
 function openDetail(row, type) {

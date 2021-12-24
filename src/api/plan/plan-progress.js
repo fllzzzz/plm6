@@ -9,5 +9,4 @@ export function get(params) {
   })
 }
 
-
 export default { get }

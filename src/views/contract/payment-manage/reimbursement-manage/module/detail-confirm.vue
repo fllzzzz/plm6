@@ -218,6 +218,7 @@
             <span v-else>{{ collectionInfo.remark }}</span>
           </div>
         </el-form-item>
+        <el-divider><span class="title">报销明细</span></el-divider>
         <common-table
           ref="detailRef"
           border

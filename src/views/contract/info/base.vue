@@ -18,7 +18,7 @@
                 v-model="form.serialNumber"
                 placeholder="合同编号"
               />
-              <span v-else>{{ detail.serialNumber }}</span>
+              <span v-else>{{ detail.serialNumber || '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="项目名称" prop="name">
@@ -28,7 +28,7 @@
                 v-model="form.name"
                 placeholder="项目名称"
               />
-              <span v-else>{{ detail.name }}</span>
+              <span v-else>{{ detail.name || '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="项目简称" prop="shortName">
@@ -38,7 +38,7 @@
                 v-model="form.shortName"
                 placeholder="项目简称"
               />
-              <span v-else>{{ detail.shortName }}</span>
+              <span v-else>{{ detail.shortName || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -56,7 +56,7 @@
                 disabled
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ detail.startDate }}</span>
+                <span>{{ detail.startDate? parseTime(detail.startDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -73,7 +73,7 @@
                 :disabledDate="endDateOption"
               />
               <template v-else>
-                <span v-if="detail.endDate">{{ parseTime(detail.endDate,'{y}-{m}-{d}') }}</span>
+                <span>{{ detail.endDate? parseTime(detail.endDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -84,7 +84,7 @@
                 v-model="totalDuration"
                 :readonly="true"
               />
-              <span v-else>{{ detail.totalDuration }}</span>
+              <span v-else>{{ detail.totalDuration || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -101,7 +101,7 @@
                 filterable
                 @change="handleRegionChange"
               />
-              <span v-else>{{ detail.regionalFullName }}</span>
+              <span v-else>{{ detail.regionalFullName || '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="详细地址" prop="address">
@@ -111,7 +111,7 @@
                 v-model="form.address"
                 placeholder="项目详细地址"
               />
-              <span v-else>{{ detail.address }}</span>
+              <span v-else>{{ detail.address || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -130,7 +130,7 @@
                 style="width:200px"
                 placeholder="项目经理"
               />
-              <span v-else>{{ detail.projectManagerFullName }}</span>
+              <span v-else>{{ detail.projectManagerFullName || '-' }}</span>
             </div>
           </el-form-item>
           <!-- <el-form-item label="业务负责人1" prop="businessLeaderId">
@@ -170,7 +170,7 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'' }}</span>
+              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -216,7 +216,7 @@
               </div>
             </template>
             <template v-else>
-              <span>{{ detail.managementFee? detail.managementFee.toThousand(): '' }}</span>
+              <span>{{ detail.managementFee? detail.managementFee.toThousand(): '-' }}</span>
               <span>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
             </template>
           </el-form-item>
@@ -237,7 +237,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '' }}</span>
+                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -255,7 +255,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.marginType && dict && dict.label && dict.label['margin_type']">{{ dict.label['margin_type'][detail.marginType] }}</span>
+                <span>{{ detail.marginType && dict && dict.label && dict.label['margin_type']? dict.label['margin_type'][detail.marginType]: '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -273,7 +273,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.currencyType && dict && dict.label && dict.label['currency_type']">{{ dict.label['currency_type'][detail.currencyType]}}</span>
+                <span>{{ detail.currencyType && dict && dict.label && dict.label['currency_type']? dict.label['currency_type'][detail.currencyType]: '-'}}</span>
               </template>
             </div>
           </el-form-item>
@@ -331,7 +331,7 @@ const defaultForm = {
   cityId: undefined, // 市
   regionId: undefined, // 区
   address: undefined, // 项目详细地址
-  startDate: String(new Date().getTime()), // 项目开始时间
+  startDate: undefined, // 项目开始时间
   endDate: undefined, // 项目结束时间
   contractAmount: undefined, // 合同金额
   prepayments: undefined, // 预付款

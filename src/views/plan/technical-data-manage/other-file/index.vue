@@ -6,14 +6,16 @@
     </div>
     <!--表格渲染-->
     <common-table
-    ref="tableRef"
-    v-loading="crud.loading"
-    :data="crud.data"
-    :empty-text="crud.emptyText"
-    :max-height="maxHeight"
-    @row-dblclick="dbclick"
-    style="width: 100%"
-  >
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      @row-dblclick="dbclick"
+      style="width: 100%"
+      @selection-change="crud.selectionChangeHandler"
+    >
+    <el-table-column type="selection" width="55" align="center" />
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="文件" min-width="160px" />
     <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" width="350px">
