@@ -1,7 +1,12 @@
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
-// 获取物料分类树
+/**
+ * 获取物料分类树
+ * @param {function} loadedCallBack 加载成功回调
+ * @param {boolean} reload 重新加载（更新）
+ * @returns
+ */
 const useMatClsTree = (loadedCallBack, reload = false) => {
   const store = useStore()
   const loaded = computed(() => store.state.config.loaded.matClsTree)
