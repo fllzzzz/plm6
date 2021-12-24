@@ -39,14 +39,14 @@ type="primary"
           <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.areaName) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="productSerialNumber" :show-overflow-tooltip="true" label="编号" min-width="100px">
+      <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100px">
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.productSerialNumber) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.serialNumber) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="productSpecification" :show-overflow-tooltip="true" label="规格" min-width="110px">
+      <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="110px">
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.productSpecification) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.specification) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="sourceSchedulingQuantity" label="总任务数" min-width="100px">

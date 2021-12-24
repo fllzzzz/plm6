@@ -56,7 +56,7 @@
                 v-if="modifying"
                 v-model="scope.row.schedulingMap[line.id].quantity"
                 :step="1"
-                :min="scope.row.schedulingMap[line.id].sourceQuantity"
+                :min="scope.row.schedulingMap[line.id].sourceQuantity || 0"
                 :max="scope.row.quantity"
                 size="mini"
                 controls-position="right"

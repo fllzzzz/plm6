@@ -11,4 +11,6 @@ export default function useGlobalProjectIdChangeToQuery(crud, field = 'projectId
     },
     { immediate: true }
   )
+
+  return globalProjectId
 }

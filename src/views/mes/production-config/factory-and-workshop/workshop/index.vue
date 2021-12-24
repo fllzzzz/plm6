@@ -187,10 +187,10 @@ async function changeStatus(data, val) {
     await editStatus({ id: data.id, boolEnabledEnum: val })
     crud.refresh()
     crud.notify(enabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    changeStoreLoaded()
   } catch (error) {
     console.log('变更车间状态', error)
     data.boolEnabledEnum = data.boolEnabledEnum === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
-    changeStoreLoaded()
   }
 }
 
