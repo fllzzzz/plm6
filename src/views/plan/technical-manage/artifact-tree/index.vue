@@ -249,7 +249,7 @@
           fixed="right"
         >
           <template v-slot="scope">
-            <udOperation :data="scope.row" :permission="permission" :show-del="false" />
+            <udOperation :data="scope.row" :permission="permission" :show-del="false" v-if="scope.row.dataType===2"/>
           </template>
         </el-table-column>
       </common-table>

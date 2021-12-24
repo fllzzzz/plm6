@@ -220,6 +220,7 @@
             <span v-else>{{ collectionInfo.remark }}</span>
           </div>
         </el-form-item>
+        <el-divider><span class="title">报销明细</span></el-divider>
         <common-table
           ref="detailRef"
           border
@@ -276,7 +277,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-if="isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" />
+              <el-input v-if="isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)"/>
               <span v-else>{{ scope.row.invoiceNo }}</span>
             </template>
           </el-table-column>
@@ -386,7 +387,7 @@ import { invoiceTypeEnum } from '@enum-ms/finance'
 import { reimbursementTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { digitUppercase } from '@/utils/data-type/number'
 import { edit, editStatus } from '@/api/contract/supplier-manage/reimbursement'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 import useTableValidate from '@compos/form/use-table-validate'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { isNotBlank } from '@data-type/index'
@@ -468,6 +469,7 @@ const tableRules = {
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 const businessTypeName = ref()
+const invoiceNoArr = ref([])
 
 function modifyInfo() {
   isModify.value = true
@@ -492,6 +494,7 @@ async function getContractInfo(id) {
   let data = {}
   try {
     data = await contractCollectionInfo({ projectId: id })
+    console.log(data)
   } catch (e) {
     console.log('获取合同信息', e)
   } finally {
@@ -620,8 +623,30 @@ function addRow() {
     invoiceNo: undefined,
     invoiceType: undefined,
     taxRate: undefined,
-    verify: {}
+    dataIndex: form.value.detailList.length
   })
+}
+
+function checkInvoiceNo(row, index) {
+  if (row.invoiceNo) {
+    const val = invoiceNoArr.value.find(v => v.index === index)
+    if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+      row.invoiceNo = undefined
+      if (val) {
+        val.invoiceNo = undefined
+      }
+    } else {
+      if (val) {
+        val.invoiceNo = row.invoiceNo
+      } else {
+        invoiceNoArr.value.push({
+          invoiceNo: row.invoiceNo,
+          index: index
+        })
+      }
+    }
+  }
 }
 
 function handleSuccess() {
@@ -640,6 +665,10 @@ async function onSubmit(val) {
       await editStatus(submitData)
       handleSuccess()
     } else {
+      if (form.value.detailList.length <= 0) {
+        ElMessage({ message: '请先填写报销明细', type: 'error' })
+        return false
+      }
       const { validResult, dealList } = tableValidate(form.value.detailList)
       if (validResult) {
         form.value.detailList = dealList
