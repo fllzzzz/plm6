@@ -27,7 +27,7 @@
       </el-form-item>
       <template v-if="form.processId">
         <el-form-item
-          :label="`单价(${wageQuotaTypeEnum[wageQuotaTypeEnum.VK[form.processOption[form.processId].wageQuotaType]].unit})`"
+          :label="`单价(${wageQuotaTypeEnum.V[form.processOption[form.processId].wageQuotaType].unit})`"
           prop="price"
         >
           <el-input-number

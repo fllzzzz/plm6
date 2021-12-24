@@ -25,7 +25,7 @@
 
 <script setup>
 import { defineExpose, defineProps, defineEmits, computed, watch, ref } from 'vue'
-import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import { componentTypeEnum as typeEnum } from '@enum-ms/mes'
 import { isNotBlank } from '@data-type/index'
 import RAF from '@/utils/raf'
 
@@ -35,20 +35,19 @@ const emit = defineEmits(['change', 'update:modelValue'])
 
 const props = defineProps({
   // 查询指定工序次序，不传查所有
-  processType: {
+  productType: {
     // Value
     type: [Number, Boolean],
-    default: undefined
-  },
-  // 查询指定产品类型，不传查所有
-  sequenceType: {
-    // Value
-    type: Number,
     default: undefined
   },
   // eslint-disable-next-line vue/require-default-prop
   modelValue: {
     type: [Number, Array]
+  },
+  // 一次工序 是否展示 包含零件工序
+  containsMachinePart: {
+    type: Boolean,
+    default: false
   },
   multiple: {
     type: Boolean,
@@ -80,13 +79,18 @@ const sourceData = ref()
 const { loaded, process } = useProcess()
 
 const processOptions = computed(() => {
+  let _productType = props.productType
+  // 一次工序 是否展示 包含零件工序
+  if (props.containsMachinePart && _productType & typeEnum.ASSEMBLE.V && isNotBlank(props.productType)) {
+    _productType = _productType | typeEnum.MACHINE_PART.V
+  }
   return options.value.filter((v) => {
     if (v.originOptions && v.originOptions.length) {
       v.options = v.originOptions.filter((o) => {
-        return isNotBlank(props.processType) ? props.processType === o.type : true
+        return isNotBlank(_productType) ? _productType & o.productType : true
       })
     }
-    return isNotBlank(props.sequenceType) ? props.sequenceType === v.type : true
+    return isNotBlank(_productType) ? _productType & v.type : true
   })
 })
 
@@ -138,12 +142,12 @@ function dataFormat() {
     typeEnum.KEYS.forEach((type) => {
       const _optionObj = {}
       _optionObj.type = typeEnum[type].V
-      _optionObj.name = typeEnum[type].L + '工序'
+      _optionObj.name = typeEnum[type].SL + (typeEnum[type].V & (typeEnum.ASSEMBLE.V | typeEnum.ARTIFACT.V) ? '' : '工序')
       _optionObj.options = process.value.filter((v) => {
-        return v.sequenceType === typeEnum[type].V
+        return v.productType === typeEnum[type].V
       })
       _optionObj.originOptions = process.value.filter((v) => {
-        return v.sequenceType === typeEnum[type].V
+        return v.productType === typeEnum[type].V
       })
       if (_optionObj.options && _optionObj.options.length) {
         _options.push(_optionObj)

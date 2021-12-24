@@ -38,7 +38,7 @@
         width="100px"
       >
         <template v-slot="scope">
-          <span>{{ wageQuotaTypeEnum[wageQuotaTypeEnum.VK[scope.row.wageQuotaType]].meteUnit }}</span>
+          <span>{{ wageQuotaTypeEnum.V[scope.row.wageQuotaType].meteUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column

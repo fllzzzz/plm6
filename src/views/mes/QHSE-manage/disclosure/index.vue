@@ -100,7 +100,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <el-tag v-if="improveStatusEnum.VK[scope.row.status]" :type="improveStatusEnum[improveStatusEnum.VK[scope.row.status]].T">{{
+          <el-tag v-if="improveStatusEnum.VK[scope.row.status]" :type="improveStatusEnum.V[scope.row.status].T">{{
             improveStatusEnum.VL[scope.row.status]
           }}</el-tag>
         </template>

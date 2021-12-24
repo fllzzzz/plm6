@@ -60,7 +60,7 @@
         <template v-slot="scope">
           <el-tag
             v-if="scope.row.checkStatus"
-            :type="shipAuditStatusEnum[shipAuditStatusEnum.VK[scope.row.checkStatus]].T"
+            :type="shipAuditStatusEnum.V[scope.row.checkStatus].T"
             effect="plain"
             >{{ shipAuditStatusEnum.VL[scope.row.checkStatus] }}</el-tag
           >
@@ -128,7 +128,7 @@
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
             style="margin-right: 5px"
             :key="item"
-            :type="packTypeEnum[packTypeEnum.VK[item]].T"
+            :type="packTypeEnum.V[item].T"
             effect="light"
             disable-transitions
             >{{ packTypeEnum.VL[item] }}</el-tag

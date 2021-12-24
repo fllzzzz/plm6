@@ -47,7 +47,7 @@
         width="100"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ componentTypeEnum.VL[scope.row.productType] }}</span>
+          <span v-empty-text>{{ reportComponentTypeEnum.VL[scope.row.productType] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -128,7 +128,7 @@
 import crudApi from '@/api/mes/manufactures-manage/report'
 import { ref, provide } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { reportComponentTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@enum/base'
 
 import useMaxHeight from '@compos/use-max-height'
