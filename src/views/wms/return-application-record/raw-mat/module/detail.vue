@@ -6,54 +6,44 @@
     :before-close="crud.cancelDetail"
     :title="drawerTitle"
     :show-close="true"
-    size="90%"
-    custom-class="raw-mat-inbound-application-record-detail"
+    size="100%"
+    custom-class="raw-mat-return-application-record-detail"
   >
     <template #titleAfter>
-      <el-tag v-if="detail.applicant" type="success" effect="dark">{{`申请人：${detail.applicant.name} | ${detail.applicant.deptName}`}}</el-tag>
-      <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.userUpdateTime)}` }}</el-tag>
+      <el-tag v-if="detail.applicant" type="success" effect="dark">
+        {{ `申请人：${detail.applicant.name} | ${detail.applicant.deptName}` }}
+      </el-tag>
+      <el-tag effect="plain">{{ `退库申请时间：${parseTime(detail.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <!-- TODO:打印按钮 -->
     </template>
     <template #content>
+      <material-info class="material-info" :basic-class="detail.basicClass" :material="currentSource" />
       <common-table
+        ref="tableRef"
         :data="detail.list"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
         :expand-row-keys="expandRowKeys"
         row-key="id"
+        highlight-current-row
+        @row-click="handleRowClick"
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark show-graphics>
-              <p v-if="row.boolTransfer">
-                调拨：
-                <span>（来源）</span>
-                <span style="color: brown" v-parse-project="{ project: row.sourceProject }" v-empty-text />
-                <span> ▶ </span>
-                <span>（目的）</span>
-                <span style="color: #3a8ee6" v-parse-project="{ project: row.project }" v-empty-text />
-              </p>
-            </expand-secondary-info>
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" :show-batch-no="false" show-remark show-graphics />
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" show-outbound-mode />
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
         <!-- 次要信息 -->
-        <material-secondary-info-columns />
+        <material-secondary-info-columns :basic-class="detail.basicClass" />
         <!-- 单位及其数量 -->
-        <material-unit-quantity-columns />
+        <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 仓库信息 -->
-        <warehouse-info-columns show-project show-transfer />
-        <el-table-column label="领用人" width="100px" align="center">
-          <template #default="{ row }">
-            <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
-              <span v-if="row.recipient">{{ row.recipient.name }}</span>
-            </el-tooltip>
-          </template>
-        </el-table-column>
+        <warehouse-info-columns show-project />
       </common-table>
     </template>
   </common-drawer>
@@ -68,22 +58,29 @@ import { parseTime } from '@/utils/date'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
+import MaterialInfo from '@/views/wms/return-application/components/material-info/index.vue'
 
 const drawerRef = ref()
+const tableRef = ref()
 const expandRowKeys = ref([])
+// 当前退库源数据
+const currentSource = ref()
 const { CRUD, crud, detail } = regDetail()
+
+const { baseUnit } = useMatBaseUnit() // 当前分类基础单位
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.raw-mat-inbound-application-record-detail',
-    extraBox: ['.el-drawer__header'],
+    mainBox: '.raw-mat-return-application-record-detail',
+    extraBox: ['.el-drawer__header', '.material-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -95,28 +92,47 @@ const { maxHeight } = useMaxHeight(
 // 标题
 const drawerTitle = computed(() => {
   if (detail && detail.serialNumber) {
-    return `出库单：${detail.serialNumber}`
+    return `退库单：${detail.serialNumber}`
   } else {
-    return '出库单'
+    return '退库单'
   }
 })
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
+  // 当前数据
+  currentSource.value = undefined
   await setSpecInfoToList(detail.list)
-  detail.list = await numFmtByBasicClass(detail.list, {
-    toSmallest: false,
-    toNum: true
-  })
+  await numFmtByBasicClass(detail.list, { toNum: true })
+  const sourceList = detail.list.map((v) => v.source)
+  await setSpecInfoToList(sourceList)
+  await numFmtByBasicClass(
+    sourceList,
+    { toNum: true },
+    {
+      mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
+    }
+  )
+}
+
+// 行选中
+function handleRowClick(row, column, event) {
+  currentSource.value = row.source
 }
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete'] })
+  // 获取单位精度
+  const dp =
+    detail.basicClass && baseUnit.value && baseUnit.value[detail.basicClass] ? baseUnit.value[detail.basicClass].measure.precision : 0
+  return tableSummary(param, { props: [['quantity', dp], 'mete'] })
 }
 </script>
 
 <style lang="scss" scoped>
-.raw-mat-inbound-application-record-detail {
+.raw-mat-return-application-record-detail {
+  .material-info {
+    margin-bottom: 10px;
+  }
   .el-drawer__header .el-tag {
     min-width: 70px;
     text-align: center;
@@ -125,6 +141,10 @@ function getSummaries(param) {
     ::v-deep(.cell) {
       height: 28px;
       line-height: 28px;
+    }
+
+    ::v-deep(.current-row > td.el-table__cell) {
+      --el-table-current-row-background-color: #d7ffef;
     }
   }
 }

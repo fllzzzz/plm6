@@ -4,7 +4,15 @@
       <span v-empty-text>{{ row.brand }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showHeatNoAndBatchNo" prop="heatNoAndBatchNo" :label="heatNoAndBatchNoLabel" align="left" min-width="150px" :fixed="fixed" show-overflow-tooltip>
+  <el-table-column
+    v-if="showHeatNoAndBatchNo"
+    prop="heatNoAndBatchNo"
+    :label="heatNoAndBatchNoLabel"
+    align="left"
+    min-width="150px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <span v-empty-text>{{ row.heatNoAndBatchNo }}</span>
     </template>

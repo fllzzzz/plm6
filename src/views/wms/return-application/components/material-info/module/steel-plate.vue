@@ -59,9 +59,9 @@
     </span>
     <span class="info-item">
       <span>单重({{ baseUnit.weight.unit }})</span>
-      <span class="returnable-number">{{ material.singleReturnableMete }}</span>
+      <span class="returnable-number" v-to-fixed="{ val: material.singleReturnableMete || 0, dp: baseUnit.weight.precision }" />
       <span>&nbsp;/&nbsp;</span>
-      <span>{{ material.singleMete }}</span>
+      <span v-to-fixed="{ val: material.singleMete || 0, dp: baseUnit.weight.precision }" />
     </span>
     <span class="info-item">
       <span>总重({{ baseUnit.weight.unit }})</span>
@@ -70,7 +70,7 @@
         v-to-fixed="{ val: material.returnableMete || 0, dp: baseUnit.weight.precision }"
       />
       <span>&nbsp;/&nbsp;</span>
-      <span>{{ material.mete }}</span>
+      <span v-to-fixed="{ val: material.mete || 0, dp: baseUnit.weight.precision }" />
     </span>
   </div>
 </template>

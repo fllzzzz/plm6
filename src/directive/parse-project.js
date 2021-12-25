@@ -12,7 +12,7 @@ export default {
 }
 
 function resolve(el, binding) {
-  const { value: { project, split = '　、　', onlyShortName = false }} = binding
+  const { value: { project, split = '、', onlyShortName = false }} = binding
   if (isBlank(project)) return
   let p = []
   if (Array.isArray(project)) {

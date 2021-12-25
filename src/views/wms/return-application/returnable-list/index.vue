@@ -98,6 +98,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { createUniqueString } from '@/utils/data-type/string'
+import { specFormat } from '@/utils/wms/spec-format'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -112,7 +113,6 @@ import ClickablePermissionSpan from '@/components-system/common/clickable-permis
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import { ElMessage } from 'element-plus'
-import { specFormat } from '@/utils/wms/spec-format'
 
 const emit = defineEmits(['add'])
 
@@ -153,7 +153,7 @@ const optShow = {
 
 // 展开行
 const expandRowKeys = ref([])
-// 调拨详情ref
+// 出库详情ref
 const outboundDetailRef = ref()
 const returnNumber = ref({})
 // 表格ref

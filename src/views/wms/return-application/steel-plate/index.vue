@@ -1,6 +1,13 @@
 <template>
   <div class="app-container">
-    <common-header ref="headerRef" :basic-class="basicClass" :list="form.list" :current-source="currentSource" @add="rowWatch" />
+    <common-header
+      ref="headerRef"
+      :edit="props.edit"
+      :basic-class="basicClass"
+      :list="form.list"
+      :current-source="currentSource"
+      @add="rowWatch"
+    />
     <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
       <common-table
         ref="tableRef"
@@ -9,10 +16,25 @@
         :default-expand-all="false"
         :stripe="false"
         :cell-class-name="wrongCellMask"
-        highlight-current-row
+        :expand-row-keys="expandRowKeys"
         row-key="uid"
+        highlight-current-row
         @row-click="handleRowClick"
       >
+        <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
+          <template #default="{ row }">
+            <el-input
+              v-model="row.remark"
+              :rows="1"
+              :autosize="{ minRows: 1, maxRows: 1 }"
+              type="textarea"
+              placeholder="备注"
+              maxlength="200"
+              show-word-limit
+              style="width: 400px"
+            />
+          </template>
+        </el-expand-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" fixed="left">
           <template #default="{ row, $index }">
             <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
@@ -35,7 +57,7 @@
         </el-table-column>
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
-        <el-table-column prop="source.thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left">
+        <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left">
           <template #default="{ row }">
             <span v-to-fixed="baseUnit.thickness.precision">{{ row.source.thickness }}</span>
           </template>
@@ -87,7 +109,7 @@
             <el-input-number
               v-model="row.mete"
               :min="0"
-              :max="+row.maxTotalWeight"
+              :max="+row.maxMete"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -115,13 +137,14 @@ import { edit as editReturnApplication } from '@/api/wms/return/raw-mat-applicat
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useForm from '@/composables/form/use-form'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import WarehouseSetColumns from '../components/warehouse-set-columns.vue'
 import CommonHeader from '../components/common-header.vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -147,6 +170,7 @@ const defaultForm = {
   list: []
 }
 
+const expandRowKeys = ref([]) // 展开行key
 const headerRef = ref()
 const tableRef = ref()
 const formRef = ref()
@@ -181,15 +205,18 @@ const ditto = new Map([
 const setFormCallback = (form) => {
   form.list = form.list.map((v) => reactive(v))
   const trigger = watch(
-    tableRef,
-    (ref) => {
-      if (ref) {
+    [tableRef, headerRef, baseUnit],
+    ([tRef, hRef, bu]) => {
+      if (tRef && hRef && bu) {
         // 将相同的材料设置为同一个对象，便于计算
         extractSource(form)
         // 初始化选中数据，执行一次后取消当前监听
-        form.list.forEach((v) => rowWatch(v))
+        initCheckOverMaxWeight(form.list)
+        form.list.forEach((row) => rowWatch(row))
         nextTick(() => {
           trigger()
+          headerRef.value.calcAllQuantity()
+          headerRef.value.calcAllWeight()
         })
       }
     },
@@ -262,6 +289,7 @@ function init() {
   currentSource.value = undefined
   // 当前高亮uid
   currentUid.value = undefined
+  cu.props.abnormalList = undefined
 }
 
 // 校验
@@ -324,11 +352,13 @@ function setDefaultCurrent() {
 function rowWatch(row) {
   // 计算最大总重
   watch([() => row.quantity], () => {
-    calcMaxTotalWeight(row)
+    calcMaxMete(row)
     headerRef.value && headerRef.value.calcAllQuantity()
   })
   // 计算理论及单重
-  watch([() => row.length, () => row.width, baseUnit], () => calcTheoryWeight(row))
+  watch([() => row.length, () => row.width, baseUnit], () => {
+    calcTheoryWeight(row)
+  })
   // 计算总重
   watch([() => row.singleMete, () => row.quantity], () => {
     calcTotalWeight(row)
@@ -351,7 +381,7 @@ async function calcTheoryWeight(row) {
     thickness: row.source.thickness
   })
   if (row.theoryWeight) {
-    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleReturnableMete)
+    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
   } else {
     row.singleMete = undefined
   }
@@ -367,18 +397,18 @@ function calcTotalWeight(row) {
 }
 
 // 计算最大重量
-function calcMaxTotalWeight(row) {
+function calcMaxMete(row) {
   if (row.quantity) {
-    row.maxTotalWeight = row.source.singleReturnableMete * row.quantity
+    row.maxMete = row.source.singleReturnableMete * row.quantity
   } else {
-    row.maxTotalWeight = row.source.singleReturnableMete
+    row.maxMete = row.source.singleReturnableMete
   }
 }
 
 // 提取退库材料相同的对象
 function extractSource(form) {
   const sourceKV = {}
-  form.list.forEach(v => {
+  form.list.forEach((v) => {
     if (sourceKV[v.source.id]) {
       v.source = sourceKV[v.source.id]
     } else {
@@ -401,7 +431,7 @@ function calcReturnInfo() {
       mete[v.id] = v.mete || 0
     }
   })
-  Object.keys(sourceKV).forEach(key => {
+  Object.keys(sourceKV).forEach((key) => {
     const sourceMaterial = sourceKV[key]
     sourceMaterial.returnableMete = sourceMaterial.sourceReturnableMete - (mete[sourceMaterial.id] || 0)
   })
@@ -425,6 +455,31 @@ function checkOverSource(row) {
         r.overTipColor = undefined
       }
     })
+  }
+}
+
+// 初始校验超出最大量
+function initCheckOverMaxWeight(list) {
+  const overList = []
+  list.forEach((row) => {
+    const _row = deepClone(row)
+    let quantityChange = false
+    if (row.source.quantity < row.quantity) {
+      quantityChange = true
+      row.quantity = row.source.quantity
+      _row.maxQuantity = row.source.quantity
+    }
+    // 计算最大重量
+    calcMaxMete(row)
+    // 旧值与新值比较，避免数量变化产生量的问题
+    if (row.maxMete < _row.mete || quantityChange) {
+      _row.maxMete = row.maxMete
+      overList.push(_row)
+    }
+  })
+  if (overList.length) {
+    cu.props.abnormalList = overList
+    ElMessage.warning('退库记录的可退库信息发生变化，已自动修正，可查看异常列表')
   }
 }
 </script>

@@ -16,6 +16,7 @@
       </div>
       <div class="filter-right-box child-mr-7">
         <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
+        <common-button v-if="cu.props.abnormalList" type="danger" @click="abnormalVisible = true" size="mini">异常列表</common-button>
         <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
           提 交
         </common-button>
@@ -24,23 +25,33 @@
     </div>
   </div>
   <returnable-list-drawer v-model="returnableVisible" :basic-class="basicClass" :select-list="form.list" @add="handleAdd" />
+  <common-dialog ref="drawerRef" v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
+    <abnormal-list :basicClass="basicClass" :list="cu.props.abnormalList" :maxHeight="700" />
+  </common-dialog>
 </template>
 
 <script setup>
 import { ref, defineEmits, defineProps, defineExpose } from 'vue'
 
 import { regExtra } from '@/composables/form/use-form'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+
 import MaterialInfo from '@/views/wms/return-application/components/material-info/index.vue'
 import ReturnableListDrawer from '@/views/wms/return-application/components/returnable-list-drawer/index.vue'
-import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
-import { toFixed } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
+import AbnormalList from '../components/abnormal-list'
+
+import { toFixed } from '@/utils/data-type'
 
 const emit = defineEmits(['add'])
 
 const { cu, form, FORM } = regExtra() // 表单
 
 const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
   currentSource: {
     type: Object,
     default: () => {
@@ -62,6 +73,8 @@ const allMete = ref()
 const allQuantity = ref()
 // 显示可归还列表
 const returnableVisible = ref(false)
+// 显示异常列表
+const abnormalVisible = ref(false)
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(props.basicClass)
 
@@ -88,8 +101,8 @@ function openReturnableList() {
 
 // 计算所有退库钢材总重
 function calcAllWeight() {
-  allMete.value = form.list.reduce((sum, { mete = 0 }) => {
-    return +toFixed(sum + mete, baseUnit.value.weight.precision)
+  allMete.value = form.list.reduce((sum, cur) => {
+    return +toFixed(sum + cur.mete, baseUnit.value.weight.precision)
   }, 0)
 }
 
