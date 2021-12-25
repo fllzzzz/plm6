@@ -32,7 +32,7 @@
     </el-table-column>
     <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.length"
           :max="999999"
           :controls="false"
@@ -45,7 +45,7 @@
     </el-table-column>
     <el-table-column prop="quantity" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.quantity"
           :min="1"
           :max="999999999"
@@ -74,7 +74,7 @@
           :disabled="!row.hasOver"
           placement="top"
         >
-          <el-input-number
+          <common-input-number
             v-model="row.weighingTotalWeight"
             :min="0"
             :max="999999999"

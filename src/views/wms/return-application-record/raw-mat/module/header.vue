@@ -62,7 +62,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
@@ -83,6 +84,10 @@ const defaultQuery = {
   operatorName: undefined // 创建人
 }
 
+const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
 useGlobalProjectIdChangeToQuery(crud)
+onMounted(() => {
+  query.basicClass = route.params.basicClass
+})
 </script>

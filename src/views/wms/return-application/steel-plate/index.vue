@@ -64,7 +64,7 @@
         </el-table-column>
         <el-table-column prop="width" align="center" width="110px" :label="`宽 (${baseUnit.width.unit})`">
           <template #default="{ row }">
-            <el-input-number
+            <common-input-number
               v-model="row.width"
               :min="0"
               :max="+row.source.width"
@@ -78,7 +78,7 @@
         </el-table-column>
         <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
           <template #default="{ row }">
-            <el-input-number
+            <common-input-number
               v-model="row.length"
               :max="+row.source.length"
               :controls="false"
@@ -91,7 +91,7 @@
         </el-table-column>
         <el-table-column prop="quantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
           <template #default="{ row }">
-            <el-input-number
+            <common-input-number
               v-model="row.quantity"
               :min="1"
               :max="+row.source.quantity"
@@ -106,7 +106,7 @@
         </el-table-column>
         <el-table-column key="mete" prop="mete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
           <template #default="{ row }">
-            <el-input-number
+            <common-input-number
               v-model="row.mete"
               :min="0"
               :max="+row.maxMete"
@@ -149,7 +149,7 @@ import WarehouseSetColumns from '../components/warehouse-set-columns.vue'
 import CommonHeader from '../components/common-header.vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { ElMessage } from 'element-plus'
-import { getLightColor } from '@/utils/color'
+import { getDarkColor } from '@/utils/color'
 
 const emit = defineEmits(['success'])
 
@@ -209,12 +209,15 @@ const setFormCallback = (form) => {
     ([tRef, hRef, bu]) => {
       if (tRef && hRef && bu) {
         // 将相同的材料设置为同一个对象，便于计算
-        extractSource(form)
-        // 初始化选中数据，执行一次后取消当前监听
+        extractSource(form.list)
         initCheckOverMaxWeight(form.list)
-        form.list.forEach((row) => rowWatch(row))
+        // 初始化选中数据
+        form.list.forEach((row) => {
+          rowWatch(row)
+          checkOverSource(row)
+        })
         nextTick(() => {
-          trigger()
+          trigger() // 执行一次后取消当前监听
           headerRef.value.calcAllQuantity()
           headerRef.value.calcAllWeight()
         })
@@ -368,7 +371,8 @@ function rowWatch(row) {
     () => row.mete,
     () => {
       checkOverSource(row)
-    }
+    },
+    { immediate: true }
   )
 }
 
@@ -406,9 +410,9 @@ function calcMaxMete(row) {
 }
 
 // 提取退库材料相同的对象
-function extractSource(form) {
+function extractSource(list) {
   const sourceKV = {}
-  form.list.forEach((v) => {
+  list.forEach((v) => {
     if (sourceKV[v.source.id]) {
       v.source = sourceKV[v.source.id]
     } else {
@@ -418,17 +422,22 @@ function extractSource(form) {
 }
 
 // 计算退库信息
-function calcReturnInfo() {
+function calcReturnInfo(row) {
   const mete = {}
   const sourceKV = {}
   form.list.forEach((v) => {
-    if (!sourceKV[v.source.id]) {
-      sourceKV[v.source.id] = v.source
-    }
-    if (isNotBlank(mete[v.id])) {
-      mete[v.id] += v.mete || 0
-    } else {
-      mete[v.id] = v.mete || 0
+    if (row.id === v.id) {
+      // 做转换，避免草稿或修改与退库列表不一致
+      if (sourceKV[v.source.id]) {
+        v.source = sourceKV[v.source.id]
+      } else {
+        sourceKV[v.source.id] = v.source
+      }
+      if (isNotBlank(mete[v.id])) {
+        mete[v.id] += v.mete || 0
+      } else {
+        mete[v.id] = v.mete || 0
+      }
     }
   })
   Object.keys(sourceKV).forEach((key) => {
@@ -439,9 +448,9 @@ function calcReturnInfo() {
 
 // 校验是否超出原材料的可退库量
 function checkOverSource(row) {
-  calcReturnInfo()
+  calcReturnInfo(row)
   if (row.source.returnableMete < 0 && !row.overTipColor) {
-    const overTipColor = getLightColor()
+    const overTipColor = getDarkColor()
     row.overTipColor = overTipColor
     form.list.forEach((r) => {
       if (r.id === row.id) {

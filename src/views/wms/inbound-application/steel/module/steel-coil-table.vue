@@ -32,7 +32,7 @@
       width="135px"
     >
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.weighingTotalWeight"
           :min="0"
           :max="999999999"
@@ -47,7 +47,7 @@
     </el-table-column>
     <el-table-column prop="thickness" align="center" width="100px" :label="`厚 (${baseUnit.thickness.unit})`">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.thickness"
           :min="0"
           :max="999999"
@@ -61,7 +61,7 @@
     </el-table-column>
     <el-table-column prop="width" align="center" width="135px" :label="`宽 (${baseUnit.width.unit})`">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.width"
           :min="0"
           :max="999999"
@@ -75,10 +75,10 @@
     </el-table-column>
     <el-table-column prop="length" align="center" width="135px" :label="`长 (${baseUnit.length.unit})`">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.length"
           :min="0"
-          :max="999999"
+          :max="999999999"
           :controls="false"
           :precision="baseUnit.length.precision"
           size="mini"
@@ -88,7 +88,7 @@
     </el-table-column>
     <!-- <el-table-column prop="number" align="center" width="135px" :label="`数量 (${baseUnit.measure.unit})`">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.quantity"
           :max="999999999"
           controls-position="right"

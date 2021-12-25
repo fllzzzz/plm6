@@ -119,7 +119,7 @@
             <template v-if="form.supplyType == orderSupplyTypeEnum.SELF.V">
               <el-form-item class="el-form-item-8" label="合同量" prop="mete">
                 <div class="input-underline flex-rss child-mr-10">
-                  <el-input-number
+                  <common-input-number
                     v-model="form.mete"
                     placeholder="请填写合同量"
                     autocomplete="off"
@@ -140,7 +140,7 @@
                 </div>
               </el-form-item>
               <el-form-item class="el-form-item-9" label="合同额（元）" prop="amount">
-                <el-input-number
+                <common-input-number
                   v-model="form.amount"
                   :max="999999999999"
                   :precision="2"

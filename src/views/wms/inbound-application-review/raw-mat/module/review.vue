@@ -188,11 +188,15 @@ const warehouseRules = {
   warehouseId: [{ required: true, message: '请选择仓库', trigger: 'change' }]
 }
 
-// 采购填写的信息（金额、申购单及项目）
+// 采购填写的信息（金额、申购单）
 const amountRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
+}
+
+// 项目
+const projectRules = {
+  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
 }
 
 // 甲供不填写金额方面的信息
@@ -204,6 +208,9 @@ const tableRules = computed(() => {
   const rules = {}
   if (showAmount.value) Object.assign(rules, boolPartyA.value ? partyAAmountRules : amountRules)
   if (showWarehouse.value) Object.assign(rules, warehouseRules)
+  if (isNotBlank(order.value.projects)) {
+    Object.assign(rules, projectRules)
+  }
   return rules
 })
 

@@ -64,7 +64,7 @@
         <template #default="{ row }">
           <template v-if="row.editMode">
             <div class="edit-item">
-              <el-input-number
+              <common-input-number
                 v-model="row.minimumInventory"
                 :disabled="row.editLoading"
                 :max="999999"

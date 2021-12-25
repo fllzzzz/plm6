@@ -79,7 +79,7 @@
           </template>
           <template #default="{ row }">
             <span class="flex-rbc">
-              <el-input-number
+              <common-input-number
                 v-model="row.batchTransferQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"

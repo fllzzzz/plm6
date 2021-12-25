@@ -3,7 +3,7 @@
     <el-divider><span class="title">物流信息</span></el-divider>
     <el-form ref="formRef" :model="currentForm" :disabled="props.disabled" :rules="rules" size="small" inline label-position="right" label-width="80px">
       <el-form-item label="运费" prop="freight" label-width="50px">
-        <el-input-number
+        <common-input-number
           class="input-underline"
           v-model="currentForm.freight"
           type="text"
@@ -16,7 +16,7 @@
         />
       </el-form-item>
       <!-- <el-form-item label="装车费" prop="loadingFee">
-        <el-input-number
+        <common-input-number
           class="input-underline"
           v-model="currentForm.entruckPrice"
           :min="0"
@@ -29,7 +29,7 @@
         />
       </el-form-item>
       <el-form-item label="其他杂费" prop="otherFees">
-        <el-input-number
+        <common-input-number
           class="input-underline"
           v-model="currentForm.entruckPrice"
           :min="0"

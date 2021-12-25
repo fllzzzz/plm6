@@ -23,7 +23,7 @@
           <common-radio v-model="form.halfMode" :options="steelPlateHalfModeEnum.ENUM" type="enum" size="small" />
         </el-form-item>
         <el-form-item label="半出尺寸(mm)" prop="halfSize">
-          <el-input-number v-model="form.halfSize" :min="0" :max="maxHalfSize" controls-position="right" />
+          <common-input-number v-model="form.halfSize" :min="0" :max="maxHalfSize" controls-position="right" />
         </el-form-item>
       </template>
       <common-form-item :material="material" :form="form" />

@@ -24,7 +24,7 @@
         <div class="setting-container">
           <div class="setting-item">
             <el-tag size="medium" effect="plain">【批量】设置预警数量</el-tag>
-            <el-input-number
+            <common-input-number
               v-model.number="batch.minimumInventory"
               :min="0"
               :max="999999"
@@ -99,7 +99,7 @@
               min-width="120"
             >
               <template #default="{ row }">
-                <el-input-number
+                <common-input-number
                   v-model="row.minimumInventory"
                   :min="0"
                   :max="999999"

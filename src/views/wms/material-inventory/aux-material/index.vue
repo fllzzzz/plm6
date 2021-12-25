@@ -23,7 +23,7 @@
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <warehouse-info-columns :columns="columns" />
       <!--编辑与删除-->
-      <el-table-column label="操作" width="180px" align="center" fixed="right">
+      <el-table-column label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
           <!--出库-->
           <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
@@ -33,8 +33,6 @@
           <common-button v-permission="permission.transfer" type="warning" size="mini" @click="toTransfer(row)">
             <svg-icon icon-class="wms-transfer" />
           </common-button>
-          <!--打印-->
-          <common-button icon="el-icon-printer" type="success" size="mini" @click="toPrintLabel(row)" />
         </template>
       </el-table-column>
     </common-table>

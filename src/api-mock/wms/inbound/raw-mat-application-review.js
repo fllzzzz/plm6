@@ -368,7 +368,7 @@ const detail_id1 = {
   }
 }
 
-// 气体详情
+// 辅材详情
 const detail_id2 = {
   url: '/api/wms/inbound/application/review/raw-materials/2',
   method: 'get',
@@ -381,7 +381,7 @@ const detail_id2 = {
         purchaseOrder: {
           id: 3, // 订单id
           purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
-          supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+          supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
           basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
           serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
           'projects|2': [

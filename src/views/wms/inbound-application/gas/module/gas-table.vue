@@ -31,7 +31,7 @@
     </el-table-column>
     <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-if="row.measureUnit"
           v-model="row.quantity"
           :min="1"
@@ -52,7 +52,7 @@
     </el-table-column>
     <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.mete"
           :min="1"
           :max="999999999"

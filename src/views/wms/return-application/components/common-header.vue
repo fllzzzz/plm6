@@ -21,6 +21,7 @@
           提 交
         </common-button>
         <common-button type="success" @click="openReturnableList" size="mini">检索退库材料</common-button>
+        <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toReturnRecord" />
       </div>
     </div>
   </div>
@@ -32,6 +33,7 @@
 
 <script setup>
 import { ref, defineEmits, defineProps, defineExpose } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { regExtra } from '@/composables/form/use-form'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -67,6 +69,7 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
 // 总重量
 const allMete = ref()
 // 总数量
@@ -111,6 +114,11 @@ function calcAllQuantity() {
   allQuantity.value = form.list.reduce((sum, { quantity = 0 }) => {
     return +toFixed(sum + quantity, baseUnit.value.measure.precision)
   }, 0)
+}
+
+// 前往退库记录
+function toReturnRecord() {
+  router.push({ name: 'RawMatReturnApplicationRecord', params: { basicClass: props.basicClass }})
 }
 
 // 清除

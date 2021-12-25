@@ -6,7 +6,7 @@
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" :fixed="fixed">
+  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <!-- 甲供调拨方式 -->
       <table-cell-tag

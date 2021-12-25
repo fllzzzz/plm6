@@ -22,7 +22,7 @@
             style="width: 300px"
             @change="handleProjectChange"
           />
-          <span v-else v-parse-project="{ project: globalProject }" v-empty-text />
+          <span v-else v-parse-project="{ project: globalProject }" v-empty-text style="min-width: 150px" />
         </el-form-item>
         <el-form-item label="领用人" prop="recipientId">
           <user-dept-cascader
@@ -80,7 +80,7 @@
           </template>
           <template #default="{ row }">
             <span class="flex-rbc">
-              <el-input-number
+              <common-input-number
                 v-model="row.batchOutboundQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
