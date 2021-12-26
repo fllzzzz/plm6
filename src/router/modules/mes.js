@@ -591,6 +591,17 @@ export default {
       }
     },
     {
+      name: 'MesTeamReportOffStaffWagesConfig',
+      path: 'off-staff/wages-config',
+      hidden: false,
+      component: '/mes/team-report/off-staff/wages-config/index',
+      meta: {
+        title: '编外-工价',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
       name: 'MesTeamReportWagesAdjust',
       path: 'wages-adjust',
       hidden: false,
