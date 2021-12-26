@@ -50,24 +50,36 @@
       :prop="`${field}.thickness`"
       align="center"
       width="100px"
-      :label="`厚 (mm)`"
+      :label="`厚 (${baseUnit.thickness.unit})`"
       show-overflow-tooltip
+      :fixed="fixed"
     >
       <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'thickness') }}</span>
+        <span v-to-fixed="baseUnit.thickness.precision">{{ getInfo(row, 'thickness') }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showWidth" :prop="`${field}.width`" align="center" width="120px" :label="`宽 (mm)`" show-overflow-tooltip>
+    <el-table-column
+      v-if="showWidth"
+      :prop="`${field}.width`"
+      align="center"
+      width="120px"
+      :label="`宽 (${baseUnit.width.unit})`"
+      show-overflow-tooltip
+      :fixed="fixed"
+    >
       <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'width') }}</span>
+        <span v-to-fixed="baseUnit.width.precision">{{ getInfo(row, 'width') }}</span>
       </template>
     </el-table-column>
-    <!-- <el-table-column v-if="showLength" :prop="`${field}.length`" align="center" width="120px" :label="`长 (mm)`">
-      <template #default="{ row }">
-        <span v-empty-text>{{ row.length }}</span>
-      </template>
-    </el-table-column> -->
-    <el-table-column v-if="showColor" :prop="`${field}.color`" align="center" width="120px" :label="`颜色`" show-overflow-tooltip>
+    <el-table-column
+      v-if="showColor"
+      :prop="`${field}.color`"
+      align="center"
+      width="120px"
+      :label="`颜色`"
+      show-overflow-tooltip
+      :fixed="fixed"
+    >
       <template #default="{ row }">
         <span v-empty-text>{{ getInfo(row, 'color') }}</span>
       </template>
@@ -79,6 +91,7 @@
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
   specMerge: {
@@ -99,15 +112,29 @@ const props = defineProps({
     // 字段
     type: String,
     default: 'material'
+  },
+  showWidth: {
+    type: Boolean,
+    default: true
+  },
+  showThickness: {
+    type: Boolean,
+    default: true
   }
 })
+
+// 当前分类基础单位
+const { loaded, baseUnit } = useMatBaseUnit(props.basicClass)
 
 const getInfo = inject('getInfo')
 
 const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.classifyFullName`))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.specification`))
-const showThickness = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.thickness`))
-const showWidth = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.width`))
-// const showLength = computed(() => isBlank(props.columns) || props.columns.visible('length'))
+const showThickness = computed(
+  () => props.showThickness && loaded.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.thickness`))
+)
+const showWidth = computed(
+  () => props.showWidth && loaded.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.width`))
+)
 const showColor = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.color`))
 </script>

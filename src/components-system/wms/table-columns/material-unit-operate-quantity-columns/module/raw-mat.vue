@@ -30,8 +30,10 @@
   </el-table-column>
   <el-table-column v-if="showMete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
     <template #default="{ row }">
-      <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
-      /
+      <template v-if="showOperableMete">
+        <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+        /
+      </template>
       <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
     </template>
   </el-table-column>
@@ -40,7 +42,7 @@
 <script setup>
 import { defineProps, computed } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
-import { isBlank } from '@/utils/data-type'
+import { isBlank, isNotBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 const props = defineProps({
@@ -70,6 +72,10 @@ const props = defineProps({
     // 量-label
     type: String
   },
+  labelPrefix: {
+    // 列名前缀
+    type: String
+  },
   quantityField: {
     // 数量字段
     type: String,
@@ -94,39 +100,60 @@ const props = defineProps({
     // 显示可操作数量
     type: Boolean,
     default: true
+  },
+  showOperableMete: {
+    type: Boolean,
+    default: true
   }
 })
 
 const meteLabel = computed(() => {
+  let label = ''
   if (props.meteLabel) {
-    return props.meteLabel
+    label = props.meteLabel
   }
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
-      return props.singleMeteMode ? '单重（kg）' : '重量（kg）'
+      label = props.singleMeteMode ? '单重(kg)' : '重量(kg)'
+      break
     case rawMatClsEnum.STEEL_COIL.V:
-      return '重量（kg）'
+      label = '重量(kg)'
+      break
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
-      return props.singleMeteMode ? '单件量（kg）' : '核算量'
+      label = props.singleMeteMode ? '单件量(kg)' : '核算量'
+      break
   }
+  if (props.showOperableMete && isNotBlank(props.labelPrefix)) {
+    label = props.labelPrefix + ' / ' + label
+  }
+  return label
 })
 
 const quantityLabel = computed(() => {
+  let label = ''
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
-      return '数量（张）'
+      label = '数量(张)'
+      break
     case rawMatClsEnum.SECTION_STEEL.V:
-      return '数量（根）'
+      label = '数量(根)'
+      break
     case rawMatClsEnum.STEEL_COIL.V:
-      return '长度（mm）'
+      label = '长度(mm)'
+      break
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
-      return '数量'
+      label = '数量'
+      break
   }
+  if (props.showOperableQuantity && isNotBlank(props.labelPrefix)) {
+    label = props.labelPrefix + ' / ' + label
+  }
+  return label
 })
 
 // 是否显示单位

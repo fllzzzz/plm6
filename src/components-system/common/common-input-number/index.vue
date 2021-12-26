@@ -1,7 +1,6 @@
 <template>
   <el-input-number
     ref="inputRef"
-    :key="`input_number_${Math.random()}`"
     v-model="copyValue"
     :min="min"
     :max="max"
@@ -99,15 +98,17 @@ function blurCallBack(event) {
 function focusCallBack(event) {
   emit('focus', event)
 }
+
 function focus() {
   inputRef.value.focus()
 }
-function select() {
-  inputRef.value.select()
+
+function blur() {
+  inputRef.value.blur()
 }
 
 defineExpose({
   focus,
-  select
+  blur
 })
 </script>

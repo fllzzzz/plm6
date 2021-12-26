@@ -57,7 +57,7 @@ const props = defineProps({
     default: true
   },
   outboundTypeMode: {
-    // 出库单位 模式（显示出库单位对应的数量及单位）
+    // 出库单位 模式(显示出库单位对应的数量及单位)
     type: Boolean,
     default: false
   },

@@ -59,6 +59,20 @@ export default {
           meta: { title: '钢板退库', icon: 'project', noCache: true }
         },
         {
+          name: 'SectionSteelReturnApplication',
+          path: 'section-steel',
+          hidden: false,
+          component: '/wms/return-application/section-steel/index',
+          meta: { title: '型材退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SteelCoilReturnApplication',
+          path: 'steel-coil',
+          hidden: false,
+          component: '/wms/return-application/steel-coil/index',
+          meta: { title: '钢卷退库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatReturnApplicationRecord',
           path: 'return-application-record/raw-mat',
           hidden: false,

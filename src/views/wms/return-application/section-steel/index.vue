@@ -41,38 +41,17 @@
           field="source"
           fixed="left"
           show-project
-          :show-width="false"
           :show-length="false"
-          :show-thickness="false"
         />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
-        <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left">
-          <template #default="{ row }">
-            <span v-to-fixed="baseUnit.thickness.precision">{{ row.source.thickness }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="width" align="center" width="110px" :label="`宽 (${baseUnit.width.unit})`">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.width"
-              :min="0"
-              :max="+row.source.width"
-              controls-position="right"
-              :controls="false"
-              :precision="baseUnit.width.precision"
-              size="mini"
-              placeholder="宽"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
+        <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
           <template #default="{ row }">
             <common-input-number
               v-model="row.length"
-              :max="+row.source.length"
               :controls="false"
               :min="0"
+              :max="+row.source.singleReturnableLength"
               :precision="baseUnit.length.precision"
               size="mini"
               placeholder="长"
@@ -121,12 +100,12 @@
 </template>
 
 <script setup>
-import { steelPlateReturnApplication } from '@/api/wms/return/application'
+import { sectionSteelReturnApplication } from '@/api/wms/return/application'
 import { edit as editReturnApplication } from '@/api/wms/return/raw-mat-application-record'
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
+import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -154,7 +133,7 @@ const props = defineProps({
 })
 
 // 权限
-const permission = ['wms_steelPlateReturnApplication:submit']
+const permission = ['wms_sectionSteelReturnApplication:submit']
 // 默认表单
 const defaultForm = {
   list: []
@@ -167,13 +146,12 @@ const formRef = ref()
 // 最大高度
 const { maxHeight } = useMaxHeight({ paginate: false })
 // 钢板类型
-const basicClass = rawMatClsEnum.STEEL_PLATE.V
+const basicClass = rawMatClsEnum.SECTION_STEEL.V
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(basicClass)
 
 const tableRules = {
   id: [{ required: true, message: '请选择退库物料', trigger: 'change' }],
-  width: [{ required: true, message: '请填写宽度', trigger: 'blur' }],
   length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
   mete: [{ required: true, message: '请填写重量', trigger: 'blur' }],
   quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
@@ -183,21 +161,21 @@ const tableRules = {
 
 const { cu, form, FORM } = useForm(
   {
-    title: '钢板退库',
+    title: '型材退库',
     formStore: !props.edit,
-    formStoreKey: 'WMS_RETURN_APPLICATION_STEEL_PLATE',
+    formStoreKey: 'WMS_RETURN_APPLICATION_SECTION_STEEL',
     permission: permission,
     defaultForm: defaultForm,
     useDraftCallback: setFormCallback,
     clearDraftCallback: init,
-    api: props.edit ? editReturnApplication : steelPlateReturnApplication
+    api: props.edit ? editReturnApplication : sectionSteelReturnApplication
   },
   formRef,
   props.detail
 )
 
 // 通用计算校验
-const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
+const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
@@ -232,13 +210,18 @@ function rowWatch(row) {
     headerRef.value && headerRef.value.calcAllQuantity()
   })
   // 计算理论及单重
-  watch([() => row.length, () => row.width, baseUnit], () => {
+  watch([() => row.length, baseUnit], () => {
     calcTheoryWeight(row)
   })
   // 计算总重
   watch([() => row.singleMete, () => row.quantity], () => {
     calcTotalWeight(row)
     headerRef.value && headerRef.value.calcAllWeight()
+  })
+  // 计算总长度
+  watch([() => row.length, () => row.quantity], () => {
+    calcTotalLength(row)
+    headerRef.value && headerRef.value.calcAllLength()
   })
   watch(
     () => row.mete,
@@ -251,11 +234,9 @@ function rowWatch(row) {
 
 // 计算单件理论重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight({
-    name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-    length: row.length,
-    width: row.width,
-    thickness: row.source.thickness
+  row.theoryWeight = await calcSectionSteelWeight({
+    length: row.length, // 长度
+    unitWeight: row.source.unitWeight // 单位重量
   })
   if (row.theoryWeight) {
     row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
@@ -270,6 +251,18 @@ function calcTotalWeight(row) {
     row.mete = +toFixed(row.singleMete * row.quantity, baseUnit.value.weight.precision)
   } else {
     row.mete = undefined
+  }
+}
+
+// 计算总长
+function calcTotalLength(row) {
+  if (isNotBlank(row.length) && row.quantity) {
+    row.totalLength = calcSectionSteelTotalLength({
+      length: row.length, // 长度
+      quantity: row.quantity // 数量
+    })
+  } else {
+    row.totalLength = undefined
   }
 }
 
@@ -292,6 +285,7 @@ function setFormCallback(form) {
           trigger() // 执行一次后取消当前监听
           headerRef.value.calcAllQuantity()
           headerRef.value.calcAllWeight()
+          headerRef.value.calcAllLength()
         })
       }
     },

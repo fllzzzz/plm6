@@ -33,7 +33,7 @@ const useMatBaseUnit = (basicClass, loadedCallBack) => {
   }
 
   return {
-    // loaded,
+    loaded,
     baseUnit // wms基础单位
   }
 }

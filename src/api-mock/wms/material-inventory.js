@@ -22,8 +22,8 @@ const getSteelPlate = {
             quantity: 10, // 数量
             frozenQuantity: 5, // 冻结数量
             thickness: 10,
-            length: 1000,
-            width: 1000,
+            length: 11000,
+            width: 990,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
             projectFrozen: [// 针对不同项目可出库的冻结数量（目前只针对申购冻结）
@@ -57,8 +57,8 @@ const getSteelPlate = {
             quantity: 5, // 数量
             frozenQuantity: 4, // 冻结数量
             thickness: 10,
-            length: 1500,
-            width: 1500,
+            length: 15000,
+            width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
             project: {

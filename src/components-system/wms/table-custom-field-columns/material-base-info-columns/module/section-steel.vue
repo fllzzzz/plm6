@@ -45,9 +45,17 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column v-if="showLength" :prop="`${field}.length`" align="center" width="120px" :label="`长 (mm)`" show-overflow-tooltip>
+    <el-table-column
+      v-if="showLength"
+      :prop="`${field}.length`"
+      align="center"
+      width="120px"
+      :label="`长 (${baseUnit.length.unit})`"
+      show-overflow-tooltip
+      :fixed="fixed"
+    >
       <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'length') }}</span>
+        <span v-to-fixed="baseUnit.length.precision">{{ getInfo(row, 'length') }}</span>
       </template>
     </el-table-column>
   </template>
@@ -57,6 +65,7 @@
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
   specMerge: {
@@ -77,12 +86,19 @@ const props = defineProps({
     // 字段
     type: String,
     default: 'material'
+  },
+  showLength: {
+    type: Boolean,
+    default: true
   }
 })
+
+// 当前分类基础单位
+const { loaded, baseUnit } = useMatBaseUnit(props.basicClass)
 
 const getInfo = inject('getInfo')
 
 const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.classifyFullName`))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.specification`))
-const showLength = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.length`))
+const showLength = computed(() => props.showLength && loaded.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.length`)))
 </script>

@@ -69,7 +69,7 @@ const comp = computed(() => {
     }
     > span:first-child {
       font-weight: bold;
-      width: 80px;
+      width: 90px;
       text-align: right;
       &:after {
         content: '：';

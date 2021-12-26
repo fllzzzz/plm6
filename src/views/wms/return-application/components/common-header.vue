@@ -5,13 +5,19 @@
       <div class="filter-left-box">
         <span class="total-info">
           <span class="info-item">
-            <span>总件数({{ baseUnit.measure.unit }})</span>
+            <span>总数({{ baseUnit.measure.unit }})</span>
             <span v-to-fixed="{ val: allQuantity || 0, dp: baseUnit.measure.precision }" />
           </span>
-          <span class="info-item">
-            <span>总重量({{ baseUnit.weight.unit }})</span>
-            <span v-to-fixed="{ val: allMete || 0, dp: baseUnit.weight.precision }" />
-          </span>
+          <template v-if="basicClass & STEEL_ENUM">
+            <span class="info-item">
+              <span>总重量({{ baseUnit.weight.unit }})</span>
+              <span v-to-fixed="{ val: allMete || 0, dp: baseUnit.weight.precision }" />
+            </span>
+            <span v-if="basicClass === rawMatClsEnum.SECTION_STEEL.V" class="info-item">
+              <span>总长度(m)</span>
+              <span v-to-fixed="{ val: allLength || 0, dp: baseUnit.length.precision }" />
+            </span>
+          </template>
         </span>
       </div>
       <div class="filter-right-box child-mr-7">
@@ -35,6 +41,10 @@
 import { ref, defineEmits, defineProps, defineExpose } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { toFixed } from '@/utils/data-type'
+import { STEEL_ENUM } from '@/settings/config'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+
 import { regExtra } from '@/composables/form/use-form'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
@@ -43,10 +53,7 @@ import ReturnableListDrawer from '@/views/wms/return-application/components/retu
 import StoreOperation from '@crud/STORE.operation.vue'
 import AbnormalList from '../components/abnormal-list'
 
-import { toFixed } from '@/utils/data-type'
-
 const emit = defineEmits(['add'])
-
 const { cu, form, FORM } = regExtra() // 表单
 
 const props = defineProps({
@@ -74,6 +81,9 @@ const router = useRouter()
 const allMete = ref()
 // 总数量
 const allQuantity = ref()
+// 总长度
+const allLength = ref()
+
 // 显示可归还列表
 const returnableVisible = ref(false)
 // 显示异常列表
@@ -90,6 +100,7 @@ FORM.HOOK.afterSubmit = () => {
 function init() {
   allMete.value = 0
   allQuantity.value = 0
+  allLength.value = 0
 }
 
 // 添加
@@ -116,6 +127,13 @@ function calcAllQuantity() {
   }, 0)
 }
 
+// 计算所有型材总长
+function calcAllLength() {
+  allLength.value = form.list.reduce((sum, cur) => {
+    return +toFixed(sum + cur.totalLength, 2)
+  }, 0)
+}
+
 // 前往退库记录
 function toReturnRecord() {
   router.push({ name: 'RawMatReturnApplicationRecord', params: { basicClass: props.basicClass }})
@@ -126,7 +144,8 @@ function handleClear() {}
 
 defineExpose({
   calcAllWeight,
-  calcAllQuantity
+  calcAllQuantity,
+  calcAllLength
 })
 </script>
 
@@ -148,7 +167,7 @@ defineExpose({
     }
     > span:first-child {
       font-weight: bold;
-      width: 80px;
+      width: 90px;
       text-align: right;
       &:after {
         content: '：';

@@ -36,37 +36,10 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns
-          :basic-class="basicClass"
-          field="source"
-          fixed="left"
-          show-project
-          :show-width="false"
-          :show-length="false"
-          :show-thickness="false"
-        />
+        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
-        <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left">
-          <template #default="{ row }">
-            <span v-to-fixed="baseUnit.thickness.precision">{{ row.source.thickness }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="width" align="center" width="110px" :label="`宽 (${baseUnit.width.unit})`">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.width"
-              :min="0"
-              :max="+row.source.width"
-              controls-position="right"
-              :controls="false"
-              :precision="baseUnit.width.precision"
-              size="mini"
-              placeholder="宽"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
+        <!-- <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
           <template #default="{ row }">
             <common-input-number
               v-model="row.length"
@@ -78,28 +51,13 @@
               placeholder="长"
             />
           </template>
-        </el-table-column>
-        <el-table-column prop="quantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
-          <template #default="{ row }">
-            <common-input-number
-              v-model="row.quantity"
-              :min="1"
-              :max="+row.source.quantity"
-              controls-position="right"
-              :controls="false"
-              :step="1"
-              :precision="baseUnit.measure.precision"
-              size="mini"
-              placeholder="数量"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column key="mete" prop="mete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
+        </el-table-column> -->
+        <el-table-column key="mete" prop="mete" align="center" :label="`重量 (${baseUnit.weight.unit})`" width="120px">
           <template #default="{ row }">
             <common-input-number
               v-model="row.mete"
               :min="0"
-              :max="+row.maxMete"
+              :max="+row.source.singleReturnableMete"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -121,13 +79,13 @@
 </template>
 
 <script setup>
-import { steelPlateReturnApplication } from '@/api/wms/return/application'
+import { steelCoilReturnApplication } from '@/api/wms/return/application'
 import { edit as editReturnApplication } from '@/api/wms/return/raw-mat-application-record'
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
+import { toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -154,7 +112,7 @@ const props = defineProps({
 })
 
 // 权限
-const permission = ['wms_steelPlateReturnApplication:submit']
+const permission = ['wms_steelCoilReturnApplication:submit']
 // 默认表单
 const defaultForm = {
   list: []
@@ -167,37 +125,34 @@ const formRef = ref()
 // 最大高度
 const { maxHeight } = useMaxHeight({ paginate: false })
 // 钢板类型
-const basicClass = rawMatClsEnum.STEEL_PLATE.V
+const basicClass = rawMatClsEnum.STEEL_COIL.V
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(basicClass)
 
 const tableRules = {
   id: [{ required: true, message: '请选择退库物料', trigger: 'change' }],
-  width: [{ required: true, message: '请填写宽度', trigger: 'blur' }],
-  length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
   mete: [{ required: true, message: '请填写重量', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
 }
 
 const { cu, form, FORM } = useForm(
   {
-    title: '钢板退库',
+    title: '钢卷退库',
     formStore: !props.edit,
-    formStoreKey: 'WMS_RETURN_APPLICATION_STEEL_PLATE',
+    formStoreKey: 'WMS_RETURN_APPLICATION_STEEL_COIL',
     permission: permission,
     defaultForm: defaultForm,
     useDraftCallback: setFormCallback,
     clearDraftCallback: init,
-    api: props.edit ? editReturnApplication : steelPlateReturnApplication
+    api: props.edit ? editReturnApplication : steelCoilReturnApplication
   },
   formRef,
   props.detail
 )
 
 // 通用计算校验
-const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
+const { extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
@@ -228,16 +183,12 @@ function init() {
 function rowWatch(row) {
   // 计算最大总重
   watch([() => row.quantity], () => {
-    calcMaxMete(row)
     headerRef.value && headerRef.value.calcAllQuantity()
   })
   // 计算理论及单重
-  watch([() => row.length, () => row.width, baseUnit], () => {
-    calcTheoryWeight(row)
-  })
-  // 计算总重
-  watch([() => row.singleMete, () => row.quantity], () => {
-    calcTotalWeight(row)
+  watch([() => row.mete, baseUnit], () => {
+    console.log(2333)
+    calcTheoryLength(row)
     headerRef.value && headerRef.value.calcAllWeight()
   })
   watch(
@@ -250,27 +201,20 @@ function rowWatch(row) {
 }
 
 // 计算单件理论重量
-async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight({
-    name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-    length: row.length,
-    width: row.width,
+async function calcTheoryLength(row) {
+  row.theoryLength = await calcSteelCoilLength({
+    weight: row.mete,
+    width: row.source.width,
     thickness: row.source.thickness
   })
-  if (row.theoryWeight) {
-    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
+  console.log('theoryLength', row.theoryLength, row.source.theoryLength, row.source.quantity)
+  if (row.theoryLength) {
+    console.log('aaa', +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity))
+    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity)
   } else {
-    row.singleMete = undefined
+    row.singleLength = undefined
   }
-}
-
-// 计算总重
-function calcTotalWeight(row) {
-  if (isNotBlank(row.singleMete) && row.quantity) {
-    row.mete = +toFixed(row.singleMete * row.quantity, baseUnit.value.weight.precision)
-  } else {
-    row.mete = undefined
-  }
+  row.quantity = row.singleLength
 }
 
 // 使用草稿/修改时，为数据设置监听

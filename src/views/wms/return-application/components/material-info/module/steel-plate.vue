@@ -13,16 +13,16 @@
       <span>{{ material.specification }}</span>
     </span>
     <span class="info-item">
-      <span>厚度(mm)</span>
-      <span class="important-info">{{ material.thickness }}</span>
+      <span>厚度({{ baseUnit.thickness.unit }})</span>
+      <span class="important-info" v-to-fixed="{ val: material.thickness || 0, dp: baseUnit.thickness.precision }" />
     </span>
     <span class="info-item">
-      <span>宽度(mm)</span>
-      <span class="important-info">{{ material.width }}</span>
+      <span>宽度({{ baseUnit.width.unit }})</span>
+      <span class="important-info" v-to-fixed="{ val: material.width || 0, dp: baseUnit.width.precision }" />
     </span>
     <span class="info-item">
-      <span>长度(mm)</span>
-      <span class="important-info">{{ material.length }}</span>
+      <span>长度({{ baseUnit.length.unit }})</span>
+      <span class="important-info" v-to-fixed="{ val: material.length || 0, dp: baseUnit.length.precision }" />
     </span>
     <span class="info-item">
       <span>品牌</span>
@@ -55,7 +55,7 @@
     </span>
     <span class="info-item">
       <span>数量({{ baseUnit.measure.unit }})</span>
-      <span class="returnable-number">{{ material.quantity }}</span>
+      <span class="returnable-number" v-to-fixed="{ val: material.quantity || 0, dp: baseUnit.measure.precision }" />
     </span>
     <span class="info-item">
       <span>单重({{ baseUnit.weight.unit }})</span>

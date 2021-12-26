@@ -2,6 +2,7 @@ import store from '@/store'
 import { isBlank, isNotBlank } from '../data-type'
 import { uniqueArr } from '../data-type/array'
 import { measureTypeEnum } from '../enum/modules/wms'
+import { rawMatClsEnum } from '@enum-ms/classification'
 
 // 为列表设置规格
 export async function setSpecInfoToList(list) {
@@ -32,9 +33,12 @@ export async function setSpecInfoToList(list) {
             row.outboundUnit = row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
             row.outboundUnitPrecision =
               row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
-            // row.basicClass = info.classify.basicClass // 基础类型
+            row.basicClass = info.classify.basicClass // 基础类型
             // row.specification = info.spec // 规格
             row.specificationMap = info.specKV // 规格KV格式
+            if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+              row.unitWeight = info.unitWeight // 单位重量 kg/m
+            }
           }
         })
         allPromise.push(p)

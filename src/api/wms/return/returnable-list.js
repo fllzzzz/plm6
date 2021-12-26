@@ -10,7 +10,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'wms',
-    url: 'return/returnable',
+    url: `return/returnable/${params.basicClass}`,
     method: 'get',
     params
   })

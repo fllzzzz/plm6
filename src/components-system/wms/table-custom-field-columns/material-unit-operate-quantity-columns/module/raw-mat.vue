@@ -60,7 +60,7 @@ const mateLabel = computed(() => {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
     case rawMatClsEnum.STEEL_COIL.V:
-      return '重量（kg）'
+      return '重量(kg)'
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
@@ -71,11 +71,11 @@ const mateLabel = computed(() => {
 const quantityLabel = computed(() => {
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
-      return '数量（张）'
+      return '数量(张)'
     case rawMatClsEnum.SECTION_STEEL.V:
-      return '数量（根）'
+      return '数量(根)'
     case rawMatClsEnum.STEEL_COIL.V:
-      return '长度（mm）'
+      return '长度(mm)'
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
