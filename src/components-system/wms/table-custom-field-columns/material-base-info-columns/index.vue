@@ -20,7 +20,7 @@
       <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" :prop="`${field}.serialNumber`" label="编号" align="center" width="110px" :fixed="fixed">
+  <el-table-column v-if="showSerialNumber" :prop="`${field}.serialNumber`" label="编号" align="center" width="110px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <table-cell-tag
         v-if="showPartyATransfer && getInfo(row, 'partyATransferType')"

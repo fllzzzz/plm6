@@ -10,14 +10,14 @@
           placeholder="备注"
           maxlength="200"
           show-word-limit
-          style="width:400px"
+          style="width: 400px"
         />
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyFullName" label="物料种类" align="center" min-width="200px" fixed="left" />
-    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left">
+    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
+    <el-table-column prop="classifyFullName" label="物料种类" align="center" min-width="200px" fixed="left" show-overflow-tooltip />
+    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span v-empty-text>{{ row.specification }}</span>

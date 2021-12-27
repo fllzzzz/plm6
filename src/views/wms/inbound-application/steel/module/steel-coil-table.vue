@@ -113,7 +113,7 @@
     </el-table-column>
     <el-table-column prop="heatNoAndBatchNo" label="卷号" align="center" min-width="150px">
       <template #default="{ row }">
-        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="卷号" />
+        <el-input v-model.trim="row.heatNoAndBatchNo" size="mini" placeholder="卷号" maxlength="200" />
       </template>
     </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">
