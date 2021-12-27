@@ -20,9 +20,9 @@
           <div>{{ scope.row.name }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('projectMode')" key="projectMode" prop="projectMode" :show-overflow-tooltip="true" label="项目模式" min-width="150">
+      <el-table-column v-if="columns.visible('mode')" key="mode" prop="mode" :show-overflow-tooltip="true" label="项目模式" min-width="150">
         <template v-slot="scope">
-          <div>{{ scope.row.projectMode? projectModeEnum.VL[scope.row.projectMode]: '-' }}</div>
+          <div>{{ scope.row.mode? projectModeEnum.VL[scope.row.mode]: '-' }}</div>
         </template>
       </el-table-column>
     </common-table>

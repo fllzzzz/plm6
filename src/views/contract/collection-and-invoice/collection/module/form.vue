@@ -59,7 +59,7 @@
       <div class="form-row" style="display:flex;">
         <el-form-item label="已收款额(元)">
           <el-input
-            v-model="contractInfo.collectionSumAmount"
+            v-model="contractInfo.haveCollectionAmount"
             type="text"
             placeholder="已收款额"
             style="width: 250px;"

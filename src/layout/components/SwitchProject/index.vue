@@ -42,6 +42,9 @@
       <el-tag v-if="globalProject && globalProject.businessType" type="info" effect="plain" style="margin-left: 5px">
         {{ businessTypeEnum.VL[globalProject.businessType] }}
       </el-tag>
+      <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-left: 5px">
+        {{ '项目模式:'+projectModeEnum.VL[globalProject.mode] }}
+      </el-tag>
     </div>
   </div>
 </template>
@@ -52,7 +55,7 @@ import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 import { allPT } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
-import { projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
+import { projectTypeEnum, businessTypeEnum, projectModeEnum } from '@enum-ms/contract'
 
 import useUserProjects from '@compos/store/use-user-projects'
 import { getBitwiseBack } from '@/utils/data-type/number'
