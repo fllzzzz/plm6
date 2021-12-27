@@ -111,6 +111,7 @@ const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGe
 const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  crud.data = []
   dataHasFormat.value = lineLoad.value // 数据格式是否已经转换，因为接口异步，所以dataHasFormat放在循环前赋值
   res.data.content = res.data.content.map((v) => {
     v.schedulingList = v.schedulingProductionLineDTOS || [] // 排产列表
