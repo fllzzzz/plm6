@@ -173,14 +173,14 @@ export default {
           hidden: false,
           component: '/plan/technical-data-manage/other-file/index',
           meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
-        },
-        {
-          name: 'SummaryList',
-          path: 'summary-list',
-          hidden: false,
-          component: '/plan/technical-manage/summary-list/index',
-          meta: { title: '清单合计', icon: 'project', noCache: true }
         }
+        // {
+        //   name: 'SummaryList',
+        //   path: 'summary-list',
+        //   hidden: false,
+        //   component: '/plan/technical-manage/summary-list/index',
+        //   meta: { title: '清单合计', icon: 'project', noCache: true }
+        // }
       ]
     }
   ]
