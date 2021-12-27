@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-input v-model.trim="filterText" size="small" clearable placeholder="输入菜单名称搜索" />
+    <el-input v-model.trim="filterText" size="small" clearable placeholder="输入名称搜索" />
     <div style="height:240px;overflow:scroll;">
       <el-tree
         ref="treeMenuRef"
@@ -67,7 +67,7 @@ watch(
 // 菜单过滤
 function filterNode(value, data) {
   if (!value) return true
-  return data.label.includes(value)
+  return data.name.indexOf(value) !== -1
 }
 
 // 切换清单

@@ -217,7 +217,7 @@ const techOptions = [
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '单体',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],

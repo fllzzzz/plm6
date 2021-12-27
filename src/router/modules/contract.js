@@ -102,7 +102,7 @@ export default {
           meta: { title: '供应商付款-付款台账', icon: 'contract2', noCache: true }
         }
       ]
-    },
+    }
     // {
     //   path: '/contract/project-tax',
     //   component: 'Layout',

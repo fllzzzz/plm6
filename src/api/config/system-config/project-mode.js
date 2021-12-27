@@ -18,4 +18,12 @@ export function edit(data) {
   })
 }
 
+export function modeData(data) {
+  return request({
+    module: 'contract',
+    url: 'config/getProjectMode',
+    method: 'get'
+  })
+}
+
 export default { get, edit }

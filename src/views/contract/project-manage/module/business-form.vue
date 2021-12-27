@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px" class="form-margin">
     <div>
       <div id="baseInfo">
         <div class="form-row">
@@ -424,7 +424,7 @@ defineExpose({
   align-items: center;
   margin-top: 20px;
 }
->>> .input-underline {
+::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
   width: 200px;
   margin-right: 0;
@@ -437,5 +437,10 @@ defineExpose({
 }
 .form-row {
   width: 100%;
+}
+.form-margin{
+  ::v-deep(.el-form-item){
+    margin-right:30px;
+  }
 }
 </style>

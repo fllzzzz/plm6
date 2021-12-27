@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-width="110px" class="form-margin">
     <div>
       <div class="form-row">
         <el-form-item label="客户名称" prop="customerUnit">
@@ -17,7 +17,6 @@
           <region-cascader
             class="input-underline"
             ref="region"
-            style="width: 200px"
             v-model="form.region"
             clearable
             filterable
@@ -186,7 +185,7 @@ defineExpose({
 })
 </script>
 <style lang="scss" scoped>
->>> .input-underline {
+::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
   width: 250px;
   margin-right: 0;
@@ -199,5 +198,10 @@ defineExpose({
 }
 .form-row {
   width: 100%;
+}
+.form-margin{
+  ::v-deep(.el-form-item){
+    margin-right:30px;
+  }
 }
 </style>
