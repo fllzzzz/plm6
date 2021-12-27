@@ -28,18 +28,18 @@
           @success="crud.toQuery"
         />
       </template>
-      <!-- <template #viewLeft>
+      <template #viewLeft>
         <common-button
           v-if="projectId"
-          v-permission="permission.download"
+          v-permission="crud.permission.download"
           :loading="downloadLoading"
           type="warning"
           icon="el-icon-download"
           size="mini"
           :disabled="!projectId"
-          @click.stop="downloadAll()"
+          @click="downloadAll()"
         >下载项目下所有文件</common-button>
-      </template> -->
+      </template>
     </crudOperation>
   </div>
 </template>
@@ -51,13 +51,15 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
 import uploadBtn from '../../components/drawing-upload-btn'
-import { upload } from '@/api/plan/technical-data-manage/other'
+import { upload, downloadByProject } from '@/api/plan/technical-data-manage/other'
+import { fileDownload } from '@/utils/file'
 
 const defaultQuery = {
   type: technicalDataTypeEnum.MODEL.V // 类型 1蓝图 2变更文件 3模型 4其他文件
 }
 
 const modelRef = ref()
+const downloadLoading = ref(false)
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
@@ -69,4 +71,15 @@ const props = defineProps({
 const carryParam = computed(() => {
   return { projectId: props.projectId, type: crud.query.type }
 })
+
+async function downloadAll() {
+  try {
+    downloadLoading.value = true
+    await fileDownload(downloadByProject, crud.query.projectId, crud.query.type)
+  } catch (error) {
+    console.log('根据单体下载', error)
+  } finally {
+    downloadLoading.value = false
+  }
+}
 </script>

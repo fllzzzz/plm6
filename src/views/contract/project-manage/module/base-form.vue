@@ -50,15 +50,6 @@
             filterable
             @change="handleRegionChange"
           />
-          <!-- <region-cascader
-            class="input-underline"
-            :value.sync="form.region"
-            clearable
-            filterable
-            style="width:200px"
-            placeholder="项目省市区"
-            @change="handleRegionChange"
-          /> -->
         </el-form-item>
         <el-form-item label="详细地址" prop="address" label-width="80px">
           <el-input v-model="form.address" placeholder="项目详细地址" class="input-underline" style="width: 520px" />

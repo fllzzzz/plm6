@@ -291,6 +291,7 @@ function showMemberList(id) {
 
 function memberChangeSuccess() {
   membersDialogVisible.value = false
+  crud.toQuery()
 }
 
 async function changeStatus(data, val) {

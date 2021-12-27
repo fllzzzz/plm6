@@ -249,6 +249,14 @@ const supplierPayTypeEnum = {
 }
 constantize(supplierPayTypeEnum)
 
+// TODO: 项目模式
+const projectModeEnum = {
+  STRUCTURE: { L: '构件', K: 'STRUCTURE', V: 1 << 0 },
+  STRUCTURE_ASSEMBLE: { L: '构件&组立', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
+  STRUCTURE_PART_ASSEMBLE: { L: '构件&零件&组立', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
+}
+constantize(projectModeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -277,7 +285,8 @@ export {
   supplierPayModeEnum,
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
-  reimbursementTypeEnum
+  reimbursementTypeEnum,
+  projectModeEnum
 }
 
 export default {
@@ -307,5 +316,6 @@ export default {
   supplierPayModeEnum,
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
-  reimbursementTypeEnum
+  reimbursementTypeEnum,
+  projectModeEnum
 }

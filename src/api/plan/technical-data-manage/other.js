@@ -60,4 +60,4 @@ export function upload(data) {
   })
 }
 
-export default { get, del, download }
+export default { get, del, download, edit }

@@ -85,10 +85,16 @@ const checkedList = ref([])
 const treeLoading = ref(false)
 
 watch(
-  () => filterText.value,
+  () => props.projectId,
   (val) => {
-    tree.value.filter(val)
-  }
+    if (val) {
+      fetchMembers()
+    } else {
+      checkedList.value = []
+      resetChecked()
+    }
+  },
+  { deep: true, immediate: true }
 )
 
 watch(

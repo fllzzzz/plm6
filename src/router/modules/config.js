@@ -242,9 +242,15 @@ export default {
           hidden: false,
           component: '/config-manage/system/branch-company/index',
           meta: { title: '分支机构', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ProjectMode',
+          path: 'project-mode',
+          hidden: false,
+          component: '/config-manage/system/project-mode/index',
+          meta: { title: '项目模式', icon: 'project', noCache: true }
         }
       ]
-    },
-    
+    }
   ]
 }

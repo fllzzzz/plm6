@@ -95,9 +95,9 @@
           min-width="80px"
         />
         <el-table-column
-          v-if="columns.visible('alreadyProductQuantity')"
-          key="alreadyProductQuantity"
-          prop="alreadyProductQuantity"
+          v-if="columns.visible('producedQuantity')"
+          key="producedQuantity"
+          prop="producedQuantity"
           sortable="custom"
           label="已生产量"
           align="left"
