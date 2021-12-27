@@ -28,8 +28,7 @@ const emit = defineEmits(['change', 'blur', 'focus'])
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
-  // TODO:是否限制类型
-  value: {
+  modelValue: {
     type: [Number, null]
   },
   min: {
@@ -49,8 +48,7 @@ const props = defineProps({
     default: false
   },
   precision: {
-    type: Number,
-    default: 0
+    type: Number
   },
   size: {
     type: String,
@@ -90,6 +88,7 @@ watchEffect(() => {
 })
 
 function changeCallBack(currentValue, oldValue) {
+  console.log('change', currentValue, oldValue)
   emit('change', currentValue, oldValue)
 }
 function blurCallBack(event) {
