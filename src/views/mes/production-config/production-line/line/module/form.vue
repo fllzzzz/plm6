@@ -31,7 +31,7 @@
       </el-form-item> -->
       <el-form-item label="生产线类型" prop="productType">
         <common-select
-          type="enum"
+          :dataStructure="{ key: 'K', label: 'SL', value: 'V' }"
           v-model="form.productType"
           :options="componentTypeEnum.ENUM"
           :unshowOptions="[componentTypeEnum.AUXILIARY_MATERIAL.K]"
