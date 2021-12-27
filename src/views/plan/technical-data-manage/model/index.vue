@@ -18,7 +18,7 @@
     <el-table-column type="selection" width="55" align="center" />
     <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="文件" min-width="160px" />
     <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" width="350px">
-      <!-- <template slot="header">
+      <template #header>
         <el-tooltip
           class="item"
           effect="light"
@@ -30,8 +30,8 @@
             <i class="el-icon-info" />
           </div>
         </el-tooltip>
-      </template> -->
-      <!-- <template v-slot="scope">
+      </template>
+      <template v-slot="scope">
         <span v-if="!scope.row.edit">{{ scope.row.remark }}</span>
         <span v-else>
           <el-input
@@ -40,11 +40,12 @@
             :rows="1"
             size="mini"
             style="width:180px;"
+            :maxlength="200"
           />
           <common-button size="mini" type="primary" :loading="scope.row.editLoading" @click="saveIt(scope.row)">保存</common-button>
           <common-button size="mini" type="info" @click="cancelIt(scope.row)">取消</common-button>
         </span>
-      </template> -->
+      </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" width="200px" />
     <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="160px">
@@ -66,7 +67,7 @@
           :show-edit="false"
         />
         <!-- 下载 -->
-        <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+        <e-operation :data="scope.row" :permission="permission.download" />
       </template>
     </el-table-column>
   </common-table>
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/plan/technical-data-manage/other'
+import crudApi, { edit } from '@/api/plan/technical-data-manage/other'
 import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -85,6 +86,8 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
+import { ElNotification } from 'element-plus'
+import eOperation from '@crud/E.operation'
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 // crud交由presenter持有
@@ -139,25 +142,26 @@ function dbclick(row, column, event) {
   }
 }
 
-// function cancelIt(row) {
-//   row.remark = row.originalRemark
-//   row.edit = false
-// }
+function cancelIt(row) {
+  row.remark = row.originalRemark
+  row.edit = false
+}
 
-// async function saveIt(row) {
-//   try {
-//     row.editLoading = true
-//     await edit(row.id, {
-//       remark: row.remark
-//     })
-//     this.$notify({ title: '修改成功', type: 'success', duration: 2500 })
-//   } catch (error) {
-//     console.log('编辑备注', error)
-//   } finally {
-//     row.edit = false
-//     row.editLoading = false
-//   }
-// }
+async function saveIt(row) {
+  try {
+    row.editLoading = true
+    await edit(row.id, {
+      remark: row.remark
+    })
+    ElNotification({ title: '修改成功', type: 'success', duration: 2500 })
+    row.originalRemark = row.remark
+  } catch (error) {
+    console.log('编辑备注', error)
+  } finally {
+    row.edit = false
+    row.editLoading = false
+  }
+}
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map(v => {

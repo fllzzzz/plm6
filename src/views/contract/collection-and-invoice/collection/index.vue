@@ -124,7 +124,7 @@
   <!--分页组件-->
   <pagination />
   <mForm />
-  <mDetail :collectionInfo="currentInfo" :type="showType"  v-model="detailVisble" @success="crud.toQuery"/>
+  <mDetail :collectionInfo="currentInfo" :type="showType"  v-model="detailVisible" @success="crud.toQuery"/>
   </div>
 </template>
 
@@ -160,7 +160,7 @@ const optShow = {
 const tableRef = ref()
 const currentInfo = ref({})
 const showType = ref('detail')
-const detailVisble = ref(false)
+const detailVisible = ref(false)
 const dict = useDict(['payment_reason'])
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -184,7 +184,7 @@ const { maxHeight } = useMaxHeight({
 function openDetail(row, type) {
   currentInfo.value = row
   showType.value = type
-  detailVisble.value = true
+  detailVisible.value = true
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

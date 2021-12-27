@@ -255,7 +255,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm :project-id="globalProjectId" />
+      <mForm />
     </template>
     <!-- <template v-else>
       <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
