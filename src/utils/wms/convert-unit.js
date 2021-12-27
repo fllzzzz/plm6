@@ -290,10 +290,13 @@ function fieldsFormat({ data, fields, symbol, unitPrecision, type, toSmallest, s
 
 // 根据单位进行数据转换 列表 转换
 // 若行字段有差异（如unit与unitPrecision）,可修改传入对象，增加字段参数
-export async function numFmtByUnitForList(list = [], { fields, toSmallest = false, showUnit = false, toNum = false } = {}) {
+export async function numFmtByUnitForList(
+  list = [],
+  { fields, unitField = 'unit', unitPrecisionField = 'unitPrecision', toSmallest = false, showUnit = false, toNum = false } = {}
+) {
   const unitCfg = await getUnit()
   list.forEach((row) =>
-    numFmtBySysUnit(row, { unit: unitCfg.get(row.unit), precision: row.unitPrecision, fields, toSmallest, showUnit, toNum })
+    numFmtBySysUnit(row, { unit: unitCfg.get(row[unitField]), precision: row[unitPrecisionField], fields, toSmallest, showUnit, toNum })
   )
 }
 
