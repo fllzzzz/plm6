@@ -13,8 +13,21 @@
             style="width: 300px"
           />
         </el-form-item>
-        <el-form-item label="车牌号" prop="licensePlate" label-width="70px">
-          <el-input class="input-underline" v-model.trim="form.licensePlate" placeholder="请输入车牌号" style="width: 125px" />
+        <el-form-item
+          v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V"
+          label="车牌号"
+          prop="licensePlate"
+          label-width="70px"
+        >
+          <el-input class="input-underline" v-model.trim="form.licensePlate" placeholder="车牌号" style="width: 125px" />
+        </el-form-item>
+        <el-form-item
+          v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.POST.V"
+          label="物流单号"
+          prop="shipmentNumber"
+          label-width="70px"
+        >
+          <el-input class="input-underline" v-model.trim="form.shipmentNumber" placeholder="物流单号" style="width: 200px" />
         </el-form-item>
         <el-form-item
           v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
@@ -68,6 +81,7 @@ import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nex
 import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
@@ -108,17 +122,31 @@ const validateLoadingWeight = (rule, value, callback) => {
   }
 }
 
-const rules = {
+const baseRules = {
   purchaseId: [{ required: true, message: '请选择订单', trigger: 'change' }],
-  licensePlate: [
-    { required: true, message: '请填写车牌号', trigger: 'blur' },
-    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
-  ],
+  licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }],
   loadingWeight: [
     { required: true, message: '请填写过磅重量', trigger: 'blur' },
     { validator: validateLoadingWeight, trigger: 'blur' }
   ]
 }
+
+const licensePlateRules = {
+  licensePlate: [
+    { required: true, message: '请填写车牌号', trigger: 'blur' },
+    { pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }
+  ]
+}
+
+const rules = computed(() => {
+  const rules = Object.assign({}, baseRules)
+  if (orderInfo.value.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
+    if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.SUPPLIER.V) {
+      Object.assign(rules, licensePlateRules)
+    }
+  }
+  return rules
+})
 
 const formRef = ref()
 // const form = ref(deepClone(defaultForm))
@@ -162,6 +190,10 @@ function init() {
 
 // 采购订单id变更
 function handlePurchaseIdChange(val) {
+  nextTick(() => {
+    trainsDiff.value = {}
+    formRef.value.clearValidate()
+  })
   emit('update:purchaseId', val)
 }
 

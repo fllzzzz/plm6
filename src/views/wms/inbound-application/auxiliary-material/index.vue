@@ -82,6 +82,7 @@ const defaultForm = {
   purchaseId: null, // 申购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  shipmentNumber: null, // 物流单号
   logistics: {}, // 物流信息
   list: [] // 入库清单
 }

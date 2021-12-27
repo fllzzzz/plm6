@@ -1045,6 +1045,8 @@ function addCrudFeatureMethod(crud, data) {
         crud.invisibleColumns.forEach((property) => {
           if (columns[property]) {
             columns[property].visible = false
+          } else {
+            columns[property] = { visible: false } // 避免切换前已经被隐藏的列无法设置
           }
         })
       })

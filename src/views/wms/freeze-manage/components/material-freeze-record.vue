@@ -1,5 +1,5 @@
 <template>
-  <common-table v-bind="$attrs" v-loading="detailLoading" :data="list">
+  <common-table v-bind="$attrs" v-loading="detailLoading" :data="list" row-key="id">
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column key="type" :show-overflow-tooltip="true" prop="type" label="类型" align="center" width="100">
       <template #default="{ row }">

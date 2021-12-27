@@ -6,7 +6,7 @@
           <div class="flex-rbc">
             <div class="flex-rsc">
               <span>{{ title }}</span>
-              <el-tag v-show="labelTip" size="small" style="margin-left:5px">{{ labelTip }}</el-tag>
+              <el-tag v-show="labelTip" size="small" style="margin-left: 5px">{{ labelTip }}</el-tag>
             </div>
             <div>
               <common-button v-permission="permission.add" size="small" type="success" icon="el-icon-plus" @click="add()" />
@@ -39,9 +39,9 @@
           :max-height="maxHeight - 170"
           empty-text="暂无数据"
           highlight-current-row
-          style="width: 100%"
           @row-click="(row, col, event) => rowClick(row, col, event, 1)"
           @selection-change="handleSelectionChange($event, 1)"
+          row-key="id"
         >
           <el-table-column v-if="selected.delBtn" type="selection" width="45" align="center" />
           <el-table-column prop="serialNumber" label="编码" min-width="120" />
@@ -50,14 +50,7 @@
         </common-table>
       </div>
     </el-card>
-    <del-confirm
-      v-model="visible.del"
-      :tip="delTip"
-      :fn="delRow"
-      show-exit
-      @exit="delExit()"
-      @success="handleDelSuccess"
-    />
+    <del-confirm v-model="visible.del" :tip="delTip" :fn="delRow" show-exit @exit="delExit()" @success="handleDelSuccess" />
   </div>
 </template>
 
@@ -128,9 +121,11 @@ const labelTip = computed(() => {
 // 上一个等级的所有的科目id
 const selectedParentIds = computed(() => {
   const filterParentList = selectMap[`current_list_LV${parentLevel}`]
-  if (selectedParent.value) { // 父级有选中的情况（高亮）
+  if (selectedParent.value) {
+    // 父级有选中的情况（高亮）
     return [selectedParent.value.id]
-  } else if (filterParentList) { // 父级科目未选中的情况，父级的列表
+  } else if (filterParentList) {
+    // 父级科目未选中的情况，父级的列表
     return filterParentList.map((v) => v.id)
   }
   return []
@@ -139,10 +134,7 @@ const selectedParentIds = computed(() => {
 // 列表
 const tableList = computed(() => {
   const list = props.data.filter(
-    (v) =>
-      selectedParentIds.value.includes(v.parent.id) &&
-      v.name.includes(search.name) &&
-      v.serialNumber.includes(search.serialNumber)
+    (v) => selectedParentIds.value.includes(v.parent.id) && v.name.includes(search.name) && v.serialNumber.includes(search.serialNumber)
   )
   // 校验选中行是否依然被选中，未选中则取消
   whetherContainsCheckRow(list)
@@ -176,7 +168,7 @@ function del() {
 // 删除方法
 async function delRow() {
   try {
-    const rowIds = selected.rows.map(row => row.id)
+    const rowIds = selected.rows.map((row) => row.id)
     await crudApi.del(rowIds)
   } catch (error) {
     console.log('删除科目', error)
@@ -209,7 +201,7 @@ function rowClick(row) {
 
 function whetherContainsCheckRow(list) {
   if (isBlank(selected.checkRow)) return
-  const checked = list.some(v => v.id === selected.checkRow.id)
+  const checked = list.some((v) => v.id === selected.checkRow.id)
   if (!checked) {
     uncheck()
   }

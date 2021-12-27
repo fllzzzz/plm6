@@ -170,7 +170,7 @@
                   :size="'small'"
                 />
               </el-form-item>
-              <el-form-item class="el-form-item-12" label="提货方式" prop="pickUpMode">
+              <!-- <el-form-item class="el-form-item-12" label="提货方式" prop="pickUpMode">
                 <common-radio
                   v-model="form.pickUpMode"
                   :options="pickUpModeEnum.ENUM"
@@ -179,7 +179,7 @@
                   :disabled="form.boolUsed"
                   size="small"
                 />
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item class="el-form-item-13" label="订单类型" prop="purchaseOrderPaymentMode">
                 <common-radio
                   v-model="form.purchaseOrderPaymentMode"
@@ -189,9 +189,29 @@
                   :size="'small'"
                 />
               </el-form-item>
+              <el-form-item class="el-form-item-16" label="物流运输方式" prop="pickUpMode">
+                <common-radio
+                  v-model="form.logisticsTransportType"
+                  :options="logisticsTransportTypeEnum.ENUM"
+                  :disabled-val="pickUpModeDisabled"
+                  type="enum"
+                  :disabled="form.boolUsed"
+                  size="small"
+                />
+              </el-form-item>
+              <el-form-item class="el-form-item-17" label="物流费用承担" prop="pickUpMode">
+                <common-radio
+                  v-model="form.logisticsPayerType"
+                  :options="logisticsPayerEnum.ENUM"
+                  :disabled-val="pickUpModeDisabled"
+                  type="enum"
+                  :disabled="form.boolUsed"
+                  size="small"
+                />
+              </el-form-item>
             </template>
             <el-form-item class="el-form-item-14" prop="remark">
-              <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
+              <el-input v-model="form.remark" :rows="4" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
             </el-form-item>
             <!-- :show-download="!!form.id" -->
             <upload-list
@@ -209,9 +229,10 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { isNotBlank, isBlank } from '@/utils/data-type'
@@ -228,7 +249,6 @@ import RequisitionsSnSelect from '@/components-system/wms/requisitions-sn-select
 import UploadList from '@comp/file-upload/UploadList.vue'
 import AreaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
-
 const defaultForm = {
   serialNumber: undefined, // 采购订单编号
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
@@ -246,7 +266,9 @@ const defaultForm = {
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   taxRate: undefined, // 税率
   weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
-  pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+  // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+  logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+  logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
   remark: undefined, // 备注
   attachments: undefined, // 附件
@@ -291,7 +313,9 @@ const baseRules = {
 // 自采物料校验
 const selfRules = {
   weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
-  pickUpMode: [{ required: true, message: '请选择提货方式', trigger: 'change' }],
+  // pickUpMode: [{ required: true, message: '请选择提货方式', trigger: 'change' }],
+  logisticsTransportType: [{ required: true, message: '请选择物流运输方式', trigger: 'change' }],
+  logisticsPayerType: [{ required: true, message: '请选择物流费用承担方', trigger: 'change' }],
   purchaseOrderPaymentMode: [{ required: true, message: '请选择订单类型', trigger: 'change' }],
   invoiceType: [{ required: true, validator: validateInvoiceType, trigger: 'change' }],
   taxRate: [{ max: 2, message: '请输入税率', trigger: 'blur' }],
@@ -355,18 +379,18 @@ const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 useWatchFormValidate(formRef, form, [['areaIds', ['purchaseType', 'basicClass', 'strucAreaIds', 'enclAreaIds']]])
 
-watch(
-  () => form.basicClass,
-  (bc) => {
-    if (bc & matClsEnum.GAS.V) {
-      // 气体只能选择到厂
-      form.pickUpMode = pickUpModeEnum.SUPPLIER.V
-      pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
-    } else {
-      pickUpModeDisabled.value = []
-    }
-  }
-)
+// watch(
+//   () => form.basicClass,
+//   (bc) => {
+//     if (bc & matClsEnum.GAS.V) {
+//       // 气体只能选择到厂
+//       form.pickUpMode = pickUpModeEnum.SUPPLIER.V
+//       pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
+//     } else {
+//       pickUpModeDisabled.value = []
+//     }
+//   }
+// )
 
 // 初始化表单
 CRUD.HOOK.afterToAdd = () => {}
@@ -408,9 +432,9 @@ crud.submitFormFormat = (form) => {
     'z z z z z z z z z z z z'
     'f f f f f f g g g g g g'
     'h h h h i i i i j j j j'
-    'k k k k l l l m m m m m'
-    'n n n n n n n n n n n n'
-    'o o o o o o o o o o o o';
+    'k k k k m m m m m m . .'
+    'p p p p q q q q . . . .'
+    'o o o o o o n n n n n n';
   .el-form-item {
     margin-bottom: 20px;
   }
@@ -460,6 +484,14 @@ crud.submitFormFormat = (form) => {
 
   > .el-form-item-15 {
     grid-area: o;
+  }
+
+  > .el-form-item-16 {
+    grid-area: p;
+  }
+
+  > .el-form-item-17 {
+    grid-area: q;
   }
   > .el-form-item-20 {
     grid-area: z;

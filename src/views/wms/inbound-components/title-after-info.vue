@@ -1,5 +1,6 @@
 <template>
-  <el-tag effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
+  <el-tag v-if="detail.licensePlate" effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
+  <el-tag v-if="detail.shipmentNumber" effect="plain">{{ `物流单号：${detail.shipmentNumber}` }}</el-tag>
   <el-tag v-if="detail.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
     {{ `过磅重量：${detail.loadingWeight}kg` }}
   </el-tag>
@@ -16,13 +17,13 @@
     type="info"
     effect="plain"
   />
-  <el-tag v-if="order.pickUpMode" v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" />
+  <!-- <el-tag v-if="order.pickUpMode" v-parse-enum="{ e: pickUpModeEnum, v: order.pickUpMode }" type="info" effect="plain" /> -->
 </template>
 
 <script setup>
 import { STEEL_ENUM } from '@/settings/config'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
-import { orderSupplyTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@/utils/enum/modules/wms'
+import { orderSupplyTypeEnum, purchaseOrderPaymentModeEnum } from '@/utils/enum/modules/wms'
 import { defineProps } from 'vue'
 
 // eslint-disable-next-line no-unused-vars

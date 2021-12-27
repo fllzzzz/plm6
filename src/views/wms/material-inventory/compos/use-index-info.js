@@ -92,6 +92,7 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
   }
 
   return {
+    headerRef,
     expandRowKeys,
     maxHeight,
     basicClass,

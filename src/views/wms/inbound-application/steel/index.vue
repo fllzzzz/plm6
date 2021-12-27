@@ -112,6 +112,7 @@ const defaultForm = {
   purchaseId: null, // 采购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  shipmentNumber: null, // 物流单号
   logistics: {}, // 物流信息
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表

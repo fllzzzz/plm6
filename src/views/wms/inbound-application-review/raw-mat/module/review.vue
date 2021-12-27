@@ -101,7 +101,8 @@
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/inbound/raw-mat-application-review'
 import { computed, ref, defineEmits, defineProps, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum } from '@enum-ms/wms'
+import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -166,7 +167,7 @@ const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inbo
 // 显示仓库
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示物流信息
-const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
+const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 采购订单信息

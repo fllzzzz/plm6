@@ -52,7 +52,7 @@
       </div>
       <common-table
         ref="tableRef"
-        v-loading="matListloading"
+        v-loading="matListLoading"
         :data="filterMatList"
         :max-height="maxHeight"
         :default-expand-all="false"
@@ -164,7 +164,7 @@ const returnableMatList = ref([])
 // 归还列表
 const returnList = ref([])
 // 可归还的材料列表加载状态
-const matListloading = ref(false)
+const matListLoading = ref(false)
 // 过滤列表参数
 const filterParams = ref({
   type: projectWareTypeEnum.CUR_PROJECT.V,
@@ -260,7 +260,7 @@ async function fetchReturnableMatList(id) {
   returnableMatList.value = []
   if (!id) return
   try {
-    matListloading.value = true
+    matListLoading.value = true
     const { content = [] } = await getReturnableMatListById(id)
     await setSpecInfoToList(content)
     returnableMatList.value = await numFmtByBasicClass(content, {
@@ -285,7 +285,7 @@ async function fetchReturnableMatList(id) {
   } catch (error) {
     console.log('加载可归还物料列表', error)
   } finally {
-    matListloading.value = false
+    matListLoading.value = false
   }
 }
 

@@ -116,6 +116,7 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const {
+  headerRef,
   expandRowKeys,
   maxHeight,
   basicClass,

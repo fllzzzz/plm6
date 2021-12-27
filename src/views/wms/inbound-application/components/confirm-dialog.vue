@@ -69,12 +69,13 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum } from '@enum-ms/wms'
+import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
+import { matClsEnum } from '@/utils/enum/modules/classification'
+import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
@@ -149,7 +150,7 @@ const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inbo
 // 显示仓库
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
 // 显示物流信息
-const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
+const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 

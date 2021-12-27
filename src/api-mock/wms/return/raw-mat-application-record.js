@@ -2,6 +2,7 @@ import { pickUpModeEnum, purchaseOrderPaymentModeEnum, orderSupplyTypeEnum, base
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { matClsEnum, rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 
 // 退库申请列表
 const get = {
@@ -381,7 +382,9 @@ const detail_id2 = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             }
           ], // 项目id
-          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+          logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
           requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
           purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
@@ -452,7 +455,9 @@ const detail_id3 = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             }
           ], // 项目id
-          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+          logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
           requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
           purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式

@@ -37,9 +37,9 @@
           :max-height="maxHeight - 170"
           empty-text="暂无数据"
           highlight-current-row
-          style="width: 100%"
           @row-click="(row, col, event) => rowClick(row, col, event, 1)"
           @selection-change="handleSelectionChange($event, 1)"
+          row-key="id"
         >
           <el-table-column v-if="selected.delBtn" type="selection" width="45" align="center" />
           <el-table-column prop="name" label="名称" min-width="120" />
@@ -146,7 +146,7 @@ function del() {
 // 删除方法
 async function delRow() {
   try {
-    const rowIds = selected.rows.map(row => row.id)
+    const rowIds = selected.rows.map((row) => row.id)
     await crudApi.del(rowIds)
   } catch (error) {
     console.log('删除科目', error)
@@ -179,7 +179,7 @@ function rowClick(row) {
 
 function whetherContainsCheckRow(list) {
   if (isBlank(selected.checkRow)) return
-  const checked = list.some(v => v.id === selected.checkRow.id)
+  const checked = list.some((v) => v.id === selected.checkRow.id)
   if (!checked) {
     uncheck()
   }

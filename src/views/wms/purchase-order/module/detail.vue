@@ -55,8 +55,12 @@
             <el-form-item prop="weightMeasurementMode" label="计量方式">
               <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
             </el-form-item>
-            <el-form-item label="提货方式" prop="pickUpMode">
+            <!-- <el-form-item label="提货方式" prop="pickUpMode">
               <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
+            </el-form-item> -->
+            <el-form-item label="物流信息" prop="logistics">
+              <span v-parse-enum="{ e: logisticsTransportTypeEnum, v: detail.logisticsTransportType }" />
+              （费用<span v-parse-enum="{ e: logisticsPayerEnum, v: detail.logisticsPayerType }" />）
             </el-form-item>
 
             <el-form-item label="采购状态" prop="purchaseStatus">
@@ -127,8 +131,9 @@
 <script setup>
 import { watch, nextTick } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
 import { isNotBlank } from '@/utils/data-type'

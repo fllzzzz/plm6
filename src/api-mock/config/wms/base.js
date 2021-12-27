@@ -24,7 +24,7 @@ const getWmsConfig = {
             overDiffSubmittable: whetherEnum.TRUE.V
           },
           fillWay: {
-            amountFillWay: inboundFillWayEnum.REVIEWING.V, // 金额填写场景
+            amountFillWay: inboundFillWayEnum.APPLICATION.V, // 金额填写场景
             warehouseFillWay: inboundFillWayEnum.REVIEWING.V // 存储位置填写场景
           },
           printLabelTipWay: { // 打印标签提示场景

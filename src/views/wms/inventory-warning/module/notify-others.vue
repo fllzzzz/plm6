@@ -12,7 +12,7 @@
       <common-button v-permission="permission.edit" :loading="submitLoading" type="primary" size="mini" @click="submit"> 提 交 </common-button>
     </template>
     <template #content>
-      <common-table v-loading="!loaded || configLoading" :data="form.list" style="width: 100%">
+      <common-table v-loading="!loaded || configLoading" :data="form.list" style="width: 100%" row-key="factoryId">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="factoryName" label="工厂名称" :show-overflow-tooltip="true" width="150" />
         <el-table-column prop="createTime" label="通知人" :show-overflow-tooltip="true" min-width="180">

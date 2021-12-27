@@ -44,7 +44,7 @@
             :data="form.list"
             :cell-class-name="data => wrongCellMask(data, tableRules)"
             :max-height="maxHeight"
-            style="width: 100%;"
+            row-key="uid"
           >
             <el-table-column label="序号" type="index" align="center" width="60" />
             <el-table-column prop="code" label="编码" align="center" width="100">
