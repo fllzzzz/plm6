@@ -32,8 +32,10 @@
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
       style="width: 100%"
+      @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
     >
+      <el-table-column type="selection" width="55" align="center" fixed />
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column
         v-if="columns.visible('areaName')"

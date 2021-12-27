@@ -27,10 +27,10 @@
             <p>【操作后】构件数量：50 | 已分配数量：20 | 未分配数量：30 | 进入生产流程数量：20</p>
             <div style="text-align: right; margin: 0">
               <common-button size="mini" type="text" @click="clearPopVisible = false">取消</common-button>
-              <common-button type="primary" size="mini" @click="handleClear">确定</common-button>
+              <common-button type="primary" size="mini" @click="handleClear(crud.selections,productType)">确定</common-button>
             </div>
             <template #reference>
-              <common-button :loading="clearLoading" size="mini" type="danger">清空任务</common-button>
+              <common-button :loading="clearLoading" size="mini" type="danger" :disabled="!crud.selections || !crud.selections.length">清空任务</common-button>
             </template>
           </el-popover>
         </template>
@@ -103,6 +103,7 @@ const currentArea = {
   name: ''
 }
 
+const productType = inject('productType')
 const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGetLines({ emit, dataHasFormatHook })
 const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 
