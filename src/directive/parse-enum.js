@@ -1,4 +1,4 @@
-import { emptyTextFormatter } from '@/utils/data-type'
+import { emptyTextFormatter, isBlank } from '@/utils/data-type'
 import { cleanArray } from '@/utils/data-type/array'
 import EO from '@enum'
 
@@ -14,6 +14,7 @@ export default {
 
 function resolve(el, binding) {
   const { value: { e, v, f = 'L', bit = false, split = '、', emptyText, extra = '' }} = binding
+  if (isBlank(v)) return
   let text
   if (Array.isArray(v)) {
     text = v.map(v => e.V[v][f]).join(split)

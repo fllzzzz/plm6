@@ -78,7 +78,7 @@ const props = defineProps({
   },
   detailBtnType: {
     type: String,
-    default: 'primary'
+    default: 'info'
   },
   delPrompt: {
     type: String,

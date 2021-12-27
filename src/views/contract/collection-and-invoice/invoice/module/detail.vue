@@ -250,7 +250,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { editStatus, edit } from '@/api/contract/collection-and-invoice/invoice'
 import { ElNotification } from 'element-plus'
-import UploadBtn from '@/components/file-upload/UploadBtn'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
 const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }

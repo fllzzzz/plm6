@@ -1,7 +1,7 @@
 <template>
   <el-tag effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
   <el-tag v-if="detail.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
-    {{ `过磅重量：${detail.loadingWeight}kg` }}{{order.weightMeasurementMode}}
+    {{ `过磅重量：${detail.loadingWeight}kg` }}
   </el-tag>
   <el-tag v-if="order.supplyType" v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
   <el-tag

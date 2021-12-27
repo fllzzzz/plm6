@@ -23,7 +23,7 @@
           <span>
             <span v-if="props.showType" class="extra-label">
               <span class="title">类型：</span>
-              <span v-parse-enum="{ e: supplierTypeEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
+              <span v-parse-enum="{ e: supplierClassEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
             </span>
           </span>
         </span>
@@ -32,7 +32,7 @@
     <el-popover v-model:visible="addVisible" placement="top" width="450">
       <add-supplier @close="handlePopoverClose" />
       <template #reference>
-        <span v-if="props.logisticsCreateable" class="add-icon pointer" @click.stop="addVisible = !addVisible ">
+        <span v-if="props.logisticsCreateable" class="add-icon pointer" @click.stop="addVisible = !addVisible">
           <el-icon v-permission="permission.add" color="#1881ef">
             <el-icon-plus />
           </el-icon>
@@ -45,7 +45,7 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
-import { supplierIsHideEnum, supplierTypeEnum } from '@/utils/enum/modules/supplier'
+import { supplierIsHideEnum, supplierTypeEnum, supplierClassEnum } from '@/utils/enum/modules/supplier'
 import { isNotBlank, isBlank, judgeSameValue } from '@data-type/index'
 import useSuppliers from '@compos/store/use-suppliers'
 import addSupplier from './module/add-supplier.vue'

@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading.data" class="app-container" id="hhaa">
-    <div id="card-main-content" class="flex-rsc" style="padding-bottom: 20px;overflow-x: auto;">
+    <div id="card-main-content" class="flex-rsc" style="padding-bottom: 20px; overflow-x: auto">
       <root-card class="box-card lv-one-card" :level="1" :data="listMap.LV1" @add="openAddDlg" @del="handleDelSuccess" />
       <child-card class="box-card lv-two-card" :level="2" :data="listMap.LV2" @add="openAddDlg" @del="handleDelSuccess" />
       <child-card class="box-card lv-three-card" :level="3" :data="listMap.LV3" @add="openAddDlg" @del="handleDelSuccess" />
@@ -17,6 +17,7 @@ import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
+import useRefreshStore from '@/composables/store/use-refresh-store'
 import rootCard from './module/root-card.vue'
 import childCard from './module/child-card.vue'
 import batchAdd from './module/batch-add.vue'
@@ -39,11 +40,17 @@ const loading = reactive({
   data: false
 })
 const listMap = reactive({
-  LV1: [], LV2: [], LV3: []
+  LV1: [],
+  LV2: [],
+  LV3: []
 })
 const selectMap = reactive({
-  current_LV1: undefined, current_LV2: undefined, current_LV3: undefined,
-  current_list_LV1: undefined, current_list_LV2: undefined, current_list_LV3: undefined
+  current_LV1: undefined,
+  current_LV2: undefined,
+  current_LV3: undefined,
+  current_list_LV1: undefined,
+  current_list_LV2: undefined,
+  current_list_LV3: undefined
 })
 
 provide('permission', permission)
@@ -64,7 +71,7 @@ async function fetchList() {
   loading.data = true
   try {
     // 清空老数据
-    Object.keys(listMap).forEach(key => {
+    Object.keys(listMap).forEach((key) => {
       listMap[key] = []
     })
     const tree = await crudApi.get()
@@ -85,7 +92,7 @@ async function fetchList() {
  */
 function tree2listByDeep(tree, parent, deep = 1) {
   const list = listMap[`LV${deep}`]
-  tree.forEach(node => {
+  tree.forEach((node) => {
     const n = {
       parent: parent,
       id: node.id,
@@ -105,10 +112,12 @@ function tree2listByDeep(tree, parent, deep = 1) {
 
 function handleAddSuccess() {
   fetchList()
+  useRefreshStore('classification')
 }
 
 function handleDelSuccess() {
   fetchList()
+  useRefreshStore('classification')
 }
 </script>
 
@@ -118,9 +127,9 @@ function handleDelSuccess() {
     padding: 5px;
   }
   .el-button--small {
-      min-height: 25px;
-    }
-  .el-button+.el-button {
+    min-height: 25px;
+  }
+  .el-button + .el-button {
     margin-left: 5px;
   }
   .search-name {
@@ -132,7 +141,7 @@ function handleDelSuccess() {
     // width:350px;
   }
   flex-wrap: wrap;
-  .flex-rbc{
+  .flex-rbc {
     width: 100%;
   }
 }
@@ -148,11 +157,12 @@ function handleDelSuccess() {
   }
 }
 
-.box-card+.box-card{
-    margin-left: 10px;
+.box-card + .box-card {
+  margin-left: 10px;
 }
 
-.lv-one-card, .lv-two-card {
+.lv-one-card,
+.lv-two-card {
   width: 420px;
   height: 100%;
 }
@@ -168,6 +178,6 @@ function handleDelSuccess() {
 }
 
 .app-container {
-  padding:20px;
+  padding: 20px;
 }
 </style>

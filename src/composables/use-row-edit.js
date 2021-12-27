@@ -3,17 +3,17 @@ import { ElMessage } from 'element-plus'
 const prefix = 'source_'
 
 // 行内修改
-export default function useRowEdit(editApi, fields = []) {
+export default function useRowEdit(editApi, fields = [], dataFormatFn) {
   const fieldsMap = new Map()
   // 生成map
   const _fields = Array.isArray(fields) ? fields : [fields]
-  _fields.forEach(f => {
+  _fields.forEach((f) => {
     fieldsMap.set(f, `${prefix}${f}`)
   })
 
   // row初始化
   const rowInit = (list) => {
-    list.forEach(row => {
+    list.forEach((row) => {
       row.editMode = false
       row.editLoading = false
       fieldsMap.forEach((sourceKey, key) => {
@@ -40,12 +40,16 @@ export default function useRowEdit(editApi, fields = []) {
       return
     }
     row.editLoading = true
-    const updateFrom = {
+    let updateFrom = {
       id: row.id
     }
-    _fields.forEach(field => {
+    _fields.forEach((field) => {
       updateFrom[field] = row[field]
     })
+    if (typeof dataFormatFn === 'function') {
+      // 格式转换
+      updateFrom = await dataFormatFn(row, updateFrom)
+    }
     try {
       await editApi(updateFrom)
       row.editMode = false

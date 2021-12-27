@@ -114,6 +114,13 @@ const isTaxEnum = {
 }
 constantize(isTaxEnum)
 
+// 是否含税
+const isTaxContractEnum = {
+  YES: { L: '是', K: 'YES', V: 1 },
+  NO: { L: '否', K: 'NO', V: 0 }
+}
+constantize(isTaxContractEnum)
+
 // 工程结算类型新
 const engineerSettlementTypeEnumN = {
   THEORY: { L: '理计结算', SL: '理计', K: 'THEORY', V: 1 << 0, COLOR: '#1682e6' },
@@ -173,6 +180,14 @@ const contractDateTypeEnum = {
   INVOICE_DATE: { L: '开票日期', K: 'INVOICE_DATE', V: 3 }
 }
 constantize(contractDateTypeEnum)
+
+// TODO: 收款时间类型1
+const collectionDateTypeEnum = {
+  UPDATE_DATE: { L: '填报日期', K: 'UPDATE_DATE', V: 1 },
+  AUDIT_DATE: { L: '审核日期', K: 'AUDIT_DATE', V: 2 },
+  INVOICE_DATE: { L: '填报日期', K: 'INVOICE_DATE', V: 3 }
+}
+constantize(collectionDateTypeEnum)
 
 // TODO: 付款属性1
 const supplierPayMentTypeEnum = {
@@ -245,6 +260,7 @@ export {
   paymentModeEnum, // 付款方式
   invoiceTypeEnum,
   isTaxEnum,
+  isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
   enclosureSettlementTypeEnum, // 围护结算类型
   transportModeEnum,
@@ -253,6 +269,7 @@ export {
   contractChangeTypeEnum,
   systemTypeEnum,
   contractDateTypeEnum,
+  collectionDateTypeEnum,
   supplierPayMentTypeEnum,
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,
@@ -273,6 +290,7 @@ export default {
   paymentModeEnum, // 付款方式
   invoiceTypeEnum,
   isTaxEnum,
+  isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
   enclosureSettlementTypeEnum, // 围护结算类型
   transportModeEnum,
@@ -281,6 +299,7 @@ export default {
   contractChangeTypeEnum,
   systemTypeEnum,
   contractDateTypeEnum,
+  collectionDateTypeEnum, // 收款日期
   supplierPayMentTypeEnum,
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,

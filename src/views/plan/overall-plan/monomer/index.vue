@@ -16,9 +16,24 @@
         row-key="id"
         @selection-change="crud.selectionChangeHandler"
       >
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="单体名称" />
+        <el-table-column
+          type="selection"
+          width="55"
+          align="center"
+        />
+        <el-table-column
+          label="序号"
+          type="index"
+          align="center"
+          width="60"
+        />
+        <el-table-column
+          v-if="columns.visible('name')"
+          key="name"
+          prop="name"
+          :show-overflow-tooltip="true"
+          label="单体名称"
+        />
         <el-table-column
           v-if="columns.visible('mainStructure')"
           key="mainStructure"
@@ -27,7 +42,7 @@
           label="构件(t)"
         >
           <template v-slot="scope">
-            <span v-empty-text v-to-fixed="DP.COM_WT__KG">{{ scope.row.mainStructure }}</span>
+            <span>{{ scope.row.mainStructure? scope.row.mainStructure.toFixed(DP.COM_WT__KG): '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -38,7 +53,7 @@
           label="夹芯板(t)"
         >
           <template v-slot="scope">
-            <span v-empty-text v-to-fixed="DP.COM_WT__KG">{{ scope.row.battenBoard }}</span>
+            <span>{{ scope.row.battenBoard? scope.row.battenBoard.toFixed(DP.COM_WT__KG): '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -49,7 +64,7 @@
           label="压型板(t)"
         >
           <template v-slot="scope">
-            <span v-empty-text v-to-fixed="DP.COM_WT__KG">{{ scope.row.contourPlate }}</span>
+            <span>{{ scope.row.contourPlate? scope.row.contourPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -60,7 +75,7 @@
           label="折边件(t)"
         >
           <template v-slot="scope">
-            <span v-empty-text v-to-fixed="DP.COM_WT__KG">{{ scope.row.flangingPiece }}</span>
+            <span>{{ scope.row.flangingPiece? scope.row.flangingPiece.toFixed(DP.COM_WT__KG): '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -71,7 +86,7 @@
           label="桁架楼承板(t)"
         >
           <template v-slot="scope">
-            <span v-empty-text v-to-fixed="DP.COM_WT__KG">{{ scope.row.trussFloorPlate }}</span>
+            <span>{{ scope.row.trussFloorPlate? scope.row.trussFloorPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -82,11 +97,23 @@
           label="压型楼承板(t)"
         >
           <template v-slot="scope">
-            <span v-empty-text v-to-fixed="DP.COM_WT__KG">{{ scope.row.pressureBearingPlate }}</span>
+            <span>{{ scope.row.pressureBearingPlate?scope.row.pressureBearingPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" />
-        <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" />
+        <el-table-column
+          v-if="columns.visible('sort')"
+          key="sort"
+          prop="sort"
+          label="排序"
+          align="center"
+        />
+        <el-table-column
+          v-if="columns.visible('remark')"
+          key="remark"
+          prop="remark"
+          :show-overflow-tooltip="true"
+          label="备注"
+        />
         <!--编辑与删除-->
         <el-table-column
           v-if="checkPermission([...permission.edit, ...permission.del])"
@@ -96,13 +123,20 @@
           fixed="right"
         >
           <template v-slot="scope">
-            <udOperation :data="scope.row" :permission="permission" />
+            <udOperation
+              :data="scope.row"
+              :permission="permission"
+            />
           </template>
         </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm :project-id="globalProjectId" :global-project="globalProject" :origin-option="techOptions" />
+      <mForm
+        :project-id="globalProjectId"
+        :global-project="globalProject"
+        :origin-option="techOptions"
+      />
     </template>
     <template v-else>
       <div style="color: red; font-size: 14px">*请先前去合同管理模块添加项目内容</div>
@@ -144,10 +178,24 @@ const tableRef = ref()
 const techOptions = [
   { label: '构件(t)', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE' },
   {
+    label: '夹芯板(t)',
+    key: 'battenBoard',
+    dateKey: 'battenBoardDate',
+    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
+    alias: 'ENCLOSURE'
+  },
+  {
     label: '压型板(t)',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
     no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
+    alias: 'ENCLOSURE'
+  },
+  {
+    label: '折边件(t)',
+    key: 'flangingPiece',
+    dateKey: 'flangingPieceDate',
+    no: TechnologyTypeAllEnum.BENDING.V,
     alias: 'ENCLOSURE'
   },
   {
@@ -158,24 +206,10 @@ const techOptions = [
     alias: 'ENCLOSURE'
   },
   {
-    label: '夹芯板(t)',
-    key: 'battenBoard',
-    dateKey: 'battenBoardDate',
-    no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE'
-  },
-  {
     label: '压型楼承板(t)',
     key: 'pressureBearingPlate',
     dateKey: 'pressureBearingPlateDate',
     no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
-    alias: 'ENCLOSURE'
-  },
-  {
-    label: '折边件(t)',
-    key: 'flangingPiece',
-    dateKey: 'flangingPieceDate',
-    no: TechnologyTypeAllEnum.BENDING.V,
     alias: 'ENCLOSURE'
   }
 ]
@@ -207,7 +241,7 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

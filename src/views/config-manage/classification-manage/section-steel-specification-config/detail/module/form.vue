@@ -35,7 +35,7 @@
             :placeholder="`${sd.name} 理论重量(kg/m)`"
             controls-position="right"
             style="width: 350px"
-            :min="1"
+            :min="0.001"
           />
         </el-form-item>
       </template>

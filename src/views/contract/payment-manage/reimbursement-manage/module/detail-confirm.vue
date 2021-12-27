@@ -77,7 +77,7 @@
             <div style="width: 460px">
               <el-input v-if="isModify" v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
               <span v-else>{{ collectionInfo.applyAmount ? collectionInfo.applyAmount.toThousand() : '' }}</span>
-              <span v-if="upperYuan" style="margin-left: 5px">{{ `大写:${upperYuan}` }}</span>
+              <span v-if="upperYuan" style="margin-left: 5px">{{ `(${upperYuan})` }}</span>
             </div>
           </el-form-item>
         </div>
@@ -210,13 +210,15 @@
               v-model="form.remark"
               type="textarea"
               :autosize="{ minRows: 6, maxRows: 8 }"
-              :maxLength="500"
+              :maxlength="200"
+              show-word-limit
               placeholder="可填写备注"
               style="max-width: 500px"
             />
             <span v-else>{{ collectionInfo.remark }}</span>
           </div>
         </el-form-item>
+        <el-divider><span class="title">报销明细</span></el-divider>
         <common-table
           ref="detailRef"
           border

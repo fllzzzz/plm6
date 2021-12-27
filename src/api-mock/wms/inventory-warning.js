@@ -10,39 +10,39 @@ const getMaterialIW = {
       code: 20000,
       message: '成功',
       data: {
-        'content': [
+        content: [
           {
-            'id|+1': 1,
-            'classifyId|+1': 1,
-            'serialNumber': /[0-9]{10}/,
-            'factoryId': 3,
-            'fullClassifyName': '紧固件>高强螺栓>大六角',
-            'classifyName': '大六角',
-            'specification': /([A-Z0-9]{2,3}\*){1,3}[A-Z0-9]{2,3}/,
-            'unit': '套',
-            'unitType': measureTypeEnum.MEASURE.V,
+            id: 1,
+            classifyId: 204,
+            // 'serialNumber': /[0-9]{10}/,
+            factoryId: 3,
+            // 'fullClassifyName': '紧固件>高强螺栓>大六角',
+            // 'classifyName': '大六角',
+            specification: 'M26 * 65',
+            // 'unit': '套',
+            unitType: measureTypeEnum.ACCOUNTING.V,
             'minimumInventory|10-200': 10,
-            'enabled': enabledEnum.TRUE.V,
-            'createTime': '@datetime(T)',
-            'updateTime': '@datetime(T)'
+            enabled: enabledEnum.TRUE.V,
+            createTime: '@datetime(T)',
+            updateTime: '@datetime(T)'
           },
           {
-            'id|+1': 1,
-            'classifyId|+1': 1,
-            'serialNumber': /[0-9]{10}/,
-            'factoryId': undefined,
-            'fullClassifyName': '紧固件>螺母',
-            'classifyName': '螺母',
-            'specification': /([A-Z0-9]{2,3}\*){1,3}[A-Z0-9]{2,3}/,
-            'unit': '个',
-            'unitType': measureTypeEnum.ACCOUNTING.V,
+            id: 2,
+            classifyId: 204,
+            // 'serialNumber': /[0-9]{10}/,
+            factoryId: undefined,
+            // 'fullClassifyName': '紧固件>螺母',
+            // 'classifyName': '螺母',
+            specification: 'M26 * 70',
+            // 'unit': '个',
+            unitType: measureTypeEnum.ACCOUNTING.V,
             'minimumInventory|10-200': 10,
-            'enabled': enabledEnum.FALSE.V,
-            'createTime': '@datetime(T)',
-            'updateTime': '@datetime(T)'
+            enabled: enabledEnum.FALSE.V,
+            createTime: '@datetime(T)',
+            updateTime: '@datetime(T)'
           }
         ],
-        'totalElements': 2
+        totalElements: 2
       }
     }
   }

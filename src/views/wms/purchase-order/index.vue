@@ -1,11 +1,11 @@
 <template>
-  <div class="app-container">
+  <div v-if="clsLoaded && loaded" class="app-container">
     <!--工具栏-->
     <mHeader />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
-      v-loading="!loaded || crud.loading"
+      v-loading="tableLoading"
       :data="crud.data"
       :max-height="maxHeight"
       :default-expand-all="false"
@@ -15,6 +15,9 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="serialNumber">
         <template #default="{ row }">
+          <p v-if="isNotBlank(row.auxMaterialIds)">
+            辅材明细：<span v-arr-join>{{ row.auxMaterialNames }}</span>
+          </p>
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
             关联申购单：<span v-empty-text>{{ row.requisitionsSNStr }}</span>
@@ -65,7 +68,14 @@
         label="物料种类"
         min-width="170px"
       />
-      <el-table-column v-if="columns.visible('projects')" show-overflow-tooltip key="projects" prop="projects" label="关联项目" min-width="170">
+      <el-table-column
+        v-if="columns.visible('projects')"
+        show-overflow-tooltip
+        key="projects"
+        prop="projects"
+        label="关联项目"
+        min-width="170"
+      >
         <template #default="{ row }">
           <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
         </template>
@@ -88,7 +98,7 @@
         width="110"
       >
         <template #default="{ row }">
-          <span>{{ row.mete ? `${row.mete} ${row.meteUnit}` : '' }}</span>
+          <span>{{ row.mete ? `${row.mete || ''} ${row.meteUnit || ''}` : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -140,8 +150,7 @@
             v-if="checkPermission(permission.editPurchaseStatus)"
             v-model="row.purchaseStatus"
             :disabled="
-              row.enabledLoading ||
-              (row.status === settlementStatusEnum.SETTLED.V && row.purchaseStatus === purchaseStatusEnum.FINISHED.V)
+              row.enabledLoading || (row.status === settlementStatusEnum.SETTLED.V && row.purchaseStatus === purchaseStatusEnum.FINISHED.V)
             "
             active-color="#13ce66"
             :active-value="purchaseStatusEnum.UNFINISHED.V"
@@ -207,6 +216,7 @@ import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
+import { isNotBlank } from '@/utils/data-type'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -220,7 +230,7 @@ import mForm from './module/form'
 import mDetail from './module/detail'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-
+import useMatClsList from '@/composables/store/use-mat-class-list'
 const permission = {
   get: ['wms_purchaseOrder:get'],
   add: ['wms_purchaseOrder:add'],
@@ -232,7 +242,7 @@ const permission = {
 
 const optShow = {
   add: true,
-  edit: true,
+  edit: false,
   del: true,
   download: false
 }
@@ -256,21 +266,33 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const { loaded, supplierKV } = useSuppliers()
+const { loaded: clsLoaded, rawMatClsKV } = useMatClsList()
 const { maxHeight } = useMaxHeight({ paginate: true })
 const { handleEnabledChange } = useCrudEnabledChange(
   { CRUD, crud, editEnabled: editPurchaseStatus },
   { enabledField: 'purchaseStatus', enumObj: purchaseStatusEnum, t: 'UNFINISHED', f: 'FINISHED' }
 )
 
+const tableLoading = computed(() => !clsLoaded.value || !loaded.value || crud.loading)
+
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
-    v.supplier = computed(() => supplierKV.value[v.supplierId])
+    v.supplier = supplierKV.value[v.supplierId]
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
-    v.projectIds = v.projects ? v.projects.map((v) => v.id) : []
+    v.projectIds = v.projects ? v.projects.map((p) => p.id) : []
+    if (v.auxMaterialIds) {
+      v.auxMaterialNames = v.auxMaterialIds.map((id) => {
+        const material = rawMatClsKV.value[id]
+        if (material) {
+          return material.name
+        }
+        return '-'
+      })
+    }
+
     return v
   })
 }
-
 </script>

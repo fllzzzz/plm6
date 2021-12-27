@@ -230,7 +230,7 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 async function changeStatus(data, val) {

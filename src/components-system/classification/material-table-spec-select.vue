@@ -16,13 +16,15 @@
             >
               <div class="classify-item pointer" @click="handleClassifyClick(opt)">
                 <span>
-                  <span class="number-badge counter-badge" v-if="opt.id && counter[opt.id]" @dblclick.stop="clearCurrentClassify(opt.id)">{{ counter[opt.id] }}</span>
+                  <span class="number-badge counter-badge" v-if="opt.id && counter[opt.id]" @dblclick.stop="clearCurrentClassify(opt.id)">{{
+                    counter[opt.id]
+                  }}</span>
                   {{ opt.serialNumber }}
                 </span>
                 <span>
                   {{ opt.name }}
                   <span v-if="isNotBlank(opt.parent)" v-arr-join="'>'" class="parent-node-title">
-                    {{ opt.parent.fullNamePath }}
+                    {{ opt.parent.fullPathName }}
                   </span>
                 </span>
               </div>
@@ -71,7 +73,12 @@ const props = defineProps({
     default: () => []
   },
   rowInitFn: {
+    // 行初始化方法
     type: Function
+  },
+  classifyIds: {
+    // 指定的科目范围（上级科目或当前科目）
+    type: Array
   },
   mode: {
     type: String,
@@ -118,18 +125,29 @@ const leftWidth = computed(() => {
 })
 
 const { matClsSpecKV } = useMatClsSpec()
-const { loaded, matClsList } = useMatClsList()
+const { loaded, matClsLeafList } = useMatClsList()
 
 // 搜索过滤
 const filterOptions = computed(() => {
+  let list = options.value
+  if (isNotBlank(props.classifyIds)) {
+    list = list.filter((v) => {
+      for (const cid of props.classifyIds) {
+        if (v.fullPathId.includes(cid)) {
+          return true
+        }
+      }
+      return false
+    })
+  }
   if (isNotBlank(filterText.value)) {
-    return options.value.filter((v) => {
+    list = list.filter((v) => {
       const sn = v.serialNumber.indexOf(filterText.value) > -1
-      const fullName = v.fullNamePath.some((v) => v.indexOf(filterText.value) > -1)
+      const fullName = v.fullPathName.some((v) => v.indexOf(filterText.value) > -1)
       return sn || fullName
     })
   }
-  return options.value
+  return list
 })
 
 watch(
@@ -143,15 +161,15 @@ watch(
 watchEffect(() => setOption(props.basicClass))
 
 function setOption(basicClass) {
-  if (!matClsList.value) {
+  if (!matClsLeafList.value) {
     options.value = []
     return
   }
   let opts
   if (basicClass) {
-    opts = matClsList.value.filter((v) => basicClass & v.basicClass)
+    opts = matClsLeafList.value.filter((v) => basicClass & v.basicClass)
   } else {
-    opts = matClsList.value
+    opts = matClsLeafList.value
   }
   if (props.autoSelected && isNotBlank(opts)) {
     setSelection(opts[0])
@@ -185,7 +203,7 @@ function clearCurrentClassify(classifyId) {
 }
 
 /**
- * selector 模式
+ * accumulator 模式
  */
 function handleAccumulateChange({ snList, addList, cancelList }) {
   if (isNotBlank(addList)) {
@@ -204,7 +222,7 @@ function handleAccumulateChange({ snList, addList, cancelList }) {
 }
 
 /**
- * accumulator 模式
+ * selector 模式
  */
 function handleSelectChange(val) {
   emit('selectionChange', val)
@@ -223,7 +241,7 @@ function initSelected(row) {
       counter.value[id] = counter.value[id] ? counter.value[id] + 1 : 1
     })
   }
-  specRef.value && specRef.value.initSelected(row.map(v => v.sn))
+  specRef.value && specRef.value.initSelected(row.map((v) => v.sn))
 }
 
 // 删除

@@ -2,6 +2,7 @@ import store from '@/store'
 import { isBlank, isNotBlank } from '../data-type'
 import { uniqueArr } from '../data-type/array'
 import { measureTypeEnum } from '../enum/modules/wms'
+import { rawMatClsEnum } from '@enum-ms/classification'
 
 // 为列表设置规格
 export async function setSpecInfoToList(list) {
@@ -20,8 +21,9 @@ export async function setSpecInfoToList(list) {
           if (info) {
             row.sn = info.sn // 该科目规格唯一编号
             row.specificationLabels = info.specificationLabels // 规格中文
-            row.serialNumber = info.classify.serialNumber // 科目编号
+            row.serialNumber = info.serialNumber // 科目编号 - 规格
             row.classifyId = info.classify.id // 科目id
+            row.classifyFullPathId = info.classify.fullPathId // 全路径id
             row.classifyFullName = info.classify.fullName // 全路径名称
             row.measureUnit = info.classify.measureUnit // 计量单位
             row.accountingUnit = info.classify.accountingUnit // 核算单位
@@ -31,9 +33,12 @@ export async function setSpecInfoToList(list) {
             row.outboundUnit = row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
             row.outboundUnitPrecision =
               row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
-            // row.basicClass = info.classify.basicClass // 基础类型
+            row.basicClass = info.classify.basicClass // 基础类型
             // row.specification = info.spec // 规格
             row.specificationMap = info.specKV // 规格KV格式
+            if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+              row.unitWeight = info.unitWeight // 单位重量 kg/m
+            }
           }
         })
         allPromise.push(p)

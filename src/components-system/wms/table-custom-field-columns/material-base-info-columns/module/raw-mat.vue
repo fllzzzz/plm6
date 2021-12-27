@@ -5,6 +5,7 @@
     :prop="`${field}.classifyFullName`"
     label="物料种类"
     align="center"
+    show-overflow-tooltip
     :width="classifyFullNameWidth"
     :fixed="fixed"
   >
@@ -12,7 +13,15 @@
       <span v-empty-text>{{ getInfo(row, 'classifyFullName') }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showSpecification" :prop="`${field}.specification`" label="规格" width="270" align="center" :fixed="fixed">
+  <el-table-column
+    v-if="showSpecification"
+    :prop="`${field}.specification`"
+    label="规格"
+    width="270"
+    align="center"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <el-tooltip :content="specTip(getInfo(row))" placement="top">
         <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>

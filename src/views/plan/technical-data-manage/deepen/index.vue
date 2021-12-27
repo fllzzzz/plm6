@@ -7,13 +7,15 @@
       </div>
       <!--表格渲染-->
       <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :empty-text="crud.emptyText"
-      :max-height="maxHeight"
-      style="width: 100%"
-    >
+        ref="tableRef"
+        v-loading="crud.loading"
+        :data="crud.data"
+        :empty-text="crud.emptyText"
+        :max-height="maxHeight"
+        style="width: 100%"
+        @selection-change="crud.selectionChangeHandler"
+      >
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" width="140px">
         <!-- <template slot="header">
@@ -139,7 +141,7 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 </script>

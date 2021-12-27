@@ -23,12 +23,12 @@
 <script setup>
 import { mapGetters } from '@/store/lib'
 import { useStore } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb/index.vue'
-import Hamburger from '@/components/Hamburger/index.vue'
-// import ErrorLog from '@/components/ErrorLog/index.vue'
-// import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect/index.vue'
-import UserHeader from '@/components/UserHeader/index.vue'
+import Breadcrumb from '@comp/Breadcrumb/index.vue'
+import Hamburger from '@comp/Hamburger/index.vue'
+// import ErrorLog from '@comp/ErrorLog/index.vue'
+// import Screenfull from '@comp/Screenfull'
+import SizeSelect from '@comp/SizeSelect/index.vue'
+import UserHeader from '@comp/UserHeader/index.vue'
 import HeadSwitchProject from './SwitchProject'
 import inventoryNotify from '@/components-system/wms/inventory-notify/index.vue'
 

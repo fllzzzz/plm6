@@ -1,7 +1,7 @@
 <template>
   <el-table-column v-if="!boolPartyA" prop="unitPrice" align="center" width="115px" label="含税单价">
     <template #default="{ row }">
-      <el-input-number
+      <common-input-number
         v-model="row.unitPrice"
         :min="0"
         :max="9999999999"
@@ -16,7 +16,7 @@
   </el-table-column>
   <el-table-column v-if="!boolPartyA" prop="amount" align="center" width="135px" label="金额">
     <template #default="{ row }">
-      <el-input-number
+      <common-input-number
         v-model="row.amount"
         :min="0"
         :max="9999999999"

@@ -58,6 +58,8 @@
           type="textarea"
           :autosize="{ minRows: 4, maxRows: 6 }"
           placeholder="请填写备注"
+          :maxlength="200"
+          show-word-limit
           style="width: 320px"
         />
       </el-form-item>
@@ -197,29 +199,38 @@ watch(
 )
 function mainDateOptionFn(time) {
   if (props.globalProject.endDate) {
-    return time.getTime() - 8.64e6 > props.globalProject.endDate
+    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() - 8.64e6 < props.globalProject.createTime
   } else {
-    return false
+    return time.getTime() - 8.64e6 < props.globalProject.createTime
   }
 }
 
 function subDateOptionFn(time) {
   if (crud.form.date) {
-    return time.getTime() - 8.64e6 > crud.form.date
+    return time.getTime() - 8.64e6 > crud.form.date || time.getTime() - 8.64e6 < props.globalProject.createTime
   } else {
-    return false
+    return time.getTime() - 8.64e6 < props.globalProject.createTime
   }
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  console.log(currentOption.value)
   crud.form.detailSaveDTOParamList = []
   currentOption.value.forEach((v) => {
-    crud.form.detailSaveDTOParamList.push({
-      mete: crud.form[v.key],
-      date: crud.form[v.dateKey],
-      type: v.no
-    })
+    let val
+    if (crud.form.id) {
+      val = crud.form.monomerDetailList.find(k => k.type === v.no)
+    }
+    if (val) {
+      val.mete = crud.form[v.key]
+      val.date = crud.form[v.dateKey]
+      crud.form.detailSaveDTOParamList.push(val)
+    } else {
+      crud.form.detailSaveDTOParamList.push({
+        mete: crud.form[v.key],
+        date: crud.form[v.dateKey],
+        type: v.no
+      })
+    }
   })
   crud.form.projectId = props.projectId
   return !!crud.form.projectId

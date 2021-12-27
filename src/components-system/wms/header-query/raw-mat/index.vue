@@ -23,6 +23,7 @@
         class="filter-item"
         @change="toQuery"
       />
+      <slot name="beforeWarehouse" />
       <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
       <warehouse-select
         v-model="queryVO.warehouseId"

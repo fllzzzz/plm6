@@ -323,7 +323,7 @@ import { regForm } from '@compos/use-crud'
 import { shearTypeEnum } from '@enum-ms/plan'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
-// import UploadBtn from '@/components/FileUpload/UploadBtn'
+// import UploadBtn from '@comp/FileUpload/UploadBtn'
 
 const formRef = ref()
 const editing = ref(false)

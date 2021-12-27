@@ -137,6 +137,13 @@ async function changeEnabled(data, val) {
     data.enabled = data.enabled === systemEnabledEnum.ENUM.TRUE.V ? systemEnabledEnum.ENUM.FALSE.V : systemEnabledEnum.ENUM.TRUE.V
   }
 }
+
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  data.data.content = data.data.content.map((v) => {
+    v.bankAccounts = v.bankAccounts || []
+    return v
+  })
+}
 </script>
 
 <style lang="scss" scoped>

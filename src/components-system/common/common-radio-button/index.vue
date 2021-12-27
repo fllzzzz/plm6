@@ -61,7 +61,7 @@ const props = defineProps({
   },
   optionAllValue: {
     type: [Number, String, Boolean],
-    default: -999999999
+    default: -999999999 // 设置默认值的原因是 label 为 undefined会报错
   },
   dataStructure: {
     // 数据结构， type不选择dict与enum的情景下，可使用

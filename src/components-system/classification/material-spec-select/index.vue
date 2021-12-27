@@ -14,23 +14,23 @@
       <div v-if="extraQueryOpened">
         <!-- 型材没有规格配置 -->
         <!-- <template v-if="matCls.basicClass !== matClsEnum.SECTION_STEEL.V"> -->
-          <template v-for="item in matCls.specConfig" :key="item.id">
-            <div class="select-container">
-              <div class="container-prepend">{{ item.name }}</div>
-              <common-select
-                v-model="query[item.id]"
-                :options="item.list"
-                :loading="!loaded"
-                :data-structure="{ key: 'name', label: 'name', value: 'name' }"
-                clearable
-                filterable
-                type="other"
-                size="small"
-                :placeholder="item.name"
-                class="spec-conf-select"
-              />
-            </div>
-          </template>
+        <template v-for="item in matCls.specConfig" :key="item.id">
+          <div class="select-container">
+            <div class="container-prepend">{{ item.name }}</div>
+            <common-select
+              v-model="query[item.id]"
+              :options="item.list"
+              :loading="!loaded"
+              :data-structure="{ key: 'name', label: 'name', value: 'name' }"
+              clearable
+              filterable
+              type="other"
+              size="small"
+              :placeholder="item.name"
+              class="spec-conf-select"
+            />
+          </div>
+        </template>
         <!-- </template> -->
       </div>
     </div>
@@ -39,7 +39,14 @@
         <el-icon class="is-loading"><el-icon-loading /></el-icon>
         科目加载中
       </el-tag>
-      <el-tag v-else-if="matCls.hasUnitConfig === false" class="tip-tag" type="danger" size="medium" effect="plain">请先在“配置管理-计量配置”中进行该科目的核算单位配置</el-tag>
+      <el-tag
+v-else-if="matCls.hasUnitConfig === false"
+class="tip-tag"
+type="danger"
+size="medium"
+effect="plain"
+        >请先在“配置管理-计量配置”中进行该科目的核算单位配置</el-tag
+      >
       <div v-else-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
         <template v-if="props.mode === 'accumulator'">
           <template v-for="item in specList" :key="item.sn">
@@ -192,11 +199,15 @@ watch(
 )
 
 // 规格列表参数变更时，重新计算宽度
-watch([() => props.visible, () => matCls.value.specList], ([visible]) => {
-  if (visible) {
-    calcSpecWidth()
-  }
-})
+watch(
+  [() => props.visible, () => matCls.value.specList],
+  ([visible]) => {
+    if (visible) {
+      calcSpecWidth()
+    }
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
   window.addEventListener('resize', calcSpecWidth, { passive: false })

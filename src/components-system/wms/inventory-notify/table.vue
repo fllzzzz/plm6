@@ -11,24 +11,24 @@
     <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('classify.serialNumber')"
-        key="classify.serialNumber"
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
         :show-overflow-tooltip="true"
-        prop="classify.serialNumber"
+        prop="serialNumber"
         label="编码"
         align="left"
         width="150"
       >
-        <template v-slot="scope">
-          <factory-table-cell-tag :id="scope.row.factoryId" />
-          <span>{{ scope.row.classify.serialNumber }}</span>
+        <template #default="{ row }">
+          <factory-table-cell-tag :id="row.factoryId" />
+          <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('classify.fullName')"
-        key="classify.fullName"
+        v-if="columns.visible('classifyFullName')"
+        key="classifyFullName"
         :show-overflow-tooltip="true"
-        prop="classify.fullName"
+        prop="classifyFullName"
         label="科目"
         align="left"
         min-width="180"
@@ -51,19 +51,12 @@
         align="center"
         min-width="150"
       >
-        <template v-slot="scope">
-          <span :style="{ color: scope.row.inventory > 0 ? '#f18121' : 'red' }" style="margin-right:5px">
-            {{
-              toFixed(
-                scope.row.inventory,
-                scope.row.unitType === measureTypeEnum.MEASURE.V
-                  ? scope.row.classify.measurePrecision
-                  : scope.row.classify.accountingPrecision
-              )
-            }}
+        <template #default="{ row }">
+          <span :style="{ color: row.inventory > 0 ? '#f18121' : 'red' }" style="margin-right: 5px">
+            {{ toFixed(row.inventory, row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision) }}
           </span>
-          <span
-            >{{ scope.row.unitType === measureTypeEnum.MEASURE.V ? scope.row.classify.measureUnit : scope.row.classify.accountingUnit }}
+          <span>
+            {{ row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit }}
           </span>
         </template>
       </el-table-column>
@@ -81,9 +74,10 @@ import { toFixed } from '@/utils/data-type'
 import useCRUD from '@compos/use-crud'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
-import useMatClsSpec from '@compos/store/use-mat-cls-spec'
 import pagination from '@crud/Pagination'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -113,7 +107,6 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const { matClsSpec, fetchMatClsSpec } = useMatClsSpec()
 const { visible, handleClose } = useVisible({ emit, props })
 const { maxHeight } = useMaxHeight(
   {
@@ -127,10 +120,14 @@ const { maxHeight } = useMaxHeight(
   visible
 )
 
-CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
-  content.forEach((v) => {
-    fetchMatClsSpec(v.classifyId)
-    v.classify = matClsSpec.value[v.classifyId]
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  await setSpecInfoToList(data.content)
+  data.content = await numFmtByBasicClass(data.content, {
+    toSmallest: false,
+    toNum: false
+  })
+  data.content.forEach((row) => {
+    row.unit = row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit
   })
 }
 </script>

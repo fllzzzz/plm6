@@ -27,3 +27,9 @@ function handleClick() {
   emit('click')
 }
 </script>
+
+<style lang="scss" scoped>
+.text-clickable {
+  color: #1881ef!important;
+}
+</style>

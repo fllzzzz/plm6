@@ -62,7 +62,7 @@
           <material-secondary-info-columns v-if="!showAmount" :basic-class="form.basicClass" />
           <!-- 甲供设置 -->
           <set-party-a-info v-if="showAmount && form && form.list" :form="form" />
-          <!-- 仓库设置 -->
+          <!-- 仓库信息 -->
           <warehouse-info-columns show-project />
         </common-table>
         <div class="flex-rss footer-info">

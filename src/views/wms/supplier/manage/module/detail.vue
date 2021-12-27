@@ -5,15 +5,10 @@
     :before-close="crud.cancelDetail"
     :visible="crud.detailVisible"
     :title="crud.detailTitle"
-    :show-close="false"
+    :show-close="true"
     width="80%"
     fullscreen
   >
-    <template #titleRight>
-      <span style="float:right">
-        <common-button size="mini" @click="crud.cancelDetail">关 闭</common-button>
-      </span>
-    </template>
     <div class="form">
       <el-form  v-loading="crud.detailLoading" ref="formRef" size="small" label-width="100px" class="demo-form">
         <div class="rule-row">
@@ -111,7 +106,7 @@ import { getLabelByBit } from '@/utils/enum/base'
 
 import { regDetail } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
-import uploadList from '@/components/file-upload/uploadList'
+import uploadList from '@comp/file-upload/UploadList.vue'
 
 const formRef = ref()
 

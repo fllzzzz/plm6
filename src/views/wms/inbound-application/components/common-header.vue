@@ -29,7 +29,7 @@
             :disabled="!trainsDiff.hasOver"
             placement="top"
           >
-            <el-input-number
+            <common-input-number
               v-model="form.loadingWeight"
               class="input-underline"
               style="width: 135px"
@@ -47,7 +47,7 @@
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
-      <el-tooltip content="请先选择订单号" :disabled="!!form.purchaseId" placement="bottom" effect="light">
+      <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"
@@ -57,9 +57,7 @@
           @success="handleExcelSuccess"
         />
       </el-tooltip>
-      <el-tooltip :content="`入库记录`" :show-after="1000" effect="light" placement="bottom">
-        <common-button icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
-      </el-tooltip>
+      <common-button icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
     </div>
   </div>
 </template>
@@ -67,6 +65,7 @@
 <script setup>
 import { getRequisitionsDetailBySN } from '@/api/wms/requisitions'
 import { defineProps, defineEmits, defineExpose, ref, computed, watchEffect, nextTick, inject } from 'vue'
+import { useRouter } from 'vue-router'
 import { STEEL_ENUM } from '@/settings/config'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { patternLicensePlate } from '@/utils/validate/pattern'
@@ -92,6 +91,8 @@ const props = defineProps({
     default: false
   }
 })
+
+const router = useRouter()
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { cu, form, FORM } = regExtra() // 表单
@@ -178,7 +179,7 @@ function handleOrderInfoChange(val) {
 async function fetchRequisitionsDetail(snArr) {
   if (isBlank(snArr)) return
   const allInterFace = []
-  snArr.forEach(sn => {
+  snArr.forEach((sn) => {
     const promiseItem = getRequisitionsDetailBySN(sn).then((detail) => {
       cu.props.requisitions[sn] = detail
     })
@@ -193,7 +194,9 @@ function handleExcelSuccess(val) {
 }
 
 // TODO:跳转到入库记录
-function toInboundRecord() {}
+function toInboundRecord() {
+  router.push({ name: 'RawMatInboundApplicationRecord', params: { basicClass: props.basicClass }})
+}
 
 // 查看申购单
 function openRequisitionsView() {}

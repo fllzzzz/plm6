@@ -23,7 +23,7 @@
         end-placeholder="结束日期"
         style="width:240px"
       />
-      <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
         <el-radio-button :label="undefined">全部</el-radio-button>
         <el-radio-button
@@ -48,24 +48,25 @@
       <common-select
         v-model="query.auditStatus"
         :options="auditTypeEnum.ENUM"
+        show-all
         type="enum"
         size="small"
         clearable
         class="filter-item"
         placeholder="状态"
-        style="width:200px"
+        style="width:120px"
         @change="crud.toQuery"
       />
       <el-input
         v-model="query.auditorName"
         placeholder="审核人"
-        style="width:200px"
+        style="width:120px"
         class="filter-item"
       />
       <el-input
         v-model="query.writtenByName"
         placeholder="填报人"
-        style="width:200px"
+        style="width:120px"
         class="filter-item"
       />
       <rrOperation/>
@@ -89,6 +90,7 @@ const defaultQuery = {
   startDate: undefined,
   endDate: undefined,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
+  auditStatus: undefined,
   invoiceType: undefined,
   writtenByName: undefined
 }

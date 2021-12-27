@@ -30,7 +30,7 @@
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" show-brand />
+              <expand-secondary-info v-if="showAmount" :basic-class="props.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>
@@ -41,7 +41,7 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="props.basicClass" />
           <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
+          <material-secondary-info-columns v-if="!showAmount" :basic-class="props.basicClass" />
           <!-- 金额设置 -->
           <price-set-columns
             v-if="showAmount"

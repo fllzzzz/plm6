@@ -13,7 +13,7 @@ export function get(params) {
 export function edit(data) {
   return request({
     module: 'contract',
-    url: `enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.ENUM.TRUSSFLOORPLATE.V}`,
+    url: `enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V}`,
     method: 'post',
     data
   })

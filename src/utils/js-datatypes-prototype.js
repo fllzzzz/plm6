@@ -70,6 +70,16 @@ Array.prototype.maxIndex = function () {
 }
 Object.defineProperty(Array.prototype, 'maxIndex', { enumerable: false })
 
+// 查找最后一个符合条件的index
+Array.prototype.findLastIndex = function (callback) {
+  for (var i = this.length - 1; i >= 0; i--) {
+    if (callback(this[i])) {
+      return i
+    }
+  }
+}
+Object.defineProperty(Array.prototype, 'findLastIndex', { enumerable: false })
+
 // 10000 => "10,000"
 Number.prototype.toThousand = function () {
   return toThousand(this)

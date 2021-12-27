@@ -16,24 +16,35 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-model="query.type"
+        :options="areaPlanTypeEnum.ENUM"
+        :disabled-val="disabledVal"
+        type="enum"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
     </div>
     <crudOperation :disabled="!query.productType"/>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { monomerDetail } from '@/api/plan/monomer'
 import { useRoute } from 'vue-router'
+import { areaPlanTypeEnum } from '@enum-ms/plan'
+import { businessTypeEnum } from '@enum-ms/contract'
 
 const route = useRoute()
 const defaultQuery = {
   projectId: undefined,
-  monomerId: undefined,
-  productType: undefined
+  monomerId: { value: undefined, resetAble: false },
+  productType: { value: undefined, resetAble: false },
+  type: { value: areaPlanTypeEnum.DEEPEN.V, resetAble: false }
 }
 const monomerSelectRef = ref()
 const queryMonomerId = ref()
@@ -45,9 +56,16 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 
+const disabledVal = computed(() => {
+  return props.globalProject.businessType === businessTypeEnum.MACHINING.V ? [areaPlanTypeEnum.INSTALL.V] : []
+})
 // watch(
 //   () => route.params.monomerId,
 //   (val) => {

@@ -27,9 +27,10 @@ const useMatClsList = (loadedCallBack) => {
   }
 
   return {
-    manufClsList: computed(() => store.state.config.manufClsList),
-    rawMatClsList: computed(() => store.state.config.rawMatClsList),
-    matClsList: computed(() => store.state.config.matClsList),
+    manufClsLeafList: computed(() => store.state.config.manufClsLeafList),
+    rawMatClsLeafList: computed(() => store.state.config.rawMatClsLeafList),
+    matClsLeafList: computed(() => store.state.config.matClsLeafList),
+    rawMatClsKV: computed(() => store.state.config.rawMatClsKV),
     loaded
   }
 }

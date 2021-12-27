@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="600px"
+    size="700px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -41,6 +41,14 @@
             style="width: 270px;"
           />
         </el-form-item>
+        <el-form-item label="轴线/标高" prop="axis">
+          <el-input
+            v-model="form.axis"
+            type="text"
+            placeholder="请填写轴线或标高"
+            style="width: 270px;"
+          />
+        </el-form-item>
         <el-form-item label="完成时间" prop="date">
           <el-date-picker
             v-model="form.date"
@@ -49,14 +57,6 @@
             placeholder="选择完成日期"
             style="width:270px"
             :disabledDate="dateOptionFn"
-          />
-        </el-form-item>
-        <el-form-item label="轴线/标高" prop="axis">
-          <el-input
-            v-model="form.axis"
-            type="text"
-            placeholder="请填写轴线或标高"
-            style="width: 270px;"
           />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
@@ -99,6 +99,10 @@ const props = defineProps({
   typeInfo: {
     type: Array,
     default: () => []
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 const typeProp = { key: 'no', label: 'name', value: 'no' }
@@ -137,7 +141,7 @@ const rules = {
     { required: true, message: '请选择制造方式', trigger: 'change' }
   ],
   date: [
-    { validator: checkOtherDate, trigger: 'change' }
+    { required: true, validator: checkOtherDate, trigger: 'change' }
   ],
   sort: [
     { required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }
@@ -156,9 +160,9 @@ const rules = {
 function dateOptionFn(time) {
   if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
     const val = props.typeInfo.find(v => v.no === crud.form.productType)
-    return time.getTime() - 8.64e6 > val.date
+    return time.getTime() - 8.64e6 > val.date || time.getTime() - 8.64e6 < props.globalProject.createTime
   } else {
-    return false
+    return time.getTime() - 8.64e6 < props.globalProject.createTime
   }
 }
 

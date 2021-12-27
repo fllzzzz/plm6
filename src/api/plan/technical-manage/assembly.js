@@ -9,7 +9,6 @@ export function get(params) {
   })
 }
 
-
 export function edit(data) {
   return request({
     module: 'plan',
@@ -22,7 +21,7 @@ export function edit(data) {
 export function del(id) {
   return request({
     module: 'plan',
-    url: `assemble​/deleteAssemble​/${id}`,
+    url: 'assemble​/deleteAssemble​/' + id,
     method: 'delete'
   })
 }
@@ -35,7 +34,6 @@ export function delAssemblyArtifact(params) {
     params
   })
 }
-
 
 export function addAssemblyArtifact(data) {
   return request({
@@ -62,7 +60,7 @@ export function listUpload(data) {
 /**
  * 下载组立清单
  */
- export function downloadAssemble(params) {
+export function downloadAssemble(params) {
   return request({
     module: 'plan',
     url: 'assemble/export',

@@ -13,7 +13,10 @@
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
-        <el-form-item label="项目" prop="projectId" label-width="55px">
+        <el-form-item v-if="!showProjectSelect && isBlank(globalProject)" label="包含项目" label-width="80px">
+          <span v-parse-project="{ project: listProjects }" />
+        </el-form-item>
+        <el-form-item v-else label="项目" prop="projectId" label-width="55px">
           <project-cascader
             v-if="showProjectSelect"
             v-model="form.projectId"
@@ -22,7 +25,7 @@
             style="width: 300px"
             @change="handleProjectChange"
           />
-          <span v-else v-parse-project="{ project: globalProject }" v-empty-text />
+          <span v-else v-parse-project="{ project: globalProject }" v-empty-text style="display: inline-block; min-width: 150px" />
         </el-form-item>
         <el-form-item label="领用人" prop="recipientId">
           <user-dept-cascader
@@ -80,7 +83,7 @@
           </template>
           <template #default="{ row }">
             <span class="flex-rbc">
-              <el-input-number
+              <common-input-number
                 v-model="row.batchOutboundQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
@@ -106,6 +109,8 @@ import {
 } from '@/api/wms/outbound/outbound-handling'
 import { defineEmits, defineProps, watch, ref, watchEffect, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { obj2arr } from '@/utils/convert/type'
+import { isBlank } from '@/utils/data-type'
 import { STEEL_ENUM } from '@/settings/config'
 
 import useVisible from '@compos/use-visible'
@@ -124,7 +129,6 @@ import { mapGetters } from '@/store/lib'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
-
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -194,6 +198,16 @@ const boolPublicWare = computed(() => props.projectWarehouseType === projectWare
 // 显示项目选择组件(false:显示项目名称)： 公共库 或者 配置=>项目库可以出库给其他项目
 const showProjectSelect = computed(() => {
   return boolPublicWare.value || outboundCfg.value.boolCanOutToOtherProject === true
+})
+
+const listProjects = computed(() => {
+  const projects = {}
+  form.value.list.forEach((l) => {
+    if (!projects[l.project.id]) {
+      projects[l.project.id] = l.project
+    }
+  })
+  return obj2arr(projects)
 })
 
 // 备注输入框大小

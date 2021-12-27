@@ -29,7 +29,7 @@
                     @click="openTransferDetailView(transfer.id)"
                     :text="transfer.serialNumber"
                   />
-                  <span v-if="ri !== row.returnTransfers.length - 1"> / </span>
+                  <span v-if="ri !== row.returnTransfers.length - 1">、</span>
                 </template>
               </template>
               <template v-else><span v-empty-text /></template>
@@ -105,7 +105,7 @@
                 @click="openTransferDetailView(transfer.id)"
                 :text="transfer.serialNumber"
               />
-              <span v-if="ri !== row.returnTransfers.length - 1"> / </span>
+              <span v-if="ri !== row.returnTransfers.length - 1">、</span>
             </template>
           </template>
         </template>

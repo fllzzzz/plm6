@@ -32,12 +32,12 @@ export function contractCollectionInfo(params) {
     module: 'contract',
     url: 'contract/collection/getFinanceInfo',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 
-//审核
-export function editStatus(id,status) {
+export function editStatus(id, status) {
   return request({
     module: 'contract',
     url: `contract/collection/audit/collectionId/${id}/status/${status}`,

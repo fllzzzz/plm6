@@ -9,9 +9,13 @@
     >
       <div class="filter-container">
         <div class="filter-right-box">
-          <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!currentBasicClass">
-            添加物料
-          </common-button>
+          <el-tooltip :disabled="addable" effect="light" content="请先选择采购订单" placement="left-start">
+            <span>
+              <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
+                添加物料
+              </common-button>
+            </span>
+          </el-tooltip>
         </div>
       </div>
       <el-form ref="formRef" :model="form">
@@ -28,7 +32,7 @@
     >
       <template #content>
         <material-table-spec-select
-          v-if="currentBasicClass"
+          v-if="addable"
           ref="matSpecRef"
           v-model="form.list"
           :visible="materialSelectVisible"
@@ -49,7 +53,7 @@
 
 import { gasInboundApplication } from '@/api/wms/inbound/application'
 import { edit as editInboundApplication } from '@/api/wms/inbound/raw-mat-application-record'
-import { defineProps, defineEmits, ref, watch, provide, nextTick, watchEffect, reactive } from 'vue'
+import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useForm from '@/composables/form/use-form'
@@ -90,28 +94,34 @@ const order = ref() // 订单信息
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.GAS.V // 当前基础分类
 
+const addable = computed(() => !!(currentBasicClass && order.value)) // 可添加的状态（选择了采购订单）
+
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 // 使用草稿/修改时，为数据设置监听
 const setFormCallback = (form) => {
-  form.list = form.list.map(v => reactive(v))
+  form.list = form.list.map((v) => reactive(v))
   const trigger = watch(
     tableRef,
     (ref) => {
       if (ref) {
         // 初始化选中数据，执行一次后取消当前监听
-        const initSelectedTrigger = watchEffect(() => {
-          if (matSpecRef.value) {
-            matSpecRef.value.initSelected(
-              form.list.map((v) => {
-                return { sn: v.sn, classifyId: v.classifyId }
+        const initSelectedTrigger = watch(
+          matSpecRef,
+          () => {
+            if (matSpecRef.value) {
+              matSpecRef.value.initSelected(
+                form.list.map((v) => {
+                  return { sn: v.sn, classifyId: v.classifyId }
+                })
+              )
+              nextTick(() => {
+                initSelectedTrigger()
               })
-            )
-            nextTick(() => {
-              initSelectedTrigger()
-            })
-          }
-        })
+            }
+          },
+          { immediate: true }
+        )
         nextTick(() => {
           trigger()
         })

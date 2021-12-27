@@ -18,7 +18,7 @@
                 v-model="form.serialNumber"
                 placeholder="合同编号"
               />
-              <span v-else>{{ detail.serialNumber }}</span>
+              <span v-else>{{ detail.serialNumber || '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="项目名称" prop="name">
@@ -28,7 +28,7 @@
                 v-model="form.name"
                 placeholder="项目名称"
               />
-              <span v-else>{{ detail.name }}</span>
+              <span v-else>{{ detail.name || '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="项目简称" prop="shortName">
@@ -38,7 +38,7 @@
                 v-model="form.shortName"
                 placeholder="项目简称"
               />
-              <span v-else>{{ detail.shortName }}</span>
+              <span v-else>{{ detail.shortName || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -56,7 +56,7 @@
                 disabled
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ detail.startDate }}</span>
+                <span>{{ detail.startDate? parseTime(detail.startDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -73,7 +73,7 @@
                 :disabledDate="endDateOption"
               />
               <template v-else>
-                <span v-if="detail.endDate">{{ parseTime(detail.endDate,'{y}-{m}-{d}') }}</span>
+                <span>{{ detail.endDate? parseTime(detail.endDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -84,7 +84,7 @@
                 v-model="totalDuration"
                 :readonly="true"
               />
-              <span v-else>{{ detail.totalDuration }}</span>
+              <span v-else>{{ detail.totalDuration || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -101,7 +101,7 @@
                 filterable
                 @change="handleRegionChange"
               />
-              <span v-else>{{ detail.regionalFullName }}</span>
+              <span v-else>{{ detail.regionalFullName || '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="详细地址" prop="address">
@@ -111,7 +111,7 @@
                 v-model="form.address"
                 placeholder="项目详细地址"
               />
-              <span v-else>{{ detail.address }}</span>
+              <span v-else>{{ detail.address || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -130,10 +130,10 @@
                 style="width:200px"
                 placeholder="项目经理"
               />
-              <span v-else>{{ detail.projectManagerFullName }}</span>
+              <span v-else>{{ detail.projectManagerFullName || '-' }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="业务负责人1" prop="businessLeaderId">
+          <!-- <el-form-item label="业务负责人1" prop="businessLeaderId">
             <div class="input-underline" style="width:300px">
               <user-dept-cascader
                 v-if="isModify"
@@ -164,13 +164,13 @@
               />
               <span v-else>{{ detail.businessLeaderTwoFullName }}</span>
             </div>
-          </el-form-item>
+          </el-form-item> -->
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'' }}</span>
+              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -193,19 +193,15 @@
             </div>
           </el-form-item>
           <el-form-item label="管理费(元)" prop="managementFeeRate">
-            <div class="input-underline" style="display:inline-block;width:110px">
-              <el-input
-                v-if="isModify"
-                v-model="managementFee"
-                :readonly="true"
-                placeholder="先输入费率"
-              />
-              <template v-else>
-                <span>{{ managementFee? managementFee.toThousand(): '' }}</span>
-              </template>
-            </div>
-            <div class="input-underline" style="display:inline-block;width:130px">
-              <div v-if="isModify">
+            <template v-if="isModify">
+              <div class="input-underline" style="display:inline-block;width:110px">
+                <el-input
+                  v-model="managementFee"
+                  :readonly="true"
+                  placeholder="先输入费率"
+                />
+              </div>
+              <div class="input-underline" style="display:inline-block;width:130px">
                 <el-input-number
                   v-model="form.managementFeeRate"
                   :step="1"
@@ -218,8 +214,11 @@
                   style="width:80px"
                 />%
               </div>
-              <span v-else>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
-            </div>
+            </template>
+            <template v-else>
+              <span>{{ detail.managementFee? detail.managementFee.toThousand(): '-' }}</span>
+              <span>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
+            </template>
           </el-form-item>
         </div>
         <div class="form-row">
@@ -238,7 +237,7 @@
                 style="width:100%"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '' }}</span>
+                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -256,7 +255,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.marginType && dict && dict.label && dict.label['margin_type']">{{ dict.label['margin_type'][detail.marginType] }}</span>
+                <span>{{ detail.marginType && dict && dict.label && dict.label['margin_type']? dict.label['margin_type'][detail.marginType]: '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -274,7 +273,7 @@
                 style="width:200px"
               />
               <template v-else>
-                <span v-if="detail.currencyType && dict && dict.label && dict.label['currency_type']">{{ dict.label['currency_type'][detail.currencyType]}}</span>
+                <span>{{ detail.currencyType && dict && dict.label && dict.label['currency_type']? dict.label['currency_type'][detail.currencyType]: '-'}}</span>
               </template>
             </div>
           </el-form-item>
@@ -286,7 +285,7 @@
           v-if="!isModify"
           :show-download="!isModify"
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
-          v-model:files="detail.attachments"
+          v-model:files="detail.attachmentFiles"
           :download-fn="downloadBaseAttachments"
           :uploadable="isModify"
           empty-text="暂未上传合同附件"
@@ -295,7 +294,7 @@
           v-else
           :show-download="!isModify"
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
-          v-model:files="form.attachments"
+          v-model:files="form.attachmentFiles"
           :download-fn="downloadBaseAttachments"
           :uploadable="isModify"
           empty-text="暂未上传合同附件"
@@ -306,14 +305,14 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed, defineExpose } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
 import { dateDifferenceReduce } from '@/utils/date'
 import { cleanArray } from '@data-type/array'
 import regionCascader from '@comp-base/region-cascader'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import useDict from '@compos/store/use-dict'
 import { fileClassifyEnum } from '@enum-ms/file'
-import uploadList from '@/components/file-upload/uploadList'
+import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
@@ -332,7 +331,7 @@ const defaultForm = {
   cityId: undefined, // 市
   regionId: undefined, // 区
   address: undefined, // 项目详细地址
-  startDate: String(new Date().getTime()), // 项目开始时间
+  startDate: undefined, // 项目开始时间
   endDate: undefined, // 项目结束时间
   contractAmount: undefined, // 合同金额
   prepayments: undefined, // 预付款
@@ -343,7 +342,8 @@ const defaultForm = {
   projectManagerId: undefined, // 项目经理
   businessLeaderId: undefined, // 业务负责人1
   businessLeaderTwoId: undefined, // 业务负责人2
-  attachments: [] // 附件
+  attachmentFiles: [], // 附件
+  attachments: []
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -416,10 +416,15 @@ const managementFee = computed(() => {
  * 重置表单
  */
 function resetForm() {
-  // if (formRef.value) {
-  //   formRef.value.resetFields()
-  // }
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
   form.value = JSON.parse(JSON.stringify(detail.value))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 
@@ -428,7 +433,7 @@ async function validateForm() {
     const valid = await formRef.value.validate()
     if (valid) {
       const data = form.value
-      data.attachments = data.attachments.length > 0 ? data.attachments.map(v => v.id) : []
+      data.attachments = data.attachmentFiles.length > 0 ? data.attachmentFiles.map(v => v.id) : []
     }
     return valid
   } catch (error) {
@@ -477,8 +482,8 @@ async function fetchDetail() {
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
     _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
-    _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? (_detail.managementFeeRate * _detail.contractAmount / 100).toFixed(DP.YUAN) : ''
-    _detail.attachments = _detail.attachments || []
+    _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? _detail.managementFeeRate * _detail.contractAmount / 100 : ''
+    _detail.attachmentFiles = _detail.attachments || []
     _detail.region = cleanArray([_detail.countryId, _detail.provinceId, _detail.cityId, _detail.regionId])
   } catch (error) {
     console.log('error', error)

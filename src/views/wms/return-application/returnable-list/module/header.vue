@@ -17,6 +17,16 @@
             @change="handleBasicClassChange"
           />
         </template>
+        <template #beforeWarehouse>
+          <project-cascader
+            v-model="query.projectId"
+            placeholder="所属项目"
+            clearable
+            @change="crud.toQuery"
+            class="filter-item"
+            style="width: 300px"
+          />
+        </template>
         <template #afterWarehouse>
           <el-date-picker
             v-model="query.createTime"
@@ -57,8 +67,9 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import useGlobalProjectIdChangeToQuery from '@/composables/use-global-project-id-change-to-query'
+// import useGlobalProjectIdChangeToQuery from '@/composables/use-global-project-id-change-to-query'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
+import projectCascader from '@comp-base/project-cascader.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 const isComponent = inject('isComponent')
@@ -66,12 +77,12 @@ const basicClass = inject('basicClass')
 
 const defaultQuery = {
   createTime: [], // [借用开始日期，借用结束日期]
-  projectId: { value: undefined, resetAble: false }, // 原项目id
+  // projectId: { value: undefined, resetAble: false }, // 原项目id
   basicClass: { value: basicClass, resetAble: false }
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
+// useGlobalProjectIdChangeToQuery(crud)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

@@ -6,6 +6,7 @@
     :title="crud.status.title"
     :show-close="true"
     :size="1000"
+    :close-on-click-modal="false"
     custom-class="purchase-order-form"
   >
     <template #titleRight>
@@ -59,7 +60,21 @@
                 />
               </div>
             </el-form-item>
-
+            <el-form-item v-if="form.basicClass & matClsEnum.MATERIAL.V" class="el-form-item-5" label="辅材明细" prop="auxMaterialIds">
+              <material-cascader
+                v-model="form.auxMaterialIds"
+                :basic-class="matClsEnum.MATERIAL.V"
+                :deep="2"
+                multiple
+                :collapse-tags="false"
+                separator=" > "
+                clearable
+                placeholder="请选择辅材"
+                class="input-underline"
+                size="small"
+                style="width: 100%"
+              />
+            </el-form-item>
             <el-form-item label="选择项目" class="el-form-item-4" prop="projectIds">
               <project-cascader v-model="form.projectIds" clearable :disabled="form.boolUsed" multiple class="input-underline" />
             </el-form-item>
@@ -104,7 +119,7 @@
             <template v-if="form.supplyType == orderSupplyTypeEnum.SELF.V">
               <el-form-item class="el-form-item-8" label="合同量" prop="mete">
                 <div class="input-underline flex-rss child-mr-10">
-                  <el-input-number
+                  <common-input-number
                     v-model="form.mete"
                     placeholder="请填写合同量"
                     autocomplete="off"
@@ -125,7 +140,7 @@
                 </div>
               </el-form-item>
               <el-form-item class="el-form-item-9" label="合同额（元）" prop="amount">
-                <el-input-number
+                <common-input-number
                   v-model="form.amount"
                   :max="999999999999"
                   :precision="2"
@@ -179,15 +194,14 @@
             <el-form-item class="el-form-item-14" prop="remark">
               <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
             </el-form-item>
-            <el-form-item class="el-form-item-15" prop="attachments">
-              <!-- :show-download="!!form.id" -->
-              <upload-list
-                show-download
-                :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
-                v-model:files="form.attachments"
-                empty-text="暂未上传采购订单附件"
-              />
-            </el-form-item>
+            <!-- :show-download="!!form.id" -->
+            <upload-list
+              class="el-form-item-15"
+              show-download
+              :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
+              v-model:files="form.attachments"
+              empty-text="暂未上传采购订单附件"
+            />
           </div>
         </el-form>
       </div>
@@ -205,14 +219,15 @@ import { isNotBlank, isBlank } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
-import unitSelect from '@comp-common/unit-select/index.vue'
-import projectCascader from '@comp-base/project-cascader.vue'
-import supplierSelect from '@comp-base/supplier-select/index.vue'
-import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
-import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
-import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
-import uploadList from '@/components/file-upload/UploadList.vue'
-import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
+import UnitSelect from '@comp-common/unit-select/index.vue'
+import ProjectCascader from '@comp-base/project-cascader.vue'
+import SupplierSelect from '@comp-base/supplier-select/index.vue'
+import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+import BasicClassSelect from '@/components-system/classification/basic-class-select.vue'
+import InvoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
+import RequisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
+import UploadList from '@comp/file-upload/UploadList.vue'
+import AreaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
 
 const defaultForm = {
@@ -220,6 +235,7 @@ const defaultForm = {
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
   purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类
   basicClass: null, // 物料类型
+  auxMaterialIds: undefined, // 辅材明细ids
   projectIds: undefined, // 项目ids
   areaIds: null, // 区域
   strucAreaIds: [], // 构件区域
@@ -291,6 +307,11 @@ const partyARules = {
 
 const rawMatRules = {}
 
+// 辅材校验
+const auxMatRules = {
+  auxMaterialIds: [{ required: true, message: '请选择辅材', trigger: 'change' }]
+}
+
 // 制成品校验
 const manufRules = {
   projectIds: [{ required: true, message: '请选择项目', trigger: 'change' }],
@@ -314,6 +335,9 @@ const rules = computed(() => {
   }
   if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
     Object.assign(r, partyARules)
+  }
+  if (form.basicClass & matClsEnum.MATERIAL.V) {
+    Object.assign(r, auxMatRules)
   }
   // const newFields = Object.keys(r)
   // const clearFields = oldFields.filter(v => !newFields.includes(v))
@@ -352,6 +376,9 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
   if (isNotBlank(form.project)) {
     form.projectIds = form.project.map((v) => v.id)
   }
+  if (isBlank(form.attachments)) {
+    form.attachments = []
+  }
 }
 
 // 表单提交数据清理
@@ -376,8 +403,8 @@ crud.submitFormFormat = (form) => {
   grid-column-gap: 20px;
   grid-auto-flow: row;
   grid-template-areas:
-    'a a a a a a . . . . . .'
-    'c c c c c c b b b b b b'
+    'a a a a a a b b b b b b'
+    'c c c c c c e e e e e e'
     'd d d d d d d d d d d d'
     'z z z z z z z z z z z z'
     'f f f f f f g g g g g g'

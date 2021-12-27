@@ -77,15 +77,16 @@
             <div style="width: 460px">
               <el-input v-if="isModify" v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
               <span v-else>{{ collectionInfo.applyAmount ? collectionInfo.applyAmount.toThousand() : '' }}</span>
-              <span v-if="upperYuan" style="margin-left: 5px">{{ `大写:${upperYuan}` }}</span>
+              <span v-if="upperYuan" style="margin-left: 5px">{{ `(${upperYuan})` }}</span>
             </div>
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
           <el-form-item label="业务类型" prop="businessType">
             <div style="width: 360px">
-              <span v-if="isModify">{{ contractInfo.businessType ? businessTypeEnum.VL[contractInfo.businessType] : '' }}</span>
-              <span v-else>{{ businessTypeName }}</span>
+              <span>{{ businessTypeName }}</span>
+              <!-- <span v-if="isModify">{{ contractInfo.businessType ? businessTypeEnum.VL[contractInfo.businessType] : '' }}</span>
+              <span v-else>{{ businessTypeName }}</span> -->
             </div>
           </el-form-item>
           <el-form-item label="申请人" prop="applyUserId">
@@ -152,7 +153,7 @@
             </div>
           </el-form-item>
         </div>
-        <div class="form-row" style="display: flex" v-if="!isModify">
+        <div class="form-row" style="display: flex" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.PASS.V">
           <el-form-item label="付款单位" prop="paymentUnitId">
             <div style="width: 360px">
               <common-select
@@ -171,7 +172,7 @@
               <span v-else>{{ form.paymentUnit }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="付款开户行" prop="paymentDepositBank" v-if="!isModify">
+          <el-form-item label="付款开户行" prop="paymentDepositBank" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.PASS.V">
             <div style="width: 360px">
               <el-input
                 v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type === 'audit'"
@@ -185,7 +186,7 @@
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
-          <el-form-item label="付款账号" prop="paymentBankAccount" v-if="!isModify">
+          <el-form-item label="付款账号" prop="paymentBankAccount" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.PASS.V">
             <div style="width: 360px">
               <el-input
                 v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type === 'audit'"
@@ -197,7 +198,7 @@
               <span v-else>{{ form.paymentBankAccount }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="实付金额(元)" prop="actuallyPayAmount" v-if="!isModify">
+          <el-form-item label="实付金额(元)" prop="actuallyPayAmount" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.PASS.V">
             <div style="width: 360px">
               <span>{{ form.actuallyPayAmount ? form.actuallyPayAmount.toThousand() : '' }}</span>
               <span v-if="actuallyUpperYuan" style="margin-left: 5px">{{ `大写:${actuallyUpperYuan}` }}</span>
@@ -211,13 +212,15 @@
               v-model="form.remark"
               type="textarea"
               :autosize="{ minRows: 6, maxRows: 8 }"
-              :maxLength="500"
+              :maxlength="200"
+              show-word-limit
               placeholder="可填写备注"
               style="max-width: 500px"
             />
             <span v-else>{{ collectionInfo.remark }}</span>
           </div>
         </el-form-item>
+        <el-divider><span class="title">报销明细</span></el-divider>
         <common-table
           ref="detailRef"
           border
@@ -274,7 +277,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-if="isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" />
+              <el-input v-if="isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)"/>
               <span v-else>{{ scope.row.invoiceNo }}</span>
             </template>
           </el-table-column>
@@ -333,7 +336,7 @@
               <template v-else>{{ scope.row.inputTax }}</template>
             </template>
           </el-table-column>
-          <el-table-column prop="actuallyPayAmount" label="实付金额(元)" align="center" min-width="160" v-if="!isModify">
+          <el-table-column prop="actuallyPayAmount" label="实付金额(元)" align="center" min-width="160" v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.PASS.V">
             <template v-slot="scope">
               <el-input-number
                 v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type === 'audit'"
@@ -384,7 +387,7 @@ import { invoiceTypeEnum } from '@enum-ms/finance'
 import { reimbursementTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { digitUppercase } from '@/utils/data-type/number'
 import { edit, editStatus } from '@/api/contract/supplier-manage/reimbursement'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 import useTableValidate from '@compos/form/use-table-validate'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { isNotBlank } from '@data-type/index'
@@ -465,6 +468,8 @@ const tableRules = {
   applyAmount: [{ required: true, message: '请输入申请金额', trigger: 'change', type: 'number' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+const businessTypeName = ref()
+const invoiceNoArr = ref([])
 
 function modifyInfo() {
   isModify.value = true
@@ -489,10 +494,12 @@ async function getContractInfo(id) {
   let data = {}
   try {
     data = await contractCollectionInfo({ projectId: id })
+    console.log(data)
   } catch (e) {
     console.log('获取合同信息', e)
   } finally {
     contractInfo.value = data
+    businessTypeName.value = contractInfo.value.businessType ? businessTypeEnum.VL[contractInfo.value.businessType] : ''
   }
 }
 
@@ -573,9 +580,9 @@ const actuallyUpperYuan = computed(() => {
   return form.value.actuallyPayAmount ? digitUppercase(form.value.actuallyPayAmount) : ''
 })
 
-const businessTypeName = computed(() => {
-  return contractInfo.value.businessType ? businessTypeEnum.VL[contractInfo.value.businessType] : ''
-})
+// const businessTypeName = computed(() => {
+//   return contractInfo.value.businessType ? businessTypeEnum.VL[contractInfo.value.businessType] : ''
+// })
 
 function expenseChange(val) {
   if (val) {
@@ -616,8 +623,30 @@ function addRow() {
     invoiceNo: undefined,
     invoiceType: undefined,
     taxRate: undefined,
-    verify: {}
+    dataIndex: form.value.detailList.length
   })
+}
+
+function checkInvoiceNo(row, index) {
+  if (row.invoiceNo) {
+    const val = invoiceNoArr.value.find(v => v.index === index)
+    if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+      ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+      row.invoiceNo = undefined
+      if (val) {
+        val.invoiceNo = undefined
+      }
+    } else {
+      if (val) {
+        val.invoiceNo = row.invoiceNo
+      } else {
+        invoiceNoArr.value.push({
+          invoiceNo: row.invoiceNo,
+          index: index
+        })
+      }
+    }
+  }
 }
 
 function handleSuccess() {
@@ -636,6 +665,10 @@ async function onSubmit(val) {
       await editStatus(submitData)
       handleSuccess()
     } else {
+      if (form.value.detailList.length <= 0) {
+        ElMessage({ message: '请先填写报销明细', type: 'error' })
+        return false
+      }
       const { validResult, dealList } = tableValidate(form.value.detailList)
       if (validResult) {
         form.value.detailList = dealList

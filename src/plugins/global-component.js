@@ -1,3 +1,4 @@
+import commonInputNumber from '@comp-common/common-input-number'
 import commonButton from '@comp-common/common-button'
 import commonTipButton from '@comp-common/common-tip-button'
 import commonSelect from '@comp-common/common-select'
@@ -9,6 +10,7 @@ import commonDialog from '@comp-common/common-dialog'
 import projectRadioButton from '@comp-common/project-radio-button'
 
 const components = new Map([
+  ['commonInputNumber', commonInputNumber],
   ['commonButton', commonButton],
   ['commonTipButton', commonTipButton],
   ['commonSelect', commonSelect],

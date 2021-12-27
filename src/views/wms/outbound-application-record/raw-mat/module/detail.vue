@@ -45,7 +45,7 @@
         <material-secondary-info-columns />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns />
-        <!-- 仓库设置 -->
+        <!-- 仓库信息 -->
         <warehouse-info-columns show-project show-transfer />
         <el-table-column label="领用人" width="100px" align="center">
           <template #default="{ row }">

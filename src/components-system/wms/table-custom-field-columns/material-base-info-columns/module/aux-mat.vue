@@ -1,11 +1,27 @@
 <template>
-  <el-table-column v-if="showClassifyFullName" :prop="`${field}.classifyFullName`" label="物料种类" align="center" min-width="180px" :fixed="fixed" >
+  <el-table-column
+    v-if="showClassifyFullName"
+    :prop="`${field}.classifyFullName`"
+    label="物料种类"
+    align="center"
+    min-width="180px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <span v-empty-text>{{ getInfo(row, 'classifyFullName') }}</span>
     </template>
   </el-table-column>
   <template v-if="props.specMerge">
-    <el-table-column v-if="showSpecification" :prop="`${field}.specification`" label="规格" align="center" min-width="180px" :fixed="fixed">
+    <el-table-column
+      v-if="showSpecification"
+      :prop="`${field}.specification`"
+      label="规格"
+      align="center"
+      min-width="180px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <el-tooltip :content="specTip(getInfo(row))" placement="top">
           <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>
@@ -14,14 +30,22 @@
     </el-table-column>
   </template>
   <template v-else>
-    <el-table-column v-if="showSpecification" :prop="`${field}.specification`" label="规格" align="center" min-width="180px" :fixed="fixed">
+    <el-table-column
+      v-if="showSpecification"
+      :prop="`${field}.specification`"
+      label="规格"
+      align="center"
+      min-width="180px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="top">
           <span v-empty-text>{{ getInfo(row, 'specification') }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column v-if="showColor" :prop="`${field}.color`" align="center" width="120px" :label="`颜色`">
+    <el-table-column v-if="showColor" :prop="`${field}.color`" align="center" width="120px" :label="`颜色`" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ getInfo(row, 'color') }}</span>
       </template>
@@ -45,7 +69,8 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  fixed: { // 定位
+  fixed: {
+    // 定位
     type: String
   },
   field: {

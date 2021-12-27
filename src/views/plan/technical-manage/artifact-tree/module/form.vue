@@ -34,7 +34,7 @@
             <span>{{ form.productionQuantity }}</span>
           </el-form-item>
           <el-form-item label="关联组立号">
-            <span>{{ form.name }}</span>
+            <span>{{ form.assembleSerialNumber }}</span>
           </el-form-item>
         </div>
         <div style="display: flex; width: 100%">
@@ -358,7 +358,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { shearTypeEnum } from '@enum-ms/plan'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
-import UploadBtn from '@/components/file-upload/UploadBtn'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 
 const formRef = ref()

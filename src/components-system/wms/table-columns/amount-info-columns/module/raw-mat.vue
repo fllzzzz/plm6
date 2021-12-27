@@ -1,30 +1,30 @@
 <template>
-  <el-table-column v-if="showInvoiceType" prop="invoiceType" label="票据类型" align="center" min-width="70px">
+  <el-table-column v-if="showInvoiceType" prop="invoiceType" label="票据类型" align="center" min-width="70px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType, f:'SL' }" />
     </template>
   </el-table-column>
-  <el-table-column v-if="showTaxRate" prop="taxRate" label="税率" align="center"  min-width="70">
+  <el-table-column v-if="showTaxRate" prop="taxRate" label="税率" align="center"  min-width="70" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text>{{ row.taxRate ? `${row.taxRate}%` : undefined }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showUnitPrice" prop="unitPrice" label="含税单价" align="right"  min-width="90px">
+  <el-table-column v-if="showUnitPrice" prop="unitPrice" label="含税单价" align="right"  min-width="90px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ row.unitPrice }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showAmount" prop="amount" label="金额" align="right"  min-width="105px">
+  <el-table-column v-if="showAmount" prop="amount" label="金额" align="right"  min-width="105px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ row.amount }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showAmountExcludingVAT" prop="amountExcludingVAT" label="不含税金额" align="right"  min-width="105px">
+  <el-table-column v-if="showAmountExcludingVAT" prop="amountExcludingVAT" label="不含税金额" align="right"  min-width="105px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ row.amountExcludingVAT }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showInputVAT" prop="inputVAT" label="进项税" align="right"  min-width="90px">
+  <el-table-column v-if="showInputVAT" prop="inputVAT" label="进项税" align="right"  min-width="90px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ row.inputVAT }}</span>
     </template>

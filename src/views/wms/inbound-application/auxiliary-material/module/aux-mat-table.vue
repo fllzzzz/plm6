@@ -31,7 +31,7 @@
     </el-table-column>
     <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-if="row.measureUnit"
           v-model="row.quantity"
           :min="1"
@@ -52,7 +52,7 @@
     </el-table-column>
     <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.mete"
           :min="1"
           :max="999999999"
@@ -117,8 +117,9 @@ function rowInit(row) {
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
     specificationLabels: row.specificationLabels, // 规格中文
-    serialNumber: row.classify.serialNumber, // 科目编号
+    serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
+    classifyFullPathId: row.classify.fullPathId, // 全路径id
     classifyFullName: row.classify.fullName, // 全路径名称
     basicClass: row.classify.basicClass, // 基础类型
     specification: row.spec, // 规格

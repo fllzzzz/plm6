@@ -301,7 +301,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierPayMentTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
 import { ElNotification } from 'element-plus'
-import UploadBtn from '@/components/file-upload/UploadBtn'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
 const defaultForm = {

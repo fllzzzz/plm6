@@ -85,7 +85,7 @@
         <el-table-column label="归还数量" width="170px" align="center" fixed="right">
           <template #default="{ row }">
             <span class="flex-rbc">
-              <el-input-number
+              <common-input-number
                 v-model="row.returnedQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"

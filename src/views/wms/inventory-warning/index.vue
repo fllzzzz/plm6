@@ -28,10 +28,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('fullClassifyName')"
-        key="fullClassifyName"
+        v-if="columns.visible('classifyFullName')"
+        key="classifyFullName"
         :show-overflow-tooltip="true"
-        prop="fullClassifyName"
+        prop="classifyFullName"
         label="科目"
         align="left"
         min-width="180"
@@ -56,7 +56,6 @@
       <el-table-column
         v-if="columns.visible('minimumInventory')"
         key="minimumInventory"
-        :show-overflow-tooltip="true"
         prop="minimumInventory"
         label="预警数量"
         align="center"
@@ -65,7 +64,7 @@
         <template #default="{ row }">
           <template v-if="row.editMode">
             <div class="edit-item">
-              <el-input-number
+              <common-input-number
                 v-model="row.minimumInventory"
                 :disabled="row.editLoading"
                 :max="999999"
@@ -95,7 +94,7 @@
               :disabled="row.enabledLoading"
               v-model="row.enabled"
               class="drawer-switch"
-              @change="handleEnabledChange(row, ['fullClassifyName', 'specification'])"
+              @change="handleEnabledChange(row, ['classifyFullName', 'specification'])"
             />
           </template>
           <template v-else>
@@ -152,6 +151,8 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
+import { numFmtByBasicClass, numFmtByUnit } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 
 const permission = {
   get: ['wms_inventoryWarning:get'],
@@ -187,10 +188,30 @@ const { CRUD, crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled })
 
-const { rowInit, cancelRowEdit, confirmRowEdit } = useRowEdit(editMinimumInventory, editField)
+const { rowInit, cancelRowEdit, confirmRowEdit } = useRowEdit(editMinimumInventory, editField, editDataFormat)
 
-CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
-  rowInit(content)
+CRUD.HOOK.handleRefresh = async (crud, { data }) => {
+  await setSpecInfoToList(data.content)
+  data.content = await numFmtByBasicClass(data.content, {
+    toSmallest: false,
+    toNum: true
+  })
+  data.content.forEach((row) => {
+    row.unit = row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit
+  })
+  rowInit(data.content)
+}
+
+// 修改格式转换
+async function editDataFormat(row, data) {
+  await numFmtByUnit(data, {
+    unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
+    precision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,
+    fields: ['minimumInventory'],
+    toSmallest: true,
+    toNum: true
+  })
+  return data
 }
 </script>
 
@@ -198,5 +219,9 @@ CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
 .icon-button {
   margin-left: 10px;
   padding: 7px;
+}
+
+.edit-item {
+  display: inline-flex;
 }
 </style>

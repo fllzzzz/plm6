@@ -49,7 +49,7 @@ export default {
       name: 'WMSReturnApplication',
       alwaysShow: false,
       redirect: '/wms/return-application/steel-plate/index',
-      meta: { title: '入库办理', icon: 'contract', noCache: true },
+      meta: { title: '退库办理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'SteelPlateReturnApplication',
@@ -57,6 +57,27 @@ export default {
           hidden: false,
           component: '/wms/return-application/steel-plate/index',
           meta: { title: '钢板退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SectionSteelReturnApplication',
+          path: 'section-steel',
+          hidden: false,
+          component: '/wms/return-application/section-steel/index',
+          meta: { title: '型材退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SteelCoilReturnApplication',
+          path: 'steel-coil',
+          hidden: false,
+          component: '/wms/return-application/steel-coil/index',
+          meta: { title: '钢卷退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatReturnApplicationRecord',
+          path: 'return-application-record/raw-mat',
+          hidden: false,
+          component: '/wms/return-application-record/raw-mat/index',
+          meta: { title: '原材料-退库申请', icon: 'project', noCache: true }
         }
       ]
     },
