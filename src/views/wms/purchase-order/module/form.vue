@@ -124,7 +124,6 @@
                     placeholder="请填写合同量"
                     autocomplete="off"
                     :max="999999999999"
-                    :precision="5"
                     :step="1"
                     :controls="false"
                     style="width: 100%"

@@ -24,7 +24,7 @@
 import { isNotBlank } from '@/utils/data-type'
 import { ref, defineExpose, defineProps, defineEmits, watchEffect } from 'vue'
 
-const emit = defineEmits(['change', 'blur', 'focus'])
+const emit = defineEmits(['change', 'blur', 'focus', 'update:modelValue'])
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -88,7 +88,7 @@ watchEffect(() => {
 })
 
 function changeCallBack(currentValue, oldValue) {
-  console.log('change', currentValue, oldValue)
+  emit('update:modelValue', currentValue)
   emit('change', currentValue, oldValue)
 }
 function blurCallBack(event) {

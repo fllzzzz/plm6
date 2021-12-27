@@ -351,6 +351,8 @@ function getDefaultOption() {
     permission: {},
     // 在主页准备
     queryOnPresenterCreated: true,
+    // 可查询的
+    queryable: true,
     // 调试开关
     debug: false
   }
@@ -495,6 +497,7 @@ function addCrudBusinessMethod(crud) {
 
   // 搜索
   const toQuery = async () => {
+    if (!crud.queryable) return
     // TODO:【考虑删除】若不等待加载完vm完毕后再查询，钩子可能会无法触发(例：首次加载通过watch,immediate:true触发),因此在下方加入settimeout，还需优化
     const vmSet = new Set()
     crud.vms.forEach((vm) => vm && vmSet.add(vm.vm))

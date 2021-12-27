@@ -1,5 +1,5 @@
 <template>
-  <div v-if="clsLoaded && loaded" class="app-container">
+  <div class="app-container">
     <!--工具栏-->
     <mHeader />
     <!-- 表格渲染 -->
@@ -258,22 +258,24 @@ const { CRUD, crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: [],
     detailFormApi: false,
     formStore: true,
+    queryable: false,
     formStoreKey: 'WMS_PURCHASE_ORDER'
   },
   tableRef
 )
 
-const { loaded, supplierKV } = useSuppliers()
-const { loaded: clsLoaded, rawMatClsKV } = useMatClsList()
+const { loaded: supplierLoaded, supplierKV } = useSuppliers(toQuery)
+const { loaded: clsLoaded, rawMatClsKV } = useMatClsList(toQuery)
 const { maxHeight } = useMaxHeight({ paginate: true })
 const { handleEnabledChange } = useCrudEnabledChange(
   { CRUD, crud, editEnabled: editPurchaseStatus },
   { enabledField: 'purchaseStatus', enumObj: purchaseStatusEnum, t: 'UNFINISHED', f: 'FINISHED' }
 )
 
-const tableLoading = computed(() => !clsLoaded.value || !loaded.value || crud.loading)
+const tableLoading = computed(() => !clsLoaded.value || !supplierLoaded.value || crud.loading)
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
@@ -294,5 +296,12 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 
     return v
   })
+}
+
+function toQuery() {
+  if (clsLoaded.value && supplierLoaded.value) {
+    crud.queryable = true
+    crud.toQuery()
+  }
 }
 </script>
