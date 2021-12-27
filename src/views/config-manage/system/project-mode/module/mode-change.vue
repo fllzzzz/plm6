@@ -34,7 +34,7 @@ import { ref, watch, defineProps, defineEmits } from 'vue'
 import { projectModeEnum } from '@enum-ms/contract'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
-import { edit } from '@/api/config/system-config/project-mode'
+import { modeData, edit } from '@/api/config/system-config/project-mode'
 import { ElNotification } from 'element-plus'
 
 const formRef = ref()
@@ -59,11 +59,13 @@ watch(
   (val) => {
     if (val) {
       resetForm()
+      getProjectMode()
     }
   },
   { deep: true, immediate: true }
 )
 
+// const modeOption = ref([])
 const rules = {
   projectMode: [{ required: true, message: '请选择项目模式', trigger: 'change' }]
 }
@@ -79,6 +81,16 @@ function handleSuccess() {
   ElNotification({ title: '提交成功', type: 'success' })
   emit('success')
   handleClose()
+}
+
+async function getProjectMode() {
+  try {
+    const data = await modeData()
+    form.value.projectMode = data.projectMode
+    // modeOption.value = data
+  } catch (e) {
+    console.log('获取项目模式', e)
+  }
 }
 
 async function onSubmit(val) {

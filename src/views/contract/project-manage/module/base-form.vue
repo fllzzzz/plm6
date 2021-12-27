@@ -1,12 +1,12 @@
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="104px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="104px" class="form-margin">
     <div>
-      <div class="form-row">
+      <div>
         <el-form-item label="合同编号" prop="serialNumber">
-          <el-input v-model.trim="form.serialNumber" class="input-underline" placeholder="合同编号" style="width: 200px" />
+          <el-input v-model.trim="form.serialNumber" class="input-underline" placeholder="合同编号" style="width: 220px" />
         </el-form-item>
         <el-form-item label="项目名称" prop="name">
-          <el-input v-model.trim="form.name" class="input-underline" placeholder="项目名称" style="width: 200px" />
+          <el-input v-model.trim="form.name" class="input-underline" placeholder="项目名称" style="width: 220px" />
         </el-form-item>
         <el-form-item label="项目简称" prop="shortName">
           <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称" />
@@ -20,7 +20,7 @@
             class="input-underline"
             value-format="x"
             placeholder="选择约定开工日期"
-            style="width: 200px"
+            style="width: 220px"
             disabled
           />
         </el-form-item>
@@ -31,7 +31,7 @@
             class="input-underline"
             value-format="x"
             placeholder="选择约定完成日期"
-            style="width: 200px"
+            style="width: 220px"
             :disabledDate="endDateOption"
           />
         </el-form-item>
@@ -44,15 +44,15 @@
           <region-cascader
             class="input-underline"
             ref="region"
-            style="width: 200px"
+            style="width: 220px"
             v-model="form.region"
             clearable
             filterable
             @change="handleRegionChange"
           />
         </el-form-item>
-        <el-form-item label="详细地址" prop="address" label-width="80px">
-          <el-input v-model="form.address" placeholder="项目详细地址" class="input-underline" style="width: 520px" />
+        <el-form-item label="详细地址" prop="address">
+          <el-input v-model="form.address" placeholder="项目详细地址" class="input-underline" style="width: 500px" />
         </el-form-item>
       </div>
       <el-divider><span class="title">负责人</span></el-divider>
@@ -65,7 +65,7 @@
             clearable
             show-all-levels
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
             placeholder="项目经理"
           />
         </el-form-item>
@@ -77,7 +77,7 @@
             clearable
             show-all-levels
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
             placeholder="业务负责人1"
           />
         </el-form-item>
@@ -89,7 +89,7 @@
             clearable
             show-all-levels
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
             placeholder="业务负责人2"
           />
         </el-form-item> -->
@@ -106,7 +106,7 @@
             :controls="false"
             controls-position="right"
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
             placeholder="合同金额(元)"
           />
         </el-form-item>
@@ -120,7 +120,7 @@
             :controls="false"
             controls-position="right"
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
             placeholder="预付款(元)"
           />
         </el-form-item>
@@ -151,7 +151,7 @@
             :controls="false"
             controls-position="right"
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
             placeholder="保证金(元)"
           />
         </el-form-item>
@@ -164,7 +164,7 @@
             clearable
             placeholder="保证金类型"
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
           />
         </el-form-item>
         <el-form-item label="币种" prop="currencyType">
@@ -176,7 +176,7 @@
             clearable
             placeholder="币种"
             class="input-underline"
-            style="width: 200px"
+            style="width: 220px"
           />
         </el-form-item>
       </div>
@@ -249,8 +249,8 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   contractAmount: [{ required: true, message: '请填写合同金额', trigger: 'blur' }],
-  address: [{ max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }],
-  signingAddress: [{ max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }]
+  address: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
+  signingAddress: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }]
 }
 
 const props = defineProps({
@@ -352,9 +352,9 @@ defineExpose({
   box-sizing: border-box;
   padding: 0 25px;
 }
->>> .input-underline {
+::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
-  width: 200px;
+  width: 220px;
   margin-right: 0;
   input {
     border-top: 0;
@@ -365,5 +365,10 @@ defineExpose({
 }
 .form-row {
   width: 100%;
+}
+.form-margin{
+  ::v-deep(.el-form-item){
+    margin-right:30px;
+  }
 }
 </style>

@@ -2,7 +2,13 @@
   <div v-if="showMenu" class="menu-wrapper">
     <template v-if="isOnlyOne">
       <app-link v-if="lastChild.meta" :to="resolvePath(basePath, lastChild.path)">
-        <el-menu-item :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
+        <template v-if="item.name && allEnclosure.indexOf(item.name)>-1">
+          <el-menu-item v-if="showItem.indexOf(item.name)>-1" :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
+            <svg-icon :icon-class="lastChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
+            <template #title class="system-menu-title">{{ lastChild.meta.title }}</template>
+          </el-menu-item>
+        </template>
+        <el-menu-item v-else :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
           <svg-icon :icon-class="lastChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
           <template #title class="system-menu-title">{{ lastChild.meta.title }}</template>
         </el-menu-item>
@@ -33,13 +39,14 @@ export default {
 </script>
 <script setup>
 // TODO: item.routePath 代替 resolvePath(basePath, item.path) toRefs toref
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, watch, ref } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { resolvePath } from '@/utils/resolve-path'
 import { ElSubMenu, ElMenuItem } from 'element-plus'
 import Item from './item.vue'
 import AppLink from './link.vue'
 import { isNotBlank } from '@/utils/data-type'
+import { TechnologyTypeAllEnum, businessTypeEnum, projectModeEnum } from '@enum-ms/contract'
 
 const props = defineProps({
   item: {
@@ -56,8 +63,52 @@ const props = defineProps({
   }
 })
 
-const { currentMenu, globalProjectId } = mapGetters(['currentMenu', 'globalProjectId'])
-
+const { globalProject, currentMenu, globalProjectId } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId'])
+const allEnclosure = ['PlanTrussSupportList', 'PlanSandwichList', 'PlanPressedSupportList', 'PlanPressedColorList', 'PlanAssemblyList']
+const enclosureItem = [
+  { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
+  { name: 'PlanSandwichList', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
+  { name: 'PlanPressedSupportList', no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V },
+  { name: 'PlanPressedColorList', no: TechnologyTypeAllEnum.PROFILED_PLATE.V }
+]
+const showItem = ref([])
+watch(
+  () => globalProject.value,
+  (val) => {
+    if (isNotBlank(val)) {
+      const arr = []
+      const projectContentData = []
+      if (val.projectContentList && val.projectContentList.length > 0) {
+        val.projectContentList.forEach(v => {
+          if (val.businessType === businessTypeEnum.MACHINING.V) {
+            projectContentData.push(v)
+          } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
+            if (v.childrenList && v.childrenList.length > 0) {
+              v.childrenList.forEach(value => {
+                projectContentData.push(value)
+              })
+            }
+          }
+        })
+      }
+      if (projectContentData.length > 0) {
+        enclosureItem.forEach(val => {
+          const enclosureVal = projectContentData.find(v => Number(v.no) === val.no)
+          if (enclosureVal) {
+            arr.push(val.name)
+          }
+        })
+      }
+      if (val.mode !== projectModeEnum.STRUCTURE.V) {
+        arr.push('PlanAssemblyList')
+      }
+      showItem.value = arr
+    } else {
+      showItem.value = []
+    }
+  },
+  { deep: true, immediate: true }
+)
 const showMenu = computed(() => {
   // 1.不隐藏
   const hidden = !props.item.hidden

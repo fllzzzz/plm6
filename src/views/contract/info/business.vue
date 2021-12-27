@@ -353,6 +353,14 @@ function resetForm() {
     formRef.value.resetFields()
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
+  form.value.projectContent = []
+  projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.INSTALLATION.V ? projectContent2 : projectContent1
+  if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
+    detail.value.projectContentList.forEach((v) => {
+      form.value.projectContent.push(v.id)
+    })
+  }
+  getShowItem(form.value.projectContent)
   if (formRef.value) {
     nextTick(() => {
       formRef.value.clearValidate()
@@ -425,11 +433,11 @@ function enclosureSave() {
   form.value = {
     ...form.value,
     enclosureInfo: info,
-    structureSaveRequestVOS: info[TechnologyTypeEnum.STRUCTURE.V],
-    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.PROFILED_PLATE.V],
-    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
-    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
-    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
+    structureList: info[TechnologyTypeEnum.STRUCTURE.V],
+    profiledPlateList: info[TechnologyTypeEnum.PROFILED_PLATE.V],
+    pressureBearingPlateList: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
+    trussFloorPlateList: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
+    sandwichBoardList: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
   }
   enclosureVisible.value = false
 }

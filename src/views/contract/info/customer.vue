@@ -41,13 +41,13 @@
           <el-form-item label="邮箱" prop="customerEmail">
             <div class="input-underline">
               <el-input v-if="isModify" v-model="form.customerEmail" placeholder="邮箱" maxlength="256"/>
-              <span v-else>{{ detail.customerEmail }}</span>
+              <span class="detail-break" v-else>{{ detail.customerEmail }}</span>
             </div>
           </el-form-item>
           <el-form-item label="详细地址" prop="customerAddress">
             <div class="input-underline">
               <el-input v-if="isModify" v-model="form.customerAddress" placeholder="详细地址" maxlength="200"/>
-              <span v-else>{{ detail.customerAddress }}</span>
+              <span class="detail-break" v-else>{{ detail.customerAddress }}</span>
             </div>
           </el-form-item>
         </div>
@@ -62,7 +62,7 @@
                 maxlength="50"
                 class="input-underline"
               />
-              <span v-else>{{ detail.customerBankUserName }}</span>
+              <span class="detail-break" v-else>{{ detail.customerBankUserName }}</span>
             </div>
           </el-form-item>
           <el-form-item label="银行账号" prop="customerBankCode">
@@ -274,5 +274,8 @@ defineExpose({
 span {
   // color:#4482ff #1682e6
   color: #82848a;
+}
+.detail-break{
+  word-break:break-all;
 }
 </style>
