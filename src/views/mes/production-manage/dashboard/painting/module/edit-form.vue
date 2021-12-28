@@ -1,21 +1,14 @@
 <template>
   <common-dialog title="涂装计算" v-model="dialogVisible" width="450px" :before-close="handleClose">
     <template #titleRight>
-      <common-button
-:loading="saveLoading"
-:disabled="submitDisabled"
-type="primary"
-size="mini"
-@click="save"
-        >保 存</common-button
-      >
+      <common-button :loading="saveLoading" :disabled="submitDisabled" type="primary" size="mini" @click="save"> 保 存 </common-button>
     </template>
     <el-form ref="formRef" :model="form" size="small" label-width="120px">
       <el-form-item label="名称" prop="name">
-          <span v-empty-text>{{ form.name }}</span>
+        <span v-empty-text>{{ form.name }}</span>
       </el-form-item>
       <el-form-item label="材质" prop="material">
-          <span v-empty-text>{{ form.material }}</span>
+        <span v-empty-text>{{ form.material }}</span>
       </el-form-item>
       <el-form-item label="油漆类别" prop="paintCategory"> </el-form-item>
       <el-form-item label="干膜厚度(μm)" prop="thickness">
@@ -55,7 +48,7 @@ size="mini"
         />
       </el-form-item>
       <el-form-item label="实际用量(L)">
-        <span>{{measure }}</span>
+        <span>{{ measure }}</span>
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -92,7 +85,7 @@ const submitDisabled = computed(() => isObjectValueEqual(form, props.info))
 
 const measure = computed(() => {
   // 面积*干膜厚度/（10*体积固体份*（1-损耗））
-  return toFixed((form.changeArea * form.thickness) / (10 * (form.volumeSolids / 100) * (1 - (form.loss / 100))), DP.COM_VOLUME__L)
+  return form.volumeSolids ? toFixed((form.changeArea * form.thickness) / (10 * (form.volumeSolids / 100) * (1 - (form.loss / 100))), DP.COM_VOLUME__L) : 0
 })
 
 watch(

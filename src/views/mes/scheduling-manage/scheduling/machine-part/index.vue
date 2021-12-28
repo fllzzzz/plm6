@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines" />
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -121,7 +121,6 @@ import crudApi from '@/api/mes/scheduling-manage/scheduling/machine-part'
 import { provide, ref } from 'vue'
 
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
-import { mapGetters } from '@/store/lib'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -181,7 +180,6 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-const { globalProjectId } = mapGetters(['globalProjectId'])
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
 </script>
 

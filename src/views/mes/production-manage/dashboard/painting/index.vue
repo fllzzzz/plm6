@@ -130,7 +130,7 @@
           <span v-empty-text>{{ toFixed(scope.row.measure, DP.COM_VOLUME__L) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="160px" align="center" fixed="right">
+      <el-table-column label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-edit" @click.stop="toEditForm(scope.row)" />
         </template>
@@ -147,6 +147,7 @@ import { ref } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
+import { convertUnits } from '@/utils/convert/unit'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -185,7 +186,10 @@ const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.originChangeArea = v.changeArea
+    v.surfaceArea = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
+    const _area = convertUnits(v.changeArea, 'mm²', '㎡', DP.COM_AREA__M2)
+    v.changeArea = _area
+    v.originChangeArea = _area
     return v
   })
 }

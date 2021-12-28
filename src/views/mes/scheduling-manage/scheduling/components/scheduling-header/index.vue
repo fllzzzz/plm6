@@ -65,6 +65,7 @@ import useGetLines from '@compos/mes/scheduling/use-get-lines'
 import useFormatSchedulingList from '@compos/mes/scheduling/use-format-scheduling-list'
 import useSchedulingClear from '@compos/mes/scheduling/use-scheduling-clear'
 import { regHeader } from '@compos/use-crud'
+import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
@@ -79,16 +80,13 @@ const defaultQuery = {
   areaId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
+const projectId = useGlobalProjectIdChangeToQuery(crud)
 const permission = inject('permission')
 
 const props = defineProps({
   modifying: {
     type: Boolean,
     default: false
-  },
-  projectId: {
-    type: [Number, String],
-    required: true
   },
   lines: {
     type: Array,
