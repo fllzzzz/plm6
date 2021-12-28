@@ -5,7 +5,7 @@
       <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column v-if="showWarehouse" prop="warehouse" label="仓库" align="left" min-width="110px">
+  <el-table-column v-if="showWarehouse" prop="warehouse" label="仓库" align="left" min-width="110px" show-overflow-tooltip>
     <template #default="{ row }">
       <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
       <span v-empty-text>{{ typeof row.warehouse === 'object' ? row.warehouse.name : row.warehouse }}</span>

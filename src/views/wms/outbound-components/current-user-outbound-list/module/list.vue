@@ -36,6 +36,12 @@
           </template>
         </el-popconfirm>
       </template>
+      <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
+        <!-- TODO:打印按钮 -->
+        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="printOrDownload">
+          打印/下载完毕
+        </common-button>
+      </template>
     </template>
     <template #content>
       <el-form class="form" :disabled="formDisabled">
@@ -254,6 +260,11 @@ async function returned() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, { props: ['quantity', 'mete'] })
+}
+
+// 打印/下载出库单
+function printOrDownload() {
+  // TODO:
 }
 </script>
 

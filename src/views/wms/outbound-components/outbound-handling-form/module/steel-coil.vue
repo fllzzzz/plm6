@@ -24,11 +24,12 @@
 import { steelCoilOutboundHandling } from '@/api/wms/outbound/outbound-handling'
 import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { isBlank } from '@/utils/data-type'
+import { deepClone, isBlank } from '@/utils/data-type'
 
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
 const props = defineProps({
   basicClass: {
@@ -106,7 +107,15 @@ function formInit(data) {
 async function submit() {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  const res = await steelCoilOutboundHandling(form.value)
+  const formData = deepClone(form.value)
+  await numFmtByUnit(formData, {
+    unit: formData.outboundUnit,
+    precision: formData.outboundUnitPrecision,
+    fields: ['quantity'],
+    toSmallest: true,
+    toNum: true
+  })
+  const res = await steelCoilOutboundHandling(formData)
   return res
 }
 

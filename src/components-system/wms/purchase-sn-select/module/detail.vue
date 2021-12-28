@@ -2,6 +2,7 @@
   <common-drawer
     ref="drawerRef"
     :visible="visible"
+    :content-loading="!clsLoaded || loading"
     :before-close="handleClose"
     title="采购订单详情"
     :show-close="true"
@@ -9,7 +10,7 @@
     custom-class="purchase-order-detail"
   >
     <template #content>
-      <div v-loading="loading" class="main-content">
+      <div class="main-content">
         <el-form :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content">
             <el-form-item label="采购订单" prop="serialNumber">
@@ -31,6 +32,10 @@
               {{ detail.supplier ? detail.supplier.name : '' }}
             </el-form-item>
 
+            <el-form-item v-if="detail.basicClass & matClsEnum.MATERIAL.V" label="辅材明细" prop="auxMaterialNames" style="width: 100%; word-break: break-all">
+              <span v-arr-join>{{ detail.auxMaterialNames }}</span>
+            </el-form-item>
+
             <template v-if="detail.supplyType == orderSupplyTypeEnum.SELF.V">
               <el-form-item label="合同量" prop="mete">
                 <div class="input-underline flex-rss child-mr-10">
@@ -45,15 +50,12 @@
             <el-form-item prop="weightMeasurementMode" label="计量方式">
               <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
             </el-form-item>
-            <el-form-item label="提货方式" prop="pickUpMode">
+            <!-- <el-form-item label="提货方式" prop="pickUpMode">
               <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
-            </el-form-item>
-            <el-form-item label="备注" prop="remark">
-              <span>{{ detail.remark }}</span>
-            </el-form-item>
-
-            <el-form-item label="申购单号" prop="requisitionsSN">
-              <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
+            </el-form-item> -->
+            <el-form-item label="物流信息" prop="logistics">
+              <span v-parse-enum="{ e: logisticsTransportTypeEnum, v: detail.logisticsTransportType }" />
+              （费用<span v-parse-enum="{ e: logisticsPayerEnum, v: detail.logisticsPayerType }" />）
             </el-form-item>
 
             <el-form-item label="采购状态" prop="purchaseStatus">
@@ -75,6 +77,14 @@
             </el-form-item>
             <el-form-item label="最后操作人" prop="lastOperatorName">
               <span v-empty-text>{{ detail.lastOperatorName }}</span>
+            </el-form-item>
+
+            <el-form-item label="备注" prop="remark">
+              <span style="word-break: break-all">{{ detail.remark }}</span>
+            </el-form-item>
+
+            <el-form-item label="申购单号" prop="requisitionsSN">
+              <span class="pre-wrap">{{ detail.requisitionsSN ? detail.requisitionsSN.join(`\n`) : '' }}</span>
             </el-form-item>
 
             <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">
@@ -112,15 +122,17 @@
 import { detail as detailApi } from '@/api/wms/purchase-order'
 import { defineEmits, defineProps, ref, watch } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, settlementStatusEnum } from '@enum-ms/finance'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
 import { isNotBlank } from '@/utils/data-type'
 
-import uploadList from '@/components/file-upload/UploadList.vue'
+import uploadList from '@comp/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import useVisible from '@/composables/use-visible'
+import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const emit = defineEmits(['success', 'update:modelValue'])
 
@@ -137,6 +149,7 @@ const props = defineProps({
 const detail = ref({})
 const loading = ref(false)
 const { visible, handleClose } = useVisible({ emit, props })
+const { loaded: clsLoaded, rawMatClsKV } = useMatClsList()
 
 watch(
   () => props.detailId,
@@ -154,6 +167,15 @@ async function getDetail(id) {
   detail.value = {}
   try {
     detail.value = await detailApi(id)
+    if (detail.value.auxMaterialIds) {
+      detail.value.auxMaterialNames = detail.value.auxMaterialIds.map((id) => {
+        const material = rawMatClsKV.value[id]
+        if (material) {
+          return material.name
+        }
+        return '-'
+      })
+    }
   } catch (error) {
     console.log('采购单详情', error)
   } finally {
@@ -169,8 +191,8 @@ async function getDetail(id) {
   ::v-deep(.el-form-item) {
     width: 450px;
   }
-  ::v-deep(.el-form-item:nth-child(even)) {
-    margin-left: 20px;
+  ::v-deep(.el-form-item__content) {
+    padding-right: 20px;
   }
 }
 </style>

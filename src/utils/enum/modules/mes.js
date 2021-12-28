@@ -41,11 +41,11 @@ constantize(processReportTypeEnum)
 
 // mes 产品类型
 const componentTypeEnum = {
-  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 1 },
-  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 0 },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 },
-  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: 1 << 3 },
-  ASSEMBLE: { L: '组立', K: 'ASSEMBLE', V: 1 << 4 }
+  ASSEMBLE: { L: '组立', SL: '一次工序', K: 'ASSEMBLE', V: 1 << 4, COLOR: '#40ed8d' },
+  ARTIFACT: { L: '构件', SL: '二次工序', K: 'ARTIFACT', V: 1 << 1, COLOR: '#00babd' },
+  MACHINE_PART: { L: '零件', SL: '零件', K: 'MACHINE_PART', V: 1 << 0, COLOR: '#fad400' },
+  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: 1 << 2, COLOR: '#ff7800' },
+  AUXILIARY_MATERIAL: { L: '辅材', SL: '辅材', K: 'AUXILIARY_MATERIAL', V: 1 << 3, COLOR: '#f5f7fa' }
 }
 constantize(componentTypeEnum)
 
@@ -191,6 +191,13 @@ const paintingTypeEnum = {
 }
 constantize(paintingTypeEnum)
 
+const labelTypeEnum = {
+  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0 },
+  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1 },
+  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2 }
+}
+constantize(labelTypeEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -215,7 +222,8 @@ export {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  reportComponentTypeEnum
+  reportComponentTypeEnum,
+  labelTypeEnum
 }
 
 export default {
@@ -242,5 +250,6 @@ export default {
   projectComponentTypeEnum,
   artifactProcessEnum,
   paintingTypeEnum,
-  reportComponentTypeEnum
+  reportComponentTypeEnum,
+  labelTypeEnum
 }

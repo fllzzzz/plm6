@@ -132,7 +132,8 @@ const { maxHeight } = useMaxHeight(
     mainBox: '.excel-resolve-preview',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
-    clientHRepMainH: true
+    clientHRepMainH: true,
+    extraHeight: '15vh'
   },
   previewVisible
 )

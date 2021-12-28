@@ -62,7 +62,7 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
 
       row.verify = {}
       for (const rule in rules) {
-        row.verify[rule] = validate(rules[rule], row[rule], row)
+        row.verify[rule] = validate(rule, rules[rule], row[rule], row)
         if (!row.verify[rule]) {
           flag = false
         }
@@ -117,7 +117,7 @@ export function wrongCellMask({ row, column }, tableRules) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -127,13 +127,16 @@ export function wrongCellMask({ row, column }, tableRules) {
 }
 
 // 校验
-export function validate(rules, value, row = {}) {
+export function validate(property, rules, value, row = {}) {
   let flag = true
   // 判断是否存在校验
   if (isBlank(rules)) {
     return flag
   }
-  for (const rule of rules) {
+  let index = 0
+  for (index = 0; index < rules.length; index++) {
+    const rule = rules[index]
+    // for (const rule of rules) {
     const pattern = rule.pattern
     if (pattern && !pattern.test(value || '')) {
       flag = false
@@ -163,6 +166,9 @@ export function validate(rules, value, row = {}) {
       flag = false
       break
     }
+  }
+  if (!flag) {
+    console.error(`${property}：${rules[index].message}`)
   }
   return flag
 }

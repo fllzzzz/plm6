@@ -24,7 +24,7 @@
         <div class="setting-container">
           <div class="setting-item">
             <el-tag size="medium" effect="plain">【批量】设置预警数量</el-tag>
-            <el-input-number
+            <common-input-number
               v-model.number="batch.minimumInventory"
               :min="0"
               :max="999999"
@@ -55,6 +55,7 @@
             :max-height="maxHeight"
             :cell-class-name="wrongCellMask"
             @selection-change="crud.selectionChangeHandler"
+             row-key="uid"
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="序号" type="index" align="center" width="60" />
@@ -99,7 +100,7 @@
               min-width="120"
             >
               <template #default="{ row }">
-                <el-input-number
+                <common-input-number
                   v-model="row.minimumInventory"
                   :min="0"
                   :max="999999"
@@ -132,6 +133,8 @@
 import { reactive, ref, computed } from 'vue'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
+import { createUniqueString } from '@/utils/data-type/string'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -185,7 +188,7 @@ CRUD.HOOK.beforeValidateBCU = () => {
 CRUD.HOOK.beforeToBCU = () => specInit()
 
 // 表单提交数据清理
-crud.submitBatchFormFormat = (form) => {
+crud.submitBatchFormFormat = async (form) => {
   cleanUpData(form.list)
   const formList = form.list.map((row) => {
     return {
@@ -193,9 +196,16 @@ crud.submitBatchFormFormat = (form) => {
       specification: row.specification,
       specificationMap: row.specificationMap,
       minimumInventory: row.minimumInventory,
+      unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
+      unitPrecision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,
       unitType: row.unitType,
       factoryId: row.factoryId
     }
+  })
+  await numFmtByUnitForList(formList, {
+    fields: ['minimumInventory'],
+    toSmallest: true,
+    toNum: true
   })
   return formList
 }
@@ -211,6 +221,7 @@ function specInit() {
 // 行初始化
 function rowInit(row) {
   const _row = {
+    uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称

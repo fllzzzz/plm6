@@ -351,6 +351,8 @@ function getDefaultOption() {
     permission: {},
     // 在主页准备
     queryOnPresenterCreated: true,
+    // 可查询的
+    queryable: true,
     // 调试开关
     debug: false
   }
@@ -495,6 +497,7 @@ function addCrudBusinessMethod(crud) {
 
   // 搜索
   const toQuery = async () => {
+    if (!crud.queryable) return
     // TODO:【考虑删除】若不等待加载完vm完毕后再查询，钩子可能会无法触发(例：首次加载通过watch,immediate:true触发),因此在下方加入settimeout，还需优化
     const vmSet = new Set()
     crud.vms.forEach((vm) => vm && vmSet.add(vm.vm))
@@ -851,7 +854,7 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.edit = CRUD.STATUS.PROCESSING
-      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
+      const data = await crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.crudApi.edit(data)
       crud.status.edit = CRUD.STATUS.NORMAL
       crud.getDataStatus(crud.form.id).edit = CRUD.STATUS.NORMAL
@@ -880,7 +883,7 @@ function addCrudBusinessMethod(crud) {
     try {
       crud.bStatus.batchAdd = CRUD.STATUS.PROCESSING
       // 深拷贝表单后转换，避免表单发生变化
-      const data = crud.submitBatchFormFormat(lodash.cloneDeep(crud.batchForm))
+      const data = await crud.submitBatchFormFormat(lodash.cloneDeep(crud.batchForm))
       crud.submitResult = await crud.crudApi.batchAdd(data)
       await callVmHook(crud, CRUD.HOOK.afterBatchAddSuccess)
       crud.bStatus.batchAdd = CRUD.STATUS.NORMAL
@@ -1039,9 +1042,11 @@ function addCrudFeatureMethod(crud, data) {
       nextTick(() => {
         // 避免在极其特殊的情况下，table.getColumns()读取字段时，dom已经被v-if display：none掉
         // 不使用nextTick, 归还甲方-默认隐藏炉批号可触发该问题
-        crud.invisibleColumns.forEach(property => {
+        crud.invisibleColumns.forEach((property) => {
           if (columns[property]) {
             columns[property].visible = false
+          } else {
+            columns[property] = { visible: false } // 避免切换前已经被隐藏的列无法设置
           }
         })
       })

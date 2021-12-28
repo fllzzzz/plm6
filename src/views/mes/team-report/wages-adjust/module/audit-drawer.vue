@@ -55,7 +55,7 @@
               <common-button size="mini" type="success" :disabled="scope.row.auditLoading" @click="auditIt(scope.row, reviewStatusEnum.PASS.V)">同意</common-button>
               <common-button size="mini" type="danger" :disabled="scope.row.auditLoading" @click="auditIt(scope.row, reviewStatusEnum.REFUSE.V)">拒绝</common-button>
             </span>
-            <el-tag v-else :type="reviewStatusEnum[reviewStatusEnum.VK[scope.row.auditStatus]].TAG">
+            <el-tag v-else :type="reviewStatusEnum.V[scope.row.auditStatus].TAG">
               {{ reviewStatusEnum.VL[scope.row.auditStatus] }}
             </el-tag>
           </template>

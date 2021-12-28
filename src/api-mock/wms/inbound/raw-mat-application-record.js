@@ -3,6 +3,7 @@ import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 
 // 入库申请列表
 const get = {
@@ -20,6 +21,7 @@ const get = {
             basicClass: 7, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
+            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             'projects|2': [
               {
@@ -47,6 +49,7 @@ const get = {
             basicClass: 8, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
+            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             'projects|2': [
               {
@@ -76,6 +79,7 @@ const get = {
             basicClass: 16, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
+            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             'projects|2': [
               {
@@ -105,6 +109,7 @@ const get = {
             basicClass: 8, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
+            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             supplier: {
               // 供应商
@@ -152,7 +157,9 @@ const detail_id1 = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             }
           ], // 项目id
-          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+          logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
           requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
           purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
@@ -161,14 +168,17 @@ const detail_id1 = {
             name: '杭州天马钢材有限公司'
           }
         },
-        'requisitionsList|2': [{
-          'basicClass|1-16': 1,
-          'serialNumber|+1': ['SG-AFTER-123456', 'SG-AFTER-133456'],
-          'projectId|+1': 1
-        }],
+        'requisitionsList|2': [
+          {
+            'basicClass|1-16': 1,
+            'serialNumber|+1': ['SG-AFTER-123456', 'SG-AFTER-133456'],
+            'projectId|+1': 1
+          }
+        ],
         id: 1, // 入库单id
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
         licensePlate: patternLicensePlate, // 车牌号
         loadingWeight: 2000.0, // 过磅重量
         list: [
@@ -352,7 +362,9 @@ const detail_id2 = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             }
           ], // 项目id
-          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+          logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
           requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
           purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
@@ -364,6 +376,7 @@ const detail_id2 = {
         id: 2, // 入库单id
         basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
         licensePlate: patternLicensePlate, // 车牌号
         loadingWeight: 2000.0, // 过磅重量
         list: [
@@ -424,7 +437,9 @@ const detail_id3 = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             }
           ], // 项目id
-          pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+          logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+          logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
           requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
           purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
@@ -436,6 +451,7 @@ const detail_id3 = {
         id: 3, // 入库单id
         basicClass: matClsEnum.GAS.V, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
+        shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
         licensePlate: patternLicensePlate, // 车牌号
         loadingWeight: 2000.0, // 过磅重量
         list: [

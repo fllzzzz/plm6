@@ -48,7 +48,7 @@
         min-width="80"
       >
         <template v-slot="scope">
-          <el-tag :type="manufactureTypeEnum[manufactureTypeEnum.VK[scope.row.manufactureType]].T" effect="plain" disable-transitions>{{
+          <el-tag :type="manufactureTypeEnum.V[scope.row.manufactureType].T" effect="plain" disable-transitions>{{
             manufactureTypeEnum.VL[scope.row.manufactureType]
           }}</el-tag>
         </template>
@@ -59,7 +59,7 @@
             v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
             style="margin-right: 5px"
             :key="item"
-            :type="packTypeEnum[packTypeEnum.VK[item]].T"
+            :type="packTypeEnum.V[item].T"
             effect="light"
             disable-transitions
             >{{ packTypeEnum.VL[item] }}</el-tag
@@ -100,7 +100,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <!-- <el-tag v-if="scope.row.supplier" style="margin-right:5px;" :type="logisticsPriceTypeEnum[logisticsPriceTypeEnum.VK[scope.row.supplier.priceType]].T" effect="plain">{{
+          <!-- <el-tag v-if="scope.row.supplier" style="margin-right:5px;" :type="logisticsPriceTypeEnum.V[scope.row.supplier.priceType].T" effect="plain">{{
             logisticsPriceTypeEnum.VL[scope.row.supplier.priceType]
           }}</el-tag> -->
           <span>{{ scope.row.supplier && toFixed(scope.row.supplier.price, DP.YUAN) }}</span>

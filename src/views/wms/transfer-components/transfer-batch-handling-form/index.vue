@@ -67,7 +67,7 @@
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
-        <material-unit-operate-quantity-columns :basic-class="basicClass"  />
+        <material-unit-operate-quantity-columns :basic-class="basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns />
@@ -79,7 +79,7 @@
           </template>
           <template #default="{ row }">
             <span class="flex-rbc">
-              <el-input-number
+              <common-input-number
                 v-model="row.batchTransferQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
@@ -119,6 +119,7 @@ import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 import { ElMessage } from 'element-plus'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -200,7 +201,7 @@ watchEffect(() => {
   let partyANum = 0
   materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
   form.value.list = materialList.value
-  materialList.value.forEach(v => {
+  materialList.value.forEach((v) => {
     if (v.boolPartyA) partyANum++
   })
   if (partyANum) {
@@ -258,11 +259,19 @@ async function submit() {
       if (v.batchTransferQuantity) {
         data.list.push({
           id: v.id,
-          quantity: v.quantity,
-          outboundUnit: v.outboundUnit,
-          outboundUnitType: v.curOutboundUnitType
+          quantity: v.batchTransferQuantity, // 数量
+          outboundUnit: v.outboundUnit, // 出库单位
+          outboundUnitPrecision: v.outboundUnitPrecision, // 单位精度
+          outboundUnitType: v.curOutboundUnitType // 出库单位类型
         })
       }
+    })
+    await numFmtByUnitForList(data.list, {
+      unitField: 'outboundUnit',
+      unitPrecisionField: 'outboundUnitPrecision',
+      fields: ['quantity'],
+      toSmallest: true,
+      toNum: true
     })
     if (data.list.length === 0) {
       ElMessage.warning('请填写数据')
@@ -285,7 +294,7 @@ async function submit() {
 function handleTypeChange(type) {
   if (type === transferNormalTypeEnum.RETURN_PARTY_A.V) {
     // 归还甲方，筛选为甲供的类型
-    form.value.list = materialList.value.filter(v => v.boolPartyA)
+    form.value.list = materialList.value.filter((v) => v.boolPartyA)
   } else {
     form.value.list = materialList.value
   }

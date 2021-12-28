@@ -1,6 +1,6 @@
 import { emptyTextFormatter } from '@/utils/data-type'
 
-// 时间转换
+// 空字符串 判断，可配合表格row-key使用，否则该数据不会更新
 export default {
   mounted(el, binding) {
     resolve(el, binding)

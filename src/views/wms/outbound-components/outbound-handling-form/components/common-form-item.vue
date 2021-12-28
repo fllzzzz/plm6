@@ -1,6 +1,6 @@
 <template>
   <el-form-item :label="`数量(${material.outboundUnit})`" prop="quantity">
-    <el-input-number
+    <common-input-number
       v-model="currentForm.quantity"
       :min="0"
       :precision="material.outboundUnitPrecision"

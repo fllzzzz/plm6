@@ -27,9 +27,13 @@
           >
             按过磅重量自动分配（钢卷不参与分配)
           </common-button>
-          <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!currentBasicClass">
-            添加物料
-          </common-button>
+          <el-tooltip :disabled="addable" effect="light" content="请先选择采购订单" placement="left-start">
+            <span>
+              <common-button class="filter-item" type="success" @click="materialSelectVisible = true" :disabled="!addable">
+                添加物料
+              </common-button>
+            </span>
+          </el-tooltip>
         </div>
       </div>
       <el-form ref="formRef" :model="form">
@@ -46,7 +50,7 @@
     >
       <template #content>
         <material-table-spec-select
-          v-if="currentBasicClass"
+          v-if="addable"
           ref="matSpecRef"
           v-model="list"
           :visible="materialSelectVisible"
@@ -65,7 +69,7 @@
 <script setup>
 import { steelInboundApplication } from '@/api/wms/inbound/application'
 import { edit as editInboundApplication } from '@/api/wms/inbound/raw-mat-application-record'
-import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive, watchEffect } from 'vue'
+import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
@@ -108,6 +112,7 @@ const defaultForm = {
   purchaseId: null, // 采购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  shipmentNumber: null, // 物流单号
   logistics: {}, // 物流信息
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
@@ -133,6 +138,8 @@ const steelRefList = reactive({
   steelCoilList: null
 })
 
+const addable = computed(() => !!(currentBasicClass.value && order.value)) // 可添加的状态（选择了采购订单）
+
 provide('matSpecRef', matSpecRef) // 供兄弟组件调用 删除
 
 // 使用草稿时，为数据设置监听
@@ -150,7 +157,7 @@ const setFormCallback = (form) => {
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
   list.forEach((key) => {
     if (isNotBlank(form[key])) {
-      form[key] = form[key].map(v => reactive(v))
+      form[key] = form[key].map((v) => reactive(v))
       trigger[key] = watch(
         steelRefList,
         (ref) => {
@@ -158,18 +165,22 @@ const setFormCallback = (form) => {
             // 初始化数据监听，执行一次后取消当前监听
             form[key].forEach((v) => ref[key].rowWatch(v))
             // 初始化选中数据，执行一次后取消当前监听
-            initSelectedTrigger[key] = watchEffect(() => {
-              if (matSpecRef.value) {
-                matSpecRef.value.initSelected(
-                  form[key].map((v) => {
-                    return { sn: v.sn, classifyId: v.classifyId }
+            initSelectedTrigger[key] = watch(
+              matSpecRef,
+              () => {
+                if (matSpecRef.value) {
+                  matSpecRef.value.initSelected(
+                    form[key].map((v) => {
+                      return { sn: v.sn, classifyId: v.classifyId }
+                    })
+                  )
+                  nextTick(() => {
+                    initSelectedTrigger[key]()
                   })
-                )
-                nextTick(() => {
-                  initSelectedTrigger[key]()
-                })
-              }
-            })
+                }
+              },
+              { immediate: true }
+            )
             nextTick(() => {
               trigger[key]()
             })
@@ -401,14 +412,18 @@ function handleOrderInfoChange(orderInfo) {
         disabledBasicClass.value[k] = false
       } else {
         form[k] = []
-        const trigger = watchEffect(() => {
-          if (matSpecRef.value) {
-            matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
-            nextTick(() => {
-              trigger()
-            })
-          }
-        })
+        const trigger = watch(
+          matSpecRef,
+          () => {
+            if (matSpecRef.value) {
+              matSpecRef.value.clearByBasicClass(steelBasicClassKV[k].V)
+              nextTick(() => {
+                trigger()
+              })
+            }
+          },
+          { immediate: true }
+        )
       }
     })
     // 默认赋值

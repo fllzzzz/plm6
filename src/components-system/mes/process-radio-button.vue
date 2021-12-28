@@ -74,7 +74,7 @@ watch(
   () => {
     nextTick(() => {
       // 重置选择
-      commonRadioButtonRef.value.selectChange(0)
+      commonRadioButtonRef.value.selectChange()
     })
   },
   { immediate: true }

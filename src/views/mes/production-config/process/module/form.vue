@@ -139,7 +139,7 @@ const inspectDisabled = ref([])
 const disabledList = computed(() => {
   return form.id
     ? [typeEnum.ARTIFACT.V, typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V].filter((v) => v !== form.sequenceType)
-    : [typeEnum.ENCLOSURE.V]
+    : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V]
 })
 
 const wageQuotaTypeDisabled = computed(() => {

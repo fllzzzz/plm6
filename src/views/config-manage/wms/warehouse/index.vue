@@ -8,8 +8,8 @@
       v-loading="crud.loading"
       :data="crud.data"
       :max-height="maxHeight"
-      style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
+      row-key="id"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />

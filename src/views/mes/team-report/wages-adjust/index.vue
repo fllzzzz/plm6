@@ -115,7 +115,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         v.totalPrice += o.price || 0
       })
       v.processSequence = v.process.map((o) => {
-        const unit = isNotBlank(o.wageQuotaType) ? wageQuotaTypeEnum[wageQuotaTypeEnum.VK[o.wageQuotaType]].unit : ''
+        const unit = isNotBlank(o.wageQuotaType) ? wageQuotaTypeEnum.V[o.wageQuotaType].unit : ''
         return {
           monomerId: crud.query.monomerId,
           projectId: crud.query.projectId,

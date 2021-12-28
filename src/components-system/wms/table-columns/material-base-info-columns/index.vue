@@ -6,7 +6,7 @@
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" :fixed="fixed">
+  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <!-- 甲供调拨方式 -->
       <table-cell-tag
@@ -31,6 +31,7 @@
     prop="classifyFullName"
     label="物料种类"
     align="center"
+    show-overflow-tooltip
     :width="classifyFullNameWidth"
     :fixed="fixed"
   >
@@ -45,13 +46,7 @@
       <span v-else v-empty-text>{{ row.classifyFullName }}</span>
     </template>
   </el-table-column>
-  <component
-    :is="comp"
-    :columns="columns"
-    :basic-class="basicClass"
-    :spec-merge="specMerge"
-    :fixed="fixed"
-  />
+  <component :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" />
   <common-dialog
     :title="`冻结记录：${currentMaterial.classifyFullName} ${currentMaterial.specification}`"
     v-model="freezeDialogVisible"
@@ -208,7 +203,7 @@ const comp = computed(() => {
 
 <style lang="scss" scoped>
 .freeze-text {
-  color:#409eff;
+  color: #409eff;
   cursor: pointer;
 }
 </style>

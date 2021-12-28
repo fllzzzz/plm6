@@ -1,11 +1,26 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
+      <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
       <table-cell-tag v-if="showPartyA" :show="!!getInfo(row, 'boolPartyA')" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" :prop="`${field}.serialNumber`" label="编号" align="center" width="110px" :fixed="fixed">
+  <slot name="afterIndex" />
+  <el-table-column
+    v-if="showProject"
+    :prop="`${field}.project`"
+    label="项目"
+    align="left"
+    min-width="120px"
+    fixed="left"
+    show-overflow-tooltip
+  >
+    <template #default="{ row }">
+      <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
+    </template>
+  </el-table-column>
+  <el-table-column v-if="showSerialNumber" :prop="`${field}.serialNumber`" label="编号" align="center" width="110px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <table-cell-tag
         v-if="showPartyATransfer && getInfo(row, 'partyATransferType')"
@@ -30,6 +45,7 @@
     :show-factory="props.showFactory"
     :fixed="fixed"
     :field="field"
+    v-bind="$attrs"
   />
 </template>
 
@@ -77,6 +93,11 @@ const props = defineProps({
   },
   showOutboundMode: {
     // 显示 出库方式 （整料半出）
+    type: Boolean,
+    default: false
+  },
+  showProject: {
+    // 显示项目
     type: Boolean,
     default: false
   },

@@ -10,14 +10,14 @@
           placeholder="备注"
           maxlength="200"
           show-word-limit
-          style="width:400px"
+          style="width: 400px"
         />
       </template>
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
-    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column prop="classifyFullName" label="物料种类" align="center" min-width="200px" fixed="left" />
-    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left">
+    <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
+    <el-table-column prop="classifyFullName" label="物料种类" align="center" min-width="200px" fixed="left" show-overflow-tooltip />
+    <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span v-empty-text>{{ row.specification }}</span>
@@ -31,7 +31,7 @@
     </el-table-column>
     <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-if="row.measureUnit"
           v-model="row.quantity"
           :min="1"
@@ -52,7 +52,7 @@
     </el-table-column>
     <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-model="row.mete"
           :min="1"
           :max="999999999"
@@ -112,7 +112,7 @@ function rowInit(row) {
     uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
     specificationLabels: row.specificationLabels, // 规格中文
-    serialNumber: row.classify.serialNumber, // 科目编号
+    serialNumber: row.serialNumber, // 科目编号 - 规格
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称
     basicClass: row.classify.basicClass, // 基础类型

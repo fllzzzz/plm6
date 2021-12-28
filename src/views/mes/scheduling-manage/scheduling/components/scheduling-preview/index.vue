@@ -19,7 +19,7 @@
         <common-table :data="workshopList">
           <el-table-column width="150" property="name" label="车间" />
           <el-table-column width="110" align="center" property="increase" label="新增数量" />
-          <template v-if="productType === componentTypeEnum.ENCLOSURE.V">
+          <template v-if="productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.ASSEMBLE.V)">
             <el-table-column min-width="110" align="center" property="lengthIncrease" :label="`新增分配长度\n（m）`">
               <template v-slot="scope">
                 {{ convertUnits(scope.row.lengthIncrease, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
@@ -39,8 +39,8 @@
             </el-table-column>
           </template>
 
-          <el-table-column width="110" align="center" property="reduce" label="减少数量" />
-          <template v-if="productType === componentTypeEnum.ENCLOSURE.V">
+          <!-- <el-table-column width="110" align="center" property="reduce" label="减少数量" />
+          <template v-if="productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.ASSEMBLE.V)">
             <el-table-column min-width="110" align="center" property="lengthReduce" :label="`减少分配长度\n（m）`">
               <template v-slot="scope">
                 {{ convertUnits(scope.row.lengthReduce, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}
@@ -58,7 +58,7 @@
                 {{ toFixed(scope.row.grossWeightReduce, DP.COM_WT__KG) }}
               </template>
             </el-table-column>
-          </template>
+          </template> -->
         </common-table>
         <template #reference>
           <common-button type="warning" size="mini">查看分配汇总</common-button>
@@ -107,7 +107,7 @@ type="primary"
             <template v-slot:header>
               <span class="ellipsis-text">【{{ workshop.name }}】</span>
               <span class="ellipsis-text">{{ line.name }}</span>
-              <el-tooltip class="item" effect="light" :content="ellipsisTextTip(workshop,line)" placement="top-start">
+              <el-tooltip class="item" effect="light" :content="ellipsisTextTip(workshop, line)" placement="top-start">
                 <div>
                   <span
 v-if="changedLineData[line.id]"
@@ -234,22 +234,17 @@ watch(
 
 function ellipsisTextTip(workshop, line) {
   const _data = changedLineData.value[line.id]
-  if (productType === componentTypeEnum.ENCLOSURE.V) {
+  if (productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.ASSEMBLE.V)) {
     return `${workshop.name}\n
                 ${line.name}\n
                 新增分配数量：${_data.increase} 张\n
-                新增分配长度：${convertUnits(_data.lengthIncrease, 'mm', 'm', DP.MES_ENCLOSURE_L__M)} m\n
-                减少分配数量：${_data.reduce} 张\n
-                减少分配长度：${convertUnits(_data.lengthReduce, 'mm', 'm', DP.MES_ENCLOSURE_L__M)} m\n`
+                新增分配长度：${convertUnits(_data.lengthIncrease, 'mm', 'm', DP.MES_ENCLOSURE_L__M)} m\n`
   } else {
     return `${workshop.name}\n
                 ${line.name}\n
                 新增分配数量：${_data.increase} 件\n
                 新增分配重量（净重）：${toFixed(_data.netWeightIncrease, DP.COM_WT__KG)} kg\n
-                新增分配重量（毛重）：${toFixed(_data.grossWeightIncrease, DP.COM_WT__KG)} kg\n
-                减少分配数量：${_data.reduce} 件\n
-                减少分配重量（净重）：${toFixed(_data.netWeightReduce, DP.COM_WT__KG)} kg\n
-                减少分配重量（毛重）：${toFixed(_data.grossWeightReduce, DP.COM_WT__KG)} kg\n`
+                新增分配重量（毛重）：${toFixed(_data.grossWeightIncrease, DP.COM_WT__KG)} kg\n`
   }
 }
 
@@ -320,7 +315,7 @@ function handleDataChange() {
           }
           if (changeQuantity > 0) {
             hasChangedLine[key].increase += Math.abs(changeQuantity)
-            if (productType === componentTypeEnum.ENCLOSURE.V) {
+            if (productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.ASSEMBLE.V)) {
               hasChangedLine[key].lengthIncrease += Math.abs(changeQuantity) * v.length
             } else {
               hasChangedLine[key].netWeightIncrease += Math.abs(changeQuantity) * v.netWeight
@@ -328,7 +323,7 @@ function handleDataChange() {
             }
           } else {
             hasChangedLine[key].reduce += Math.abs(changeQuantity)
-            if (productType === componentTypeEnum.ENCLOSURE.V) {
+            if (productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.ASSEMBLE.V)) {
               hasChangedLine[key].lengthReduce += Math.abs(changeQuantity) * v.length
             } else {
               hasChangedLine[key].netWeightReduce += Math.abs(changeQuantity) * v.netWeight
@@ -368,7 +363,7 @@ function handleDataChange() {
         }
         hasChangedWorkshop[workshop.id].increase += hasChangedLine[line.id].increase
         hasChangedWorkshop[workshop.id].reduce += hasChangedLine[line.id].reduce
-        if (productType === componentTypeEnum.ENCLOSURE.V) {
+        if (productType & (componentTypeEnum.ENCLOSURE.V | componentTypeEnum.ASSEMBLE.V)) {
           hasChangedWorkshop[workshop.id].lengthIncrease += hasChangedLine[line.id].lengthIncrease
           hasChangedWorkshop[workshop.id].lengthReduce += hasChangedLine[line.id].lengthReduce
         } else {

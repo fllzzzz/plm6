@@ -6,7 +6,10 @@ export function getFactoriesAllSimple(params) {
     module: 'mes',
     url: 'factory',
     method: 'get',
-    params
+    params: {
+      boolEnabledEnum: true,
+      ...params
+    }
   })
 }
 
@@ -16,7 +19,10 @@ export function getWorkshopsAllSimple(params) {
     module: 'mes',
     url: 'workshop',
     method: 'get',
-    params
+    params: {
+      boolEnabledEnum: true,
+      ...params
+    }
   })
 }
 
@@ -40,7 +46,10 @@ export function getAllFactoryWorkshopLines(params) {
     module: 'mes',
     url: 'factory/production_line_group',
     method: 'get',
-    params
+    params: {
+      boolEnabledEnum: true,
+      ...params
+    }
   })
 }
 

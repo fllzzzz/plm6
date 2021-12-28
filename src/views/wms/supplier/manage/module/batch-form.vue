@@ -5,78 +5,76 @@
     :before-close="crud.cancelBCU"
     :visible="dialogVisible"
     :title="crud.bStatus.title"
-    :show-close="false"
-    custom-class="unit-batch-add"
+    :show-close="true"
+    custom-class="supplier-batch-add"
     width="80%"
     top="10vh"
   >
     <template #titleRight>
-      <span style="float:right">
-        <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
-        <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">提 交</common-button>
-        <store-operation type="crudBatch" />
-        <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
-      </span>
+      <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
+      <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">提 交</common-button>
+      <store-operation type="crudBatch" />
     </template>
     <div>
       <el-form ref="formRef" :model="form" :disabled="crud.bStatus.cu === CRUD.STATUS.PROCESSING">
-      <common-table
-        :data="form.list"
-        empty-text="暂无数据"
-        :max-height="maxHeight"
-        default-expand-all
-        :cell-class-name="wrongCellMask"
-        style="width: 100%;"
-      >
-        <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="name" label="供应商名称" min-width="180">
-        <template v-slot:header>
-          <el-tooltip
-            class="item"
-            effect="light"
-            content="长度在 2 到 32 个字符"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>供应商名称</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template>
-        <template v-slot="scope">
-          <el-input v-model="scope.row.name" size="small" style="width:100%;" placeholder="供应商名称" clearable />
-        </template>
-      </el-table-column>
-      <el-table-column prop="socialCode" label="社会统一代码" min-width="150">
-        <template v-slot="scope">
-          <el-input v-model="scope.row.socialCode" size="small" style="width:100%;" placeholder="社会统一代码" clearable />
-        </template>
-      </el-table-column>
-      <el-table-column prop="supplierClassification" label="供应商分类" min-width="180">
-        <template v-slot="scope">
-          <common-select
-            v-model="scope.row.supplierClassification"
-            :options="supplierClassEnum.ENUM"
-            multiple
-            clearable
-            type="enum"
-            placeholder="供应商分类"
-            style="width: 100%;"
-            @change="handleSupplierClass($event, scope.row)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        width="70px"
-        align="center"
-        fixed="right"
+        <common-table
+          :data="form.list"
+          empty-text="暂无数据"
+          :max-height="maxHeight"
+          default-expand-all
+          :cell-class-name="wrongCellMask"
+          style="width: 100%;"
+          row-key="uid"
         >
+          <el-table-column label="序号" type="index" align="center" width="60" />
+          <el-table-column prop="name" label="供应商名称" min-width="180">
+          <template v-slot:header>
+            <el-tooltip
+              class="item"
+              effect="light"
+              content="长度在 2 到 32 个字符"
+              placement="top"
+            >
+              <div style="display:inline-block;">
+                <span>供应商名称</span>
+                <i class="el-icon-info" />
+              </div>
+            </el-tooltip>
+          </template>
           <template v-slot="scope">
-            <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, scope.$index)" />
+            <el-input v-model="scope.row.name" size="small" style="width:100%;" placeholder="供应商名称" maxlength="32" clearable />
           </template>
         </el-table-column>
-      </common-table>
+        <el-table-column prop="socialCode" label="社会统一代码" min-width="150">
+          <template v-slot="scope">
+            <el-input v-model="scope.row.socialCode" size="small" style="width:100%;" placeholder="社会统一代码" maxlength="18" clearable />
+          </template>
+        </el-table-column>
+        <el-table-column prop="classification" label="供应商分类" min-width="180">
+          <template v-slot="scope">
+            <common-select
+              v-model="scope.row.classification"
+              :options="supplierClassEnum.ENUM"
+              multiple
+              clearable
+              type="enum"
+              placeholder="供应商分类"
+              style="width: 100%;"
+              @change="handleSupplierClass($event, scope.row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="70px"
+          align="center"
+          fixed="right"
+          >
+            <template v-slot="scope">
+              <common-button type="danger" icon="el-icon-delete" size="mini" style="padding:6px" @click.stop="removeRow(form.list, scope.$index)" />
+            </template>
+          </el-table-column>
+        </common-table>
       </el-form>
     </div>
   </common-dialog>
@@ -95,13 +93,14 @@ import StoreOperation from '@crud/STORE.operation'
 
 const tableRules = {
   name: [{ min: 2, max: 32, message: '长度在 2 到 32 个字符', trigger: 'blur' }],
-  supplierClassification: [{ required: true, message: '请选择供应商分类', trigger: 'blur' }]
+  classification: [{ required: true, message: '请选择供应商分类', trigger: 'blur' }]
 }
 
 const defaultForm = { list: [] }
 
 const defaultRow = {
   name: '',
+  classification: [],
   supplierClassification: undefined
 }
 
@@ -115,7 +114,7 @@ const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: 
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.unit-batch-add',
+    mainBox: '.supplier-batch-add',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
@@ -147,6 +146,6 @@ function handleSupplierClass(val, row) {
       supplierClassification |= v
     })
   }
-  row.classification = supplierClassification
+  row.supplierClassification = supplierClassification
 }
 </script>

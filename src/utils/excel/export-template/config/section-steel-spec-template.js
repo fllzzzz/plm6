@@ -105,7 +105,7 @@ const sectionSteelSpecETmpl = {
      */
     fields: [
       { show: true, key: 'specification', title: '规格', align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: true, key: 'unitNet', title: '单位净重(kg/m)', align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: false }
+      { show: true, key: 'unitNet', title: '单位净重(kg/m)', align: alignEnum.CENTER.V, minWidth: 15, type: typeEnum.QUANTITY.K, format: { toThousand: false }, sum: false }
     ]
   },
   /**

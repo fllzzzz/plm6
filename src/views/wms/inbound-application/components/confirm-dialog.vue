@@ -30,7 +30,7 @@
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount || showWarehouse" :basic-class="props.basicClass" :row="row" show-brand />
+              <expand-secondary-info v-if="showAmount" :basic-class="props.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>
@@ -41,7 +41,7 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="props.basicClass" />
           <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="!(showAmount || showWarehouse)" :basic-class="props.basicClass" />
+          <material-secondary-info-columns v-if="!showAmount" :basic-class="props.basicClass" />
           <!-- 金额设置 -->
           <price-set-columns
             v-if="showAmount"
@@ -69,12 +69,13 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, provide, ref, watch } from 'vue'
-import { inboundFillWayEnum, orderSupplyTypeEnum, pickUpModeEnum } from '@enum-ms/wms'
+import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { STEEL_ENUM } from '@/settings/config'
+import { matClsEnum } from '@/utils/enum/modules/classification'
+import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
@@ -116,19 +117,24 @@ const warehouseRules = {
 
 // 采购填写的信息（金额、申购单及项目）
 const amountRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
 }
 
-// 甲供不填写金额方面的信息
-const partyAAmountRules = {
+// 项目
+const projectRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
 }
 
 const tableRules = computed(() => {
   const rules = {}
-  if (showAmount.value) Object.assign(rules, boolPartyA.value ? partyAAmountRules : amountRules)
+  // 甲供不填写金额方面的信息
+  if (showAmount.value && !boolPartyA.value) {
+    Object.assign(rules, amountRules)
+    if (isNotBlank(order.value.projects)) {
+      Object.assign(rules, projectRules)
+    }
+  }
   if (showWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
@@ -144,12 +150,12 @@ const { inboundFillWayCfg } = useWmsConfig()
 const logisticsRef = ref()
 // 订单信息
 const order = computed(() => cu.props.order || {})
-// 显示金额
+// 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
-// 显示仓库
+// 显示仓库（由仓库填写的信息）
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
 // 显示物流信息
-const showLogistics = computed(() => order.value.pickUpMode === pickUpModeEnum.SELF.V && showAmount.value)
+const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 

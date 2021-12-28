@@ -1,10 +1,26 @@
 <template>
-  <el-table-column v-if="showBrand" :prop="`${field}.brand`" label="品牌" align="left" min-width="100px" :fixed="fixed">
+  <el-table-column
+    v-if="showBrand"
+    :prop="`${field}.brand`"
+    label="品牌"
+    align="left"
+    min-width="100px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <span v-empty-text>{{ getInfo(row, 'brand') }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showHeatNoAndBatchNo" :prop="`${field}.heatNoAndBatchNo`" :label="heatNoAndBatchNoLabel" align="left" min-width="150px" :fixed="fixed">
+  <el-table-column
+    v-if="showHeatNoAndBatchNo"
+    :prop="`${field}.heatNoAndBatchNo`"
+    :label="heatNoAndBatchNoLabel"
+    align="left"
+    min-width="150px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <span v-empty-text>{{ getInfo(row, 'heatNoAndBatchNo') }}</span>
     </template>
@@ -55,5 +71,7 @@ const heatNoAndBatchNoLabel = computed(() => {
 })
 
 const showBrand = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.brand`))
-const showHeatNoAndBatchNo = computed(() => props.showBatchNo && (isBlank(props.columns) || props.columns.visible(`${props.field}.heatNoAndBatchNo`)))
+const showHeatNoAndBatchNo = computed(
+  () => props.showBatchNo && (isBlank(props.columns) || props.columns.visible(`${props.field}.heatNoAndBatchNo`))
+)
 </script>

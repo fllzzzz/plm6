@@ -14,8 +14,8 @@ const fetchInventoryNotify = {
             inventory: 0.0,
             minimumInventory: 1000.0,
             unitType: measureTypeEnum.MEASURE.V,
-            classifyId: 1,
-            specification: /([A-Z0-9]{2,3}\*){1,3}[A-Z0-9]{2,3}/,
+            classifyId: 204,
+            specification: 'M26 * 65',
             factoryId: 3
           }
         ],

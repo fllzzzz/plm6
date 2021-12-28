@@ -18,7 +18,7 @@
           :unshow-val="[typeEnum.MACHINE_PART.V]"
           type="enum"
           size="small"
-          @change="productTypeChnage(form.sequenceType)"
+          @change="productTypeChange(form.sequenceType)"
         />
       </el-form-item>
       <el-form-item v-if="form.sequenceType === typeEnum.ARTIFACT.V" label="工序次序" prop="processType">
@@ -37,8 +37,7 @@
                 :size="'small'"
                 :multiple="false"
                 :clearable="true"
-                :sequence-type="form.sequenceType"
-                :process-type="form.processType"
+                :product-type="productType"
                 style="width: 220px;"
                 :disabled-value="processDisabled(form.processSequenceIds, form.processSequenceIds[index])"
               />
@@ -60,15 +59,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
-import { processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import { processTypeEnum, processMaterialListTypeEnum as typeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { arrIsRepeat } from '@data-type/array'
 import { arr2obj } from '@/utils/convert/type'
 
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
+import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
 const processSelectRef = ref()
@@ -91,7 +91,15 @@ const rules = {
   processSequenceIds: [{ required: true, message: '请选择工序' }]
 }
 
-function productTypeChnage(sequenceType) {
+const productType = computed(() => {
+  let _type = form.sequenceType
+  if (isNotBlank(form.processType) && form.processType === processTypeEnum.ONCE.V) {
+    _type = componentTypeEnum.ASSEMBLE.V
+  }
+  return _type
+})
+
+function productTypeChange(sequenceType) {
   if (sequenceType === typeEnum.ARTIFACT.V) {
     form.processType = processTypeEnum.ONCE.V
   } else {

@@ -149,7 +149,7 @@ import projectCascader from '@comp-base/project-cascader'
 import { DP } from '@/settings/config'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
-import UploadBtn from '@/components/file-upload/UploadBtn'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 
 const formRef = ref()

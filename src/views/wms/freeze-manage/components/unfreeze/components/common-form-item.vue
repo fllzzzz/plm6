@@ -14,7 +14,7 @@
   </el-form-item>
   <el-form-item :label="`数量(${material.outboundUnit})`" prop="quantity">
     <div class="flex-rsc" style="width: 100%">
-      <el-input-number
+      <common-input-number
         v-model="currentForm.quantity"
         :min="0"
         :precision="material.outboundUnitPrecision"

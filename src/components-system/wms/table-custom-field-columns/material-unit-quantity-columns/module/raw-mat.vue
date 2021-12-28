@@ -1,11 +1,11 @@
 <template>
   <template v-if="outboundTypeMode">
-    <el-table-column v-if="showOutboundUnit" :prop="`${field}.outboundUnit`" label="单位" align="center" width="70px">
+    <el-table-column v-if="showOutboundUnit" :prop="`${field}.outboundUnit`" label="单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showCurQuantity" :prop="`${field}.curQuantity`" label="数量" align="right" width="100px">
+    <el-table-column v-if="showCurQuantity" :prop="`${field}.curQuantity`" label="数量" align="right" width="100px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text v-to-fixed="getInfo(row, 'outboundUnitPrecision')">
           {{ getInfo(row, 'curOutboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
@@ -14,12 +14,12 @@
     </el-table-column>
   </template>
   <template v-else>
-    <el-table-column v-if="showMeasureUnit" :prop="`${field}.measureUnit`" label="计量单位" align="center" width="70px">
+    <el-table-column v-if="showMeasureUnit" :prop="`${field}.measureUnit`" label="计量单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showQuantity" :prop="`${field}.${quantityField}`" :label="quantityLabel" align="right" width="100px">
+    <el-table-column v-if="showQuantity" :prop="`${field}.${quantityField}`" :label="quantityLabel" align="right" width="100px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-if="getInfo(row, 'measureUnit')" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
           {{ getInfo(row, quantityField) }}
@@ -27,12 +27,12 @@
         <span v-else v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column v-if="showAccountingUnit" :prop="`${field}.accountingUnit`" label="核算单位" align="center" width="70px">
+    <el-table-column v-if="showAccountingUnit" :prop="`${field}.accountingUnit`" label="核算单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px">
+    <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, meteField) }}</span>
       </template>
@@ -57,7 +57,7 @@ const props = defineProps({
     default: true
   },
   outboundTypeMode: {
-    // 出库单位 模式（显示出库单位对应的数量及单位）
+    // 出库单位 模式(显示出库单位对应的数量及单位)
     type: Boolean,
     default: false
   },

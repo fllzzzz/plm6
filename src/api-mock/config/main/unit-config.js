@@ -10,15 +10,15 @@ const getAllUnit = {
       code: 20000,
       message: '成功',
       data: [
-        { id: 1, 'name': '毫米', 'symbol': '㎜', 'type': unitTypeEnum.LENGTH.V },
-        { id: 2, 'name': '米', 'symbol': 'm', 'type': unitTypeEnum.LENGTH.V },
-        { id: 3, 'name': '平方米', 'symbol': '㎡', 'type': unitTypeEnum.AREA.V },
-        { id: 4, 'name': '立方米', 'symbol': 'm³', 'type': unitTypeEnum.VOLUME.V },
-        { id: 5, 'name': '千克', 'symbol': 'kg', 'type': unitTypeEnum.WEIGHT.V },
-        { id: 6, 'name': '张', 'symbol': '', 'type': unitTypeEnum.DIGIT.V },
-        { id: 7, 'name': '卷', 'symbol': '', 'type': unitTypeEnum.DIGIT.V },
-        { id: 8, 'name': '桶', 'symbol': '', 'type': unitTypeEnum.DIGIT.V },
-        { id: 9, 'name': '箱', 'symbol': '', 'type': unitTypeEnum.DIGIT.V }
+        { id: 1, name: '毫米', symbol: '㎜', type: unitTypeEnum.LENGTH.V, enabled: true },
+        { id: 2, name: '米', symbol: 'm', type: unitTypeEnum.LENGTH.V, enabled: true },
+        { id: 3, name: '平方米', symbol: '㎡', type: unitTypeEnum.AREA.V, enabled: true },
+        { id: 4, name: '立方米', symbol: 'm³', type: unitTypeEnum.VOLUME.V, enabled: true },
+        { id: 5, name: '千克', symbol: 'kg', type: unitTypeEnum.WEIGHT.V, enabled: true },
+        { id: 6, name: '张', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
+        { id: 7, name: '卷', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
+        { id: 8, name: '桶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
+        { id: 9, name: '箱', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
       ]
     }
   }
@@ -33,16 +33,16 @@ const getUnit = {
       code: 20000,
       message: '成功',
       data: {
-        'content': [
-          { id: 1, 'name': '毫米', 'symbol': '㎜', 'type': unitTypeEnum.LENGTH.V, 'enabled': enabledEnum.TRUE.V, boolSystem: true },
-          { id: 2, 'name': '米', 'symbol': 'm', 'type': unitTypeEnum.LENGTH.V, 'enabled': enabledEnum.TRUE.V, boolSystem: true },
-          { id: 3, 'name': '平方米', 'symbol': '㎡', 'type': unitTypeEnum.AREA.V, 'enabled': enabledEnum.TRUE.V, boolSystem: true },
-          { id: 4, 'name': '立方米', 'symbol': 'm³', 'type': unitTypeEnum.VOLUME.V, 'enabled': enabledEnum.FALSE.V, boolSystem: true },
-          { id: 5, 'name': '千克', 'symbol': '㎏', 'type': unitTypeEnum.WEIGHT.V, 'enabled': enabledEnum.TRUE.V, boolSystem: true },
-          { id: 6, 'name': '张', 'symbol': '', 'type': unitTypeEnum.DIGIT.V, 'enabled': enabledEnum.TRUE.V, boolSystem: false },
-          { id: 7, 'name': '卷', 'symbol': '', 'type': unitTypeEnum.DIGIT.V, 'enabled': enabledEnum.TRUE.V, boolSystem: false },
-          { id: 8, 'name': '桶', 'symbol': '', 'type': unitTypeEnum.DIGIT.V, 'enabled': enabledEnum.TRUE.V, boolSystem: false },
-          { id: 9, 'name': '箱', 'symbol': '', 'type': unitTypeEnum.DIGIT.V, 'enabled': enabledEnum.TRUE.V, boolSystem: false }
+        content: [
+          { id: 1, name: '毫米', symbol: '㎜', type: unitTypeEnum.LENGTH.V, enabled: enabledEnum.TRUE.V, boolSystem: true },
+          { id: 2, name: '米', symbol: 'm', type: unitTypeEnum.LENGTH.V, enabled: enabledEnum.TRUE.V, boolSystem: true },
+          { id: 3, name: '平方米', symbol: '㎡', type: unitTypeEnum.AREA.V, enabled: enabledEnum.TRUE.V, boolSystem: true },
+          { id: 4, name: '立方米', symbol: 'm³', type: unitTypeEnum.VOLUME.V, enabled: enabledEnum.FALSE.V, boolSystem: true },
+          { id: 5, name: '千克', symbol: '㎏', type: unitTypeEnum.WEIGHT.V, enabled: enabledEnum.TRUE.V, boolSystem: true },
+          { id: 6, name: '张', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: enabledEnum.TRUE.V, boolSystem: false },
+          { id: 7, name: '卷', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: enabledEnum.TRUE.V, boolSystem: false },
+          { id: 8, name: '桶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: enabledEnum.TRUE.V, boolSystem: false },
+          { id: 9, name: '箱', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: enabledEnum.TRUE.V, boolSystem: false }
         ],
         totalElements: 9
       }
@@ -89,10 +89,4 @@ const delUnit = {
   }
 }
 
-export default [
-  getUnit,
-  getAllUnit,
-  batchAddUnit,
-  editEnabled,
-  delUnit
-]
+export default [getUnit, getAllUnit, batchAddUnit, editEnabled, delUnit]

@@ -34,7 +34,7 @@
           :max-height="maxHeight"
           :highlight-current-row="false"
           :span-method="spanMethod"
-          style="width: 100%"
+          row-key="id"
         >
           <el-table-column type="index" label="序号" align="center" width="60" />
           <el-table-column key="first" prop="first" label="一级" align="left" min-width="160px">

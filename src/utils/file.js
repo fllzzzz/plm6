@@ -71,16 +71,16 @@ export function downloadFileByResponse(response) {
   const downloadElement = document.createElement('a')
   const href = window.URL.createObjectURL(blob) // 创建下载的链接
   downloadElement.href = href
-  const _fullNameArr = headers && headers['content-disposition'] ? headers['content-disposition'].split('=')[1].split('.') : []
-  if (!_fullNameArr || _fullNameArr.length === 0) {
+  const _fullPathName = headers && headers['content-disposition'] ? headers['content-disposition'].split('=')[1].split('.') : []
+  if (!_fullPathName || _fullPathName.length === 0) {
     return false
   }
-  const _suffix = `${decodeURI(_fullNameArr.pop())}` // 处理文件名乱码问题,后缀名
+  const _suffix = `${decodeURI(_fullPathName.pop())}` // 处理文件名乱码问题,后缀名
   if (!_suffix) {
     return false
   }
   // 获取文件名
-  let _name = `${decodeURI(_fullNameArr.join('.'))}` // 处理文件名乱码问题
+  let _name = `${decodeURI(_fullPathName.join('.'))}` // 处理文件名乱码问题
 
   _name = `${_name}_`
   const fileName = `${_name}${parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')}.${_suffix}` // 处理文件名乱码问题

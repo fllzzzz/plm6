@@ -32,27 +32,27 @@
           </template>
         </el-table-column>
         <el-table-column
-          key="totalQuantity"
-          prop="totalQuantity"
+          key="taskQuantity"
+          prop="taskQuantity"
           :show-overflow-tooltip="true"
           :label="`任务总数(${showUnit})`"
           align="center"
           width="90"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.totalQuantity }}</span>
+            <span>{{ scope.row.taskQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          key="totalMete"
-          prop="totalMete"
+          key="taskMete"
+          prop="taskMete"
           :show-overflow-tooltip="true"
           :label="`任务总数(${showUnit})`"
           align="center"
           width="120"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.totalMete }}</span>
+            <span>{{ scope.row.taskMete }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -268,12 +268,11 @@ async function fetchList() {
     tableLoading.value = true
     const { enclosureAnalysisList } = await detail(query)
     list.value = enclosureAnalysisList.map((v) => {
-      v.totalQuantity = v.surplusTaskQuantity + v.taskQuantity
-      v.totalMete = convertUnits(v.surplusLength + v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+      v.taskMete = convertUnits(v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
       v.completeMete = convertUnits(v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
       v.inProductionMete = convertUnits(v.inProductionLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-      v.unProducedQuantity = v.totalQuantity - v.completeQuantity - v.inProductionQuantity
-      v.unProducedMete = convertUnits(v.totalMete - v.completeMete - v.inProductionMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+      v.unProducedQuantity = v.taskQuantity - v.completeQuantity - v.inProductionQuantity
+      v.unProducedMete = convertUnits(v.taskMete - v.completeMete - v.inProductionMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
       return v
     })
   } catch (error) {

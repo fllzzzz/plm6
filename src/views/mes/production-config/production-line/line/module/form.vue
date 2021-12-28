@@ -12,16 +12,32 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
       <el-form-item label="工厂" prop="factoryId">
-        <factory-select v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
+        <factory-select :disabled="isEdit" v-model="form.factoryId" placeholder="请选择工厂" style="width: 270px" />
       </el-form-item>
       <el-form-item label="车间" prop="workshopId">
-        <workshop-select v-model:value="form.workshopId" :factory-id="form.factoryId" placeholder="请先选择工厂" style="width: 270px" />
+        <workshop-select
+          :disabled="isEdit"
+          v-model="form.workshopId"
+          :factory-id="form.factoryId"
+          placeholder="请先选择工厂"
+          style="width: 270px"
+        />
       </el-form-item>
       <el-form-item label="生产线名称" prop="name">
         <el-input v-model="form.name" type="text" placeholder="请填写生产线名称" style="width: 270px" />
       </el-form-item>
-      <el-form-item label="生产线简称" prop="shortName">
+      <!-- <el-form-item label="生产线简称" prop="shortName">
         <el-input v-model="form.shortName" type="text" placeholder="请填写生产线简称" style="width: 270px" />
+      </el-form-item> -->
+      <el-form-item label="生产线类型" prop="productType">
+        <common-select
+          :dataStructure="{ key: 'K', label: 'SL', value: 'V' }"
+          v-model="form.productType"
+          :options="componentTypeEnum.ENUM"
+          :unshowOptions="[componentTypeEnum.AUXILIARY_MATERIAL.K]"
+          placeholder="请选择生产线类型"
+          style="width: 270px"
+        />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -40,7 +56,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { componentTypeEnum } from '@enum-ms/mes'
+
 import { regForm } from '@compos/use-crud'
 import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
@@ -51,26 +69,29 @@ const defaultForm = {
   id: undefined,
   factoryId: undefined,
   workshopId: undefined,
+  productType: undefined,
   name: '',
-  shortName: '',
+  // shortName: '',
   sort: 1,
   remark: ''
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
+const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
   workshopId: [{ required: true, message: '请选择车间', trigger: 'change' }],
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
+  productType: [{ required: true, message: '请选择生产线类型', trigger: 'change' }],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
   name: [
     { required: true, message: '请填写生产线名称', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
   ],
-  shortName: [
-    { required: true, message: '请填写生产线简称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ],
+  // shortName: [
+  //   { required: true, message: '请填写生产线简称', trigger: 'blur' },
+  //   { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+  // ],
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }]
 }
 </script>

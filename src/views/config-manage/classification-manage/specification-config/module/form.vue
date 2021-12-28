@@ -44,7 +44,7 @@
             :data="form.list"
             :cell-class-name="data => wrongCellMask(data, tableRules)"
             :max-height="maxHeight"
-            style="width: 100%;"
+            row-key="uid"
           >
             <el-table-column label="序号" type="index" align="center" width="60" />
             <el-table-column prop="code" label="编码" align="center" width="100">
@@ -104,7 +104,7 @@ import { regForm } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useTableOperate from '@compos/form/use-table-operate'
 import useTableValidate from '@compos/form/use-table-validate'
-import SvgIcon from '@/components/SvgIcon/index.vue'
+import SvgIcon from '@comp/SvgIcon/index.vue'
 
 const currentNode = inject('currentNode')
 const permission = inject('permission')

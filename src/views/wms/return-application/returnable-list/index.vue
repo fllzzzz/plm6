@@ -15,7 +15,7 @@
       @sort-change="crud.handleSortChange"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" fixed="left" />
+      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" fixed="left" />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
       <!-- 单位及其数量 -->
@@ -23,10 +23,32 @@
         :columns="columns"
         :basic-class="crud.query.basicClass"
         single-mete-mode
-        meteField="singleMete"
-        operableMeteField="singleReturnableMete"
+        label-prefix="可退库"
+        mete-field="singleMete"
+        operable-mete-field="singleReturnableMete"
         :show-operable-quantity="false"
       />
+      <template v-if="basicClass === rawMatClsEnum.SECTION_STEEL.V && curMatBaseUnit">
+        <el-table-column
+          v-if="columns.visible('singleReturnableLength')"
+          key="singleReturnableLength"
+          :show-overflow-tooltip="true"
+          prop="singleReturnableLength"
+          :label="`可退库 / 长(${curMatBaseUnit.length.unit})`"
+          align="right"
+          width="150"
+        >
+          <template #default="{ row }">
+            <span
+              class="operable-number"
+              v-empty-text
+              v-to-fixed="{ val: row.singleReturnableLength, dp: curMatBaseUnit.length.precision }"
+            />
+            /
+            <span v-empty-text v-to-fixed="curMatBaseUnit.length.precision">{{ row.length }}</span>
+          </template>
+        </el-table-column>
+      </template>
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
@@ -92,12 +114,13 @@
 import crudApi from '@/api/wms/return/returnable-list'
 import { detail as getOutboundDetail } from '@/api/wms/outbound/raw-mat-application-review'
 
-import { defineEmits, defineProps, provide, reactive, ref, watchEffect } from 'vue'
+import { computed, defineEmits, defineProps, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { createUniqueString } from '@/utils/data-type/string'
+import { specFormat } from '@/utils/wms/spec-format'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -112,7 +135,7 @@ import ClickablePermissionSpan from '@/components-system/common/clickable-permis
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import { ElMessage } from 'element-plus'
-import { specFormat } from '@/utils/wms/spec-format'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const emit = defineEmits(['add'])
 
@@ -153,7 +176,7 @@ const optShow = {
 
 // 展开行
 const expandRowKeys = ref([])
-// 调拨详情ref
+// 出库详情ref
 const outboundDetailRef = ref()
 const returnNumber = ref({})
 // 表格ref
@@ -172,6 +195,17 @@ const { CRUD, crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
+// 当前分类基础单位
+const { baseUnit } = useMatBaseUnit()
+
+const curMatBaseUnit = computed(() => {
+  if (baseUnit.value) {
+    return baseUnit.value[props.basicClass]
+  } else {
+    return {}
+  }
+})
+
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
@@ -183,6 +217,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       toNum: false
     },
     {
+      length: ['length', 'singleReturnableLength'],
       mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
     }
   )
@@ -190,6 +225,11 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await calcTheoryWeight(data.content)
   data.content.forEach((row) => {
     row.sourceReturnableMete = row.returnableMete
+    if (props.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+      row.returnableLength = row.singleReturnableLength * row.quantity
+      row.totalLength = row.length * row.quantity
+      row.sourceReturnableLength = row.returnableLength
+    }
   })
 }
 
@@ -201,7 +241,7 @@ function handleAddReturn(row) {
   //   id: row.id, // 物料id
   //   sn: row.sn, // 该科目规格唯一编号
   //   specificationLabels: row.specificationLabels, // 规格中文
-  //   serialNumber: row.serialNumber, // 科目编号
+  //   serialNumber: row.serialNumber, // 科目编号 - 规格
   //   classifyId: row.classifyId, // 科目id
   //   classifyFullName: row.classifyFullName, // 全路径名称
   //   basicClass: row.basicClass, // 基础类型
@@ -228,42 +268,16 @@ function handleAddReturn(row) {
     newData.factoryId = -1 // 工厂 同上
     newData.warehouseId = -1 // 仓库 同上
   }
-  setBasicInfoForData(row, newData)
-  const index = selectList.lastIndexOf((v) => v.id === row.id)
+  // setBasicInfoForData(row, newData)
+  const index = selectList.findLastIndex((v) => v.id === row.id)
+
   if (index > -1) {
-    selectList.splice(index, 0, newData)
+    selectList.splice(index + 1, 0, newData)
   } else {
     selectList.push(newData)
   }
   ElMessage.warning(`${row.classifyFullName}-${specFormat(row)} 加入退库列表`)
   emit('add', newData)
-}
-
-// 根据物料基础类型设置信息
-function setBasicInfoForData(row, data) {
-  // switch (data.basicClass) {
-  //   case rawMatClsEnum.STEEL_PLATE.V:
-  //     data.thickness = row.thickness
-  //     data.theoryWeight = row.theoryWeight
-  //     data.heatNoAndBatchNo = row.heatNoAndBatchNo
-  //     return
-  //   case rawMatClsEnum.STEEL_COIL.V:
-  //     data.thickness = row.thickness
-  //     data.width = row.width
-  //     data.color = row.color
-  //     data.theoryLength = row.theoryLength
-  //     data.heatNoAndBatchNo = row.heatNoAndBatchNo
-  //     return
-  //   case rawMatClsEnum.SECTION_STEEL.V:
-  //     data.theoryWeight = row.theoryWeight
-  //     data.heatNoAndBatchNo = row.heatNoAndBatchNo
-  //     return
-  //   case rawMatClsEnum.MATERIAL.V:
-  //     data.color = row.color
-  //     return
-  //   default:
-  //     return
-  // }
 }
 
 // 计算退库信息
@@ -302,5 +316,11 @@ function openOutboundDetailView(outboundId) {
     padding-top: 10px;
     padding-bottom: 10px;
   }
+}
+</style>
+
+<style lang="scss" scoped>
+.operable-number {
+  color: green;
 }
 </style>

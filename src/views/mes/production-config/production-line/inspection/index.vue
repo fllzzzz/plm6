@@ -49,7 +49,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
+      <mForm :productType="line.productType" />
     </div>
   </div>
 </template>
@@ -110,6 +110,11 @@ watch(
 )
 
 CRUD.HOOK.beforeRefresh = () => {
+  crud.query.productionLineId = lineId
+  return !!crud.query.productionLineId
+}
+
+CRUD.HOOK.beforeToQuery = () => {
   crud.query.productionLineId = lineId
   return !!crud.query.productionLineId
 }

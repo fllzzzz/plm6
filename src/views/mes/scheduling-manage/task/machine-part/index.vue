@@ -14,24 +14,21 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column v-if="columns.visible('date')" prop="date" label="排产日期" align="center" width="140px">
-        <template v-slot="scope">
-          <div>{{ parseTime(scope.row.date, '{y}-{m}-{d}') }}</div>
+        <template #default="{ row }">
+          <span v-parse-time="'{y}-{m}-{d}'">{{ row.date }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('schedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="schedulingQuantity"
-        :label="`排产量（件/kg）`"
+        :label="`排产量（件/${unitObj.unit}）`"
         align="left"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <el-tag type="info" effect="plain" style="width: 95%">
-            <template v-if="scope.row.schedulingQuantity">
-              <span style="color: #409eff">{{ emptyTextFormatter(scope.row.schedulingQuantity) }}</span> /
-              <span>{{ emptyTextFormatter(toFixed(scope.row.totalSchedulingWeight, DP.COM_WT__KG)) }}</span>
-            </template>
-            <template v-else>{{ emptyTextFormatter('') }}</template>
+            <span v-empty-text style="color: #409eff">{{ row.schedulingQuantity }}</span> /
+            <span v-empty-text>{{ row.totalSchedulingMete }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -39,16 +36,13 @@
         v-if="columns.visible('taskQuantity')"
         :show-overflow-tooltip="true"
         prop="taskQuantity"
-        :label="`已排产量（件/kg）`"
+        :label="`已排产量（件/${unitObj.unit}）`"
         align="left"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <el-tag type="info" effect="plain" style="width: 95%">
-            <template v-if="scope.row.taskQuantity">
-              <span style="color: #67c23a">{{ emptyTextFormatter(scope.row.taskQuantity) }}</span> /
-              <span>{{ emptyTextFormatter(toFixed(scope.row.totalTaskWeight, DP.COM_WT__KG)) }}</span>
-            </template>
-            <template v-else>{{ emptyTextFormatter('') }}</template>
+            <span v-empty-text style="color: #67c23a">{{ row.taskQuantity }}</span> /
+            <span v-empty-text>{{ row.totalTaskMete }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -56,16 +50,13 @@
         v-if="columns.visible('unschedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="unschedulingQuantity"
-        :label="`未排产量（件/kg）`"
+        :label="`未排产量（件/${unitObj.unit}）`"
         align="left"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <el-tag type="info" effect="plain" style="width: 95%">
-            <template v-if="scope.row.unschedulingQuantity">
-              <span style="color: #f56c6c">{{ emptyTextFormatter(scope.row.unschedulingQuantity) }}</span> /
-              <span>{{ emptyTextFormatter(toFixed(scope.row.unschedulingWeight, DP.COM_WT__KG)) }}</span>
-            </template>
-            <template v-else>{{ emptyTextFormatter('') }}</template>
+            <span v-empty-text style="color: #f56c6c">{{ row.unschedulingQuantity }}</span> /
+            <span v-empty-text>{{ row.unschedulingMete }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -94,7 +85,7 @@
       "
     >
       <template #content>
-        <m-detail :details="detailRow" @refresh="crud.toQuery"/>
+        <m-detail :details="detailRow" @refresh="crud.toQuery" />
       </template>
     </common-drawer>
   </div>
@@ -102,17 +93,17 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/task/machine-part'
-import { ref, provide } from 'vue'
+import { ref, provide, computed } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
-import { emptyTextFormatter, toFixed } from '@data-type'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import mDetail from '../details'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
+import mDetail from '../components/task-details'
 import mHeader from './module/header'
 
 // crud交由presenter持有
@@ -159,15 +150,41 @@ function showDetail(row) {
   drawerVisible.value = true
 }
 
+const productType = componentTypeEnum.MACHINE_PART.V
+
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({
+    productType: productType
+  })
+})
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  crud.data = [] // 不清空不更新表格
   res.data.content = res.data.content.map((v) => {
-    v.productType = componentTypeEnum.MACHINE_PART.V
+    v.processType = crud.query.processType
     v.schedulingQuantity = v.schedulingQuantity || 0
     v.taskQuantity = v.taskQuantity || 0
     v.unschedulingQuantity = v.schedulingQuantity - v.taskQuantity
-    v.totalSchedulingWeight = v.totalSchedulingWeight || 0
-    v.totalTaskWeight = v.totalTaskWeight || 0
-    v.unschedulingWeight = v.totalSchedulingWeight - v.totalTaskWeight
+    v.productType = productType
+    v.totalSchedulingMete = useProductMeteConvert({
+      productType: v.productType,
+      length: v.totalSchedulingLength,
+      L_TO_UNIT: unitObj.value.unit,
+      L_DP: unitObj.value.dp,
+      weight: v.totalSchedulingNetWeight,
+      W_TO_UNIT: unitObj.value.unit,
+      W_DP: unitObj.value.dp
+    }).convertMete
+    v.totalTaskMete = useProductMeteConvert({
+      productType: v.productType,
+      length: v.totalTaskLength,
+      L_TO_UNIT: unitObj.value.unit,
+      L_DP: unitObj.value.dp,
+      weight: v.totalTaskNetWeight,
+      W_TO_UNIT: unitObj.value.unit,
+      W_DP: unitObj.value.dp
+    }).convertMete
+    v.unschedulingMete = (v.totalSchedulingMete - v.totalTaskMete).toFixed(unitObj.value.dp)
     return v
   })
 }

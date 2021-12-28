@@ -10,6 +10,7 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       @selection-change="crud.selectionChangeHandler"
+      row-key="id"
     >
       <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" type="index" align="center" width="60" />

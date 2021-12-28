@@ -221,7 +221,7 @@ import { invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierPayMentTypeEnum } from '@enum-ms/contract'
 import { orderInfo } from '@/api/contract/supplier-manage/pay-invoice/pay'
-import UploadBtn from '@/components/file-upload/UploadBtn'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
 const uploadRef = ref()

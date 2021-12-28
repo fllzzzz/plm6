@@ -5,42 +5,62 @@
       <div class="filter-left-box">
         <span class="total-info">
           <span class="info-item">
-            <span>总件数({{ baseUnit.measure.unit }})</span>
+            <span>总数({{ baseUnit.measure.unit }})</span>
             <span v-to-fixed="{ val: allQuantity || 0, dp: baseUnit.measure.precision }" />
           </span>
-          <span class="info-item">
-            <span>总重量({{ baseUnit.weight.unit }})</span>
-            <span v-to-fixed="{ val: allMete || 0, dp: baseUnit.weight.precision }" />
-          </span>
+          <template v-if="basicClass & STEEL_ENUM">
+            <span class="info-item">
+              <span>总重量({{ baseUnit.weight.unit }})</span>
+              <span v-to-fixed="{ val: allMete || 0, dp: baseUnit.weight.precision }" />
+            </span>
+            <span v-if="basicClass === rawMatClsEnum.SECTION_STEEL.V" class="info-item">
+              <span>总长度(m)</span>
+              <span v-to-fixed="{ val: allLength || 0, dp: baseUnit.length.precision }" />
+            </span>
+          </template>
         </span>
       </div>
       <div class="filter-right-box child-mr-7">
         <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
+        <common-button v-if="cu.props.abnormalList" type="danger" @click="abnormalVisible = true" size="mini">异常列表</common-button>
         <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
           提 交
         </common-button>
         <common-button type="success" @click="openReturnableList" size="mini">检索退库材料</common-button>
+        <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toReturnRecord" />
       </div>
     </div>
   </div>
   <returnable-list-drawer v-model="returnableVisible" :basic-class="basicClass" :select-list="form.list" @add="handleAdd" />
+  <common-dialog ref="drawerRef" v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
+    <abnormal-list :basicClass="basicClass" :list="cu.props.abnormalList" :maxHeight="700" />
+  </common-dialog>
 </template>
 
 <script setup>
 import { ref, defineEmits, defineProps, defineExpose } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { toFixed } from '@/utils/data-type'
+import { STEEL_ENUM } from '@/settings/config'
+import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { regExtra } from '@/composables/form/use-form'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+
 import MaterialInfo from '@/views/wms/return-application/components/material-info/index.vue'
 import ReturnableListDrawer from '@/views/wms/return-application/components/returnable-list-drawer/index.vue'
-import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
-import { toFixed } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
+import AbnormalList from '../components/abnormal-list'
 
 const emit = defineEmits(['add'])
-
 const { cu, form, FORM } = regExtra() // 表单
 
 const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
   currentSource: {
     type: Object,
     default: () => {
@@ -56,12 +76,18 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
 // 总重量
 const allMete = ref()
 // 总数量
 const allQuantity = ref()
+// 总长度
+const allLength = ref()
+
 // 显示可归还列表
 const returnableVisible = ref(false)
+// 显示异常列表
+const abnormalVisible = ref(false)
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(props.basicClass)
 
@@ -74,6 +100,7 @@ FORM.HOOK.afterSubmit = () => {
 function init() {
   allMete.value = 0
   allQuantity.value = 0
+  allLength.value = 0
 }
 
 // 添加
@@ -88,8 +115,8 @@ function openReturnableList() {
 
 // 计算所有退库钢材总重
 function calcAllWeight() {
-  allMete.value = form.list.reduce((sum, { mete = 0 }) => {
-    return +toFixed(sum + mete, baseUnit.value.weight.precision)
+  allMete.value = form.list.reduce((sum, cur) => {
+    return +toFixed(sum + cur.mete, baseUnit.value.weight.precision)
   }, 0)
 }
 
@@ -100,12 +127,25 @@ function calcAllQuantity() {
   }, 0)
 }
 
+// 计算所有型材总长
+function calcAllLength() {
+  allLength.value = form.list.reduce((sum, cur) => {
+    return +toFixed(sum + cur.totalLength, 2)
+  }, 0)
+}
+
+// 前往退库记录
+function toReturnRecord() {
+  router.push({ name: 'RawMatReturnApplicationRecord', params: { basicClass: props.basicClass }})
+}
+
 // 清除
 function handleClear() {}
 
 defineExpose({
   calcAllWeight,
-  calcAllQuantity
+  calcAllQuantity,
+  calcAllLength
 })
 </script>
 
@@ -127,7 +167,7 @@ defineExpose({
     }
     > span:first-child {
       font-weight: bold;
-      width: 80px;
+      width: 90px;
       text-align: right;
       &:after {
         content: '：';

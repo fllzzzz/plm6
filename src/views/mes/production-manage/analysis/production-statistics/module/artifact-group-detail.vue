@@ -33,27 +33,27 @@
         </el-table-column>
         <el-table-column :label="`任务总数(${showUnit})`" align="center">
           <el-table-column
-            key="totalQuantity"
-            prop="totalQuantity"
+            key="taskQuantity"
+            prop="taskQuantity"
             :show-overflow-tooltip="true"
             :label="`任务总数(${showUnit})`"
             align="center"
             width="90"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalQuantity }}</span>
+              <span>{{ scope.row.taskQuantity }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            key="totalMete"
-            prop="totalMete"
+            key="taskMete"
+            prop="taskMete"
             :show-overflow-tooltip="true"
             :label="`任务总数(${showUnit})`"
             align="center"
             width="120"
           >
             <template v-slot="scope">
-              <span>{{ scope.row.totalMete }}</span>
+              <span>{{ scope.row.taskMete }}</span>
             </template>
           </el-table-column>
         </el-table-column>
@@ -263,14 +263,13 @@ function init() {
 async function fetchList() {
   try {
     tableLoading.value = true
-    const { artifactAnalysisDTOList } = await detail(query)
-    list.value = artifactAnalysisDTOList.map((v) => {
-      v.totalQuantity = v.surplusTaskQuantity + v.taskQuantity
-      v.totalMete = toFixed(v.surplusNetWeight + v.taskNetWeight, DP.COM_WT__KG)
+    const { artifactAnalysisList } = await detail(query)
+    list.value = artifactAnalysisList.map((v) => {
+      v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
       v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG)
       v.inProductionMete = toFixed(v.inProductionNetWeight, DP.COM_WT__KG)
-      v.unProducedQuantity = v.totalQuantity - v.completeQuantity - v.inProductionQuantity
-      v.unProducedMete = toFixed(v.totalMete - v.completeMete - v.inProductionMete, DP.COM_WT__KG)
+      v.unProducedQuantity = v.taskQuantity - v.completeQuantity - v.inProductionQuantity
+      v.unProducedMete = toFixed(v.taskMete - v.completeMete - v.inProductionMete, DP.COM_WT__KG)
       return v
     })
   } catch (error) {

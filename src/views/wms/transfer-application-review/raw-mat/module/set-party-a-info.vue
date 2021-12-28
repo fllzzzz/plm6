@@ -24,7 +24,7 @@
 
     <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="115px" label="含税单价">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
           v-model="row.unitPrice"
           :min="0"
@@ -41,7 +41,7 @@
     </el-table-column>
     <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
       <template #default="{ row }">
-        <el-input-number
+        <common-input-number
           v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
           v-model="row.amount"
           :min="0"

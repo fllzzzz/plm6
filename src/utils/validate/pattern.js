@@ -28,6 +28,9 @@ const validatorTel = /^(0\d{2}-\d{8}(-\d{1,4})?)|(0\d{3}-\d{7,8}(-\d{1,4})?)$|1(
 // 域名验证
 const validatorDomain = /^(?=^.{3,255}$)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*\/?$/
 
+// 网址验证
+const validatorWebsite = /^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*$/
+
 // 发票编号(数字 + 特殊字符)
 const validatorInvoiceNo = /^[0-9!#$%&@',.*+-/=?^_`{|}~]+$/
 
@@ -102,6 +105,7 @@ export {
   validatorMoreHundred,
   validatorEn,
   validatorDomain,
+  validatorWebsite,
   patternLicensePlate,
   validatorInvoiceNo
 }

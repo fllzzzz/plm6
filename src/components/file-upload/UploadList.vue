@@ -3,13 +3,13 @@
     <div class="attachment-content">
       <common-table :data="files" :empty-text="emptyText" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="200" />
-        <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" min-width="180">
+        <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="150" />
+        <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" width="100" align="center">
           <template v-slot="scope">
             <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column label="操作" width="120">
           <template v-slot="scope">
             <common-button v-if="uploadable" type="danger" icon="el-icon-delete" size="mini" @click="toDelete(scope.$index)" />
             <export-button
@@ -40,13 +40,7 @@
         :disabled="props.disabled"
         multiple
       >
-        <common-button
-          :loading="uploadLoading"
-          :size="props.size"
-          :icon="props.icon"
-          :disabled="props.disabled"
-          :type="props.btnType"
-        >
+        <common-button :loading="uploadLoading" :size="props.size" :icon="props.icon" :disabled="props.disabled" :type="props.btnType">
           <span v-if="props.btnName">{{ props.btnName }}</span>
         </common-button>
       </el-upload>
@@ -164,7 +158,7 @@ function handleSuccess(response) {
   handleClear()
   uploadLoading.value = false
   if (response && response.code === 20000) {
-    const data = response.data
+    const data = [response.data]
     emit('update:files', props.files.concat(response.data))
     currentUpload.value = currentUpload.value.concat(data.map((v) => v.id))
     ElMessage.success('上传成功')
@@ -227,8 +221,8 @@ function beforeRemove(file, fileList) {
   .upload-box {
     position: absolute;
     display: inline-block;
-    right: 10px;
-    top: 9px;
+    right: 5px;
+    top: 6px;
   }
   .attachment-content {
     position: relative;

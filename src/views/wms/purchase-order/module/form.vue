@@ -6,6 +6,7 @@
     :title="crud.status.title"
     :show-close="true"
     :size="1000"
+    :close-on-click-modal="false"
     custom-class="purchase-order-form"
   >
     <template #titleRight>
@@ -59,7 +60,21 @@
                 />
               </div>
             </el-form-item>
-
+            <el-form-item v-if="form.basicClass & matClsEnum.MATERIAL.V" class="el-form-item-5" label="辅材明细" prop="auxMaterialIds">
+              <material-cascader
+                v-model="form.auxMaterialIds"
+                :basic-class="matClsEnum.MATERIAL.V"
+                :deep="2"
+                multiple
+                :collapse-tags="false"
+                separator=" > "
+                clearable
+                placeholder="请选择辅材"
+                class="input-underline"
+                size="small"
+                style="width: 100%"
+              />
+            </el-form-item>
             <el-form-item label="选择项目" class="el-form-item-4" prop="projectIds">
               <project-cascader v-model="form.projectIds" clearable :disabled="form.boolUsed" multiple class="input-underline" />
             </el-form-item>
@@ -104,12 +119,11 @@
             <template v-if="form.supplyType == orderSupplyTypeEnum.SELF.V">
               <el-form-item class="el-form-item-8" label="合同量" prop="mete">
                 <div class="input-underline flex-rss child-mr-10">
-                  <el-input-number
+                  <common-input-number
                     v-model="form.mete"
                     placeholder="请填写合同量"
                     autocomplete="off"
                     :max="999999999999"
-                    :precision="5"
                     :step="1"
                     :controls="false"
                     style="width: 100%"
@@ -125,7 +139,7 @@
                 </div>
               </el-form-item>
               <el-form-item class="el-form-item-9" label="合同额（元）" prop="amount">
-                <el-input-number
+                <common-input-number
                   v-model="form.amount"
                   :max="999999999999"
                   :precision="2"
@@ -156,7 +170,7 @@
                   :size="'small'"
                 />
               </el-form-item>
-              <el-form-item class="el-form-item-12" label="提货方式" prop="pickUpMode">
+              <!-- <el-form-item class="el-form-item-12" label="提货方式" prop="pickUpMode">
                 <common-radio
                   v-model="form.pickUpMode"
                   :options="pickUpModeEnum.ENUM"
@@ -165,7 +179,7 @@
                   :disabled="form.boolUsed"
                   size="small"
                 />
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item class="el-form-item-13" label="订单类型" prop="purchaseOrderPaymentMode">
                 <common-radio
                   v-model="form.purchaseOrderPaymentMode"
@@ -175,19 +189,38 @@
                   :size="'small'"
                 />
               </el-form-item>
+              <el-form-item class="el-form-item-16" label="物流运输方式" prop="pickUpMode">
+                <common-radio
+                  v-model="form.logisticsTransportType"
+                  :options="logisticsTransportTypeEnum.ENUM"
+                  :disabled-val="pickUpModeDisabled"
+                  type="enum"
+                  :disabled="form.boolUsed"
+                  size="small"
+                />
+              </el-form-item>
+              <el-form-item class="el-form-item-17" label="物流费用承担" prop="pickUpMode">
+                <common-radio
+                  v-model="form.logisticsPayerType"
+                  :options="logisticsPayerEnum.ENUM"
+                  :disabled-val="pickUpModeDisabled"
+                  type="enum"
+                  :disabled="form.boolUsed"
+                  size="small"
+                />
+              </el-form-item>
             </template>
             <el-form-item class="el-form-item-14" prop="remark">
-              <el-input v-model="form.remark" :rows="3" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
+              <el-input v-model="form.remark" :rows="4" type="textarea" placeholder="备注" maxlength="1000" show-word-limit />
             </el-form-item>
-            <el-form-item class="el-form-item-15" prop="attachments">
-              <!-- :show-download="!!form.id" -->
-              <upload-list
-                show-download
-                :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
-                v-model:files="form.attachments"
-                empty-text="暂未上传采购订单附件"
-              />
-            </el-form-item>
+            <!-- :show-download="!!form.id" -->
+            <upload-list
+              class="el-form-item-15"
+              show-download
+              :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
+              v-model:files="form.attachments"
+              empty-text="暂未上传采购订单附件"
+            />
           </div>
         </el-form>
       </div>
@@ -196,30 +229,32 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
-import { orderSupplyTypeEnum, baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum } from '@enum-ms/wms'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { weightMeasurementModeEnum, invoiceTypeEnum } from '@enum-ms/finance'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 
 import { regForm } from '@compos/use-crud'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
-import unitSelect from '@comp-common/unit-select/index.vue'
-import projectCascader from '@comp-base/project-cascader.vue'
-import supplierSelect from '@comp-base/supplier-select/index.vue'
-import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
-import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
-import requisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
-import uploadList from '@/components/file-upload/UploadList.vue'
-import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
+import UnitSelect from '@comp-common/unit-select/index.vue'
+import ProjectCascader from '@comp-base/project-cascader.vue'
+import SupplierSelect from '@comp-base/supplier-select/index.vue'
+import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+import BasicClassSelect from '@/components-system/classification/basic-class-select.vue'
+import InvoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
+import RequisitionsSnSelect from '@/components-system/wms/requisitions-sn-select.vue'
+import UploadList from '@comp/file-upload/UploadList.vue'
+import AreaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
-
 const defaultForm = {
   serialNumber: undefined, // 采购订单编号
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
   purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 物料种类
   basicClass: null, // 物料类型
+  auxMaterialIds: undefined, // 辅材明细ids
   projectIds: undefined, // 项目ids
   areaIds: null, // 区域
   strucAreaIds: [], // 构件区域
@@ -231,7 +266,9 @@ const defaultForm = {
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   taxRate: undefined, // 税率
   weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
-  pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+  // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+  logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+  logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
   remark: undefined, // 备注
   attachments: undefined, // 附件
@@ -276,7 +313,9 @@ const baseRules = {
 // 自采物料校验
 const selfRules = {
   weightMeasurementMode: [{ required: true, message: '请选择计量方式', trigger: 'change' }],
-  pickUpMode: [{ required: true, message: '请选择提货方式', trigger: 'change' }],
+  // pickUpMode: [{ required: true, message: '请选择提货方式', trigger: 'change' }],
+  logisticsTransportType: [{ required: true, message: '请选择物流运输方式', trigger: 'change' }],
+  logisticsPayerType: [{ required: true, message: '请选择物流费用承担方', trigger: 'change' }],
   purchaseOrderPaymentMode: [{ required: true, message: '请选择订单类型', trigger: 'change' }],
   invoiceType: [{ required: true, validator: validateInvoiceType, trigger: 'change' }],
   taxRate: [{ max: 2, message: '请输入税率', trigger: 'blur' }],
@@ -290,6 +329,11 @@ const partyARules = {
 }
 
 const rawMatRules = {}
+
+// 辅材校验
+const auxMatRules = {
+  auxMaterialIds: [{ required: true, message: '请选择辅材', trigger: 'change' }]
+}
 
 // 制成品校验
 const manufRules = {
@@ -315,6 +359,9 @@ const rules = computed(() => {
   if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
     Object.assign(r, partyARules)
   }
+  if (form.basicClass & matClsEnum.MATERIAL.V) {
+    Object.assign(r, auxMatRules)
+  }
   // const newFields = Object.keys(r)
   // const clearFields = oldFields.filter(v => !newFields.includes(v))
   // 清除被删除的rules
@@ -332,18 +379,18 @@ const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 useWatchFormValidate(formRef, form, [['areaIds', ['purchaseType', 'basicClass', 'strucAreaIds', 'enclAreaIds']]])
 
-watch(
-  () => form.basicClass,
-  (bc) => {
-    if (bc & matClsEnum.GAS.V) {
-      // 气体只能选择到厂
-      form.pickUpMode = pickUpModeEnum.SUPPLIER.V
-      pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
-    } else {
-      pickUpModeDisabled.value = []
-    }
-  }
-)
+// watch(
+//   () => form.basicClass,
+//   (bc) => {
+//     if (bc & matClsEnum.GAS.V) {
+//       // 气体只能选择到厂
+//       form.pickUpMode = pickUpModeEnum.SUPPLIER.V
+//       pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
+//     } else {
+//       pickUpModeDisabled.value = []
+//     }
+//   }
+// )
 
 // 初始化表单
 CRUD.HOOK.afterToAdd = () => {}
@@ -351,6 +398,9 @@ CRUD.HOOK.afterToAdd = () => {}
 CRUD.HOOK.beforeToEdit = (crud, form) => {
   if (isNotBlank(form.project)) {
     form.projectIds = form.project.map((v) => v.id)
+  }
+  if (isBlank(form.attachments)) {
+    form.attachments = []
   }
 }
 
@@ -376,15 +426,15 @@ crud.submitFormFormat = (form) => {
   grid-column-gap: 20px;
   grid-auto-flow: row;
   grid-template-areas:
-    'a a a a a a . . . . . .'
-    'c c c c c c b b b b b b'
+    'a a a a a a b b b b b b'
+    'c c c c c c e e e e e e'
     'd d d d d d d d d d d d'
     'z z z z z z z z z z z z'
     'f f f f f f g g g g g g'
     'h h h h i i i i j j j j'
-    'k k k k l l l m m m m m'
-    'n n n n n n n n n n n n'
-    'o o o o o o o o o o o o';
+    'k k k k m m m m m m . .'
+    'p p p p q q q q . . . .'
+    'o o o o o o n n n n n n';
   .el-form-item {
     margin-bottom: 20px;
   }
@@ -434,6 +484,14 @@ crud.submitFormFormat = (form) => {
 
   > .el-form-item-15 {
     grid-area: o;
+  }
+
+  > .el-form-item-16 {
+    grid-area: p;
+  }
+
+  > .el-form-item-17 {
+    grid-area: q;
   }
   > .el-form-item-20 {
     grid-area: z;

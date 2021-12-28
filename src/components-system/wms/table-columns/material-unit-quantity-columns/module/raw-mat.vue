@@ -1,11 +1,11 @@
 <template>
   <template v-if="outboundTypeMode">
-    <el-table-column v-if="showOutboundUnit" prop="outboundUnit" label="单位" align="center" width="70px">
+    <el-table-column v-if="showOutboundUnit" prop="outboundUnit" label="单位"  align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ row.outboundUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showCurQuantity" prop="curQuantity" label="数量" align="right" width="100px">
+    <el-table-column v-if="showCurQuantity" prop="curQuantity" label="数量" align="right" width="100px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text v-to-fixed="row.outboundUnitPrecision">
           {{ row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField] }}
@@ -14,23 +14,23 @@
     </el-table-column>
   </template>
   <template v-else>
-    <el-table-column v-if="showMeasureUnit" prop="measureUnit" label="计量单位" align="center" width="70px">
+    <el-table-column v-if="showMeasureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px">
+    <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-if="row.measureUnit" v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
         <span v-else v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px">
+    <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px">
+    <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
       </template>

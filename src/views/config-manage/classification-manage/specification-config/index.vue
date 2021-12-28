@@ -42,7 +42,7 @@
             </div>
           </template>
           <div class="card-box">
-            <common-table :data="item.list" style="width: 100%" :maxHeight="maxHeight - 105">
+            <common-table :data="item.list" :maxHeight="maxHeight - 105" row-key="id">
               <el-table-column prop="code" label="编码" width="80" align="left"/>
               <el-table-column prop="value" label="规格" min-width="140" />
             </common-table>
@@ -94,7 +94,7 @@ const { crud } = useCRUD({
 })
 
 const { maxHeight, heightStyle } = useMaxHeight({ extraHeight: 15 })
-const { loaded, rawMatClsTree } = useMatClsTree(formatTree)
+const { loaded, rawMatClsTree } = useMatClsTree(formatTree, true)
 
 const treeMenuRef = ref() // 菜单ref
 

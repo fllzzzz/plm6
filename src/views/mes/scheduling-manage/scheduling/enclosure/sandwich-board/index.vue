@@ -23,8 +23,10 @@
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
       style="width: 100%"
+      @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
     >
+      <el-table-column type="selection" width="55" align="center" fixed />
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column
         v-if="columns.visible('areaName')"
@@ -42,6 +44,7 @@
         :category="mesEnclosureTypeEnum.SANDWICH_BOARD.V"
         :columns="columns"
         :fixed="'left'"
+        fixedWidth
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
@@ -62,7 +65,7 @@
                 v-if="modifying"
                 v-model="scope.row.schedulingMap[line.id].quantity"
                 :step="1"
-                :min="scope.row.schedulingMap[line.id].sourceQuantity"
+                :min="scope.row.schedulingMap[line.id].sourceQuantity || 0"
                 :max="scope.row.quantity"
                 size="mini"
                 controls-position="right"

@@ -61,6 +61,11 @@ const props = defineProps({
     type: [Array, Object],
     default: () => []
   },
+  showForbidden: {
+    // 显示禁用的单位
+    type: Boolean,
+    default: false
+  },
   size: {
     type: String,
     default: 'small'
@@ -114,22 +119,36 @@ const copyValue = ref()
 const { unit, loaded } = useUnit()
 
 const options = computed(() => {
+  let list = []
   if (props.unitType) {
-    return unit.value[props.unitType] || []
+    list = unit.value[props.unitType] || []
   } else {
-    return unit.value.ALL || []
+    list = unit.value.ALL || []
   }
+  // 只查可使用的
+  if (!props.showForbidden) {
+    list = list.filter((v) => v.enabled)
+  }
+  return list
 })
 
 const groups = computed(() => {
+  let group
   if (props.unitType) {
     for (const item of unit.value.GROUP) {
-      if (item.type === props.unitType) return [item]
+      if (item.type === props.unitType) group = [item]
     }
-    return []
+    group = []
   } else {
-    return unit.value.GROUP || []
+    group = unit.value.GROUP || []
   }
+  if (!props.showForbidden) {
+    group = JSON.parse(JSON.stringify(group))
+    group.forEach((v) => {
+      v.options = v.options.filter((v) => v.enabled)
+    })
+  }
+  return group
 })
 
 watch(

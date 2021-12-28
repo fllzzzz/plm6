@@ -1,5 +1,6 @@
 import { MIN_UNIT, STEEL_ENUM } from '@/settings/config'
 import store from '@/store'
+import { codeWait } from '..'
 import { convertUnits } from '../convert/unit'
 import { deepClone, isBlank, isNotBlank, toFixed } from '../data-type'
 import { unitTypeEnum } from '../enum/modules/common'
@@ -14,14 +15,22 @@ async function getBaseUnit() {
   return store.getters.baseUnit
 }
 
-// 获取单位
-async function getUnit() {
-  const _unit = store.state.config.loaded.unit
-  if (_unit) {
+// 获取单位,避免同时调用 例：库存预警页面与库存预警铃铛
+async function getUnit(pollingNumber = 1) {
+  try {
+    const _unit = store.state.config.loaded.unit
+    if (_unit) {
+      return store.state.config.unit.MAP
+    }
+    await store.dispatch('config/fetchUnit')
     return store.state.config.unit.MAP
+  } catch (error) {
+    console.log('获取单位', error)
+    if (pollingNumber && pollingNumber <= 5) {
+      await codeWait(1000)
+      return await getUnit(++pollingNumber)
+    }
   }
-  await store.dispatch('config/fetchUnit')
-  return store.state.config.unit.MAP
 }
 
 /**
@@ -72,11 +81,15 @@ export async function numFmtByBasicClass(
     otherRawMatFormat(
       _d,
       unitCfg,
-      { measureUnit: measureUnit || _d.measureUnit,
+      {
+        measureUnit: measureUnit || _d.measureUnit,
         accountingUnit: accountingUnit || _d.accountingUnit,
         accountingPrecision: accountingPrecision || _d.accountingPrecision,
         measurePrecision: measurePrecision || _d.measurePrecision,
-        toNum, showUnit, toSmallest },
+        toNum,
+        showUnit,
+        toSmallest
+      },
       fieldsConfig
     )
     return _d
@@ -95,12 +108,7 @@ function steelFormat(
   data,
   unitCfg,
   { basicClass, toNum = false, showUnit = false, toSmallest = false } = {},
-  {
-    length = ['length', 'totalLength'],
-    width = ['width'],
-    weight = ['weight', 'totalWeight'],
-    thickness = ['thickness']
-  } = {}
+  { length = ['length', 'totalLength'], width = ['width'], weight = ['weight', 'totalWeight'], thickness = ['thickness'] } = {}
 ) {
   if (!basicClass || !unitCfg[basicClass]) {
     return data
@@ -278,6 +286,40 @@ function fieldsFormat({ data, fields, symbol, unitPrecision, type, toSmallest, s
       }
     })
   }
+}
+
+// 根据单位进行数据转换 列表 转换
+// 若行字段有差异（如unit与unitPrecision）,可修改传入对象，增加字段参数
+export async function numFmtByUnitForList(
+  list = [],
+  { fields, unitField = 'unit', unitPrecisionField = 'unitPrecision', toSmallest = false, showUnit = false, toNum = false } = {}
+) {
+  const unitCfg = await getUnit()
+  list.forEach((row) =>
+    numFmtBySysUnit(row, { unit: unitCfg.get(row[unitField]), precision: row[unitPrecisionField], fields, toSmallest, showUnit, toNum })
+  )
+}
+
+// 根据单位进行数据转换 单条数据 转换
+export async function numFmtByUnit(data, { unit, precision = 0, fields, toSmallest = false, showUnit = false, toNum = false } = {}) {
+  const unitCfg = await getUnit()
+  numFmtBySysUnit(data, { unit: unitCfg.get(unit), precision, fields, toSmallest, showUnit, toNum })
+}
+
+// 根据单位装换
+// unit : 转换后的unit
+export function numFmtBySysUnit(data, { unit, precision = 0, fields, toSmallest = false, showUnit = false, toNum = false } = {}) {
+  if (isBlank(unit) || isBlank(fields)) return
+  fieldsFormat({
+    data,
+    fields: fields,
+    symbol: unit.symbol,
+    unitPrecision: precision,
+    type: unit.type,
+    toSmallest,
+    showUnit,
+    toNum
+  })
 }
 
 // 获取单位类型

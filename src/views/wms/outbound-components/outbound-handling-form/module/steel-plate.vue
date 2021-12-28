@@ -23,7 +23,7 @@
           <common-radio v-model="form.halfMode" :options="steelPlateHalfModeEnum.ENUM" type="enum" size="small" />
         </el-form-item>
         <el-form-item label="半出尺寸(mm)" prop="halfSize">
-          <el-input-number v-model="form.halfSize" :min="0" :max="maxHalfSize" controls-position="right" />
+          <common-input-number v-model="form.halfSize" :min="0" :max="maxHalfSize" controls-position="right" />
         </el-form-item>
       </template>
       <common-form-item :material="material" :form="form" />
@@ -36,7 +36,8 @@ import { steelPlateOutboundHandling } from '@/api/wms/outbound/outbound-handling
 import { defineProps, defineExpose, computed, ref, watch, provide } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { materialOutboundModeEnum, steelPlateHalfModeEnum } from '@/utils/enum/modules/wms'
-import { isBlank } from '@/utils/data-type'
+import { deepClone, isBlank } from '@/utils/data-type'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
@@ -152,7 +153,15 @@ function formInit(data) {
 async function submit() {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  const res = await steelPlateOutboundHandling(form.value)
+  const formData = deepClone(form.value)
+  await numFmtByUnit(formData, {
+    unit: formData.outboundUnit,
+    precision: formData.outboundUnitPrecision,
+    fields: ['quantity'],
+    toSmallest: true,
+    toNum: true
+  })
+  const res = await steelPlateOutboundHandling(formData)
   return res
 }
 

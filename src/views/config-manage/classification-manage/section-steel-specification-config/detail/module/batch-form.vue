@@ -13,13 +13,9 @@
     <template #titleRight>
       <span style="float: right">
         <common-button size="mini" type="success" icon="el-icon-plus" @click="addRow(form.list)" />
-        <common-button
-:loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING"
-type="primary"
-size="mini"
-@click="crud.submitBCU"
-          >提 交</common-button
-        >
+        <common-button :loading="crud.bStatus.cu === CRUD.STATUS.PROCESSING" type="primary" size="mini" @click="crud.submitBCU">
+          提 交
+        </common-button>
         <store-operation type="crudBatch" />
         <common-button size="mini" @click="crud.cancelBCU">关 闭</common-button>
       </span>
@@ -32,7 +28,7 @@ size="mini"
           :max-height="maxHeight"
           default-expand-all
           :cell-class-name="wrongCellMask"
-          style="width: 100%"
+          row-key="uid"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column key="name" prop="specification" :show-overflow-tooltip="true" label="规格">
@@ -50,7 +46,7 @@ size="mini"
                   type="text"
                   controls-position="right"
                   style="width: 100%"
-                  :min="1"
+                  :min="0.001"
                 />
               </template>
             </el-table-column>

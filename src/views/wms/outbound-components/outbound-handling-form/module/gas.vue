@@ -13,7 +13,8 @@
 import { gasOutboundHandling } from '@/api/wms/outbound/outbound-handling'
 import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { isBlank } from '@/utils/data-type'
+import { deepClone, isBlank } from '@/utils/data-type'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
@@ -45,8 +46,7 @@ const validateQuantity = (rule, value, callback) => {
 
 const rules = {
   quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' },
-    { validator: validateQuantity, trigger: 'change' }
+    { required: true, validator: validateQuantity, trigger: 'blur' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
@@ -94,7 +94,15 @@ function formInit(data) {
 async function submit() {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  const res = await gasOutboundHandling(form.value)
+  const formData = deepClone(form.value)
+  await numFmtByUnit(formData, {
+    unit: formData.outboundUnit,
+    precision: formData.outboundUnitPrecision,
+    fields: ['quantity'],
+    toSmallest: true,
+    toNum: true
+  })
+  const res = await gasOutboundHandling(formData)
   return res
 }
 

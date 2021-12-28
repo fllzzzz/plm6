@@ -187,24 +187,21 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       _data.surplusNetWeight + _data.taskNetWeight - _data.completeNetWeight - _data.inProductionNetWeight,
       DP.COM_WT__KG
     )
-    const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
+    // const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
     const completeRate = completeMete ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
     const inProductionRate = inProductionMete ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
-    const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
+    // const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
     const unProducedRate = unProducedMete ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
     res.data = [
-      {
-        beginMete: _data.surplusTaskQuantity,
-        taskMete: _data.taskQuantity,
-        totalMete: totalQuantity,
-        completeMete: _data.completeQuantity,
-        completeRate,
-        inProductionRate,
-        inProductionMete: _data.inProductionQuantity,
-        unProducedMete: unProducedQuantity,
-        unProducedRate
-      },
-      { beginMete, taskMete, totalMete, completeMete, inProductionMete, unProducedMete }
+      // {
+      //   beginMete: _data.surplusTaskQuantity,
+      //   taskMete: _data.taskQuantity,
+      //   totalMete: totalQuantity,
+      //   completeMete: _data.completeQuantity,
+      //   inProductionMete: _data.inProductionQuantity,
+      //   unProducedMete: unProducedQuantity
+      // },
+      { beginMete, taskMete, totalMete, completeRate, inProductionRate, completeMete, inProductionMete, unProducedMete, unProducedRate }
     ]
   }
   if (crud.query.productType === reportComponentTypeEnum.ENCLOSURE.V) {
@@ -214,25 +211,27 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     const totalMete = convertUnits(_data.surplusLength + _data.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
     const completeMete = convertUnits(_data.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
     const inProductionMete = convertUnits(_data.inProductionLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    const unProducedMete = convertUnits(_data.surplusLength + _data.taskLength - _data.completeLength - _data.inProductionLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
+    const unProducedMete = convertUnits(
+      _data.surplusLength + _data.taskLength - _data.completeLength - _data.inProductionLength,
+      'mm',
+      'm',
+      DP.MES_ENCLOSURE_L__M
+    )
+    // const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
     const completeRate = completeMete ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
     const inProductionRate = inProductionMete ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
-    const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
+    // const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
     const unProducedRate = unProducedMete ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
     res.data = [
-      {
-        beginMete: _data.surplusTaskQuantity,
-        taskMete: _data.taskQuantity,
-        totalMete: totalQuantity,
-        completeMete: _data.completeQuantity,
-        completeRate,
-        inProductionRate,
-        inProductionMete: _data.inProductionQuantity,
-        unProducedMete: unProducedQuantity,
-        unProducedRate
-      },
-      { beginMete, taskMete, totalMete, completeMete, inProductionMete, unProducedMete }
+      // {
+      //   beginMete: _data.surplusTaskQuantity,
+      //   taskMete: _data.taskQuantity,
+      //   totalMete: totalQuantity,
+      //   completeMete: _data.completeQuantity,
+      //   inProductionMete: _data.inProductionQuantity,
+      //   unProducedMete: unProducedQuantity
+      // },
+      { beginMete, taskMete, totalMete, completeRate, inProductionRate, completeMete, inProductionMete, unProducedMete, unProducedRate }
     ]
   }
 }

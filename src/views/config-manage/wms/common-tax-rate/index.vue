@@ -6,7 +6,7 @@
           <span class="card-title">常用税率配置</span>
         </div>
       </template>
-      <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" style="width: 100%">
+      <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" row-key="name">
         <el-table-column
           v-if="columns.visible('name')"
           key="name"

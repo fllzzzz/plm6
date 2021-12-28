@@ -82,8 +82,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
@@ -107,6 +108,14 @@ const defaultQuery = {
   operatorName: undefined // 创建人
 }
 
+const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
 useGlobalProjectIdChangeToQuery(crud)
+onMounted(() => {
+  if (+route.params.basicClass === STEEL_ENUM) {
+    query.basicClass = rawMatClsEnum.STEEL_PLATE.V
+  } else {
+    query.basicClass = route.params.basicClass
+  }
+})
 </script>

@@ -53,3 +53,14 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
   })
 }
 </script>
+
+<style lang="scss" scoped>
+::v-deep(.inbound-application-container) {
+  .header {
+    padding: 0 0 10px 0;
+  }
+  .main-content {
+    padding: 0;
+  }
+}
+</style>

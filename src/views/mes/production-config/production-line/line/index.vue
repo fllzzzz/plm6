@@ -30,21 +30,57 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
+        v-if="columns.visible('factoryName')"
+        prop="factoryName"
+        :show-overflow-tooltip="true"
+        label="工厂"
+        min-width="100px"
+      >
+        <template #default="{ row }">
+          <span>{{ row.factoryName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('workshopName')"
+        prop="workshopName"
+        :show-overflow-tooltip="true"
+        label="车间"
+        min-width="100px"
+      >
+        <template #default="{ row }">
+          <span>{{ row.workshopName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('name')"
         key="name"
         prop="name"
         :show-overflow-tooltip="true"
         label="生产线名称"
         min-width="140px"
-      />
-      <el-table-column
+      >
+        <template #default="{ row }">
+          <table-cell-tag
+            v-if="row.productType"
+            :name="componentTypeEnum.V[row.productType].SL"
+            :color="componentTypeEnum.V[row.productType].COLOR"
+            :offset="15"
+          />
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column
         v-if="columns.visible('shortName')"
         key="shortName"
         prop="shortName"
         :show-overflow-tooltip="true"
         label="生产线简称"
         min-width="140px"
-      />
+      >
+        <template #default="{ row }">
+          <span>{{ row.shortName }}</span>
+        </template>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('boolEnabledEnum')"
         key="boolEnabledEnum"
@@ -81,7 +117,11 @@
         :show-overflow-tooltip="true"
         label="备注"
         min-width="140px"
-      />
+      >
+        <template #default="{ row }">
+          <span>{{ row.remark }}</span>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.del, ...permission.edit])"
@@ -106,11 +146,13 @@ import crudApi, { editStatus } from '@/api/mes/production-config/production-line
 import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
+import { componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { ElMessageBox } from 'element-plus'
@@ -142,7 +184,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['shortName']
+    invisibleColumns: ['shortName', 'factoryName', 'workshopName']
   },
   tableRef
 )
@@ -159,10 +201,10 @@ async function changeStatus(data, val) {
     await editStatus({ id: data.id, boolEnabledEnum: val })
     crud.refresh()
     crud.notify(enabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    changeStoreLoaded()
   } catch (error) {
     console.log('变更生产线状态', error)
     data.boolEnabledEnum = data.boolEnabledEnum === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
-    changeStoreLoaded()
   }
 }
 

@@ -8,14 +8,12 @@
     <crudOperation>
       <template v-slot:optRight>
         <!-- 任务录入按钮 -->
-        <template v-if="true || (query.areaId && checkPermission(permission.save))">
-          <template v-if="modifying">
-            <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
-            <common-button type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
-          </template>
-          <common-button v-else type="primary" size="mini" @click.stop="handelModifying(true)">任务录入</common-button>
+        <template v-if="query.areaId && checkPermission(permission.save)">
+          <common-button v-show="modifying" type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
+          <common-button v-show="modifying" type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
+          <common-button v-show="!modifying" type="primary" style="margin-left:0px;" size="mini" @click.stop="handelModifying(true)">任务录入</common-button>
           <el-popover
-            v-if="true || (query.areaId && checkPermission(permission.clear))"
+            v-if="query.areaId && checkPermission(permission.clear)"
             v-model:visible="clearPopVisible"
             placement="top"
             width="600"
@@ -27,18 +25,24 @@
             <p>【操作后】构件数量：50 | 已分配数量：20 | 未分配数量：30 | 进入生产流程数量：20</p>
             <div style="text-align: right; margin: 0">
               <common-button size="mini" type="text" @click="clearPopVisible = false">取消</common-button>
-              <common-button type="primary" size="mini" @click="handleClear">确定</common-button>
+              <common-button type="primary" size="mini" @click="handleClear(crud.selections, productType)">确定</common-button>
             </div>
             <template #reference>
-              <common-button :loading="clearLoading" size="mini" type="danger">清空任务</common-button>
+              <common-button
+:loading="clearLoading"
+size="mini"
+type="danger"
+:disabled="!crud.selections || !crud.selections.length"
+                >清空任务</common-button
+              >
             </template>
           </el-popover>
         </template>
         <common-button
-          v-if="true || (query.areaId && checkPermission(permission.save))"
-          type="warning"
-          size="mini"
-          @click.stop="openQuicklyAssignDlg"
+v-if="query.areaId && checkPermission(permission.save)"
+type="warning"
+size="mini"
+@click.stop="openQuicklyAssignDlg"
           >快速分配</common-button
         >
       </template>
@@ -50,7 +54,7 @@
     </crudOperation>
   </div>
   <mPreview v-model:visible="previewVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
-  <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" @changeLines="handleChangeLines"/>
+  <production-line-drawer v-model:visible="productionLineVisible" :lines="lines" @changeLines="handleChangeLines" />
   <quickly-assign-drawer v-model:visible="quicklyAssignVisible" :data="crud.data" :lines="lines" @success="handleSaveSuccess" />
 </template>
 
@@ -107,6 +111,7 @@ const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGe
 const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  crud.data = []
   dataHasFormat.value = lineLoad.value // 数据格式是否已经转换，因为接口异步，所以dataHasFormat放在循环前赋值
   res.data.content = res.data.content.map((v) => {
     v.schedulingList = v.schedulingProductionLineDTOS || [] // 排产列表
@@ -154,9 +159,8 @@ function refresh() {
 }
 
 function handleChangeLines(changeLines) {
-  crud.data.forEach(v => {
+  crud.data.forEach((v) => {
     for (const id in changeLines) {
-      console.log(id, changeLines[id])
       // 取消选择还原数据
       if (!changeLines[id]) {
         const changeQuantity = (v.schedulingMap[id]?.quantity || 0) - (v.schedulingMap[id]?.sourceQuantity || 0)

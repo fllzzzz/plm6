@@ -52,6 +52,13 @@ const getSuppliersBrief = {
             type: supplierTypeEnum.LOGISTICS.V,
             basicClass: supplierClassEnum.LOGISTICS.V,
             'boolHide|1-2': supplierIsHideEnum.FALSE.V
+          },
+          {
+            id: 5,
+            name: '辅材供应',
+            type: supplierTypeEnum.RAW_MATERIAL.V,
+            basicClass: supplierClassEnum.MATERIAL.V,
+            'boolHide': supplierIsHideEnum.FALSE.V
           }
         ]
       }
@@ -993,34 +1000,10 @@ const uploadAttachment = {
   }
 }
 
-const uploadAttachmentList = {
-  url: '/api/common/attachment',
-  method: 'post',
-  headers: { 'Content-Type': 'multipart/form-data' },
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      data: [{
-        'id': 3,
-        'name': '-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
-        'imageUrl': 'http://wfxhxg.natappfree.cc/files\\supplier\\1637723900129_-7Q5-gty6XeZ3uT3cS1hc-u0.jpg',
-        'tinyImageUrl': 'http://wfxhxg.natappfree.cc/files\\supplier\\1637723900129_-7Q5-gty6XeZ3uT3cS1hc-u0_256.jpg',
-        'createUserId': 1,
-        'createUserName': 'xxx',
-        'type': 50,
-        'createTime': 1637723901000
-      }],
-      message: '操作成功'
-    }
-  }
-}
-
 export default [
   getUserTree,
   getRegionalTree,
   uploadAttachment,
-  uploadAttachmentList,
   getUserAllSimple,
   getDeptAllSimple,
   getSuppliersBrief,

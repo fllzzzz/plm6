@@ -17,7 +17,7 @@ import { getWarehouseBrief } from '@/api/config/wms/warehouse'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
-import { setEmptyArr2Undefined, tree2list } from '@/utils/data-type/tree'
+import { setEmptyArr2Undefined, tree2list, tree2listForLeaf } from '@/utils/data-type/tree'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
@@ -29,6 +29,14 @@ const state = {
   matClsTree: [], // 物料科目树
   rawMatClsTree: [], // 普通物料科目树（不含制成品）
   manufClsTree: [], // 制成品科目树
+  matClsList: [], // 材料科目树列表
+  rawMatClsList: [], // 原材料科目树列表
+  manufClsList: [], // 制成品科目树列表
+  rawMatClsKV: {}, // 原材料科目树 kv k：id，v：科目信息
+  matClsLeafList: [], // 材料科目树列表 - 只包含叶子节点
+  rawMatClsLeafList: [], // 原材料科目树列表 - 只包含叶子节点
+  manufClsLeafList: [], // 制成品科目树列表 - 只包含叶子节点
+
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
   unit: { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }, // 单位列表 ALL，WEIGHT...
@@ -82,11 +90,17 @@ const mutations = {
     state.matClsTree = tree
     state.rawMatClsTree = tree.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
     state.manufClsTree = tree.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
-  },
-  SET_MAT_CLS_LIST(state, list = []) {
+
+    const list = tree2list(tree)
     state.matClsList = list
     state.rawMatClsList = list.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
     state.manufClsList = list.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsKV = arr2obj(list, 'id')
+
+    const leafList = tree2listForLeaf(tree)
+    state.matClsLeafList = leafList
+    state.rawMatClsLeafList = leafList.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.manufClsLeafList = leafList.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
   },
   SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
@@ -158,10 +172,7 @@ const actions = {
   async fetchMatClsTree({ commit }) {
     const res = await getMatClsTree()
     const tree = formatClsTree(res)
-    const list = tree2list(tree)
     commit('SET_MAT_CLS_TREE', tree)
-    commit('SET_MAT_CLS_LIST', list)
-
     commit('SET_LOADED', { key: 'matClsTree' })
     return tree
   },
@@ -211,7 +222,8 @@ const actions = {
         id: v.id,
         name: v.name,
         type: v.type,
-        symbol: v.symbol
+        symbol: v.symbol,
+        enabled: v.enabled
       }
       unit.ALL.push(n)
       unit.MAP.set(n.name, n)
@@ -339,8 +351,9 @@ const actions = {
           basicClass: res.basicClass,
           hasUnitConfig: !!res.accountingUnit
         }
-        clsBrief.fullNameArr = res.fullName.split('>') // 全称全路径 数组
-        clsBrief.fullName = clsBrief.fullNameArr.join(' > ') // 全称
+        clsBrief.fullPathId = res.fullPathId // 全路径id
+        clsBrief.fullPathName = res.fullName.split('>') // 全称全路径 数组
+        clsBrief.fullName = clsBrief.fullPathName.join(' > ') // 全称
 
         const matCls = {
           ...clsBrief,
@@ -403,6 +416,7 @@ function getSpecList(classify, specConfig) {
         specKV: {},
         specNameKV: {},
         specArrKV: [],
+        serialNumber: classify.serialNumber,
         sn: classify.id + '_' + '-1'
       }
     ]
@@ -419,7 +433,8 @@ function getSpecList(classify, specConfig) {
     arr[i] = {
       classify,
       index: new Array(specLengthArr.length),
-      arr: new Array(specLengthArr.length)
+      arr: new Array(specLengthArr.length),
+      code: new Array(specLengthArr.length)
     }
   }
   // 遍历方式：按顺序将每一个【规格配置】的所有【小规格】推入数组来获得结果
@@ -434,6 +449,7 @@ function getSpecList(classify, specConfig) {
           const currentIndex = p * specLengthArr[i] * kl + j * kl + k
           arr[currentIndex].index[i] = spec.index
           arr[currentIndex].arr[i] = spec.name
+          arr[currentIndex].code[i] = spec.code
           if (classify.basicClass === matClsEnum.SECTION_STEEL.V && spec.boolStandard) {
             arr[currentIndex].unitWeight = spec.unitWeight
             arr[currentIndex].boolStandard = spec.boolStandard
@@ -444,6 +460,8 @@ function getSpecList(classify, specConfig) {
     prevLength = prevLength * specLengthArr[i]
   }
   arr.forEach((v) => {
+    // 唯一编号
+    v.serialNumber = classify.serialNumber + v.code.join('')
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}
@@ -462,6 +480,7 @@ function getSpecList(classify, specConfig) {
     v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
     v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value
     v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号
+    // TODO:之所以使用index作为唯一标识，而不使用规格的code最后拼接的serialNumber, 是因为一开始未设计code
   })
   return arr
 }

@@ -61,7 +61,7 @@
               :disabled="scope.row.reportDisabled.includes(reportType.V)"
             />
           </el-select>
-          <el-tag v-else :type="reportTypeEnum[reportTypeEnum.VK[scope.row.reportType]].T">{{
+          <el-tag v-else :type="reportTypeEnum.V[scope.row.reportType].T">{{
             reportTypeEnum.VL[scope.row.reportType]
           }}</el-tag>
         </template>
@@ -108,7 +108,7 @@
               :disabled="scope.row.inspectDisabled.includes(inspectType.V)"
             />
           </el-select>
-          <el-tag v-else :type="inspectTypeEnum[inspectTypeEnum.VK[scope.row.inspectType]].T">{{
+          <el-tag v-else :type="inspectTypeEnum.V[scope.row.inspectType].T">{{
             inspectTypeEnum.VL[scope.row.inspectType]
           }}</el-tag>
         </template>
@@ -160,7 +160,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('sequenceType')" key="sequenceType" prop="sequenceType" label="类型" min-width="110px">
         <template v-slot="scope">
-          <el-tag :type="typeEnum[typeEnum.VK[scope.row.sequenceType]].T">{{ typeEnum.VL[scope.row.sequenceType] }}</el-tag>
+          <el-tag :type="typeEnum.V[scope.row.sequenceType].T">{{ typeEnum.VL[scope.row.sequenceType] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" min-width="110px" />
