@@ -162,9 +162,9 @@ const currentInboundId = ref() // 当前id
 
 const { inboundFillWayCfg } = useWmsConfig()
 
-// 显示金额
+// 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
-// 显示仓库
+// 显示仓库（由仓库填写的信息）
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示物流信息
 const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
@@ -200,18 +200,16 @@ const projectRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
 }
 
-// 甲供不填写金额方面的信息
-const partyAAmountRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
-}
-
 const tableRules = computed(() => {
   const rules = {}
-  if (showAmount.value) Object.assign(rules, boolPartyA.value ? partyAAmountRules : amountRules)
-  if (showWarehouse.value) Object.assign(rules, warehouseRules)
-  if (isNotBlank(order.value.projects)) {
-    Object.assign(rules, projectRules)
+  // 甲供不填写金额方面的信息
+  if (showAmount.value && !boolPartyA.value) {
+    Object.assign(rules, amountRules)
+    if (isNotBlank(order.value.projects)) {
+      Object.assign(rules, projectRules)
+    }
   }
+  if (showWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
 

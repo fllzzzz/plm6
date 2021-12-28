@@ -215,10 +215,38 @@ const getFinalMatClsById = {
   }
 }
 
+// 获取油漆
+const getPaint = {
+  url: RegExp('/api/config/classification/final-material/247'),
+  method: 'get',
+  // timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        'id|1-100': 1,
+        name: '油漆',
+        fullName: '油漆涂料>油漆',
+        fullPathId: [131, 247], // 全路径id
+        serialNumber: /[0-9]{9}/,
+        measureUnit: '桶', // 计量单位
+        measurePrecision: 0, // 计量单位小数精度
+        accountingUnit: '千克', // 核算单位
+        accountingPrecision: 2, // 核算单位小数精度
+        outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
+        basicClass: matClsEnum.MATERIAL.V,
+        specConfig: []
+      }
+    }
+  }
+}
+
 export default [
   getFinalMatClsByIdForSteelPlate,
   getFinalMatClsByIdForSectionSteel,
   getFinalMatClsByIdForSteelCoil,
   getFinalMatClsByIdForGas,
+  getPaint,
   getFinalMatClsById
 ]

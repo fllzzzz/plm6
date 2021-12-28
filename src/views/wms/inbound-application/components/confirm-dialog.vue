@@ -117,19 +117,24 @@ const warehouseRules = {
 
 // 采购填写的信息（金额、申购单及项目）
 const amountRules = {
-  projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   unitPrice: [{ required: true, message: '请填写单价', trigger: 'blur' }],
   amount: [{ required: true, message: '请填写金额', trigger: 'blur' }]
 }
 
-// 甲供不填写金额方面的信息
-const partyAAmountRules = {
+// 项目
+const projectRules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }]
 }
 
 const tableRules = computed(() => {
   const rules = {}
-  if (showAmount.value) Object.assign(rules, boolPartyA.value ? partyAAmountRules : amountRules)
+  // 甲供不填写金额方面的信息
+  if (showAmount.value && !boolPartyA.value) {
+    Object.assign(rules, amountRules)
+    if (isNotBlank(order.value.projects)) {
+      Object.assign(rules, projectRules)
+    }
+  }
   if (showWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
@@ -145,9 +150,9 @@ const { inboundFillWayCfg } = useWmsConfig()
 const logisticsRef = ref()
 // 订单信息
 const order = computed(() => cu.props.order || {})
-// 显示金额
+// 显示金额相关信息（由采购填写的信息）
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
-// 显示仓库
+// 显示仓库（由仓库填写的信息）
 const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
 // 显示物流信息
 const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)

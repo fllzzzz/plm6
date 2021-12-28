@@ -27,7 +27,7 @@
           prop="shipmentNumber"
           label-width="70px"
         >
-          <el-input class="input-underline" v-model.trim="form.shipmentNumber" placeholder="物流单号" style="width: 200px" />
+          <el-input class="input-underline" v-model.trim="form.shipmentNumber" placeholder="物流单号" maxlength="100" style="width: 200px" />
         </el-form-item>
         <el-form-item
           v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
