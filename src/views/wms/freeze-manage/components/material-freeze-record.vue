@@ -146,7 +146,7 @@ async function fetchMaterialFreezeDetailById() {
   try {
     list.value = []
     detailLoading.value = true
-    const { content = [] } = await getMaterialFreezeRecordById()
+    const { content = [] } = await getMaterialFreezeRecordById(material.id)
     list.value = await dataUnitFormat(material, content)
   } catch (error) {
     console.error('error', error)
