@@ -1,8 +1,17 @@
 import { componentTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 export default function useProductSummaryMeteUnit({
-  productType
+  productType,
+  w_unit = 't',
+  l_unit = 'm'
 }) {
+  const unitDp = {
+    't': 'COM_WT__T',
+    'kg': 'COM_WT__KG',
+    'm': 'COM_L__M',
+    'mm': 'COM_L__MM'
+  }
   const labelObj = {
     [componentTypeEnum.ARTIFACT.V]: '重量',
     [componentTypeEnum.MACHINE_PART.V]: '重量',
@@ -10,16 +19,16 @@ export default function useProductSummaryMeteUnit({
     [componentTypeEnum.ENCLOSURE.V]: '长度'
   }
   const unitObj = {
-    [componentTypeEnum.ARTIFACT.V]: 't',
-    [componentTypeEnum.MACHINE_PART.V]: 't',
-    [componentTypeEnum.ASSEMBLE.V]: 'm',
-    [componentTypeEnum.ENCLOSURE.V]: 'm'
+    [componentTypeEnum.ARTIFACT.V]: w_unit,
+    [componentTypeEnum.MACHINE_PART.V]: w_unit,
+    [componentTypeEnum.ASSEMBLE.V]: l_unit,
+    [componentTypeEnum.ENCLOSURE.V]: l_unit
   }
   const dpObj = {
-    [componentTypeEnum.ARTIFACT.V]: 'COM_WT__T',
-    [componentTypeEnum.MACHINE_PART.V]: 'COM_WT__T',
-    [componentTypeEnum.ASSEMBLE.V]: 'MES_ARTIFACT_L__M',
-    [componentTypeEnum.ENCLOSURE.V]: 'MES_ENCLOSURE_L__M'
+    [componentTypeEnum.ARTIFACT.V]: unitDp[w_unit],
+    [componentTypeEnum.MACHINE_PART.V]: unitDp[w_unit],
+    [componentTypeEnum.ASSEMBLE.V]: unitDp[l_unit],
+    [componentTypeEnum.ENCLOSURE.V]: unitDp[l_unit]
   }
   const unit = unitObj[productType]
   const dp = dpObj[productType]
@@ -27,6 +36,7 @@ export default function useProductSummaryMeteUnit({
   return {
     label,
     unit,
-    dp
+    dp,
+    DP: DP[dp]
   }
 }

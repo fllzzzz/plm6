@@ -93,7 +93,7 @@
             <span class="tc-danger">{{ scope.row.unCompleteQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="completeMete" prop="completeMete" :show-overflow-tooltip="true" label="完成总量" align="center" min-width="100px">
+        <el-table-column key="completeMete" prop="completeMete" :show-overflow-tooltip="true" :label="`完成总量(${unitObj.unit})`" align="center" min-width="100px">
           <template v-slot="scope">
             <span class="tc-success">{{ scope.row.completeMete }}</span>
           </template>
@@ -105,16 +105,16 @@
 
 <script setup>
 import { processDetail as detail } from '@/api/mes/team-report/artifact-team'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { artifactProcessEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { deepClone } from '@data-type/index'
-import { DP } from '@/settings/config'
-import { toFixed } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -175,12 +175,14 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
+        if (['completeMete'].includes(column.property)) {
+          sums[index] = sums[index].toFixed(unitObj.value.DP)
+        }
       }
     }
   })
   return sums
 }
-
 const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
@@ -188,6 +190,10 @@ const dataPath = {
   [artifactProcessEnum.ONCE.V]: 'assembleList',
   [artifactProcessEnum.TWICE.V]: 'artifactList'
 }
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({ productType: props.info.productType, w_unit: 'kg' })
+})
+
 async function fetchList() {
   try {
     tableLoading.value = true
@@ -201,7 +207,13 @@ async function fetchList() {
     const _data = await detail(_query)
     list.value = _data[dataPath[_productType]].map((v) => {
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
-      v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG)
+      v.completeMete = useProductMeteConvert({
+        productType: v.productType,
+        weight: v.completeNetWeight,
+        length: v.completeLength,
+        L_TO_UNIT: unitObj.value.unit,
+        L_DP: unitObj.value.dp
+      }).convertMete
       return v
     })
   } catch (error) {

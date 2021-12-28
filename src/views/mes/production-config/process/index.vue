@@ -318,14 +318,14 @@ function getWageQuotaTypeDisabled(v) {
 }
 
 function getReportDisabled(v) {
-  if (v.sequenceType === typeEnum.MACHINE_PART.V || (v.sequenceType === typeEnum.ARTIFACT.V && v.type === processTypeEnum.ONCE.V)) {
+  if (v.sequenceType === typeEnum.MACHINE_PART.V) {
     return [reportTypeEnum.BATCH_SCAN.V, reportTypeEnum.SINGLE_SCAN.V]
   }
   return []
 }
 
 function getInspectDisabled(v) {
-  if (v.sequenceType === typeEnum.MACHINE_PART.V || (v.sequenceType === typeEnum.ARTIFACT.V && v.type === processTypeEnum.ONCE.V)) {
+  if (v.sequenceType === typeEnum.MACHINE_PART.V) {
     return [inspectTypeEnum.BATCH_SCAN.V, inspectTypeEnum.SINGLE_SCAN.V]
   }
   return []

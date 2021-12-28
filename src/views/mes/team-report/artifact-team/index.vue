@@ -132,6 +132,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         productType: v.productType,
         weight: o.completeNetWeight,
         length: o.completeLength,
+        L_TO_UNIT: 'm',
+        L_DP: 'COM_L__M',
         showUnit: true
       }).convertMete
       o.taskMete = useProductMeteConvert({ productType: v.productType, weight: o.taskNetWeight, length: o.taskLength }).convertMete
@@ -139,6 +141,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         productType: v.productType,
         weight: o.taskNetWeight,
         length: o.taskLength,
+        L_TO_UNIT: 'm',
+        L_DP: 'COM_L__M',
         showUnit: true
       }).convertMete
       o.completeRate = (o.completeMete / o.taskMete) * 100
