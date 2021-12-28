@@ -92,7 +92,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '总装匹配',
+    title: '零件齐套',
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },

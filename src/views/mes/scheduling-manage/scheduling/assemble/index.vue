@@ -1,18 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines">
-      <template v-slot:customSearch>
-        <el-input
-          v-model="crud.query.serialNumber"
-          size="small"
-          placeholder="输入组立号搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-      </template>
-    </mHeader>
+    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -39,7 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns :productType="componentTypeEnum.ASSEMBLE.V" :columns="columns" :fixed="'left'" fixedWidth />
+      <productType-base-info-columns :productType="productType" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -178,11 +166,12 @@ const optShow = {
   download: false
 }
 
+const productType = componentTypeEnum.ASSEMBLE.V
 provide('needTableColumns', [
   { label: '区域', width: '140px', field: 'areaName' },
   { label: '组立号', width: '140px', field: 'serialNumber' }
 ])
-provide('productType', componentTypeEnum.ASSEMBLE.V)
+provide('productType', productType)
 provide('processType', processTypeEnum.ONCE.V)
 
 const tableRef = ref()

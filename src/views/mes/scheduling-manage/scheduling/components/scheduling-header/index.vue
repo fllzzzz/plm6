@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <monomer-select-area-tabs :project-id="projectId" @change="fetchMonomerAndArea" />
-      <slot name="customSearch" />
+      <product-type-query :productType="productType" :category="category" :enclosureShowItem="Boolean(category)" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <crudOperation>
@@ -11,7 +11,9 @@
         <template v-if="query.areaId && checkPermission(permission.save)">
           <common-button v-show="modifying" type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
           <common-button v-show="modifying" type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
-          <common-button v-show="!modifying" type="primary" style="margin-left:0px;" size="mini" @click.stop="handelModifying(true)">任务录入</common-button>
+          <common-button v-show="!modifying" type="primary" style="margin-left: 0px" size="mini" @click.stop="handelModifying(true)">
+            任务录入
+          </common-button>
           <el-popover
             v-if="query.areaId && checkPermission(permission.clear)"
             v-model:visible="clearPopVisible"
@@ -28,23 +30,20 @@
               <common-button type="primary" size="mini" @click="handleClear(crud.selections, productType)">确定</common-button>
             </div>
             <template #reference>
-              <common-button
-:loading="clearLoading"
-size="mini"
-type="danger"
-:disabled="!crud.selections || !crud.selections.length"
-                >清空任务</common-button
+              <common-button :loading="clearLoading" size="mini" type="danger" :disabled="!crud.selections || !crud.selections.length">
+                清空任务</common-button
               >
             </template>
           </el-popover>
         </template>
         <common-button
-v-if="query.areaId && checkPermission(permission.save)"
-type="warning"
-size="mini"
-@click.stop="openQuicklyAssignDlg"
-          >快速分配</common-button
+          v-if="query.areaId && checkPermission(permission.save)"
+          type="warning"
+          size="mini"
+          @click.stop="openQuicklyAssignDlg"
         >
+          快速分配
+        </common-button>
       </template>
       <template v-slot:viewLeft>
         <common-button :loading="!loaded" type="success" size="mini" @click.stop="productionLineVisible = true">{{
@@ -70,12 +69,12 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
+import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import productionLineDrawer from '../production-line-drawer'
 import quicklyAssignDrawer from '../quickly-assign-drawer'
 import mPreview from '../scheduling-preview'
 
 const defaultQuery = {
-  serialNumber: '',
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false }
 }
@@ -106,7 +105,8 @@ const dataHasFormat = ref(false) // 排产数据格式是否已转换，未转�
 const currentArea = {
   name: ''
 }
-
+const productType = inject('productType')
+const category = inject('category', undefined)
 const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGetLines({ emit, dataHasFormatHook })
 const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 

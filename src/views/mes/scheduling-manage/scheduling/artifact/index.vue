@@ -1,45 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines">
-      <template v-slot:customSearch>
-        <el-input
-          v-model="crud.query.name"
-          size="small"
-          placeholder="输入名称搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <el-input
-          v-model="crud.query.serialNumber"
-          size="small"
-          placeholder="输入编号搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <el-input
-          v-model="crud.query.specification"
-          size="small"
-          placeholder="输入规格搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <el-input
-          v-model="crud.query.material"
-          size="small"
-          placeholder="输入材质搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-      </template>
-    </mHeader>
+    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -66,7 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns :productType="componentTypeEnum.ARTIFACT.V" :columns="columns" :fixed="'left'" fixedWidth />
+      <productType-base-info-columns :productType="productType" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -186,6 +147,7 @@ const optShow = {
   download: false
 }
 
+const productType = componentTypeEnum.ARTIFACT.V
 provide('needTableColumns', [
   { label: '名称', width: '120px', field: 'name' },
   { label: '编号', width: '140px', field: 'serialNumber' },
@@ -193,7 +155,7 @@ provide('needTableColumns', [
   { label: '材质', width: '80px', field: 'material' },
   { label: `长度\n(mm)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ARTIFACT_L__MM }
 ])
-provide('productType', componentTypeEnum.ARTIFACT.V)
+provide('productType', productType)
 provide('processType', processTypeEnum.TWICE.V)
 
 const tableRef = ref()
