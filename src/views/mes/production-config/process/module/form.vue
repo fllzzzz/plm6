@@ -133,13 +133,18 @@ CRUD.HOOK.beforeToAdd = async (crud, form) => {
   }
 }
 
+CRUD.HOOK.beforeToCU = async (crud, form) => {
+  typeChange(form.sequenceType)
+}
+
 const reportDisabled = ref([])
 const inspectDisabled = ref([])
 
 const disabledList = computed(() => {
   return form.id
     ? [typeEnum.ARTIFACT.V, typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V].filter((v) => v !== form.sequenceType)
-    : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V]
+    // : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V] // TODO:正式部署打开现在
+    : []
 })
 
 const wageQuotaTypeDisabled = computed(() => {

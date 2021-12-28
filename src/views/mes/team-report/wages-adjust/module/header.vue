@@ -25,7 +25,7 @@
           class="filter-item"
           @change="crud.toQuery"
         /> -->
-        <monomer-select v-model="query.monomerId" clearable :project-id="projectId" class="filter-item" />
+        <monomer-select ref="monomerRef" v-model="query.monomerId" clearable :project-id="projectId" class="filter-item" />
         <rrOperation />
       </div>
     </template>
@@ -40,7 +40,7 @@
 
 <script setup>
 import { checkNumber } from '@/api/mes/team-report/wages-adjust'
-import { inject, ref, watch } from 'vue'
+import { inject, ref, watch, defineExpose } from 'vue'
 import { processMaterialListTypeEnum as typeEnum, artifactProcessEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
@@ -71,6 +71,8 @@ function handleComponentType(val) {
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+const monomerRef = ref()
+
 CRUD.HOOK.beforeToQuery = () => {
   crud.query.projectId = projectId
 }
@@ -92,4 +94,12 @@ watch(
 async function getAuditNumber() {
   auditNumberBadge.value = await checkNumber(query)
 }
+
+function getMonomer() {
+  return monomerRef.value?.getOption(query.monomerId) || {}
+}
+
+defineExpose({
+  getMonomer
+})
 </script>

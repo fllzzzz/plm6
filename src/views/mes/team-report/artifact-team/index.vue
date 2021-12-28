@@ -10,6 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -131,6 +132,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         productType: v.productType,
         weight: o.completeNetWeight,
         length: o.completeLength,
+        L_TO_UNIT: 'm',
+        L_DP: 'COM_L__M',
         showUnit: true
       }).convertMete
       o.taskMete = useProductMeteConvert({ productType: v.productType, weight: o.taskNetWeight, length: o.taskLength }).convertMete
@@ -138,6 +141,8 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         productType: v.productType,
         weight: o.taskNetWeight,
         length: o.taskLength,
+        L_TO_UNIT: 'm',
+        L_DP: 'COM_L__M',
         showUnit: true
       }).convertMete
       o.completeRate = (o.completeMete / o.taskMete) * 100

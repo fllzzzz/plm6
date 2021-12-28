@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 /**
  *
- * 获取总装匹配列表
+ * 获取零件齐套列表
  * @export
  * @param {*} page|required 页码
  * @param {*} size|required 页大小

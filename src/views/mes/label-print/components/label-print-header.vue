@@ -224,6 +224,8 @@ async function fetchHasTaskLine() {
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]
+    } else {
+      selectedAbleLineIds.value = []
     }
   } catch (error) {
     console.log('获取有任务的生产线', error)
@@ -231,6 +233,7 @@ async function fetchHasTaskLine() {
     selectedAbleLineLoading.value = false
   }
 }
+
 function handleLinesLoaded() {
   if (plBoxSelectRef.value) {
     lines.value = plBoxSelectRef.value.getLines()

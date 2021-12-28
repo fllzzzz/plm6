@@ -14,6 +14,7 @@
         show-summary
         :summary-method="getSummaries"
         :data="list"
+        row-key="id"
         :max-height="maxHeight"
         style="width: 100%"
       >
@@ -41,7 +42,7 @@
         <el-table-column key="completeQuantity" prop="completeQuantity" label="数量" align="center" min-width="80px" />
         <el-table-column key="completeArea" prop="completeArea" :label="`总面积(㎡)`" align="center" min-width="80px">
           <template v-slot="scope">
-            <span>{{ convertUnits(scope.row.completeArea,'mm²','㎡', DP.COM_AREA__M2) }}</span>
+            <span>{{ convertUnits(scope.row.completeArea, 'mm²', '㎡', DP.COM_AREA__M2) }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -53,7 +54,7 @@
           min-width="80px"
         >
           <template v-slot="scope">
-            <span>{{ convertUnits(scope.row.completeLength,'mm','m', DP.MES_ENCLOSURE_L__M) }}</span>
+            <span>{{ convertUnits(scope.row.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
           </template>
         </el-table-column>
         <el-table-column key="completeTime" prop="completeTime" :show-overflow-tooltip="true" label="生产日期" align="center" width="160px">

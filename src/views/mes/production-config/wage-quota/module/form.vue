@@ -27,11 +27,11 @@
       </el-form-item>
       <template v-if="form.processId">
         <el-form-item
-          :label="`单价(${wageQuotaTypeEnum.V[form.processOption[form.processId].wageQuotaType].unit})`"
+          :label="`单价(${form.unit})`"
           prop="price"
         >
           <el-input-number
-            v-model="form.processOption[form.processId].price"
+            v-model="form.price"
             placeholder="请输入单价"
             :precision="2"
             controls-position="right"
@@ -47,7 +47,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { processMaterialListTypeEnum as typeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 
 import { regForm } from '@compos/use-crud'
 
@@ -65,9 +65,9 @@ const rules = {
   price: [{ required: true, message: '请选择填写单价', trigger: 'blur' }]
 }
 
-CRUD.HOOK.beforeToCU = () => {
-  form.processId = form.process[0].processId
-}
+// CRUD.HOOK.beforeToCU = () => {
+//   form.processId = form.process[0].processId
+// }
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {

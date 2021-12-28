@@ -188,10 +188,10 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       DP.COM_WT__KG
     )
     // const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
-    const completeRate = completeMete ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
-    const inProductionRate = inProductionMete ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
+    const completeRate = Number(completeMete) ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
+    const inProductionRate = Number(inProductionMete) ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
     // const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
-    const unProducedRate = unProducedMete ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
+    const unProducedRate = Number(unProducedMete) ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
     res.data = [
       // {
       //   beginMete: _data.surplusTaskQuantity,
@@ -218,10 +218,10 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       DP.MES_ENCLOSURE_L__M
     )
     // const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
-    const completeRate = completeMete ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
-    const inProductionRate = inProductionMete ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
+    const completeRate = Number(completeMete) ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
+    const inProductionRate = Number(inProductionMete) ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
     // const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
-    const unProducedRate = unProducedMete ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
+    const unProducedRate = Number(unProducedMete) ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
     res.data = [
       // {
       //   beginMete: _data.surplusTaskQuantity,

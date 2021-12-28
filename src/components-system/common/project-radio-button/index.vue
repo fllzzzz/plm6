@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, watchEffect, ref } from 'vue'
+import { defineProps, defineEmits, watchEffect, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@/utils/data-type'
 import { ElRadioGroup } from 'element-plus'
@@ -20,14 +20,27 @@ const props = defineProps({
   size: {
     type: String,
     default: 'small'
+  },
+  type: {
+    type: String,
+    default: 'default' // default / all
   }
 })
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const copyValue = ref()
-
 watchEffect(() => {
   copyValue.value = isNotBlank(props.modelValue) ? props.modelValue : 0
 })
+
+watch(
+  () => globalProjectId.value,
+  (newVal) => {
+    if (copyValue.value) {
+      selectChange(newVal)
+    }
+  },
+  { immediate: true }
+)
 
 function selectChange(val) {
   if (val === 0) val = undefined
@@ -42,6 +55,4 @@ function init() {
   }
 }
 init()
-
 </script>
-

@@ -1,18 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines">
-      <template v-slot:customSearch>
-        <el-input
-          v-model="crud.query.name"
-          size="small"
-          placeholder="输入名称搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-      </template>
-    </mHeader>
+    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -23,6 +11,7 @@
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
       style="width: 100%"
+      row-key="id"
       @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
     >
@@ -39,9 +28,9 @@
         width="120px"
       />
       <productType-base-info-columns
-        :productType="componentTypeEnum.ENCLOSURE.V"
+        :productType="productType"
         enclosureShowItem
-        :category="mesEnclosureTypeEnum.SANDWICH_BOARD.V"
+        :category="category"
         :columns="columns"
         :fixed="'left'"
         fixedWidth
@@ -165,13 +154,16 @@ const optShow = {
   download: false
 }
 
+const category = mesEnclosureTypeEnum.SANDWICH_BOARD.V
+const productType = componentTypeEnum.ENCLOSURE.V
 provide('needTableColumns', [
   { label: '名称', width: '120px', field: 'name' },
   { label: '板型', width: '120px', field: 'plate' },
   { label: `板厚\n(mm)`, width: '80px', field: 'thickness', toFixed: true, DP: DP.MES_ENCLOSURE_T__MM },
   { label: `有效宽度\n(mm)`, width: '80px', field: 'width', toFixed: true, DP: DP.MES_ENCLOSURE_W__MM }
 ])
-provide('productType', componentTypeEnum.ENCLOSURE.V)
+provide('productType', productType)
+provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
 
 const tableRef = ref()
@@ -194,7 +186,7 @@ const { globalProjectId } = mapGetters(['globalProjectId'])
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.category = mesEnclosureTypeEnum.SANDWICH_BOARD.V
+  crud.query.category = category
 }
 </script>
 

@@ -15,7 +15,7 @@
         <project-cascader class="input-underline" v-model="form.projectId" style="width: 300px" clearable />
       </el-form-item>
       <el-form-item label="选择物流公司" prop="supplierId">
-        <supplier-select class="input-underline" v-model="form.supplierId" style="width: 300px" />
+        <supplier-select class="input-underline" v-model="form.supplierId" :type="supplierTypeEnum.LOGISTICS.V" style="width: 300px" />
       </el-form-item>
       <el-form-item label="计价方式" prop="priceType">
         <common-radio-button class="filter-item" v-model="form.priceType" :options="logisticsPriceTypeEnum.ENUM" type="enum" size="small" />
@@ -59,6 +59,7 @@
 import { ref } from 'vue'
 
 import { logisticsPriceTypeEnum } from '@enum-ms/mes'
+import { supplierTypeEnum } from '@/utils/enum/modules/supplier'
 import { DP } from '@/settings/config'
 
 import { regForm } from '@compos/use-crud'

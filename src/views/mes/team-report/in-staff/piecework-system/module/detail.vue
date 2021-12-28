@@ -24,6 +24,7 @@
         v-loading="tableLoading"
         :data="list"
         :max-height="maxHeight"
+        row-key="id"
         show-summary
         :summary-method="getSummaries"
         style="width: 100%"
