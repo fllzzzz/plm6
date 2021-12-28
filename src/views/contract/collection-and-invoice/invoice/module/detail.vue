@@ -213,6 +213,8 @@
                 v-if="isModify"
                 v-model:files="form.attachments"
                 :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
+                :accept="'.pdf,.jpg,.jpeg,.png'"
+                :tip="'支持扩展名:pdf .jpg .jpeg .png'"
                 :limit="1"
               />
               <template v-else>

@@ -170,7 +170,7 @@ function handleSuccess(response) {
 function handleClear() {
   // TODO: 清空无效
   // uploadRef.value.clearFiles()
-  if (uploadRef.value && uploadRef.value.upload) {
+  if (uploadRef.value && uploadRef.value.uploadRef) {
     uploadRef.value.uploadRef.fileList.length = 0
   }
 }
