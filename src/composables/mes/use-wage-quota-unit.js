@@ -1,4 +1,5 @@
 import { wageQuotaTypeEnum } from '@enum-ms/mes'
+import { DP } from '@/settings/config'
 
 export default function useWageQuotaUnit({ wageQuotaType }) {
   const UNIT = wageQuotaType && wageQuotaTypeEnum.V[wageQuotaType].C_UNIT
@@ -11,6 +12,7 @@ export default function useWageQuotaUnit({ wageQuotaType }) {
     dp,
     unit,
     meteUnit,
-    field
+    field,
+    DP: DP[dp]
   }
 }

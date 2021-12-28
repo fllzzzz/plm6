@@ -43,16 +43,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('mate')"
-        key="mate"
-        prop="mate"
+        v-if="columns.visible('productMete')"
+        prop="productMete"
         align="center"
         :show-overflow-tooltip="true"
         label="生产量"
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.mate }}</span>
+          <span>{{ scope.row.productMete }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -87,6 +86,7 @@ import { wageQuotaTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
@@ -125,6 +125,12 @@ provide('query', crud.query)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
+    v.productMete = useWageQuotaMeteConvert({
+      length: v.mate,
+      weight: v.mate,
+      surfaceArea: v.mate,
+      wageQuotaType: v.wageQuotaType
+    }).convertMete
     return v
   })
 }
