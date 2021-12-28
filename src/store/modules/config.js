@@ -99,8 +99,12 @@ const mutations = {
 
     const leafList = tree2listForLeaf(tree)
     state.matClsLeafList = leafList
-    state.rawMatClsLeafList = leafList.filter((t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
-    state.manufClsLeafList = leafList.filter((t) => [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass))
+    state.rawMatClsLeafList = leafList.filter(
+      (t) => ![matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass)
+    )
+    state.manufClsLeafList = leafList.filter((t) =>
+      [matClsEnum.STRUC_MANUFACTURED.V, matClsEnum.ENCL_MANUFACTURED.V].includes(t.basicClass)
+    )
   },
   SET_CLS_TREE(state, tree = []) {
     state.clsTree = tree
@@ -227,6 +231,9 @@ const actions = {
       }
       unit.ALL.push(n)
       unit.MAP.set(n.name, n)
+      if (n.symbol) { // 如果存在符号，则符号也设置进map
+        unit.MAP.set(n.symbol, n)
+      }
       unit.KS.set(n.name, n.symbol || n.name)
       unit[unitTypeEnum.VK[n.type]].push(n)
     })

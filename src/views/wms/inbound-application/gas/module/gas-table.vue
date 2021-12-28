@@ -34,7 +34,7 @@
         <common-input-number
           v-if="row.measureUnit"
           v-model="row.quantity"
-          :min="1"
+          :min="0"
           :max="999999999"
           :controls="false"
           :step="1"
@@ -54,7 +54,7 @@
       <template #default="{ row }">
         <common-input-number
           v-model="row.mete"
-          :min="1"
+          :min="0"
           :max="999999999"
           :controls="false"
           :step="1"
@@ -79,12 +79,12 @@
 
 <script setup>
 import { defineExpose, ref, inject, reactive } from 'vue'
-import { isBlank } from '@/utils/data-type'
+import { createUniqueString } from '@/utils/data-type/string'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import { createUniqueString } from '@/utils/data-type/string'
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
@@ -92,16 +92,18 @@ const expandRowKeys = ref([]) // 展开行key
 
 // 数量校验方式
 const validateQuantity = (value, row) => {
-  if (row.measureUnit && isBlank(value)) {
-    return false
-  }
+  if (row.measureUnit) return !!value
+
   return true
 }
 
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   quantity: [{ validator: validateQuantity, message: '请填写数量', trigger: 'blur' }],
-  mete: [{ required: true, message: '请填写核算量', trigger: 'blur' }]
+  mete: [
+    { required: true, message: '请填写核算量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
+  ]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验

@@ -11,6 +11,7 @@ const getAllUnit = {
       message: '成功',
       data: [
         { id: 1, name: '毫米', symbol: '㎜', type: unitTypeEnum.LENGTH.V, enabled: true },
+        { id: 11, name: '厘米', symbol: '㎝', type: unitTypeEnum.LENGTH.V, enabled: true },
         { id: 2, name: '米', symbol: 'm', type: unitTypeEnum.LENGTH.V, enabled: true },
         { id: 3, name: '平方米', symbol: '㎡', type: unitTypeEnum.AREA.V, enabled: true },
         { id: 4, name: '立方米', symbol: 'm³', type: unitTypeEnum.VOLUME.V, enabled: true },
@@ -18,7 +19,8 @@ const getAllUnit = {
         { id: 6, name: '张', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
         { id: 7, name: '卷', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
         { id: 8, name: '桶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
-        { id: 9, name: '箱', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
+        { id: 9, name: '箱', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false },
+        { id: 10, name: '套', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
       ]
     }
   }

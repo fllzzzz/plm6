@@ -190,6 +190,7 @@ const setFormCallback = (form) => {
       )
     }
   })
+  fixMaxHeight()
 }
 
 const { cu, form, FORM } = useForm(
@@ -242,7 +243,7 @@ if (props.edit) {
     extraHeight: 20
   }
 }
-const { maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
+const { fixMaxHeight, maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
 
 // 当前使用的组件
 const comp = computed(() => {
@@ -437,6 +438,7 @@ function handleOrderInfoChange(orderInfo) {
       steelRefList.steelCoilList = null
     })
   }
+  calcWeight()
 }
 
 // 信息初始化

@@ -39,31 +39,52 @@
         <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
-        <!-- <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
+
+        <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
           <template #default="{ row }">
-            <common-input-number
-              v-model="row.length"
-              :max="+row.source.length"
-              :controls="false"
-              :min="0"
-              :precision="baseUnit.length.precision"
-              size="mini"
-              placeholder="长"
-            />
+            <span v-empty-text>{{ row.measureUnit }}</span>
           </template>
-        </el-table-column> -->
-        <el-table-column key="mete" prop="mete" align="center" :label="`重量 (${baseUnit.weight.unit})`" width="120px">
+        </el-table-column>
+        <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
+          <template #default="{ row }">
+            <template v-if="row.measureUnit">
+              <common-input-number
+                v-if="row.outboundUnitType === measureTypeEnum.MEASURE.V"
+                v-model="row.quantity"
+                :min="0"
+                :max="+row.source.quantity"
+                :controls="false"
+                :step="1"
+                :precision="+row.measurePrecision"
+                size="mini"
+                placeholder="数量"
+                @change="handleQuantityChange(row, $event)"
+              />
+              <span v-else v-to-fixed="{ val: row.quantity || 0, dp: row.measurePrecision }" />
+            </template>
+            <span v-else v-empty-text />
+          </template>
+        </el-table-column>
+        <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
+          <template #default="{ row }">
+            <span v-empty-text>{{ row.accountingUnit }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
           <template #default="{ row }">
             <common-input-number
+              v-if="row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
               v-model="row.mete"
               :min="0"
-              :max="+row.source.singleReturnableMete"
-              controls-position="right"
+              :max="+row.source.sourceReturnableMete"
               :controls="false"
-              :precision="baseUnit.weight.precision"
+              :step="1"
+              :precision="row.accountingPrecision"
               size="mini"
-              placeholder="重量"
+              placeholder="核算量"
+              @change="handleMeteChange(row, $event)"
             />
+            <span v-else v-to-fixed="{ val: row.mete || 0, dp: row.accountingPrecision }" />
           </template>
         </el-table-column>
         <!-- 仓库设置 -->
@@ -79,13 +100,13 @@
 </template>
 
 <script setup>
-import { steelCoilReturnApplication } from '@/api/wms/return/application'
+import { auxMatReturnApplication } from '@/api/wms/return/application'
 import { edit as editReturnApplication } from '@/api/wms/return/raw-mat-application-record'
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
-import { toFixed } from '@/utils/data-type'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -98,6 +119,7 @@ import CommonHeader from '../components/common-header.vue'
 import useCurrentRow from '../composables/use-current-row'
 import useFormSet from '../composables/use-form-set'
 import useCommonCalc from '../composables/use-common-calc'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['success'])
 
@@ -112,7 +134,7 @@ const props = defineProps({
 })
 
 // 权限
-const permission = ['wms_steelCoilReturnApplication:submit']
+const permission = ['wms_auxMatReturnApplication:submit']
 // 默认表单
 const defaultForm = {
   list: []
@@ -124,35 +146,47 @@ const tableRef = ref()
 const formRef = ref()
 // 最大高度
 const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
-// 钢板类型
-const basicClass = rawMatClsEnum.STEEL_COIL.V
+// 辅材
+const basicClass = rawMatClsEnum.MATERIAL.V
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(basicClass)
 
+// 数量校验方式
+const validateQuantity = (value, row) => {
+  if (row.measureUnit) return !!value
+  return true
+}
+
 const tableRules = {
-  id: [{ required: true, message: '请选择退库物料', trigger: 'change' }],
-  mete: [{ required: true, message: '请填写重量', trigger: 'blur' }],
-  factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
-  warehouseId: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
+  id: [{ required: true, message: '请选择退库物料' }],
+  mete: [
+    { required: true, message: '请填写核算量' },
+    { pattern: positiveNumPattern, message: '核算量必须大于0' }
+  ],
+  quantity: [
+    { validator: validateQuantity, message: '有计量单位，数量必须大于0' }
+  ],
+  factoryId: [{ required: true, message: '请选择工厂' }],
+  warehouseId: [{ required: true, message: '请选择存储位置' }]
 }
 
 const { cu, form, FORM } = useForm(
   {
-    title: '钢卷退库',
+    title: '辅材退库',
     formStore: !props.edit,
-    formStoreKey: 'WMS_RETURN_APPLICATION_STEEL_COIL',
+    formStoreKey: 'WMS_RETURN_APPLICATION_AUX_MATERIAL',
     permission: permission,
     defaultForm: defaultForm,
     useDraftCallback: setFormCallback,
     clearDraftCallback: init,
-    api: props.edit ? editReturnApplication : steelCoilReturnApplication
+    api: props.edit ? editReturnApplication : auxMatReturnApplication
   },
   formRef,
   props.detail
 )
 
 // 通用计算校验
-const { extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
+const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
@@ -183,13 +217,7 @@ function init() {
 function rowWatch(row) {
   // 计算最大总重
   watch([() => row.quantity], () => {
-    headerRef.value && headerRef.value.calcAllQuantity()
-  })
-  // 计算理论及单重
-  watch([() => row.mete, baseUnit], () => {
-    console.log(2333)
-    calcTheoryLength(row)
-    headerRef.value && headerRef.value.calcAllWeight()
+    calcMaxMete(row)
   })
   watch(
     () => row.mete,
@@ -200,21 +228,21 @@ function rowWatch(row) {
   )
 }
 
-// 计算单件理论重量
-async function calcTheoryLength(row) {
-  row.theoryLength = await calcSteelCoilLength({
-    weight: row.mete,
-    width: row.source.width,
-    thickness: row.source.thickness
-  })
-  console.log('theoryLength', row.theoryLength, row.source.theoryLength, row.source.quantity)
-  if (row.theoryLength) {
-    console.log('aaa', +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity))
-    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity)
+// 数量变更
+function handleQuantityChange(row, nVal) {
+  // 单位净量
+  if (isNotBlank(nVal) && row.source.unitNet) {
+    row.mete = +toFixed(nVal * row.source.unitNet, row.accountingPrecision)
   } else {
-    row.singleLength = undefined
+    row.mete = undefined
   }
-  row.quantity = row.singleLength
+}
+
+// 核算量变更
+function handleMeteChange(row, nVal) {
+  if (isNotBlank(nVal) && isNotBlank(row.source.accountingUnitNet)) {
+    row.quantity = +toFixed(nVal * row.source.accountingUnitNet, row.measureUnit)
+  }
 }
 
 // 使用草稿/修改时，为数据设置监听
@@ -234,8 +262,6 @@ function setFormCallback(form) {
         })
         nextTick(() => {
           trigger() // 执行一次后取消当前监听
-          headerRef.value.calcAllQuantity()
-          headerRef.value.calcAllWeight()
         })
       }
     },

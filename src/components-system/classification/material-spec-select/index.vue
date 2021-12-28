@@ -400,16 +400,32 @@ function clear() {
 function calcWidth() {
   const list = matCls.value.specList
   if (isNotBlank(list)) {
+    // 取前中后三个规格，取其中最宽的数据做处理
     const firstSpec = list[0].spec || unspecifiedName
+    const lastSpec = list[list.length - 1].spec || unspecifiedName
+    const centerSpec = list[Math.floor((list.length - 1) / 2)].spec || unspecifiedName
     // tag间距
     const actualSpacing = 10
     // 为避免出现规格长宽差别稍大的情况，每个tag额外增加20px。
     // TODO: 这样处理仍会有字符串过长，超出tag的情况，暂时未找到好的方式处理
-    const tagWidth =
-      20 +
-      getTextDomWidth(firstSpec, {
-        attribute: new Map([['class', 'el-tag el-tag--info el-tag--medium el-tag--plain']])
-      })
+    // TODO: 对list进行排序？
+    const getTagWidth = (spec) => {
+      return (
+        20 +
+        getTextDomWidth(spec, {
+          attribute: new Map([['class', 'el-tag el-tag--info el-tag--medium el-tag--plain']])
+        })
+      )
+    }
+    // 获取最大宽度
+    const firstTagWidth = getTagWidth(firstSpec)
+    const lastTagWidth = getTagWidth(lastSpec)
+    const centerTagWidth = getTagWidth(centerSpec)
+    const tagWidthArr = [firstTagWidth, lastTagWidth, centerTagWidth]
+    const maxIndex = tagWidthArr.maxIndex()
+    const tagWidth = tagWidthArr[maxIndex]
+
+    // dom宽度
     const domWidth = style2Num(getStyle(materialSpecRef.value, 'width')) - 10
     let number = Math.floor(domWidth / tagWidth)
     const spacing = domWidth % tagWidth

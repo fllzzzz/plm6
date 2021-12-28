@@ -262,6 +262,7 @@ function handleAddReturn(row) {
     measureUnit: row.measureUnit, // 计量单位
     accountingUnit: row.accountingUnit, // 核算单位
     accountingPrecision: row.accountingPrecision, // 核算单位小数精度
+    outboundUnitType: row.outboundUnitType, // 出库单位类型
     measurePrecision: row.measurePrecision // 计量单位小数精度
   })
   if (selectList.length > 0) {
@@ -276,7 +277,7 @@ function handleAddReturn(row) {
   } else {
     selectList.push(newData)
   }
-  ElMessage.warning(`${row.classifyFullName}-${specFormat(row)} 加入退库列表`)
+  ElMessage.success(`${row.classifyFullName}-${specFormat(row)} 加入退库列表`)
   emit('add', newData)
 }
 

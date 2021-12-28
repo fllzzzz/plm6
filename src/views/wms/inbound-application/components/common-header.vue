@@ -27,7 +27,13 @@
           prop="shipmentNumber"
           label-width="70px"
         >
-          <el-input class="input-underline" v-model.trim="form.shipmentNumber" placeholder="物流单号" maxlength="100" style="width: 200px" />
+          <el-input
+            class="input-underline"
+            v-model.trim="form.shipmentNumber"
+            placeholder="物流单号"
+            maxlength="100"
+            style="width: 200px"
+          />
         </el-form-item>
         <el-form-item
           v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
@@ -141,7 +147,8 @@ const licensePlateRules = {
 const rules = computed(() => {
   const rules = Object.assign({}, baseRules)
   if (orderInfo.value.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
-    if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.SUPPLIER.V) {
+    // 自提填写车牌号
+    if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V) {
       Object.assign(rules, licensePlateRules)
     }
   }
@@ -163,8 +170,10 @@ watchEffect(() => {
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
-  formRef.value.resetFields()
   init()
+  nextTick(() => {
+    formRef.value.resetFields()
+  })
 }
 
 // 重置表单

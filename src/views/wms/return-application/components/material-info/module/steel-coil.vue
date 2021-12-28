@@ -1,7 +1,7 @@
 <template>
   <div class="return-material-info" v-if="isNotBlank(material)">
     <span class="info-item">
-      <span class="label">编号</span>
+      <span>编号</span>
       <span>{{ material.serialNumber }}</span>
     </span>
     <span class="info-item">

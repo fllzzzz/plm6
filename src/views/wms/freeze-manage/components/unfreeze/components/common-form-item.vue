@@ -9,7 +9,12 @@
     <span v-parse-project="{ project: record.project, onlyShortName: true }" v-empty-text />
   </el-form-item>
   <el-form-item label="冻结数量">
-    <span v-to-fixed="{ val: record.quantity, dp: material.outboundUnitPrecision }" />
+    <span
+      v-to-fixed="{
+        val: material.curOutboundUnitType === measureTypeEnum.MEASURE.V ? record.quantity : record.mete,
+        dp: material.outboundUnitPrecision,
+      }"
+    />
     <span style="margin-left: 10px">{{ material.outboundUnit }}</span>
   </el-form-item>
   <el-form-item :label="`数量(${material.outboundUnit})`" prop="quantity">

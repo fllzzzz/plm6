@@ -186,8 +186,9 @@ function handleChange(val) {
 }
 
 function emitInfo(val) {
-  emit('update:info', purchaseOrderKV.value[val])
-  emit('info-change', purchaseOrderKV.value[val])
+  const res = val ? purchaseOrderKV.value[val] : null
+  emit('update:info', res)
+  emit('info-change', res)
 }
 
 function loadedCallBack() {
@@ -221,6 +222,10 @@ function setDefault() {
     selectValue.value = options.value[0].value
     handleChange(selectValue.value)
     return
+  }
+  // 未赋予默认值
+  if (isBlank(selectValue.value) && isNotBlank(props.info)) {
+    emitInfo()
   }
 }
 </script>

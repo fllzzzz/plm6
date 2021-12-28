@@ -82,6 +82,7 @@ export async function numFmtByBasicClass(
       _d,
       unitCfg,
       {
+        basicClass: _basicClass,
         measureUnit: measureUnit || _d.measureUnit,
         accountingUnit: accountingUnit || _d.accountingUnit,
         accountingPrecision: accountingPrecision || _d.accountingPrecision,
@@ -214,13 +215,31 @@ function steelFormat(
 function otherRawMatFormat(
   data,
   unitCfg,
-  { measureUnit, measurePrecision, accountingUnit, accountingPrecision, toNum = false, showUnit = false, toSmallest = false } = {},
-  { mete = ['mete', 'frozenMete'], quantity = ['quantity', 'frozenQuantity'], amount = ['unitPrice', 'unitPriceExcludingVAT'] } = {}
+  {
+    basicClass,
+    measureUnit,
+    measurePrecision,
+    accountingUnit,
+    accountingPrecision,
+    toNum = false,
+    showUnit = false,
+    toSmallest = false
+  } = {},
+  {
+    mete = ['mete', 'frozenMete'],
+    quantity = ['quantity', 'frozenQuantity'],
+    unitNet = 'unitNet',
+    accountingUnitNet = 'accountingUnitNet',
+    amount = ['unitPrice', 'unitPriceExcludingVAT']
+  } = {}
 ) {
   // 计量
   const _measureUnit = unitCfg.get(measureUnit)
   // 核算
   const _accountingUnit = unitCfg.get(accountingUnit)
+
+  if (isNotBlank(measureUnit) && isBlank(_measureUnit)) console.error(`“${measureUnit}”:无法从当前系统获取当该单位配置`)
+  if (isNotBlank(accountingUnit) && isBlank(_accountingUnit)) console.error(`“${accountingUnit}”:无法从当前系统获取当该单位配置`)
 
   // 数量
   if (isNotBlank(_measureUnit) && isNotBlank(quantity)) {
@@ -263,6 +282,61 @@ function otherRawMatFormat(
         toNum
       })
     }
+
+    // 辅材、气体等（除钢材）单位净量转换
+    // 服务端unitNet是根据最小单位计算的，所以此处需要转换（服务端unitNet: 入库时：核算量/计量量）
+    if (!(basicClass & STEEL_ENUM)) {
+      unitNetFormat({
+        data,
+        unitNet,
+        accountingUnitNet,
+        measureUnit: _measureUnit,
+        accountingUnit: _accountingUnit,
+        measurePrecision,
+        accountingPrecision,
+        toSmallest,
+        showUnit,
+        toNum
+      })
+    }
+  }
+}
+
+// 辅材、气体等（除钢材）单位净量转换
+function unitNetFormat({
+  data,
+  unitNet = 'unitNet',
+  accountingUnitNet = 'accountingUnitNet',
+  measureUnit,
+  accountingUnit,
+  measurePrecision,
+  accountingPrecision,
+  toSmallest,
+  showUnit,
+  toNum
+}) {
+  if (isBlank(unitNet)) return
+  if (isNotBlank(measureUnit)) {
+    // 计量与最小单位的比例
+    const measureMinUnit = getUnitType(measureUnit.type)
+    const measureScale = convertUnits(1, measureUnit.symbol, MIN_UNIT[measureMinUnit], MIN_UNIT[`${measureMinUnit}_DP`], { showUnit, toNum })
+    // 核算与最小单位的比例
+    const accountingMinUnit = getUnitType(accountingUnit.type)
+    const accountingScale = convertUnits(1, accountingUnit.symbol, MIN_UNIT[accountingMinUnit], MIN_UNIT[`${accountingMinUnit}_DP`], {
+      showUnit,
+      toNum
+    })
+
+    const ratio = accountingScale / measureScale
+    if (patternNumerical.test(data[unitNet])) {
+      const un = toSmallest ? data[unitNet] * ratio : data[unitNet] / ratio
+      data[unitNet] = toFixed(un, accountingPrecision)
+      data[accountingUnitNet] = toFixed(1 / un, measurePrecision)
+    }
+  } else {
+    // 计量单位为空，单位净量为1
+    data[unitNet] = 1
+    data[accountingUnitNet] = 1
   }
 }
 

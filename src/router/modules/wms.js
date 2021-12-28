@@ -73,6 +73,13 @@ export default {
           meta: { title: '钢卷退库', icon: 'project', noCache: true }
         },
         {
+          name: 'AuxMaterialReturnApplication',
+          path: 'aux-material',
+          hidden: false,
+          component: '/wms/return-application/aux-material/index',
+          meta: { title: '辅材退库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatReturnApplicationRecord',
           path: 'return-application-record/raw-mat',
           hidden: false,
