@@ -50,7 +50,7 @@
           min-width="140"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.supplier && scope.row.supplier }}</span>
+            <span>{{ scope.row.supplier && scope.row.supplier?.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -203,6 +203,7 @@ watch(
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.projectId = v.project && v.project.id
+    v.supplierId = v.supplier && v.supplier.id
     return v
   })
 }

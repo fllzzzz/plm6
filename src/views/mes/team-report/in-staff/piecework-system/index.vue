@@ -11,6 +11,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       show-summary
+      row-key="id"
       :summary-method="getSummaries"
       style="width: 100%"
     >

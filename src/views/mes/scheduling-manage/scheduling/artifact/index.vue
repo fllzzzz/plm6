@@ -49,6 +49,7 @@
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
+      row-key="id"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"

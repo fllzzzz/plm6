@@ -32,6 +32,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      row-key="id"
       @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >

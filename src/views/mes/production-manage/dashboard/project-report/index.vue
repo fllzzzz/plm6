@@ -66,12 +66,12 @@ function handleDateChange() {
     commonQuery.startDate = undefined
     commonQuery.endDate = undefined
   }
-  componentRef.value.toQuery()
+  componentRef.value?.toQuery()
 }
 
 function fetchMonomerAndArea({ monomerId, areaId }) {
   commonQuery.monomerId = monomerId
   commonQuery.areaId = areaId
-  componentRef.value.toQuery()
+  componentRef.value?.toQuery()
 }
 </script>

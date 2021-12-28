@@ -50,6 +50,7 @@
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
       style="width: 100%"
+      row-key="id"
       @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
     >
