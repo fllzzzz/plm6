@@ -12,7 +12,6 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
-        default-expand-all
         style="width: 100%"
       >
         <el-table-column type="expand">
@@ -154,7 +153,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.plan-make',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

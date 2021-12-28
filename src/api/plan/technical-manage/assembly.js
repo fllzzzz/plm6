@@ -21,7 +21,7 @@ export function edit(data) {
 export function del(id) {
   return request({
     module: 'plan',
-    url: 'assemble​/deleteAssemble​/' + id,
+    url: 'assemble/deleteAssemble/' + id,
     method: 'delete'
   })
 }

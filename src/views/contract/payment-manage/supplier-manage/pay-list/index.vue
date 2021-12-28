@@ -56,12 +56,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentDate')" key="paymentDate" :show-overflow-tooltip="true" prop="paymentDate" label="付款日期" align="center" min-width="100">
       <template v-slot="scope">
-        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.paymentDate }}</div>
+        <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" :show-overflow-tooltip="true" prop="paymentAmount" label="付款金额(元)" align="center" min-width="100">
       <template v-slot="scope">
-        <span>{{ scope.row.paymentAmount && scope.row.paymentAmount>0? scope.row.paymentAmount.toThousand(): scope.row.paymentAmount }}</span>
+        <span>{{ scope.row.paymentAmount && scope.row.paymentAmount>0? toThousand(scope.row.paymentAmount): scope.row.paymentAmount }}</span>
       </template>
     </el-table-column>
   </common-table>
@@ -79,6 +79,8 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import { supplierPayMentTypeEnum, contractPayForEnum } from '@enum-ms/contract'
 import useDict from '@compos/store/use-dict'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 // crud交由presenter持有
 const permission = {
@@ -109,7 +111,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.supplierPayList',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 </script>

@@ -107,7 +107,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.contractRecord',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 </script>

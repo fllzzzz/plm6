@@ -18,7 +18,6 @@
           :data="form.dictionaryDetails"
           empty-text="暂无数据"
           :max-height="500"
-          default-expand-all
           :cell-class-name="wrongCellMask"
           style="width: 100%"
         >

@@ -64,7 +64,7 @@ const props = defineProps({
 })
 
 const { globalProject, currentMenu, globalProjectId } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId'])
-const allEnclosure = ['PlanTrussSupportList', 'PlanSandwichList', 'PlanPressedSupportList', 'PlanPressedColorList', 'PlanAssemblyList']
+const allEnclosure = ['PlanTrussSupportList', 'PlanSandwichList', 'PlanPressedSupportList', 'PlanPressedColorList', 'PlanAssemblyList', 'PlanBendingList']
 const enclosureItem = [
   { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
   { name: 'PlanSandwichList', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
@@ -81,10 +81,12 @@ watch(
       if (val.projectContentList && val.projectContentList.length > 0) {
         val.projectContentList.forEach(v => {
           if (val.businessType === businessTypeEnum.MACHINING.V) {
+            v.alias = v.parentCategory
             projectContentData.push(v)
           } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
             if (v.childrenList && v.childrenList.length > 0) {
               v.childrenList.forEach(value => {
+                value.alias = v.alias
                 projectContentData.push(value)
               })
             }
@@ -98,6 +100,9 @@ watch(
             arr.push(val.name)
           }
         })
+        if (projectContentData.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
+          arr.push('PlanBendingList')
+        }
       }
       if (val.mode !== projectModeEnum.STRUCTURE.V) {
         arr.push('PlanAssemblyList')

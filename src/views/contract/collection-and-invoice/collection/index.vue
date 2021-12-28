@@ -24,17 +24,17 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="150">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? scope.row.contractAmount.toThousand(): '' }}</span>
+        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('haveCollectionAmount')" key="haveCollectionAmount" prop="haveCollectionAmount" label="已收款金额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.haveCollectionAmount && scope.row.haveCollectionAmount>0? haveCollectionAmount.toThousand(): scope.row.haveCollectionAmount }}</div>
+        <div>{{ scope.row.haveCollectionAmount && scope.row.haveCollectionAmount>0? toThousand(haveCollectionAmount): scope.row.haveCollectionAmount }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="收款金额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <span>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? scope.row.collectionAmount.toThousand(): scope.row.collectionAmount }}</span>
+        <span>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionReason')" key="collectionReason" prop="collectionReason" label="收款事由" align="center" min-width="120">
@@ -49,7 +49,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionDate')" key="collectionDate" prop="collectionDate" label="收款日期" align="center" min-width="120">
       <template v-slot="scope">
-        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.collectionDate }}</div>
+        <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="收款单位" align="center" min-width="120">
@@ -89,7 +89,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="填报日期" align="center" width="110px">
       <template v-slot="scope">
-        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('auditorName')" key="auditorName" prop="auditorName" label="审核人" align="center" width="110px">
@@ -99,7 +99,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" label="审核日期" align="center" width="110px">
       <template v-slot="scope">
-        <div>{{ scope.row.auditTime }}</div>
+        <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('auditStatus')" key="auditStatus" prop="auditStatus" label="状态" align="center" width="110px">
@@ -141,6 +141,8 @@ import mDetail from './module/detail'
 import { auditTypeEnum } from '@enum-ms/contract'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
+import { parseTime } from '@/utils/date'
+import { toThousand } from '@data-type/number'
 
 // crud交由presenter持有
 const permission = {
@@ -178,7 +180,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.collection',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 function openDetail(row, type) {

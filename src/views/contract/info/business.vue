@@ -35,24 +35,8 @@
                 <span v-else>{{ detail.businessTypeDesc }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="项目类型" prop="projectType">
-              <div style="width: 200px">
-                <common-select
-                  v-if="isModify"
-                  v-model="form.projectType"
-                  :options="projectTypeEnumN.ENUM"
-                  type="enum"
-                  size="small"
-                  clearable
-                  placeholder="项目类型"
-                  style="width: 200px"
-                  class="input-underline"
-                />
-                <span v-else>{{ detail.projectTypeDesc }}</span>
-              </div>
-            </el-form-item>
             <el-form-item label="项目内容" prop="content">
-              <div style="width: 200px">
+              <div style="width: 320px">
                 <el-select
                   v-if="isModify"
                   v-model="form.projectContent"
@@ -71,6 +55,22 @@
             </el-form-item>
           </div>
           <div class="form-row">
+            <el-form-item label="项目类型" prop="projectType">
+              <div style="width: 200px">
+                <common-select
+                  v-if="isModify"
+                  v-model="form.projectType"
+                  :options="projectTypeEnumN.ENUM"
+                  type="enum"
+                  size="small"
+                  clearable
+                  placeholder="项目类型"
+                  style="width: 200px"
+                  class="input-underline"
+                />
+                <span v-else>{{ detail.projectTypeDesc }}</span>
+              </div>
+            </el-form-item>
             <el-form-item label="签约人" prop="singerId">
               <div style="width: 200px">
                 <template v-if="isModify">
@@ -88,6 +88,8 @@
                 <span v-else>{{ detail.singerName }}</span>
               </div>
             </el-form-item>
+          </div>
+          <div class="form-row">
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <el-date-picker
@@ -105,13 +107,13 @@
               </div>
             </el-form-item>
             <el-form-item label="签约地址" prop="signingAddress">
-              <div style="width: 200px">
+              <div style="width: 400px">
                 <el-input
                   v-if="isModify"
                   v-model="form.signingAddress"
                   class="input-underline"
                   placeholder="签约地址"
-                  style="width: 200px"
+                  style="width: 400px"
                 />
                 <span v-else>{{ detail.signingAddress }}</span>
               </div>

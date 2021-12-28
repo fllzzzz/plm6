@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="1200px"
+    size="860px"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -14,7 +14,7 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
         <el-form-item label="公司名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="请填写名称" class="input-underline" style="width: 270px" maxlength="50"/>
+          <el-input v-model="form.name" type="text" placeholder="请填写名称" class="input-underline" style="width: 320px" maxlength="50"/>
         </el-form-item>
         <el-form-item label="社会统一信用代码" prop="socialCode">
           <el-input
@@ -22,7 +22,8 @@
             type="text"
             placeholder="请填写社会统一信用代码"
             class="input-underline"
-            style="width: 270px"
+            style="width: 320px"
+            maxlength="18"
           />
         </el-form-item>
         <el-form-item label="母公司" prop="isParent">
@@ -48,6 +49,8 @@
             type="textarea"
             :autosize="{ minRows: 6, maxRows: 8 }"
             placeholder="请填写备注"
+            maxlength="200"
+            show-word-limit
             style="max-width: 500px"
           />
         </el-form-item>
@@ -61,14 +64,14 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column prop="depositBank" label="开户行" align="center" min-width="150">
+          <el-table-column prop="depositBank" label="开户行" align="center" min-width="270">
             <template v-slot="scope">
-              <el-input v-model="scope.row.depositBank" type="text" placeholder="开户行" style="width: 120px" />
+              <el-input v-model="scope.row.depositBank" type="text" placeholder="开户行" style="width: 260px" maxlength="50"/>
             </template>
           </el-table-column>
-          <el-table-column prop="account" label="账号" align="center" min-width="150">
+          <el-table-column prop="account" label="账号" align="center" min-width="270">
             <template v-slot="scope">
-              <el-input v-model="scope.row.account" type="text" placeholder="账号" style="width: 120px" />
+              <el-input v-model="scope.row.account" type="text" placeholder="账号" style="width: 260px" maxlength="30"/>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -97,6 +100,7 @@ import { regForm } from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
 import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessage } from 'element-plus'
+import { validatorEnOrNum } from '@/utils/validate/pattern'
 
 const formRef = ref()
 const detailRef = ref()
@@ -118,7 +122,11 @@ const defaultForm = {
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const rules = {
   name: [{ required: true, message: '请输入公司名称', trigger: 'blur' }],
-  sort: [{ required: true, message: '请输入排序', trigger: 'blur' }]
+  sort: [{ required: true, message: '请输入排序', trigger: 'blur' }],
+  socialCode: [
+    { max: 18, message: '长度不超过 18 个字符', trigger: 'blur' },
+    { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }
+  ]
 }
 
 const tableRules = {

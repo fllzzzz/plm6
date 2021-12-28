@@ -52,7 +52,7 @@
           min-width="120"
         >
           <template v-slot="scope">
-            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.signingTime }}</div>
+            <div>{{ scope.row.signingTime? parseTime(scope.row.signingTime,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </el-table-column>
       </template>
@@ -137,7 +137,7 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.amount && scope.row.amount > 0 ? scope.row.amount.toThousand() : scope.row.amount }}</span>
+            <span>{{ scope.row.amount && scope.row.amount > 0 ? toThousand(scope.row.amount) : scope.row.amount }}</span>
           </template>
         </el-table-column>
       </template>
@@ -152,7 +152,7 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.freight && scope.row.freight > 0 ? scope.row.freight.toThousand() : scope.row.freight }}</span>
+            <span>{{ scope.row.freight && scope.row.freight > 0 ? toThousand(scope.row.freight) : scope.row.freight }}</span>
           </template>
         </el-table-column>
       </template>
@@ -169,7 +169,7 @@
           <template v-slot="scope">
             <span>{{
               scope.row.settlementAmount && scope.row.settlementAmount > 0
-                ? scope.row.settlementAmount.toThousand()
+                ? toThousand(scope.row.settlementAmount)
                 : scope.row.settlementAmount
             }}</span>
           </template>
@@ -186,7 +186,7 @@
       >
         <template v-slot="scope">
           <span>{{
-            scope.row.paymentAmount && scope.row.paymentAmount > 0 ? scope.row.paymentAmount.toThousand() : scope.row.paymentAmount
+            scope.row.paymentAmount && scope.row.paymentAmount > 0 ? toThousand(scope.row.paymentAmount) : scope.row.paymentAmount
           }}</span>
         </template>
       </el-table-column>
@@ -214,7 +214,7 @@
       >
         <template v-slot="scope">
           <span>{{
-            scope.row.invoiceAmount && scope.row.invoiceAmount > 0 ? scope.row.invoiceAmount.toThousand() : scope.row.invoiceAmount
+            scope.row.invoiceAmount && scope.row.invoiceAmount > 0 ? toThousand(scope.row.invoiceAmount) : scope.row.invoiceAmount
           }}</span>
         </template>
       </el-table-column>
@@ -243,7 +243,7 @@
         >
           <template v-slot="scope">
             <span>{{
-              scope.row.inboundAmount && scope.row.inboundAmount > 0 ? scope.row.inboundAmount.toThousand() : scope.row.inboundAmount
+              scope.row.inboundAmount && scope.row.inboundAmount > 0 ? toThousand(scope.row.inboundAmount) : scope.row.inboundAmount
             }}</span>
           </template>
         </el-table-column>
@@ -276,7 +276,7 @@
       >
         <template v-slot="scope"> -->
           <!-- <span>{{
-            scope.row.paymentAmount && scope.row.paymentAmount > 0 ? scope.row.paymentAmount.toThousand() : scope.row.paymentAmount
+            scope.row.paymentAmount && scope.row.paymentAmount > 0 ? toThousand(scope.row.paymentAmount) : scope.row.paymentAmount
           }}</span> -->
         <!-- </template>
       </el-table-column> -->
@@ -293,6 +293,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 import {
   supplierPayMentTypeEnum,
   supplierPayTypeEnum
@@ -326,7 +328,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.supplierPayList',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 </script>
 

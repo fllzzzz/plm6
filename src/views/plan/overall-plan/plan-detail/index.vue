@@ -123,7 +123,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.plan-make',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

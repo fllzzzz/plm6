@@ -80,7 +80,7 @@
         :label="`合同金额(元)`"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.contractAmount? scope.row.contractAmount.toThousand(): '-' }}</span>
+          <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="100px">
@@ -114,7 +114,7 @@
         label="签订日期"
       >
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.signingDate }}</span>
+          <span>{{ scope.row.signingDate? parseTime(scope.row.signingDate,'{y}-{m}-{d}'): '-' }}</span>
         </template>
       </el-table-column>
 
@@ -127,7 +127,7 @@
         width="100px"
       >
         <template v-slot="scope">
-          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createDate }}</div>
+          <div>{{ scope.row.createDate? parseTime(scope.row.createDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="110px" align="center" fixed="right">
@@ -238,6 +238,8 @@ import { isNotBlank } from '@data-type/index'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
 import members from './members'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
 // crud交由presenter持有
@@ -281,7 +283,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.contractProject',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 function showMemberList(id) {

@@ -24,7 +24,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" min-width="150">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? scope.row.contractAmount.toThousand(): '' }}</span>
+        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="120">
@@ -34,17 +34,17 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票面额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? scope.row.invoiceAmount.toThousand(): scope.row.invoiceAmount }}</span>
+        <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('tax')" key="tax" prop="tax" label="销项税额(元)" align="center" min-width="120">
       <template v-slot="scope">
-        <span>{{ scope.row.tax && scope.row.tax>0? scope.row.tax.toThousand(): scope.row.tax }}</span>
+        <span>{{ scope.row.tax && scope.row.tax>0? toThousand(scope.row.tax): scope.row.tax }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceDate')" key="invoiceDate" prop="invoiceDate" label="发票日期" align="center" min-width="120">
       <template v-slot="scope">
-        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.invoiceDate }}</div>
+        <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceNo')" key="invoiceNo" prop="invoiceNo" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
@@ -69,7 +69,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="填报日期" align="center" width="110px">
       <template v-slot="scope">
-        <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('auditorName')" key="auditorName" prop="auditorName" label="审核人" align="center" width="110px">
@@ -124,6 +124,8 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
 import { auditTypeEnum, systemTypeEnum, invoiceTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 // crud交由presenter持有
 const permission = {
@@ -160,7 +162,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.collection',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 function openDetail(row, type) {
