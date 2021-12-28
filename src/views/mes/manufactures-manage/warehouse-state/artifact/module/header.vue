@@ -144,7 +144,7 @@ watch(
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.weight = v.grossWeight || 0
+    v.weight = v.netWeight || 0
     v.totalWeight = v.weight * v.quantity
     v.stockQuantity = v.inboundQuantity - v.outboundQuantity || 0
     v.inboundWeight = v.inboundQuantity * v.weight

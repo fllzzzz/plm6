@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader />
+      <mHeader ref="headRef" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -81,6 +81,7 @@ const optShow = {
 const { globalProjectId } = mapGetters('globalProjectId')
 provide('projectId', globalProjectId)
 
+const headRef = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -97,6 +98,7 @@ const { maxHeight } = useMaxHeight({ paginate: false })
 provide('query', crud.query)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  const monomer = headRef.value?.getMonomer() || {}
   res.data.content = res.data.content.map((v) => {
     v.process = deepClone(v.processList)
     if (v.process && v.process.length > 0) {
@@ -118,6 +120,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         const unit = isNotBlank(o.wageQuotaType) ? wageQuotaTypeEnum.V[o.wageQuotaType].unit : ''
         return {
           monomerId: crud.query.monomerId,
+          monomerName: monomer.name,
           projectId: crud.query.projectId,
           productType: crud.query.productType,
           productProcessId: v.productProcessId,

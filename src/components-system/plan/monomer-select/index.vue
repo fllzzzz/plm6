@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue'
+import { ref, defineProps, defineEmits, watch, defineExpose } from 'vue'
 import { monomerAll as getAll } from '@/api/plan/monomer'
 import { isNotBlank } from '@data-type/index'
 const emit = defineEmits(['change', 'update:modelValue', 'getAreaInfo'])
@@ -138,6 +138,11 @@ async function fetchData() {
   }
 }
 
+// 获取单体信息
+function getOption(val) {
+  return originOptions.value.find(k => k.id === val)
+}
+
 function selectChange(val) {
   let monomerVal = {}
   if (!val) {
@@ -151,5 +156,9 @@ function selectChange(val) {
   emit('change', val)
   emit('getAreaInfo', areaInfo)
 }
+
+defineExpose({
+  getOption
+})
 
 </script>

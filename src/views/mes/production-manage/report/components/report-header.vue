@@ -1,7 +1,7 @@
 <template>
   <div v-show="crud.searchToggle">
     <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-    <monomer-select v-model="monomerId" clearable :project-id="query.projectId" :default="false" class="filter-item" @change="crud.toQuery"/>
+    <monomer-select v-model="query.monomerId" clearable :project-id="query.projectId" :default="false" class="filter-item" @change="crud.toQuery"/>
     <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
     <el-date-picker
       v-model="query.date"
@@ -51,7 +51,8 @@ const commonDefault = {
   date: [],
   startDate: undefined,
   endDate: undefined,
-  factoryId: undefined
+  factoryId: undefined,
+  monomerId: undefined
 }
 
 const { crud, query, CRUD } = regHeader(Object.assign(commonDefault, defaultQuery))

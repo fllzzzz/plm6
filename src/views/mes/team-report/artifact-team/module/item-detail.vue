@@ -40,17 +40,31 @@
             <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140px">
+        <el-table-column
+          v-if="info.productType === artifactProcessEnum.TWICE.V"
+          key="specification"
+          prop="specification"
+          :show-overflow-tooltip="true"
+          label="规格"
+          min-width="140px"
+        >
           <template v-slot="scope">
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px">
+        <el-table-column
+          v-if="info.productType === artifactProcessEnum.TWICE.V"
+          key="material"
+          prop="material"
+          :show-overflow-tooltip="true"
+          label="材质"
+          min-width="80px"
+        >
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="排产任务" align="center" width="100px">
+        <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="排产任务" align="center" min-width="100px">
           <template v-slot="scope">
             <span>{{ scope.row.taskQuantity }}</span>
           </template>
@@ -61,7 +75,7 @@
           :show-overflow-tooltip="true"
           label="完成数量"
           align="center"
-          width="100px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <span class="tc-success">{{ scope.row.completeQuantity }}</span>
@@ -73,13 +87,13 @@
           :show-overflow-tooltip="true"
           label="未完成"
           align="center"
-          width="100px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <span class="tc-danger">{{ scope.row.unCompleteQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="completeMete" prop="completeMete" :show-overflow-tooltip="true" label="完成总量" align="center" width="100px">
+        <el-table-column key="completeMete" prop="completeMete" :show-overflow-tooltip="true" label="完成总量" align="center" min-width="100px">
           <template v-slot="scope">
             <span class="tc-success">{{ scope.row.completeMete }}</span>
           </template>
@@ -170,18 +184,22 @@ function getSummaries(param) {
 const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
+const dataPath = {
+  [artifactProcessEnum.ONCE.V]: 'assembleList',
+  [artifactProcessEnum.TWICE.V]: 'artifactList'
+}
 async function fetchList() {
   try {
     tableLoading.value = true
+    const _productType = props.info.productType
     const _query = Object.assign(deepClone(query), {
       factoryId: props.info.factory?.id,
       processId: props.itemInfo.id,
-      productType: props.info.productType,
-      productionLineId: props.info.productionLine?.id,
-      projectId: props.info.project?.id
+      productType: _productType,
+      productionLineId: props.info.productionLine?.id
     })
-    const { artifactList } = await detail(_query)
-    list.value = artifactList.map((v) => {
+    const _data = await detail(_query)
+    list.value = _data[dataPath[_productType]].map((v) => {
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
       v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG)
       return v

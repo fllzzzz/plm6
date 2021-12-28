@@ -119,8 +119,7 @@ async function fetchList() {
     const _query = Object.assign(deepClone(query), {
       factoryId: props.info.factory?.id,
       productType: props.info.productType,
-      productionLineId: props.info.productionLine?.id,
-      projectId: props.info.project?.id
+      productionLineId: props.info.productionLine?.id
     })
     const { content, process } = await detail(_query)
     list.value = content.map((v) => {
