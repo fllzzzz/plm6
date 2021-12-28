@@ -17,6 +17,7 @@
                 v-if="isModify"
                 v-model="form.serialNumber"
                 placeholder="合同编号"
+                style="width:260px;"
               />
               <span v-else>{{ detail.serialNumber || '-' }}</span>
             </div>
@@ -27,22 +28,13 @@
                 v-if="isModify"
                 v-model="form.name"
                 placeholder="项目名称"
+                style="width:320px;"
               />
               <span v-else>{{ detail.name || '-' }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="项目简称" prop="shortName">
-            <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="form.shortName"
-                placeholder="项目简称"
-              />
-              <span v-else>{{ detail.shortName || '-' }}</span>
-            </div>
-          </el-form-item>
         </div>
-        <div class="form-row">
+        <div>
           <el-form-item label="开工时间" prop="startDate">
             <div class="input-underline">
               <el-date-picker
@@ -52,7 +44,7 @@
                 class="input-underline"
                 value-format="x"
                 placeholder="选择约定开工日期"
-                style="width:200px"
+                style="width:260px"
                 disabled
               />
               <template v-else>
@@ -60,6 +52,19 @@
               </template>
             </div>
           </el-form-item>
+          <el-form-item label="项目简称" prop="shortName">
+            <div class="input-underline">
+              <el-input
+                v-if="isModify"
+                v-model="form.shortName"
+                placeholder="项目简称"
+                style="width:320px;"
+              />
+              <span v-else>{{ detail.shortName || '-' }}</span>
+            </div>
+          </el-form-item>
+        </div>
+        <div class="form-row">
           <el-form-item label="完成时间" prop="endDate">
             <div class="input-underline">
               <el-date-picker
@@ -69,7 +74,7 @@
                 class="input-underline"
                 value-format="x"
                 placeholder="选择约定完成日期"
-                style="width:200px"
+                style="width:260px"
                 :disabledDate="endDateOption"
               />
               <template v-else>
@@ -79,11 +84,7 @@
           </el-form-item>
           <el-form-item label="总工期(天)" prop="totalDuration">
             <div class="input-underline">
-              <el-input
-                v-if="isModify"
-                v-model="totalDuration"
-                :readonly="true"
-              />
+              <span v-if="isModify">{{ totalDuration }}</span>
               <span v-else>{{ detail.totalDuration || '-' }}</span>
             </div>
           </el-form-item>
@@ -105,7 +106,7 @@
             </div>
           </el-form-item>
           <el-form-item label="详细地址" prop="address">
-            <div class="input-underline" style="width:520px">
+            <div class="input-underline" style="width:420px">
               <el-input
                 v-if="isModify"
                 v-model="form.address"
@@ -127,7 +128,7 @@
                 clearable
                 show-all-levels
                 class="input-underline"
-                style="width:200px"
+                style="width:220px"
                 placeholder="项目经理"
               />
               <span v-else>{{ detail.projectManagerFullName || '-' }}</span>
@@ -170,7 +171,7 @@
         <div class="form-row">
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
-              <span>{{ detail.contractAmount? detail.contractAmount.toThousand():'-' }}</span>
+              <span>{{ detail.contractAmount? toThousand(detail.contractAmount): '-' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -185,10 +186,10 @@
                 :controls="false"
                 controls-position="right"
                 placeholder="预付款(元)"
-                style="width:100%"
+                style="width:220px;"
               />
               <template v-else>
-                <span>{{ detail.prepayments? detail.prepayments.toThousand(): '' }}</span>
+                <span>{{ detail.prepayments? toThousand(detail.prepayments): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -216,7 +217,7 @@
               </div>
             </template>
             <template v-else>
-              <span>{{ detail.managementFee? detail.managementFee.toThousand(): '-' }}</span>
+              <span>{{ detail.managementFee? toThousand(detail.managementFee): '-' }}</span>
               <span>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
             </template>
           </el-form-item>
@@ -234,10 +235,10 @@
                 :controls="false"
                 controls-position="right"
                 placeholder="保证金(元)"
-                style="width:100%"
+                style="width:220px;"
               />
               <template v-else>
-                <span>{{ detail.marginAmount? detail.marginAmount.toThousand(): '-' }}</span>
+                <span>{{ detail.marginAmount? toThousand(detail.marginAmount): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -252,7 +253,7 @@
                 clearable
                 placeholder="保证金类型"
                 class="input-underline"
-                style="width:200px"
+                style="width:220px;"
               />
               <template v-else>
                 <span>{{ detail.marginType && dict && dict.label && dict.label['margin_type']? dict.label['margin_type'][detail.marginType]: '-' }}</span>
@@ -270,7 +271,7 @@
                 clearable
                 placeholder="币种"
                 class="input-underline"
-                style="width:200px"
+                style="width:220px;"
               />
               <template v-else>
                 <span>{{ detail.currencyType && dict && dict.label && dict.label['currency_type']? dict.label['currency_type'][detail.currencyType]: '-'}}</span>
@@ -317,6 +318,7 @@ import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 import { parseTime } from '@/utils/date'
+import { toThousand } from '@data-type/number'
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
@@ -519,7 +521,7 @@ defineExpose({
 }
 ::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
-  width: 250px;
+  width: 320px;
   margin-right: 0;
   input{
     border-top:0;

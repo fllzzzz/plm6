@@ -34,7 +34,7 @@
               </el-table-column>
               <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.applyAmount? scope.row.applyAmount.toThousand(): '' }}</span>
+                  <span>{{ scope.row.applyAmount? toThousand(scope.row.applyAmount): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="100">
@@ -45,12 +45,12 @@
               <el-table-column key="invoiceNo" prop="invoiceNo" label="发票号码" align="center"/>
               <el-table-column prop="invoiceAmount" label="发票面额（元）" align="center" min-width="120">
                 <template v-slot="scope">
-                  <span>{{ scope.row.invoiceAmount? scope.row.invoiceAmount.toThousand(): '' }}</span>
+                  <span>{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="inputTax" prop="inputTax" label="进项税额" align="center">
                 <template v-slot="scope">
-                  <span>{{ scope.row.inputTax? scope.row.inputTax.toThousand(): '' }}</span>
+                  <span>{{ scope.row.inputTax? toThousand(scope.row.inputTax): '' }}</span>
                 </template>
               </el-table-column>
               <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="70">
@@ -108,7 +108,7 @@
         label="申请日期"
       >
         <template v-slot="scope">
-          <span v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.applyDate }}</span>
+          <span>{{ scope.row.applyDate?parseTime(scope.row.applyDate,'{y}-{m}-{d}'):'' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -120,7 +120,7 @@
         label="申请金额"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.applyAmount ? scope.row.applyAmount.toThousand() : '' }}</span>
+          <span>{{ scope.row.applyAmount ? toThousand(scope.row.applyAmount) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -132,7 +132,7 @@
         label="实付金额"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.actuallyPayAmount ? scope.row.actuallyPayAmount.toThousand() : '' }}</span>
+          <span>{{ scope.row.actuallyPayAmount ? toThousand(scope.row.actuallyPayAmount) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -180,7 +180,7 @@
         label="填报日期"
       >
         <template v-slot="scope">
-          <span v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -204,7 +204,7 @@
         label="确认日期"
       >
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'" v-if="scope.row.confirmTime">{{ scope.row.confirmTime }}</span>
+          <span>{{ scope.row.confirmTime?parseTime(scope.row.confirmTime,'{y}-{m}-{d}'):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -258,6 +258,8 @@ import mForm from './module/form'
 import mDetail from './module/detail'
 import DetailConfirm from './module/detail-confirm'
 import { reimbursementTypeEnum, systemTypeEnum, invoiceTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 // crud交由presenter持有
 const permission = {

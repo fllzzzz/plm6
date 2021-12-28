@@ -110,7 +110,7 @@
                 style="width: 250px"
                 disabled
               />
-              <span v-else>{{ collectionInfo.contractAmount ? collectionInfo.contractAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.contractAmount ? toThousand(collectionInfo.contractAmount) : '' }}</span>
             </div>
           </el-form-item>
           <template v-if="isModify">
@@ -135,7 +135,7 @@
           <template v-else>
             <el-form-item label="销项税额" prop="taxRate" v-if="collectionInfo.invoiceType === invoiceTypeEnum.ENUM.SPECIAL.V">
               <div style="width: 260px">
-                <span>{{ rateMoney ? rateMoney.toThousand() : '' }}</span>
+                <span>{{ rateMoney ? toThousand(rateMoney) : '' }}</span>
               </div>
             </el-form-item>
           </template>
@@ -170,7 +170,7 @@
                 style="width: 250px"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ collectionInfo.invoiceDate }}</span>
+                <span>{{ collectionInfo.invoiceDate? parseTime(collectionInfo.invoiceDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -203,7 +203,7 @@
                 controls-position="right"
                 style="width: 250px"
               />
-              <span v-else>{{ collectionInfo.invoiceAmount ? collectionInfo.invoiceAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.invoiceAmount ? toThousand(collectionInfo.invoiceAmount) : '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="附件" prop="attachments">
@@ -239,7 +239,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits } from 'vue'
+import { ref, watch, computed, defineProps, defineEmits, nextTick } from 'vue'
 import projectCascader from '@comp-base/project-cascader'
 import { DP } from '@/settings/config'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
@@ -250,7 +250,9 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { editStatus, edit } from '@/api/contract/collection-and-invoice/invoice'
 import { ElNotification } from 'element-plus'
-import UploadBtn from '@comp/file-upload/UploadBtn'
+import UploadBtn from '@/components/file-upload/UploadBtn'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }
@@ -323,15 +325,17 @@ function closeDrawer() {
 }
 
 function resetForm() {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
   const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.invoiceDate = String(DataValue.invoiceDate)
   DataValue.projectId = props.collectionInfo.project.id
   DataValue.invoiceUnitId = Number(DataValue.invoiceUnitId)
   DataValue.attachments = DataValue.attachmentList ? DataValue.attachmentList.map((v) => v.id) : undefined
   form.value = DataValue
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 

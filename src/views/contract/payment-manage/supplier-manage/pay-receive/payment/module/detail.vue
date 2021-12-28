@@ -163,7 +163,7 @@
                 style="width: 250px;"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ paymentDetailInfo.paymentDate }}</span>
+                <span>{{ paymentDetailInfo.paymentDate? parseTime(paymentDetailInfo.paymentDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -196,12 +196,12 @@
           <template v-else>
             <el-form-item v-if="paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
               <div style="width:260px;">
-                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? choseOrderInfo.amount.toThousand(): choseOrderInfo.amount }}</span>
+                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? toThousand(choseOrderInfo.amount): choseOrderInfo.amount }}</span>
               </div>
             </el-form-item>
             <el-form-item v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
               <div style="width:260px;">
-                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? choseOrderInfo.amount.toThousand(): choseOrderInfo.amount }}</span>
+                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? toThousand(choseOrderInfo.amount): choseOrderInfo.amount }}</span>
               </div>
             </el-form-item>
           </template>
@@ -235,7 +235,7 @@
                 style="width: 250px;"
                 disabled
               />
-              <span v-else>{{ choseOrderInfo.inBoundAmount && choseOrderInfo.inBoundAmount>0? choseOrderInfo.inBoundAmount.toThousand(): choseOrderInfo.inBoundAmount }}</span>
+              <span v-else>{{ choseOrderInfo.inBoundAmount && choseOrderInfo.inBoundAmount>0? toThousand(choseOrderInfo.inBoundAmount): choseOrderInfo.inBoundAmount }}</span>
             </div>
           </el-form-item>
         </div>
@@ -279,7 +279,7 @@
                 style="width: 250px;"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ paymentDetailInfo.applyDate }}</span>
+                <span>{{ paymentDetailInfo.applyDate? parseTime(paymentDetailInfo.applyDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -310,7 +310,7 @@
                 controls-position="right"
                 style="width: 250px;"
               />
-              <span v-else>{{ paymentDetailInfo.applyAmount && paymentDetailInfo.applyAmount>0? paymentDetailInfo.applyAmount.toThousand(): paymentDetailInfo.applyAmount }}</span>
+              <span v-else>{{ paymentDetailInfo.applyAmount && paymentDetailInfo.applyAmount>0? toThousand(paymentDetailInfo.applyAmount): paymentDetailInfo.applyAmount }}</span>
             </div>
           </el-form-item>
           <el-form-item label="收款单位" prop="receiveUnit">
@@ -341,7 +341,7 @@
                 style="width: 250px;"
               />
               <div v-else>
-                <span>{{ paymentDetailInfo.paymentAmount && paymentDetailInfo.paymentAmount>0? paymentDetailInfo.paymentAmount.toThousand(): paymentDetailInfo.paymentAmount }}</span>
+                <span>{{ paymentDetailInfo.paymentAmount && paymentDetailInfo.paymentAmount>0? toThousand(paymentDetailInfo.paymentAmount): paymentDetailInfo.paymentAmount }}</span>
                 <span>{{ upperYuan }}</span>
               </div>
             </div>
@@ -453,6 +453,8 @@ import { ElNotification } from 'element-plus'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])

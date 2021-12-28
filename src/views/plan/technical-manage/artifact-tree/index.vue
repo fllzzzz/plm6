@@ -15,7 +15,6 @@
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :row-class-name="handleRowClassName"
         row-key="rowKey"
-        default-expand-all
         style="width: 100%"
         @sort-change="crud.handleSortChange"
         @selection-change="crud.selectionChangeHandler"
@@ -208,9 +207,7 @@
         />
         <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" min-width="160px">
           <template v-slot="scope">
-            <div>
-              <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
-            </div>
+            <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="80px" fixed="right">
@@ -276,6 +273,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
+import { parseTime } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -310,7 +308,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact-tree',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 function changeIndex(val) {

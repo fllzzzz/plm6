@@ -272,7 +272,7 @@ const maxNubmer = 99999999
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.trussSupport',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

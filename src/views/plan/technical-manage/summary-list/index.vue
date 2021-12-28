@@ -101,7 +101,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.summary-list',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

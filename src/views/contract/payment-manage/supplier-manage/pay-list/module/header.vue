@@ -60,7 +60,7 @@
       <rrOperation />
       <crudOperation add-text="付款填报">
         <template #viewLeft>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计付款金额：${totalSum.toThousand()}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计付款金额：${toThousand(totalSum)}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>
@@ -76,6 +76,7 @@ import { supplierPayMentTypeEnum, contractPayForEnum } from '@enum-ms/contract'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import useDict from '@compos/store/use-dict'
 import { paySum } from '@/api/contract/supplier-manage/pay-invoice/pay'
+import { toThousand } from '@data-type/number'
 
 const dict = useDict(['payment_reason'])
 const defaultQuery = {

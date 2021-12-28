@@ -92,7 +92,7 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.truss-detail-card',
-  extraHeight: 157
+  extraHeight: 40
 })
 
 const props = defineProps({

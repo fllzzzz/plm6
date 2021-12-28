@@ -249,7 +249,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.machine-part',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

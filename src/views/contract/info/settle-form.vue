@@ -76,7 +76,7 @@
           placeholder="变更日期"
           style="width: 320px;"
         />
-        <span v-else v-parse-time="'{y}-{m}-{d}'">{{ form.changeDate }}</span>
+        <span v-else>{{ form.changeDate? parseTime(form.changeDate,'{y}-{m}-{d}'): '-' }}</span>
       </el-form-item>
       <el-form-item label="负责人" prop="userList">
         <user-dept-cascader
@@ -110,6 +110,7 @@ import { DP } from '@/settings/config'
 import { editContract } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
 import { ElNotification } from 'element-plus'
+import { parseTime } from '@/utils/date'
 
 const props = defineProps({
   projectId: [Number, String],

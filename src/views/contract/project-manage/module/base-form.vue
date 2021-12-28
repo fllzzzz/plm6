@@ -3,16 +3,13 @@
     <div>
       <div>
         <el-form-item label="合同编号" prop="serialNumber">
-          <el-input v-model.trim="form.serialNumber" class="input-underline" placeholder="合同编号" style="width: 220px" />
+          <el-input v-model.trim="form.serialNumber" class="input-underline" placeholder="合同编号" style="width: 260px" />
         </el-form-item>
         <el-form-item label="项目名称" prop="name">
-          <el-input v-model.trim="form.name" class="input-underline" placeholder="项目名称" style="width: 220px" />
-        </el-form-item>
-        <el-form-item label="项目简称" prop="shortName">
-          <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称" />
+          <el-input v-model.trim="form.name" class="input-underline" placeholder="项目名称" style="width: 320px" />
         </el-form-item>
       </div>
-      <div class="form-row">
+      <div>
         <el-form-item label="开工时间" prop="startDate">
           <el-date-picker
             v-model="form.startDate"
@@ -20,10 +17,15 @@
             class="input-underline"
             value-format="x"
             placeholder="选择约定开工日期"
-            style="width: 220px"
+            style="width: 260px"
             disabled
           />
         </el-form-item>
+        <el-form-item label="项目简称" prop="shortName">
+          <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称"  style="width: 320px"/>
+        </el-form-item>
+      </div>
+      <div class="form-row">
         <el-form-item label="完工日期" prop="endDate">
           <el-date-picker
             v-model="form.endDate"
@@ -31,7 +33,7 @@
             class="input-underline"
             value-format="x"
             placeholder="选择约定完成日期"
-            style="width: 220px"
+            style="width: 260px"
             :disabledDate="endDateOption"
           />
         </el-form-item>
@@ -44,7 +46,7 @@
           <region-cascader
             class="input-underline"
             ref="region"
-            style="width: 220px"
+            style="width: 260px"
             v-model="form.region"
             clearable
             filterable
@@ -52,7 +54,7 @@
           />
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
-          <el-input v-model="form.address" placeholder="项目详细地址" class="input-underline" style="width: 500px" />
+          <el-input v-model="form.address" placeholder="项目详细地址" class="input-underline" style="width: 420px" />
         </el-form-item>
       </div>
       <el-divider><span class="title">负责人</span></el-divider>

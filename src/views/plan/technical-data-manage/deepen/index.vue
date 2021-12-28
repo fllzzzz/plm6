@@ -57,7 +57,7 @@
       <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" width="160px" />
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="160px">
         <template v-slot="scope">
-          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -97,6 +97,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 // import { planTypeEnum } from '@enum-ms/plan'
+import { parseTime } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -131,7 +132,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.deepen',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

@@ -42,7 +42,7 @@
       <rrOperation />
       <crudOperation add-text="报销填报">
         <template #viewLeft>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `报销总额：${totalSum.toThousand()}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium">{{ `报销总额:${toThousand(totalSum)}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>
@@ -57,6 +57,7 @@ import crudOperation from '@crud/CRUD.operation'
 import { reimbursementTypeEnum, contractReimbursementDateEnum } from '@enum-ms/contract'
 import { reimbursementSum } from '@/api/contract/supplier-manage/reimbursement'
 import Expense from './expense'
+import { toThousand } from '@data-type/number'
 
 const defaultQuery = {
   projectId: undefined,

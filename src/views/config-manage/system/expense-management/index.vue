@@ -92,7 +92,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.collection',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

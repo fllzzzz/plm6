@@ -76,7 +76,7 @@
           <el-form-item label="申请金额(元)" prop="applyAmount">
             <div style="width: 460px">
               <el-input v-if="isModify" v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
-              <span v-else>{{ collectionInfo.applyAmount ? collectionInfo.applyAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.applyAmount ? toThousand(collectionInfo.applyAmount) : '-' }}</span>
               <span v-if="upperYuan" style="margin-left: 5px">{{ `(${upperYuan})` }}</span>
             </div>
           </el-form-item>
@@ -132,7 +132,7 @@
                 style="width: 320px"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ collectionInfo.applyDate }}</span>
+                <span>{{ collectionInfo.applyDate?parseTime(collectionInfo.applyDate,'{y}-{m}-{d}'):'-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -198,7 +198,7 @@
           </el-form-item>
           <el-form-item label="实付金额(元)" prop="actuallyPayAmount" v-if="!isModify">
             <div style="width: 360px">
-              <span>{{ form.actuallyPayAmount ? form.actuallyPayAmount.toThousand() : '' }}</span>
+              <span>{{ form.actuallyPayAmount ? toThousand(form.actuallyPayAmount) : '-' }}</span>
               <span v-if="actuallyUpperYuan" style="margin-left: 5px">{{ `大写:${actuallyUpperYuan}` }}</span>
             </div>
           </el-form-item>
@@ -375,7 +375,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits } from 'vue'
+import { ref, watch, computed, defineProps, defineEmits, nextTick } from 'vue'
 import projectCascader from '@comp-base/project-cascader'
 import { DP } from '@/settings/config'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
@@ -390,6 +390,8 @@ import useTableValidate from '@compos/form/use-table-validate'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import { isNotBlank } from '@data-type/index'
 import Expense from './expense'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const defaultForm = {
@@ -484,6 +486,11 @@ function resetForm() {
   const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.applyDate = String(DataValue.applyDate)
   form.value = DataValue
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
 }
 
 async function getContractInfo(id) {

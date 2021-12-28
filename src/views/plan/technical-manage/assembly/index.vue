@@ -12,7 +12,8 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
-        default-expand-all
+        row-key="id"
+        :expand-row-keys="expandArr"
         class="assembly-table"
         style="width: 100%"
       >
@@ -406,13 +407,20 @@
               <common-button type="primary" icon="el-icon-edit" size="mini" @click="modifyRow(scope.row, scope.$index)" />
             </template>
             <udOperation :data="scope.row" :show-edit="false" />
-            <common-button
-              type="primary"
-              icon="el-icon-plus"
-              size="mini"
-              @click="addRow(scope.row, scope.$index)"
-              style="margin-left: 8px"
-            />
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="绑定构件"
+              placement="top"
+            >
+              <common-button
+                type="primary"
+                icon="el-icon-plus"
+                size="mini"
+                @click="addRow(scope.row, scope.$index)"
+                style="margin-left: 8px"
+              />
+            </el-tooltip>
           </template>
         </el-table-column>
       </common-table>
@@ -468,6 +476,7 @@ const tableRules = {
   netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
 }
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+const expandArr = ref([])
 
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -485,7 +494,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(
@@ -529,6 +538,9 @@ function cancelMainRow(val) {
 }
 
 function addRow(val, index) {
+  if (expandArr.value.indexOf(val.id) < 0) {
+    expandArr.value.push(val.id)
+  }
   val.artifactDTOList.push({
     assembleId: val.id,
     length: undefined,
@@ -562,7 +574,7 @@ async function deleteRow(val, index) {
   if (val.id) {
     try {
       val.popoverVisible = false
-      await delAssemblyArtifact(val.serialNumber, crud.data[val.mainIndex].id)
+      await delAssemblyArtifact({ artifactNo: val.serialNumber, assembleId: crud.data[val.mainIndex].id })
       crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
       crud.toQuery()
     } catch (e) {

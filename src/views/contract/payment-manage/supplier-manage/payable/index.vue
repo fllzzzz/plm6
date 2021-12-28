@@ -26,12 +26,12 @@
     </el-table-column>
      <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" :show-overflow-tooltip="true" label="交易总额(元)" min-width="100">
       <template v-slot="scope">
-        <span>{{ scope.row.amount? scope.row.amount.toThousand(): '' }}</span>
+        <span>{{ scope.row.amount? toThousand(scope.row.amount): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" :show-overflow-tooltip="true" label="已付金额(元)" min-width="100">
       <template v-slot="scope">
-        <span>{{ scope.row.paymentAmount? scope.row.paymentAmount.toThousand(): '' }}</span>
+        <span>{{ scope.row.paymentAmount? toThousand(scope.row.paymentAmount): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('payRate')" key="payRate" prop="payRate" :show-overflow-tooltip="true" label="付款比例" min-width="100">
@@ -41,12 +41,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('unPaymentAmount')" key="unPaymentAmount" prop="unPaymentAmount" :show-overflow-tooltip="true" label="未付金额(元)" min-width="100">
       <template v-slot="scope">
-        <span>{{ scope.row.unPaymentAmount? scope.row.unPaymentAmount.toThousand(): '' }}</span>
+        <span>{{ scope.row.unPaymentAmount? toThousand(scope.row.unPaymentAmount): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" :show-overflow-tooltip="true" label="收票金额(元)" min-width="100">
       <template v-slot="scope">
-        <span>{{ scope.row.invoiceAmount? scope.row.invoiceAmount.toThousand(): '' }}</span>
+        <span>{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" :show-overflow-tooltip="true" label="开票比例" min-width="100">
@@ -56,7 +56,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('unInvoiceAmount')" key="unInvoiceAmount" prop="unInvoiceAmount" :show-overflow-tooltip="true" label="待补发票(元)" min-width="100">
       <template v-slot="scope">
-        <span>{{ scope.row.unInvoiceAmount? scope.row.unInvoiceAmount.toThousand(): '' }}</span>
+        <span>{{ scope.row.unInvoiceAmount? toThousand(scope.row.unInvoiceAmount): '' }}</span>
       </template>
     </el-table-column>
   </common-table>
@@ -73,6 +73,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import { supplierPayMentTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
 
 // crud交由presenter持有
 const permission = {
@@ -102,7 +103,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.supplierPayable',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 </script>
