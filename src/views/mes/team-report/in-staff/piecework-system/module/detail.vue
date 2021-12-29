@@ -74,7 +74,7 @@ import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
-import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+// import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
@@ -142,12 +142,13 @@ async function fetchList() {
     const { content } = await detail(_query)
     _list = content.map((v) => {
       v.showUnit = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType }).meteUnit
-      v.checkMete = useWageQuotaMeteConvert({
-        length: v.mate,
-        weight: v.mate,
-        surfaceArea: v.mate,
-        wageQuotaType: v.wageQuotaType
-      }).convertMete
+      // v.checkMete = useWageQuotaMeteConvert({
+      //   length: v.mate,
+      //   weight: v.mate,
+      //   surfaceArea: v.mate,
+      //   wageQuotaType: v.wageQuotaType
+      // }).convertMete
+      v.checkMete = v.mate
       v.mete = useProductMeteConvert({
         productType: query.productType,
         length: v.length * v.quantity,
@@ -186,6 +187,9 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
+        if (column.property === 'price') {
+          sums[index] = sums[index].toFixed(2)
+        }
       }
     }
   })

@@ -29,7 +29,7 @@
           <span>{{ scope.row.processName }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('wageQuotaType')"
         key="wageQuotaType"
         prop="wageQuotaType"
@@ -41,13 +41,13 @@
         <template v-slot="scope">
           <span>{{ wageQuotaTypeEnum.V[scope.row.wageQuotaType].meteUnit }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('productMete')"
         prop="productMete"
         align="center"
         :show-overflow-tooltip="true"
-        label="生产量"
+        :label="`生产量(${unitObj.unit})`"
         min-width="100px"
       >
         <template v-slot="scope">
@@ -60,7 +60,7 @@
         prop="price"
         align="center"
         :show-overflow-tooltip="true"
-        label="工资总额"
+        label="工资总额(元)"
         min-width="100px"
       >
         <template v-slot="scope">
@@ -80,13 +80,14 @@
 
 <script setup>
 import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
-import { ref, provide } from 'vue'
+import { ref, provide, computed } from 'vue'
 
-import { wageQuotaTypeEnum } from '@enum-ms/mes'
+// import { wageQuotaTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+// import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
@@ -123,14 +124,21 @@ const { maxHeight } = useMaxHeight({ paginate: false })
 
 provide('query', crud.query)
 
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({
+    productType: crud.query.productType
+  })
+})
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.productMete = useWageQuotaMeteConvert({
-      length: v.mate,
-      weight: v.mate,
-      surfaceArea: v.mate,
-      wageQuotaType: v.wageQuotaType
-    }).convertMete
+    // v.productMete = useWageQuotaMeteConvert({
+    //   length: v.mate,
+    //   weight: v.mate,
+    //   surfaceArea: v.mate,
+    //   wageQuotaType: v.wageQuotaType
+    // }).convertMete
+    v.productMete = v.mate
     return v
   })
 }
@@ -154,6 +162,7 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
+        sums[index] = sums[index].toFixed(2)
       }
     }
   })
