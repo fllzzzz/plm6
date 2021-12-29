@@ -39,7 +39,9 @@ import baseForm from './base-form'
 import businessForm from './business-form'
 import customerForm from './customer-form'
 import projectMembers from './project-members'
+import { useStore } from 'vuex'
 
+const store = useStore()
 const formRef = ref()
 const baseFormRef = ref()
 const businessFormRef = ref()
@@ -119,6 +121,10 @@ async function nextStep() {
 
 CRUD.HOOK.beforeToCU = (crud, form) => {
   stepActive.value = 0
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  store.dispatch('project/fetchUserProjects')
 }
 
 // 保存  手动输入不存在的配置信息

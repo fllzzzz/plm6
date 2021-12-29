@@ -28,6 +28,7 @@
             value-format="x"
             placeholder="选择收款日期"
             style="width: 250px;"
+            :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"
           />
         </el-form-item>
       </div>

@@ -119,7 +119,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '深化图纸',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['monomerId', 'productType'],
