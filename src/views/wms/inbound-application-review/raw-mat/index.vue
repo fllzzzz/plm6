@@ -10,7 +10,6 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
-      @row-dblclick="(row) => crud.toDetail(row)"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
@@ -168,6 +167,12 @@
           </template>
         </template>
       </el-table-column>
+      <!--详情-->
+      <el-table-column label="操作" width="80" align="center" fixed="right">
+        <template #default="{ row }">
+          <udOperation :data="row" :show-edit="false" :show-del="false" show-detail />
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -189,6 +194,7 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import mHeader from './module/header'
+import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
 import review from './module/review.vue'

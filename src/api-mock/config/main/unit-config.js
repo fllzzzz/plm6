@@ -21,7 +21,8 @@ const getAllUnit = {
         { id: 8, name: '桶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
         { id: 9, name: '箱', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false },
         { id: 10, name: '套', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false },
-        { id: 11, name: '瓶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
+        { id: 11, name: '瓶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false },
+        { id: 12, name: '根', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
       ]
     }
   }

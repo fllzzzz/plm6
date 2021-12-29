@@ -83,7 +83,7 @@
                 v-model="row.batchTransferQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
-                :max="row.operableQuantity"
+                :max="row.corOperableQuantity"
                 controls-position="right"
               />
               <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
