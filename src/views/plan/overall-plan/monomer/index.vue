@@ -50,7 +50,7 @@
           key="battenBoard"
           prop="battenBoard"
           :show-overflow-tooltip="true"
-          :label="globalProject.enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V?'夹芯板(m)':'夹芯板(㎡)'"
+          label="夹芯板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.battenBoard? scope.row.battenBoard.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -61,7 +61,7 @@
           key="contourPlate"
           prop="contourPlate"
           :show-overflow-tooltip="true"
-          :label="globalProject.enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V?'压型板(m)':'压型板(㎡)'"
+          label="压型板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.contourPlate? scope.row.contourPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -72,7 +72,7 @@
           key="flangingPiece"
           prop="flangingPiece"
           :show-overflow-tooltip="true"
-          :label="globalProject.enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V?'折边件(m)':'折边件(㎡)'"
+          label="折边件(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.flangingPiece? scope.row.flangingPiece.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -83,7 +83,7 @@
           key="trussFloorPlate"
           prop="trussFloorPlate"
           :show-overflow-tooltip="true"
-          :label="globalProject.enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V?'桁架楼承板(m)':'桁架楼承板(㎡)'"
+          label="桁架楼承板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.trussFloorPlate? scope.row.trussFloorPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -94,7 +94,7 @@
           key="pressureBearingPlate"
           prop="pressureBearingPlate"
           :show-overflow-tooltip="true"
-          :label="globalProject.enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V?'压型楼承板(m)':'压型楼承板(㎡)'"
+          label="压型楼承板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.pressureBearingPlate?scope.row.pressureBearingPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -148,7 +148,7 @@
 import crudApi from '@/api/plan/monomer'
 import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
-import { TechnologyTypeAllEnum, enclosureSettlementTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -222,7 +222,7 @@ const techOptions = [
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '单体',
-    sort: ['id.desc'],
+    sort: ['sort.asc', 'id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],

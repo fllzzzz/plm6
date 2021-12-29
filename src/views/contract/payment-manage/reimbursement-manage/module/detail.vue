@@ -682,6 +682,7 @@ async function onSubmit(val) {
       await formRef.value.validate()
       if (props.type === 'detail') {
         await edit(form.value)
+        invoiceNoArr.value = []
         handleSuccess()
       } else {
         const submitData = {
@@ -695,6 +696,7 @@ async function onSubmit(val) {
           paymentUnitId: form.value.paymentUnitId
         }
         await editStatus(submitData)
+        invoiceNoArr.value = []
         handleSuccess()
       }
     }

@@ -545,7 +545,7 @@ defineExpose({
   align-items: center;
   margin-top: 20px;
 }
->>> .input-underline {
+::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
   width: 200px;
   margin-right: 0;
@@ -556,9 +556,9 @@ defineExpose({
     border-radius: 0;
   }
 }
->>> .el-input-number .el-input__inner {
-  text-align: left;
-}
+// .el-input-number .el-input__inner {
+//   text-align: left;
+// }
 .form-row {
   width: 100%;
 }

@@ -14,6 +14,7 @@
     :show-file-list="props.showFileList"
     :on-exceed="handleExceed"
     :disabled="props.disabled"
+    :accept="props.accept"
     multiple
   >
     <common-button :size="props.size" :icon="props.icon" :disabled="props.disabled" :type="props.btnType">{{ props.btnName }}</common-button>
@@ -71,6 +72,10 @@ const props = defineProps({
   size: {
     type: String,
     default: 'mini'
+  },
+  accept: {
+    type: String,
+    default: ''
   },
   icon: {
     type: String,
@@ -155,10 +160,9 @@ function beforeRemove(file, fileList) {
 }
 
 function clearFiles() {
-  if (upload.value && upload.value.upload) {
-    upload.value.upload.fileList.length = 0
+  if (upload.value && upload.value.uploadRef) {
+    upload.value.uploadRef.fileList.length = 0
   }
-  // upload.value.clearFiles()
 }
 
 defineExpose({

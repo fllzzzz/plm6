@@ -111,7 +111,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '蓝图',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId', 'type'],

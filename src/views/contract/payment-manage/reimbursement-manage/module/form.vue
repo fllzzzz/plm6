@@ -123,7 +123,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)"/>
+              <el-input v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)"/>
             </template>
           </el-table-column>
           <el-table-column prop="invoiceAmount" label="发票面额（元）" align="center" min-width="120">
@@ -385,6 +385,10 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   } else {
     return validResult
   }
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  invoiceNoArr.value = []
 }
 </script>
 <style lang="scss" scoped>

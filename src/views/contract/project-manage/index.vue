@@ -240,7 +240,9 @@ import contractInfo from '@/views/contract/info/index'
 import members from './members'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+import { useStore } from 'vuex'
 
+const store = useStore()
 const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
 // crud交由presenter持有
 const permission = {
@@ -318,6 +320,9 @@ function openContractInfo(row) {
   projectStatus.value = row.status
   projectName.value = row.name
   contractInfoVisible.value = true
+}
+CRUD.HOOK.afterDelete = () => {
+  store.dispatch('project/fetchUserProjects')
 }
 </script>
 

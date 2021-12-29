@@ -110,7 +110,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '模型',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId', 'type'],

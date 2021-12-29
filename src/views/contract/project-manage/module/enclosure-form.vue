@@ -86,7 +86,8 @@
           <el-input
             v-model="form.techDesc"
             type="textarea"
-            maxlength="500"
+            maxlength="200"
+            show-word-limit
             rows="2"
             placeholder="技术要求描述"
             style="width: 420px;"

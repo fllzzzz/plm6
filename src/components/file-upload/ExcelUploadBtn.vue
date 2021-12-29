@@ -29,7 +29,6 @@ import { getFileSuffix, downloadFileByResponse } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
 
 import { ElUpload, ElMessage } from 'element-plus'
-import axios from 'axios'
 
 const emit = defineEmits(['success'])
 
@@ -137,8 +136,8 @@ async function handleRequest(file) {
     console.log(error)
   } finally {
     uploadLoading.value = false
-    if(upload.value & upload.value.upload){
-      upload.value.upload.fileList.length = 0
+    if (upload.value & upload.value.uploadRef) {
+      upload.value.uploadRef.fileList.length = 0
     }
     // handleClear()
   }
@@ -147,8 +146,8 @@ async function handleRequest(file) {
 function handleClear() {
   // TODO: 清空无效
   // upload.value.clearFiles()
-  if (upload.value && upload.value.upload) {
-    upload.value.upload.fileList.length = 0
+  if (upload.value && upload.value.uploadRef) {
+    upload.value.uploadRef.fileList.length = 0
   }
 }
 function handleBefore(file) {
