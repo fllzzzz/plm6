@@ -145,7 +145,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         L_DP: 'COM_L__M',
         showUnit: true
       }).convertMete
-      o.completeRate = (o.completeMete / o.taskMete) * 100
+      o.completeRate = o.taskMete ? (o.completeMete / o.taskMete) * 100 : '0'
       return o
     })
     return v

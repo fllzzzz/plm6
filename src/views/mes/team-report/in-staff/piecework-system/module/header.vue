@@ -63,8 +63,8 @@ import rrOperation from '@crud/RR.operation'
 import factorySelect from '@comp-base/factory-select'
 import summaryDetail from './summary-detail'
 const defaultQuery = {
-  date: [moment().startOf('year').valueOf(), moment().valueOf()],
-  startDate: moment().startOf('year').valueOf(),
+  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
+  startDate: moment().subtract(1, 'month').valueOf(),
   endDate: moment().valueOf(),
   productType: artifactProcessEnum.ONCE.V,
   componentType: typeEnum.ARTIFACT.V
