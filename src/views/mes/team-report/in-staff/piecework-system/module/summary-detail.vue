@@ -1,12 +1,5 @@
 <template>
-  <common-drawer
-    ref="drawerRef"
-    title="汇总详情"
-    v-model="drawerVisible"
-    direction="rtl"
-    :before-close="handleClose"
-    size="80%"
-  >
+  <common-drawer ref="drawerRef" title="汇总详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
     <template #titleAfter>
       <el-tag type="success" effect="plain" size="medium">
         <span>统计日期：</span>
@@ -26,33 +19,38 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject showMonomer showWorkshop showTeam />
-        <el-table-column key="processName" prop="processName" :show-overflow-tooltip="true" label="工序">
+        <el-table-column prop="processName" :show-overflow-tooltip="true" label="工序">
           <template v-slot="scope">
             <span>{{ scope.row.processName }}</span>
           </template>
         </el-table-column>
         <product-name-columns :productType="query.productType" />
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量">
+        <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="showUnit" prop="showUnit" :show-overflow-tooltip="true" label="核算单位" align="center">
+        <el-table-column prop="mete" :show-overflow-tooltip="true" :label="`${unitObj.label}(${unitObj.unit})`" align="center">
+          <template v-slot="scope">
+            <span>{{ scope.row.mete }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="showUnit" :show-overflow-tooltip="true" label="核算单位" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.showUnit }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="mate" prop="mate" :show-overflow-tooltip="true" label="核算量">
+        <el-table-column prop="checkMete" :show-overflow-tooltip="true" label="核算量" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.mate }}</span>
+            <span>{{ scope.row.checkMete }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="wages" prop="wages" :show-overflow-tooltip="true" label="工序单价(元)">
+        <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="'YUAN'">{{ scope.row.wages }}</span>
+            <span v-to-fixed="'YUAN'">{{ scope.row.wage }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="price" prop="price" :show-overflow-tooltip="true" label="工资(元)">
+        <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
           <template v-slot="scope">
             <span v-to-fixed="'YUAN'">{{ scope.row.price }}</span>
           </template>
@@ -64,11 +62,14 @@
 
 <script setup>
 import { detail } from '@/api/mes/team-report/in-staff/piecework-system'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
+// import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import productNameColumns from '@comp-mes/table-columns/product-name-columns'
 
@@ -108,6 +109,12 @@ const tableLoading = ref(false)
 const list = ref([])
 const query = inject('query')
 
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({
+    productType: query.productType
+  })
+})
+
 async function fetchList() {
   let _list = []
   try {
@@ -115,6 +122,22 @@ async function fetchList() {
     const { content } = await detail(query)
     _list = content.map((v) => {
       v.showUnit = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType }).meteUnit
+      // v.checkMete = useWageQuotaMeteConvert({
+      //   length: v.mate,
+      //   weight: v.mate,
+      //   surfaceArea: v.mate,
+      //   wageQuotaType: v.wageQuotaType
+      // }).convertMete
+      v.checkMete = v.mate
+      v.mete = useProductMeteConvert({
+        productType: query.productType,
+        length: v.length * v.quantity,
+        L_TO_UNIT: unitObj.value.unit,
+        L_DP: unitObj.value.dp,
+        weight: v.netWeight * v.quantity,
+        W_TO_UNIT: unitObj.value.unit,
+        W_DP: unitObj.value.dp
+      }).convertMete
       return v
     })
   } catch (error) {
@@ -144,6 +167,9 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
+        if (column.property === 'price') {
+          sums[index] = sums[index].toFixed(2)
+        }
       }
     }
   })

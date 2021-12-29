@@ -13,13 +13,13 @@ export default function useWageQuotaMeteConvert({
   const { UNIT, dp } = useWageQuotaUnit({ wageQuotaType })
   const convertFn = {
     [wageQuotaTypeEnum.WEIGHT.V]: function ({ W_CUR_UNIT, weight, W_DP }) {
-      return convertUnits(weight, W_CUR_UNIT, UNIT, DP[W_DP] || dp, { showUnit })
+      return convertUnits(weight, W_CUR_UNIT, UNIT, DP[W_DP] || DP[dp], { showUnit })
     },
     [wageQuotaTypeEnum.LENGTH.V]: function ({ L_CUR_UNIT, length, L_DP }) {
-      return convertUnits(length, L_CUR_UNIT, UNIT, DP[L_DP] || dp, { showUnit })
+      return convertUnits(length, L_CUR_UNIT, UNIT, DP[L_DP] || DP[dp], { showUnit })
     },
     [wageQuotaTypeEnum.AREA.V]: function ({ A_CUR_UNIT, surfaceArea, A_DP }) {
-      return convertUnits(surfaceArea, A_CUR_UNIT, UNIT, DP[A_DP] || dp, { showUnit })
+      return convertUnits(surfaceArea, A_CUR_UNIT, UNIT, DP[A_DP] || DP[dp], { showUnit })
     }
   }
   const convertMete = convertFn[wageQuotaType]({

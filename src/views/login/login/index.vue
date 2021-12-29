@@ -3,7 +3,7 @@
     <div id="login-content" class="login-content">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="off" label-position="left">
         <div class="title-container">
-          <h3 class="title">MES管理系统</h3>
+          <h3 class="title">CM-PLM管理系统</h3>
         </div>
 
         <el-form-item prop="username">
