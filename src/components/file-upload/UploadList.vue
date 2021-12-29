@@ -221,7 +221,7 @@ function beforeRemove(file, fileList) {
   .upload-box {
     position: absolute;
     display: inline-block;
-    right: 5px;
+    right: 11px;
     top: 6px;
   }
   .attachment-content {

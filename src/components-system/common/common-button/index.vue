@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { isNotBlank } from '@/utils/data-type'
+import { isBlank } from '@/utils/data-type'
 import { ElButton } from 'element-plus'
 import { defineProps, defineEmits, useSlots, ref } from 'vue'
 
@@ -66,10 +66,10 @@ if (slotDefault.value) {
   const slot = useSlots().default()
   // 避免slot为v-if=false的情况，出现span，从而导致图标未居中
   slotDefault.value = slot.some((v) => {
-    if (v.shapeFlag === 9 && (isNotBlank(v.children) || v.el instanceof HTMLElement)) return true // 文字情况1
-    if (v.shapeFlag === 8 && isNotBlank(v.children) && v.type.toString() === 'Symbol(Text)') return true // 文字情况2
-    if (v.shapeFlag === 4) return true // 图标
-    return false
+    // shapeFlag:某种类型,暂不知。 打包前v-if为false 显示 v.children为v-if 打包后为 “空”
+    console.log('v.children', v, v.children)
+    const blankFlag = v.shapeFlag === 8 && (isBlank(v.children) || v.children === 'v-if' || v.children === 'v-show')
+    return !blankFlag
   })
 }
 

@@ -33,7 +33,7 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
       // ------ 空行处理 start ------
       // 为了不删除有数据row的同上字段，因此拷贝一个row
       const rowCopy = JSON.parse(JSON.stringify(row))
-
+      delete rowCopy.uid
       ditto.forEach((val, name) => {
         if (rowCopy[name] === val) {
           delete rowCopy[name] // 删除同上
@@ -69,35 +69,13 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
       }
     }
 
-    // 删除空行
-    for (const i in blankRowsIndex) {
-      const index = blankRowsIndex[i]
-      list.splice(index - i, 1)
-    }
-
     if (!flag) {
       message = errorMsg
     }
 
     // 数据为空(全部空行的情况)
-    if (list.length === 0) {
+    if (blankRowsIndex.length === copyList.length) {
       flag = false
-    }
-
-    // 设置空行
-    const _blankRow = {}
-    ditto.forEach((value, key) => {
-      _blankRow[key] = value
-    })
-
-    // 将列表数量填充回原来的数量。(若两个数据行中间有空行，则数据行会前移)
-    for (let i = list.length; i < copyList.length; i++) {
-      if (i === 0) {
-        list.push({})
-      } else {
-        // 插入空行，能进入循环，则代表 blankRowsIndex 一定不为空
-        list.push(lodash.cloneDeep(_blankRow))
-      }
     }
   } else {
     flag = false
