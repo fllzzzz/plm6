@@ -168,6 +168,7 @@
                 value-format="x"
                 placeholder="选择开票日期"
                 style="width: 250px"
+                :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"
               />
               <template v-else>
                 <span>{{ collectionInfo.invoiceDate? parseTime(collectionInfo.invoiceDate,'{y}-{m}-{d}'): '-' }}</span>
@@ -229,7 +230,8 @@
             v-model="form.remark"
             type="textarea"
             :autosize="{ minRows: 6, maxRows: 8 }"
-            :maxLength="500"
+            :maxlength="200"
+            show-word-limit
             placeholder="可填写备注"
             style="max-width: 500px"
           />

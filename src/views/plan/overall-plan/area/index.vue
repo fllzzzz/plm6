@@ -87,7 +87,7 @@ const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域',
-    sort: [],
+    sort: ['sort.asc', 'id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['productType'],

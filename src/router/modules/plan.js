@@ -173,14 +173,32 @@ export default {
           hidden: false,
           component: '/plan/technical-data-manage/other-file/index',
           meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SummaryList',
+          path: 'summary-list',
+          hidden: false,
+          component: '/plan/technical-manage/summary-list/index',
+          meta: { title: '清单合计', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'SummaryList',
-        //   path: 'summary-list',
-        //   hidden: false,
-        //   component: '/plan/technical-manage/summary-list/index',
-        //   meta: { title: '清单合计', icon: 'project', noCache: true }
-        // }
+      ]
+    },
+    {
+      path: '/plan/dosage-statistical',
+      component: 'Layout',
+      hidden: false,
+      name: 'DosageStatistical',
+      alwaysShow: false,
+      redirect: '/plan/dosage-statistical/steel-statistical',
+      meta: { title: '标准用量统计', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'SteelStatistical',
+          path: 'steel-statistical',
+          hidden: false,
+          component: '/plan/technical-manage/steel-statistical/index',
+          meta: { title: '钢材使用用量对比', icon: 'project', noCache: true }
+        }
       ]
     }
   ]

@@ -72,7 +72,7 @@ import { ref, defineProps, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
-import { TechnologyTypeAllEnum, businessTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
 
 const formRef = ref()
 const currentOption = ref([])
@@ -165,7 +165,7 @@ watch(
   () => props.globalProject,
   (val) => {
     if (isNotBlank(val)) {
-      const unitData = props.globalProject.enclosureMeasureMode === enclosureSettlementTypeEnum.LENGTH.V ? '(m)' : '(㎡)'
+      const unitData = '(m)'
       props.originOption.forEach(v => {
         if (v.no !== TechnologyTypeAllEnum.STRUCTURE.V) {
           v.unit = unitData

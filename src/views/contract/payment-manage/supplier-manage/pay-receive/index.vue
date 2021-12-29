@@ -30,11 +30,11 @@ const activeName = ref('collection')
 .tab-content {
   padding: 0;
 }
-.badge-item {
-  >>>.el-badge__content {
-    top: 10px;
-    right: -2px;
-  }
-}
+// .badge-item {
+//   >>>.el-badge__content {
+//     top: 10px;
+//     right: -2px;
+//   }
+// }
 
 </style>
