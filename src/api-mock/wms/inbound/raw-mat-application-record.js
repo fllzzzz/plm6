@@ -1,4 +1,4 @@
-import { pickUpModeEnum, purchaseOrderPaymentModeEnum, orderSupplyTypeEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
+import { purchaseOrderPaymentModeEnum, orderSupplyTypeEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { patternLicensePlate } from '@/utils/validate/pattern'

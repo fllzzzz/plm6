@@ -80,6 +80,13 @@ export default {
           meta: { title: '辅材退库', icon: 'project', noCache: true }
         },
         {
+          name: 'GasReturnApplication',
+          path: 'gas',
+          hidden: false,
+          component: '/wms/return-application/gas/index',
+          meta: { title: '气体退库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatReturnApplicationRecord',
           path: 'return-application-record/raw-mat',
           hidden: false,

@@ -4,7 +4,7 @@
     <m-header />
     <!--表格渲染-->
     <common-table
-      :key="`returnable_list_${crud.query.basicClass}`"
+      :key="`returnable_list_${basicClass}`"
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
@@ -15,13 +15,13 @@
       @sort-change="crud.handleSortChange"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" fixed="left" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" fixed="left" />
       <!-- 次要信息 -->
-      <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
+      <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns
         :columns="columns"
-        :basic-class="crud.query.basicClass"
+        :basic-class="basicClass"
         single-mete-mode
         label-prefix="可退库"
         mete-field="singleMete"
@@ -206,6 +206,11 @@ const curMatBaseUnit = computed(() => {
   }
 })
 
+const basicClass = computed(() => {
+  if (crud.query) return crud.query.basicClass
+  return null
+})
+
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
@@ -277,7 +282,9 @@ function handleAddReturn(row) {
   } else {
     selectList.push(newData)
   }
-  ElMessage.success(`${row.classifyFullName}-${specFormat(row)} 加入退库列表`)
+  const specInfo = specFormat(row)
+  const message = `${row.classifyFullName}${specInfo ? ' - ' + specInfo : ''} 加入退库列表`
+  ElMessage.success(message)
   emit('add', newData)
 }
 

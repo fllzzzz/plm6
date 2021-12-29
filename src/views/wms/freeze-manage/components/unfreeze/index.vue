@@ -35,6 +35,7 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
+import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -79,9 +80,7 @@ const rules = {
   factoryId: [{ required: true, message: '请选择调拨工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择调拨仓库', trigger: 'change' }],
   quantity: [
-    // TODO: 点击加减按钮为change,因此将两种trigger方式都包含
-    { required: true, validator: validateQuantity, trigger: 'blur' },
-    { validator: validateQuantity, trigger: 'change' }
+    { required: true, validator: validateQuantity, trigger: 'blur' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
@@ -90,6 +89,10 @@ const rules = {
 const formRef = ref()
 // 表单
 const form = ref({})
+
+// 监听校验
+useWatchFormValidate(formRef, form, ['quantity'])
+
 // 监听物料变化，在物料发生变化时，初始化form表单
 watch(
   () => props.record,

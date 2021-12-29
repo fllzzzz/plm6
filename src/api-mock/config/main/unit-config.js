@@ -20,7 +20,8 @@ const getAllUnit = {
         { id: 7, name: '卷', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
         { id: 8, name: '桶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: true },
         { id: 9, name: '箱', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false },
-        { id: 10, name: '套', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
+        { id: 10, name: '套', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false },
+        { id: 11, name: '瓶', symbol: '', type: unitTypeEnum.DIGIT.V, enabled: false }
       ]
     }
   }

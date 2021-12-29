@@ -64,12 +64,6 @@
         <span class="returnable-number" v-to-fixed="{ val: material.quantity || 0, dp: material.measurePrecision }" />
       </span>
     </template>
-    <!-- <span class="info-item">
-      <span>单重({{ baseUnit.weight.unit }})</span>
-      <span class="returnable-number" v-to-fixed="{ val: material.singleReturnableMete || 0, dp: baseUnit.weight.precision }" />
-      <span>&nbsp;/&nbsp;</span>
-      <span v-to-fixed="{ val: material.singleMete || 0, dp: baseUnit.weight.precision }" />
-    </span> -->
     <span class="info-item">
       <span>核算量({{ material.accountingUnit }})</span>
       <span

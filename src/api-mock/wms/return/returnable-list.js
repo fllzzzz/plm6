@@ -371,4 +371,93 @@ const getAuxMaterialList = {
     }
   }
 }
-export default [getSteelPlateList, getSectionSteelList, getSteelCoilList, getAuxMaterialList]
+
+// 辅材退库列表
+const getGasList = {
+  url: '/api/wms/return/returnable/16',
+  method: 'get',
+  timeout: 500,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        content: [
+          {
+            id: 1,
+            boolPartyA: false, // 是否甲供材料
+            outboundUnitType: measureTypeEnum.ACCOUNTING.V, // 出库单位类型
+            classifyId: 901,
+            basicClass: rawMatClsEnum.GAS.V,
+            quantity: 4,
+            brand: '嘻嘻',
+            remark: '66666',
+            unitNet: 25000, // 单位净量
+            mete: 100000,
+            returnableMete: 100000,
+            singleMete: 25000, // 单件重量(气体mete = singleMete)
+            singleReturnableMete: 25000, // 单件可退库重量
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            outbound: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            recipientName: '@cname', // 领用人
+            createTime: '@datetime(T)' // 生成时间
+          },
+          {
+            id: 2,
+            boolPartyA: false, // 是否甲供材料
+            outboundUnitType: measureTypeEnum.MEASURE.V, // 出库单位类型
+            classifyId: 901,
+            basicClass: rawMatClsEnum.GAS.V,
+            quantity: 2,
+            brand: '嘻嘻',
+            remark: '66666',
+            unitNet: 30000, // 单位净量
+            mete: 60000,
+            returnableMete: 60000,
+            singleMete: 30000, // 单件重量(气体mete = singleMete)
+            singleReturnableMete: 30000, // 单件可退库重量
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            outbound: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            recipientName: '@cname', // 领用人
+            createTime: '@datetime(T)' // 生成时间
+          }
+        ],
+        totalElements: 2
+      }
+    }
+  }
+}
+
+export default [getSteelPlateList, getSectionSteelList, getSteelCoilList, getAuxMaterialList, getGasList]
