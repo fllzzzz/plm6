@@ -73,10 +73,10 @@ export default {
           meta: { title: '钢卷退库', icon: 'project', noCache: true }
         },
         {
-          name: 'AuxMaterialReturnApplication',
-          path: 'aux-material',
+          name: 'AuxMatReturnApplication',
+          path: 'auxiliary-material',
           hidden: false,
-          component: '/wms/return-application/aux-material/index',
+          component: '/wms/return-application/auxiliary-material/index',
           meta: { title: '辅材退库', icon: 'project', noCache: true }
         },
         {
@@ -117,14 +117,14 @@ export default {
           hidden: false,
           component: '/wms/transfer-application-review/raw-mat/index',
           meta: { title: '原材料-调拨审核', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatReturnApplicationReview',
+          path: 'return-application-review/raw-mat',
+          hidden: false,
+          component: '/wms/return-application-review/raw-mat/index',
+          meta: { title: '原材料-退库审核', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'RawMatReturnApplicationReview',
-        //   path: 'return-application-review/raw-mat',
-        //   hidden: false,
-        //   component: '/wms/return-application-review/raw-mat/index',
-        //   meta: { title: '原材料-退库审核', icon: 'project', noCache: true }
-        // }
       ]
     },
     {

@@ -140,7 +140,6 @@ function handleNext() {
 function removeCurrent() {
   if (reviewList.value.length > 0) {
     reviewList.value.splice(ci.value, 1)
-    console.log('index:', ci.value, reviewList.value, reviewList.value.length)
     // 如果位于最后一条，回到第一条
     if (ci.value >= reviewList.value.length - 1) {
       ci.value = 0

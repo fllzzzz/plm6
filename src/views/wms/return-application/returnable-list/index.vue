@@ -45,7 +45,7 @@
               v-to-fixed="{ val: row.singleReturnableLength, dp: curMatBaseUnit.length.precision }"
             />
             /
-            <span v-empty-text v-to-fixed="curMatBaseUnit.length.precision">{{ row.length }}</span>
+            <span v-empty-text v-to-fixed="{ val: row.length, dp: curMatBaseUnit.length.precision }" />
           </template>
         </el-table-column>
       </template>

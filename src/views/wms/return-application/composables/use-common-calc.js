@@ -7,8 +7,12 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 export default function useCommonCalc({ cu, form, basicClass }) {
   // 计算最大重量
   function calcMaxMete(row) {
-    if (row.quantity) {
-      row.maxMete = row.source.singleReturnableMete * row.quantity
+    if (basicClass !== rawMatClsEnum.STEEL_COIL.V) {
+      if (row.quantity) {
+        row.maxMete = row.source.singleReturnableMete * row.quantity
+      } else {
+        row.maxMete = row.source.singleReturnableMete
+      }
     } else {
       row.maxMete = row.source.singleReturnableMete
     }
@@ -91,23 +95,70 @@ export default function useCommonCalc({ cu, form, basicClass }) {
     const overList = []
     list.forEach((row) => {
       const _row = deepClone(row)
+      // 检测数量是否发生变化
       let quantityChange = false
-      if (row.source.quantity < row.quantity) {
-        quantityChange = true
-        row.quantity = row.source.quantity
-        _row.maxQuantity = row.source.quantity
+      // 没有计量单位的不做处理
+      if (row.measureUnit) {
+        if (row.source.quantity < row.quantity) {
+          quantityChange = true
+          row.quantity = row.source.quantity
+          _row.maxQuantity = row.source.quantity
+        }
       }
+
+      // 检测重量是否发生变化
       // 计算最大重量
       calcMaxMete(row)
+
+      let meteChange = false
       // 旧值与新值比较，避免数量变化产生量的问题
-      if (row.maxMete < _row.mete || quantityChange) {
+      if (row.maxMete < _row.mete) {
+        meteChange = true
         _row.maxMete = row.maxMete
+      }
+      // 钢板长宽理论上不会发生错误的情况，代码处理是以防万一
+      // 检测长度是否发生变化
+      let lengthChange = false
+      if (row.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
+        if (row.source.length < row.length) {
+          lengthChange = true
+          _row.maxLength = row.source.length
+          // 清空长度
+          row.length = undefined
+        }
+      }
+
+      if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+        if (row.source.singleReturnableLength < row.length) {
+          lengthChange = true
+          _row.maxLength = row.source.singleReturnableLength
+          // 清空长度
+          row.length = undefined
+        }
+      }
+
+      // 检测宽度是否发生变化
+      let widthChange = false
+      if (row.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
+        if (row.source.width < row.width) {
+          widthChange = true
+          _row.maxWidth = row.source.width
+          // 清空宽度
+          row.width = undefined
+        }
+      }
+
+      // 发生异常
+      if (meteChange || quantityChange || lengthChange || widthChange) {
         overList.push(_row)
+        // 清空当前的数量、核算量
+        row.quantity = undefined
+        row.mete = undefined
       }
     })
     if (overList.length) {
       cu.props.abnormalList = overList
-      ElMessage.warning('退库记录的可退库信息发生变化，已自动修正，可查看异常列表')
+      ElMessage.warning('退库记录的可退库信息发生变化，已清除关联信息，具体信息查看异常列表')
     }
   }
 

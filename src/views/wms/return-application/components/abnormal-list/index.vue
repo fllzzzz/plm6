@@ -1,35 +1,35 @@
 <template>
-  <common-table
-    ref="tableRef"
-    :data="list"
-    :max-height="maxHeight"
-    :expand-row-keys="expandRowKeys"
-    row-key="id"
-  >
+  <common-table ref="tableRef" :data="list" :max-height="maxHeight" :expand-row-keys="expandRowKeys" row-key="id">
     <el-expand-table-column :data="list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
       <template #default="{ row }">
         <expand-secondary-info :basic-class="row.basicClass" :row="row" :show-batch-no="false" show-remark show-graphics />
       </template>
     </el-expand-table-column>
     <!-- 基础信息 -->
-    <material-base-info-columns :basic-class="basicClass" fixed="left" />
+    <material-base-info-columns
+      :basic-class="basicClass"
+      :show-length="![rawMatClsEnum.STEEL_PLATE.V, rawMatClsEnum.SECTION_STEEL.V].includes(basicClass)"
+      :show-width="basicClass !== rawMatClsEnum.STEEL_PLATE.V"
+      :show-thickness="basicClass !== rawMatClsEnum.STEEL_PLATE.V"
+      fixed="left"
+    />
     <!-- 次要信息 -->
     <material-secondary-info-columns :basic-class="basicClass" />
+    <!-- 尺寸信息 -->
+    <size-info :basic-class="props.basicClass" />
     <!-- 单位及其数量 -->
-    <!-- <material-unit-quantity-columns :basic-class="basicClass" /> -->
-    <component
-      :is="comp"
-      :basic-class="props.basicClass"
-    />
+    <quantity-info :basic-class="props.basicClass" :show-quantity="basicClass !== rawMatClsEnum.STEEL_COIL.V" />
     <!-- 仓库信息 -->
     <warehouse-info-columns show-project />
   </common-table>
 </template>
 
 <script setup>
-import { defineProps, computed, ref } from 'vue'
+import { defineProps, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import RawMat from './module/raw-mat.vue'
+
+import QuantityInfo from './module/quantity-info.vue'
+import SizeInfo from './module/size-info.vue'
 
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -53,18 +53,6 @@ const props = defineProps({
 })
 
 const expandRowKeys = ref([])
-
-const comp = computed(() => {
-  switch (props.basicClass) {
-    case rawMatClsEnum.STEEL_PLATE.V:
-    case rawMatClsEnum.SECTION_STEEL.V:
-    case rawMatClsEnum.STEEL_COIL.V:
-    case rawMatClsEnum.MATERIAL.V:
-    case rawMatClsEnum.GAS.V:
-    default:
-      return RawMat
-  }
-})
 </script>
 
 <style lang="scss" scoped>

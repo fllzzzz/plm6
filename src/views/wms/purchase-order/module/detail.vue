@@ -32,7 +32,12 @@
               <span v-if="detail.supplier">{{ detail.supplier.name }}</span>
             </el-form-item>
 
-            <el-form-item v-if="detail.basicClass & matClsEnum.MATERIAL.V" label="辅材明细" prop="auxMaterialNames" style="width: 100%; word-break: break-all">
+            <el-form-item
+              v-if="detail.basicClass & matClsEnum.MATERIAL.V"
+              label="辅材明细"
+              prop="auxMaterialNames"
+              style="width: 100%; word-break: break-all"
+            >
               <span v-arr-join>{{ detail.auxMaterialNames }}</span>
             </el-form-item>
 
@@ -53,6 +58,7 @@
               </el-form-item>
             </template>
             <el-form-item prop="weightMeasurementMode" label="计量方式">
+              {{ detail.weightMeasurementMode }}
               <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
             </el-form-item>
             <!-- <el-form-item label="提货方式" prop="pickUpMode">

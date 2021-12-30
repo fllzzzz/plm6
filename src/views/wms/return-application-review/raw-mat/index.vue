@@ -15,10 +15,20 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
-          <!-- TODO:入库单增加备注？ -->
-          <!-- <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
-          </p> -->
+          <p>
+            关联出库单：
+            <template v-if="row.outboundList && row.outboundList.length > 0">
+              <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
+                <clickable-permission-span
+                  :permission="permission.outboundDetail"
+                  @click="openOutboundDetailView(outbound.id)"
+                  :text="outbound.serialNumber"
+                />
+                <span v-if="ri !== row.outboundList.length - 1">、</span>
+              </template>
+            </template>
+            <template v-else><span v-empty-text /></template>
+          </p>
           <p>
             审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
           </p>
@@ -26,38 +36,22 @@
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('purchaseSN')"
-        key="purchaseSN"
-        :show-overflow-tooltip="true"
-        prop="purchaseSN"
-        label="采购单号"
-        min-width="155"
-      />
-      <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
         :show-overflow-tooltip="true"
         prop="serialNumber"
         min-width="160"
-        label="入库单号"
+        label="退库单号"
         align="left"
       />
       <el-table-column
-        v-if="columns.visible('licensePlate')"
-        key="licensePlate"
+        v-if="columns.visible('basicClass')"
+        key="basicClass"
         :show-overflow-tooltip="true"
-        prop="licensePlate"
-        label="车牌号"
-        align="left"
-        width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('materialTypeText')"
-        key="materialTypeText"
-        :show-overflow-tooltip="true"
-        prop="materialTypeText"
+        prop="basicClass"
         label="物料种类"
-        width="120"
+        align="center"
+        width="80"
       >
         <template #default="{ row }">
           <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
@@ -76,18 +70,32 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('supplier.name')"
-        key="supplier.name"
+        v-if="columns.visible('outboundSNList')"
+        key="outboundSNList"
         :show-overflow-tooltip="true"
-        prop="supplier.name"
-        label="供应商"
-        min-width="200"
-      />
+        prop="outboundSNList"
+        label="关联出库单"
+        min-width="155"
+      >
+        <template #default="{ row }">
+          <template v-if="row.outboundList && row.outboundList.length > 0">
+            <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
+              <clickable-permission-span
+                :permission="permission.outboundDetail"
+                @click="openOutboundDetailView(outbound.id)"
+                :text="outbound.serialNumber"
+              />
+              <span v-if="ri !== row.outboundList.length - 1"> 、</span>
+            </template>
+          </template>
+          <span v-else v-empty-text />
+        </template>
+      </el-table-column>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -115,7 +123,7 @@
         key="createTime"
         :show-overflow-tooltip="true"
         prop="createTime"
-        label="申请日期"
+        label="创建日期"
         align="center"
         width="140"
       >
@@ -180,29 +188,41 @@
     <m-detail />
     <!-- 审核 -->
     <review v-model="reviewVisible" :data="currentRow" @refresh="crud.refresh" />
+    <!-- 出库详情 -->
+    <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
+      <outbound-detail />
+    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
+import { detail as getOutboundDetail } from '@/api/wms/outbound/raw-mat-application-review'
+import crudApi from '@/api/wms/return/raw-mat-application-record'
+
 import { ref } from 'vue'
-import crudApi from '@/api/wms/inbound/raw-mat-application-review'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+
+import OutboundDetail from '@/views/wms/outbound-application-review/raw-mat/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import MHeader from './module/header'
+import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+
+import DetailWrapper from '@crud/detail-wrapper.vue'
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
+import MHeader from './module/header'
 import MDetail from './module/detail.vue'
 import Review from './module/review.vue'
 
 // crud交由presenter持有
 const permission = {
-  get: ['wms_inboundApplication_review:get'],
-  review: ['wms_inboundApplication_review:review']
+  get: ['wms_returnApplication_record:get'],
+  review: ['wms_inboundApplication_review:review'],
+  outboundDetail: ['wms_outboundApplication_review:detail']
 }
 
 const optShow = {
@@ -212,12 +232,17 @@ const optShow = {
   download: false
 }
 
+const currentRow = ref({})
+const reviewVisible = ref(false)
+const expandRowKeys = ref([])
+// 出库详情ref
+const outboundDetailRef = ref()
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '入库记录',
+    title: '退库审核',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: ['editorName', 'userUpdateTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
@@ -225,15 +250,17 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const currentRow = ref({})
-const reviewVisible = ref(false)
-const expandRowKeys = ref([])
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.reviewable = v.reviewStatus === reviewStatusEnum.UNREVIEWED.V && checkPermission(permission.review)
   })
+}
+
+// 打开出库详情窗口
+function openOutboundDetailView(outboundId) {
+  outboundDetailRef.value.toDetail(outboundId)
 }
 
 // 打开审核

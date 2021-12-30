@@ -10,7 +10,7 @@
     custom-class="raw-mat-inbound-application-record-form"
   >
     <template #content>
-      <component :is="comp" :detail="form" edit @success="crud.cancelCU" />
+      <component :is="comp" :detail="form" edit @success="handleSuccess" />
     </template>
   </common-drawer>
 </template>
@@ -18,13 +18,15 @@
 <script setup>
 import { computed } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { matClsEnum, rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import SteelPlateApplication from '@/views/wms/return-application/steel-plate/index.vue'
-import AuxMatApplication from '@/views/wms/inbound-application/auxiliary-material/index.vue'
-import GasApplication from '@/views/wms/inbound-application/gas/index.vue'
+import SectionSteelApplication from '@/views/wms/return-application/section-steel/index.vue'
+import SteelCoilApplication from '@/views/wms/return-application/steel-coil/index.vue'
+import AuxMatApplication from '@/views/wms/return-application/auxiliary-material/index.vue'
+import GasApplication from '@/views/wms/return-application/gas/index.vue'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { toFixed } from '@/utils/data-type'
 
@@ -33,9 +35,11 @@ const { CRUD, crud, form } = regForm()
 const comp = computed(() => {
   switch (form.basicClass) {
     case matClsEnum.STEEL_PLATE.V:
-    case matClsEnum.SECTION_STEEL.V:
-    case matClsEnum.STEEL_COIL.V:
       return SteelPlateApplication
+    case matClsEnum.SECTION_STEEL.V:
+      return SectionSteelApplication
+    case matClsEnum.STEEL_COIL.V:
+      return SteelCoilApplication
     case matClsEnum.MATERIAL.V:
       return AuxMatApplication
     case matClsEnum.GAS.V:
@@ -63,6 +67,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
   await calcTheoryWeight(sourceList)
   sourceList.forEach((row) => {
     row.sourceReturnableMete = row.returnableMete
+    if (form.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+      row.returnableLength = row.singleReturnableLength * row.quantity
+      row.totalLength = row.length * row.quantity
+      row.sourceReturnableLength = row.returnableLength
+    }
   })
   detail.list.forEach((row) => {
     row.warehouseId = row.warehouse ? row.warehouse.id : row.warehouseId
@@ -70,6 +79,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     // 计算单重
     row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
   })
+}
+
+function handleSuccess() {
+  crud.cancelCU()
+  crud.refresh()
 }
 </script>
 

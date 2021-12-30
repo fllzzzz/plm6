@@ -49,7 +49,7 @@
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
         <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left">
           <template #default="{ row }">
-            <span v-to-fixed="baseUnit.thickness.precision">{{ row.source.thickness }}</span>
+            <span v-to-fixed="{ val: row.source.thickness, dp: baseUnit.thickness.precision }" />
           </template>
         </el-table-column>
         <el-table-column prop="width" align="center" width="110px" :label="`宽 (${baseUnit.width.unit})`">
@@ -197,7 +197,7 @@ const { cu, form, FORM } = useForm(
 )
 
 // 通用计算校验
-const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
+const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
