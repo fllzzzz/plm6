@@ -393,6 +393,9 @@ div:focus {
     &:last-child {
       margin: 0;
     }
+    .title {
+      font-weight: bold;
+    }
   }
 }
 
@@ -405,7 +408,7 @@ div:focus {
   color: #8492a6;
   font-size: 13px;
   .title {
-    color: #9b6161;
+    color: #e6a23c;
   }
 }
 

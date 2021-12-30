@@ -39,12 +39,12 @@
             </span>
             <span class="extra-label">
               <span class="title">供应商：</span>
-              <span>{{ data.supplier.name }}</span>
+              <span class="more-text-info ellipsis-text">{{ data.supplier.name }}</span>
             </span>
             <span class="extra-label">
               <template v-if="data.projectNames">
                 <span class="title">项目：</span>
-                <span class="project-info ellipsis-text">{{ data.projectNames }}</span>
+                <span class="more-text-info ellipsis-text">{{ data.projectNames }}</span>
               </template>
             </span>
           </span>
@@ -260,8 +260,9 @@ function setDefault() {
   }
 }
 
-.project-info {
+.more-text-info {
   display: inline-block;
-  width: 200px;
+  line-height: 12px;
+  max-width: 250px;
 }
 </style>
