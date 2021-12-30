@@ -6,6 +6,7 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
+        :productType="TechnologyTypeAllEnum.BENDING.V"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
@@ -24,7 +25,7 @@
         </el-radio-button>
       </el-radio-group>
       <el-input
-        v-model="query.mame"
+        v-model="query.name"
         size="small"
         placeholder="输入名称搜索"
         style="width: 170px; margin-left: 0"

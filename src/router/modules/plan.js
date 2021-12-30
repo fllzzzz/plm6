@@ -59,10 +59,10 @@ export default {
           meta: { title: '计划跟踪', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanOverallPlanDetail',
-          path: 'plan-detail',
-          hidden: true,
-          component: '/plan/overall-plan/plan-detail/index',
+          name: 'PlanOverallPlanConfirm',
+          path: 'plan-true',
+          hidden: false,
+          component: '/plan/overall-plan/plan-confirm/index',
           meta: { title: '计划确认', icon: 'project', noCache: true }
         }
       ]
