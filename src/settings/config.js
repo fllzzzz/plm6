@@ -77,6 +77,15 @@ export const MIN_UNIT = {
   VOLUME_DP: 0
 }
 
+export const specialPath = {
+  QR_SCAN_ARTIFACT_TASK: '/s/s/a',
+  QR_SCAN_ENCLOSURE_TASK: '/s/s/e',
+  QR_SCAN_AUXILIARY_MATERIAL: '/s/s/m',
+  QR_SCAN_BRIDGE_BOX_TASK: '/s/b/b',
+  QR_SCAN_BRIDGE_SINGLE_ELEMENT_TASK: '/s/b/s',
+  QR_SCAN_BRIDGE_AUXILIARY_MATERIAL: '/s/b/m'
+}
+
 export const QR_SCAN_F_TYPE = {
   MEW_PRODUCTION: 1, // 建钢产品
   MES_PACKAGE_SHIP: 2// 建钢打包发运

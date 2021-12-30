@@ -1,23 +1,39 @@
 <template>
-  <common-drawer ref="drawerRef" title="项目工价审核" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="70%">
+  <common-drawer ref="drawerRef" title="项目工价审核" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
     <template #titleRight> </template>
     <template #content>
       <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showMonomer showArea showTeam />
-        <el-table-column prop="processName" show-overflow-tooltip label="工序">
+        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="140px">
           <template v-slot="scope">
-            <span>{{ scope.row.processName }}</span>
+            <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="oldPrice" show-overflow-tooltip label="定额单价" align="center">
+        <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140px">
           <template v-slot="scope">
-            <span>{{ scope.row.oldPrice }}</span>
+            <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="newPrice" show-overflow-tooltip label="调整后" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.newPrice }}</span>
+        <el-table-column prop="taskQuantity" label="任务数量" align="center" width="100px" />
+        <el-table-column prop="taskMete" :label="`任务量(${unitObj.unit})`" align="center" width="100px">
+          <template #default="{ row }">
+            <span>{{ row.taskMete }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="checkMete" :label="`核算量(${checkUnitObj.UNIT})`" align="center" width="100px">
+          <template #default="{ row }">
+            <span>{{ row.checkMete }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="unitPrice" align="center" width="115px" label="单价(元)">
+          <template #default="{ row }">
+            <span v-to-fixed="'YUAN'">{{ row.unitPrice }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalAmount" label="总价(元)" align="center" width="100px">
+          <template #default="{ row }">
+            <span v-to-fixed="'YUAN'">{{ row.totalAmount }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="userName" show-overflow-tooltip label="操作人">
@@ -77,6 +93,8 @@ import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 
 const drawerRef = ref()
@@ -101,6 +119,8 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 const query = inject('query')
+const unitObj = inject('unitObj')
+const checkUnitObj = inject('checkUnitObj')
 
 watch(
   () => props.visible,
@@ -127,6 +147,24 @@ async function fetchList() {
     const data = await checkList(query)
     list.value = data[dataPath[query.productType]].map((v) => {
       v.auditLoading = false
+      v.unitPrice = v.wage || 0
+      v.originUnitPrice = v.unitPrice
+      v.taskMete = useProductMeteConvert({
+        productType: query.productType,
+        length: v.taskLength,
+        L_TO_UNIT: unitObj.value.unit,
+        L_DP: unitObj.value.dp,
+        weight: v.taskNetWeight,
+        W_TO_UNIT: unitObj.value.unit,
+        W_DP: unitObj.value.dp
+      }).convertMete
+      v.checkMete = useWageQuotaMeteConvert({
+        length: v.mate,
+        weight: v.mate,
+        surfaceArea: v.mate,
+        wageQuotaType: v.wageQuotaType
+      }).convertMete
+      v.totalAmount = v.checkMete * v.unitPrice
       return v
     })
   } catch (error) {

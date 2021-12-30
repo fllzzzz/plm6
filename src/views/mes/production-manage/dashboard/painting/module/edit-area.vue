@@ -1,12 +1,7 @@
 <template>
   <common-dialog title="表面积修改" v-model="dialogVisible" width="400px" :before-close="handleClose">
     <template #titleRight>
-      <common-button
-:loading="saveLoading"
-:disabled="form.changeArea === form.originChangeArea"
-type="primary"
-size="mini"
-@click="save"
+      <common-button :loading="saveLoading" :disabled="form.changeArea === form.originChangeArea" type="primary" size="mini" @click="save"
         >保 存</common-button
       >
     </template>
@@ -37,10 +32,12 @@ size="mini"
 </template>
 
 <script setup>
-import { change } from '@/api/mes/production-manage/dashboard/painting'
+import { areaChange } from '@/api/mes/production-manage/dashboard/painting'
 import { defineEmits, defineProps, watch, computed, reactive, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
+import { deepClone } from '@data-type/index'
+import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 
@@ -50,12 +47,12 @@ const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   info: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -79,12 +76,10 @@ watch(
 async function save() {
   try {
     saveLoading.value = true
-    const { projectId, monomerId, changeArea } = form
-    await change({
-      projectId,
-      monomerId,
-      changeArea
-    })
+    const _form = deepClone(form)
+    _form.changeArea = convertUnits(_form.changeArea, '㎡', 'mm²')
+    const { projectId, monomerId, changeArea, paintingType, material, name } = _form
+    await areaChange({ projectId, monomerId, changeArea, paintingType, material, name })
     ElNotification({ title: '修改成功', type: 'success' })
     handleClose()
     emit('refresh')

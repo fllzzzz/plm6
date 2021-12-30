@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { isNotBlank } from '@data-type/index'
 import Layout from '@/layout/index.vue'
+import { specialPath } from '@/settings/config'
 
 /**
  * constantRoutes
@@ -29,6 +30,18 @@ const constantRoutes = [
     path: '/',
     component: () => import('@/views/login/index'),
     meta: { projectType: 0 },
+    hidden: true
+  },
+  {
+    path: specialPath.QR_SCAN_ARTIFACT_TASK,
+    component: () => import('@/views/qr-scan-info/mes/artifact'),
+    meta: { title: '构件信息' },
+    hidden: true
+  },
+  {
+    path: specialPath.QR_SCAN_ENCLOSURE_TASK,
+    component: () => import('@/views/qr-scan-info/mes/enclosure'),
+    meta: { title: '围护信息' },
     hidden: true
   },
   // {

@@ -10,20 +10,11 @@
     :clearable="clearable"
     filterable
     :placeholder="placeholder"
-    :no-data-text="projectId ? '无数据': '未选择项目'"
+    :no-data-text="projectId ? '无数据' : '未选择项目'"
     @change="selectChange"
   >
-    <el-option
-      v-if="showAll"
-      label="全部单体"
-      :value="undefined"
-    />
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-    />
+    <el-option v-if="showAll" label="全部单体" :value="undefined" />
+    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
   </el-select>
 </template>
 
@@ -39,43 +30,43 @@ const options = ref([])
 const originOptions = ref([])
 const props = defineProps({
   projectId: {
-    type: [Number, String]
+    type: [Number, String],
   },
   modelValue: {
-    type: [Number, String]
+    type: [Number, String],
   },
   size: {
     type: String,
-    default: 'small'
+    default: 'small',
   },
   multiple: {
     type: Boolean,
-    default: false
+    default: false,
   },
   clearable: {
     type: Boolean,
-    default: false
+    default: false,
   },
   showAll: {
     type: Boolean,
-    default: false
+    default: false,
   },
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   collapseTags: {
     type: Boolean,
-    default: false
+    default: false,
   },
   default: {
     type: Boolean,
-    default: true
+    default: true,
   },
   placeholder: {
     type: String,
-    default: '请选择单体'
-  }
+    default: '请选择单体',
+  },
 })
 
 watch(
@@ -116,12 +107,12 @@ async function fetchData() {
   let optionData = []
   loading.value = true
   try {
-    const { content = [] } = await getAll(props.projectId) || {}
+    const { content = [] } = (await getAll(props.projectId)) || {}
     originOptions.value = content || []
-    optionData = content.map(o => {
+    optionData = content.map((o) => {
       return {
         value: o.id,
-        label: o.name
+        label: o.name,
       }
     })
   } catch (error) {
@@ -140,7 +131,16 @@ async function fetchData() {
 
 // 获取单体信息
 function getOption(val) {
-  return originOptions.value.find(k => k.id === val)
+  return originOptions.value.find((k) => k.id === val)
+}
+
+// 获取单体类型
+function getProductType(val) {
+  return originOptions.value
+    .find((k) => k.id === val)
+    ?.productTypeList.reduce((res, cur) => {
+      return res | cur.type
+    }, 0)
 }
 
 function selectChange(val) {
@@ -149,7 +149,7 @@ function selectChange(val) {
     val = undefined
     monomerVal = {}
   } else {
-    monomerVal = originOptions.value.find(k => k.id === val)
+    monomerVal = originOptions.value.find((k) => k.id === val)
   }
   const areaInfo = monomerVal && monomerVal.areaSimpleList ? monomerVal.areaSimpleList : []
   emit('update:modelValue', val)
@@ -158,7 +158,7 @@ function selectChange(val) {
 }
 
 defineExpose({
-  getOption
+  getOption,
+  getProductType,
 })
-
 </script>

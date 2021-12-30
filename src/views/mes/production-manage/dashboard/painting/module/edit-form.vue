@@ -10,7 +10,9 @@
       <el-form-item label="材质" prop="material">
         <span v-empty-text>{{ form.material }}</span>
       </el-form-item>
-      <el-form-item label="油漆类别" prop="paintCategory"> </el-form-item>
+      <el-form-item label="油漆类别" prop="paintCategory">
+        <el-input v-model="form.paintCategory" size="small" placeholder="请输入油漆类别" />
+      </el-form-item>
       <el-form-item label="干膜厚度(μm)" prop="thickness">
         <el-input-number
           v-model="form.thickness"
@@ -58,8 +60,10 @@
 import { change } from '@/api/mes/production-manage/dashboard/painting'
 import { defineEmits, defineProps, watch, computed, reactive, ref } from 'vue'
 import { ElNotification } from 'element-plus'
+import { deepClone } from '@data-type/index'
 
 import { DP } from '@/settings/config'
+import { convertUnits } from '@/utils/convert/unit'
 import { toFixed } from '@data-type/index'
 import { isObjectValueEqual } from '@data-type/object'
 
@@ -69,12 +73,12 @@ const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false
+    default: false,
   },
   info: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
@@ -84,8 +88,10 @@ const saveLoading = ref(false)
 const submitDisabled = computed(() => isObjectValueEqual(form, props.info))
 
 const measure = computed(() => {
-  // 面积*干膜厚度/（10*体积固体份*（1-损耗））
-  return form.volumeSolids ? toFixed((form.changeArea * form.thickness) / (10 * (form.volumeSolids / 100) * (1 - (form.loss / 100))), DP.COM_VOLUME__L) : 0
+  // 面积*干膜厚度/（10*体积固体份*100*（1-损耗））
+  return form.volumeSolids
+    ? toFixed((form.changeArea * form.thickness) / (10 * (form.volumeSolids / 100) * 100 * (1 - form.loss / 100)), DP.COM_VOLUME__L)
+    : 0
 })
 
 watch(
@@ -101,8 +107,11 @@ watch(
 async function save() {
   try {
     saveLoading.value = true
-    form.measure = measure.value
-    await change(form)
+    const _form = deepClone(form)
+    _form.changeArea = convertUnits(_form.changeArea, '㎡', 'mm²')
+    _form.loss = _form.loss / 100
+    _form.volumeSolids = _form.volumeSolids / 100
+    await change(_form)
     ElNotification({ title: '修改成功', type: 'success' })
     handleClose()
     emit('refresh')
