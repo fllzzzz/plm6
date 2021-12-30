@@ -1,7 +1,14 @@
 <template>
   <div v-show="crud.searchToggle">
-    <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
-    <common-radio-button class="filter-item" v-model="query.category" :options="projectComponentTypeEnum.ENUM" type="enum" size="small" @change="crud.toQuery" />
+    <monomer-select-area-tabs ref="monomerRef" :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+    <common-radio-button
+      class="filter-item"
+      v-model="query.category"
+      :options="monomerProductTypeEnum"
+      type="enum"
+      size="small"
+      @change="crud.toQuery"
+    />
     <el-date-picker
       v-model="query.date"
       type="daterange"
@@ -32,8 +39,10 @@
 
 <script setup>
 import moment from 'moment'
+import { computed,ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
+import EO from '@enum'
 import { projectComponentTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
@@ -42,13 +51,12 @@ import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
-import { computed } from 'vue-demi'
 
 const defaultQuery = {
   category: projectComponentTypeEnum.ARTIFACT.V,
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
   startDate: moment().startOf('month').valueOf(),
-  endDate: moment().valueOf()
+  endDate: moment().valueOf(),
 }
 
 const { crud, query } = regHeader(defaultQuery)
@@ -67,6 +75,12 @@ function handleDateChange() {
 
 const productType = computed(() => {
   return query.category === projectComponentTypeEnum.ARTIFACT.V ? componentTypeEnum.ARTIFACT.V : componentTypeEnum.ENCLOSURE.V
+})
+
+const monomerRef = ref()
+const monomerProductTypeEnum = computed(() => {
+  const _productType = monomerRef.value?.getProductType() || 0
+  return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
 
 function fetchMonomerAndArea({ monomerId, areaId }) {

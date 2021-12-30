@@ -1,72 +1,68 @@
 <template>
-  <div class="card-panel" :class="alwaysShow?'alwaysShow':''" :style="{'cursor': cursor ? 'pointer':''}">
-    <div v-if="icon" class="card-panel-icon-wrapper" :class="[`icon-${color}`]">
-      <svg-icon :icon-class="icon" class-name="card-panel-icon" />
+  <div class="card-panel" :class="props.alwaysShow ? 'alwaysShow' : ''" :style="{'cursor': props.cursor ? 'pointer':''}">
+    <div v-if="props.icon" class="card-panel-icon-wrapper" :class="[`icon-${props.color}`]">
+      <svg-icon :icon-class="props.icon" class-name="card-panel-icon" />
     </div>
     <div class="card-panel-description">
       <div class="card-panel-text">
-        {{ name }}
+        {{ props.name }}
       </div>
-      <count-to :style="{'color':numColor}" :start-val="startVal" :end-val="endVal" :decimals="decimals" :separator="separator" :duration="2600" class="card-panel-num" />
+      <count-to :style="{'color': props.numColor}" :start-val="props.startVal" :end-val="props.endVal" :decimals="props.decimals" :separator="props.separator" :duration="2600" class="card-panel-num" />
     </div>
   </div>
 </template>
 
-<script>
-import CountTo from 'vue-count-to'
+<script setup>
+import { defineProps } from 'vue'
 
-export default {
-  components: {
-    CountTo
+import { CountTo } from 'vue3-count-to'
+
+const props = defineProps({
+  name: {
+    type: [String, Number],
+    default: undefined
   },
-  props: {
-    // eslint-disable-next-line vue/require-default-prop
-    name: {
-      type: [String, Number]
-    },
-    icon: {
-      type: String,
-      default: undefined
-    },
-    decimals: {
-      type: Number,
-      default: 0
-    },
-    separator: {
-      type: String,
-      default: ','
-    },
-    startVal: {
-      type: [Number, String],
-      default: 0
-    },
-    endVal: {
-      type: [Number, String],
-      required: true
-    },
-    color: {
-      type: String,
-      default: 'blue'
-    },
-    numColor: {
-      type: String,
-      default: ''
-    },
-    cursor: {
-      type: Boolean,
-      default: false
-    },
-    alwaysShow: {
-      type: Boolean,
-      default: false
-    }
+  icon: {
+    type: String,
+    default: undefined
+  },
+  decimals: {
+    type: Number,
+    default: 0
+  },
+  separator: {
+    type: String,
+    default: ','
+  },
+  startVal: {
+    type: [Number, String],
+    default: 0
+  },
+  endVal: {
+    type: [Number, String],
+    required: true
+  },
+  color: {
+    type: String,
+    default: 'blue'
+  },
+  numColor: {
+    type: String,
+    default: ''
+  },
+  cursor: {
+    type: Boolean,
+    default: false
+  },
+  alwaysShow: {
+    type: Boolean,
+    default: false
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
   .card-panel {
-    height: 108px;
     font-size: 12px;
     position: relative;
     overflow: hidden;
@@ -128,14 +124,9 @@ export default {
     }
 
     .card-panel-description {
-      float: right;
       font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-end;
+      text-align: center;
+      margin: 18px;
 
       .card-panel-text {
         line-height: 18px;
@@ -145,49 +136,37 @@ export default {
       }
 
       .card-panel-num {
-        font-size: 20px;
+        font-size: 40px;
+        line-height: 40px;
       }
     }
  }
 
   .alwaysShow{
     .card-panel-icon-wrapper {
-          color: #fff;
-        }
+      color: #fff;
+    }
 
-        .icon-blueGreen {
-          background: #40c9c6;
-        }
+    .icon-blueGreen {
+      background: #40c9c6;
+    }
 
-        .icon-blue {
-          background: #36a3f7;
-        }
+    .icon-blue {
+      background: #36a3f7;
+    }
 
-        .icon-red {
-          background: #f4516c;
-        }
+    .icon-red {
+      background: #f4516c;
+    }
 
-        .icon-green {
-          background: #34bfa3
-        }
+    .icon-green {
+      background: #34bfa3
+    }
   }
 
 @media (max-width:550px) {
   .card-panel-icon-wrapper {
     display: none;
   }
-
-//   .card-panel-icon-wrapper {
-//     float: none !important;
-//     width: 100%;
-//     height: 100%;
-//     margin: 0 !important;
-
-//     .svg-icon {
-//       display: block;
-//       margin: 14px auto !important;
-//       float: none !important;
-//     }
-//   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <monomer-select v-model="monomerId" :project-id="projectId" class="filter-item" @getAreaInfo="getAreaInfo" />
+  <monomer-select ref="monomerRef" v-model="monomerId" :project-id="projectId" class="filter-item" @getAreaInfo="getAreaInfo" />
   <area-tabs
     class="filter-item"
     style="width: calc(100% - 230px)"
@@ -22,6 +22,7 @@ defineProps({
   }
 })
 
+const monomerRef = ref()
 const monomerId = ref()
 const areaId = ref()
 const currentArea = ref({})
@@ -36,8 +37,8 @@ function tabClick(val) {
   }
   emit('change', { monomerId: monomerId, areaId: areaId, currentArea: currentArea })
 }
+
 function getAreaInfo(val) {
-  console.log()
   areaInfo.value = val || []
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
@@ -48,4 +49,13 @@ function getAreaInfo(val) {
     defaultTab.value = {}
   }
 }
+
+// 单体绑定的类型
+function getProductType() {
+  return monomerRef.value?.getProductType(monomerId.value) || {}
+}
+
+defineExpose({
+  getProductType
+})
 </script>

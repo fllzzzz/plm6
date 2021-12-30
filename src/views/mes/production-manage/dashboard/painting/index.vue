@@ -12,6 +12,7 @@
       :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
+      row-key="id"
       style="width: 100%"
       @sort-change="crud.handleSortChange"
     >
@@ -160,14 +161,14 @@ const permission = {
   get: [''],
   edit: [''],
   add: [''],
-  del: ['']
+  del: [''],
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const tableRef = ref()
@@ -177,7 +178,8 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: false,
+    requiredQuery: ['monomerId'],
   },
   tableRef
 )
@@ -185,11 +187,15 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content.map((v, i) => {
+    v.id = i + '' + Math.random()
+    v.loss = v.loss ? v.loss * 100 : v.loss
+    v.volumeSolids = v.volumeSolids ? v.volumeSolids * 100 : v.volumeSolids
     v.surfaceArea = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
     const _area = convertUnits(v.changeArea, 'mm²', '㎡', DP.COM_AREA__M2)
     v.changeArea = _area
     v.originChangeArea = _area
+    v.paintingType = crud.query.paintingType
     return v
   })
 }

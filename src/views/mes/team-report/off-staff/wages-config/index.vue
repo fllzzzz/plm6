@@ -12,6 +12,7 @@
       :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -181,7 +182,8 @@ provide('unitObj', unitObj)
 provide('checkUnitObj', checkUnitObj)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data = res.data[dataPath[crud.query.productType]].map((v) => {
+  res.data = res.data[dataPath[crud.query.productType]].map((v, i) => {
+    v.id = i + '' + Math.random()
     v.unitPrice = v.wage || 0
     v.originUnitPrice = v.unitPrice
     v.taskMete = useProductMeteConvert({
