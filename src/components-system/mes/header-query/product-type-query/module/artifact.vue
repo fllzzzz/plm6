@@ -51,6 +51,10 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  // 围护子类型
+  category: {
+    type: Number
   }
 })
 

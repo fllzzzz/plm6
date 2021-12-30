@@ -104,7 +104,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="210px">
         <template #default="{ row }">
-          <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="danger">删除任务</common-button>
+          <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="danger" @click="toDelTask(row)">
+            删除任务
+          </common-button>
           <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="warning">协同任务</common-button>
         </template>
       </el-table-column>
@@ -112,6 +114,7 @@
   </common-table>
   <issue-preview v-model:visible="previewVisible" :modified-data="crud.selections" @refresh="refresh" />
   <modifyQuantityDialog v-model:visible="modifyQuantityVisible" :details="detailRow" @modifySuccess="refresh" />
+  <delTask v-model:visible="delTaskVisible" :details="detailRow" @delSuccess="refresh" />
 </template>
 
 <script setup>
@@ -131,6 +134,7 @@ import useTableValidate from '@compos/form/use-table-validate'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header'
 import modifyQuantityDialog from './module/modify-quantity-dialog'
+import delTask from './module/del-task'
 import issuePreview from './module/issue-preview'
 
 // crud交由presenter持有
@@ -204,6 +208,7 @@ const category = computed(() => {
 })
 
 provide('productType', productType)
+provide('category', category)
 
 watch(
   () => [processType.value, productType.value],
@@ -223,6 +228,7 @@ watch(
 
 const modifying = ref(false)
 const modifyQuantityVisible = ref(false)
+const delTaskVisible = ref(false)
 const previewVisible = ref(false)
 const detailRow = ref({})
 
@@ -246,6 +252,11 @@ function editSchedulingQuantity(row) {
   if (!row.operable) return
   detailRow.value = Object.assign({}, row)
   modifyQuantityVisible.value = true
+}
+
+function toDelTask(row) {
+  detailRow.value = Object.assign({}, row)
+  delTaskVisible.value = true
 }
 
 function refresh() {

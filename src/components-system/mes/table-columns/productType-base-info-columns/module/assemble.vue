@@ -58,6 +58,10 @@ defineProps({
   unShowField: {
     type: Array,
     default: () => []
+  },
+  // 围护子类型
+  category: {
+    type: Number
   }
 })
 </script>

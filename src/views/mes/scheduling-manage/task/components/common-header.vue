@@ -1,5 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
+    <project-radio-button size="small" :type="'all'" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <el-date-picker
       v-model="query.date"
       type="month"
@@ -57,7 +58,6 @@ import { ref } from 'vue'
 import moment from 'moment'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import FactorySelect from '@/components-system/base/factory-select.vue'
 import productionLineSelect from '@comp-mes/production-line-select'
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -69,7 +69,6 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 
 const areaList = ref([])
 function getAreaInfo(list) {

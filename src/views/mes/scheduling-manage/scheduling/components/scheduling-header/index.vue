@@ -77,7 +77,8 @@ import mPreview from '../scheduling-preview'
 
 const defaultQuery = {
   monomerId: { value: undefined, resetAble: false },
-  areaId: { value: undefined, resetAble: false }
+  areaId: { value: undefined, resetAble: false },
+  projectId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const projectId = useGlobalProjectIdChangeToQuery(crud)
