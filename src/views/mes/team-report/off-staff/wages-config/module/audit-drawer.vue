@@ -151,13 +151,9 @@ async function fetchList() {
       v.originUnitPrice = v.unitPrice
       v.taskMete = useProductMeteConvert({
         productType: query.productType,
-        length: v.taskLength,
-        L_TO_UNIT: unitObj.value.unit,
-        L_DP: unitObj.value.dp,
-        weight: v.taskNetWeight,
-        W_TO_UNIT: unitObj.value.unit,
-        W_DP: unitObj.value.dp
-      }).convertMete
+        length: { num: v.taskLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+        weight: { num: v.taskNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+      })
       v.checkMete = useWageQuotaMeteConvert({
         length: v.mate,
         weight: v.mate,

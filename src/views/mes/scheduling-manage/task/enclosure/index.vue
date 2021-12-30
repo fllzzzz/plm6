@@ -1,7 +1,19 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader />
+      <mHeader>
+        <template #customSearch="{ query }">
+          <common-radio-button
+            v-model="query.category"
+            :options="mesEnclosureTypeEnum.ENUM"
+            showOptionAll
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
+        </template>
+      </mHeader>
     </div>
     <!--表格渲染-->
     <common-table
@@ -10,7 +22,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
+      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
@@ -37,7 +49,7 @@
         v-if="columns.visible('taskQuantity')"
         :show-overflow-tooltip="true"
         prop="taskQuantity"
-        :label="`已排产量（件/${unitObj.unit}）`"
+        :label="`已下发（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -51,7 +63,7 @@
         v-if="columns.visible('unschedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="unschedulingQuantity"
-        :label="`未排产量（件/${unitObj.unit}）`"
+        :label="`未下发（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -86,7 +98,7 @@
       "
     >
       <template #content>
-        <m-detail :details="detailRow" @refresh="crud.toQuery" />
+        <m-detail :details="detailRow" :query="crud.query" @refresh="crud.toQuery" />
       </template>
     </common-drawer>
   </div>
@@ -94,9 +106,9 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/task/enclosure'
-import { ref, provide, computed } from 'vue'
+import { ref, computed } from 'vue'
 
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -105,7 +117,7 @@ import useCRUD from '@compos/use-crud'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import mDetail from '../components/task-details'
-import mHeader from './module/header'
+import mHeader from '../components/common-header'
 
 // crud交由presenter持有
 const permission = {
@@ -121,12 +133,6 @@ const optShow = {
   del: false,
   download: false
 }
-
-provide('needTableColumns', [
-  { label: '板型', width: '120px', field: 'plate' },
-  { label: '规格', width: '140px', field: 'specification' }
-  // { label: `总长度\n(m)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ENCLOSURE_L__M }
-])
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -160,32 +166,24 @@ const unitObj = computed(() => {
 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  crud.data = [] // 不清空不更新表格
-  res.data.content = res.data.content.map((v) => {
-    v.processType = crud.query.processType
+  res.data.content = res.data.content.map((v, i) => {
+    v.rowId = i + '' + Math.random()
     v.schedulingQuantity = v.schedulingQuantity || 0
     v.taskQuantity = v.taskQuantity || 0
     v.unschedulingQuantity = v.schedulingQuantity - v.taskQuantity
     v.productType = productType
+    v.category = crud.query.category
     v.totalSchedulingMete = useProductMeteConvert({
       productType: v.productType,
-      length: v.totalSchedulingLength,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.totalSchedulingNetWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.totalSchedulingLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.totalSchedulingNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.totalTaskMete = useProductMeteConvert({
       productType: v.productType,
-      length: v.totalTaskLength,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.totalTaskNetWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
-    v.unschedulingMete = (v.totalSchedulingMete - v.totalTaskMete).toFixed(unitObj.value.dp)
+      length: { num: v.totalTaskLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.totalTaskNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
+    v.unschedulingMete = (v.totalSchedulingMete - v.totalTaskMete).toFixed(unitObj.value.DP)
     return v
   })
 }

@@ -125,26 +125,26 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.completeStatus = v.processSummaryList.map((o) => {
       o.completeMete = useProductMeteConvert({
         productType: v.productType,
-        weight: o.completeNetWeight,
-        length: o.completeLength
-      }).convertMete
+        weight: { num: o.completeNetWeight },
+        length: { num: o.completeLength }
+      })
       o.completeMeteShow = useProductMeteConvert({
         productType: v.productType,
-        weight: o.completeNetWeight,
-        length: o.completeLength,
-        L_TO_UNIT: 'm',
-        L_DP: 'COM_L__M',
+        weight: { num: o.completeNetWeight },
+        length: { num: o.completeLength, to: 'm', dp: 'COM_L__M' },
         showUnit: true
-      }).convertMete
-      o.taskMete = useProductMeteConvert({ productType: v.productType, weight: o.taskNetWeight, length: o.taskLength }).convertMete
+      })
+      o.taskMete = useProductMeteConvert({
+        productType: v.productType,
+        weight: { num: o.taskNetWeight },
+        length: { num: o.taskLength }
+      })
       o.taskMeteShow = useProductMeteConvert({
         productType: v.productType,
-        weight: o.taskNetWeight,
-        length: o.taskLength,
-        L_TO_UNIT: 'm',
-        L_DP: 'COM_L__M',
+        weight: { num: o.taskNetWeight },
+        length: { num: o.taskLength, to: 'm', dp: 'COM_L__M' },
         showUnit: true
-      }).convertMete
+      })
       o.completeRate = o.taskMete ? (o.completeMete / o.taskMete) * 100 : '0'
       return o
     })

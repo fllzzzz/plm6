@@ -209,11 +209,9 @@ async function fetchList() {
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
       v.completeMete = useProductMeteConvert({
         productType: v.productType,
-        weight: v.completeNetWeight,
-        length: v.completeLength,
-        L_TO_UNIT: unitObj.value.unit,
-        L_DP: unitObj.value.dp
-      }).convertMete
+        weight: { num: v.completeNetWeight },
+        length: { num: v.completeLength, to: unitObj.value.unit, dp: unitObj.value.dp }
+      })
       return v
     })
   } catch (error) {

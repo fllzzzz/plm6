@@ -45,7 +45,7 @@ export default function useLabelPrint({ getPrintTotalNumber, getLabelInfo, getLo
     let printedTimes = 0 // 已打印次数
     const startTime = new Date().getTime()
     try {
-      const labelInfo = getLabelInfo(row)
+      const labelInfo = await getLabelInfo(row)
       while (pollingTimes--) {
         printLoading.value.text = `正在加入打印队列：${getLoadingTextFunc(row)} 第${printedTimes + 1}张`
         await codeWait(500)

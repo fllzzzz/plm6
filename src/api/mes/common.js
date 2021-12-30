@@ -37,6 +37,23 @@ export function getProcessAllSimple(params) {
 }
 
 /**
+ * 获取所有生产线
+ * @export
+ * @returns
+ */
+export function getLinesAllSimple(params) {
+  return request({
+    module: 'mes',
+    url: 'productionLine',
+    method: 'get',
+    params: {
+      boolEnabledEnum: true,
+      ...params
+    }
+  })
+}
+
+/**
  * 层级：工厂-车间-生产线
  * @export
  * @returns

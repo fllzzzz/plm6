@@ -250,19 +250,20 @@
     <!--分页组件-->
     <pagination />
     <printed-record-drawer v-model:visible="recordVisible" :task-id="currentTaskId" />
-    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
+    <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :productType="productType" :labelType="labelType" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/mes/label-print/artifact'
-import { ref, provide } from 'vue'
+import { ref, provide, computed } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, printProductTypeEnum } from '@enum-ms/mes'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
+import { parseTime } from '@/utils/date'
 import { printArtifact as printComponent } from '@/utils/print/index'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -271,7 +272,7 @@ import pagination from '@crud/Pagination'
 import tableCellTag from '@comp-common/table-cell-tag/index'
 import mHeader from '../components/label-print-header.vue'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
-import labelDlg from './module/label-dlg'
+import labelDlg from '../components/label-dlg'
 
 // crud交由presenter持有
 const permission = {
@@ -309,6 +310,13 @@ const labelVisible = ref(false)
 const currentLabel = ref({})
 const currentTaskId = ref()
 const recordVisible = ref(false)
+const productType = componentTypeEnum.ARTIFACT.V
+provide('productType', productType)
+const printType = printProductTypeEnum.ARTIFACT.V
+provide('printType', printType)
+const labelType = computed(() => {
+  return headRef.value?.printConfig?.type
+})
 
 async function printLabel(row) {
   try {
@@ -329,11 +337,11 @@ function openRecordView(row) {
 }
 
 function getLabelInfo(row) {
-  console.log(headRef.value)
-  const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl } = headRef.value
+  const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
   // 标签构件信息
   const component = {
     projectName: row.project.shortName,
+    printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime((new Date()).getTime(), '{y}/{m}/{d}'),
     monomerName: printConfig.showMonomer ? row.monomer.name : '',
     areaName: printConfig.showArea ? row.area.name : '',
     name: row.name,
@@ -350,13 +358,13 @@ function getLabelInfo(row) {
   return {
     component,
     productionLineName: printConfig.showProductionLine ? `${productionLine.factoryName}-${productionLine.name}` : '',
-    manufacturerName: printConfig.manufacturerName,
-    qrCode: spliceQrCodeUrl(`${baseUrl}/#${QR_SCAN_PATH.ARTIFACT_TASK}`, {
+    manufacturerName: printConfig.manufacturerName || companyName,
+    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ARTIFACT_TASK}`, {
       id: row.id, // id
       ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
-      factoryId: productionLine.factoryId, // 工厂id
+      factoryId: row.factoryId, // 工厂id
       taskId: row.taskId, // 任务id
-      type: componentTypeEnum.ARTIFACT.V, // 类型
+      type: productType, // 类型
       wt: printConfig.weight, // 重量类型
       sl: Number(printConfig.showProductionLine), // 显示生产线
       sa: Number(printConfig.showArea), // 显示区域

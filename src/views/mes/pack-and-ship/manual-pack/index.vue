@@ -11,10 +11,12 @@
             clearable
             style="width: 200px"
           />
-          <monomer-select v-model="monomerId" clearable :project-id="globalProjectId" class="filter-item" />
+          <monomer-select v-model="monomerId" :default="false" clearable :project-id="globalProjectId" class="filter-item" />
         </div>
         <div class="filter-right-box">
-          <common-button type="primary" size="mini" :disabled="isEmpty" @click="packVisible = true">打包列表</common-button>
+          <el-badge :value="totalBadge" :max="99" :hidden="totalBadge < 1">
+            <common-button type="primary" size="mini" :disabled="isEmpty" @click="packVisible = true">打包列表</common-button>
+          </el-badge>
         </div>
       </div>
     </div>
@@ -65,6 +67,14 @@ const packData = reactive({
   [packTypeEnum.STRUCTURE.K]: {},
   [packTypeEnum.ENCLOSURE.K]: {},
   [packTypeEnum.AUXILIARY_MATERIAL.K]: {}
+})
+
+const totalBadge = computed(() => {
+  let num = 0
+  for (const item in packData) {
+    num += Object.keys(packData[item]).length
+  }
+  return num
 })
 
 provide('packData', packData)
