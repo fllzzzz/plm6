@@ -19,7 +19,7 @@
           </el-form-item>
           <el-form-item label="申请金额(元)" prop="applyAmount">
             <el-input v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
-            <span v-if="upperYuan" style="size:12px;">{{ upperYuan }}</span>
+            <div v-if="upperYuan" style="size:12px;">{{ upperYuan }}</div>
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
@@ -53,15 +53,15 @@
             />
           </el-form-item>
           <el-form-item label="申请日期" prop="applyDate">
-            <el-date-picker v-model="form.applyDate" type="date" value-format="x" placeholder="申请日期" style="width: 320px" />
+            <el-date-picker v-model="form.applyDate" type="date" value-format="x" placeholder="申请日期" style="width: 320px" :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"/>
           </el-form-item>
         </div>
         <div class="form-row" style="display: flex">
           <el-form-item label="收款开户行" prop="collectionDepositBank">
-            <el-input v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" />
+            <el-input v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" maxlength="50"/>
           </el-form-item>
           <el-form-item label="收款账号" prop="collectionBankAccount">
-            <el-input v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" />
+            <el-input v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" maxlength="30"/>
           </el-form-item>
         </div>
         <el-form-item label="备注" prop="remark">
@@ -123,7 +123,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)"/>
+              <el-input v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
             </template>
           </el-table-column>
           <el-table-column prop="invoiceAmount" label="发票面额（元）" align="center" min-width="120">

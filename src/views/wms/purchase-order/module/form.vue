@@ -268,7 +268,7 @@ const defaultForm = {
   weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
   // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
   logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
-  logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
+  logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流运输方式 90%由供方承担运费
   purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 订单类型
   remark: undefined, // 备注
   attachments: undefined, // 附件

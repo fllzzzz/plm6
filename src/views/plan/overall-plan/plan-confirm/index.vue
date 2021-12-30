@@ -7,13 +7,13 @@
       </div> -->
       <!--表格渲染-->
       <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      :data="crud.data"
-      :empty-text="crud.emptyText"
-      :max-height="maxHeight"
-      style="width: 100%"
-    >
+        ref="tableRef"
+        v-loading="crud.loading"
+        :data="crud.data"
+        :empty-text="crud.emptyText"
+        :max-height="maxHeight"
+        style="width: 100%"
+      >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="日期" min-width="100" />
       <el-table-column v-if="columns.visible('axis')" key="axis" prop="axis" :show-overflow-tooltip="true" label="提交人" min-width="180" />
@@ -89,14 +89,12 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import { manufactureTypeEnum } from '@enum-ms/plan'
-import { dateDifferenceReduce } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
-  get: ['plan:get'],
-  edit: ['plan:edit']
+  get: ['planConfirm:get'],
+  edit: ['planConfirm:edit']
 }
 
 const optShow = {
@@ -109,11 +107,11 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '区域计划',
+    title: '工作确认',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['productType'],
+    requiredQuery: ['productId'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -121,42 +119,42 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.plan-make',
+  wrapperBox: '.plan-confirm',
   paginate: true,
   extraHeight: 40
 })
 
-watch(
-  () => globalProjectId,
-  (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId
-      crud.toQuery()
-    }
-  },
-  { immediate: true, deep: true }
-)
+// watch(
+//   () => globalProjectId,
+//   (val) => {
+//     if (val) {
+//       crud.query.projectId = globalProjectId
+//       crud.toQuery()
+//     }
+//   },
+//   { immediate: true, deep: true }
+// )
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.typeTagType = v.type === manufactureTypeEnum.HOMEMADE.V ? '' : 'warning'
-    if (v.startDate && v.endDate) {
-      v.dateDifference = dateDifferenceReduce(v.startDate, v.endDate) + '天'
-    } else {
-      v.dateDifference = ''
-    }
-    v.sourceRemark = v.remark
-    v.sourceStartDate = v.startDate
-    v.sourceEndDate = v.endDate
-    v.startDate = v.startDate ? v.startDate + '' : undefined
-    v.endDate = v.endDate ? v.endDate + '' : undefined
-    v.modifying = false
-    return v
-  })
-}
+// CRUD.HOOK.handleRefresh = (crud, data) => {
+//   data.data.content = data.data.content.map(v => {
+//     v.typeTagType = v.type === manufactureTypeEnum.HOMEMADE.V ? '' : 'warning'
+//     if (v.startDate && v.endDate) {
+//       v.dateDifference = dateDifferenceReduce(v.startDate, v.endDate) + '天'
+//     } else {
+//       v.dateDifference = ''
+//     }
+//     v.sourceRemark = v.remark
+//     v.sourceStartDate = v.startDate
+//     v.sourceEndDate = v.endDate
+//     v.startDate = v.startDate ? v.startDate + '' : undefined
+//     v.endDate = v.endDate ? v.endDate + '' : undefined
+//     v.modifying = false
+//     return v
+//   })
+// }
 
-CRUD.HOOK.beforeSubmit = () => {
-  crud.form.projectId = globalProjectId
-  return !!crud.form.projectId
-}
+// CRUD.HOOK.beforeSubmit = () => {
+//   crud.form.projectId = globalProjectId
+//   return !!crud.form.projectId
+// }
 </script>

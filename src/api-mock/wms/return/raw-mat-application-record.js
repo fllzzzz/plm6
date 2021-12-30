@@ -341,7 +341,12 @@ const detail_id2 = {
         reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
         basicClass: matClsEnum.SECTION_STEEL.V, // 退库物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退库单号
-        loadingWeight: 2000.0, // 过磅重量
+        createTime: '@datetime(T)', // 创建时间
+        applicant: {
+          // 创建人（填写退库的人）
+          name: '@cname',
+          deptName: '仓库'
+        },
         list: [
           {
             id: 1,
@@ -411,6 +416,98 @@ const detail_id2 = {
   }
 }
 
+// 型钢详情
+const detail_id3 = {
+  url: '/api/wms/return/application/record/raw-materials/3',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        id: 2, // 退库单id
+        reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+        basicClass: matClsEnum.STEEL_COIL.V, // 退库物料基础类型
+        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退库单号
+        createTime: '@datetime(T)', // 创建时间
+        applicant: {
+          // 创建人（填写退库的人）
+          name: '@cname',
+          deptName: '仓库'
+        },
+        list: [
+          {
+            id: 1,
+            classifyId: 120,
+            outboundUnitType: measureTypeEnum.MEASURE.V, // 出库单位类型
+            basicClass: rawMatClsEnum.STEEL_COIL.V,
+            specification: 'DC51D+Z',
+            quantity: 2207,
+            color: '天蓝',
+            brand: '武钢',
+            heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
+            thickness: 0.326,
+            width: 1000,
+            mete: 100000,
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '1号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            source: {
+              id: 1,
+              boolPartyA: false, // 是否甲供材料
+              classifyId: 120,
+              outboundUnitType: measureTypeEnum.MEASURE.V, // 出库单位类型
+              basicClass: rawMatClsEnum.STEEL_COIL.V,
+              specification: 'DC51D+Z',
+              quantity: 2207,
+              color: '天蓝',
+              brand: '武钢',
+              heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{4,6}/,
+              thickness: 0.326,
+              width: 1000,
+              mete: 1000000,
+              returnableMete: 700000,
+              singleMete: 1000000, // 单件重量(钢卷mete = singleMete)
+              singleReturnableMete: 700000, // 单件可退库重量
+              project: {
+                id: 1,
+                name: '长安街666666号辅路',
+                shortName: '长安街',
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              outbound: {
+                id: 1,
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              factory: {
+                id: 1,
+                name: '一号工厂'
+              },
+              warehouse: {
+                id: 1,
+                name: '666号仓库'
+              },
+              recipientName: '@cname', // 领用人
+              createTime: '@datetime(T)' // 生成时间
+            }
+          }
+        ]
+      }
+    }
+  }
+}
 // 详情
 // const detail_id2 = {
 //   url: '/api/wms/return/application/record/raw-materials/2',
@@ -460,53 +557,53 @@ const detail_id2 = {
 //   }
 // }
 
-// 辅材详情
-const detail_id3 = {
-  url: '/api/wms/return/application/record/raw-materials/3',
-  method: 'get',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功',
-      data: {
-        id: 3, // 退库单id
-        reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
-        basicClass: matClsEnum.GAS.V, // 退库物料基础类型
-        serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退库单号
-        loadingWeight: 2000.0, // 过磅重量
-        list: [
-          {
-            id: 1,
-            classifyId: 901,
-            // specification: '',
-            basicClass: 1,
-            quantity: 10,
-            brand: '嘻嘻',
-            remark: '66666',
-            mete: 250000,
-            unitPrice: 0.01,
-            amount: 8000,
-            amountExcludingVAT: 7079.64,
-            inputVAT: 920.36,
-            requisitionsSN: 'SG-AFTER-123456',
-            project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factoryId: 1,
-            warehouse: {
-              id: 1,
-              name: '666号仓库'
-            }
-          }
-        ]
-      }
-    }
-  }
-}
+// // 辅材详情
+// const detail_id3 = {
+//   url: '/api/wms/return/application/record/raw-materials/3',
+//   method: 'get',
+//   timeout: 1000,
+//   response: () => {
+//     return {
+//       code: 20000,
+//       message: '成功',
+//       data: {
+//         id: 3, // 退库单id
+//         reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+//         basicClass: matClsEnum.GAS.V, // 退库物料基础类型
+//         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退库单号
+//         loadingWeight: 2000.0, // 过磅重量
+//         list: [
+//           {
+//             id: 1,
+//             classifyId: 901,
+//             // specification: '',
+//             basicClass: 1,
+//             quantity: 10,
+//             brand: '嘻嘻',
+//             remark: '66666',
+//             mete: 250000,
+//             unitPrice: 0.01,
+//             amount: 8000,
+//             amountExcludingVAT: 7079.64,
+//             inputVAT: 920.36,
+//             requisitionsSN: 'SG-AFTER-123456',
+//             project: {
+//               'id|+1': 1,
+//               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+//               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+//               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
+//             },
+//             factoryId: 1,
+//             warehouse: {
+//               id: 1,
+//               name: '666号仓库',
+//             },
+//           },
+//         ],
+//       },
+//     }
+//   },
+// }
 
 // 修改采购订单
 const edit = {
