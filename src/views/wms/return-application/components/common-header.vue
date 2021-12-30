@@ -4,11 +4,11 @@
     <div class="filter-container">
       <div class="filter-left-box">
         <span class="total-info">
-          <span class="info-item">
-            <span>总数({{ baseUnit.measure.unit }})</span>
-            <span v-to-fixed="{ val: allQuantity || 0, dp: baseUnit.measure.precision }" />
-          </span>
           <template v-if="basicClass & STEEL_ENUM">
+            <span class="info-item">
+              <span>总数({{ baseUnit.measure.unit }})</span>
+              <span v-to-fixed="{ val: allQuantity || 0, dp: baseUnit.measure.precision }" />
+            </span>
             <span class="info-item">
               <span>总重量({{ baseUnit.weight.unit }})</span>
               <span v-to-fixed="{ val: allMete || 0, dp: baseUnit.weight.precision }" />

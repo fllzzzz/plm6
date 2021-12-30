@@ -1,6 +1,7 @@
-import { baseMaterialTypeEnum, pickUpModeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
+import { baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { invoiceTypeEnum, settlementStatusEnum, weightMeasurementModeEnum } from '@enum-ms/finance'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 
 // 获取采购订单
 const getPurchaseOrder = {
@@ -34,7 +35,9 @@ const getPurchaseOrder = {
             meteUnit: '千克', // 单位
             'taxRate|1-4': 3, // 税率（百分比）
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
             weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '@cparagraph', // 备注
@@ -70,7 +73,9 @@ const getPurchaseOrder = {
             meteUnit: '千克', // 单位
             'taxRate|1-4': 3, // 税率（百分比）
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.POST.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流运输方式
             weightMeasurementMode: weightMeasurementModeEnum.THEORY.V, // 重量计量方式
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '@cparagraph', // 备注
@@ -116,7 +121,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            pickUpMode: pickUpModeEnum.SUPPLIER.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SUPPLIER.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担方
             requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
@@ -139,7 +146,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            pickUpMode: pickUpModeEnum.SUPPLIER.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SUPPLIER.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流运输方式
             requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
@@ -163,7 +172,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.POST.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流费用承担方
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             strucAreaIds: [1, 5], // 构件区域id
@@ -190,7 +201,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.DEMAND.V, // 物流费用承担方
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             strucAreaIds: [1, 5], // 构件区域id
@@ -216,7 +229,9 @@ const getPurchasingPurchaseOrderBrief = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ], // 项目id
-            pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+            logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+            logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担方
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 重量计量方式
             strucAreaIds: [1, 5], // 构件区域id
@@ -270,7 +285,9 @@ const detail = {
         meteUnit: '千克', // 单位
         'taxRate|1-4': 3, // 税率（百分比）
         invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-        pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+        // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+        logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+        logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担方
         weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
         purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
         remark: '@cparagraph', // 备注
@@ -322,7 +339,9 @@ const detail_3 = {
         meteUnit: '千克', // 单位
         'taxRate|1-4': 3, // 税率（百分比）
         invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
-        pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+        // pickUpMode: pickUpModeEnum.SELF.V, // 提货方式
+        logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
+        logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担方
         weightMeasurementMode: weightMeasurementModeEnum.MIXTURE.V, // 重量计量方式
         purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
         remark: '@cparagraph', // 备注

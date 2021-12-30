@@ -24,6 +24,7 @@
           default-expand-all
           :cell-class-name="wrongCellMask"
           style="width: 100%;"
+          row-key="uid"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column prop="name" label="供应商名称" min-width="180">

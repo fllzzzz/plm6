@@ -24,12 +24,11 @@
 import { isNotBlank } from '@/utils/data-type'
 import { ref, defineExpose, defineProps, defineEmits, watchEffect } from 'vue'
 
-const emit = defineEmits(['change', 'blur', 'focus'])
+const emit = defineEmits(['change', 'blur', 'focus', 'update:modelValue'])
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
-  // TODO:是否限制类型
-  value: {
+  modelValue: {
     type: [Number, null]
   },
   min: {
@@ -49,8 +48,7 @@ const props = defineProps({
     default: false
   },
   precision: {
-    type: Number,
-    default: 0
+    type: Number
   },
   size: {
     type: String,
@@ -89,7 +87,24 @@ watchEffect(() => {
   copyValue.value = !isNaN(props.modelValue) && isNotBlank(props.modelValue) ? props.modelValue : undefined
 })
 
+watchEffect(() => {
+  if (isNotBlank(copyValue.value) && isNotBlank(props.max)) {
+    if (copyValue.value > props.max) {
+      changeCallBack(props.max, copyValue.value)
+    }
+  }
+})
+
+watchEffect(() => {
+  if (isNotBlank(copyValue.value) && isNotBlank(props.max)) {
+    if (copyValue.value < props.min) {
+      changeCallBack(props.min, copyValue.value)
+    }
+  }
+})
+
 function changeCallBack(currentValue, oldValue) {
+  emit('update:modelValue', currentValue)
   emit('change', currentValue, oldValue)
 }
 function blurCallBack(event) {

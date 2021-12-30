@@ -10,7 +10,7 @@
     custom-class="raw-mat-application-review-form"
   >
     <template #titleRight>
-      <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
+      <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V && isNotBlank(form.list)">
         <el-popconfirm
           confirm-button-text="确定"
           cancel-button-text="取消"
@@ -35,6 +35,12 @@
             <common-button :loading="submitOptLoading" size="mini" icon="el-icon-document-delete" type="danger"> 清 空 </common-button>
           </template>
         </el-popconfirm>
+      </template>
+      <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
+        <!-- TODO:打印按钮 -->
+        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="printOrDownload">
+          打印/下载完毕
+        </common-button>
       </template>
     </template>
     <template #content>
@@ -107,9 +113,11 @@
 <script setup>
 import { getDetailByCurrentUser, reviewPassed, reviewReturned, delMaterial } from '@/api/wms/outbound/raw-mat-application-review'
 import { inject, computed, ref, defineEmits, defineProps } from 'vue'
+import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { isNotBlank } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -119,7 +127,6 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import { reviewStatusEnum } from '@/utils/enum/modules/common'
 
 const emit = defineEmits(['refresh', 'update:visible'])
 
@@ -254,6 +261,11 @@ async function returned() {
 // 合计
 function getSummaries(param) {
   return tableSummary(param, { props: ['quantity', 'mete'] })
+}
+
+// 打印/下载出库单
+function printOrDownload() {
+  // TODO:
 }
 </script>
 

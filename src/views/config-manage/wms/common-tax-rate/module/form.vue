@@ -69,6 +69,15 @@ const inputValue = ref()
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
+CRUD.HOOK.beforeToCU = () => {
+  init()
+}
+
+function init() {
+  inputVisible.value = false
+  inputValue.value = undefined
+}
+
 function handleClose(tag) {
   form.taxRateList.splice(form.taxRateList.indexOf(tag), 1)
 }
@@ -88,8 +97,7 @@ function handleInputConfirm() {
   if (inputValue.value) {
     form.taxRateList.push(inputValue.value)
   }
-  inputVisible.value = false
-  inputValue.value = undefined
+  init()
 }
 </script>
 

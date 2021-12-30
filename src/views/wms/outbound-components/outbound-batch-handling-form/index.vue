@@ -127,6 +127,7 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { mapGetters } from '@/store/lib'
 import { ElMessage } from 'element-plus'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 const emit = defineEmits(['success', 'update:visible'])
 const props = defineProps({
@@ -282,11 +283,19 @@ async function submit() {
       if (v.batchOutboundQuantity) {
         data.list.push({
           id: v.id,
-          quantity: v.quantity,
-          outboundUnit: v.outboundUnit,
-          outboundUnitType: v.curOutboundUnitType
+          quantity: v.batchOutboundQuantity, // 数量
+          outboundUnit: v.outboundUnit, // 出库单位
+          outboundUnitPrecision: v.outboundUnitPrecision, // 单位精度
+          outboundUnitType: v.curOutboundUnitType // 出库单位类型
         })
       }
+    })
+    await numFmtByUnitForList(data.list, {
+      unitField: 'outboundUnit',
+      unitPrecisionField: 'outboundUnitPrecision',
+      fields: ['quantity'],
+      toSmallest: true,
+      toNum: true
     })
     if (data.list.length === 0) {
       ElMessage.warning('请填写数据')

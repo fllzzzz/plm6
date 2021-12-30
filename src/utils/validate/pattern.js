@@ -54,8 +54,8 @@ const validatorOneToHundred = /^(1|([1-9]\d{0,1})|100)$/
 // 100-1000
 const validatorMoreHundred = /^(100|([1-9][0-9]\d{1})|1000)$/
 
-// 大于0的数
-const validatorGreaterThanZero = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+// 正数
+const positiveNumPattern = /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
 
 // ----------------------------  数字 end  ---------------------------------------
 
@@ -89,7 +89,7 @@ const validatorEnOrNum = {
 
 export {
   patternNumerical,
-  validatorGreaterThanZero,
+  positiveNumPattern,
   validatorEnOrNum,
   validatorUsername,
   validatorCN_EN_NUM,

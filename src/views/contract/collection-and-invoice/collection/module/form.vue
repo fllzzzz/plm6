@@ -28,6 +28,7 @@
             value-format="x"
             placeholder="选择收款日期"
             style="width: 250px;"
+            :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"
           />
         </el-form-item>
       </div>
@@ -59,20 +60,31 @@
       <div class="form-row" style="display:flex;">
         <el-form-item label="已收款额(元)">
           <el-input
-            v-model="contractInfo.collectionSumAmount"
+            v-model="contractInfo.haveCollectionAmount"
             type="text"
             placeholder="已收款额"
             style="width: 250px;"
             disabled
           />
         </el-form-item>
-        <el-form-item label="收款行" prop="collectionDepositBank">
-          <el-input
+        <el-form-item label="收款行" prop="collectionDepositBankId">
+          <common-select
+            v-model="form.collectionDepositBankId"
+            :options="bankOption"
+            :type="'other'"
+            :dataStructure="bankProp"
+            size="small"
+            clearable
+            placeholder="收款行"
+            style="width:250px"
+            @change="bankChange"
+          />
+          <!-- <el-input
             v-model="form.collectionDepositBank"
             type="text"
             placeholder="收款行"
             style="width: 250px;"
-          />
+          /> -->
         </el-form-item>
       </div>
       <div class="form-row" style="display:flex;">
@@ -166,7 +178,7 @@
           />
         </el-form-item>
       </div>
-      <el-collapse-transition>
+      <!-- <el-collapse-transition>
         <div v-show="form.collectionMode === paymentFineModeEnum.ENUM.ACCEPTANCE_DRAFT.V" class="table-box">
           <common-table
             ref="table"
@@ -225,7 +237,7 @@
           </div>
           <hr class="gradient-line">
         </div>
-      </el-collapse-transition>
+      </el-collapse-transition> -->
       <el-form-item label="备注" prop="remark">
         <el-input
           v-model="form.remark"
@@ -249,16 +261,19 @@ import { DP } from '@/settings/config'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import { digitUppercase } from '@/utils/data-type/number'
+import { bankData } from '@/api/config/system-config/branch-company'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])
 const typeProp = { key: 'companyId', label: 'companyName', value: 'companyId' }
+const bankProp = { key: 'id', label: 'depositBank', value: 'id' }
 const defaultForm = {
   id: undefined,
   collectionAmount: undefined,
   collectionBankAccount: undefined,
   collectionDate: undefined,
   collectionDepositBank: undefined,
+  collectionDepositBankId: undefined,
   collectionReason: undefined,
   collectionUnit: undefined,
   collectionUnitId: undefined,
@@ -272,6 +287,7 @@ const defaultForm = {
 const { crud, form } = regForm(defaultForm, formRef)
 
 const contractInfo = ref({})
+const bankOption = ref([])
 
 const rules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
@@ -280,6 +296,7 @@ const rules = {
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
   collectionUnitId: [{ required: true, message: '请选择收款单位', trigger: 'change' }],
+  collectionDepositBankId: [{ required: true, message: '请选择收款行', trigger: 'change' }],
   paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
 }
 const upperYuan = computed(() => {
@@ -316,18 +333,37 @@ async function getContractInfo(id) {
 function collectionCompanyChange(val) {
   if (val) {
     const collectionVal = contractInfo.value.companyBankAccountList.find(v => v.companyId === val)
-    form.collectionBankAccount = collectionVal.account
-    form.collectionDepositBank = collectionVal.depositBank
+    // form.collectionBankAccount = collectionVal.account
+    // form.collectionDepositBank = collectionVal.depositBank
     form.collectionUnit = collectionVal.companyName
+    getBankData(val)
   } else {
-    form.collectionBankAccount = ''
-    form.collectionDepositBank = ''
+    // form.collectionBankAccount = ''
+    // form.collectionDepositBank = ''
     form.collectionUnit = ''
+  }
+  form.collectionBankAccount = ''
+  form.collectionDepositBank = ''
+}
+
+async function getBankData(id) {
+  try {
+    const { content } = await bankData(id)
+    bankOption.value = content
+  } catch (e) {
+    console.log('获取银行信息', e)
   }
 }
 
-function handelCellClassName() {
-
+function bankChange(val) {
+  if (val) {
+    const bankVal = bankOption.value.find(v => v.id === val)
+    form.collectionDepositBank = bankVal.depositBank
+    form.collectionBankAccount = bankVal.account
+  } else {
+    form.collectionDepositBank = ''
+    form.collectionBankAccount = ''
+  }
 }
 </script>
 <style lang="scss" scoped>

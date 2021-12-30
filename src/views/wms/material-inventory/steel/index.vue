@@ -27,7 +27,7 @@
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="crud.toQuery" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="handleRefresh" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 次要信息 -->
@@ -116,6 +116,7 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const {
+  headerRef,
   expandRowKeys,
   maxHeight,
   basicClass,
@@ -125,6 +126,8 @@ const {
   toTransfer,
   toOutHandle,
   handleOutboundSuccess,
-  handleTransferSuccess
+  handleTransferSuccess,
+  handleRefresh
 } = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
+
 </script>

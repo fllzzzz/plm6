@@ -127,8 +127,8 @@ function handleSuccess(response) {
 function handleClear() {
   // TODO: 清空无效
   // upload.value.clearFiles()
-  if (upload.value && upload.value.upload) {
-    upload.value.upload.fileList.length = 0
+  if (upload.value && upload.value.uploadRef) {
+    upload.value.uploadRef.fileList.length = 0
   }
 }
 

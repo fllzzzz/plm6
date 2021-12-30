@@ -11,16 +11,12 @@
       :max-height="maxHeight"
       :span-method="spanMethod"
       :highlight-current-row="false"
-      style="width: 100%;"
+      row-key="id"
     >
       <el-table-column key="index" type="index" label="序号" align="center" width="60" />
       <el-table-column v-if="columns.visible('level1')" prop="level1" label="一级" align="left" min-width="160px">
         <template #header>
-          <el-tooltip
-            effect="light"
-            :content="`一级科目（名称-编号）`"
-            placement="top"
-          >
+          <el-tooltip effect="light" :content="`一级科目（名称-编号）`" placement="top">
             <div>
               <span>一级科目</span>
               <i class="el-icon-info" />
@@ -35,11 +31,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('level2')" prop="level2" label="二级" align="left" min-width="160px">
         <template #header>
-          <el-tooltip
-            effect="light"
-            :content="`二级科目（名称-编号）`"
-            placement="top"
-          >
+          <el-tooltip effect="light" :content="`二级科目（名称-编号）`" placement="top">
             <div>
               <span>二级科目</span>
               <i class="el-icon-info" />
@@ -54,14 +46,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column  v-if="columns.visible('level3')" prop="level3" label="三级" align="left" min-width="160px">
+      <el-table-column v-if="columns.visible('level3')" prop="level3" label="三级" align="left" min-width="160px">
         <template #header>
-          <el-tooltip
-            effect="light"
-            :content="`三级科目（名称-编号）`"
-            placement="top"
-          >
-            <div style="margin:0 10px">
+          <el-tooltip effect="light" :content="`三级科目（名称-编号）`" placement="top">
+            <div style="margin: 0 10px">
               <span>三级科目</span>
               <i class="el-icon-info" />
             </div>
@@ -75,27 +63,66 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column  v-if="columns.visible('measureUnit')" key="measureUnit" prop="measureUnit" :show-overflow-tooltip="true" label="计量单位" min-width="100px" align="center">
+      <el-table-column
+        v-if="columns.visible('measureUnit')"
+        key="measureUnit"
+        prop="measureUnit"
+        :show-overflow-tooltip="true"
+        label="计量单位"
+        min-width="100px"
+        align="center"
+      >
         <template v-slot="scope">
           <div>{{ emptyTextFormatter(scope.row.measureUnit) }}</div>
         </template>
       </el-table-column>
-      <el-table-column  v-if="columns.visible('measurePrecision')" key="measurePrecision" prop="measurePrecision" :show-overflow-tooltip="true" label="小数精度(计量)" min-width="100px" align="center">
+      <el-table-column
+        v-if="columns.visible('measurePrecision')"
+        key="measurePrecision"
+        prop="measurePrecision"
+        :show-overflow-tooltip="true"
+        label="小数精度(计量)"
+        min-width="100px"
+        align="center"
+      >
         <template v-slot="scope">
           <div>{{ emptyTextFormatter(scope.row.measurePrecision) }}</div>
         </template>
       </el-table-column>
-      <el-table-column  v-if="columns.visible('accountingUnit')" key="accountingUnit" prop="accountingUnit" :show-overflow-tooltip="true" label="核算单位" min-width="100px" align="center">
+      <el-table-column
+        v-if="columns.visible('accountingUnit')"
+        key="accountingUnit"
+        prop="accountingUnit"
+        :show-overflow-tooltip="true"
+        label="核算单位"
+        min-width="100px"
+        align="center"
+      >
         <template v-slot="scope">
           <div>{{ emptyTextFormatter(scope.row.accountingUnit) }}</div>
         </template>
       </el-table-column>
-      <el-table-column  v-if="columns.visible('accountingPrecision')" key="accountingPrecision" prop="accountingPrecision" :show-overflow-tooltip="true" label="小数精度(核算)" min-width="100px" align="center">
+      <el-table-column
+        v-if="columns.visible('accountingPrecision')"
+        key="accountingPrecision"
+        prop="accountingPrecision"
+        :show-overflow-tooltip="true"
+        label="小数精度(核算)"
+        min-width="100px"
+        align="center"
+      >
         <template v-slot="scope">
           <div>{{ emptyTextFormatter(scope.row.accountingPrecision) }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="outboundUnitType" prop="outboundUnitType" :show-overflow-tooltip="true" label="出库单位" min-width="100px" align="center">
+      <el-table-column
+        key="outboundUnitType"
+        prop="outboundUnitType"
+        :show-overflow-tooltip="true"
+        label="出库单位"
+        min-width="100px"
+        align="center"
+      >
         <template v-slot="scope">
           <div>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnitType]) }}</div>
         </template>
@@ -132,20 +159,25 @@ const tableRef = ref()
 const tableRefresh = ref(true)
 const { maxHeight } = useMaxHeight()
 
-const { crud, columns } = useCRUD({
-  title: '计量配置',
-  sort: ['sort.asc', 'id.desc'],
-  permission: { ...permission },
-  crudApi: { ...crudApi },
-  optShow: { ...optShow },
-  hasPagination: false
-}, tableRef)
+const { crud, columns } = useCRUD(
+  {
+    title: '计量配置',
+    sort: ['sort.asc', 'id.desc'],
+    permission: { ...permission },
+    crudApi: { ...crudApi },
+    optShow: { ...optShow },
+    hasPagination: false
+  },
+  tableRef
+)
 
 const list = computed(() => {
   let list = crud.data
   if (crud.query && isNotBlank(crud.query.nameOrCode)) {
     const nameOrCode = crud.query.nameOrCode
-    list = list.filter(v => v.fullName.some(v => v.indexOf(nameOrCode) > -1) || v.fullSerialNumber.some(v => v.indexOf(nameOrCode) > -1))
+    list = list.filter(
+      (v) => v.fullName.some((v) => v.indexOf(nameOrCode) > -1) || v.fullSerialNumber.some((v) => v.indexOf(nameOrCode) > -1)
+    )
   }
   return mergeCells(list)
 })
@@ -160,7 +192,7 @@ function mergeCells(list) {
   if (list.length === 0) return list
   const row = [[], []]
   const id = [-1, -1]
-  list.forEach(v => {
+  list.forEach((v) => {
     for (let i = 0; i < row.length; i++) {
       const newId = v.fullId[i]
       const oldId = id.length > i ? id[i] : undefined
@@ -222,7 +254,8 @@ function spanMethod({ row, column, rowIndex, columnIndex }) {
 
 <style lang="scss" scoped>
 ::v-deep(.el-table) {
-  th, td {
+  th,
+  td {
     padding: 0;
   }
   .el-tooltip {
@@ -231,11 +264,13 @@ function spanMethod({ row, column, rowIndex, columnIndex }) {
   .cell {
     line-height: 30px;
   }
-  th:first-child .cell, td:first-child .cell {
+  th:first-child .cell,
+  td:first-child .cell {
     padding: 0;
   }
-  .el-table__body .el-input__inner, .el-table__body .el-textarea__inner {
-    border-radius: 0
+  .el-table__body .el-input__inner,
+  .el-table__body .el-textarea__inner {
+    border-radius: 0;
   }
 }
 </style>

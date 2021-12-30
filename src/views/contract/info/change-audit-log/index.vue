@@ -28,7 +28,7 @@
         min-width="250"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.amount ? scope.row.amount.toThousand() : scope.row.amount }}</span>
+          <span>{{ scope.row.amount ? toThousand(scope.row.amount) : scope.row.amount }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -40,7 +40,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <div>{{ scope.row.contractAmount ? scope.row.contractAmount.toThousand() : scope.row.contractAmount }}</div>
+          <div>{{ scope.row.contractAmount ? toThousand(scope.row.contractAmount) : scope.row.contractAmount }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -65,7 +65,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.changeDate }}</div>
+          <div>{{ scope.row.changeDate?parseTime(scope.row.changeDate,'{y}-{m}-{d}'):'-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -78,7 +78,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+          <div>{{ scope.row.createTime?parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -102,7 +102,7 @@
         width="110px"
       >
         <template v-slot="scope">
-           <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</div>
+           <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -163,6 +163,8 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
 // crud交由presenter持有
@@ -202,7 +204,7 @@ const props = defineProps({
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.changeAuditLog',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

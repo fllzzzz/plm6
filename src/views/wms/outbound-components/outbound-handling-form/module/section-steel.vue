@@ -33,7 +33,8 @@ import { sectionSteelOutboundHandling } from '@/api/wms/outbound/outbound-handli
 import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
-import { isBlank } from '@/utils/data-type'
+import { deepClone, isBlank } from '@/utils/data-type'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
@@ -80,12 +81,10 @@ const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
   halfSize: [
-    { required: true, validator: validateHalfSize, trigger: 'blur' },
-    { validator: validateHalfSize, trigger: 'change' }
+    { required: true, validator: validateHalfSize, trigger: 'blur' }
   ],
   quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' },
-    { validator: validateQuantity, trigger: 'change' }
+    { required: true, validator: validateQuantity, trigger: 'blur' }
   ],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
@@ -133,7 +132,15 @@ function formInit(data) {
 async function submit() {
   const valid = await formRef.value.validate()
   if (!valid) return false
-  const res = await sectionSteelOutboundHandling(form.value)
+  const formData = deepClone(form.value)
+  await numFmtByUnit(formData, {
+    unit: formData.outboundUnit,
+    precision: formData.outboundUnitPrecision,
+    fields: ['quantity'],
+    toSmallest: true,
+    toNum: true
+  })
+  const res = await sectionSteelOutboundHandling(formData)
   return res
 }
 

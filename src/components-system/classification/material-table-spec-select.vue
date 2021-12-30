@@ -130,16 +130,6 @@ const { loaded, matClsLeafList } = useMatClsList()
 // 搜索过滤
 const filterOptions = computed(() => {
   let list = options.value
-  if (isNotBlank(props.classifyIds)) {
-    list = list.filter((v) => {
-      for (const cid of props.classifyIds) {
-        if (v.fullPathId.includes(cid)) {
-          return true
-        }
-      }
-      return false
-    })
-  }
   if (isNotBlank(filterText.value)) {
     list = list.filter((v) => {
       const sn = v.serialNumber.indexOf(filterText.value) > -1
@@ -170,6 +160,16 @@ function setOption(basicClass) {
     opts = matClsLeafList.value.filter((v) => basicClass & v.basicClass)
   } else {
     opts = matClsLeafList.value
+  }
+  if (isNotBlank(props.classifyIds)) {
+    opts = opts.filter((v) => {
+      for (const cid of props.classifyIds) {
+        if (v.fullPathId.includes(cid)) {
+          return true
+        }
+      }
+      return false
+    })
   }
   if (props.autoSelected && isNotBlank(opts)) {
     setSelection(opts[0])

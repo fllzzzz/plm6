@@ -12,7 +12,6 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
-      style="width: 100%"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">

@@ -95,20 +95,20 @@
           min-width="80px"
         />
         <el-table-column
-          v-if="columns.visible('totalProductionQuantity')"
-          key="totalProductionQuantity"
-          prop="totalProductionQuantity"
+          v-if="columns.visible('producedQuantity')"
+          key="producedQuantity"
+          prop="producedQuantity"
           sortable="custom"
           label="总生产量"
           align="center"
           width="100px"
         />
         <el-table-column
-          v-if="columns.visible('alreadyProductQuantity')"
-          key="alreadyProductQuantity"
-          prop="alreadyProductQuantity"
+          v-if="columns.visible('usedQuantity')"
+          key="usedQuantity"
+          prop="usedQuantity"
           sortable="custom"
-          label="已生产量"
+          label="已使用量"
           align="left"
           min-width="90px"
         />
@@ -186,7 +186,7 @@
           width="100px"
         >
           <template v-slot="scope">
-            {{ isNotBlank(scope.row.shearType) ? shearTypeEnum.VL[scope.row.shearType] : '-' }}
+            {{ isNotBlank(scope.row.type) ? shearTypeEnum.VL[scope.row.type] : '-' }}
           </template>
         </el-table-column>
         <el-table-column
@@ -236,7 +236,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '零件清单',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['areaId'],
@@ -249,7 +249,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.machine-part',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

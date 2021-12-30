@@ -35,24 +35,8 @@
                 <span v-else>{{ detail.businessTypeDesc }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="项目类型" prop="projectType">
-              <div style="width: 200px">
-                <common-select
-                  v-if="isModify"
-                  v-model="form.projectType"
-                  :options="projectTypeEnumN.ENUM"
-                  type="enum"
-                  size="small"
-                  clearable
-                  placeholder="项目类型"
-                  style="width: 200px"
-                  class="input-underline"
-                />
-                <span v-else>{{ detail.projectTypeDesc }}</span>
-              </div>
-            </el-form-item>
             <el-form-item label="项目内容" prop="content">
-              <div style="width: 200px">
+              <div style="width: 320px">
                 <el-select
                   v-if="isModify"
                   v-model="form.projectContent"
@@ -71,6 +55,22 @@
             </el-form-item>
           </div>
           <div class="form-row">
+            <el-form-item label="项目类型" prop="projectType">
+              <div style="width: 200px">
+                <common-select
+                  v-if="isModify"
+                  v-model="form.projectType"
+                  :options="projectTypeEnumN.ENUM"
+                  type="enum"
+                  size="small"
+                  clearable
+                  placeholder="项目类型"
+                  style="width: 200px"
+                  class="input-underline"
+                />
+                <span v-else>{{ detail.projectTypeDesc }}</span>
+              </div>
+            </el-form-item>
             <el-form-item label="签约人" prop="singerId">
               <div style="width: 200px">
                 <template v-if="isModify">
@@ -88,6 +88,8 @@
                 <span v-else>{{ detail.singerName }}</span>
               </div>
             </el-form-item>
+          </div>
+          <div class="form-row">
             <el-form-item label="签订日期" prop="signingDate">
               <div style="width: 200px">
                 <el-date-picker
@@ -105,13 +107,13 @@
               </div>
             </el-form-item>
             <el-form-item label="签约地址" prop="signingAddress">
-              <div style="width: 200px">
+              <div style="width: 400px">
                 <el-input
                   v-if="isModify"
                   v-model="form.signingAddress"
                   class="input-underline"
                   placeholder="签约地址"
-                  style="width: 200px"
+                  style="width: 400px"
                 />
                 <span v-else>{{ detail.signingAddress }}</span>
               </div>
@@ -353,6 +355,14 @@ function resetForm() {
     formRef.value.resetFields()
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
+  form.value.projectContent = []
+  projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.INSTALLATION.V ? projectContent2 : projectContent1
+  if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
+    detail.value.projectContentList.forEach((v) => {
+      form.value.projectContent.push(v.id)
+    })
+  }
+  getShowItem(form.value.projectContent)
   if (formRef.value) {
     nextTick(() => {
       formRef.value.clearValidate()
@@ -425,11 +435,11 @@ function enclosureSave() {
   form.value = {
     ...form.value,
     enclosureInfo: info,
-    structureSaveRequestVOS: info[TechnologyTypeEnum.STRUCTURE.V],
-    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.PROFILED_PLATE.V],
-    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
-    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
-    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
+    structureList: info[TechnologyTypeEnum.STRUCTURE.V],
+    profiledPlateList: info[TechnologyTypeEnum.PROFILED_PLATE.V],
+    pressureBearingPlateList: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
+    trussFloorPlateList: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
+    sandwichBoardList: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
   }
   enclosureVisible.value = false
 }
@@ -535,7 +545,7 @@ defineExpose({
   align-items: center;
   margin-top: 20px;
 }
->>> .input-underline {
+::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
   width: 200px;
   margin-right: 0;
@@ -546,9 +556,9 @@ defineExpose({
     border-radius: 0;
   }
 }
->>> .el-input-number .el-input__inner {
-  text-align: left;
-}
+// .el-input-number .el-input__inner {
+//   text-align: left;
+// }
 .form-row {
   width: 100%;
 }

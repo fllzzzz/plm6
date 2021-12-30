@@ -104,8 +104,8 @@
       <rrOperation/>
       <crudOperation add-text="收票填报">
         <template #viewLeft>
-          <el-tag type="success" v-if="totalSum" size="medium" style="margin-right:5px;">{{ `累计收票金额：${totalSum.toThousand()}元` }}</el-tag>
-          <el-tag type="success" v-if="totalTax" size="medium">{{ `累计进项税额：${totalTax.toThousand()}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" style="margin-right:5px;">{{ `累计收票金额：${toThousand(totalSum.toThousand)}元` }}</el-tag>
+          <el-tag type="success" v-if="totalTax" size="medium">{{ `累计进项税额：${toThousand(totalTax)}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>
@@ -120,9 +120,10 @@ import crudOperation from '@crud/CRUD.operation'
 import { supplierPayMentTypeEnum, auditTypeEnum, contractReceiveDateTypeEnum, invoiceTypeEnum } from '@enum-ms/contract'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import { receiveSum } from '@/api/contract/supplier-manage/pay-invoice/invoice'
+import { toThousand } from '@data-type/number'
 
 const defaultQuery = {
-  dateType: contractReceiveDateTypeEnum .ENUM.UPDATE_DATE.V,
+  dateType: contractReceiveDateTypeEnum.ENUM.UPDATE_DATE.V,
   createTime: [],
   startDate: undefined,
   endDate: undefined,

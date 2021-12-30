@@ -57,7 +57,7 @@
       <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" width="160px" />
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="160px">
         <template v-slot="scope">
-          <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -69,13 +69,13 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <common-button v-if="crud.query.type === planTypeEnum.ENCLOSURE.V" size="mini" type="primary" icon="el-icon-edit" @click="editDraw(scope.row)" />
+          <!-- <common-button v-if="crud.query.type === planTypeEnum.ENCLOSURE.V" size="mini" type="primary" icon="el-icon-edit" @click="editDraw(scope.row)" /> -->
           <udOperation
             :data="scope.row"
             :show-edit="false"
           />
           <!-- 下载 -->
-          <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+          <e-operation :data="scope.row" :permission="permission.download" style="margin-left:5px;"/>
         </template>
       </el-table-column>
     </common-table>
@@ -92,10 +92,12 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
+import eOperation from '@crud/E.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { planTypeEnum } from '@enum-ms/plan'
+// import { planTypeEnum } from '@enum-ms/plan'
+import { parseTime } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -117,7 +119,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '深化图纸',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['monomerId', 'productType'],
@@ -130,7 +132,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.deepen',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

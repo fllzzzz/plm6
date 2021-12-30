@@ -12,28 +12,58 @@
     <template #title>
       <div class="dialog-title">
         <span style="margin-right:5px;">付款信息</span>
-        <common-button v-if="paymentDetailInfo.auditStatus" size="mini" :type="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.REJECT.V?'info':(paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
+        <common-button
+          v-if="paymentDetailInfo.auditStatus"
+          size="mini"
+          :type="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.REJECT.V?'info':(paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.PASS.V?'success':'warning')"
+        >
           {{ paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.REJECT.V?'已驳回':(paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.PASS.V?'已通过':'审核中') }}
         </common-button>
         <span style="position:absolute;right:20px;">
           <template v-if="paymentDetailInfo.auditStatus">
             <template v-if="!isModify">
-              <common-button v-if="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.AUDITING.V && type==='audit'" size="small" type="info" @click="onSubmit(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
-              <common-button v-if="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.AUDITING.V && type==='audit'" size="small" type="success" @click="onSubmit(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
+              <common-button
+                v-if="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.AUDITING.V && type==='audit'"
+                size="small"
+                type="info"
+                @click="onSubmit(auditTypeEnum.ENUM.REJECT.V)"
+              >驳回</common-button>
+              <common-button
+                v-if="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.AUDITING.V && type==='audit'"
+                size="small"
+                type="success"
+                @click="onSubmit(auditTypeEnum.ENUM.PASS.V)"
+              >通过</common-button>
               <!-- <common-button size="small" type="primary" @click="modifyInfo" v-if="paymentDetailInfo.auditStatus==auditTypeEnum.ENUM.REJECT.V && type==='detail'">重新编辑</common-button> -->
             </template>
             <template v-else>
-              <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
+              <common-button
+                type="primary"
+                size="small"
+                @click="onSubmit"
+              >提交</common-button>
             </template>
           </template>
-          <common-button size="small"  @click="closeDrawer">关闭</common-button>
+          <common-button
+            size="small"
+            @click="closeDrawer"
+          >关闭</common-button>
         </span>
       </div>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        size="small"
+        label-width="140px"
+      >
         <div style="display:flex;">
-          <el-form-item label="属性" prop="propertyType">
+          <el-form-item
+            label="属性"
+            prop="propertyType"
+          >
             <div style="width:260px;">
               <common-select
                 v-if="isModify"
@@ -50,7 +80,10 @@
               <span v-else>{{ paymentDetailInfo.propertyType? supplierPayMentTypeEnum.VL[paymentDetailInfo.propertyType] : '' }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="付款事由" prop="paymentReason">
+          <el-form-item
+            label="付款事由"
+            prop="paymentReason"
+          >
             <div style="width:260px;">
               <common-select
                 v-if="isModify"
@@ -67,7 +100,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item :label="(form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V)?'所属订单':'订单号'" prop="orderId">
+          <el-form-item
+            :label="(form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V)?'所属订单':'订单号'"
+            prop="orderId"
+          >
             <div style="width:260px;">
               <common-select
                 v-if="isModify"
@@ -85,7 +121,10 @@
               <span v-else>{{ paymentDetailInfo.orderSerialNumber }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="付款方式" prop="payType">
+          <el-form-item
+            label="付款方式"
+            prop="payType"
+          >
             <div style="width:260px;">
               <common-select
                 v-if="isModify"
@@ -102,7 +141,11 @@
         </div>
         <div style="display:flex;">
           <template v-if="isModify">
-            <el-form-item v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="费用类别" prop="payForTypeName">
+            <el-form-item
+              v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+              label="费用类别"
+              prop="payForTypeName"
+            >
               <div style="width:260px;">
                 <el-input
                   v-model="form.payForTypeName"
@@ -113,7 +156,11 @@
                 />
               </div>
             </el-form-item>
-            <el-form-item v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="种类" prop="basicClassName">
+            <el-form-item
+              v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+              label="种类"
+              prop="basicClassName"
+            >
               <div style="width:260px;">
                 <el-input
                   v-model="form.basicClassName"
@@ -126,12 +173,20 @@
             </el-form-item>
           </template>
           <template v-else>
-            <el-form-item v-if="paymentDetailInfo.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="费用类别" prop="payForTypeName">
+            <el-form-item
+              v-if="paymentDetailInfo.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+              label="费用类别"
+              prop="payForTypeName"
+            >
               <div style="width:260px;">
                 <span>{{ paymentDetailInfo.payForType? contractPayForEnum.VL[ paymentDetailInfo.payForType ]: ''}}</span>
               </div>
             </el-form-item>
-            <el-form-item v-if="paymentDetailInfo.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="种类" prop="basicClassName">
+            <el-form-item
+              v-if="paymentDetailInfo.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+              label="种类"
+              prop="basicClassName"
+            >
               <div style="width:260px;">
                 <span>{{ paymentDetailInfo.basicClassName }}</span>
               </div>
@@ -139,7 +194,10 @@
           </template>
         </div>
         <div style="display:flex;">
-          <el-form-item label="供应商" prop="supplierName">
+          <el-form-item
+            label="供应商"
+            prop="supplierName"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -152,7 +210,10 @@
               <span v-else>{{ paymentDetailInfo.supplierName }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="付款日期" prop="paymentDate">
+          <el-form-item
+            label="付款日期"
+            prop="paymentDate"
+          >
             <div style="width:260px;">
               <el-date-picker
                 v-if="isModify"
@@ -163,14 +224,18 @@
                 style="width: 250px;"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ paymentDetailInfo.paymentDate }}</span>
+                <span>{{ paymentDetailInfo.paymentDate? parseTime(paymentDetailInfo.paymentDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
         </div>
         <div style="display:flex;">
           <template v-if="isModify">
-            <el-form-item v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
+            <el-form-item
+              v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V"
+              label="合同金额(元)"
+              prop="contractAmount"
+            >
               <div style="width:260px;">
                 <el-input
                   v-model="choseOrderInfo.amount"
@@ -181,7 +246,11 @@
                 />
               </div>
             </el-form-item>
-            <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
+            <el-form-item
+              v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V "
+              label="运费金额(元)"
+              prop="contractAmount"
+            >
               <div style="width:260px;">
                 <el-input
                   v-model="choseOrderInfo.amount"
@@ -194,18 +263,29 @@
             </el-form-item>
           </template>
           <template v-else>
-            <el-form-item v-if="paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
+            <el-form-item
+              v-if="paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && paymentDetailInfo.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V"
+              label="合同金额(元)"
+              prop="contractAmount"
+            >
               <div style="width:260px;">
-                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? choseOrderInfo.amount.toThousand(): choseOrderInfo.amount }}</span>
+                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? toThousand(choseOrderInfo.amount): choseOrderInfo.amount }}</span>
               </div>
             </el-form-item>
-            <el-form-item v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
+            <el-form-item
+              v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V "
+              label="运费金额(元)"
+              prop="contractAmount"
+            >
               <div style="width:260px;">
-                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? choseOrderInfo.amount.toThousand(): choseOrderInfo.amount }}</span>
+                <span>{{ choseOrderInfo.amount && choseOrderInfo.amount>0? toThousand(choseOrderInfo.amount): choseOrderInfo.amount }}</span>
               </div>
             </el-form-item>
           </template>
-          <el-form-item label="付款单位" prop="paymentUnitId">
+          <el-form-item
+            label="付款单位"
+            prop="paymentUnitId"
+          >
             <div style="width:260px;">
               <common-select
                 v-if="isModify"
@@ -235,12 +315,15 @@
                 style="width: 250px;"
                 disabled
               />
-              <span v-else>{{ choseOrderInfo.inBoundAmount && choseOrderInfo.inBoundAmount>0? choseOrderInfo.inBoundAmount.toThousand(): choseOrderInfo.inBoundAmount }}</span>
+              <span v-else>{{ choseOrderInfo.inBoundAmount && choseOrderInfo.inBoundAmount>0? toThousand(choseOrderInfo.inBoundAmount): choseOrderInfo.inBoundAmount }}</span>
             </div>
           </el-form-item>
         </div>
         <div style="display:flex;">
-           <el-form-item label="申请人" prop="applyUserId">
+          <el-form-item
+            label="申请人"
+            prop="applyUserId"
+          >
             <div style="width:260px;">
               <user-dept-cascader
                 v-if="isModify"
@@ -254,7 +337,10 @@
               <span v-else>{{ paymentDetailInfo.applyUserName }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="付款行" prop="paymentBank">
+          <el-form-item
+            label="付款行"
+            prop="paymentBank"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -268,7 +354,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-           <el-form-item label="申请日期" prop="applyDate">
+          <el-form-item
+            label="申请日期"
+            prop="applyDate"
+          >
             <div style="width:260px;">
               <el-date-picker
                 v-if="isModify"
@@ -279,11 +368,14 @@
                 style="width: 250px;"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ paymentDetailInfo.applyDate }}</span>
+                <span>{{ paymentDetailInfo.applyDate? parseTime(paymentDetailInfo.applyDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
-          <el-form-item label="付款账号" prop="paymentBankAccount">
+          <el-form-item
+            label="付款账号"
+            prop="paymentBankAccount"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -297,7 +389,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="申请金额(元)" prop="applyAmount">
+          <el-form-item
+            label="申请金额(元)"
+            prop="applyAmount"
+          >
             <div style="width:260px;">
               <el-input-number
                 v-if="isModify"
@@ -310,10 +405,13 @@
                 controls-position="right"
                 style="width: 250px;"
               />
-              <span v-else>{{ paymentDetailInfo.applyAmount && paymentDetailInfo.applyAmount>0? paymentDetailInfo.applyAmount.toThousand(): paymentDetailInfo.applyAmount }}</span>
+              <span v-else>{{ paymentDetailInfo.applyAmount && paymentDetailInfo.applyAmount>0? toThousand(paymentDetailInfo.applyAmount): paymentDetailInfo.applyAmount }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="收款单位" prop="receiveUnit">
+          <el-form-item
+            label="收款单位"
+            prop="receiveUnit"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -327,7 +425,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="付款金额(元)" prop="paymentAmount">
+          <el-form-item
+            label="付款金额(元)"
+            prop="paymentAmount"
+          >
             <div style="width:260px;">
               <el-input-number
                 v-if="isModify"
@@ -341,7 +442,7 @@
                 style="width: 250px;"
               />
               <div v-else>
-                <span>{{ paymentDetailInfo.paymentAmount && paymentDetailInfo.paymentAmount>0? paymentDetailInfo.paymentAmount.toThousand(): paymentDetailInfo.paymentAmount }}</span>
+                <span>{{ paymentDetailInfo.paymentAmount && paymentDetailInfo.paymentAmount>0? toThousand(paymentDetailInfo.paymentAmount): paymentDetailInfo.paymentAmount }}</span>
                 <span>{{ upperYuan }}</span>
               </div>
             </div>
@@ -356,7 +457,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="收款行" prop="paymentBank">
+          <el-form-item
+            label="收款行"
+            prop="paymentBank"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -370,7 +474,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="付款比例" prop="paymentRate">
+          <el-form-item
+            label="付款比例"
+            prop="paymentRate"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -383,7 +490,10 @@
               <span v-else>{{ paymentRate }}</span>
             </div>
           </el-form-item>
-          <el-form-item label="收款账号" prop="receiveBankAccount">
+          <el-form-item
+            label="收款账号"
+            prop="receiveBankAccount"
+          >
             <div style="width:260px;">
               <el-input
                 v-if="isModify"
@@ -398,33 +508,60 @@
         </div>
         <div style="display:flex;">
           <template v-if="isModify">
-            <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="关联项目" prop="projectId">
+            <el-form-item
+              v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+              label="关联项目"
+              prop="projectId"
+            >
               <div style="width:260px;">
                 <template v-if="choseOrderInfo.projectList && choseOrderInfo.projectList.length>0">
-                  <div v-for="item in choseOrderInfo.projectList" :key="item.id">{{item.serialNumber+' '+item.shortName}}</div>
+                  <div
+                    v-for="item in choseOrderInfo.projectList"
+                    :key="item.id"
+                  >{{item.serialNumber+' '+item.shortName}}</div>
                 </template>
               </div>
             </el-form-item>
           </template>
           <template v-else>
-            <el-form-item v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="关联项目" prop="projectId">
+            <el-form-item
+              v-if="paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || paymentDetailInfo.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+              label="关联项目"
+              prop="projectId"
+            >
               <div style="width:260px;">
                 <template v-if="choseOrderInfo.projectList && choseOrderInfo.projectList.length>0">
-                  <div v-for="item in choseOrderInfo.projectList" :key="item.id">{{item.serialNumber+' '+item.shortName}}</div>
+                  <div
+                    v-for="item in choseOrderInfo.projectList"
+                    :key="item.id"
+                  >{{item.serialNumber+' '+item.shortName}}</div>
                 </template>
               </div>
             </el-form-item>
           </template>
           <el-form-item label="附件">
             <div style="width:260px;">
-              <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.ENUM.NORMAL.V" v-if="isModify" />
+              <upload-btn
+                ref="uploadRef"
+                v-model:files="form.attachments"
+                :file-classify="fileClassifyEnum.ENUM.NORMAL.V"
+                v-if="isModify"
+                :accept="'.pdf,.jpg,.jpeg,.png'"
+                :tip="'支持扩展名:pdf .jpg .jpeg .png'"
+              />
               <template v-else>
-                <div v-for="item in paymentDetailInfo.attachmentList" :key="item.id">{{ item.name }}</div>
+                <div
+                  v-for="item in paymentDetailInfo.attachmentList"
+                  :key="item.id"
+                >{{ item.name }}</div>
               </template>
             </div>
           </el-form-item>
         </div>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item
+          label="备注"
+          prop="remark"
+        >
           <el-input
             v-if="isModify"
             v-model="form.remark"
@@ -453,6 +590,8 @@ import { ElNotification } from 'element-plus'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])
@@ -527,9 +666,13 @@ const rules = {
 
 const paymentRate = computed(() => {
   if (isModify.value) {
-    return form.value.paymentAmount && choseOrderInfo.value.amount ? (form.value.paymentAmount / choseOrderInfo.value.amount) * 100 + '%' : ''
+    return form.value.paymentAmount && choseOrderInfo.value.amount
+      ? (form.value.paymentAmount / choseOrderInfo.value.amount) * 100 + '%'
+      : ''
   } else {
-    return props.paymentDetailInfo.paymentAmount && choseOrderInfo.value.amount ? (props.paymentDetailInfo.paymentAmount / choseOrderInfo.value.amount) * 100 + '%' : ''
+    return props.paymentDetailInfo.paymentAmount && choseOrderInfo.value.amount
+      ? (props.paymentDetailInfo.paymentAmount / choseOrderInfo.value.amount) * 100 + '%'
+      : ''
   }
 })
 
@@ -585,7 +728,7 @@ async function getOrderInfoReset(type) {
     console.log('获取订单信息', e)
   } finally {
     orderListOption.value = data
-    choseOrderInfo.value = orderListOption.value.find(v => v.id === props.paymentDetailInfo.orderId)
+    choseOrderInfo.value = orderListOption.value.find((v) => v.id === props.paymentDetailInfo.orderId)
   }
 }
 
@@ -621,7 +764,7 @@ function clearInfo() {
 
 function orderChange(val) {
   if (val) {
-    choseOrderInfo.value = orderListOption.value.find(v => v.id === val)
+    choseOrderInfo.value = orderListOption.value.find((v) => v.id === val)
     form.value.orderSerialNumber = choseOrderInfo.value.serialNumber
     form.value.receiveBank = choseOrderInfo.value.bankName
     form.value.receiveBankAccount = choseOrderInfo.value.bankAccount
@@ -643,7 +786,7 @@ function orderChange(val) {
 
 function orderCompanyChange(val) {
   if (val) {
-    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v => v.companyId === val)
+    const orderVal = choseOrderInfo.value.companyBankAccountList.find((v) => v.companyId === val)
     form.value.paymentBankAccount = orderVal.account
     form.value.paymentBank = orderVal.depositBank
     form.value.paymentUnit = orderVal.companyName
@@ -677,7 +820,6 @@ async function onSubmit(val) {
     closeDrawer()
   }
 }
-
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

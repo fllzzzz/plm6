@@ -63,18 +63,18 @@
           @click="draw"
         >绘制图纸</common-button> -->
       </template>
-      <!-- <template #viewLeft>
+      <template #viewLeft>
         <common-button
-          v-if="projectId"
-          v-permission="permission.download"
+          v-if="query.monomerId"
+          v-permission="crud.permission.download"
           :loading="downloadLoading"
           type="warning"
           icon="el-icon-download"
           size="mini"
-          :disabled="!projectId"
-          @click.stop="downloadAll()"
-        >下载项目下所有文件</common-button>
-      </template> -->
+          :disabled="!query.monomerId"
+          @click="downloadAll()"
+        >下载单体下所有图纸</common-button>
+      </template>
     </crudOperation>
   </div>
 </template>
@@ -89,7 +89,8 @@ import { monomerDetail } from '@/api/plan/monomer'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { planTypeEnum } from '@enum-ms/plan'
 import uploadBtn from '../../components/drawing-upload-btn'
-import { upload } from '@/api/plan/technical-data-manage/deepen'
+import { upload, downloadByMonomer } from '@/api/plan/technical-data-manage/deepen'
+import { fileDownload } from '@/utils/file'
 
 const defaultQuery = {
   drawingNumber: undefined,
@@ -100,6 +101,7 @@ const defaultQuery = {
 }
 
 const monomerSelectRef = ref()
+const downloadLoading = ref(false)
 const { crud, query } = regHeader(defaultQuery)
 const typeProp = { key: 'no', label: 'name', value: 'no' }
 const typeOption = ref([])
@@ -188,4 +190,15 @@ const accept = computed(() => {
     return '.pdf,.zip'
   }
 })
+
+async function downloadAll() {
+  try {
+    downloadLoading.value = true
+    await fileDownload(downloadByMonomer, crud.query.monomerId, crud.query.type)
+  } catch (error) {
+    console.log('根据单体下载', error)
+  } finally {
+    downloadLoading.value = false
+  }
+}
 </script>

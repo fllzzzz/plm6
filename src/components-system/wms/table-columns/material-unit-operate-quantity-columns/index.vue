@@ -9,6 +9,7 @@
     :operable-quantity-field="operableQuantityField"
     :operable-mete-field="operableMeteField"
     :show-operable-quantity="showOperableQuantity"
+    :single-mete-mode="singleMeteMode"
   />
 </template>
 

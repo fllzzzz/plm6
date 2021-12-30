@@ -14,7 +14,7 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
         <el-form-item label="类型名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="请填写费用类型名称" style="width: 270px" />
+          <el-input v-model="form.name" type="text" placeholder="请填写费用类型名称" style="width: 270px" maxlength="30"/>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -65,18 +65,32 @@ const defaultForm = {
   iid: undefined,
   name: '',
   sort: 1,
-  dictionaryIdList: undefined
+  dictionaryIdList: []
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
-
+const validateLinks = (rule, value, callback) => {
+  if (value && value.length) {
+    for (const i in value) {
+      if (!value[i]) {
+        callback(new Error('请选择费用类型'))
+      }
+    }
+    callback()
+  } else {
+    callback(new Error('请填写费用明细'))
+  }
+}
 const rules = {
   name: [
     { required: true, message: '请填写费用类型名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  dictionaryIdList: [{ required: true, message: '请选择费用明细' }]
+  dictionaryIdList: [
+    { required: true, message: '请选择费用明细' },
+    { validator: validateLinks, trigger: 'change' }
+  ]
 }
 
 function addProcess() {

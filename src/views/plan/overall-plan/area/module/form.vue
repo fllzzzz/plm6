@@ -160,9 +160,9 @@ const rules = {
 function dateOptionFn(time) {
   if (crud.form.productType && props.typeInfo && props.typeInfo.length > 0) {
     const val = props.typeInfo.find(v => v.no === crud.form.productType)
-    return time.getTime() - 8.64e6 > val.date || time.getTime() - 8.64e6 < props.globalProject.createTime
+    return time.getTime() - 8.64e6 > val.date || time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
   } else {
-    return time.getTime() - 8.64e6 < props.globalProject.createTime
+    return time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
   }
 }
 

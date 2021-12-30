@@ -110,7 +110,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['productType'],
@@ -123,7 +123,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.plan-make',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

@@ -55,6 +55,7 @@
             :max-height="maxHeight"
             :cell-class-name="wrongCellMask"
             @selection-change="crud.selectionChangeHandler"
+             row-key="uid"
           >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column label="序号" type="index" align="center" width="60" />
@@ -132,6 +133,8 @@
 import { reactive, ref, computed } from 'vue'
 import { measureTypeEnum } from '@enum-ms/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
+import { createUniqueString } from '@/utils/data-type/string'
 
 import { regBatchForm } from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -139,7 +142,6 @@ import useMaxHeight from '@compos/use-max-height'
 import StoreOperation from '@crud/STORE.operation.vue'
 import materialSpecSelect from '@comp-cls/material-spec-select/index.vue'
 import factorySelect from '@comp-base/factory-select.vue'
-import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 // 未进行重复数据校验，目前由后端处理
 const tableRules = {}
@@ -219,6 +221,7 @@ function specInit() {
 // 行初始化
 function rowInit(row) {
   const _row = {
+    uid: createUniqueString(),
     sn: row.sn, // 该科目规格唯一编号
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称

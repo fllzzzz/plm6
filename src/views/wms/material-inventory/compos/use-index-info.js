@@ -1,4 +1,3 @@
-
 import { ref, computed } from 'vue'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -36,12 +35,12 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
       v.operableQuantity = v.quantity - v.frozenQuantity || 0
       v.operableMete = v.mete - v.frozenMete || 0
       if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
-      // 实际在出库中使用的数量
+        // 实际在出库中使用的数量
         v.corQuantity = v.quantity // 数量
         v.corFrozenQuantity = v.frozenQuantity // 冻结数量
         v.corOperableQuantity = v.operableQuantity // 可操作数量
       } else {
-      // 核算量
+        // 核算量
         v.corQuantity = v.mete
         v.corFrozenQuantity = v.frozenMete
         v.corOperableQuantity = v.operableMete
@@ -58,8 +57,8 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
           toSmallest: false,
           toNum: true
         })
-        v.projectFrozen.forEach(pf => {
-        // 用于普通出库
+        v.projectFrozen.forEach((pf) => {
+          // 用于普通出库
           v.projectFrozenForUnitKV[pf.projectId] = v.curOutboundUnitType === measureTypeEnum.MEASURE.V ? pf.quantity : pf.mete
           // 用于批量出库
           v.projectFrozenKV[pf.projectId] = pf
@@ -90,8 +89,14 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
   function handleTransferSuccess() {
     crud.toQuery()
   }
+  // 刷新
+  function handleRefresh() {
+    headerRef.value && headerRef.value.updateListNumber()
+    crud.toQuery()
+  }
 
   return {
+    headerRef,
     expandRowKeys,
     maxHeight,
     basicClass,
@@ -101,6 +106,7 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
     toTransfer,
     toOutHandle,
     handleOutboundSuccess,
-    handleTransferSuccess
+    handleTransferSuccess,
+    handleRefresh
   }
 }

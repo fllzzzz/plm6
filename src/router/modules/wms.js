@@ -73,6 +73,20 @@ export default {
           meta: { title: '钢卷退库', icon: 'project', noCache: true }
         },
         {
+          name: 'AuxMaterialReturnApplication',
+          path: 'aux-material',
+          hidden: false,
+          component: '/wms/return-application/aux-material/index',
+          meta: { title: '辅材退库', icon: 'project', noCache: true }
+        },
+        {
+          name: 'GasReturnApplication',
+          path: 'gas',
+          hidden: false,
+          component: '/wms/return-application/gas/index',
+          meta: { title: '气体退库', icon: 'project', noCache: true }
+        },
+        {
           name: 'RawMatReturnApplicationRecord',
           path: 'return-application-record/raw-mat',
           hidden: false,
@@ -88,7 +102,7 @@ export default {
       name: 'WMSInboundAndOutboundReview',
       alwaysShow: false,
       redirect: '/wms/inbound-application-review/raw-mat/index',
-      meta: { title: '入库审核', icon: 'contract', noCache: true },
+      meta: { title: '出入库审核', icon: 'contract', noCache: true },
       children: [
         {
           name: 'RawMatInboundApplicationReview',
@@ -103,6 +117,13 @@ export default {
           hidden: false,
           component: '/wms/transfer-application-review/raw-mat/index',
           meta: { title: '原材料-调拨审核', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatReturnApplicationReview',
+          path: 'return-application-review/raw-mat',
+          hidden: false,
+          component: '/wms/return-application-review/raw-mat/index',
+          meta: { title: '原材料-退库审核', icon: 'project', noCache: true }
         }
       ]
     },

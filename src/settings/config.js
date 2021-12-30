@@ -17,6 +17,9 @@ export const TAG_TRANSFER_COLOR = '#e64242'
 // 出库调拨标签颜色
 export const TAG_TRANSFER_OUTBOUND_COLOR = '#409eff'
 
+// 出库调拨标签颜色
+export const TAG_TRANSFER_UNFREEZE_COLOR = '#e64242'
+
 // 打印标签默认颜色
 export const TAG_PRINTED_DEF_COLOR = '#0f9747'
 

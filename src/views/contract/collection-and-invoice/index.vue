@@ -30,7 +30,7 @@ const activeName = ref('collection')
   padding: 0;
 }
 .badge-item {
-  >>>.el-badge__content {
+  ::v-deep(.el-badge__content) {
     top: 10px;
     right: -2px;
   }

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'system',
-    url: 'dept',
+    url: 'dept/list',
     method: 'get',
     params
   })

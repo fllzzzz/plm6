@@ -35,13 +35,22 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('licensePlate')"
+        v-if="crud.query && crud.query.logisticsTransportType !== logisticsTransportTypeEnum.FREIGHT.V && columns.visible('shipmentNumber')"
+        key="shipmentNumber"
+        prop="shipmentNumber"
+        label="物流单号"
+        align="left"
+        min-width="150"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        v-if="crud.query && crud.query.logisticsTransportType !== logisticsTransportTypeEnum.POST.V && columns.visible('licensePlate')"
         key="licensePlate"
-        :show-overflow-tooltip="true"
         prop="licensePlate"
         label="车牌号"
         align="left"
         min-width="100"
+        show-overflow-tooltip
       />
       <el-table-column
         v-if="columns.visible('projects')"
@@ -147,7 +156,7 @@
         key="serialNumber"
         :show-overflow-tooltip="true"
         prop="serialNumber"
-        label="物流单号"
+        label="物流单号(系统)"
         align="center"
         min-width="170"
       />
@@ -198,6 +207,7 @@ import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
+import { logisticsTransportTypeEnum } from '@enum-ms/logistics'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -226,7 +236,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料物流订单',
     sort: ['id.desc'],
-    invisibleColumns: ['projects', 'purchaseSN'],
+    invisibleColumns: ['projects', 'purchaseSN', 'serialNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

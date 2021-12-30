@@ -28,7 +28,7 @@
           :max-height="maxHeight"
           default-expand-all
           :cell-class-name="wrongCellMask"
-          style="width: 100%"
+          row-key="uid"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />
           <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="仓库位置" width="220">

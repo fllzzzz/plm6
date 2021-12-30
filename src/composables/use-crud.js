@@ -351,6 +351,8 @@ function getDefaultOption() {
     permission: {},
     // 在主页准备
     queryOnPresenterCreated: true,
+    // 可查询的
+    queryable: true,
     // 调试开关
     debug: false
   }
@@ -495,6 +497,7 @@ function addCrudBusinessMethod(crud) {
 
   // 搜索
   const toQuery = async () => {
+    if (!crud.queryable) return
     // TODO:【考虑删除】若不等待加载完vm完毕后再查询，钩子可能会无法触发(例：首次加载通过watch,immediate:true触发),因此在下方加入settimeout，还需优化
     const vmSet = new Set()
     crud.vms.forEach((vm) => vm && vmSet.add(vm.vm))
@@ -1042,6 +1045,8 @@ function addCrudFeatureMethod(crud, data) {
         crud.invisibleColumns.forEach((property) => {
           if (columns[property]) {
             columns[property].visible = false
+          } else {
+            columns[property] = { visible: false } // 避免切换前已经被隐藏的列无法设置
           }
         })
       })
@@ -1087,7 +1092,7 @@ function addCrudFeatureMethod(crud, data) {
     Object.keys(query).forEach((key) => {
       if (defaultQuery[key]) {
         // 字段是否可重置
-        if (typeof defaultQuery[key] === 'object') {
+        if (typeof defaultQuery[key] === 'object' && isNotBlank(defaultQuery[key].resetAble)) {
           if (defaultQuery[key].resetAble) query[key] = defaultQuery[key].value
         } else {
           query[key] = defaultQuery[key]

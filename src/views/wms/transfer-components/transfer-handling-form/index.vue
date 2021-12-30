@@ -33,7 +33,7 @@ import {
 import { defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
-import { isBlank } from '@/utils/data-type'
+import { deepClone, isBlank } from '@/utils/data-type'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
@@ -43,6 +43,7 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -154,7 +155,16 @@ async function submit() {
     const valid = await formRef.value.validate()
     if (!valid) return false
     const submitApi = getApi(props.basicClass)
-    await submitApi(form.value)
+    // 数据格式转换
+    const formData = deepClone(form.value)
+    await numFmtByUnit(formData, {
+      unit: formData.outboundUnit,
+      precision: formData.outboundUnitPrecision,
+      fields: ['quantity'],
+      toSmallest: true,
+      toNum: true
+    })
+    await submitApi(formData)
     emit('success')
     handleClose()
     resetForm()

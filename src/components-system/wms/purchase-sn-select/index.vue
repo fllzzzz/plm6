@@ -39,12 +39,12 @@
             </span>
             <span class="extra-label">
               <span class="title">供应商：</span>
-              <span>{{ data.supplier.name }}</span>
+              <span class="more-text-info ellipsis-text">{{ data.supplier.name }}</span>
             </span>
             <span class="extra-label">
               <template v-if="data.projectNames">
                 <span class="title">项目：</span>
-                <span>{{ data.projectNames }}</span>
+                <span class="more-text-info ellipsis-text">{{ data.projectNames }}</span>
               </template>
             </span>
           </span>
@@ -186,8 +186,9 @@ function handleChange(val) {
 }
 
 function emitInfo(val) {
-  emit('update:info', purchaseOrderKV.value[val])
-  emit('info-change', purchaseOrderKV.value[val])
+  const res = val ? purchaseOrderKV.value[val] : null
+  emit('update:info', res)
+  emit('info-change', res)
 }
 
 function loadedCallBack() {
@@ -222,6 +223,10 @@ function setDefault() {
     handleChange(selectValue.value)
     return
   }
+  // 未赋予默认值
+  if (isBlank(selectValue.value) && isNotBlank(props.info)) {
+    emitInfo()
+  }
 }
 </script>
 
@@ -253,5 +258,11 @@ function setDefault() {
   ::v-deep(.el-input__suffix) {
     right: 35px;
   }
+}
+
+.more-text-info {
+  display: inline-block;
+  line-height: 12px;
+  max-width: 250px;
 }
 </style>

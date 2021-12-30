@@ -50,7 +50,7 @@
           key="battenBoard"
           prop="battenBoard"
           :show-overflow-tooltip="true"
-          label="夹芯板(t)"
+          label="夹芯板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.battenBoard? scope.row.battenBoard.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -61,7 +61,7 @@
           key="contourPlate"
           prop="contourPlate"
           :show-overflow-tooltip="true"
-          label="压型板(t)"
+          label="压型板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.contourPlate? scope.row.contourPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -72,7 +72,7 @@
           key="flangingPiece"
           prop="flangingPiece"
           :show-overflow-tooltip="true"
-          label="折边件(t)"
+          label="折边件(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.flangingPiece? scope.row.flangingPiece.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -83,7 +83,7 @@
           key="trussFloorPlate"
           prop="trussFloorPlate"
           :show-overflow-tooltip="true"
-          label="桁架楼承板(t)"
+          label="桁架楼承板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.trussFloorPlate? scope.row.trussFloorPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -94,7 +94,7 @@
           key="pressureBearingPlate"
           prop="pressureBearingPlate"
           :show-overflow-tooltip="true"
-          label="压型楼承板(t)"
+          label="压型楼承板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.pressureBearingPlate?scope.row.pressureBearingPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -176,48 +176,53 @@ const optShow = {
 
 const tableRef = ref()
 const techOptions = [
-  { label: '构件(t)', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE' },
+  { label: '构件', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE', unit: '(t)' },
   {
-    label: '夹芯板(t)',
+    label: '夹芯板',
     key: 'battenBoard',
     dateKey: 'battenBoardDate',
     no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
-    alias: 'ENCLOSURE'
+    alias: 'ENCLOSURE',
+    unit: '(m)'
   },
   {
-    label: '压型板(t)',
+    label: '压型板',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
     no: TechnologyTypeAllEnum.PROFILED_PLATE.V,
-    alias: 'ENCLOSURE'
+    alias: 'ENCLOSURE',
+    unit: '(m)'
   },
   {
-    label: '折边件(t)',
+    label: '折边件',
     key: 'flangingPiece',
     dateKey: 'flangingPieceDate',
     no: TechnologyTypeAllEnum.BENDING.V,
-    alias: 'ENCLOSURE'
+    alias: 'ENCLOSURE',
+    unit: '(m)'
   },
   {
-    label: '桁架楼承板(t)',
+    label: '桁架楼承板',
     key: 'trussFloorPlate',
     dateKey: 'trussFloorPlateDate',
     no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V,
-    alias: 'ENCLOSURE'
+    alias: 'ENCLOSURE',
+    unit: '(m)'
   },
   {
-    label: '压型楼承板(t)',
+    label: '压型楼承板',
     key: 'pressureBearingPlate',
     dateKey: 'pressureBearingPlateDate',
     no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
-    alias: 'ENCLOSURE'
+    alias: 'ENCLOSURE',
+    unit: '(m)'
   }
 ]
 
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '单体',
-    sort: [],
+    sort: ['sort.asc', 'id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['projectId'],
@@ -230,7 +235,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.monomer',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

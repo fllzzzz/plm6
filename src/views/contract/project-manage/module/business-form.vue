@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="130px">
+  <el-form ref="formRef" :model="form" :rules="rules" inline size="small" label-position="right" label-width="110px" class="form-margin">
     <div>
       <div id="baseInfo">
         <div class="form-row">
@@ -26,18 +26,6 @@
               @change="businessChange"
             />
           </el-form-item>
-          <el-form-item label="项目类型" prop="projectType">
-            <common-select
-              v-model="form.projectType"
-              :options="projectTypeEnumN.ENUM"
-              type="enum"
-              size="small"
-              clearable
-              placeholder="项目类型"
-              style="width: 200px"
-              class="input-underline"
-            />
-          </el-form-item>
           <el-form-item label="项目内容" prop="projectContent">
             <el-select
               v-model="form.projectContent"
@@ -52,6 +40,18 @@
           </el-form-item>
         </div>
         <div class="form-row">
+          <el-form-item label="项目类型" prop="projectType">
+            <common-select
+              v-model="form.projectType"
+              :options="projectTypeEnumN.ENUM"
+              type="enum"
+              size="small"
+              clearable
+              placeholder="项目类型"
+              style="width: 200px"
+              class="input-underline"
+            />
+          </el-form-item>
           <el-form-item label="签约人" prop="singerId">
             <user-dept-cascader
               v-model="form.singerId"
@@ -60,10 +60,12 @@
               clearable
               show-all-levels
               class="input-underline"
-              style="width: 200px"
+              style="width: 320px"
               placeholder="签约人"
             />
           </el-form-item>
+        </div>
+        <div class="form-row">
           <el-form-item label="签订日期" prop="signingDate">
             <el-date-picker
               v-model="form.signingDate"
@@ -75,7 +77,7 @@
             />
           </el-form-item>
           <el-form-item label="签约地址" prop="signingAddress">
-            <el-input v-model="form.signingAddress" class="input-underline" placeholder="签约地址" style="width: 320px" />
+            <el-input v-model="form.signingAddress" class="input-underline" placeholder="签约地址" style="width: 400px" />
           </el-form-item>
         </div>
         <div class="form-row">
@@ -217,11 +219,11 @@ const props = defineProps({
   formData: {
     type: Object,
     default: () => {}
-  },
-  projectType: {
-    type: Number,
-    default: undefined
   }
+  // projectType: {
+  //   type: Number,
+  //   default: undefined
+  // }
 })
 const defaultForm = {
   contractSignBodyId: undefined, // 合同签订主体
@@ -424,7 +426,7 @@ defineExpose({
   align-items: center;
   margin-top: 20px;
 }
->>> .input-underline {
+::v-deep(.input-underline) {
   // width: calc((95vw - 40px)/3);
   width: 200px;
   margin-right: 0;
@@ -437,5 +439,10 @@ defineExpose({
 }
 .form-row {
   width: 100%;
+}
+.form-margin{
+  ::v-deep(.el-form-item){
+    margin-right:30px;
+  }
 }
 </style>

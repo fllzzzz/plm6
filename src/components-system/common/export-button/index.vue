@@ -7,7 +7,7 @@
     :size="props.size"
     @click.stop="doExport"
   >
-    {{ props.btnText }}
+    <span v-if="props.btnText">{{ props.btnText }}</span>
   </common-button>
 </template>
 

@@ -116,7 +116,7 @@
           <template v-else>
             <el-form-item label="销项税额" prop="taxRate" v-if="collectionInfo.invoiceType === invoiceTypeEnum.ENUM.SPECIAL.V">
               <div style="width: 260px">
-                <span>{{ rateMoney ? rateMoney.toThousand() : '' }}</span>
+                <span>{{ rateMoney ? toThousand(rateMoney) : '' }}</span>
               </div>
             </el-form-item>
           </template>
@@ -139,7 +139,7 @@
                 style="width: 250px"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ collectionInfo.invoiceDate }}</span>
+                <span>{{ collectionInfo.invoiceDate?parseTime(collectionInfo.invoiceDate,'{y}-{m}-{d}'):'-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -162,7 +162,7 @@
           <el-form-item label="合同金额(元)" prop="amount">
             <div style="width: 260px">
               <el-input v-if="isModify" v-model="choseOrderInfo.amount" type="text" placeholder="合同金额" style="width: 250px" disabled />
-              <span v-else>{{ choseOrderInfo.amount ? choseOrderInfo.amount.toThousand() : '' }}</span>
+              <span v-else>{{ choseOrderInfo.amount ? toThousand(choseOrderInfo.amount) : '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="发票面额(元)" prop="invoiceAmount">
@@ -178,7 +178,7 @@
                 controls-position="right"
                 style="width: 250px"
               />
-              <span v-else>{{ collectionInfo.invoiceAmount ? collectionInfo.invoiceAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.invoiceAmount ? toThousand(collectionInfo.invoiceAmount) : '' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -228,7 +228,7 @@
                 style="width: 250px"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ collectionInfo.receiveInvoiceDate }}</span>
+                <span>{{ collectionInfo.receiveInvoiceDate? parseTime(collectionInfo.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -259,6 +259,8 @@
                 v-model:files="form.attachments"
                 :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
                 :limit="1"
+                :accept="'.pdf,.jpg,.jpeg,.png'"
+                :tip="'支持扩展名:pdf .jpg .jpeg .png'"
                 v-if="isModify"
               />
               <template v-else>
@@ -301,7 +303,9 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import { supplierPayMentTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
 import { ElNotification } from 'element-plus'
-import UploadBtn from '@comp/file-upload/UploadBtn'
+import UploadBtn from '@/components/file-upload/UploadBtn'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const defaultForm = {

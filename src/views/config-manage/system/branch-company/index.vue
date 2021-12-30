@@ -119,7 +119,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.branchCompanyConfig',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 async function changeEnabled(data, val) {

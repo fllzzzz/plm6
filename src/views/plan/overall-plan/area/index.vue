@@ -24,7 +24,7 @@
         </el-table-column>
         <el-table-column v-if="columns.visible('date')" key="endDate" prop="endDate" label="完成时间" align="center" width="180px">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.date }}</span>
+            <span>{{ scope.row.date?parseTime(scope.row.date,'{y}-{m}-{d}'):'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" min-width="80" />
@@ -64,6 +64,7 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { manufactureTypeEnum } from '@enum-ms/plan'
+import { parseTime } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -86,7 +87,7 @@ const typeInfo = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域',
-    sort: [],
+    sort: ['sort.asc', 'id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['productType'],
@@ -99,7 +100,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.area',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

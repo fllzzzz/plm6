@@ -62,7 +62,7 @@
       <rrOperation />
       <crudOperation add-text="付款填报">
         <template #viewLeft>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计付款金额：${totalSum.toThousand()}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计付款金额：${toThousand(totalSum)}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>
@@ -77,6 +77,7 @@ import crudOperation from '@crud/CRUD.operation'
 import { supplierPayMentTypeEnum, auditTypeEnum, contractPayDateTypeEnum } from '@enum-ms/contract'
 import basicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import { paySum } from '@/api/contract/supplier-manage/pay-invoice/pay'
+import { toThousand } from '@data-type/number'
 
 const defaultQuery = {
   dateType: contractPayDateTypeEnum.ENUM.UPDATE_DATE.V,

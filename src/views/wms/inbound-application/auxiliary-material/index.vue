@@ -82,6 +82,7 @@ const defaultForm = {
   purchaseId: null, // 申购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  shipmentNumber: null, // 物流单号
   logistics: {}, // 物流信息
   list: [] // 入库清单
 }
@@ -130,6 +131,7 @@ const setFormCallback = (form) => {
     },
     { immediate: true, deep: true }
   )
+  fixMaxHeight()
 }
 
 const { cu, form, FORM } = useForm(
@@ -182,7 +184,7 @@ if (props.edit) {
     extraHeight: 20
   }
 }
-const { maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
+const { fixMaxHeight, maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
 
 // 初始化
 init()

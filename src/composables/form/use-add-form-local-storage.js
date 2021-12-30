@@ -35,6 +35,7 @@ export default function useAddFormLocalStorage(key, pendingForm, trigger, { useD
       return saveFormToStorage(ls)
     },
     resetForm: () => {
+      clearFormStorage(ls)
       // 清除内容
       ls.form.length = 0
       ls.init && ls.init()

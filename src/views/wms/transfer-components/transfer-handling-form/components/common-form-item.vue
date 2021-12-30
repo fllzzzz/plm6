@@ -29,7 +29,7 @@
         v-model="currentForm.quantity"
         :min="0"
         :precision="material.outboundUnitPrecision"
-        :max="material.operableQuantity"
+        :max="material.corOperableQuantity"
         controls-position="right"
         style="flex: auto"
       />

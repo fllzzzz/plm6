@@ -32,11 +32,11 @@
             value-format="x"
             placeholder="选择日期"
             style="width:160px"
-            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() - 8.64e6 < globalProject.createTime || date.getTime() - 8.64e6 > scope.row.endDate } else { return date.getTime() - 8.64e6 < globalProject.createTime || date.getTime() - 8.64e6 > scope.row.date }}"
+            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() < globalProject.createTime - 1 * 24 * 60 * 60 * 1000 || date.getTime() - 8.64e6 > scope.row.endDate } else { return date.getTime() < globalProject.createTime - 1 * 24 * 60 * 60 * 1000 || date.getTime() - 8.64e6 > scope.row.date }}"
             @change="handleDateChange($event, scope.row)"
           />
           <template v-else>
-            <span v-if="scope.row.startDate" v-parse-time="'{y}-{m}-{d}'">{{ scope.row.startDate }}</span>
+            <span v-if="scope.row.startDate">{{ scope.row.startDate? parseTime(scope.row.startDate,'{y}-{m}-{d}'): '-' }}</span>
           </template>
         </template>
       </el-table-column>
@@ -50,11 +50,11 @@
             value-format="x"
             placeholder="选择日期"
             style="width:160px"
-            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() < scope.row.startDate - 8.64e6 || date.getTime() - 8.64e6 > scope.row.date } else { return date.getTime() - 8.64e6 < globalProject.createTime || date.getTime() - 8.64e6 > scope.row.date }}"
+            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() < scope.row.startDate - 8.64e6 || date.getTime() - 8.64e6 > scope.row.date } else { return date.getTime() < globalProject.createTime - 1 * 24 * 60 * 60 * 1000 || date.getTime() - 8.64e6 > scope.row.date }}"
             @change="handleDateChange($event, scope.row)"
           />
           <template v-else>
-            <span v-if="scope.row.endDate" v-parse-time="'{y}-{m}-{d}'">{{ scope.row.endDate }}</span>
+            <span>{{ scope.row.endDate? parseTime(scope.row.endDate,'{y}-{m}-{d}'): '-' }}</span>
           </template>
         </template>
       </el-table-column>
@@ -108,6 +108,7 @@ import mHeader from './module/header'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 import { isNotBlank } from '@data-type/index'
 import { dateDifferenceReduce } from '@/utils/date'
+import { parseTime } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -127,7 +128,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['productType'],
@@ -140,7 +141,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.plan-make',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

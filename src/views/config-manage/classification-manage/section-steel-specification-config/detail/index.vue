@@ -15,7 +15,6 @@
         ref="tableRef"
         v-loading="crud.loading"
         :data="crud.data"
-        style="width: 100%"
         :max-height="maxHeight"
         @selection-change="crud.selectionChangeHandler"
       >

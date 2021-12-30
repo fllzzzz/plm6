@@ -214,7 +214,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '压型板清单',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['areaId'],
@@ -226,7 +226,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.trussSupport',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

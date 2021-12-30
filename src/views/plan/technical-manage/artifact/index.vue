@@ -95,9 +95,9 @@
           min-width="80px"
         />
         <el-table-column
-          v-if="columns.visible('alreadyProductQuantity')"
-          key="alreadyProductQuantity"
-          prop="alreadyProductQuantity"
+          v-if="columns.visible('producedQuantity')"
+          key="producedQuantity"
+          prop="producedQuantity"
           sortable="custom"
           label="已生产量"
           align="left"
@@ -197,9 +197,7 @@
         />
         <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" min-width="160px">
           <template v-slot="scope">
-            <div>
-              <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
-            </div>
+            <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </el-table-column>
       </common-table>
@@ -221,6 +219,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
+import { parseTime } from '@/utils/date'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -239,7 +238,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '构件清单',
-    sort: [],
+    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['areaId'],
@@ -252,7 +251,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.artifact',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 40
 })
 
 watch(

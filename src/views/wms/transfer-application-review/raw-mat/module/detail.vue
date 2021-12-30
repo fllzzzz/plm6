@@ -27,6 +27,7 @@
       </el-tag>
     </template>
     <template #content>
+      <unfreeze-info class="unfreeze-info" v-if="detail.boolHasUnfreeze" :basic-class="detail.basicClass" :list="detail.unfreezeList" />
       <common-table
         :data="detail.list"
         :max-height="maxHeight"
@@ -83,6 +84,7 @@ import amountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import commonTitleInfo from './common-title-info.vue'
+import unfreezeInfo from './unfreeze-info.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([]) // 展开key
@@ -93,7 +95,7 @@ const { CRUD, crud, detail } = regDetail()
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-transfer-application-review-detail',
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.unfreeze-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,

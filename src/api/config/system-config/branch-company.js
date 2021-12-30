@@ -45,4 +45,12 @@ export function editStatus(params) {
   })
 }
 
+export function bankData(companyId) {
+  return request({
+    module: 'contract',
+    url: `branchCompany/listBankAccountByCompanyId/${companyId}`,
+    method: 'get'
+  })
+}
+
 export default { get, add, edit, del }

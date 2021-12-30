@@ -112,6 +112,7 @@ const defaultForm = {
   purchaseId: null, // 采购单id
   loadingWeight: null, // 装载重量
   licensePlate: null, // 车牌号
+  shipmentNumber: null, // 物流单号
   logistics: {}, // 物流信息
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
@@ -189,6 +190,7 @@ const setFormCallback = (form) => {
       )
     }
   })
+  fixMaxHeight()
 }
 
 const { cu, form, FORM } = useForm(
@@ -241,7 +243,7 @@ if (props.edit) {
     extraHeight: 20
   }
 }
-const { maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
+const { fixMaxHeight, maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
 
 // 当前使用的组件
 const comp = computed(() => {
@@ -436,6 +438,7 @@ function handleOrderInfoChange(orderInfo) {
       steelRefList.steelCoilList = null
     })
   }
+  calcWeight()
 }
 
 // 信息初始化

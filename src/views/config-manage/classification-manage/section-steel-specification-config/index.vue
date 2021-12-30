@@ -8,7 +8,6 @@
       v-loading="crud.loading"
       :data="tableList"
       row-key="id"
-      style="width: 100%"
       :max-height="maxHeight"
       default-expand-all
       @selection-change="crud.selectionChangeHandler"

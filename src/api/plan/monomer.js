@@ -36,7 +36,7 @@ export function del(ids) {
   })
 }
 
-//获取所有单体信息 及对应已建区域信息
+// 获取所有单体信息 及对应已建区域信息
 export function monomerAll(projectId) {
   return request({
     module: 'plan',
@@ -45,7 +45,7 @@ export function monomerAll(projectId) {
   })
 }
 
-//获取单体信息的产品类型及完成时间
+// 获取单体信息的产品类型及完成时间
 export function monomerDetail(id) {
   return request({
     module: 'plan',

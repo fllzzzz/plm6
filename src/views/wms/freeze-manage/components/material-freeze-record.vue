@@ -1,5 +1,5 @@
 <template>
-  <common-table v-bind="$attrs" v-loading="detailLoading" :data="list">
+  <common-table v-bind="$attrs" v-loading="detailLoading" :data="list" row-key="id">
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column key="type" :show-overflow-tooltip="true" prop="type" label="类型" align="center" width="100">
       <template #default="{ row }">
@@ -146,7 +146,7 @@ async function fetchMaterialFreezeDetailById() {
   try {
     list.value = []
     detailLoading.value = true
-    const { content = [] } = await getMaterialFreezeRecordById()
+    const { content = [] } = await getMaterialFreezeRecordById(material.id)
     list.value = await dataUnitFormat(material, content)
   } catch (error) {
     console.error('error', error)

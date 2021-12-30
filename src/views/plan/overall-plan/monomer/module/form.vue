@@ -27,7 +27,7 @@
         </el-form-item>
       </div>
       <div v-for="item in currentOption" :key="item.key" class="form-row" style="display: flex">
-        <el-form-item :label="item.label" :prop="item.key">
+        <el-form-item :label="item.label+item.unit" :prop="item.key">
           <el-input-number
             v-model="form[item.key]"
             :step="10"
@@ -165,6 +165,12 @@ watch(
   () => props.globalProject,
   (val) => {
     if (isNotBlank(val)) {
+      const unitData = '(m)'
+      props.originOption.forEach(v => {
+        if (v.no !== TechnologyTypeAllEnum.STRUCTURE.V) {
+          v.unit = unitData
+        }
+      })
       currentOption.value = []
       val.projectContentList.forEach((v) => {
         if (val.businessType === businessTypeEnum.ENUM.MACHINING.V) {
@@ -185,11 +191,12 @@ watch(
       })
       if (currentOption.value.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
         const optionVal = {
-          label: '折边件(t)',
+          label: '折边件',
           key: 'flangingPiece',
           dateKey: 'flangingPieceDate',
           alias: 'ENCLOSURE',
-          no: TechnologyTypeAllEnum.BENDING.V
+          no: TechnologyTypeAllEnum.BENDING.V,
+          unit: unitData
         }
         currentOption.value.push(optionVal)
       }
@@ -199,17 +206,17 @@ watch(
 )
 function mainDateOptionFn(time) {
   if (props.globalProject.endDate) {
-    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() - 8.64e6 < props.globalProject.createTime
+    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.createTime1 - 1 * 24 * 60 * 60 * 1000
   } else {
-    return time.getTime() - 8.64e6 < props.globalProject.createTime
+    return time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
   }
 }
 
 function subDateOptionFn(time) {
   if (crud.form.date) {
-    return time.getTime() - 8.64e6 > crud.form.date || time.getTime() - 8.64e6 < props.globalProject.createTime
+    return time.getTime() - 8.64e6 > crud.form.date || time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
   } else {
-    return time.getTime() - 8.64e6 < props.globalProject.createTime
+    return time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
   }
 }
 

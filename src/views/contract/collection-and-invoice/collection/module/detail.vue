@@ -88,9 +88,10 @@
                 value-format="x"
                 placeholder="选择收款日期"
                 style="width: 250px"
+                :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"
               />
               <template v-else>
-                <span v-parse-time="'{y}-{m}-{d}'">{{ collectionInfo.collectionDate }}</span>
+                <span>{{ collectionInfo.collectionDate? parseTime(collectionInfo.collectionDate,'{y}-{m}-{d}'): '' }}</span>
               </template>
             </div>
           </el-form-item>
@@ -106,7 +107,7 @@
                 style="width: 250px"
                 disabled
               />
-              <span v-else>{{ collectionInfo.contractAmount ? collectionInfo.contractAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.contractAmount ? toThousand(collectionInfo.contractAmount) : '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="收款单位" prop="collectionUnitId">
@@ -139,7 +140,7 @@
                 style="width: 250px"
                 disabled
               />
-              <span v-else>{{ collectionInfo.haveCollectionAmount ? collectionInfo.haveCollectionAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.haveCollectionAmount ? toThousand(collectionInfo.haveCollectionAmount): '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="收款行" prop="collectionDepositBank">
@@ -163,7 +164,7 @@
                 controls-position="right"
                 style="width: 250px"
               />
-              <span v-else>{{ collectionInfo.collectionAmount ? collectionInfo.collectionAmount.toThousand() : '' }}</span>
+              <span v-else>{{ collectionInfo.collectionAmount ? toThousand(collectionInfo.collectionAmount): '' }}</span>
             </div>
           </el-form-item>
           <el-form-item label="收款账号" prop="collectionBankAccount">
@@ -242,7 +243,7 @@
             </div>
           </el-form-item>
         </div>
-        <el-collapse-transition>
+        <!-- <el-collapse-transition>
           <div v-show="form.collectionMode === paymentFineModeEnum.ENUM.ACCEPTANCE_DRAFT.V" class="table-box">
             <common-table ref="table" :data="form.acceptanceDrafts" :cell-class-name="handelCellClassName" style="width: 100%">
               <el-table-column label="序号" type="index" align="center" width="60" />
@@ -302,7 +303,7 @@
             </div>
             <hr class="gradient-line" />
           </div>
-        </el-collapse-transition>
+        </el-collapse-transition> -->
         <el-form-item label="备注" prop="remark">
           <el-input
             v-if="isModify"
@@ -320,7 +321,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits } from 'vue'
+import { ref, watch, computed, defineProps, defineEmits, nextTick } from 'vue'
 import projectCascader from '@comp-base/project-cascader'
 import useDict from '@compos/store/use-dict'
 import { DP } from '@/settings/config'
@@ -332,6 +333,8 @@ import useVisible from '@compos/use-visible'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { editStatus, edit } from '@/api/contract/collection-and-invoice/collection'
 import { ElNotification } from 'element-plus'
+import { toThousand } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])
@@ -411,14 +414,16 @@ function closeDrawer() {
 }
 
 function resetForm() {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
   const DataValue = JSON.parse(JSON.stringify(props.collectionInfo))
   DataValue.collectionDate = String(DataValue.collectionDate)
   DataValue.projectId = DataValue.project.id
   DataValue.collectionUnitId = Number(DataValue.collectionUnitId)
   form.value = JSON.parse(JSON.stringify(DataValue))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   getContractInfoReset(form.value.projectId)
   useWatchFormValidate(formRef, form)
 }

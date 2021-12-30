@@ -123,7 +123,7 @@ const headerRef = ref()
 const tableRef = ref()
 const formRef = ref()
 // 最大高度
-const { maxHeight } = useMaxHeight({ paginate: false })
+const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 // 钢板类型
 const basicClass = rawMatClsEnum.STEEL_COIL.V
 // 当前分类基础单位
@@ -241,6 +241,7 @@ function setFormCallback(form) {
     },
     { immediate: true, deep: true }
   )
+  fixMaxHeight()
 }
 </script>
 

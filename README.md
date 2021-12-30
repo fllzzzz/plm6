@@ -21,3 +21,33 @@ Vue 3 中函数式组件的性能提升很小，可以直接使用常规组件
 
 /* one-off global rule */
 ::v-global(.foo) {}
+
+## 系统待优化
+
+## 服务端
+
+## WMS
+1.物料信息由后端传递，而不由前端自行获取，即不再需要调用 setSpecInfoToList这类的方法
+  （目前由于服务端暂无时间处理且没有缓存，因此将该功能坐在前端中）
+  （若该功能后期不由后端处理，修改物料分类单位精度后，各个页面的物料单位精度会统一变化，而实际应照原来的显示。）
+
+## 前端
+
+## 极端BUG
+代码build后，生产环境部署时入库办理时查看采购订单详情，导致"分配重量按钮"消失[PS:开发环境（本地运行）正常]
+
+原因1：采购订单详情中使用了"上传列表组件（uploadList）",上传列表组件中的export-button组件的attr中的params使用了“props.files[index].id”,
+      代码如下 ：
+      <export-button
+        v-show="props.showDownload"
+        v-permission="props.downloadPerm"
+        :params="{ ...props.downloadParams, id: props.files[scope.$index].id }"
+        :fn="props.downloadFn"
+      />
+      错误1: props.files 可能为null
+      错误2：element-plus的^1.1.0-beta.19版本中，table没数据时，index可能为-1，可运行查看
+
+原因1 导致了vue插入dom出现问题（具体为什么只有"分配重量按钮"出现问题，原因未知）
+如果想探知该问题，请切换到git的 cc60af13518a4a2bb58d426b56b24c62657c54f7 版本， 时间： 2021/12/29
+      
+
