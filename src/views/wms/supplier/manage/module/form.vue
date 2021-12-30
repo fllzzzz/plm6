@@ -128,7 +128,6 @@
             :show-download="!!form.id"
             :file-classify="fileClassifyEnum.SUPPLIER_ATT.V"
             :download-perm="crud.permission.downloadAttachments"
-            :download-fn="downloadAttachment"
             v-model:files="form.files"
             style="padding: 10px 30px 0"
           />
@@ -139,7 +138,6 @@
 </template>
 
 <script setup>
-import { downloadAttachment } from '@/api/wms/supplier/manage'
 import { ref } from 'vue'
 
 import { supplierClassEnum } from '@enum-ms/supplier'
