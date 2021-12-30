@@ -30,43 +30,43 @@ const options = ref([])
 const originOptions = ref([])
 const props = defineProps({
   projectId: {
-    type: [Number, String],
+    type: [Number, String]
   },
   modelValue: {
-    type: [Number, String],
+    type: [Number, String]
   },
   size: {
     type: String,
-    default: 'small',
+    default: 'small'
   },
   multiple: {
     type: Boolean,
-    default: false,
+    default: false
   },
   clearable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   showAll: {
     type: Boolean,
-    default: false,
+    default: false
   },
   disabled: {
     type: Boolean,
-    default: false,
+    default: false
   },
   collapseTags: {
     type: Boolean,
-    default: false,
+    default: false
   },
   default: {
     type: Boolean,
-    default: true,
+    default: true
   },
   placeholder: {
     type: String,
-    default: '请选择单体',
-  },
+    default: '请选择单体'
+  }
 })
 
 watch(
@@ -112,7 +112,7 @@ async function fetchData() {
     optionData = content.map((o) => {
       return {
         value: o.id,
-        label: o.name,
+        label: o.name
       }
     })
   } catch (error) {
@@ -159,6 +159,6 @@ function selectChange(val) {
 
 defineExpose({
   getOption,
-  getProductType,
+  getProductType
 })
 </script>

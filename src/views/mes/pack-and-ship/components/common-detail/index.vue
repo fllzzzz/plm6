@@ -71,7 +71,7 @@ const SummaryStatusEnum = {
   SUSPEND: { L: '区域汇总', K: 'SUSPEND', V: 1 }
 }
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'getDetail'])
 const props = defineProps({
   visible: {
     type: Boolean,
@@ -185,6 +185,7 @@ async function fetchDetail() {
     tableLoading.value = true
     curProductType.value = productTypeBits.value[0]
     const data = await props.detailFunc(detailId.value)
+    emit('getDetail', detailId.value, data)
     artifactList.value = data.artifactList || []
     enclosureList.value = data.enclosureList || []
     auxList.value = data.auxList || []

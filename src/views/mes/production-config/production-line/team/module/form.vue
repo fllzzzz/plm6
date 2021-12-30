@@ -63,8 +63,8 @@ import { teamAttributeEnum } from '@enum-ms/mes'
 defineProps({
   productType: {
     type: Number,
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 const formRef = ref()
@@ -76,7 +76,7 @@ const defaultForm = {
   processId: undefined,
   leaderId: undefined,
   organizationType: undefined,
-  memberIds: [],
+  memberIds: []
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
@@ -86,7 +86,7 @@ const rules = {
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
-  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }],
+  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }]
 }
 
 function leaderChange(userlist) {

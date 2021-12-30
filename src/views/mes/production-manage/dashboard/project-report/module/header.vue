@@ -27,7 +27,6 @@
       <product-type-query
         :productType="productType"
         :category="query.category"
-        :enclosureShowItem="Boolean(query.category)"
         :toQuery="crud.toQuery"
         :query="query"
       />
@@ -39,7 +38,7 @@
 
 <script setup>
 import moment from 'moment'
-import { computed,ref } from 'vue'
+import { computed, ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import EO from '@enum'
@@ -56,7 +55,7 @@ const defaultQuery = {
   category: projectComponentTypeEnum.ARTIFACT.V,
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
   startDate: moment().startOf('month').valueOf(),
-  endDate: moment().valueOf(),
+  endDate: moment().valueOf()
 }
 
 const { crud, query } = regHeader(defaultQuery)

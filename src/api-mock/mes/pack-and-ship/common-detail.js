@@ -2,7 +2,7 @@ export default {
   'code': 20000,
   'message': '成功',
   'data': {
-    'artifactList|1-10': [{
+    'artifactList|1-20': [{
       'id|+1': 1,
       'project': {
         'id': 1,
@@ -41,7 +41,7 @@ export default {
       'unPackageQuantity|1-100': 1,
       'unitPrice|1-1000.1-8': 1
     }],
-    'enclosureList|1-10': [{
+    'enclosureList|1-20': [{
       'id|+1': 1,
       'project': {
         'id': 1,

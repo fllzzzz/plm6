@@ -227,9 +227,10 @@
 import crudApi from '@/api/mes/label-print/enclosure'
 import { ref, provide } from 'vue'
 
-import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, mesEnclosureTypeEnum, printProductTypeEnum } from '@enum-ms/mes'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
+import { parseTime } from '@/utils/date'
 import { convertUnits } from '@/utils/convert/unit'
 import { printArtifact as printComponent } from '@/utils/print/index'
 
@@ -281,6 +282,10 @@ const labelVisible = ref(false)
 const currentLabel = ref({})
 const currentTaskId = ref()
 const recordVisible = ref(false)
+const productType = componentTypeEnum.ENCLOSURE.V
+provide('productType', productType)
+const printType = printProductTypeEnum.ENCLOSURE.V
+provide('printType', printType)
 
 async function printLabel(row) {
   try {
@@ -306,13 +311,14 @@ function getLabelInfo(row) {
   // 标签构件信息
   const component = {
     projectName: row.project.shortName,
+    printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime((new Date()).getTime(), '{y}/{m}/{d}'),
     monomerName: printConfig.showMonomer ? row.monomer.name : '',
     areaName: printConfig.showArea ? row.area.name : '',
     name: row.name,
     serialNumber: row.serialNumber,
     color: row.color,
     plateType: row.plate,
-    thickness: row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM),
+    thickness: row.thickness && row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM),
     length: convertUnits(row.length, 'mm', 'm', DP.MES_ARTIFACT_L__M),
     quantity: row.quantity,
     specification: row.specification,
@@ -328,9 +334,9 @@ function getLabelInfo(row) {
     qrCode: spliceQrCodeUrl(`${baseUrl}/#${QR_SCAN_PATH.ARTIFACT_TASK}`, {
       id: row.id, // id
       ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
-      factoryId: productionLine.factoryId, // 工厂id
+      factoryId: row.factoryId, // 工厂id
       taskId: row.taskId, // 任务id
-      type: componentTypeEnum.ARTIFACT.V, // 类型
+      type: productType, // 类型
       wt: printConfig.weight, // 重量类型
       mn: printConfig.manufacturerName, // 制造商名称
       sl: Number(printConfig.showProductionLine), // 显示生产线

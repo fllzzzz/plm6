@@ -31,13 +31,13 @@
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject showMonomer />
-        <product-name-columns :productType="query.productType" />
+        <productType-base-info-columns :productType="query.productType" :unShowField="['specification', 'material', 'color']" />
         <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-         <el-table-column prop="mete" :show-overflow-tooltip="true" :label="`${unitObj.label}(${unitObj.unit})`" align="center">
+        <el-table-column prop="mete" :show-overflow-tooltip="true" :label="`${unitObj.label}(${unitObj.unit})`" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.mete }}</span>
           </template>
@@ -78,7 +78,7 @@ import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
-import productNameColumns from '@comp-mes/table-columns/product-name-columns'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -151,13 +151,9 @@ async function fetchList() {
       v.checkMete = v.mate
       v.mete = useProductMeteConvert({
         productType: query.productType,
-        length: v.length * v.quantity,
-        L_TO_UNIT: unitObj.value.unit,
-        L_DP: unitObj.value.dp,
-        weight: v.netWeight * v.quantity,
-        W_TO_UNIT: unitObj.value.unit,
-        W_DP: unitObj.value.dp
-      }).convertMete
+        length: { num: v.length * v.quantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+        weight: { num: v.netWeight * v.quantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+      })
       return v
     })
   } catch (error) {

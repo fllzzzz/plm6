@@ -1,6 +1,7 @@
 import { printModeEnum as PrintMode } from './enum'
 import { getLODOP, printByMode, combineHtml } from './base'
 import { projectNameFormatter } from '@/utils/project'
+import { packTypeEnum } from '@enum-ms/mes'
 
 let LODOP
 
@@ -17,37 +18,45 @@ let LODOP
    */
 async function printArtifact({ component, productionLineName, manufacturerName, qrCode, printMode = PrintMode.QUEUE.V }) {
   const bodyHtml = `
-    <table border="1" bordercolor="#000000">
-        <tr>
-            <td class="col-2" colspan="2">${component.projectName}</td>
-            <td>${component.monomerName}</td>
-        </tr>
-        <tr>
-            <td class="col-3" style="font-size: 16pt;font-weight:bold" colspan="3">${component.serialNumber}</td>
-        </tr>
-        <tr>
-            <td>名称： ${component.name}</td>
-            <td class="col-2" colspan="2">规格：${component.specification}</td>
-        </tr>
-        <tr>
-            <td>数量：${component.quantity}</td>
-            <td>长度(m): ${component.length}</td>
-            <td>单重(kg): ${component.weight}</td>
-        </tr>
-        <tr>
-            <td class="col-2" colspan="2">区域： ${component.areaName}</td>
-            <td rowspan="3">
-                <div class="qr-content"></div>
-            </td>
-        </tr>
-        <tr>
-            <td class="col-2" colspan="2">${productionLineName}</td>
-        </tr>
-        <tr>
-            <td class="col-2" colspan="2">${manufacturerName}</td>
-        </tr>
-    </table>`
-  const strHtml = combineHtml(COMPONENT_STYLE, bodyHtml)
+    <div class="artifact-label">
+    <div class="row">
+      <div class="col">${component.projectName}</div>
+      <div class="col">${component.monomerName}</div>
+    </div>
+    <div class="row row-2">
+      <div class="col col-3" style="position: relative;">
+        <span style="position: absolute; top: -11mm">NO:</span>
+        <span style="font-size: 20pt; font-weight: 600; margin-left: 2.5mm">GZ-UY89</span>
+        <span style="position: absolute; bottom: -8mm; right: 1mm">生产日期：2021/1/1</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">名称：${component.name}</div>
+      <div class="col">数量(件)：${component.quantity}</div>
+      <div class="col">单重(kg)：${component.weight}</div>
+    </div>
+    <div class="bottom-content">
+      <div class="col" style="flex: 2">
+        <div class="row">
+          <div class="col">长度（mm）：</div>
+          <div class="col">规格：</div>
+        </div>
+        <div class="row">
+          <div class="col">区域：第二批（3轴线~15轴线）</div>
+        </div>
+        <div class="row">
+          <div class="col">浙江鸿翔筑能钢结构有限公司</div>
+        </div>
+      </div>
+      <div class="col" style="flex: 1">
+        <div class="row" style="height: 27mm;">
+          <div class="col qr-content">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`
+  const strHtml = combineHtml(ARTIFACT_STYLE, bodyHtml)
   let result = false
   try {
     LODOP = await getLODOP()
@@ -56,6 +65,7 @@ async function printArtifact({ component, productionLineName, manufacturerName, 
     LODOP.ADD_PRINT_BARCODE('39.5mm', '71mm', '34mm', '34mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+    LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -191,43 +201,88 @@ async function printAuxiliaryMaterial({ component, manufacturerName, qrCode, pri
    * @author duhh
    */
 async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QUEUE.V }) {
-  // 备注最大长度255
-  if (packageInfo.remark && (packageInfo.remark.length > 91)) {
-    packageInfo.remark = packageInfo.remark.substr(0, 91) + '...'
+  const pageHtml = `<div style="text-align:center;"><span tdata='pageNO'>##</span> / <span tdata='pageCount'>##</span></div>`
+  const theadHtml = {
+    [packTypeEnum.STRUCTURE.V]: `<tr>
+        <td class="col-1">编号</td>
+        <td class="col-1">材质</td>
+        <td class="col-1">数量</td>
+        <td class="col-1">重量(kg)</td>
+      </tr>`,
+    [packTypeEnum.ENCLOSURE.V]: `<tr>
+        <td class="col-1">编号</td>
+        <td class="col-1">版型</td>
+        <td class="col-1">长度</td>
+        <td class="col-1">数量</td>
+      </tr>`,
+    [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
+  }
+  const headHtml = `
+      <tr>
+        <td rowspan="2">
+          <div class="qr-content"></div>
+        </td>
+        <td class="col-3" colspan="3">
+          <span style="font-weight:bold">${packageInfo.companyName}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>包单号</td>
+        <td class="col-2" colspan="2" style="font-weight:bold">${packageInfo.serialNumber}</td>
+      </tr>
+      ${theadHtml[packageInfo.productType]}
+  `
+  let listHtml = headHtml
+  const tbodyHtml = {
+    [packTypeEnum.STRUCTURE.V]: function (item) {
+      return `
+        <tr>
+          <td class="col-1">${item.serialNumber}</td>
+          <td class="col-1">${item.material}</td>
+          <td class="col-1">${item.quantity}</td>
+          <td class="col-1">${item.totalNetWeight}</td>
+        </tr>
+      `
+    },
+    [packTypeEnum.ENCLOSURE.V]: function (item) {
+      return `
+        <tr>
+          <td class="col-1">${item.serialNumber}</td>
+          <td class="col-1">${item.plate}</td>
+          <td class="col-1">${item.length}</td>
+          <td class="col-1">${item.quantity}</td>
+        </tr>
+      `
+    },
+    [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
+  }
+  for (let x = 0; x < packageInfo.list.length; x++) {
+    const item = packageInfo.list[x]
+    console.log(tbodyHtml[packageInfo.productType], packageInfo.productType)
+    listHtml += tbodyHtml[packageInfo.productType](item)
+    if ((x + 1) % 8 === 0) {
+      listHtml += `<div style="page-break-after:always;"></div>`
+      if (packageInfo.list[x + 1]) {
+        listHtml += headHtml
+      }
+    }
   }
   const bodyHtml = `
-        <table border="1" bordercolor="#000000">
-            <tr>
-                <td class="col-3" colspan="3">${packageInfo.projectName}</td>
-            </tr>
-            <tr>
-                <td class="col-3" colspan="3">
-                  <span style="font-size: 18pt;font-weight:bold">${packageInfo.serialNumber}</span>
-                  <span style="font-size: 10pt;float: right;margin-top: 5pt;">${packageInfo.materialTypeNames}</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-2" colspan="2">总重(kg): ${packageInfo.totalWeight}</td>
-                <td>数量：${packageInfo.quantity}</td>
-            </tr>
-            <tr>
-              <td class="col-2" colspan="2">打包：${packageInfo.packerName} ${packageInfo.createTime}</td>
-              <td rowspan="3">
-                <div class="qr-content"></div>
-              </td>
-            </tr>
-            <tr>
-              <td class="col-2" colspan="2" rowspan="2">备注：${packageInfo.remark}</td>
-            </tr>
-        </table>`
+      <table border="1" bordercolor="#000000">
+          ${listHtml}
+      </table>`
   const strHtml = combineHtml(PACKAGE_STYLE, bodyHtml)
   let result = false
   try {
     LODOP = await getLODOP()
-    LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('1mm', '3mm', '100%', '100%', strHtml)
-    LODOP.ADD_PRINT_BARCODE('38.5mm', '71mm', '30mm', '30mm', 'QRCode', qrCode)
-    LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
+    LODOP.SET_PRINT_PAGESIZE(1, 750, 1000, '1') /* 纸张大小*/ // 75mm*100mm
+    LODOP.ADD_PRINT_HTM('1mm', '1mm', '73mm', '90mm', strHtml)
+    LODOP.ADD_PRINT_HTM('95mm', '1mm', '73mm', '5mm', pageHtml)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    LODOP.ADD_PRINT_BARCODE('1.5mm', '3mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
+    LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -558,25 +613,29 @@ const PACKAGE_STYLE = `
         font-family:'微软雅黑';
         border-collapse:collapse;
         border-spacing: 0;
-        text-align: left;
+        text-align: center;
         font-size: 9pt;
         color: black;
     }
     table tr td {
         box-sizing: border-box;
         padding: 0 1mm;
-        height: 10.9mm;
-        width: 32mm;
+        height: 8mm;
+        width: 17mm;
         word-break: break-all;
     }
+    table tr td.col-1 {
+      width: 17mm;
+    }
     table tr td.col-2 {
-      width: 64mm;
+      width: 34mm;
     }
     table tr td.col-3 {
-      width: 96mm;
+      width: 66mm;
     }
     table .qr-content {
-      height: 32mm;
+      width: 17mm;
+      height: 16mm;
     }
 </style>`
 
@@ -652,6 +711,63 @@ const LABEL_STYLE = `
   // }
 </style>
 `
+
+const ARTIFACT_STYLE = `
+<style>
+.artifact-label {
+  font-family: '微软雅黑';
+  text-align: left;
+  font-size: 9pt;
+  color: black;
+  box-sizing: border-box;
+}
+
+.qr-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  border: 1px solid #000;
+  box-sizing: border-box;
+  height: 9mm;
+}
+
+.row-2 {
+  height: 18mm;
+}
+
+.row:not(:last-child) {
+  border-bottom: none;
+}
+
+.row > .col:not(:last-child) {
+  border-right: 1px solid #000;
+}
+
+.row > .col {
+  height: 100%;
+  padding: 0 1mm;
+  line-height: 8mm;
+  box-sizing: border-box;
+  flex: 1;
+  word-break: break-all;
+}
+
+.bottom-content {
+  display: flex;
+  box-sizing: border-box;
+  border-left: 1px solid #000;
+}
+
+.bottom-content .row {
+  border-left: none;
+}
+</style>`
 
 export {
   printArtifact,

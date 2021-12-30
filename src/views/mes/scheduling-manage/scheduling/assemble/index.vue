@@ -27,7 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns :productType="productType" :columns="columns" :fixed="'left'" fixedWidth />
+      <productType-full-info-columns :productType="productType" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -147,7 +147,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
-import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 
 // crud交由presenter持有

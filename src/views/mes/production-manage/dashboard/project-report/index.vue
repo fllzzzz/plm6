@@ -113,7 +113,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get: artifact },
-    requiredQuery: ['areaId'],
+    requiredQuery: ['areaId']
   },
   tableRef
 )
@@ -153,32 +153,20 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.mete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.netWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.length, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.netWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.completeMete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length * v.completeQuantity,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.netWeight * v.completeQuantity,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
-    v.sendQuantity = v.sendQuantity || 0
+      length: { num: v.length * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.netWeight * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.shipMete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length * v.sendQuantity,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.netWeight * v.sendQuantity,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.length * v.sendQuantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.netWeight * v.sendQuantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
+    v.sendQuantity = v.sendQuantity || 0
     return v
   })
 }
