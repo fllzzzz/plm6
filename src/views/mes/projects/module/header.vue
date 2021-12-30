@@ -18,7 +18,7 @@
       <template v-slot:optRight>
          <div v-show="crud.searchToggle">
           <el-input
-            v-model="query.noOrProjectName"
+            v-model="query.noOrName"
             size="small"
             placeholder="输入合同编号或项目简称"
             style="width: 200px;"
@@ -55,7 +55,7 @@ import Panel from '@/components/Panel'
 const projectInfo = inject('projectInfo')
 
 const defaultQuery = {
-  noOrProjectName: undefined,
+  noOrName: undefined,
   year: parseTime(new Date(), '{y}')
 }
 
