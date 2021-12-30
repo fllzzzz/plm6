@@ -11,7 +11,7 @@
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">提 交</common-button>
-      <store-operation type="crud" />
+      <store-operation v-if="crud.status.add > CRUD.STATUS.NORMAL" type="crud" />
     </template>
     <div class="form">
       <el-form v-loading="crud.editDetailLoading" :disabled="crud.status.cu === CRUD.STATUS.PROCESSING" ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" class="demo-form">

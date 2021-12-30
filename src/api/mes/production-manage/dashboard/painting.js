@@ -30,4 +30,17 @@ export function change(data) {
   })
 }
 
+/**
+ *
+ * 涂装面积修改
+ */
+export function areaChange(data) {
+  return request({
+    module: 'mes',
+    url: 'kanban/painting/area/change',
+    method: 'put',
+    data
+  })
+}
+
 export default { get }

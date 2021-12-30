@@ -101,23 +101,25 @@
 </template>
 
 <script setup>
+import { detail } from '@/api/mes/pack-and-ship/pack-list'
 import { packageRecordAdd } from '@/api/mes/label-print/print-record'
-import { inject, reactive, defineExpose, computed } from 'vue'
+import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
-import { DP, QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
+import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
+import { DP } from '@/settings/config'
 // import { isNotBlank } from '@data-type/index'
-import { parseTime } from '@/utils/date'
 
 import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
+const emit = defineEmits(['getDetail'])
 const permission = inject('permission')
 const { companyName } = mapGetters(['companyName'])
 const defaultQuery = {
@@ -163,17 +165,44 @@ const { batchPrint, print } = usePrintLabel({
   addPrintRecordReq: packageRecordAdd
 })
 
-function getLabelInfo(row) {
+const detailStore = inject('detailStore')
+const dataField = {
+  [packTypeEnum.STRUCTURE.V]: 'artifactList',
+  [packTypeEnum.ENCLOSURE.V]: 'enclosureList',
+  [packTypeEnum.AUXILIARY_MATERIAL.V]: 'materialList'
+}
+
+async function getLabelInfo(row) {
+  let _list = []
+  let _data = {}
+  try {
+    if (detailStore[row.id]) {
+      _data = detailStore[row.id]
+    } else {
+      _data = await detail(row.id)
+      emit('getDetail', row.id, _data)
+    }
+    _list = _data[dataField[row.productType]].map((v) => {
+      const { serialNumber, material, quantity, totalNetWeight, plate, length } = v
+      return {
+        serialNumber,
+        material,
+        quantity,
+        totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
+        plate,
+        length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
+      }
+    })
+  } catch (error) {
+    console.log('获取详情失败', error)
+  }
+
   // 标签构件信息
   const packageInfo = {
-    projectName: row.project.name,
     serialNumber: row.serialNumber,
-    totalWeight: row.totalGrossWeight && row.totalGrossWeight.toFixed(DP.COM_WT__KG),
-    quantity: row.quantity,
-    materialTypeNames: row.materialTypeNames,
-    createTime: parseTime(row.createTime, '{y}-{m}-{d}'),
-    packerName: row.packerName,
-    remark: row.remark
+    list: _list,
+    productType: row.productType,
+    companyName: '山东经典钢构股份有限公司'
   }
   // 生产线信息
   return {

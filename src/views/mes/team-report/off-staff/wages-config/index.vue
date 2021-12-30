@@ -12,6 +12,7 @@
       :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -181,18 +182,15 @@ provide('unitObj', unitObj)
 provide('checkUnitObj', checkUnitObj)
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data = res.data[dataPath[crud.query.productType]].map((v) => {
+  res.data = res.data[dataPath[crud.query.productType]].map((v, i) => {
+    v.id = i + '' + Math.random()
     v.unitPrice = v.wage || 0
     v.originUnitPrice = v.unitPrice
     v.taskMete = useProductMeteConvert({
       productType: crud.query.productType,
-      length: v.taskLength,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.taskNetWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.taskLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.taskNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.checkMete = useWageQuotaMeteConvert({
       length: v.mate,
       weight: v.mate,

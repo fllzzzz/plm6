@@ -10,7 +10,7 @@
           class="filter-item"
           @change="crud.toQuery"
         />
-        <monomer-select v-model="query.monomerId" :default="false" :project-id="projectId" class="filter-item" @change="crud.toQuery" />
+        <monomer-select v-model="query.monomerId" :project-id="projectId" class="filter-item" @change="crud.toQuery" />
         <rrOperation />
       </div>
     </template>

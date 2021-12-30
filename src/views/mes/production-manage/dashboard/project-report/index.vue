@@ -54,9 +54,8 @@
         min-width="70px"
       />
       <el-table-column
-        v-if="columns.visible('shipQuantity')"
-        key="shipQuantity"
-        prop="quantity"
+        v-if="columns.visible('sendQuantity')"
+        prop="sendQuantity"
         sortable="custom"
         :label="`已发运数(${unitObj.measure})`"
         align="center"
@@ -113,7 +112,8 @@ const { crud, columns, CRUD } = useCRUD(
     title: '项目报表',
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { get: artifact }
+    crudApi: { get: artifact },
+    requiredQuery: ['areaId']
   },
   tableRef
 )
@@ -153,31 +153,20 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.mete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.netWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.length, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.netWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.completeMete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length * v.completeQuantity,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.netWeight * v.completeQuantity,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.length * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.netWeight * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.shipMete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length * v.shipQuantity,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.netWeight * v.shipQuantity,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.length * v.sendQuantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.netWeight * v.sendQuantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
+    v.sendQuantity = v.sendQuantity || 0
     return v
   })
 }

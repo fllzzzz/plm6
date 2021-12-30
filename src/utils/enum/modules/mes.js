@@ -178,8 +178,10 @@ constantize(abnormalChangeTypeEnum)
 
 // 问题整改状态
 const improveStatusEnum = {
-  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 1, T: 'danger' },
-  RECTIFIED: { L: '已整改', K: 'RECTIFIED', V: 1 << 0, T: 'success' }
+  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 0, T: 'danger' },
+  RECTIFIED: { L: '已整改', K: 'RECTIFIED', V: 1 << 1, T: 'success' },
+  ADOPT: { L: '整改通过', K: 'ADOPT', V: 1 << 2, T: 'warning' },
+  UN_ADOPT: { L: '整改未通过', K: 'UN_ADOPT', V: 1 << 3, T: 'info' }
 }
 constantize(improveStatusEnum)
 
@@ -191,12 +193,30 @@ const paintingTypeEnum = {
 }
 constantize(paintingTypeEnum)
 
+// 标签类型
 const labelTypeEnum = {
-  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0 },
-  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1 },
-  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2 }
+  COMMON: { L: '常规型', K: 'COMMON', V: 1 << 0, size: {
+    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+    [componentTypeEnum.ENCLOSURE.V]: ' 100 * 30 '
+  }},
+  SIMPLE: { L: '简约型', K: 'SIMPLE', V: 1 << 1, size: {
+    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+    [componentTypeEnum.ENCLOSURE.V]: ' 无 '
+  }},
+  CUSTOM: { L: '定制型', K: 'CUSTOM', V: 1 << 2, size: {
+    [componentTypeEnum.ARTIFACT.V]: ' 100 * 75 ',
+    [componentTypeEnum.ENCLOSURE.V]: ' 100 * 50 '
+  }}
 }
 constantize(labelTypeEnum)
+
+// 打印的产品类型
+const printProductTypeEnum = {
+  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 0 },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 1 },
+  PACKAGE: { L: '包', K: 'PACKAGE', V: 1 << 2 }
+}
+constantize(printProductTypeEnum)
 
 export {
   teamTypeEnum,
@@ -223,7 +243,8 @@ export {
   artifactProcessEnum,
   paintingTypeEnum,
   reportComponentTypeEnum,
-  labelTypeEnum
+  labelTypeEnum,
+  printProductTypeEnum
 }
 
 export default {
@@ -251,5 +272,6 @@ export default {
   artifactProcessEnum,
   paintingTypeEnum,
   reportComponentTypeEnum,
-  labelTypeEnum
+  labelTypeEnum,
+  printProductTypeEnum
 }
