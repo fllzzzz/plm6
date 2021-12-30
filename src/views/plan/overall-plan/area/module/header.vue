@@ -32,6 +32,7 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { monomerDetail } from '@/api/plan/monomer'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 
 const router = useRouter()
 
@@ -74,7 +75,7 @@ async function getTypeInfo() {
     const option = []
     if (productTypeList && productTypeList.length > 0) {
       productTypeList.forEach(v => {
-        if (v.no === 5) {
+        if (v.no === TechnologyTypeAllEnum.STRUCTURE.V) {
           option.unshift(v)
         } else {
           option.push(v)
