@@ -9,6 +9,7 @@
         placeholder="选择年"
         value-format="YYYY"
         format="YYYY"
+        :disabled-date="disabledDate"
         @change="handleYearChange"
       />
     </div>
@@ -45,6 +46,10 @@ onMounted(() => {
   // 默认选择当年
   handleYearChange(year.value)
 })
+
+function disabledDate(time) {
+  return time > new Date()
+}
 
 function handleYearChange(val) {
   emit('update:year', val)

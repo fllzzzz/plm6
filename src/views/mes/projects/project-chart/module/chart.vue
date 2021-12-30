@@ -28,7 +28,7 @@ const chart = ref()
 const provinceList = ref([])
 
 const provinceNameList = computed(() => {
-  return provinceList.value.map(v => v.name)
+  return provinceList.value.map(v => v.provinceName)
 })
 
 const quantityList = computed(() => {

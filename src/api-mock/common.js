@@ -1042,7 +1042,7 @@ const getProjectInfo = {
         'completedQuantity|10-20': 20, // 已完成数量
         'monthNewQuantity|1-10': 2, // 本月新增数量
         'provinceList|10': [{
-          'name': '@cword(2,5)',
+          'provinceName': '@cword(2,5)',
           'quantity|1-10': 10
         }] // 省份项目数量列表
       }

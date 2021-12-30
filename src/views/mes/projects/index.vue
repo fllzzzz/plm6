@@ -20,19 +20,20 @@
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left"/>
         <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber"  prop="serialNumber" :show-overflow-tooltip="true" min-width="130" align="center"  label="合同编号" fixed="left" />
         <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" min-width="150" align="center"  label="项目名称"  />
+        <el-table-column v-if="columns.visible('shortName')" key="shortName" prop="shortName" :show-overflow-tooltip="true" min-width="130" align="center"  label="项目简称"  />
         <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="业务类型"  align="center" min-width="100" >
           <template v-slot="scope">
             <span v-empty-text>{{ scope.row.businessType && businessTypeEnum.VL[  scope.row.businessType] }}</span>
           </template>
         </el-table-column>
-        <el-table-column  v-if="columns.visible('planStartDate')" key="planStartDate" prop="planStartDate" label="计划开工日期"   align="center"  width="100"  >
+        <el-table-column  v-if="columns.visible('startDate')" key="startDate" prop="startDate" label="计划开工日期"   align="center"  width="100"  >
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.planStartDate }}</span>
+            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.startDate }}</span>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('planEndDate')" key="planEndDate" prop="planEndDate" label="计划完成日期" align="center" width="100" >
+        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="100" >
           <template v-slot="scope">
-            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.planEndDate }}</div>
+            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.endDate }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="工期(天)" align="center" width="100">
@@ -45,6 +46,7 @@
             <div>{{ scope.row.alreadyDays }}</div>
           </template>
         </el-table-column>
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="100px" />
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -95,6 +97,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
+    invisibleColumns: ['createTime'],
     hasPagination: true
   },
   tableRef
@@ -119,18 +122,18 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     // 计算天数
     v.allDays = ''
     v.alreadyDays = ''
-    if (isNotBlank(v.planStartDate)) {
+    if (isNotBlank(v.startDate)) {
       // 工期
-      if (isNotBlank(v.planEndDate)) {
-        v.allDays = dateDifference(v.planStartDate, v.planEndDate)
+      if (isNotBlank(v.endDate)) {
+        v.allDays = dateDifference(v.startDate, v.endDate)
       }
       // 用时天数（清单内所有任务全部入库，自动停止计时）
-      let endDate = v.planEndDate || v.inWarehouseDate
-      if (isNotBlank(v.planEndDate) && isNotBlank(v.inWarehouseDate)) {
-        endDate = Math.min(v.planEndDate, v.inWarehouseDate)
+      let endDate = v.endDate || v.inWarehouseDate
+      if (isNotBlank(v.endDate) && isNotBlank(v.inWarehouseDate)) {
+        endDate = Math.min(v.endDate, v.inWarehouseDate)
       }
       if (isNotBlank(endDate)) {
-        v.alreadyDays = dateDifference(v.planStartDate, endDate)
+        v.alreadyDays = dateDifference(v.startDate, endDate)
       }
     }
     return v
