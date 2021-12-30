@@ -1,16 +1,16 @@
 <template>
-  <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="130px">
+  <el-form v-if="unitLoaded" ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="130px">
     <div class="material-info">
       <common-material-info :material="material" :form="form">
         <template #afterSpec>
           <el-form-item label="定尺长度">
-            <span>{{ `${material.length}mm` }}</span>
+            <span>{{ `${material.length}${baseUnit.length.unit}` }}</span>
           </el-form-item>
         </template>
         <template #afterBrand>
           <el-form-item label="炉批号">
-        <span>{{ material.heatNoAndBatchNo }}</span>
-      </el-form-item>
+            <span>{{ material.heatNoAndBatchNo }}</span>
+          </el-form-item>
         </template>
       </common-material-info>
     </div>
@@ -20,7 +20,13 @@
       </el-form-item>
       <template v-if="form.materialOutboundMode === materialOutboundModeEnum.HALF.V">
         <el-form-item label="半出尺寸(mm)" prop="halfSize">
-          <common-input-number v-model="form.halfSize" :min="0" :max="+material.length" controls-position="right" />
+          <common-input-number
+            v-model="form.halfSize"
+            :min="0"
+            :max="+material.length"
+            :precision="baseUnit.length.precision"
+            controls-position="right"
+          />
         </el-form-item>
       </template>
       <common-form-item :material="material" :form="form" />
@@ -36,6 +42,7 @@ import { materialOutboundModeEnum } from '@/utils/enum/modules/wms'
 import { deepClone, isBlank } from '@/utils/data-type'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
@@ -80,12 +87,8 @@ const validateHalfSize = (rule, value, callback) => {
 const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
-  halfSize: [
-    { required: true, validator: validateHalfSize, trigger: 'blur' }
-  ],
-  quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' }
-  ],
+  halfSize: [{ required: true, validator: validateHalfSize, trigger: 'blur' }],
+  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
 
@@ -96,6 +99,10 @@ const form = ref({})
 const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
+
+// 当前分类基础单位
+const { loaded: unitLoaded, baseUnit } = useMatBaseUnit(props.basicClass)
+
 // 监听校验
 useWatchFormValidate(formRef, form, ['quantity', 'halfSize'])
 // 最大数量

@@ -6,7 +6,15 @@
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" prop="serialNumber" label="编号" align="center" width="110px" :fixed="fixed" show-overflow-tooltip>
+  <el-table-column
+    v-if="showSerialNumber"
+    prop="serialNumber"
+    label="编号"
+    align="center"
+    width="110px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <!-- 甲供调拨方式 -->
       <table-cell-tag
@@ -46,7 +54,16 @@
       <span v-else v-empty-text>{{ row.classifyFullName }}</span>
     </template>
   </el-table-column>
-  <component :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" />
+  <component
+    :is="comp"
+    :columns="columns"
+    :basic-class="basicClass"
+    :spec-merge="specMerge"
+    :fixed="fixed"
+    :show-width="showWidth"
+    :show-length="showLength"
+    :show-thickness="showThickness"
+  />
   <common-dialog
     :title="`冻结记录：${currentMaterial.classifyFullName} ${currentMaterial.specification}`"
     v-model="freezeDialogVisible"
@@ -125,6 +142,18 @@ const props = defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  showWidth: {
+    type: Boolean,
+    default: true
+  },
+  showLength: {
+    type: Boolean,
+    default: true
+  },
+  showThickness: {
+    type: Boolean,
+    default: true
   }
 })
 

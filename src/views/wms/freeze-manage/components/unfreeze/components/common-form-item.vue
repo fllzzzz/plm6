@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { defineProps, watchEffect, computed, ref } from 'vue'
+import { defineProps, watchEffect, inject, ref } from 'vue'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 
 const props = defineProps({
@@ -62,6 +62,8 @@ const props = defineProps({
   }
 })
 
+const maxQuantity = inject('maxQuantity')
+
 // 表单
 const currentForm = ref({
   // 当前表单字段
@@ -71,15 +73,6 @@ const currentForm = ref({
 // 监听
 watchEffect(() => {
   currentForm.value = props.form
-})
-
-// 最大可设置数量
-const maxQuantity = computed(() => {
-  if (props.material.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
-    return props.record.quantity // 数量
-  } else {
-    return props.record.mete
-  }
 })
 
 // 设置最大数量

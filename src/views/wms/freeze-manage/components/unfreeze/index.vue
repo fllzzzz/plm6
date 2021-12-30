@@ -24,7 +24,7 @@
 
 <script setup>
 import { unfreezeHandling } from '@/api/wms/freeze/raw-mat'
-import { defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
+import { defineEmits, defineProps, watch, computed, ref, nextTick, provide } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
 
@@ -36,6 +36,7 @@ import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -61,6 +62,16 @@ const props = defineProps({
 const submitLoading = ref(false)
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
 
+// 最大可设置数量
+const maxQuantity = computed(() => {
+  if (props.material.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+    return props.record.quantity // 数量
+  } else {
+    return props.record.mete
+  }
+})
+provide('maxQuantity', maxQuantity)
+
 const validateQuantity = (rule, value, callback) => {
   if (isBlank(value)) {
     return callback(new Error('请填写数量'))
@@ -68,7 +79,7 @@ const validateQuantity = (rule, value, callback) => {
   if (value <= 0) {
     return callback(new Error('数量必须大于0'))
   }
-  if (value > props.material.corOperableQuantity) {
+  if (value > maxQuantity.value) {
     return callback(new Error('数量不可超过可操作数量'))
   }
   callback()
@@ -140,7 +151,7 @@ async function submit() {
     handleClose()
     resetForm()
   } catch (error) {
-    console.log('调拨办理', error)
+    console.log('解冻', error)
   } finally {
     submitLoading.value = false
   }

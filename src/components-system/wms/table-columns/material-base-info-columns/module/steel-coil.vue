@@ -82,6 +82,14 @@ const props = defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  showWidth: {
+    type: Boolean,
+    default: true
+  },
+  showThickness: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -89,7 +97,7 @@ const props = defineProps({
 const { loaded, baseUnit } = useMatBaseUnit(props.basicClass)
 
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))
-const showThickness = computed(() => loaded.value && (isBlank(props.columns) || props.columns.visible('thickness')))
-const showWidth = computed(() => loaded.value && (isBlank(props.columns) || props.columns.visible('width')))
+const showThickness = computed(() => props.showThickness && loaded.value && (isBlank(props.columns) || props.columns.visible('thickness')))
+const showWidth = computed(() => props.showWidth && loaded.value && (isBlank(props.columns) || props.columns.visible('width')))
 const showColor = computed(() => isBlank(props.columns) || props.columns.visible('color'))
 </script>

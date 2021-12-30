@@ -1,10 +1,14 @@
 <template>
-  <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
+  <el-form v-if="unitLoaded" ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
     <div class="material-info">
       <common-material-info :material="material" :form="form">
         <template #afterSpec>
           <el-form-item label="厚 * 宽 * 长">
-            <span>{{ `${material.thickness}mm * ${material.width}mm * ${material.length}mm` }}</span>
+            <span>
+              {{
+                `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit} * ${material.length}${baseUnit.length.unit}`
+              }}
+            </span>
           </el-form-item>
         </template>
         <template #afterBrand>
@@ -22,8 +26,14 @@
         <el-form-item label="半出方式" prop="halfMode">
           <common-radio v-model="form.halfMode" :options="steelPlateHalfModeEnum.ENUM" type="enum" size="small" />
         </el-form-item>
-        <el-form-item label="半出尺寸(mm)" prop="halfSize">
-          <common-input-number v-model="form.halfSize" :min="0" :max="maxHalfSize" controls-position="right" />
+        <el-form-item :label="`半出尺寸(${halfUnitInfo.unit})`" prop="halfSize">
+          <common-input-number
+            v-model="form.halfSize"
+            :min="0"
+            :max="maxHalfSize"
+            :precision="halfUnitInfo.precision"
+            controls-position="right"
+          />
         </el-form-item>
       </template>
       <common-form-item :material="material" :form="form" />
@@ -39,6 +49,7 @@ import { materialOutboundModeEnum, steelPlateHalfModeEnum } from '@/utils/enum/m
 import { deepClone, isBlank } from '@/utils/data-type'
 import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
@@ -84,12 +95,8 @@ const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
   materialOutboundMode: [{ required: true, message: '请选择物料出库方式', trigger: 'change' }],
   halfMode: [{ required: true, message: '请选择物料半出方式', trigger: 'change' }],
-  halfSize: [
-    { required: true, validator: validateHalfSize, trigger: 'blur' }
-  ],
-  quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' }
-  ],
+  halfSize: [{ required: true, validator: validateHalfSize, trigger: 'blur' }],
+  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
 
@@ -103,6 +110,9 @@ const { user } = mapGetters('user')
 // 材料
 const material = computed(() => props.material || {})
 
+// 当前分类基础单位
+const { loaded: unitLoaded, baseUnit } = useMatBaseUnit(props.basicClass)
+
 // 监听校验
 useWatchFormValidate(formRef, form, ['quantity', 'halfSize'])
 
@@ -115,6 +125,17 @@ const maxHalfSize = computed(() => {
     return +material.value.width
   }
   return 0
+})
+
+// 最大半出尺寸
+const halfUnitInfo = computed(() => {
+  if (form.value.halfMode === steelPlateHalfModeEnum.LENGTH.V) {
+    return baseUnit.value.length
+  }
+  if (form.value.halfMode === steelPlateHalfModeEnum.WIDTH.V) {
+    return baseUnit.value.width
+  }
+  return {}
 })
 
 // 最大数量
