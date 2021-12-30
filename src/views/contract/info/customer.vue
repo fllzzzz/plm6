@@ -5,13 +5,13 @@
         <div class="form-row">
           <el-form-item label="客户名称" prop="customerUnit">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model="form.customerUnit" placeholder="客户名称" maxlength="20"/>
+              <el-input v-if="isModify" v-model.trim="form.customerUnit" placeholder="客户名称" maxlength="20"/>
               <span v-else>{{ detail.customerUnit }}</span>
             </div>
           </el-form-item>
           <el-form-item label="社会统一代码" prop="socialCode">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model="form.socialCode" placeholder="社会统一代码" maxlength="18" style="width:260px;"/>
+              <el-input v-if="isModify" v-model.trim="form.socialCode" placeholder="社会统一代码" maxlength="18" style="width:260px;"/>
               <span v-else>{{ detail.socialCode }}</span>
             </div>
           </el-form-item>
@@ -19,13 +19,13 @@
         <div class="form-row">
           <el-form-item label="联系电话" prop="customerUnitPhone">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model="form.customerUnitPhone" placeholder="联系电话" />
+              <el-input v-if="isModify" v-model.trim="form.customerUnitPhone" placeholder="联系电话" />
               <span v-else>{{ detail.customerUnitPhone }}</span>
             </div>
           </el-form-item>
           <el-form-item label="邮箱" prop="customerEmail">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model="form.customerEmail" placeholder="邮箱" maxlength="256" style="width:260px;"/>
+              <el-input v-if="isModify" v-model.trim="form.customerEmail" placeholder="邮箱" maxlength="256" style="width:260px;"/>
               <span class="detail-break" v-else>{{ detail.customerEmail }}</span>
             </div>
           </el-form-item>
@@ -48,7 +48,7 @@
           </el-form-item>
           <el-form-item label="详细地址" prop="customerAddress">
             <div class="input-underline" style="width:380px;">
-              <el-input v-if="isModify" v-model="form.customerAddress" placeholder="详细地址" maxlength="200" style="width:380px;"/>
+              <el-input v-if="isModify" v-model.trim="form.customerAddress" placeholder="详细地址" maxlength="200" style="width:380px;"/>
               <span class="detail-break" v-else>{{ detail.customerAddress }}</span>
             </div>
           </el-form-item>
@@ -58,7 +58,7 @@
             <div class="input-underline">
               <el-input
                 v-if="isModify"
-                v-model="form.customerBankUserName"
+                v-model.trim="form.customerBankUserName"
                 placeholder="银行账户户名"
                 :controls="false"
                 maxlength="50"
@@ -69,13 +69,13 @@
           </el-form-item>
           <el-form-item label="银行账号" prop="customerBankCode">
             <div class="input-underline" style="width:260px;">
-              <el-input v-if="isModify" v-model="form.customerBankCode" placeholder="银行账号" :controls="false" maxlength="30" style="width:260px;"/>
+              <el-input v-if="isModify" v-model.trim="form.customerBankCode" placeholder="银行账号" :controls="false" maxlength="30" style="width:260px;"/>
               <span v-else>{{ detail.customerBankCode }}</span>
             </div>
           </el-form-item>
           <el-form-item label="开户行" prop="customerBankName">
             <div class="input-underline" style="width:260px;">
-              <el-input v-if="isModify" v-model="form.customerBankName" placeholder="开户行" maxlength="30" style="width:260px;"/>
+              <el-input v-if="isModify" v-model.trim="form.customerBankName" placeholder="开户行" maxlength="30" style="width:260px;"/>
               <span v-else>{{ detail.customerBankName }}</span>
             </div>
           </el-form-item>
@@ -83,7 +83,7 @@
         <div class="form-row">
           <el-form-item label="负责人1" prop="customerManagerOne">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model="form.customerManagerOne" placeholder="负责人1" maxlength="20"/>
+              <el-input v-if="isModify" v-model.trim="form.customerManagerOne" placeholder="负责人1" maxlength="20"/>
               <span v-else>{{ detail.customerManagerOne }}</span>
             </div>
           </el-form-item>
@@ -97,7 +97,7 @@
         <div class="form-row">
           <el-form-item label="负责人2" prop="customerManagerTwo">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model="form.customerManagerTwo" placeholder="负责人2" maxlength="20"/>
+              <el-input v-if="isModify" v-model.trim="form.customerManagerTwo" placeholder="负责人2" maxlength="20"/>
               <span v-else>{{ detail.customerManagerTwo }}</span>
             </div>
           </el-form-item>

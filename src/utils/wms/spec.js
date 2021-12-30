@@ -10,10 +10,11 @@ export async function setSpecInfoToList(list) {
   try {
     const allPromise = []
     let p
-    // 加载科目信息
-    const classifyIds = uniqueArr(list.map((v) => v.classifyId))
+    // 加载科目信息, 只处理有classifyId的数据
+    const _list = list.filter(v => v && v.classifyId)
+    const classifyIds = uniqueArr(_list.map((v) => v.classifyId))
     await fetchSpecInfoByFullSpec(classifyIds)
-    list.forEach((row) => {
+    _list.forEach((row) => {
       if (isNotBlank(row.classifyId)) {
         // 无规格
         if (isBlank(row.specification)) row.specification = ''

@@ -87,6 +87,22 @@ watchEffect(() => {
   copyValue.value = !isNaN(props.modelValue) && isNotBlank(props.modelValue) ? props.modelValue : undefined
 })
 
+watchEffect(() => {
+  if (isNotBlank(copyValue.value) && isNotBlank(props.max)) {
+    if (copyValue.value > props.max) {
+      changeCallBack(props.max, copyValue.value)
+    }
+  }
+})
+
+watchEffect(() => {
+  if (isNotBlank(copyValue.value) && isNotBlank(props.max)) {
+    if (copyValue.value < props.min) {
+      changeCallBack(props.min, copyValue.value)
+    }
+  }
+})
+
 function changeCallBack(currentValue, oldValue) {
   emit('update:modelValue', currentValue)
   emit('change', currentValue, oldValue)

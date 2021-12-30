@@ -90,7 +90,7 @@ export default function useMaxHeight(
     maxHeight,
     heightStyle,
     maxHeightStyle,
-    fixMaxHeight: windowSizeHandler // 手动调用修正高度
+    fixMaxHeight: () => nextTick(() => windowSizeHandler()) // 手动调用修正高度
   }
 }
 

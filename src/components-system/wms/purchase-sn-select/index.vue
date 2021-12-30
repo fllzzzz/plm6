@@ -44,7 +44,7 @@
             <span class="extra-label">
               <template v-if="data.projectNames">
                 <span class="title">项目：</span>
-                <span>{{ data.projectNames }}</span>
+                <span class="project-info ellipsis-text">{{ data.projectNames }}</span>
               </template>
             </span>
           </span>
@@ -258,5 +258,10 @@ function setDefault() {
   ::v-deep(.el-input__suffix) {
     right: 35px;
   }
+}
+
+.project-info {
+  display: inline-block;
+  width: 200px;
 }
 </style>

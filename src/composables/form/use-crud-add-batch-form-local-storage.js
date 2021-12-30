@@ -32,6 +32,7 @@ export default function useCrudAddFormLocalStorage(key, { useDraftCallback, clea
       return res
     },
     resetForm: () => {
+      clearFormStorage(ls)
       // 清除内容
       crud.resetBatchForm()
       ls.init && ls.init()

@@ -9,12 +9,26 @@
     size="860px"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
+      <common-button
+        :loading="crud.status.cu === 2"
+        type="primary"
+        size="mini"
+        @click="crud.submitCU"
+      >确认</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="rules"
+        size="small"
+        label-width="140px"
+      >
         <div style="display:flex;">
-          <el-form-item label="属性" prop="propertyType">
+          <el-form-item
+            label="属性"
+            prop="propertyType"
+          >
             <div style="width:260px;">
               <common-select
                 v-model="form.propertyType"
@@ -28,7 +42,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="付款事由" prop="paymentReason">
+          <el-form-item
+            label="付款事由"
+            prop="paymentReason"
+          >
             <div style="width:260px;">
               <common-select
                 v-model="form.paymentReason"
@@ -43,7 +60,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item :label="(form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V)?'所属订单':'订单号'" prop="orderId">
+          <el-form-item
+            :label="(form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V)?'所属订单':'订单号'"
+            prop="orderId"
+          >
             <div style="width:260px;">
               <common-select
                 v-model="form.orderId"
@@ -59,7 +79,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="付款方式" prop="payType">
+          <el-form-item
+            label="付款方式"
+            prop="payType"
+          >
             <div style="width:260px;">
               <common-select
                 v-model="form.payType"
@@ -73,7 +96,11 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="费用类别" prop="payForTypeName">
+          <el-form-item
+            v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+            label="费用类别"
+            prop="payForTypeName"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.payForTypeName"
@@ -84,7 +111,11 @@
               />
             </div>
           </el-form-item>
-          <el-form-item v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="种类" prop="basicClassName">
+          <el-form-item
+            v-if="form.propertyType!=supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+            label="种类"
+            prop="basicClassName"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.basicClassName"
@@ -97,7 +128,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="供应商" prop="supplierName">
+          <el-form-item
+            label="供应商"
+            prop="supplierName"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.supplierName"
@@ -108,7 +142,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="付款日期" prop="paymentDate">
+          <el-form-item
+            label="付款日期"
+            prop="paymentDate"
+          >
             <div style="width:260px;">
               <el-date-picker
                 v-model="form.paymentDate"
@@ -121,7 +158,11 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V" label="合同金额(元)" prop="contractAmount">
+          <el-form-item
+            v-if="form.propertyType !=supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V && form.propertyType !=supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V"
+            label="合同金额(元)"
+            prop="contractAmount"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="choseOrderInfo.amount"
@@ -132,7 +173,11 @@
               />
             </div>
           </el-form-item>
-          <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V " label="运费金额(元)" prop="contractAmount">
+          <el-form-item
+            v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.MATERIAL_TRANSPORT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT_TRANSPORT.V "
+            label="运费金额(元)"
+            prop="contractAmount"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="choseOrderInfo.amount"
@@ -143,7 +188,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="付款单位" prop="paymentUnitId">
+          <el-form-item
+            label="付款单位"
+            prop="paymentUnitId"
+          >
             <div style="width:260px;">
               <common-select
                 v-model="form.paymentUnitId"
@@ -174,7 +222,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-           <el-form-item label="申请人" prop="applyUserId">
+          <el-form-item
+            label="申请人"
+            prop="applyUserId"
+          >
             <div style="width:260px;">
               <user-dept-cascader
                 v-model="form.applyUserId"
@@ -186,7 +237,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="付款行" prop="paymentBank">
+          <el-form-item
+            label="付款行"
+            prop="paymentBank"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.paymentBank"
@@ -198,7 +252,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-           <el-form-item label="申请日期" prop="applyDate">
+          <el-form-item
+            label="申请日期"
+            prop="applyDate"
+          >
             <div style="width:260px;">
               <el-date-picker
                 v-model="form.applyDate"
@@ -209,7 +266,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="付款账号" prop="paymentBankAccount">
+          <el-form-item
+            label="付款账号"
+            prop="paymentBankAccount"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.paymentBankAccount"
@@ -221,7 +281,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="申请金额(元)" prop="applyAmount">
+          <el-form-item
+            label="申请金额(元)"
+            prop="applyAmount"
+          >
             <div style="width:260px;">
               <el-input-number
                 v-model.number="form.applyAmount"
@@ -235,7 +298,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="收款单位" prop="receiveUnit">
+          <el-form-item
+            label="收款单位"
+            prop="receiveUnit"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.receiveUnit"
@@ -247,7 +313,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="付款金额(元)" prop="paymentAmount">
+          <el-form-item
+            label="付款金额(元)"
+            prop="paymentAmount"
+          >
             <div style="width:260px;">
               <el-input-number
                 v-model.number="form.paymentAmount"
@@ -270,7 +339,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="收款行" prop="paymentBank">
+          <el-form-item
+            label="收款行"
+            prop="paymentBank"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.paymentBank"
@@ -282,7 +354,10 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item label="付款比例" prop="paymentRate">
+          <el-form-item
+            label="付款比例"
+            prop="paymentRate"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="paymentRate"
@@ -293,7 +368,10 @@
               />
             </div>
           </el-form-item>
-          <el-form-item label="收款账号" prop="receiveBankAccount">
+          <el-form-item
+            label="收款账号"
+            prop="receiveBankAccount"
+          >
             <div style="width:260px;">
               <el-input
                 v-model="form.receiveBankAccount"
@@ -305,20 +383,36 @@
           </el-form-item>
         </div>
         <div style="display:flex;">
-          <el-form-item v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V" label="关联项目" prop="projectId">
+          <el-form-item
+            v-if="form.propertyType===supplierPayMentTypeEnum.ENUM.PRODUCT.V || form.propertyType===supplierPayMentTypeEnum.ENUM.SUBCONTRACT.V"
+            label="关联项目"
+            prop="projectId"
+          >
             <div style="width:260px;">
               <template v-if="choseOrderInfo.projectList && choseOrderInfo.projectList.length>0">
-                <div v-for="item in choseOrderInfo.projectList" :key="item.id">{{item.serialNumber+' '+item.shortName}}</div>
+                <div
+                  v-for="item in choseOrderInfo.projectList"
+                  :key="item.id"
+                >{{item.serialNumber+' '+item.shortName}}</div>
               </template>
             </div>
           </el-form-item>
           <el-form-item label="附件">
             <div style="width:260px;">
-              <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.ENUM.NORMAL.V" />
+              <upload-btn
+                ref="uploadRef"
+                v-model:files="form.attachments"
+                :file-classify="fileClassifyEnum.ENUM.NORMAL.V"
+                :accept="'.pdf,.jpg,.jpeg,.png'"
+                :tip="'支持扩展名:pdf .jpg .jpeg .png'"
+              />
             </div>
           </el-form-item>
         </div>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item
+          label="备注"
+          prop="remark"
+        >
           <el-input
             v-model="form.remark"
             type="textarea"
@@ -516,7 +610,7 @@ function clearInfo() {
 
 function orderChange(val) {
   if (val) {
-    choseOrderInfo.value = orderListOption.value.find(v => v.id === val)
+    choseOrderInfo.value = orderListOption.value.find((v) => v.id === val)
     form.orderSerialNumber = choseOrderInfo.value.serialNumber
     form.receiveBank = choseOrderInfo.value.bankName
     form.receiveBankAccount = choseOrderInfo.value.bankAccount
@@ -538,7 +632,7 @@ function orderChange(val) {
 
 function orderCompanyChange(val) {
   if (val) {
-    const orderVal = choseOrderInfo.value.companyBankAccountList.find(v => v.companyId === val)
+    const orderVal = choseOrderInfo.value.companyBankAccountList.find((v) => v.companyId === val)
     form.paymentBankAccount = orderVal.account
     form.paymentBank = orderVal.depositBank
     form.paymentUnit = orderVal.companyName

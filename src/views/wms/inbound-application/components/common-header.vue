@@ -36,7 +36,7 @@
           />
         </el-form-item>
         <el-form-item
-          v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
+          v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V"
           :label="`过磅重量(千克)`"
           label-width="120px"
           prop="loadingWeight"

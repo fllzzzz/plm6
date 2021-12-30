@@ -168,6 +168,7 @@
                 value-format="x"
                 placeholder="选择开票日期"
                 style="width: 250px"
+                :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"
               />
               <template v-else>
                 <span>{{ collectionInfo.invoiceDate? parseTime(collectionInfo.invoiceDate,'{y}-{m}-{d}'): '-' }}</span>
@@ -213,6 +214,8 @@
                 v-if="isModify"
                 v-model:files="form.attachments"
                 :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
+                :accept="'.pdf,.jpg,.jpeg,.png'"
+                :tip="'支持扩展名:pdf .jpg .jpeg .png'"
                 :limit="1"
               />
               <template v-else>
@@ -227,7 +230,8 @@
             v-model="form.remark"
             type="textarea"
             :autosize="{ minRows: 6, maxRows: 8 }"
-            :maxLength="500"
+            :maxlength="200"
+            show-word-limit
             placeholder="可填写备注"
             style="max-width: 500px"
           />
