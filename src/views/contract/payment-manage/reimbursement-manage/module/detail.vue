@@ -76,8 +76,8 @@
           <el-form-item label="申请金额(元)" prop="applyAmount">
             <div style="width: 460px">
               <el-input v-if="isModify" v-model="form.applyAmount" type="text" placeholder="申请金额" style="width: 320px" disabled />
-              <span v-else>{{ collectionInfo.applyAmount ? toThousand(collectionInfo.applyAmount) : '' }}</span>
-              <span v-if="upperYuan" style="margin-left: 5px">{{ `(${upperYuan})` }}</span>
+              <div v-else>{{ collectionInfo.applyAmount ? toThousand(collectionInfo.applyAmount) : '' }}</div>
+              <div v-if="upperYuan" style="margin-left: 5px">{{ `${upperYuan}` }}</div>
             </div>
           </el-form-item>
         </div>
@@ -132,6 +132,7 @@
                 value-format="x"
                 placeholder="申请日期"
                 style="width: 320px"
+                :disabledDate="(date) => { return date.getTime() > new Date().getTime() }"
               />
               <template v-else>
                 <span>{{ collectionInfo.applyDate? parseTime(collectionInfo.applyDate,'{y}-{m}-{d}'): '-' }}</span>
@@ -248,7 +249,7 @@
                 v-model="scope.row.applyAmount"
                 :min="1"
                 :max="99999999999"
-                :step="10000"
+                :step="100"
                 :precision="DP.YUAN"
                 size="small"
                 controls-position="right"
@@ -288,7 +289,7 @@
                 v-model="scope.row.invoiceAmount"
                 :min="scope.row.applyAmount ? scope.row.applyAmount : 1"
                 :max="99999999999"
-                :step="10000"
+                :step="100"
                 :precision="DP.YUAN"
                 size="small"
                 controls-position="right"
@@ -343,7 +344,7 @@
                 v-model="scope.row.actuallyPayAmount"
                 :min="1"
                 :max="99999999999"
-                :step="10000"
+                :step="100"
                 :precision="DP.YUAN"
                 size="small"
                 controls-position="right"

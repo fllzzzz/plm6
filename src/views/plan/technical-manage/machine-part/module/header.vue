@@ -6,6 +6,7 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
+        :productType="TechnologyTypeAllEnum.STRUCTURE.V"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
@@ -70,6 +71,7 @@ import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import { processingEnum, shearTypeEnum } from '@enum-ms/plan'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { ElRadioGroup } from 'element-plus'
 
 const defaultQuery = {

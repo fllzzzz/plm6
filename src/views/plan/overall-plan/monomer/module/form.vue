@@ -172,21 +172,17 @@ watch(
         }
       })
       currentOption.value = []
-      val.projectContentList.forEach((v) => {
-        if (val.businessType === businessTypeEnum.ENUM.MACHINING.V) {
-          if (v.no && props.originOption.findIndex((k) => k.no === Number(v.no)) > -1) {
-            const optionVal = props.originOption.find((k) => k.no === Number(v.no))
-            currentOption.value.push(optionVal)
+      props.originOption.forEach(v => {
+        if (val.businessType === businessTypeEnum.MACHINING.V) {
+          if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
+            currentOption.value.push(v)
           }
-        } else if (val.businessType === businessTypeEnum.ENUM.INSTALLATION.V) {
-          if (v.childrenList && v.childrenList.length > 0) {
-            v.childrenList.forEach((value) => {
-              if (value.no && props.originOption.findIndex((k) => k.no === Number(value.no)) > -1) {
-                const optionVal = props.originOption.find((k) => k.no === Number(value.no))
-                currentOption.value.push(optionVal)
-              }
-            })
-          }
+        } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
+          val.projectContentList.forEach(k => {
+            if (k.childrenList && k.childrenList.length > 0 && k.childrenList.findIndex((value) => Number(value.no) === v.no) > -1) {
+              currentOption.value.push(v)
+            }
+          })
         }
       })
       if (currentOption.value.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {

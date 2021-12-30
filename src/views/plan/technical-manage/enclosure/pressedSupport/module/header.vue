@@ -6,6 +6,7 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
+        :productType="TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
@@ -24,7 +25,7 @@
         </el-radio-button>
       </el-radio-group>
       <el-input
-        v-model="query.mame"
+        v-model="query.name"
         size="small"
         placeholder="输入名称搜索"
         style="width: 170px; margin-left: 0"
@@ -86,7 +87,7 @@ import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import { processingEnum } from '@enum-ms/plan'
-import { TechnologyTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/enclosure'
 import ExportButton from '@comp-common/export-button/index.vue'
@@ -99,7 +100,7 @@ const defaultQuery = {
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false },
-  category: { value: TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V, resetAble: false }
+  category: { value: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V, resetAble: false }
 }
 
 const monomerSelectRef = ref()
@@ -115,7 +116,7 @@ const props = defineProps({
 })
 
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, category: TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V }
+  return { areaId: crud.query.areaId, category: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V }
 })
 
 const exportParam = computed(() => {

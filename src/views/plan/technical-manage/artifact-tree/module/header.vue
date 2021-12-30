@@ -6,6 +6,7 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
+        :productType="TechnologyTypeAllEnum.STRUCTURE.V"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
@@ -80,6 +81,7 @@ import areaTabs from '@/components-system/plan/area-tabs'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { downloadArtifactTree, downloadArtifactTreeTemplate } from '@/api/plan/technical-manage/artifact-tree'
 
 const defaultQuery = {
