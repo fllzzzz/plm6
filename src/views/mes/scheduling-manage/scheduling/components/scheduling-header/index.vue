@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <monomer-select-area-tabs :project-id="projectId" @change="fetchMonomerAndArea" />
-      <product-type-query :productType="productType" :category="category" :enclosureShowItem="Boolean(category)" :toQuery="crud.toQuery" :query="query" />
+      <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <crudOperation>

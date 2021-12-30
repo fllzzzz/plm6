@@ -128,11 +128,9 @@ async function fetchList() {
         .join('<span>→</span>')
       v.mete = useProductMeteConvert({
         productType: productType.value,
-        weight: v.netWeight,
-        length: v.length,
-        L_TO_UNIT: unitObj.value.unit,
-        L_DP: unitObj.value.dp
-      }).convertMete
+        weight: { num: v.netWeight },
+        length: { num: v.length, to: unitObj.value.unit, dp: unitObj.value.dp }
+      })
       return v
     })
   } catch (error) {

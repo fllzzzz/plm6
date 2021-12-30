@@ -11,6 +11,7 @@
     :clearable="props.clearable"
     :filterable="props.filterable"
     :placeholder="props.placeholder"
+    :no-data-text="props.noDataText"
     :class="textAlignClass"
     @change="handleChange"
     @blur="handleBlur"
@@ -107,6 +108,9 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择'
+  },
+  noDataText: {
+    type: String
   },
   textAlign: {
     type: String,

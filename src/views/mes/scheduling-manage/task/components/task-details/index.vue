@@ -31,36 +31,17 @@
         <span>{{ emptyTextFormatter(scope.row.projectName) }}</span>
       </template>
     </el-table-column>
-    <el-table-column
-      v-if="columns.visible('areaName')"
-      prop="areaName"
-      :show-overflow-tooltip="true"
-      label="单体区域"
-      min-width="140px"
-    >
+    <el-table-column v-if="columns.visible('areaName')" prop="areaName" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
       <template v-slot="scope">
         <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.areaName) }}</span>
       </template>
     </el-table-column>
-    <template v-for="item in needTableColumns" :key="item.field">
-      <el-table-column
-        v-if="item.toFixed"
-        :show-overflow-tooltip="true"
-        :prop="item.field"
-        :label="item.label"
-        align="center"
-        :width="item.width"
-      >
-        <template v-slot="scope">
-          {{ toFixed(scope.row[item.field], item.DP) }}
-        </template>
-      </el-table-column>
-      <el-table-column v-else :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width">
-        <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row[item.field]) }}</span>
-        </template>
-      </el-table-column>
-    </template>
+    <productType-base-info-columns
+      :productType="productType"
+      :category="category"
+      :columns="columns"
+      :unShowField="['specification', 'material']"
+    />
     <el-table-column v-if="columns.visible('schedulingQuantity')" prop="schedulingQuantity" label="任务数" min-width="100px">
       <template v-slot:header>
         <el-tooltip class="item" effect="light" :content="`‘未下发’状态下，可修改排产数`" placement="top">
@@ -109,11 +90,25 @@
           type="date"
           size="mini"
           style="width: 100%"
+          :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
           placeholder="需求完成日期"
         />
         <span v-else>{{ emptyTextFormatter(parseTime(scope.row.askCompleteTime, '{y}-{m}-{d}')) }}</span>
       </template>
     </el-table-column>
+    <template v-if="crud.query.issueStatus === taskIssueTypeEnum.HAS_ISSUED.V">
+      <el-table-column v-if="columns.visible('completeQuantity')" prop="completeQuantity" label="完成数量" align="center" width="80px">
+        <template #default="{ row }">
+          <span :class="row.completeQuantity === row.schedulingQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="210px">
+        <template #default="{ row }">
+          <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="danger">删除任务</common-button>
+          <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="warning">协同任务</common-button>
+        </template>
+      </el-table-column>
+    </template>
   </common-table>
   <issue-preview v-model:visible="previewVisible" :modified-data="crud.selections" @refresh="refresh" />
   <modifyQuantityDialog v-model:visible="modifyQuantityVisible" :details="detailRow" @modifySuccess="refresh" />
@@ -121,18 +116,19 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/task/common'
-import { computed, ref, defineProps, defineEmits, watch, inject } from 'vue'
+import { computed, ref, defineProps, defineEmits, watch, provide } from 'vue'
 import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
 import { taskIssueTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
-import { emptyTextFormatter, toFixed } from '@data-type'
+import { emptyTextFormatter } from '@data-type'
 
 // import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header'
 import modifyQuantityDialog from './module/modify-quantity-dialog'
 import issuePreview from './module/issue-preview'
@@ -157,7 +153,6 @@ const tableRules = {
   // askCompleteTime: [{ required: true, message: '请选择需求完成日期', trigger: 'change' }]
 }
 
-const needTableColumns = inject('needTableColumns')
 const headerRef = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -181,6 +176,10 @@ const props = defineProps({
   details: {
     type: Object,
     default: () => {}
+  },
+  query: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -200,11 +199,24 @@ const processType = computed(() => {
 const productType = computed(() => {
   return props.details?.productType
 })
+const category = computed(() => {
+  return props.details?.category || 0
+})
+
+provide('productType', productType)
 
 watch(
   () => [processType.value, productType.value],
   () => {
     crud.refresh()
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => props.query,
+  () => {
+    crud.query = Object.assign(crud.query, props.query)
   },
   { immediate: true, deep: true }
 )
@@ -244,14 +256,12 @@ function refresh() {
 CRUD.HOOK.beforeToQuery = () => {
   modifying.value = false
   crud.query.date = moment(props.details.date).valueOf()
-  crud.query.processType = processType.value
   crud.query.productType = productType.value
 }
 
 CRUD.HOOK.beforeRefresh = () => {
   modifying.value = false
   crud.query.date = moment(props.details.date).valueOf()
-  crud.query.processType = processType.value
   crud.query.productType = productType.value
 }
 

@@ -6,6 +6,7 @@ import { getFactoriesAllSimple } from '@/api/mes/common'
 import { getUserTree, getRegionalCascade } from '@/api/common'
 import { getWorkshopsAllSimple } from '@/api/mes/common'
 import { getAllFactoryWorkshopLines } from '@/api/mes/common'
+import { getLinesAllSimple } from '@/api/mes/common'
 import { getProcessAllSimple } from '@/api/mes/common'
 import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
@@ -44,7 +45,8 @@ const state = {
   factoryKV: {}, // 工厂id:value 格式
   warehouse: [], // 存储仓库
   workshops: [], // 车间
-  productLines: [], // 生产线
+  productLines: [], // 工厂-车间-生产线
+  onlyProductLines: [], // 生产线
   process: [], // 工序
   users: [], // 人员列表
   dept: [], // 部门列表
@@ -62,6 +64,7 @@ const state = {
     warehouse: false,
     workshops: false,
     productLines: false,
+    onlyProductLines: false,
     process: false,
     users: false,
     dept: false,
@@ -128,6 +131,9 @@ const mutations = {
   },
   SET_PRODUCT_LINES(state, productLines) {
     state.productLines = productLines
+  },
+  SET_ONLY_PRODUCT_LINES(state, onlyProductLines) {
+    state.onlyProductLines = onlyProductLines
   },
   SET_PROCESS(state, process) {
     state.process = process
@@ -274,6 +280,13 @@ const actions = {
     const { content = [] } = await getAllFactoryWorkshopLines()
     commit('SET_PRODUCT_LINES', content)
     commit('SET_LOADED', { key: 'productLines', loaded: true })
+    return content
+  },
+  // 生产线
+  async fetchOnlyProductLines({ commit }) {
+    const { content = [] } = await getLinesAllSimple()
+    commit('SET_ONLY_PRODUCT_LINES', content)
+    commit('SET_LOADED', { key: 'onlyProductLines', loaded: true })
     return content
   },
   // 工序

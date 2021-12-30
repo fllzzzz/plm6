@@ -267,6 +267,13 @@ watch(
   { immediate: true }
 )
 
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query.projectId = props.projectId
+  crud.query.factoryId = props.factoryId
+  crud.query.monomerId = props.monomerId
+  crud.query.areaId = props.areaId
+}
+
 function add(row) {
   emit('add', row, packTypeK)
 }

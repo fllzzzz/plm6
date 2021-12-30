@@ -186,6 +186,9 @@ function handleCurrentChange(val) {
 CRUD.HOOK.afterSubmit = () => {
   changeStoreLoaded()
 }
+CRUD.HOOK.afterDelete = () => {
+  changeStoreLoaded()
+}
 function changeStoreLoaded() {
   store.commit('config/SET_LOADED', { key: 'factories', loaded: false })
 }
