@@ -46,7 +46,11 @@
             <div>{{ scope.row.alreadyDays }}</div>
           </template>
         </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="100px" />
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" align="center" width="100" >
+          <template v-slot="scope">
+            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+          </template>
+        </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
