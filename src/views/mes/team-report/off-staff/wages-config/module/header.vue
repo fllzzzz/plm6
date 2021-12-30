@@ -71,7 +71,7 @@
       <common-button v-else type="primary" size="mini" @click.stop="handelModifying(true)">编辑</common-button>
     </template>
     <template #viewLeft>
-      <el-badge v-if="auditNumberBadge" :value="auditNumberBadge">
+      <el-badge :value="auditNumberBadge" :hidden="auditNumberBadge===0">
         <common-button size="mini" type="primary" @click="auditVisible = true">审核</common-button>
       </el-badge>
     </template>

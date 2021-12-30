@@ -54,9 +54,8 @@
         min-width="70px"
       />
       <el-table-column
-        v-if="columns.visible('shipQuantity')"
-        key="shipQuantity"
-        prop="quantity"
+        v-if="columns.visible('sendQuantity')"
+        prop="sendQuantity"
         sortable="custom"
         :label="`已发运数(${unitObj.measure})`"
         align="center"
@@ -113,7 +112,8 @@ const { crud, columns, CRUD } = useCRUD(
     title: '项目报表',
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { get: artifact }
+    crudApi: { get: artifact },
+    requiredQuery: ['areaId'],
   },
   tableRef
 )
@@ -169,12 +169,13 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       W_TO_UNIT: unitObj.value.unit,
       W_DP: unitObj.value.dp
     }).convertMete
+    v.sendQuantity = v.sendQuantity || 0
     v.shipMete = useProductMeteConvert({
       productType: productType.value,
-      length: v.length * v.shipQuantity,
+      length: v.length * v.sendQuantity,
       L_TO_UNIT: unitObj.value.unit,
       L_DP: unitObj.value.dp,
-      weight: v.netWeight * v.shipQuantity,
+      weight: v.netWeight * v.sendQuantity,
       W_TO_UNIT: unitObj.value.unit,
       W_DP: unitObj.value.dp
     }).convertMete

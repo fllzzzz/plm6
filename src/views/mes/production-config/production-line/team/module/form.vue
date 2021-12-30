@@ -12,10 +12,17 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
       <el-form-item label="工序" prop="processId">
-        <process-select v-model="form.processId" :productType="productType" containsMachinePart :size="'small'" :multiple="false" style="width: 270px" />
+        <process-select
+          v-model="form.processId"
+          :productType="productType"
+          containsMachinePart
+          :size="'small'"
+          :multiple="false"
+          style="width: 270px"
+        />
       </el-form-item>
       <el-form-item label="班组属性" prop="organizationType">
-        <el-select v-model="form.organizationType" placeholder="请选择班组属性" :size="'small'" style="width: 270px">
+        <el-select v-model="form.organizationType" placeholder="请选择班组属性" :size="'small'" style="width: 270px" :disabled="isEdit">
           <el-option v-for="item in teamAttributeEnum.ENUM" :key="item.V" :label="item.L" :value="item.V" />
         </el-select>
       </el-form-item>
@@ -47,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
@@ -56,8 +63,8 @@ import { teamAttributeEnum } from '@enum-ms/mes'
 defineProps({
   productType: {
     type: Number,
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
 const formRef = ref()
@@ -69,16 +76,17 @@ const defaultForm = {
   processId: undefined,
   leaderId: undefined,
   organizationType: undefined,
-  memberIds: []
+  memberIds: [],
 }
 
 const { crud, form } = regForm(defaultForm, formRef)
+const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
-  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }]
+  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }],
 }
 
 function leaderChange(userlist) {
