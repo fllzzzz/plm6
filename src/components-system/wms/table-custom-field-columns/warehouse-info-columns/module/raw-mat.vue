@@ -8,7 +8,7 @@
   <el-table-column v-if="showWarehouse" :prop="`${field}.warehouse`" label="仓库" align="left" min-width="110px" show-overflow-tooltip>
     <template #default="{ row }">
       <factory-table-cell-tag v-if="props.showFactory" :id="getInfo(row, 'factory') ? getInfo(row, 'factory.id') :getInfo(row, 'factoryId')" />
-      <span v-empty-text>{{ typeof getInfo(row, 'warehouse') === 'object' ? getInfo(row, 'warehouse.name') : getInfo(row, 'warehouse') }}</span>
+      <span v-empty-text>{{ row.warehouse && typeof getInfo(row, 'warehouse') === 'object' ? getInfo(row, 'warehouse.name') : getInfo(row, 'warehouse') }}</span>
     </template>
   </el-table-column>
 </template>

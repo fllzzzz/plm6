@@ -13,7 +13,7 @@
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
       <div class="material-info">
-        <component :is="comp" :material="props.material" />
+        <component :is="comp" :material="props.material" :basicClass="props.basicClass" />
       </div>
       <div class="form-info">
         <common-form-item :material="material" :form="form" />

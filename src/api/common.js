@@ -80,3 +80,37 @@ export function downloadAttachment({ id }) {
     responseType: 'blob'
   })
 }
+
+/**
+ * 获取全部项目（多模块使用）
+ * @export
+ * @param {number} page|required 页码
+ * @param {number} size|required 页大小
+ * @param {number} year 年份
+ * @param {string} noOrProjectName 合同编号或项目简称
+ * @returns
+ */
+export function getProjectList(params) {
+  return request({
+    module: 'contract',
+    url: 'project/listMy',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 获取项目汇总信息（多模块使用）
+ * @export
+ * @param {number} year 年份
+ * @returns
+ */
+export function getProjectInfo(params) {
+  return request({
+    module: 'contract',
+    url: 'project/getMyProjectInfo',
+    method: 'get',
+    params
+  })
+}
+

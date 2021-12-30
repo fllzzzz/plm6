@@ -66,6 +66,10 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择单体'
+  },
+  productType: {
+    type: [Number, String],
+    default: undefined
   }
 })
 
@@ -151,7 +155,18 @@ function selectChange(val) {
   } else {
     monomerVal = originOptions.value.find((k) => k.id === val)
   }
-  const areaInfo = monomerVal && monomerVal.areaSimpleList ? monomerVal.areaSimpleList : []
+  const areaInfo = []
+  if (monomerVal && monomerVal.areaSimpleList && monomerVal.areaSimpleList.length > 0) {
+    monomerVal.areaSimpleList.map(v => {
+      if (props.productType) {
+        if (v.productType === props.productType) {
+          areaInfo.push(v)
+        }
+      } else {
+        areaInfo.push(v)
+      }
+    })
+  }
   emit('update:modelValue', val)
   emit('change', val)
   emit('getAreaInfo', areaInfo)
