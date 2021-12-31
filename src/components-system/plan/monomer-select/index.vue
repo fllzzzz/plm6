@@ -113,6 +113,7 @@ async function fetchData() {
   options.value = []
   originOptions.value = []
   if (!props.projectId) {
+    selectValue.value = undefined
     return
   }
   let optionData = []
