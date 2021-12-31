@@ -183,6 +183,38 @@ const setPartyABorrowReturnConf = {
   }
 }
 
+// 获取退货基础配置
+const getRejectBasicConf = {
+  url: '/api/wms/config/reject/base',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        materialAmountDisplayWay: {
+          application: true,
+          review: true
+        }
+      }
+    }
+  }
+}
+
+// 保存退货基础配置
+const setRejectBasicConf = {
+  url: '/api/wms/config/reject/base',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 export default [
   getWmsConfig,
   getInboundBasicConf,
@@ -192,5 +224,7 @@ export default [
   getOutboundBasicConf,
   setOutboundBasicConf,
   getPartyABorrowReturnConf,
-  setPartyABorrowReturnConf
+  setPartyABorrowReturnConf,
+  getRejectBasicConf,
+  setRejectBasicConf
 ]

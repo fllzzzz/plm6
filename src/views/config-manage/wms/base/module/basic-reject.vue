@@ -2,9 +2,9 @@
   <el-card shadow="always">
     <template #header>
       <div class="clearfix">
-        <span class="card-title">入库基础配置</span>
+        <span class="card-title">退货基础配置</span>
         <common-tip-button
-          v-permission="permission.basicInboundEdit"
+          v-permission="permission.basicRejectEdit"
           :loading="submitLoading"
           :disabled="submitDisabled"
           show-tip
@@ -17,18 +17,12 @@
         </common-tip-button>
       </div>
     </template>
-    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="130px">
-      <el-form-item label="金额填写场景">
-        <common-radio v-model="form.amountFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
-      </el-form-item>
-      <el-form-item label="存储位置填写场景">
-        <common-radio v-model="form.warehouseFillWay" :options="inboundFillWayEnum.ENUM" type="enum" size="small" />
-      </el-form-item>
-      <el-form-item label="打印标签提示场景">
-        <el-checkbox v-model="form.printLabelTipWay.afterApplication" label="入库申请提交后" size="mini"></el-checkbox>
-        <el-checkbox v-model="form.printLabelTipWay.afterReview" label="入库单审核后" size="mini"></el-checkbox>
+    <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="160px">
+      <el-form-item label="退货页面物料金额显示">
+        <el-checkbox v-model="form.materialAmountDisplayWay.application" label="退货申请列表" size="mini"></el-checkbox>
+        <el-checkbox v-model="form.materialAmountDisplayWay.review" label="退货审核列表" size="mini"></el-checkbox>
         <el-form-item>
-          <span class="form-item-tip">勾选后，会在对应的场景弹窗提示用户打印此次入库物料的标签。</span>
+          <span class="form-item-tip">勾选后，会在对应的业务场景展示物料金额。</span>
         </el-form-item>
       </el-form-item>
     </el-form>
@@ -36,9 +30,8 @@
 </template>
 
 <script setup>
-import { getInboundBasicConf, setInboundBasicConf } from '@/api/config/wms/base'
+import { getRejectBasicConf, setRejectBasicConf } from '@/api/config/wms/base'
 import { ref, onMounted, inject, computed } from 'vue'
-import { inboundFillWayEnum } from '@enum-ms/wms'
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
 
@@ -48,14 +41,10 @@ const permission = inject('permission')
 
 // 数据源
 const dataSource = ref({
-  // 金额填写方式
-  amountFillWay: undefined,
-  // 工厂填写方式
-  warehouseFillWay: undefined,
-  // 标签打印提示场景
-  printLabelTipWay: {
-    afterApplication: undefined,
-    afterReview: undefined
+  // 物料金额显示方式
+  materialAmountDisplayWay: {
+    application: undefined,
+    review: undefined
   }
 })
 // 表单
@@ -77,11 +66,11 @@ onMounted(() => {
 async function fetchData() {
   dataLoading.value = true
   try {
-    const res = await getInboundBasicConf()
+    const res = await getRejectBasicConf()
     form.value = deepClone(res)
     dataSource.value = res
   } catch (error) {
-    console.log('wms基础配置', error)
+    console.log('wms退货配置', error)
   } finally {
     dataLoading.value = false
   }
@@ -92,9 +81,9 @@ async function submit() {
   try {
     submitLoading.value = true
 
-    await setInboundBasicConf(form.value)
+    await setRejectBasicConf(form.value)
     ElNotification({
-      title: '入库基础配置设置成功',
+      title: '退货基础配置设置成功',
       type: 'success',
       duration: 2500
     })
@@ -104,7 +93,7 @@ async function submit() {
     // await store.dispatch('config/fetchConfigInfo')
   } catch (error) {
     ElNotification({
-      title: '入库基础配置设置失败',
+      title: '退货基础配置设置失败',
       type: 'error',
       duration: 2500
     })
