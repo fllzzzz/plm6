@@ -66,7 +66,7 @@
           </el-table-column>
           <el-table-column key="sort" prop="sort" :show-overflow-tooltip="true" label="排序" align="center" width="100">
             <template #default="{ row }">
-              <el-input-number
+              <common-input-number
                 v-model="row.sort"
                 type="text"
                 maxlength="3"

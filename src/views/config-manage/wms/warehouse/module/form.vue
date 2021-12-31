@@ -44,7 +44,7 @@
         />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input-number
+        <common-input-number
           v-model="form.sort"
           controls-position="right"
           class="align-left"
