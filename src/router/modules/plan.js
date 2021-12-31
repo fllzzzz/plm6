@@ -67,7 +67,7 @@ export default {
         },
         {
           name: 'PlanOverallPlanConfirm',
-          path: 'plan-true',
+          path: 'plan-confirm',
           hidden: false,
           component: '/plan/overall-plan/plan-confirm/index',
           meta: { title: '工作确认', icon: 'project', noCache: true }

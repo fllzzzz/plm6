@@ -30,7 +30,6 @@
         placeholder="选择年"
         format="YYYY"
         value-format="YYYY"
-        :disabledDate="(date) => { return date.getFullYear() > new Date().getFullYear() }"
         @change="crud.toQuery"
       />
       <el-input
