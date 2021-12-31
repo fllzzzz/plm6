@@ -28,7 +28,7 @@
             <span>{{ form.serialNumber }}</span>
           </el-form-item>
           <el-form-item label="构件数量">
-            <span>{{ form.quantity }}</span>
+            <span>{{ originQuantity }}</span>
           </el-form-item>
           <el-form-item label="生产数量">
             <span>{{ form.productionQuantity }}</span>
@@ -391,6 +391,7 @@ const choseVal = ref([])
 const preVal = ref()
 const uploadRef = ref()
 const minQuantity = ref(0)
+const originQuantity = ref()
 const rules = {
   name: [
     { required: true, message: '请填写构件名称', trigger: 'blur' },
@@ -513,12 +514,21 @@ function deleteItems() {
 }
 
 function quantityChange() {
-  if (crud.form.newQuantity && crud.form.newQuantity !== preVal.value) {
+  if (crud.form.newQuantity) {
+    if (crud.form.newQuantity !== preVal.value) {
+      crud.form.machinePartDTOList.map((val) => {
+        val.quantity = val.unitData * crud.form.newQuantity
+      })
+      preVal.value = crud.form.newQuantity
+      totalQuantity.value = crud.form.newQuantity
+      weigthChange()
+    }
+  } else {
     crud.form.machinePartDTOList.map((val) => {
-      val.quantity = val.unitData * crud.form.newQuantity
+      val.quantity = val.unitData * crud.form.quantity
     })
-    preVal.value = crud.form.newQuantity
-    totalQuantity.value = crud.form.newQuantity
+    preVal.value = undefined
+    totalQuantity.value = crud.form.quantity
     weigthChange()
   }
 }
@@ -530,6 +540,7 @@ function partQuantityChange(row) {
 }
 
 CRUD.HOOK.afterToEdit = (crud, form) => {
+  originQuantity.value = crud.form.quantity
   totalQuantity.value = crud.form.quantity
   preVal.value = crud.form.quantity
   crud.form.machinePartDTOList.map((val) => {
@@ -542,6 +553,7 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : undefined
+  crud.form.quantity = crud.form.newQuantity ? crud.form.newQuantity : crud.form.quantity
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>

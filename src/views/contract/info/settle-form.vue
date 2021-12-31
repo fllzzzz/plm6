@@ -122,6 +122,10 @@ const props = defineProps({
   contractInfo: {
     type: Object,
     default: () => {}
+  },
+  showType: {
+    type: String,
+    default: undefined
   }
 })
 

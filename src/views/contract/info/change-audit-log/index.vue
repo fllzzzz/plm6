@@ -2,7 +2,7 @@
   <div class="app-container" style="padding: 0">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :currentProjectType="currentProjectType" />
+      <mHeader />
     </div>
     <!--表格渲染-->
     <common-table
@@ -151,6 +151,10 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- 金额变更 -->
+    <!-- <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-Info="detailInfo"/> -->
+    <!-- 结算填报 -->
+    <!-- <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-Info="detailInfo"/> -->
   </div>
 </template>
 
@@ -160,13 +164,13 @@ import { ref, watch, defineProps } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+// import moneyForm from '../money-form'
+// import settleForm from '../settle-form'
 
-const { currentProjectType } = mapGetters(['currentProjectType'])
 // crud交由presenter持有
 const permission = {
   get: ['changeAuditLog:get'],
@@ -182,6 +186,12 @@ const optShow = {
 }
 
 const tableRef = ref()
+// const moneyRef = ref()
+const auditStatus = ref()
+const showType = ref('detail')
+const moneyVisible = ref(false)
+const settleVisible = ref(false)
+const detailInfo = ref({})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '变更管理',
@@ -219,7 +229,20 @@ watch(
 )
 
 function openDetail(row, type) {
-
+  auditStatus.value = row.auditStatus
+  showType.value = type
+  detailInfo.value = row
+  switch (row.type) {
+    // CONTRACT_INFO,CONTRACT_AMOUNT,CONTRACT_SETTLE
+    case (contractChangeTypeEnum.CONTRACT_AMOUNT.V):
+      moneyVisible.value = true
+      break
+    case (contractChangeTypeEnum.CONTRACT_SETTLE.V):
+      settleVisible.value = true
+      break
+    default:
+      break
+  }
 }
 
 CRUD.HOOK.beforeRefresh = () => {
