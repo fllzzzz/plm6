@@ -52,6 +52,13 @@ export default {
           meta: { title: '工作计划', icon: 'project', noCache: true }
         },
         {
+          name: 'PlanOverallPlanSummary',
+          path: 'plan-summary',
+          hidden: false,
+          component: '/plan/overall-plan/plan-summary/index',
+          meta: { title: '排产汇总', icon: 'project', noCache: true }
+        },
+        {
           name: 'PlanOverallPlanProgress',
           path: 'plan-progress',
           hidden: false,
@@ -63,7 +70,7 @@ export default {
           path: 'plan-true',
           hidden: false,
           component: '/plan/overall-plan/plan-confirm/index',
-          meta: { title: '计划确认', icon: 'project', noCache: true }
+          meta: { title: '工作确认', icon: 'project', noCache: true }
         }
       ]
     },

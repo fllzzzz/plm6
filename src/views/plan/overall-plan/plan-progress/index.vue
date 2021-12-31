@@ -9,102 +9,52 @@
       <common-table
         ref="tableRef"
         v-loading="crud.loading"
-        :data="crud.data"
+        :data="[{type:1,name:'深化加工'},{type:2,name:'深化加工'}]"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
+        :stripe="false"
+        :span-method="objectSpanMethod"
         style="width: 100%"
       >
-        <el-table-column type="expand">
+        <el-table-column label="序号" type="index" align="center" width="60" />
+        <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="计划类型" width="180" />
+        <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="类型" width="180" >
           <template v-slot="scope">
-            <div :key="`'singleTable${scope.row.id}'`">
-              <common-table ref="singleTable" :data="scope.row.areaTraceDTOList" class="customer-table" style="width: 100%; border-color: transparent">
-                <el-table-column key="sort" prop="sort" label="区域名称" align="center">
-                  <template v-slot="scope">
-                    <span>{{ scope.row.name+ ' ' + scope.row.axis }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="sort" prop="sort" label="计划完成时间" align="center">
-                  <template v-slot="scope">
-                    <span v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.date }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column key="sort1" prop="sort" label="深化进度" align="center" width="360">
-                  <template v-slot="scope">
-                    <div style="position: relative">
-                      <span class="progress-left" v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.deepVal? scope.row.deepVal.startDate: ''}}</span>
-                      <!-- <span class="progress-left">2021/01/01丨已进行/2天</span> -->
-                      <el-progress :stroke-width="18" :percentage="20" :color="'#489fef'" />
-                      <span class="progress-right" v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.deepVal? scope.row.deepVal.endDate: ''}}</span>
-                      <!-- <span class="progress-right">2021/01/12丨总工期/12天</span> -->
-                    </div>
-                    <div style="position: relative; margin-top: 5px">
-                      <span>{{ scope.row.deepVal? scope.row.deepVal.completedMete: '' }} </span>
-                      <!-- <span class="progress-left">已完成/50(t)</span>
-                      <el-progress :stroke-width="22" :percentage="20" :color="'#13ce66'" />
-                      <span class="progress-right">总工作量/100(t)</span> -->
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column key="sort2" prop="sort" label="加工进度" align="center" width="360">
-                  <template v-slot="scope">
-                    <div style="position: relative">
-                      <span class="progress-left" v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.processVal? scope.row.processVal.startDate: ''}}</span>
-                      <el-progress :stroke-width="18" :percentage="20" :color="'#489fef'" />
-                      <span class="progress-right" v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.processVal? scope.row.processVal.endDate: ''}}</span>
-                    </div>
-                    <div style="position: relative; margin-top: 5px">
-                      <span>{{ scope.row.processVal? scope.row.processVal.completedMete: '' }} </span>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column key="sort3" prop="sort" label="安装进度" align="center" width="360">
-                  <template v-slot="scope">
-                    <div style="position: relative">
-                      <span class="progress-left" v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.installVal? scope.row.installVal.startDate: ''}}</span>
-                      <el-progress :stroke-width="18" :percentage="20" :color="'#489fef'" />
-                      <span class="progress-right" v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.installVal? scope.row.installVal.endDate: ''}}</span>
-                    </div>
-                    <div style="position: relative; margin-top: 5px">
-                      <span>{{ scope.row.installVal? scope.row.installVal.completedMete: '' }} </span>
-                    </div>
-                  </template>
-                </el-table-column>
-              </common-table>
-            </div>
+            <el-tag :type="scope.row.type===2?'danger':''">{{ scope.row.type===1? '时间': '任务' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="单体" min-width="100" />
         <el-table-column
-          v-if="columns.visible('date')"
-          key="date"
-          prop="date"
+          v-if="columns.visible('rateProgress')"
+          key="rateProgress"
+          prop="rateProgress"
           :show-overflow-tooltip="true"
-          label="计划完成时间"
-          min-width="180"
+          label="完成进度"
+          min-width="320"
         >
           <template v-slot="scope">
-            <span v-empty-text v-parse-time="'{y}-{m}-{d}'">{{ scope.row.date }}</span>
+            <div v-if="scope.row.type===1">计划用时120天|已用时60天</div>
+            <div v-if="scope.row.type===2">{{`总量1200${crud.query.productType===TechnologyTypeAllEnum.STRUCTURE.V?'(t)':'(m)'}|已完成300${crud.query.productType===TechnologyTypeAllEnum.STRUCTURE.V?'(t)':'(m)'}`}}</div>
+            <el-progress
+              :text-inside="true"
+              :stroke-width="26"
+              :percentage="50"
+              :status="scope.row.type===2?'exception':''"
+            />
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          v-if="columns.visible('axis')"
-          key="axis"
-          prop="axis"
+         <el-table-column
+          v-if="columns.visible('rate')"
+          key="rate"
+          prop="rate"
           :show-overflow-tooltip="true"
-          label="工作量(t)"
-          min-width="180"
+          label="完成率"
+          min-width="280"
         >
           <template v-slot="scope">
-            <div style="position: relative">
-              <span class="progress-left">已完成/50(t)</span>
-              <el-progress :stroke-width="22" :percentage="20" :color="'#13ce66'" />
-              <span class="progress-right">总工作量/100(t)</span>
-            </div>
+            <el-tag :type="scope.row.type===2?'danger':''">50%</el-tag>
           </template>
-        </el-table-column> -->
+        </el-table-column>
       </common-table>
-      <!--分页组件-->
-      <pagination />
     </template>
     <template v-else>
       <div style="color: red; font-size: 14px">*请先前去合同管理模块添加项目内容</div>
@@ -117,16 +67,14 @@ import crudApi from '@/api/plan/plan-progress'
 import { ref, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { areaPlanTypeEnum } from '@enum-ms/plan'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
 const permission = {
-  get: ['plan:get'],
-  edit: ['plan:edit']
+  get: ['planProgress:get']
 }
 
 const optShow = {
@@ -139,19 +87,19 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '区域计划',
+    title: '计划跟踪',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['productType'],
     crudApi: { ...crudApi },
-    hasPagination: true
+    hasPagination: false
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.plan-make',
+  wrapperBox: '.plan-progress',
   paginate: true,
   extraHeight: 40
 })
@@ -167,21 +115,36 @@ watch(
   { immediate: true, deep: true }
 )
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map((v) => {
-    v.areaTraceDTOList = v.monomerDetail.areaTraceDTOList && v.monomerDetail.areaTraceDTOList.length > 0 ? v.monomerDetail.areaTraceDTOList : []
-    if (v.areaTraceDTOList.length > 0) {
-      v.areaTraceDTOList.map(val => {
-        const deepVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.DEEPEN.V)
-        const processVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.PROCESS.V)
-        const installVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.INSTALL.V)
-        val.deepVal = deepVal
-        val.processVal = processVal
-        val.installVal = installVal
-      })
+function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+  if (columnIndex === 1) {
+    if (rowIndex % 2 === 0) {
+      return {
+        rowspan: 2,
+        colspan: 1
+      }
+    } else {
+      return {
+        rowspan: 0,
+        colspan: 0
+      }
     }
-    return v
-  })
+  }
+}
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  // data.data.content = data.data.content.map((v) => {
+  //   v.areaTraceDTOList = v.monomerDetail.areaTraceDTOList && v.monomerDetail.areaTraceDTOList.length > 0 ? v.monomerDetail.areaTraceDTOList : []
+  //   if (v.areaTraceDTOList.length > 0) {
+  //     v.areaTraceDTOList.map(val => {
+  //       const deepVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.DEEPEN.V)
+  //       const processVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.PROCESS.V)
+  //       const installVal = val.planDetailTraceDTOList.find(k => k.type === areaPlanTypeEnum.ENUM.INSTALL.V)
+  //       val.deepVal = deepVal
+  //       val.processVal = processVal
+  //       val.installVal = installVal
+  //     })
+  //   }
+  //   return v
+  // })
 }
 </script>
 <style lang="scss" scoped>
@@ -199,20 +162,20 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     width: 0;
   }
 }
-.progress-left {
-  font-size: 12px;
-  position: absolute;
-  z-index: 200;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-}
-.progress-right {
-  font-size: 12px;
-  position: absolute;
-  z-index: 200;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 50px;
-}
+// .progress-left {
+//   font-size: 12px;
+//   position: absolute;
+//   z-index: 200;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   left: 0;
+// }
+// .progress-right {
+//   font-size: 12px;
+//   position: absolute;
+//   z-index: 200;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   right: 50px;
+// }
 </style>
