@@ -1,15 +1,14 @@
 // 注意modules文件夹下的文件（不相同的两个js）的export不能出现相同的名称
 
-const modulesFiles = require.context('./modules', true, /\.js$/)
+// 批量引入文件
+const modulesFiles = import.meta.globEager('./modules/*.js')
 
-const modules = modulesFiles.keys().reduce((modules, modulePath) => {
-  const value = modulesFiles(modulePath)
-  modules = Object.assign(modules, { ...value.default })
-  return modules
-}, {})
+const modules = {}
 
-exports = Object.assign(exports, modules)
-exports.default = {
-  ...modules
+// 遍历文件
+for (const key in modulesFiles) {
+  modules[key.replace(/(\.\/modules\/|\.js)/g, '')] = modulesFiles[key].default
 }
-exports.__esModule = true
+
+export default modules
+

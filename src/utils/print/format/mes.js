@@ -1,5 +1,6 @@
 
-import { meteFmtByMaterialType, meteFmtByMaterialListType, meteFmtByBasicClass } from '@/utils/other'
+// import { meteFmtByMaterialType, meteFmtByMaterialListType } from '@/utils/other'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 function materialType({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
@@ -13,7 +14,7 @@ function materialType({ header, table = [], footer, qrCode }) {
     if (header) {
       config.enclosureSettlementType = header.enclosurePriceType
     }
-    row = meteFmtByMaterialType(config)
+    // row = meteFmtByMaterialType(config)
     return row
   })
   return {
@@ -36,7 +37,7 @@ function materialListType({ header, table = [], footer, qrCode }) {
     if (header) {
       config.enclosureSettlementType = header.enclosurePriceType
     }
-    row = meteFmtByMaterialListType(config)
+    // row = meteFmtByMaterialListType(config)
     return row
   })
   return {
@@ -49,7 +50,7 @@ function materialListType({ header, table = [], footer, qrCode }) {
 
 function steelDosageFormat({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
-    row = meteFmtByBasicClass({
+    row = numFmtByBasicClass({
       data: row,
       basicClass: row.basicClass,
       field: ['modelMete', 'outboundMete', 'diff'],

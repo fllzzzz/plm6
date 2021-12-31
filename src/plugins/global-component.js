@@ -8,6 +8,7 @@ import commonTable from '@comp-common/common-table'
 import commonDrawer from '@comp-common/common-drawer'
 import commonDialog from '@comp-common/common-dialog'
 import projectRadioButton from '@comp-common/project-radio-button'
+import printTable from '@comp-common/print/print-table'
 
 const components = new Map([
   ['commonInputNumber', commonInputNumber],
@@ -19,6 +20,7 @@ const components = new Map([
   ['commonTable', commonTable],
   ['commonDrawer', commonDrawer],
   ['commonDialog', commonDialog],
+  ['printTable', printTable],
   ['projectRadioButton', projectRadioButton]
 ])
 

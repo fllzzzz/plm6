@@ -1,9 +1,9 @@
 
-import { meteFmtByBasicClass } from '@/utils/other'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 function meteWithUnit({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
-    row = meteFmtByBasicClass({
+    row = numFmtByBasicClass({
       data: row,
       enclosureSettlementType: header && header.enclosureSettlementType,
       basicClass: row.basicClass,

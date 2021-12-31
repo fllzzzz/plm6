@@ -5,16 +5,25 @@
  * @author duhh
  */
 // 备注：增加了每项内容的margin
-import { toThousand, emptyTextFormatter, isNotBlank, convertUnits } from '@/utils'
-import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from './enum'
-import { convertColumns, delNotDisplayed, getLastColumns } from './page-handle'
-import enumOperate, { projectNameArrangementModeEnum } from '@/utils/enum'
-import { projectNameFormatter, getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
+import { toThousand } from '@/utils/data-type/number'
+import { isNotBlank } from '@data-type/index'
+import { emptyTextFormatter } from '@/utils/data-type'
+import { convertUnits } from '@/utils/convert/unit'
+
+import { projectNameFormatter } from '@/utils/project'
+import { matClsEnum } from '@enum-ms/classification'
+
+import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from '../enum'
+import { convertColumns, delNotDisplayed, getLastColumns } from '../page-handle'
+
+import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import EO from '@/utils/enum'
+import { getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/unit'
 import enumAll from '@/utils/enum/all'
-import { minUnit } from '@/utils/constant'
+import { MIN_UNIT } from '@/settings/config'
 import moment from 'moment'
-import { getLODOP, printByMode } from './base'
-import _ from 'lodash'
+import { getLODOP, printByMode } from '../base'
+import * as lodash from 'lodash'
 
 let LODOP
 
@@ -808,7 +817,7 @@ function enumFormat(val, format) {
     const enumK = enumAll[format.enum]
     if (format.bit) {
       // 位运算的值
-      const enums = enumOperate.toArr(enumK)
+      const enums = EO.toArr(enumK)
       const res = []
       enums.forEach(e => {
         if (e.V & val) {
@@ -817,7 +826,7 @@ function enumFormat(val, format) {
       })
       return res.join('/')
     } else {
-      const enumV = enumOperate.key2val(enumK)
+      const enumV = EO.key2val(enumK)
       return isNotBlank(enumV) && isNotBlank(enumV[val]) ? enumV[val][key] || enumV[val]['L'] : ''
     }
   }
@@ -917,7 +926,7 @@ function weightFormat(val, format = {}) {
   if (isNotBlank(_val)) {
     // 单位转换
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.WEIGHT, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -941,7 +950,7 @@ function lengthFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.LENGTH, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -965,7 +974,7 @@ function thicknessFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.THICKNESS, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.THICKNESS, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1004,7 +1013,7 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
         if (checkUnit) {
           _unit = checkUnit
         } else {
-          _unit = getBasicClassUnit(basicClass)
+          _unit = matClsEnum(basicClass)
         }
       }
       if (isNotBlank(materialType)) {
@@ -1150,7 +1159,7 @@ function keyParse(data, key) {
       return data[keys[0]]
     } else {
       return keys.reduce((cur, key) => {
-        return _.isPlainObject(cur) ? cur[key] : undefined
+        return lodash.isPlainObject(cur) ? cur[key] : undefined
       }, data)
     }
   }
