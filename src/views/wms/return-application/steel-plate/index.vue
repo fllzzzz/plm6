@@ -41,6 +41,7 @@
           field="source"
           fixed="left"
           show-project
+          party-a-position="project"
           :show-width="false"
           :show-length="false"
           :show-thickness="false"
@@ -212,6 +213,15 @@ const { wrongCellMask } = useFormSet({
   setFormCallback,
   isEdit: props.edit
 })
+
+watch(
+  () => form.list,
+  () => {
+    headerRef.value && headerRef.value.calcAllQuantity()
+    headerRef.value && headerRef.value.calcAllWeight()
+  },
+  { deep: true }
+)
 
 // 初始化
 function init() {

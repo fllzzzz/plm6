@@ -26,7 +26,7 @@
         class="project-cascader"
         style="width: 100%"
       />
-      <span @click="handleShowAllClick" class="all-tip pointer" :style="{ color: navbarShowAll ? 'cornflowerblue' : '#dcdfe6' }"> All </span>
+      <span @click="handleShowAllClick" class="all-tip pointer" :style="{ color: navbarShowAll ? '#17db9b' : '#dcdfe6' }"> All </span>
     </span>
     <el-tooltip class="item" effect="dark" content="刷新项目列表" placement="right">
       <i v-if="!refreshLoading" class="el-icon-refresh" style="cursor: pointer" @click="refreshProjectList" />
@@ -266,7 +266,7 @@ function handleShowAllClick() {
     right: 35px;
   }
   ::v-deep(.el-tag--plain) {
-    color: cornflowerblue;
+    color: #17db9b;
   }
   ::v-deep(.el-tag--plain.el-tag--info) {
     color: var(--el-tag-font-color);
@@ -278,13 +278,13 @@ function handleShowAllClick() {
   height: 100%;
   align-items: center;
   padding: 10px;
-  color: cornflowerblue;
+  color: #17db9b;
   .project-type-select {
     width: 100px;
   }
   ::v-deep(.el-input input) {
     border: none;
-    color: cornflowerblue;
+    color: #17db9b;
     background-color: unset;
   }
 }

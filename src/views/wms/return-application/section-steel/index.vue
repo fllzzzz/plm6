@@ -42,6 +42,7 @@
           fixed="left"
           show-project
           :show-length="false"
+          party-a-position="project"
         />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
@@ -190,6 +191,16 @@ const { wrongCellMask } = useFormSet({
   setFormCallback,
   isEdit: props.edit
 })
+
+watch(
+  () => form.list,
+  () => {
+    headerRef.value && headerRef.value.calcAllQuantity()
+    headerRef.value && headerRef.value.calcAllWeight()
+    headerRef.value && headerRef.value.calcAllLength()
+  },
+  { deep: true }
+)
 
 // 初始化
 function init() {

@@ -36,7 +36,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project />
+        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project party-a-position="project" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
         <!-- <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
@@ -167,6 +167,15 @@ const { wrongCellMask } = useFormSet({
   setFormCallback,
   isEdit: props.edit
 })
+
+watch(
+  () => form.list,
+  () => {
+    headerRef.value && headerRef.value.calcAllQuantity()
+    headerRef.value && headerRef.value.calcAllWeight()
+  },
+  { deep: true }
+)
 
 // 初始化
 function init() {

@@ -65,6 +65,7 @@
                 v-model="form.auxMaterialIds"
                 :basic-class="matClsEnum.MATERIAL.V"
                 :deep="2"
+                :disabled="form.boolUsed"
                 multiple
                 :collapse-tags="false"
                 separator=" > "
@@ -170,16 +171,6 @@
                   :size="'small'"
                 />
               </el-form-item>
-              <!-- <el-form-item class="el-form-item-12" label="提货方式" prop="pickUpMode">
-                <common-radio
-                  v-model="form.pickUpMode"
-                  :options="pickUpModeEnum.ENUM"
-                  :disabled-val="pickUpModeDisabled"
-                  type="enum"
-                  :disabled="form.boolUsed"
-                  size="small"
-                />
-              </el-form-item> -->
               <el-form-item class="el-form-item-13" label="订单类型" prop="purchaseOrderPaymentMode">
                 <common-radio
                   v-model="form.purchaseOrderPaymentMode"
@@ -358,6 +349,8 @@ const rules = computed(() => {
   }
   if (form.supplyType === orderSupplyTypeEnum.PARTY_A.V) {
     Object.assign(r, partyARules)
+    // 甲供供应商选填
+    delete r.supplierId
   }
   if (form.basicClass & matClsEnum.MATERIAL.V) {
     Object.assign(r, auxMatRules)
@@ -378,19 +371,6 @@ const pickUpModeDisabled = ref([])
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 useWatchFormValidate(formRef, form, [['areaIds', ['purchaseType', 'basicClass', 'strucAreaIds', 'enclAreaIds']]])
-
-// watch(
-//   () => form.basicClass,
-//   (bc) => {
-//     if (bc & matClsEnum.GAS.V) {
-//       // 气体只能选择到厂
-//       form.pickUpMode = pickUpModeEnum.SUPPLIER.V
-//       pickUpModeDisabled.value = [pickUpModeEnum.SELF.V]
-//     } else {
-//       pickUpModeDisabled.value = []
-//     }
-//   }
-// )
 
 // 初始化表单
 CRUD.HOOK.afterToAdd = () => {}

@@ -75,7 +75,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.review" label="操作" min-width="180px" align="left">
+      <el-table-column v-permission="permission.review" label="操作" min-width="180px" align="left" fixed="right">
         <template #default="{ row }">
           <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
         </template>

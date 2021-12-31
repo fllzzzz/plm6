@@ -36,7 +36,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project />
+        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project party-a-position="project" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
 
@@ -160,9 +160,7 @@ const tableRules = {
     { required: true, message: '请填写核算量' },
     { pattern: positiveNumPattern, message: '核算量必须大于0' }
   ],
-  quantity: [
-    { validator: validateQuantity, message: '有计量单位，数量必须大于0' }
-  ],
+  quantity: [{ validator: validateQuantity, message: '有计量单位，数量必须大于0' }],
   factoryId: [{ required: true, message: '请选择工厂' }],
   warehouseId: [{ required: true, message: '请选择存储位置' }]
 }
