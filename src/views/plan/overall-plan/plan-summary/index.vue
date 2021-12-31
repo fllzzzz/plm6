@@ -22,67 +22,67 @@
         <el-table-column align="center" label="计划交期">
           <el-table-column key="month1" prop="month1" align="center" label="1月">
             <template v-slot="scope">
-              <div>{{ scope.row.month1? scope.row.month1.toFixed(2): '-'}}</div>
+              <div>{{ isNotBlank(scope.row.month1)? scope.row.month1.toFixed(2): '-'}}</div>
             </template>
           </el-table-column>
           <el-table-column key="month2" prop="month2" align="center" label="2月">
             <template v-slot="scope">
-              <div>{{ scope.row.month2? scope.row.month2.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month2)? scope.row.month2.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month3" prop="month3" align="center" label="3月">
             <template v-slot="scope">
-              <div>{{ scope.row.month1? scope.row.month3.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month3)? scope.row.month3.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month4" prop="month4" align="center" label="4月">
             <template v-slot="scope">
-              <div>{{ scope.row.month4? scope.row.month4.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month4)? scope.row.month4.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month5" prop="month5" align="center" label="5月">
             <template v-slot="scope">
-              <div>{{ scope.row.month5? scope.row.month5.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month5)? scope.row.month5.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month6" prop="month6" align="center" label="6月">
             <template v-slot="scope">
-              <div>{{ scope.row.month6? scope.row.month6.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month6)? scope.row.month6.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month7" prop="month7" align="center" label="7月">
             <template v-slot="scope">
-              <div>{{ scope.row.month7? scope.row.month7.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month7)? scope.row.month7.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month8" prop="month8" align="center" label="8月">
             <template v-slot="scope">
-              <div>{{ scope.row.month8? scope.row.month8.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month8)? scope.row.month8.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month9" prop="month9" align="center" label="9月">
             <template v-slot="scope">
-              <div>{{ scope.row.month9? scope.row.month9.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month9)? scope.row.month9.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month10" prop="month10" align="center" label="10月">
             <template v-slot="scope">
-              <div>{{ scope.row.month10? scope.row.month10.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month10)? scope.row.month10.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month11" prop="month11" align="center" label="11月">
             <template v-slot="scope">
-              <div>{{ scope.row.month11? scope.row.month12.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month11)? scope.row.month12.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="month12" prop="month12" align="center" label="12月">
             <template v-slot="scope">
-              <div>{{ scope.row.month12? scope.row.month12.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.month12)? scope.row.month12.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="monthSummary" prop="monthSummary" align="center" label="合计">
             <template v-slot="scope">
-              <div>{{ scope.row.monthSummary? scope.row.monthSummary.toFixed(2): '-' }}</div>
+              <div>{{ isNotBlank(scope.row.monthSummary)? scope.row.monthSummary.toFixed(2): '-' }}</div>
             </template>
           </el-table-column>
         </el-table-column>
@@ -96,6 +96,7 @@ import { ref } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
+import { isNotBlank } from '@data-type/index'
 
 // crud交由presenter持有
 const permission = {
@@ -113,7 +114,6 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '排产汇总',
-    sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['type', 'year'],
@@ -165,7 +165,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       v.monthSummary = 0
       v.details.map(k => {
         v['month' + Number(k.month)] = k.mete
-        v.monthSummary += k.mete
+        v.monthSummary = k.mete ? v.monthSummary + k.mete : v.monthSummary
       })
     }
     return v
