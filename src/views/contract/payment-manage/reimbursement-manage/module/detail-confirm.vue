@@ -141,13 +141,13 @@
         <div class="form-row" style="display: flex">
           <el-form-item label="收款开户行" prop="collectionDepositBank">
             <div style="width: 360px">
-              <el-input v-if="isModify" v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" />
+              <el-input v-if="isModify" v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" maxlength="50"/>
               <span v-else>{{ form.collectionDepositBank }}</span>
             </div>
           </el-form-item>
           <el-form-item label="收款账号" prop="collectionBankAccount">
             <div style="width: 360px">
-              <el-input v-if="isModify" v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" />
+              <el-input v-if="isModify" v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" maxlength="30"/>
               <span v-else>{{ form.collectionBankAccount }}</span>
             </div>
           </el-form-item>
@@ -179,6 +179,7 @@
                 type="text"
                 placeholder="付款开户行"
                 style="width: 320px"
+                maxlength="50"
               />
               <span v-else>{{ form.paymentDepositBank }}</span>
             </div>
@@ -193,6 +194,7 @@
                 type="text"
                 placeholder="付款账号"
                 style="width: 320px"
+                maxlength="30"
               />
               <span v-else>{{ form.paymentBankAccount }}</span>
             </div>

@@ -10,7 +10,6 @@
         class="filter-item"
         @change="crud.toQuery"
         style="width:120px;"
-        :disabledDate="(date) => { return date.getFullYear() > new Date().getFullYear() }"
       />
       <common-radio-button
         v-model="query.type"
