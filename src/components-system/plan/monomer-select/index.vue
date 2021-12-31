@@ -85,9 +85,7 @@ const props = defineProps({
 watch(
   () => props.projectId,
   (val) => {
-    if (val) {
-      fetchData()
-    }
+    fetchData()
   },
   { deep: true, immediate: true }
 )
