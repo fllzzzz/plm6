@@ -1,5 +1,5 @@
 <template>
-  <common-button v-bind="$attrs" @click="openDetail">{{ props.btnName }}</common-button>
+  <common-button v-bind="$attrs" @click="openDetail" type="info">{{ props.btnName }}</common-button>
   <m-detail v-if="props.purchaseId" v-model="visible" :detail-id="props.purchaseId" />
 </template>
 
