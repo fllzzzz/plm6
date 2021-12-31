@@ -70,6 +70,10 @@ defineProps({
     type: Boolean,
     default: false
   },
+  // 围护子类型
+  category: {
+    type: Number
+  },
   unShowField: {
     type: Array,
     default: () => []

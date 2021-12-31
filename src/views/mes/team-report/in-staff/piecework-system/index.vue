@@ -11,7 +11,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       show-summary
-      row-key="id"
+      row-key="rowId"
       :summary-method="getSummaries"
       style="width: 100%"
     >
@@ -131,7 +131,8 @@ const unitObj = computed(() => {
 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content.map((v, i) => {
+    v.rowId = i + '' + Math.random()
     // v.productMete = useWageQuotaMeteConvert({
     //   length: v.mate,
     //   weight: v.mate,

@@ -42,7 +42,7 @@
       type="enum"
       @change="crud.toQuery"
     />
-    <product-type-query :productType="productType" :category="query.category" :toQuery="crud.toQuery" :query="query" />
+    <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
     <rrOperation />
   </div>
   <crudOperation>
@@ -124,6 +124,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const productType = inject('productType')
+const category = inject('category')
 const buttonValue = ref()
 const askCompleteTime = ref()
 

@@ -1,6 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+    <project-radio-button size="small" v-model="query.projectId" :type="'all'" class="filter-item" @change="crud.toQuery" />
     <monomer-select
       v-model="query.monomerId"
       clearable
