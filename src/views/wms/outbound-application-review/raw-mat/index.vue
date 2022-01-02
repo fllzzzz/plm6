@@ -58,8 +58,24 @@
         prop="applicantName"
         label="申请人"
         align="center"
-        width="150"
+        width="140"
       />
+      <el-table-column
+        v-if="columns.visible('outboundTime')"
+        key="outboundTime"
+        :show-overflow-tooltip="true"
+        prop="outboundTime"
+        label="出库日期"
+        align="center"
+        width="200"
+        sortable="custom"
+      >
+        <template #default="{ row }">
+          <span v-parse-time="{ val: row.outboundStartTime, fmt: '{y}-{m}-{d}' }" />
+          &nbsp;~&nbsp;
+          <span v-parse-time="{ val: row.outboundEndTime, fmt: '{y}-{m}-{d}' }" />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('userUpdateTime')"
         key="userUpdateTime"
@@ -75,8 +91,9 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.review" label="操作" min-width="180px" align="left" fixed="right">
+      <el-table-column v-permission="permission.review" label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
+          <udOperation :data="row" show-detail :show-edit="false" :show-del="false" />
           <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
         </template>
       </el-table-column>
@@ -85,6 +102,7 @@
     <pagination />
     <!-- 审核 -->
     <review v-model="reviewVisible" :data="currentRow" @refresh="crud.refresh" />
+    <m-detail />
   </div>
 </template>
 
@@ -95,9 +113,11 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import MHeader from './module/header'
+import MDetail from './module/detail.vue'
 import Review from './module/review.vue'
 
 // crud交由presenter持有

@@ -64,7 +64,7 @@
         prop="applicantName"
         label="申请人"
         align="center"
-        width="150"
+        min-width="100"
       />
       <el-table-column
         v-if="columns.visible('reviewerName')"
@@ -73,8 +73,24 @@
         prop="reviewerName"
         label="处理人"
         align="center"
-        width="150"
+        min-width="100"
       />
+      <el-table-column
+        v-if="columns.visible('outboundTime')"
+        key="outboundTime"
+        :show-overflow-tooltip="true"
+        prop="outboundTime"
+        label="出库日期"
+        align="center"
+        width="200"
+        sortable="custom"
+      >
+        <template #default="{ row }">
+          <span v-parse-time="{ val: row.outboundStartTime, fmt: '{y}-{m}-{d}' }" />
+          &nbsp;~&nbsp;
+          <span v-parse-time="{ val: row.outboundEndTime, fmt: '{y}-{m}-{d}' }" />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('userUpdateTime')"
         key="userUpdateTime"
@@ -86,7 +102,7 @@
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.userUpdateTime }}</span>
+          <span v-parse-time="{ val: row.userUpdateTime }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -99,11 +115,11 @@
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.reviewTime }}</span>
+          <span v-parse-time="{ val: row.reviewTime }" />
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column label="操作" min-width="180px" align="left">
+      <el-table-column label="操作" width="65px" align="center" fixed="right">
         <template #default="{ row }">
           <udOperation :show-edit="false" :show-del="false" show-detail :data="row" />
         </template>

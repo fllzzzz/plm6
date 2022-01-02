@@ -12,7 +12,7 @@
     <template #titleRight>
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V && isNotBlank(form.list)">
         <span class="batch-set-info child-mr-7">
-          <el-date-picker v-model="batchOutboundTime" type="datetime" placeholder="批量设置出库时间" />
+          <el-date-picker v-model="batchOutboundTime" type="datetime" value-format="x" placeholder="批量设置出库时间" />
           <common-button type="success" size="mini" @click="setOutboundTime">设置</common-button>
         </span>
         <el-popconfirm
@@ -92,6 +92,7 @@
                 v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
                 v-model="row.outboundTime"
                 type="datetime"
+                value-format="x"
                 placeholder="出库时间"
               />
               <span v-else v-parse-time="{ val: row.outboundTime }" />
@@ -250,7 +251,7 @@ async function delItem(row, index) {
 async function passed() {
   try {
     submitOptLoading.value = true
-    await reviewPassed(form.value.id)
+    await reviewPassed(form.value)
     // 审核通过后设置审核状态
     form.value.reviewStatus = reviewStatusEnum.PASS.V
     ++operateRecordNumber.value
@@ -282,7 +283,7 @@ function getSummaries(param) {
 
 // 设置出库时间
 function setOutboundTime() {
-  form.value.list.forEach(v => {
+  form.value.list.forEach((v) => {
     v.outboundTime = batchOutboundTime.value
   })
 }

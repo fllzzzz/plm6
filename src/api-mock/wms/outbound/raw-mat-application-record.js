@@ -28,7 +28,9 @@ const get = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
             applicantName: '@cname', // 申请人名称
             reviewerName: '@cname', // 审核人名称
-            reviewTime: '@datetime(T)', // 审核时间
+            reviewTime: '@datetime(T)',
+            outboundStartTime: '@datetime(T)',
+            outboundEndTime: '@datetime(T)', // 审核时间
             userUpdateTime: '@datetime(T)', // 用户修改时间
             createTime: '@datetime(T)' // 创建时间
           }
@@ -53,6 +55,8 @@ const detail_id1 = {
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         reviewTime: '@datetime(T)',
+        outboundStartTime: '@datetime(T)',
+        outboundEndTime: '@datetime(T)',
         applicant: {
           name: '@cname',
           deptName: '生产部'
@@ -92,7 +96,8 @@ const detail_id1 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 2,
@@ -122,7 +127,8 @@ const detail_id1 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 3,
@@ -150,7 +156,8 @@ const detail_id1 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 5,
@@ -202,6 +209,8 @@ const detail_id2 = {
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         reviewTime: '@datetime(T)',
+        outboundStartTime: '@datetime(T)',
+        outboundEndTime: '@datetime(T)',
         applicant: {
           name: '@cname',
           deptName: '生产部'
@@ -238,7 +247,8 @@ const detail_id2 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 3,
@@ -266,7 +276,8 @@ const detail_id2 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 5,
@@ -322,7 +333,8 @@ const detail_id2 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 9,
