@@ -137,7 +137,7 @@ const getProject = {
   }
 }
 
-const addProject ={
+const addProject = {
   url: '/api/project',
   method: 'post',
   timeout: 1000,
@@ -185,13 +185,13 @@ const editProjectStatus = {
   }
 }
 
-const getProjectContentInfo ={
+const getProjectContentInfo = {
   url: '/api/project/getAllType',
   method: 'get',
   timeout: 1000,
   response: (res) => {
     switch (Number(res.query.businessType)) {
-      case  businessTypeEnum.ENUM.MACHINING.V:
+      case businessTypeEnum.ENUM.MACHINING.V:
         return {
           'code': 20000,
           'message': '成功',
@@ -303,7 +303,7 @@ const getProjectContentInfo ={
             }]
           }
         }
-      }
+    }
   }
 }
 
@@ -354,7 +354,7 @@ const getUserAllSimpleByProject = {
 }
 
 const getEnclosureDictList = {
-  url: RegExp('/api/project/listByType/' + '.*' ),
+  url: RegExp('/api/project/listByType/' + '.*'),
   method: 'get',
   timeout: 1000,
   response: (res) => {
@@ -460,7 +460,6 @@ const getEnclosureDictList = {
     }
   }
 }
-
 
 const getContractBase = {
   url: RegExp('/api/project/' + '[1-9][0-9]*' + '/base'),
@@ -659,15 +658,15 @@ const getBranchCompanyAllSimple = {
         'totalElements': 3,
         'content': [{
           'id': 2,
-          'name': '河南六建建筑集团有限公司',
+          'name': '初鸣建筑科技有限公司',
           'sort': 1
         }, {
           'id': 1,
-          'name': '河南六建重工有限公司',
+          'name': '杭州初鸣建筑科技有限公司',
           'sort': 2
         }, {
           'id': 3,
-          'name': '河南六建集团钢结构分公司',
+          'name': '安徽初鸣建筑科技有限公司',
           'sort': 3
         }]
       }

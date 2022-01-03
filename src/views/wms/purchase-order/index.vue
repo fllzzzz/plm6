@@ -35,6 +35,14 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('branchCompany.name')"
+        key="branchCompany.name"
+        :show-overflow-tooltip="true"
+        prop="branchCompany.name"
+        label="签订主体"
+        min-width="170px"
+      />
+      <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
         :show-overflow-tooltip="true"
@@ -254,7 +262,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料采购订单',
     sort: ['id.desc'],
-    invisibleColumns: ['invoiceType', 'userUpdateTime'],
+    invisibleColumns: ['branchCompany.name', 'invoiceType', 'userUpdateTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
