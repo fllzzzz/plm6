@@ -117,6 +117,16 @@
                 class="input-underline"
               />
             </el-form-item>
+            <el-form-item class="el-form-item-18" label="签订主体" prop="branchCompanyId">
+              <branch-company-select
+                v-model="form.branchCompanyId"
+                class="input-underline"
+                placeholder="合同签订主体"
+                :disabled="form.boolUsed"
+                default
+                style="width: 100%"
+              />
+            </el-form-item>
             <template v-if="form.supplyType == orderSupplyTypeEnum.SELF.V">
               <el-form-item class="el-form-item-8" label="合同量" prop="mete">
                 <div class="input-underline flex-rss child-mr-10">
@@ -233,6 +243,7 @@ import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import UnitSelect from '@comp-common/unit-select/index.vue'
 import ProjectCascader from '@comp-base/project-cascader.vue'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
+import BranchCompanySelect from '@comp-base/branch-company-select.vue'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import BasicClassSelect from '@/components-system/classification/basic-class-select.vue'
 import InvoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
@@ -240,6 +251,7 @@ import RequisitionsSnSelect from '@/components-system/wms/requisitions-sn-select
 import UploadList from '@comp/file-upload/UploadList.vue'
 import AreaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
+
 const defaultForm = {
   serialNumber: undefined, // 采购订单编号
   supplyType: orderSupplyTypeEnum.SELF.V, // 供货类型
@@ -252,6 +264,7 @@ const defaultForm = {
   enclAreaIds: [], // 围护区域
   requisitionsSN: undefined, // 申购单编号
   supplierId: undefined, // 供应商id
+  branchCompanyId: undefined, // 公司签订主体
   mete: undefined, // 合同量
   amount: undefined, // 合同金额
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
@@ -298,7 +311,8 @@ const baseRules = {
   supplyType: [{ required: true, message: '请选择供货类型', trigger: 'change' }],
   purchaseType: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
   basicClass: [{ required: true, message: '请选择物料类型', trigger: 'change' }],
-  supplierId: [{ required: true, message: '请选择供应商', trigger: 'change' }]
+  supplierId: [{ required: true, message: '请选择供应商', trigger: 'change' }],
+  branchCompanyId: [{ required: true, message: '请选择签订主体', trigger: 'change' }]
 }
 
 // 自采物料校验
@@ -411,9 +425,9 @@ crud.submitFormFormat = (form) => {
     'd d d d d d d d d d d d'
     'z z z z z z z z z z z z'
     'f f f f f f g g g g g g'
-    'h h h h i i i i j j j j'
-    'k k k k m m m m m m . .'
-    'p p p p q q q q . . . .'
+    'r r r r h h h h i i i i'
+    'j j j j m m m m m m . .'
+    'k k k k p p p p q q q q'
     'o o o o o o n n n n n n';
   .el-form-item {
     margin-bottom: 20px;
@@ -472,6 +486,9 @@ crud.submitFormFormat = (form) => {
 
   > .el-form-item-17 {
     grid-area: q;
+  }
+  > .el-form-item-18 {
+    grid-area: r;
   }
   > .el-form-item-20 {
     grid-area: z;

@@ -27,8 +27,8 @@ const get = {
             applicationSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库申请编号
             applicantName: '@cname',
             userUpdateTime: '@datetime(T)',
-            outboundStartTime: '@datetime(T)',
-            outboundEndTime: '@datetime(T)',
+            outboundEarliestTime: '@datetime(T)',
+            outboundLatestTime: '@datetime(T)',
             createTime: '@datetime(T)'
           }
         ],

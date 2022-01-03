@@ -13,7 +13,7 @@
       <el-tag v-if="detail.applicant" type="success" effect="dark">{{
         `申请人：${detail.applicant.name} | ${detail.applicant.deptName}`
       }}</el-tag>
-      <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.userUpdateTime)}` }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <!-- TODO:打印按钮 -->

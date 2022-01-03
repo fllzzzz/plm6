@@ -29,8 +29,8 @@ const get = {
             applicantName: '@cname', // 申请人名称
             reviewerName: '@cname', // 审核人名称
             reviewTime: '@datetime(T)',
-            outboundStartTime: '@datetime(T)',
-            outboundEndTime: '@datetime(T)', // 审核时间
+            outboundEarliestTime: '@datetime(T)',
+            outboundLatestTime: '@datetime(T)', // 审核时间
             userUpdateTime: '@datetime(T)', // 用户修改时间
             createTime: '@datetime(T)' // 创建时间
           }
@@ -55,8 +55,8 @@ const detail_id1 = {
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         reviewTime: '@datetime(T)',
-        outboundStartTime: '@datetime(T)',
-        outboundEndTime: '@datetime(T)',
+        outboundEarliestTime: '@datetime(T)',
+        outboundLatestTime: '@datetime(T)',
         applicant: {
           name: '@cname',
           deptName: '生产部'
@@ -209,8 +209,8 @@ const detail_id2 = {
         userUpdateTime: '@datetime(T)',
         createTime: '@datetime(T)',
         reviewTime: '@datetime(T)',
-        outboundStartTime: '@datetime(T)',
-        outboundEndTime: '@datetime(T)',
+        outboundEarliestTime: '@datetime(T)',
+        outboundLatestTime: '@datetime(T)',
         applicant: {
           name: '@cname',
           deptName: '生产部'

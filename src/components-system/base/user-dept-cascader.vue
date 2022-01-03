@@ -28,67 +28,75 @@ const emit = defineEmits(['change', 'update:modelValue'])
 const props = defineProps({
   modelValue: {
     type: [Array, Number, String],
-    default: '',
+    default: ''
   },
   // 禁用值 id
   disabledVal: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   // 部门id
   deptIds: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   // 大小
   size: {
     type: String,
-    default: 'small',
+    default: 'small'
   },
   // 是否可清除
   clearable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 是否禁用
   disabled: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 输入框显示全路径
   showAllLevels: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 分隔符
   separator: {
     type: String,
-    default: '/',
+    default: '/'
   },
   // 提示
   placeholder: {
     type: String,
-    default: '请选择用户',
+    default: '请选择用户'
   },
   // 多选
   multiple: {
     type: Boolean,
-    default: false,
+    default: false
   },
   checkStrictly: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 返回结果全路径
   emitPath: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 额外的选项
-  extraOption: {
-    type: Object,
-    require: false,
+  showExtra: {
+    type: Boolean,
+    default: false
   },
+  extraOptionLabel: {
+    type: String,
+    default: '同上'
+  },
+  extraOptionValue: {
+    type: [Number, String, Array, Boolean],
+    default: -1
+  }
 })
 
 const userDeptCascaderRef = ref()
@@ -106,7 +114,7 @@ const cascaderProps = computed(() => {
     expandTrigger: 'hover',
     emitPath: props.emitPath,
     multiple: props.multiple,
-    checkStrictly: props.checkStrictly,
+    checkStrictly: props.checkStrictly
   }
 })
 
@@ -163,8 +171,8 @@ function setOptions(tree) {
       // 过滤空部门
       options.value = filterBlankDept(deepClone(tree))
       // 加入额外的选项
-      if (props.extraOption) {
-        options.value.unshift(props.extraOption)
+      if (props.showExtra) {
+        options.value.unshift({ id: props.extraOptionValue, label: props.extraOptionLabel })
       }
     }
   } catch (error) {
@@ -215,7 +223,7 @@ function getParentNode(node) {
 
 defineExpose({
   getNodeInfo,
-  getParentNode,
+  getParentNode
 })
 </script>
 

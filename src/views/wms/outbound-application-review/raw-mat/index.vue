@@ -68,26 +68,25 @@
         label="出库日期"
         align="center"
         width="200"
-        sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="{ val: row.outboundStartTime, fmt: '{y}-{m}-{d}' }" />
+          <span v-parse-time="{ val: row.outboundEarliestTime, fmt: '{y}-{m}-{d}' }" />
           &nbsp;~&nbsp;
-          <span v-parse-time="{ val: row.outboundEndTime, fmt: '{y}-{m}-{d}' }" />
+          <span v-parse-time="{ val: row.outboundLatestTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('userUpdateTime')"
-        key="userUpdateTime"
+        v-if="columns.visible('createTime')"
+        key="createTime"
         :show-overflow-tooltip="true"
-        prop="userUpdateTime"
+        prop="createTime"
         label="申请日期"
         align="center"
         width="160"
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.userUpdateTime }}</span>
+          <span v-parse-time>{{ row.createTime }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->

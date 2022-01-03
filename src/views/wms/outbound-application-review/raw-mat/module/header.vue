@@ -29,7 +29,7 @@
     />
     <br />
     <el-date-picker
-      v-model="query.userUpdateTime"
+      v-model="query.createTime"
       :default-time="defaultTime"
       type="daterange"
       range-separator=":"
@@ -77,7 +77,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false }, // 项目id
-  userUpdateTime: [], // 申请日期
+  createTime: [], // 申请日期
   outboundTime: [], // 出库日期
   applicationSN: undefined, // 出库申请编号
   operatorName: undefined, // 操作人姓名 含领用人/申请人/审核人

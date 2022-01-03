@@ -117,9 +117,13 @@ const props = defineProps({
     default: false
   },
   // 额外的选项
-  extraOption: {
-    type: Object,
-    require: false
+  extraOptionLabel: {
+    type: String,
+    default: '同上'
+  },
+  extraOptionValue: {
+    type: [Number, String, Array, Boolean],
+    default: -1
   }
 })
 
@@ -225,7 +229,7 @@ function setCascader(tree) {
       classification.tree = dataFormat(tree.filter((v) => !props.basicClass || v.basicClass === props.basicClass))
       // 加入额外的选项
       if (props.showExtra) {
-        classification.tree.unshift(props.extraOption)
+        classification.tree.unshift({ id: props.extraOptionValue, name: props.extraOptionLabel })
       }
     } else {
       classification.treeOrigin = []

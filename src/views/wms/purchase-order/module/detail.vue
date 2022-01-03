@@ -13,6 +13,10 @@
       <div class="main-content">
         <el-form :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content">
+            <el-form-item label="签订主体" prop="branchCompanyName" style="width: 100%">
+              <span v-if="detail.branchCompany">{{ detail.branchCompany.name }}</span>
+            </el-form-item>
+
             <el-form-item label="采购订单" prop="serialNumber">
               {{ detail.serialNumber }}
             </el-form-item>
@@ -58,7 +62,6 @@
               </el-form-item>
             </template>
             <el-form-item prop="weightMeasurementMode" label="计量方式">
-              {{ detail.weightMeasurementMode }}
               <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
             </el-form-item>
             <!-- <el-form-item label="提货方式" prop="pickUpMode">

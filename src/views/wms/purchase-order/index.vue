@@ -281,6 +281,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
+    v.branchCompanyId = v.branchCompany ? v.branchCompany.id : undefined
     v.supplier = supplierKV.value[v.supplierId]
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
     v.projectIds = v.projects ? v.projects.map((p) => p.id) : []

@@ -13,7 +13,7 @@
       <el-tag v-if="form.applicant" type="success" effect="dark">{{
         `申请人：${form.applicant.name} | ${form.applicant.deptName}`
       }}</el-tag>
-      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
