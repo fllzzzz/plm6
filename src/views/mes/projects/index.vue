@@ -132,13 +132,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         v.allDays = dateDifference(v.startDate, v.endDate)
       }
       // 用时天数（清单内所有任务全部入库，自动停止计时）
-      let endDate = v.endDate || v.inWarehouseDate
-      if (isNotBlank(v.endDate) && isNotBlank(v.inWarehouseDate)) {
-        endDate = Math.min(v.endDate, v.inWarehouseDate)
-      }
-      if (isNotBlank(endDate)) {
-        v.alreadyDays = dateDifference(v.startDate, endDate)
-      }
+      const completeDate = v.completeDate || new Date().getTime()
+      v.alreadyDays = dateDifference(v.startDate, completeDate)
     }
     return v
   })
