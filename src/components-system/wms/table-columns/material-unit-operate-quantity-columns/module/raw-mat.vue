@@ -1,49 +1,51 @@
 <template>
-  <el-table-column v-if="showMeasureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.measureUnit }}</span>
-    </template>
-  </el-table-column>
-  <el-table-column
-    v-if="showQuantity"
-    prop="quantity"
-    :label="quantityLabel"
-    show-overflow-tooltip
-    align="right"
-    :min-width="showOperableQuantity ? '150px' : '70px'"
-  >
-    <template #default="{ row }">
-      <template v-if="row.measureUnit">
-        <template v-if="showOperableQuantity">
-          <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+  <template v-if="loaded">
+    <el-table-column v-if="showMeasureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.measureUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showQuantity"
+      prop="quantity"
+      :label="quantityLabel"
+      show-overflow-tooltip
+      align="right"
+      :min-width="showOperableQuantity ? '150px' : '70px'"
+    >
+      <template #default="{ row }">
+        <template v-if="row.measureUnit">
+          <template v-if="showOperableQuantity">
+            <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            /
+          </template>
+          <span v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
+        </template>
+        <span v-else v-empty-text />
+      </template>
+    </el-table-column>
+    <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.accountingUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="showMete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
+      <template #default="{ row }">
+        <template v-if="showOperableMete">
+          <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
           /
         </template>
-        <span v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
+        <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
       </template>
-      <span v-else v-empty-text />
-    </template>
-  </el-table-column>
-  <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.accountingUnit }}</span>
-    </template>
-  </el-table-column>
-  <el-table-column v-if="showMete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
-    <template #default="{ row }">
-      <template v-if="showOperableMete">
-        <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
-        /
-      </template>
-      <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
-    </template>
-  </el-table-column>
+    </el-table-column>
+  </template>
 </template>
-
 <script setup>
 import { defineProps, computed } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
   basicClass: {
@@ -107,6 +109,17 @@ const props = defineProps({
   }
 })
 
+// 当前分类基础单位
+const { loaded, baseUnit } = useMatBaseUnit()
+
+const unitInfo = computed(() => {
+  if (props.basicClass) {
+    return baseUnit.value[props.basicClass] || {}
+  } else {
+    return {}
+  }
+})
+
 const meteLabel = computed(() => {
   let label = ''
   if (props.meteLabel) {
@@ -115,15 +128,15 @@ const meteLabel = computed(() => {
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
-      label = props.singleMeteMode ? '单重(kg)' : '重量(kg)'
+      label = props.singleMeteMode ? `单重(${unitInfo.value.weight.unit})` : `重量(${unitInfo.value.weight.unit})`
       break
     case rawMatClsEnum.STEEL_COIL.V:
-      label = '重量(kg)'
+      label = `重量(${unitInfo.value.weight.unit})`
       break
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
-      label = props.singleMeteMode ? '单件量(kg)' : '核算量'
+      label = props.singleMeteMode ? `单件量(${unitInfo.value.weight.unit})` : '核算量'
       break
   }
   if (props.showOperableMete && isNotBlank(props.labelPrefix)) {
@@ -136,13 +149,13 @@ const quantityLabel = computed(() => {
   let label = ''
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
-      label = '数量(张)'
+      label = `数量(${unitInfo.value.measure.unit})`
       break
     case rawMatClsEnum.SECTION_STEEL.V:
-      label = '数量(根)'
+      label = `数量(${unitInfo.value.measure.unit})`
       break
     case rawMatClsEnum.STEEL_COIL.V:
-      label = '长度(mm)'
+      label = `长度(${unitInfo.value.measure.unit})`
       break
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:

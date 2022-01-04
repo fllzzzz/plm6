@@ -268,7 +268,7 @@ async function calcTheoryWeight(row) {
     thickness: row.source.thickness
   })
   if (row.theoryWeight) {
-    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
+    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
   } else {
     row.singleMete = undefined
   }

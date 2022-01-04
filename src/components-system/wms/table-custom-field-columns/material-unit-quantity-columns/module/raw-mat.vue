@@ -1,42 +1,72 @@
 <template>
-  <template v-if="outboundTypeMode">
-    <el-table-column v-if="showOutboundUnit" :prop="`${field}.outboundUnit`" label="单位" align="center" width="70px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="showCurQuantity" :prop="`${field}.curQuantity`" label="数量" align="right" width="100px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text v-to-fixed="getInfo(row, 'outboundUnitPrecision')">
-          {{ getInfo(row, 'curOutboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
-        </span>
-      </template>
-    </el-table-column>
-  </template>
-  <template v-else>
-    <el-table-column v-if="showMeasureUnit" :prop="`${field}.measureUnit`" label="计量单位" align="center" width="70px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="showQuantity" :prop="`${field}.${quantityField}`" :label="quantityLabel" align="right" width="100px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-if="getInfo(row, 'measureUnit')" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
-          {{ getInfo(row, quantityField) }}
-        </span>
-        <span v-else v-empty-text />
-      </template>
-    </el-table-column>
-    <el-table-column v-if="showAccountingUnit" :prop="`${field}.accountingUnit`" label="核算单位" align="center" width="70px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, meteField) }}</span>
-      </template>
-    </el-table-column>
+  <template v-if="loaded">
+    <template v-if="outboundTypeMode">
+      <el-table-column
+        v-if="showOutboundUnit"
+        :prop="`${field}.outboundUnit`"
+        label="单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      >
+        <template #default="{ row }">
+          <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showCurQuantity" :prop="`${field}.curQuantity`" label="数量" align="right" width="100px" show-overflow-tooltip>
+        <template #default="{ row }">
+          <span v-empty-text v-to-fixed="getInfo(row, 'outboundUnitPrecision')">
+            {{ getInfo(row, 'curOutboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
+          </span>
+        </template>
+      </el-table-column>
+    </template>
+    <template v-else>
+      <el-table-column
+        v-if="showMeasureUnit"
+        :prop="`${field}.measureUnit`"
+        label="计量单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      >
+        <template #default="{ row }">
+          <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="showQuantity"
+        :prop="`${field}.${quantityField}`"
+        :label="quantityLabel"
+        align="right"
+        width="100px"
+        show-overflow-tooltip
+      >
+        <template #default="{ row }">
+          <span v-if="getInfo(row, 'measureUnit')" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
+            {{ getInfo(row, quantityField) }}
+          </span>
+          <span v-else v-empty-text />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="showAccountingUnit"
+        :prop="`${field}.accountingUnit`"
+        label="核算单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      >
+        <template #default="{ row }">
+          <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
+        <template #default="{ row }">
+          <span v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, meteField) }}</span>
+        </template>
+      </el-table-column>
+    </template>
   </template>
 </template>
 
@@ -45,6 +75,7 @@ import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
   basicClass: {
@@ -87,6 +118,16 @@ const props = defineProps({
 
 const getInfo = inject('getInfo')
 
+const { loaded, baseUnit } = useMatBaseUnit()
+
+const unitInfo = computed(() => {
+  if (props.basicClass) {
+    return baseUnit.value[props.basicClass] || {}
+  } else {
+    return {}
+  }
+})
+
 const mateLabel = computed(() => {
   let label = ''
   if (props.showUnit) {
@@ -96,7 +137,7 @@ const mateLabel = computed(() => {
       case rawMatClsEnum.STEEL_PLATE.V:
       case rawMatClsEnum.SECTION_STEEL.V:
       case rawMatClsEnum.STEEL_COIL.V:
-        label = '重量(kg)'
+        label = `重量(${unitInfo.value.measure.unit})`
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
@@ -115,13 +156,13 @@ const quantityLabel = computed(() => {
   } else {
     switch (props.basicClass) {
       case rawMatClsEnum.STEEL_PLATE.V:
-        label = '数量(张)'
+        label = `数量(${unitInfo.value.measure.unit})`
         break
       case rawMatClsEnum.SECTION_STEEL.V:
-        label = '数量(根)'
+        label = `数量(${unitInfo.value.measure.unit})`
         break
       case rawMatClsEnum.STEEL_COIL.V:
-        label = '长度(mm)'
+        label = `长度(${unitInfo.value.measure.unit})`
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:

@@ -250,7 +250,7 @@ async function calcTheoryWeight(row) {
     unitWeight: row.source.unitWeight // 单位重量
   })
   if (row.theoryWeight) {
-    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
+    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
   } else {
     row.singleMete = undefined
   }

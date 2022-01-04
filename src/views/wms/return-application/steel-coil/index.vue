@@ -216,7 +216,7 @@ async function calcTheoryLength(row) {
     thickness: row.source.thickness
   })
   if (row.theoryLength) {
-    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity)
+    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity, baseUnit.value.length.precision)
   } else {
     row.singleLength = undefined
   }
