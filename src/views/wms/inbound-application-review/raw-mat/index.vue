@@ -157,6 +157,7 @@
         label="状态"
         align="center"
         width="80"
+        fixed="right"
       >
         <template #default="{ row }">
           <template v-if="row.reviewable">
@@ -192,12 +193,12 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import mHeader from './module/header'
-import udOperation from '@crud/UD.operation.vue'
-import pagination from '@crud/Pagination'
-import mDetail from './module/detail.vue'
-import review from './module/review.vue'
+import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import MHeader from './module/header'
+import UdOperation from '@crud/UD.operation.vue'
+import Pagination from '@crud/Pagination'
+import MDetail from './module/detail.vue'
+import Review from './module/review.vue'
 
 // crud交由presenter持有
 const permission = {

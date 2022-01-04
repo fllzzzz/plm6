@@ -28,7 +28,7 @@
           >
             {{ item + '%' }}
           </el-tag>
-          <el-input-number
+          <common-input-number
             v-if="inputVisible"
             ref="inputRef"
             v-model="inputValue"

@@ -36,7 +36,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project />
+        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project party-a-position="project" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
 
@@ -109,7 +109,6 @@ import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
-import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useForm from '@/composables/form/use-form'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-custom-field-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
@@ -148,8 +147,6 @@ const formRef = ref()
 const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 // 辅材
 const basicClass = rawMatClsEnum.MATERIAL.V
-// 当前分类基础单位
-const { baseUnit } = useMatBaseUnit(basicClass)
 
 // 数量校验方式
 const validateQuantity = (value, row) => {
@@ -163,9 +160,7 @@ const tableRules = {
     { required: true, message: '请填写核算量' },
     { pattern: positiveNumPattern, message: '核算量必须大于0' }
   ],
-  quantity: [
-    { validator: validateQuantity, message: '有计量单位，数量必须大于0' }
-  ],
+  quantity: [{ validator: validateQuantity, message: '有计量单位，数量必须大于0' }],
   factoryId: [{ required: true, message: '请选择工厂' }],
   warehouseId: [{ required: true, message: '请选择存储位置' }]
 }
@@ -186,7 +181,7 @@ const { cu, form, FORM } = useForm(
 )
 
 // 通用计算校验
-const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
+const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
@@ -249,9 +244,9 @@ function handleMeteChange(row, nVal) {
 function setFormCallback(form) {
   form.list = form.list.map((v) => reactive(v))
   const trigger = watch(
-    [tableRef, headerRef, baseUnit],
-    ([tRef, hRef, bu]) => {
-      if (tRef && hRef && bu) {
+    [tableRef, headerRef],
+    ([tRef, hRef]) => {
+      if (tRef && hRef) {
         // 将相同的材料设置为同一个对象，便于计算
         extractSource(form.list)
         initCheckOverMaxWeight(form.list)

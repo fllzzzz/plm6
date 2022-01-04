@@ -162,6 +162,8 @@ export function cleanUpData(list, ditto = new Map()) {
         delete row[name] // 删除同上
       }
     })
+    // 删除uid
+    delete row.uid
 
     // delete rowCopy.verify // 删除验证字段
     const rowArr = obj2arr(row)

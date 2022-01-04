@@ -12,6 +12,9 @@
     <template #titleAfter>
       <title-after-info :order="order" :detail="detail" />
     </template>
+    <template #titleRight>
+      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+    </template>
     <template #content>
       <common-table
         :data="detail.list"
@@ -64,6 +67,7 @@ import amountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
+import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([])

@@ -20,9 +20,9 @@
     <el-option
       v-if="showExtra"
       :key="-2"
-      :label="extraOption.label"
-      :value="extraOption.value"
-      :disabled="disabledVal.includes(extraOption.value)"
+      :label="extraOptionLabel"
+      :value="extraOptionValue"
+      :disabled="disabledVal.includes(extraOptionValue)"
     />
     <template v-for="item in options">
       <el-option
@@ -96,14 +96,13 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  extraOption: {
-    type: Object,
-    default: () => {
-      return {
-        label: '同上',
-        value: -1
-      }
-    }
+  extraOptionLabel: {
+    type: String,
+    default: '同上'
+  },
+  extraOptionValue: {
+    type: [Number, String, Array, Boolean],
+    default: -1
   },
   placeholder: {
     type: String,
@@ -211,9 +210,9 @@ watch(
         aOpt[DS.value] = allVal.value
         options.push(aOpt)
       }
-      if (props.showExtra && props.extraOption) {
+      if (props.showExtra && props.extraOptionLabel) {
         const eOpt = {}
-        eOpt[DS.value] = props.extraOption.value
+        eOpt[DS.value] = props.extraOptionValue
         options.push(eOpt)
       }
       let cv = selectValue.value
@@ -274,12 +273,12 @@ function setDefault() {
     return
   }
   if (props.onlyOneDefault && props.options.length === 1) {
-    selectValue.value = props.options[0].value
+    selectValue.value = props.options[0][DS.value]
     handleChange(selectValue.value)
     return
   }
   if (props.default) {
-    selectValue.value = props.options[0].value
+    selectValue.value = props.options[0][DS.value]
     handleChange(selectValue.value)
     return
   }

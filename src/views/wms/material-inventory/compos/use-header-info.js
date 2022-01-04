@@ -1,9 +1,9 @@
-import { inject, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
-import useProjectChangeByWarehouseType from '@/composables/wms/use-project-change-by-warehouse-type'
+import { mapGetters } from '@/store/lib'
 
 export default function useIndexInfo({ defaultBasicClass }) {
   const router = useRouter()
@@ -16,7 +16,7 @@ export default function useIndexInfo({ defaultBasicClass }) {
     basicClass: { value: defaultBasicClass, resetAble: false }
   }
 
-  const { crud, query } = regHeader(defaultQuery)
+  const { CRUD, crud, query } = regHeader(defaultQuery)
 
   // 出库清单组件
   const currentUserOutboundListRef = ref()
@@ -25,7 +25,27 @@ export default function useIndexInfo({ defaultBasicClass }) {
   // 显示批量调拨
   const batchTransferHandlingVisible = ref(false)
 
-  useProjectChangeByWarehouseType({ crud })
+  // 全局项目id
+  const { globalProjectId } = mapGetters('globalProjectId')
+
+  // 选中项目库时， 根据项目id的变化刷新列表
+  watch(
+    globalProjectId,
+    () => {
+      if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
+        crud.toQuery()
+      }
+    },
+    { immediate: true }
+  )
+
+  CRUD.HOOK.beforeToQuery = () => {
+    if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
+      crud.query.projectId = globalProjectId.value || undefined
+    } else {
+      crud.query.projectId = undefined
+    }
+  }
 
   // 去出库记录
   function toOutboundRecord() {

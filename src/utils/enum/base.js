@@ -13,7 +13,7 @@ export function constantize(obj) {
   const V = {}
   const KEYS = Object.keys(obj)
   obj.ENUM = Object.assign({}, obj)
-  KEYS.forEach(key => {
+  KEYS.forEach((key) => {
     const value = obj[key].V
     const label = obj[key].L
     KV[key] = value
@@ -80,9 +80,11 @@ export function getBits(enumerate, value, type) {
       switch (type) {
         case 'K':
         case 'V':
-        case 'L': bitArr.push(enumerate[i][type])
+        case 'L':
+          bitArr.push(enumerate[i][type])
           break
-        default: bitArr.push(enumerate[i])
+        default:
+          bitArr.push(enumerate[i])
           break
       }
     }
@@ -100,12 +102,17 @@ export function getBitsSum(enumerate) {
   let _e
   if (Array.isArray(enumerate)) {
     _e = enumerate
-  } else if (typeof enumerate === 'object') { // enum
+  } else if (typeof enumerate === 'object') {
+    // enum
     _e = Object.keys(enumerate.VK)
   }
-  return _e.reduce((res, cur) => {
-    return res | cur
-  }, 0)
+  if (Array.isArray(_e)) {
+    return _e.reduce((res, cur) => {
+      return res | cur
+    }, 0)
+  } else {
+    return 0
+  }
 }
 
 /**
@@ -121,7 +128,7 @@ export function getBitwiseLabel(enumerate, bitArr, separator, label = 'L', val =
     return
   }
   const resArr = []
-  Object.keys(enumerate).forEach(key => {
+  Object.keys(enumerate).forEach((key) => {
     if (bitArr.includes(enumerate[key][val])) {
       resArr.push(enumerate[key][label])
     }
@@ -159,7 +166,7 @@ export function getLabelByBit(enumerate, num, separator, label = 'L', val = 'V')
  * @returns
  */
 export function setEnumValue(data, field, needField, enumerate, enumField, needEnumField = undefined) {
-  return data.map(o => {
+  return data.map((o) => {
     let newData
     Object.keys(enumerate).forEach((key, i) => {
       if (typeof enumerate[key] === 'object') {

@@ -1,8 +1,12 @@
+import { isNotBlank } from '@/utils/data-type'
 import { parseTime } from '@/utils/date'
 
 // 时间转换
 export default {
   mounted(el, binding) {
+    resolve(el, binding)
+  },
+  updated(el, binding) {
     resolve(el, binding)
   }
 }
@@ -10,5 +14,10 @@ export default {
 function resolve(el, binding) {
   const { value } = binding
   const { innerText } = el
-  el.innerText = parseTime(innerText, value || '{y}-{m}-{d} {h}:{i}')
+  if (isNotBlank(value) && typeof value === 'object') {
+    const { val, fmt = '{y}-{m}-{d} {h}:{i}' } = value
+    el.innerText = parseTime(val, fmt)
+  } else {
+    el.innerText = parseTime(innerText, value || '{y}-{m}-{d} {h}:{i}')
+  }
 }

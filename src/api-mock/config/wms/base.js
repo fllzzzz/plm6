@@ -10,8 +10,10 @@ const getWmsConfig = {
       code: 20000,
       message: '成功',
       data: {
+        // 出库配置
         inbound: {
-          steel: { // 钢材配置
+          steel: {
+            // 钢材配置
             // 车次重量差值
             trainsDiff: 1000,
             // 车次重量差值类型（g 或 %）
@@ -27,11 +29,13 @@ const getWmsConfig = {
             amountFillWay: inboundFillWayEnum.APPLICATION.V, // 金额填写场景
             warehouseFillWay: inboundFillWayEnum.REVIEWING.V // 存储位置填写场景
           },
-          printLabelTipWay: { // 打印标签提示场景
+          printLabelTipWay: {
+            // 打印标签提示场景
             afterApplication: true, // 入库申请提交后
             afterReview: true // 审核后
           }
         },
+        // 出库配置
         outbound: {
           // 辅材出库方式
           boolAuxMatToWorkShopWay: whetherEnum.FALSE.V,
@@ -39,6 +43,16 @@ const getWmsConfig = {
           boolGasOutAfterInbound: whetherEnum.TRUE.V,
           // 项目仓可以出库给其他项目
           boolCanOutToOtherProject: whetherEnum.TRUE.V
+        },
+        // 退库配置
+        reject: {
+          // 金额显示场景
+          materialAmountDisplayWay: {
+            // 退货申请列表
+            application: true,
+            // 退货审核列表
+            review: true
+          }
         }
       }
     }
@@ -55,9 +69,10 @@ const getInboundBasicConf = {
       code: 20000,
       message: '成功',
       data: {
-        'amountFillWay': inboundFillWayEnum.REVIEWING.V, // 金额填写场景
-        'warehouseFillWay': inboundFillWayEnum.APPLICATION.V, // 存储位置填写场景
-        'printLabelTipWay': { // 打印标签提示场景
+        amountFillWay: inboundFillWayEnum.REVIEWING.V, // 金额填写场景
+        warehouseFillWay: inboundFillWayEnum.APPLICATION.V, // 存储位置填写场景
+        printLabelTipWay: {
+          // 打印标签提示场景
           afterApplication: true,
           afterReview: true
         }
@@ -183,6 +198,41 @@ const setPartyABorrowReturnConf = {
   }
 }
 
+// 获取退货基础配置
+const getRejectBasicConf = {
+  url: '/api/wms/config/reject/base',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        // 金额显示场景
+        materialAmountDisplayWay: {
+          // 退货申请列表
+          application: true,
+          // 退货审核列表
+          review: true
+        }
+      }
+    }
+  }
+}
+
+// 保存退货基础配置
+const setRejectBasicConf = {
+  url: '/api/wms/config/reject/base',
+  method: 'put',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
 export default [
   getWmsConfig,
   getInboundBasicConf,
@@ -192,5 +242,7 @@ export default [
   getOutboundBasicConf,
   setOutboundBasicConf,
   getPartyABorrowReturnConf,
-  setPartyABorrowReturnConf
+  setPartyABorrowReturnConf,
+  getRejectBasicConf,
+  setRejectBasicConf
 ]

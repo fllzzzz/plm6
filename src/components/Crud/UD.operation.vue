@@ -18,7 +18,15 @@
       icon="el-icon-edit"
       @click.stop="crud.toEdit(props.data)"
     />
-    <el-popover v-if="props.showDel && checkPermission(permission.del)" v-model:visible="pop" placement="top" width="180" trigger="manual" @show="onPopoverShow" @hide="onPopoverHide">
+    <el-popover
+      v-if="props.showDel && checkPermission(permission.del)"
+      v-model:visible="pop"
+      placement="top"
+      width="180"
+      trigger="manual"
+      @show="onPopoverShow"
+      @hide="onPopoverHide"
+    >
       <p>{{ props.delPrompt }}</p>
       <div style="text-align: right; margin: 0">
         <common-button size="mini" type="text" @click="cancelDelete">取消</common-button>
@@ -127,13 +135,13 @@ function handleDocumentClick(event) {
 </script>
 
 <style lang="scss" scoped>
-.ud-operation + .el-button {
-  margin-left: 8px;
+::v-global(.ud-operation + .el-button) {
+  margin-left: 7px;
 }
-.el-button + .ud-operation {
-  margin-left: 8px;
+::v-global(.el-button + .ud-operation) {
+  margin-left: 7px;
 }
 .el-button + .el-button {
-  margin-left: 8px;
+  margin-left: 7px;
 }
 </style>

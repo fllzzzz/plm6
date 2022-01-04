@@ -1,7 +1,7 @@
 <template>
   <div class="app-container section-steel">
     <!--工具栏-->
-    <mHeader @refresh="handleRefresh" />
+    <mHeader @refresh="crud.refresh" />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
@@ -77,7 +77,7 @@
                 :template="sectionSteelSpecITmpl"
                 :title="`${scope.row.name}：${sd.name}`"
                 :submitFn="(data) => sectionSteelSpecITmpl.submit(data, scope.row, sd)"
-                @success="handleRefresh"
+                @success="crud.refresh"
               />
               <template #reference>
                 <common-button size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
@@ -170,6 +170,10 @@ provide('sectionSteel', currentRow)
 
 fetchStandard()
 
+CRUD.HOOK.beforeRefresh = () => {
+  fetchStandard()
+}
+
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   if (isNotBlank(data.content)) {
     const iterateTree = (tree) => {
@@ -188,10 +192,10 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 }
 
 // 处理刷新
-function handleRefresh() {
-  crud.refresh()
-  fetchStandard()
-}
+// function handleRefresh() {
+//   crud.refresh()
+//   fetchStandard()
+// }
 
 // 显示型材规格详情
 function showSpec(row) {

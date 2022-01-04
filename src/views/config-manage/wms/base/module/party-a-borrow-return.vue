@@ -39,14 +39,15 @@
         <span class="form-item-tip">2.关闭：只可将“项目B或公共库的材料”归还到 “甲供项目A”。</span>
       </el-form-item>
       <el-form-item label="钢板-边长度误差(mm)">
-        <el-input-number v-model="form.steelPlateSideLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
+        <common-input-number v-model="form.steelPlateSideLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
       <el-form-item label="型钢-长度误差(mm)">
-        <el-input-number v-model="form.sectionSteelLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
+        <common-input-number v-model="form.sectionSteelLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
-      <el-form-item label="钢卷-长度误差(mm)">
-        <el-input-number v-model="form.steelCoilLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
-      </el-form-item>
+      <!-- 目前按长度还，不需要该配置，若按照卷或重量还则需要对应配置-->
+      <!-- <el-form-item label="钢卷-长度误差(mm)">
+        <common-input-number v-model="form.steelCoilLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
+      </el-form-item> -->
       <el-form-item>
         <span class="form-item-tip">
           可归还列表中不会检索出误差范围外的钢材。

@@ -42,6 +42,7 @@
           fixed="left"
           show-project
           :show-length="false"
+          party-a-position="project"
         />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
@@ -106,7 +107,7 @@ import { edit as editReturnApplication } from '@/api/wms/return/raw-mat-applicat
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -191,6 +192,16 @@ const { wrongCellMask } = useFormSet({
   isEdit: props.edit
 })
 
+watch(
+  () => form.list,
+  () => {
+    headerRef.value && headerRef.value.calcAllQuantity()
+    headerRef.value && headerRef.value.calcAllWeight()
+    headerRef.value && headerRef.value.calcAllLength()
+  },
+  { deep: true }
+)
+
 // 初始化
 function init() {
   form.list = []
@@ -239,7 +250,7 @@ async function calcTheoryWeight(row) {
     unitWeight: row.source.unitWeight // 单位重量
   })
   if (row.theoryWeight) {
-    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
+    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
   } else {
     row.singleMete = undefined
   }
@@ -281,6 +292,7 @@ function setFormCallback(form) {
           rowWatch(row)
           checkOverSource(row)
         })
+        console.log('form.list', deepClone(form.list))
         nextTick(() => {
           trigger() // 执行一次后取消当前监听
           headerRef.value.calcAllQuantity()

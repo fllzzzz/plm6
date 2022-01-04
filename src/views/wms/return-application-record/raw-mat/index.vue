@@ -187,7 +187,7 @@
     <m-detail />
     <!-- 编辑 -->
     <m-form />
-    <!-- 调拨详情 -->
+    <!-- 出库详情 -->
     <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
       <outbound-detail />
     </detail-wrapper>
@@ -235,11 +235,11 @@ const expandRowKeys = ref([])
 // 出库详情ref
 const outboundDetailRef = ref()
 const tableRef = ref()
-const { CRUD, crud, columns } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '退库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: ['editorName', 'userUpdateTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }
@@ -248,12 +248,6 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
-    v.editable = v.reviewStatus !== reviewStatusEnum.PASS.V // 可编辑的
-  })
-}
 
 // 打开出库详情窗口
 function openOutboundDetailView(outboundId) {

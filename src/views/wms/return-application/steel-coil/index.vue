@@ -36,7 +36,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project />
+        <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project party-a-position="project" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
         <!-- <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
@@ -152,7 +152,7 @@ const { cu, form, FORM } = useForm(
 )
 
 // 通用计算校验
-const { extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ form })
+const { extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
@@ -167,6 +167,15 @@ const { wrongCellMask } = useFormSet({
   setFormCallback,
   isEdit: props.edit
 })
+
+watch(
+  () => form.list,
+  () => {
+    headerRef.value && headerRef.value.calcAllQuantity()
+    headerRef.value && headerRef.value.calcAllWeight()
+  },
+  { deep: true }
+)
 
 // 初始化
 function init() {
@@ -187,7 +196,6 @@ function rowWatch(row) {
   })
   // 计算理论及单重
   watch([() => row.mete, baseUnit], () => {
-    console.log(2333)
     calcTheoryLength(row)
     headerRef.value && headerRef.value.calcAllWeight()
   })
@@ -207,10 +215,8 @@ async function calcTheoryLength(row) {
     width: row.source.width,
     thickness: row.source.thickness
   })
-  console.log('theoryLength', row.theoryLength, row.source.theoryLength, row.source.quantity)
   if (row.theoryLength) {
-    console.log('aaa', +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity))
-    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity)
+    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity, baseUnit.value.length.precision)
   } else {
     row.singleLength = undefined
   }

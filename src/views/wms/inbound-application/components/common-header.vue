@@ -174,14 +174,14 @@ watchEffect(() => {
 FORM.HOOK.afterSubmit = () => {
   init()
   nextTick(() => {
-    formRef.value.resetFields()
+    formRef.value && formRef.value.resetFields()
   })
 }
 
 // 重置表单
 function handleClear() {
   nextTick(() => {
-    formRef.value.clearValidate()
+    formRef.value && formRef.value.clearValidate()
     init()
   })
 }

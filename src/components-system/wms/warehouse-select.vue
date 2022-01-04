@@ -108,14 +108,14 @@ const options = computed(() => {
   let list = warehouse.value
   // 只查可使用的
   if (!props.showForbidden) {
-    list = warehouse.value.filter((v) => v.enabled)
+    list = list.filter((v) => v.enabled)
   }
   // 筛选工厂
   if (props.factoryId) {
     if (Array.isArray(props.factoryId)) {
-      list = warehouse.value.filter((v) => props.factoryId.includes(v.factoryId))
+      list = list.filter((v) => props.factoryId.includes(v.factoryId))
     } else {
-      list = warehouse.value.filter((v) => props.factoryId === v.factoryId)
+      list = list.filter((v) => props.factoryId === v.factoryId)
     }
   } else {
     list = props.showAll ? list : []

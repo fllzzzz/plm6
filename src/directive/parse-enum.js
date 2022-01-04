@@ -14,6 +14,8 @@ export default {
 
 function resolve(el, binding) {
   const { value: { e, v, f = 'L', bit = false, split = '、', emptyText, extra = '' }} = binding
+  // 先设置为空，避免v为null或找不到的状态下，innerText是之前的值
+  el.innerText = ''
   if (isBlank(v)) return
   let text
   if (Array.isArray(v)) {
@@ -23,7 +25,9 @@ function resolve(el, binding) {
   } else {
     text = e.V[v][f] || ''
   }
-  if (!text) return
+  if (!text) {
+    return
+  }
   text += extra
   el.innerText = emptyText ? emptyTextFormatter(text, emptyText) : text
 }

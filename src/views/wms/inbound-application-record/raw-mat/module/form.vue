@@ -10,7 +10,7 @@
     custom-class="raw-mat-inbound-application-record-form"
   >
     <template #content>
-      <component :is="comp" :detail="form" edit @success="crud.cancelCU" />
+      <component :is="comp" :detail="form" edit @success="handleSuccess" />
     </template>
   </common-drawer>
 </template>
@@ -51,6 +51,11 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     toSmallest: false,
     toNum: true
   })
+}
+
+function handleSuccess() {
+  crud.cancelCU()
+  crud.refresh()
 }
 </script>
 

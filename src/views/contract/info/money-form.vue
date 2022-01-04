@@ -16,8 +16,8 @@
         </common-button>
         <span style="position:absolute;right:20px;">
           <template v-if="auditStatus">
-            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
-            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
+            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V && showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
+            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V && showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
           </template>
           <template v-else>
             <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
@@ -34,13 +34,11 @@
           style="width: 320px;"
           disabled
         />
-        <span v-else>{{ contractName }}</span>
-      </el-form-item>
-      <el-form-item label="项目名称" prop="serialNumber">
-        <span>{{ contractInfo.name }}</span>
+        <span v-else>{{ detailInfo.project? detailInfo.project.serialNumber+detailInfo.project.shortName: '-'}}</span>
       </el-form-item>
       <el-form-item label="合同金额" prop="serialNumber">
-         <span>{{ contractInfo.contractAmount }}</span>
+         <span v-if="!auditStatus">{{ contractInfo.contractAmount }}</span>
+         <span v-else>{{ detailInfo.project.contractAmount }}</span>
       </el-form-item>
       <el-form-item label="变更内容" prop="changeContent">
         <el-input
@@ -70,6 +68,7 @@
           v-if="!auditStatus"
           v-model="newAmount"
           :max="9999999999"
+          :min="-9999999999"
           :precision="DP.YUAN"
           controls-position="right"
           placeholder="变更合同金额"
@@ -145,6 +144,14 @@ const props = defineProps({
   contractInfo: {
     type: Object,
     default: () => {}
+  },
+  showType: {
+    type: String,
+    default: undefined
+  },
+  detailInfo: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -181,15 +188,15 @@ const rules = {
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
-watch(
-  () => visible.value,
-  (val) => {
-    if (val) {
-      resetForm()
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => visible.value,
+//   (val) => {
+//     if (val) {
+//       resetForm()
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 watch(
   () => props.contractInfo,
@@ -203,24 +210,24 @@ const newAmount = computed(() => {
   return props.contractInfo.contractAmount && form.value.changeMoney ? props.contractInfo.contractAmount + form.value.changeMoney : undefined
 })
 
-function resetForm(data) {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
-  let formkey
-  if (data && Object.keys(data).length > 0) {
-    formkey = data
-  } else {
-    formkey = JSON.parse(JSON.stringify(defaultForm))
-  }
-  const crudFrom = form.value
-  for (const key in crudFrom) {
-    crudFrom[key] = undefined
-  }
-  for (const key in formkey) {
-    crudFrom[key] = formkey[key]
-  }
-}
+// function resetForm(data) {
+//   if (formRef.value) {
+//     formRef.value.resetFields()
+//   }
+//   let formkey
+//   if (data && Object.keys(data).length > 0) {
+//     formkey = data
+//   } else {
+//     formkey = JSON.parse(JSON.stringify(defaultForm))
+//   }
+//   const crudFrom = form.value
+//   for (const key in crudFrom) {
+//     crudFrom[key] = undefined
+//   }
+//   for (const key in formkey) {
+//     crudFrom[key] = formkey[key]
+//   }
+// }
 
 async function onSubmit() {
   const valid = await formRef.value.validate()

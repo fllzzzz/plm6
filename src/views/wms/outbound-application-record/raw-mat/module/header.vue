@@ -9,21 +9,6 @@
       class="filter-item"
       @change="crud.toQuery"
     />
-    <el-date-picker
-      v-model="query.userUpdateTime"
-      :default-time="defaultTime"
-      type="daterange"
-      range-separator=":"
-      size="small"
-      value-format="x"
-      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-      unlink-panels
-      start-placeholder="申请开始日期"
-      end-placeholder="申请结束日期"
-      style="width: 240px"
-      class="filter-item"
-      @change="crud.toQuery"
-    />
     <el-input
       v-model="query.serialNumber"
       placeholder="出库单号"
@@ -41,6 +26,37 @@
       size="small"
       clearable
       @keyup.enter="crud.toQuery"
+    />
+    <br />
+    <el-date-picker
+      v-model="query.createTime"
+      :default-time="defaultTime"
+      type="daterange"
+      range-separator=":"
+      size="small"
+      value-format="x"
+      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+      unlink-panels
+      start-placeholder="申请日期"
+      end-placeholder="申请日期"
+      style="width: 240px"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+    <el-date-picker
+      v-model="query.outboundTime"
+      :default-time="defaultTime"
+      type="daterange"
+      range-separator=":"
+      size="small"
+      value-format="x"
+      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+      unlink-panels
+      start-placeholder="出库日期"
+      end-placeholder="出库日期"
+      style="width: 240px"
+      class="filter-item"
+      @change="crud.toQuery"
     />
     <rrOperation />
     <crudOperation />
@@ -61,7 +77,8 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   projectId: { value: undefined, resetAble: false }, // 项目id
-  userUpdateTime: [], // [开始日期，结束日期]
+  createTime: [], // 申请日期
+  outboundTime: [], // 出库日期
   serialNumber: undefined, // 出库单号
   operatorName: undefined, // 操作人姓名 含领用人/申请人/审核人
   basicClass: undefined // 基础类型

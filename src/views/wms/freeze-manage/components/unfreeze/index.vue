@@ -86,10 +86,6 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const rules = {
-  transferType: [{ required: true, message: '请选择调拨类型', trigger: 'change' }],
-  projectId: [{ required: true, message: '请选择调拨项目', trigger: 'change' }],
-  factoryId: [{ required: true, message: '请选择调拨工厂', trigger: 'change' }],
-  warehouseId: [{ required: true, message: '请选择调拨仓库', trigger: 'change' }],
   quantity: [
     { required: true, validator: validateQuantity, trigger: 'blur' }
   ],

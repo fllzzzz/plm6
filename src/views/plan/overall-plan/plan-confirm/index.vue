@@ -1,22 +1,19 @@
 <template>
   <div class="app-container">
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
-      <!--工具栏-->
-      <!-- <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
-      </div> -->
+      <mHeader />
       <!--表格渲染-->
       <common-table
         ref="tableRef"
         v-loading="crud.loading"
-        :data="crud.data"
+        :data="[{id:1}]"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
-        style="width: 100%"
+        style="width: 100%;margin-top:20px;"
       >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="日期" min-width="100" />
-      <el-table-column v-if="columns.visible('axis')" key="axis" prop="axis" :show-overflow-tooltip="true" label="提交人" min-width="180" />
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="日期" width="150" />
+      <el-table-column v-if="columns.visible('axis')" key="axis" prop="axis" :show-overflow-tooltip="true" label="提交人" width="120" />
       <el-table-column v-if="columns.visible('className')" key="sort" prop="sort" label="单体名称" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.className }}</span>
@@ -46,7 +43,7 @@
           <span>{{ scope.row.className }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('className')" key="sort" prop="sort" label="单位" align="center">
+      <el-table-column v-if="columns.visible('className')" key="sort" prop="sort" label="单位" align="center" width="60">
         <template v-slot="scope">
           <span>{{ scope.row.className }}</span>
         </template>
@@ -62,16 +59,21 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <!-- <el-table-column
+      <el-table-column
         v-if="checkPermission([...permission.edit])"
-        label="状态"
+        label="操作"
         width="160px"
         align="center"
         fixed="right"
       >
         <template v-slot="scope">
+          <el-popconfirm title="一旦确认，将不能修改，确认完成?" @confirm="confirmEvent(scope.row.name)">
+            <template #reference>
+              <common-button type="primary" size="small">确定完成</common-button>
+            </template>
+          </el-popconfirm>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </common-table>
       <!--分页组件-->
       <pagination />
@@ -89,6 +91,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
+import checkPermission from '@/utils/system/check-permission'
+import mHeader from './module/header'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 // crud交由presenter持有
@@ -105,7 +109,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '工作确认',
     sort: ['id.desc'],
@@ -124,16 +128,26 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-// watch(
-//   () => globalProjectId,
-//   (val) => {
-//     if (val) {
-//       crud.query.projectId = globalProjectId
-//       crud.toQuery()
-//     }
-//   },
-//   { immediate: true, deep: true }
-// )
+watch(
+  () => globalProjectId,
+  (val) => {
+    if (val) {
+      crud.query.projectId = globalProjectId
+      crud.toQuery()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+async function confirmEvent(name) {
+  try {
+    // await editStatus(data.id, val)
+    // crud.notify(`“${name}” 确认成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    // crud.refresh()
+  } catch (e) {
+    console.log('计划确认', e)
+  }
+}
 
 // CRUD.HOOK.handleRefresh = (crud, data) => {
 //   data.data.content = data.data.content.map(v => {
@@ -158,3 +172,4 @@ const { maxHeight } = useMaxHeight({
 //   return !!crud.form.projectId
 // }
 </script>
+

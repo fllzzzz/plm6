@@ -208,7 +208,7 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
-const { CRUD, crud, columns } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
@@ -221,10 +221,4 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
-    v.editable = v.reviewStatus !== reviewStatusEnum.PASS.V // 可编辑的
-  })
-}
 </script>
