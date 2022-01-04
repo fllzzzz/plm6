@@ -24,7 +24,7 @@
         v-loading="tableLoading"
         :data="list"
         :max-height="maxHeight"
-        row-key="id"
+        row-key="rowId"
         show-summary
         :summary-method="getSummaries"
         style="width: 100%"
@@ -140,7 +140,8 @@ async function fetchList() {
       query
     )
     const { content } = await detail(_query)
-    _list = content.map((v) => {
+    _list = content.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.showUnit = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType }).meteUnit
       // v.checkMete = useWageQuotaMeteConvert({
       //   length: v.mate,

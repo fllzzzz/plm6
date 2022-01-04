@@ -77,7 +77,7 @@ import mHeader from './module/header'
 import partProductionStatus from './module/part-production-status.vue'
 
 const permission = {
-  get: ['artifactInboundStateDashboard:get']
+  get: ['assemblyMatch:get']
 }
 
 const optShow = {

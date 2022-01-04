@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
-        v-model="query.productType"
+        v-model="query.checkStatus"
         :options="shipAuditStatusEnum.ENUM"
         showOptionAll
         type="enum"
@@ -12,7 +12,7 @@
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-model="query.checkStatus"
+        v-model="query.productType"
         :options="packTypeEnum.ENUM"
         showOptionAll
         type="enum"
@@ -62,13 +62,7 @@
     </div>
     <crudOperation>
       <template v-slot:optLeft>
-        <!-- <export-button
-          v-permission="permission.downloadLogistics"
-          :params="{...query}"
-          :fn="downloadLogistics"
-          btn-text="下载物流汇总表（根据查询条件下载）"
-          class="filter-item"
-        />
+        <!--
         <print-table
           v-permission="[...permission.print, ...permission.detailPrint]"
           v-model:current-key="currentKey"

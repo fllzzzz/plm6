@@ -35,7 +35,7 @@ watchEffect(() => {
 watch(
   () => globalProjectId.value,
   (newVal) => {
-    if (props.type === 'default' && copyValue.value) {
+    if (copyValue.value) {
       selectChange(newVal)
     }
   },

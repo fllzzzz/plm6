@@ -102,12 +102,29 @@
           <span :class="row.completeQuantity === row.schedulingQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="210px">
+      <el-table-column
+        v-if="checkPermission([...permission.taskAdd, ...permission.assistanceAdd])"
+        label="操作"
+        align="center"
+        width="210px"
+      >
         <template #default="{ row }">
-          <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="danger" @click="toDelTask(row)">
+          <common-button
+            v-permission="permission.taskAdd"
+            :disabled="row.completeQuantity === row.schedulingQuantity"
+            size="mini"
+            type="danger"
+            @click="toDelTask(row)"
+          >
             删除任务
           </common-button>
-          <common-button :disabled="row.completeQuantity === row.schedulingQuantity" size="mini" type="warning">协同任务</common-button>
+          <common-button
+            v-permission="permission.assistanceAdd"
+            :disabled="row.completeQuantity === row.schedulingQuantity"
+            size="mini"
+            type="warning"
+            >协同任务</common-button
+          >
         </template>
       </el-table-column>
     </template>
@@ -127,7 +144,7 @@ import { taskIssueTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import { emptyTextFormatter } from '@data-type'
 
-// import checkPermission from '@/utils/system/check-permission'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
@@ -139,10 +156,10 @@ import issuePreview from './module/issue-preview'
 
 // crud交由presenter持有
 const permission = {
-  get: ['taskAssignDetail:get'],
-  print: ['taskAssignDetail:print'],
-  detail: ['taskAssignDetail:detail'],
-  download: ['taskAssignDetail:download']
+  get: ['artifactTask:detail', 'enclosureTask:detail', 'machinePartTask:detail'],
+  taskAdd: ['artifactTask:add', 'enclosureTask:add', 'machinePartTask:add'], // 任务下发
+  del: ['artifactTask:del', 'enclosureTask:del', 'machinePartTask:del'],
+  assistanceAdd: ['artifactTaskAssistance:add', 'enclosureTaskAssistance:add', 'machinePartTaskAssistance:add'] // 班组协同
 }
 
 const optShow = {
