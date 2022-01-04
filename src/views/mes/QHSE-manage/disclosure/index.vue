@@ -167,10 +167,7 @@ import mHeader from './module/header'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['qhseDisclosure:get']
 }
 
 const optShow = {

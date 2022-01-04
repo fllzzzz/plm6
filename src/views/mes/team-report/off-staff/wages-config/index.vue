@@ -126,10 +126,9 @@ import mHeader from './module/header'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['offStaffWagesConfig:get'],
+  edit: ['offStaffWagesConfig:edit'],
+  audit: ['offStaffWagesConfig:audit']
 }
 
 const optShow = {

@@ -1,14 +1,27 @@
 <template>
   <div v-show="crud.searchToggle">
-    <monomer-select-area-tabs ref="monomerRef" :project-id="globalProjectId" @change="fetchMonomerAndArea" />
-    <common-radio-button
-      class="filter-item"
-      v-model="query.category"
-      :options="monomerProductTypeEnum"
-      type="enum"
-      size="small"
-      @change="crud.toQuery"
-    />
+    <monomer-select-area-select
+      ref="monomerRef"
+      v-model:monomerId="query.monomerId"
+      v-model:areaId="query.areaId"
+      :productType="query.category"
+      :project-id="globalProjectId"
+      monomerDefault
+      areaDefault
+      @change="crud.toQuery()"
+    >
+      <template #middle>
+        <common-radio-button
+          class="filter-item"
+          v-model="query.category"
+          :options="monomerProductTypeEnum"
+          type="enum"
+          size="small"
+          @change="crud.toQuery"
+        />
+      </template>
+    </monomer-select-area-select>
+    <br/>
     <el-date-picker
       v-model="query.date"
       type="daterange"
@@ -23,15 +36,8 @@
       value-format="x"
       @change="handleDateChange"
     />
-    <div>
-      <product-type-query
-        :productType="productType"
-        :category="query.category"
-        :toQuery="crud.toQuery"
-        :query="query"
-      />
-      <rrOperation />
-    </div>
+    <product-type-query :productType="productType" :category="query.category" :toQuery="crud.toQuery" :query="query" />
+    <rrOperation />
   </div>
   <crudOperation />
 </template>
@@ -47,7 +53,7 @@ import { projectComponentTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
-import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 

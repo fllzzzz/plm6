@@ -25,6 +25,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="rowId"
       style="width: 100%"
       @sort-change="crud.handleSortChange"
     >
@@ -83,10 +84,7 @@ import mHeader from '../components/report-header.vue'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['enclosureProductionReport:get']
 }
 
 const optShow = {
@@ -116,7 +114,8 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content.map((v, i) => {
+    v.rowId = i + '' + Math.random()
     v.totalArea = convertUnits(v.totalArea, 'mm²', '㎡', DP.COM_AREA__M2)
     v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.COM_L__M)
     return v

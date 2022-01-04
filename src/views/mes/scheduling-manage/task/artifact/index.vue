@@ -74,7 +74,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="checkPermission([...permission.detail, ...permission.download])"
+        v-if="checkPermission([...permission.detail])"
         label="操作"
         width="120px"
         align="center"
@@ -121,10 +121,8 @@ import mHeader from '../components/common-header'
 
 // crud交由presenter持有
 const permission = {
-  get: ['taskAssignDetail:get'],
-  print: ['taskAssignDetail:print'],
-  detail: ['taskAssignDetail:detail'],
-  download: ['taskAssignDetail:download']
+  get: ['artifactTask:get'],
+  detail: ['artifactTask:detail']
 }
 
 const optShow = {

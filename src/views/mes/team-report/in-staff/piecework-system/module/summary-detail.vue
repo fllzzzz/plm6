@@ -15,6 +15,7 @@
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
+        row-key="rowId"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -24,7 +25,7 @@
             <span>{{ scope.row.processName }}</span>
           </template>
         </el-table-column>
-        <productType-base-info-columns :productType="query.productType" :unShowField="['specification', 'material', 'color']"/>
+        <productType-base-info-columns :productType="query.productType" :unShowField="['specification', 'material', 'color']" />
         <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
@@ -120,7 +121,8 @@ async function fetchList() {
   try {
     tableLoading.value = true
     const { content } = await detail(query)
-    _list = content.map((v) => {
+    _list = content.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.showUnit = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType }).meteUnit
       // v.checkMete = useWageQuotaMeteConvert({
       //   length: v.mate,

@@ -92,12 +92,12 @@
       >
         <template v-slot="scope">
           <span>{{ scope.row.sourceUnassignQuantity }}</span>
-          <span
-v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuantity"
-            >▶<span :style="{ color: scope.row.unassignQuantity < scope.row.sourceUnassignQuantity ? '#11b95c' : 'red' }">{{
-              scope.row.unassignQuantity
-            }}</span></span
-          >
+          <span v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuantity">
+            ▶
+            <span :style="{ color: scope.row.unassignQuantity < scope.row.sourceUnassignQuantity ? '#11b95c' : 'red' }">
+              {{ scope.row.unassignQuantity }}
+            </span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -112,12 +112,12 @@ v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuanti
       >
         <template v-slot="scope">
           <span>{{ scope.row.sourceAssignQuantity }}</span>
-          <span
-v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity"
-            >▶<span :style="{ color: scope.row.assignQuantity > scope.row.sourceAssignQuantity ? '#11b95c' : 'red' }">{{
-              scope.row.assignQuantity
-            }}</span></span
-          >
+          <span v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity">
+            ▶
+            <span :style="{ color: scope.row.assignQuantity > scope.row.sourceAssignQuantity ? '#11b95c' : 'red' }">
+              {{ scope.row.assignQuantity }}
+            </span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -153,7 +153,6 @@ import mHeader from '@/views/mes/scheduling-manage/scheduling/components/schedul
 // crud交由presenter持有
 const permission = {
   get: ['assembleScheduling:get'],
-  editStatus: ['assembleScheduling:editStatus'],
   save: ['assembleScheduling:save'],
   clear: ['assembleScheduling:clearWithOneClick']
 }

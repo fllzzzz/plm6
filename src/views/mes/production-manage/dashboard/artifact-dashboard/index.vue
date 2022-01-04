@@ -52,7 +52,7 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 
 const permission = {
-  get: ['artifactInboundStateDashboard:get']
+  get: ['artifactProductionDashboard:get']
 }
 
 const optShow = {

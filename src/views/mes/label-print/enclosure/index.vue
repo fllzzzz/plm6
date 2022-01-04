@@ -1,28 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader ref="headRef">
-        <template v-slot:customSearch>
-          <el-input
-            v-model="crud.query.name"
-            size="small"
-            placeholder="输入名称搜索"
-            style="width: 170px"
-            class="filter-item"
-            clearable
-            @keyup.enter="crud.toQuery"
-          />
-          <el-input
-            v-model="crud.query.serialNumber"
-            size="small"
-            placeholder="输入编号搜索"
-            style="width: 170px"
-            class="filter-item"
-            clearable
-            @keyup.enter="crud.toQuery"
-          />
-        </template>
-      </mHeader>
+      <mHeader ref="headRef" />
     </div>
     <!--表格渲染-->
     <common-table
@@ -244,10 +223,7 @@ import labelDlg from './module/label-dlg'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['enclosureLabel:get']
 }
 
 const optShow = {
@@ -311,7 +287,7 @@ function getLabelInfo(row) {
   // 标签构件信息
   const component = {
     projectName: row.project.shortName,
-    printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime((new Date()).getTime(), '{y}/{m}/{d}'),
+    printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime(new Date().getTime(), '{y}/{m}/{d}'),
     monomerName: printConfig.showMonomer ? row.monomer.name : '',
     areaName: printConfig.showArea ? row.area.name : '',
     name: row.name,
