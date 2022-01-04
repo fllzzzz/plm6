@@ -7,10 +7,10 @@
   <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="180px" show-overflow-tooltip>
     <template #default="{ row }">
       <template v-if="row.measureUnit">
-        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+        <span v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
         <template v-if="row.maxQuantity < row[quantityField]">
           ->
-          <span v-empty-text v-to-fixed="row.measurePrecision" class="color-brown">{{ row.maxQuantity }}</span>
+          <span v-empty-text v-to-fixed="{ val: row.maxQuantity, dp: row.measurePrecision }" class="color-coral" />
         </template>
       </template>
       <span v-else v-empty-text />
@@ -23,10 +23,10 @@
   </el-table-column>
   <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="180px" show-overflow-tooltip>
     <template #default="{ row }">
-      <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
+      <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
       <template v-if="row.maxMete < row[meteField]">
         ->
-        <span v-empty-text v-to-fixed="row.accountingPrecision" class="color-brown">{{ row.maxMete }}</span>
+        <span v-empty-text v-to-fixed="{ val: row.maxMete, dp: row.accountingPrecision }" class="color-coral" />
       </template>
     </template>
   </el-table-column>
@@ -69,6 +69,10 @@ const props = defineProps({
     // 核算量字段
     type: String,
     default: 'mete'
+  },
+  showQuantity: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -129,11 +133,6 @@ const showUnit = computed(() => {
 
 const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
 const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
-const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(props.quantityField))
+const showQuantity = computed(() => props.showQuantity && (isBlank(props.columns) || props.columns.visible(props.quantityField)))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(props.meteField))
 </script>
-<style lang="scss" scoped>
-.color-brown {
-  color: brown;
-}
-</style>

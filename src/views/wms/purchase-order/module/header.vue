@@ -35,15 +35,23 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <br/>
+      <branch-company-select
+        v-model="query.branchCompanyId"
+        placeholder="合同签订主体"
+        class="filter-item"
+        style="width: 250px"
+        @change="crud.toQuery"
+      />
       <supplier-select
         v-model="query.supplierId"
         :type="query.purchaseType"
         clearable
-        class="filter-item"
-        @change="crud.toQuery"
         placeholder="可选择供应商搜索"
         show-hide
+        class="filter-item"
         style="width: 250px"
+        @change="crud.toQuery"
       />
       <el-input
         v-model.trim="query.serialNumber"
@@ -76,9 +84,10 @@ import { purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
-import supplierSelect from '@comp-base/supplier-select/index.vue'
+import RrOperation from '@crud/RR.operation'
+import CrudOperation from '@crud/CRUD.operation'
+import SupplierSelect from '@comp-base/supplier-select/index.vue'
+import BranchCompanySelect from '@comp-base/branch-company-select.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -88,6 +97,7 @@ const defaultQuery = {
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   serialNumber: undefined, // 采购单号搜索
+  branchCompanyId: undefined, // 签订主体
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人 or 最后操作人
 }

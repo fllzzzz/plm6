@@ -37,6 +37,7 @@ const get = {
               name: '杭州天天向上有限公司'
             },
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
+            editable: true, // 可修改的
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
@@ -65,6 +66,7 @@ const get = {
               name: '杭州艾哈有限公司'
             },
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            editable: true, // 可修改的
             approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -95,6 +97,7 @@ const get = {
               name: '杭州艾哈有限公司'
             },
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            editable: true, // 可修改的
             approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
@@ -117,6 +120,7 @@ const get = {
               name: '吖丫丫有限公司'
             },
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
+            editable: false, // 可修改的
             approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）

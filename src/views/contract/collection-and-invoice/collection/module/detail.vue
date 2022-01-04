@@ -157,7 +157,7 @@
                 v-if="isModify"
                 v-model.number="form.collectionAmount"
                 :min="-99999999999"
-                :max="99999999999"
+                :max="contractInfo.contractAmount-contractInfo.haveCollectionAmount"
                 :step="10000"
                 :precision="DP.YUAN"
                 placeholder="本次收款金额(元)"
@@ -385,10 +385,25 @@ watch(
   },
   { deep: true, immediate: true }
 )
-
+const validateAmount = (rule, value, callback) => {
+  if (value) {
+    if (contractInfo.value.contractAmount) {
+      if (value > contractInfo.value.contractAmount - contractInfo.value.haveCollectionAmount) {
+        callback(new Error('本次金额不能大于合同金额-已收款额'))
+      } else {
+        callback()
+      }
+    }
+  } else {
+    callback(new Error('请选择输入本次收款金额'))
+  }
+}
 const rules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
-  collectionAmount: [{ required: true, message: '请输入本次收款金额', trigger: 'change', type: 'number' }],
+  collectionAmount: [
+    { required: true, message: '请输入本次收款金额', trigger: 'change', type: 'number' },
+    { validator: validateAmount, trigger: 'change' }
+  ],
   collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],

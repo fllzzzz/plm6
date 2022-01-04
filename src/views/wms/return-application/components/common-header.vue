@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps, defineExpose } from 'vue'
+import { ref, defineEmits, defineProps, defineExpose, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { toFixed } from '@/utils/data-type'
@@ -115,9 +115,11 @@ function openReturnableList() {
 
 // 计算所有退库钢材总重
 function calcAllWeight() {
-  allMete.value = form.list.reduce((sum, cur) => {
-    return +toFixed(sum + cur.mete, baseUnit.value.weight.precision)
-  }, 0)
+  nextTick(() => {
+    allMete.value = form.list.reduce((sum, cur) => {
+      return +toFixed(sum + cur.mete, baseUnit.value.weight.precision)
+    }, 0)
+  })
 }
 
 // 计算所有退库钢材总数量

@@ -34,7 +34,7 @@
             <span class="title-text">{{ props.title }}</span>
             <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
-          <span class="title-right-content">
+          <span class="title-right-content child-mr-6">
             <slot name="titleRight" />
             <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关 闭</common-button>
           </span>

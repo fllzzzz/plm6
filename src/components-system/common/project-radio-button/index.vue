@@ -35,7 +35,7 @@ watchEffect(() => {
 watch(
   () => globalProjectId.value,
   (newVal) => {
-    if (copyValue.value) {
+    if (props.type === 'default' && copyValue.value) {
       selectChange(newVal)
     }
   },
@@ -49,7 +49,7 @@ function selectChange(val) {
 }
 
 function init() {
-  if (isNotBlank(globalProjectId.value)) {
+  if (props.type === 'default' && isNotBlank(globalProjectId.value)) {
     copyValue.value = globalProjectId.value
     selectChange(copyValue.value)
   }

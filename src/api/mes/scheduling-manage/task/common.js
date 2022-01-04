@@ -29,6 +29,20 @@ export function modifyQuantity(data) {
 }
 
 /**
+ * @description: 删除任务
+ * @param {*} data
+ * @return {*}
+ */
+export function delTask(data) {
+  return request({
+    module: 'mes',
+    url: 'task/quantity',
+    method: 'put',
+    data
+  })
+}
+
+/**
  * @description: 任务下发
  * @param {*} data
  * @return {*}

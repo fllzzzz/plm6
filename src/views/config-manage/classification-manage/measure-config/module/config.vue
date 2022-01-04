@@ -20,7 +20,7 @@
             v-model.trim="query.nameOrCode"
             placeholder="输入科目名称、编号搜索"
             class="filter-item"
-            style="width: 200px;margin-bottom: 15px;"
+            style="width: 200px; margin-bottom: 15px"
             size="small"
             clearable
           />
@@ -106,7 +106,7 @@
             align="center"
           >
             <template v-slot="scope">
-              <el-input-number
+              <common-input-number
                 v-if="isEditMode"
                 v-model="scope.row.measurePrecision"
                 :step="1"
@@ -131,7 +131,7 @@
               <unit-select
                 v-if="isEditMode"
                 v-model="scope.row.accountingUnit"
-                :unit-type="scope.row.basicClass & STEEL_ENUM > 0 ? unitTypeEnum.WEIGHT.K : undefined"
+                :unit-type="scope.row.basicClass & (STEEL_ENUM > 0) ? unitTypeEnum.WEIGHT.K : undefined"
                 :disabled="scope.row.disabled"
                 size="mini"
                 style="width: 100%"
@@ -150,7 +150,7 @@
             align="center"
           >
             <template v-slot="scope">
-              <el-input-number
+              <common-input-number
                 v-if="isEditMode"
                 v-model="scope.row.accountingPrecision"
                 :step="1"
@@ -163,22 +163,29 @@
               <div v-else>{{ emptyTextFormatter(scope.row.sourceAccountingPrecision) }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="outboundUnitType" prop="outboundUnitType" :show-overflow-tooltip="true" label="出库单位" min-width="100px" align="center">
-        <template v-slot="scope">
-          <common-select
-            v-if="isEditMode"
-            v-model="scope.row.outboundUnitType"
-            :options="measureTypeEnum.ENUM"
-            :disabled="scope.row.disabled"
-            text-align="center"
-            type="enum"
-            size="mini"
-            style="width: 100%;"
-            clearable
-          />
-          <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnitType]) }}</div>
-        </template>
-      </el-table-column>
+          <!-- <el-table-column
+            key="outboundUnitType"
+            prop="outboundUnitType"
+            :show-overflow-tooltip="true"
+            label="出库单位"
+            min-width="100px"
+            align="center"
+          >
+            <template v-slot="scope">
+              <common-select
+                v-if="isEditMode"
+                v-model="scope.row.outboundUnitType"
+                :options="measureTypeEnum.ENUM"
+                :disabled="scope.row.disabled"
+                text-align="center"
+                type="enum"
+                size="mini"
+                style="width: 100%"
+                clearable
+              />
+              <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnitType]) }}</div>
+            </template>
+          </el-table-column> -->
         </common-table>
         <config-preview v-model:visible="previewVisible" :data="list" :level="level" @save-success="handleSaveSuccess" />
       </div>
@@ -190,7 +197,7 @@
 import { defineProps, defineEmits, inject, reactive, ref, watch, computed } from 'vue'
 import { emptyTextFormatter } from '@data-type'
 import { STEEL_ENUM } from '@/settings/config'
-import { measureTypeEnum } from '@enum-ms/wms'
+// import { measureTypeEnum } from '@enum-ms/wms'
 import { unitTypeEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -359,7 +366,7 @@ $default-cell-mask-color: #52f09840;
   }
   .cell {
     line-height: 32px;
-    padding:0;
+    padding: 0;
   }
   th .cell {
     padding: 0 10px;
@@ -376,11 +383,11 @@ $default-cell-mask-color: #52f09840;
     .el-input__inner {
       border: none;
     }
-    .el-input-number__increase {
+    .common-input-number__increase {
       border-left: none;
       margin-right: 10px;
     }
-    .el-input-number__decrease {
+    .common-input-number__decrease {
       border-right: none;
       margin-left: 10px;
     }

@@ -18,7 +18,7 @@
           <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
           /
         </template>
-        <span v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+        <span v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
       </template>
       <span v-else v-empty-text />
     </template>
@@ -34,7 +34,7 @@
         <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
         /
       </template>
-      <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
+      <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
     </template>
   </el-table-column>
 </template>

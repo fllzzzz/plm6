@@ -77,8 +77,6 @@ const validateLinks = (rule, value, callback) => {
       }
     }
     callback()
-  } else {
-    callback(new Error('请填写费用明细'))
   }
 }
 const rules = {
@@ -87,10 +85,7 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  dictionaryIdList: [
-    { required: true, message: '请选择费用明细' },
-    { validator: validateLinks, trigger: 'change' }
-  ]
+  dictionaryIdList: [{ validator: validateLinks, trigger: 'change' }]
 }
 
 function addProcess() {

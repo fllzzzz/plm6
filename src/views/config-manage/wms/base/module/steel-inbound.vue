@@ -32,7 +32,7 @@
         </template>
         <div class="flex-r">
           <common-radio-button v-model="form.trainsDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
-          <el-input-number
+          <common-input-number
             v-model="form.trainsDiff"
             :max="form.trainsDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
             controls-position="right"
@@ -57,7 +57,7 @@
         </template>
         <div class="flex-r">
           <common-radio-button v-model="form.steelDiffType" :options="numOrPctEnum.ENUM" type="enum" size="small" />
-          <el-input-number
+          <common-input-number
             v-model="form.steelDiff"
             :max="form.steelDiffType === numOrPctEnum.NUMBER.V ? 999999999999 : 100"
             controls-position="right"

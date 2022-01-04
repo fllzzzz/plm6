@@ -6,12 +6,14 @@
     :before-close="crud.cancelDetail"
     :title="drawerTitle"
     :show-close="true"
-    size="90%"
+    size="100%"
     custom-class="raw-mat-inbound-application-record-detail"
   >
     <template #titleAfter>
-      <el-tag v-if="detail.applicant" type="success" effect="dark">{{`申请人：${detail.applicant.name} | ${detail.applicant.deptName}`}}</el-tag>
-      <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.userUpdateTime)}` }}</el-tag>
+      <el-tag v-if="detail.applicant" type="success" effect="dark">{{
+        `申请人：${detail.applicant.name} | ${detail.applicant.deptName}`
+      }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <!-- TODO:打印按钮 -->
@@ -52,6 +54,11 @@
             <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
               <span v-if="row.recipient">{{ row.recipient.name }}</span>
             </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="出库时间" width="120px" align="center">
+          <template #default="{ row }">
+            <span v-parse-time="{ val: row.outboundTime }" />
           </template>
         </el-table-column>
       </common-table>

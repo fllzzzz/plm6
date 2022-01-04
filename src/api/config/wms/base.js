@@ -84,3 +84,22 @@ export function setPartyABorrowReturnConf(data) {
     data
   })
 }
+
+// 获取退货基础配置
+export function getRejectBasicConf() {
+  return request({
+    module: 'wms',
+    url: 'config/reject/base',
+    method: 'get'
+  })
+}
+
+// 保存退货基础配置
+export function setRejectBasicConf(data) {
+  return request({
+    module: 'wms',
+    url: 'config/reject/base',
+    method: 'put',
+    data
+  })
+}

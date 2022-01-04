@@ -78,10 +78,17 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  // 额外的选项
-  extraOption: {
-    type: Object,
-    require: false
+  showExtra: {
+    type: Boolean,
+    default: false
+  },
+  extraOptionLabel: {
+    type: String,
+    default: '同上'
+  },
+  extraOptionValue: {
+    type: [Number, String, Array, Boolean],
+    default: -1
   },
   dataIndex: {
     type: Number

@@ -6,11 +6,15 @@
     :before-close="handleClose"
     title="出库清单"
     :show-close="true"
-    size="90%"
+    size="100%"
     custom-class="raw-mat-application-review-form"
   >
     <template #titleRight>
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V && isNotBlank(form.list)">
+        <span class="batch-set-info child-mr-7">
+          <el-date-picker v-model="batchOutboundTime" type="datetime" value-format="x" placeholder="批量设置出库时间" />
+          <common-button type="success" size="mini" @click="setOutboundTime">设置</common-button>
+        </span>
         <el-popconfirm
           confirm-button-text="确定"
           cancel-button-text="取消"
@@ -55,7 +59,7 @@
         >
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark  show-graphics>
+              <expand-secondary-info :basic-class="row.basicClass" :row="row" show-remark show-graphics>
                 <p v-if="row.boolTransfer">
                   调拨：
                   <span>（来源）</span>
@@ -80,6 +84,18 @@
               <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
                 <span v-if="row.recipient">{{ row.recipient.name }}</span>
               </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="出库时间" width="195px" align="center">
+            <template #default="{ row }">
+              <el-date-picker
+                v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
+                v-model="row.outboundTime"
+                type="datetime"
+                value-format="x"
+                placeholder="出库时间"
+              />
+              <span v-else v-parse-time="{ val: row.outboundTime }" />
             </template>
           </el-table-column>
           <el-table-column
@@ -127,6 +143,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import CommonButton from '@/components-system/common/common-button/index.vue'
 
 const emit = defineEmits(['refresh', 'update:visible'])
 
@@ -146,6 +163,7 @@ const detailLoading = ref(false) // 通过loading
 const expandRowKeys = ref([]) // 展开
 const form = ref({})
 const operateRecordNumber = ref(0) // 操作记录数，大于0代表有操作，回到物料仓时需要刷新页面
+const batchOutboundTime = ref() // 批量设置出库时间
 
 // 表单禁止操作
 const formDisabled = computed(() => submitOptLoading.value)
@@ -233,7 +251,7 @@ async function delItem(row, index) {
 async function passed() {
   try {
     submitOptLoading.value = true
-    await reviewPassed(form.value.id)
+    await reviewPassed(form.value)
     // 审核通过后设置审核状态
     form.value.reviewStatus = reviewStatusEnum.PASS.V
     ++operateRecordNumber.value
@@ -263,6 +281,13 @@ function getSummaries(param) {
   return tableSummary(param, { props: ['quantity', 'mete'] })
 }
 
+// 设置出库时间
+function setOutboundTime() {
+  form.value.list.forEach((v) => {
+    v.outboundTime = batchOutboundTime.value
+  })
+}
+
 // 打印/下载出库单
 function printOrDownload() {
   // TODO:
@@ -284,6 +309,15 @@ function printOrDownload() {
       min-height: 28px;
       line-height: 28px;
     }
+
+    ::v-deep(.el-input--suffix .el-input__inner) {
+      padding-right: 10px;
+    }
+  }
+  .batch-set-info {
+    padding-right: 10px;
+    margin-right: 10px;
+    border-right: 1px solid#dcdfe6;
   }
 }
 </style>

@@ -3,6 +3,8 @@
     v-model="copyValue"
     :options="options"
     :showExtra="props.showExtra"
+    :extra-option-label="props.extraOptionLabel"
+    :extra-option-value="props.extraOptionValue"
     :size="props.size"
     :disabled="disabled"
     :multiple="props.multiple"
@@ -71,14 +73,13 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  extraOption: {
-    type: Object,
-    default: () => {
-      return {
-        label: '同上',
-        value: -1
-      }
-    }
+  extraOptionLabel: {
+    type: String,
+    default: '同上'
+  },
+  extraOptionValue: {
+    type: [Number, String, Array, Boolean],
+    default: -1
   },
   placeholder: {
     type: String,

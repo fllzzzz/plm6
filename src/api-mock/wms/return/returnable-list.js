@@ -306,7 +306,7 @@ const getAuxMaterialList = {
             remark: '66666',
             mete: 100,
             returnableMete: 100,
-            singleMete: 100, // 单件重量(钢卷mete = singleMete)
+            singleMete: 100, // 单件重量
             singleReturnableMete: 100, // 单件可退库重量
             project: {
               id: 1,
@@ -342,7 +342,7 @@ const getAuxMaterialList = {
             unitNet: 10000, // 单位净量
             mete: 100000,
             returnableMete: 100000,
-            singleMete: 10000, // 单件重量(钢卷mete = singleMete)
+            singleMete: 10000, // 单件重量
             singleReturnableMete: 10000, // 单件可退库重量
             project: {
               id: 1,
@@ -395,7 +395,7 @@ const getGasList = {
             unitNet: 25000, // 单位净量
             mete: 100000,
             returnableMete: 100000,
-            singleMete: 25000, // 单件重量(气体mete = singleMete)
+            singleMete: 25000, // 单件重量
             singleReturnableMete: 25000, // 单件可退库重量
             project: {
               id: 1,
@@ -430,7 +430,7 @@ const getGasList = {
             unitNet: 30000, // 单位净量
             mete: 60000,
             returnableMete: 60000,
-            singleMete: 30000, // 单件重量(气体mete = singleMete)
+            singleMete: 30000, // 单件重量
             singleReturnableMete: 30000, // 单件可退库重量
             project: {
               id: 1,

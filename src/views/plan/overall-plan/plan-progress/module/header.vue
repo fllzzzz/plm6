@@ -17,7 +17,7 @@
         @change="crud.toQuery"
       />
     </div>
-    <crudOperation :disabled="!query.productType"/>
+    <crudOperation/>
   </div>
 </template>
 

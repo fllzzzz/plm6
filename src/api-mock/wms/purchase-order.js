@@ -29,6 +29,10 @@ const getPurchaseOrder = {
               }
             ], // 项目id
             requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+            branchCompany: {
+              id: 2,
+              name: '杭州初鸣建筑科技有限公司'
+            },
             supplierId: 5, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
@@ -67,6 +71,10 @@ const getPurchaseOrder = {
             strucAreaIds: [1, 5], // 构件区域id
             enclAreaIds: [2], // 围护区域id
             requisitionsSN: ['AFTER-Q-123456', 'AFTER-Q-133456'], // 采购申请单
+            branchCompany: {
+              id: 1,
+              name: '杭州初鸣建筑科技有限公司'
+            },
             supplierId: 1, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
@@ -275,6 +283,10 @@ const detail = {
           }
         ], // 项目id
         requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+        branchCompany: {
+          id: 1,
+          name: '杭州初鸣建筑科技有限公司'
+        },
         supplier: {
           // 供应商
           id: 1,
@@ -329,6 +341,10 @@ const detail_3 = {
           }
         ], // 项目id
         requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
+        branchCompany: {
+          id: 1,
+          name: '杭州初鸣建筑科技有限公司'
+        },
         supplier: {
           // 供应商
           id: 1,

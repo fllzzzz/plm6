@@ -5,7 +5,7 @@
       <el-input v-model="form.name" maxlength="32" show-word-limit placeholder="请输入供应商名称" />
     </el-form-item>
     <el-form-item label="社会统一代码" prop="socialCode">
-      <el-input v-model="form.socialCode" placeholder="请输入社会统一代码" />
+      <el-input v-model="form.socialCode" placeholder="请输入社会统一代码" maxlength="50" />
     </el-form-item>
     <!-- <el-form-item label="供应商分类" prop="supplierClass">
       <common-select

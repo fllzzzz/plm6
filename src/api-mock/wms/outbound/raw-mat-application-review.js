@@ -27,6 +27,8 @@ const get = {
             applicationSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库申请编号
             applicantName: '@cname',
             userUpdateTime: '@datetime(T)',
+            outboundEarliestTime: '@datetime(T)',
+            outboundLatestTime: '@datetime(T)',
             createTime: '@datetime(T)'
           }
         ],
@@ -162,7 +164,8 @@ const getDetailByCurrentUser = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 3,
@@ -199,7 +202,8 @@ const getDetailByCurrentUser = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 5,
@@ -255,7 +259,8 @@ const getDetailByCurrentUser = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 9,
@@ -339,7 +344,8 @@ const detail_id1 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 2,
@@ -368,7 +374,8 @@ const detail_id1 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 3,
@@ -396,7 +403,8 @@ const detail_id1 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 5,
@@ -498,7 +506,8 @@ const detail_id2 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 3,
@@ -526,7 +535,8 @@ const detail_id2 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 5,
@@ -582,7 +592,8 @@ const detail_id2 = {
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            outboundTime: '@datetime(T)'
           },
           {
             id: 9,

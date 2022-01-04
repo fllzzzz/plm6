@@ -2,7 +2,7 @@
   <el-card shadow="always">
     <template #header>
       <div class="clearfix">
-        <span class="card-title">基础出库配置</span>
+        <span class="card-title">出库基础配置</span>
         <common-tip-button
           v-permission="permission.basicOutboundEdit"
           :loading="submitLoading"

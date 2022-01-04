@@ -2,7 +2,7 @@
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
       <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
-      <table-cell-tag v-if="showPartyA" :show="!!getInfo(row, 'boolPartyA')" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+      <table-cell-tag v-if="showPartyA && partyAPosition === 'index'" :show="!!getInfo(row, 'boolPartyA')" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -17,6 +17,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
+      <table-cell-tag v-if="showPartyA && partyAPosition === 'project'" :show="!!getInfo(row, 'boolPartyA')" name="甲供" :color="TAG_PARTY_DEF_COLOR" :offset="15" />
       <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
@@ -85,6 +86,10 @@ const props = defineProps({
     // 显示 “甲供”
     type: Boolean,
     default: true
+  },
+  partyAPosition: {
+    type: String,
+    default: 'index' // index / project
   },
   showPartyATransfer: {
     // 显示 甲供调拨类型

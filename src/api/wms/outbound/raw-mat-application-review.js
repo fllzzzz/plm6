@@ -52,11 +52,12 @@ export function reviewReturned(id) {
  * 出库单确认出库（审核通过）
  * @returns
  */
-export function reviewPassed(id) {
+export function reviewPassed(data) {
   return request({
     module: 'wms',
-    url: `outbound/application/review/raw-materials/${id}/passed`,
-    method: 'put'
+    url: `outbound/application/review/raw-materials/${data.id}/passed`,
+    method: 'put',
+    data
   })
 }
 
@@ -108,4 +109,4 @@ export function clear(id) {
   })
 }
 
-export default { get }
+export default { get, detail }
