@@ -64,12 +64,13 @@ const props = defineProps({
 })
 
 const { globalProject, currentMenu, globalProjectId } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId'])
-const allEnclosure = ['PlanTrussSupportList', 'PlanSandwichList', 'PlanPressedSupportList', 'PlanPressedColorList', 'PlanAssemblyList', 'PlanBendingList']
+const allEnclosure = ['PlanTrussSupportList', 'PlanSandwichList', 'PlanPressedSupportList', 'PlanPressedColorList', 'PlanAssemblyList', 'PlanBendingList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList']
 const enclosureItem = [
   { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
   { name: 'PlanSandwichList', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
   { name: 'PlanPressedSupportList', no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V },
-  { name: 'PlanPressedColorList', no: TechnologyTypeAllEnum.PROFILED_PLATE.V }
+  { name: 'PlanPressedColorList', no: TechnologyTypeAllEnum.PROFILED_PLATE.V },
+  { name: 'PlanArtifactTreeList', no: TechnologyTypeAllEnum.STRUCTURE.V }
 ]
 const showItem = ref([])
 watch(
@@ -94,18 +95,21 @@ watch(
         })
       }
       if (projectContentData.length > 0) {
-        enclosureItem.forEach(val => {
-          const enclosureVal = projectContentData.find(v => Number(v.no) === val.no)
+        enclosureItem.forEach(value => {
+          const enclosureVal = projectContentData.find(v => Number(v.no) === value.no)
           if (enclosureVal) {
-            arr.push(val.name)
+            arr.push(value.name)
+            if (value.no === TechnologyTypeAllEnum.STRUCTURE.V) {
+              if (globalProject.value.mode !== projectModeEnum.STRUCTURE.V) {
+                arr.push('PlanAssemblyList')
+              }
+              arr.push('PlanArtifactList', 'PlanMachinePartList')
+            }
           }
         })
         if (projectContentData.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
           arr.push('PlanBendingList')
         }
-      }
-      if (val.mode !== projectModeEnum.STRUCTURE.V) {
-        arr.push('PlanAssemblyList')
       }
       showItem.value = arr
     } else {
