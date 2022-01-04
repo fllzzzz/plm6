@@ -9,26 +9,11 @@
       style="width: 250px"
       @change="crud.toQuery"
     />
-    <monomer-select
-      v-model="query.monomerId"
-      :default="false"
+    <monomer-select-area-select
+      v-model:monomerId="query.monomerId"
+      v-model:areaId="query.areaId"
       clearable
       :project-id="query.projectId"
-      class="filter-item"
-      style="width: 250px"
-      @getAreaInfo="getAreaInfo"
-      @change="crud.toQuery"
-    />
-    <common-select
-      v-model="query.areaId"
-      :options="areaList"
-      size="small"
-      :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-      clearable
-      :noDataText="query.monomerId ? '暂无数据' : '未选择单体'"
-      class="filter-item"
-      placeholder="请选择区域"
-      style="width: 250px"
       @change="crud.toQuery"
     />
   </div>
@@ -98,7 +83,7 @@ import { regHeader } from '@compos/use-crud'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import FactorySelect from '@/components-system/base/factory-select.vue'
 import productionLineSelect from '@comp-mes/production-line-select'
-import monomerSelect from '@/components-system/plan/monomer-select'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
@@ -127,11 +112,6 @@ const productType = inject('productType')
 const category = inject('category')
 const buttonValue = ref()
 const askCompleteTime = ref()
-
-const areaList = ref([])
-function getAreaInfo(list) {
-  areaList.value = list
-}
 
 // 操作
 function operateIt(v) {

@@ -1,5 +1,12 @@
 <template>
-  <monomer-select ref="monomerRef" v-model="monomerId" :project-id="projectId" class="filter-item" @getAreaInfo="getAreaInfo" />
+  <monomer-select
+    ref="monomerRef"
+    v-model="monomerId"
+    :productType="proType"
+    :project-id="projectId"
+    class="filter-item"
+    @getAreaInfo="getAreaInfo"
+  />
   <area-tabs
     class="filter-item"
     style="width: calc(100% - 230px)"
@@ -11,15 +18,32 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineExpose, defineEmits } from 'vue'
+import { ref, defineProps, defineExpose, defineEmits, computed } from 'vue'
+
+import { convertProductType } from '@/utils/mes/convert-product-type'
+
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 
 const emit = defineEmits(['change'])
-defineProps({
+const props = defineProps({
   projectId: {
     type: [Number, String]
+  },
+  productType: {
+    type: [Number, String, undefined]
+  },
+  category: {
+    type: [Number, String, undefined]
+  },
+  needConvert: {
+    type: Boolean,
+    default: false
   }
+})
+
+const proType = computed(() => {
+  return props.needConvert ? convertProductType(props.productType, props.category) : props.productType
 })
 
 const monomerRef = ref()
@@ -35,7 +59,7 @@ function tabClick(val) {
     id: name,
     name: label
   }
-  emit('change', { monomerId: monomerId, areaId: areaId, currentArea: currentArea })
+  emit('change', { monomerId: monomerId.value, areaId: areaId.value, currentArea: currentArea })
 }
 
 function getAreaInfo(val) {

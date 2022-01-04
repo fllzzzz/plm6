@@ -1,33 +1,9 @@
-<!--
- * @Description:
- * @Author: SYJ
- * @Date: 2021-11-22 14:41:35
- * @LastEditors: SYJ
- * @LastEditTime: 2021-12-10 17:32:51
--->
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <monomer-select-area-tabs :project-id="globalProjectId" :productType="productType" needConvert @change="fetchMonomerAndArea" />
       <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
-      <el-input
-        v-model="query.name"
-        size="small"
-        placeholder="输入名称搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.serialNumber"
-        size="small"
-        placeholder="输入编号搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
+      <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
       <el-input
         v-model="query.plate"
         size="small"
@@ -99,7 +75,8 @@ v-if="!summaryLoading"
             <span>库存量：</span>
             <span
 v-if="!summaryLoading"
-              >{{ summaryInfo.stockQuantity }} 张 | {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
+              >{{ summaryInfo.stockQuantity }} 张 |
+              {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
             >
             <i v-else class="el-icon-loading" />
           </el-tag>
@@ -113,6 +90,7 @@ v-if="!summaryLoading"
 import { getBoardForEnclosureSummary as getSummary } from '@/api/mes/manufactures-manage/common'
 import { ref, watch } from 'vue'
 
+import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { mapGetters } from '@/store/lib'
@@ -121,6 +99,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
@@ -136,6 +115,7 @@ const defaultQuery = {
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
 
+const productType = componentTypeEnum.ENCLOSURE.V
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const summaryInfo = ref({
   quantity: 0,
