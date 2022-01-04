@@ -75,16 +75,17 @@ export function toArr(obj, newObj = true) {
  */
 export function getBits(enumerate, value, type) {
   const bitArr = []
-  for (const i in enumerate) {
-    if (enumerate[i].V & value) {
+  const _enumerate = isBlank(enumerate.ENUM) ? enumerate : enumerate.ENUM
+  for (const i in _enumerate) {
+    if (_enumerate[i].V & value) {
       switch (type) {
         case 'K':
         case 'V':
         case 'L':
-          bitArr.push(enumerate[i][type])
+          bitArr.push(_enumerate[i][type])
           break
         default:
-          bitArr.push(enumerate[i])
+          bitArr.push(_enumerate[i])
           break
       }
     }

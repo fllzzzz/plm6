@@ -1,4 +1,4 @@
-import { key2val, toArr, getBits, getBitsSum, setEnumValue } from './base'
+import { constantize, key2val, toArr, getBits, getBitsSum, setEnumValue } from './base'
 // 注意modules文件夹下的文件（不相同的两个js）的export不能出现相同的名称
 
 const modulesFiles = import.meta.globEager('./modules/*.js')
@@ -16,7 +16,7 @@ exports = Object.assign(exports, modules)
 //   key2val, toArr, getBits, setEnumValue
 // }
 export default {
-  key2val, toArr, getBits, getBitsSum, setEnumValue
+  constantize, key2val, toArr, getBits, getBitsSum, setEnumValue
 }
 
 Object.defineProperty(exports, '__esModule', {

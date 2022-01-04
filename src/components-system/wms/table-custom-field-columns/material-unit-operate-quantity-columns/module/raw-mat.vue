@@ -59,6 +59,7 @@
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { STEEL_ENUM } from '@/settings/config'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
@@ -96,6 +97,7 @@ const mateLabel = computed(() => {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
     case rawMatClsEnum.STEEL_COIL.V:
+    case STEEL_ENUM:
       return `重量(${unitInfo.value.weight.unit})`
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
@@ -112,6 +114,8 @@ const quantityLabel = computed(() => {
       return `数量(${unitInfo.value.measure.unit})`
     case rawMatClsEnum.STEEL_COIL.V:
       return `长度(${unitInfo.value.measure.unit})`
+    case STEEL_ENUM:
+      return `数量(${unitInfo.value.measure.unit})`
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:

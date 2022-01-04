@@ -75,6 +75,7 @@ import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { STEEL_ENUM } from '@/settings/config'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
@@ -86,6 +87,11 @@ const props = defineProps({
     // 是否显示单位
     type: Boolean,
     default: true
+  },
+  showSteelUnit: {
+    // 是否显示钢材单位
+    type: Boolean,
+    default: false
   },
   outboundTypeMode: {
     // 出库单位 模式(显示出库单位对应的数量及单位)
@@ -130,14 +136,15 @@ const unitInfo = computed(() => {
 
 const mateLabel = computed(() => {
   let label = ''
-  if (props.showUnit) {
+  if (props.showUnit && props.showSteelUnit) {
     label = '核算量'
   } else {
     switch (props.basicClass) {
       case rawMatClsEnum.STEEL_PLATE.V:
       case rawMatClsEnum.SECTION_STEEL.V:
       case rawMatClsEnum.STEEL_COIL.V:
-        label = `重量(${unitInfo.value.measure.unit})`
+      case STEEL_ENUM:
+        label = `重量(${unitInfo.value.weight.unit})`
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
@@ -151,7 +158,7 @@ const mateLabel = computed(() => {
 
 const quantityLabel = computed(() => {
   let label = ''
-  if (props.showUnit) {
+  if (props.showUnit && props.showSteelUnit) {
     label = '数量'
   } else {
     switch (props.basicClass) {
@@ -164,6 +171,9 @@ const quantityLabel = computed(() => {
       case rawMatClsEnum.STEEL_COIL.V:
         label = `长度(${unitInfo.value.measure.unit})`
         break
+      case STEEL_ENUM:
+        label = `数量(${unitInfo.value.measure.unit})`
+        break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:
       default:
@@ -174,9 +184,18 @@ const quantityLabel = computed(() => {
   return (props.labelPrefix || '') + label
 })
 
-const showMeasureUnit = computed(() => props.showUnit && (isBlank(props.columns) || props.columns.visible(`${props.field}.measureUnit`)))
+// 是否显示单位
+const showUnit = computed(() => {
+  if (props.basicClass & STEEL_ENUM) {
+    return props.showSteelUnit && props.showUnit
+  } else {
+    return props.showUnit
+  }
+})
+
+const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.measureUnit`)))
 const showAccountingUnit = computed(
-  () => props.showUnit && (isBlank(props.columns) || props.columns.visible(`${props.field}.accountingUnit`))
+  () => showUnit.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.accountingUnit`))
 )
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.${props.quantityField}`))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.${props.meteField}`))

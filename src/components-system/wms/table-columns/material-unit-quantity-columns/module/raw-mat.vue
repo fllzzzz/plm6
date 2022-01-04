@@ -107,6 +107,7 @@ const mateLabel = computed(() => {
       case rawMatClsEnum.STEEL_PLATE.V:
       case rawMatClsEnum.SECTION_STEEL.V:
       case rawMatClsEnum.STEEL_COIL.V:
+      case STEEL_ENUM:
         label = `重量(${unitInfo.value.weight.unit})`
         break
       case rawMatClsEnum.MATERIAL.V:
@@ -133,6 +134,9 @@ const quantityLabel = computed(() => {
         break
       case rawMatClsEnum.STEEL_COIL.V:
         label = `长度(${unitInfo.value.measure.unit})`
+        break
+      case STEEL_ENUM:
+        label = `数量(${unitInfo.value.measure.unit})`
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:

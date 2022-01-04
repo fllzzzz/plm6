@@ -133,10 +133,13 @@ const meteLabel = computed(() => {
     case rawMatClsEnum.STEEL_COIL.V:
       label = `重量(${unitInfo.value.weight.unit})`
       break
+    case STEEL_ENUM:
+      label = props.singleMeteMode ? `单重(${unitInfo.value.weight.unit})` : `重量(${unitInfo.value.weight.unit})`
+      break
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
-      label = props.singleMeteMode ? `单件量(${unitInfo.value.weight.unit})` : '核算量'
+      label = props.singleMeteMode ? `单件量` : '核算量'
       break
   }
   if (props.showOperableMete && isNotBlank(props.labelPrefix)) {
@@ -156,6 +159,9 @@ const quantityLabel = computed(() => {
       break
     case rawMatClsEnum.STEEL_COIL.V:
       label = `长度(${unitInfo.value.measure.unit})`
+      break
+    case STEEL_ENUM:
+      label = `数量(${unitInfo.value.measure.unit})`
       break
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:

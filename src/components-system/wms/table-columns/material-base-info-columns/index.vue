@@ -1,8 +1,17 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
-      <!-- 是否甲供材料 -->
-      <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+      <template v-if="showRejectStatus">
+        <table-cell-tag
+          v-if="isNotBlank(row.rejectStatus) && row.rejectStatus !== materialRejectStatusEnum.NONE.V"
+          :name="materialRejectStatusEnum.VL[row.rejectStatus]"
+          :color="materialRejectStatusEnum.V[row.rejectStatus].COLOR"
+        />
+      </template>
+      <template v-else>
+        <!-- 是否甲供材料 -->
+        <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+      </template>
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -81,8 +90,8 @@
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
-import { isBlank } from '@/utils/data-type'
+import { materialRejectStatusEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
+import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 
 import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
@@ -113,6 +122,11 @@ const props = defineProps({
     // 显示 “序号”
     type: Boolean,
     default: true
+  },
+  showRejectStatus: {
+    // 显示 “退货状态”
+    type: Boolean,
+    default: false
   },
   showPartyA: {
     // 显示 “甲供”
