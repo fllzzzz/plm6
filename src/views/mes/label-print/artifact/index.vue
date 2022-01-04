@@ -276,10 +276,7 @@ import labelDlg from '../components/label-dlg'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['artifactLabel:get']
 }
 
 const optShow = {

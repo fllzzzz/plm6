@@ -65,13 +65,7 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <!-- <export-button
-          v-permission="permission.downloadLogistics"
-          :params="{...query}"
-          :fn="downloadLogistics"
-          btn-text="下载收货状态汇总表（根据查询条件下载）"
-          class="filter-item"
-        />
+        <!--
         <print-table
           v-permission="[...permission.print, ...permission.detailPrint]"
           :current-key.sync="currentKey"
@@ -84,11 +78,11 @@
         /> -->
       </template>
       <template #viewLeft>
-        <common-button @click="feeVisible = true" size="mini" type="primary">物流费设置</common-button>
+        <common-button v-permission="permission.edit" @click="feeVisible = true" size="mini" type="primary">物流费设置</common-button>
       </template>
     </crudOperation>
   </div>
-  <logistics-fee-setting v-model:visible="feeVisible"/>
+  <logistics-fee-setting v-model:visible="feeVisible" />
 </template>
 
 <script setup>

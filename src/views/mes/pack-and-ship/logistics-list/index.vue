@@ -179,8 +179,7 @@ import mHeader from './module/header'
 const permission = {
   get: ['logistics:get'],
   edit: ['logistics:edit'],
-  print: ['logistics:print'],
-  download: ['logistics:download']
+  print: ['logistics:print']
 }
 
 const optShow = {

@@ -244,10 +244,7 @@ import labelDlg from './module/label-dlg'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['enclosureLabel:get']
 }
 
 const optShow = {

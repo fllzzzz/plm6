@@ -222,7 +222,6 @@ const router = useRouter()
 // crud交由presenter持有
 const permission = {
   get: ['mesPack:get'],
-  download: ['mesPack:download'],
   detail: ['mesPack:detail'],
   edit: ['mesPack:edit'],
   del: ['mesPack:del'],

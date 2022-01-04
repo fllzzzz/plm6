@@ -73,7 +73,7 @@
           <span>{{ scope.row.completeRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="info" @click="toDetail(scope.row)">查看</common-button>
         </template>
@@ -99,10 +99,8 @@ import mDetail from './module/detail'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['analysisDelayReport:get'],
+  detail: ['analysisDelayReport:detail']
 }
 
 const optShow = {

@@ -58,12 +58,9 @@
         width="100px"
       >
         <template v-slot="scope">
-          <el-tag
-            v-if="scope.row.checkStatus"
-            :type="shipAuditStatusEnum.V[scope.row.checkStatus].T"
-            effect="plain"
-            >{{ shipAuditStatusEnum.VL[scope.row.checkStatus] }}</el-tag
-          >
+          <el-tag v-if="scope.row.checkStatus" :type="shipAuditStatusEnum.V[scope.row.checkStatus].T" effect="plain">{{
+            shipAuditStatusEnum.VL[scope.row.checkStatus]
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -160,20 +157,16 @@
         </template>
       </el-table-column>
       <!--详情与下载-->
-      <el-table-column
-        v-if="checkPermission([...permission.download, ...permission.detail, ...permission.detailPrint])"
-        label="操作"
-        width="90px"
-        align="center"
-      >
+      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="90px" align="center">
         <template v-slot="scope">
           <common-button
             v-if="scope.row.checkStatus === shipAuditStatusEnum.CHECKED.V"
             type="info"
             size="mini"
             @click.stop="showDetail(scope.row)"
-            >查看</common-button
           >
+            查看
+          </common-button>
           <common-button v-else type="primary" size="mini" @click.stop="showDetail(scope.row)"> 审核 </common-button>
         </template>
       </el-table-column>
@@ -181,21 +174,13 @@
     <!--分页组件-->
     <pagination />
     <m-detail v-model:visible="detailVisible" :detail-info="shipInfo" title="发运审核" :detailFunc="detail">
-      <template #titleRight v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V">
-        <common-button
-type="primary"
-:loading="loading.passLoading"
-size="mini"
-@click="auditIt(shipAuditEnum.PASS, 'passLoading')"
-          >同意发运</common-button
-        >
-        <common-button
-type="danger"
-:loading="loading.noPassLoading"
-size="mini"
-@click="auditIt(shipAuditEnum.NO_PASS, 'noPassLoading')"
-          >不同意发运</common-button
-        >
+      <template #titleRight v-if="shipInfo.checkStatus === shipAuditStatusEnum.UNCHECKED.V && checkPermission([...permission.audit])">
+        <common-button type="primary" :loading="loading.passLoading" size="mini" @click="auditIt(shipAuditEnum.PASS, 'passLoading')">
+          同意发运
+        </common-button>
+        <common-button type="danger" :loading="loading.noPassLoading" size="mini" @click="auditIt(shipAuditEnum.NO_PASS, 'noPassLoading')">
+          不同意发运
+        </common-button>
       </template>
     </m-detail>
   </div>
@@ -227,12 +212,10 @@ const shipAuditEnum = {
 }
 
 const permission = {
-  get: ['mesShip:get'],
-  detail: ['mesShip:detail'],
-  print: ['mesShip:print'],
-  detailPrint: ['mesShip:detailPrint'],
-  download: ['mesShip:download'],
-  downloadLogistics: ['mesShip:downloadAllLogistics']
+  get: ['shipAudit:get'],
+  detail: ['shipAudit:detail'],
+  print: ['shipAudit:print'],
+  audit: ['shipAudit:audit']
 }
 
 const optShow = {
