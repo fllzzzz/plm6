@@ -6,11 +6,13 @@
     :before-close="crud.cancelCU"
     :title="`${crud.props.factory ? crud.props.factory.name + '：' : ''}${crud.status.title}`"
     :show-close="true"
-    custom-class="conifg-wms-warehouse-form"
+    custom-class="config-wms-warehouse-form"
     width="600px"
   >
     <template #titleRight>
-      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">确认</common-button>
+      <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
+        确认
+      </common-button>
     </template>
     <el-form
       ref="formRef"
@@ -29,19 +31,14 @@
           v-model="form.materialType"
           :options="matClsEnum.ENUM"
           multiple
+          mode="bit"
           type="enum"
           placeholder="可存储材料类型"
-          style="width: 100%;"
+          style="width: 100%"
         />
       </el-form-item>
       <el-form-item label="仓库类型" prop="type">
-        <common-select
-          v-model="form.type"
-          :options="warehouseTypeEnum.ENUM"
-          type="enum"
-          placeholder="仓库类型"
-          style="width: 100%;"
-        />
+        <common-select v-model="form.type" :options="warehouseTypeEnum.ENUM" type="enum" placeholder="仓库类型" style="width: 100%" />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
         <common-input-number
@@ -51,7 +48,7 @@
           :max="99999"
           size="small"
           placeholder="排序"
-          style="width: 100%;"
+          style="width: 100%"
         />
       </el-form-item>
     </el-form>
@@ -60,7 +57,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import EO from '@enum'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
 
@@ -85,14 +81,13 @@ const formRef = ref()
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 crud.submitFormFormat = (form) => {
-  form.materialType = EO.getBitsSum(form.materialType)
   form.factoryId = crud.query.factoryId
   return form
 }
 </script>
 
 <style lang="scss" scoped>
-.conifg-wms-warehouse-form {
+.config-wms-warehouse-form {
   .align-left {
     ::v-deep(.el-input__inner) {
       text-align: left;

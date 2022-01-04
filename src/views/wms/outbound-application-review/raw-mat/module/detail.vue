@@ -49,14 +49,14 @@
         <material-unit-quantity-columns />
         <!-- 仓库信息 -->
         <warehouse-info-columns show-project show-transfer />
-        <el-table-column label="领用人" width="100px" align="center">
+        <el-table-column key="recipient" label="领用人" width="100px" align="center">
           <template #default="{ row }">
             <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
               <span v-if="row.recipient">{{ row.recipient.name }}</span>
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="出库时间" width="120px" align="center">
+        <el-table-column key="outboundTime" label="出库时间" width="125px" align="center">
           <template #default="{ row }">
             <span v-parse-time="{ val: row.outboundTime }" />
           </template>
