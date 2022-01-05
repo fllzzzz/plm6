@@ -1,10 +1,17 @@
-import { computed, ref, onUnmounted, onMounted } from 'vue'
+import { computed, ref, onUnmounted, onMounted, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import RAF from '@/utils/raf'
 
 export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD }) {
   const { globalProjectId } = mapGetters(['globalProjectId'])
   const boardList = ref([])
+  watch(
+    globalProjectId,
+    (val) => {
+      boardList.value = []
+    },
+    { immediate: true }
+  )
 
   const boxScale = computed(() => {
     if (headRef.value) {

@@ -295,13 +295,14 @@ function openRecordView(row) {
 }
 
 function getLabelInfo(row) {
-  const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
+  // const { getLine, printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
+  const { printConfig, spliceQrCodeUrl, QR_SCAN_PATH, requestUrl, companyName } = headRef.value
   // 标签构件信息
   const component = {
     projectName: row.project.shortName,
     printTime: row.printTime ? parseTime(row.printTime, '{y}/{m}/{d}') : parseTime(new Date().getTime(), '{y}/{m}/{d}'),
-    monomerName: printConfig.showMonomer ? row.monomer.name : '',
-    areaName: printConfig.showArea ? row.area.name : '',
+    monomerName: row.monomer.name,
+    areaName: row.area.name,
     name: row.name,
     serialNumber: row.serialNumber,
     quantity: row.quantity,
@@ -311,11 +312,13 @@ function getLabelInfo(row) {
     length: convertUnits(row.length, 'mm', 'm', DP.MES_ARTIFACT_L__M)
   }
   // 生产线信息
-  const productionLine = getLine()
+  // const productionLine = getLine()
   const baseUrl = requestUrl
   return {
+    productType,
+    labelType: labelType.value,
     component,
-    productionLineName: printConfig.showProductionLine ? `${productionLine.factoryName}-${productionLine.name}` : '',
+    printConfig,
     manufacturerName: printConfig.manufacturerName || companyName,
     qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ARTIFACT_TASK}`, {
       id: row.id, // id

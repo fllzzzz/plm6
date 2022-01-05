@@ -48,14 +48,7 @@
             <span>{{ scope.row.totalQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          key="totalMete"
-          prop="totalMete"
-          :show-overflow-tooltip="true"
-          :label="`任务总量`"
-          align="center"
-          width="90"
-        >
+        <el-table-column key="totalMete" prop="totalMete" :show-overflow-tooltip="true" :label="`任务总量`" align="center" width="90">
           <template v-slot="scope">
             <span>{{ scope.row.totalMete }}</span>
           </template>
@@ -154,8 +147,8 @@ async function fetchList() {
     tableLoading.value = true
     const { artifactDetailsAnalysisDTOList } = await detail(query)
     list.value = artifactDetailsAnalysisDTOList.map((v) => {
-      v.totalQuantity = v.surplusTaskQuantity + v.taskQuantity
-      v.totalMete = toFixed(v.surplusNetWeight + v.taskNetWeight, DP.COM_WT__KG)
+      v.totalQuantity = v.taskQuantity
+      v.totalMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
       v.processSequence = v.processSummaryList
         .map((v) => {
           return `<span>【${v.name} │ <span style="color: #67C23A;">${v.completeQuantity}</span>】</span>`

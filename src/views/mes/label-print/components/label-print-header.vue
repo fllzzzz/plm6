@@ -18,12 +18,17 @@
       <template v-slot:optRight>
         <el-popover v-model:visible="printConfigVisible" placement="bottom-start" width="400">
           <el-form ref="form" :model="printConfig" label-width="90px" size="mini">
-            <el-form-item label="重量">
+            <el-form-item label="重量" v-show="productType & componentTypeEnum.ARTIFACT.V">
               <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
             </el-form-item>
             <el-form-item label="标签类型">
               <div style="display: flex; align-items: center">
-                <common-radio-button v-model="printConfig.type" :options="labelTypeEnum.ENUM" type="enum" />
+                <common-radio-button
+                  v-model="printConfig.type"
+                  :unshowVal="productType & componentTypeEnum.ENCLOSURE.V ? [labelTypeEnum.SIMPLE.V] : []"
+                  :options="labelTypeEnum.ENUM"
+                  type="enum"
+                />
                 <el-popover placement="right" :title="labelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
                   <div style="height: 350px; margin-top: -40px">
                     <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type })"></span>
@@ -38,11 +43,11 @@
                 </el-popover>
               </div>
             </el-form-item>
-            <el-form-item label="显示">
+            <el-form-item label="显示" v-show="productType & componentTypeEnum.ARTIFACT.V">
               <span style="display: flex; align-items: center">
                 <span style="margin-right: 3px">单体</span><el-checkbox v-model="printConfig.showMonomer" />
                 <span style="margin-right: 3px">区域</span><el-checkbox v-model="printConfig.showArea" />
-                <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" />
+                <!-- <span style="margin-right: 3px">生产线</span><el-checkbox v-model="printConfig.showProductionLine" /> -->
               </span>
             </el-form-item>
             <el-form-item label="制造商名称">
@@ -68,15 +73,14 @@
           </div>
         </el-popover>
         <el-tag hit size="medium" style="margin-left: 5px" effect="plain">
-          <span v-if="!configLoading">{{
-            `标签类型：${labelTypeEnum.VL[sourcePrintConfig.type]}，
-            重量：${printWeightTypeEnum.VL[sourcePrintConfig.weight]}，
-            区域：${isShowText(sourcePrintConfig.showArea)}，
-            工厂及生产线：${isShowText(sourcePrintConfig.showProductionLine)}，
-            单体：${isShowText(sourcePrintConfig.showMonomer)}，
-            制造商名称：${sourcePrintConfig.manufacturerName || '-'}，
-            份数：${sourcePrintConfig.copiesQuantity}`
-          }}</span>
+          <span v-if="!configLoading">
+            <span>标签类型：{{labelTypeEnum.VL[sourcePrintConfig.type]}}，</span>
+            <span v-show="productType & componentTypeEnum.ARTIFACT.V">重量：{{printWeightTypeEnum.VL[sourcePrintConfig.weight]}}，</span>
+            <span v-show="productType & componentTypeEnum.ARTIFACT.V">区域：{{isShowText(sourcePrintConfig.showArea)}}，</span>
+            <span v-show="productType & componentTypeEnum.ARTIFACT.V">单体：{{isShowText(sourcePrintConfig.showMonomer)}}，</span>
+            <span>制造商名称：{{sourcePrintConfig.manufacturerName || '-'}}，</span>
+            <span>份数：{{sourcePrintConfig.copiesQuantity}}</span>
+          </span>
           <i v-else class="el-icon-loading" />
         </el-tag>
       </template>
@@ -101,7 +105,7 @@ import { getHasTaskLine } from '@/api/mes/common'
 import { ref, watch, inject, reactive, defineExpose } from 'vue'
 
 import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
-import { labelTypeEnum } from '@enum-ms/mes'
+import { labelTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
 import { deepClone } from '@data-type/index'
 import { spliceQrCodeUrl, QR_SCAN_PATH } from '@/utils/label'
@@ -113,7 +117,7 @@ import rrOperation from '@crud/RR.operation'
 import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productionLineBoxSelect from '@comp-mes/production-line-box-select'
-import { getMiniLabelHtml } from '@comp-label/label-fn.js'
+import { getMiniLabelHtml } from '@/utils/label/index.js'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
@@ -151,7 +155,7 @@ let printConfig = reactive({
   type: labelTypeEnum.COMMON.V,
   showArea: true,
   showMonomer: true,
-  showProductionLine: true,
+  // showProductionLine: true,
   manufacturerName: '',
   copiesQuantity: 1
 })
@@ -182,9 +186,9 @@ async function fetchPrintConfig() {
     configLoading.value = true
     const _data = await getPrintConfig(globalProjectId.value, printType)
     if (_data) {
-      const { weight, showProductionLine, showArea, showMonomer, manufacturerName, copiesQuantity } = _data
+      const { weight, showArea, showMonomer, manufacturerName, copiesQuantity } = _data
       printConfig.weight = weight
-      printConfig.showProductionLine = showProductionLine
+      // printConfig.showProductionLine = showProductionLine
       printConfig.showArea = showArea
       printConfig.showMonomer = showMonomer
       printConfig.manufacturerName = manufacturerName
@@ -213,7 +217,7 @@ async function saveConfig() {
     await setPrintConfig({
       ...config,
       printType,
-      showProductionLine: printConfig.showProductionLine,
+      // showProductionLine: printConfig.showProductionLine,
       showArea: printConfig.showArea,
       showMonomer: printConfig.showMonomer
     })

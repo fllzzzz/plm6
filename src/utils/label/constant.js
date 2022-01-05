@@ -13,16 +13,20 @@ const defComponent = {
   quantity: 'XX',
   weight: 'XX',
   length: 'XX',
+  thickness: 'XX',
+  plate: 'XX',
+  color: 'XX',
   specification: 'XX',
   areaName: 'XX'
 }
 
-const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, manufacturerName = 'XX', productionLineName }) {
+// 构件-常规标签
+const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
   return `
 <div class="artifact-label">
 <div class="row">
-  <div class="col">${component.projectName}</div>
-  <div class="col">${component.monomerName}</div>
+  <div class="col" style="${printConfig?.showMonomer ? '' : 'border:none;'}">${component.projectName}</div>
+  <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">${component.monomerName}</div>
 </div>
 <div class="row row-2">
   <div class="col amplify-content">
@@ -43,7 +47,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, manufacture
       <div class="col">规格：${component.specification}</div>
     </div>
     <div class="row">
-      <div class="col">区域：${component.areaName}</div>
+      <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${component.areaName}</div>
     </div>
     <div class="row">
       <div class="col">${manufacturerName}</div>
@@ -60,6 +64,7 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, manufacture
 `
 }
 
+// 构件-简约标签
 const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent }) {
   return `
 <div class="artifact-label">
@@ -79,7 +84,8 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent }) {
 `
 }
 
-const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, manufacturerName = 'XX', productionLineName }) {
+// 构件-定制标签
+const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
   return `
   <div class="artifact-label">
   <div class="row">
@@ -94,13 +100,13 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, manufacture
     </div>
   </div>
   <div class="row">
-    <div class="col">${component.projectName}</div>
-    <div class="col">${component.monomerName}</div>
+    <div class="col" style="${printConfig?.showMonomer ? '' : 'border:none;'}">${component.projectName}</div>
+    <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">${component.monomerName}</div>
   </div>
   <div class="contains-rows">
     <div class="col" style="flex: 2">
       <div class="row">
-        <div class="col">区域：${component.areaName}</div>
+        <div class="col" style="${printConfig?.showArea ? '' : 'display:none;'}">区域：${component.areaName}</div>
       </div>
       <div class="row">
         <div class="col">数量(件)：${component.quantity}</div>
@@ -123,16 +129,18 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, manufacture
   `
 }
 
-// 构件标签
+// 构件标签样式
 const ARTIFACT_STYLE = function ({
   fClass = '',
   colContent = 'start',
   rowHeight = 60,
   colPadding = 10,
-  unit = 'px'
+  unit = 'px',
+  qrPosition = {}
 }) {
   return {
     fClass,
+    qrPosition,
     style: `
     <style>
     .${fClass} .artifact-label {
@@ -212,7 +220,121 @@ const ARTIFACT_STYLE = function ({
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: normal;
+      align-items: stretch;
+    }
+    </style>
+    `
+  }
+}
+
+// 围护-常规标签
+const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+  console.log('ENCLOSURE_COMMON_L_HTML')
+  return `
+  <div class="enclosure-label">
+    <div class="content">
+      <div class="flex-1">
+        <div class="qr-content">
+        </div>
+      </div>
+      <div class="flex-2">
+        <div class="row">品名：${component.name}</div>
+        <div class="row">厚度(mm)：${component.thickness}</div>
+        <div class="row">单长(mm)：${component.length}</div>
+        <div class="row">颜色：${component.color}</div>
+      </div>
+      <div class="flex-2">
+        <div class="row">编号：${component.serialNumber}</div>
+        <div class="row">总张数：${component.quantity}</div>
+        <div class="row">板型：${component.plate}</div>
+        <div class="row">生产日期：${component.printTime}</div>
+      </div>
+    </div>
+  </div>
+`
+}
+
+// 围护-定制标签
+const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+  return `
+  <div class="enclosure-label">
+    <div class="company">
+      <div>LOGO</div>
+      <div style="flex:1;text-align:center;">${manufacturerName}</div>
+    </div>
+    <div class="content">
+      <div class="flex-2">
+        <div class="row">品名：${component.name}</div>
+        <div class="row">厚度(mm)：${component.thickness}</div>
+        <div class="row">单长(mm)：${component.length}</div>
+        <div class="row">颜色：${component.color}</div>
+      </div>
+      <div class="flex-2">
+        <div class="row">编号：${component.serialNumber}</div>
+        <div class="row">总张数：${component.quantity}</div>
+        <div class="row">板型：${component.plate}</div>
+        <div class="row">生产日期：${component.printTime}</div>
+      </div>
+      <div class="flex-1">
+        <div class="qr-content">
+        </div>
+      </div>
+    </div>
+  </div>
+`
+}
+
+// 围护标签样式
+const ENCLOSURE_STYLE = function ({
+  fClass = '',
+  qrPosition = {},
+  rowHeight = 40,
+  headerHeight = 60,
+  padding = 15,
+  border = 1,
+  unit = 'px'
+}) {
+  return {
+    fClass,
+    qrPosition,
+    style: `
+    <style>
+    .${fClass} .company{
+      display:flex;
+      align-items: center;
+      height: ${headerHeight}${unit};
+      font-size: 25pt;
+    }
+
+    .${fClass} .enclosure-label {
+      font-family: "微软雅黑";
+      font-size: 9pt;
+      color: black;
+      padding:0 ${padding}${unit};
+      box-sizing: border-box;
+      border:${border}px solid #000;
+      border-radius: 15px;
+    }
+
+    .${fClass} .enclosure-label .content {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .${fClass} .enclosure-label .row {
+      display: flex;
+      height: ${rowHeight}${unit};
+      align-items: center;
+    }
+    
+    .${fClass} .enclosure-label .flex-1{
+      width:25%;
+    }
+    
+    .${fClass} .enclosure-label .flex-2{
+      width: 35%;
+      display: flex;
+      flex-direction: column;
     }
     </style>
     `
@@ -226,9 +348,9 @@ export const LABEL_HTML = {
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_CUSTOM_L_HTML
   },
   [componentTypeEnum.ENCLOSURE.V]: {
-    [labelTypeEnum.COMMON.V]: ARTIFACT_COMMON_L_HTML,
-    [labelTypeEnum.SIMPLE.V]: ARTIFACT_SIMPLE_L_HTML,
-    [labelTypeEnum.CUSTOM.V]: ARTIFACT_CUSTOM_L_HTML
+    [labelTypeEnum.COMMON.V]: ENCLOSURE_COMMON_L_HTML,
+    [labelTypeEnum.SIMPLE.V]: '',
+    [labelTypeEnum.CUSTOM.V]: ENCLOSURE_CUSTOM_L_HTML
   }
 }
 
@@ -236,27 +358,32 @@ export const PRE_LABEL_STYLE = {
   [componentTypeEnum.ARTIFACT.V]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
       fClass: 'pre-com-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
       rowHeight: 60
     }),
     [labelTypeEnum.SIMPLE.V]: ARTIFACT_STYLE({
       fClass: 'pre-sim-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
       rowHeight: 210,
       colContent: 'center'
     }),
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
       fClass: 'pre-cus-al',
+      qrPosition: { right: '18px', bottom: '8px', size: 160 },
       rowHeight: 60
     })
   },
   [componentTypeEnum.ENCLOSURE.V]: {
-    [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
+    [labelTypeEnum.COMMON.V]: ENCLOSURE_STYLE({
       fClass: 'pre-com-al',
-      rowHeight: 60
+      qrPosition: { top: '17px', left: '15px', size: 130 },
+      rowHeight: 40
     }),
     [labelTypeEnum.SIMPLE.V]: '',
-    [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
+    [labelTypeEnum.CUSTOM.V]: ENCLOSURE_STYLE({
       fClass: 'pre-cus-al',
-      rowHeight: 60
+      qrPosition: { top: '75px', left: '', right: '15px', size: 130 },
+      rowHeight: 40
     })
   }
 }
@@ -278,14 +405,15 @@ export const MINI_LABEL_STYLE = {
     })
   },
   [componentTypeEnum.ENCLOSURE.V]: {
-    [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
+    [labelTypeEnum.COMMON.V]: ENCLOSURE_STYLE({
       fClass: 'mini-com-al',
-      rowHeight: 40
+      rowHeight: 25
     }),
     [labelTypeEnum.SIMPLE.V]: '',
-    [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
+    [labelTypeEnum.CUSTOM.V]: ENCLOSURE_STYLE({
       fClass: 'mini-cus-al',
-      rowHeight: 40
+      headerHeight: 30,
+      rowHeight: 25
     })
   }
 }
@@ -302,6 +430,7 @@ export const PRINT_LABEL_STYLE = {
       fClass: 'print-sim-al',
       rowHeight: 32,
       colPadding: 1,
+      colContent: 'center',
       unit: 'mm'
     }),
     [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
@@ -312,17 +441,20 @@ export const PRINT_LABEL_STYLE = {
     })
   },
   [componentTypeEnum.ENCLOSURE.V]: {
-    [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
+    [labelTypeEnum.COMMON.V]: ENCLOSURE_STYLE({
       fClass: 'print-com-al',
-      rowHeight: 9,
-      colPadding: 1,
+      rowHeight: 7,
+      padding: 1,
+      border: 0,
       unit: 'mm'
     }),
     [labelTypeEnum.SIMPLE.V]: '',
-    [labelTypeEnum.CUSTOM.V]: ARTIFACT_STYLE({
+    [labelTypeEnum.CUSTOM.V]: ENCLOSURE_STYLE({
       fClass: 'print-cus-al',
-      rowHeight: 9,
-      colPadding: 1,
+      headerHeight: 14,
+      padding: 1,
+      rowHeight: 8,
+      border: 0,
       unit: 'mm'
     })
   }

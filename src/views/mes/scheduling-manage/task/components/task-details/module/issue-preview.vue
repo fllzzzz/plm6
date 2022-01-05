@@ -13,30 +13,25 @@
       </el-tooltip>
     </template>
     <template #titleRight>
-      <common-button
-:loading="loading"
-size="mini"
-:disabled="!modifiedData || modifiedData.length == 0"
-type="primary"
-@click="submit"
-        >保 存</common-button
-      >
+      <common-button :loading="loading" size="mini" :disabled="!modifiedData || modifiedData.length == 0" type="primary" @click="submit">
+        保 存
+      </common-button>
     </template>
     <common-table :data="modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="productionLineName" :show-overflow-tooltip="true" label="生产线" min-width="140px">
+      <el-table-column prop="productionLine.name" :show-overflow-tooltip="true" label="生产线" min-width="140px">
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.workshopName) }}>{{ emptyTextFormatter(scope.row.productionLineName) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.workshop?.name) }}>{{ emptyTextFormatter(scope.row.productionLine?.name) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="projectName" label="所属项目" min-width="250px">
-        <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.projectName) }}</span>
+      <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="180px" :fixed="fixed">
+        <template #default="{ row }">
+          <span v-parse-project="{ project: row.project }" v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column prop="areaName" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
+      <el-table-column prop="area.name" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
         <template v-slot="scope">
-          <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.areaName) }}</span>
+          <span>{{ emptyTextFormatter(scope.row.monomer?.name) }}>{{ emptyTextFormatter(scope.row.area?.name) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100px">

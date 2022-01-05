@@ -252,6 +252,7 @@ watch(
   () => {
     let _type
     for (const item in packTypeEnum.ENUM) {
+      if (packData[item] === null) packData[item] = {}
       listObj[item] = Object.values(packData[item])
       listObj['source' + item] = Object.values(packData[item])
       if (listObj[item].length && !_type) _type = packTypeEnum.KV[item]

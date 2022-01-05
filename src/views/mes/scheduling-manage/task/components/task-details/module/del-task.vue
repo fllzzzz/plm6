@@ -19,23 +19,23 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="所属项目">
-        <span v-empty-text>{{ details.projectName }}</span>
+        <span v-empty-text>{{ details.project?.name }}</span>
       </el-form-item>
       <el-form-item label="编号">
         <span v-empty-text>{{ details.productSerialNumber }}</span>
       </el-form-item>
       <el-form-item label="任务数">
-        <span v-empty-text>{{ details.sourceSchedulingQuantity }}</span>
+        <span>{{ details.sourceSchedulingQuantity }}</span>
       </el-form-item>
-      <el-form-item label="未完成数">
-        <span v-empty-text>{{ unCompleteQuantity }}</span>
+      <el-form-item label="未生产数">
+        <span>{{ unInProductionQuantity }}</span>
       </el-form-item>
-      <el-form-item label="删除数量" prop="quantity">
+      <el-form-item label="输入数量" prop="quantity">
         <el-input-number
           v-model="form.quantity"
           :step="1"
           :min="0"
-          :max="unCompleteQuantity"
+          :max="unInProductionQuantity"
           size="small"
           controls-position="right"
           style="width: 250px"
@@ -47,7 +47,7 @@
 
 <script setup>
 import { delTask } from '@/api/mes/scheduling-manage/task/common'
-import { defineProps, ref, defineEmits, computed, reactive } from 'vue'
+import { defineProps, ref, defineEmits, computed, reactive, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import useVisible from '@compos/use-visible'
@@ -72,20 +72,19 @@ const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field:
 const submitLoading = ref(false)
 const form = reactive({ quantity: null })
 
-const unCompleteQuantity = computed(() => {
-  console.log(props.details?.sourceSchedulingQuantity, props.details?.completeQuantity)
-  return (props.details?.sourceSchedulingQuantity || 0) - (props.details?.completeQuantity || 0)
+const unInProductionQuantity = computed(() => {
+  return (props.details?.sourceSchedulingQuantity || 0) - (props.details?.inProductionQuantity || 0)
 })
 
-// watch(
-//   () => props.visible,
-//   (visible) => {
-//     if (visible) {
-//       quantity.value = props.details.quantity
-//     }
-//   },
-//   { immediate: true }
-// )
+watch(
+  () => props.visible,
+  (visible) => {
+    if (visible) {
+      form.quantity = null
+    }
+  },
+  { immediate: true }
+)
 
 function submitIt() {
   formRef.value.validate(async (valid) => {
