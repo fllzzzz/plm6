@@ -77,7 +77,6 @@ const props = defineProps({
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const packageInfo = computed(() => {
-  console.log(props.labelData.packageInfo)
   return props.labelData.packageInfo || {}
 })
 const page = ref(1)

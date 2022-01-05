@@ -154,8 +154,8 @@ async function fetchList() {
     tableLoading.value = true
     const { enclosureDetailsAnalysisList } = await detail(query)
     list.value = enclosureDetailsAnalysisList.map((v) => {
-      v.totalQuantity = v.surplusTaskQuantity + v.taskQuantity
-      v.totalMete = convertUnits(v.surplusLength + v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+      v.totalQuantity = v.taskQuantity
+      v.totalMete = convertUnits(v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
       v.processSequence = v.processSummaryList
         .map((o) => {
           let _class = ''
