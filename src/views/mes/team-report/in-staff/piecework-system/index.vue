@@ -68,7 +68,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="[...permission.detail]" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="showDetail(scope.row)">查看</common-button>
         </template>
@@ -94,10 +94,9 @@ import mDetail from './module/detail'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['inStaffPieceworkSystem:get'],
+  detail: ['inStaffPieceworkSystem:detail'],
+  summaryDetail: ['inStaffPieceworkSystemSummary:detail']
 }
 
 const optShow = {

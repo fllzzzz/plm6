@@ -112,13 +112,7 @@
     </div>
     <crudOperation>
       <template v-slot:optLeft>
-        <!-- <export-button
-          v-permission="permission.downloadLogistics"
-          :params="{...query}"
-          :fn="downloadLogistics"
-          btn-text="下载收货状态汇总表（根据查询条件下载）"
-          class="filter-item"
-        />
+        <!--
         <print-table
           v-permission="[...permission.print, ...permission.detailPrint]"
           :current-key.sync="currentKey"

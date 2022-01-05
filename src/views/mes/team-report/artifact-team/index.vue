@@ -53,13 +53,13 @@
               <div class="status-detail">
                 <div>任务量：{{ item.taskMeteShow }}</div>
                 <div>已完成：{{ item.completeMeteShow }}</div>
-                <common-button type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
+                <common-button v-permission="permission.processDetail" type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
               </div>
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="120px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="showDetail(scope.row)">全景看板</common-button>
         </template>
@@ -92,10 +92,9 @@ const colors = [
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['artifactTeamReport:get'],
+  detail: ['artifactTeamReport:detail'],
+  processDetail: ['artifactTeamReportProcess:detail']
 }
 
 const optShow = {

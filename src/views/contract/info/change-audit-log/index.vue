@@ -152,9 +152,9 @@
     <!--分页组件-->
     <pagination />
     <!-- 金额变更 -->
-    <!-- <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-Info="detailInfo"/> -->
+    <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-Info="detailInfo" :show-type="showType"/>
     <!-- 结算填报 -->
-    <!-- <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-Info="detailInfo"/> -->
+    <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-Info="detailInfo" :show-type="showType"/>
   </div>
 </template>
 
@@ -168,8 +168,8 @@ import mHeader from './module/header'
 import { auditTypeEnum, contractChangeTypeEnum, systemTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
-// import moneyForm from '../money-form'
-// import settleForm from '../settle-form'
+import moneyForm from '../money-form'
+import settleForm from '../settle-form'
 
 // crud交由presenter持有
 const permission = {
@@ -186,7 +186,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-// const moneyRef = ref()
+const moneyRef = ref()
 const auditStatus = ref()
 const showType = ref('detail')
 const moneyVisible = ref(false)

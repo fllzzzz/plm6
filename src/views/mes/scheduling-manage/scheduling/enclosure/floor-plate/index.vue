@@ -139,10 +139,9 @@ import mHeader from '@/views/mes/scheduling-manage/scheduling/components/schedul
 
 // crud交由presenter持有
 const permission = {
-  get: ['artifactScheduling:get'],
-  editStatus: ['artifactScheduling:editStatus'],
-  save: ['artifactScheduling:save'],
-  clear: ['artifactScheduling:clearWithOneClick']
+  get: ['enclosureScheduling:get'],
+  save: ['enclosureScheduling:save'],
+  clear: ['enclosureScheduling:clearWithOneClick']
 }
 
 const optShow = {

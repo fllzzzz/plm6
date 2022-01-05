@@ -1,5 +1,14 @@
 <template>
-  <el-table-column v-if="showSpecification" prop="specification" label="规格" width="270" align="center" :fixed="fixed" show-overflow-tooltip>
+  <el-table-column
+    v-if="showSpecification"
+    key="specification"
+    prop="specification"
+    label="规格"
+    width="270"
+    align="center"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <el-tooltip :content="specTip(row)" placement="top">
         <span v-empty-text>{{ specFormat(row) }}</span>
@@ -24,7 +33,8 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  fixed: { // 定位
+  fixed: {
+    // 定位
     type: String
   }
 })

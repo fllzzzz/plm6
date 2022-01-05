@@ -32,8 +32,8 @@
         min-width="300"
       >
         <template v-slot="scope">
-          <template v-for="(item, index) in scope.row.materialType" :key="index">
-            <el-tag  effect="plain" style="margin-right: 5px">{{ matClsEnum.VL[item] }}</el-tag>
+          <template v-for="(item, index) in scope.row.materialTypeName" :key="index">
+            <el-tag effect="plain" style="margin-right: 5px">{{ item }}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -47,9 +47,9 @@
         width="100px"
       >
         <template v-slot="scope">
-          <el-tag :type="scope.row.type === warehouseTypeEnum.NORMAL.V ? 'info' : 'warning'">{{
-            warehouseTypeEnum.VL[scope.row.type]
-          }}</el-tag>
+          <el-tag :type="scope.row.type === warehouseTypeEnum.NORMAL.V ? 'info' : 'warning'">
+            {{ warehouseTypeEnum.VL[scope.row.type] }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -71,7 +71,12 @@
       >
         <template v-slot="scope">
           <template v-if="checkPermission(permission.edit)">
-            <el-switch :disabled="scope.row.enabledLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleEnabledChange(scope.row)" />
+            <el-switch
+              :disabled="scope.row.enabledLoading"
+              v-model="scope.row.enabled"
+              class="drawer-switch"
+              @change="handleEnabledChange(scope.row)"
+            />
           </template>
           <template v-else>
             {{ enabledEnum.VL[scope.row.enabled] }}
@@ -150,9 +155,9 @@ const { CRUD, crud, columns } = useCRUD(
 const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled })
 
 CRUD.HOOK.handleRefresh = (crud, { data: { content }}) => {
-  content.forEach(v => {
+  content.forEach((v) => {
     const mt = v.materialType
-    v.materialType = EO.getBits(matClsEnum.ENUM, mt, 'V')
+    v.materialTypeName = EO.getBits(matClsEnum.ENUM, mt, 'L')
   })
 }
 </script>

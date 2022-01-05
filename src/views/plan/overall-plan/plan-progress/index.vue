@@ -48,7 +48,7 @@
           prop="rate"
           :show-overflow-tooltip="true"
           label="完成率"
-          min-width="280"
+          width="280"
         >
           <template v-slot="scope">
             <el-tag :type="scope.row.type===2?'danger':''">50%</el-tag>

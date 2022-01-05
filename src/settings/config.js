@@ -59,11 +59,18 @@ MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   width: { unit: 'mm', precision: 0 }
 }
 MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
-  measure: { unit: 'm', precision: 2 },
+  measure: { unit: 'mm', precision: 0 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 },
   thickness: { unit: 'mm', precision: 3 }
+}
+
+MAT_BASE_UNIT[STEEL_ENUM] = {
+  measure: { unit: '件', precision: 0 },
+  weight: { unit: 'kg', precision: 2 },
+  length: { unit: 'mm', precision: 0 },
+  width: { unit: 'mm', precision: 0 }
 }
 
 // 系统最小单位（默认）

@@ -68,8 +68,9 @@ import mForm from './module/form'
 
 // crud交由presenter持有
 const permission = {
-  get: ['wageEdit:get'],
-  edit: ['wageEdit:edit']
+  get: ['wagesAdjust:get'],
+  edit: ['wagesAdjust:edit'],
+  audit: ['wagesAdjust:audit']
 }
 
 const optShow = {

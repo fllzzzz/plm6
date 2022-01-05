@@ -7,9 +7,10 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="tableList"
-      row-key="id"
       :max-height="maxHeight"
       default-expand-all
+      row-key="id"
+      class="tree-table"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" align="center" />

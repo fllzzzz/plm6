@@ -26,6 +26,7 @@
                 :cell-class-name="wrongCellMask"
                 :row-class-name="handleRowClassName"
                 row-key="rowKey"
+                :stripe="false"
                 style="width: 100%; border-color: transparent"
               >
                 <el-table-column key="serialNumber" prop="serialNumber" label="构件编号" align="center">
@@ -484,7 +485,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['areaId'],
+    requiredQuery: ['areaId', 'monomerId'],
     crudApi: { ...crudApi },
     hasPagination: true
   },

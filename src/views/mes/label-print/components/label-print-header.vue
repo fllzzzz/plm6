@@ -1,8 +1,8 @@
 <template>
   <div class="hed-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
-      <slot name="customSearch" />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" :productType="productType" needConvert />
+      <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <production-line-box-select
@@ -110,6 +110,7 @@ import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productionLineBoxSelect from '@comp-mes/production-line-box-select'
 import { getMiniLabelHtml } from '@comp-label/label-fn.js'
@@ -243,11 +244,12 @@ const plBoxSelectRef = ref()
 const lines = ref([])
 
 async function fetchHasTaskLine() {
-  selectedAbleLineLoading.value = true
   query.productionLineId = undefined
   selectedAbleLineIds.value = []
+  if (!query.areaId) return
   try {
-    const { ids } = await getHasTaskLine({ areaId: query.areaId, type: 1 })
+    selectedAbleLineLoading.value = true
+    const { ids } = await getHasTaskLine({ areaId: query.areaId, productType: productType })
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]
@@ -290,9 +292,7 @@ function getLine() {
 watch(
   [() => query.monomerId, () => query.areaId],
   ([monomerId, areaId]) => {
-    if (monomerId && areaId) {
-      fetchHasTaskLine()
-    }
+    fetchHasTaskLine()
     if (monomerId && areaId && query.productionLineId) {
       crud.toQuery()
     }

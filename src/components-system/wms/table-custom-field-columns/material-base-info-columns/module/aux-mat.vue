@@ -1,6 +1,7 @@
 <template>
   <el-table-column
     v-if="showClassifyFullName"
+    :key="`${field}.classifyFullName`"
     :prop="`${field}.classifyFullName`"
     label="物料种类"
     align="center"
@@ -15,6 +16,7 @@
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -32,6 +34,7 @@
   <template v-else>
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -45,7 +48,15 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column v-if="showColor" :prop="`${field}.color`" align="center" width="120px" :label="`颜色`" show-overflow-tooltip>
+    <el-table-column
+      v-if="showColor"
+      :key="`${field}.color`"
+      :prop="`${field}.color`"
+      align="center"
+      width="120px"
+      :label="`颜色`"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <span v-empty-text>{{ getInfo(row, 'color') }}</span>
       </template>

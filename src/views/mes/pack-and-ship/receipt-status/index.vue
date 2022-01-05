@@ -160,17 +160,15 @@
       </el-table-column>
       <!--详情与下载-->
       <el-table-column
-        v-if="checkPermission([...permission.download, ...permission.detail, ...permission.detailPrint])"
+        v-if="checkPermission([...permission.detail])"
         label="操作"
-        width="120px"
+        width="100px"
         align="center"
         fixed="right"
       >
         <template v-slot="scope">
           <!-- 详情 -->
           <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail(scope.row)" />
-          <!-- 下载 -->
-          <e-operation :data="{ ...scope.row }" :permission="permission.download" />
         </template>
       </el-table-column>
     </common-table>
@@ -201,7 +199,6 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import eOperation from '@crud/E.operation'
 import mHeader from './module/header'
 import mDetail from '../components/common-detail'
 
@@ -209,9 +206,7 @@ const permission = {
   get: ['receiptStatus:get'],
   detail: ['receiptStatus:detail'],
   print: ['receiptStatus:print'],
-  detailPrint: ['receiptStatus:detailPrint'],
-  download: ['receiptStatus:download'],
-  downloadLogistics: ['receiptStatus:downloadAll']
+  detailPrint: ['receiptStatus:detailPrint']
 }
 
 const optShow = {

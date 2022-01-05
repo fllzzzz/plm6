@@ -103,6 +103,7 @@ import {
   wageQuotaTypeEnum
 } from '@enum-ms/mes'
 import { regForm } from '@compos/use-crud'
+import { isBlank } from '@/utils/data-type'
 
 const formRef = ref()
 
@@ -143,8 +144,7 @@ const inspectDisabled = ref([])
 const disabledList = computed(() => {
   return form.id
     ? [typeEnum.ARTIFACT.V, typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V].filter((v) => v !== form.sequenceType)
-    // : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V] // TODO:正式部署打开现在
-    : []
+    : []// : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V] // TODO:正式部署打开现在
 })
 
 const wageQuotaTypeDisabled = computed(() => {
@@ -169,7 +169,7 @@ function typeChange(sequenceType) {
     inspectDisabled.value = []
   }
   if (sequenceType === typeEnum.ARTIFACT.V) {
-    form.type = processTypeEnum.ONCE.V
+    form.type = isBlank(form.type) ? processTypeEnum.ONCE.V : form.type
   } else {
     delete form.type
   }

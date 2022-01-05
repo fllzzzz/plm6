@@ -68,6 +68,11 @@
           class="filter-item"
         />
         <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" />
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么？`" @confirm="deleteAssemle">
+          <template #reference>
+            <common-button type="danger">一键清空(按区域)</common-button>
+          </template>
+        </el-popconfirm>
       </template>
     </crudOperation>
   </div>
@@ -83,7 +88,7 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/assembly'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { downloadAssemble, downloadAssembleTemplate } from '@/api/plan/technical-manage/assembly'
+import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea } from '@/api/plan/technical-manage/assembly'
 
 const defaultQuery = {
   name: '',
@@ -98,7 +103,7 @@ const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
-const { crud, query } = regHeader(defaultQuery)
+const { crud, query, CRUD } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
     type: [Number, String],
@@ -132,6 +137,16 @@ function getAreaInfo(val) {
     }
   } else {
     defaultTab.value = {}
+  }
+}
+
+async function deleteAssemle() {
+  try {
+    await delAssemblyByArea({ areaId: crud.query.areaId })
+    crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    crud.toQuery()
+  } catch (e) {
+    console.log('清空组立', e)
   }
 }
 </script>

@@ -40,12 +40,12 @@
           class="filter-item"
           @change="crud.toQuery"
         /> -->
-        <factory-select v-model="query.factoryId" class="filter-item" style="width: 200px" @change="crud.toQuery" />
+        <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
         <rrOperation />
       </div>
     </template>
     <template #viewLeft>
-      <common-button size="mini" @click="summaryDetailVisible = true" type="success">汇总查看</common-button>
+      <common-button v-permission="crud.permission?.summaryDetail" size="mini" @click="summaryDetailVisible = true" type="success">汇总查看</common-button>
     </template>
   </crudOperation>
   <summaryDetail v-model:visible="summaryDetailVisible" />

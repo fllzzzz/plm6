@@ -1,6 +1,7 @@
 <template>
   <el-table-column
     v-if="showClassifyFullName"
+    :key="`${field}.classifyFullName`"
     :prop="`${field}.classifyFullName`"
     label="物料种类"
     align="center"
@@ -15,6 +16,7 @@
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -32,6 +34,7 @@
   <template v-else>
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -47,6 +50,7 @@
     </el-table-column>
     <el-table-column
       v-if="showLength"
+      :key="`${field}.length`"
       :prop="`${field}.length`"
       align="center"
       width="120px"
@@ -100,5 +104,7 @@ const getInfo = inject('getInfo')
 
 const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.classifyFullName`))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.specification`))
-const showLength = computed(() => props.showLength && loaded.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.length`)))
+const showLength = computed(
+  () => props.showLength && loaded.value && (isBlank(props.columns) || props.columns.visible(`${props.field}.length`))
+)
 </script>

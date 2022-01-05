@@ -44,9 +44,10 @@
       <el-form-item label="型钢-长度误差(mm)">
         <common-input-number v-model="form.sectionSteelLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
-      <el-form-item label="钢卷-长度误差(mm)">
+      <!-- 目前按长度还，不需要该配置，若按照卷或重量还则需要对应配置-->
+      <!-- <el-form-item label="钢卷-长度误差(mm)">
         <common-input-number v-model="form.steelCoilLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <span class="form-item-tip">
           可归还列表中不会检索出误差范围外的钢材。

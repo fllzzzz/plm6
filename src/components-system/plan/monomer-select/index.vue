@@ -70,15 +70,17 @@ const props = defineProps({
   productType: {
     type: [Number, String],
     default: undefined
+  },
+  filterArea: {
+    type: Boolean,
+    default: true
   }
 })
 
 watch(
   () => props.projectId,
   (val) => {
-    if (val) {
-      fetchData()
-    }
+    fetchData()
   },
   { deep: true, immediate: true }
 )
@@ -106,6 +108,8 @@ async function fetchData() {
   options.value = []
   originOptions.value = []
   if (!props.projectId) {
+    selectValue.value = undefined
+    selectChange(selectValue.value)
     return
   }
   let optionData = []
@@ -155,17 +159,11 @@ function selectChange(val) {
   } else {
     monomerVal = originOptions.value.find((k) => k.id === val)
   }
-  const areaInfo = []
-  if (monomerVal && monomerVal.areaSimpleList && monomerVal.areaSimpleList.length > 0) {
-    monomerVal.areaSimpleList.map(v => {
-      if (props.productType) {
-        if (v.productType === props.productType) {
-          areaInfo.push(v)
-        }
-      } else {
-        areaInfo.push(v)
-      }
-    })
+  let areaInfo = []
+  if (props.filterArea) {
+    areaInfo = (monomerVal?.areaSimpleList?.length && monomerVal.areaSimpleList.filter((v) => v.productType & props.productType)) || []
+  } else {
+    areaInfo = monomerVal?.areaSimpleList
   }
   emit('update:modelValue', val)
   emit('change', val)

@@ -57,6 +57,16 @@ export function editContract(data) {
   })
 }
 
+// 审核
+export function confirmContract(data) {
+  return request({
+    module: 'contract',
+    url: 'project/changeAudit',
+    method: 'put',
+    data
+  })
+}
+
 export function del(ids) {
   return request({
     module: 'contract',

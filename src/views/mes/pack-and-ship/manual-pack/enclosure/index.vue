@@ -205,7 +205,7 @@ import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
 
 // crud交由presenter持有
 const permission = {
-  get: ['structureManualPack:get'],
+  get: ['enclosureManualPack:get'],
   pack: ['manualPack:pack']
 }
 

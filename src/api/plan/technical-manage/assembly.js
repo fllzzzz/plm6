@@ -35,6 +35,16 @@ export function delAssemblyArtifact(params) {
   })
 }
 
+// 按区域一键清空
+export function delAssemblyByArea(params) {
+  return request({
+    module: 'plan',
+    url: 'assemble/clear',
+    method: 'delete',
+    params
+  })
+}
+
 export function addAssemblyArtifact(data) {
   return request({
     module: 'plan',

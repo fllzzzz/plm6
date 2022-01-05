@@ -131,7 +131,7 @@
           <span v-empty-text>{{ toFixed(scope.row.measure, DP.COM_VOLUME__L) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="permission.edit" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-edit" @click.stop="toEditForm(scope.row)" />
         </template>
@@ -149,6 +149,7 @@ import { ref } from 'vue'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -158,17 +159,16 @@ import editForm from './module/edit-form.vue'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: [''],
+  get: ['mesPainting:get'],
+  edit: ['mesPainting:edit'],
+  editArea: ['mesPaintingArea:edit']
 }
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -179,7 +179,7 @@ const { crud, columns, CRUD } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: false,
-    requiredQuery: ['monomerId'],
+    requiredQuery: ['monomerId']
   },
   tableRef
 )
@@ -205,11 +205,13 @@ const editFormVisible = ref(false)
 const itemInfo = ref({})
 
 function toEditArea(row) {
+  if (!checkPermission(permission.editArea)) return
   itemInfo.value = row
   editAreaVisible.value = true
 }
 
 function toEditForm(row) {
+  if (!checkPermission(permission.edit)) return
   itemInfo.value = row
   editFormVisible.value = true
 }

@@ -1,6 +1,7 @@
 <template>
   <el-table-column
     v-if="showBrand"
+    :key="`${field}.brand`"
     :prop="`${field}.brand`"
     label="品牌"
     align="left"
@@ -14,6 +15,7 @@
   </el-table-column>
   <el-table-column
     v-if="showHeatNoAndBatchNo"
+    :key="`${field}.heatNoAndBatchNo`"
     :prop="`${field}.heatNoAndBatchNo`"
     :label="heatNoAndBatchNoLabel"
     align="left"

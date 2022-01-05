@@ -15,7 +15,7 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <div class="flex-rcc">
+          <div class="flex-rcc mtb-20">
             <!-- TODO: 理论每次刷新unfreezePermission调用5次，实际调用几十次 -->
             <material-freeze-record
               :stripe="false"

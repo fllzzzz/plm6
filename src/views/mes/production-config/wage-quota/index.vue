@@ -43,7 +43,7 @@
       >
         <template v-slot="scope">
             <span v-for="(item, index) in scope.row.processSequence" :key="item.processId">
-            <span style="cursor: pointer" v-html="item.html" @click="crud.toEdit(item)" />
+            <span style="cursor: pointer" v-html="item.html" @click="toEdit(item)" />
             <span v-if="index !== scope.row.processSequence.length - 1">→</span>
           </span>
         </template>
@@ -81,7 +81,7 @@ import { isNotBlank } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { deepClone } from '@/utils/data-type'
 import { wageQuotaTypeEnum, processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
-// import checkPermission from '@/utils/system/check-permission'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -114,6 +114,14 @@ const { crud, columns, CRUD } = useCRUD(
   },
   tableRef
 )
+
+function toEdit(item) {
+  if (!checkPermission([...permission.edit])) {
+    console.log('无编辑权限')
+    return
+  }
+  crud.toEdit(item)
+}
 
 CRUD.HOOK.beforeToQuery = () => {
   crud.crudApi.get = crud.query.sequenceType === typeEnum.MACHINE_PART.V ? getMachinePart : crudApi.get
