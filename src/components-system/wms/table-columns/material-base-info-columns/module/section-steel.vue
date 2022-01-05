@@ -67,6 +67,10 @@ const props = defineProps({
   fixed: {
     // 定位
     type: String
+  },
+  showLength: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -74,5 +78,5 @@ const props = defineProps({
 const { loaded, baseUnit } = useMatBaseUnit(props.basicClass)
 
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible('specification'))
-const showLength = computed(() => loaded.value && (isBlank(props.columns) || props.columns.visible('length')))
+const showLength = computed(() => props.showLength && loaded.value && (isBlank(props.columns) || props.columns.visible('length')))
 </script>

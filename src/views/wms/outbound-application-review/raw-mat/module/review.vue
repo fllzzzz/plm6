@@ -6,16 +6,22 @@
     :before-close="handleClose"
     :title="drawerTitle"
     :show-close="true"
-    size="90%"
+    size="100%"
     custom-class="raw-mat-application-review-form"
   >
     <template #titleAfter>
       <el-tag v-if="form.applicant" type="success" effect="dark">{{
         `申请人：${form.applicant.name} | ${form.applicant.deptName}`
       }}</el-tag>
-      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.userUpdateTime)}` }}</el-tag>
+      <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
+      <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
+        <span class="batch-set-info child-mr-7">
+          <el-date-picker v-model="batchOutboundTime"  type="datetime" value-format="x" placeholder="批量设置出库时间" />
+          <common-button type="success" size="mini" @click="setOutboundTime">设置</common-button>
+        </span>
+      </template>
       <review-convenient-operate
         ref="reviewConvenientRef"
         v-if="pendingReviewIdList && pendingReviewIdList.length > 1"
@@ -78,6 +84,18 @@
               <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
                 <span v-if="row.recipient">{{ row.recipient.name }}</span>
               </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="出库时间" width="195px" align="center">
+            <template #default="{ row }">
+              <el-date-picker
+                v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
+                v-model="row.outboundTime"
+                type="datetime"
+                value-format="x"
+                placeholder="出库时间"
+              />
+              <span v-else v-parse-time="{ val: row.outboundTime }" />
             </template>
           </el-table-column>
           <el-table-column
@@ -156,6 +174,7 @@ const operateRecordNumber = ref(0) // 操作记录条数
 const reviewNext = ref(false) // 当前记录审核完成后，直接审核下一条
 const pendingReviewIdList = ref([]) // 待审核列表
 const currentInboundId = ref() // 当前id
+const batchOutboundTime = ref() // 批量设置时间
 
 // 表单禁止操作
 const formDisabled = computed(() => submitOptLoading.value)
@@ -267,7 +286,7 @@ async function delItem(row, index) {
 async function passed() {
   try {
     submitOptLoading.value = true
-    await reviewPassed(form.value.id)
+    await reviewPassed(form.value)
     // 审核通过后设置审核状态
     form.value.reviewStatus = reviewStatusEnum.PASS.V
     ++operateRecordNumber.value
@@ -315,6 +334,13 @@ function closeHook() {
   }
 }
 
+// 设置出库时间
+function setOutboundTime() {
+  form.value.list.forEach((v) => {
+    v.outboundTime = batchOutboundTime.value
+  })
+}
+
 // 合计
 function getSummaries(param) {
   return tableSummary(param, { props: ['quantity', 'mete'] })
@@ -336,6 +362,15 @@ function getSummaries(param) {
       min-height: 28px;
       line-height: 28px;
     }
+
+    ::v-deep(.el-input--suffix .el-input__inner) {
+      padding-right: 10px;
+    }
+  }
+  .batch-set-info {
+    padding-right: 10px;
+    margin-right: 10px;
+    border-right: 1px solid#dcdfe6;
   }
 }
 </style>

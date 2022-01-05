@@ -2,7 +2,7 @@
   <el-card shadow="always">
     <template #header>
       <div class="clearfix">
-        <span class="card-title">基础入库配置</span>
+        <span class="card-title">入库基础配置</span>
         <common-tip-button
           v-permission="permission.basicInboundEdit"
           :loading="submitLoading"
@@ -104,7 +104,7 @@ async function submit() {
     // await store.dispatch('config/fetchConfigInfo')
   } catch (error) {
     ElNotification({
-      title: '基础入库配置设置失败',
+      title: '入库基础配置设置失败',
       type: 'error',
       duration: 2500
     })

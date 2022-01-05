@@ -124,16 +124,4 @@ export function del(ids) {
   })
 }
 
-// 附件下载
-export function downloadAttachment(params) {
-  return request({
-    module: 'wms',
-    url: 'supplier/download',
-    method: 'get',
-    timeout: 6000000,
-    responseType: 'blob',
-    params
-  })
-}
-
 export default { get, add, detail, edit, batchAdd, del }

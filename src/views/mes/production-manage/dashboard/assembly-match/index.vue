@@ -77,7 +77,7 @@ import mHeader from './module/header'
 import partProductionStatus from './module/part-production-status.vue'
 
 const permission = {
-  get: ['artifactInboundStateDashboard:get']
+  get: ['assemblyMatch:get']
 }
 
 const optShow = {
@@ -92,7 +92,7 @@ const headRef = ref()
 const tableRef = ref()
 const { crud, CRUD } = useCRUD(
   {
-    title: '总装匹配',
+    title: '零件齐套',
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },

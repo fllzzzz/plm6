@@ -46,9 +46,11 @@ export default function useMaxHeight(
       switch (trigger.constructor.name) {
         case 'Function':
         case 'RefImpl':
-        case 'ComputedRefImpl':wv = trigger
+        case 'ComputedRefImpl':
+          wv = trigger
           break
-        default: wv = trigger
+        default:
+          wv = trigger
       }
       watch(
         wv,
@@ -87,7 +89,8 @@ export default function useMaxHeight(
   return {
     maxHeight,
     heightStyle,
-    maxHeightStyle
+    maxHeightStyle,
+    fixMaxHeight: () => nextTick(() => windowSizeHandler()) // 手动调用修正高度
   }
 }
 
@@ -122,12 +125,14 @@ function calcMaxHeight({ clientHRepMainH, mainBox, extraBox, wrapperBox, navbar,
   let mainHeight
   if (clientHRepMainH) {
     // 如果使用client作为高度，则需要减去主盒子的外边距和内边距
-    mainHeight = document.documentElement.clientHeight - getElHeight(mainBoxEl, ['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom'])
+    mainHeight =
+      document.documentElement.clientHeight - getElHeight(mainBoxEl, ['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom'])
   } else {
     mainHeight = mainBoxHeight
   }
   // -1 避免特殊情况下高度正好卡在滚动条出与不出之间，因此-1 避免这种情况（理论浏览器全屏，显示大小未125%状态下）若有功能需要定位到底部，请在页面处理
-  const height = mainHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight - 1
+  const height =
+    mainHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight - 1
   // console.log(extraBox, mainBoxHeight, mainHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
 
   return height > realMiniHeight ? height : realMiniHeight
@@ -313,4 +318,3 @@ function bindEventListener(fn, isBind) {
 function unbindEventListener(fn) {
   window.removeEventListener('resize', fn)
 }
-

@@ -101,7 +101,7 @@
           <span class="tc-danger">{{ scope.row.unProducedRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="info" @click="toDetail(scope.row)">查看</common-button>
         </template>
@@ -129,10 +129,8 @@ import enclosureDetail from './module/enclosure-group-detail'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['productionStatistics:get'],
+  detail: ['productionStatistics:detail']
 }
 
 const optShow = {
@@ -188,10 +186,10 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       DP.COM_WT__KG
     )
     // const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
-    const completeRate = completeMete ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
-    const inProductionRate = inProductionMete ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
+    const completeRate = Number(completeMete) ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
+    const inProductionRate = Number(inProductionMete) ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
     // const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
-    const unProducedRate = unProducedMete ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
+    const unProducedRate = Number(unProducedMete) ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
     res.data = [
       // {
       //   beginMete: _data.surplusTaskQuantity,
@@ -218,10 +216,10 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       DP.MES_ENCLOSURE_L__M
     )
     // const totalQuantity = _data.surplusTaskQuantity + _data.taskQuantity
-    const completeRate = completeMete ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
-    const inProductionRate = inProductionMete ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
+    const completeRate = Number(completeMete) ? toFixed((completeMete / totalMete) * 100, 2) + '%' : '0%'
+    const inProductionRate = Number(inProductionMete) ? toFixed((inProductionMete / totalMete) * 100, 2) + '%' : '0%'
     // const unProducedQuantity = totalQuantity - _data.completeQuantity - _data.inProductionQuantity
-    const unProducedRate = unProducedMete ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
+    const unProducedRate = Number(unProducedMete) ? toFixed((unProducedMete / totalMete) * 100, 2) + '%' : '0%'
     res.data = [
       // {
       //   beginMete: _data.surplusTaskQuantity,

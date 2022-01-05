@@ -33,7 +33,9 @@ export function convertUnits(num, from, to, decimals = 10, { showUnit = false, t
 // 获取可用来转换的单位
 export function getUsableUnit(unit) {
   switch (unit) {
+    case 'L': return 'l'
     case '㎏': return 'kg'
+    case '㎝': return 'cm'
     case '㎜': return 'mm'
     case 't' : return 'mt' // 国内的t等于国外的mt
     case 'mm²' : return 'mm2'

@@ -43,6 +43,7 @@
                 :options="matClsEnum.ENUM"
                 multiple
                 clearable
+                mode="bit"
                 type="enum"
                 placeholder="可存储材料类型"
                 style="width: 100%"
@@ -66,7 +67,7 @@
           </el-table-column>
           <el-table-column key="sort" prop="sort" :show-overflow-tooltip="true" label="排序" align="center" width="100">
             <template #default="{ row }">
-              <el-input-number
+              <common-input-number
                 v-model="row.sort"
                 type="text"
                 maxlength="3"
@@ -97,7 +98,6 @@
 <script setup>
 // TODO: 考虑根据工厂id存为草稿
 import { computed, ref } from 'vue'
-import EO from '@enum'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
 
@@ -162,9 +162,6 @@ CRUD.HOOK.beforeValidateBCU = () => {
 // 表单提交数据清理
 crud.submitBatchFormFormat = (form) => {
   cleanUpData(form.list)
-  form.list.forEach((v) => {
-    v.materialType = EO.getBitsSum(v.materialType)
-  })
   form.factoryId = crud.query.factoryId
   return form
 }

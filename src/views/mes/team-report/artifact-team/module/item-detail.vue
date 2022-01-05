@@ -40,17 +40,31 @@
             <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="140px">
+        <el-table-column
+          v-if="info.productType === artifactProcessEnum.TWICE.V"
+          key="specification"
+          prop="specification"
+          :show-overflow-tooltip="true"
+          label="规格"
+          min-width="140px"
+        >
           <template v-slot="scope">
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px">
+        <el-table-column
+          v-if="info.productType === artifactProcessEnum.TWICE.V"
+          key="material"
+          prop="material"
+          :show-overflow-tooltip="true"
+          label="材质"
+          min-width="80px"
+        >
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="排产任务" align="center" width="100px">
+        <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="排产任务" align="center" min-width="100px">
           <template v-slot="scope">
             <span>{{ scope.row.taskQuantity }}</span>
           </template>
@@ -61,7 +75,7 @@
           :show-overflow-tooltip="true"
           label="完成数量"
           align="center"
-          width="100px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <span class="tc-success">{{ scope.row.completeQuantity }}</span>
@@ -73,13 +87,13 @@
           :show-overflow-tooltip="true"
           label="未完成"
           align="center"
-          width="100px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <span class="tc-danger">{{ scope.row.unCompleteQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="completeMete" prop="completeMete" :show-overflow-tooltip="true" label="完成总量" align="center" width="100px">
+        <el-table-column key="completeMete" prop="completeMete" :show-overflow-tooltip="true" :label="`完成总量(${unitObj.unit})`" align="center" min-width="100px">
           <template v-slot="scope">
             <span class="tc-success">{{ scope.row.completeMete }}</span>
           </template>
@@ -91,16 +105,16 @@
 
 <script setup>
 import { processDetail as detail } from '@/api/mes/team-report/artifact-team'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { artifactProcessEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { deepClone } from '@data-type/index'
-import { DP } from '@/settings/config'
-import { toFixed } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -161,29 +175,43 @@ function getSummaries(param) {
             return prev
           }
         }, 0)
+        if (['completeMete'].includes(column.property)) {
+          sums[index] = sums[index].toFixed(unitObj.value.DP)
+        }
       }
     }
   })
   return sums
 }
-
 const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
+const dataPath = {
+  [artifactProcessEnum.ONCE.V]: 'assembleList',
+  [artifactProcessEnum.TWICE.V]: 'artifactList'
+}
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({ productType: props.info.productType, w_unit: 'kg' })
+})
+
 async function fetchList() {
   try {
     tableLoading.value = true
+    const _productType = props.info.productType
     const _query = Object.assign(deepClone(query), {
       factoryId: props.info.factory?.id,
       processId: props.itemInfo.id,
-      productType: props.info.productType,
-      productionLineId: props.info.productionLine?.id,
-      projectId: props.info.project?.id
+      productType: _productType,
+      productionLineId: props.info.productionLine?.id
     })
-    const { artifactList } = await detail(_query)
-    list.value = artifactList.map((v) => {
+    const _data = await detail(_query)
+    list.value = _data[dataPath[_productType]].map((v) => {
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
-      v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG)
+      v.completeMete = useProductMeteConvert({
+        productType: v.productType,
+        weight: { num: v.completeNetWeight },
+        length: { num: v.completeLength, to: unitObj.value.unit, dp: unitObj.value.dp }
+      })
       return v
     })
   } catch (error) {

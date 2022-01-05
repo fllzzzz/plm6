@@ -46,7 +46,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-       <span>{{ scope.row.completeQuantity }} / {{ scope.row.completeMete }}</span>
+          <span>{{ scope.row.completeQuantity }} / {{ scope.row.completeMete }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -73,7 +73,7 @@
           <span>{{ scope.row.completeRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="info" @click="toDetail(scope.row)">查看</common-button>
         </template>
@@ -99,10 +99,8 @@ import mDetail from './module/detail'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['analysisDelayReport:get'],
+  detail: ['analysisDelayReport:detail']
 }
 
 const optShow = {
@@ -140,20 +138,20 @@ function toDetail(row) {
 CRUD.HOOK.handleRefresh = (crud, res) => {
   if (crud.query.componentType === reportComponentTypeEnum.ARTIFACT.V) {
     res.data = res.data.artifactAssembleList.map((v) => {
-      v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
-      v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG)
-      v.diffQuantity = v.taskQuantity - v.completeQuantity
+      v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG) || 0
+      v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG) || 0
+      v.diffQuantity = v.taskQuantity - v.completeQuantity || 0
       v.diffMete = toFixed(v.taskNetWeight - v.completeNetWeight, DP.COM_WT__KG)
-      v.completeRate = v.completeMete ? toFixed(v.completeMete / v.taskMete * 100, 2) + '%' : '0%'
+      v.completeRate = Number(v.taskMete) ? toFixed((Number(v.completeMete) / Number(v.taskMete)) * 100, 2) + '%' : '0%'
       return v
     })
   } else {
     res.data = res.data.enclosureList.map((v) => {
-      v.taskMete = convertUnits(v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-      v.completeMete = convertUnits(v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-      v.diffQuantity = v.taskQuantity - v.completeQuantity
+      v.taskMete = convertUnits(v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0
+      v.completeMete = convertUnits(v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0
+      v.diffQuantity = v.taskQuantity - v.completeQuantity || 0
       v.diffMete = convertUnits(v.taskLength - v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-      v.completeRate = v.completeMete ? toFixed(v.completeMete / v.taskMete * 100, 2) + '%' : '0%'
+      v.completeRate = Number(v.taskMete) ? toFixed((Number(v.completeMete) / Number(v.taskMete)) * 100, 2) + '%' : '0%'
       return v
     })
   }

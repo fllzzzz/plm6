@@ -232,7 +232,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 async function changeInspectType(data, val) {
   try {
     await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 工序的检验方式：\n由“${inspectTypeEnum.VL[data.orginInspectType]}”变更为 “${
+      `此操作将把 “${data.name}” 工序的检验方式：\n由“${inspectTypeEnum.VL[data.originInspectType]}”变更为 “${
         inspectTypeEnum.VL[val]
       }”, 是否继续？`,
       '提示',
@@ -247,14 +247,14 @@ async function changeInspectType(data, val) {
     crud.refresh()
   } catch (error) {
     console.log(error)
-    data.inspectType = data.orginInspectType
+    data.inspectType = data.originInspectType
   }
 }
 
 async function changeReportType(data, val) {
   try {
     await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 工序的上报方式：\n由“${reportTypeEnum.VL[data.orginReportType]}”变更为 “${
+      `此操作将把 “${data.name}” 工序的上报方式：\n由“${reportTypeEnum.VL[data.originReportType]}”变更为 “${
         reportTypeEnum.VL[val]
       }”, 是否继续？`,
       '提示',
@@ -269,14 +269,14 @@ async function changeReportType(data, val) {
     crud.refresh()
   } catch (error) {
     console.log(error)
-    data.reportType = data.orginReportType
+    data.reportType = data.originReportType
   }
 }
 
 async function changeWageQuotaType(data, val) {
   try {
     await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 工序的工价单位：\n由“${wageQuotaTypeEnum.VL[data.orginReportType]}”变更为 “${
+      `此操作将把 “${data.name}” 工序的工价单位：\n由“${wageQuotaTypeEnum.VL[data.originReportType]}”变更为 “${
         wageQuotaTypeEnum.VL[val]
       }”, 是否继续？`,
       '提示',
@@ -291,16 +291,16 @@ async function changeWageQuotaType(data, val) {
     crud.refresh()
   } catch (error) {
     console.log(error)
-    data.wageQuotaType = data.orginWageQuotaType
+    data.wageQuotaType = data.originWageQuotaType
   }
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.createTime = parseTime(v.createTime)
-    v.orginInspectType = v.inspectType
-    v.orginReportType = v.reportType
-    v.orginWageQuotaType = v.wageQuotaType
+    v.originInspectType = v.inspectType
+    v.originReportType = v.reportType
+    v.originWageQuotaType = v.wageQuotaType
     v.wageQuotaTypeDisabled = getWageQuotaTypeDisabled(v)
     v.reportDisabled = getReportDisabled(v)
     v.inspectDisabled = getInspectDisabled(v)
@@ -318,14 +318,14 @@ function getWageQuotaTypeDisabled(v) {
 }
 
 function getReportDisabled(v) {
-  if (v.sequenceType === typeEnum.MACHINE_PART.V || (v.sequenceType === typeEnum.ARTIFACT.V && v.type === processTypeEnum.ONCE.V)) {
+  if (v.sequenceType === typeEnum.MACHINE_PART.V) {
     return [reportTypeEnum.BATCH_SCAN.V, reportTypeEnum.SINGLE_SCAN.V]
   }
   return []
 }
 
 function getInspectDisabled(v) {
-  if (v.sequenceType === typeEnum.MACHINE_PART.V || (v.sequenceType === typeEnum.ARTIFACT.V && v.type === processTypeEnum.ONCE.V)) {
+  if (v.sequenceType === typeEnum.MACHINE_PART.V) {
     return [inspectTypeEnum.BATCH_SCAN.V, inspectTypeEnum.SINGLE_SCAN.V]
   }
   return []
@@ -349,6 +349,9 @@ CRUD.HOOK.beforeSubmit = () => {
 
 // 编辑之后 取消缓存的已加载设置
 CRUD.HOOK.afterSubmit = () => {
+  store.commit('config/SET_LOADED', { key: 'process', loaded: false })
+}
+CRUD.HOOK.afterDelete = () => {
   store.commit('config/SET_LOADED', { key: 'process', loaded: false })
 }
 </script>

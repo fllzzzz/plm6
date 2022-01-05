@@ -1,8 +1,22 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
-      <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
-      <table-cell-tag v-if="showPartyA" :show="!!getInfo(row, 'boolPartyA')" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+      <template v-if="showRejectStatus">
+        <table-cell-tag
+          v-if="isNotBlank(getInfo(row, 'rejectStatus')) && getInfo(row, 'rejectStatus') !== materialRejectStatusEnum.NONE.V"
+          :name="materialRejectStatusEnum.VL[getInfo(row, 'rejectStatus')]"
+          :color="materialRejectStatusEnum.V[getInfo(row, 'rejectStatus')].COLOR"
+        />
+      </template>
+      <template v-else>
+        <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
+        <table-cell-tag
+          v-if="showPartyA && partyAPosition === 'index'"
+          :show="!!getInfo(row, 'boolPartyA')"
+          name="甲供"
+          :color="TAG_PARTY_DEF_COLOR"
+        />
+      </template>
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -17,10 +31,25 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
+      <table-cell-tag
+        v-if="showPartyA && partyAPosition === 'project'"
+        :show="!!getInfo(row, 'boolPartyA')"
+        name="甲供"
+        :color="TAG_PARTY_DEF_COLOR"
+        :offset="15"
+      />
       <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column v-if="showSerialNumber" :prop="`${field}.serialNumber`" label="编号" align="center" width="110px" :fixed="fixed" show-overflow-tooltip>
+  <el-table-column
+    v-if="showSerialNumber"
+    :prop="`${field}.serialNumber`"
+    label="编号"
+    align="center"
+    width="110px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
     <template #default="{ row }">
       <table-cell-tag
         v-if="showPartyATransfer && getInfo(row, 'partyATransferType')"
@@ -53,7 +82,7 @@
 import { defineProps, computed, provide } from 'vue'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
+import { materialRejectStatusEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
 import { isBlank } from '@/utils/data-type'
 
 import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
@@ -81,10 +110,19 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  showRejectStatus: {
+    // 显示 “退货状态”
+    type: Boolean,
+    default: false
+  },
   showPartyA: {
     // 显示 “甲供”
     type: Boolean,
     default: true
+  },
+  partyAPosition: {
+    type: String,
+    default: 'index' // index / project
   },
   showPartyATransfer: {
     // 显示 甲供调拨类型

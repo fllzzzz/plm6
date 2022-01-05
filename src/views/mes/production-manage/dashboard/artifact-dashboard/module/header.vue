@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <monomer-select-area-tabs :productType="query.productType" needConvert :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <common-radio-button
         v-model="query.productType"
         :options="artifactProcessEnum.ENUM"
@@ -11,54 +11,12 @@
         @change="crud.toQuery"
       />
       <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
-      <el-input
-        v-model="query.name"
-        size="small"
-        placeholder="输入名称搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.serialNumber"
-        size="small"
-        placeholder="输入编号搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.specification"
-        size="small"
-        placeholder="输入规格搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model="query.material"
-        size="small"
-        placeholder="输入材质搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-        @keyup.enter="crud.toQuery"
-      />
+      <product-type-query :productType="query.productType" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <crudOperation :show-grid="false" :show-refresh="false">
       <template #optRight>
-        <color-card
-          class="filter-item"
-          v-model:value="query.status"
-          :colors="colors"
-          color-border
-          select-able
-          @change="crud.toQuery"
-        />
+        <color-card class="filter-item" v-model:value="query.status" :colors="colors" color-border select-able @change="crud.toQuery" />
       </template>
       <template #viewLeft>
         <scale class="filter-item" v-model:value="boxScale" :intervals="400" @zoom-out="boxZoomOut" />
@@ -79,6 +37,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import ColorCard from '@comp/ColorCard'
 import Scale from '@comp/Scale'
+import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import factorySelect from '@comp-base/factory-select'
 
@@ -107,6 +66,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.detailLoading = false
     v.hasDetail = false
     v.compareQuantity = v.quantity
+    v.isProcess = v.inProductionQuantity > 0
     v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
     return v
   })

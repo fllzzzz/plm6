@@ -56,7 +56,7 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 
 const permission = {
-  get: ['enclosureInboundStateDashboard:get']
+  get: ['enclosureOutboundStateDashboard:get']
 }
 
 const optShow = {

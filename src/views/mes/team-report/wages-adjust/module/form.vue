@@ -11,6 +11,12 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
+      <el-form-item label="项目">
+        {{ globalProject.name }}
+      </el-form-item>
+      <el-form-item label="单体" prop="monomerName">
+        {{ form.monomerName }}
+      </el-form-item>
       <el-form-item label="名称" prop="name">
         {{ form.name }}
       </el-form-item>
@@ -38,6 +44,7 @@
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { mapGetters } from '@/store/lib'
 
 import { judgeSameValue } from '@data-type/index'
 import { regForm } from '@compos/use-crud'
@@ -46,6 +53,8 @@ const formRef = ref()
 const defaultForm = {
   id: undefined
 }
+
+const { globalProject } = mapGetters(['globalProject'])
 
 const { crud, CRUD, form } = regForm(defaultForm, formRef)
 

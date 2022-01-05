@@ -10,7 +10,6 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
-      @row-dblclick="(row) => crud.toDetail(row)"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
@@ -23,7 +22,11 @@
       <el-table-column label="序号" type="index" align="center" width="60">
         <template #default="{ row, $index }">
           <!-- 是否甲供材料 -->
-          <table-cell-tag v-if="row.transferCreateType === transferCreateTypeEnum.OUTBOUND.V" name="出库" :color="TAG_TRANSFER_OUTBOUND_COLOR" />
+          <table-cell-tag
+            v-if="row.transferCreateType === transferCreateTypeEnum.OUTBOUND.V"
+            name="出库"
+            :color="TAG_TRANSFER_OUTBOUND_COLOR"
+          />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
@@ -35,7 +38,13 @@
         width="160"
         label="调拨单号"
         align="left"
-      />
+      >
+        <template #default="{ row }">
+          <!-- 是否甲供材料 -->
+          <table-cell-tag v-if="row.boolHasUnfreeze" name="解冻" :color="TAG_TRANSFER_UNFREEZE_COLOR" :offset="15" />
+          <span>{{ row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('materialTypeText')"
         key="materialTypeText"
@@ -190,6 +199,12 @@
           </template>
         </template>
       </el-table-column>
+      <!--详情-->
+      <el-table-column label="操作" width="80" align="center" fixed="right">
+        <template #default="{ row }">
+          <udOperation :data="row" :show-edit="false" :show-del="false" show-detail />
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -203,7 +218,7 @@
 <script setup>
 import { ref } from 'vue'
 import crudApi from '@/api/wms/transfer/raw-mat-application-review'
-import { TAG_TRANSFER_OUTBOUND_COLOR } from '@/settings/config'
+import { TAG_TRANSFER_OUTBOUND_COLOR, TAG_TRANSFER_UNFREEZE_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { transferCreateTypeEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -213,6 +228,7 @@ import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import mHeader from './module/header'
+import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
 import review from './module/review.vue'

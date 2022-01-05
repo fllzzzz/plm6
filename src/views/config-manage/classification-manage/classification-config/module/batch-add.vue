@@ -47,7 +47,6 @@
               clearable
               placeholder="上级科目"
               :showExtra="$index !== 0"
-              :extra-option="{ name: '同上', id: ditto.get('parentId') }"
               size="small"
               style="width: 100%"
             />

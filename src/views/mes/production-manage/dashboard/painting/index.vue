@@ -12,6 +12,7 @@
       :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
+      row-key="id"
       style="width: 100%"
       @sort-change="crud.handleSortChange"
     >
@@ -130,7 +131,7 @@
           <span v-empty-text>{{ toFixed(scope.row.measure, DP.COM_VOLUME__L) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="160px" align="center" fixed="right">
+      <el-table-column v-permission="permission.edit" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-edit" @click.stop="toEditForm(scope.row)" />
         </template>
@@ -147,6 +148,8 @@ import { ref } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
+import { convertUnits } from '@/utils/convert/unit'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -156,10 +159,9 @@ import editForm from './module/edit-form.vue'
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['mesPainting:get'],
+  edit: ['mesPainting:edit'],
+  editArea: ['mesPaintingArea:edit']
 }
 
 const optShow = {
@@ -176,7 +178,8 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: false,
+    requiredQuery: ['monomerId']
   },
   tableRef
 )
@@ -184,8 +187,15 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
-    v.originChangeArea = v.changeArea
+  res.data.content = res.data.content.map((v, i) => {
+    v.id = i + '' + Math.random()
+    v.loss = v.loss ? v.loss * 100 : v.loss
+    v.volumeSolids = v.volumeSolids ? v.volumeSolids * 100 : v.volumeSolids
+    v.surfaceArea = convertUnits(v.surfaceArea, 'mm²', '㎡', DP.COM_AREA__M2)
+    const _area = convertUnits(v.changeArea, 'mm²', '㎡', DP.COM_AREA__M2)
+    v.changeArea = _area
+    v.originChangeArea = _area
+    v.paintingType = crud.query.paintingType
     return v
   })
 }
@@ -195,11 +205,13 @@ const editFormVisible = ref(false)
 const itemInfo = ref({})
 
 function toEditArea(row) {
+  if (!checkPermission(permission.editArea)) return
   itemInfo.value = row
   editAreaVisible.value = true
 }
 
 function toEditForm(row) {
+  if (!checkPermission(permission.edit)) return
   itemInfo.value = row
   editFormVisible.value = true
 }

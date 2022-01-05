@@ -205,7 +205,7 @@ import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
 
 // crud交由presenter持有
 const permission = {
-  get: ['structureManualPack:get'],
+  get: ['enclosureManualPack:get'],
   pack: ['manualPack:pack']
 }
 
@@ -266,6 +266,13 @@ watch(
   },
   { immediate: true }
 )
+
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query.projectId = props.projectId
+  crud.query.factoryId = props.factoryId
+  crud.query.monomerId = props.monomerId
+  crud.query.areaId = props.areaId
+}
 
 function add(row) {
   emit('add', row, packTypeK)

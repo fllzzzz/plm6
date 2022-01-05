@@ -23,22 +23,32 @@
         label="名称"
         width="120px"
       >
-        <template v-slot="scope">
-          <factory-table-cell-tag :id="scope.row.factory ? scope.row.factory.id : scope.row.factoryId" />
-          <span>{{ scope.row.name }}</span>
+        <template #default="{ row }">
+          <factory-table-cell-tag :id="row.factory ? row.factory.id : row.factoryId" />
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('monomer.name')"
         prop="monomer.name"
+        :show-overflow-tooltip="true"
         label="单体"
         sortable="custom"
         align="center"
         width="100px"
       />
-      <el-table-column v-if="columns.visible('area.name')" prop="area.name" label="区域" sortable="custom" align="center" width="100px" />
+      <el-table-column
+        v-if="columns.visible('area.name')"
+        :show-overflow-tooltip="true"
+        prop="area.name"
+        label="区域"
+        sortable="custom"
+        align="center"
+        width="100px"
+      />
       <el-table-column
         v-if="columns.visible('serialNumber')"
+        :show-overflow-tooltip="true"
         prop="serialNumber"
         label="编号"
         sortable="custom"
@@ -47,20 +57,18 @@
       />
       <el-table-column
         v-if="columns.visible('specification')"
-        key="specification"
+        :show-overflow-tooltip="true"
         prop="specification"
         sortable="custom"
-        :show-overflow-tooltip="true"
         label="规格"
         min-width="140px"
       >
-        <template v-slot="scope">
-          <span>{{ scope.row.specification }}</span>
+        <template #default="{ row }">
+          <span>{{ row.specification }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('length')"
-        key="length"
         prop="length"
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -68,26 +76,24 @@
         align="left"
         min-width="85px"
       >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}
+        <template #default="{ row }">
+          {{ toFixed(row.length, DP.MES_ARTIFACT_L__MM) }}
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('material')"
-        key="material"
         prop="material"
         sortable="custom"
         :show-overflow-tooltip="true"
         label="材质"
         min-width="80px"
       >
-        <template v-slot="scope">
-          <span>{{ scope.row.material }}</span>
+        <template #default="{ row }">
+          <span>{{ row.material }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('netWeight')"
-        key="netWeight"
         prop="netWeight"
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -95,13 +101,12 @@
         align="left"
         min-width="80px"
       >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.netWeight, DP.COM_WT__KG) }}
+        <template #default="{ row }">
+          {{ toFixed(row.netWeight, DP.COM_WT__KG) }}
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('grossWeight')"
-        key="grossWeight"
         prop="grossWeight"
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -109,13 +114,12 @@
         align="left"
         min-width="80px"
       >
-        <template v-slot="scope">
-          {{ toFixed(scope.row.grossWeight, DP.COM_WT__KG) }}
+        <template #default="{ row }">
+          {{ toFixed(row.grossWeight, DP.COM_WT__KG) }}
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('drawingNumber')"
-        key="drawingNumber"
         prop="drawingNumber"
         sortable="custom"
         :show-overflow-tooltip="true"
@@ -124,7 +128,6 @@
       />
       <el-table-column
         v-if="columns.visible('quantity')"
-        key="quantity"
         prop="quantity"
         sortable="custom"
         label="清单数"
@@ -133,7 +136,6 @@
       />
       <el-table-column
         v-if="columns.visible('inQuantity')"
-        key="inQuantity"
         prop="inQuantity"
         sortable="custom"
         label="入库量"
@@ -165,19 +167,13 @@
             </div>
           </el-tooltip>
         </template>
-        <template v-slot="scope">
-          <el-tag :type="scope.row.status === processingEnum.PROCESS.V ? 'success' : 'primary'">{{ processingEnumV[scope.row.status].L }}</el-tag>
+        <template #default="{row}">
+          <el-tag :type="row.status === processingEnum.PROCESS.V ? 'success' : 'primary'">{{ processingEnumV[row.status].L }}</el-tag>
         </template>
       </el-table-column> -->
       <el-table-column v-permission="permission.pack" label="操作" width="70" align="center" fixed="right">
-        <template v-slot="scope">
-          <common-button
-            type="success"
-            icon="el-icon-plus"
-            :disabled="ids.includes(`${scope.row.id}`)"
-            size="mini"
-            @click="add(scope.row)"
-          />
+        <template #default="{ row }">
+          <common-button type="success" icon="el-icon-plus" :disabled="ids.includes(`${row.id}`)" size="mini" @click="add(row)" />
         </template>
       </el-table-column>
     </common-table>
@@ -258,11 +254,18 @@ watch(
   () => {
     crud.toQuery()
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 function add(row) {
   emit('add', row, packTypeK)
+}
+
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query.projectId = props.projectId
+  crud.query.factoryId = props.factoryId
+  crud.query.monomerId = props.monomerId
+  crud.query.areaId = props.areaId
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {

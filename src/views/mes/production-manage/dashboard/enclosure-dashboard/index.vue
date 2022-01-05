@@ -62,7 +62,7 @@ import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 
 const permission = {
-  get: ['enclosureInboundStateDashboard:get']
+  get: ['enclosureProductionDashboard:get']
 }
 
 const optShow = {
@@ -80,9 +80,9 @@ const { crud, CRUD } = useCRUD(
     title: '围护看板',
     permission: { ...permission },
     crudApi: { get },
-    optShow: { ...optShow }
-    // requiredQuery: ['areaId'],
-    // queryOnPresenterCreated: false
+    optShow: { ...optShow },
+    requiredQuery: ['areaId'],
+    queryOnPresenterCreated: false
   },
   tableRef
 )

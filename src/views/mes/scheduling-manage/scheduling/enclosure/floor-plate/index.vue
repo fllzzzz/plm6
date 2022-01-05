@@ -1,27 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines">
-      <template v-slot:customSearch>
-        <el-input
-          v-model="crud.query.name"
-          size="small"
-          placeholder="输入名称搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <el-input
-          v-model="crud.query.serialNumber"
-          size="small"
-          placeholder="输入编号搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-      </template>
-    </mHeader>
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -31,6 +10,7 @@
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
+      row-key="id"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
@@ -47,10 +27,10 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns
-        :productType="componentTypeEnum.ENCLOSURE.V"
+      <productType-full-info-columns
+        :productType="productType"
         enclosureShowItem
-        :category="mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V"
+        :category="category"
         :columns="columns"
         :fixed="'left'"
         fixedWidth
@@ -149,21 +129,19 @@ import { provide, ref } from 'vue'
 
 import { componentTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
-import { mapGetters } from '@/store/lib'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
-import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 
 // crud交由presenter持有
 const permission = {
-  get: ['artifactScheduling:get'],
-  editStatus: ['artifactScheduling:editStatus'],
-  save: ['artifactScheduling:save'],
-  clear: ['artifactScheduling:clearWithOneClick']
+  get: ['enclosureScheduling:get'],
+  save: ['enclosureScheduling:save'],
+  clear: ['enclosureScheduling:clearWithOneClick']
 }
 
 const optShow = {
@@ -173,13 +151,16 @@ const optShow = {
   download: false
 }
 
+const category = mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V
+const productType = componentTypeEnum.ENCLOSURE.V
 provide('needTableColumns', [
   { label: '名称', width: '120px', field: 'name' },
   { label: '板型', width: '120px', field: 'plate' },
   { label: '编号', width: '140px', field: 'serialNumber' },
   { label: '材质', width: '120px', field: 'material' }
 ])
-provide('productType', componentTypeEnum.ENCLOSURE.V)
+provide('productType', productType)
+provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
 
 const tableRef = ref()
@@ -198,11 +179,10 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-const { globalProjectId } = mapGetters(['globalProjectId'])
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.category = mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V
+  crud.query.category = category
 }
 </script>
 

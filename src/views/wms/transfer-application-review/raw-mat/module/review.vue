@@ -33,6 +33,7 @@
     </template>
     <template #content>
       <el-form ref="formRef" class="form" :model="form" :rules="rules" :disabled="formDisabled" label-position="left" size="mini">
+        <unfreeze-info class="unfreeze-info" v-if="form.boolHasUnfreeze" :basic-class="form.basicClass" :list="form.unfreezeList" />
         <common-table
           :data="form.list"
           :max-height="maxHeight"
@@ -79,7 +80,7 @@
             class="approval-comments"
             v-model="form.approvalComments"
             :rows="2"
-            :max="1000"
+            maxLength="1000"
             type="textarea"
             show-word-limit
             placeholder="审核意见"
@@ -99,6 +100,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 import useTableValidate from '../composables/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
@@ -112,10 +114,10 @@ import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-se
 import ReviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
 import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
-
+import unfreezeInfo from './unfreeze-info.vue'
 import commonTitleInfo from './common-title-info.vue'
 import setPartyAInfo from './set-party-a-info.vue'
-import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+
 const emit = defineEmits(['refresh', 'update:visible'])
 
 const props = defineProps({
@@ -156,7 +158,7 @@ const drawerTitle = computed(() => (detailLoading.value ? `调拨单：` : `调�
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-transfer-application-review-form',
-    extraBox: ['.el-drawer__header', '.approval-comments'],
+    extraBox: ['.el-drawer__header', '.approval-comments', '.unfreeze-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300
@@ -189,9 +191,7 @@ const validateInvoiceType = (rule, value, callback) => {
 }
 
 const invoiceRules = {
-  invoiceType: [
-    { required: true, validator: validateInvoiceType, trigger: 'change' }
-  ]
+  invoiceType: [{ required: true, validator: validateInvoiceType, trigger: 'change' }]
 }
 
 const rules = computed(() => {

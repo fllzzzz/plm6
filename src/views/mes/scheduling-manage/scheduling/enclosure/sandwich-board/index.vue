@@ -1,18 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader :project-id="globalProjectId" v-model:modifying="modifying" v-model:lines="lines">
-      <template v-slot:customSearch>
-        <el-input
-          v-model="crud.query.name"
-          size="small"
-          placeholder="输入名称搜索"
-          style="width: 170px"
-          class="filter-item"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-      </template>
-    </mHeader>
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -23,6 +11,7 @@
       :row-class-name="handleRowClassName"
       :cell-class-name="handelCellClassName"
       style="width: 100%"
+      row-key="id"
       @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
     >
@@ -38,10 +27,10 @@
         label="区域"
         width="120px"
       />
-      <productType-base-info-columns
-        :productType="componentTypeEnum.ENCLOSURE.V"
+      <productType-full-info-columns
+        :productType="productType"
         enclosureShowItem
-        :category="mesEnclosureTypeEnum.SANDWICH_BOARD.V"
+        :category="category"
         :columns="columns"
         :fixed="'left'"
         fixedWidth
@@ -90,12 +79,12 @@
       >
         <template v-slot="scope">
           <span>{{ scope.row.sourceUnassignQuantity }}</span>
-          <span
-v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuantity"
-            >▶<span :style="{ color: scope.row.unassignQuantity < scope.row.sourceUnassignQuantity ? '#11b95c' : 'red' }">{{
-              scope.row.unassignQuantity
-            }}</span></span
-          >
+          <span v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuantity">
+            ▶
+            <span :style="{ color: scope.row.unassignQuantity < scope.row.sourceUnassignQuantity ? '#11b95c' : 'red' }">
+              {{ scope.row.unassignQuantity }}
+            </span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -110,12 +99,12 @@ v-if="modifying && scope.row.unassignQuantity !== scope.row.sourceUnassignQuanti
       >
         <template v-slot="scope">
           <span>{{ scope.row.sourceAssignQuantity }}</span>
-          <span
-v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity"
-            >▶<span :style="{ color: scope.row.assignQuantity > scope.row.sourceAssignQuantity ? '#11b95c' : 'red' }">{{
-              scope.row.assignQuantity
-            }}</span></span
-          >
+          <span v-if="modifying && scope.row.assignQuantity !== scope.row.sourceAssignQuantity">
+            ▶
+            <span :style="{ color: scope.row.assignQuantity > scope.row.sourceAssignQuantity ? '#11b95c' : 'red' }">
+              {{ scope.row.assignQuantity }}
+            </span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -141,21 +130,19 @@ import { provide, ref } from 'vue'
 import { componentTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
 import { DP } from '@/settings/config'
-import { mapGetters } from '@/store/lib'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
-import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 
 // crud交由presenter持有
 const permission = {
-  get: ['artifactScheduling:get'],
-  editStatus: ['artifactScheduling:editStatus'],
-  save: ['artifactScheduling:save'],
-  clear: ['artifactScheduling:clearWithOneClick']
+  get: ['enclosureScheduling:get'],
+  save: ['enclosureScheduling:save'],
+  clear: ['enclosureScheduling:clearWithOneClick']
 }
 
 const optShow = {
@@ -165,13 +152,16 @@ const optShow = {
   download: false
 }
 
+const category = mesEnclosureTypeEnum.SANDWICH_BOARD.V
+const productType = componentTypeEnum.ENCLOSURE.V
 provide('needTableColumns', [
   { label: '名称', width: '120px', field: 'name' },
   { label: '板型', width: '120px', field: 'plate' },
   { label: `板厚\n(mm)`, width: '80px', field: 'thickness', toFixed: true, DP: DP.MES_ENCLOSURE_T__MM },
   { label: `有效宽度\n(mm)`, width: '80px', field: 'width', toFixed: true, DP: DP.MES_ENCLOSURE_W__MM }
 ])
-provide('productType', componentTypeEnum.ENCLOSURE.V)
+provide('productType', productType)
+provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
 
 const tableRef = ref()
@@ -190,11 +180,10 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-const { globalProjectId } = mapGetters(['globalProjectId'])
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.category = mesEnclosureTypeEnum.SANDWICH_BOARD.V
+  crud.query.category = category
 }
 </script>
 

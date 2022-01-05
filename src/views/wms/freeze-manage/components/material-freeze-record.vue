@@ -31,9 +31,13 @@
     </el-table-column>
     <el-table-column prop="curQuantity" label="数量" align="right" width="100px">
       <template #default="{ row }">
-        <span v-empty-text v-to-fixed="material.outboundUnitPrecision">
-          {{ material.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete }}
-        </span>
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: material.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete,
+            dp: material.outboundUnitPrecision,
+          }"
+        />
       </template>
     </el-table-column>
     <el-table-column key="operatorName" :show-overflow-tooltip="true" prop="operatorName" label="冻结人" align="center" width="90" />

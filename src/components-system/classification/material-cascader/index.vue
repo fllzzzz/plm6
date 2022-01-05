@@ -113,9 +113,17 @@ const props = defineProps({
     default: false
   },
   // 额外的选项
-  extraOption: {
-    type: Object,
-    require: false
+  showExtra: {
+    type: Boolean,
+    default: false
+  },
+  extraOptionLabel: {
+    type: String,
+    default: '同上'
+  },
+  extraOptionValue: {
+    type: [Number, String, Array, Boolean],
+    default: -1
   }
 })
 
@@ -220,8 +228,8 @@ function setCascader(tree) {
       // 根据基础材料类型 筛选一级科目
       classification.tree = dataFormat(tree.filter((v) => !props.basicClass || v.basicClass & props.basicClass))
       // 加入额外的选项
-      if (props.extraOption) {
-        classification.tree.unshift(props.extraOption)
+      if (props.showExtra) {
+        classification.tree.unshift({ id: props.extraOptionValue, name: props.extraOptionLabel })
       }
     } else {
       classification.treeOrigin = []

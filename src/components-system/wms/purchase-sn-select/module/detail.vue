@@ -13,6 +13,10 @@
       <div class="main-content">
         <el-form :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content">
+            <el-form-item label="签订主体" prop="branchCompanyName" style="width: 100%">
+              <span v-if="detail.branchCompany">{{ detail.branchCompany.name }}</span>
+            </el-form-item>
+
             <el-form-item label="采购订单" prop="serialNumber">
               {{ detail.serialNumber }}
             </el-form-item>
@@ -32,7 +36,12 @@
               {{ detail.supplier ? detail.supplier.name : '' }}
             </el-form-item>
 
-            <el-form-item v-if="detail.basicClass & matClsEnum.MATERIAL.V" label="辅材明细" prop="auxMaterialNames" style="width: 100%; word-break: break-all">
+            <el-form-item
+              v-if="detail.basicClass & matClsEnum.MATERIAL.V"
+              label="辅材明细"
+              prop="auxMaterialNames"
+              style="width: 100%; word-break: break-all"
+            >
               <span v-arr-join>{{ detail.auxMaterialNames }}</span>
             </el-form-item>
 
@@ -50,9 +59,6 @@
             <el-form-item prop="weightMeasurementMode" label="计量方式">
               <span v-parse-enum="{ e: weightMeasurementModeEnum, v: detail.weightMeasurementMode }" />
             </el-form-item>
-            <!-- <el-form-item label="提货方式" prop="pickUpMode">
-              <span v-parse-enum="{ e: pickUpModeEnum, v: detail.pickUpMode }" />
-            </el-form-item> -->
             <el-form-item label="物流信息" prop="logistics">
               <span v-parse-enum="{ e: logisticsTransportTypeEnum, v: detail.logisticsTransportType }" />
               （费用<span v-parse-enum="{ e: logisticsPayerEnum, v: detail.logisticsPayerType }" />）

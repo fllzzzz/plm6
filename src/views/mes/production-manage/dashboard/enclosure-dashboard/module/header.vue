@@ -1,8 +1,8 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
-      <common-radio-button
+      <monomer-select-area-tabs :productType="query.productType" needConvert :project-id="globalProjectId" @change="fetchMonomerAndArea" />
+      <!-- <common-radio-button
         type="enum"
         v-model="query.category"
         :options="mesEnclosureTypeEnum.ENUM"
@@ -10,7 +10,7 @@
         placeholder="请选择围护类型"
         class="filter-item"
         @change="crud.toQuery"
-      />
+      /> -->
       <factory-select
         v-model="query.factoryId"
         class="filter-item"
@@ -76,7 +76,7 @@
 <script setup>
 import { ref, defineExpose, defineEmits } from 'vue'
 
-import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
@@ -114,6 +114,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.detailLoading = false
     v.hasDetail = false
     v.compareQuantity = v.quantity
+    v.isProcess = v.inProductionQuantity > 0
     v.boxColor = getColor(v, { quantity: 'completeQuantity', compare: 'compareQuantity' })
     return v
   })

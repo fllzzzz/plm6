@@ -10,6 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -52,13 +53,13 @@
               <div class="status-detail">
                 <div>任务量：{{ item.taskMeteShow }}</div>
                 <div>已完成：{{ item.completeMeteShow }}</div>
-                <common-button type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
+                <common-button v-permission="permission.processDetail" type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
               </div>
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="120px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="showDetail(scope.row)">全景看板</common-button>
         </template>
@@ -91,10 +92,9 @@ const colors = [
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['artifactTeamReport:get'],
+  detail: ['artifactTeamReport:detail'],
+  processDetail: ['artifactTeamReportProcess:detail']
 }
 
 const optShow = {
@@ -124,23 +124,27 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.completeStatus = v.processSummaryList.map((o) => {
       o.completeMete = useProductMeteConvert({
         productType: v.productType,
-        weight: o.completeNetWeight,
-        length: o.completeLength
-      }).convertMete
+        weight: { num: o.completeNetWeight },
+        length: { num: o.completeLength }
+      })
       o.completeMeteShow = useProductMeteConvert({
         productType: v.productType,
-        weight: o.completeNetWeight,
-        length: o.completeLength,
+        weight: { num: o.completeNetWeight },
+        length: { num: o.completeLength, to: 'm', dp: 'COM_L__M' },
         showUnit: true
-      }).convertMete
-      o.taskMete = useProductMeteConvert({ productType: v.productType, weight: o.taskNetWeight, length: o.taskLength }).convertMete
+      })
+      o.taskMete = useProductMeteConvert({
+        productType: v.productType,
+        weight: { num: o.taskNetWeight },
+        length: { num: o.taskLength }
+      })
       o.taskMeteShow = useProductMeteConvert({
         productType: v.productType,
-        weight: o.taskNetWeight,
-        length: o.taskLength,
+        weight: { num: o.taskNetWeight },
+        length: { num: o.taskLength, to: 'm', dp: 'COM_L__M' },
         showUnit: true
-      }).convertMete
-      o.completeRate = (o.completeMete / o.taskMete) * 100
+      })
+      o.completeRate = o.taskMete ? (o.completeMete / o.taskMete) * 100 : '0'
       return o
     })
     return v

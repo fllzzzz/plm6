@@ -49,8 +49,8 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('quantity')" prop="quantity" label="已还/总数" align="right" width="110px">
         <template #default="{ row }">
-          <span class="returned-number" v-empty-text v-to-fixed="row.outboundUnitPrecision">{{ row.corReturnedQuantity || 0 }}</span> /
-          <span v-empty-text v-to-fixed="row.outboundUnitPrecision">{{ row.corQuantity }}</span>
+          <span class="returned-number" v-empty-text v-to-fixed="{ val: row.corReturnedQuantity || 0, dp: row.outboundUnitPrecision }" /> /
+          <span v-empty-text v-to-fixed="{ val: row.corQuantity, dp: row.outboundUnitPrecision }" />
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="原项目" min-width="170">

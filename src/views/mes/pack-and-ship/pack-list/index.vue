@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader ref="headerRef" />
+      <mHeader ref="headerRef" @getDetail="handleDetail"/>
     </div>
     <!--表格渲染-->
     <common-table
@@ -184,7 +184,7 @@
     <!--分页组件-->
     <pagination />
     <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" />
-    <m-detail v-model:visible="detailVisible" :detail-info="packageInfo" title="打包清单" quantityFelid="packageQuantity" :detailFunc="detail">
+    <m-detail v-model:visible="detailVisible" :detail-info="packageInfo" title="打包清单" quantityFelid="packageQuantity" :detailFunc="detail" @getDetail="handleDetail">
       <template #tip>
         <el-tag effect="plain" style="margin-left: 5px" size="medium">{{ packageInfo.serialNumber }}</el-tag>
       </template>
@@ -195,7 +195,7 @@
 
 <script setup>
 import crudApi, { detail } from '@/api/mes/pack-and-ship/pack-list'
-import { ref } from 'vue'
+import { ref, reactive, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
 
@@ -222,7 +222,6 @@ const router = useRouter()
 // crud交由presenter持有
 const permission = {
   get: ['mesPack:get'],
-  download: ['mesPack:download'],
   detail: ['mesPack:detail'],
   edit: ['mesPack:edit'],
   del: ['mesPack:del'],
@@ -238,6 +237,7 @@ const optShow = {
   download: false
 }
 
+const detailStore = reactive({}) // 存储已经请求过的详情
 const headerRef = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -274,6 +274,13 @@ function showDetail(row) {
   detailVisible.value = true
 }
 
+function handleDetail(id, data) {
+  if (!detailStore[id]) {
+    detailStore[id] = data
+  }
+}
+provide('detailStore', detailStore)
+
 async function printLabel(row) {
   try {
     await headerRef.value.print([row])
@@ -282,8 +289,8 @@ async function printLabel(row) {
   }
 }
 
-function previewLabel(row) {
-  currentLabel.value = headerRef.value.getLabelInfo(row)
+async function previewLabel(row) {
+  currentLabel.value = await headerRef.value.getLabelInfo(row)
   labelVisible.value = true
 }
 

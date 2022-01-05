@@ -40,12 +40,12 @@
           class="filter-item"
           @change="crud.toQuery"
         /> -->
-        <factory-select v-model="query.factoryId" class="filter-item" style="width: 200px" @change="crud.toQuery" />
+        <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
         <rrOperation />
       </div>
     </template>
     <template #viewLeft>
-      <common-button size="mini" @click="summaryDetailVisible = true" type="success">汇总查看</common-button>
+      <common-button v-permission="crud.permission?.summaryDetail" size="mini" @click="summaryDetailVisible = true" type="success">汇总查看</common-button>
     </template>
   </crudOperation>
   <summaryDetail v-model:visible="summaryDetailVisible" />
@@ -63,8 +63,8 @@ import rrOperation from '@crud/RR.operation'
 import factorySelect from '@comp-base/factory-select'
 import summaryDetail from './summary-detail'
 const defaultQuery = {
-  date: [moment().startOf('year').valueOf(), moment().valueOf()],
-  startDate: moment().startOf('year').valueOf(),
+  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
+  startDate: moment().subtract(1, 'month').valueOf(),
   endDate: moment().valueOf(),
   productType: artifactProcessEnum.ONCE.V,
   componentType: typeEnum.ARTIFACT.V

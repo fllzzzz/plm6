@@ -10,7 +10,6 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
-      @row-dblclick="(row) => crud.toDetail(row)"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
@@ -163,9 +162,9 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit,...permission.del]" label="操作" width="120px" align="center" fixed="right">
+      <el-table-column label="操作" width="170px" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" />
+          <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" show-detail />
         </template>
       </el-table-column>
     </common-table>
@@ -209,7 +208,7 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
-const { CRUD, crud, columns } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
@@ -222,10 +221,4 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-
-CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
-    v.editable = v.reviewStatus !== reviewStatusEnum.PASS.V // 可编辑的
-  })
-}
 </script>

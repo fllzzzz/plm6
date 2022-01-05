@@ -18,6 +18,7 @@
             ref="table"
             :max-height="maxHeight"
             :data="assignAbleList"
+            row-key="id"
             empty-text="暂无数据"
             @selection-change="handleSelectionChange"
           >

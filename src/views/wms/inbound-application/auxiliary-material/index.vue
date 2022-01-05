@@ -131,6 +131,7 @@ const setFormCallback = (form) => {
     },
     { immediate: true, deep: true }
   )
+  fixMaxHeight()
 }
 
 const { cu, form, FORM } = useForm(
@@ -183,7 +184,7 @@ if (props.edit) {
     extraHeight: 20
   }
 }
-const { maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
+const { fixMaxHeight, maxHeight: tableMaxHeight } = useMaxHeight(tableHeightConfig)
 
 // 初始化
 init()

@@ -1,17 +1,19 @@
 <template>
-  <div v-for="workshop in lines" :key="workshop.id" class="workshop-content">
-    <div class="workshop-title">{{ workshop.name }}【{{ workshop.factoryName }}】</div>
-    <div class="production-lines-content">
-      <template v-for="line in workshop.productionLineList" :key="line.id">
-        <el-tag
-          hit
-          v-if="productType && productType === line.productType"
-          :effect="isSingle ? (selectLineId === line.id ? 'light' : 'plain') : line.selected ? 'light' : 'plain'"
-          :type="isSingle ? (selectLineId === line.id ? 'success' : 'info') : line.selected ? 'success' : 'info'"
-          @click="handleChange(workshop, line)"
-          >{{ line.name }}</el-tag
-        >
-      </template>
+  <div v-for="workshop in lines" :key="workshop.id">
+    <div class="workshop-content" v-if="workshop.productionLineList && workshop.productionLineList.length">
+      <div class="workshop-title">{{ workshop.name }}【{{ workshop.factoryName }}】</div>
+      <div class="production-lines-content">
+        <template v-for="line in workshop.productionLineList" :key="line.id">
+          <el-tag
+            hit
+            v-if="productType && productType === line.productType"
+            :effect="isSingle ? (selectLineId === line.id ? 'light' : 'plain') : line.selected ? 'light' : 'plain'"
+            :type="isSingle ? (selectLineId === line.id ? 'success' : 'info') : line.selected ? 'success' : 'info'"
+            @click="handleChange(workshop, line)"
+            >{{ line.name }}</el-tag
+          >
+        </template>
+      </div>
     </div>
   </div>
 </template>

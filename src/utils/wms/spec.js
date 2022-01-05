@@ -10,10 +10,11 @@ export async function setSpecInfoToList(list) {
   try {
     const allPromise = []
     let p
-    // 加载科目信息
-    const classifyIds = uniqueArr(list.map((v) => v.classifyId))
+    // 加载科目信息, 只处理有classifyId的数据
+    const _list = list.filter(v => v && v.classifyId)
+    const classifyIds = uniqueArr(_list.map((v) => v.classifyId))
     await fetchSpecInfoByFullSpec(classifyIds)
-    list.forEach((row) => {
+    _list.forEach((row) => {
       if (isNotBlank(row.classifyId)) {
         // 无规格
         if (isBlank(row.specification)) row.specification = ''
@@ -26,10 +27,11 @@ export async function setSpecInfoToList(list) {
             row.classifyFullPathId = info.classify.fullPathId // 全路径id
             row.classifyFullName = info.classify.fullName // 全路径名称
             row.measureUnit = info.classify.measureUnit // 计量单位
+            row.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
             row.accountingUnit = info.classify.accountingUnit // 核算单位
             row.accountingPrecision = info.classify.accountingPrecision // 核算单位小数精度
-            row.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
             row.curOutboundUnitType = info.classify.outboundUnitType // 出库方式
+            row.outboundUnitType = info.classify.outboundUnitType // TODO: 由后端传值后，删除。避免不同表单的出库单位不一样
             row.outboundUnit = row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
             row.outboundUnitPrecision =
               row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度

@@ -15,12 +15,22 @@ const processingColorsEnum = {
 }
 constantize(processingColorsEnum)
 
+const problemTypeEnum = {
+  QUALITY: { L: '质量问题', K: 'QUALITY', V: 1 << 0, T: 'info' },
+  SECURITY: { L: '安全问题', K: 'SECURITY', V: 1 << 1, T: 'warning' },
+  ENVIRONMENT: { L: '环境问题', K: 'ENVIRONMENT', V: 1 << 2, T: 'success' },
+  SPECIAL_QUALITY: { L: '特殊质量问题', K: 'SPECIAL_QUALITY', V: 1 << 3, T: 'danger' }
+}
+constantize(problemTypeEnum)
+
 export {
   manufactureTypeEnum,
-  processingColorsEnum
+  processingColorsEnum,
+  problemTypeEnum
 }
 
 export default {
   manufactureTypeEnum,
-  processingColorsEnum
+  processingColorsEnum,
+  problemTypeEnum
 }

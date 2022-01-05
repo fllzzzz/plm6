@@ -13,6 +13,10 @@
       <div class="main-content">
         <el-form :model="detail" size="small" label-position="left" label-width="100px">
           <div class="form-content">
+            <el-form-item label="签订主体" prop="branchCompanyName" style="width: 100%">
+              <span v-if="detail.branchCompany">{{ detail.branchCompany.name }}</span>
+            </el-form-item>
+
             <el-form-item label="采购订单" prop="serialNumber">
               {{ detail.serialNumber }}
             </el-form-item>
@@ -32,7 +36,12 @@
               <span v-if="detail.supplier">{{ detail.supplier.name }}</span>
             </el-form-item>
 
-            <el-form-item v-if="detail.basicClass & matClsEnum.MATERIAL.V" label="辅材明细" prop="auxMaterialNames" style="width: 100%; word-break: break-all">
+            <el-form-item
+              v-if="detail.basicClass & matClsEnum.MATERIAL.V"
+              label="辅材明细"
+              prop="auxMaterialNames"
+              style="width: 100%; word-break: break-all"
+            >
               <span v-arr-join>{{ detail.auxMaterialNames }}</span>
             </el-form-item>
 
@@ -117,7 +126,7 @@
             <upload-list
               show-download
               :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
-              v-model:files="detail.attachment"
+              v-model:files="detail.attachments"
               :uploadable="false"
               empty-text="暂未上传采购订单附件"
             />

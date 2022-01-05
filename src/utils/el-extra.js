@@ -1,4 +1,4 @@
-import { toFixed } from './data-type'
+import { isBlank, toFixed } from './data-type'
 
 /**
  * 合计通用
@@ -22,11 +22,11 @@ export function tableSummary(param, { props = [], precision = 2 }) {
       }
     })
     if (fieldIndex > -1) {
-      const values = data.map((item) => Number(item[column.property]))
+      const values = data.map((item) => Number(getInfo(item, column.property)))
       let dp = precision
       const curField = props[fieldIndex]
       if (Array.isArray(curField) && curField.length === 2) {
-        dp = curField[2]
+        dp = curField[1]
       }
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
@@ -42,4 +42,17 @@ export function tableSummary(param, { props = [], precision = 2 }) {
     }
   })
   return sums
+}
+
+// 获取字段信息
+function getInfo(row, field) {
+  if (isBlank(row)) return
+  if (field) {
+    const keys = field.split('.')
+    return keys.reduce((cur, key) => {
+      return typeof cur === 'object' ? cur[key] : undefined
+    }, row)
+  } else {
+    return row
+  }
 }

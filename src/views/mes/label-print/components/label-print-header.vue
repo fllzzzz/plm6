@@ -1,8 +1,8 @@
 <template>
   <div class="hed-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" />
-      <slot name="customSearch" />
+      <monomer-select-area-tabs :project-id="globalProjectId" @change="fetchMonomerAndArea" :productType="productType" needConvert />
+      <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <production-line-box-select
@@ -22,7 +22,21 @@
               <common-radio-button v-model="printConfig.weight" :options="printWeightTypeEnum.ENUM" type="enum" />
             </el-form-item>
             <el-form-item label="标签类型">
-              <common-radio-button v-model="printConfig.type" :options="labelTypeEnum.ENUM" type="enum" />
+              <div style="display: flex; align-items: center">
+                <common-radio-button v-model="printConfig.type" :options="labelTypeEnum.ENUM" type="enum" />
+                <el-popover placement="right" :title="labelTypeEnum.VL[printConfig.type]" :width="400" trigger="hover">
+                  <div style="height: 350px; margin-top: -40px">
+                    <span v-html="getMiniLabelHtml({ productType, labelType: printConfig.type })"></span>
+                  </div>
+                  <template #reference>
+                    <div style="margin-left: 5px">
+                      <common-button size="mini" type="info">
+                        <i class="el-icon-view"></i>
+                      </common-button>
+                    </div>
+                  </template>
+                </el-popover>
+              </div>
             </el-form-item>
             <el-form-item label="显示">
               <span style="display: flex; align-items: center">
@@ -96,8 +110,10 @@ import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import monomerSelectAreaTabs from '@comp-base/monomer-select-area-tabs'
 import productionLineBoxSelect from '@comp-mes/production-line-box-select'
+import { getMiniLabelHtml } from '@comp-label/label-fn.js'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
@@ -111,6 +127,8 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 
 const { globalProjectId, user, requestUrl } = mapGetters(['globalProjectId', 'user', 'requestUrl'])
 const permission = inject('permission')
+const productType = inject('productType')
+const printType = inject('printType')
 
 // // TODO
 // const currentArea = {
@@ -138,6 +156,13 @@ let printConfig = reactive({
   copiesQuantity: 1
 })
 const sourcePrintConfig = ref(deepClone(printConfig))
+const labelTypeVisible = reactive({})
+function initLabelTypeVisible() {
+  for (const item in labelTypeEnum.V) {
+    labelTypeVisible[item] = false
+  }
+}
+initLabelTypeVisible()
 
 function isShowText(bool) {
   return bool ? '显示' : '不显示'
@@ -155,16 +180,17 @@ watch(
 async function fetchPrintConfig() {
   try {
     configLoading.value = true
-    const { weight, showProductionLine, showArea, showMonomer, manufacturerName, copiesQuantity } = await getPrintConfig(
-      globalProjectId.value
-    )
-    printConfig.weight = weight
-    printConfig.showProductionLine = showProductionLine
-    printConfig.showArea = showArea
-    printConfig.showMonomer = showMonomer
-    printConfig.manufacturerName = manufacturerName || (user && user.companyName)
-    printConfig.copiesQuantity = copiesQuantity || 1
-    sourcePrintConfig.value = deepClone(printConfig)
+    const _data = await getPrintConfig(globalProjectId.value, printType)
+    if (_data) {
+      const { weight, showProductionLine, showArea, showMonomer, manufacturerName, copiesQuantity } = _data
+      printConfig.weight = weight
+      printConfig.showProductionLine = showProductionLine
+      printConfig.showArea = showArea
+      printConfig.showMonomer = showMonomer
+      printConfig.manufacturerName = manufacturerName
+      printConfig.copiesQuantity = copiesQuantity || 1
+      sourcePrintConfig.value = deepClone(printConfig)
+    }
   } catch (error) {
     console.log('项目打印配置', error)
   } finally {
@@ -186,6 +212,7 @@ async function saveConfig() {
     }
     await setPrintConfig({
       ...config,
+      printType,
       showProductionLine: printConfig.showProductionLine,
       showArea: printConfig.showArea,
       showMonomer: printConfig.showMonomer
@@ -217,10 +244,12 @@ const plBoxSelectRef = ref()
 const lines = ref([])
 
 async function fetchHasTaskLine() {
-  selectedAbleLineLoading.value = true
   query.productionLineId = undefined
+  selectedAbleLineIds.value = []
+  if (!query.areaId) return
   try {
-    const { ids } = await getHasTaskLine({ areaId: query.areaId, type: 1 })
+    selectedAbleLineLoading.value = true
+    const { ids } = await getHasTaskLine({ areaId: query.areaId, productType: productType })
     if (ids && ids.length > 0) {
       selectedAbleLineIds.value = ids
       query.productionLineId = selectedAbleLineIds.value[0]
@@ -231,6 +260,7 @@ async function fetchHasTaskLine() {
     selectedAbleLineLoading.value = false
   }
 }
+
 function handleLinesLoaded() {
   if (plBoxSelectRef.value) {
     lines.value = plBoxSelectRef.value.getLines()
@@ -239,17 +269,20 @@ function handleLinesLoaded() {
 
 function getLine() {
   let _line = {}
-  for (const workshop of lines.value) {
-    const productionLines = workshop.productionLineList || []
-    for (const line of productionLines) {
-      if (line.id === query.productionLineId) {
-        _line = {
-          id: line.id,
-          name: line.name,
-          factoryId: workshop.factoryId,
-          factoryName: workshop.factoryName
+  for (const factory of lines.value) {
+    const workshops = factory.workshopList || []
+    for (const workshop of workshops) {
+      const productionLines = workshop.productionLineList || []
+      for (const line of productionLines) {
+        if (line.id === query.productionLineId) {
+          _line = {
+            id: line.id,
+            name: line.name,
+            factoryId: workshop.factoryId,
+            factoryName: workshop.factoryName
+          }
+          break
         }
-        break
       }
     }
   }
@@ -259,9 +292,7 @@ function getLine() {
 watch(
   [() => query.monomerId, () => query.areaId],
   ([monomerId, areaId]) => {
-    if (monomerId && areaId) {
-      fetchHasTaskLine()
-    }
+    fetchHasTaskLine()
     if (monomerId && areaId && query.productionLineId) {
       crud.toQuery()
     }
@@ -272,9 +303,7 @@ watch(
 watch(
   () => query.productionLineId,
   (productionLineId) => {
-    if (query.monomerId && query.areaId && productionLineId) {
-      crud.toQuery()
-    }
+    crud.toQuery()
   },
   { immediate: true }
 )
@@ -293,6 +322,7 @@ const { batchPrint, print } = usePrintLabel({
 
 defineExpose({
   getLine,
+  companyName: user.value && user.value.companyName,
   printConfig: sourcePrintConfig,
   spliceQrCodeUrl,
   QR_SCAN_PATH,

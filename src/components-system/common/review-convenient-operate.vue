@@ -45,16 +45,21 @@ const isConsequent = ref(false)
 
 const reviewList = ref([])
 
-watch(() => props.modelValue,
+watch(
+  () => props.modelValue,
   () => {
     if (props.modelValue !== currentValue.value) {
-      const index = props.list.findIndex(v => props.modelValue === v)
+      const index = props.list.findIndex((v) => props.modelValue === v)
       currentValue.value = props.modelValue
       ci.value = index
     }
-  }, { immediate: true })
+  },
+  { immediate: true }
+)
 
-watchEffect(() => { reviewList.value = props.list })
+watchEffect(() => {
+  reviewList.value = props.list
+})
 
 watchEffect(() => {
   if (props.currentIndex) {
@@ -135,6 +140,10 @@ function handleNext() {
 function removeCurrent() {
   if (reviewList.value.length > 0) {
     reviewList.value.splice(ci.value, 1)
+    // 如果位于最后一条，回到第一条
+    if (ci.value >= reviewList.value.length - 1) {
+      ci.value = 0
+    }
   }
 }
 
@@ -152,7 +161,7 @@ defineExpose({
   > :nth-child(n) {
     margin-right: 7px;
   }
-  >:last-child {
+  > :last-child {
     margin-right: 0;
   }
 }
@@ -163,5 +172,4 @@ defineExpose({
     color: #409eff;
   }
 }
-
 </style>

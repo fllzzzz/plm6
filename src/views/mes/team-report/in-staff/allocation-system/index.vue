@@ -10,6 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -127,16 +128,11 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.processSequence = v.processList.map((o) => {
       return `<span>【${o.processName} │ <span style="color: #67C23A;">${o.price}</span>】</span>`
     })
-    const complete = useProductMeteConvert({
+    v.completeMete = useProductMeteConvert({
       productType: crud.query.productType,
-      length: v.completeLength,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.completeNetWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
+      length: { num: v.completeLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.completeNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
-    v.completeMete = complete.convertMete
     return v
   })
 }

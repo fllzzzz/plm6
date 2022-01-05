@@ -6,12 +6,12 @@ import request from '@/utils/request'
  * @param {number} projectId|required 项目id
  * @returns
  */
-export function getPrintConfig(projectId) {
+export function getPrintConfig(projectId, printType) {
   return request({
     module: 'mes',
     url: 'print/config',
     method: 'get',
-    params: { projectId }
+    params: { projectId, printType }
   })
 }
 
@@ -25,11 +25,11 @@ export function getPrintConfig(projectId) {
  * @param {string} manufacturerName|required 制造商
  * @returns
  */
-export function setPrintConfig({ projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer }) {
+export function setPrintConfig({ printType, projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer }) {
   return request({
     module: 'mes',
     url: 'print/config',
     method: 'post',
-    data: { projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer }
+    data: { printType, projectId, weight, copiesQuantity, printAll, type, showProductionLine, manufacturerName, showArea, showMonomer }
   })
 }

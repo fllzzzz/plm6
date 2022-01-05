@@ -1,5 +1,23 @@
 <template>
   <div v-show="crud.searchToggle">
+    <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 250px" @change="crud.toQuery" />
+    <production-line-select
+      v-model="query.productionLineId"
+      :factoryId="query.factoryId"
+      clearable
+      class="filter-item"
+      style="width: 250px"
+      @change="crud.toQuery"
+    />
+    <monomer-select-area-select
+      v-model:monomerId="query.monomerId"
+      v-model:areaId="query.areaId"
+      clearable
+      :project-id="query.projectId"
+      @change="crud.toQuery"
+    />
+  </div>
+  <div v-show="crud.searchToggle">
     <common-radio-button
       v-model="query.issueStatus"
       :options="taskIssueTypeEnum.ENUM"
@@ -9,54 +27,63 @@
       type="enum"
       @change="crud.toQuery"
     />
-    <el-input
-      v-model="query.serialNumber"
-      size="small"
-      placeholder="输入编号搜索"
-      style="width: 170px"
-      class="filter-item"
-      clearable
-      @keyup.enter="crud.toQuery"
-    />
+    <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
     <rrOperation />
   </div>
   <crudOperation>
     <template v-slot:optLeft>
-      <template v-if="modifying">
-        <el-tag type="info" style="margin-right:5px;" size="medium">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
-        <common-button type="success" size="mini" @click="previewIt">预览并保存</common-button>
-        <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消</common-button>
-      </template>
-      <template v-else>
-        <common-button
-          v-for="item in operateButtonEnum"
-          :key="item.V"
-          style="margin-right: 5px"
-          :type="item.T"
-          size="mini"
-          @click.stop="operateIt(item.V)"
-          >{{ item.L }}</common-button
-        >
+      <template v-if="query.issueStatus !== taskIssueTypeEnum.HAS_ISSUED.V">
+        <template v-if="modifying">
+          <el-tag type="info" style="margin-right: 5px" size="medium">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
+          <common-button type="success" size="mini" @click="previewIt">预览并保存</common-button>
+          <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消</common-button>
+        </template>
+        <template v-else>
+          <common-button
+            v-for="item in operateButtonEnum"
+            :key="item.V"
+            style="margin-right: 5px"
+            :type="item.T"
+            size="mini"
+            @click.stop="operateIt(item.V)"
+          >
+            {{ item.L }}
+          </common-button>
+        </template>
       </template>
     </template>
     <template v-slot:viewLeft>
-      <template v-if="modifying">
-        <el-tag type="info" style="margin-right:5px;" size="medium">快捷操作</el-tag>
-        <el-date-picker style="margin-right:5px;" v-model="askCompleteTime" type="date" size="mini" placeholder="需求完成日期" />
-        <common-button type="success" size="mini" @click.stop="applyAll">全部应用</common-button>
+      <template v-if="query.issueStatus !== taskIssueTypeEnum.HAS_ISSUED.V">
+        <template v-if="modifying">
+          <el-tag type="info" style="margin-right: 5px" size="medium">快捷操作</el-tag>
+          <el-date-picker
+            style="margin-right: 5px"
+            v-model="askCompleteTime"
+            type="date"
+            size="mini"
+            :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
+            placeholder="需求完成日期"
+          />
+          <common-button type="success" size="mini" @click.stop="applyAll">全部应用</common-button>
+        </template>
       </template>
     </template>
   </crudOperation>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, defineExpose, ref } from 'vue'
+import { defineProps, defineEmits, defineExpose, ref, inject } from 'vue'
 import { ElMessage } from 'element-plus'
+import moment from 'moment'
 
 import { processTypeEnum, taskIssueTypeEnum } from '@enum-ms/mes'
 import EO from '@/utils/enum'
 
 import { regHeader } from '@compos/use-crud'
+import productTypeQuery from '@comp-mes/header-query/product-type-query'
+import FactorySelect from '@/components-system/base/factory-select.vue'
+import productionLineSelect from '@comp-mes/production-line-select'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
@@ -81,6 +108,8 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
+const productType = inject('productType')
+const category = inject('category')
 const buttonValue = ref()
 const askCompleteTime = ref()
 

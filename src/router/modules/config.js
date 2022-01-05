@@ -18,18 +18,14 @@ export default {
           hidden: false,
           component: '/config-manage/main/unit-config/index',
           meta: { title: '单位配置', icon: 'project', noCache: true }
-        }
-      ]
-    },
-    {
-      path: '/project-config',
-      component: 'Layout',
-      hidden: false,
-      name: 'ProjectConfig',
-      alwaysShow: false,
-      redirect: '/config-manage/project-config/number-config',
-      meta: { title: '工程配置', icon: 'config-2', noCache: true },
-      children: [
+        },
+        {
+          name: 'factoryAndWorkshopConfig',
+          path: 'factory-and-workshop',
+          hidden: false,
+          component: '/mes/production-config/factory-and-workshop/index',
+          meta: { title: '工厂管理', icon: 'project', noCache: true }
+        },
         {
           name: 'NumberConfig',
           path: 'number-config',
@@ -39,6 +35,24 @@ export default {
         }
       ]
     },
+    // {
+    //   path: '/project-config',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'ProjectConfig',
+    //   alwaysShow: false,
+    //   redirect: '/config-manage/project-config/number-config',
+    //   meta: { title: '工程配置', icon: 'config-2', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'NumberConfig',
+    //       path: 'number-config',
+    //       hidden: false,
+    //       component: '/config-manage/project-config/number-config/index',
+    //       meta: { title: '编号配置', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // },
     {
       path: '/classification-manage',
       component: 'Layout',
@@ -158,13 +172,7 @@ export default {
       redirect: '/mes/production-config/factory-and-workshop',
       meta: { title: '建钢-生产配置', icon: 'project', noCache: true },
       children: [
-        {
-          name: 'MesConfigFactoryAndWorkshop',
-          path: 'factory-and-workshop',
-          hidden: false,
-          component: '/mes/production-config/factory-and-workshop/index',
-          meta: { title: '工厂管理', icon: 'project', noCache: true }
-        },
+
         {
           name: 'MesConfigProductionLine',
           path: 'production-line',

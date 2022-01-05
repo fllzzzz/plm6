@@ -93,7 +93,7 @@ watch(
 )
 
 function selectChange(val) {
-  emit('update:value', val)
+  emit('update:modelValue', val)
   emit('change', val)
 }
 
@@ -124,6 +124,7 @@ async function fetch() {
     } else {
       selectValue.value = undefined
     }
+    selectChange(selectValue.value)
     loading.value = false
   }
 }

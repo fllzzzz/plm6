@@ -17,6 +17,9 @@ export const TAG_TRANSFER_COLOR = '#e64242'
 // 出库调拨标签颜色
 export const TAG_TRANSFER_OUTBOUND_COLOR = '#409eff'
 
+// 出库调拨标签颜色
+export const TAG_TRANSFER_UNFREEZE_COLOR = '#e64242'
+
 // 打印标签默认颜色
 export const TAG_PRINTED_DEF_COLOR = '#0f9747'
 
@@ -56,11 +59,18 @@ MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   width: { unit: 'mm', precision: 0 }
 }
 MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
-  measure: { unit: 'm', precision: 2 },
+  measure: { unit: 'mm', precision: 0 },
   weight: { unit: 'kg', precision: 2 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 },
   thickness: { unit: 'mm', precision: 3 }
+}
+
+MAT_BASE_UNIT[STEEL_ENUM] = {
+  measure: { unit: '件', precision: 0 },
+  weight: { unit: 'kg', precision: 2 },
+  length: { unit: 'mm', precision: 0 },
+  width: { unit: 'mm', precision: 0 }
 }
 
 // 系统最小单位（默认）
@@ -75,6 +85,15 @@ export const MIN_UNIT = {
   AREA_DP: 0,
   VOLUME: 'mm³',
   VOLUME_DP: 0
+}
+
+export const specialPath = {
+  QR_SCAN_ARTIFACT_TASK: '/s/s/a',
+  QR_SCAN_ENCLOSURE_TASK: '/s/s/e',
+  QR_SCAN_AUXILIARY_MATERIAL: '/s/s/m',
+  QR_SCAN_BRIDGE_BOX_TASK: '/s/b/b',
+  QR_SCAN_BRIDGE_SINGLE_ELEMENT_TASK: '/s/b/s',
+  QR_SCAN_BRIDGE_AUXILIARY_MATERIAL: '/s/b/m'
 }
 
 export const QR_SCAN_F_TYPE = {

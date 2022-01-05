@@ -1,5 +1,5 @@
-
 import { watch, nextTick } from 'vue'
+import { isNotBlank } from '@/utils/data-type'
 
 /**
  * 用于表单自带校验未及时触发的情况
@@ -8,34 +8,46 @@ import { watch, nextTick } from 'vue'
  * @param {array} fields 需要校验的字段 数组中可包含数组['areaIds', ['basicClass', 'strucAreaIds', 'enclAreaIds']]
  */
 export default function useWatchFormValidate(formRef, form, fields) {
-  nextTick(() => {
-    // 获取form表单
-    const _form = getForm(form)
-    const fls = fields || Object.keys(_form)
-    fls.forEach(field => {
-      let _wField
-      let _vField
-      if (Array.isArray(field)) { // 可传入数组类型，避免监听字段与校验字段不一致的情况
-        if (Array.isArray(field[1])) {
-          _wField = []
-          field[1].forEach(v => {
-            _wField.push(() => _form[v])
-          })
+  let watchFieldTrigger
+  // 表单发生变化，监听
+  watch(
+    [formRef, () => getForm(form), () => fields],
+    () => {
+      // 取消上次监听
+      if (isNotBlank(watchFieldTrigger)) watchFieldTrigger()
+      watchField()
+    },
+    { immediate: true }
+  )
+  function watchField() {
+    nextTick(() => {
+      // 获取form表单
+      const _form = getForm(form)
+      const fls = fields || Object.keys(_form)
+      fls.forEach((field) => {
+        let _wField
+        let _vField
+        if (Array.isArray(field)) {
+          // 可传入数组类型，避免监听字段与校验字段不一致的情况
+          if (Array.isArray(field[1])) {
+            _wField = []
+            field[1].forEach((v) => {
+              _wField.push(() => _form[v])
+            })
+          } else {
+            _wField = () => _form[_wField]
+          }
+          _vField = field[0] // 校验字段
         } else {
-          _wField = () => _form[_wField]
+          _vField = field
+          _wField = () => _form[_vField]
         }
-        _vField = field[0] // 校验字段
-      } else {
-        _vField = field
-        _wField = () => _form[_vField]
-      }
-      watch(
-        _wField,
-        () => {
+        watchFieldTrigger = watch(_wField, () => {
           formRef.value && formRef.value.validateField(_vField)
         })
+      })
     })
-  })
+  }
 }
 
 // 获取校验规则

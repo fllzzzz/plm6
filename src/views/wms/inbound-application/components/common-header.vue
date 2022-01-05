@@ -13,48 +13,56 @@
             style="width: 300px"
           />
         </el-form-item>
-        <el-form-item
-          v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V"
-          label="车牌号"
-          prop="licensePlate"
-          label-width="70px"
-        >
-          <el-input class="input-underline" v-model.trim="form.licensePlate" placeholder="车牌号" style="width: 125px" />
-        </el-form-item>
-        <el-form-item
-          v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.POST.V"
-          label="物流单号"
-          prop="shipmentNumber"
-          label-width="70px"
-        >
-          <el-input class="input-underline" v-model.trim="form.shipmentNumber" placeholder="物流单号" maxlength="100" style="width: 200px" />
-        </el-form-item>
-        <el-form-item
-          v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V"
-          :label="`过磅重量(千克)`"
-          label-width="120px"
-          prop="loadingWeight"
-        >
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="`重量误差：${trainsDiff.overNum} kg， ${overDiffTip}`"
-            :disabled="!trainsDiff.hasOver"
-            placement="top"
+        <template v-if="isNotBlank(orderInfo)">
+          <el-form-item
+            v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V"
+            label="车牌号"
+            prop="licensePlate"
+            label-width="70px"
           >
-            <common-input-number
-              v-model="form.loadingWeight"
+            <el-input class="input-underline" v-model.trim="form.licensePlate" placeholder="车牌号" style="width: 125px" />
+          </el-form-item>
+          <el-form-item
+            v-if="orderInfo.logisticsTransportType === logisticsTransportTypeEnum.POST.V"
+            label="物流单号"
+            prop="shipmentNumber"
+            label-width="70px"
+          >
+            <el-input
               class="input-underline"
-              style="width: 135px"
-              :min="0"
-              :max="9999999"
-              :controls="false"
-              :precision="3"
-              :placeholder="`输入该车次重量`"
-              :class="{ 'over-weight-tip': trainsDiff.hasOver }"
+              v-model.trim="form.shipmentNumber"
+              placeholder="物流单号"
+              maxlength="100"
+              style="width: 200px"
             />
-          </el-tooltip>
-        </el-form-item>
+          </el-form-item>
+          <el-form-item
+            v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V"
+            :label="`过磅重量(千克)`"
+            label-width="120px"
+            prop="loadingWeight"
+          >
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="`重量误差：${trainsDiff.overNum} kg， ${overDiffTip}`"
+              :disabled="!trainsDiff.hasOver"
+              placement="top"
+            >
+              <common-input-number
+                v-model="form.loadingWeight"
+                class="input-underline"
+                style="width: 135px"
+                :min="0"
+                :max="9999999"
+                :controls="false"
+                :precision="3"
+                :placeholder="`输入该车次重量`"
+                :class="{ 'over-weight-tip': trainsDiff.hasOver }"
+              />
+            </el-tooltip>
+          </el-form-item>
+        </template>
       </el-form>
     </div>
     <div class="child-mr-7">
@@ -88,7 +96,7 @@ import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
 import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
-import { isBlank } from '@/utils/data-type'
+import { isNotBlank, isBlank } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
 
 const emit = defineEmits(['update:purchaseId', 'purchase-order-change'])
@@ -141,7 +149,8 @@ const licensePlateRules = {
 const rules = computed(() => {
   const rules = Object.assign({}, baseRules)
   if (orderInfo.value.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
-    if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.SUPPLIER.V) {
+    // 自提填写车牌号
+    if (orderInfo.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V) {
       Object.assign(rules, licensePlateRules)
     }
   }
@@ -163,14 +172,16 @@ watchEffect(() => {
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
-  formRef.value.resetFields()
   init()
+  nextTick(() => {
+    formRef.value && formRef.value.resetFields()
+  })
 }
 
 // 重置表单
 function handleClear() {
   nextTick(() => {
-    formRef.value.clearValidate()
+    formRef.value && formRef.value.clearValidate()
     init()
   })
 }

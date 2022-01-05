@@ -1,21 +1,21 @@
 <template>
   <div class="upload-container">
     <div class="attachment-content">
-      <common-table :data="files" :empty-text="emptyText" style="width: 100%">
+      <common-table :data="curFiles" :empty-text="emptyText" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="150" />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" width="100" align="center">
-          <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
+          <template #default="{ row }">
+            <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="120">
-          <template v-slot="scope">
-            <common-button v-if="uploadable" type="danger" icon="el-icon-delete" size="mini" @click="toDelete(scope.$index)" />
+          <template #default="{ row, $index }">
+            <common-button v-if="uploadable" type="danger" icon="el-icon-delete" size="mini" @click="toDelete($index)" />
             <export-button
               v-show="props.showDownload"
               v-permission="props.downloadPerm"
-              :params="{ ...props.downloadParams, id: props.files[scope.$index].id }"
+              :params="getParams(row, $index)"
               :fn="props.downloadFn"
             />
           </template>
@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from 'vue'
+import { ref, defineEmits, defineProps, watchEffect } from 'vue'
 import { mapGetters } from '@/store/lib'
 
 import { getToken } from '@/utils/storage'
@@ -85,7 +85,9 @@ const props = defineProps({
   },
   downloadParams: {
     type: Object,
-    default: undefined
+    default: () => {
+      return {}
+    }
   },
   showDownload: {
     type: Boolean,
@@ -147,9 +149,19 @@ const uploadRef = ref()
 const headers = ref({ Authorization: getToken() })
 const uploadLoading = ref(false)
 const currentUpload = ref([])
+const curFiles = ref()
+
+watchEffect(() => {
+  curFiles.value = props.files || []
+})
+
+function getParams(row, index) {
+  const id = index >= 0 && index <= curFiles.value.length - 1 ? curFiles.value[index].id : undefined
+  return { ...props.downloadParams, id }
+}
 
 function toDelete(index) {
-  const files = [...props.files]
+  const files = [...curFiles.value]
   files.splice(index, 1)
   emit('update:files', files)
 }
@@ -159,7 +171,7 @@ function handleSuccess(response) {
   uploadLoading.value = false
   if (response && response.code === 20000) {
     const data = [response.data]
-    emit('update:files', props.files.concat(response.data))
+    emit('update:files', curFiles.value.concat(response.data))
     currentUpload.value = currentUpload.value.concat(data.map((v) => v.id))
     ElMessage.success('上传成功')
   } else {
@@ -186,9 +198,9 @@ function handleProgress() {
 }
 
 function handleRemove(file, fileList) {
-  for (const i in props.files) {
-    if (file.uid === props.files[i].uid) {
-      const files = [...props.files]
+  for (const i in curFiles.value) {
+    if (file.uid === curFiles.value[i].uid) {
+      const files = [...curFiles.value]
       files.splice(i, 1)
       emit('update:files', files)
       emit('change')
@@ -198,7 +210,7 @@ function handleRemove(file, fileList) {
 }
 function handleExceed(files, fileList) {
   ElMessage.warning(
-    `当前限制选择 ${props.limit} 个文件，本次选择了 ${props.files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
+    `当前限制选择 ${props.limit} 个文件，本次选择了 ${curFiles.value.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
   )
 }
 function beforeUpload() {
@@ -221,7 +233,7 @@ function beforeRemove(file, fileList) {
   .upload-box {
     position: absolute;
     display: inline-block;
-    right: 5px;
+    right: 11px;
     top: 6px;
   }
   .attachment-content {

@@ -10,6 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -130,6 +131,7 @@ import { ref, provide } from 'vue'
 
 import { reportComponentTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@enum/base'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -147,10 +149,8 @@ provide('reportTypeEnum', reportTypeEnum)
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['reportWarehouseState:get'],
+  detail: ['reportWarehouseState:detail']
 }
 
 const optShow = {
@@ -188,12 +188,14 @@ const itemInfo = ref({})
 const isSummary = ref(false)
 
 function showDetail(row, type) {
+  if (!checkPermission(permission.detail)) return
   detailVisible.value = true
   reportType.value = type
   itemInfo.value = row
   isSummary.value = false
 }
 function showDetailSummary(type) {
+  if (!checkPermission(permission.detail)) return
   detailVisible.value = true
   reportType.value = type
   itemInfo.value = {}

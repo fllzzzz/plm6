@@ -68,10 +68,10 @@
         <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消编辑</common-button>
         <common-button type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
       </template>
-      <common-button v-else type="primary" size="mini" @click.stop="handelModifying(true)">编辑</common-button>
+      <common-button v-permission="crud.permission?.edit" v-else type="primary" size="mini" @click.stop="handelModifying(true)">编辑</common-button>
     </template>
     <template #viewLeft>
-      <el-badge v-if="auditNumberBadge" :value="auditNumberBadge">
+      <el-badge v-permission="crud.permission?.audit" :value="auditNumberBadge" :hidden="auditNumberBadge===0">
         <common-button size="mini" type="primary" @click="auditVisible = true">审核</common-button>
       </el-badge>
     </template>

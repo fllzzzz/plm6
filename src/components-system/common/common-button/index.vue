@@ -56,8 +56,9 @@
 </template>
 
 <script setup>
-import { ElButton } from 'element-plus'
 import { defineProps, defineEmits, useSlots, ref } from 'vue'
+import { isBlank } from '@/utils/data-type'
+import { ElButton } from 'element-plus'
 
 // 判断<slot/>是否有传值,<el-button></el-button>会产生<span></span>,由与element-ui全局样式的影响, 当按钮只有图标时，这种情况会产生一个margin
 const slotDefault = ref(!!useSlots().default)
@@ -65,7 +66,9 @@ if (slotDefault.value) {
   const slot = useSlots().default()
   // 避免slot为v-if=false的情况，出现span，从而导致图标未居中
   slotDefault.value = slot.some((v) => {
-    return v.children !== 'v-if'
+    // shapeFlag:某种类型,暂不知。 打包前v-if为false时， 对应的v.children值为：v-if， 打包后v.children值为 “空”
+    const blankFlag = v.shapeFlag === 8 && (isBlank(v.children) || v.children === 'v-if' || v.children === 'v-show')
+    return !blankFlag
   })
 }
 

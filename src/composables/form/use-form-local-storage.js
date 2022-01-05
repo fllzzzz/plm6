@@ -28,6 +28,7 @@ export default function useFormLocalStorage(key, crud, FORM, { useDraftCallback,
       return saveFormToStorage(ls)
     },
     resetForm: () => {
+      clearFormStorage(ls)
       // 清除内容
       crud.resetForm()
       ls.init && ls.init()

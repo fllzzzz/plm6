@@ -1,16 +1,16 @@
 <template>
-  <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
+  <el-form v-if="unitLoaded" ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="left" label-width="120px">
     <div class="material-info">
       <common-material-info :material="material" :form="form">
         <template #afterSpec>
           <el-form-item label="厚 * 宽">
-            <span>{{ `${material.thickness}mm * ${material.width}mm` }}</span>
+            <span>{{ `${material.thickness}${baseUnit.thickness.unit} * ${material.width}${baseUnit.width.unit}` }}</span>
           </el-form-item>
         </template>
         <template #afterBrand>
           <el-form-item label="炉批号">
-        <span>{{ material.heatNoAndBatchNo }}</span>
-      </el-form-item>
+            <span>{{ material.heatNoAndBatchNo }}</span>
+          </el-form-item>
         </template>
       </common-material-info>
     </div>
@@ -26,6 +26,7 @@ import { defineProps, defineExpose, provide, computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import { deepClone, isBlank } from '@/utils/data-type'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import commonFormItem from '../components/common-form-item.vue'
 import commonMaterialInfo from '../components/common-material-info.vue'
@@ -57,15 +58,16 @@ const validateQuantity = (rule, value, callback) => {
 
 const rules = {
   projectId: [{ required: true, message: '请选择出库项目', trigger: 'change' }],
-  quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' }
-  ],
+  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
 
 const formRef = ref()
 // 表单
 const form = ref({})
+
+// 当前分类基础单位
+const { loaded: unitLoaded, baseUnit } = useMatBaseUnit(props.basicClass)
 
 // 监听校验
 useWatchFormValidate(formRef, form, ['quantity'])

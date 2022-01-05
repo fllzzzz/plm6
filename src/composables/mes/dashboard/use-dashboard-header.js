@@ -37,7 +37,7 @@ export default function useDashboardHeader({ colorCardTitles = ['未入库', '�
     if (row[quantity] === row[compare]) {
       return processingColorsEnum.COMPLETE.COLOR
     }
-    if (row[quantity] > 0 && row[quantity] < row[compare]) {
+    if (row.isProcess || row[quantity] > 0 && row[quantity] < row[compare]) {
       return processingColorsEnum.PROCESS.COLOR
     }
     return processingColorsEnum.ABNORMAL.COLOR

@@ -1,7 +1,19 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader />
+      <mHeader>
+        <template #customSearch="{ query }">
+          <common-radio-button
+            v-model="query.processType"
+            :options="processTypeEnum.ENUM"
+            size="small"
+            default
+            class="filter-item"
+            type="enum"
+            @change="crud.toQuery"
+          />
+        </template>
+      </mHeader>
     </div>
     <!--表格渲染-->
     <common-table
@@ -10,6 +22,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
@@ -36,7 +49,7 @@
         v-if="columns.visible('taskQuantity')"
         :show-overflow-tooltip="true"
         prop="taskQuantity"
-        :label="`已排产量（件/${unitObj.unit}）`"
+        :label="`已下发（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -50,7 +63,7 @@
         v-if="columns.visible('unschedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="unschedulingQuantity"
-        :label="`未排产量（件/${unitObj.unit}）`"
+        :label="`未下发（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -61,7 +74,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="checkPermission([...permission.detail, ...permission.download])"
+        v-if="checkPermission([...permission.detail])"
         label="操作"
         width="120px"
         align="center"
@@ -85,7 +98,7 @@
       "
     >
       <template #content>
-        <m-detail :details="detailRow" @refresh="crud.toQuery" />
+        <m-detail :details="detailRow" :query="crud.query" @refresh="crud.toQuery" />
       </template>
     </common-drawer>
   </div>
@@ -93,7 +106,7 @@
 
 <script setup>
 import crudApi, { getArtifact } from '@/api/mes/scheduling-manage/task/artifact'
-import { ref, provide, computed } from 'vue'
+import { ref, computed } from 'vue'
 
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
@@ -104,14 +117,12 @@ import useCRUD from '@compos/use-crud'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import mDetail from '../components/task-details'
-import mHeader from './module/header'
+import mHeader from '../components/common-header'
 
 // crud交由presenter持有
 const permission = {
-  get: ['taskAssignDetail:get'],
-  print: ['taskAssignDetail:print'],
-  detail: ['taskAssignDetail:detail'],
-  download: ['taskAssignDetail:download']
+  get: ['artifactTask:get'],
+  detail: ['artifactTask:detail']
 }
 
 const optShow = {
@@ -120,12 +131,6 @@ const optShow = {
   del: false,
   download: false
 }
-
-provide('needTableColumns', [
-  { label: '编号', width: '120px', field: 'serialNumber' },
-  { label: '规格', width: '140px', field: 'specification' }
-  // { label: `单重\n(kg)`, width: '80px', field: 'weight', toFixed: true, DP: DP.COM_WT__KG }
-])
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -151,13 +156,14 @@ function showDetail(row) {
   drawerVisible.value = true
 }
 
-CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get = crud.query.processType === processTypeEnum.ONCE.V ? crudApi.get : getArtifact
-}
-
 const productType = computed(() => {
-  return crud.query.processType === processTypeEnum.ONCE.V ? componentTypeEnum.ASSEMBLE.V : componentTypeEnum.ARTIFACT.V
+  return !crud.query.processType ? componentTypeEnum.ASSEMBLE.V : componentTypeEnum.ARTIFACT.V
 })
+
+CRUD.HOOK.beforeToQuery = () => {
+  crud.crudApi.get = !crud.query.processType ? crudApi.get : getArtifact
+  crud.query.productType = !crud.query.processType ? componentTypeEnum.ASSEMBLE.V : componentTypeEnum.ARTIFACT.V
+}
 
 const unitObj = computed(() => {
   return useProductSummaryMeteUnit({
@@ -166,8 +172,8 @@ const unitObj = computed(() => {
 })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  crud.data = [] // 不清空不更新表格
-  res.data.content = res.data.content.map((v) => {
+  res.data.content = res.data.content.map((v, i) => {
+    v.rowId = i + '' + Math.random()
     v.processType = crud.query.processType
     v.schedulingQuantity = v.schedulingQuantity || 0
     v.taskQuantity = v.taskQuantity || 0
@@ -175,23 +181,15 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.productType = productType.value
     v.totalSchedulingMete = useProductMeteConvert({
       productType: v.productType,
-      length: v.totalSchedulingLength,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.totalSchedulingNetWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
+      length: { num: v.totalSchedulingLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.totalSchedulingNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
     v.totalTaskMete = useProductMeteConvert({
       productType: v.productType,
-      length: v.totalTaskLength,
-      L_TO_UNIT: unitObj.value.unit,
-      L_DP: unitObj.value.dp,
-      weight: v.totalTaskNetWeight,
-      W_TO_UNIT: unitObj.value.unit,
-      W_DP: unitObj.value.dp
-    }).convertMete
-    v.unschedulingMete = (v.totalSchedulingMete - v.totalTaskMete).toFixed(unitObj.value.dp)
+      length: { num: v.totalTaskLength, to: unitObj.value.unit, dp: unitObj.value.dp },
+      weight: { num: v.totalTaskNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp }
+    })
+    v.unschedulingMete = (v.totalSchedulingMete - v.totalTaskMete).toFixed(unitObj.value.DP)
     return v
   })
 }

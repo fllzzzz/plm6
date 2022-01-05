@@ -10,6 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="id"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -35,7 +36,7 @@
         min-width="140px"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.taskLength,'mm','m', DP.MES_ENCLOSURE_L__M) }}</span>
+          <span>{{ convertUnits(scope.row.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -48,7 +49,7 @@
         min-width="140px"
       >
         <template v-slot="scope">
-          <span>{{ convertUnits(scope.row.completeLength,'mm','m', DP.MES_ENCLOSURE_L__M) }}</span>
+          <span>{{ convertUnits(scope.row.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -63,7 +64,7 @@
           <el-progress :text-inside="true" :stroke-width="20" :percentage="scope.row.completeRate" :color="colors" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column v-permission="permission.detail" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="showDetail(scope.row)">查看</common-button>
         </template>
@@ -95,10 +96,8 @@ const colors = [
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: ['enclosureTeamReport:get'],
+  detail: ['enclosureTeamReport:detail']
 }
 
 const optShow = {

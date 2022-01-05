@@ -12,6 +12,9 @@
     <template #titleAfter>
       <title-after-info :order="order" :detail="detail" />
     </template>
+    <template #titleRight>
+      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+    </template>
     <template #content>
       <common-table
         :data="detail.list"
@@ -30,7 +33,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" fixed="left"/>
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
@@ -69,6 +72,7 @@ import amountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
+import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
@@ -99,8 +103,7 @@ const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay ==
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `入库单`
-    : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {

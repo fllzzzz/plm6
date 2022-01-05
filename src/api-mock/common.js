@@ -1000,8 +1000,60 @@ const uploadAttachment = {
   }
 }
 
+// 获取全部项目（多模块使用）
+const getProjectList = {
+  url: '/api/project/listMy',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '操作成功',
+      data: {
+        'content|20': [{
+          'id|+1': 1,
+          'serialNumber': '@natural(1000,9999)',
+          'name': '@cword(2,16)',
+          'shortName': '@cword(2,9)',
+          'businessType|1-2': 1,
+          'planStartDate': '@datetime(T)',
+          'planEndDate': '@datetime(T)',
+          'inWarehouseDate': '@datetime(T)',
+          'createTime': '@datetime(T)'
+        }],
+        'totalElements': 20
+      }
+    }
+  }
+}
+
+// 获取项目汇总信息（多模块使用）
+const getProjectInfo = {
+  url: '/api/project/getMyProjectInfo',
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '操作成功',
+      data: {
+        'quantity|40-60': 60, // 全部数量
+        'processingQuantity|20-40': 40, // 进行中数量
+        'completedQuantity|10-20': 20, // 已完成数量
+        'monthNewQuantity|1-10': 2, // 本月新增数量
+        'provinceList|10': [{
+          'provinceName': '@cword(2,5)',
+          'quantity|1-10': 10
+        }] // 省份项目数量列表
+      }
+    }
+  }
+}
+
 export default [
   getUserTree,
+  getProjectList,
+  getProjectInfo,
   getRegionalTree,
   uploadAttachment,
   getUserAllSimple,
