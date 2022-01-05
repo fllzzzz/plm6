@@ -30,14 +30,14 @@
         </div>
       </template>
       <template v-slot:viewLeft>
-        <!-- <print-table
-          v-permission="permission.print"
+        <print-table
+          v-permission="crud.permission.print"
           api-key="CONTRACT_LEDGER"
           :params="{year: crud.query.year}"
           size="mini"
           type="warning"
           class="filter-item"
-        /> -->
+        />
       </template>
     </crudOperation>
   </div>

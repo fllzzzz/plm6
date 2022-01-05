@@ -2,8 +2,8 @@
 <template>
   <div>
     <common-select
-      v-model:value="moduleTypeVal"
-      :options="moduleTypeEnum"
+      v-model="moduleTypeVal"
+      :options="moduleTypeEnum.ENUM"
       :show-all="props.showAllModule"
       :props="selectProps"
       type="enum"
@@ -32,7 +32,7 @@
         <el-option
           v-if="props.unshowOptions.indexOf(item[selectProps.key]) === -1"
           :key="item[selectProps.key]"
-          :label="item[selectProps.label]"
+          :label="item"
           :value="item[selectProps.value]"
         />
       </template>
@@ -132,13 +132,13 @@ watch(
 
 watch(
   () => c_value.value,
-  () => {
-    selectChange()
+  (value) => {
+    selectChange(value)
   }
 )
 
 watch(
-  () => props.value,
+  () => tableTypeOptions.value,
   (value) => {
     if (tableTypeOptions.value && tableTypeOptions.value.length) {
       const exist = tableTypeOptions.value.some(t => t.V === c_value.value)

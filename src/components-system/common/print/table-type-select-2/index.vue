@@ -3,158 +3,154 @@
   <div>
     <el-select
       v-model="c_value"
-      :size="size"
-      :disabled="disabled"
-      :multiple="multiple"
-      :collapse-tags="collapseTags"
+      :size="props.size"
+      :disabled="props.disabled"
+      :multiple="props.multiple"
+      :collapse-tags="props.collapseTags"
       :loading="loading"
-      :clearable="clearable"
-      :filterable="filterable"
-      :placeholder="placeholder"
+      :clearable="props.clearable"
+      :filterable="props.filterable"
+      :placeholder="props.placeholder"
     >
       <el-option
-        v-if="showAll"
+        v-if="props.showAll"
         :key="-1"
-        :label="allLabelText"
+        :label="props.allLabelText"
         :value="undefined"
       />
       <template v-for="item in tableTypeOptions">
         <el-option
-          v-if="unshowOptions.indexOf(item[props.key]) === -1"
-          :key="item[props.key]"
-          :label="item[props.label]"
-          :value="item[props.value]"
+          v-if="unshowOptions.indexOf(item[selectProps.key]) === -1"
+          :key="item[selectProps.key]"
+          :label="item[selectProps.label]"
+          :value="item[selectProps.value]"
         />
       </template>
     </el-select>
   </div>
-
 </template>
 
-<script>
-import enumOperate, { moduleTypeEnum, tableTypeEnum } from '@/utils/print/table-type'
+<script setup>
+import { ref, computed, watch, defineProps, defineEmits } from 'vue'
+
+import enumOperate, { tableTypeEnum } from '@/utils/print/table-type'
 const tableTypeArr = enumOperate.toArr(tableTypeEnum)
 
-export default {
-  props: {
-    // eslint-disable-next-line vue/require-default-prop
-    value: {
-      type: [Number, String, Array]
-    },
-    options: {
-      type: [Array, Object],
-      default: () => []
-    },
-    moduleType: {
-      type: [Number, String],
-      default: undefined
-    },
-    size: {
-      type: String,
-      default: 'small'
-    },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    clearable: {
-      type: Boolean,
-      default: false
-    },
-    filterable: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    collapseTags: {
-      type: Boolean,
-      default: false
-    },
-    showAll: {
-      type: Boolean,
-      default: false
-    },
-    default: {
-      type: Boolean,
-      default: false
-    },
-    unshowOptions: { // value
-      type: Array,
-      default: () => []
-    },
-    placeholder: {
-      type: String,
-      default: '请选择表格'
-    },
-    allLabelText: {
-      type: String,
-      default: '模块下所有表格模板'
-    }
+const emit = defineEmits(['update:value', 'change'])
+
+const props = defineProps({
+  value: {
+    type: [Number, String, Array],
+    default: undefined
   },
-  data() {
-    return {
-      loading: false,
-      c_value: undefined,
-      defaultValue: undefined,
-      props: { key: 'K', label: 'L', value: 'K' },
-      moduleTypeEnum,
-      tableTypeEnum,
-      tableTypeArr
-    }
+  options: {
+    type: [Array, Object],
+    default: () => []
   },
-  computed: {
-    tableTypeOptions() {
-      if (this.moduleType) {
-        return tableTypeArr.filter(item => {
-          return item.T === this.moduleType
-        })
-      } else {
-        return tableTypeArr
-      }
-    }
+  moduleType: {
+    type: [Number, String],
+    default: undefined
   },
-  watch: {
-    value: {
-      handler(val) {
-        this.c_value = val
-      }, immediate: true
-    },
-    tableTypeOptions: {
-      handler() {
-        if (this.tableTypeOptions && this.tableTypeOptions.length) {
-          const exist = this.tableTypeOptions.some(t => t.V === this.c_value)
-          if (!exist) {
-            if (this.default) {
-              this.c_value = this.tableTypeOptions[0].V
-            } else {
-              this.c_value = undefined
-            }
-          }
-        } else {
-          this.c_value = undefined
-        }
-      }, immediate: true
-    },
-    c_value: {
-      handler(val) {
-        this.selectChange(val)
-      }
-    }
+  size: {
+    type: String,
+    default: 'small'
   },
-  created() {
-    this.c_value = this.value
+  multiple: {
+    type: Boolean,
+    default: false
   },
-  methods: {
-    selectChange(val) {
-      this.$emit('update:value', val)
-      this.$emit('change', val)
-    },
-    getOptions() {
-      return this.options
-    }
+  clearable: {
+    type: Boolean,
+    default: false
+  },
+  filterable: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  collapseTags: {
+    type: Boolean,
+    default: false
+  },
+  showAll: {
+    type: Boolean,
+    default: false
+  },
+  default: {
+    type: Boolean,
+    default: false
+  },
+  unshowOptions: { // value
+    type: Array,
+    default: () => []
+  },
+  placeholder: {
+    type: String,
+    default: '请选择表格'
+  },
+  allLabelText: {
+    type: String,
+    default: '模块下所有表格模板'
   }
+})
+
+const loading = ref(false)
+const c_value = ref(undefined)
+const selectProps = ref({ key: 'K', label: 'L', value: 'K' })
+
+const tableTypeOptions = computed(() => {
+  if (props.moduleType) {
+    return tableTypeArr.filter(item => {
+      return item.T === props.moduleType
+    })
+  }
+  return tableTypeArr
+})
+
+watch(
+  () => props.value,
+  (value) => {
+    c_value.value = value
+  },
+  { immediate: true }
+)
+
+watch(
+  () => c_value.value,
+  (value) => {
+    selectChange(value)
+  }
+)
+
+watch(
+  () => tableTypeOptions.value,
+  (value) => {
+    if (tableTypeOptions.value && tableTypeOptions.value.length) {
+      const exist = tableTypeOptions.value.some(t => t.V === c_value.value)
+      if (!exist) {
+        if (props.default) {
+          c_value.value = tableTypeOptions.value[0].V
+        } else {
+          c_value.value = undefined
+        }
+      }
+    } else {
+      c_value.value = undefined
+    }
+  },
+  { immediate: true }
+)
+
+function selectChange(val) {
+  emit('update:value', val)
+  emit('change', val)
+}
+
+// eslint-disable-next-line no-unused-vars
+function getOptions() {
+  return props.options
 }
 </script>

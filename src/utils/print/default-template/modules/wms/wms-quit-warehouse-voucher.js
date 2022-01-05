@@ -111,7 +111,7 @@ const WMS_QUIT_WAREHOUSE_VOUCHER = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'storageNo', title: '入库单号：', width: 120, type: typeEnum.CONTRACT_NO.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '供应商：', width: 55, type: typeEnum.COMPANY_NAME.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目：', width: 120, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'projectName', title: '项目：', width: 120, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'returnWarehouseTime', title: '退库时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }

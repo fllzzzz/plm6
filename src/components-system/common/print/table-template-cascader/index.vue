@@ -22,7 +22,7 @@ import { tableTypeEnum } from '@/utils/print/table-type'
 import printTemplate from '@/utils/print/default-template'
 import { isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
 
-const emit = defineEmits(['update:value', 'change'])
+const emit = defineEmits(['update:value', 'change', 'onload'])
 
 const props = defineProps({
   value: {
@@ -136,7 +136,7 @@ function handleChange(val) {
 }
 async function fetch() {
   loading.value = true
-  const options = [] // 初始化options
+  const _options = [] // 初始化options
   let dataSource = [] // 初始化数据源
   const types = props.tableTypes
   const typeMap = {}
@@ -174,7 +174,7 @@ async function fetch() {
         })
         defaultValue = defaultValue || k
       }
-      options.push({
+      _options.push({
         id: `-${tableTypeEnum[k].V}`,
         name: tableTypeEnum[k].L,
         key: k,
@@ -182,7 +182,7 @@ async function fetch() {
       })
     }
     // 按key排序
-    options.sort((a, b) => {
+    _options.sort((a, b) => {
       const aIndex = props.tableTypes.indexOf(a.key)
       const bIndex = props.tableTypes.indexOf(b.key)
       return aIndex - bIndex
@@ -196,8 +196,9 @@ async function fetch() {
       }
     }
     dataSource.value = dataSource
-    options.value = options
+    options.value = _options
     loading.value = false
+    emit('onload')
   }
 }
 </script>

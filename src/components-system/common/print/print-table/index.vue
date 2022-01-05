@@ -134,7 +134,6 @@ const api_key = computed(() => { // api_key
     const currentTableType = config.value.type
     if (props.apiKey instanceof Array) {
       for (const _key of props.apiKey) {
-        // console.log(_key === currentTableType || apikey[_key] === currentTableType)
         if (_key === currentTableType || apikey[_key] === currentTableType) {
           return _key
         }

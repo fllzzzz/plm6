@@ -6,7 +6,7 @@
  */
 // 备注：增加了每项内容的margin
 import { toThousand } from '@/utils/data-type/number'
-import { isNotBlank } from '@data-type/index'
+import { isBlank, isNotBlank } from '@data-type/index'
 import { emptyTextFormatter } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
 
@@ -39,7 +39,7 @@ let LODOP
  * @author duhh
  */
 async function printTable({ header, table, footer, qrCode, config, printMode = PrintMode.QUEUE.V } = {}, intCopies = 1) {
-  if (!isNotBlank(config)) {
+  if (isBlank(config)) {
     throw new Error('打印未配置')
   }
   let result = false
@@ -78,7 +78,7 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
         tbOffset2Top += config.header.height
       }
       // title显示且表头信息不显示的情况
-      if (isNotBlank(config.title) && config.title.show && (!isNotBlank(config.header) || !config.header.show)) {
+      if (isNotBlank(config.title) && config.title.show && (isBlank(config.header) || !config.header.show)) {
         prevHeight += notHeaderSpacing // 增加表格与table之间的间距
         if (!config.title.allPage) {
           // 如果title不是每页都显示，则增加table次页偏移距离
@@ -134,16 +134,15 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
       }
       LODOP.SET_PRINT_COPIES(intCopies) // 打印份数
       result = await printByMode(printMode)
-      // result = await printByMode(4)
-      return result
     }
     if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
       var img = new Image()
-      img.addEventListener('load', loadHandler)
+      img.addEventListener('load', await loadHandler)
       img.src = config.logo.url
     } else {
-      loadHandler()
+      await loadHandler()
     }
+    return result
   } catch (error) {
     throw new Error(error)
   }
@@ -166,7 +165,7 @@ function setColumns(config) {
  * @param {object} config 标题的配置信息
  */
 function getTitleHtml(config) {
-  if (!isNotBlank(config) || !config.show) {
+  if (isBlank(config) || !config.show) {
     return ''
   }
   let html = TITLE_STYLE + config.style
@@ -248,7 +247,7 @@ function getFooterHtml(data, globalConfig) {
  * @param {object} config 页码的配置信息
  */
 function getPageHtml(config) {
-  if (!isNotBlank(config) || !config.show) {
+  if (isBlank(config) || !config.show) {
     return ''
   }
 
@@ -258,7 +257,7 @@ function getPageHtml(config) {
 }
 
 function getLogoHtml(config) {
-  if (!isNotBlank(config) || !config.show) {
+  if (isBlank(config) || !config.show) {
     return ''
   }
   let html = LOGO_STYLE + config.style
@@ -762,7 +761,7 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
   if (field.source === dataSourceEnum.CUSTOMIZE.V) {
     emptyVal = ''
   }
-  const needParse = !isNotBlank(val) && isNotBlank(row) && isNotBlank(field)
+  const needParse = isBlank(val) && isNotBlank(row) && isNotBlank(field)
   if (needParse) {
     val = keyParse(row, field.key)
   }
@@ -840,9 +839,9 @@ function enumFormat(val, format) {
  * @return {string} 项目名称
  */
 function projectNameFormat(val, format = {}) {
-  if (!isNotBlank(format)) {
+  if (isBlank(format)) {
     // 默认只显示项目简称
-    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }
+    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }
   }
   return projectNameFormatter(val, format, format.lineBreak)
 }

@@ -115,7 +115,7 @@ watch(
 )
 
 watch(
-  () => props.c_value,
+  () => c_value.value,
   (value) => {
     selectChange(value)
   }

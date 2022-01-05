@@ -1,4 +1,4 @@
-// import contract from '@/api/print/contract'
+import contract from '@/api/print/contract'
 // import costCenter from '@/api/print/cost-center'
 // import contractDetail from '@/api/print/contract-detail'
 // import supplier from '@/api/print/supplier'
@@ -15,7 +15,7 @@
 // import bridgeLogistics from '@/api/print/bridge/logistics'
 // import bridgeProduction from '@/api/print/bridge/production'
 
-// const CONTRACT_LEDGER = contract.contractLedger
+const CONTRACT_LEDGER = contract.contractLedger
 // const PROJECT_COLLECTION_SUMMARY = contract.projectCollectionSummary
 // const PROJECT_COLLECTION_DETAIL = contract.projectCollectionDetail
 // const PROJECT_COLLECTION_TYPE_DETAIL = contract.projectCollectionTypeDetail
@@ -195,17 +195,17 @@
 // const STEEL_MES_REPORT_STEEL_DOSAGE = steelReport.steelDosage
 
 export default {
-//   CONTRACT_LEDGER, // 合同台账
-//   PROJECT_COLLECTION_SUMMARY, // 项目收款汇总
-//   PROJECT_COLLECTION_DETAIL, // 项目收款明细
-//   PROJECT_COLLECTION_TYPE_DETAIL, // 项目收款分类明细
-//   PROJECT_INVOICE_DETAIL, // 项目开票明细
-//   PROJECT_ARREARS_WARNING, // 项目欠款预警
-//   COMPANY_COLLECTION_PLAN, // 项目收款计划（月）
-//   COMPANY_COLLECTION_PLAN_EXECUTION, // 项目收款计划执行（月）
-//   PROJECT_REIMBURSEMENT, // 项目报销记录
-//   SHIP_INFO, // 发运信息
-//   PROJECT_EXECUTION_LEDGER, // 项目台账
+  CONTRACT_LEDGER // 合同台账
+  //   PROJECT_COLLECTION_SUMMARY, // 项目收款汇总
+  //   PROJECT_COLLECTION_DETAIL, // 项目收款明细
+  //   PROJECT_COLLECTION_TYPE_DETAIL, // 项目收款分类明细
+  //   PROJECT_INVOICE_DETAIL, // 项目开票明细
+  //   PROJECT_ARREARS_WARNING, // 项目欠款预警
+  //   COMPANY_COLLECTION_PLAN, // 项目收款计划（月）
+  //   COMPANY_COLLECTION_PLAN_EXECUTION, // 项目收款计划执行（月）
+  //   PROJECT_REIMBURSEMENT, // 项目报销记录
+  //   SHIP_INFO, // 发运信息
+  //   PROJECT_EXECUTION_LEDGER, // 项目台账
 
   //   PROJECT_MATERIAL_COSTS_DETAIL, // 材料成本
 

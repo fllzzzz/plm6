@@ -78,11 +78,22 @@ const fieldTypeEnum = {
 
   CONTRACT_NO: { L: '合同编号', K: 'CONTRACT_NO' },
   PROJECT: { L: '项目名称', K: 'PROJECT' },
+  FACTORY_NAME: { L: '工厂名称', K: 'FACTORY_NAME' },
+  MONOMER_NAME: { L: '单体名称', K: 'MONOMER_NAME' },
+  AREA_NAME: { L: '区域名称', K: 'AREA_NAME' },
+  AREA_DIVIDE: { L: '区域划分', K: 'AREA_DIVIDE' },
+  AREA_AXIS: { L: '轴线/标高', K: 'AREA_AXIS' },
   WAREHOUSE_NAME: { L: '仓库', K: 'WAREHOUSE_NAME' },
+
+  COMPONENT_PROCESS: { L: '工序', K: 'COMPONENT_PROCESS' },
+  PRODUCTION_LINE: { L: '生产线', K: 'PRODUCTION_LINE' },
+  TEAM_NAME: { L: '班组名称', K: 'TEAM_NAME' },
 
   SUBJECT_NAME: { L: '科目名称', K: 'SUBJECT_NAME' },
   SUBJECT_CODE: { L: '科目编号', K: 'SUBJECT_CODE' },
   SERIAL_NUMBER: { L: '物料编号', K: 'SERIAL_NUMBER' },
+  STRUCTURE_NAME: { L: '构件名称', K: 'STRUCTURE_NAME' },
+  ENCLOSURE_NAME: { L: '围护名称', K: 'ENCLOSURE_NAME' },
   MATERIAL_CLASS_FULL_NAME: { L: '物料种类全称', K: 'MATERIAL_CLASS_FULL_NAME' },
   MATERIAL_CLASS_NAME: { L: '物料种类', K: 'MATERIAL_CLASS_NAME' },
   MATERIAL: { L: '材质', K: 'MATERIAL' },

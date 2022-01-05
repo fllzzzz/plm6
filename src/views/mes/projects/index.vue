@@ -36,6 +36,11 @@
             <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.endDate }}</div>
           </template>
         </el-table-column>
+        <el-table-column v-if="columns.visible('completeDate')" key="completeDate" prop="completeDate" label="完成日期" align="center" width="100" >
+          <template v-slot="scope">
+            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.completeDate }}</div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="工期(天)" align="center" width="100">
           <template v-slot="scope">
             <div>{{ scope.row.allDays }}</div>
@@ -101,7 +106,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['createTime'],
+    invisibleColumns: ['completeDate', 'createTime'],
     hasPagination: true
   },
   tableRef
