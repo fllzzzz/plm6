@@ -55,7 +55,7 @@
   <crudOperation>
     <template #optRight>
       <el-popover placement="bottom-start" width="400" trigger="click">
-        <el-form ref="form" :model="printConfig" label-width="90px">
+        <el-form ref="form" :model="printConfig">
           <!-- <el-form-item label="制造商名称">
               <el-input v-model="printConfig.manufacturerName" size="small" style="width:250px" />
             </el-form-item> -->
@@ -121,7 +121,7 @@ import rrOperation from '@crud/RR.operation'
 
 const emit = defineEmits(['getDetail'])
 const permission = inject('permission')
-const { companyName } = mapGetters(['companyName'])
+const { users } = mapGetters(['users'])
 const defaultQuery = {
   serialNumber: undefined,
   userName: undefined,
@@ -135,7 +135,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const printConfig = reactive({
-  manufacturerName: companyName,
+  manufacturerName: users.companyName,
   copies: 1
 })
 
@@ -202,7 +202,7 @@ async function getLabelInfo(row) {
     serialNumber: row.serialNumber,
     list: _list,
     productType: row.productType,
-    companyName: '山东经典钢构股份有限公司'
+    companyName: printConfig.companyName
   }
   // 生产线信息
   return {
