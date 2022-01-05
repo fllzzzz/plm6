@@ -16,24 +16,31 @@
     <el-table-column v-if="modifying" type="selection" :selectable="selectableFunc" width="55" align="center" />
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column
-      v-if="columns.visible('productionLineName')"
-      prop="productionLineName"
+      v-if="columns.visible('productionLine.name')"
+      prop="productionLine.name"
       :show-overflow-tooltip="true"
       label="生产线"
       min-width="140px"
     >
       <template v-slot="scope">
-        <span>{{ emptyTextFormatter(scope.row.workshopName) }}>{{ emptyTextFormatter(scope.row.productionLineName) }}</span>
+        <span>{{ emptyTextFormatter(scope.row.workshop?.name) }}>{{ emptyTextFormatter(scope.row.productionLine?.name) }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectName')" prop="project" label="所属项目" min-width="250px">
-      <template v-slot="scope">
-        <span>{{ emptyTextFormatter(scope.row.projectName) }}</span>
+    <el-table-column
+      v-if="columns.visible('project.shortName')"
+      prop="project.shortName"
+      :show-overflow-tooltip="true"
+      label="所属项目"
+      min-width="180px"
+      :fixed="fixed"
+    >
+      <template #default="{ row }">
+        <span v-parse-project="{ project: row.project }" v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('areaName')" prop="areaName" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
+    <el-table-column v-if="columns.visible('area.name')" prop="area.name" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
       <template v-slot="scope">
-        <span>{{ emptyTextFormatter(scope.row.monomerName) }}>{{ emptyTextFormatter(scope.row.areaName) }}</span>
+        <span>{{ emptyTextFormatter(scope.row.monomer?.name) }}>{{ emptyTextFormatter(scope.row.area?.name) }}</span>
       </template>
     </el-table-column>
     <productType-base-info-columns
@@ -298,11 +305,6 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.operable = !v.issueStatus
     v.sourceSchedulingQuantity = v.schedulingQuantity
     v.modifySchedulingQuantity = v.schedulingQuantity
-    v.project = {
-      id: v.projectId,
-      name: v.projectName,
-      shortName: v.projectShortName
-    }
     return v
   })
 }

@@ -19,13 +19,13 @@
     </template>
     <el-form ref="formRef" :model="details" :rules="rules" size="small" label-width="100px">
       <el-form-item label="生产线">
-        <span>{{ emptyTextFormatter(details.workshopName) }}>{{ emptyTextFormatter(details.productionLineName) }}</span>
+        <span>{{ emptyTextFormatter(details.workshop?.name) }}>{{ emptyTextFormatter(details.productionLine?.name) }}</span>
       </el-form-item>
       <el-form-item label="所属项目">
-        <span>{{ emptyTextFormatter(details.projectName) }}</span>
+        <span>{{ emptyTextFormatter(details.project?.name) }}</span>
       </el-form-item>
       <el-form-item label="单体区域">
-        <span>{{ emptyTextFormatter(details.monomerName) }}>{{ emptyTextFormatter(details.areaName) }}</span>
+        <span>{{ emptyTextFormatter(details.monomer?.name) }}>{{ emptyTextFormatter(details.area?.name) }}</span>
       </el-form-item>
       <el-form-item label="编号">
         <span>{{ emptyTextFormatter(details.productSerialNumber) }}</span>

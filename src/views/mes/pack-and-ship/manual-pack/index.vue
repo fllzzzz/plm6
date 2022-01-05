@@ -72,7 +72,7 @@ const packData = reactive({
 const totalBadge = computed(() => {
   let num = 0
   for (const item in packData) {
-    num += Object.keys(packData[item]).length
+    num += packData[item] ? Object.keys(packData[item]).length : 0
   }
   return num
 })
