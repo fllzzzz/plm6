@@ -5,16 +5,25 @@
  * @author duhh
  */
 // 备注：增加了每项内容的margin
-import { toThousand, emptyTextFormatter, isNotBlank, convertUnits } from '@/utils'
-import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from './enum'
-import { convertColumns, delNotDisplayed, getLastColumns } from './page-handle'
-import enumOperate, { projectNameArrangementModeEnum } from '@/utils/enum'
-import { projectNameFormatter, getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
+import { toThousand } from '@/utils/data-type/number'
+import { isBlank, isNotBlank } from '@data-type/index'
+import { emptyTextFormatter } from '@/utils/data-type'
+import { convertUnits } from '@/utils/convert/unit'
+
+import { projectNameFormatter } from '@/utils/project'
+import { matClsEnum } from '@enum-ms/classification'
+
+import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from '../enum'
+import { convertColumns, delNotDisplayed, getLastColumns } from '../page-handle'
+
+import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import EO from '@/utils/enum'
+import { getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/unit'
 import enumAll from '@/utils/enum/all'
-import { minUnit } from '@/utils/constant'
+import { MIN_UNIT } from '@/settings/config'
 import moment from 'moment'
-import { getLODOP, printByMode } from './base'
-import _ from 'lodash'
+import { getLODOP, printByMode } from '../base'
+import * as lodash from 'lodash'
 
 let LODOP
 
@@ -30,7 +39,7 @@ let LODOP
  * @author duhh
  */
 async function printTable({ header, table, footer, qrCode, config, printMode = PrintMode.QUEUE.V } = {}, intCopies = 1) {
-  if (!isNotBlank(config)) {
+  if (isBlank(config)) {
     throw new Error('打印未配置')
   }
   let result = false
@@ -69,7 +78,7 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
         tbOffset2Top += config.header.height
       }
       // title显示且表头信息不显示的情况
-      if (isNotBlank(config.title) && config.title.show && (!isNotBlank(config.header) || !config.header.show)) {
+      if (isNotBlank(config.title) && config.title.show && (isBlank(config.header) || !config.header.show)) {
         prevHeight += notHeaderSpacing // 增加表格与table之间的间距
         if (!config.title.allPage) {
           // 如果title不是每页都显示，则增加table次页偏移距离
@@ -125,16 +134,15 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
       }
       LODOP.SET_PRINT_COPIES(intCopies) // 打印份数
       result = await printByMode(printMode)
-      // result = await printByMode(4)
-      return result
     }
     if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
       var img = new Image()
-      img.addEventListener('load', loadHandler)
+      img.addEventListener('load', await loadHandler)
       img.src = config.logo.url
     } else {
-      loadHandler()
+      await loadHandler()
     }
+    return result
   } catch (error) {
     throw new Error(error)
   }
@@ -157,7 +165,7 @@ function setColumns(config) {
  * @param {object} config 标题的配置信息
  */
 function getTitleHtml(config) {
-  if (!isNotBlank(config) || !config.show) {
+  if (isBlank(config) || !config.show) {
     return ''
   }
   let html = TITLE_STYLE + config.style
@@ -239,7 +247,7 @@ function getFooterHtml(data, globalConfig) {
  * @param {object} config 页码的配置信息
  */
 function getPageHtml(config) {
-  if (!isNotBlank(config) || !config.show) {
+  if (isBlank(config) || !config.show) {
     return ''
   }
 
@@ -249,7 +257,7 @@ function getPageHtml(config) {
 }
 
 function getLogoHtml(config) {
-  if (!isNotBlank(config) || !config.show) {
+  if (isBlank(config) || !config.show) {
     return ''
   }
   let html = LOGO_STYLE + config.style
@@ -753,7 +761,7 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
   if (field.source === dataSourceEnum.CUSTOMIZE.V) {
     emptyVal = ''
   }
-  const needParse = !isNotBlank(val) && isNotBlank(row) && isNotBlank(field)
+  const needParse = isBlank(val) && isNotBlank(row) && isNotBlank(field)
   if (needParse) {
     val = keyParse(row, field.key)
   }
@@ -808,7 +816,7 @@ function enumFormat(val, format) {
     const enumK = enumAll[format.enum]
     if (format.bit) {
       // 位运算的值
-      const enums = enumOperate.toArr(enumK)
+      const enums = EO.toArr(enumK)
       const res = []
       enums.forEach(e => {
         if (e.V & val) {
@@ -817,7 +825,7 @@ function enumFormat(val, format) {
       })
       return res.join('/')
     } else {
-      const enumV = enumOperate.key2val(enumK)
+      const enumV = EO.key2val(enumK)
       return isNotBlank(enumV) && isNotBlank(enumV[val]) ? enumV[val][key] || enumV[val]['L'] : ''
     }
   }
@@ -831,9 +839,9 @@ function enumFormat(val, format) {
  * @return {string} 项目名称
  */
 function projectNameFormat(val, format = {}) {
-  if (!isNotBlank(format)) {
+  if (isBlank(format)) {
     // 默认只显示项目简称
-    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }
+    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }
   }
   return projectNameFormatter(val, format, format.lineBreak)
 }
@@ -917,7 +925,7 @@ function weightFormat(val, format = {}) {
   if (isNotBlank(_val)) {
     // 单位转换
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.WEIGHT, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -941,7 +949,7 @@ function lengthFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.LENGTH, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -965,7 +973,7 @@ function thicknessFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, minUnit.THICKNESS, format.unit)
+      _val = convertUnits(_val, MIN_UNIT.THICKNESS, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1004,7 +1012,7 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
         if (checkUnit) {
           _unit = checkUnit
         } else {
-          _unit = getBasicClassUnit(basicClass)
+          _unit = matClsEnum(basicClass)
         }
       }
       if (isNotBlank(materialType)) {
@@ -1150,7 +1158,7 @@ function keyParse(data, key) {
       return data[keys[0]]
     } else {
       return keys.reduce((cur, key) => {
-        return _.isPlainObject(cur) ? cur[key] : undefined
+        return lodash.isPlainObject(cur) ? cur[key] : undefined
       }, data)
     }
   }

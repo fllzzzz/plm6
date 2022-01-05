@@ -105,7 +105,7 @@ const BRIDGE_MES_BUSINESS_TRIP_TRACKING = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'manufactureType', title: '类型：', width: 70, type: typeEnum.ENUM.K, format: { enum: 'manufactureTypeEnum', key: 'L' }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'licensePlate', title: '车牌号：', width: 60, type: typeEnum.LICENSE_PLATE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'deliveryTime', title: '发货日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD' },

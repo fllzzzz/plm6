@@ -106,9 +106,9 @@ const WMS_RETURN_WAREHOUSE_VOUCHER = {
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'returnNo', title: 'NO：', width: 135, type: typeEnum.GUID.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'createTime', title: '还库时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'originProject', title: '原属地：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'originProject', title: '原属地：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'createUserName', title: '办理人：', width: 55, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'targetProject', title: '还库至：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'targetProject', title: '还库至：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'checkUserName', title: '审核人：', width: 55, type: typeEnum.USER_NAME.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
