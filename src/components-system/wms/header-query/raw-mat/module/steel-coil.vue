@@ -18,16 +18,16 @@
     @keyup.enter="toQuery"
   />
   <el-input
-    v-model.trim="queryVO.theoryThickness"
+    v-model.trim="queryVO.thickness"
     clearable
     style="width: 130px"
     size="small"
-    placeholder="理论厚度"
+    placeholder="厚度"
     class="filter-item"
     @keyup.enter="toQuery"
   />
   <el-input
-    v-model.trim="queryVO.theoryThickness"
+    v-model.trim="queryVO.width"
     clearable
     style="width: 130px"
     size="small"

@@ -34,7 +34,14 @@
         <br />
         <div class="flex-rbc">
           <el-form-item label="类型">
-            <common-radio-button type="enum" v-model="filterParams.type" :options="projectWareTypeEnum" show-option-all clearable />
+            <common-radio-button
+              type="enum"
+              v-model="filterParams.type"
+              :options="projectWareTypeEnum"
+              :disabled-val="projectWareTypeDisabled"
+              show-option-all
+              clearable
+            />
           </el-form-item>
           <div>
             <el-form-item label="只看填写归还数量的材料" label-width="170px">
@@ -78,7 +85,7 @@
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
-        <material-unit-operate-quantity-columns :basic-class="basicClass"  />
+        <material-unit-operate-quantity-columns :basic-class="basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns show-project />
@@ -111,6 +118,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
+import useWmsConfig from '@/composables/store/use-wms-config'
 import FactorySelect from '@/components-system/base/factory-select.vue'
 import WarehouseSelect from '@/components-system/wms/warehouse-select.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -170,6 +178,8 @@ const filterParams = ref({
   type: projectWareTypeEnum.CUR_PROJECT.V,
   hasReturnedQuantity: false
 })
+// 禁用类型
+const projectWareTypeDisabled = ref([])
 // 提交表单
 const form = ref({
   list: []
@@ -178,6 +188,20 @@ const form = ref({
 const submitLoading = ref(false)
 // 显示
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
+//
+const { partyABorrowReturnCfg } = useWmsConfig()
+
+watch(
+  partyABorrowReturnCfg,
+  () => {
+    if (partyABorrowReturnCfg.value && partyABorrowReturnCfg.value.boolReturnByOtherProject) {
+      projectWareTypeDisabled.value = []
+    } else {
+      projectWareTypeDisabled.value = [projectWareTypeEnum.OTHER_PROJECT.V]
+    }
+  },
+  { immediate: true, deep: true }
+)
 // 表格最大高度
 const { maxHeight } = useMaxHeight(
   {
