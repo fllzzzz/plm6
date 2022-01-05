@@ -1,12 +1,13 @@
 <template>
   <template v-if="loaded">
-    <el-table-column v-if="showMeasureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
+    <el-table-column v-if="showMeasureUnit" prop="measureUnit" key="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
     <el-table-column
       v-if="showQuantity"
+      key="quantity"
       prop="quantity"
       :label="quantityLabel"
       show-overflow-tooltip
@@ -24,12 +25,12 @@
         <span v-else v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
+    <el-table-column v-if="showAccountingUnit" key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
       <template #default="{ row }">
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showMete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
+    <el-table-column v-if="showMete" key="mete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
       <template #default="{ row }">
         <template v-if="showOperableMete">
           <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />

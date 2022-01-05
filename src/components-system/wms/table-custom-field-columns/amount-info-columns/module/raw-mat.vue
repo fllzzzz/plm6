@@ -1,16 +1,17 @@
 <template>
-  <el-table-column v-if="showUnitPrice" :prop="`${field}.unitPrice`" label="含税单价" align="right" width="90px" show-overflow-tooltip>
+  <el-table-column v-if="showUnitPrice" :key="`${field}.unitPrice`" :prop="`${field}.unitPrice`" label="含税单价" align="right" width="90px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ getInfo(row, 'unitPrice') }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showAmount" :prop="`${field}.amount`" label="金额" align="right" width="105px" show-overflow-tooltip>
+  <el-table-column v-if="showAmount" :key="`${field}.amount`" :prop="`${field}.amount`" label="金额" align="right" width="105px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ getInfo(row, 'amount') }}</span>
     </template>
   </el-table-column>
   <el-table-column
     v-if="showAmountExcludingVAT"
+    :key="`${field}.amountExcludingVAT`"
     :prop="`${field}.amountExcludingVAT`"
     label="不含税金额"
     align="right"
@@ -21,7 +22,7 @@
       <span v-empty-text v-thousand>{{ getInfo(row, 'amountExcludingVAT') }}</span>
     </template>
   </el-table-column>
-  <el-table-column v-if="showInputVAT" :prop="`${field}.inputVAT`" label="进项税" align="right" width="90px" show-overflow-tooltip>
+  <el-table-column v-if="showInputVAT" :key="`${field}.inputVAT`" :prop="`${field}.inputVAT`" label="进项税" align="right" width="90px" show-overflow-tooltip>
     <template #default="{ row }">
       <span v-empty-text v-thousand>{{ getInfo(row, 'inputVAT') }}</span>
     </template>

@@ -1,11 +1,11 @@
 <template>
-  <el-table-column v-if="showProject" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
+  <el-table-column v-if="showProject" key="project" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
     <template #default="{ row }">
       <table-cell-tag v-if="showTransfer && row.boolTransfer" name="调拨" :color="TAG_TRANSFER_COLOR" :offset="15" />
       <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column v-if="showWarehouse" prop="warehouse" label="仓库" align="left" min-width="110px" show-overflow-tooltip>
+  <el-table-column v-if="showWarehouse" key="warehouse" prop="warehouse" label="仓库" align="left" min-width="110px" show-overflow-tooltip>
     <template #default="{ row }">
       <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
       <span v-empty-text>{{ row.warehouse ? row.warehouse.name : row.warehouseName }}</span>

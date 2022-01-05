@@ -2,6 +2,7 @@
   <template v-if="loaded">
     <el-table-column
       v-if="showMeasureUnit"
+      :key="`${field}.measureUnit`"
       :prop="`${field}.measureUnit`"
       label="计量单位"
       align="center"
@@ -14,6 +15,7 @@
     </el-table-column>
     <el-table-column
       v-if="showQuantity"
+      :key="`${field}.quantity`"
       :prop="`${field}.quantity`"
       :label="quantityLabel"
       align="right"
@@ -33,6 +35,7 @@
     </el-table-column>
     <el-table-column
       v-if="showAccountingUnit"
+      :key="`${field}.accountingUnit`"
       :prop="`${field}.accountingUnit`"
       label="核算单位"
       align="center"
@@ -43,7 +46,15 @@
         <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showMete" :prop="`${field}.mete`" :label="mateLabel" align="right" min-width="150px" show-overflow-tooltip>
+    <el-table-column
+      v-if="showMete"
+      :key="`${field}.mete`"
+      :prop="`${field}.mete`"
+      :label="mateLabel"
+      align="right"
+      min-width="150px"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">
           {{ getInfo(row, 'operableMete') }}

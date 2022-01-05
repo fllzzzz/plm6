@@ -2,6 +2,7 @@
   <!-- 钢材宽度100， 其他180 :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined" -->
   <el-table-column
     v-if="showClassifyFullName"
+    :key="`${field}.classifyFullName`"
     :prop="`${field}.classifyFullName`"
     label="物料种类"
     align="center"
@@ -15,6 +16,7 @@
   </el-table-column>
   <el-table-column
     v-if="showSpecification"
+    :key="`${field}.specification`"
     :prop="`${field}.specification`"
     label="规格"
     width="270"

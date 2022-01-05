@@ -3,6 +3,7 @@
     <template v-if="outboundTypeMode">
       <el-table-column
         v-if="showOutboundUnit"
+        :key="`${field}.outboundUnit`"
         :prop="`${field}.outboundUnit`"
         label="单位"
         align="center"
@@ -13,7 +14,15 @@
           <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCurQuantity" :prop="`${field}.curQuantity`" label="数量" align="right" width="100px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showCurQuantity"
+        :key="`${field}.curQuantity`"
+        :prop="`${field}.curQuantity`"
+        label="数量"
+        align="right"
+        width="100px"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span v-empty-text v-to-fixed="getInfo(row, 'outboundUnitPrecision')">
             {{ getInfo(row, 'curOutboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
@@ -24,6 +33,7 @@
     <template v-else>
       <el-table-column
         v-if="showMeasureUnit"
+        :key="`${field}.measureUnit`"
         :prop="`${field}.measureUnit`"
         label="计量单位"
         align="center"
@@ -36,6 +46,7 @@
       </el-table-column>
       <el-table-column
         v-if="showQuantity"
+        :key="`${field}.${quantityField}`"
         :prop="`${field}.${quantityField}`"
         :label="quantityLabel"
         align="right"
@@ -51,6 +62,7 @@
       </el-table-column>
       <el-table-column
         v-if="showAccountingUnit"
+        :key="`${field}.accountingUnit`"
         :prop="`${field}.accountingUnit`"
         label="核算单位"
         align="center"
