@@ -184,7 +184,7 @@ const quantityLabel = computed(() => {
         label = `长度(${unitInfo.value.measure.unit})`
         break
       case STEEL_ENUM:
-        label = `数量(${unitInfo.value.measure.unit})`
+        label = `数量`
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:

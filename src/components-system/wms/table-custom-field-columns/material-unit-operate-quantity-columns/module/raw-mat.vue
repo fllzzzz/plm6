@@ -126,7 +126,7 @@ const quantityLabel = computed(() => {
     case rawMatClsEnum.STEEL_COIL.V:
       return `长度(${unitInfo.value.measure.unit})`
     case STEEL_ENUM:
-      return `数量(${unitInfo.value.measure.unit})`
+      return `数量`
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:
