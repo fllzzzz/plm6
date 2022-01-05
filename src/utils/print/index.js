@@ -1,7 +1,8 @@
 import { printModeEnum as PrintMode } from './enum'
 import { getLODOP, printByMode, combineHtml } from './base'
 import { projectNameFormatter } from '@/utils/project'
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, labelTypeEnum } from '@enum-ms/mes'
+import { getPrintLabelHtml } from '@/utils/label/index'
 
 let LODOP
 
@@ -10,59 +11,19 @@ let LODOP
    * 打印构件
    * @param {object}
    * @param component 构件信息
-   * @param productionLineName 生产线名称
    * @param manufacturerName 制造商
    * @param qrCode 构件二维码
    * @param printMode 打印模式
    * @author duhh
    */
-async function printArtifact({ component, productionLineName, manufacturerName, qrCode, printMode = PrintMode.QUEUE.V }) {
-  const bodyHtml = `
-    <div class="artifact-label">
-    <div class="row">
-      <div class="col">${component.projectName}</div>
-      <div class="col">${component.monomerName}</div>
-    </div>
-    <div class="row row-2">
-      <div class="col col-3" style="position: relative;">
-        <span style="position: absolute; top: -11mm">NO:</span>
-        <span style="font-size: 20pt; font-weight: 600; margin-left: 2.5mm">GZ-UY89</span>
-        <span style="position: absolute; bottom: -8mm; right: 1mm">生产日期：2021/1/1</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">名称：${component.name}</div>
-      <div class="col">数量(件)：${component.quantity}</div>
-      <div class="col">单重(kg)：${component.weight}</div>
-    </div>
-    <div class="bottom-content">
-      <div class="col" style="flex: 2">
-        <div class="row">
-          <div class="col">长度（mm）：</div>
-          <div class="col">规格：</div>
-        </div>
-        <div class="row">
-          <div class="col">区域：第二批（3轴线~15轴线）</div>
-        </div>
-        <div class="row">
-          <div class="col">浙江鸿翔筑能钢结构有限公司</div>
-        </div>
-      </div>
-      <div class="col" style="flex: 1">
-        <div class="row" style="height: 27mm;">
-          <div class="col qr-content">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>`
-  const strHtml = combineHtml(ARTIFACT_STYLE, bodyHtml)
+async function printArtifact({ productType, labelType, component, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getPrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
   let result = false
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '100%', '90%', strHtml)
-    LODOP.ADD_PRINT_BARCODE('39.5mm', '71mm', '34mm', '34mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_HTM('2mm', '3mm', '99%', '95%', strHtml)
+    LODOP.ADD_PRINT_BARCODE('40mm', '75mm', '34mm', '34mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
     LODOP.PRINT_DESIGN()/* 打印设计*/
@@ -84,47 +45,25 @@ async function printArtifact({ component, productionLineName, manufacturerName, 
    * @param printMode 打印模式
    * @author duhh
    */
-async function printEnclosure({ component, productionLineName, manufacturerName, qrCode, printMode = PrintMode.QUEUE.V }) {
-  const bodyHtml = `
-      <table border="1" bordercolor="#000000">
-          <tr>
-              <td class="col-2" colspan="2">${component.projectName}</td>
-              <td>${component.monomerName}</td>
-          </tr>
-          <tr>
-              <td class="col-3" style="font-size: 18pt;font-weight:bold" colspan="3">${component.name}-${component.serialNumber}</td>
-          </tr>
-          <tr>
-              <td>颜色： ${component.color}</td>
-              <td class="col-2" colspan="2">版型：${component.plateType}</td>
-          </tr>
-          <tr>
-              <td>厚度(mm): ${component.thickness}</td>
-              <td>长度(mm): ${component.length}</td>
-              <td>数量：${component.quantity}</td>
-          </tr>
-          <tr>
-              <td class="col-2" colspan="2">区域： ${component.areaName}</td>
-              <td rowspan="3">
-                  <div class="qr-content"></div>
-              </td>
-          </tr>
-          <tr>
-              <td class="col-2" colspan="2">${productionLineName}</td>
-          </tr>
-          <tr>
-              <td class="col-2" colspan="2">${manufacturerName}</td>
-          </tr>
-      </table>`
-  const strHtml = combineHtml(COMPONENT_STYLE, bodyHtml)
+async function printEnclosure({ productType, labelType, component, manufacturerName, printConfig, qrCode, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getPrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
+  console.log(strHtml)
   let result = false
   try {
     LODOP = await getLODOP()
-    LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '100%', '90%', strHtml)
-    LODOP.ADD_PRINT_BARCODE('39.5mm', '71mm', '34mm', '34mm', 'QRCode', qrCode)
+    if (labelType === labelTypeEnum.COMMON.V) {
+      LODOP.SET_PRINT_PAGESIZE(1, 1030, 300, '1') /* 纸张大小*/
+      LODOP.ADD_PRINT_HTM('2mm', '3mm', '100%', '100%', strHtml)
+      LODOP.ADD_PRINT_BARCODE('4mm', '3mm', '25mm', '25mm', 'QRCode', qrCode)
+    }
+    if (labelType === labelTypeEnum.CUSTOM.V) {
+      LODOP.SET_PRINT_PAGESIZE(1, 1030, 500, '1') /* 纸张大小*/
+      LODOP.ADD_PRINT_HTM('2mm', '3mm', '100%', '100%', strHtml)
+      LODOP.ADD_PRINT_BARCODE('21mm', '77.5mm', '25mm', '25mm', 'QRCode', qrCode)
+    }
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+    LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -275,7 +214,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   let result = false
   try {
     LODOP = await getLODOP()
-    LODOP.SET_PRINT_PAGESIZE(1, 750, 1000, '1') /* 纸张大小*/ // 75mm*100mm
+    LODOP.SET_PRINT_PAGESIZE(2, 1000, 750, '1') /* 纸张大小*/ // 100mm* 75mm
     LODOP.ADD_PRINT_HTM('1mm', '1mm', '73mm', '90mm', strHtml)
     LODOP.ADD_PRINT_HTM('95mm', '1mm', '73mm', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
@@ -711,63 +650,6 @@ const LABEL_STYLE = `
   // }
 </style>
 `
-
-const ARTIFACT_STYLE = `
-<style>
-.artifact-label {
-  font-family: '微软雅黑';
-  text-align: left;
-  font-size: 9pt;
-  color: black;
-  box-sizing: border-box;
-}
-
-.qr-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.row {
-  display: flex;
-  border: 1px solid #000;
-  box-sizing: border-box;
-  height: 9mm;
-}
-
-.row-2 {
-  height: 18mm;
-}
-
-.row:not(:last-child) {
-  border-bottom: none;
-}
-
-.row > .col:not(:last-child) {
-  border-right: 1px solid #000;
-}
-
-.row > .col {
-  height: 100%;
-  padding: 0 1mm;
-  line-height: 8mm;
-  box-sizing: border-box;
-  flex: 1;
-  word-break: break-all;
-}
-
-.bottom-content {
-  display: flex;
-  box-sizing: border-box;
-  border-left: 1px solid #000;
-}
-
-.bottom-content .row {
-  border-left: none;
-}
-</style>`
 
 export {
   printArtifact,
