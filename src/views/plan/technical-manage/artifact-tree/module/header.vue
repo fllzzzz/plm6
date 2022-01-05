@@ -56,7 +56,7 @@
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <export-button
           v-if="currentArea && currentArea.id"
@@ -67,6 +67,17 @@
           class="filter-item"
         />
         <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" />
+      </template>
+      <template #viewLeft>
+        <el-tooltip
+          effect="light"
+          :content="`${mismatchList.join(',')}`"
+          placement="top"
+        >
+          <div class="filter-item">
+            <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">存在{{ mismatchList.length }}条错误数据，鼠标悬停查看</el-tag>
+          </div>
+        </el-tooltip>
       </template>
     </crudOperation>
   </div>
@@ -82,7 +93,7 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { downloadArtifactTree, downloadArtifactTreeTemplate } from '@/api/plan/technical-manage/artifact-tree'
+import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact } from '@/api/plan/technical-manage/artifact-tree'
 
 const defaultQuery = {
   artifactName: '',
@@ -98,6 +109,7 @@ const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
 const { crud, query } = regHeader(defaultQuery)
+const mismatchList = ref([])
 const props = defineProps({
   projectId: {
     type: [Number, String],
@@ -113,14 +125,29 @@ watch(
       crud.toQuery()
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
+
+watch(
+  () => query.areaId,
+  (val) => {
+    if (val) {
+      getErrorArtifactData()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
 const carryParam = computed(() => {
   const param = { ...crud.query }
   delete param.machinePartSerialNumber
   return param
 })
 
+function uploadSuccess() {
+  getErrorArtifactData()
+  crud.toQuery
+}
 function tabClick(val) {
   const { name, label } = val
   currentArea.value = {
@@ -138,6 +165,20 @@ function getAreaInfo(val) {
     }
   } else {
     defaultTab.value = {}
+  }
+}
+
+async function getErrorArtifactData() {
+  mismatchList.value = []
+  try {
+    const { content } = await errorArtifact({ areaId: crud.query.areaId })
+    if (content && content.length > 0) {
+      content.map(v => {
+        mismatchList.value.push(v.serialNumber)
+      })
+    }
+  } catch (e) {
+    console.log('获取异常构件', e)
   }
 }
 </script>

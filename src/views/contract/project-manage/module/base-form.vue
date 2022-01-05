@@ -18,11 +18,11 @@
             value-format="x"
             placeholder="选择约定开工日期"
             style="width: 260px"
-            disabled
+            :disabledDate="(date) => { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }"
           />
         </el-form-item>
         <el-form-item label="项目简称" prop="shortName">
-          <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称"  style="width: 320px"/>
+          <el-input v-model.trim="form.shortName" class="input-underline" placeholder="项目简称"  style="width: 320px" maxlength="8"/>
         </el-form-item>
       </div>
       <div class="form-row">
@@ -242,6 +242,8 @@ const rules = {
     { required: true, message: '请填写合同编号', trigger: 'blur' },
     { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }
   ],
+  startDate: [{ required: true, message: '请选择开工日期', trigger: 'change' }],
+  endDate: [{ required: true, message: '请选择完工日期', trigger: 'change' }],
   name: [
     { required: true, message: '请填写项目名称', trigger: 'blur' },
     { min: 1, max: 60, message: '长度在 1 到 60 个字符', trigger: 'blur' }

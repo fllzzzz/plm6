@@ -45,7 +45,7 @@
                 value-format="x"
                 placeholder="选择约定开工日期"
                 style="width:260px"
-                disabled
+                :disabledDate="(date) => { return date.getTime() < originDate }"
               />
               <template v-else>
                 <span>{{ detail.startDate? parseTime(detail.startDate,'{y}-{m}-{d}'): '-' }}</span>
@@ -218,7 +218,7 @@
             </template>
             <template v-else>
               <span>{{ detail.managementFee? toThousand(detail.managementFee): '-' }}</span>
-              <span>（费率：{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
+              <span>（费率:{{ detail.managementFeeRate ? detail.managementFeeRate.toFixed(DP.ACCOUNTING): '-' }}%）</span>
             </template>
           </el-form-item>
         </div>
@@ -363,6 +363,8 @@ const rules = {
     { required: true, message: '请填写项目简称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
+  startDate: [{ required: true, message: '请选择开工日期', trigger: 'change' }],
+  endDate: [{ required: true, message: '请选择完工日期', trigger: 'change' }],
   contractAmount: [
     { required: true, message: '请填写合同金额', trigger: 'blur' }
   ],
@@ -413,7 +415,7 @@ const managementFee = computed(() => {
   }
   return undefined
 })
-
+const originDate = ref()
 /**
  * 重置表单
  */
@@ -481,6 +483,7 @@ async function fetchDetail() {
   try {
     const res = await getContractBase(props.projectId)
     _detail = JSON.parse(JSON.stringify(res))
+    originDate.value = _detail.startDate
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
     _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
