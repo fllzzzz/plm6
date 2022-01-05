@@ -126,7 +126,7 @@
       />
       <!--包单操作-->
       <el-table-column
-        v-if="checkPermission([...permission.download, ...permission.detail])"
+        v-if="checkPermission([...permission.detail])"
         label="包单"
         width="70px"
         align="center"
