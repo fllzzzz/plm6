@@ -10,6 +10,7 @@
       row-key="id"
       :max-height="maxHeight"
       default-expand-all
+      class="tree-table"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" align="center" />

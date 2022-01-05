@@ -179,8 +179,8 @@ const formDisabled = computed(() => passedLoading.value || returnedLoading.value
 // 标题
 const drawerTitle = computed(() =>
   detailLoading.value
-    ? `入库单：${props.data.serialNumber}`
-    : `入库单：${props.data.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+    ? `入库单`
+    : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 
 // 仓管填写的信息（工厂及仓库）

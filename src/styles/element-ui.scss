@@ -125,6 +125,23 @@
       width: 100%;
     }
   }
+  .el-table__expanded-cell {
+    padding: 0!important;
+    border-bottom: none!important;
+  }
+  .expanded + tr + .el-table__row{
+    .el-table__cell {
+      border-top: var(--el-table-border);
+    }
+  }
+}
+
+.tree-table {
+  .expanded + tr + .el-table__row{
+    .el-table__cell {
+      border-top: none;
+    }
+  }
 }
 
 .el-range-editor--medium .el-range-separator {
