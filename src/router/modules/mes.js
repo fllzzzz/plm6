@@ -388,12 +388,12 @@ export default {
       noCache: true
     },
     children: [{
-      name: 'MesProductionDashboardProjectPlan',
-      path: 'project-plan',
+      name: 'MesProductionDashboardProjectDashboard',
+      path: 'project-dashboard',
       hidden: false,
-      component: '/mes/production-manage/dashboard/project-plan/index',
+      component: '/mes/production-manage/dashboard/project-dashboard/index',
       meta: {
-        title: '项目计划',
+        title: '项目看板',
         icon: 'project',
         noCache: true
       }
@@ -409,17 +409,17 @@ export default {
         noCache: true
       }
     },
-    {
-      name: 'MesProductionDashboardProjectState',
-      path: 'project-state',
-      hidden: false,
-      component: '/mes/production-manage/dashboard/project-state/index',
-      meta: {
-        title: '项目状态',
-        icon: 'project',
-        noCache: true
-      }
-    },
+    // {
+    //   name: 'MesProductionDashboardProjectState',
+    //   path: 'project-state',
+    //   hidden: false,
+    //   component: '/mes/production-manage/dashboard/project-state/index',
+    //   meta: {
+    //     title: '项目状态',
+    //     icon: 'project',
+    //     noCache: true
+    //   }
+    // },
     {
       name: 'MesProductionDashboardArtifactDashboard',
       path: 'artifact-dashboard',

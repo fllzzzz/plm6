@@ -3,8 +3,8 @@
     <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <common-radio-button
       v-model="query.type"
+      default
       :options="problemTypeEnum.ENUM"
-      showOptionAll
       type="enum"
       class="filter-item"
       @change="crud.toQuery"

@@ -121,7 +121,7 @@ import rrOperation from '@crud/RR.operation'
 
 const emit = defineEmits(['getDetail'])
 const permission = inject('permission')
-const { users } = mapGetters(['users'])
+const { user } = mapGetters(['user'])
 const defaultQuery = {
   serialNumber: undefined,
   userName: undefined,
@@ -135,7 +135,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const printConfig = reactive({
-  manufacturerName: users.companyName,
+  manufacturerName: user.value.companyName,
   copies: 1
 })
 
@@ -202,7 +202,7 @@ async function getLabelInfo(row) {
     serialNumber: row.serialNumber,
     list: _list,
     productType: row.productType,
-    companyName: printConfig.companyName
+    companyName: printConfig.manufacturerName
   }
   // 生产线信息
   return {
