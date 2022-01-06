@@ -23,7 +23,7 @@
 
 <script setup>
 import { defineExpose, defineProps, defineEmits, ref, watch } from 'vue'
-import { deepClone } from '@data-type/index'
+import { deepClone, isNotBlank, isBlank } from '@data-type/index'
 import useUsers from '@compos/store/use-users'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -85,17 +85,18 @@ watch(
 function handleChange(val) {
   emit('update:modelValue', val)
   const userList = getUser(val)
-  emit('change', userList)
+  if (isNotBlank(userList)) emit('change', userList)
 }
 
 function getUser(val) {
+  if (isBlank(sourceOptions.value)) return
   if (val instanceof Array) {
     const userList = new Array(3)
     const _userIdList = [...val]
     sourceOptions.value.forEach((user) => {
       const index = _userIdList.indexOf(user.id)
       if (index > -1) {
-        userList[index] = JSON.parse(JSON.stringify(user))
+        userList[index] = deepClone(user)
       }
     })
     return userList
@@ -103,7 +104,7 @@ function getUser(val) {
     let user
     for (const u of sourceOptions.value) {
       if (u.id === val) {
-        user = JSON.parse(JSON.stringify(u))
+        user = deepClone(u)
         break
       }
     }

@@ -160,7 +160,7 @@ function selectChange(val) {
     monomerVal = originOptions.value.find((k) => k.id === val)
   }
   let areaInfo = []
-  if (props.filterArea) {
+  if (props.filterArea && props.productType) {
     areaInfo = (monomerVal?.areaSimpleList?.length && monomerVal.areaSimpleList.filter((v) => v.productType & props.productType)) || []
   } else {
     areaInfo = monomerVal?.areaSimpleList
