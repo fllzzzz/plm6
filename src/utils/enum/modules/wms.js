@@ -133,6 +133,14 @@ const purchaseStatusEnum = {
 }
 constantize(purchaseStatusEnum)
 
+// 物料退库状态
+const materialRejectStatusEnum = {
+  ALL: { L: '全部退货', K: 'ALL', V: 1 << 2, COLOR: '#f56c6c' },
+  PART: { L: '部分退货', K: 'PART', V: 1 << 1, COLOR: '#f7b551' },
+  NONE: { L: '无退货', K: 'NONE', V: 1 << 0, COLOR: '#17db9b' }
+}
+constantize(materialRejectStatusEnum)
+
 export {
   inboundFillWayEnum,
   measureTypeEnum,
@@ -151,7 +159,8 @@ export {
   pickUpModeEnum,
   transferNormalTypeEnum,
   transferTypeEnum,
-  transferCreateTypeEnum
+  transferCreateTypeEnum,
+  materialRejectStatusEnum
 }
 
 export default {
@@ -172,5 +181,6 @@ export default {
   pickUpModeEnum,
   transferNormalTypeEnum,
   transferTypeEnum,
-  transferCreateTypeEnum
+  transferCreateTypeEnum,
+  materialRejectStatusEnum
 }

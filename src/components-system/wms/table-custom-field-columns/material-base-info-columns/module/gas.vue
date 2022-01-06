@@ -1,6 +1,7 @@
 <template>
   <el-table-column
     v-if="showClassifyFullName"
+    :key="`${field}.classifyFullName`"
     :prop="`${field}.classifyFullName`"
     label="物料种类"
     align="center"
@@ -15,6 +16,7 @@
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification_2`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -32,6 +34,7 @@
   <template v-else>
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"

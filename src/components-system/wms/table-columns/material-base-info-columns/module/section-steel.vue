@@ -2,6 +2,7 @@
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
+      key="specification"
       prop="specification"
       label="规格"
       align="center"
@@ -19,6 +20,7 @@
   <template v-else>
     <el-table-column
       v-if="showSpecification"
+      key="specification_2"
       prop="specification"
       label="规格"
       align="center"
@@ -34,6 +36,7 @@
     </el-table-column>
     <el-table-column
       v-if="showLength"
+      key="length"
       prop="length"
       align="center"
       width="120px"

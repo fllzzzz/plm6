@@ -1,12 +1,12 @@
 <template>
   <template v-if="loaded">
     <template v-if="outboundTypeMode">
-      <el-table-column v-if="showOutboundUnit" prop="outboundUnit" label="单位" align="center" width="70px" show-overflow-tooltip>
+      <el-table-column v-if="showOutboundUnit" key="outboundUnit" prop="outboundUnit" label="单位" align="center" width="70px" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text>{{ row.outboundUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCurQuantity" prop="curQuantity" label="数量" align="right" width="100px" show-overflow-tooltip>
+      <el-table-column v-if="showCurQuantity" key="curQuantity" prop="curQuantity" label="数量" align="right" width="100px" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text v-to-fixed="row.outboundUnitPrecision">
             {{ row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField] }}
@@ -15,7 +15,7 @@
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column v-if="showMeasureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
+      <el-table-column v-if="showMeasureUnit" key="measureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text>{{ row.measureUnit }}</span>
         </template>
@@ -26,7 +26,7 @@
           <span v-else v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column v-if="showAccountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
+      <el-table-column v-if="showAccountingUnit" key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text>{{ row.accountingUnit }}</span>
         </template>
@@ -107,6 +107,7 @@ const mateLabel = computed(() => {
       case rawMatClsEnum.STEEL_PLATE.V:
       case rawMatClsEnum.SECTION_STEEL.V:
       case rawMatClsEnum.STEEL_COIL.V:
+      case STEEL_ENUM:
         label = `重量(${unitInfo.value.weight.unit})`
         break
       case rawMatClsEnum.MATERIAL.V:
@@ -133,6 +134,9 @@ const quantityLabel = computed(() => {
         break
       case rawMatClsEnum.STEEL_COIL.V:
         label = `长度(${unitInfo.value.measure.unit})`
+        break
+      case STEEL_ENUM:
+        label = `数量`
         break
       case rawMatClsEnum.MATERIAL.V:
       case rawMatClsEnum.GAS.V:

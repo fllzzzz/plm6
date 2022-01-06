@@ -200,7 +200,7 @@ const BRIDGE_MES_REPORT_OUTBOUND_AUXILIARY_MATERIAL = {
      */
     fields: [
       { show: false, key: 'project.contractNo', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.CONTRACT_NO.K },
-      { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, key: 'project', title: '项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, key: 'monomer', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MONOMER_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
       { show: true, key: 'fullClassifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },

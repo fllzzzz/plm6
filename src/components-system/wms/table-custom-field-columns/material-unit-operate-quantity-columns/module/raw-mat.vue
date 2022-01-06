@@ -2,6 +2,7 @@
   <template v-if="loaded">
     <el-table-column
       v-if="showMeasureUnit"
+      :key="`${field}.measureUnit`"
       :prop="`${field}.measureUnit`"
       label="计量单位"
       align="center"
@@ -14,6 +15,7 @@
     </el-table-column>
     <el-table-column
       v-if="showQuantity"
+      :key="`${field}.quantity`"
       :prop="`${field}.quantity`"
       :label="quantityLabel"
       align="right"
@@ -33,6 +35,7 @@
     </el-table-column>
     <el-table-column
       v-if="showAccountingUnit"
+      :key="`${field}.accountingUnit`"
       :prop="`${field}.accountingUnit`"
       label="核算单位"
       align="center"
@@ -43,7 +46,15 @@
         <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="showMete" :prop="`${field}.mete`" :label="mateLabel" align="right" min-width="150px" show-overflow-tooltip>
+    <el-table-column
+      v-if="showMete"
+      :key="`${field}.mete`"
+      :prop="`${field}.mete`"
+      :label="mateLabel"
+      align="right"
+      min-width="150px"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">
           {{ getInfo(row, 'operableMete') }}
@@ -59,6 +70,7 @@
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
+import { STEEL_ENUM } from '@/settings/config'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
@@ -96,6 +108,7 @@ const mateLabel = computed(() => {
     case rawMatClsEnum.STEEL_PLATE.V:
     case rawMatClsEnum.SECTION_STEEL.V:
     case rawMatClsEnum.STEEL_COIL.V:
+    case STEEL_ENUM:
       return `重量(${unitInfo.value.weight.unit})`
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
@@ -112,6 +125,8 @@ const quantityLabel = computed(() => {
       return `数量(${unitInfo.value.measure.unit})`
     case rawMatClsEnum.STEEL_COIL.V:
       return `长度(${unitInfo.value.measure.unit})`
+    case STEEL_ENUM:
+      return `数量`
     case rawMatClsEnum.MATERIAL.V:
     case rawMatClsEnum.GAS.V:
     default:

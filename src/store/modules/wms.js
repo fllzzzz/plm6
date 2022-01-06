@@ -9,6 +9,7 @@ const state = {
   inboundFillWayCfg: {}, //  入库配置
   outboundCfg: {}, // 出库基础配置
   rejectCfg: {}, // 退货基础配置
+  partyABorrowReturnCfg: {}, // 甲供借用归还配置
   loaded: {
     // 接口是否加载
     config: false
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_REJECT_CFG(state, config) {
     state.rejectCfg = config
+  },
+  SET_PARTY_A_BORROW_RETURN_CFG(state, config) {
+    state.partyABorrowReturnCfg = config
   }
 }
 
@@ -43,11 +47,12 @@ const actions = {
   },
   // wms 基础配置
   async fetchWmsConfig({ commit }) {
-    const { inbound = {}, outbound = {}, reject = {}} = await getWmsConfig()
+    const { inbound = {}, outbound = {}, reject = {}, partyABorrowReturn = {}} = await getWmsConfig()
     commit('SET_INBOUND_STEEL_CFG', inbound.steel)
     commit('SET_INBOUND_FILL_WAY_CFG', inbound.fillWay)
     commit('SET_OUTBOUND_CFG', outbound)
     commit('SET_REJECT_CFG', reject)
+    commit('SET_PARTY_A_BORROW_RETURN_CFG', partyABorrowReturn)
     commit('SET_LOADED', { key: 'config' })
   }
 }

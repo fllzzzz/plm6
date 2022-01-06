@@ -1016,8 +1016,9 @@ const getProjectList = {
           'name': '@cword(2,16)',
           'shortName': '@cword(2,9)',
           'businessType|1-2': 1,
-          'planStartDate': '@datetime(T)',
-          'planEndDate': '@datetime(T)',
+          'startDate': '@datetime(T)',
+          'endDate': '@datetime(T)',
+          'completeDate': '@datetime(T)',
           'inWarehouseDate': '@datetime(T)',
           'createTime': '@datetime(T)'
         }],

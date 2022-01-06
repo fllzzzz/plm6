@@ -110,7 +110,7 @@ const PROJECT_MATERIAL_CONT = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V, lineBreak: false }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'type', title: '类型：', width: 150, type: typeEnum.OTHER.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 40, type: typeEnum.DATES.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 150, type: typeEnum.DATE.K, format: 'YY/MM/DD' },

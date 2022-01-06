@@ -1,6 +1,7 @@
 <template>
   <el-table-column
     v-if="showClassifyFullName"
+    :key="`${field}.classifyFullName`"
     :prop="`${field}.classifyFullName`"
     label="物料种类"
     align="center"
@@ -15,6 +16,7 @@
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -32,6 +34,7 @@
   <template v-else>
     <el-table-column
       v-if="showSpecification"
+      :key="`${field}.specification`"
       :prop="`${field}.specification`"
       label="规格"
       align="center"
@@ -47,6 +50,7 @@
     </el-table-column>
     <el-table-column
       v-if="showThickness"
+      :key="`${field}.thickness`"
       :prop="`${field}.thickness`"
       align="center"
       width="100px"
@@ -60,6 +64,7 @@
     </el-table-column>
     <el-table-column
       v-if="showWidth"
+      :key="`${field}.width`"
       :prop="`${field}.width`"
       align="center"
       width="120px"
@@ -73,6 +78,7 @@
     </el-table-column>
     <el-table-column
       v-if="showColor"
+      :key="`${field}.color`"
       :prop="`${field}.color`"
       align="center"
       width="120px"

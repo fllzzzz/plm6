@@ -66,6 +66,13 @@ MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
   thickness: { unit: 'mm', precision: 3 }
 }
 
+MAT_BASE_UNIT[STEEL_ENUM] = {
+  measure: { unit: '件', precision: 0 },
+  weight: { unit: 'kg', precision: 2 },
+  length: { unit: 'mm', precision: 0 },
+  width: { unit: 'mm', precision: 0 }
+}
+
 // 系统最小单位（默认）
 export const MIN_UNIT = {
   LENGTH: 'mm',

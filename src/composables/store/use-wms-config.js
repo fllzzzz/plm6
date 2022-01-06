@@ -32,7 +32,8 @@ const useWmsConfig = (loadedCallBack) => {
     inboundSteelCfg: computed(() => store.state.wms.inboundSteelCfg), // 钢材入库配置
     inboundFillWayCfg: computed(() => store.state.wms.inboundFillWayCfg), // 入库填写方式
     outboundCfg: computed(() => store.state.wms.outboundCfg), // 出库配置
-    rejectCfg: computed(() => store.state.wms.rejectCfg) // 退货配置
+    rejectCfg: computed(() => store.state.wms.rejectCfg), // 退货配置
+    partyABorrowReturnCfg: computed(() => store.state.wms.partyABorrowReturnCfg) // 甲供借用归还配置
   }
 }
 

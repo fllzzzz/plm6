@@ -36,6 +36,11 @@
             <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.endDate }}</div>
           </template>
         </el-table-column>
+        <el-table-column v-if="columns.visible('completeDate')" key="completeDate" prop="completeDate" label="完成日期" align="center" width="100" >
+          <template v-slot="scope">
+            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.completeDate }}</div>
+          </template>
+        </el-table-column>
         <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="工期(天)" align="center" width="100">
           <template v-slot="scope">
             <div>{{ scope.row.allDays }}</div>
@@ -101,7 +106,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['createTime'],
+    invisibleColumns: ['completeDate', 'createTime'],
     hasPagination: true
   },
   tableRef
@@ -132,13 +137,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         v.allDays = dateDifference(v.startDate, v.endDate)
       }
       // 用时天数（清单内所有任务全部入库，自动停止计时）
-      let endDate = v.endDate || v.inWarehouseDate
-      if (isNotBlank(v.endDate) && isNotBlank(v.inWarehouseDate)) {
-        endDate = Math.min(v.endDate, v.inWarehouseDate)
-      }
-      if (isNotBlank(endDate)) {
-        v.alreadyDays = dateDifference(v.startDate, endDate)
-      }
+      const completeDate = v.completeDate || new Date().getTime()
+      v.alreadyDays = dateDifference(v.startDate, completeDate)
     }
     return v
   })

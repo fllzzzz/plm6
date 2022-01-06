@@ -103,7 +103,7 @@ const MES_LOGISTICS_ORDER_DELIVERY_DETAIL = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目名称：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.CONTRACT_NO_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目名称：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'logisticsSupplier', title: '物流单位：', width: 130, type: typeEnum.COMPANY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 60, type: typeEnum.DATES.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },

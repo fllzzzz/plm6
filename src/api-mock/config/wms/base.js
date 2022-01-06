@@ -53,6 +53,10 @@ const getWmsConfig = {
             // 退货审核列表
             review: true
           }
+        },
+        // 甲供归还配置
+        partyABorrowReturn: {
+          boolReturnByOtherProject: true // 可从非借用项目归还
         }
       }
     }

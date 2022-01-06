@@ -74,4 +74,14 @@ export function downloadArtifactTreeTemplate() {
   })
 }
 
+// 查询异常构件编号
+export function errorArtifact(params) {
+  return request({
+    module: 'plan',
+    url: 'artifactMachinePart/listAbnormal',
+    method: 'get',
+    params
+  })
+}
+
 export default { edit, del, get }

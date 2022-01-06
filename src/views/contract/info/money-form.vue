@@ -11,13 +11,13 @@
     <template #title>
       <div class="dialog-title">
         <span class="title-left">合同金额变更</span>
-        <common-button v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStatus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
-          {{ auditStatus==auditTypeEnum.ENUM.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.ENUM.PASS.V?'已通过':'审核中') }}
+        <common-button v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.REJECT.V?'info':(auditStatus==auditTypeEnum.PASS.V?'success':'warning')">
+          {{ auditStatus==auditTypeEnum.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.PASS.V?'已通过':'审核中') }}
         </common-button>
         <span style="position:absolute;right:20px;">
           <template v-if="auditStatus">
-            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V && showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>
-            <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V && showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.ENUM.PASS.V)">通过</common-button>
+            <common-button v-if="auditStatus==auditTypeEnum.AUDITING.V && showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
+            <common-button v-if="auditStatus==auditTypeEnum.AUDITING.V && showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
           </template>
           <template v-else>
             <common-button type="primary" size="small" @click="onSubmit">提交</common-button>
@@ -38,7 +38,7 @@
       </el-form-item>
       <el-form-item label="合同金额" prop="serialNumber">
          <span v-if="!auditStatus">{{ contractInfo.contractAmount }}</span>
-         <span v-else>{{ detailInfo.project.contractAmount }}</span>
+         <span v-else>{{ detailInfo.contractAmount }}</span>
       </el-form-item>
       <el-form-item label="变更内容" prop="changeContent">
         <el-input
@@ -61,7 +61,7 @@
           placeholder="变更金额(元)"
           style="width: 320px;"
         />
-        <span v-else>{{ form.changeAmount }}</span>
+        <span v-else>{{ detailInfo.amount-detailInfo.contractAmount }}</span>
       </el-form-item>
       <el-form-item label="变更后合同金额(元)" prop="newAmount">
         <el-input-number
@@ -75,7 +75,7 @@
           disabled
           style="width: 320px;"
         />
-        <span v-else>{{ newAmount }}</span>
+        <span v-else>{{ detailInfo.amount }}</span>
       </el-form-item>
       <el-form-item label="变更日期" prop="changeDate">
         <el-date-picker
@@ -86,7 +86,7 @@
           placeholder="变更日期"
           style="width: 320px;"
         />
-        <span v-else>{{ form.changeDate?parseTime(form.changeDate,'{y}-{m}-{d}'):'-' }}</span>
+        <span v-else>{{ detailInfo.changeDate?parseTime(detailInfo.changeDate,'{y}-{m}-{d}'):'-' }}</span>
       </el-form-item>
       <el-form-item label="负责人" prop="userList">
         <user-dept-cascader
@@ -99,7 +99,9 @@
           placeholder="负责人"
           style="width: 320px;"
         />
-        <span v-else>{{ form.userList }}</span>
+        <template v-else>
+          <span v-for="item in detailInfo.leaderList" :key="item.id">{{item.name}}</span>
+        </template>
       </el-form-item>
       <el-form-item label="描述" prop="changeDesc">
         <el-input
@@ -111,11 +113,13 @@
           style="width: 320px;"
           :maxlength="500"
         />
-        <span v-else>{{ form.changeDesc }}</span>
+        <span v-else>{{ detailInfo.changeDesc }}</span>
       </el-form-item>
       <el-form-item label="附件">
         <upload-btn v-if="!auditStatus" ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
-        <span v-else />
+        <template v-if="auditStatus && detailInfo.attachmentList && detailInfo.attachmentList.length>0">
+          <div v-for="item in detailInfo.attachmentList" :key="item.id">{{item.name}}</div>
+        </template>
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -129,9 +133,9 @@ import useVisible from '@compos/use-visible'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { DP } from '@/settings/config'
-import { editContract } from '@/api/contract/project'
+import { editContract, confirmContract } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
 
 const props = defineProps({
@@ -237,6 +241,7 @@ async function onSubmit() {
   form.value.projectId = props.projectId
   form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
   form.value.changeAmount = newAmount
+  form.value.contractAmount = props.contractInfo.contractAmount
   const submitform = {
     type: contractChangeTypeEnum.ENUM.CONTRACT_AMOUNT.V,
     ...form.value
@@ -246,6 +251,38 @@ async function onSubmit() {
     ElNotification({ title: '提交成功', type: 'success' })
   } catch (error) {
     console.log('金额变更失败', error)
+  } finally {
+    handleClose()
+  }
+}
+const inputValid = (val) => {
+  if ((!val || !val.trim()) && val !== 0) {
+    return '必填'
+  }
+  if (val.length > 200) {
+    return '长度在 1 到 200 个字符'
+  }
+  return true
+}
+async function passConfirm(val) {
+  try {
+    const title = val === auditTypeEnum.PASS.V ? '通过' : '驳回'
+    const remarkValue = await ElMessageBox.prompt('请输入审核说明', title, {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      inputType: 'textarea',
+      inputValidator: inputValid,
+      type: 'warning'
+    })
+    const submitData = {
+      auditStatus: val,
+      id: props.detailInfo.id,
+      remark: remarkValue.value
+    }
+    await confirmContract(submitData)
+    ElNotification({ title: '提交成功', type: 'success' })
+  } catch (error) {
+    console.log('审核', error)
   } finally {
     handleClose()
   }
