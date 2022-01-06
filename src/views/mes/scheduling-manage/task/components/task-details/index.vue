@@ -32,7 +32,6 @@
       :show-overflow-tooltip="true"
       label="所属项目"
       min-width="180px"
-      :fixed="fixed"
     >
       <template #default="{ row }">
         <span v-parse-project="{ project: row.project }" v-empty-text />
@@ -125,13 +124,9 @@
           >
             删除任务
           </common-button>
-          <common-button
-            v-permission="permission.assistanceAdd"
-            :disabled="row.completeQuantity === row.schedulingQuantity"
-            size="mini"
-            type="warning"
-            >协同任务</common-button
-          >
+          <common-button v-permission="permission.assistanceAdd" size="mini" type="warning" @click="toAssistanceTask(row)">
+            协同任务
+          </common-button>
         </template>
       </el-table-column>
     </template>
@@ -139,6 +134,7 @@
   <issue-preview v-model:visible="previewVisible" :modified-data="crud.selections" @refresh="refresh" />
   <modifyQuantityDialog v-model:visible="modifyQuantityVisible" :details="detailRow" @modifySuccess="refresh" />
   <delTask v-model:visible="delTaskVisible" :details="detailRow" @delSuccess="refresh" />
+  <assistance-drawer v-model:visible="assistanceVisible" :details="detailRow" />
 </template>
 
 <script setup>
@@ -160,6 +156,7 @@ import mHeader from './module/header'
 import modifyQuantityDialog from './module/modify-quantity-dialog'
 import delTask from './module/del-task'
 import issuePreview from './module/issue-preview'
+import assistanceDrawer from './module/assistance-drawer'
 
 // crud交由presenter持有
 const permission = {
@@ -254,6 +251,7 @@ const modifying = ref(false)
 const modifyQuantityVisible = ref(false)
 const delTaskVisible = ref(false)
 const previewVisible = ref(false)
+const assistanceVisible = ref(false)
 const detailRow = ref({})
 
 async function previewIt() {
@@ -281,6 +279,11 @@ function editSchedulingQuantity(row) {
 function toDelTask(row) {
   detailRow.value = Object.assign({}, row)
   delTaskVisible.value = true
+}
+
+function toAssistanceTask(row) {
+  detailRow.value = Object.assign({}, row)
+  assistanceVisible.value = true
 }
 
 function refresh() {

@@ -8,21 +8,14 @@
     width="500px"
   >
     <template #titleRight>
-      <common-button
-        :loading="submitLoading"
-        size="mini"
-        type="primary"
-        :disabled="!form.quantity"
-        @click="submitIt"
-        >确认</common-button
-      >
+      <common-button :loading="submitLoading" size="mini" type="primary" :disabled="!form.quantity" @click="submitIt">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
+      <el-form-item label="编号">
+        <span v-empty-text>{{ details.serialNumber }}</span>
+      </el-form-item>
       <el-form-item label="所属项目">
         <span v-empty-text>{{ details.project?.name }}</span>
-      </el-form-item>
-      <el-form-item label="编号">
-        <span v-empty-text>{{ details.productSerialNumber }}</span>
       </el-form-item>
       <el-form-item label="任务数">
         <span>{{ details.sourceSchedulingQuantity }}</span>
@@ -53,7 +46,7 @@ import { ElNotification } from 'element-plus'
 import useVisible from '@compos/use-visible'
 
 const rules = {
-  quantity: [{ required: true, message: '请填写删除数量', trigger: 'blur' }]
+  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
 const formRef = ref()
 const emit = defineEmits(['delSuccess', 'update:visible'])
