@@ -5,6 +5,7 @@ import 'nprogress/nprogress.css' // Progress 进度条样式
 import { ElMessage } from 'element-plus'
 import { getToken, getRequestUrl } from '@/utils/storage'
 // import { fetchMenus } from '@/api/user' // 获取菜单
+import { specialPath } from '@/settings/config'
 import configRouter from '@/router/modules/config'
 import mesRouter from '@/router/modules/mes'
 // import projectRouter from '@/router/modules/project'
@@ -17,7 +18,12 @@ import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 NProgress.configure({ showSpinner: false }) // 进度条配置：不显示Loading图标
 
 // 页面白名单
-const whiteList = ['/login', '/auth-redirect']
+const whiteList = [
+  '/login',
+  '/auth-redirect',
+  specialPath.QR_SCAN_ARTIFACT_TASK,
+  specialPath.QR_SCAN_ENCLOSURE_TASK
+]
 
 // 全局路由守卫
 router.beforeEach(async (to, from, next) => {

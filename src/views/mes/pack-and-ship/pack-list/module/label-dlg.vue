@@ -4,7 +4,7 @@
       <tr>
         <td rowspan="2">
           <div class="qr-content">
-            <qrcode-vue :value="packageInfo.qrCode" :size="90" :margin="2" />
+            <qrcode-vue :value="labelData.qrCode" :size="90" :margin="2" />
           </div>
         </td>
         <td colspan="3">
