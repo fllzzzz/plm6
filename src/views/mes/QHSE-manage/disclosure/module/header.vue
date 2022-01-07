@@ -1,11 +1,18 @@
 <template>
   <div v-show="crud.searchToggle">
-    <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <common-radio-button
       v-model="query.type"
       default
       :options="problemTypeEnum.ENUM"
       type="enum"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+    <project-radio-button
+      v-show="!(query.type & (problemTypeEnum.SECURITY.V | problemTypeEnum.ENVIRONMENT.V))"
+      :type="'all'"
+      size="small"
+      v-model="query.projectId"
       class="filter-item"
       @change="crud.toQuery"
     />

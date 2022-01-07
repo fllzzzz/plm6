@@ -95,7 +95,7 @@ watch(
 )
 
 const areaOptions = computed(() => {
-  return areaList.value && areaList.value.filter((v) => v.productType & props.productType)
+  return areaList.value && areaList.value.filter((v) => v.productType & proType.value)
 })
 
 function handleChange(val) {

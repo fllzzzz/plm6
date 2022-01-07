@@ -46,14 +46,14 @@
             <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="auditUserName" show-overflow-tooltip label="审核人">
+        <el-table-column prop="auditName" show-overflow-tooltip label="审核人">
           <template v-slot="scope">
-            <span v-empty-text>{{ scope.row.auditUserName }}</span>
+            <span v-empty-text>{{ scope.row.auditName }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'" v-empty-text>{{ scope.row.auditTime }}</span>
+            <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }"></span>
           </template>
         </el-table-column>
         <el-table-column prop="auditStatus" show-overflow-tooltip label="操作" width="170px" align="center">

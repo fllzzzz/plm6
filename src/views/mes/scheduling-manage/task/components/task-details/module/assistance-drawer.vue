@@ -9,14 +9,12 @@
   >
     <template #titleRight>
       <common-button
+        v-permission="assistPermission.edit"
         v-show="!isEdit"
         size="mini"
         type="primary"
         :disabled="!unInProductionQuantity"
-        @click="
-          isEdit = true;
-          add()
-        "
+        @click="toEdit"
       >
         添加
       </common-button>
@@ -49,7 +47,7 @@
             <span>{{ scope.row.processName }} - {{ scope.row.leaderName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="90px" align="center">
+        <el-table-column v-permission="assistPermission.del" label="操作" width="90px" align="center">
           <template v-slot="scope">
             <el-popconfirm
               confirm-button-text="确定"
@@ -124,13 +122,15 @@
 
 <script setup>
 import crudApi, { teamList } from '@/api/mes/scheduling-manage/task/assistance'
-import { defineProps, defineEmits, ref, watch, computed, reactive } from 'vue'
+import { defineProps, defineEmits, ref, watch, computed, reactive, inject } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import { deepClone } from '@data-type/index'
 
 import useVisible from '@compos/use-visible'
 // import assistanceTask from './assistance-task'
+
+const assistPermission = inject('assistPermission')
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -225,6 +225,11 @@ watch(
   },
   { immediate: true }
 )
+
+function toEdit() {
+  isEdit.value = true
+  add()
+}
 
 function cancelEdit() {
   isEdit.value = false

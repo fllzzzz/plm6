@@ -76,8 +76,8 @@
       </el-badge>
     </template>
   </crudOperation>
-  <audit-drawer v-model:visible="auditVisible" @refresh="crud.toQuery"></audit-drawer>
-  <preview v-model:visible="previewVisible" :list="crud.data" @refresh="crud.toQuery;handelModifying(false, true)"></preview>
+  <audit-drawer v-model:visible="auditVisible" @refresh="crud.toQuery()"></audit-drawer>
+  <preview v-model:visible="previewVisible" :list="crud.data" @refresh="crud.toQuery();handelModifying(false, true)"></preview>
 </template>
 
 <script setup>
@@ -149,7 +149,7 @@ function handleProcess() {
 
 // 获取审核数量
 const auditNumberBadge = ref(0)
-CRUD.HOOK.beforeRefresh = () => {
+CRUD.HOOK.beforeToQuery = () => {
   getAuditNumber()
 }
 async function getAuditNumber() {

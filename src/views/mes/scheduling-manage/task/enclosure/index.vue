@@ -73,13 +73,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="checkPermission([...permission.detail])"
-        label="操作"
-        width="120px"
-        align="center"
-        fixed="right"
-      >
+      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="120px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-s-operation" @click="showDetail(scope.row)" />
         </template>
@@ -106,7 +100,7 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/task/enclosure'
-import { ref, computed } from 'vue'
+import { ref, computed, provide } from 'vue'
 
 import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
@@ -122,7 +116,17 @@ import mHeader from '../components/common-header'
 // crud交由presenter持有
 const permission = {
   get: ['enclosureTask:get'],
-  detail: ['enclosureTask:detail']
+  detail: ['enclosureTask:detail'],
+  task: {
+    get: ['enclosureTask:detail'],
+    add: ['enclosureTask:add'], // 任务下发
+    del: ['enclosureTask:del']
+  },
+  assistance: {
+    get: ['enclosureTaskAssistance:get'],
+    edit: ['enclosureTaskAssistance:edit'], // 任务下发
+    del: ['enclosureTaskAssistance:del']
+  }
 }
 
 const optShow = {
@@ -156,6 +160,7 @@ function showDetail(row) {
 }
 
 const productType = componentTypeEnum.ENCLOSURE.V
+provide('productType', productType)
 
 const unitObj = computed(() => {
   return useProductSummaryMeteUnit({

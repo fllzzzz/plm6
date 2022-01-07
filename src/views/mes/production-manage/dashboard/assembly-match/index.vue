@@ -7,6 +7,7 @@
       :isIndeterminate="checkedNodes.length > 0 && checkedNodes.length !== boardList && !checkAll"
       @checkedAll="handleCheckedAll"
       @batchMatch="handleBatchMatch"
+      @clear="clearCheck"
     />
     <!--看板渲染-->
     <div
@@ -109,6 +110,11 @@ const checkAll = ref(false)
 const detailIds = ref([])
 const detailNames = ref()
 const checkedNodes = ref([])
+
+// 切换项目清除选择
+function clearCheck() {
+  checkedNodes.value = []
+}
 function handleCheckedChange(value, item) {
   const _checkedIndex = checkedNodes.value.findIndex((v) => v.id === item.id)
   if (value) {

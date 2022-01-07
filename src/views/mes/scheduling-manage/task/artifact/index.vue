@@ -73,13 +73,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="checkPermission([...permission.detail])"
-        label="操作"
-        width="120px"
-        align="center"
-        fixed="right"
-      >
+      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
           <common-button size="mini" type="primary" icon="el-icon-s-operation" @click="showDetail(row)" />
         </template>
@@ -106,7 +100,7 @@
 
 <script setup>
 import crudApi, { getArtifact } from '@/api/mes/scheduling-manage/task/artifact'
-import { ref, computed } from 'vue'
+import { ref, computed, provide } from 'vue'
 
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
@@ -122,7 +116,17 @@ import mHeader from '../components/common-header'
 // crud交由presenter持有
 const permission = {
   get: ['artifactTask:get'],
-  detail: ['artifactTask:detail']
+  detail: ['artifactTask:detail'],
+  task: {
+    get: ['artifactTask:detail'],
+    add: ['artifactTask:add'], // 任务下发
+    del: ['artifactTask:del']
+  },
+  assistance: {
+    get: ['artifactTaskAssistance:get'],
+    edit: ['artifactTaskAssistance:edit'], // 任务下发
+    del: ['artifactTaskAssistance:del']
+  }
 }
 
 const optShow = {
@@ -159,6 +163,7 @@ function showDetail(row) {
 const productType = computed(() => {
   return !crud.query.processType ? componentTypeEnum.ASSEMBLE.V : componentTypeEnum.ARTIFACT.V
 })
+provide('productType', productType.value)
 
 CRUD.HOOK.beforeToQuery = () => {
   crud.crudApi.get = !crud.query.processType ? crudApi.get : getArtifact

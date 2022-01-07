@@ -34,7 +34,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }} / {{ scope.row.taskMete }}</span>
+          <span>{{ scope.row.taskQuantity }} {{unitObj.measure}} | {{ scope.row.taskMete }} {{unitObj.unit}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -46,7 +46,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }} / {{ scope.row.completeMete }}</span>
+          <span>{{ scope.row.completeQuantity }} {{unitObj.measure}} | {{ scope.row.completeMete }} {{unitObj.unit}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -58,7 +58,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.diffQuantity }} / {{ scope.row.diffMete }}</span>
+          <span>{{ scope.row.diffQuantity }} {{unitObj.measure}} | {{ scope.row.diffMete }} {{unitObj.unit}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -85,15 +85,14 @@
 
 <script setup>
 import crudApi from '@/api/mes/production-manage/analysis/delay-report'
-import { ref, provide } from 'vue'
+import { ref, provide, computed } from 'vue'
 
-import { DP } from '@/settings/config'
-import { toFixed } from '@data-type/index'
-import { convertUnits } from '@/utils/convert/unit'
 import { reportComponentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
+import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 
@@ -135,25 +134,31 @@ function toDetail(row) {
   detailVisible.value = true
 }
 
+const dataPath = {
+  [reportComponentTypeEnum.ARTIFACT.V]: 'artifactAssembleList',
+  [reportComponentTypeEnum.ENCLOSURE.V]: 'enclosureList'
+}
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({ productType: crud.query.productType, w_unit: 'kg' })
+})
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  if (crud.query.componentType === reportComponentTypeEnum.ARTIFACT.V) {
-    res.data = res.data.artifactAssembleList.map((v) => {
-      v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG) || 0
-      v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG) || 0
-      v.diffQuantity = v.taskQuantity - v.completeQuantity || 0
-      v.diffMete = toFixed(v.taskNetWeight - v.completeNetWeight, DP.COM_WT__KG)
-      v.completeRate = Number(v.taskMete) ? toFixed((Number(v.completeMete) / Number(v.taskMete)) * 100, 2) + '%' : '0%'
-      return v
+  const productType = crud.query.productType
+  res.data = res.data[dataPath[crud.query.componentType]].map((v) => {
+    v.taskMete = useProductMeteConvert({
+      productType: productType,
+      weight: { num: v.taskNetWeight },
+      length: { num: v.taskLength, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
-  } else {
-    res.data = res.data.enclosureList.map((v) => {
-      v.taskMete = convertUnits(v.taskLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0
-      v.completeMete = convertUnits(v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) || 0
-      v.diffQuantity = v.taskQuantity - v.completeQuantity || 0
-      v.diffMete = convertUnits(v.taskLength - v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-      v.completeRate = Number(v.taskMete) ? toFixed((Number(v.completeMete) / Number(v.taskMete)) * 100, 2) + '%' : '0%'
-      return v
+    v.completeMete = useProductMeteConvert({
+      productType: productType,
+      weight: { num: v.completeNetWeight },
+      length: { num: v.completeLength, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
-  }
+    v.diffQuantity = v.taskQuantity - v.completeQuantity || 0
+    v.diffMete = (v.taskMete - v.completeMete).toFixed(unitObj.value.DP)
+    v.completeRate = Number(v.taskMete) ? ((Number(v.completeMete) / Number(v.taskMete)) * 100).toFixed(2) + '%' : '0%'
+    return v
+  })
 }
 </script>
