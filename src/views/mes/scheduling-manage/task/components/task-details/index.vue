@@ -109,14 +109,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="checkPermission([...permission.taskAdd, ...permission.assistanceAdd])"
+        v-if="checkPermission([...taskPermission.add, ...assistPermission.get])"
         label="操作"
         align="center"
         width="210px"
       >
         <template #default="{ row }">
           <common-button
-            v-permission="permission.taskAdd"
+            v-permission="taskPermission.add"
             :disabled="row.completeQuantity === row.schedulingQuantity"
             size="mini"
             type="danger"
@@ -124,7 +124,7 @@
           >
             删除任务
           </common-button>
-          <common-button v-permission="permission.assistanceAdd" size="mini" type="warning" @click="toAssistanceTask(row)">
+          <common-button v-permission="assistPermission.get" size="mini" type="warning" @click="toAssistanceTask(row)">
             协同任务
           </common-button>
         </template>
@@ -139,7 +139,7 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/task/common'
-import { computed, ref, defineProps, defineEmits, watch, provide } from 'vue'
+import { computed, ref, defineProps, defineEmits, watch, provide, inject } from 'vue'
 import { ElMessage } from 'element-plus'
 import moment from 'moment'
 
@@ -158,13 +158,10 @@ import delTask from './module/del-task'
 import issuePreview from './module/issue-preview'
 import assistanceDrawer from './module/assistance-drawer'
 
-// crud交由presenter持有
-const permission = {
-  get: ['artifactTask:detail', 'enclosureTask:detail', 'machinePartTask:detail'],
-  taskAdd: ['artifactTask:add', 'enclosureTask:add', 'machinePartTask:add'], // 任务下发
-  del: ['artifactTask:del', 'enclosureTask:del', 'machinePartTask:del'],
-  assistanceAdd: ['artifactTaskAssistance:add', 'enclosureTaskAssistance:add', 'machinePartTaskAssistance:add'] // 班组协同
-}
+const { task, assistance } = inject('permission')
+const taskPermission = task
+const assistPermission = assistance
+provide('assistPermission', assistPermission)
 
 const optShow = {
   add: false,
@@ -184,7 +181,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '任务详情',
     sort: [],
-    permission: { ...permission },
+    permission: { ...taskPermission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: false

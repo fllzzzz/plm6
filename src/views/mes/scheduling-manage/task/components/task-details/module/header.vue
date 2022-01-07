@@ -13,6 +13,8 @@
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
       clearable
+      :productType="productType"
+      needConvert
       :project-id="query.projectId"
       @change="crud.toQuery"
     />

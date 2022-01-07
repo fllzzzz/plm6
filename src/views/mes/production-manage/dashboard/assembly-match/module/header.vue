@@ -89,7 +89,7 @@ const defaultQuery = {
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const projectId = useGlobalProjectIdChangeToQuery(crud)
 
-const emit = defineEmits(['load', 'checkedAll', 'batchMatch'])
+const emit = defineEmits(['load', 'checkedAll', 'batchMatch', 'clear'])
 
 const boxScale = ref(1)
 const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeader({
@@ -98,7 +98,17 @@ const { colors, boxZoomOut, getColorByValue, getTagByValue } = useDashboardHeade
   crud
 })
 
+const checkAll = ref(false)
+function handleCheckAllChange(val) {
+  emit('checkedAll', val)
+}
+function batchMatch() {
+  emit('batchMatch')
+}
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
+  emit('clear')
+  checkAll.value = false
   res.data.content = res.data.content.map((v) => {
     v.checked = false
     v.compareQuantity = crud.query.factoryId ? v.assignQuantity : v.quantity
@@ -120,14 +130,6 @@ defineProps({
     default: false
   }
 })
-
-const checkAll = ref(false)
-function handleCheckAllChange(val) {
-  emit('checkedAll', val)
-}
-function batchMatch() {
-  emit('batchMatch')
-}
 
 defineExpose({
   boxScale
