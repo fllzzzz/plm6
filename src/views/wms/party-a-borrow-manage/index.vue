@@ -241,7 +241,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((v) => {
     v.pendingQuantity = v.quantity - v.returnedQuantity
     v.pendingMete = v.mete - v.returnedMete
-    if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+    if (v.outboundUnitType === measureTypeEnum.MEASURE.V) {
       v.corQuantity = v.quantity // 数量
       v.corReturnedQuantity = v.returnedQuantity // 已还数量
       v.corPendingQuantity = v.pendingQuantity // 待还数量

@@ -17,7 +17,7 @@
       <template #default="{ row }">
         <template v-if="row.measureUnit">
           <template v-if="showOperableQuantity">
-            <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
             /
           </template>
           <span v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
@@ -33,7 +33,7 @@
     <el-table-column v-if="showMete" key="mete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
       <template #default="{ row }">
         <template v-if="showOperableMete">
-          <span class="operable-number" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+          <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
           /
         </template>
         <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
@@ -190,9 +190,3 @@ const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.colum
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
 </script>
-
-<style lang="scss" scoped>
-.operable-number {
-  color: green;
-}
-</style>

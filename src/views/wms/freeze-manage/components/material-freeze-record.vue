@@ -34,7 +34,7 @@
         <span
           v-empty-text
           v-to-fixed="{
-            val: material.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete,
+            val: material.outboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete,
             dp: material.outboundUnitPrecision,
           }"
         />
@@ -100,7 +100,6 @@ const props = defineProps({
   }
 })
 
-// crud交由presenter持有
 const permission = {
   requisitionsUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_requisitions'],
   outboundUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_outbound'],

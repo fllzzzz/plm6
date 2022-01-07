@@ -38,8 +38,8 @@
           </el-form-item>
           <el-form-item
             v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V"
-            :label="`过磅重量(千克)`"
-            label-width="120px"
+            :label="`车次过磅重量(千克)`"
+            label-width="150px"
             prop="loadingWeight"
           >
             <el-tooltip

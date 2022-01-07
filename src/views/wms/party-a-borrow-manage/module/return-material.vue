@@ -294,7 +294,7 @@ async function fetchReturnableMatList(id) {
     returnableMatList.value.forEach((v) => {
       v.operableQuantity = v.quantity - v.frozenQuantity
       v.operableMete = v.mete - v.frozenMete
-      if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+      if (v.outboundUnitType === measureTypeEnum.MEASURE.V) {
         // 实际在出库中使用的数量
         v.corQuantity = v.quantity // 数量
         v.corFrozenQuantity = v.frozenQuantity // 冻结数量
@@ -347,7 +347,7 @@ async function submit() {
           id: row.id,
           quantity: row.returnedQuantity,
           outboundUnit: row.outboundUnit,
-          outboundUnitType: row.curOutboundUnitType
+          outboundUnitType: row.outboundUnitType
         }
       })
     }

@@ -286,7 +286,7 @@ async function submit() {
           quantity: v.batchOutboundQuantity, // 数量
           outboundUnit: v.outboundUnit, // 出库单位
           outboundUnitPrecision: v.outboundUnitPrecision, // 单位精度
-          outboundUnitType: v.curOutboundUnitType // 出库单位类型
+          outboundUnitType: v.outboundUnitType // 出库单位类型
         })
       }
     })
@@ -343,7 +343,7 @@ function dataFormat() {
         v.projectOperableQuantity = v.operableQuantity + (projectFrozen.quantity || 0)
         v.projectOperableMete = v.operableMete + (projectFrozen.mete || 0)
       }
-      v.corProjectOperableQuantity = v.curOutboundUnitType === measureTypeEnum.MEASURE.V ? v.projectOperableQuantity : v.projectOperableMete
+      v.corProjectOperableQuantity = v.outboundUnitType === measureTypeEnum.MEASURE.V ? v.projectOperableQuantity : v.projectOperableMete
     })
   }
 }

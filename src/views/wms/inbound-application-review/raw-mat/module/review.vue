@@ -44,7 +44,7 @@
         >
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount" :basic-class="form.basicClass" :row="row" show-brand />
+              <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>
@@ -55,7 +55,7 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="form.basicClass" />
           <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="!showAmount" :basic-class="form.basicClass" />
+          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
           <price-set-columns
             v-if="showAmount"
@@ -108,6 +108,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
 
+import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useWmsConfig from '@/composables/store/use-wms-config'
@@ -178,10 +179,16 @@ const requisitions = computed(() => form.value.requisitions || {})
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
 const drawerTitle = computed(() =>
-  detailLoading.value
-    ? `入库单`
-    : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  detailLoading.value ? `入库单` : `入库单：${form.value.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
+// 在列中显示次要信息
+const showTableColumnSecondary = computed(() => {
+  // 非甲供订单，显示项目和申购单 或者仓库时
+  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
+  // 甲供订单，显示项目和申购单以及仓库时
+  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && showWarehouse.value
+  return !(unshow1 || unshow2)
+})
 
 // 仓管填写的信息（工厂及仓库）
 const warehouseRules = {
@@ -212,6 +219,8 @@ const tableRules = computed(() => {
   if (showWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
+
+const { crud } = regExtra()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -272,7 +281,7 @@ function handleConvenientChange(id) {
 
 // 获取待审核入库单id列表
 async function fetchPendingReviewIdList() {
-  pendingReviewIdList.value = await getPendingReviewIdList()
+  pendingReviewIdList.value = await getPendingReviewIdList(crud.query)
 }
 
 // 加载详情

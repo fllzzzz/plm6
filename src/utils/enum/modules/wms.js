@@ -137,6 +137,7 @@ constantize(purchaseStatusEnum)
 const materialRejectStatusEnum = {
   ALL: { L: '全部退货', K: 'ALL', V: 1 << 2, COLOR: '#f56c6c' },
   PART: { L: '部分退货', K: 'PART', V: 1 << 1, COLOR: '#f7b551' },
+  PENDING_REVIEW: { L: '退货待审', K: 'PENDING_REVIEW', V: 1 << 3, COLOR: '#409eff' },
   NONE: { L: '无退货', K: 'NONE', V: 1 << 0, COLOR: '#17db9b' }
 }
 constantize(materialRejectStatusEnum)

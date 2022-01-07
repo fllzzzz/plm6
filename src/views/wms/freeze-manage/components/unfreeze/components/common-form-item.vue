@@ -11,7 +11,7 @@
   <el-form-item label="冻结数量">
     <span
       v-to-fixed="{
-        val: material.curOutboundUnitType === measureTypeEnum.MEASURE.V ? record.quantity : record.mete,
+        val: material.outboundUnitType === measureTypeEnum.MEASURE.V ? record.quantity : record.mete,
         dp: material.outboundUnitPrecision,
       }"
     />

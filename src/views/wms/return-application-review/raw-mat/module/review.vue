@@ -80,6 +80,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
+import { regExtra } from '@/composables/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -122,6 +123,8 @@ const formDisabled = computed(() => passedLoading.value || returnedLoading.value
 const currentSource = ref()
 const form = ref()
 
+const { crud } = regExtra()
+
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
@@ -153,9 +156,15 @@ const {
   handleConvenientChange
 } = useContinuousReview({
   detailMethod: fetchDetail,
-  passedMethod: () => { reviewPassed(form.value) },
-  returnedMethod: () => { reviewReturned(form.value) },
-  pendingListMethod: getPendingReviewIdList,
+  passedMethod: () => {
+    reviewPassed(form.value)
+  },
+  returnedMethod: () => {
+    reviewReturned(form.value)
+  },
+  pendingListMethod: () => {
+    getPendingReviewIdList(crud.query)
+  },
   detailInitCallBack: detailInitCallBack,
   closeDlg: handleClose
 })

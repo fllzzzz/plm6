@@ -21,7 +21,7 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
   cu.submitFormFormat = async (form) => {
     cleanUpData(form.list)
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
-    return form
+    return form.list
   }
 
   FORM.HOOK.beforeToEdit = async (crud, form) => {

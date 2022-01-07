@@ -40,7 +40,7 @@
         >
           <template #default="{ row }">
             <span
-              class="operable-number"
+              class="color-green"
               v-empty-text
               v-to-fixed="{ val: row.singleReturnableLength, dp: curMatBaseUnit.length.precision }"
             />
@@ -241,24 +241,6 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 // 添加退库信息
 function handleAddReturn(row) {
   const selectList = props.selectList
-  // const newData = reactive({
-  //   uid: createUniqueString(), // 当前退库记录唯一id
-  //   id: row.id, // 物料id
-  //   sn: row.sn, // 该科目规格唯一编号
-  //   specificationLabels: row.specificationLabels, // 规格中文
-  //   serialNumber: row.serialNumber, // 科目编号 - 规格
-  //   classifyId: row.classifyId, // 科目id
-  //   classifyFullName: row.classifyFullName, // 全路径名称
-  //   basicClass: row.basicClass, // 基础类型
-  //   specification: row.specification, // 规格
-  //   specificationMap: row.specificationMap, // 规格KV格式
-  //   measureUnit: row.measureUnit, // 计量单位
-  //   accountingUnit: row.accountingUnit, // 核算单位
-  //   accountingPrecision: row.accountingPrecision, // 核算单位小数精度
-  //   measurePrecision: row.measurePrecision, // 计量单位小数精度
-  //   brand: row.brand, // 品牌
-  //   project: row.project // 项目
-  // })
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
     id: row.id, // 物料id
@@ -324,11 +306,5 @@ function openOutboundDetailView(outboundId) {
     padding-top: 10px;
     padding-bottom: 10px;
   }
-}
-</style>
-
-<style lang="scss" scoped>
-.operable-number {
-  color: green;
 }
 </style>

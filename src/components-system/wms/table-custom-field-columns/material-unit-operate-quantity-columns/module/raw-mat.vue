@@ -24,11 +24,13 @@
     >
       <template #default="{ row }">
         <template v-if="getInfo(row, 'measureUnit')">
-          <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
-            {{ getInfo(row, 'operableQuantity') }}
-          </span>
+          <span
+            class="color-green"
+            v-empty-text
+            v-to-fixed="{ val: getInfo(row, 'operableQuantity'), dp: getInfo(row, 'measurePrecision') }"
+          />
           /
-          <span v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">{{ getInfo(row, 'quantity') }}</span>
+          <span v-empty-text v-to-fixed="{ val: getInfo(row, 'quantity'), dp: getInfo(row, 'measurePrecision') }" />
         </template>
         <span v-else v-empty-text />
       </template>
@@ -56,11 +58,13 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span class="operable-number" v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">
-          {{ getInfo(row, 'operableMete') }}
-        </span>
+        <span
+          class="color-green"
+          v-empty-text
+          v-to-fixed="{ val: getInfo(row, 'operableMete'), dp: getInfo(row, 'accountingPrecision') }"
+        />
         /
-        <span v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, 'mete') }}</span>
+        <span v-empty-text v-to-fixed="{ val: getInfo(row, 'mete'), dp: getInfo(row, 'accountingPrecision') }" />
       </template>
     </el-table-column>
   </template>
@@ -141,9 +145,3 @@ const showAccountingUnit = computed(
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.quantity`))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.mete`))
 </script>
-
-<style lang="scss" scoped>
-.operable-number {
-  color: green;
-}
-</style>

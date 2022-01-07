@@ -497,7 +497,7 @@ const detail_id3 = {
             id: 1,
             classifyId: 901,
             // specification: '',
-            basicClass: matClsEnum.STEEL_PLATE.V,
+            basicClass: matClsEnum.GAS.V,
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',
@@ -524,4 +524,5 @@ const detail_id3 = {
     }
   }
 }
+
 export default [get, reviewReturned, reviewPassed, getPendingReviewIdList, detail_id1, detail_id2, detail_id3]

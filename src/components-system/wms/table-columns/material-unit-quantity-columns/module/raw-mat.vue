@@ -1,39 +1,75 @@
 <template>
   <template v-if="loaded">
     <template v-if="outboundTypeMode">
-      <el-table-column v-if="showOutboundUnit" key="outboundUnit" prop="outboundUnit" label="单位" align="center" width="70px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showOutboundUnit"
+        key="outboundUnit"
+        prop="outboundUnit"
+        label="单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span v-empty-text>{{ row.outboundUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCurQuantity" key="curQuantity" prop="curQuantity" label="数量" align="right" width="100px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showNumber"
+        :key="numberPropField"
+        :prop="numberPropField"
+        label="数量"
+        align="right"
+        width="100px"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
-          <span v-empty-text v-to-fixed="row.outboundUnitPrecision">
-            {{ row.curOutboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField] }}
-          </span>
+          <span
+            v-empty-text
+            v-to-fixed="{
+              val: row.outboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
+              dp: row.outboundUnitPrecision,
+            }"
+          />
         </template>
       </el-table-column>
     </template>
     <template v-else>
-      <el-table-column v-if="showMeasureUnit" key="measureUnit" prop="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showMeasureUnit"
+        key="measureUnit"
+        prop="measureUnit"
+        label="计量单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span v-empty-text>{{ row.measureUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-if="row.measureUnit" v-empty-text v-to-fixed="row.measurePrecision">{{ row[quantityField] }}</span>
+          <span v-if="row.measureUnit" v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
           <span v-else v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column v-if="showAccountingUnit" key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showAccountingUnit"
+        key="accountingUnit"
+        prop="accountingUnit"
+        label="核算单位"
+        align="center"
+        width="70px"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span v-empty-text>{{ row.accountingUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text v-to-fixed="row.accountingPrecision">{{ row[meteField] }}</span>
+          <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
         </template>
       </el-table-column>
     </template>
@@ -74,6 +110,11 @@ const props = defineProps({
   labelPrefix: {
     // 数量label前缀
     type: String
+  },
+  numberPropField: {
+    // 默认计量，用于合计时
+    type: String,
+    default: 'quantity'
   },
   quantityField: {
     // 数量字段
@@ -163,5 +204,5 @@ const showQuantity = computed(() => isBlank(props.columns) || props.columns.visi
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(props.meteField))
 
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
-const showCurQuantity = computed(() => isBlank(props.columns) || props.columns.visible('curQuantity'))
+const showNumber = computed(() => isBlank(props.columns) || props.columns.visible(props.numberPropField))
 </script>

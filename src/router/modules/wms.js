@@ -95,24 +95,24 @@ export default {
         }
       ]
     },
-    // {
-    //   path: '/wms/reject-application',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'WMSRejectApplication',
-    //   alwaysShow: true,
-    //   redirect: '/wms/reject-application/steel-plate/index',
-    //   meta: { title: '退货办理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'SteelPlateRejectApplication',
-    //       path: 'raw-mat',
-    //       hidden: false,
-    //       component: '/wms/reject-application/raw-mat/index',
-    //       meta: { title: '原材料-退货', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
+    {
+      path: '/wms/reject-application',
+      component: 'Layout',
+      hidden: false,
+      name: 'WMSRejectApplication',
+      alwaysShow: true,
+      redirect: '/wms/reject-application/steel-plate/index',
+      meta: { title: '退货办理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'SteelPlateRejectApplication',
+          path: 'raw-mat',
+          hidden: false,
+          component: '/wms/reject-application/raw-mat/index',
+          meta: { title: '原材料-退货', icon: 'project', noCache: true }
+        }
+      ]
+    },
     {
       path: '/wms/inbound-and-outbound-review',
       component: 'Layout',

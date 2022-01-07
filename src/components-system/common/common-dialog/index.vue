@@ -30,7 +30,7 @@
             <span class="title-text">{{ props.title }}</span>
             <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
           </span>
-          <span class="dialog-title-right" v-if="!props.contentLoading">
+          <span class="dialog-title-right child-mr-6" v-if="!props.contentLoading">
             <slot name="titleRight" />
             <common-button v-if="props.showClose" @click="handleClose" size="mini" :type="props.closeBtnType" plain>关闭</common-button>
           </span>

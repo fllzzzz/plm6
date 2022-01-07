@@ -22,21 +22,21 @@
 
 <script setup>
 import { isNotBlank } from '@/utils/data-type'
-import { ref, defineExpose, defineProps, defineEmits, watchEffect } from 'vue'
+import { ref, defineExpose, defineProps, defineEmits, watchEffect, computed } from 'vue'
 
 const emit = defineEmits(['change', 'blur', 'focus', 'update:modelValue'])
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
   modelValue: {
-    type: [Number, null]
+    type: [Number, String, null]
   },
   min: {
-    type: Number,
+    type: [String, Number],
     default: undefined
   },
   max: {
-    type: Number,
+    type: [String, Number],
     default: undefined
   },
   step: {
@@ -83,8 +83,20 @@ const props = defineProps({
 const inputRef = ref()
 const copyValue = ref()
 
+const max = computed(() => {
+  if (typeof props.max === 'string') return +props.max
+  return props.max
+})
+
+const min = computed(() => {
+  if (typeof props.min === 'string') return +props.min
+  return props.min
+})
+
 watchEffect(() => {
-  copyValue.value = !isNaN(props.modelValue) && isNotBlank(props.modelValue) ? props.modelValue : undefined
+  let value = !isNaN(props.modelValue) && isNotBlank(props.modelValue) ? props.modelValue : undefined
+  if (typeof value === 'string') value = +value
+  copyValue.value = value
 })
 
 watchEffect(() => {

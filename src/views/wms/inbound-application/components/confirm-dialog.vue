@@ -30,7 +30,7 @@
           <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
-              <expand-secondary-info v-if="showAmount" :basic-class="props.basicClass" :row="row" show-brand />
+              <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
                 备注：<span v-empty-text>{{ row.remark }}</span>
               </p>
@@ -41,12 +41,12 @@
           <!-- 单位及其数量 -->
           <material-unit-quantity-columns :basic-class="props.basicClass" />
           <!-- 次要信息 -->
-          <material-secondary-info-columns v-if="!showAmount" :basic-class="props.basicClass" />
+          <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
           <!-- 金额设置 -->
           <price-set-columns
             v-if="showAmount"
-            :order="order"
             :form="form"
+            :order="order"
             :requisitions="cu.props.requisitions"
             @amount-change="handleAmountChange"
           />
@@ -158,6 +158,14 @@ const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay ==
 const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+// 在列中显示次要信息
+const showTableColumnSecondary = computed(() => {
+  // 非甲供订单，显示项目和申购单 或者仓库时
+  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
+  // 甲供订单，显示项目和申购单以及仓库时
+  const unshow2 = showAmount.value && boolPartyA.value && (order.value.projects && order.value.requisitionsSN) && showWarehouse.value
+  return !(unshow1 || unshow2)
+})
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(

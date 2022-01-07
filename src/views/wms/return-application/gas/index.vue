@@ -235,8 +235,10 @@ function handleQuantityChange(row, nVal) {
 
 // 核算量变更
 function handleMeteChange(row, nVal) {
-  if (isNotBlank(nVal) && isNotBlank(row.source.accountingUnitNet)) {
-    row.quantity = +toFixed(nVal * row.source.accountingUnitNet, row.measureUnit)
+  if (row.measureUnit && isNotBlank(nVal) && isNotBlank(row.source.accountingUnitNet)) {
+    row.quantity = +toFixed(nVal * row.source.accountingUnitNet, row.measurePrecision)
+  } else {
+    row.quantity = undefined
   }
 }
 

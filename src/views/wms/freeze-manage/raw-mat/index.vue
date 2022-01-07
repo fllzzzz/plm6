@@ -22,7 +22,7 @@
               class="table-border-none"
               :material="row"
               mode="incoming"
-              :records="filterRecord(row.recordList)"
+              :records="row.recordList"
               @unfreeze-success="crud.toQuery"
             />
           </div>
@@ -115,6 +115,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 }
 
 // 过滤记录
+// eslint-disable-next-line no-unused-vars
 function filterRecord(list) {
   if (crud.query.freezeType) {
     return list.filter((v) => v.freezeType === crud.query.freezeType)

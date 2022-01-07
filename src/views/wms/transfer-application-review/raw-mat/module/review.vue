@@ -102,6 +102,7 @@ import { deepClone } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
+import { regExtra } from '@/composables/use-crud'
 import useTableValidate from '../composables/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -153,6 +154,8 @@ const showAmount = ref(false) // 显示金额，只有“买入甲供材料才�
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题
 const drawerTitle = computed(() => (detailLoading.value ? `调拨单：` : `调拨单：${form.value.serialNumber || ''}`))
+
+const { crud } = regExtra()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -234,7 +237,7 @@ function handleConvenientChange(id) {
 
 // 获取待审核入库单id列表
 async function fetchPendingReviewIdList() {
-  pendingReviewIdList.value = await getPendingReviewIdList()
+  pendingReviewIdList.value = await getPendingReviewIdList(crud.query)
 }
 
 // 加载详情

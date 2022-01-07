@@ -34,7 +34,7 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
     data.content.forEach(async (v) => {
       v.operableQuantity = v.quantity - v.frozenQuantity || 0
       v.operableMete = v.mete - v.frozenMete || 0
-      if (v.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+      if (v.outboundUnitType === measureTypeEnum.MEASURE.V) {
         // 实际在出库中使用的数量
         v.corQuantity = v.quantity // 数量
         v.corFrozenQuantity = v.frozenQuantity // 冻结数量
@@ -59,7 +59,7 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
         })
         v.projectFrozen.forEach((pf) => {
           // 用于普通出库
-          v.projectFrozenForUnitKV[pf.projectId] = v.curOutboundUnitType === measureTypeEnum.MEASURE.V ? pf.quantity : pf.mete
+          v.projectFrozenForUnitKV[pf.projectId] = v.outboundUnitType === measureTypeEnum.MEASURE.V ? pf.quantity : pf.mete
           // 用于批量出库
           v.projectFrozenKV[pf.projectId] = pf
         })

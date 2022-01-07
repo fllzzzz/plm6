@@ -135,6 +135,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { parseTime } from '@/utils/date'
 
+import { regExtra } from '@/composables/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -187,6 +188,8 @@ const drawerTitle = computed(() => {
   }
 })
 
+const { crud } = regExtra()
+
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {
@@ -237,7 +240,7 @@ function handleConvenientChange(id) {
 
 // 获取待审核入库单id列表
 async function fetchPendingReviewIdList() {
-  pendingReviewIdList.value = await getPendingReviewIdList()
+  pendingReviewIdList.value = await getPendingReviewIdList(crud.query)
 }
 
 // 加载详情

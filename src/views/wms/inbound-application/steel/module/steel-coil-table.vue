@@ -215,7 +215,7 @@ function calcTotalLength(row) {
   } else {
     row.length = undefined
   }
-  row.quantity = row.length
+  // row.quantity = row.length
 }
 
 // 删除行
@@ -233,6 +233,9 @@ function validate() {
   if (isBlank(form.steelCoilList)) return true
   const { validResult, dealList } = tableValidate(form.steelCoilList)
   form.steelCoilList = dealList
+  form.steelCoilList.forEach((row) => {
+    row.quantity = row.length
+  })
   return validResult
 }
 

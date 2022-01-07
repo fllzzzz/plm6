@@ -11,6 +11,7 @@
             type="enum"
             size="small"
             class="filter-item"
+            @change="crud.toQuery"
           />
         </template>
         <template #afterProjectWarehouseType>
@@ -26,7 +27,7 @@
       </mat-header-query>
       <rr-operation />
     </div>
-    <crud-operation> </crud-operation>
+    <crud-operation />
   </div>
 </template>
 

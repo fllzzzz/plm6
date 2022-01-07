@@ -64,7 +64,7 @@ const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field:
 
 // 最大可设置数量
 const maxQuantity = computed(() => {
-  if (props.material.curOutboundUnitType === measureTypeEnum.MEASURE.V) {
+  if (props.material.outboundUnitType === measureTypeEnum.MEASURE.V) {
     return props.record.quantity // 数量
   } else {
     return props.record.mete

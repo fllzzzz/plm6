@@ -1,4 +1,4 @@
-import { MIN_UNIT, STEEL_ENUM } from '@/settings/config'
+import { MIN_UNIT, STEEL_ENUM, UNIT_NET_PRECISION } from '@/settings/config'
 import store from '@/store'
 import { codeWait } from '..'
 import { convertUnits } from '../convert/unit'
@@ -241,6 +241,11 @@ function otherRawMatFormat(
   if (isNotBlank(measureUnit) && isBlank(_measureUnit)) console.error(`“${measureUnit}”:无法从当前系统获取当该单位配置`)
   if (isNotBlank(accountingUnit) && isBlank(_accountingUnit)) console.error(`“${accountingUnit}”:无法从当前系统获取当该单位配置`)
 
+  // 计算钢材的单位净量
+  if (STEEL_ENUM) {
+    data['unitNet'] = toFixed(data.mete / data.quantity, UNIT_NET_PRECISION)
+  }
+
   // 数量
   if (isNotBlank(_measureUnit) && isNotBlank(quantity)) {
     fieldsFormat({
@@ -285,20 +290,20 @@ function otherRawMatFormat(
 
     // 辅材、气体等（除钢材）单位净量转换
     // 服务端unitNet是根据最小单位计算的，所以此处需要转换（服务端unitNet: 入库时：核算量/计量量）
-    if (!(basicClass & STEEL_ENUM)) {
-      unitNetFormat({
-        data,
-        unitNet,
-        accountingUnitNet,
-        measureUnit: _measureUnit,
-        accountingUnit: _accountingUnit,
-        measurePrecision,
-        accountingPrecision,
-        toSmallest,
-        showUnit,
-        toNum
-      })
-    }
+    // if (!(basicClass & STEEL_ENUM)) {
+    unitNetFormat({
+      data,
+      unitNet,
+      accountingUnitNet,
+      measureUnit: _measureUnit,
+      accountingUnit: _accountingUnit,
+      measurePrecision,
+      accountingPrecision,
+      toSmallest,
+      showUnit,
+      toNum
+    })
+    // }
   }
 }
 
@@ -319,7 +324,10 @@ function unitNetFormat({
   if (isNotBlank(measureUnit)) {
     // 计量与最小单位的比例
     const measureMinUnit = getUnitType(measureUnit.type)
-    const measureScale = convertUnits(1, measureUnit.symbol, MIN_UNIT[measureMinUnit], MIN_UNIT[`${measureMinUnit}_DP`], { showUnit, toNum })
+    const measureScale = convertUnits(1, measureUnit.symbol, MIN_UNIT[measureMinUnit], MIN_UNIT[`${measureMinUnit}_DP`], {
+      showUnit,
+      toNum
+    })
     // 核算与最小单位的比例
     const accountingMinUnit = getUnitType(accountingUnit.type)
     const accountingScale = convertUnits(1, accountingUnit.symbol, MIN_UNIT[accountingMinUnit], MIN_UNIT[`${accountingMinUnit}_DP`], {

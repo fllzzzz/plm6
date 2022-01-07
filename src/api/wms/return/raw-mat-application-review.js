@@ -29,11 +29,12 @@ export function detail(id) {
 /**
  * 获取待审核的ids
  */
-export function getPendingReviewIdList() {
+export function getPendingReviewIdList(params) {
   return request({
     module: 'wms',
     url: `return/application/review/raw-materials/pending/ids`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
