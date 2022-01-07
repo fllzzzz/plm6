@@ -23,7 +23,7 @@
       <el-form-item label="未生产数">
         <span>{{ unInProductionQuantity }}</span>
       </el-form-item>
-      <el-form-item label="输入数量" prop="quantity">
+      <el-form-item label="删除数量" prop="quantity">
         <el-input-number
           v-model="form.quantity"
           :step="1"
@@ -46,7 +46,7 @@ import { ElNotification } from 'element-plus'
 import useVisible from '@compos/use-visible'
 
 const rules = {
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
+  quantity: [{ required: true, message: '请填写删除数量', trigger: 'blur' }]
 }
 const formRef = ref()
 const emit = defineEmits(['delSuccess', 'update:visible'])
@@ -84,7 +84,7 @@ function submitIt() {
     if (valid) {
       const data = {
         id: props.details.id,
-        quantity: form?.quantity
+        quantity: props.details.sourceSchedulingQuantity - form?.quantity
       }
       await delTask(data)
       ElNotification({ title: '任务删除成功', type: 'success', duration: 2500 })

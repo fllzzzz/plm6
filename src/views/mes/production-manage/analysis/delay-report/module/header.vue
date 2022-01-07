@@ -35,7 +35,6 @@
           class="filter-item"
           @change="crud.toQuery"
         />
-
         <rrOperation />
       </div>
     </template>
