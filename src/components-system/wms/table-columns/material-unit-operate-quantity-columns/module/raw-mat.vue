@@ -16,7 +16,7 @@
     >
       <template #default="{ row }">
         <template v-if="row.measureUnit">
-          <template v-if="showOperableQuantity">
+          <template v-if="showOperableQuantity && (!equalDisabled || row[operableQuantityField] != row[quantityField])">
             <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
             /
           </template>
@@ -32,7 +32,7 @@
     </el-table-column>
     <el-table-column v-if="showMete" key="mete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
       <template #default="{ row }">
-        <template v-if="showOperableMete">
+        <template v-if="showOperableMete && (!equalDisabled || row[operableMeteField] != row[meteField])">
           <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
           /
         </template>
@@ -107,6 +107,10 @@ const props = defineProps({
   showOperableMete: {
     type: Boolean,
     default: true
+  },
+  equalDisabled: {
+    type: Boolean,
+    default: false
   }
 })
 

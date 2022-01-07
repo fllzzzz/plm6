@@ -18,9 +18,10 @@
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="handleRefresh" />
       <!-- 单位及其数量 -->
-      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" />
+      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" equal-disabled />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
+      <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" />
       <!--编辑与删除-->
       <el-table-column label="操作" width="120px" align="center" fixed="right">

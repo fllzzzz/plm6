@@ -32,8 +32,8 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
     })
     // TODO:后期考虑由服务端处理
     data.content.forEach(async (v) => {
-      v.operableQuantity = v.quantity - v.frozenQuantity || 0
-      v.operableMete = v.mete - v.frozenMete || 0
+      v.operableQuantity = v.quantity - (v.frozenQuantity || 0)
+      v.operableMete = v.mete - (v.frozenMete || 0)
       if (v.outboundUnitType === measureTypeEnum.MEASURE.V) {
         // 实际在出库中使用的数量
         v.corQuantity = v.quantity // 数量

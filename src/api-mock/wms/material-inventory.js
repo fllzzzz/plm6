@@ -53,9 +53,7 @@ const getSteelPlate = {
             basicClass: 1,
             specification: 'Q325B',
             mete: 500000, // 核算量
-            frozenMete: 400000, // 冻结量
             quantity: 5, // 数量
-            frozenQuantity: 4, // 冻结数量
             thickness: 10,
             length: 15000,
             width: 1000,
