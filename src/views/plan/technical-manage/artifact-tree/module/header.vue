@@ -146,7 +146,7 @@ const carryParam = computed(() => {
 
 function uploadSuccess() {
   getErrorArtifactData()
-  crud.toQuery
+  crud.toQuery()
 }
 function tabClick(val) {
   const { name, label } = val
