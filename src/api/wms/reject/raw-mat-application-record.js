@@ -20,21 +20,6 @@ export function get(params) {
 }
 
 /**
- *修改退库申请
- *
- * @export
- * @returns
- */
-export function edit(data) {
-  return request({
-    module: 'wms',
-    url: 'reject/application/record/raw-materials',
-    method: 'put',
-    data
-  })
-}
-
-/**
  *删除订单
  *
  * @export
@@ -62,4 +47,4 @@ export function detail(id) {
   })
 }
 
-export default { get, edit, del, detail }
+export default { get, del, detail }

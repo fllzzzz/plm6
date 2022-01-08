@@ -104,10 +104,10 @@ import materialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import titleAfterInfo from '@/views/wms/inbound-components/title-after-info.vue'
+import titleAfterInfo from '@/views/wms/reject-components/raw-mat/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
-import RejectInfoTable from '@/views/wms/reject-components/raw-mat-reject-info-table/index.vue'
-import RejectMatchInfo from '@/views/wms/reject-components/raw-mat-reject-match-info/index.vue'
+import RejectInfoTable from '@/views/wms/reject-components/raw-mat/reject-info-table.vue'
+import RejectMatchInfo from '@/views/wms/reject-components/raw-mat/reject-match-info.vue'
 import Preview from './preview.vue'
 
 const emit = defineEmits(['success', 'update:visible'])
@@ -143,7 +143,6 @@ const currentRowRejectInfo = ref()
 const curAddRecordNumber = ref(0)
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
-const { rejectCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -156,6 +155,9 @@ const { maxHeight } = useMaxHeight(
   },
   dialogVisible
 )
+
+// 退货配置
+const { rejectCfg } = useWmsConfig()
 
 // 物料金额显示
 const materialAmountDisplayWay = computed(() => {

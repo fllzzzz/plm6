@@ -39,11 +39,7 @@
           width="150"
         >
           <template #default="{ row }">
-            <span
-              class="color-green"
-              v-empty-text
-              v-to-fixed="{ val: row.singleReturnableLength, dp: curMatBaseUnit.length.precision }"
-            />
+            <span class="color-green" v-empty-text v-to-fixed="{ val: row.singleReturnableLength, dp: curMatBaseUnit.length.precision }" />
             /
             <span v-empty-text v-to-fixed="{ val: row.length, dp: curMatBaseUnit.length.precision }" />
           </template>
@@ -95,8 +91,9 @@
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">
         <template #default="{ row }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
-            <common-button type="warning" size="mini" @click="handleAddReturn(row)">退库</common-button>
+            <common-button :disabled="row.boolReviewPending" type="warning" size="mini" @click="handleAddReturn(row)">退库</common-button>
           </el-badge>
+          <table-cell-tag v-if="row.boolReviewPending" name="退库中" color="#909399" />
         </template>
       </el-table-column>
     </common-table>
@@ -128,6 +125,7 @@ import Pagination from '@crud/Pagination'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header'
 
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import OutboundDetail from '@/views/wms/outbound-application-review/raw-mat/module/detail.vue'

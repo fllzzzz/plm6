@@ -53,6 +53,7 @@ const getSteelPlateList = {
           {
             id: 2,
             classifyId: 103,
+            boolReviewPending: true,
             basicClass: rawMatClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 8000000,

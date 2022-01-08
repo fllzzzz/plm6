@@ -200,6 +200,12 @@ div:focus {
   }
 }
 
+.label-after {
+  &:after {
+    content: '：';
+  }
+}
+
 //main-container全局样式
 .app-container {
   padding: 20px;

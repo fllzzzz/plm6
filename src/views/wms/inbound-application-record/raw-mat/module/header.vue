@@ -36,6 +36,7 @@
       />
       <supplier-select
         v-model="query.supplierId"
+        :basicClass="query.basicClass"
         :type="supplierTypeEnum.RAW_MATERIAL.V"
         clearable
         class="filter-item"

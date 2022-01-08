@@ -28,9 +28,9 @@
         value-format="x"
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         unlink-panels
-        start-placeholder="申请开始日期"
-        end-placeholder="申请结束日期"
-        style="width: 270px"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        style="width: 240px"
         class="filter-item"
         @change="crud.toQuery"
       />
@@ -56,7 +56,7 @@
         @keyup.enter="crud.toQuery"
       />
       <el-input
-        v-model.trim="query.serialNumber"
+        v-model.trim="query.inboundSN"
         clearable
         style="width: 200px"
         size="small"
@@ -65,11 +65,20 @@
         @keyup.enter="crud.toQuery"
       />
       <el-input
+        v-model.trim="query.serialNumber"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按退货单号搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
         v-model.trim="query.operatorName"
         clearable
         style="width: 200px"
         size="small"
-        placeholder="申请人/编辑人/审核人"
+        placeholder="退货申请人/审核人"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -83,8 +92,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
@@ -100,14 +110,23 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   basicClass: undefined, // 采购类型
-  reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
+  reviewStatus: undefined, // 审核状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   purchaseSN: undefined, // 采购单号
-  serialNumber: undefined, // 入库单号
+  inboundSN: undefined, // 入库单号
+  serialNumber: undefined, // 退货单号
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人
 }
 
+const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
 useGlobalProjectIdChangeToQuery(crud)
+onMounted(() => {
+  if (+route.params.basicClass === STEEL_ENUM) {
+    query.basicClass = rawMatClsEnum.STEEL_PLATE.V
+  } else {
+    query.basicClass = route.params.basicClass
+  }
+})
 </script>

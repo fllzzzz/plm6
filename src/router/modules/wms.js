@@ -110,6 +110,13 @@ export default {
           hidden: false,
           component: '/wms/reject-application/raw-mat/index',
           meta: { title: '原材料-退货', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatRejectRecord',
+          path: 'reject-record/raw-mat',
+          hidden: false,
+          component: '/wms/reject-application-record/raw-mat/index',
+          meta: { title: '原材料-退货申请', icon: 'project', noCache: true }
         }
       ]
     },
@@ -142,6 +149,13 @@ export default {
           hidden: false,
           component: '/wms/return-application-review/raw-mat/index',
           meta: { title: '原材料-退库审核', icon: 'project', noCache: true }
+        },
+        {
+          name: 'RawMatRejectReview',
+          path: 'reject-application-review/raw-mat',
+          hidden: false,
+          component: '/wms/reject-application-review/raw-mat/index',
+          meta: { title: '原材料-退货审核', icon: 'project', noCache: true }
         }
       ]
     },
