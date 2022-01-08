@@ -156,6 +156,7 @@
         prop="reviewStatus"
         label="状态"
         align="center"
+        fixed="right"
       >
         <template #default="{ row }">
           <el-tag :type="reviewStatusEnum.V[row.reviewStatus].TAG">{{ reviewStatusEnum.VL[row.reviewStatus] }}</el-tag>

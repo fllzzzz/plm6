@@ -189,6 +189,7 @@
         label="状态"
         align="center"
         width="80"
+        fixed="right"
       >
         <template #default="{ row }">
           <template v-if="row.reviewable">
