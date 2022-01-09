@@ -9,35 +9,35 @@ export default {
       hidden: false,
       name: 'WMSInboundApplication',
       alwaysShow: false,
-      redirect: '/wms/inbound-application/steel/index',
+      redirect: '/wms/material-inbound/raw-material/application/steel/index',
       meta: { title: '入库办理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'SteelInboundApplication',
           path: 'steel',
           hidden: false,
-          component: '/wms/inbound-application/steel/index',
+          component: '/wms/material-inbound/raw-material/application/steel/index',
           meta: { title: '钢材入库', icon: 'project', noCache: true }
         },
         {
           name: 'AuxMatInboundApplication',
           path: 'auxiliary-material',
           hidden: false,
-          component: '/wms/inbound-application/auxiliary-material/index',
+          component: '/wms/material-inbound/raw-material/application/auxiliary-material/index',
           meta: { title: '辅材入库', icon: 'project', noCache: true }
         },
         {
           name: 'GasInboundApplication',
           path: 'gas',
           hidden: false,
-          component: '/wms/inbound-application/gas/index',
+          component: '/wms/material-inbound/raw-material/application/gas/index',
           meta: { title: '气体入库', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatInboundApplicationRecord',
-          path: 'inbound-application-record/raw-mat',
+          path: 'material-inbound/raw-material/record',
           hidden: false,
-          component: '/wms/inbound-application-record/raw-mat/index',
+          component: '/wms/material-inbound/raw-material/record/index',
           meta: { title: '原材料-入库申请', icon: 'project', noCache: true }
         }
       ]
@@ -48,49 +48,49 @@ export default {
       hidden: false,
       name: 'WMSReturnApplication',
       alwaysShow: false,
-      redirect: '/wms/return-application/steel-plate/index',
+      redirect: '/wms/material-return/raw-material/application/steel-plate/index',
       meta: { title: '退库办理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'SteelPlateReturnApplication',
           path: 'steel-plate',
           hidden: false,
-          component: '/wms/return-application/steel-plate/index',
+          component: '/wms/material-return/raw-material/application/steel-plate/index',
           meta: { title: '钢板退库', icon: 'project', noCache: true }
         },
         {
           name: 'SectionSteelReturnApplication',
           path: 'section-steel',
           hidden: false,
-          component: '/wms/return-application/section-steel/index',
+          component: '/wms/material-return/raw-material/application/section-steel/index',
           meta: { title: '型材退库', icon: 'project', noCache: true }
         },
         {
           name: 'SteelCoilReturnApplication',
           path: 'steel-coil',
           hidden: false,
-          component: '/wms/return-application/steel-coil/index',
+          component: '/wms/material-return/raw-material/application/steel-coil/index',
           meta: { title: '钢卷退库', icon: 'project', noCache: true }
         },
         {
           name: 'AuxMatReturnApplication',
           path: 'auxiliary-material',
           hidden: false,
-          component: '/wms/return-application/auxiliary-material/index',
+          component: '/wms/material-return/raw-material/application/auxiliary-material/index',
           meta: { title: '辅材退库', icon: 'project', noCache: true }
         },
         {
           name: 'GasReturnApplication',
           path: 'gas',
           hidden: false,
-          component: '/wms/return-application/gas/index',
+          component: '/wms/material-return/raw-material/application/gas/index',
           meta: { title: '气体退库', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatReturnApplicationRecord',
-          path: 'return-application-record/raw-mat',
+          path: 'material-return/raw-material/record',
           hidden: false,
-          component: '/wms/return-application-record/raw-mat/index',
+          component: '/wms/material-return/raw-material/record/index',
           meta: { title: '原材料-退库申请', icon: 'project', noCache: true }
         }
       ]
@@ -108,14 +108,14 @@ export default {
           name: 'SteelPlateRejectApplication',
           path: 'raw-mat',
           hidden: false,
-          component: '/wms/reject-application/raw-mat/index',
+          component: '/wms/material-reject/raw-material/application/index',
           meta: { title: '原材料-退货', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatRejectRecord',
           path: 'reject-record/raw-mat',
           hidden: false,
-          component: '/wms/reject-application-record/raw-mat/index',
+          component: '/wms/material-reject/raw-material/record/index',
           meta: { title: '原材料-退货申请', icon: 'project', noCache: true }
         }
       ]
@@ -126,35 +126,35 @@ export default {
       hidden: false,
       name: 'WMSInboundAndOutboundReview',
       alwaysShow: false,
-      redirect: '/wms/inbound-application-review/raw-mat/index',
+      redirect: '/wms/material-inbound/raw-material/review/index',
       meta: { title: '出入库审核', icon: 'contract', noCache: true },
       children: [
         {
           name: 'RawMatInboundApplicationReview',
-          path: 'inbound-application-review/raw-mat',
+          path: 'material-inbound/raw-material/review',
           hidden: false,
-          component: '/wms/inbound-application-review/raw-mat/index',
+          component: '/wms/material-inbound/raw-material/review/index',
           meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatTransferApplicationReview',
-          path: 'transfer-application-review/raw-mat',
+          path: 'material-transfer/raw-material/review',
           hidden: false,
-          component: '/wms/transfer-application-review/raw-mat/index',
+          component: '/wms/material-transfer/raw-material/review/index',
           meta: { title: '原材料-调拨审核', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatReturnApplicationReview',
-          path: 'return-application-review/raw-mat',
+          path: 'material-return/raw-material/review',
           hidden: false,
-          component: '/wms/return-application-review/raw-mat/index',
+          component: '/wms/material-return/raw-material/review/index',
           meta: { title: '原材料-退库审核', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatRejectReview',
-          path: 'reject-application-review/raw-mat',
+          path: 'material-reject/raw-material/review',
           hidden: false,
-          component: '/wms/reject-application-review/raw-mat/index',
+          component: '/wms/material-reject/raw-material/review/index',
           meta: { title: '原材料-退货审核', icon: 'project', noCache: true }
         }
       ]
@@ -191,23 +191,23 @@ export default {
         },
         {
           name: 'WMSOutboundReview',
-          path: 'outbound-application-review/raw-mat',
+          path: 'material-outbound/raw-material/review',
           hidden: false,
-          component: '/wms/outbound-application-review/raw-mat/index',
+          component: '/wms/material-outbound/raw-material/review/index',
           meta: { title: '原材料-出库审核', icon: 'project', noCache: true }
         },
         {
           name: 'WMSOutboundRecord',
-          path: 'outbound-application-record/raw-mat',
+          path: 'material-outbound/raw-material/record',
           hidden: false,
-          component: '/wms/outbound-application-record/raw-mat/index',
+          component: '/wms/material-outbound/raw-material/record/index',
           meta: { title: '原材料-出库记录', icon: 'project', noCache: true }
         },
         {
           name: 'WMSPartyABorrowManage',
-          path: 'party-a-borrow-manage',
+          path: 'material-transfer/raw-material/party-a-borrow-manage',
           hidden: false,
-          component: '/wms/party-a-borrow-manage/index',
+          component: '/wms/material-transfer/raw-material/party-a-borrow-manage/index',
           meta: { title: '甲供材料借出管理', icon: 'project', noCache: true }
         }
       ]
@@ -231,26 +231,26 @@ export default {
       ]
     },
     {
-      path: '/wms/freeze-manage',
+      path: '/wms/material-freeze',
       component: 'Layout',
       hidden: false,
       name: 'WMSFreezeManage',
       alwaysShow: false,
-      redirect: '/wms/freeze-manage/raw-mat/index',
+      redirect: '/wms/material-freeze/raw-material/record/index',
       meta: { title: '冻结管理', icon: 'contract', noCache: true },
       children: [
         {
           name: 'WMSRawMatFreezeList',
           path: 'raw-mat-record',
           hidden: false,
-          component: '/wms/freeze-manage/raw-mat/index',
+          component: '/wms/material-freeze/raw-material/record/index',
           meta: { title: '原材料-冻结列表', icon: 'project', noCache: true }
         },
         {
           name: 'WMSRawMatUnfreezeRecord',
           path: 'raw-mat-unfreeze-record',
           hidden: false,
-          component: '/wms/freeze-manage/raw-mat-unfreeze-record/index',
+          component: '/wms/material-freeze/raw-material/unfreeze-record/index',
           meta: { title: '原材料-解冻记录', icon: 'project', noCache: true }
         }
       ]
@@ -353,13 +353,6 @@ export default {
       ]
     },
     // {
-    //   name: 'InventoryWarning',
-    //   path: 'inventory-warning',
-    //   hidden: false,
-    //   component: '/wms-config/inventory-warning/index',
-    //   meta: { title: '库存预警', icon: 'project', noCache: true }
-    // },
-    // {
     //   path: '/wms/prepares-materials',
     //   component: 'Layout',
     //   hidden: false,
@@ -381,13 +374,6 @@ export default {
     //       hidden: false,
     //       component: '/wms/prepares-materials/track/index',
     //       meta: { title: '备料跟踪', icon: 'project', noCache: true }
-    //     },
-    //     {
-    //       name: 'WmsFreezeMaterialManage',
-    //       path: 'freeze-manage',
-    //       hidden: false,
-    //       component: '/wms/warehouse-management/freeze-manage',
-    //       meta: { title: '冻结管理', icon: 'project', noCache: true }
     //     }
     //   ]
     // },

@@ -66,8 +66,8 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import OutboundHandlingForm from '@/views/wms/outbound-components/outbound-handling-form/index.vue'
-import TransferHandlingForm from '@/views/wms/transfer-components/transfer-handling-form/index.vue'
+import OutboundHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/index.vue'
+import TransferHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-handling-form/index.vue'
 import MHeader from './module/header'
 import Pagination from '@crud/Pagination'
 

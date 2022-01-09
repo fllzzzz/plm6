@@ -75,8 +75,8 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/wms/transfer/return-to-party-a'
-import { detail as getTransferDetail } from '@/api/wms/transfer/raw-mat-application-review'
+import crudApi from '@/api/wms/material-transfer/raw-material/return-to-party-a'
+import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
 
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -90,7 +90,7 @@ import MHeader from './module/header'
 
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import TransferDetail from '@/views/wms/transfer-application-review/raw-mat/module/detail.vue'
+import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'

@@ -95,7 +95,7 @@ import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 
 import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
-import materialFreezeRecord from '@/views/wms/freeze-manage/components/material-freeze-record.vue'
+import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
 import steelPlate from './module/steel-plate.vue'
 import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
