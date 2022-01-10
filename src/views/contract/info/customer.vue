@@ -89,7 +89,7 @@
           </el-form-item>
           <el-form-item label="联系电话" prop="customerManagerOnePhone">
             <div class="input-underline" style="width:260px;">
-              <el-input v-if="isModify" v-model.number="form.customerManagerOnePhone" placeholder="负责人1联系电话" style="width:260px;"/>
+              <el-input v-if="isModify" v-model.trim="form.customerManagerOnePhone" placeholder="负责人1联系电话" style="width:260px;"/>
               <span v-else>{{ detail.customerManagerOnePhone }}</span>
             </div>
           </el-form-item>
@@ -103,7 +103,7 @@
           </el-form-item>
           <el-form-item label="联系电话" prop="customerManagerTwoPhone">
             <div class="input-underline" style="width:260px;">
-              <el-input v-if="isModify" v-model.number="form.customerManagerTwoPhone" placeholder="负责人2联系电话" style="width:260px;"/>
+              <el-input v-if="isModify" v-model.trim="form.customerManagerTwoPhone" placeholder="负责人2联系电话" style="width:260px;"/>
               <span v-else>{{ detail.customerManagerTwoPhone }}</span>
             </div>
           </el-form-item>
@@ -244,7 +244,8 @@ defineExpose({
   form,
   validateForm,
   fetchDetail,
-  resetForm
+  resetForm,
+  detail
 })
 </script>
 <style lang="scss" scoped>

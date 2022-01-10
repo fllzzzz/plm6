@@ -5,24 +5,54 @@
     border
   >
     <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="板型">
+    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="版型">
       <template v-slot="scope">
         <span>{{ scope.row.plateType }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" :show-overflow-tooltip="true" align="center" label="厚度">
+    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="展宽(mm)">
       <template v-slot="scope">
-        <span>{{ scope.row.thickness? Number(scope.row.thickness).toFixed(DP.MES_ENCLOSURE_T__MM): '' }}</span>
+        <span>{{ scope.row.plateType }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="plating" :show-overflow-tooltip="true" align="center" label="镀层">
+    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="有效宽(mm)">
+      <template v-slot="scope">
+        <span>{{ scope.row.plateType }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="版型">
+      <template v-slot="scope">
+        <span>{{ scope.row.plateType }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="mode" :show-overflow-tooltip="true" align="center" label="类型">
+      <template v-slot="scope">
+        <span>{{ scope.row.mode }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="thickness" :show-overflow-tooltip="true" align="center" label="板厚(mm)">
+      <template v-slot="scope">
+        <span>{{ scope.row.thickness }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="plating" :show-overflow-tooltip="true" align="center" label="屈服强度">
       <template v-slot="scope">
         <span>{{ scope.row.plating }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="usePart" :show-overflow-tooltip="true" align="center" label="使用部位">
+    <el-table-column prop="brand" :show-overflow-tooltip="true" align="center" label="品牌">
       <template v-slot="scope">
-        <span>{{ scope.row.usePart }}</span>
+        <span>{{ scope.row.brand }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="plating" :show-overflow-tooltip="true" align="center" label="镀层(g)">
+      <template v-slot="scope">
+        <span>{{ scope.row.plating }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="quantity" :show-overflow-tooltip="true" align="center" label="数量(m)">
+      <template v-slot="scope">
+        <span>{{ scope.row.quantity }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="!isShow" label="操作" align="center" fixed="right">
@@ -36,7 +66,6 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
-import { DP } from '@/settings/config'
 const props = defineProps({
   tableData: {
     type: Array,

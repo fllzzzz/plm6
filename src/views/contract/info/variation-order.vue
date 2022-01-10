@@ -5,12 +5,12 @@
     top="10vh"
     width="600px"
     :before-close="handleClose"
-    title="合同金额变更"
+    title="变更签证"
     :center="false"
   >
     <template #title>
       <div class="dialog-title">
-        <span class="title-left">合同金额变更</span>
+        <span class="title-left">变更签证</span>
         <common-button v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.REJECT.V?'info':(auditStatus==auditTypeEnum.PASS.V?'success':'warning')">
           {{ auditStatus==auditTypeEnum.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.PASS.V?'已通过':'审核中') }}
         </common-button>
@@ -27,7 +27,7 @@
       </div>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
-      <el-form-item label="项目" prop="serialNumber">
+      <el-form-item label="合同编号" prop="serialNumber">
         <span v-if="!auditStatus" class="project-name">{{ projectNameFormatter(detailInfo) }}</span>
         <template v-else>
           <span class="project-name" v-if="detailInfo.project">{{ projectNameFormatter(detailInfo.project) }}</span>
@@ -37,26 +37,16 @@
          <span v-if="!auditStatus">{{ toThousand(detailInfo.contractAmount) }}</span>
          <span v-else>{{ toThousand(detailInfo.contractAmount) }}</span>
       </el-form-item>
-      <el-form-item label="变更内容" prop="changeContent">
-        <el-input
-          v-if="!auditStatus"
-          v-model="form.changeContent"
-          placeholder="变更内容"
-          style="width: 320px;"
-        />
-        <span v-else>{{ form.changeContent }}</span>
-      </el-form-item>
-      <el-form-item label="变更金额(可增减)" prop="changeMoney">
+      <el-form-item label="签证金额" prop="changeMoney">
         <el-input-number
-          v-show-thousand
           v-if="!auditStatus"
           v-model="form.changeMoney"
           :max="9999999999"
-          :min="-detailInfo.contractAmount"
-          :step="100"
+          :min="0"
+          :step="10000"
           :precision="DP.YUAN"
           controls-position="right"
-          placeholder="变更金额(元)"
+          placeholder="签证金额(元)"
           style="width: 320px;"
         />
         <span v-else :class="detailInfo.contractAmount>detailInfo.changeAmount?'tip-red':'tip-green'">{{ toThousand(detailInfo.changeAmount-detailInfo.contractAmount) }}</span>
@@ -65,18 +55,18 @@
         <span v-if="!auditStatus">{{ newAmount?toThousand(newAmount):'' }}</span>
         <span v-else>{{ toThousand(detailInfo.changeAmount) }}</span>
       </el-form-item>
-      <el-form-item label="变更日期" prop="changeDate">
+      <el-form-item label="日期" prop="changeDate">
         <el-date-picker
           v-if="!auditStatus"
           v-model="form.changeDate"
           type="date"
           value-format="x"
-          placeholder="变更日期"
+          placeholder="日期"
           style="width: 320px;"
         />
         <span v-else>{{ detailInfo.changeDate?parseTime(detailInfo.changeDate,'{y}-{m}-{d}'):'-' }}</span>
       </el-form-item>
-      <el-form-item label="负责人" prop="userList">
+      <el-form-item label="签证人" prop="userList">
         <user-dept-cascader
           v-if="!auditStatus"
           v-model="form.userList"
@@ -84,25 +74,37 @@
           filterable
           clearable
           show-all-levels
-          placeholder="负责人"
+          placeholder="签证人"
           style="width: 320px;"
         />
         <template v-else>
           <span v-for="item in detailInfo.leaderList" :key="item.id">{{item.name}}</span>
         </template>
       </el-form-item>
-      <el-form-item label="描述" prop="changeDesc">
+      <el-form-item label="原因描述" prop="changeDesc">
         <el-input
           v-if="!auditStatus"
           v-model="form.changeDesc"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 8}"
-          placeholder="请填写描述"
+          placeholder="请填写原因描述"
           style="width: 320px;"
           :maxlength="200"
         />
         <span v-else>{{ detailInfo.changeDesc }}</span>
       </el-form-item>
+      <el-form-item label="付款方式" prop="payType">
+        <common-select
+          v-if="!auditStatus"
+          v-model="form.payType"
+          :options="paymentFineModeEnum.ENUM"
+          type="enum"
+          size="small"
+          placeholder="付款方式"
+          style="width: 250px"
+        />
+        <span v-else>{{ detailInfo.payType ? paymentFineModeEnum.VL[detailInfo.payType] : '' }}</span>
+    </el-form-item>
       <el-form-item label="附件">
         <upload-btn v-if="!auditStatus" ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
         <template v-if="auditStatus && detailInfo.attachmentList && detailInfo.attachmentList.length>0">
@@ -124,13 +126,13 @@ import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { DP } from '@/settings/config'
 import { editContract, confirmContract } from '@/api/contract/project'
-import { isNotBlank } from '@data-type/index'
 import { ElNotification, ElMessageBox } from 'element-plus'
+import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
-import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
 import ExportButton from '@comp-common/export-button/index.vue'
+import { toThousand } from '@data-type/number'
 
 const props = defineProps({
   projectId: [Number, String],
@@ -139,10 +141,6 @@ const props = defineProps({
     type: Boolean,
     require: true
   },
-  // detailInfo: {
-  //   type: Object,
-  //   default: () => {}
-  // },
   showType: {
     type: String,
     default: undefined
@@ -163,7 +161,8 @@ const defaultForm = {
   userList: [],
   changeDesc: undefined,
   attachments: undefined,
-  attachmentIds: undefined
+  attachmentIds: undefined,
+  payType: undefined
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -177,10 +176,8 @@ const validateLength = (rule, value, callback) => {
   }
 }
 const validateMoney = (rule, value, callback) => {
-  if (!isNotBlank(value)) {
-    callback(new Error('请填写变更金额'))
-  } else if (value === 0) {
-    callback(new Error('变更金额不能等于0'))
+  if (value <= 0) {
+    callback(new Error('签证金额必须大于0'))
   } else {
     callback()
   }
@@ -189,7 +186,8 @@ const validateMoney = (rule, value, callback) => {
 const rules = {
   changeMoney: { required: true, validator: validateMoney, trigger: 'change' },
   userList: { required: true, validator: validateLength, trigger: 'change' },
-  changeDate: { required: true, message: '请选择变更日期', trigger: 'blur' }
+  changeDate: { required: true, message: '请选择变更日期', trigger: 'blur' },
+  payType: { required: true, message: '请选择支付方式', trigger: 'change' }
 }
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
@@ -228,25 +226,25 @@ const newAmount = computed(() => {
 })
 
 async function onSubmit() {
+  const valid = await formRef.value.validate()
+  if (!valid) {
+    return
+  }
+  form.value.projectId = props.projectId
+  form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
+  form.value.changeAmount = newAmount
+  form.value.contractAmount = props.detailInfo.contractAmount
+  const submitform = {
+    type: contractChangeTypeEnum.VARIATION_ORDER.V,
+    ...form.value
+  }
   try {
-    const valid = await formRef.value.validate()
-    if (!valid) {
-      return
-    }
-    form.value.projectId = props.projectId
-    form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
-    form.value.changeAmount = newAmount
-    form.value.contractAmount = props.detailInfo.contractAmount
-    const submitform = {
-      type: contractChangeTypeEnum.ENUM.CONTRACT_AMOUNT.V,
-      ...form.value
-    }
     await editContract(submitform)
     ElNotification({ title: '提交成功', type: 'success' })
     emit('success')
     handleClose()
   } catch (error) {
-    console.log('金额变更失败', error)
+    console.log('变更签证失败', error)
   }
 }
 const inputValid = (val) => {
@@ -275,10 +273,10 @@ async function passConfirm(val) {
     }
     await confirmContract(submitData)
     ElNotification({ title: '提交成功', type: 'success' })
-    emit('success')
-    handleClose()
   } catch (error) {
     console.log('审核', error)
+  } finally {
+    handleClose()
   }
 }
 </script>

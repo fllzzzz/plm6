@@ -4,32 +4,27 @@
     :data="tableData"
     :cell-style="handleSandwichCellStyle"
   >
-    <el-table-column :label="'序号'" type="index" align="center" width="60" />
-    <el-table-column prop="brand" :show-overflow-tooltip="true" align="center" label="品名">
-      <template v-slot="scope">
-        <span>{{ scope.row.brand }}</span>
-      </template>
-    </el-table-column>
+    <el-table-column :label="'序号'" type="index" align="center" width="50" />
     <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="板型">
       <template v-slot="scope">
         <span>{{ scope.row.plateType }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="thickness" :show-overflow-tooltip="true" align="center" label="厚度">
+    <el-table-column prop="thickness" :show-overflow-tooltip="true" align="center" :label="`厚度\n(mm)`">
       <template v-slot="scope">
         <span>{{ scope.row.thickness? Number(scope.row.thickness).toFixed(DP.MES_ENCLOSURE_T__MM): '' }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="effectiveWidth" :show-overflow-tooltip="true" align="center" label="有效宽度">
+    <el-table-column prop="effectiveWidth" :show-overflow-tooltip="true" align="center" :label="`有效宽度\n(mm)`">
       <template v-slot="scope">
         <span>{{ scope.row.effectiveWidth? Number(scope.row.effectiveWidth).toFixed(DP.MES_ENCLOSURE_W__MM): '' }}</span>
       </template>
     </el-table-column>
     <el-table-column align="center" label="钢板信息">
       <el-table-column align="center" label="内外板">
-        <template>
-          <div class="sandwich-cell-top">外板</div>
-          <div class="sandwich-cell-bottom">内板</div>
+        <template v-slot="scope">
+          <div class="sandwich-cell-top" :key="scope.$index">外板</div>
+          <div class="sandwich-cell-bottom" :key="scope.$index">内板</div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="板形状">
@@ -50,7 +45,7 @@
           <div class="sandwich-cell-bottom">{{ scope.row.intSteelPlateBrand }}</div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="厚度">
+      <el-table-column align="center" label="厚度(mm)">
         <template v-slot="scope">
           <div class="sandwich-cell-top">{{ scope.row.outThickness? Number(scope.row.outThickness).toFixed(DP.MES_ENCLOSURE_T__MM): '' }}</div>
           <div class="sandwich-cell-bottom">{{ scope.row.intThickness? Number(scope.row.intThickness).toFixed(DP.MES_ENCLOSURE_T__MM): '' }}</div>
@@ -92,9 +87,14 @@
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="unitWeight" :show-overflow-tooltip="true" align="center" label="容重">
+      <el-table-column prop="unitWeight" :show-overflow-tooltip="true" align="center" :label="`容重\n(kg/m³)`">
         <template v-slot="scope">
-          <span>{{ scope.row.unitWeight? Number(scope.row.unitWeight).toFixed(2): '' }}</span>
+          <span>{{ scope.row.unitWeight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="quantity" :show-overflow-tooltip="true" align="center" label="数量(m)">
+        <template v-slot="scope">
+          <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
     </el-table-column>

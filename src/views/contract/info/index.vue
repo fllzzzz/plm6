@@ -1,71 +1,83 @@
 <template>
-  <div class="app-container">
+  <common-drawer
+    append-to-body
+    v-model="visible"
+    top="10vh"
+    width="600px"
+    :before-close="ModifyCancel"
+    title="合同信息"
+    :wrapper-closable="false"
+    size="80%"
+  >
+  <template #content>
     <div>
-      <el-radio-group v-model="showName" size="small" class="filter-item">
-        <el-radio-button label="contract">合同信息</el-radio-button>
-        <el-radio-button label="changeLog">变更管理</el-radio-button>
-      </el-radio-group>
-    </div>
-    <transition name="el-fade-in">
-      <div v-show="showName=='contract'" style="margin-bottom:10px;position:relative;">
-        <div style="position:absolute;right:0;z-index:2;">
-          <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
-            <template v-if="!isModify">
-              <template v-if="projectStatus==0">
-                <el-tooltip class="item" effect="dark" content="修改" placement="top">
-                  <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" />
+      <transition name="el-fade-in">
+        <div v-show="showName=='contract'" style="margin-bottom:10px;position:relative;">
+          <div style="position:absolute;right:0;z-index:2;">
+            <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
+              <template v-if="!isModify">
+                <template v-if="projectStatus===projectStatusEnum.PROCESS.V">
+                  <el-tooltip class="item" effect="dark" content="修改" placement="top">
+                    <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" />
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="合同金额变更" placement="top">
+                    <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" />
+                  </el-tooltip>
+                </template>
+                <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V || projectStatus!==projectStatusEnum.SETTLED.V">
+                  <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
+                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="变更签证" placement="top">
+                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" />
+                  </el-tooltip>
+                </template>
+                <el-tooltip class="item" effect="dark" content="打印" placement="top">
+                  <common-button size="mini" icon="el-icon-printer" plain class="next_btn" />
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="合同金额变更" placement="top">
-                  <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" />
+                <el-tooltip class="item" effect="dark" content="下载" placement="top">
+                  <common-button size="mini" icon="el-icon-download" plain class="next_btn" />
                 </el-tooltip>
               </template>
-              <template v-if="projectStatus!=1">
-                <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
-                  <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
-                </el-tooltip>
-              </template>
-              <el-tooltip class="item" effect="dark" content="打印" placement="top">
-                <common-button size="mini" icon="el-icon-printer" plain class="next_btn" />
-              </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="下载" placement="top">
-                <common-button size="mini" icon="el-icon-download" plain class="next_btn" />
-              </el-tooltip>
-            </template>
+            </div>
+            <div v-else>
+              <common-button size="mini" @click="ModifyCancel">取消</common-button>
+              <common-button :loading="submitLoading" size="mini" type="success" @click="submit">保存</common-button>
+            </div>
           </div>
-          <div v-else>
-            <common-button size="mini" @click="ModifyCancel">取消</common-button>
-            <common-button :loading="submitLoading" size="mini" type="success" @click="submit">保存</common-button>
-          </div>
+          <el-tabs v-model="activeName" v-if="projectId">
+            <el-tab-pane label="基础信息" name="baseInfo">
+              <base-info  ref="baseRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
+            </el-tab-pane>
+            <el-tab-pane label="商务信息" name="businessInfo">
+              <business-info ref="businessRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
+            </el-tab-pane>
+            <el-tab-pane label="客户信息" name="customerInfo">
+              <customer-info ref="customerRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
+            </el-tab-pane>
+            <el-tab-pane label="项目成员" name="memberInfo">
+              <members ref="memberRef" v-if="projectId" :project-id="projectId" :is-modify="isModify" />
+            </el-tab-pane>
+          </el-tabs>
         </div>
-        <el-tabs v-model="activeName" v-if="projectId">
-          <el-tab-pane label="基础信息" name="baseInfo">
-            <base-info  ref="baseRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
-          </el-tab-pane>
-          <el-tab-pane label="商务信息" name="businessInfo">
-            <business-info ref="businessRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
-          </el-tab-pane>
-          <el-tab-pane label="客户信息" name="customerInfo">
-            <customer-info ref="customerRef" class="tab-content" :project-id="projectId" :is-modify="isModify" />
-          </el-tab-pane>
-          <el-tab-pane label="项目成员" name="memberInfo">
-            <members ref="memberRef" v-if="projectId" :project-id="projectId" :is-modify="isModify" />
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-    </transition>
-    <transition name="el-fade-in">
-      <change-audit-log v-if="showName=='changeLog'" style="margin-top:10px;" :project-id="projectId" />
-    </transition>
-    <!-- 金额变更 -->
-    <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :contract-info="baseInfoValue"/>
-    <!-- 结算填报 -->
-    <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :contract-info="baseInfoValue"/>
-  </div>
+      </transition>
+      <transition name="el-fade-in">
+        <change-audit-log v-if="showName=='changeLog'" style="margin-top:10px;" :project-id="projectId" />
+      </transition>
+      <!-- 金额变更 -->
+      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <!-- 结算填报 -->
+      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <!-- 变更签证 -->
+      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+    </div>
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
-import { ref, defineProps, watch } from 'vue'
-import { ElMessage, ElTabs, ElTabPane, ElRadioGroup, ElMessageBox, ElNotification } from 'element-plus'
+import { ref, defineProps, defineEmits, watch } from 'vue'
+import { ElMessage, ElTabs, ElTabPane, ElMessageBox, ElNotification } from 'element-plus'
 import { contractChangeTypeEnum } from '@enum-ms/contract'
 import baseInfo from './base'
 import businessInfo from './business'
@@ -73,8 +85,12 @@ import customerInfo from './customer'
 import members from './members'
 import moneyForm from './money-form'
 import settleForm from './settle-form'
+import variationOrder from './variation-order'
 import changeAuditLog from './change-audit-log'
 import { editContract } from '@/api/contract/project'
+import { projectStatusEnum } from '@enum-ms/contract'
+import useVisible from '@compos/use-visible'
+import { judgeSameValue } from './judgeSameValue'
 
 const props = defineProps({
   projectId: {
@@ -88,13 +104,20 @@ const props = defineProps({
   projectName: {
     type: String,
     default: undefined
+  },
+  modelValue: {
+    type: Boolean,
+    require: true
   }
 })
+const emit = defineEmits(['success', 'update:modelValue'])
+const { visible, handleClose } = useVisible({ emit, props })
 const showName = ref('contract')
 const activeName = ref('baseInfo')
 const isModify = ref(false)
 const moneyVisible = ref(false)
 const settleVisible = ref(false)
+const variationVisible = ref(false)
 const submitLoading = ref(false)
 const auditStatus = ref()
 const baseRef = ref()
@@ -104,6 +127,7 @@ const memberRef = ref()
 const baseInfoValue = ref()
 const moneyRef = ref()
 const settleRef = ref()
+const variationRef = ref()
 
 watch(
   () => props.projectId,
@@ -118,7 +142,7 @@ watch(
 
 function confirmSettle() {
   baseInfoValue.value = baseRef.value.detail
-  if (props.projectStatus === 0) {
+  if (props.projectStatus === projectStatusEnum.PROCESS.V) {
     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
@@ -137,12 +161,21 @@ function moneyChange() {
   baseInfoValue.value = baseRef.value.detail
 }
 
+function variationChange() {
+  variationVisible.value = true
+  baseInfoValue.value = baseRef.value.detail
+}
+
 function ModifyCancel() {
-  baseRef.value.resetForm()
-  businessRef.value.resetForm()
-  customerRef.value.resetForm()
-  memberRef.value.fetchMembers()
-  isModify.value = false
+  if (isModify.value) {
+    baseRef.value.resetForm()
+    businessRef.value.resetForm()
+    customerRef.value.resetForm()
+    memberRef.value.fetchMembers()
+    isModify.value = false
+  }
+  activeName.value = 'baseInfo'
+  handleClose()
 }
 
 const validateData = [
@@ -151,16 +184,6 @@ const validateData = [
   { name: 'customerInfo', label: '客户信息' }
 ]
 
-// function nextStepValidate(index) {
-//   switch (index) {
-//     case 0:
-//       return baseRef.value.validateForm()
-//     case 1:
-//       return businessRef.value.validateForm()
-//     case 2:
-//       return customerRef.value.validateForm()
-//   }
-// }
 async function submit() {
   const baseValidate = await baseRef.value.validateForm()
   const businessValidate = await businessRef.value.validateForm()
@@ -174,8 +197,15 @@ async function submit() {
     }
   }
   memberRef.value.getUser()
-  // const userData = memberRef.value.getUser()
-  const submitform = {
+  const baseChange = judgeSameValue(baseRef.value.form, baseRef.value.detail)
+  const businessChange = judgeSameValue(businessRef.value.form, businessRef.value.detail)
+  const customerChange = judgeSameValue(customerRef.value.form, customerRef.value.detail)
+  const userChange = judgeSameValue(memberRef.value.checkedList, memberRef.value.originUserList)
+  if (baseChange && businessChange && customerChange && userChange) {
+    ElMessage.error('项目未改动，请修改后提交')
+    return
+  }
+  const submitForm = {
     projectId: props.projectId,
     type: contractChangeTypeEnum.ENUM.CONTRACT_INFO.V,
     projectUpdateDTOParam: {
@@ -186,20 +216,16 @@ async function submit() {
     }
   }
   try {
-    await editContract(submitform)
-    // await baseRef.value.fetchDetail()
-    // await businessRef.value.fetchDetail()
-    // await customerRef.value.fetchDetail()
-    // await memberRef.value.fetchMembers()
+    await editContract(submitForm)
     ElNotification({ title: '提交成功', type: 'success' })
-  } catch (error) {
-    console.log('合同信息更新失败', error)
-  } finally {
     baseRef.value.resetForm()
     businessRef.value.resetForm()
     customerRef.value.resetForm()
     memberRef.value.fetchMembers()
     isModify.value = false
+    handleClose()
+  } catch (error) {
+    console.log('合同信息更新失败', error)
   }
 }
 </script>

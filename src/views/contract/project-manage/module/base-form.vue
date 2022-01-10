@@ -18,7 +18,7 @@
             value-format="x"
             placeholder="选择约定开工日期"
             style="width: 260px"
-            :disabledDate="(date) => { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }"
+            :disabledDate="(date) => { if (form.endDate) { return date.getTime() > form.endDate- 1 * 24 * 60 * 60 * 1000||  date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 } }"
           />
         </el-form-item>
         <el-form-item label="项目简称" prop="shortName">
@@ -71,46 +71,26 @@
             placeholder="项目经理"
           />
         </el-form-item>
-        <!-- <el-form-item label="业务负责人1" prop="businessLeaderIId">
-          <user-dept-cascader
-            v-model="form.businessLeaderId"
-            filterable
-            :collapse-tags="false"
-            clearable
-            show-all-levels
-            class="input-underline"
-            style="width: 220px"
-            placeholder="业务负责人1"
-          />
-        </el-form-item>
-        <el-form-item label="业务负责人2" prop="businessLeaderIIId">
-          <user-dept-cascader
-            v-model="form.businessLeaderTwoId"
-            filterable
-            :collapse-tags="false"
-            clearable
-            show-all-levels
-            class="input-underline"
-            style="width: 220px"
-            placeholder="业务负责人2"
-          />
-        </el-form-item> -->
       </div>
       <el-divider><span class="title">合同金额</span></el-divider>
       <div class="form-row">
         <el-form-item label="合同金额(元)" prop="contractAmount">
-          <el-input-number
-            v-model="form.contractAmount"
-            :step="1"
-            :min="0"
-            :max="999999999999"
-            :precision="DP.YUAN"
-            :controls="false"
-            controls-position="right"
-            class="input-underline"
-            style="width: 220px"
-            placeholder="合同金额(元)"
-          />
+          <div style="width:280px">
+            <el-input-number
+              v-show-thousand
+              v-model="form.contractAmount"
+              :step="1"
+              :min="0"
+              :max="999999999999"
+              :precision="DP.YUAN"
+              :controls="false"
+              controls-position="right"
+              class="input-underline"
+              style="width: 220px"
+              placeholder="合同金额(元)"
+            />
+            <div style="color:#82848a">{{form.contractAmount?digitUppercase(form.contractAmount):''}}</div>
+          </div>
         </el-form-item>
         <el-form-item label="预付款(元)" prop="prepayments">
           <el-input-number
@@ -144,18 +124,20 @@
       </div>
       <div class="form-row">
         <el-form-item label="保证金(元)" prop="marginAmount">
-          <el-input-number
-            v-model="form.marginAmount"
-            :step="1"
-            :min="0"
-            :max="999999999999"
-            :precision="DP.YUAN"
-            :controls="false"
-            controls-position="right"
-            class="input-underline"
-            style="width: 220px"
-            placeholder="保证金(元)"
-          />
+          <div style="width:280px">
+            <el-input-number
+              v-model="form.marginAmount"
+              :step="1"
+              :min="0"
+              :max="999999999999"
+              :precision="DP.YUAN"
+              :controls="false"
+              controls-position="right"
+              class="input-underline"
+              style="width: 220px"
+              placeholder="保证金(元)"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="保证金类型" prop="marginType">
           <common-select
@@ -205,6 +187,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
+import { digitUppercase } from '@/utils/data-type/number'
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
@@ -321,7 +304,7 @@ function endDateOption(time) {
   if (form.value.startDate) {
     return time.getTime() - 8.64e6 < form.value.startDate
   } else {
-    return false
+    return time.getTime() - 8.64e6 < new Date().getTime()
   }
 }
 

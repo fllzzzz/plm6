@@ -5,44 +5,59 @@
     border
   >
     <el-table-column :label="'序号'" type="index" align="center" width="60" />
-    <el-table-column prop="code" :show-overflow-tooltip="true" align="center" label="编号">
+    <el-table-column prop="serialNumber" :show-overflow-tooltip="true" align="center" label="版型">
       <template v-slot="scope">
-        <span>{{ scope.row.code }}</span>
+        <span>{{ scope.row.serialNumber }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="high" :show-overflow-tooltip="true" align="center" label="高度">
+    <el-table-column prop="basementMembrane" :show-overflow-tooltip="true" align="center" label="底膜(mm)">
+      <template v-slot="scope">
+        <span>{{ scope.row.basementMembrane }}</span>
+      </template>
+    </el-table-column>
+    <!-- <el-table-column prop="high" :show-overflow-tooltip="true" align="center" label="高度">
       <template v-slot="scope">
         <span>{{ scope.row.high }}</span>
       </template>
+    </el-table-column> -->
+    <el-table-column prop="effectiveWidth" :show-overflow-tooltip="true" align="center" label="有效宽度">
+      <template v-slot="scope">
+        <span>{{ scope.row.effectiveWidth }}</span>
+      </template>
     </el-table-column>
-    <el-table-column prop="firstQuarter" :show-overflow-tooltip="true" align="center" label="上弦">
+    <el-table-column prop="firstQuarter" :show-overflow-tooltip="true" align="center" label="上弦筋(φ)">
       <template v-slot="scope">
         <span>{{ scope.row.firstQuarter }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="lastQuarter" :show-overflow-tooltip="true" align="center" label="下弦">
+    <el-table-column prop="lastQuarter" :show-overflow-tooltip="true" align="center" label="下弦筋(φ)">
       <template v-slot="scope">
         <span>{{ scope.row.lastQuarter }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="webMember" :show-overflow-tooltip="true" align="center" label="腹杆">
+    <el-table-column prop="webMember" :show-overflow-tooltip="true" align="center" label="腹杆筋(φ)">
       <template v-slot="scope">
         <span>{{ scope.row.webMember }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="vertical" :show-overflow-tooltip="true" align="center" label="竖向">
+    <el-table-column prop="vertical" :show-overflow-tooltip="true" align="center" label="竖向筋(φ)">
       <template v-slot="scope">
         <span>{{ scope.row.vertical }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="level" :show-overflow-tooltip="true" align="center" label="水平">
+    <el-table-column prop="level" :show-overflow-tooltip="true" align="center" label="水平筋(φ)">
       <template v-slot="scope">
         <span>{{ scope.row.level }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="basementMembrane" :show-overflow-tooltip="true" align="center" label="底膜">
+    <el-table-column prop="weightMeter" :show-overflow-tooltip="true" align="center" label="米重(kg/m)">
       <template v-slot="scope">
-        <span>{{ scope.row.basementMembrane }}</span>
+        <span>{{ scope.row.weightMeter }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="quantity" :show-overflow-tooltip="true" align="center" label="数量(m)">
+      <template v-slot="scope">
+        <span>{{ scope.row.quantity }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="!isShow" label="操作" align="center" fixed="right">

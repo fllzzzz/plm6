@@ -82,10 +82,10 @@
         </div>
         <div class="form-row">
           <el-form-item label="工程结算方式" prop="structureMeasureMode">
-            <common-radio v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
+            <common-radio v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="!form.structureMeasureMode"/>
           </el-form-item>
           <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
-            <common-radio v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
+            <common-radio v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="!form.enclosureMeasureMode"/>
           </el-form-item>
         </div>
         <div class="form-row">
@@ -119,20 +119,6 @@
               placeholder="选择发票类型"
               style="width: 200px"
             />
-            <!--            <template v-if="form.invoiceType === invoiceTypeEnum.SPECIAL_INVOICE.V">-->
-            <!--              <el-input-number-->
-            <!--                v-model.number="form.taxRate"-->
-            <!--                :min="0"-->
-            <!--                :max="100"-->
-            <!--                :step="1"-->
-            <!--                :precision="1"-->
-            <!--                placeholder="税率"-->
-            <!--                size="small"-->
-            <!--                :controls="false"-->
-            <!--                style="width: 70px;"-->
-            <!--                class="input-underline"-->
-            <!--              />%-->
-            <!--            </template>-->
           </el-form-item>
         </div>
         <div class="form-row">
@@ -154,7 +140,7 @@
       <div style="text-align: right; margin-right: 20px">
         <common-button style="margin-left: 20px" type="success" size="small" @click="handleAddEnclosure">添加</common-button>
       </div>
-      <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" />
+      <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"/>
       <!--围护产品数据弹窗  -->
       <common-drawer
         v-model:visible="enclosureVisible"
@@ -177,7 +163,7 @@
           </span>
         </template>
         <template #content>
-          <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" />
+          <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :default-type="defaultType"/>
         </template>
       </common-drawer>
     </div>
@@ -277,6 +263,7 @@ watch(
   { deep: true, immediate: true }
 )
 
+const defaultType = ref()
 function resetForm(data) {
   // 清除表单信息
   if (formRef.value) {
@@ -332,6 +319,8 @@ function businessChange() {
   form.value.projectContent = []
   showItem.value = []
   showCategory.value = []
+  form.value.structureMeasureMode = undefined
+  form.value.enclosureMeasureMode = undefined
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   if (form.value.businessType) {
     projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.MACHINING.V ? projectContent1 : projectContent2
@@ -355,10 +344,12 @@ function getShowItem(val) {
     TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
     TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V
   ]
+  const AllInfo = []
   if (val.length > 0) {
     val.map((v) => {
       if (form.value.businessType === businessTypeEnum.ENUM.MACHINING.V) {
         const val = projectContent1.find((k) => k.id === v)
+        AllInfo.push(val)
         if (val.alias === 'STRUCTURE') {
           if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
             showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
@@ -371,6 +362,7 @@ function getShowItem(val) {
         }
       } else {
         const val = projectContent2.find((k) => k.id === v)
+        AllInfo.push(val)
         if (val.alias) {
           if (val.alias === 'STRUCTURE') {
             if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
@@ -383,7 +375,13 @@ function getShowItem(val) {
         }
       }
     })
+    form.value.structureMeasureMode = AllInfo.findIndex(v => v.alias === 'STRUCTURE') > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
+    form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.alias === 'ENCLOSURE') > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
   }
+}
+
+function typeChange(val) {
+  defaultType.value = val
 }
 // 围护保存
 function enclosureSave() {

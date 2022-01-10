@@ -15,7 +15,8 @@ export function get(params) {
     module: 'contract',
     url: 'enclosure/dictionaries/dict',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 
@@ -24,6 +25,15 @@ export function add(data) {
     module: 'contract',
     url: `enclosure/dictionaries/dictDetailSave/type/${TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V}`,
     method: 'post',
+    data
+  })
+}
+
+export function delTrussCode(data) {
+  return request({
+    module: 'contract',
+    url: 'enclosure/dictionaries/deleteCodes',
+    method: 'delete',
     data
   })
 }

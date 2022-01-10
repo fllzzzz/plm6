@@ -58,7 +58,7 @@
           <el-input v-model.trim="form.customerManagerOne" placeholder="负责人1" class="input-underline" style="width:320px;"/>
         </el-form-item>
         <el-form-item label="联系电话" prop="customerManagerOnePhone">
-          <el-input v-model.number="form.customerManagerOnePhone" placeholder="负责人1联系电话" class="input-underline" />
+          <el-input v-model.trim="form.customerManagerOnePhone" placeholder="负责人1联系电话" class="input-underline" />
         </el-form-item>
       </div>
       <div class="form-row">
@@ -66,7 +66,7 @@
           <el-input v-model.trim="form.customerManagerTwo" placeholder="负责人2" class="input-underline" style="width:320px;"/>
         </el-form-item>
         <el-form-item label="联系电话" prop="customerManagerTwoPhone">
-          <el-input v-model.number="form.customerManagerTwoPhone" placeholder="负责人2联系电话" class="input-underline" />
+          <el-input v-model.trim="form.customerManagerTwoPhone" placeholder="负责人2联系电话" class="input-underline" />
         </el-form-item>
       </div>
     </div>

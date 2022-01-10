@@ -14,12 +14,22 @@
                   placeholder="合同签订主体"
                   style="width: 550px"
                 />
-                <span v-else>{{ detail.signingMainBodyName }}</span>
+                <span v-else>{{ detail.contractSignBodyName }}</span>
               </div>
             </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="业务类型" prop="businessType">
+              <template #label>
+                业务类型
+                <el-tooltip
+                  effect="light"
+                  :content="`已创建工作计划时不能修改`"
+                  placement="top"
+                >
+                  <i class="el-icon-info" />
+                </el-tooltip>
+              </template>
               <div style="width: 200px">
                 <common-select
                   v-if="isModify"
@@ -31,11 +41,12 @@
                   placeholder="业务类型"
                   class="input-underline"
                   @change="businessChange"
+                  :disabled="detail.monomerQuantity>0"
                 />
-                <span v-else>{{ detail.businessTypeDesc }}</span>
+                <span v-else>{{ detail.businessType? businessTypeEnum.VL[detail.businessType]: '-' }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="项目内容" prop="content">
+            <el-form-item label="项目内容" prop="projectContent">
               <div style="width: 320px">
                 <el-select
                   v-if="isModify"
@@ -68,7 +79,7 @@
                   style="width: 200px"
                   class="input-underline"
                 />
-                <span v-else>{{ detail.projectTypeDesc }}</span>
+                <span v-else>{{ detail.projectType? projectTypeEnumN.VL[detail.projectType]: '-' }}</span>
               </div>
             </el-form-item>
             <el-form-item label="签约人" prop="singerId">
@@ -115,14 +126,14 @@
                   placeholder="签约地址"
                   style="width: 400px"
                 />
-                <span v-else>{{ detail.signingAddress }}</span>
+                <span v-else class="detail-break">{{ detail.signingAddress }}</span>
               </div>
             </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="工程结算方式" prop="structureMeasureMode">
               <div style="width: 200px">
-                <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" />
+                <common-radio v-if="isModify" v-model="form.structureMeasureMode" :options="engineerSettlementTypeEnumN.ENUM" type="enum" :disabled="!form.structureMeasureMode"/>
                 <span v-else>{{
                   isNotBlank(detail.structureMeasureMode) ? engineerSettlementTypeEnumN.VL[detail.structureMeasureMode] : ''
                 }}</span>
@@ -130,7 +141,7 @@
             </el-form-item>
             <el-form-item label="围护结算方式" prop="enclosureMeasureMode">
               <div>
-                <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" />
+                <common-radio v-if="isModify" v-model="form.enclosureMeasureMode" :options="enclosureSettlementTypeEnum.ENUM" type="enum" :disabled="!form.enclosureMeasureMode"/>
                 <span v-else>{{
                   isNotBlank(detail.enclosureMeasureMode) ? enclosureSettlementTypeEnum.VL[detail.enclosureMeasureMode] : ''
                 }}</span>
@@ -214,7 +225,7 @@
             >添加</common-button
           >
         </div>
-        <enclosure-show :table-data="!isModify ? detail.enclosureInfo : form.enclosureInfo" :show-item="showItem" />
+        <enclosure-show :table-data="!isModify ? detail.enclosureInfo : form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"/>
         <!--围护产品数据弹窗  -->
         <common-drawer
           v-model:visible="enclosureVisible"
@@ -237,7 +248,7 @@
             </span>
           </template>
           <template #content>
-            <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :init-form="form.enclosureInfo" />
+            <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :init-form="form.enclosureInfo" :default-type="defaultType"/>
           </template>
         </common-drawer>
       </div>
@@ -312,12 +323,31 @@ const techForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
-
+const originContent = ref()
+const defaultType = ref()
+const validateContent = (rule, value, callback) => {
+  if (value.length <= 0) {
+    callback(new Error('请选择项目内容'))
+  } else {
+    if (detail.value.monomerQuantity > 0) {
+      originContent.value.forEach(v => {
+        if (form.value.projectContent.indexOf(v) < 0) {
+          callback(new Error('项目内容只能增加不能减少'))
+        }
+      })
+      callback()
+    } else {
+      callback()
+    }
+  }
+}
 const rules = {
   payTypeDesc: [{ max: 200, message: '不能超过 200 个字符', trigger: 'blur' }],
   businessType: [{ required: true, message: '请选择业务类型', trigger: 'change' }],
   projectType: [{ required: true, message: '请选择项目类型', trigger: 'change' }],
-  projectContent: [{ required: true, message: '请输入项目内容', trigger: 'change' }],
+  projectContent: [
+    { required: true, validator: validateContent, trigger: 'change' }
+  ],
   contractSignBodyId: [
     { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
   ]
@@ -376,6 +406,8 @@ function businessChange() {
   form.value.projectContent = []
   showItem.value = []
   showCategory.value = []
+  form.value.structureMeasureMode = undefined
+  form.value.enclosureMeasureMode = undefined
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   if (form.value.businessType) {
     projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.MACHINING.V ? projectContent1 : projectContent2
@@ -399,10 +431,12 @@ function getShowItem(val) {
     TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
     TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V
   ]
+  const AllInfo = []
   if (val.length > 0) {
     val.map((v) => {
       if (form.value.businessType === businessTypeEnum.ENUM.MACHINING.V) {
         const val = projectContent1.find((k) => k.id === v)
+        AllInfo.push(val)
         if (val.alias === 'STRUCTURE') {
           if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
             showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
@@ -415,6 +449,7 @@ function getShowItem(val) {
         }
       } else {
         const val = projectContent2.find((k) => k.id === v)
+        AllInfo.push(val)
         if (val.alias) {
           if (val.alias === 'STRUCTURE') {
             if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
@@ -427,8 +462,15 @@ function getShowItem(val) {
         }
       }
     })
+    form.value.structureMeasureMode = AllInfo.findIndex(v => v.alias === 'STRUCTURE') > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
+    form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.alias === 'ENCLOSURE') > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
   }
 }
+
+function typeChange(val) {
+  defaultType.value = val
+}
+
 // 围护保存
 function enclosureSave() {
   const info = enclosureFormRef.value.tableData
@@ -512,8 +554,9 @@ async function fetchDetail() {
         form.value.projectContent.push(v.id)
       })
     }
+    originContent.value = JSON.parse(JSON.stringify(form.value.projectContent))
+    detail.value.projectContent = JSON.parse(JSON.stringify(form.value.projectContent))
     getShowItem(form.value.projectContent)
-    // loading.close()
   }
 }
 
@@ -521,7 +564,8 @@ defineExpose({
   form,
   validateForm,
   fetchDetail,
-  resetForm
+  resetForm,
+  detail
 })
 </script>
 
@@ -565,5 +609,8 @@ defineExpose({
 span {
   // color:#4482ff #1682e6
   color: #82848a;
+}
+.detail-break{
+  word-break:break-all;
 }
 </style>

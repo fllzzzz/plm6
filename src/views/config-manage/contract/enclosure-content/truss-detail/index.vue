@@ -85,7 +85,8 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false
+    queryOnPresenterCreated: false,
+    hasPagination: false
   },
   tableRef
 )

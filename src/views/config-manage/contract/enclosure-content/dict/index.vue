@@ -3,7 +3,7 @@
     <template v-slot:header>
       <span style="line-height: 28px">{{ crud.title }}列表</span>
     </template>
-    <mHeader />
+    <mHeader @type-change="handleCurrentChange" :selectArr="selectArr"/>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -35,20 +35,9 @@
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
-      v-else
-    >
-    <!-- <common-table
-      ref="tableRef"
-      v-loading="crud.loading"
-      highlight-current-row
-      :data="crud.data"
-      :empty-text="crud.emptyText"
-      :max-height="maxHeight"
-      style="width: 100%;margin-top:10px;"
-      @current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"
       v-else
-    > -->
+    >
       <el-table-column key="selection" type="selection" width="55" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
@@ -57,6 +46,13 @@
         prop="code"
         :show-overflow-tooltip="true"
         label="编码"
+      />
+      <el-table-column
+        v-if="columns.visible('sort')"
+        key="sort"
+        prop="sort"
+        :show-overflow-tooltip="true"
+        label="排序"
       />
       <el-table-column key="status" prop="status" label="状态">
           <template v-slot="scope">
@@ -97,25 +93,28 @@ const emit = defineEmits(['click-line'])
 // crud交由presenter持有
 const permission = {
   get: ['enclosureConfig:get'],
-  editStatus: ['enclosureConfig:editStatus']
+  editStatus: ['enclosureConfig:editStatus'],
+  del: ['enclosureConfig:del']
 }
 
 const optShow = {
   add: true,
   edit: false,
-  del: true,
+  del: false,
   download: false
 }
 
 const tableRef = ref()
 const multipleTable = ref()
+const selectArr = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '围护配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    hasPagination: false
   },
   tableRef,
   multipleTable
@@ -136,7 +135,7 @@ async function changeStatus(data, val) {
     })
     const submitData = {
       type: this.crud.query.type,
-      data: { code: data.code, updateStatus: 1 }
+      data: { code: data.code, status: val ? 1 : 0 }
     }
     await editStatus(submitData)
     crud.refresh()
@@ -153,6 +152,9 @@ function handleCurrentChange(val) {
   }
 }
 
+function handleSelectionChange(val) {
+  selectArr.value = val
+}
 CRUD.HOOK.handleRefresh = (crud, data) => {
   if (data.data.content.length > 0) {
     data.data.content.forEach(v => {
