@@ -175,27 +175,12 @@
       </el-table-column>
     </common-table>
     <mForm />
-    <common-drawer
-      ref="infoDialog"
+    <contract-info
+      :project-id="contractInfoRowId"
+      :project-status="projectStatus"
+      :project-name="projectName"
       v-model="contractInfoVisible"
-      :with-header="false"
-      direction="rtl"
-      size="80%"
-      :before-close="
-        () => {
-          contractInfoVisible = false
-        }
-      "
-    >
-      <template #content>
-        <contract-info
-          :project-id="contractInfoRowId"
-          :project-status="projectStatus"
-          :project-name="projectName"
-          style="padding: 20px; box-sizing: border-box"
-        />
-      </template>
-    </common-drawer>
+    />
     <common-dialog
       title="项目成员"
       v-model="membersDialogVisible"
@@ -269,7 +254,7 @@ const projectStatus = ref()
 const projectName = ref()
 const contractInfoVisible = ref(false)
 const membersList = ref()
-const infoDialog = ref()
+// const infoDialog = ref()
 
 const { crud, columns, CRUD } = useCRUD(
   {

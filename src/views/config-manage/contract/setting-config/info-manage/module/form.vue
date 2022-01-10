@@ -21,7 +21,8 @@
             v-model="form.remark"
             type="textarea"
             :autosize="{ minRows: 6, maxRows: 8 }"
-            :maxLength="500"
+            :maxLength="200"
+            show-word-limit
             placeholder="描述信息"
             style="max-width: 500px"
           />

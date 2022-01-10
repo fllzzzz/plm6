@@ -26,7 +26,7 @@
                 filterable
                 clearable
                 size="small"
-                :placeholder="item.name+ `${item.unit?'，单位：'+item.unit:''}`"
+                :placeholder="item.name+ `${item.unit?'，单位:'+item.unit:''}`"
                 style="min-width: 120px;margin-right:10px;"
                 class="input-underline"
                 @blur="(e)=>{handleBlur(e,item.field,item.dict)}"
@@ -46,7 +46,7 @@
                 filterable
                 clearable
                 size="small"
-                :placeholder="item.name+ `${item.unit?'，单位：'+item.unit:''}`"
+                :placeholder="item.name+ `${item.unit?'，单位:'+item.unit:''}`"
                 style="min-width: 120px;margin-right:10px;"
                 class="input-underline"
                 @blur="(e)=>{handleBlur(e,item.field)}"
@@ -94,6 +94,21 @@
           />
         </el-form-item>
       </div>
+      <!-- 数量 -->
+      <div style="margin-top:10px;" v-else>
+        <span class="form-title">数量(m)</span>
+        <el-form-item style="margin-top: 10px;" prop="quantity">
+          <el-input-number
+            v-model="form.quantity"
+            placeholder="数量"
+            size="small"
+            class="input-underline"
+            :precision="2"
+            :controls="false"
+            clearable
+          />
+        </el-form-item>
+      </div>
       <div>
         <span style="float:right;margin-bottom:10px;">
           <common-button size="small" type="success" @click="addRow">保存继续添加</common-button>
@@ -112,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, computed, defineExpose } from 'vue'
+import { ref, defineProps, watch, computed, defineExpose, nextTick } from 'vue'
 import { TechnologyTypeEnum } from '@enum-ms/contract'
 import { getEnclosureDictList } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
@@ -139,6 +154,10 @@ const props = defineProps({
     default: () => {
       return []
     }
+  },
+  defaultType: {
+    type: [String, Number],
+    default: undefined
   }
 })
 const boardType = ref()
@@ -180,15 +199,17 @@ watch(
   { immediate: true }
 )
 
-// watch(
-//   () => props.showItem,
-//   (val) => {
-//     if (val.length > 0) {
-//       boardType.value = props.showItem[0]
-//     }
-//   },
-//   { deep: true, immediate: true }
-// )
+watch(
+  () => props.defaultType,
+  (val) => {
+    if (val) {
+      boardType.value = props.defaultType
+    } else {
+      boardType.value = props.showItem.length > 0 ? props.showItem[0] : undefined
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 watch(
   () => props.initForm,
@@ -273,13 +294,8 @@ const FIELD_INFO = {
         { field: 'plateType', name: '板型', dict: 'model', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
         { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
         { field: 'colour', name: '颜色', dict: 'color', placeholder: '请选择或填写颜色', rules: validateLength('请选择或填写颜色', 10) },
-        { field: 'coating', name: '涂层', dict: 'coating', placeholder: '请选择或填写涂层', rules: validateLength('请选择或填写涂层', 10) }
-      ]
-    },
-    {
-      type: '使用部位',
-      fields: [
-        { field: 'usePart', name: '使用部位', dict: 'use_part', placeholder: '请选择或填写使用部位', rules: validateLength('请选择或填写使用部位', 10) }
+        { field: 'coating', name: '涂层', dict: 'coating', placeholder: '请选择或填写涂层', rules: validateLength('请选择或填写涂层', 10) },
+        { field: 'yieldStrength', name: '屈服强度', dict: 'yieldStrength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
       ]
     }
   ],
@@ -288,7 +304,7 @@ const FIELD_INFO = {
     {
       type: '编号',
       fields: [
-        { field: 'code', name: '编号', placeholder: '请选择编号', rules: validateLength('请选择编号', 20) }
+        { field: 'serialNumber', name: '编号', placeholder: '请选择编号', rules: validateLength('请选择编号', 20) }
       ]
     }
   ],
@@ -303,13 +319,8 @@ const FIELD_INFO = {
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
         { field: 'brand', name: '品牌', dict: 'brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 10) },
-        { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) }
-      ]
-    },
-    {
-      type: '使用部位',
-      fields: [
-        { field: 'usePart', name: '使用部位', dict: 'use_part', placeholder: '请选择或填写使用部位', rules: validateLength('请选择或填写使用部位', 10) }
+        { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
+        { field: 'yieldStrength', name: '屈服强度', dict: 'yieldStrength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
       ]
     }
   ],
@@ -318,7 +329,7 @@ const FIELD_INFO = {
     {
       type: '产品信息',
       fields: [
-        { field: 'brand', name: '品牌系列', dict: 'brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 20) },
+        // { field: 'brand', name: '品牌系列', dict: 'brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 20) },
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
@@ -401,14 +412,14 @@ function addRow() {
         return
       }
       if (boardType.value === TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) {
-        const trussVal = trussDict.value.find(k => k.code === form.value.code)
+        const trussVal = trussDict.value.find(k => k.code === form.value.serialNumber)
         if (trussVal) {
           trussVal.list.map(v => {
             form.value[v.name] = v.value
-            // this.$set(this.form, v.name, v.value)
           })
         }
       }
+      console.log(form.value)
       const row = Object.assign({}, form.value)
       tableData.value[boardType.value].push(row)
       reset()
@@ -434,7 +445,6 @@ async function fetchDict() {
     if (boardType.value !== TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V && boardType.value !== TechnologyTypeEnum.STRUCTURE.V) {
       content.forEach(o => {
         typeDict.value[o.name] = o.labels
-        // this.$set(this.typeDict, o.name, o.labels)
       })
     }
     trussDict.value = boardType.value === TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V ? content : []
@@ -449,7 +459,14 @@ function reset() {
     dict: {}
   }
   isEditing.value = false
-  formRef.value.resetFields()
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
 }
 
 defineExpose({

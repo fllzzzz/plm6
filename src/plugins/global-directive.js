@@ -9,6 +9,7 @@ import arrJoin from '@/directive/arr-join'
 import toFixed from '@/directive/to-fixed'
 import toThousand from '@/directive/to-thousand'
 import convertWeight from '@/directive/convert-weight'
+import showThousand from '@/directive/show-thousand'
 
 const directive = new Map([
   ['permission', checkPermission],
@@ -21,7 +22,8 @@ const directive = new Map([
   ['arr-join', arrJoin],
   ['to-fixed', toFixed],
   ['thousand', toThousand],
-  ['convert-weight', convertWeight]
+  ['convert-weight', convertWeight],
+  ['show-thousand', showThousand]
 ])
 
 export default (app) => {

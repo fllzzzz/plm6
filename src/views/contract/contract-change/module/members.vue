@@ -1,17 +1,5 @@
 <template>
   <div>
-    <div class="header-container">
-      <div class="filter-container">
-        <div class="filter-left-box">
-          <el-input
-            v-model="filterText"
-            class="filter-item"
-            placeholder="输入关键字进行过滤"
-            style="width:270px"
-          />
-        </div>
-      </div>
-    </div>
     <div class="user-tree tree-container" :loading="treeLoading">
       <el-tree
         ref="tree"
@@ -30,8 +18,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, watch, defineExpose } from 'vue'
-import { getUserAllSimpleByProject as getAllUser } from '@/api/contract/project'
+import { ref, defineProps, computed, watch } from 'vue'
 import useUserDeptTree from '@compos/store/use-user-dept-tree'
 import { isNotBlank } from '@data-type/index'
 
@@ -43,38 +30,27 @@ const props = defineProps({
   isModify: {
     type: Boolean,
     default: false
+  },
+  checkedList: {
+    type: Array,
+    default: () => []
   }
 })
 const { userDeptTree } = useUserDeptTree()
 
 const tree = ref()
-const filterText = ref()
-// const isEditing = ref(false)
 const defaultProps = {
   children: 'children',
   label: 'label'
 }
 const disabledUser = ref([])
 const noDisabledUser = ref([])
-const checkedList = ref([])
 const treeLoading = ref(false)
-const originUserList = ref([])
-// const userList = ref([])
 
 watch(
-  () => filterText.value,
+  () => props.checkedList,
   (val) => {
-    tree.value.filter(val)
-  }
-)
-
-watch(
-  () => props.projectId,
-  (val) => {
-    if (val) {
-      fetchMembers()
-    } else {
-      checkedList.value = []
+    if (val.length > 0) {
       resetChecked()
     }
   },
@@ -86,7 +62,6 @@ watch(
   (list) => {
     if (isNotBlank(userDeptTree.value)) {
       fetchUserTree()
-      fetchMembers()
     }
   },
   { immediate: true, deep: true }
@@ -131,52 +106,11 @@ function traversalTree(tree, disabled, parentLabel) {
     }
   })
 }
-async function fetchMembers() {
-  let userIds = []
-  try {
-    const { content } = await getAllUser(props.projectId)
-    userIds = content.map(v => v.id)
-  } catch (error) {
-    console.log(error)
-  } finally {
-    originUserList.value = userIds
-    checkedList.value = userIds
-    resetChecked()
-  }
-}
-// function cancelEdit() {
-//   isEditing.value = false
-//   resetChecked()
-// }
-
-function getUser() {
-  let checkedNodes = tree.value.getCheckedKeys(true)
-  checkedNodes = checkedNodes.filter(v => v > 0)
-  checkedList.value = checkedNodes
-}
-// async function submit() {
-//   try {
-//     submitLoading.value = true
-//     let checkedNodes = tree.value.getCheckedKeys(true)
-//     checkedNodes = checkedNodes.filter(v => v > 0)
-//     checkedList.value = checkedNodes
-//   } catch (error) {
-//     console.log('提交用户', error)
-//   } finally {
-//     submitLoading.value = false
-//   }
-// }
 
 function resetChecked() {
-  tree.value.setCheckedKeys(checkedList.value)
+  tree.value.setCheckedKeys(props.checkedList)
 }
 
-defineExpose({
-  getUser,
-  checkedList,
-  fetchMembers,
-  originUserList
-})
 </script>
 
 <style lang="scss" scoped>

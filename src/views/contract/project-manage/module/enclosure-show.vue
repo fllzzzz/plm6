@@ -1,7 +1,7 @@
 <template>
   <!--  <div v-if="tableData[typeEnum.SANDWICH_BOARD.V].length || tableData[typeEnum.PRESSED_COLOR_BOARD.V].length || tableData[typeEnum.FLOOR_BOARD.V].length">-->
   <div>
-    <el-radio-group v-model="boardType" size="small" class="filter-item">
+    <el-radio-group v-model="boardType" size="small" class="filter-item" @change="typeChange">
       <el-radio-button
         v-for="item in TechnologyTypeEnum.ENUM"
         :key="item.V"
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, computed, watch } from 'vue'
+import { ref, defineProps, computed, watch, defineEmits } from 'vue'
 import { TechnologyTypeEnum } from '@enum-ms/contract'
 import { ElRadioGroup } from 'element-plus'
 import sandwichTable from './enclosure-table/sandwich-table'
@@ -52,6 +52,7 @@ const props = defineProps({
   }
 })
 const boardType = ref()
+const emit = defineEmits(['click-change'])
 
 watch(
   () => props.showItem,
@@ -73,6 +74,10 @@ const currentView = computed(() => {
     default: return ''
   }
 })
+
+function typeChange(val) {
+  emit('click-change', val)
+}
 </script>
 
 <style lang='scss' scoped>

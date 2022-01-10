@@ -76,8 +76,8 @@ const validateLinks = (rule, value, callback) => {
         callback(new Error('请选择费用类型'))
       }
     }
-    callback()
   }
+  callback()
 }
 const rules = {
   name: [

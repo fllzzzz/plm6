@@ -49,7 +49,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
+      <mForm :line="line"/>
     </div>
   </div>
 </template>
@@ -82,7 +82,8 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false
+    queryOnPresenterCreated: false,
+    hasPagination: false
   },
   tableRef
 )
@@ -105,10 +106,12 @@ const lineName = computed(() => {
 })
 
 watch(
-  () => lineName,
+  () => props.line,
   (val) => {
-    if (val.value) {
+    if (val.name) {
       crud.toQuery()
+    } else {
+      crud.data = []
     }
   },
   { deep: true, immediate: true }

@@ -12,7 +12,19 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="60px">
       <el-form-item label="编码" prop="code">
-        <el-input v-model="form.code" type="text" placeholder="请填写编码" style="width: 270px" />
+        <el-input v-model="form.code" type="text" placeholder="请填写编码" style="width: 200px" />
+      </el-form-item>
+      <el-form-item label="排序" prop="sort">
+        <el-input-number
+          class="align-left"
+          v-model="form.sort"
+          placeholder="请填写"
+          type="text"
+          controls-position="right"
+          style="width: 200px"
+          :min="0"
+          :max="9999999999"
+        />
       </el-form-item>
       <common-table
           :data="form.dictionaryDetails"
@@ -54,14 +66,17 @@ const formRef = ref()
 
 const defaultForm = {
   code: undefined,
+  sort: undefined,
   dictionaryDetails: [
-    { id: '', name: 'high', remark: '高度', label: undefined, sort: 1 },
-    { id: '', name: 'firstQuarter', remark: '上弦', label: undefined, sort: 2 },
-    { id: '', name: 'lastQuarter', remark: '下弦', label: undefined, sort: 3 },
-    { id: '', name: 'webMember', remark: '腹杆', label: undefined, sort: 4 },
-    { id: '', name: 'vertical', remark: '竖向', label: undefined, sort: 5 },
-    { id: '', name: 'level', remark: '水平', label: undefined, sort: 6 },
-    { id: '', name: 'basementMembrane', remark: '底膜', label: undefined, sort: 7 }
+    // { id: '', name: 'high', remark: '高度', label: undefined, sort: 1 },
+    { id: '', name: 'effectiveWidth', remark: '有效宽度(mm)', label: undefined, sort: 1 },
+    { id: '', name: 'firstQuarter', remark: '上弦筋(φ)', label: undefined, sort: 2 },
+    { id: '', name: 'lastQuarter', remark: '下弦筋(φ)', label: undefined, sort: 3 },
+    { id: '', name: 'webMember', remark: '腹杆筋(φ)', label: undefined, sort: 4 },
+    { id: '', name: 'vertical', remark: '竖向筋(φ)', label: undefined, sort: 5 },
+    { id: '', name: 'level', remark: '水平筋(φ)', label: undefined, sort: 6 },
+    { id: '', name: 'basementMembrane', remark: '底膜(mm)', label: undefined, sort: 7 },
+    { id: '', name: 'weightMeter', remark: '米重(kg/m)', label: undefined, sort: 8 }
   ]
 }
 
@@ -75,7 +90,8 @@ const rules = {
   code: [
     { required: true, message: '请填写编码', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ]
+  ],
+  sort: [{ required: true, message: '请输入排序', trigger: 'blur', type: 'number' }]
 }
 
 CRUD.HOOK.beforeSubmit = () => {

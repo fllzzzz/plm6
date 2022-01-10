@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10">
       <el-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10" style="margin-bottom: 10px">
-        <dictConfig @click-line="handleChangeline" ref="dicRef"/>
+        <dictConfig @click-line="handleChangeLine" ref="dicRef"/>
       </el-col>
       <el-col :xs="24" :sm="24" :md="24" :lg="14" :xl="14">
         <el-card class="box-card team-card">
@@ -30,22 +30,25 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { TechnologyTypeEnum } from '@enum-ms/contract'
 import dictConfig from './dict'
 import trussDetailConfig from './truss-detail'
 import dictDetailConfig from './dict-detail'
+import { isNotBlank } from '@data-type/index'
 
 // const teamType = ref(teamTypeEnum.TEAM.V)
 const dicRef = ref()
 const trussRef = ref()
 const dictDetailRef = ref()
-let currentLine = reactive({})
+const currentLine = ref({})
 
-function handleChangeline(val) {
-  if (val) {
-    currentLine = Object.assign(currentLine, val)
+function handleChangeLine(val) {
+  if (isNotBlank(val)) {
+    currentLine.value = Object.assign(currentLine.value, val)
+  } else {
+    currentLine.value = {}
   }
 }
 </script>

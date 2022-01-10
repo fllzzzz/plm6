@@ -45,7 +45,7 @@
                 value-format="x"
                 placeholder="选择约定开工日期"
                 style="width:260px"
-                :disabledDate="(date) => { return date.getTime() < originDate }"
+                :disabledDate="(date) => { if (form.endDate) { return date.getTime() > form.endDate- 1 * 24 * 60 * 60 * 1000||  date.getTime() < form.createTime - 1 * 24 * 60 * 60 * 1000 } else { return date.getTime() < form.createTime - 1 * 24 * 60 * 60 * 1000 } }"
               />
               <template v-else>
                 <span>{{ detail.startDate? parseTime(detail.startDate,'{y}-{m}-{d}'): '-' }}</span>
@@ -112,7 +112,7 @@
                 v-model="form.address"
                 placeholder="项目详细地址"
               />
-              <span v-else>{{ detail.address || '-' }}</span>
+              <span v-else class="detail-break">{{ detail.address || '-' }}</span>
             </div>
           </el-form-item>
         </div>
@@ -172,6 +172,7 @@
           <el-form-item label="合同金额(元)" prop="contractAmount">
             <div class="input-underline">
               <span>{{ detail.contractAmount? toThousand(detail.contractAmount): '-' }}</span>
+              <div style="color:#82848a">{{ detail.contractAmount? digitUppercase(detail.contractAmount):'' }}</div>
             </div>
           </el-form-item>
           <el-form-item label="预付款(元)" prop="prepayments">
@@ -319,6 +320,7 @@ import { DP } from '@/settings/config'
 import { getContractBase, downloadBaseAttachments } from '@/api/contract/project'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
+import { digitUppercase } from '@/utils/data-type/number'
 
 const formRef = ref()
 const dict = useDict(['margin_type', 'currency_type'])
@@ -415,7 +417,6 @@ const managementFee = computed(() => {
   }
   return undefined
 })
-const originDate = ref()
 /**
  * 重置表单
  */
@@ -450,7 +451,7 @@ function endDateOption(time) {
   if (form.value.startDate) {
     return time.getTime() - 8.64e6 < form.value.startDate
   } else {
-    return false
+    return time.getTime() - 8.64e6 < form.value.createTime
   }
 }
 
@@ -483,12 +484,12 @@ async function fetchDetail() {
   try {
     const res = await getContractBase(props.projectId)
     _detail = JSON.parse(JSON.stringify(res))
-    originDate.value = _detail.startDate
     _detail.startDate = _detail.startDate ? String(_detail.startDate) : ''
     _detail.endDate = _detail.endDate ? String(_detail.endDate) : ''
     _detail.totalDuration = _detail.startDate && _detail.endDate ? dateDifferenceReduce(_detail.startDate, _detail.endDate) : ''
     _detail.managementFee = _detail.managementFeeRate && _detail.contractAmount ? _detail.managementFeeRate * _detail.contractAmount / 100 : ''
-    _detail.attachmentFiles = _detail.attachments || []
+    _detail.attachments = _detail.attachments || []
+    _detail.attachmentFiles = _detail.attachments
     _detail.region = cleanArray([_detail.countryId, _detail.provinceId, _detail.cityId, _detail.regionId])
   } catch (error) {
     console.log('error', error)
@@ -540,5 +541,7 @@ span {
   // color:#4482ff #1682e6
   color:#82848a
 }
-
+.detail-break{
+  word-break:break-all;
+}
 </style>

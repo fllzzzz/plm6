@@ -18,4 +18,13 @@ export function editStatus(params) {
   })
 }
 
+export function getChangeInfo(params) {
+  return request({
+    module: 'contract',
+    url: 'project/getTempInfo',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

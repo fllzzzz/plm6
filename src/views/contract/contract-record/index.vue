@@ -19,24 +19,14 @@
         <span>{{ scope.row.serialNumber }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="项目" min-width="250">
+    <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="项目名称" min-width="250">
       <template v-slot="scope">
         <span class="project-name">{{ scope.row.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="业务类型" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="订单类型" align="center" min-width="120">
       <template v-slot="scope">
         <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" label="项目类型" align="center" min-width="120">
-      <template v-slot="scope">
-        <div>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('projectContent')" key="projectContent" prop="projectContent" :show-overflow-tooltip="true" label="项目内容" align="center" min-width="180">
-      <template v-slot="scope">
-        <div>{{ scope.row.projectContent }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="文件份数" align="center" width="110px">
@@ -45,23 +35,19 @@
       </template>
     </el-table-column>
     <!--编辑与删除-->
-    <!-- <el-table-column
-      v-if="checkPermission([ ...permission.download])"
+    <el-table-column
+      v-if="checkPermission([ ...permission.detail])"
       label="操作"
       width="130px"
       align="center"
       fixed="right"
     >
-      <template v-slot="scope"> -->
-        <!-- <udOperation
-          :data="scope.row"
-          :show-edit="false"
-        /> -->
-        <!-- 下载 -->
-        <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
-      <!-- </template>
-    </el-table-column> -->
+      <template v-slot="scope">
+        <common-button type="primary" v-permission="permission.detail" @click="openDetail(scope.row)">查看</common-button>
+      </template>
+    </el-table-column>
   </common-table>
+  <mDetail  v-model="detailVisible" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -75,12 +61,15 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
+import { businessTypeEnum } from '@enum-ms/contract'
+import checkPermission from '@/utils/system/check-permission'
+import mDetail from './module/detail'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
 // crud交由presenter持有
 const permission = {
   get: ['contractRecord:get'],
+  detail: ['contractRecord:detail'],
   download: ['contractRecord:download']
 }
 
@@ -92,6 +81,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const detailVisible = ref(false)
 const { crud, columns } = useCRUD(
   {
     title: '合同档案',
@@ -110,6 +100,9 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+function openDetail(row) {
+  detailVisible.value = true
+}
 </script>
 
 <style lang="scss" scoped>
