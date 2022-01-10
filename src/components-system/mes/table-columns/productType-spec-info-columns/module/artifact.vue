@@ -1,6 +1,6 @@
 <template>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('length')"
+    v-if="!unShowField.includes('length') && (isBlank(columns) || columns.visible('length'))"
     :show-overflow-tooltip="true"
     prop="length"
     label="长度(mm)"
@@ -15,7 +15,7 @@
   </el-table-column>
   <slot name="quantity" />
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('netWeight')"
+    v-if="!unShowField.includes('netWeight') && (isBlank(columns) || columns.visible('netWeight'))"
     :show-overflow-tooltip="true"
     prop="netWeight"
     :label="`单净重\n(kg)`"
@@ -29,7 +29,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('grossWeight')"
+    v-if="!unShowField.includes('grossWeight') && (isBlank(columns) || columns.visible('grossWeight'))"
     :show-overflow-tooltip="true"
     prop="grossWeight"
     :label="`单毛重\n(kg)`"
@@ -43,7 +43,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('totalNetWeight')"
+    v-if="!unShowField.includes('totalNetWeight') && (isBlank(columns) || columns.visible('totalNetWeight'))"
     :show-overflow-tooltip="true"
     prop="totalNetWeight"
     :label="`总净重\n(kg)`"
@@ -57,7 +57,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('totalGrossWeight')"
+    v-if="!unShowField.includes('totalGrossWeight') && (isBlank(columns) || columns.visible('totalGrossWeight'))"
     :show-overflow-tooltip="true"
     prop="totalGrossWeight"
     :label="`总毛重\n(kg)`"
@@ -71,7 +71,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('surfaceArea')"
+    v-if="!unShowField.includes('surfaceArea') && (isBlank(columns) || columns.visible('surfaceArea'))"
     :show-overflow-tooltip="true"
     prop="surfaceArea"
     :label="`面积\n(㎡)`"
@@ -101,6 +101,10 @@ defineProps({
   fixedWidth: {
     type: Boolean,
     default: false
+  },
+  unShowField: {
+    type: Array,
+    default: () => []
   }
 })
 </script>
