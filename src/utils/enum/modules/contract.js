@@ -11,9 +11,10 @@ import { constantize } from '../base'
 
 // TODO:项目状态
 const projectStatusEnum = {
-  PROCESS: { L: '进行中', K: 'PROCESS', V: 0 },
-  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 },
-  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 2 }
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0 },
+  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1 },
+  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2 },
+  SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3 }
 }
 constantize(projectStatusEnum)
 
@@ -146,9 +147,10 @@ constantize(reimbursementTypeEnum)
 
 // 变更类型1
 const contractChangeTypeEnum = {
-  CONTRACT_INFO: { L: '变更合同信息', K: 'CONTRACT_INFO', V: 1 },
-  CONTRACT_AMOUNT: { L: '变更合同金额', K: 'CONTRACT_AMOUNT', V: 2 },
-  CONTRACT_SETTLE: { L: '项目结算', K: 'CONTRACT_SETTLE', V: 3 }
+  CONTRACT_INFO: { L: '变更合同信息', K: 'CONTRACT_INFO', V: 1 << 0 },
+  CONTRACT_AMOUNT: { L: '变更合同金额', K: 'CONTRACT_AMOUNT', V: 1 << 1 },
+  CONTRACT_SETTLE: { L: '项目结算', K: 'CONTRACT_SETTLE', V: 1 << 2 },
+  VARIATION_ORDER: { L: '签证变更', K: 'VARIATION_ORDER', V: 1 << 3 }
 }
 constantize(contractChangeTypeEnum)
 

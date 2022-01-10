@@ -3,13 +3,15 @@
     <div v-show="crud.searchToggle">
       <el-radio-group v-model="query.status" size="small" class="filter-item"  @change="crud.toQuery">
         <el-radio-button :label="undefined">全部</el-radio-button>
-        <el-radio-button
-          v-for="item in projectStatusEnum.ENUM"
-          :key="item.V"
-          :label="item.V"
-        >
-          {{ item.L }}
-        </el-radio-button>
+        <template v-for="item in projectStatusEnum.ENUM">
+          <el-radio-button
+            :key="item.V"
+            :label="item.V"
+            v-if="item.V!= projectStatusEnum.SETTLED.V"
+          >
+            {{ item.L }}
+          </el-radio-button>
+        </template>
       </el-radio-group>
       <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
         <el-radio-button :label="undefined">全部</el-radio-button>
