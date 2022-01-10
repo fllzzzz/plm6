@@ -45,6 +45,7 @@ export function emptyTextFormatter(val, sign = '-') {
     val = '0'
   }
   val = `${val || ''}`.trim()
+  if (val === 'undefined' || val === 'null') val = ''
   return val || sign
 }
 

@@ -34,19 +34,19 @@
         align="left"
       />
       <el-table-column
-        v-if="columns.visible('purchaseReceipt.serialNumber')"
-        key="purchaseReceipt.serialNumber"
+        v-if="columns.visible('purchaseOrder.serialNumber')"
+        key="purchaseOrder.serialNumber"
         :show-overflow-tooltip="true"
-        prop="purchaseReceipt.serialNumber"
+        prop="purchaseOrder.serialNumber"
         label="采购单号"
         min-width="155"
       >
         <template #default="{ row }">
           <clickable-permission-span
-            v-if="row.purchaseReceipt"
-            :permission="permission.inboundDetail"
-            @click="openPurchaseOrderDetail(row.purchaseReceipt.id)"
-            :text="row.purchaseReceipt.serialNumber"
+            v-if="row.purchaseOrder"
+            :permission="permission.purchaseOrderDetail"
+            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
+            :text="row.purchaseOrder.serialNumber"
           />
         </template>
       </el-table-column>
@@ -62,7 +62,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.inboundReceipt"
-            :permission="permission.purchaseDetail"
+            :permission="permission.purchaseOrderDetail"
             @click="openInboundDetail(row.inboundReceipt.id)"
             :text="row.inboundReceipt.serialNumber"
           />
@@ -176,10 +176,11 @@
     <m-detail />
     <!-- 审核 -->
     <review v-model="reviewVisible" :data="currentRow" @refresh="crud.refresh" />
-    <!-- 详情 -->
+    <!-- 入库单详情 -->
     <detail-wrapper ref="inboundDetailRef" :api="getInboundDetail">
       <inbound-detail />
     </detail-wrapper>
+    <!-- 采购订单详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
       <purchase-order-detail />
     </detail-wrapper>
@@ -193,10 +194,12 @@ import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useOtherCrudDetail from '@compos/use-other-crud-detail'
+
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import DetailWrapper from '@crud/detail-wrapper.vue'
@@ -208,14 +211,13 @@ import InboundDetail from '@/views/wms/material-inbound/raw-material/review/modu
 import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-import checkPermission from '@/utils/system/check-permission'
 
 // crud交由presenter持有
 const permission = {
   get: ['wms_rejectApplication_review:get'],
   review: ['wms_rejectApplication_review:review'],
   inboundDetail: ['wms_inboundApplication_review:detail'],
-  purchaseDetail: ['wms_purchaseOrder:detail']
+  purchaseOrderDetail: ['wms_purchaseOrder:detail']
 }
 
 const optShow = {

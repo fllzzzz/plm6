@@ -12,7 +12,7 @@
     <!-- 次要信息 -->
     <material-secondary-info-columns :basic-class="basicClass" />
     <!-- 单位及其数量 -->
-    <material-unit-quantity-columns :basic-class="basicClass" outbound-type-mode />
+    <material-unit-quantity-columns :basic-class="basicClass" outbound-type-mode :number-prop-field="numberPropField" />
     <warehouse-info-columns show-project />
     <el-table-column key="status" prop="status" label="状态" align="center" width="80" show-overflow-tooltip>
       <template #default="{ row }">
@@ -36,13 +36,15 @@
 
 <script setup>
 import { tableSummary } from '@/utils/el-extra'
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
 import { materialStatusEnum } from '@/views/wms/material-reject/enum'
 
 import materialBaseInfoColumns from '@/components-system/wms/table-custom-field-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-custom-field-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-custom-field-columns/warehouse-info-columns/index.vue'
+import { isBlank } from '@/utils/data-type'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['del'])
 const props = defineProps({
@@ -66,6 +68,16 @@ const props = defineProps({
   list: {
     type: Array,
     default: () => []
+  }
+})
+
+// 出库单位对应的字段
+const numberPropField = computed(() => {
+  if (isBlank(props.material)) return
+  if (props.material.outboundUnitType === measureTypeEnum.MEASURE.V) {
+    return 'quantity'
+  } else {
+    return 'mete'
   }
 })
 

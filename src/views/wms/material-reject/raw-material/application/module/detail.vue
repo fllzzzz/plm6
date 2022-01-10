@@ -13,7 +13,7 @@
       <title-after-info :order="order" :detail="detail" />
     </template>
     <template #titleRight>
-      <purchase-detail-button v-permission="permission.purchaseDetail" :purchase-id="order.id" size="mini" />
+      <purchase-detail-button v-permission="permission.purchaseOrderDetail" :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
       <common-table
@@ -125,7 +125,10 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
+  })
 }
 </script>
 

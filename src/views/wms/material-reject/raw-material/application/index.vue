@@ -26,13 +26,22 @@
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('purchaseSN')"
-        key="purchaseSN"
+        v-if="columns.visible('purchaseOrder.serialNumber')"
+        key="purchaseOrder.serialNumber"
         :show-overflow-tooltip="true"
-        prop="purchaseSN"
+        prop="purchaseOrder.serialNumber"
         label="采购单号"
         min-width="155"
-      />
+      >
+        <template #default="{ row }">
+          <clickable-permission-span
+            v-if="row.purchaseOrder"
+            :permission="permission.purchaseOrderDetail"
+            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
+            :text="row.purchaseOrder.serialNumber"
+          />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -161,6 +170,10 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
+    <!-- 采购订单详情 -->
+    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
+      <purchase-order-detail />
+    </detail-wrapper>
     <!-- 退货办理页面 -->
     <m-application v-model:visible="rejectApplicationVisible" :inbound-id="currentRowId" @success="crud.refresh" />
   </div>
@@ -168,23 +181,31 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-reject/raw-material/application'
+import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import useOtherCrudDetail from '@/composables/use-other-crud-detail'
+
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
+import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
 import MApplication from './module/application.vue'
+
+import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 
 // crud交由presenter持有
 const permission = {
   get: ['wms_rejectApplication:get'],
   edit: ['wms_rejectApplication:edit'],
-  del: ['wms_rejectApplication:del']
+  del: ['wms_rejectApplication:del'],
+  purchaseOrderDetail: ['wms_purchaseOrder:detail']
 }
 
 const optShow = {
@@ -217,4 +238,6 @@ function handleRejectApplication(row) {
   rejectApplicationVisible.value = true
   currentRowId.value = row.id
 }
+
+const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
 </script>

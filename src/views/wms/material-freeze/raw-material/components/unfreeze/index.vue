@@ -26,17 +26,18 @@
 import { unfreezeHandling } from '@/api/wms/material-freeze/raw-material/record'
 import { defineEmits, defineProps, watch, computed, ref, nextTick, provide } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { isBlank } from '@/utils/data-type'
+import { deepClone, isBlank } from '@/utils/data-type'
 
-import useVisible from '@compos/use-visible'
-import commonFormItem from './components/common-form-item.vue'
-import steelPlate from './module/steel-plate.vue'
-import sectionSteel from './module/section-steel.vue'
-import steelCoil from './module/steel-coil.vue'
-import auxMat from './module/aux-mat.vue'
-import gas from './module/gas.vue'
-import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
+import useVisible from '@compos/use-visible'
+import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
+import CommonFormItem from './components/common-form-item.vue'
+import SteelPlate from './module/steel-plate.vue'
+import SectionSteel from './module/section-steel.vue'
+import SteelCoil from './module/steel-coil.vue'
+import AuxMat from './module/aux-mat.vue'
+import Gas from './module/gas.vue'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -86,9 +87,7 @@ const validateQuantity = (rule, value, callback) => {
 }
 
 const rules = {
-  quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' }
-  ],
+  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
 }
 
@@ -142,7 +141,15 @@ async function submit() {
     submitLoading.value = true
     const valid = await formRef.value.validate()
     if (!valid) return false
-    await unfreezeHandling(form.value)
+    const formData = deepClone(form.value)
+    await numFmtByUnit(formData, {
+      unit: formData.outboundUnit,
+      precision: formData.outboundUnitPrecision,
+      fields: ['quantity'],
+      toSmallest: true,
+      toNum: true
+    })
+    await unfreezeHandling(formData)
     emit('success')
     handleClose()
     resetForm()
@@ -157,17 +164,17 @@ async function submit() {
 const comp = computed(() => {
   switch (props.material.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
-      return steelPlate
+      return SteelPlate
     case rawMatClsEnum.SECTION_STEEL.V:
-      return sectionSteel
+      return SectionSteel
     case rawMatClsEnum.STEEL_COIL.V:
-      return steelCoil
+      return SteelCoil
     case rawMatClsEnum.MATERIAL.V:
-      return auxMat
+      return AuxMat
     case rawMatClsEnum.GAS.V:
-      return gas
+      return Gas
     default:
-      return auxMat
+      return AuxMat
   }
 })
 </script>

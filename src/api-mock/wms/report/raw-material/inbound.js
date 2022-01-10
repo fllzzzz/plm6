@@ -1,13 +1,20 @@
-import { purchaseOrderPaymentModeEnum, orderSupplyTypeEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
+import {
+  purchaseOrderPaymentModeEnum,
+  orderSupplyTypeEnum,
+  baseMaterialTypeEnum,
+  receiptRejectStatusEnum,
+  materialRejectStatusEnum
+} from '@enum-ms/wms'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
+import { STEEL_ENUM } from '@/settings/config'
 
-// 入库申请列表
+// 入库单列表
 const get = {
-  url: '/api/wms/inbound/application/record/raw-materials',
+  url: '/api/wms/report/raw-materials/inbound/receipt',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -18,12 +25,18 @@ const get = {
         content: [
           {
             id: 1, // 入库单id
-            basicClass: 7, // 采购物料基础类型
-            boolPartyA: true, // 是否甲供
+            basicClass: STEEL_ENUM, // 采购物料基础类型
+            rejectStatus: receiptRejectStatusEnum.PENDING_REVIEW.V, // 退货状态
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            // 采购单号
+            purchaseOrder: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
+            rejectAmount: 10000, // 退货金额
+            inboundAmount: 1000000, // 入库金额
             'projects|2': [
               {
                 'id|+1': 1,
@@ -41,18 +54,24 @@ const get = {
             editable: true, // 可修改的
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
-            // reviewerName: '@cname', // 审核人（审核的人）
+            reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间
           },
           {
             id: 2, // 入库单id
-            basicClass: 8, // 采购物料基础类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
+            rejectStatus: receiptRejectStatusEnum.ALL.V, // 退货状态
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseOrder: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+            },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
+            rejectAmount: 100000, // 退货金额
+            inboundAmount: 100000, // 入库金额
             'projects|2': [
               {
                 'id|+1': 1,
@@ -79,11 +98,17 @@ const get = {
           },
           {
             id: 3, // 入库单id
-            basicClass: 16, // 采购物料基础类型
+            basicClass: matClsEnum.GAS.V, // 采购物料基础类型
+            rejectStatus: receiptRejectStatusEnum.PART.V, // 退货状态
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseOrder: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+            },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
+            rejectAmount: 50000, // 退货金额
+            inboundAmount: 260000, // 入库金额
             'projects|2': [
               {
                 'id|+1': 1,
@@ -110,9 +135,13 @@ const get = {
           },
           {
             id: 4, // 入库单id
+            boolPartyA: true, // 是否甲供
             basicClass: 8, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            purchaseOrder: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
+            },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
             supplier: {
@@ -140,7 +169,7 @@ const get = {
 
 // 钢材详情
 const detail_id1 = {
-  url: '/api/wms/inbound/application/record/raw-materials/1',
+  url: '/api/wms/report/raw-materials/inbound/receipt/1',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -151,7 +180,7 @@ const detail_id1 = {
         purchaseOrder: {
           id: 1, // 订单id
           purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
-          supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+          supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
           basicClass: 7, // 采购物料基础类型
           serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
           'projects|2': [
@@ -173,13 +202,6 @@ const detail_id1 = {
             name: '杭州天马钢材有限公司'
           }
         },
-        'requisitionsList|2': [
-          {
-            'basicClass|1-16': 1,
-            'serialNumber|+1': ['SG-AFTER-123456', 'SG-AFTER-133456'],
-            'projectId|+1': 1
-          }
-        ],
         id: 1, // 入库单id
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
@@ -189,9 +211,10 @@ const detail_id1 = {
         list: [
           {
             id: 1,
+            rejectStatus: materialRejectStatusEnum.PENDING_REVIEW.V,
             serialNumber: '3192520223',
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             quantity: 10,
             thickness: 10,
@@ -212,15 +235,89 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            rejectList: [
+              {
+                reviewStatus: reviewStatusEnum.PASS.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 1,
+                  serialNumber: '3192520223',
+                  classifyId: 103,
+                  basicClass: matClsEnum.STEEL_PLATE.V,
+                  specification: 'Q325B',
+                  quantity: 1,
+                  thickness: 10,
+                  length: 1000,
+                  width: 1000,
+                  brand: '嘻嘻',
+                  heatNoAndBatchNo: 'aaff',
+                  remark: '66666',
+                  mete: 80000,
+                  requisitionsSN: 'SG-AFTER-123456',
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              },
+              {
+                reviewStatus: reviewStatusEnum.UNREVIEWED.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 1,
+                  serialNumber: '3192520223',
+                  classifyId: 103,
+                  basicClass: matClsEnum.STEEL_PLATE.V,
+                  specification: 'Q325B',
+                  quantity: 2,
+                  thickness: 10,
+                  length: 1000,
+                  width: 1000,
+                  brand: '嘻嘻',
+                  heatNoAndBatchNo: 'aaff',
+                  remark: '66666',
+                  mete: 160000,
+                  requisitionsSN: 'SG-AFTER-123456',
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              }
+            ]
           },
           {
             id: 2,
-            basicClass: 1,
+            rejectStatus: materialRejectStatusEnum.ALL.V,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             classifyId: 103,
             specification: 'Q235B',
             quantity: 5,
@@ -242,76 +339,126 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            rejectList: [
+              {
+                reviewStatus: reviewStatusEnum.PASS.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 2,
+                  basicClass: matClsEnum.STEEL_PLATE.V,
+                  classifyId: 103,
+                  specification: 'Q235B',
+                  quantity: 5,
+                  thickness: 20,
+                  length: 1500,
+                  width: 2000,
+                  brand: '哈哈',
+                  heatNoAndBatchNo: 'fddfd',
+                  mete: 2355000,
+                  weight: 2355000,
+                  requisitionsSN: 'SG-AFTER-123456',
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              }
+            ]
           },
-          // {
-          //   id: 3,
-          //   sn: '110_0',
-          //   specification: '57*21*3*9 * Q325B',
-          //   classifyId: 110,
-          //   basicClass: 2,
-          //   quantity: 1,
-          //   length: 10000,
-          //   totalLength: 10,
-          //   brand: '马钢',
-          //   heatNoAndBatchNo: 'ooopp',
-          //   mete: 152900,
-          //   weight: 152900,
-          //   unitPrice: 0.03,
-          //   amount: 4587,
-          //   amountExcludingVAT: 4059.29,
-          //   requisitionsSN: 'SG-AFTER-123456',
-          //   inputVAT: 527.71,
-          //   project: {
-          //     'id|+1': 1,
-          //     'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-          //     'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-          //     serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-          //   },
-          //   factoryId: 1,
-          //   warehouse: {
-          //     id: 1,
-          //     name: '666号仓库'
-          //   }
-          // },
-          // {
-          //   uid: 4,
-          //   // sn: '110_1',
-          //   classifyId: 110,
-          //   quantity: 2,
-          //   length: 2500,
-          //   totalLength: 5,
-          //   brand: '鞍钢',
-          //   heatNoAndBatchNo: 'qqwww',
-          //   requisitionsSN: 'SG-AFTER-123456',
-          //   mete: 150000,
-          //   weight: 150000,
-          //   unitPrice: 0.04,
-          //   amount: 6000,
-          //   amountExcludingVAT: 5000,
-          //   inputVAT: 1000,
-          //   project: {
-          //     'id|+1': 1,
-          //     'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-          //     'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-          //     serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-          //   },
-          //   factoryId: 1,
-          //   warehouse: {
-          //     id: 1,
-          //     name: '666号仓库'
-          //   }
-          // },
+          {
+            id: 3,
+            rejectStatus: materialRejectStatusEnum.PART.V,
+            specification: '57*21*3*9 * Q325B',
+            classifyId: 110,
+            basicClass: 2,
+            quantity: 2,
+            length: 10000,
+            brand: '马钢',
+            heatNoAndBatchNo: 'ooopp',
+            mete: 252900,
+            weight: 252900,
+            unitPrice: 0.03,
+            amount: 9174,
+            amountExcludingVAT: 8188.58,
+            requisitionsSN: 'SG-AFTER-123456',
+            inputVAT: 1055.42,
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            rejectList: [
+              {
+                reviewStatus: reviewStatusEnum.PASS.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 3,
+                  rejectStatus: materialRejectStatusEnum.PART.V,
+                  specification: '57*21*3*9 * Q325B',
+                  classifyId: 110,
+                  basicClass: matClsEnum.STEEL_PLATE.V,
+                  quantity: 1,
+                  length: 10000,
+                  brand: '马钢',
+                  heatNoAndBatchNo: 'ooopp',
+                  mete: 126450,
+                  weight: 126450,
+                  unitPrice: 0.03,
+                  amount: 4587,
+                  amountExcludingVAT: 4059.29,
+                  requisitionsSN: 'SG-AFTER-123456',
+                  inputVAT: 527.71,
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              }
+            ]
+          },
           {
             id: 5,
             classifyId: 120,
             basicClass: 4,
             specification: 'DC51D+Z',
-            quantity: 1,
+            quantity: 200000,
             color: '天蓝',
             brand: '武钢',
             heatNoAndBatchNo: '12341234fsafs1234',
@@ -319,8 +466,8 @@ const detail_id1 = {
             thickness: 0.326,
             length: 3907.62,
             width: 1000,
-            mete: 10000,
-            weight: 10000,
+            mete: 200000,
+            weight: 1000000,
             unitPrice: 0.05,
             amount: 500,
             amountExcludingVAT: 450,
@@ -331,7 +478,10 @@ const detail_id1 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
             warehouse: {
               id: 4,
               name: '668号仓库'
@@ -345,7 +495,7 @@ const detail_id1 = {
 
 // 气体详情
 const detail_id2 = {
-  url: '/api/wms/inbound/application/record/raw-materials/2',
+  url: '/api/wms/report/raw-materials/inbound/receipt/2',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -354,9 +504,9 @@ const detail_id2 = {
       message: '成功',
       data: {
         purchaseOrder: {
-          id: 3, // 订单id
+          id: 4, // 订单id
           purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
-          supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+          supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
           basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
           serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
           'projects|2': [
@@ -383,18 +533,15 @@ const detail_id2 = {
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
         shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
         licensePlate: patternLicensePlate, // 车牌号
-        loadingWeight: 2000.0, // 过磅重量
         list: [
           {
-            id: 1,
+            rejectStatus: materialRejectStatusEnum.ALL.V,
+            id: 6,
             classifyId: 204,
             specification: 'M27 * 60',
-            color: '天蓝',
-            basicClass: 1,
-            quantity: 10,
+            basicClass: matClsEnum.MATERIAL.V,
             brand: '嘻嘻',
-            remark: '66666',
-            mete: 800000,
+            mete: 80,
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,
@@ -406,11 +553,99 @@ const detail_id2 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            rejectList: [
+              {
+                reviewStatus: reviewStatusEnum.PASS.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 6,
+                  classifyId: 204,
+                  specification: 'M27 * 60',
+                  basicClass: matClsEnum.MATERIAL.V,
+                  brand: '嘻嘻',
+                  mete: 80,
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              }
+            ]
+          },
+          {
+            rejectStatus: materialRejectStatusEnum.ALL.V,
+            id: 7,
+            classifyId: 247,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            quantity: 10,
+            brand: '嘻嘻',
+            color: '蓝色',
+            mete: 100000,
+            unitPrice: 0.01,
+            amount: 8000,
+            amountExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            rejectList: [
+              {
+                reviewStatus: reviewStatusEnum.PASS.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 7,
+                  classifyId: 247,
+                  basicClass: matClsEnum.STEEL_PLATE.V,
+                  quantity: 10,
+                  brand: '嘻嘻',
+                  color: '蓝色',
+                  mete: 100000,
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              }
+            ]
           }
         ]
       }
@@ -418,9 +653,9 @@ const detail_id2 = {
   }
 }
 
-// 辅材详情
+// 气体详情
 const detail_id3 = {
-  url: '/api/wms/inbound/application/record/raw-materials/3',
+  url: '/api/wms/report/raw-materials/inbound/receipt/3',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -431,7 +666,7 @@ const detail_id3 = {
         purchaseOrder: {
           id: 4, // 订单id
           purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
-          supplyType: orderSupplyTypeEnum.PARTY_A.V, // 供应类型
+          supplyType: orderSupplyTypeEnum.SELF.V, // 供应类型
           basicClass: matClsEnum.GAS.V, // 采购物料基础类型
           serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
           'projects|2': [
@@ -458,17 +693,16 @@ const detail_id3 = {
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
         shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
         licensePlate: patternLicensePlate, // 车牌号
-        loadingWeight: 2000.0, // 过磅重量
         list: [
           {
-            id: 1,
+            rejectStatus: materialRejectStatusEnum.PART.V,
+            id: 8,
             classifyId: 901,
-            // specification: '',
-            basicClass: 1,
+            basicClass: matClsEnum.GAS.V,
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',
-            mete: 250000,
+            mete: 200000,
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,
@@ -480,11 +714,43 @@ const detail_id3 = {
               'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
-            factoryId: 1,
+            factory: {
+              id: 1,
+              name: '一号工厂'
+            },
             warehouse: {
               id: 1,
               name: '666号仓库'
-            }
+            },
+            rejectList: [
+              {
+                reviewStatus: reviewStatusEnum.PASS.V,
+                createTime: '@datetime(T)',
+                material: {
+                  id: 8,
+                  classifyId: 901,
+                  basicClass: matClsEnum.GAS.V,
+                  quantity: 8,
+                  brand: '嘻嘻',
+                  remark: '66666',
+                  mete: 160000,
+                  project: {
+                    'id|+1': 1,
+                    'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+                    'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  factory: {
+                    id: 1,
+                    name: '一号工厂'
+                  },
+                  warehouse: {
+                    id: 1,
+                    name: '666号仓库'
+                  }
+                }
+              }
+            ]
           }
         ]
       }
@@ -492,30 +758,4 @@ const detail_id3 = {
   }
 }
 
-// 修改采购订单
-const edit = {
-  url: '/api/wms/inbound/application/record/raw-materials',
-  method: 'put',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-// 删除采购订单
-const del = {
-  url: '/api/wms/inbound/application/record/raw-materials',
-  method: 'delete',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-export default [get, edit, del, detail_id1, detail_id2, detail_id3]
+export default [get, detail_id1, detail_id2, detail_id3]

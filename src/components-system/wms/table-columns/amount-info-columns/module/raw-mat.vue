@@ -27,12 +27,12 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-empty-text v-thousand>{{ row.unitPrice }}</span>
+      <span v-thousand="{ val: row.unitPrice }" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column v-if="showAmount" key="amount" prop="amount" label="金额" align="right" min-width="105px" show-overflow-tooltip>
     <template #default="{ row }">
-      <span v-empty-text v-thousand>{{ row.amount }}</span>
+      <span v-thousand="{ val: row.amount }" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column
@@ -45,12 +45,12 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-empty-text v-thousand>{{ row.amountExcludingVAT }}</span>
+      <span v-thousand="{ val: row.amountExcludingVAT }" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column v-if="showInputVAT" key="inputVAT" prop="inputVAT" label="进项税" align="right" min-width="90px" show-overflow-tooltip>
     <template #default="{ row }">
-      <span v-empty-text v-thousand>{{ row.inputVAT }}</span>
+      <span v-thousand="{ val: row.inputVAT }" v-empty-text />
     </template>
   </el-table-column>
 </template>

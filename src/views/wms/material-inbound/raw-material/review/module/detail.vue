@@ -33,7 +33,7 @@
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" fixed="left"/>
+        <material-base-info-columns :basic-class="detail.basicClass" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
@@ -97,8 +97,7 @@ const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inbo
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `入库单`
-    : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
@@ -111,7 +110,10 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
+  })
 }
 </script>
 
