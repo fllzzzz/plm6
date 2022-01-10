@@ -103,7 +103,8 @@ const { maxHeight } = useMaxHeight(
   {
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
-    clientHRepMainH: true
+    clientHRepMainH: true,
+    extraHeight: 150
   },
   dialogVisible
 )

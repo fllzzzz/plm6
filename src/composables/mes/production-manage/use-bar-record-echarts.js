@@ -65,7 +65,6 @@ export default function useBarRecordEcharts({ elementId, globalProjectId, year, 
       console.log('生产、出库记录信息', error)
     }
     var option = myChart.getOption()
-    console.log(option, 'option')
     option.series[0].data = orList.value
     option.series[1].data = prList.value
     myChart.setOption(option)

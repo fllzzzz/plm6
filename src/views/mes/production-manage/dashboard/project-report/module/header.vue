@@ -87,10 +87,4 @@ const monomerProductTypeEnum = computed(() => {
   const _productType = monomerRef.value?.getProductType() || 0
   return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
-
-function fetchMonomerAndArea({ monomerId, areaId }) {
-  query.monomerId = monomerId
-  query.areaId = areaId
-  crud.toQuery()
-}
 </script>
