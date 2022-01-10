@@ -30,14 +30,13 @@ export function tableSummary(param, { props = [], precision = 2 }) {
       }
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
+          const value = +toFixed(curr, dp)
           if (!isNaN(value)) {
-            return prev + curr
+            return +toFixed(prev + curr, dp)
           } else {
             return prev
           }
         }, 0)
-        sums[index] = toFixed(sums[index], dp)
       }
     }
   })
