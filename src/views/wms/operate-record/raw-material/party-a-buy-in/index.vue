@@ -83,6 +83,7 @@ import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-mat
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -97,11 +98,6 @@ import ClickablePermissionSpan from '@/components-system/common/clickable-permis
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
-
-const permission = {
-  get: ['wms_partyABorrow:get'],
-  transferDetail: ['wms_transferApplication_review:detail']
-}
 
 const optShow = {
   batchAdd: false,

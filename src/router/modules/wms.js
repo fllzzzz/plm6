@@ -265,19 +265,26 @@ export default {
       meta: { title: '报表中心', icon: 'contract', noCache: true },
       children: [
         {
-          name: 'WMSReturnToPartyARecord',
+          name: 'WMSRawMaterialReturnToPartyARecord',
           path: 'return-to-party-a',
           hidden: false,
-          component: '/wms/operate-record/return-to-party-a/index',
+          component: '/wms/operate-record/raw-material/return-to-party-a/index',
           meta: { title: '归还甲方', icon: 'project', noCache: true }
         },
         {
-          name: 'WMSPartyABuyInRecord',
+          name: 'WMSRawMaterialPartyABuyInRecord',
           path: 'party-a-buy-in',
           hidden: false,
-          component: '/wms/operate-record/party-a-buy-in/index',
+          component: '/wms/operate-record/raw-material/party-a-buy-in/index',
           meta: { title: '甲供买入', icon: 'project', noCache: true }
         }
+        // {
+        //   name: 'WMSReportRawMaterialMaterialInbound',
+        //   path: 'report/raw-material/material-inbound',
+        //   hidden: false,
+        //   component: '/wms/report/raw-material/material-inbound/index',
+        //   meta: { title: '原材料-入库报表', icon: 'project', noCache: true }
+        // }
       ]
     },
     {

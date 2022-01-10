@@ -17,7 +17,7 @@
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" fixed="left" />
       <!-- 次要信息 -->
-      <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass"/>
+      <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
       <!-- 单位及其数量 -->
       <material-unit-quantity-columns :columns="columns" :basic-class="crud.query.basicClass" />
       <!-- 仓库信息 -->
@@ -81,6 +81,7 @@ import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-mat
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { operateRecordReturnToPartyAPM as permission } from '@/page-permission/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -94,11 +95,6 @@ import TransferDetail from '@/views/wms/material-transfer/raw-material/review/mo
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-
-const permission = {
-  get: ['wms_partyABorrow:get'],
-  transferDetail: ['wms_transferApplication_review:detail']
-}
 
 const optShow = {
   batchAdd: false,

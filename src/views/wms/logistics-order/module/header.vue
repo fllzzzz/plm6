@@ -65,8 +65,26 @@
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
-      <el-input
+      <!-- <el-input
         v-model.trim="query.serialNumber"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按物流单号（系统）搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      /> -->
+      <el-input
+        v-model.trim="query.licensePlate"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按车牌号搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.shipmentNumber"
         clearable
         style="width: 200px"
         size="small"
@@ -112,9 +130,11 @@ const defaultQuery = {
   purchaseType: undefined, // 采购类型
   logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V, // 物流运输方式
   projectId: { value: undefined, resetAble: false }, // 项目id
+  shipmentNumber: undefined, // 物流单号
+  licensePlate: undefined, // 车牌号
   purchaseSN: undefined, // 采购单号
   inboundSN: undefined, // 入库单号
-  serialNumber: undefined, // 物流单号
+  // serialNumber: undefined, // 物流单号（系统）
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人
 }

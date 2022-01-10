@@ -52,6 +52,15 @@
         width="100"
       />
       <el-table-column
+        v-if="columns.visible('shipmentNumber')"
+        key="shipmentNumber"
+        prop="shipmentNumber"
+        label="物流单号"
+        align="left"
+        min-width="150"
+        show-overflow-tooltip
+      />
+      <el-table-column
         v-if="columns.visible('materialTypeText')"
         key="materialTypeText"
         :show-overflow-tooltip="true"
@@ -218,7 +227,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: ['editorName', 'userUpdateTime', 'licensePlate', 'shipmentNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

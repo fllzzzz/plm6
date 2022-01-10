@@ -28,13 +28,12 @@
         value-format="x"
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         unlink-panels
-        start-placeholder="申请开始日期"
-        end-placeholder="申请结束日期"
+        start-placeholder="申请日期"
+        end-placeholder="申请日期"
         style="width: 270px"
         class="filter-item"
         @change="crud.toQuery"
       />
-      <br />
       <supplier-select
         v-model="query.supplierId"
         :basicClass="query.basicClass"
@@ -46,12 +45,13 @@
         show-hide
         style="width: 250px"
       />
+      <br />
       <el-input
         v-model.trim="query.purchaseSN"
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按采购订单号搜索"
+        placeholder="采购订单号"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -60,7 +60,25 @@
         clearable
         style="width: 200px"
         size="small"
-        placeholder="按入库单号搜索"
+        placeholder="入库单号"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.licensePlate"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="车牌号"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.shipmentNumber"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="物流单号"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -103,6 +121,8 @@ const defaultQuery = {
   reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   purchaseSN: undefined, // 采购单号
+  shipmentNumber: undefined, // 物流单号
+  licensePlate: undefined, // 车牌号
   serialNumber: undefined, // 入库单号
   supplierId: undefined, // 供应商id
   operatorName: undefined // 创建人
