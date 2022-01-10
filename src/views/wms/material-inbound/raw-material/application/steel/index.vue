@@ -5,7 +5,7 @@
       :total-value="totalWeight"
       :validate="validate"
       :edit="props.edit"
-      unit="t"
+      unit="kg"
       total-name="总量合计"
       @purchase-order-change="handleOrderInfoChange"
     >
@@ -83,7 +83,6 @@ import sectionSteelTable from './module/section-steel-table.vue'
 import steelCoilTable from './module/steel-coil-table.vue'
 import { ElMessage, ElRadioGroup } from 'element-plus'
 import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
-import { convertUnits } from '@/utils/convert/unit'
 import { steelInboundFormFormat } from '@/utils/wms/measurement-calc'
 
 const emit = defineEmits(['success'])
@@ -351,7 +350,7 @@ function automaticAssignWeight() {
   }
   // 可计算钢板及型钢数据为空
   if (isBlank(spList) && isBlank(ssList)) {
-    ElMessage.warning('请先填写完整钢板或型钢的信息')
+    ElMessage.warning('您未填写完整钢板或型钢的信息, 或它们的理论重量过小')
     return
   }
 
@@ -377,6 +376,7 @@ function automaticAssignWeight() {
   }
   spList.forEach((v) => calc(v))
   ssList.forEach((v) => calc(v))
+  ElMessage.warning('已自动分配车次过磅重量')
 }
 
 // 计算总重
@@ -398,7 +398,7 @@ function calcWeight() {
     })
   }
   cu.props.totalWeight = toFixed(weight, 2) // 用于与车的过磅重量比较
-  totalWeight.value = convertUnits(weight, 'kg', 't', 3)
+  totalWeight.value = cu.props.totalWeight
 }
 
 // 订单变化

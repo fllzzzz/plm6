@@ -23,16 +23,18 @@
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
           <template #default="{ row }">
-            <el-input
-              v-model="row.remark"
-              :rows="1"
-              :autosize="{ minRows: 1, maxRows: 1 }"
-              type="textarea"
-              placeholder="备注"
-              maxlength="200"
-              show-word-limit
-              style="width: 400px"
-            />
+            <div class="mtb-10">
+              <el-input
+                v-model="row.remark"
+                :rows="1"
+                :autosize="{ minRows: 1, maxRows: 1 }"
+                type="textarea"
+                placeholder="备注"
+                maxlength="200"
+                show-word-limit
+                style="width: 400px"
+              />
+            </div>
           </template>
         </el-expand-table-column>
         <!-- 基础信息 -->

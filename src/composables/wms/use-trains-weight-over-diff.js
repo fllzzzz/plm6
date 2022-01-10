@@ -13,7 +13,7 @@ export default function useWeightOverDiff() {
   // 超出提示
   const overDiffTip = computed(() => {
     if (inboundSteelCfg.value.trainsDiffType === numOrPctEnum.PERCENTAGE.V) {
-      return `车次重量与入库钢材重量的误差不可超过入库钢材重量的${inboundSteelCfg.value.trainsDiff || 0}%(${overableNumber.value}kg)`
+      return `车次重量与入库钢材重量的误差不可超过入库钢材重量的${inboundSteelCfg.value.trainsDiff || 0}%（${overableNumber.value}kg）`
     }
     return `车次重量与入库钢材重量的误差不可超过${inboundSteelCfg.value.trainsDiff || 0}g`
   })

@@ -38,7 +38,7 @@
           </el-form-item>
           <el-form-item
             v-if="props.basicClass & STEEL_ENUM && orderInfo.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V"
-            :label="`车次过磅重量(千克)`"
+            :label="`车次过磅重量(kg)`"
             label-width="150px"
             prop="loadingWeight"
           >
@@ -54,9 +54,9 @@
                 class="input-underline"
                 style="width: 135px"
                 :min="0"
-                :max="9999999"
+                :max="999999999"
                 :controls="false"
-                :precision="3"
+                :precision="2"
                 :placeholder="`输入该车次重量`"
                 :class="{ 'over-weight-tip': trainsDiff.hasOver }"
               />
