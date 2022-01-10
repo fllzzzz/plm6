@@ -1,10 +1,10 @@
 import { isNotBlank } from '@data-type/index'
 import { fieldTypeEnum, dataSourceEnum } from '@/utils/print/enum'
-import { patternLicensePlate, validatorPhone, validatorTel } from '@/utils/validatePattern'
+import { patternLicensePlate, validatorPhone, validatorTel } from '@/utils/validate/pattern'
 import enumAll from '@/utils/enum/all'
 import enumOperate from '@/utils/enum'
-import { Random } from './data'
-const Mock = require('mockjs')
+import Random from './data'
+import Mock from 'mockjs'
 
 /**
  * 随机生成模板数据-列表
@@ -90,10 +90,10 @@ function getDataByType(field) {
       break
     case fieldTypeEnum.ENCLOSURE_NAME.K: _md = Random.enclosureName()
       break
-    case fieldTypeEnum.SEGMENTS_NAME.K: _md = Random.segmentsName()
-      break
-    case fieldTypeEnum.SINGLE_ELEMENT_NAME.K: _md = Random.singleElementName()
-      break
+    // case fieldTypeEnum.SEGMENTS_NAME.K: _md = Random.segmentsName()
+    //   break
+    // case fieldTypeEnum.SINGLE_ELEMENT_NAME.K: _md = Random.singleElementName()
+    //   break
     case fieldTypeEnum.MONOMER_NAME.K: _md = Random.monomerName()
       break
     case fieldTypeEnum.AREA_NAME.K: _md = Random.areaName()
@@ -108,16 +108,16 @@ function getDataByType(field) {
       break
     case fieldTypeEnum.COMPONENT_PROCESS.K: _md = Random.componentProcess()
       break
-    case fieldTypeEnum.STRUCTURE_PROCESS.K: _md = Random.structureProcess()
-      break
-    case fieldTypeEnum.ENCLOSURE_PROCESS.K: _md = Random.enclosureProcess()
-      break
-    case fieldTypeEnum.MACHINE_PART_PROCESS.K: _md = Random.machinePartProcess()
-      break
-    case fieldTypeEnum.SEGMENTS_PROCESS.K: _md = Random.segmentsProcess()
-      break
-    case fieldTypeEnum.SINGLE_ELEMENT_PROCESS.K: _md = Random.singleElementProcess()
-      break
+    // case fieldTypeEnum.STRUCTURE_PROCESS.K: _md = Random.structureProcess()
+    //   break
+    // case fieldTypeEnum.ENCLOSURE_PROCESS.K: _md = Random.enclosureProcess()
+    //   break
+    // case fieldTypeEnum.MACHINE_PART_PROCESS.K: _md = Random.machinePartProcess()
+    //   break
+    // case fieldTypeEnum.SEGMENTS_PROCESS.K: _md = Random.segmentsProcess()
+    //   break
+    // case fieldTypeEnum.SINGLE_ELEMENT_PROCESS.K: _md = Random.singleElementProcess()
+    //   break
     case fieldTypeEnum.USER_NAME.K: _md = Random.cname()
       break
     case fieldTypeEnum.COMPANY_NAME.K: _md = Random.cpname()

@@ -17,7 +17,7 @@ import { ref, watch, computed, defineProps, defineEmits } from 'vue'
 
 import enumOperate, { moduleTypeEnum, tableTypeEnum } from '@/utils/print/table-type'
 
-const emit = defineEmits(['update:currentKey', 'change'])
+const emit = defineEmits(['update:value', 'change'])
 
 const props = defineProps({
   value: {
@@ -87,12 +87,12 @@ function handleChange(val) {
 
 function fetch() {
   loading.value = true
-  let options = []
-  const _moduleTypeEnum = JSON.parse(JSON.stringify(moduleTypeEnum))
+  const _options = []
+  const _moduleTypeEnum = JSON.parse(JSON.stringify(moduleTypeEnum.ENUM))
   for (const moduleType in _moduleTypeEnum) {
     // 将模块的value改为负数，使options能使用emitPath：false
     if (!props.emitPath) {
-      _moduleTypeEnum[moduleType].V = -_moduleTypeEnum[moduleType].V
+      _moduleTypeEnum[moduleType].V = _moduleTypeEnum[moduleType].K
     }
     _moduleTypeEnum[moduleType].children = []
   }
@@ -102,8 +102,10 @@ function fetch() {
       _moduleTypeEnum[tableType.T].children.push(tableType)
     }
   }
-  options = enumOperate.toArr(_moduleTypeEnum)
-  options.value = options
+  for (const moduleType in _moduleTypeEnum) {
+    _options.push(_moduleTypeEnum[moduleType])
+  }
+  options.value = _options
   loading.value = false
 }
 </script>

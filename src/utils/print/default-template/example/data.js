@@ -1,4 +1,4 @@
-const Mock = require('mockjs')
+import Mock from 'mockjs'
 const Random = Mock.Random
 
 Random.extend({
@@ -214,6 +214,7 @@ Random.extend({
   segmentsName: function () {
     // 箱体名称
     var name = ['箱梁', '箱体', '直发件']
+    console.log('this.pick: ', this.pick)
     return this.pick(name)
   },
   singleElementName: function () {
