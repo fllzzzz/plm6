@@ -1,6 +1,6 @@
 <template>
   <div class="notify-component">
-    <el-badge :value="total" :max="99" :hidden="total < 1" class="item">
+    <el-badge :value="total" :max="99" :hidden="total < 1">
       <svg-icon icon-class="notify" @click="visible = true" />
     </el-badge>
     <table-list v-model="visible" />

@@ -24,6 +24,11 @@ import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
 import { monomerAll } from '@/api/plan/monomer'
 
+/**
+ * TODO: 后期设计配置变更，增加接口加载状态：未加载，加载中，加载完成，加载失败
+ * 接口处于“加载中时”等待加载回调，而非调用接口后被自动取消。
+ * 相关其他文件 composable/store
+ */
 // TODO: 加入接口数据缓存有效时间，避免页面长时间未刷新
 const state = {
   clsTree: [], // 科目树

@@ -34,9 +34,12 @@ export function projectNameFormatter(project, config, lineBreak = true) {
     extra = ` \n`
   }
   switch (config.arrangement) {
-    case projectNameArrangementModeEnum.SERIAL_NUMBER_START.V: return `${project.serialNumber}${extra}${_projectName}`
-    case projectNameArrangementModeEnum.SERIAL_NUMBER_END.V: return `${_projectName}${extra}${project.serialNumber}`
-    default: return `${_projectName}`
+    case projectNameArrangementModeEnum.SERIAL_NUMBER_START.V:
+      return `${project.serialNumber}${extra}${_projectName}`
+    case projectNameArrangementModeEnum.SERIAL_NUMBER_END.V:
+      return `${_projectName}${extra}${project.serialNumber}`
+    default:
+      return `${_projectName}`
   }
 }
 
@@ -49,18 +52,19 @@ export function projectNameFormatter(project, config, lineBreak = true) {
 export function projectsToCascade(projects, timeField = 'createTime') {
   const cascade = [] // 级联列表
   const statusArr = EO.toArr(projectStatusEnum) // 枚举转数组
-  const statusValArr = statusArr.map(v => v.V) // 枚举值数组
+  const statusValArr = statusArr.map((v) => v.V) // 枚举值数组
   const year = [] // 年份
 
   // 年份排序
-  const compare = function (obj1, obj2) { // 年份排序 倒序
+  const compare = function (obj1, obj2) {
+    // 年份排序 倒序
     const year1 = -obj1.id
     const year2 = -obj2.id
     return year2 - year1
   }
 
   // 遍历项目
-  projects.forEach(project => {
+  projects.forEach((project) => {
     const pYear = parseTime(project[timeField], '{y}')
     // 获取数组下标
     let yIndex = year.indexOf(pYear)
@@ -76,7 +80,7 @@ export function projectsToCascade(projects, timeField = 'createTime') {
       // 更新数组下标
       yIndex = year.length - 1
       // 设置级联第二级：项目状态
-      statusArr.forEach(item => {
+      statusArr.forEach((item) => {
         cascade[yIndex].children.push({
           id: -Number(item.V),
           name: item.L,
@@ -86,7 +90,9 @@ export function projectsToCascade(projects, timeField = 'createTime') {
     }
     project.name = projectNameFormatter(project)
     // 设置级联第三级：项目
-    cascade[yIndex].children[statusValArr.indexOf(project.status)].children.push(project)
+    if (statusValArr.indexOf(project.status) > -1) {
+      cascade[yIndex].children[statusValArr.indexOf(project.status)].children.push(project)
+    }
   })
   // 级联项目排序
   cascade.sort(compare)

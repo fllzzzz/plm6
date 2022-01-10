@@ -52,9 +52,25 @@ const props = defineProps({
 <style lang="scss" scoped>
 .square-content {
   margin: 10px 10px 10px 10px;
+  max-width: 1000px;
+  overflow: auto;
 }
 
+.flex-rbs {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
 .info {
   flex: auto;
+  min-width: 200px;
+  p {
+    margin: 0;
+  }
+  >p:nth-child(n){
+    margin-top: 12px;
+  }
+  >p:first-child{
+    margin-top: 0;
+  }
 }
 </style>

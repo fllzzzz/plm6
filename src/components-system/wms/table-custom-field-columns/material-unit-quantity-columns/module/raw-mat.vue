@@ -15,18 +15,22 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="showCurQuantity"
-        :key="`${field}.curQuantity`"
-        :prop="`${field}.curQuantity`"
+        v-if="showNumber"
+        :key="`${field}.${numberPropField}`"
+        :prop="`${field}.${numberPropField}`"
         label="数量"
         align="right"
         width="100px"
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <span v-empty-text v-to-fixed="getInfo(row, 'outboundUnitPrecision')">
-            {{ getInfo(row, 'curOutboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
-          </span>
+          <span
+            v-empty-text
+            v-to-fixed="{
+              val: getInfo(row, 'outboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField),
+              dp: getInfo(row, 'outboundUnitPrecision'),
+            }"
+          />
         </template>
       </el-table-column>
     </template>
@@ -54,9 +58,11 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <span v-if="getInfo(row, 'measureUnit')" v-empty-text v-to-fixed="getInfo(row, 'measurePrecision')">
-            {{ getInfo(row, quantityField) }}
-          </span>
+          <span
+            v-if="getInfo(row, 'measureUnit')"
+            v-empty-text
+            v-to-fixed="{ val: getInfo(row, quantityField), dp: getInfo(row, 'measurePrecision') }"
+          />
           <span v-else v-empty-text />
         </template>
       </el-table-column>
@@ -75,7 +81,7 @@
       </el-table-column>
       <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text v-to-fixed="getInfo(row, 'accountingPrecision')">{{ getInfo(row, meteField) }}</span>
+          <span v-empty-text v-to-fixed="{ val: getInfo(row, meteField), dp: getInfo(row, 'accountingPrecision') }" />
         </template>
       </el-table-column>
     </template>
@@ -116,6 +122,11 @@ const props = defineProps({
   labelPrefix: {
     // 数量label前缀
     type: String
+  },
+  numberPropField: {
+    // 默认计量，用于合计时
+    type: String,
+    default: 'quantity'
   },
   quantityField: {
     // 数量字段
@@ -213,5 +224,5 @@ const showQuantity = computed(() => isBlank(props.columns) || props.columns.visi
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.${props.meteField}`))
 
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.outboundUnit`))
-const showCurQuantity = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.curQuantity`))
+const showNumber = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.${props.numberPropField}`))
 </script>

@@ -10,6 +10,7 @@
     :operable-mete-field="operableMeteField"
     :show-operable-quantity="showOperableQuantity"
     :single-mete-mode="singleMeteMode"
+    :equal-disabled="equalDisabled"
   />
 </template>
 
@@ -62,6 +63,12 @@ const props = defineProps({
     // 显示可操作数量
     type: Boolean,
     default: true
+  },
+  equalDisabled: {
+    // 相同不显示可操作性数量
+    type: Boolean,
+    default: false
+
   }
 })
 

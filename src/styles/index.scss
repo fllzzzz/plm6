@@ -200,6 +200,12 @@ div:focus {
   }
 }
 
+.label-after {
+  &:after {
+    content: '：';
+  }
+}
+
 //main-container全局样式
 .app-container {
   padding: 20px;
@@ -471,4 +477,9 @@ div:focus {
 
 .color-coral {
   color:coral
+}
+
+
+.color-green {
+  color:#25d325
 }

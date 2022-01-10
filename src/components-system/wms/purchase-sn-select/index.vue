@@ -37,15 +37,13 @@
               <span class="title">类型：</span>
               <span v-parse-enum="{ e: rawMatClsEnum, v: data.basicClass, bit: true, split: ' | ' }"></span>
             </span>
-            <span class="extra-label">
+            <span v-if="data.supplier" class="extra-label">
               <span class="title">供应商：</span>
               <span class="more-text-info ellipsis-text">{{ data.supplier.name }}</span>
             </span>
-            <span class="extra-label">
-              <template v-if="data.projectNames">
-                <span class="title">项目：</span>
-                <span class="more-text-info ellipsis-text">{{ data.projectNames }}</span>
-              </template>
+            <span v-if="data.projectNames" class="extra-label">
+              <span class="title">项目：</span>
+              <span class="more-text-info ellipsis-text">{{ data.projectNames }}</span>
             </span>
           </span>
         </span>

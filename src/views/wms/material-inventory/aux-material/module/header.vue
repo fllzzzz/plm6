@@ -50,9 +50,9 @@ import useHeaderInfo from '../../compos/use-header-info'
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
-import CurrentUserOutboundList from '@/views/wms/outbound-components/current-user-outbound-list/index.vue'
-import OutboundBatchHandlingForm from '@/views/wms/outbound-components/outbound-batch-handling-form/index.vue'
-import TransferBatchHandlingForm from '@/views/wms/transfer-components/transfer-batch-handling-form/index.vue'
+import CurrentUserOutboundList from '@/views/wms/material-outbound/raw-material/components/current-user-outbound-list/index.vue'
+import OutboundBatchHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-batch-handling-form/index.vue'
+import TransferBatchHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-batch-handling-form/index.vue'
 
 const {
   crud,

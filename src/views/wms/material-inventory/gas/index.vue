@@ -18,9 +18,10 @@
       <!-- 基础信息 -->
       <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="handleRefresh" />
       <!-- 单位及其数量 -->
-      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" />
+      <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" equal-disabled />
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" />
+      <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" />
       <!--编辑与删除-->
       <el-table-column label="操作" width="120px" align="center" fixed="right">
@@ -65,8 +66,8 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import OutboundHandlingForm from '@/views/wms/outbound-components/outbound-handling-form/index.vue'
-import TransferHandlingForm from '@/views/wms/transfer-components/transfer-handling-form/index.vue'
+import OutboundHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/index.vue'
+import TransferHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-handling-form/index.vue'
 import MHeader from './module/header'
 import Pagination from '@crud/Pagination'
 

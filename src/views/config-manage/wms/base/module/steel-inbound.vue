@@ -48,8 +48,8 @@
         <span class="form-item-tip">
           可配置一车次钢材的最大误差。【入库钢材的总重量】与【当前车过磅重量】的差值（绝对值）超过该误差，将无法提交入库申请。
         </span>
-        <span class="form-item-tip">固定重量(g)：误差不可超 过固定重量；</span>
-        <span class="form-item-tip">百分比(%)：误差不可超 过车次总重量*百分比。</span>
+        <span class="form-item-tip">固定重量(g)：误差不可超过 固定重量；</span>
+        <span class="form-item-tip">百分比(%)：误差不可超过 入库钢材总重量*百分比。</span>
       </el-form-item>
       <el-form-item class="form-tip-item" label="重量允许误差(%)" prop="steelDiffType">
         <template #label>

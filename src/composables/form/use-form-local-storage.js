@@ -106,15 +106,21 @@ function setFormContent(form, storageForm) {
 function saveFormToStorage(ls, form, type = ADD_FORM.TYPE.normal) {
   if (!ls.isRegister) return false
   const _form = form || ls.form
-  storage.set(
-    `${ADD_FORM.KEY_PREFIX}_${ls.key}`,
-    {
-      type: type,
-      content: _form
-    },
-    ls.expired
-  )
-  return true
+  try {
+    storage.set(
+      `${ADD_FORM.KEY_PREFIX}_${ls.key}`,
+      {
+        type: type,
+        content: _form
+      },
+      ls.expired
+    )
+    return true
+  } catch (error) {
+    console.log('缓存错误信息', error)
+    console.log('缓存', _form)
+    return false
+  }
 }
 
 function clearFormStorage(ls) {
