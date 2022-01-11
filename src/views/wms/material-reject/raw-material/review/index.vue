@@ -62,7 +62,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.inboundReceipt"
-            :permission="permission.purchaseOrderDetail"
+            :permission="permission.inboundDetail"
             @click="openInboundDetail(row.inboundReceipt.id)"
             :text="row.inboundReceipt.serialNumber"
           />

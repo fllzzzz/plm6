@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-if="row.measureUnit" v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
+          <span v-if="row.measureUnit" v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" v-empty-text />
           <span v-else v-empty-text />
         </template>
       </el-table-column>
@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
+          <span v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" v-empty-text />
         </template>
       </el-table-column>
     </template>

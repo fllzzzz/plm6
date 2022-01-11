@@ -1,19 +1,4 @@
 <template>
-  <!-- 钢材宽度100， 其他180 :min-width="props.basicClass > STEEL_ENUM ? 180 : undefined" -->
-  <el-table-column
-    v-if="showClassifyFullName"
-    :key="`${field}.classifyFullName`"
-    :prop="`${field}.classifyFullName`"
-    label="物料种类"
-    align="center"
-    show-overflow-tooltip
-    :width="classifyFullNameWidth"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ getInfo(row, 'classifyFullName') }}</span>
-    </template>
-  </el-table-column>
   <el-table-column
     v-if="showSpecification"
     :key="`${field}.specification`"
@@ -36,7 +21,6 @@
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
-import { STEEL_ENUM } from '@/settings/config'
 
 const props = defineProps({
   specMerge: {
@@ -61,12 +45,5 @@ const props = defineProps({
 })
 
 const getInfo = inject('getInfo')
-
-// 物料全名宽度
-const classifyFullNameWidth = computed(() => {
-  // 基础分类不存在，或基础分类不为钢材，则宽度为100
-  return !props.basicClass || props.basicClass > STEEL_ENUM ? 250 : 100
-})
-const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.classifyFullName`))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.specification`))
 </script>
