@@ -5,6 +5,7 @@
       v-model="query.monomerId"
       clearable
       :project-id="query.projectId"
+      :disabled="!query.projectId"
       :default="false"
       class="filter-item"
       @change="crud.toQuery"

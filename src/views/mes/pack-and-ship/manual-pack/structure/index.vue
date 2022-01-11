@@ -187,17 +187,12 @@ import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'
+import { artifactManualPackPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
-
-// crud交由presenter持有
-const permission = {
-  get: ['structureManualPack:get'],
-  pack: ['manualPack:pack']
-}
 
 const optShow = {
   add: false,

@@ -31,6 +31,8 @@
         needConvert
         clearable
         :project-id="query.projectId"
+        :monomerDisabled="!query.projectId"
+        :areaDisabled="!query.projectId"
         @change="crud.toQuery"
       />
       <rrOperation />

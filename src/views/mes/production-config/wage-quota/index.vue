@@ -82,6 +82,7 @@ import { parseTime } from '@/utils/date'
 import { deepClone } from '@/utils/data-type'
 import { wageQuotaTypeEnum, processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { configWageQuotaPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -89,12 +90,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wageQuota:get'],
-  edit: ['wageQuota:edit']
-}
 
 const optShow = {
   add: false,

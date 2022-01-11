@@ -1,13 +1,17 @@
 import * as echarts from 'echarts'
 import { onMounted, ref } from 'vue'
 import { getQhseList } from '@/api/mes/production-manage/dashboard/project-dashboard'
+import checkPermission from '@/utils/system/check-permission'
 
-export default function useQhseRecordEcharts({ elementId, title, xAxisData, globalProjectId, monomerId }) {
+export default function useQhseRecordEcharts({ elementId, title, xAxisData, globalProjectId, monomerId, permission }) {
   let myChart = null
   const echartsLoading = ref(false)
   const list = ref([])
 
   async function fetchList() {
+    if (!checkPermission(permission.shipGet)) {
+      return
+    }
     if (!monomerId) {
       return
     }
@@ -70,6 +74,7 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
       tooltip: {
         trigger: 'axis'
       },
+      color: ['#34bfa3'],
       toolbox: {
         show: true,
         feature: {

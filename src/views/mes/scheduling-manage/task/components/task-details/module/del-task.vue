@@ -29,6 +29,7 @@
           :step="1"
           :min="0"
           :max="unInProductionQuantity"
+          :precision="0"
           size="small"
           controls-position="right"
           style="width: 250px"

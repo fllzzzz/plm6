@@ -55,15 +55,12 @@ import { detail } from '@/api/mes/production-manage/dashboard/enclosure'
 import { ref } from 'vue'
 
 import { DP } from '@/settings/config'
+import { enclosureProductionDashboardPM as permission } from '@/page-permission/mes'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-
-const permission = {
-  get: ['enclosureProductionDashboard:get']
-}
 
 const optShow = {
   add: false,
