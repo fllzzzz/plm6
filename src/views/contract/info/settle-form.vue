@@ -68,6 +68,7 @@
           value-format="x"
           placeholder="结算日期"
           style="width: 320px;"
+          :disabledDate="(date) => { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }"
         />
         <span v-else>{{ detailInfo.changeDate? parseTime(detailInfo.changeDate,'{y}-{m}-{d}'): '-' }}</span>
       </el-form-item>
