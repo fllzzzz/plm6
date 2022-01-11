@@ -8,10 +8,19 @@ export function changeStatus(id) {
   })
 }
 
-export function change(data) {
+export function exceptionChange(data) {
   return request({
     module: 'mes',
     url: 'abnormal/artifact',
+    method: 'put',
+    data
+  })
+}
+
+export function taskChange(data) {
+  return request({
+    module: 'mes',
+    url: 'abnormal/artifact/task',
     method: 'put',
     data
   })
@@ -21,15 +30,6 @@ export function exceptionList(params) {
   return request({
     module: 'mes',
     url: 'abnormal/report',
-    method: 'get',
-    params
-  })
-}
-
-export function extraTaskList(params) {
-  return request({
-    module: 'mes',
-    url: 'changed_list/extra_task',
     method: 'get',
     params
   })

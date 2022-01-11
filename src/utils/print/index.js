@@ -142,83 +142,78 @@ async function printAuxiliaryMaterial({ component, manufacturerName, qrCode, pri
 async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QUEUE.V }) {
   const pageHtml = `<div style="text-align:center;"><span tdata='pageNO'>##</span> / <span tdata='pageCount'>##</span></div>`
   const theadHtml = {
-    [packTypeEnum.STRUCTURE.V]: `<tr>
-        <td class="col-1">编号</td>
-        <td class="col-1">材质</td>
-        <td class="col-1">数量</td>
-        <td class="col-1">重量(kg)</td>
-      </tr>`,
-    [packTypeEnum.ENCLOSURE.V]: `<tr>
-        <td class="col-1">编号</td>
-        <td class="col-1">版型</td>
-        <td class="col-1">长度</td>
-        <td class="col-1">数量</td>
-      </tr>`,
+    [packTypeEnum.STRUCTURE.V]: `<div class="flex">
+        <div class="row-0 w-1 col border-r">编号</div>
+        <div class="row-0 w-1 col border-r">材质</div>
+        <div class="row-0 w-1 col border-r">数量</div>
+        <div class="row-0 w-1 col">重量(kg)</div>
+        </div>`,
+    [packTypeEnum.ENCLOSURE.V]: `<div class="flex">
+        <div class="row-0 w-1 col border-r">编号</div>
+        <div class="row-0 w-1 col border-r">版型</div>
+        <div class="row-0 w-1 col border-r">长度</div>
+        <div class="row-0 w-1 col">数量</div>
+      </div>`,
     [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
   }
   const headHtml = `
-      <tr>
-        <td rowspan="2">
-          <div class="qr-content"></div>
-        </td>
-        <td class="col-3" colspan="3">
-          <span style="font-weight:bold">${packageInfo.companyName}</span>
-        </td>
-      </tr>
-      <tr>
-        <td>包单号</td>
-        <td class="col-2" colspan="2" style="font-weight:bold">${packageInfo.serialNumber}</td>
-      </tr>
-      ${theadHtml[packageInfo.productType]}
+      <div class="package-label">
+        <div class="flex">
+          <div class="row-2 w-1 col border-r border-b">
+            <div class="qr-content"></div>
+          </div>
+          <div class="flex w-3 flex-column">
+            <div class="row-1 col border-b" style="font-weight:bold">${packageInfo.companyName}</div>
+            <div class="flex">
+              <div class="flex-1 row-1 col border-b border-r">包单号</div>
+              <div class="flex-2 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
+            </div>
+          </div>
+        </div>
+        ${theadHtml[packageInfo.productType]}
+      </div>
   `
-  let listHtml = headHtml
+  let bodyHtml = '<div class="package-label" style="border-top:none;border-bottom:none;">'
   const tbodyHtml = {
     [packTypeEnum.STRUCTURE.V]: function (item) {
       return `
-        <tr>
-          <td class="col-1">${item.serialNumber}</td>
-          <td class="col-1">${item.material}</td>
-          <td class="col-1">${item.quantity}</td>
-          <td class="col-1">${item.totalNetWeight}</td>
-        </tr>
+        <div class="flex">
+          <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
+          <div class="row-0 w-1 col border-b border-r">${item.material}</div>
+          <div class="row-0 w-1 col border-b border-r">${item.quantity}</div>
+          <div class="row-0 w-1 col border-b">${item.totalNetWeight}</div>
+        </div>
       `
     },
     [packTypeEnum.ENCLOSURE.V]: function (item) {
       return `
-        <tr>
-          <td class="col-1">${item.serialNumber}</td>
-          <td class="col-1">${item.plate}</td>
-          <td class="col-1">${item.length}</td>
-          <td class="col-1">${item.quantity}</td>
-        </tr>
+        <div class="flex">
+          <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
+          <div class="row-0 w-1 col border-b border-r">${item.plate}</div>
+          <div class="row-0 w-1 col border-b border-r">${item.length}</div>
+          <div class="row-0 w-1 col border-b">${item.quantity}</div>
+        </div>
       `
     },
     [packTypeEnum.AUXILIARY_MATERIAL.V]: ''
   }
   for (let x = 0; x < packageInfo.list.length; x++) {
     const item = packageInfo.list[x]
-    console.log(tbodyHtml[packageInfo.productType], packageInfo.productType)
-    listHtml += tbodyHtml[packageInfo.productType](item)
-    if ((x + 1) % 8 === 0) {
-      listHtml += `<div style="page-break-after:always;"></div>`
-      if (packageInfo.list[x + 1]) {
-        listHtml += headHtml
-      }
-    }
+    bodyHtml += tbodyHtml[packageInfo.productType](item)
   }
-  const bodyHtml = `
-      <table border="1" bordercolor="#000000">
-          ${listHtml}
-      </table>`
+  bodyHtml += '</div>'
   const strHtml = combineHtml(PACKAGE_STYLE, bodyHtml)
+  const headStrHtml = combineHtml(PACKAGE_STYLE, headHtml)
   let result = false
   try {
     LODOP = await getLODOP()
-    LODOP.SET_PRINT_PAGESIZE(2, 1000, 750, '1') /* 纸张大小*/ // 100mm* 75mm
-    LODOP.ADD_PRINT_HTM('1mm', '1mm', '73mm', '90mm', strHtml)
-    LODOP.ADD_PRINT_HTM('95mm', '1mm', '73mm', '5mm', pageHtml)
+    LODOP.SET_PRINT_PAGESIZE(2, 1030, 680, '1') /* 纸张大小*/ // 100mm* 75mm
+    LODOP.ADD_PRINT_HTM('1mm', '1mm', '65mm', '24mm', headStrHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_BARCODE('1.5mm', '3mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_HTM('23mm', '1mm', '65mm', '66mm', strHtml)
+    LODOP.ADD_PRINT_HTM('96mm', '1mm', '65mm', '5mm', pageHtml)
+    LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
+    LODOP.ADD_PRINT_BARCODE('1.3mm', '1.3mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     LODOP.PRINT_DESIGN()/* 打印设计*/
@@ -547,35 +542,83 @@ const GAS_STYLE = `
 </style>`
 
 const PACKAGE_STYLE = `
-<style>
-    table {
-        font-family:'微软雅黑';
-        border-collapse:collapse;
-        border-spacing: 0;
-        text-align: center;
-        font-size: 9pt;
-        color: black;
-    }
-    table tr td {
-        box-sizing: border-box;
-        padding: 0 1mm;
-        height: 8mm;
-        width: 17mm;
-        word-break: break-all;
-    }
-    table tr td.col-1 {
-      width: 17mm;
-    }
-    table tr td.col-2 {
-      width: 34mm;
-    }
-    table tr td.col-3 {
-      width: 66mm;
-    }
-    table .qr-content {
-      width: 17mm;
-      height: 16mm;
-    }
+  <style>
+  .package-label {
+    font-family: "微软雅黑";
+    font-size: 9pt;
+    color: black;
+    box-sizing: border-box;
+    border: 1px solid #000;
+  }
+
+  .package-label .flex {
+    display: flex;
+    width: 100%;
+  }
+
+  .package-label .flex-column {
+    flex-direction: column;
+  }
+  
+  .package-label .flex-auto {
+    flex:1 1 auto;
+  }
+
+  .package-label .flex-1 {
+    width: 33.33%;
+  }
+
+  .package-label .flex-2 {
+    width: 66.66%;
+  }
+
+  .package-label .w-0 {
+    width: 20%;
+  }
+
+  .package-label .w-1 {
+    width: 25%;
+  }
+
+  .package-label .w-2 {
+    width: 50%;
+  }
+
+  .package-label .w-3 {
+    width: 75%;
+  }
+
+  .package-label .row-0 {
+    height: 6mm;
+  }
+  .package-label .row-1 {
+    height: 8mm;
+  }
+
+  .package-label .row-2 {
+    height: 16mm;
+  }
+
+  .package-label .border-r {
+    border-right: 1px solid #000;
+  }
+
+  .package-label .border-t {
+    border-top: 1px solid #000;
+  }
+
+  .package-label .border-b {
+    border-bottom: 1px solid #000;
+  }
+
+  .package-label .col {
+    // padding: 0 1mm;
+    box-sizing: border-box;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>`
 
 const OUTBOUND_LIST_STYLE = `

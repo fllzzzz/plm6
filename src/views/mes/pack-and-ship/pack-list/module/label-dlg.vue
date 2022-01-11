@@ -82,15 +82,8 @@ const packageInfo = computed(() => {
 const page = ref(1)
 const breakUpList = computed(() => {
   const _list = []
-  let lastSliceIndex = 0
-  for (let x = 0; x < packageInfo.value.list.length; x++) {
-    if ((x + 1) % 8 === 0) {
-      _list.push(packageInfo.value.list.slice(lastSliceIndex, x + 1))
-      lastSliceIndex = x
-    }
-  }
-  if (packageInfo.value.list[lastSliceIndex + 1]) {
-    _list.push(packageInfo.value.list.slice(lastSliceIndex, packageInfo.value.list.length))
+  for (var i = 0, len = packageInfo.value.list.length; i < len; i += 11) {
+    _list.push(packageInfo.value.list.slice(i, Math.min(i + 11, len)))
   }
   return _list
 })

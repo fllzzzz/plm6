@@ -69,7 +69,41 @@ const getArtifactChangeList = {
         'changeType|0-5': 0,
         'newQuantity': 50,
         'taskQuantity': 100
-      }],
+      },
+      {
+        'id': 1,
+        'project': {
+          'id': 29,
+          'name': '零件数',
+          'contractNo': '零件数',
+          'shortName': '零件数',
+          'type': null
+        },
+        'monomer': {
+          'id': 25,
+          'name': '零件数'
+        },
+        'areaDetail': {
+          'id': 33,
+          'name': '零件数'
+        },
+        'productId': 895,
+        'productType': 2,
+        'oldQuantity': 100,
+        'taskQuantity': 10,
+        'newQuantity': 5,
+        'changeType': 1,
+        'userId': 1,
+        'userName': '超级管理员',
+        'createTime': 1641807655000,
+        'status': 0,
+        'serialNumber': 'GL-103',
+        'totalTaskQuantity': 10,
+        'totalInProductionQuantity': 0,
+        'usedQuantity': null,
+        'producedQuantity': null
+      }
+      ],
       'message': '成功'
     }
   }

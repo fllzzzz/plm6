@@ -1,6 +1,6 @@
 <template>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('length')"
+    v-if="!unShowField.includes('length') && (isBlank(columns) || columns.visible('length'))"
     :show-overflow-tooltip="true"
     prop="length"
     :label="`单长\n(mm)`"
@@ -15,7 +15,7 @@
   </el-table-column>
   <slot name="quantity" />
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('width')"
+    v-if="!unShowField.includes('width') && (isBlank(columns) || columns.visible('width'))"
     :show-overflow-tooltip="true"
     prop="width"
     :label="`有效宽度\n(mm)`"
@@ -29,7 +29,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('totalArea')"
+    v-if="!unShowField.includes('totalArea') && (isBlank(columns) || columns.visible('totalArea'))"
     :show-overflow-tooltip="true"
     prop="totalArea"
     :label="`总面积\n(㎡)`"
@@ -43,7 +43,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('totalLength')"
+    v-if="!unShowField.includes('totalLength') && (isBlank(columns) || columns.visible('totalLength'))"
     :show-overflow-tooltip="true"
     prop="totalLength"
     :label="`总长度\n(m)`"
@@ -72,6 +72,10 @@ defineProps({
   },
   fixedWidth: {
     type: Boolean
+  },
+  unShowField: {
+    type: Array,
+    default: () => []
   }
 })
 </script>
