@@ -121,6 +121,7 @@
 import crudApi from '@/api/mes/scheduling-manage/scheduling/machine-part'
 import { provide, ref } from 'vue'
 
+import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -129,13 +130,6 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['machinePartScheduling:get'],
-  save: ['machinePartScheduling:save'],
-  clear: ['machinePartScheduling:clearWithOneClick']
-}
 
 const optShow = {
   add: false,

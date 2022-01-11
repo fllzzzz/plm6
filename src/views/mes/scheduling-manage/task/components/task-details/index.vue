@@ -11,7 +11,7 @@
     :max-height="maxHeight"
     :cell-class-name="wrongCellMask"
     style="width: 100%"
-    @selection-change="crud.selectionChangeHandler"
+    @selection-change="handleSelectChange"
   >
     <el-table-column v-if="modifying" type="selection" :selectable="selectableFunc" width="55" align="center" />
     <el-table-column label="序号" type="index" align="center" width="60" />
@@ -273,6 +273,13 @@ async function previewIt() {
     return
   }
   previewVisible.value = true
+}
+
+function handleSelectChange(val) {
+  val.forEach(v => {
+    v.askCompleteTime = v.askCompleteTime ? v.askCompleteTime : new Date()
+  })
+  crud.selectionChangeHandler(val)
 }
 
 function selectableFunc(row) {

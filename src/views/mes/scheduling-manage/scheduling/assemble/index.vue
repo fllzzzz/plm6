@@ -143,6 +143,7 @@ import { provide, ref } from 'vue'
 
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
+import { assembleSchedulingPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -150,13 +151,6 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['assembleScheduling:get'],
-  save: ['assembleScheduling:save'],
-  clear: ['assembleScheduling:clearWithOneClick']
-}
 
 const optShow = {
   add: false,

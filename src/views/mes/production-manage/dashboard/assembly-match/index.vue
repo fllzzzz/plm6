@@ -70,16 +70,13 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
 import { DP } from '@/settings/config'
+import { assemblyMatchDashboardPM as permission } from '@/page-permission/mes'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import partProductionStatus from './module/part-production-status.vue'
-
-const permission = {
-  get: ['assemblyMatch:get']
-}
 
 const optShow = {
   add: false,

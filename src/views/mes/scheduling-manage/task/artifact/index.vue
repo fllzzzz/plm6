@@ -105,6 +105,7 @@ import { ref, computed, provide } from 'vue'
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
+import { artifactTaskPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -112,22 +113,6 @@ import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import mDetail from '../components/task-details'
 import mHeader from '../components/common-header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['artifactTask:get'],
-  detail: ['artifactTask:detail'],
-  task: {
-    get: ['artifactTask:detail'],
-    add: ['artifactTask:add'], // 任务下发
-    del: ['artifactTask:del']
-  },
-  assistance: {
-    get: ['artifactTaskAssistance:get'],
-    edit: ['artifactTaskAssistance:edit'], // 任务下发
-    del: ['artifactTaskAssistance:del']
-  }
-}
 
 const optShow = {
   add: false,

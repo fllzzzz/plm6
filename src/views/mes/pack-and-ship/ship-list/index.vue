@@ -195,6 +195,7 @@
 import crudApi, { detail } from '@/api/mes/pack-and-ship/ship-list'
 import { ref } from 'vue'
 
+import { mesShipPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
@@ -209,13 +210,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from '../components/common-detail'
-
-const permission = {
-  get: ['mesShip:get'],
-  detail: ['mesShip:detail'],
-  print: ['mesShip:print'],
-  detailPrint: ['mesShip:detailPrint']
-}
 
 const optShow = {
   add: false,

@@ -60,18 +60,12 @@ import { isNotBlank } from '@data-type/index'
 import { wageQuotaTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import { deepClone } from '@data-type/index'
 import { mapGetters } from '@/store/lib'
+import { wagesAdjustPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wagesAdjust:get'],
-  edit: ['wagesAdjust:edit'],
-  audit: ['wagesAdjust:audit']
-}
 
 const optShow = {
   add: false,

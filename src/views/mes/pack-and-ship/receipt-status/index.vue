@@ -189,6 +189,7 @@
 import crudApi, { detail } from '@/api/mes/pack-and-ship/receipt-status'
 import { ref } from 'vue'
 
+import { receiptStatusPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum, receiptStatusEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
@@ -201,13 +202,6 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from '../components/common-detail'
-
-const permission = {
-  get: ['receiptStatus:get'],
-  detail: ['receiptStatus:detail'],
-  print: ['receiptStatus:print'],
-  detailPrint: ['receiptStatus:detailPrint']
-}
 
 const optShow = {
   add: false,

@@ -25,7 +25,7 @@
           <div class="handle-title">
             <el-tag size="medium" effect="plain">可处理列表</el-tag>
             <span>
-              <common-button size="mini" :disabled="remainHandleMete <= 0 || !canHandleList.length" type="success">一键处理</common-button>
+              <!-- <common-button size="mini" :disabled="remainHandleMete <= 0 || !canHandleList.length" type="success">一键处理</common-button> -->
             </span>
           </div>
           <common-table ref="tableRef" v-loading="tableLoading" :data="canHandleList" :max-height="maxHeight" style="width: 100%">
@@ -35,7 +35,7 @@
                 <span>{{ scope.row.serialNumber }}</span>
               </template>
             </el-table-column> -->
-            <belonging-info-columns showProductionLine showFactory/>
+            <belonging-info-columns showProductionLine showFactory />
             <!-- <el-table-column prop="teamName" :show-overflow-tooltip="true" label="班组">
               <template v-slot="scope">
                 <span>{{ scope.row.teamName }}</span>
@@ -241,11 +241,16 @@ async function fetchList() {
   }
 }
 
+function getCanHandleMete(row) {
+  if (props.info.handleType === handleMethodEnum.EXCEPTION_HANDLE.V) {
+    return row.canHandleMete > processLimitObj.value[row.processId] ? processLimitObj.value[row.processId] : row.canHandleMete
+  } else {
+    return row.canHandleMete
+  }
+}
+
 function getMax(row) {
-  const _quantity =
-    processLimitObj.value[row.processId] && row.canHandleMete > processLimitObj.value[row.processId]
-      ? processLimitObj.value[row.processId]
-      : row.canHandleMete
+  const _quantity = getCanHandleMete(row)
   if (_quantity < row.dealMete + remainHandleMete.value) {
     return _quantity
   } else {
@@ -254,10 +259,7 @@ function getMax(row) {
 }
 
 function addRow(index, row) {
-  const _quantity =
-    processLimitObj.value[row.processId] && row.canHandleMete > processLimitObj.value[row.processId]
-      ? processLimitObj.value[row.processId]
-      : row.canHandleMete
+  const _quantity = getCanHandleMete(row)
   if (_quantity > remainHandleMete.value) {
     row.dealMete = remainHandleMete.value
   } else {
