@@ -108,12 +108,7 @@
           <span :class="row.completeQuantity === row.schedulingQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="checkPermission([...taskPermission.add, ...assistPermission.get])"
-        label="操作"
-        align="center"
-        width="210px"
-      >
+      <el-table-column v-if="checkPermission([...taskPermission.add, ...assistPermission.get])" label="操作" align="center" width="210px">
         <template #default="{ row }">
           <common-button
             v-permission="taskPermission.add"
@@ -204,8 +199,25 @@ const props = defineProps({
     default: () => {}
   }
 })
+watch(
+  () => props.visible,
+  (visible) => {
+    if (!visible) {
+      crud.resetQuery()
+    }
+  },
+  { immediate: true }
+)
 
-const { maxHeight } = useMaxHeight({ paginate: false })
+const { maxHeight } = useMaxHeight({
+  navbar: false,
+  extraBox: ['.el-drawer__header', '.head-container'],
+  wrapperBox: ['.el-drawer__body'],
+  clientHRepMainH: true,
+  paginate: false,
+  minHeight: 300,
+  extraHeight: 40
+})
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 const buttonValue = computed(() => {
@@ -300,12 +312,12 @@ CRUD.HOOK.beforeRefresh = () => {
   crud.query.productType = productType.value
 }
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
     v.operable = !v.issueStatus
     v.sourceSchedulingQuantity = v.schedulingQuantity
     v.modifySchedulingQuantity = v.schedulingQuantity
-    return v
+    // return v
   })
 }
 </script>

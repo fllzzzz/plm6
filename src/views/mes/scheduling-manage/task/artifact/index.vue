@@ -92,7 +92,7 @@
       "
     >
       <template #content>
-        <m-detail :details="detailRow" :query="crud.query" @refresh="crud.toQuery" />
+        <m-detail :details="detailRow" :query="crud.query" @refresh="crud.toQuery" :visible="drawerVisible" />
       </template>
     </common-drawer>
   </div>

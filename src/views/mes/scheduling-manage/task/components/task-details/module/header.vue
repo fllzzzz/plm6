@@ -1,14 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 250px" @change="crud.toQuery" />
-    <production-line-select
-      v-model="query.productionLineId"
-      :factoryId="query.factoryId"
-      clearable
-      class="filter-item"
-      style="width: 250px"
-      @change="crud.toQuery"
-    />
+    <project-cascader v-model="query.projectId" placeholder="请选择项目" class="filter-item" style="width: 300px" clearable @change="crud.toQuery" />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
@@ -16,6 +8,15 @@
       :productType="productType"
       needConvert
       :project-id="query.projectId"
+      @change="crud.toQuery"
+    />
+    <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 250px" @change="crud.toQuery" />
+    <production-line-select
+      v-model="query.productionLineId"
+      :factoryId="query.factoryId"
+      clearable
+      class="filter-item"
+      style="width: 250px"
       @change="crud.toQuery"
     />
   </div>
@@ -86,6 +87,7 @@ import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import FactorySelect from '@/components-system/base/factory-select.vue'
 import productionLineSelect from '@comp-mes/production-line-select'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
+import projectCascader from '@comp-base/project-cascader.vue'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
