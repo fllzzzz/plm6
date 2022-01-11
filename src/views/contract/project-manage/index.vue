@@ -100,9 +100,9 @@
           <div>{{ scope.row.alreadyDays }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('signerName')" key="signerName" prop="signerName" label="签约人" align="center" width="100px">
+      <el-table-column v-if="columns.visible('singerName')" key="singerName" prop="singerName" label="签约人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.signerName }}</div>
+          <div>{{ scope.row.singerName }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -119,15 +119,15 @@
       </el-table-column>
 
       <el-table-column
-        v-if="columns.visible('createDate')"
-        key="createDate"
-        prop="createDate"
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        prop="createTime"
         label="立项日期"
         align="center"
         width="100px"
       >
         <template v-slot="scope">
-          <div>{{ scope.row.createDate? parseTime(scope.row.createDate,'{y}-{m}-{d}'): '-' }}</div>
+          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="110px" align="center" fixed="right">
