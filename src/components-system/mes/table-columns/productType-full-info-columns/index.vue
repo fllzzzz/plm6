@@ -4,6 +4,7 @@
     :category="category"
     :columns="columns"
     :fixed="fixed"
+    :unShowField="unShowField"
     :fixedWidth="fixedWidth"
   />
   <productType-spec-info-columns
@@ -12,10 +13,15 @@
     :columns="columns"
     :enclosureShowItem="enclosureShowItem"
     :fixed="fixed"
+    :unShowField="unShowField"
     :fixedWidth="fixedWidth"
-  />
+  >
+   <template #quantity>
+      <slot name="quantity" />
+    </template>
+  </productType-spec-info-columns>
   <el-table-column
-    v-if="!(unShowDNVal & productType) && (isBlank(columns) || columns.visible('drawingNumber'))"
+    v-if="!unShowField.includes('drawingNumber') && !(unShowDNVal & productType) && (isBlank(columns) || columns.visible('drawingNumber'))"
     :show-overflow-tooltip="true"
     prop="drawingNumber"
     label="图号"
@@ -28,7 +34,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('remark')"
+    v-if="!unShowField.includes('remark') && (isBlank(columns) || columns.visible('remark'))"
     :show-overflow-tooltip="true"
     prop="remark"
     label="备注"
@@ -70,6 +76,10 @@ defineProps({
   },
   fixedWidth: {
     type: Boolean
+  },
+  unShowField: {
+    type: Array,
+    default: () => []
   }
 })
 

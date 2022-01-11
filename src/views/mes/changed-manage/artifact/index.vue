@@ -171,16 +171,16 @@ const handleMethodEnum = {
   DECREASE_TASK: {
     K: 'DECREASE_TASK',
     L: '多余任务处理',
-    V: 0,
+    V: 1,
     COLUMNS: [
-      { label: '类型', field: 'type', width: '', preview: true },
-      { label: '多余量', field: 'extraQuantity', width: '150px', align: 'center', preview: false }
+      // { label: '类型', field: 'type', width: '', preview: true },
+      { label: '任务数', field: 'taskQuantity', width: '150px', align: 'center', preview: false }
     ]
   },
   EXCEPTION_HANDLE: {
     K: 'EXCEPTION_HANDLE',
     L: '异常处理',
-    V: 1,
+    V: 2,
     COLUMNS: [
       { label: '工序', field: 'processName', width: '', preview: true },
       { label: '类型', field: 'reportTypeText', width: '', preview: true },
@@ -195,9 +195,9 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data = res.data.map((v) => {
     v.changTypeText = abnormalChangeTypeEnum.VL[v.changeType]
     // 未生产数总和 = 任务数量 - 已生产数量
-    v.unproducedMete = v.taskQuantity - v.totalInProductionQuantity || 0
+    v.unproducedMete = v.totalTaskQuantity - v.totalInProductionQuantity || 0
     // 需要减少的任务数 = 任务数量 - 变更后的数量
-    v.needDecreaseTaskMete = v.taskQuantity - v.newQuantity || 0
+    v.needDecreaseTaskMete = v.totalTaskQuantity - v.newQuantity || 0
     // 条件一: 未生产数总和 >= 需要减少的任务数 => 进行减少任务操作(处理总数=需要减少的任务数)
     if (v.unproducedMete >= v.needDecreaseTaskMete) {
       v.handleType = handleMethodEnum.DECREASE_TASK.V

@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentView" :columns="columns" :fixed="fixed" :fixedWidth="fixedWidth">
+  <component :is="currentView" :columns="columns" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField">
     <template #quantity>
       <slot name="quantity" />
     </template>
@@ -30,6 +30,10 @@ const props = defineProps({
   enclosureShowItem: {
     type: Boolean,
     default: false
+  },
+  unShowField: {
+    type: Array,
+    default: () => []
   },
   columns: {
     type: Object

@@ -105,8 +105,8 @@ const currentTableView = computed(() => {
 // 分页操作
 const { tablePageSize } = mapGetters('tablePageSize')
 const queryPage = reactive({
-  page: 1,
-  size: tablePageSize
+  pageNumber: 1,
+  pageSize: tablePageSize
 })
 const total = ref(0)
 function handleSizeChange(val) {

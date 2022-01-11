@@ -1,6 +1,6 @@
 <template>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('length')"
+    v-if="!unShowField.includes('length') && (isBlank(columns) || columns.visible('length'))"
     :show-overflow-tooltip="true"
     prop="length"
     :label="`长度\n(mm)`"
@@ -15,7 +15,7 @@
   </el-table-column>
   <slot name="quantity" />
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('netWeight')"
+    v-if="!unShowField.includes('netWeight') && (isBlank(columns) || columns.visible('netWeight'))"
     :show-overflow-tooltip="true"
     prop="netWeight"
     :label="`单净重\n(kg)`"
@@ -29,7 +29,7 @@
     </template>
   </el-table-column>
   <el-table-column
-    v-if="isBlank(columns) || columns.visible('totalNetWeight')"
+    v-if="!unShowField.includes('totalNetWeight') && (isBlank(columns) || columns.visible('totalNetWeight'))"
     :show-overflow-tooltip="true"
     prop="totalNetWeight"
     :label="`总净重\n(kg)`"
@@ -58,6 +58,10 @@ defineProps({
   },
   fixedWidth: {
     type: Boolean
+  },
+  unShowField: {
+    type: Array,
+    default: () => []
   }
 })
 </script>
