@@ -113,6 +113,7 @@
 import crudApi from '@/api/mes/team-report/off-staff'
 import { ref, provide, computed } from 'vue'
 
+import { offStaffWagesConfigPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -123,13 +124,6 @@ import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
 import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['offStaffWagesConfig:get'],
-  edit: ['offStaffWagesConfig:edit'],
-  audit: ['offStaffWagesConfig:audit']
-}
 
 const optShow = {
   add: false,
@@ -196,7 +190,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       surfaceArea: v.mate,
       wageQuotaType: v.wageQuotaType
     }).convertMete
-    v.totalAmount = v.checkMete * v.unitPrice
+    v.totalAmount = (v.checkMete * v.unitPrice).toFixed(2)
     return v
   })
 }

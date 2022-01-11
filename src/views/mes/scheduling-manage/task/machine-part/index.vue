@@ -93,6 +93,7 @@ import { ref, computed, provide } from 'vue'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
+import { machinePartTaskPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -100,22 +101,6 @@ import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import mDetail from '../components/task-details'
 import mHeader from '../components/common-header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['machinePartTask:get'],
-  detail: ['machinePartTask:detail'],
-  task: {
-    get: ['machinePartTask:detail'],
-    add: ['machinePartTask:add'], // 任务下发
-    del: ['machinePartTask:del']
-  },
-  assistance: {
-    get: ['machinePartTaskAssistance:get'],
-    edit: ['machinePartTaskAssistance:edit'], // 任务下发
-    del: ['machinePartTaskAssistance:del']
-  }
-}
 
 const optShow = {
   add: false,

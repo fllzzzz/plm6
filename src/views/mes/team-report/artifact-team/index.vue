@@ -74,6 +74,7 @@
 import crudApi from '@/api/mes/team-report/artifact-team'
 import { ref, reactive, provide } from 'vue'
 
+import { artifactTeamReportPM as permission } from '@/page-permission/mes'
 import { artifactProcessEnum } from '@enum-ms/mes'
 import { toFixed } from '@data-type/index'
 
@@ -89,13 +90,6 @@ const colors = [
   { color: '#e6a23c', percentage: 70 },
   { color: '#6f7ad3', percentage: 100 }
 ]
-
-// crud交由presenter持有
-const permission = {
-  get: ['artifactTeamReport:get'],
-  detail: ['artifactTeamReport:detail'],
-  processDetail: ['artifactTeamReportProcess:detail']
-}
 
 const optShow = {
   add: false,

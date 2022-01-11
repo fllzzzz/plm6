@@ -207,6 +207,7 @@ import { projectNameFormatter } from '@/utils/project'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { debounce } from '@/utils'
+import { mesPackPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -218,17 +219,6 @@ import labelDlg from './module/label-dlg'
 import printedRecordDrawer from './module/printed-record-drawer'
 
 const router = useRouter()
-
-// crud交由presenter持有
-const permission = {
-  get: ['mesPack:get'],
-  detail: ['mesPack:detail'],
-  edit: ['mesPack:edit'],
-  del: ['mesPack:del'],
-  print: ['mesPack:print'],
-  printPackList: ['mesPack:printPackList'],
-  printRecords: ['mesPack:printRecords']
-}
 
 const optShow = {
   add: false,

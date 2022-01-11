@@ -199,6 +199,7 @@ import { getBoardForEnclosure as get } from '@/api/mes/manufactures-manage/commo
 import { ref } from 'vue'
 // import { mapGetters } from '@/store/lib'
 
+import { enclosureWarehousePM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { toFixed } from '@data-type'
@@ -207,12 +208,6 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-
-const permission = {
-  get: ['enclosureWarehouseState:get'],
-  print: ['enclosureWarehouseState:print'],
-  download: ['enclosureWarehouseState:download']
-}
 
 const optShow = {
   add: false,

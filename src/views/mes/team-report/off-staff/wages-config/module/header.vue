@@ -64,20 +64,34 @@
   </div>
   <crudOperation>
     <template #optLeft>
-      <template v-if="modifying">
-        <common-button type="warning" size="mini" @click.stop="handelModifying(false, true)">取消编辑</common-button>
-        <common-button type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
-      </template>
-      <common-button v-permission="crud.permission?.edit" v-else type="primary" size="mini" @click.stop="handelModifying(true)">编辑</common-button>
+      <common-button v-show="modifying" type="warning" size="mini" @click.stop="handelModifying(false, true)">取消编辑</common-button>
+      <common-button v-show="modifying" type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
+      <common-button
+        v-permission="crud.permission?.edit"
+        v-show="!modifying"
+        type="primary"
+        size="mini"
+        style="margin-left:0px;"
+        @click.stop="handelModifying(true)"
+      >
+        编辑
+      </common-button>
     </template>
     <template #viewLeft>
-      <el-badge v-permission="crud.permission?.audit" :value="auditNumberBadge" :hidden="auditNumberBadge===0">
+      <el-badge v-permission="crud.permission?.audit" :value="auditNumberBadge" :hidden="auditNumberBadge === 0">
         <common-button size="mini" type="primary" @click="auditVisible = true">审核</common-button>
       </el-badge>
     </template>
   </crudOperation>
   <audit-drawer v-model:visible="auditVisible" @refresh="crud.toQuery()"></audit-drawer>
-  <preview v-model:visible="previewVisible" :list="crud.data" @refresh="crud.toQuery();handelModifying(false, true)"></preview>
+  <preview
+    v-model:visible="previewVisible"
+    :list="crud.data"
+    @refresh="
+      crud.toQuery();
+      handelModifying(false, true)
+    "
+  ></preview>
 </template>
 
 <script setup>

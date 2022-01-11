@@ -5,6 +5,7 @@
     :productType="proType"
     :clearable="clearable"
     :project-id="projectId"
+    :disabled="monomerDisabled"
     :default="monomerDefault"
     :filterArea="false"
     style="width: 250px"
@@ -17,6 +18,7 @@
     :options="areaOptions"
     size="small"
     :default="areaDefault"
+    :disabled="areaDisabled"
     :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
     :clearable="clearable"
     :noDataText="copyMonomerId ? '暂无数据' : '未选择单体'"
@@ -64,6 +66,14 @@ const props = defineProps({
     default: false
   },
   areaDefault: {
+    type: Boolean,
+    default: false
+  },
+  monomerDisabled: {
+    type: Boolean,
+    default: false
+  },
+  areaDisabled: {
     type: Boolean,
     default: false
   }

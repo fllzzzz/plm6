@@ -49,16 +49,13 @@
 import { getBoardForArtifact as get } from '@/api/mes/manufactures-manage/common'
 import { ref } from 'vue'
 
+import { artifactOutboundDashboardPM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-
-const permission = {
-  get: ['artifactOutboundStateDashboard:get']
-}
 
 const optShow = {
   add: false,

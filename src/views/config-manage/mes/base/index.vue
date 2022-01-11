@@ -16,23 +16,13 @@
 
 <script setup>
 import { provide } from 'vue'
+import { configMesBasePM as permission } from '@/page-permission/config'
+
 import overweightSMSRecipient from './component/overweight-sms-config'
 import safeAmount from './component/safe-amount-config'
 // import installationAudit from './component/installation-audit'
 import driverFillConfig from './component/driver-fill-config'
 import carModelConfig from './component/car-model-config'
-
-const permission = {
-  overweightSMSRecipientGet: ['overweightSMSRecipient:get'],
-  overweightSMSRecipientEdit: ['overweightSMSRecipient:edit'],
-  safeAmountFactorGet: ['safeAmountFactor:get'],
-  safeAmountFactorEdit: ['safeAmountFactor:edit'],
-  installationAuditGet: ['installationAudit:get'],
-  driverFillConfigGet: ['driverFillConfig:get'],
-  driverFillConfigEdit: ['driverFillConfig:edit'],
-  carModelConfigGet: ['carModelConfig:get'],
-  carModelConfigEdit: ['carModelConfig:edit']
-}
 
 provide('permission', permission)
 </script>

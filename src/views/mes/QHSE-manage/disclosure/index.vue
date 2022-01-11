@@ -159,16 +159,12 @@ import { ref } from 'vue'
 
 import { problemTypeEnum } from '@enum-ms/production'
 import { improveStatusEnum } from '@enum-ms/mes'
+import { qhseDisclosurePM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['qhseDisclosure:get']
-}
 
 const optShow = {
   add: false,

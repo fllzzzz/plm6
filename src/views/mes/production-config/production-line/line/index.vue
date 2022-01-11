@@ -148,6 +148,7 @@ import { useStore } from 'vuex'
 import { enabledEnum } from '@enum-ms/common'
 import { componentTypeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { configProductionLinePM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -159,15 +160,6 @@ import { ElMessageBox } from 'element-plus'
 
 const store = useStore()
 const emit = defineEmits(['click-line'])
-
-// crud交由presenter持有
-const permission = {
-  get: ['productionLine:get'],
-  add: ['productionLine:add'],
-  edit: ['productionLine:edit'],
-  del: ['productionLine:del'],
-  editStatus: ['productionLine:editStatus']
-}
 
 const optShow = {
   add: false,

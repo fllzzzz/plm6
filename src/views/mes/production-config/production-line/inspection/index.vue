@@ -59,20 +59,13 @@ import crudApi from '@/api/mes/production-config/production-line-inspection'
 import { defineExpose, ref, defineProps, watch, computed, inject } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
+import { configProductionLineInspectPM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['productionLineInspect:get'],
-  add: ['productionLineInspect:add'],
-  edit: ['productionLineInspect:edit'],
-  del: ['productionLineInspect:del']
-}
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

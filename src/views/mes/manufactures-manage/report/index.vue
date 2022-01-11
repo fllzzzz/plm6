@@ -129,6 +129,7 @@
 import crudApi from '@/api/mes/manufactures-manage/report'
 import { ref, provide } from 'vue'
 
+import { reportWarehouseStatePM as permission } from '@/page-permission/mes'
 import { reportComponentTypeEnum } from '@enum-ms/mes'
 import { constantize } from '@enum/base'
 import checkPermission from '@/utils/system/check-permission'
@@ -146,12 +147,6 @@ const reportTypeEnum = {
 }
 constantize(reportTypeEnum)
 provide('reportTypeEnum', reportTypeEnum)
-
-// crud交由presenter持有
-const permission = {
-  get: ['reportWarehouseState:get'],
-  detail: ['reportWarehouseState:detail']
-}
 
 const optShow = {
   add: false,

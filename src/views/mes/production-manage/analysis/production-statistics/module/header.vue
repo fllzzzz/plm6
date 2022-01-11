@@ -19,7 +19,7 @@
           value-format="x"
           @change="crud.toQuery"
         />
-        <monomer-select v-model="query.monomerId" clearable :project-id="query.projectId" class="filter-item" @change="crud.toQuery" />
+        <monomer-select v-model="query.monomerId" clearable :project-id="query.projectId" :disabled="!query.projectId" class="filter-item" @change="crud.toQuery" />
         <rrOperation />
       </div>
     </template>

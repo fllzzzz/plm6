@@ -59,6 +59,7 @@ import crudApi, { getSummary } from '@/api/mes/production-manage/report/artifact
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
+import { artifactProductionReportPM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 
@@ -69,11 +70,6 @@ import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base
 import productTypeSpecInfoColumns from '@comp-mes/table-columns/productType-spec-info-columns'
 import pagination from '@crud/Pagination'
 import mHeader from '../components/report-header.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['artifactProductionReport:get']
-}
 
 const optShow = {
   add: false,
