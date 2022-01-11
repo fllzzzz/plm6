@@ -42,6 +42,7 @@
           v-if="!auditStatus"
           v-model="form.changeContent"
           placeholder="变更内容"
+          :maxlength="50"
           style="width: 320px;"
         />
         <span v-else>{{ form.changeContent }}</span>
@@ -62,7 +63,7 @@
         <span v-else :class="detailInfo.contractAmount>detailInfo.changeAmount?'tip-red':'tip-green'">{{ toThousand(detailInfo.changeAmount-detailInfo.contractAmount) }}</span>
       </el-form-item>
       <el-form-item label="变更后合同金额(元)" prop="newAmount">
-        <span v-if="!auditStatus">{{ newAmount?toThousand(newAmount):'' }}</span>
+        <span v-if="!auditStatus">{{ isNotBlank(newAmount)?toThousand(newAmount):'' }}</span>
         <span v-else>{{ toThousand(detailInfo.changeAmount) }}</span>
       </el-form-item>
       <el-form-item label="变更日期" prop="changeDate">
@@ -100,8 +101,9 @@
           placeholder="请填写描述"
           style="width: 320px;"
           :maxlength="200"
+          show-word-limit
         />
-        <span v-else>{{ detailInfo.changeDesc }}</span>
+        <span v-else class="detail-break">{{ detailInfo.changeDesc }}</span>
       </el-form-item>
       <el-form-item label="附件">
         <upload-btn v-if="!auditStatus" ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" />
@@ -311,5 +313,8 @@ async function passConfirm(val) {
 }
 .tip-green{
   color:#67c23a;
+}
+.detail-break{
+  word-break:break-all;
 }
 </style>

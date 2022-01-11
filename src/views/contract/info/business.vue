@@ -82,11 +82,11 @@
                 <span v-else>{{ detail.projectType? projectTypeEnumN.VL[detail.projectType]: '-' }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="签约人" prop="singerId">
+            <el-form-item label="签约人" prop="signerId">
               <div style="width: 200px">
                 <template v-if="isModify">
                   <user-dept-cascader
-                    v-model="form.singerId"
+                    v-model="form.signerId"
                     filterable
                     :collapse-tags="false"
                     clearable
@@ -96,7 +96,7 @@
                     placeholder="签约人"
                   />
                 </template>
-                <span v-else>{{ detail.singerName }}</span>
+                <span v-else>{{ detail.signerName }}</span>
               </div>
             </el-form-item>
           </div>
@@ -295,7 +295,7 @@ const defaultForm = {
   projectType: undefined, // 项目类型
   projectContent: [], // 项目内容
   projectContentList: [],
-  singerId: undefined, // 签约人
+  signerId: undefined, // 签约人
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
   structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式
