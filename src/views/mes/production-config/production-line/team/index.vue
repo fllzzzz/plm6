@@ -71,20 +71,13 @@ import crudApi from '@/api/mes/production-config/production-line-team'
 import { defineExpose, ref, defineProps, watch, computed, inject } from 'vue'
 import { teamAttributeEnum } from '@enum-ms/mes'
 import checkPermission from '@/utils/system/check-permission'
+import { configProductionLineTeamPM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['productionLineTeam:get'],
-  add: ['productionLineTeam:add'],
-  edit: ['productionLineTeam:edit'],
-  del: ['productionLineTeam:del']
-}
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

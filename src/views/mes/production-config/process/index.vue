@@ -198,6 +198,7 @@ import {
 } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
+import { configProcessPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -207,14 +208,6 @@ import mHeader from './module/header'
 import mForm from './module/form'
 
 const store = useStore()
-
-// crud交由presenter持有
-const permission = {
-  get: ['process:get'],
-  add: ['process:add'],
-  edit: ['process:edit'],
-  del: ['process:del']
-}
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
