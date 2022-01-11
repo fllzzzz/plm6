@@ -59,7 +59,7 @@ const get = {
             id: 1, // 退货单id
             basicClass: 7, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-            purchaseReceipt: {
+            purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
             },
@@ -92,7 +92,7 @@ const get = {
             id: 2, // 退货单id
             basicClass: 8, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-            purchaseReceipt: {
+            purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
             },
@@ -126,7 +126,7 @@ const get = {
             id: 3, // 退货单id
             basicClass: 16, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-            purchaseReceipt: {
+            purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
             },
@@ -161,7 +161,7 @@ const get = {
             id: 4, // 退货单id
             basicClass: 8, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-            purchaseReceipt: {
+            purchaseOrder: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
             },

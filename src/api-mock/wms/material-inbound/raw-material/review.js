@@ -59,6 +59,7 @@ const get = {
           {
             id: 1, // 入库单id
             basicClass: 7, // 采购物料基础类型
+            boolPartyA: true, // 是否甲供
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseSN: 'CG-211125-123213', // 采购单号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号

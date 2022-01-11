@@ -1,6 +1,8 @@
 // --------------------------- 公共权限 start ------------------------------
 
 export const commonPM = {
+  // 采购订单详情
+  purchaseOrderDetail: ['wms_purchaseOrder:detail'],
   // 调拨详情
   transferDetail: ['wms_transfer_rawMaterial_review:detail']
 }
@@ -26,7 +28,8 @@ export const operateRecordPartyABuyInPM = {
 // 报表中心/原材料-入库报表
 export const reportRawMaterialInboundPM = {
   get: ['wms_inbound_rawMaterial_report:get'], // 查看
-  showAmount: ['wms_inbound_rawMaterial_report:showAmount'] // 显示金额
+  showAmount: ['wms_inbound_rawMaterial_report:showAmount'], // 显示金额
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单详情
 }
 
 // ---------------------------- 报表中心 end -------------------------------

@@ -34,19 +34,19 @@
         align="left"
       />
       <el-table-column
-        v-if="columns.visible('purchaseReceipt.serialNumber')"
-        key="purchaseReceipt.serialNumber"
+        v-if="columns.visible('purchaseOrder.serialNumber')"
+        key="purchaseOrder.serialNumber"
         :show-overflow-tooltip="true"
-        prop="purchaseReceipt.serialNumber"
+        prop="purchaseOrder.serialNumber"
         label="采购单号"
         min-width="155"
       >
         <template #default="{ row }">
           <clickable-permission-span
-            v-if="row.purchaseReceipt"
+            v-if="row.purchaseOrder"
             :permission="permission.inboundDetail"
-            @click="openPurchaseOrderDetail(row.purchaseReceipt.id)"
-            :text="row.purchaseReceipt.serialNumber"
+            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
+            :text="row.purchaseOrder.serialNumber"
           />
         </template>
       </el-table-column>
@@ -62,7 +62,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.inboundReceipt"
-            :permission="permission.purchaseDetail"
+            :permission="permission.purchaseOrderDetail"
             @click="openInboundDetail(row.inboundReceipt.id)"
             :text="row.inboundReceipt.serialNumber"
           />
@@ -168,9 +168,11 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
+    <!-- 入库单详情 -->
     <detail-wrapper ref="inboundDetailRef" :api="getInboundDetail">
       <inbound-detail />
     </detail-wrapper>
+    <!-- 采购订单详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
       <purchase-order-detail />
     </detail-wrapper>
@@ -188,6 +190,7 @@ import { reviewStatusEnum } from '@enum-ms/common'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useOtherCrudDetail from '@compos/use-other-crud-detail'
+
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import DetailWrapper from '@crud/detail-wrapper.vue'
@@ -204,7 +207,7 @@ const permission = {
   get: ['wms_rejectApplication_record:get'],
   del: ['wms_rejectApplication_record:del'],
   inboundDetail: ['wms_inboundApplication_review:detail'],
-  purchaseDetail: ['wms_purchaseOrder:detail']
+  purchaseOrderDetail: ['wms_purchaseOrder:detail']
 }
 
 const optShow = {
