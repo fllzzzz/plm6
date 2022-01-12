@@ -339,3 +339,10 @@ body .el-table th.gutter {
   background: #304156;
   border-color: #304156;
 }
+
+// 选择框禁用状态下，右侧箭头禁用
+.el-select {
+  .el-input.is-disabled .el-select__caret{
+    cursor: not-allowed;
+  }
+}

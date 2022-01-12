@@ -13,39 +13,15 @@ export default function useProductSummaryMeteUnit({
     'm': 'COM_L__M',
     'mm': 'COM_L__MM'
   }
-  const labelObj = {
-    [componentTypeEnum.ARTIFACT.V]: isSingle ? '单重' : '重量',
-    [componentTypeEnum.MACHINE_PART.V]: isSingle ? '单重' : '重量',
-    [componentTypeEnum.ASSEMBLE.V]: isSingle ? '单长' : '长度',
-    [componentTypeEnum.ENCLOSURE.V]: isSingle ? '单长' : '长度'
-  }
+  const w_dp = unitDp[w_unit]
+  const l_dp = unitDp[l_unit]
+
   const unitObj = {
-    [componentTypeEnum.ARTIFACT.V]: w_unit,
-    [componentTypeEnum.MACHINE_PART.V]: w_unit,
-    [componentTypeEnum.ASSEMBLE.V]: l_unit,
-    [componentTypeEnum.ENCLOSURE.V]: l_unit
+    [componentTypeEnum.ARTIFACT.V]: { label: isSingle ? '单重' : '重量', measure: '件', unit: w_unit, dp: w_dp, DP: DP[w_dp] },
+    [componentTypeEnum.MACHINE_PART.V]: { label: isSingle ? '单重' : '重量', measure: '件', unit: w_unit, dp: w_dp, DP: DP[w_dp] },
+    [componentTypeEnum.ASSEMBLE.V]: { label: isSingle ? '单长' : '长度', measure: '件', unit: l_unit, dp: l_dp, DP: DP[l_dp] },
+    [componentTypeEnum.ENCLOSURE.V]: { label: isSingle ? '单长' : '长度', measure: '张', unit: l_unit, dp: l_dp, DP: DP[l_dp] }
   }
-  const measureUnitObj = {
-    [componentTypeEnum.ARTIFACT.V]: '件',
-    [componentTypeEnum.MACHINE_PART.V]: '件',
-    [componentTypeEnum.ASSEMBLE.V]: '件',
-    [componentTypeEnum.ENCLOSURE.V]: '张'
-  }
-  const dpObj = {
-    [componentTypeEnum.ARTIFACT.V]: unitDp[w_unit],
-    [componentTypeEnum.MACHINE_PART.V]: unitDp[w_unit],
-    [componentTypeEnum.ASSEMBLE.V]: unitDp[l_unit],
-    [componentTypeEnum.ENCLOSURE.V]: unitDp[l_unit]
-  }
-  const unit = unitObj[productType]
-  const measure = measureUnitObj[productType]
-  const dp = dpObj[productType]
-  const label = labelObj[productType]
-  return {
-    label,
-    unit,
-    measure,
-    dp,
-    DP: DP[dp]
-  }
+
+  return unitObj[productType]
 }

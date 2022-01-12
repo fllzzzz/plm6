@@ -9,6 +9,7 @@
           size="small"
           class="filter-item"
           placeholder="选择月"
+          :clearable="false"
           value-format="x"
           @change="crud.toQuery"
         />

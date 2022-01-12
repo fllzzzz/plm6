@@ -19,7 +19,7 @@
           {{ unitTypeEnum.VL[scope.row.type] }}
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('enabled')" :show-overflow-tooltip="true" prop="enabled" label="状态" align="center">
+      <el-table-column v-if="columns.visible('enabled')" :show-overflow-tooltip="true" prop="enabled" label="启用状态" align="center">
         <template v-slot="scope">
           <template v-if="checkPermission(permission.edit)">
             <el-switch :disabled="scope.row.enabledLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleEnabledChange(scope.row)" />

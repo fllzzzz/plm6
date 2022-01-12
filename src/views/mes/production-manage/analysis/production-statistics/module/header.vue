@@ -14,6 +14,7 @@
           v-model="query.dateTime"
           type="month"
           size="small"
+          :clearable="false"
           class="filter-item"
           placeholder="选择月"
           value-format="x"
