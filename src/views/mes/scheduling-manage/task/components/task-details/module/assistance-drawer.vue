@@ -13,7 +13,7 @@
         v-show="!isEdit"
         size="mini"
         type="primary"
-        :disabled="!unInProductionQuantity"
+        :disabled="!unCompleteQuantity"
         @click="toEdit"
       >
         添加
@@ -31,8 +31,8 @@
         <el-form-item label="任务数">
           <span>{{ details.sourceSchedulingQuantity }}</span>
         </el-form-item>
-        <el-form-item label="未生产数">
-          <span>{{ unInProductionQuantity }}</span>
+        <el-form-item label="未完成数">
+          <span>{{ unCompleteQuantity }}</span>
         </el-form-item>
       </el-form>
       <common-table v-loading="tableLoading" :data="list" style="width: 100%">
@@ -147,8 +147,8 @@ const props = defineProps({
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
-const unInProductionQuantity = computed(() => {
-  return (props.details?.sourceSchedulingQuantity || 0) - (props.details?.inProductionQuantity || 0)
+const unCompleteQuantity = computed(() => {
+  return (props.details?.sourceSchedulingQuantity || 0) - (props.details?.completeQuantity || 0)
 })
 
 const originDisabledTeamId = computed(() => {

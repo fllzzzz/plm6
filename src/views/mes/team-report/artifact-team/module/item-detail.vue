@@ -141,7 +141,8 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    clientHRepMainH: true
+    clientHRepMainH: true,
+    extraHeight: 60
   },
   drawerRef
 )

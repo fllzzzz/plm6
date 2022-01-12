@@ -126,6 +126,8 @@
       </el-table-column>
     </template>
   </common-table>
+      <!--分页组件-->
+    <pagination />
   <issue-preview v-model:visible="previewVisible" :modified-data="crud.selections" @refresh="refresh" />
   <modifyQuantityDialog v-model:visible="modifyQuantityVisible" :details="detailRow" @modifySuccess="refresh" />
   <delTask v-model:visible="delTaskVisible" :details="detailRow" @delSuccess="refresh" />
@@ -146,6 +148,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
+import pagination from '@crud/Pagination'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header'
 import modifyQuantityDialog from './module/modify-quantity-dialog'
@@ -179,7 +182,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...taskPermission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )
@@ -214,9 +217,9 @@ const { maxHeight } = useMaxHeight({
   extraBox: ['.el-drawer__header', '.head-container'],
   wrapperBox: ['.el-drawer__body'],
   clientHRepMainH: true,
-  paginate: false,
+  paginate: true,
   minHeight: 300,
-  extraHeight: 40
+  extraHeight: 60
 })
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
