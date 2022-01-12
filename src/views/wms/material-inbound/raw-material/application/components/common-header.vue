@@ -120,6 +120,12 @@ const { cu, form, FORM } = regExtra() // 表单
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff() // 过磅重量超出理论重量处理
 
 const validateLoadingWeight = (rule, value, callback) => {
+  // 为空通过
+  if (value === undefined || value === null) {
+    callback()
+    return
+  }
+  // 范围内通过
   if (diffSubmitValidate(trainsDiff.value.hasOver)) {
     callback()
     return
@@ -193,6 +199,7 @@ function handleClear() {
 
 function init() {
   trainsDiff.value = {}
+  orderInfo.value = {}
   // 清除选中
   const trigger = watchEffect(() => {
     if (matSpecRef.value) {
