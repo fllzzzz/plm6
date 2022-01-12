@@ -143,6 +143,15 @@
         min-width="80px"
       />
       <el-table-column
+        v-if="columns.visible('unPackageQuantity')"
+        key="unPackageQuantity"
+        prop="unPackageQuantity"
+        sortable="custom"
+        label="可打包量"
+        align="center"
+        min-width="80px"
+      />
+      <el-table-column
         v-if="columns.visible('packageQuantity')"
         key="packageQuantity"
         prop="packageQuantity"
@@ -209,7 +218,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['drawingNumber'],
+    invisibleColumns: ['drawingNumber', 'packageQuantity'],
     queryOnPresenterCreated: false,
     hasPagination: false
   },

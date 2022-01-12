@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'" v-empty-text>{{ scope.row.auditTime }}</span>
+            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="auditStatus" show-overflow-tooltip label="操作" width="170px" align="center">
