@@ -26,7 +26,7 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info v-if="showAmount" :basic-class="detail.basicClass" :row="row" show-brand />
+            <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="detail.basicClass" :row="row" show-brand />
             <p>
               备注：<span v-empty-text>{{ row.remark }}</span>
             </p>
@@ -37,13 +37,13 @@
         <!-- 单位及其数量 -->
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
-        <material-secondary-info-columns v-if="!showAmount" :basic-class="detail.basicClass" />
+        <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
         <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
           <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
         </template>
-        <warehouse-info-columns show-project />
+        <warehouse-info-columns v-if="showWarehouse" show-project />
       </common-table>
     </template>
   </common-drawer>
@@ -92,13 +92,22 @@ const order = computed(() => detail.purchaseOrder || {})
 // 显示金额
 const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
 // 显示仓库
-// const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
+const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
 const drawerTitle = computed(() =>
   crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
+
+// 在列中显示次要信息
+const showTableColumnSecondary = computed(() => {
+  // 非甲供订单，显示项目和申购单 或者仓库时
+  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
+  // 甲供订单，显示项目和申购单以及仓库时
+  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && showWarehouse.value
+  return !(unshow1 || unshow2)
+})
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.list)

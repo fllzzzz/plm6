@@ -12,6 +12,15 @@
             class="filter-item"
             @change="handleBasicClassChange"
           />
+          <common-radio-button
+            v-model="query.rejectStatus"
+            :options="materialRejectStatusEnum.ENUM"
+            show-option-all
+            type="enum"
+            size="small"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
           <supplier-select
             v-model="query.supplierId"
             :basicClass="query.basicClass"
@@ -19,10 +28,10 @@
             mode="cross"
             clearable
             class="filter-item"
-            @change="crud.toQuery"
             placeholder="可选择供应商搜索"
             show-hide
             style="width: 250px"
+            @change="crud.toQuery"
           />
         </template>
         <template #secondLineFirstItem>
@@ -104,6 +113,7 @@ import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { materialRejectStatusEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -118,6 +128,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 const defaultQuery = {
   createTime: [], // [开始时间，结束时间]
   basicClass: undefined, // 采购类型
+  rejectStatus: undefined, // 退货状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   shipmentNumber: undefined, // 物流单号
   licensePlate: undefined, // 车牌号
