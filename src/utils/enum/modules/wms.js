@@ -28,17 +28,17 @@ const projectWarehouseTypeEnum = {
 }
 constantize(projectWarehouseTypeEnum)
 
-// 物料类型仓库（整料|余料）
+// 物料类型（整料|余料）
 const materialIsWholeEnum = {
-  WHOLE: { L: '整料', K: 'WHOLE ', V: 1 << 0 },
-  ODDMENT: { L: '余料', K: 'ODDMENT', V: 1 << 1 }
+  WHOLE: { L: '整料', K: 'WHOLE ', V: 1 << 0, COLOR: '#3a8ee6' },
+  ODDMENT: { L: '余料', K: 'ODDMENT', V: 1 << 1, COLOR: '#e6a23c' }
 }
 constantize(materialIsWholeEnum)
 
-// 物料出库方式（整料整出， 整料半出）
+// 物料出库方式（整出， 半出）
 const materialOutboundModeEnum = {
-  WHOLE: { L: '整料整出', K: 'WHOLE ', V: 1 << 0, COLOR: '#3a8ee6' },
-  HALF: { L: '整料半出', K: 'HALF', V: 1 << 1, COLOR: '#e6a23c' }
+  WHOLE: { L: '整出', K: 'WHOLE ', V: 1 << 0, COLOR: '#3a8ee6' },
+  HALF: { L: '半出', K: 'HALF', V: 1 << 1, COLOR: '#e6a23c' }
 }
 constantize(materialOutboundModeEnum)
 
@@ -51,8 +51,8 @@ constantize(steelPlateHalfModeEnum)
 
 // 订单供货类型
 const orderSupplyTypeEnum = {
-  SELF: { L: '自采物料', K: 'SELF', V: 1 << 0 },
-  PARTY_A: { L: '甲供物料', K: 'PARTY_A', V: 1 << 1 }
+  SELF: { L: '自采物料', SL: '自采', K: 'SELF', V: 1 << 0 },
+  PARTY_A: { L: '甲供物料', SL: '甲供', K: 'PARTY_A', V: 1 << 1 }
 }
 constantize(orderSupplyTypeEnum)
 

@@ -1,3 +1,5 @@
+import { matClsEnum } from '@/utils/enum/modules/classification'
+
 // 钢板库存
 const getSteelPlate = {
   url: '/api/wms/material-inventory/steel-plate',
@@ -15,7 +17,7 @@ const getSteelPlate = {
             boolHasFrozen: true, // 有冻结
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 800000, // 核算量
             frozenMete: 400000, // 冻结量
@@ -50,7 +52,7 @@ const getSteelPlate = {
             boolPartyA: true, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 500000, // 核算量
             quantity: 5, // 数量
@@ -96,7 +98,7 @@ const getSectionSteel = {
           {
             id: 4,
             classifyId: 110,
-            basicClass: 2,
+            basicClass: matClsEnum.SECTION_STEEL.V,
             specification: '10*10*200*500 * Q325B',
             quantity: 10,
             frozenQuantity: 5, // 冻结数量
@@ -142,7 +144,7 @@ const getSteelCoil = {
           {
             id: 5,
             classifyId: 120,
-            basicClass: 4,
+            basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             quantity: 3907,
             frozenMete: 5000, // 冻结量
@@ -193,7 +195,7 @@ const getAuxMatInventory = {
             classifyId: 204,
             specification: 'M27 * 60',
             color: '天蓝',
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             quantity: 10,
             frozenMete: 1, // 冻结量
             frozenQuantity: 1, // 冻结数量
@@ -232,7 +234,7 @@ const getGasInventory = {
             id: 1,
             classifyId: 901,
             // specification: '',
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',

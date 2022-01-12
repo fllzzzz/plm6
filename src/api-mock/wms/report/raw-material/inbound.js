@@ -136,7 +136,7 @@ const getReceiptList = {
           {
             id: 4, // 入库单id
             boolPartyA: true, // 是否甲供
-            basicClass: 8, // 采购物料基础类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
@@ -388,7 +388,7 @@ const getReceiptDetail_id1 = {
             rejectStatus: materialRejectStatusEnum.PART.V,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
-            basicClass: 2,
+            basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,
             length: 10000,
             brand: '马钢',
@@ -456,7 +456,7 @@ const getReceiptDetail_id1 = {
           {
             id: 5,
             classifyId: 120,
-            basicClass: 4,
+            basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             quantity: 200000,
             color: '天蓝',
@@ -758,7 +758,7 @@ const getReceiptDetail_id3 = {
   }
 }
 
-// 钢材详情
+// 入库明细
 const getDetails = {
   url: '/api/wms/report/raw-materials/inbound/details',
   method: 'get',
@@ -772,6 +772,7 @@ const getDetails = {
           {
             id: 1,
             rejectStatus: materialRejectStatusEnum.PENDING_REVIEW.V,
+            boolPartyA: true,
             classifyId: 103,
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
@@ -781,12 +782,7 @@ const getDetails = {
             width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: 'aaff',
-            remark: '66666',
             mete: 800000,
-            unitPrice: 0.01,
-            amount: 8000,
-            amountExcludingVAT: 7079.64,
-            inputVAT: 920.36,
             requisitionsSN: 'SG-AFTER-123456',
             project: {
               'id|+1': 1,
@@ -989,7 +985,7 @@ const getDetails = {
             rejectStatus: materialRejectStatusEnum.PART.V,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
-            basicClass: 2,
+            basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,
             length: 10000,
             brand: '马钢',
@@ -1078,7 +1074,7 @@ const getDetails = {
           {
             id: 5,
             classifyId: 120,
-            basicClass: 4,
+            basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             quantity: 200000,
             color: '天蓝',

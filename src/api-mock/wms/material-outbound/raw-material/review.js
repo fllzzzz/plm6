@@ -129,7 +129,6 @@ const getDetailByCurrentUser = {
         list: [
           {
             id: 1,
-            boolPartyA: true, // 甲供材料
             classifyId: 103,
             materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             basicClass: matClsEnum.STEEL_PLATE.V,
@@ -169,7 +168,6 @@ const getDetailByCurrentUser = {
           },
           {
             id: 3,
-            boolPartyA: true, // 甲供材料
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
             materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
@@ -208,6 +206,7 @@ const getDetailByCurrentUser = {
           {
             id: 5,
             classifyId: 120,
+            boolPartyA: true, // 甲供材料
             basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             outboundUnitType: measureTypeEnum.MEASURE.V,
@@ -318,7 +317,7 @@ const detail_id1 = {
           {
             id: 1,
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             outboundUnitType: measureTypeEnum.MEASURE.V,

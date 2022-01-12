@@ -47,7 +47,7 @@ const getInboundListForRejectable = {
           },
           {
             id: 2, // 入库单id
-            basicClass: 8, // 采购物料基础类型
+            basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
@@ -80,7 +80,7 @@ const getInboundListForRejectable = {
           },
           {
             id: 3, // 入库单id
-            basicClass: 16, // 采购物料基础类型
+            basicClass: matClsEnum.STEEL_PLATE.V6, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 入库单号
             purchaseOrder: {
               id: 1,
@@ -338,7 +338,7 @@ const getInboundDetail_1 = {
             rejectStatus: materialRejectStatusEnum.PART.V,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
-            basicClass: 2,
+            basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,
             length: 10000,
             brand: '马钢',
@@ -406,7 +406,7 @@ const getInboundDetail_1 = {
           {
             id: 5,
             classifyId: 120,
-            basicClass: 4,
+            basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
             quantity: 200000,
             color: '天蓝',

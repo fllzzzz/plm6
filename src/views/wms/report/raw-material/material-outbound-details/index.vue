@@ -1,5 +1,5 @@
 <template>
-  <div class="report-material-inbound-details app-container">
+  <div class="report-material-outbound-details app-container">
     <!--工具栏-->
     <mHeader />
     <!-- 表格渲染 -->
@@ -19,27 +19,20 @@
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns
-        :columns="columns"
-        :basic-class="basicClass"
-        show-reject-status
-        reject-detail-viewable
-        spec-merge
-        fixed="left"
-      >
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" spec-merge fixed="left">
         <template #afterIndex>
           <el-table-column
-            v-if="columns.visible('inboundReceipt.reviewTime')"
-            key="inboundReceipt.reviewTime"
+            v-if="columns.visible('outboundReceipt.outboundTime')"
+            key="outboundReceipt.outboundTime"
             :show-overflow-tooltip="true"
-            prop="inboundReceipt.reviewTime"
-            label="入库时间"
+            prop="outboundReceipt.outboundTime"
+            label="出库时间"
             align="center"
             width="125"
             fixed="left"
           >
             <template #default="{ row }">
-              <span v-parse-time>{{ row.inboundReceipt.reviewTime }}</span>
+              <span v-parse-time>{{ row.outboundReceipt.outboundTime }}</span>
             </template>
           </el-table-column>
         </template>
@@ -54,104 +47,65 @@
       </template>
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
-        v-if="columns.visible('inboundReceipt.purchaseOrder')"
-        key="inboundReceipt.purchaseOrder"
+        v-if="columns.visible('outboundReceipt.serialNumber')"
+        key="outboundReceipt.serialNumber"
         :show-overflow-tooltip="true"
-        prop="inboundReceipt.purchaseOrder"
-        label="采购单号"
+        prop="outboundReceipt.serialNumber"
         min-width="155"
-      >
-        <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.inboundReceipt.purchaseOrder"
-            :permission="permission.purchaseOrderDetail"
-            @click="openPurchaseOrderDetail(row.inboundReceipt.purchaseOrder.id)"
-            :text="row.inboundReceipt.purchaseOrder.serialNumber"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('inboundReceipt.serialNumber')"
-        key="inboundReceipt.serialNumber"
-        :show-overflow-tooltip="true"
-        prop="inboundReceipt.serialNumber"
-        min-width="155"
-        label="入库单号"
+        label="出库单号"
         align="left"
       >
         <template #default="{ row }">
           <clickable-permission-span
-            v-if="row.inboundReceipt"
-            :permission="permission.inboundDetail"
-            @click="openInboundReceiptDetail(row.inboundReceipt.id)"
-            :text="row.inboundReceipt.serialNumber"
+            v-if="row.outboundReceipt"
+            :permission="permission.outboundReceiptDetail"
+            @click="openOutboundReceiptDetail(row.outboundReceipt.id)"
+            :text="row.outboundReceipt.serialNumber"
           />
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('inboundReceipt.licensePlate')"
-        key="inboundReceipt.licensePlate"
+        v-if="columns.visible('outboundReceipt.founderName')"
+        key="outboundReceipt.founderName"
         :show-overflow-tooltip="true"
-        prop="inboundReceipt.licensePlate"
-        label="车牌号"
-        align="left"
-        width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('inboundReceipt.shipmentNumber')"
-        key="inboundReceipt.shipmentNumber"
-        prop="inboundReceipt.shipmentNumber"
-        label="物流单号"
-        align="left"
-        min-width="150"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        v-if="columns.visible('inboundReceipt.supplier.name')"
-        key="inboundReceipt.supplier.name"
-        :show-overflow-tooltip="true"
-        prop="inboundReceipt.supplier.name"
-        label="供应商"
-        min-width="200"
-      />
-      <el-table-column
-        v-if="columns.visible('inboundReceipt.founderName')"
-        key="inboundReceipt.founderName"
-        :show-overflow-tooltip="true"
-        prop="inboundReceipt.founderName"
+        prop="outboundReceipt.founderName"
         label="申请人"
         align="center"
         min-width="100"
       />
       <el-table-column
-        v-if="columns.visible('inboundReceipt.editorName')"
-        key="inboundReceipt.editorName"
+        v-if="columns.visible('outboundReceipt.reviewerName')"
+        key="outboundReceipt.reviewerName"
         :show-overflow-tooltip="true"
-        prop="inboundReceipt.editorName"
-        label="编辑人"
-        align="center"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('inboundReceipt.reviewerName')"
-        key="inboundReceipt.reviewerName"
-        :show-overflow-tooltip="true"
-        prop="inboundReceipt.reviewerName"
+        prop="outboundReceipt.reviewerName"
         label="审核人"
         align="center"
         min-width="100"
       />
       <el-table-column
-        v-if="columns.visible('inboundReceipt.createTime')"
-        key="inboundReceipt.createTime"
+        v-if="columns.visible('outboundReceipt.createTime')"
+        key="outboundReceipt.createTime"
         :show-overflow-tooltip="true"
-        prop="inboundReceipt.createTime"
+        prop="outboundReceipt.createTime"
         label="申请时间"
         align="center"
         width="125"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.inboundReceipt.createTime }}</span>
+          <span v-parse-time>{{ row.outboundReceipt.createTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('outboundReceipt.reviewTime')"
+        key="outboundReceipt.reviewTime"
+        :show-overflow-tooltip="true"
+        prop="outboundReceipt.reviewTime"
+        label="审核时间"
+        align="center"
+        width="125"
+      >
+        <template #default="{ row }">
+          <span v-parse-time>{{ row.outboundReceipt.reviewTime }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -159,26 +113,21 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 采购订单详情 -->
-    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
-      <purchase-order-detail />
-    </detail-wrapper>
-    <!-- 入库单详情 -->
-    <detail-wrapper ref="inboundReceiptDetailRef" :api="getInboundReceiptDetail">
-      <inbound-receipt-detail />
+    <!-- 出库单详情 -->
+    <detail-wrapper ref="outboundReceiptDetailRef" :api="getOutboundReceiptDetail">
+      <outbound-receipt-detail />
     </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
-import { getDetails as get } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
-import { detail as getInboundReceiptDetail } from '@/api/wms/material-inbound/raw-material/review'
-import { reportRawMaterialInboundDetailsPM as permission } from '@/page-permission/wms'
-import checkPermission from '@/utils/system/check-permission'
+import { getDetails as get } from '@/api/wms/report/raw-material/outbound'
+import { detail as getOutboundReceiptDetail } from '@/api/wms/material-outbound/raw-material/record'
+import { reportRawMaterialOutboundDetailsPM as permission } from '@/page-permission/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -189,8 +138,7 @@ import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 import MDetail from './module/detail.vue'
 
-import InboundReceiptDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
-import PurchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import OutboundReceiptDetail from '@/views/wms/material-outbound/raw-material/record/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -212,16 +160,13 @@ const tableRef = ref()
 
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '入库明细',
+    title: '出库明细',
     sort: ['id.desc'],
     invisibleColumns: [
-      'inboundReceipt.founderName',
-      'inboundReceipt.editorName',
-      'inboundReceipt.reviewerName',
-      'inboundReceipt.createTime',
-      'inboundReceipt.reviewTime',
-      'inboundReceipt.licensePlate',
-      'inboundReceipt.shipmentNumber'
+      'outboundReceipt.founderName',
+      'outboundReceipt.reviewerName',
+      'outboundReceipt.createTime',
+      'outboundReceipt.reviewTime'
     ],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -235,19 +180,17 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 // 是否有权限显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
-const basicClass = computed(() => crud.query ? crud.query.basicClass : undefined)
+const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
 
-// 采购单详情
-const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
-// 入库单详情
-const { detailRef: inboundReceiptDetailRef, openDetail: openInboundReceiptDetail } = useOtherCrudDetail()
+// 出库单详情
+const { detailRef: outboundReceiptDetailRef, openDetail: openOutboundReceiptDetail } = useOtherCrudDetail()
 
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content)
   data.content.forEach((row) => {
-    if (!row.inboundReceipt) row.inboundReceipt = {}
+    if (!row.outboundReceipt) row.outboundReceipt = {}
   })
   // 退货信息转换
   const rejectList = []
@@ -264,7 +207,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 </script>
 
 <style lang="scss" scoped>
-.report-material-inbound-details {
+.report-material-outbound-details {
   .el-table {
     ::v-deep(.cell) {
       height: 28px;
