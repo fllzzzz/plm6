@@ -191,9 +191,9 @@ FORM.HOOK.afterSubmit = () => {
 
 // 重置表单
 function handleClear() {
+  init()
   nextTick(() => {
     formRef.value && formRef.value.clearValidate()
-    init()
   })
 }
 

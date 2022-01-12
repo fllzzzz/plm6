@@ -100,12 +100,27 @@ const props = defineProps({
   autoInsertSpace: {
     // 自动在两个中文字符之间插入空格
     type: Boolean
+  },
+  clickOutFocus: {
+    // 点击后强制按钮失去焦点
+    type: Boolean,
+    default: true
   }
 })
 
 // 处理禁用，点击按钮内的文字仍可触发点击的情况
 function handleClick(event) {
   if (props.disabled === true) return
+  if (props.clickOutFocus) outFocus(event)
   emit('click', event)
+}
+
+// 点击后强制按钮失去焦点
+function outFocus(event) {
+  let target = event.target
+  if (target.nodeName !== 'BUTTON') {
+    target = event.target.parentNode
+  }
+  target.blur()
 }
 </script>
