@@ -77,7 +77,7 @@
           @success="handleExcelSuccess"
         />
       </el-tooltip>
-      <common-button icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
+      <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
     </div>
   </div>
 </template>
