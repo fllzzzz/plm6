@@ -39,6 +39,7 @@
         v-model="query.supplierId"
         :basicClass="query.basicClass"
         :type="supplierTypeEnum.RAW_MATERIAL.V"
+        mode="cross"
         clearable
         class="filter-item"
         @change="crud.toQuery"

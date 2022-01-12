@@ -279,11 +279,18 @@ export default {
           meta: { title: '甲供买入', icon: 'project', noCache: true }
         },
         {
-          name: 'WMSReportRawMaterialMaterialInbound',
-          path: 'report/raw-material/material-inbound',
+          name: 'WMSReportRawMaterialMaterialInboundReceipt',
+          path: 'report/raw-material/material-inbound-receipt',
           hidden: false,
-          component: '/wms/report/raw-material/material-inbound/index',
-          meta: { title: '原材料-入库报表', icon: 'project', noCache: true }
+          component: '/wms/report/raw-material/material-inbound-receipt/index',
+          meta: { title: '原材料-入库单表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialInboundDetails',
+          path: 'report/raw-material/material-inbound-details',
+          hidden: false,
+          component: '/wms/report/raw-material/material-inbound-details/index',
+          meta: { title: '原材料-入库明细', icon: 'project', noCache: true }
         }
       ]
     },

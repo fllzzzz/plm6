@@ -4,6 +4,9 @@ import { emptyTextFormatter } from '@/utils/data-type'
 export default {
   mounted(el, binding) {
     resolve(el, binding)
+  },
+  updated(el, binding) {
+    resolve(el, binding)
   }
 }
 
@@ -14,6 +17,6 @@ function resolve(el, binding) {
     const { val, blank = '-' } = value
     el.innerText = emptyTextFormatter(val, blank)
   } else {
-    el.innerText = emptyTextFormatter(innerText, value || '-')
+    el.innerText = emptyTextFormatter(value || innerText, '-')
   }
 }

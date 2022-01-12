@@ -218,9 +218,9 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import crudApi from '@/api/wms/report/raw-material/inbound'
+import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
 import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
-import { reportRawMaterialInboundPM as permission } from '@/page-permission/wms'
+import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
 import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum } from '@enum-ms/wms'
@@ -258,7 +258,7 @@ const { crud, columns } = useCRUD(
     invisibleColumns: ['rejectAmount', 'editorName', 'userUpdateTime', 'reviewTime', 'licensePlate', 'shipmentNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { get, detail }
   },
   tableRef
 )
@@ -270,5 +270,4 @@ const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 采购单详情
 const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
-
 </script>

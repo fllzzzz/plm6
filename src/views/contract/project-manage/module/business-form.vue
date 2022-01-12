@@ -52,9 +52,9 @@
               class="input-underline"
             />
           </el-form-item>
-          <el-form-item label="签约人" prop="singerId">
+          <el-form-item label="签约人" prop="signerId">
             <user-dept-cascader
-              v-model="form.singerId"
+              v-model="form.signerId"
               filterable
               :collapse-tags="false"
               clearable
@@ -216,7 +216,7 @@ const defaultForm = {
   businessType: undefined, // 业务类型
   projectType: undefined, // 项目类型
   projectContent: [], // 项目内容
-  singerId: undefined, // 签约人
+  signerId: undefined, // 签约人
   signingDate: undefined, // 签约日期
   signingAddress: undefined, // 签约地址
   structureMeasureMode: engineerSettlementTypeEnumN.THEORY.V, // 结算方式

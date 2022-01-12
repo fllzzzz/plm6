@@ -13,7 +13,7 @@
       <title-after-info :order="order" :detail="detail" />
     </template>
     <template #titleRight>
-      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+      <purchase-detail-button v-permission="permission.purchaseOrderDetail" :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
       <common-table
@@ -24,8 +24,15 @@
         :expand-row-keys="expandRowKeys"
         row-key="id"
       >
+        <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
+          <template #default="{ row }">
+            <div v-if="isNotBlank(row.rejectList)" class="flex-rcc mtb-20">
+              <reject-info-table :stripe="false" :material="row" :basic-class="row.basicClass" :list="row.rejectList" operable />
+            </div>
+          </template>
+        </el-expand-table-column>
         <!-- 基础信息 -->
-        <material-base-info-columns :basic-class="detail.basicClass" />
+        <material-base-info-columns :basic-class="detail.basicClass" show-reject-status />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="detail.basicClass" />
         <!-- 单位及其数量 -->
@@ -36,32 +43,32 @@
         </template>
         <warehouse-info-columns show-project />
       </common-table>
-      <p class="remark">
-        <span class="label-after">备注</span>
-        <span v-empty-text="detail.remark" />
-      </p>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { inject, computed, ref } from 'vue'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { isNotBlank } from '@/utils/data-type'
+import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
+import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
+import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 
+const permission = inject('permission')
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
@@ -79,30 +86,34 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
-// 退货配置
-const { rejectCfg } = useWmsConfig()
-
-// 物料金额显示
-const materialAmountDisplayWay = computed(() => {
-  return rejectCfg.value ? rejectCfg.value.materialAmountDisplayWay : {}
-})
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
-// 显示金额
-const showAmount = computed(() => (materialAmountDisplayWay.value ? !!materialAmountDisplayWay.value.application : false))
+
+// 是否有权限显示金额
+const showAmount = computed(() => checkPermission(permission.showAmount))
+
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
+
 // 标题
 const drawerTitle = computed(() =>
-  crud.detailLoading ? `退货单` : `退货单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
+  crud.detailLoading ? `入库单` : `入库单：${detail.serialNumber}（ ${order.value.supplier ? order.value.supplier.name : ''} ）`
 )
 
 CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.list)
-  detail.list = await numFmtByBasicClass(detail.list, {
-    toSmallest: false,
-    toNum: false
+  await numFmtByBasicClass(detail.list)
+  // 退货信息转换
+  const rejectList = []
+  detail.list.forEach((row) => {
+    if (Array.isArray(row.rejectList)) {
+      row.rejectList.forEach((rr) => {
+        rejectList.push(rr.material)
+      })
+    }
   })
+  await setSpecInfoToList(rejectList)
+  await numFmtByBasicClass(rejectList)
 }
 
 // 合计
@@ -120,12 +131,6 @@ function getSummaries(param) {
     ::v-deep(.cell) {
       height: 28px;
       line-height: 28px;
-    }
-  }
-  .remark {
-    font-size: 14px;
-    :first-child {
-      font-weight: 700;
     }
   }
 }

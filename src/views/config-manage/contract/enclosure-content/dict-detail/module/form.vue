@@ -97,16 +97,16 @@ const validateLabel = (rule, value, callback) => {
   if (!value) {
     callback(new Error('请填写字典标签'))
   }
-  if (['brand', 'cladding_inout', 'brand_inout', 'brand_core'].includes(props.line.name) && value.length > 20) {
+  if (['brand', 'mode', 'plating', 'yield_strength', 'plate_type', 'in_plating', 'out_plating', 'in_Steel_Plate_brand', 'out_steel_plate_brand', 'brand_core', 'out_plate_shape', 'in_plate_shape'].includes(props.line.name) && value.length > 20) {
     callback(new Error('长度在 20 个字符以内'))
   }
-  if (['model', 'material_inout', 'coating_inout', 'color_inout', 'form_inout', 'kind_core'].includes(props.line.name) && value.length > 10) {
+  if (['model', 'out_material', 'in_material', 'in_coating', 'out_coating', 'out_colour', 'in_colour', 'kind_core'].includes(props.line.name) && value.length > 10) {
     callback(new Error('长度在 10 个字符以内'))
   }
-  if (['effective_width', 'width_inout'].includes(props.line.name) && !regInt.test(value)) {
+  if (['effective_width', 'out_effective_width', 'in_effective_width'].includes(props.line.name) && !regInt.test(value)) {
     callback(new Error(`请输入整数`))
   }
-  if (['thickness', 'thickness_inout'].includes(props.line.name) && !regDP3.test(value)) {
+  if (['thickness', 'out_thickness', 'in_thickness'].includes(props.line.name) && !regDP3.test(value)) {
     callback(new Error(`请输入数字且最多保留3位小数`))
   }
   if (['unit_weight_core'].includes(props.line.name) && !regDP2.test(value)) {

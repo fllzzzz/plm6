@@ -55,7 +55,7 @@
         </common-table>
         <p class="remark">
           <span class="label-after">备注</span>
-          <span v-empty-text="{ val: detail.remark }" />
+          <span v-empty-text="detail.remark" />
         </p>
         <el-input
           class="approval-comments"
@@ -201,6 +201,7 @@ function detailInitCallBack() {
 
 // 加载详情
 async function fetchDetail(id) {
+  if (!id) return
   try {
     detailLoading.value = true
     const data = await getDetail(id)

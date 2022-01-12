@@ -242,7 +242,8 @@ const actions = {
       }
       unit.ALL.push(n)
       unit.MAP.set(n.name, n)
-      if (n.symbol) { // 如果存在符号，则符号也设置进map
+      if (n.symbol) {
+        // 如果存在符号，则符号也设置进map
         unit.MAP.set(n.symbol, n)
       }
       unit.KS.set(n.name, n.symbol || n.name)
@@ -379,6 +380,9 @@ const actions = {
         clsBrief.fullPathId = res.fullPathId // 全路径id
         clsBrief.fullPathName = res.fullName.split('>') // 全称全路径 数组
         clsBrief.fullName = clsBrief.fullPathName.join(' > ') // 全称
+        clsBrief.name = clsBrief.fullPathName[clsBrief.fullPathName.length - 1]
+        clsBrief.parentPathName = clsBrief.fullPathName.slice(0, -1) // 路径
+        clsBrief.pathName = clsBrief.parentPathName.join(' > ') // 全称
 
         const matCls = {
           ...clsBrief,

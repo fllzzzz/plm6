@@ -3,7 +3,7 @@ import request from '@/utils/request'
 /**
  * 获取原材料入库单列表
  */
-export function get(params) {
+export function getReceiptList(params) {
   return request({
     module: 'wms',
     url: 'report/raw-materials/inbound/receipt',
@@ -15,7 +15,7 @@ export function get(params) {
 /**
  * 入库单详情（含退货记录）
  */
-export function detail(id) {
+export function getReceiptDetail(id) {
   return request({
     module: 'wms',
     url: `report/raw-materials/inbound/receipt/${id}`,
@@ -23,4 +23,14 @@ export function detail(id) {
   })
 }
 
-export default { get, detail }
+/**
+ * 入库明细
+ */
+export function getDetails(params) {
+  return request({
+    module: 'wms',
+    url: `report/raw-materials/inbound/details`,
+    method: 'get',
+    params
+  })
+}
