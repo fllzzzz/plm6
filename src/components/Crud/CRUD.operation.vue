@@ -226,6 +226,7 @@ function toggleSearch() {
   display: inline-flex;
   flex-direction: column;
   max-height: 60vh;
+  overflow: auto;
   .el-checkbox {
     height: 22px;
     flex: none;

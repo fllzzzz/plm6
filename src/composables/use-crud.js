@@ -1024,29 +1024,46 @@ function addCrudFeatureMethod(crud, data) {
     if (!crud.ref.table) return
     nextTick(() => {
       const columns = crud.tableColumns
+      // 1：保留上一次的列
+      const lastColumns = lodash.cloneDeep(columns)
+      // 2：删除所有列表字段（下方重新计算），保留visible方法
       Object.keys(columns).forEach((key) => {
         if (key !== 'visible') delete columns[key]
       })
+      // 3:获得table的所有列
       const tableColumns = crud.ref.table.getColumns()
-      // 获得table的所有列
+      // 4:获取当前所有列，此时的列在部分情况下会缺失,因此这一步，只设置visible为true
+      // 例如：在某些情况下，table.getColumns()读取字段时，dom已经被v-if display：none掉
       tableColumns.forEach((e) => {
         if (!e.property || e.type !== 'default') {
           return
         }
         columns[e.property] = {
           label: e.label,
-          // visible: crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
           visible: true
         }
       })
+      // 5.待页面渲染后，重新再获取列。此时获取的列，包含第四步中“某些情况下”的列
       nextTick(() => {
-        // 避免在极其特殊的情况下，table.getColumns()读取字段时，dom已经被v-if display：none掉
-        // 不使用nextTick, 归还甲方-默认隐藏炉批号可触发该问题
-        crud.invisibleColumns.forEach((property) => {
-          if (columns[property]) {
-            columns[property].visible = false
+        // ，删除所有列表字段（重新设置，避免展示顺序出现问题，不重新设置会导致原来隐藏的都排在后面），保留visible方法
+        Object.keys(columns).forEach((key) => {
+          if (key !== 'visible') delete columns[key]
+        })
+        const tableColumns = crud.ref.table.getColumns()
+        // 获得table的所有列
+        tableColumns.forEach((e) => {
+          if (!e.property || e.type !== 'default') {
+            return
+          }
+          // 设置默认隐藏
+          columns[e.property] = {
+            label: e.label
+          }
+          // 设置列的visible状态
+          if (lastColumns[e.property]) {
+            columns[e.property].visible = lastColumns[e.property].visible // 之前隐藏的列，继续隐藏
           } else {
-            columns[property] = { visible: false } // 避免切换前已经被隐藏的列无法设置
+            columns[e.property].visible = crud.invisibleColumns.indexOf(e.property) === -1 // 默认隐藏
           }
         })
       })

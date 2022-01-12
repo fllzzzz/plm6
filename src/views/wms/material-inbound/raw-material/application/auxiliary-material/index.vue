@@ -92,6 +92,7 @@ const matSpecRef = ref() // 规格列表ref
 const formRef = ref() // form表单ref
 const drawerRef = ref()
 const order = ref() // 订单信息
+const orderLoaded = ref(false) // 订单加载状态
 
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = matClsEnum.MATERIAL.V // 当前基础分类
@@ -251,10 +252,13 @@ function handleOrderInfoChange(orderInfo) {
       { immediate: true }
     )
   }
+  orderLoaded.value = true
 }
 
 // 信息初始化
-function init() {}
+function init() {
+  orderLoaded.value = false
+}
 </script>
 
 <style lang="scss" scoped>

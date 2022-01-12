@@ -242,6 +242,7 @@ async function fetchPendingReviewIdList() {
 
 // 加载详情
 async function fetchDetail(id) {
+  if (!id) return
   try {
     detailLoading.value = true
     const data = await detail(id)
