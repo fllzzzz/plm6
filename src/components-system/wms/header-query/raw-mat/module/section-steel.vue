@@ -18,6 +18,15 @@
     @keyup.enter="toQuery"
   />
   <el-input
+    v-model.trim="queryVO.brand"
+    clearable
+    style="width: 200px"
+    size="small"
+    placeholder="品牌"
+    class="filter-item"
+    @keyup.enter="toQuery"
+  />
+  <el-input
     v-model.trim="queryVO.heatNoAndBatchNo"
     clearable
     style="width: 200px"

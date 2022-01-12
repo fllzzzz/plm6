@@ -56,6 +56,7 @@
                 :step="1"
                 :min="scope.row.schedulingMap[line.id].sourceQuantity || 0"
                 :max="scope.row.quantity"
+                :precision="0"
                 size="mini"
                 controls-position="right"
                 style="width: 100%"
@@ -129,6 +130,7 @@ import { provide, ref } from 'vue'
 
 import { componentTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
+import { enclosureSchedulingPM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -137,13 +139,6 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['enclosureScheduling:get'],
-  save: ['enclosureScheduling:save'],
-  clear: ['enclosureScheduling:clearWithOneClick']
-}
 
 const optShow = {
   add: false,

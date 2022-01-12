@@ -120,18 +120,13 @@ import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
 import { reportComponentTypeEnum } from '@enum-ms/mes'
+import { productionStatisticsPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import artifactDetail from './module/artifact-group-detail'
 import enclosureDetail from './module/enclosure-group-detail'
-
-// crud交由presenter持有
-const permission = {
-  get: ['productionStatistics:get'],
-  detail: ['productionStatistics:detail']
-}
 
 const optShow = {
   add: false,

@@ -1,6 +1,5 @@
 <template>
   <section class="app-main">
-    <div class="drag" />
     <template v-if="!showNeedProjectTip">
       <!-- 正常路由显示的模块
         当路由route.component未正确配置路径或加载方式，

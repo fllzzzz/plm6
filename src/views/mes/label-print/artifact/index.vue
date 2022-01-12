@@ -226,6 +226,7 @@ import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { printArtifact as printComponent } from '@/utils/print/index'
+import { artifactLabelPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -234,11 +235,6 @@ import tableCellTag from '@comp-common/table-cell-tag/index'
 import mHeader from '../components/label-print-header.vue'
 import printedRecordDrawer from '../components/task-printed-record-drawer.vue'
 import labelDlg from '../components/label-dlg'
-
-// crud交由presenter持有
-const permission = {
-  get: ['artifactLabel:get']
-}
 
 const optShow = {
   add: false,

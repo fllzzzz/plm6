@@ -63,6 +63,7 @@
           value-format="x"
           placeholder="日期"
           style="width: 320px;"
+          :disabledDate="(date) => { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }"
         />
         <span v-else>{{ detailInfo.changeDate?parseTime(detailInfo.changeDate,'{y}-{m}-{d}'):'-' }}</span>
       </el-form-item>
@@ -91,7 +92,7 @@
           style="width: 320px;"
           :maxlength="200"
         />
-        <span v-else>{{ detailInfo.changeDesc }}</span>
+        <span v-else class="detail-break">{{ detailInfo.changeDesc }}</span>
       </el-form-item>
       <el-form-item label="付款方式" prop="payType">
         <common-select
@@ -309,5 +310,8 @@ async function passConfirm(val) {
 }
 .tip-green{
   color:#67c23a;
+}
+.detail-break{
+  word-break:break-all;
 }
 </style>

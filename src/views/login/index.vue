@@ -1,6 +1,5 @@
 <template>
   <div class="login-menus-container">
-    <div class="drag" />
     <div class="header-container">
       <div class="left-drawer">
         <logo />

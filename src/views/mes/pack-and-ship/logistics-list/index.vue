@@ -162,6 +162,7 @@
 import crudApi from '@/api/mes/pack-and-ship/logistics-list'
 import { ref } from 'vue'
 
+import { logisticsPM as permission } from '@/page-permission/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { packTypeEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
@@ -175,12 +176,6 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-
-const permission = {
-  get: ['logistics:get'],
-  edit: ['logistics:edit'],
-  print: ['logistics:print']
-}
 
 const optShow = {
   add: false,

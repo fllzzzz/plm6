@@ -38,9 +38,9 @@
                 <span>{{ detail.projectType?projectTypeEnumN.VL[detail.projectType]:'-' }}</span>
               </div>
             </el-form-item>
-            <el-form-item label="签约人" prop="singerId">
+            <el-form-item label="签约人" prop="signerId">
               <div style="width: 200px">
-                <span>{{ detail.singerName }}</span>
+                <span>{{ detail.signerName }}</span>
               </div>
             </el-form-item>
           </div>

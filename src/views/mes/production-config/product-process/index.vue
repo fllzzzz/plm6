@@ -79,6 +79,7 @@ import { enabledEnum } from '@enum-ms/common'
 import { processTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
+import { configProductProcessPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -86,15 +87,6 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['productProcess:get'],
-  add: ['productProcess:add'],
-  edit: ['productProcess:edit'],
-  del: ['productProcess:del'],
-  editStatus: ['productProcess:editStatus']
-}
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

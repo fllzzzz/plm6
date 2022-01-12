@@ -81,6 +81,7 @@ import { ref, reactive, provide } from 'vue'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
+import { enclosureTeamReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -93,12 +94,6 @@ const colors = [
   { color: '#e6a23c', percentage: 70 },
   { color: '#6f7ad3', percentage: 100 }
 ]
-
-// crud交由presenter持有
-const permission = {
-  get: ['enclosureTeamReport:get'],
-  detail: ['enclosureTeamReport:detail']
-}
 
 const optShow = {
   add: false,

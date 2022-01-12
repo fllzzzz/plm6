@@ -28,6 +28,7 @@
       <supplier-select
         v-model="query.supplierId"
         :type="supplierTypeEnum.RAW_MATERIAL.V"
+        mode="cross"
         clearable
         class="filter-item"
         @change="crud.toQuery"

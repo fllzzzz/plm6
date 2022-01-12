@@ -210,7 +210,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
     LODOP.SET_PRINT_PAGESIZE(2, 1030, 680, '1') /* 纸张大小*/ // 100mm* 75mm
     LODOP.ADD_PRINT_HTM('1mm', '1mm', '65mm', '24mm', headStrHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_HTM('23mm', '1mm', '65mm', '66mm', strHtml)
+    LODOP.ADD_PRINT_HTM('24mm', '1mm', '65mm', '66mm', strHtml)
     LODOP.ADD_PRINT_HTM('96mm', '1mm', '65mm', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
     LODOP.ADD_PRINT_BARCODE('1.3mm', '1.3mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
@@ -589,7 +589,7 @@ const PACKAGE_STYLE = `
   }
 
   .package-label .row-0 {
-    height: 6mm;
+    height: 6.6mm;
   }
   .package-label .row-1 {
     height: 8mm;

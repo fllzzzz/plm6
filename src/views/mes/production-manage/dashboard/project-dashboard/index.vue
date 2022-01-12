@@ -128,6 +128,8 @@ import { computed, ref, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 
+import { projectDashboardPM as permission } from '@/page-permission/mes'
+import checkPermission from '@/utils/system/check-permission'
 import EO from '@enum'
 import { projectComponentTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { dateDifference } from '@/utils/date'
@@ -168,7 +170,8 @@ const monomerId = ref()
 const projectType = ref()
 const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 const diffDate = computed(() => {
-  return (globalProject.value && dateDifference(globalProject.value.startDate, globalProject.value.endDate)) || 0
+  const _endDate = globalProject.value.endDate ? globalProject.value.endDate : new Date()
+  return (globalProject.value && dateDifference(globalProject.value.startDate, _endDate)) || 0
 })
 const month = ref(moment(moment(globalProject.value.startDate)).format('YYYY-MM'))
 
@@ -176,12 +179,14 @@ const { updateChart: shipUpdateChart, echartsLoading: shipEchartsLoading } = use
   elementId: 'shipMain',
   globalProjectId,
   monomerId,
-  month
+  month,
+  permission
 })
 const { updateChart: qhseUpdateChart, echartsLoading: qhseEchartsLoading } = useQhseRecordCharts({
   elementId: 'QCMain',
   globalProjectId,
-  monomerId
+  monomerId,
+  permission
 })
 
 const monomerRef = ref()
@@ -202,6 +207,9 @@ const unitObj = computed(() => {
 })
 
 async function fetchList() {
+  if (!checkPermission(permission.get)) {
+    return
+  }
   if (!projectType.value || !monomerId.value || !globalProjectId.value) {
     return
   }

@@ -79,7 +79,7 @@
       />
       <div>
         <el-input
-          v-model="query.singerName"
+          v-model="query.signerName"
           size="small"
           placeholder="输入签约人"
           style="width: 120px;"
@@ -123,7 +123,7 @@ let projectContent2 = []
 const typeProp = { key: 'id', label: 'name', value: 'id' }
 const defaultQuery = {
   projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContentId: undefined,
-  singerName: '',
+  signerName: '',
   status: projectStatusEnum.PROCESS.V,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
 }

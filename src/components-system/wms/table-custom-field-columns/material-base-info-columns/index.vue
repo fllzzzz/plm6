@@ -1,22 +1,13 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
-      <template v-if="showRejectStatus">
-        <table-cell-tag
-          v-if="isNotBlank(getInfo(row, 'rejectStatus')) && getInfo(row, 'rejectStatus') !== materialRejectStatusEnum.NONE.V"
-          :name="materialRejectStatusEnum.VL[getInfo(row, 'rejectStatus')]"
-          :color="materialRejectStatusEnum.V[getInfo(row, 'rejectStatus')].COLOR"
-        />
-      </template>
-      <template v-else>
-        <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
-        <table-cell-tag
-          v-if="showPartyA && partyAPosition === 'index'"
-          :show="!!getInfo(row, 'boolPartyA')"
-          name="甲供"
-          :color="TAG_PARTY_DEF_COLOR"
-        />
-      </template>
+      <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
+      <table-cell-tag
+        v-if="showPartyA && partyAPosition === 'index'"
+        :show="!!getInfo(row, 'boolPartyA')"
+        name="甲供"
+        :color="TAG_PARTY_DEF_COLOR"
+      />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -63,7 +54,50 @@
         :color="materialOutboundModeEnum.V[getInfo(row, 'materialOutboundMode')].COLOR"
         :offset="15"
       />
+      <!-- 显示退货状态 -->
+      <template v-if="showRejectStatus">
+        <table-cell-tag
+          v-if="isNotBlank(getInfo(row, 'rejectStatus')) && getInfo(row, 'rejectStatus') !== materialRejectStatusEnum.NONE.V"
+          :name="materialRejectStatusEnum.VL[getInfo(row, 'rejectStatus')]"
+          :color="materialRejectStatusEnum.V[getInfo(row, 'rejectStatus')].COLOR"
+          :class="{ pointer: rejectDetailViewable }"
+          @click="openMatRejectDetail(row)"
+        />
+      </template>
       <span v-empty-text>{{ getInfo(row, 'serialNumber') }}</span>
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="showClassifyName"
+    :key="`${field}.classifyName`"
+    :prop="`${field}.classifyName`"
+    label="物料种类"
+    align="center"
+    show-overflow-tooltip
+    :width="classifyNameWidth"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <!-- 是否显示冻结角标 -->
+      <span v-if="showFrozenTip && getInfo(row, 'boolHasFrozen')" class="table-cell-triangle-frozen" />
+      <el-tooltip
+        :content="getInfo(row, 'classifyPathName')"
+        :disabled="!getInfo(row, 'classifyPathName')"
+        :show-after="500"
+        placement="top"
+      >
+        <span>
+          <!-- 是否可以查看材料冻结 -->
+          <span
+            v-if="frozenViewable && getInfo(row, 'boolHasFrozen')"
+            class="freeze-text"
+            v-empty-text="getInfo(row, 'classifyName')"
+            @click="openMatFrozenDetail(row)"
+          />
+          <!-- 正常显示 -->
+          <span v-else v-empty-text="getInfo(row, 'classifyName')" />
+        </span>
+      </el-tooltip>
     </template>
   </el-table-column>
   <component
@@ -76,22 +110,60 @@
     :field="field"
     v-bind="$attrs"
   />
+
+  <!-- 冻结记录 -->
+  <common-dialog
+    :title="`冻结记录：${currentMaterial.classifyName} ${currentMaterial.specification}`"
+    v-model="freezeDialogVisible"
+    width="1300px"
+    show-close
+    :before-close="handleFreezeClose"
+    custom-class="wms-material-freeze-record-view"
+    top="10vh"
+  >
+    <material-freeze-record :material="currentMaterial" :max-height="maxHeight" @unfreeze-success="handleUnfreezeSuccess" />
+  </common-dialog>
+
+  <!-- 退货详情 -->
+  <common-dialog
+    :title="`退货记录：${currentMaterial.classifyName} ${currentMaterial.specification}`"
+    v-model="rejectMaterialDialogVisible"
+    width="80%"
+    show-close
+    custom-class="wms-material-reject-material-record-view"
+    top="10vh"
+  >
+    <reject-info-table
+      :material="currentMaterial"
+      :basic-class="currentMaterial.basicClass"
+      :list="currentMaterial.rejectList"
+      :max-height="maxHeight"
+      has-border
+    />
+  </common-dialog>
 </template>
 
 <script setup>
-import { defineProps, computed, provide } from 'vue'
-import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
+import { defineEmits, defineProps, computed, provide, ref } from 'vue'
+import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { materialRejectStatusEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
 import { isBlank } from '@/utils/data-type'
+import checkPermission from '@/utils/system/check-permission'
 
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
+import useMaxHeight from '@/composables/use-max-height'
 import steelPlate from './module/steel-plate.vue'
 import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import rawMat from './module/raw-mat.vue'
+
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
+import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
+import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
+
+const emit = defineEmits(['refresh'])
 
 const props = defineProps({
   specMerge: {
@@ -104,6 +176,21 @@ const props = defineProps({
   },
   columns: {
     type: Object
+  },
+  showFrozenTip: {
+    // 显示冻结角标
+    type: Boolean,
+    default: false
+  },
+  frozenViewable: {
+    // 可查看冻结
+    type: Boolean,
+    default: false
+  },
+  rejectDetailViewable: {
+    // 可查看退货详情
+    type: Boolean,
+    default: false
   },
   showIndex: {
     // 显示 “序号”
@@ -150,6 +237,78 @@ const props = defineProps({
   }
 })
 
+const permission = {
+  frozenDetail: ['wms_raw_mat_freeze:detail']
+}
+
+// 当前物料
+const currentMaterial = ref({})
+// 冻结记录窗口显示状态
+const freezeDialogVisible = ref(false)
+// 退货详情窗口显示状态
+const rejectMaterialDialogVisible = ref(false)
+// 操作次数(列如冻结)
+const operateNumber = ref(0)
+
+// 物料全名宽度
+const classifyNameWidth = computed(() => {
+  // 基础分类不存在，或基础分类不为钢材，则宽度为100
+  return !props.basicClass || props.basicClass > STEEL_ENUM ? 150 : 120
+})
+
+// 是否显示物料种类全路径
+const showClassifyName = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.classifyName`))
+// 是否显示编号
+const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.serialNumber`))
+// 可查看冻结信息
+const frozenViewable = computed(() => props.frozenViewable && checkPermission(permission.frozenDetail))
+
+// 表格高度
+const { maxHeight } = useMaxHeight(
+  {
+    mainBox: '.wms-material-freeze-record-view',
+    extraBox: ['.el-dialog__header'],
+    wrapperBox: ['.el-dialog__body'],
+    clientHRepMainH: true
+  },
+  computed(() => freezeDialogVisible.value || rejectMaterialDialogVisible.value)
+)
+
+// 打开冻结详情
+function openMatFrozenDetail(row) {
+  operateNumber.value = 0
+  currentMaterial.value = getInfo(row)
+  freezeDialogVisible.value = true
+}
+
+// 打开退货详情
+function openMatRejectDetail(row) {
+  if (!props.rejectDetailViewable) return
+  currentMaterial.value = getInfo(row)
+  rejectMaterialDialogVisible.value = true
+}
+
+// 解冻成功
+function handleUnfreezeSuccess() {
+  ++operateNumber.value
+}
+
+// 关闭窗口
+function handleFreezeClose(done) {
+  if (operateNumber.value > 0) {
+    emit('refresh')
+  }
+  done()
+}
+
+// 根据传入的物料字段获取信息
+function getInfo(row, field) {
+  const materialField = props.field
+  if (isBlank(row) || isBlank(row[materialField])) return
+  return !field ? row[materialField] : row[materialField][field]
+}
+provide('getInfo', getInfo)
+
 const comp = computed(() => {
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
@@ -166,14 +325,4 @@ const comp = computed(() => {
       return rawMat
   }
 })
-
-const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.serialNumber`))
-
-// 根据传入的物料字段获取信息
-function getInfo(row, field) {
-  const materialField = props.field
-  if (isBlank(row) || isBlank(row[materialField])) return
-  return !field ? row[materialField] : row[materialField][field]
-}
-provide('getInfo', getInfo)
 </script>

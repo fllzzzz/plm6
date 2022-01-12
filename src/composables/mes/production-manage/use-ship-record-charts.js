@@ -1,13 +1,17 @@
 import * as echarts from 'echarts'
 import { onMounted, ref } from 'vue'
 import { getShipList } from '@/api/mes/production-manage/dashboard/project-dashboard'
+import checkPermission from '@/utils/system/check-permission'
 
-export default function useShipRecordEcharts({ elementId, title, globalProjectId, monomerId, month }) {
+export default function useShipRecordEcharts({ elementId, title, globalProjectId, monomerId, month, permission }) {
   let myChart = null
   const echartsLoading = ref(false)
   const list = ref([])
 
   async function fetchList() {
+    if (!checkPermission(permission.shipGet)) {
+      return
+    }
     if (!monomerId) {
       return
     }
@@ -79,6 +83,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
           }
         }
       },
+      color: ['#34bfa3'],
       xAxis: {
         type: 'category',
         data: []

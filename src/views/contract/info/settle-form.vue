@@ -57,7 +57,7 @@
         </template>
       </el-form-item>
       <el-form-item label="结算差异(元)" prop="newAmount">
-        <span v-if="!auditStatus">{{ isNotBlank(newAmount)? toThousand(newAmount):newAmount }}</span>
+        <span v-if="!auditStatus">{{ isNotBlank(newAmount)? toThousand(newAmount):'' }}</span>
         <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.contractAmount) }}</span>
       </el-form-item>
       <el-form-item label="结算日期" prop="changeDate">
@@ -68,6 +68,7 @@
           value-format="x"
           placeholder="结算日期"
           style="width: 320px;"
+          :disabledDate="(date) => { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }"
         />
         <span v-else>{{ detailInfo.changeDate? parseTime(detailInfo.changeDate,'{y}-{m}-{d}'): '-' }}</span>
       </el-form-item>
