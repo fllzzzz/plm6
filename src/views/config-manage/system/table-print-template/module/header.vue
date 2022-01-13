@@ -10,32 +10,20 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-select
-        v-model="query.moduleType"
-        :options="moduleTypeEnum.ENUM"
-        showOptionAll
-        :data-structure="{ key: 'K', label: 'L', value: 'K' }"
-        type="other"
-        all-label-text="所有模块"
-        placeholder="选择模块"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
-      <table-type-select
+      <tableTypeCascader
         v-model="query.type"
-        :module-type="query.moduleType"
-        :show-all="true"
-        type="enum"
+        clearable
         filterable
-        placeholder="选择表格类型"
+        style="width: 300px;"
         class="filter-item"
+        placeholder="可搜索表格"
         @change="crud.toQuery"
       />
       <el-input
         v-model="query.name"
         placeholder="输入表格名称搜索"
         class="filter-item"
-        style="width: 150px;"
+        style="width: 200px;"
         size="small"
         clearable
         @keyup.enter="crud.toQuery"
@@ -55,14 +43,12 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { enabledEnum } from '@enum-ms/common'
-import { moduleTypeEnum } from '@/utils/print/table-type'
-import tableTypeSelect from '@comp-common/print/table-type-select-2'
+import tableTypeCascader from '@comp-common/print/table-type-cascader'
 
 const defaultQuery = {
   name: undefined,
   enabled: enabledEnum.TRUE.V,
-  type: undefined,
-  moduleType: undefined
+  type: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

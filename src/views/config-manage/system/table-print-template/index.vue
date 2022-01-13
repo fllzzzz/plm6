@@ -12,6 +12,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      @row-dblclick="changeDefault"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="表格名称" min-width="140px">
@@ -22,25 +23,21 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('moduleType')" key="moduleType" prop="moduleType" :show-overflow-tooltip="true" label="模块" min-width="140px">
         <template #default="{ row }">
-          <span>{{ moduleTypeEnum[row.moduleType] ? moduleTypeEnum[row.moduleType].L : '' }}</span>
+          <span>{{ tableType[row.type]?.T }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('type')" key="type" prop="type" :show-overflow-tooltip="true" label="表格" min-width="140px">
         <template #default="{ row }">
-          <span>{{ tableTypeEnum[row.type] ? tableTypeEnum[row.type].L : '' }}</span>
+          <span>{{ tableType[row.type]?.L }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" min-width="160px" />
-      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" label="状态" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" label="状态" align="center" width="80px">
         <template #default="{ row }">
           <el-switch
             v-model="row.enabled"
             :disabled="!checkPermission(permission.edit)"
-            active-color="#409EFF"
-            inactive-color="#F56C6C"
-            :active-value="systemEnabledEnum.ENUM.TRUE.V"
-            :inactive-value="systemEnabledEnum.ENUM.FALSE.V"
-            @change="changeEnabled(row, row.enabled)"
+            @change="handleEnabledChange(row, 'name')"
           />
         </template>
       </el-table-column>
@@ -53,7 +50,7 @@
         fixed="right"
       >
         <template #default="{ row }">
-          <ud-operation :show-detail="true" :data="row" />
+          <crud-operation :show-detail="true" :data="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -65,29 +62,22 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/config/system-config/table-print-template'
+import crudApi, { editEnabled, editDefault } from '@/api/config/system-config/table-print-template'
 import { ref } from 'vue'
+import { tablePrintTemplatePM as permission } from '@/page-permission/config'
 
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
+import useCrudEnabledChange from '@compos/use-crud-enabled-change'
+import crudOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
-import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessageBox } from 'element-plus'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
-import { moduleTypeEnum, tableTypeEnum } from '@/utils/print/table-type'
-
-// crud交由presenter持有
-const permission = {
-  get: ['tablePrinting:get'],
-  add: ['tablePrinting:add'],
-  edit: ['tablePrinting:edit'],
-  del: ['tablePrinting:del']
-}
+import { tableType } from '@/utils/print/table/type'
 
 const optShow = {
   add: true,
@@ -110,20 +100,22 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled })
 
-async function changeEnabled(data, val) {
+async function changeDefault(row) {
   try {
-    await ElMessageBox.confirm('此操作将 "' + systemEnabledEnum.VL[val] + '" ' + data.name + ', 是否继续？', '提示', {
+    const isDefault = !row.isDefault
+    const tip = isDefault ? `此操作将“${row.name}”设置为该表格的默认模板` : `此操作取消“${row.name}”的默认状态`
+    await ElMessageBox.confirm(tip, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await editStatus({ id: data.id, enabled: val })
+    await editDefault({ id: row.id, isDefault: isDefault })
     crud.refresh()
-    crud.notify(systemEnabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    crud.notify(isDefault ? '设置' : '取消' + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
-    console.log('变更打印模板状态', error)
-    data.enabled = data.enabled === systemEnabledEnum.ENUM.TRUE.V ? systemEnabledEnum.ENUM.FALSE.V : systemEnabledEnum.ENUM.TRUE.V
+    console.log('变更表格状态', error)
   }
 }
 </script>

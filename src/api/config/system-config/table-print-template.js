@@ -58,10 +58,11 @@ export function edit(data) {
  * @param {number} id | required 表格id
  * @param {number} enabled | required 是否启用
  */
-export function editStatus({ id, enabled }) {
+export function editEnabled({ id, enabled }) {
   return request({
-    url: `api/tablePrintTemplate/${id}/enabled/${enabled}`,
-    method: 'put'
+    url: `api/tablePrintTemplate/${id}/enabled`,
+    method: 'put',
+    params: { enabled }
   })
 }
 

@@ -55,7 +55,7 @@
             <template v-if="isNotBlank(config)">
               <!-- logo图片 -->
               <el-image
-                v-if="logoCfg && logoCfg.show && logoCfg.url"
+                v-if="logoCfg?.show && logoCfg.url"
                 class="logo-info"
                 :style="logoStyle"
                 :src="logoCfg.url"
@@ -66,20 +66,20 @@
               />
               <!-- 二维码 -->
               <div
-                v-if="qrCfg && qrCfg.show"
+                v-if="qrCfg?.show"
                 class="qr-info"
                 :style="qrStyle"
                 draggable="true"
                 @dragend="qrDrag"
                 @click.stop="configItem = configItemEnum.BASE.V"
               >
-                <qrcode-vue :value="qrContent" :size="150" :margin="1" />
+                <qrcode-vue :value="qrContent"  :margin="1" />
               </div>
               <!-- 标题 -->
-              <div v-if="titleCfg && titleCfg.show" class="title-info" :style="titleStyle" @click.stop="configItem = configItemEnum.TITLE.V" v-html="titleHtml" />
+              <div v-if="titleCfg?.show" class="title-info" :style="titleStyle" @click.stop="configItem = configItemEnum.TITLE.V" v-html="titleHtml" />
 
               <!-- 头部信息 -->
-              <div v-if="headerCfg && headerCfg.show" class="header-info" :style="headerStyle" @click.stop="configItem = configItemEnum.HEADER.V" v-html="headerHtml" />
+              <div v-if="headerCfg?.show" class="header-info" :style="headerStyle" @click.stop="configItem = configItemEnum.HEADER.V" v-html="headerHtml" />
 
               <!-- 表格信息 -->
               <div v-if="tableCfg && isNotBlank(filterExampleTableData)" ref="tableInfo" class="table-info" :style="tableStyle" @click.stop="configItem = configItemEnum.TABLE.V">
@@ -88,10 +88,10 @@
               </div>
 
               <!-- 底部信息 -->
-              <div v-if="footerCfg && footerCfg.show" class="footer-info" :style="footerStyle" @click.stop="configItem = configItemEnum.FOOTER.V" v-html="footerHtml" />
+              <div v-if="footerCfg?.show" class="footer-info" :style="footerStyle" @click.stop="configItem = configItemEnum.FOOTER.V" v-html="footerHtml" />
 
               <!-- 页码 -->
-              <div v-if="pageCfg && pageCfg.show" class="page-info" :style="pageStyle" @click.stop="configItem = configItemEnum.BASE.V" v-html="pageHtml" />
+              <div v-if="pageCfg?.show" class="page-info" :style="pageStyle" @click.stop="configItem = configItemEnum.BASE.V" v-html="pageHtml" />
             </template>
             <template v-else>
               <span class="table-type-tip">* 请选择表格模板</span>
@@ -110,14 +110,13 @@
               <div class="form-card">
                 <el-form-item label="表格类型" prop="type">
                   <tableTypeCascader
-                    v-if="crud.status.add === prepared"
-                    v-model:value="form.type"
+                    v-model="form.type"
+                    :disabled="crud.status.edit === prepared"
                     filterable
                     show-all-levels
                     style="width: 300px;"
                     @change="handleTableTypeChange"
                   />
-                  <span v-if="crud.status.edit === prepared && tableTypeEnum[form.type] && moduleTypeEnum[form.moduleType]">{{ moduleTypeEnum[form.moduleType].L }}/{{ tableTypeEnum[form.type].L }}</span>
                 </el-form-item>
                 <el-form-item v-if="crud.status.add === prepared" label="创建来源">
                   <tableTemplateSelect
@@ -156,7 +155,7 @@
               <div class="form-card form-card-inline-block">
                 <el-form-item label="打印方向">
                   <common-radio
-                    v-model:value="config.orient"
+                    v-model="config.orient"
                     :options="orientEnum.ENUM"
                     type="enum"
                     style="width: 350px;"
@@ -168,8 +167,8 @@
               <!-- <div class="form-card form-card-inline-block">
                 <el-form-item label="基本长度单位">
                   <common-select
-                    v-model:value="config.unit"
-                    :options="cssUnitEnum"
+                    v-model="config.unit"
+                    :options="cssUnitEnum.ENUM"
                     type="enum"
                     placeholder="请选择长度单位"
                     style="width: 150px;"
@@ -177,8 +176,8 @@
                 </el-form-item>
                 <el-form-item label="小数精度">
                   <common-select
-                    v-model:value="config.unitPrecision"
-                    :options="cssUnitPrecisionEnum"
+                    v-model="config.unitPrecision"
+                    :options="cssUnitPrecisionEnum.ENUM"
                     type="enum"
                     placeholder="请选择小数精度"
                     style="width: 150px;"
@@ -187,11 +186,11 @@
               </div> -->
 
               <transition name="el-fade-in-linear">
-                <div v-if="isNotBlank(config) && isNotBlank(config.unit) && form.type" class="form-cards">
+                <div v-if="config.unit && form.type" class="form-cards">
                   <!-- 表格宽高 -->
                   <div class="form-card form-card-inline-block">
                     <el-form-item :label="`高度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="config.height"
                         :precision="config.unitPrecision"
                         :min="100"
@@ -202,7 +201,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="config.width"
                         :precision="config.unitPrecision"
                         :min="0"
@@ -216,7 +215,7 @@
                   <!-- 表格内边距 -->
                   <div class="form-card form-card-inline-block">
                     <el-form-item :label="`上下边距(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="config.paddingTB"
                         :precision="config.unitPrecision"
                         :min="0"
@@ -227,7 +226,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`左右边距(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="config.paddingLR"
                         :precision="config.unitPrecision"
                         :min="0"
@@ -248,7 +247,7 @@
                     />
                     <br>
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="pageCfg.size"
                         controls-position="right"
                         :min="8"
@@ -259,7 +258,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`距离底部(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="pageCfg.bottom"
                         controls-position="right"
                         :min="0"
@@ -271,8 +270,8 @@
                     </el-form-item>
                     <el-form-item :label="`格式`">
                       <common-select
-                        v-model:value="pageCfg.format"
-                        :options="pageFormatEnum"
+                        v-model="pageCfg.format"
+                        :options="pageFormatEnum.ENUM"
                         type="enum"
                         placeholder="请选择展示格式"
                         style="width: 150px;"
@@ -281,7 +280,7 @@
                     </el-form-item>
                   </div>
                   <!-- logo 图片配置 -->
-                  <div v-if="logoCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
+                  <!-- <div v-if="logoCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
                     <el-tooltip
                       effect="light"
                       :content="`图标（logo）设置：\n
@@ -301,7 +300,7 @@
                     />
                     <br>
                     <el-form-item :label="`长度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="logoCfg.height"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -313,7 +312,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="logoCfg.width"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -326,7 +325,7 @@
                     </el-form-item>
                     <br>
                     <el-form-item :label="`距离顶部(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="logoCfg.top"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -338,7 +337,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`距离左侧(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="logoCfg.left"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -364,7 +363,7 @@
                       </template>
                       <el-tag v-else type="danger">logo未上传</el-tag>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- 二维码配置，部分表格存在该配置 -->
                   <div v-if="qrCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
                     <el-tooltip
@@ -385,7 +384,7 @@
                     />
                     <br>
                     <el-form-item :label="`距离顶部(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="qrCfg.top"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -397,7 +396,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`距离左侧(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="qrCfg.left"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -432,7 +431,7 @@
                     />
                   </el-form-item>
                   <el-form-item :label="`字体大小(${config.fontUnit})`">
-                    <el-input-number
+                    <common-input-number
                       v-model="titleCfg.size"
                       controls-position="right"
                       :min="8"
@@ -443,7 +442,7 @@
                     />
                   </el-form-item>
                   <el-form-item :label="`高度(${config.unit})`">
-                    <el-input-number
+                    <common-input-number
                       v-model="titleCfg.height"
                       :precision="config.unitPrecision"
                       controls-position="right"
@@ -470,7 +469,7 @@
                       class="text-setting"
                     />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="tableCfg.th.size"
                         controls-position="right"
                         :min="8"
@@ -481,7 +480,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`行高(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="tableCfg.th.lineHeight"
                         controls-position="right"
                         :precision="1"
@@ -493,7 +492,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`上下边距(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="tableCfg.th.paddingTB"
                         :precision="config.unitPrecision"
                         :min="0"
@@ -522,7 +521,7 @@
                       class="text-setting"
                     />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="tableCfg.td.size"
                         controls-position="right"
                         :min="8"
@@ -533,7 +532,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`行高(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="tableCfg.td.lineHeight"
                         controls-position="right"
                         :precision="1"
@@ -545,7 +544,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`上下边距(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="tableCfg.td.paddingTB"
                         :precision="config.unitPrecision"
                         :min="0"
@@ -675,8 +674,8 @@
                       <el-table-column label="对齐方式" min-width="105">
                         <template v-slot="scope">
                           <common-select
-                            v-model:value="scope.row.align"
-                            :options="alignEnum"
+                            v-model="scope.row.align"
+                            :options="alignEnum.ENUM"
                             type="enum"
                             placeholder="对齐方式"
                             class="input-border-none"
@@ -738,7 +737,7 @@
                                 </span>
                                 <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                   <common-select
-                                    v-model:value="scope.row.format.unit"
+                                    v-model="scope.row.format.unit"
                                     :options="unitEnumMap[scope.row.type]"
                                     type="enum"
                                     placeholder="单位"
@@ -794,7 +793,7 @@
                     />
                     <br>
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="headerCfg.size"
                         controls-position="right"
                         :min="8"
@@ -805,7 +804,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`高度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="headerCfg.height"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -817,8 +816,8 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
-                      <el-input-number
-                        v-model="headerCfg.width"
+                      <common-input-number
+                        v-model:value="headerCfg.width"
                         :precision="config.unitPrecision"
                         controls-position="right"
                         type="text"
@@ -940,7 +939,7 @@
                               </span>
                               <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                 <common-select
-                                  v-model:value="scope.row.format.unit"
+                                  v-model="scope.row.format.unit"
                                   :options="unitEnumMap[scope.row.type]"
                                   type="enum"
                                   placeholder="单位"
@@ -996,7 +995,7 @@
                     />
                     <br>
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="footerCfg.size"
                         controls-position="right"
                         :min="8"
@@ -1007,7 +1006,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`高度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="footerCfg.height"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -1019,7 +1018,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="footerCfg.width"
                         :precision="config.unitPrecision"
                         controls-position="right"
@@ -1039,7 +1038,7 @@
                       class="text-setting"
                     />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
-                      <el-input-number
+                      <common-input-number
                         v-model="footerCfg.tip.size"
                         controls-position="right"
                         :min="8"
@@ -1173,7 +1172,7 @@
                               </span>
                               <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                 <common-select
-                                  v-model:value="scope.row.format.unit"
+                                  v-model="scope.row.format.unit"
                                   :options="unitEnumMap[scope.row.type]"
                                   type="enum"
                                   placeholder="单位"
@@ -1221,9 +1220,7 @@
 </template>
 
 <script setup>
-// import { getCompanyLogoAll } from '@/api/common'
-import { get as getCompanyLogoAll } from '@/api/config/system-config/table-print-template'
-import { ref, reactive, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, reactive, computed, watch, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import Sortable from 'sortablejs'
 import radioButton from '@comp-common/radio-button'
@@ -1232,19 +1229,17 @@ import tableTemplateSelect from '@comp-common/print/table-template-select'
 import textSetting from '@comp-common/print/text-setting'
 import verticalLabel from '@comp-common/vertical-label'
 
-import { isNotBlank } from '@data-type/index'
+import { isBlank, isNotBlank } from '@data-type/index'
 import { px2lengthUnit, convertUnits } from '@/utils/convert/unit'
-
-import { orientEnum, printModeEnum, amountUnitEnum, lengthUnitEnum, weightUnitEnum, thicknessUnitEnum, alignEnum, dataSourceEnum, fieldTypeEnum, tableConfigItemEnum as configItemEnum, pageFormatEnum, cssUnitEnum, cssUnitPrecisionEnum } from '@/utils/print/enum'
-
+import { orientEnum, printModeEnum, amountUnitEnum, lengthUnitEnum, weightUnitEnum, thicknessUnitEnum, alignEnum, dataSourceEnum,
+  fieldTypeEnum, tableConfigItemEnum as configItemEnum, pageFormatEnum, cssUnitEnum, cssUnitPrecisionEnum } from '@/utils/print/enum'
 import { printTable } from '@/utils/print/table'
 import downloadXLSX from '@/utils/print/download'
 import { convertColumns, delNotDisplayed, getLastColumns, setting } from '@/utils/print/page-handle'
-import { tableTypeEnum, moduleTypeEnum } from '@/utils/print/table-type'
+// import { tableTypeEnum, moduleTypeEnum } from '@/utils/print/table/type'
 import example from '@/utils/print/default-template/example'
 import formatFn from '@/utils/print/format/index'
 import moment from 'moment'
-import 'moment/locale/zh-cn'
 import QrcodeVue from 'qrcode.vue'
 
 // 可格式化的字段类型
@@ -1260,17 +1255,16 @@ const toThousandfoldTypes = [fieldTypeEnum.AMOUNT.K, fieldTypeEnum.QUANTITY.K, f
 // 可合计的字段类型
 const sumableTypes = [fieldTypeEnum.AMOUNT.K, fieldTypeEnum.QUANTITY.K, fieldTypeEnum.METE.K, fieldTypeEnum.LENGTH.K, fieldTypeEnum.WEIGHT.K]
 const unitEnumMap = {}
-unitEnumMap[fieldTypeEnum.AMOUNT.K] = amountUnitEnum
-unitEnumMap[fieldTypeEnum.LENGTH.K] = lengthUnitEnum
-unitEnumMap[fieldTypeEnum.WEIGHT.K] = weightUnitEnum
-unitEnumMap[fieldTypeEnum.THICKNESS.K] = thicknessUnitEnum
+unitEnumMap[fieldTypeEnum.AMOUNT.K] = amountUnitEnum.ENUM
+unitEnumMap[fieldTypeEnum.LENGTH.K] = lengthUnitEnum.ENUM
+unitEnumMap[fieldTypeEnum.WEIGHT.K] = weightUnitEnum.ENUM
+unitEnumMap[fieldTypeEnum.THICKNESS.K] = thicknessUnitEnum.ENUM
 
 const defaultForm = {
   id: undefined,
   name: '',
   key: undefined, // 暂不保存 TODO:修改注意处理
   type: undefined,
-  moduleType: undefined,
   isDefault: false,
   config: {}
 }
@@ -1301,7 +1295,7 @@ const tableHtml = ref('')
 const footerHtml = ref('')
 const pageHtml = ref('')
 const style = ref('')
-const logos = ref([])
+// const logos = ref([])
 const templateOnload = ref(true)
 const logoLoading = ref(false)
 const qrContent = ref('欢迎来到初鸣智造钢结构生产执行管理系统')
@@ -1310,7 +1304,13 @@ const headerData = ref({})
 const footerData = ref({})
 const tableData = ref([])
 
+const tableCfg = ref({})
+const qrCfg = ref({})
+const logoCfg = ref({})
+const titleCfg = ref({})
+const headerCfg = ref({})
 const footerCfg = ref({})
+const pageCfg = ref({})
 
 const rules = ref({
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
@@ -1323,7 +1323,7 @@ const rules = ref({
   ]
 })
 
-let config = reactive(Object.assign({}, baseConfig))
+let config = reactive({ ...baseConfig })
 let tableFieldsCfg = reactive({
   columns: [],
   columnRows: [],
@@ -1332,34 +1332,6 @@ let tableFieldsCfg = reactive({
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const prepared = ref(CRUD.STATUS.PREPARED)
-
-const qrCfg = computed(() => {
-  return config?.qrCode
-})
-
-const logoCfg = computed(() => {
-  return config?.logo
-})
-
-const titleCfg = computed(() => {
-  return config?.title
-})
-
-const headerCfg = computed(() => {
-  return config?.header
-})
-
-// const footerCfg = computed(() => {
-//   return config?.footer
-// })
-
-const pageCfg = computed(() => {
-  return config?.page
-})
-
-const tableCfg = computed(() => {
-  return config?.table
-})
 
 const pageWidth = computed(() => {
   return orientEnum.TRANSVERSE.V === config.orient ? config.height : config.width
@@ -1495,25 +1467,24 @@ const pageStyle = computed(() => {
 
 const headerStyle = computed(() => {
   const _style = {}
-  if (headerCfg.value) {
-    const _config = config
-    const itemConfig = headerCfg.value
-    if (isNotBlank(itemConfig.width)) {
-      _style['width'] = `${itemConfig.width}${_config.unit}`
-    }
-    if (isNotBlank(itemConfig.height)) {
-      _style['height'] = `${itemConfig.height}${_config.unit}`
-    }
-    if (isNotBlank(itemConfig.size)) {
-      _style['font-size'] = `${itemConfig.size}${_config.fontUnit}`
-    }
-    if (isNotBlank(itemConfig.align)) {
-      _style['justify-content'] = setting.flexAlign(itemConfig.align)
-    }
-    if (isNotBlank(itemConfig.verticleAlign)) {
-      _style['align-items'] = setting.verticleAlign(itemConfig.verticleAlign)
-    }
+  const _config = config
+  const itemConfig = headerCfg.value
+  if (isNotBlank(itemConfig.width)) {
+    _style['width'] = `${itemConfig.width}${_config.unit}`
   }
+  if (isNotBlank(itemConfig.height)) {
+    _style['height'] = `${itemConfig.height}${_config.unit}`
+  }
+  if (isNotBlank(itemConfig.size)) {
+    _style['font-size'] = `${itemConfig.size}${_config.fontUnit}`
+  }
+  if (isNotBlank(itemConfig.align)) {
+    _style['justify-content'] = setting.flexAlign(itemConfig.align)
+  }
+  if (isNotBlank(itemConfig.verticleAlign)) {
+    _style['align-items'] = setting.verticleAlign(itemConfig.verticleAlign)
+  }
+  console.log('_style: ', JSON.parse(JSON.stringify(_style)))
   return _style
 })
 
@@ -1558,49 +1529,37 @@ watch(
   }
 )
 
-// watch(
-//   () => tableCfg.value,
-//   () => {
-//     handleTableHtmlChange()
-//   },
-//   { deep: true }
-// )
+watch(
+  () => titleCfg.value.title,
+  () => {
+    handleTitleHtmlChange()
+  },
+  { deep: true }
+)
 
-// watch(
-//   () => titleCfg.value.title,
-//   () => {
-//     handleTitleHtmlChange()
-//   },
-//   { deep: true }
-// )
+watch(
+  () => headerCfg.value,
+  () => {
+    handleHeaderHtmlChange()
+  },
+  { deep: true }
+)
 
-// watch(
-//   [() => headerCfg.value.bold, () => headerCfg.value.fields],
-//   ([list]) => {
-//     handleHeaderHtmlChange()
-//   },
-//   { deep: true }
-// )
+watch(
+  [() => footerCfg.value.bold, () => footerCfg.value.fields, () => footerCfg.value.tip],
+  () => {
+    handleFooterHtmlChange()
+  },
+  { deep: true }
+)
 
-// watch(
-//   [() => footerCfg.value.bold, () => footerCfg.value.fields, () => footerCfg.value.tip],
-//   ([list]) => {
-//     handleFooterHtmlChange()
-//   },
-//   { deep: true }
-// )
-
-// watch(
-//   // [() => tableCfg.value, () => contentDataLength.value],
-//   () => contentDataLength.value,
-//   () => {
-//     handleTableHtmlChange()
-//   }
-// )
-
-onMounted(() => {
-  moment.locale('zn')
-})
+watch(
+  [() => tableCfg.value, () => contentDataLength.value],
+  () => {
+    handleTableHtmlChange()
+  },
+  { deep: true }
+)
 
 CRUD.HOOK.beforeToCU = () => {
   init()
@@ -1631,13 +1590,13 @@ function init() {
     columnRows: [],
     lastColumns: []
   })
-  config = reactive(Object.assign({}, baseConfig))
+  config = Object.assign(config, baseConfig)
 }
 
 function exportXSLX() {
   let param = {
     header: headerData.value,
-    table: filterExampleTableData.value,
+    table: JSON.parse(JSON.stringify(filterExampleTableData.value)),
     footer: footerData.value,
     qrCode: qrContent.value
   }
@@ -1650,8 +1609,8 @@ function exportXSLX() {
 
 function clearTableWidth() {
   tableCfg.value.fields && tableCfg.value.fields.forEach(field => {
-    this.$set(field, 'width', undefined)
-    this.$set(field, 'minWidth', undefined)
+    field.width = undefined
+    field.minWidth = undefined
   })
 }
 
@@ -1673,44 +1632,30 @@ function tableAverageWidth(key = 'width') {
 }
 
 function imgDrag(event) {
-  this.$set(logoCfg.value, 'left', px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision))
-  this.$set(logoCfg.value, 'top', px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision))
+  config.qrCode.left = px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision)
+  config.qrCode.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
 }
 
 function qrDrag(event) {
-  this.$set(qrCfg.value, 'left', px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision))
-  this.$set(qrCfg.value, 'top', px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision))
+  config.qrCode.left = px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision)
+  config.qrCode.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
 }
 
-function chooseLogo(img) {
-  this.$set(logoCfg.value, 'url', img.path)
-  if (!isNotBlank(logoCfg.value.width)) {
-    this.$set(logoCfg.value, 'width', 20)
-  }
-  if (!isNotBlank(logoCfg.value.height)) {
-    this.$set(logoCfg.value, 'height', 20)
-  }
-  if (!isNotBlank(logoCfg.value.top)) {
-    this.$set(logoCfg.value, 'top', 10)
-  }
-  if (!isNotBlank(logoCfg.value.left)) {
-    this.$set(logoCfg.value, 'left', 10)
-  }
-}
-
-async function fetchCompanyLogos() {
-  logoLoading.value = true
-  let _logos = []
-  try {
-    const { content = [] } = await getCompanyLogoAll() || {}
-    _logos = content
-  } catch (error) {
-    console.log('error 获取公司logos', error)
-  } finally {
-    logos.value = _logos
-    logoLoading.value = false
-  }
-}
+// function chooseLogo(img) {
+//   config.logo.url = img.path
+//   if (isBlank(logoCfg.value.width)) {
+//     config.logo.width = 20
+//   }
+//   if (isBlank(logoCfg.value.height)) {
+//     config.logo.height = 20
+//   }
+//   if (isBlank(logoCfg.value.top)) {
+//     config.logo.top = 10
+//   }
+//   if (isBlank(logoCfg.value.left)) {
+//     config.logo.left = 10
+//   }
+// }
 
 function addTableField() {
   tableCfg.value.fields.push({
@@ -1776,31 +1721,29 @@ function rowDrop() {
   }
 }
 
-// 表格列字段变更
-// eslint-disable-next-line no-unused-vars
-function handleTableFieldChange(val, row, field) {
-  this.$set(row, field, val)
-}
-
 function handleTemplateSelect(val) {
-  config = reactive(isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig)))
+  // config = reactive(isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig)))
+  const _config = isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig))
+  Object.assign(config, _config)
   setData()
   splicingHtml()
   componentKey.value++
 }
 
 function handleTableTypeChange(val) {
-  if (isNotBlank(val)) {
-    form.moduleType = val.T
-    form.name = val.L
-  } else {
-    form.moduleType = undefined
-    form.name = undefined
-  }
+  form.name = val?.L
 }
 
 function setData() {
-  // footerCfg.value = config.footer
+  tableCfg.value = config.table
+  qrCfg.value = config.qrCode
+  logoCfg.value = config.logo
+  titleCfg.value = config.title
+  headerCfg.value = config.header
+  console.log('config.header: ', JSON.parse(JSON.stringify(config.header)))
+  footerCfg.value = config.footer
+  pageCfg.value = config.page
+
   if (isNotBlank(config.table?.fields)) {
     const columnRows = convertColumns(JSON.parse(JSON.stringify(config.table.fields)))
     const lastColumns = getLastColumns(columnRows)
@@ -1810,7 +1753,7 @@ function setData() {
       number: 100
     })
   }
-  if (isNotBlank(config.table?.fields)) {
+  if (isNotBlank(config.header?.fields)) {
     headerData.value = example.getOne({
       fields: config.header.fields,
       extraFields: config.header.extraFields
@@ -1840,7 +1783,7 @@ function print() {
 }
 
 function setColumns() {
-  if (!tableCfg.value) return
+  if (isBlank(tableCfg.value)) return
   // 设置column
   tableFieldsCfg.columns = delNotDisplayed(JSON.parse(JSON.stringify(tableCfg.value.fields)))
   tableFieldsCfg.columnRows = convertColumns(tableFieldsCfg.columns)
@@ -1848,7 +1791,7 @@ function setColumns() {
 }
 
 function splicingHtml() {
-  if (!isNotBlank(config)) {
+  if (isBlank(config)) {
     return
   }
   handleTitleHtmlChange()
@@ -2096,8 +2039,8 @@ function handlePageHtmlChange() {
         }
       }
       .form-card-inline-block{
-        >div {
-          display: inline-block;
+        >div.el-form-item {
+          display: inline-flex;
         }
       }
     }
@@ -2249,10 +2192,9 @@ function handlePageHtmlChange() {
         }
         .qr-info {
           position: absolute;
-          img{
-            width: 100%;
-            height: 100%;
-            vertical-align: middle;
+          canvas {
+            width: 100%!important;
+            height: 100%!important;
           }
         }
         .page-info {
