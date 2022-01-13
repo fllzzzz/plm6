@@ -186,6 +186,12 @@ export const offStaffWagesConfigPM = {
   audit: ['mes_off_staff_wages:audit'] // 编外-工价审核
 }
 
+// 班组报表/编外-工资结算
+export const offStaffSettlementPM = {
+  get: ['mes_off_staff_settlement:get'], // 编外-工资结算
+  detail: ['mes_off_staff_settlement:detail'] // 编外-工资结算
+}
+
 // 班组报表/工价调整
 export const wagesAdjustPM = {
   get: ['mes_wages_adjust:get'], // 工价调整列表
