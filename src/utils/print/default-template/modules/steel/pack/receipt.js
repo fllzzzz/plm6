@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 收货状态汇总表
-const STEEL_MES_PACK_RECEIPT = {
+// 收货状态汇总
+const mesReceiptStatusSummary = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'STEEL_MES_PACK_RECEIPT', // 表格类型 KEY
-  name: '收货状态汇总表（平台）', // 表格名称
+  type: 'mesReceiptStatusSummary', // 表格类型 KEY
+  name: '收货状态汇总（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const STEEL_MES_PACK_RECEIPT = {
   title: {
     show: true,
     allPage: false,
-    title: '收货状态汇总表',
+    title: '收货状态汇总',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -213,5 +213,5 @@ const STEEL_MES_PACK_RECEIPT = {
 }
 
 export default {
-  STEEL_MES_PACK_RECEIPT //  收货状态汇总表
+  mesReceiptStatusSummary //  收货状态汇总
 }

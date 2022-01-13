@@ -2,11 +2,11 @@ import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 打包清单
-const STEEL_MES_PACK = {
+const mesPackingList = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'STEEL_MES_PACK', // 表格类型 KEY
+  type: 'mesPackingList', // 表格类型 KEY
   name: '打包清单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -112,8 +112,9 @@ const STEEL_MES_PACK = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }}, { show: true, source: dataSourceEnum.SYSTEM.V, key: 'bagSerial', title: '包单号：', width: 190, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'packUserName', title: '打包人：', width: 135, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '包单号：', width: 190, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'userName', title: '打包人：', width: 135, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'packDate', title: '打包时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
@@ -225,11 +226,11 @@ const STEEL_MES_PACK = {
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-      { show: true, key: 'totalMete', title: '总量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true }
+      { show: true, key: 'totalNetWeight', title: '总量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true }
     ]
   }
 }
 
 export default {
-  STEEL_MES_PACK //  打包清单
+  mesPackingList //  打包清单
 }

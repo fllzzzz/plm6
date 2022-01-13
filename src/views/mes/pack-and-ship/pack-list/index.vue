@@ -35,10 +35,10 @@
         :show-overflow-tooltip="true"
         label="包单号"
         align="center"
-        min-width="140px"
+        min-width="130px"
       >
         <template v-slot="scope">
-          <table-cell-tag :show="scope.row.printType" name="已打印" color="#e64242" />
+          <table-cell-tag :show="scope.row.printType" :offset="15" name="已打印" color="#e64242" />
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
