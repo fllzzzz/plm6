@@ -149,7 +149,7 @@
       />
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="承运日期" width="120">
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</span>
+          <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
     </common-table>

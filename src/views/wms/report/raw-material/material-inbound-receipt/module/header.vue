@@ -29,7 +29,7 @@
         @change="crud.toQuery"
       />
       <el-date-picker
-        v-model="query.createTime"
+        v-model="query.inboundTime"
         :default-time="defaultTime"
         type="daterange"
         range-separator=":"
@@ -37,8 +37,8 @@
         value-format="x"
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         unlink-panels
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
+        start-placeholder="入库日期"
+        end-placeholder="入库日期"
         style="width: 240px"
         class="filter-item"
         @change="crud.toQuery"
@@ -127,7 +127,7 @@ import supplierSelect from '@comp-base/supplier-select/index.vue'
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
-  createTime: [], // [开始日期，结束日期]
+  inboundTime: [], // [开始日期，结束日期]
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
   rejectStatus: undefined, // 退货状态

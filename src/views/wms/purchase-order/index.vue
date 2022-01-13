@@ -57,7 +57,7 @@
             :name="settlementStatusEnum.SETTLED.L"
             :color="settlementStatusEnum.SETTLED.COLOR"
           />
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
+          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -191,12 +191,12 @@
         key="userUpdateTime"
         :show-overflow-tooltip="true"
         prop="userUpdateTime"
-        label="编辑日期"
+        label="编辑时间"
         align="center"
         width="100"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.userUpdateTime }}</span>
+          <span v-parse-time="row.userUpdateTime" />
         </template>
       </el-table-column>
       <!--编辑与删除-->

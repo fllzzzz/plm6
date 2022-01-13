@@ -9,12 +9,12 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType, f: 'SL' }" />
+      <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType, f: 'SL' }" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column v-if="showTaxRate" key="taxRate" prop="taxRate" label="税率" align="center" min-width="70" show-overflow-tooltip>
     <template #default="{ row }">
-      <span v-empty-text>{{ row.taxRate ? `${row.taxRate}%` : undefined }}</span>
+      <span v-empty-text="{ val: row.taxRate ? `${row.taxRate}%` : undefined }" />
     </template>
   </el-table-column>
   <el-table-column

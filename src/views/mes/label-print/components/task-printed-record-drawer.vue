@@ -8,9 +8,9 @@
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="80px" />
         <el-table-column :show-overflow-tooltip="true" prop="time" label="打印时间" min-width="300px">
           <template v-slot="scope">
-            <span v-parse-time>{{ scope.row.startTime }}</span>
+            <span v-parse-time="scope.row.startTime" />
             ~
-            <span v-parse-time>{{ scope.row.endTime }} </span>
+            <span v-parse-time="scope.row.endTime" />
           </template>
         </el-table-column>
       </common-table>

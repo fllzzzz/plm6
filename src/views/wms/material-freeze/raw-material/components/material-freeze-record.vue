@@ -43,7 +43,7 @@
     <el-table-column key="operatorName" :show-overflow-tooltip="true" prop="operatorName" label="冻结人" align="center" width="90" />
     <el-table-column key="frozenTime" :show-overflow-tooltip="true" prop="frozenTime" label="冻结日期" align="center" width="100">
       <template #default="{ row }">
-        <span v-parse-time="'{y}-{m}-{d}'">{{ row.frozenTime }}</span>
+        <span v-parse-time="{ val: row.frozenTime, fmt: '{y}-{m}-{d}' }" />
       </template>
     </el-table-column>
     <el-table-column label="操作" width="85px" align="center">

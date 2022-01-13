@@ -101,7 +101,7 @@
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime }" />
+          <span v-parse-time="row.createTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -114,7 +114,7 @@
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time="{ val: row.reviewTime }" />
+          <span v-parse-time="row.reviewTime" />
         </template>
       </el-table-column>
       <!--编辑与删除-->

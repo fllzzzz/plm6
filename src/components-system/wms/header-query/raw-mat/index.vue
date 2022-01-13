@@ -14,7 +14,7 @@
       />
       <slot name="afterProjectWarehouseType" />
       <common-radio-button
-        v-if="showMaterialIsWhole && basicClass & STEEL_ENUM"
+        v-if="showMaterialIsWhole && [rawMatClsEnum.STEEL_PLATE.V, rawMatClsEnum.SECTION_STEEL.V].includes(basicClass)"
         v-model="queryVO.materialIsWhole"
         :options="materialIsWholeEnum.ENUM"
         show-option-all
@@ -61,7 +61,6 @@
 
 <script setup>
 import { defineEmits, defineProps, computed, watchEffect, ref } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialIsWholeEnum } from '@/utils/enum/modules/wms'
 

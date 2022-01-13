@@ -85,7 +85,7 @@
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
+          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">

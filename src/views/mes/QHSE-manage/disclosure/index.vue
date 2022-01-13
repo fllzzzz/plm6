@@ -36,7 +36,7 @@
         <template v-slot="scope">
           <span style="white-space: pre-line">
             <span>{{ scope.row.userName + '\n' }}</span>
-            <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.createTime }}</span>
+            <span v-parse-time="scope.row.createTime" />
           </span>
         </template>
       </el-table-column>
@@ -141,8 +141,9 @@
       >
         <template v-slot="scope">
           <span style="white-space: pre-line">
-            <span v-empty-text>{{ scope.row.rectifyName }}</span>{{'\n'}}
-            <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.rectifyTime }}</span>
+            <span v-empty-text>{{ scope.row.rectifyName }}</span
+            >{{ '\n' }}
+            <span v-parse-time="scope.row.rectifyTime" />
           </span>
         </template>
       </el-table-column>

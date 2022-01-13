@@ -5,7 +5,7 @@ import {
   receiptRejectStatusEnum,
   materialRejectStatusEnum
 } from '@enum-ms/wms'
-import { weightMeasurementModeEnum } from '@enum-ms/finance'
+import { invoiceTypeEnum, weightMeasurementModeEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { patternLicensePlate } from '@/utils/validate/pattern'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -35,8 +35,8 @@ const getReceiptList = {
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
-            rejectAmount: 10000, // 退货金额
-            inboundAmount: 1000000, // 入库金额
+            rejectAmountExcludingVAT: 10000, // 退货金额
+            inboundAmountExcludingVAT: 1000000, // 入库金额
             'projects|2': [
               {
                 'id|+1': 1,
@@ -70,8 +70,8 @@ const getReceiptList = {
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
-            rejectAmount: 100000, // 退货金额
-            inboundAmount: 100000, // 入库金额
+            rejectAmountExcludingVAT: 100000, // 退货金额
+            inboundAmountExcludingVAT: 100000, // 入库金额
             'projects|2': [
               {
                 'id|+1': 1,
@@ -107,8 +107,8 @@ const getReceiptList = {
             },
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
-            rejectAmount: 50000, // 退货金额
-            inboundAmount: 260000, // 入库金额
+            rejectAmountExcludingVAT: 50000, // 退货金额
+            inboundAmountExcludingVAT: 260000, // 入库金额
             'projects|2': [
               {
                 'id|+1': 1,
@@ -904,6 +904,8 @@ const getDetails = {
             heatNoAndBatchNo: 'fddfd',
             mete: 2355000,
             weight: 2355000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.02,
             amount: 47100,
             amountExcludingVAT: 41681.42,
@@ -992,6 +994,8 @@ const getDetails = {
             heatNoAndBatchNo: 'ooopp',
             mete: 252900,
             weight: 252900,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.03,
             amount: 9174,
             amountExcludingVAT: 8188.58,
@@ -1086,6 +1090,8 @@ const getDetails = {
             width: 1000,
             mete: 200000,
             weight: 1000000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.05,
             amount: 500,
             amountExcludingVAT: 450,
@@ -1134,6 +1140,8 @@ const getDetails = {
             brand: '嘻嘻',
             mete: 80,
             unitPrice: 0.01,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             amount: 8000,
             amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
@@ -1182,6 +1190,8 @@ const getDetails = {
             brand: '嘻嘻',
             color: '蓝色',
             mete: 100000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,
@@ -1230,6 +1240,8 @@ const getDetails = {
             brand: '嘻嘻',
             remark: '66666',
             mete: 200000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,

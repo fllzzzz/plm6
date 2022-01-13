@@ -76,7 +76,7 @@
         <template v-slot="scope">
           <span style="white-space: pre-line">
             <span>{{ scope.row.userName + '\n' }}</span>
-            <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.loadingTime }}</span>
+            <span v-parse-time="scope.row.loadingTime" />
           </span>
         </template>
       </el-table-column>
@@ -93,7 +93,7 @@
         <template v-slot="scope">
           <span style="white-space: pre-line">
             <span>{{ scope.row.actualUserName + '\n' }}</span>
-            <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.actualTime }}</span>
+            <span v-parse-time="scope.row.actualTime" />
           </span>
         </template>
       </el-table-column>

@@ -14,7 +14,8 @@
       </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>统计日期：</span>
-        <span v-parse-time="'{y}-{m}-{d}'">{{ query.startDate }}</span> ~ <span v-parse-time="'{y}-{m}-{d}'">{{ query.endDate }}</span>
+        <span v-parse-time="{ val: query.startDate, fmt: '{y}-{m}-{d}' }" /> ~
+        <span v-parse-time="{ val: query.endDate, fmt: '{y}-{m}-{d}' }" />
       </el-tag>
     </template>
     <template #titleRight> </template>

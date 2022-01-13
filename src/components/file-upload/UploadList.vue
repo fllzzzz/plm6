@@ -6,7 +6,7 @@
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="150" />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" width="100" align="center">
           <template #default="{ row }">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
+            <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="120">

@@ -123,12 +123,12 @@
         key="createTime"
         :show-overflow-tooltip="true"
         prop="createTime"
-        label="申请日期"
+        label="申请时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.createTime }}</span>
+          <span v-parse-time="row.createTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -136,12 +136,12 @@
         key="reviewTime"
         :show-overflow-tooltip="true"
         prop="reviewTime"
-        label="审核日期"
+        label="审核时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.reviewTime }}</span>
+          <span v-parse-time="row.reviewTime" />
         </template>
       </el-table-column>
       <el-table-column

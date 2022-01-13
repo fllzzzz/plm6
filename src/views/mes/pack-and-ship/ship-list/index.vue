@@ -16,7 +16,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="发运日期" width="120">
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</span>
+          <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -166,13 +166,7 @@
         </template>
       </el-table-column>
       <!--详情与下载-->
-      <el-table-column
-        v-if="checkPermission([...permission.detail])"
-        label="操作"
-        width="100px"
-        align="center"
-        fixed="right"
-      >
+      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <!-- 详情 -->
           <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail(scope.row)" />
