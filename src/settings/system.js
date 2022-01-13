@@ -25,6 +25,7 @@ export const projectNameShowConfig = {
  * @param {boolean} required 该页面是否必须选择项目才能正常使用
  */
 export const showProjectSearch = [
+  // MES
   { component: '/mes/projects/index' },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/changed-manage/artifact/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
@@ -73,5 +74,30 @@ export const showProjectSearch = [
   { component: '/mes/pack-and-ship/receipt-status/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/pack-and-ship/logistics-list/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/pack-and-ship/ship-audit/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
-  { component: '/wms/purchase-order/index', type: allPT, required: false }
+
+  // -------------------------------------------------------- WMS ------------------------------------------------------------------
+  { component: '/wms/purchase-order/index', type: allPT, required: false },
+  { component: '/wms/logistics-order/index', type: allPT, required: false },
+  { component: '/wms/inventory-warning/index', type: allPT, required: false },
+  { component: '/wms/material-inbound/raw-material/record/index', type: allPT, required: false },
+  { component: '/wms/material-return/raw-material/record/index', type: allPT, required: false },
+  { component: '/wms/material-reject/raw-material/record/index', type: allPT, required: false },
+  { component: '/wms/material-inbound/raw-material/review/index', type: allPT, required: false },
+  { component: '/wms/material-transfer/raw-material/review/index', type: allPT, required: false },
+  { component: '/wms/material-return/raw-material/review/index', type: allPT, required: false },
+  { component: '/wms/material-reject/raw-material/review/index', type: allPT, required: false },
+  { component: '/wms/material-inventory/steel/index', type: allPT, required: false },
+  { component: '/wms/material-inventory/aux-material/index', type: allPT, required: false },
+  { component: '/wms/material-inventory/gas/index', type: allPT, required: false },
+  { component: '/wms/material-outbound/raw-material/review/index', type: allPT, required: false },
+  { component: '/wms/material-outbound/raw-material/record/index', type: allPT, required: false },
+  { component: '/wms/scrap-manage/steel/index', type: allPT, required: false },
+  { component: '/wms/material-freeze/raw-material/record/index', type: allPT, required: false },
+  { component: '/wms/material-freeze/raw-material/unfreeze-record/index', type: allPT, required: false },
+  { component: '/wms/operate-record/raw-material/return-to-party-a/index', type: allPT, required: false },
+  { component: '/wms/operate-record/raw-material/party-a-buy-in/index', type: allPT, required: false },
+  { component: '/wms/report/raw-material/material-inbound-receipt/index', type: allPT, required: false },
+  { component: '/wms/report/raw-material/material-inbound-details/index', type: allPT, required: false },
+  { component: '/wms/report/raw-material/material-outbound-details/index', type: allPT, required: false },
+  { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false }
 ]
