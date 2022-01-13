@@ -135,8 +135,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 <style lang="scss" scoped>
 .inventory-notify-list {
   .el-table {
-    ::v-deep(.cell) {
-      height: 28px;
+    ::v-deep(td .cell) {
+      min-height: 28px;
       line-height: 28px;
     }
   }

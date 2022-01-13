@@ -15,6 +15,7 @@
     width="110px"
     :fixed="fixed"
     show-overflow-tooltip
+    :sortable="sortable"
   >
     <template #default="{ row }">
       <!-- 甲供调拨方式 -->
@@ -40,20 +41,20 @@
         />
       </template>
       <template v-else> -->
-        <!-- 物料类型 整料/余料 -->
-        <table-cell-tag
-          v-if="showIsWhole && row.materialIsWhole === materialIsWholeEnum.ODDMENT.V"
-          :name="materialIsWholeEnum.VL[row.materialIsWhole]"
-          :color="materialIsWholeEnum.V[row.materialIsWhole].COLOR"
-          :offset="15"
-        />
-        <!-- 出库方式 -->
-        <table-cell-tag
-          v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
-          :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
-          :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
-          :offset="15"
-        />
+      <!-- 物料类型 整料/余料 -->
+      <table-cell-tag
+        v-if="showIsWhole && row.materialIsWhole === materialIsWholeEnum.ODDMENT.V"
+        :name="materialIsWholeEnum.VL[row.materialIsWhole]"
+        :color="materialIsWholeEnum.V[row.materialIsWhole].COLOR"
+        :offset="15"
+      />
+      <!-- 出库方式 -->
+      <table-cell-tag
+        v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
+        :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
+        :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
+        :offset="15"
+      />
       <!-- </template> -->
 
       <!-- 显示退货状态 -->
@@ -77,6 +78,7 @@
     show-overflow-tooltip
     :width="classifyNameWidth"
     :fixed="fixed"
+    :sortable="sortable"
   >
     <template #default="{ row }">
       <!-- 是否显示冻结角标 -->
@@ -97,14 +99,12 @@
     </template>
   </el-table-column>
   <component
+    v-bind="$attrs"
     :is="comp"
     :columns="columns"
     :basic-class="basicClass"
     :spec-merge="specMerge"
     :fixed="fixed"
-    :show-width="showWidth"
-    :show-length="showLength"
-    :show-thickness="showThickness"
   />
 
   <!-- 冻结记录 -->
@@ -222,17 +222,9 @@ const props = defineProps({
     // 定位
     type: String
   },
-  showWidth: {
+  sortable: {
     type: Boolean,
-    default: true
-  },
-  showLength: {
-    type: Boolean,
-    default: true
-  },
-  showThickness: {
-    type: Boolean,
-    default: true
+    default: false
   }
 })
 
@@ -261,7 +253,8 @@ const showClassifyName = computed(() => isBlank(props.columns) || props.columns.
 const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))
 // 可查看冻结信息
 const frozenViewable = computed(() => props.frozenViewable && checkPermission(permission.frozenDetail))
-
+// 列可排序
+const sortable = computed(() => (props.sortable === true ? 'custom' : false))
 // 表格高度
 const { maxHeight } = useMaxHeight(
   {

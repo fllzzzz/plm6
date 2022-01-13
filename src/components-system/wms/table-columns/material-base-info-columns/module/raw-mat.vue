@@ -11,7 +11,7 @@
   >
     <template #default="{ row }">
       <el-tooltip :content="specTip(row)" placement="top">
-        <span v-empty-text>{{ specFormat(row) }}</span>
+        <span v-empty-text="specFormat(row)" />
       </el-tooltip>
     </template>
   </el-table-column>

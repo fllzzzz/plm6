@@ -12,7 +12,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="specTip(row)" placement="top">
-          <span v-empty-text>{{ specFormat(row) }}</span>
+          <span v-empty-text="specFormat(row)" />
         </el-tooltip>
       </template>
     </el-table-column>
@@ -30,7 +30,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" :disabled="!row.specificationLabels" placement="top">
-          <span v-empty-text>{{ row.specification }}</span>
+          <span v-empty-text="row.specification" />
         </el-tooltip>
       </template>
     </el-table-column>
@@ -44,7 +44,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span v-to-fixed="baseUnit.length.precision">{{ row.length }}</span>
+        <span v-to-fixed="{ val: row.length, dp: baseUnit.length.precision }" />
       </template>
     </el-table-column>
   </template>
