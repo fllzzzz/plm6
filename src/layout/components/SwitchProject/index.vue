@@ -117,7 +117,7 @@ const { routeProjectType, currentProjectType, globalProjectId, globalProject, na
 ])
 
 // 是否显示
-const showable = computed(() => isNotBlank(routeProjectType))
+const showable = computed(() => isNotBlank(routeProjectType.value))
 
 const { projectsCascade, processProjects, projects } = useUserProjects()
 

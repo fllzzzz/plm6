@@ -83,7 +83,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
           }
         }
       },
-      color: ['#34bfa3'],
+      color: ['#48cfae'],
       xAxis: {
         type: 'category',
         data: []

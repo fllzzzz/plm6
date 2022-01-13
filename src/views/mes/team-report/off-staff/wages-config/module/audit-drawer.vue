@@ -2,7 +2,7 @@
   <common-drawer ref="drawerRef" title="项目工价审核" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
     <template #titleRight> </template>
     <template #content>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
+      <common-table row-key="rowId" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showMonomer showArea showTeam />
         <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="140px">
@@ -145,7 +145,8 @@ async function fetchList() {
   try {
     tableLoading.value = true
     const data = await checkList(query)
-    list.value = data[dataPath[query.productType]].map((v) => {
+    list.value = data[dataPath[query.productType]].map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.auditLoading = false
       v.unitPrice = v.wage || 0
       v.originUnitPrice = v.unitPrice
