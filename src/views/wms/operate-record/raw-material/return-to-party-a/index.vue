@@ -34,7 +34,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.transfer"
-            :permission="permission.transferDetail"
+            :permission="permission.transferReceiptDetail"
             @click="openTransferDetailView(row.transfer.id)"
             :text="row.transfer.serialNumber"
           />

@@ -20,7 +20,7 @@
             <template v-if="row.outboundList && row.outboundList.length > 0">
               <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
                 <clickable-permission-span
-                  :permission="permission.outboundDetail"
+                  :permission="permission.outboundReceiptDetail"
                   @click="openOutboundDetailView(outbound.id)"
                   :text="outbound.serialNumber"
                 />
@@ -81,7 +81,7 @@
           <template v-if="row.outboundList && row.outboundList.length > 0">
             <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
               <clickable-permission-span
-                :permission="permission.outboundDetail"
+                :permission="permission.outboundReceiptDetail"
                 @click="openOutboundDetailView(outbound.id)"
                 :text="outbound.serialNumber"
               />
@@ -223,7 +223,7 @@ import Review from './module/review.vue'
 const permission = {
   get: ['wms_returnApplication_record:get'],
   review: ['wms_inboundApplication_review:review'],
-  outboundDetail: ['wms_outboundApplication_review:detail']
+  outboundReceiptDetail: ['wms_outboundApplication_review:detail']
 }
 
 const optShow = {

@@ -104,8 +104,8 @@ const permission = {
   requisitionsUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_requisitions'],
   outboundUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_outbound'],
   transferUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_transfer'],
-  transferDetail: ['wms_transferApplication_review:detail'],
-  outboundDetail: ['wms_outboundApplication_review:detail'],
+  transferReceiptDetail: ['wms_transferApplication_review:detail'],
+  outboundReceiptDetail: ['wms_outboundApplication_review:detail'],
   requisitionsDetail: ['wms_requisitions:detail']
 }
 
@@ -226,9 +226,9 @@ function openDetailPermission(freezeType) {
     case materialFreezeTypeEnum.REQUISITIONS.V:
       return permission.requisitionsDetail
     case materialFreezeTypeEnum.OUTBOUND.V:
-      return permission.outboundDetail
+      return permission.outboundReceiptDetail
     case materialFreezeTypeEnum.TRANSFER.V:
-      return permission.transferDetail
+      return permission.transferReceiptDetail
   }
 }
 </script>

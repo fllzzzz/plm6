@@ -25,7 +25,7 @@
               <template v-if="row.returnTransfers && row.returnTransfers.length > 0">
                 <template v-for="(transfer, ri) in row.returnTransfers" :key="transfer.id">
                   <clickable-permission-span
-                    :permission="permission.transferDetail"
+                    :permission="permission.transferReceiptDetail"
                     @click="openTransferDetailView(transfer.id)"
                     :text="transfer.serialNumber"
                   />
@@ -82,7 +82,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.borrowTransfer"
-            :permission="permission.transferDetail"
+            :permission="permission.transferReceiptDetail"
             @click="openTransferDetailView(row.borrowTransfer.id)"
             :text="row.borrowTransfer.serialNumber"
           />
@@ -101,7 +101,7 @@
           <template v-if="row.returnTransfers && row.returnTransfers.length > 0">
             <template v-for="(transfer, ri) in row.returnTransfers" :key="transfer.id">
               <clickable-permission-span
-                :permission="permission.transferDetail"
+                :permission="permission.transferReceiptDetail"
                 @click="openTransferDetailView(transfer.id)"
                 :text="transfer.serialNumber"
               />
@@ -197,7 +197,7 @@ import returnMaterial from './module/return-material.vue'
 const permission = {
   get: ['wms_partyABorrow:get'],
   return: ['wms_partyABorrow:return'],
-  transferDetail: ['wms_transferApplication_review:detail']
+  transferReceiptDetail: ['wms_transferApplication_review:detail']
 }
 
 const optShow = {

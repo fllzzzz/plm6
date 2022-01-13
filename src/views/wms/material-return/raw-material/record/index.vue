@@ -20,7 +20,7 @@
             <template v-if="row.outboundList && row.outboundList.length > 0">
               <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
                 <clickable-permission-span
-                  :permission="permission.outboundDetail"
+                  :permission="permission.outboundReceiptDetail"
                   @click="openOutboundDetailView(outbound.id)"
                   :text="outbound.serialNumber"
                 />
@@ -81,7 +81,7 @@
           <template v-if="row.outboundList && row.outboundList.length > 0">
             <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
               <clickable-permission-span
-                :permission="permission.outboundDetail"
+                :permission="permission.outboundReceiptDetail"
                 @click="openOutboundDetailView(outbound.id)"
                 :text="outbound.serialNumber"
               />
@@ -222,7 +222,7 @@ const permission = {
   get: ['wms_returnApplication_record:get'],
   edit: ['wms_returnApplication_record:edit'],
   del: ['wms_returnApplication_record:del'],
-  outboundDetail: ['wms_outboundApplication_review:detail']
+  outboundReceiptDetail: ['wms_outboundApplication_review:detail']
 }
 
 const optShow = {

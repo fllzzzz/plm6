@@ -73,8 +73,8 @@ constantize(transferNormalTypeEnum)
 
 // 调拨类型
 const transferTypeEnum = {
-  PUBLIC_WARE: { L: '公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
-  PROJECT_WARE: { L: '项目库', K: 'PROJECT_WARE', V: 1 << 1 },
+  PUBLIC_WARE: { L: '移至公共库', K: 'PUBLIC_WARE', V: 1 << 0 },
+  PROJECT_WARE: { L: '移至项目库', K: 'PROJECT_WARE', V: 1 << 1 },
   RETURN_PARTY_A: { L: '归还甲方', K: 'RETURN_PARTY_A', V: 1 << 2 },
   BORROW_RETURN: { L: '借用归还', K: 'BORROW_RETURN', V: 1 << 3 }
 }
