@@ -9,7 +9,8 @@ const modules = {}
 
 for (const key in modulesFiles) {
   // TODO: 待修改，由export default取值改为从export中取值,避免导出重复写两遍
-  modules[key.replace(/(\.\/modules\/|\.js)/g, '')] = modulesFiles[key].default
+  // modules[key.replace(/(\.\/modules\/|\.js)/g, '')] = modulesFiles[key].default
+  Object.assign(modules, { ...modulesFiles[key].default })
 }
 
 // const modules = modulesFiles.keys().reduce((modules, modulePath) => {

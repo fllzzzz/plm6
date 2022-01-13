@@ -28,6 +28,7 @@
     "qs": "^6.10.1",
     "sass": "^1.42.1",
     "sass-loader": "^10.1.1",
+    "sortablejs": "^1.14.0",
     "vite-plugin-mock": "^2.9.6",
     "vite-plugin-style-import": "^1.2.1",
     "vite-plugin-svg-icons": "^1.0.5",
