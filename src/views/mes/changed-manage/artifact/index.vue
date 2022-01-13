@@ -14,7 +14,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <belonging-info-columns :columns="columns" showProject/>
+      <belonging-info-columns :columns="columns" showProject />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -25,16 +25,10 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.createTime}}</span>
+          <span v-parse-time="scope.row.createTime" />
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('userName')"
-        key="userName"
-        prop="userName"
-        :show-overflow-tooltip="true"
-        label="变更人"
-      >
+      <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
         <template v-slot="scope">
           <span v-empty-text>{{ scope.row.userName }}</span>
         </template>

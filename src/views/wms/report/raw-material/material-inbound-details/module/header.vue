@@ -45,7 +45,7 @@
         </template>
         <template #secondLineFirstItem>
           <el-date-picker
-            v-model="query.createTime"
+            v-model="query.inboundTime"
             :default-time="defaultTime"
             type="daterange"
             range-separator=":"
@@ -135,7 +135,7 @@ import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.v
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
-  createTime: [], // [开始时间，结束时间]
+  inboundTime: [], // [开始时间，结束时间]
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
   rejectStatus: undefined, // 退货状态

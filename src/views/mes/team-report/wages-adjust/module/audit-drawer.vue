@@ -2,7 +2,7 @@
   <common-drawer ref="drawerRef" title="项目工价审核" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="70%">
     <template #titleRight> </template>
     <template #content>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
+      <common-table row-key="rowId" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="monomer.name" show-overflow-tooltip label="单体">
           <template v-slot="scope">
@@ -36,7 +36,7 @@
         </el-table-column>
         <el-table-column prop="createTime" show-overflow-tooltip label="日期" align="center">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</span>
+            <span v-parse-time="{ val: scope.row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column prop="auditUserName" show-overflow-tooltip label="审核人">
@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'" v-empty-text>{{ scope.row.auditTime }}</span>
+            <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column prop="auditStatus" show-overflow-tooltip label="操作" width="170px" align="center">
@@ -113,7 +113,8 @@ async function fetchList() {
   try {
     tableLoading.value = true
     const { content } = await checkList(query)
-    list.value = content.map((v) => {
+    list.value = content.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.auditLoading = false
       return v
     })

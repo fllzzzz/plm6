@@ -32,7 +32,7 @@
             fixed="left"
           >
             <template #default="{ row }">
-              <span v-parse-time>{{ row.outboundReceipt.outboundTime }}</span>
+              <span v-parse-time="row.outboundReceipt.outboundTime" />
             </template>
           </el-table-column>
         </template>
@@ -43,7 +43,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" />
+        <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
       </template>
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
@@ -92,7 +92,7 @@
         width="125"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.outboundReceipt.createTime }}</span>
+          <span v-parse-time="row.outboundReceipt.createTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -105,14 +105,12 @@
         width="125"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.outboundReceipt.reviewTime }}</span>
+          <span v-parse-time="row.outboundReceipt.reviewTime" />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 查看详情 -->
-    <m-detail />
     <!-- 出库单详情 -->
     <detail-wrapper ref="outboundReceiptDetailRef" :api="getOutboundReceiptDetail">
       <outbound-receipt-detail />
@@ -136,7 +134,6 @@ import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
-import MDetail from './module/detail.vue'
 
 import OutboundReceiptDetail from '@/views/wms/material-outbound/raw-material/record/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -166,7 +163,9 @@ const { CRUD, crud, columns } = useCRUD(
       'outboundReceipt.founderName',
       'outboundReceipt.reviewerName',
       'outboundReceipt.createTime',
-      'outboundReceipt.reviewTime'
+      'outboundReceipt.reviewTime',
+      'invoiceType',
+      'taxRate'
     ],
     permission: { ...permission },
     optShow: { ...optShow },

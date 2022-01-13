@@ -35,7 +35,7 @@
     </span>
     <span class="info-item">
       <span>出库日期</span>
-      <span v-parse-time="'{y}-{m}-{d}'">{{ material.createTime }}</span>
+      <span v-parse-time="{ val: material.createTime, fmt: '{y}-{m}-{d}' }" />
     </span>
     <template v-if="material.measureUnit">
       <span class="info-item">

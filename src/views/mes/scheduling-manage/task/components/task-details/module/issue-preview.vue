@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="任务下发预览" v-model="dialogVisible" append-to-body :before-close="handleClose" :width="'70%'">
+  <common-dialog title="任务下发预览" v-model="dialogVisible" top="5vh" append-to-body :before-close="handleClose" :width="'70%'">
     <template #titleAfter>
       <el-tooltip
         effect="light"
@@ -99,7 +99,8 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    navbar: false
+    navbar: false,
+    extraHeight: 150
   },
   dialogVisible
 )

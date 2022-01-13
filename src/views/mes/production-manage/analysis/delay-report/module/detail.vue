@@ -7,22 +7,22 @@
         <productType-base-info-columns :productType="query.productType" />
         <el-table-column prop="taskQuantity" :label="`任务数(${unitObj.measure})`" min-width="100px" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.taskQuantity}}</span>
+            <span>{{ scope.row.taskQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="askCompleteTime" label="要求完成日期" align="center" min-width="110px">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.askCompleteTime }}</span>
+            <span v-parse-time="{ val: scope.row.askCompleteTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column prop="unCompleteQuantity" :label="`未完成数(${unitObj.measure})`" min-width="100px" align="center">
           <template v-slot="scope">
-            <span class="tc-danger">{{ scope.row.unCompleteQuantity}}</span>
+            <span class="tc-danger">{{ scope.row.unCompleteQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="unCompleteMete" :label="`未完成量(${unitObj.unit})`" min-width="100px" align="center">
           <template v-slot="scope">
-            <span class="tc-danger">{{ scope.row.unCompleteMete}}</span>
+            <span class="tc-danger">{{ scope.row.unCompleteMete }}</span>
           </template>
         </el-table-column>
       </common-table>

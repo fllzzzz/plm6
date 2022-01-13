@@ -17,28 +17,74 @@
         :max-height="maxHeight"
         style="width: 100%"
       >
-        <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left"/>
-        <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber"  prop="serialNumber" :show-overflow-tooltip="true" min-width="130" align="center"  label="合同编号" fixed="left" />
-        <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" min-width="150" align="center"  label="项目名称"  />
-        <el-table-column v-if="columns.visible('shortName')" key="shortName" prop="shortName" :show-overflow-tooltip="true" min-width="130" align="center"  label="项目简称"  />
-        <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="业务类型"  align="center" min-width="100" >
+        <el-table-column prop="index" label="序号" align="center" width="60" type="index" fixed="left" />
+        <el-table-column
+          v-if="columns.visible('serialNumber')"
+          key="serialNumber"
+          prop="serialNumber"
+          :show-overflow-tooltip="true"
+          min-width="130"
+          align="center"
+          label="合同编号"
+          fixed="left"
+        />
+        <el-table-column
+          v-if="columns.visible('name')"
+          key="name"
+          prop="name"
+          :show-overflow-tooltip="true"
+          min-width="150"
+          align="center"
+          label="项目名称"
+        />
+        <el-table-column
+          v-if="columns.visible('shortName')"
+          key="shortName"
+          prop="shortName"
+          :show-overflow-tooltip="true"
+          min-width="130"
+          align="center"
+          label="项目简称"
+        />
+        <el-table-column
+          v-if="columns.visible('businessType')"
+          key="businessType"
+          prop="businessType"
+          label="业务类型"
+          align="center"
+          min-width="100"
+        >
           <template v-slot="scope">
-            <span v-empty-text>{{ scope.row.businessType && businessTypeEnum.VL[  scope.row.businessType] }}</span>
+            <span v-empty-text>{{ scope.row.businessType && businessTypeEnum.VL[scope.row.businessType] }}</span>
           </template>
         </el-table-column>
-        <el-table-column  v-if="columns.visible('startDate')" key="startDate" prop="startDate" label="计划开工日期"   align="center"  width="100"  >
+        <el-table-column
+          v-if="columns.visible('startDate')"
+          key="startDate"
+          prop="startDate"
+          label="计划开工日期"
+          align="center"
+          width="100"
+        >
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.startDate }}</span>
+            <span v-parse-time="{ val: scope.row.startDate, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="100" >
+        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="100">
           <template v-slot="scope">
-            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.endDate }}</div>
+            <span v-parse-time="{ val: scope.row.endDate, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('completeDate')" key="completeDate" prop="completeDate" label="完成日期" align="center" width="100" >
+        <el-table-column
+          v-if="columns.visible('completeDate')"
+          key="completeDate"
+          prop="completeDate"
+          label="完成日期"
+          align="center"
+          width="100"
+        >
           <template v-slot="scope">
-            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.completeDate }}</div>
+            <span v-parse-time="{ val: scope.row.completeDate, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="工期(天)" align="center" width="100">
@@ -46,14 +92,28 @@
             <div>{{ scope.row.allDays }}</div>
           </template>
         </el-table-column>
-        <el-table-column  v-if="columns.visible('alreadyDays')" key="alreadyDays" prop="alreadyDays" label="已用时(天)" align="center" width="100" >
+        <el-table-column
+          v-if="columns.visible('alreadyDays')"
+          key="alreadyDays"
+          prop="alreadyDays"
+          label="已用时(天)"
+          align="center"
+          width="100"
+        >
           <template v-slot="scope">
             <div>{{ scope.row.alreadyDays }}</div>
           </template>
         </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" align="center" width="100" >
+        <el-table-column
+          v-if="columns.visible('createTime')"
+          key="createTime"
+          prop="createTime"
+          label="创建时间"
+          align="center"
+          width="100"
+        >
           <template v-slot="scope">
-            <div v-parse-time="'{y}-{m}-{d}'">{{ scope.row.createTime }}</div>
+            <span v-parse-time="{ val: scope.row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
       </common-table>
@@ -148,7 +208,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 async function fetchProjectInfo() {
   projectInfo.loading = true
   try {
-    const res = await getProjectInfo({ year: year.value }) || {}
+    const res = (await getProjectInfo({ year: year.value })) || {}
     projectInfo.provinceList = res.provinceList
     delete res.provinceList
     projectInfo.summary = res
@@ -161,11 +221,11 @@ async function fetchProjectInfo() {
 </script>
 
 <style lang="scss" scoped>
-  .app-wrap {
-    display: flex;
-    .app-container {
-      flex: 1;
-      min-width: 0;
-    }
+.app-wrap {
+  display: flex;
+  .app-container {
+    flex: 1;
+    min-width: 0;
   }
+}
 </style>

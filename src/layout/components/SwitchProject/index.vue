@@ -35,7 +35,7 @@
     <div style="font-size: 13px; margin-left: 15px; color: #333">
       <el-tag v-if="globalProject && globalProject.endDate" type="info" effect="plain">
         完成日期:
-        <span v-parse-time="'{y}-{m}-{d}'">{{ globalProject.endDate }}</span>
+        <span v-parse-time="{ val: globalProject.endDate, fmt: '{y}-{m}-{d}' }" />
         | 工期:
         {{ dateDifferenceReduce(globalProject.startDate, globalProject.endDate) }}天
       </el-tag>
@@ -43,7 +43,7 @@
         {{ businessTypeEnum.VL[globalProject.businessType] }}
       </el-tag>
       <el-tag v-if="globalProject && globalProject.mode" type="info" effect="plain" style="margin-left: 5px">
-        {{ '项目模式:'+projectModeEnum.VL[globalProject.mode] }}
+        {{ '项目模式:' + projectModeEnum.VL[globalProject.mode] }}
       </el-tag>
     </div>
   </div>
@@ -117,7 +117,7 @@ const { routeProjectType, currentProjectType, globalProjectId, globalProject, na
 ])
 
 // 是否显示
-const showable = computed(() => isNotBlank(routeProjectType))
+const showable = computed(() => isNotBlank(routeProjectType.value))
 
 const { projectsCascade, processProjects, projects } = useUserProjects()
 

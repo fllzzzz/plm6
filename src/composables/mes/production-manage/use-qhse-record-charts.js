@@ -74,7 +74,7 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
       tooltip: {
         trigger: 'axis'
       },
-      color: ['#34bfa3'],
+      color: ['#48cfae'],
       toolbox: {
         show: true,
         feature: {

@@ -120,10 +120,10 @@
       fixed="right"
     >
       <template v-slot="scope">
-      <template v-if="!scope.row.isModify">
-          <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)"/>
-          <common-button icon="el-icon-delete" type="danger" size="mini" />
-          <common-button type="success" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')">通过</common-button>
+        <template v-if="!scope.row.isModify">
+          <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.status===auditTypeEnum.AUDITING.V"/>
+          <common-button icon="el-icon-delete" type="danger" size="mini" v-if="scope.row.status===auditTypeEnum.AUDITING.V"/>
+          <common-button type="success" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')" v-if="scope.row.status===auditTypeEnum.AUDITING.V">通过</common-button>
         </template>
         <template v-else>
           <common-button type="primary" size="mini" @click="rowCancel(scope.row,scope.$index)">取消</common-button>
@@ -141,7 +141,7 @@
 import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
-// import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum } from '@enum-ms/contract'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'

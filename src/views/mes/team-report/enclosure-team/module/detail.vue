@@ -59,7 +59,7 @@
         </el-table-column>
         <el-table-column key="completeTime" prop="completeTime" :show-overflow-tooltip="true" label="生产日期" align="center" width="160px">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.completeTime }}</span>
+            <span v-parse-time="{ val: scope.row.completeTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
       </common-table>

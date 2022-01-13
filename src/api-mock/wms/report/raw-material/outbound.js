@@ -1,4 +1,5 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { materialIsWholeEnum, materialOutboundModeEnum } from '@/utils/enum/modules/wms'
 
 // 出库明细
@@ -66,6 +67,8 @@ const getDetails = {
             heatNoAndBatchNo: 'fddfd',
             mete: 2355000,
             weight: 2355000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.02,
             amount: 47100,
             amountExcludingVAT: 41681.42,
@@ -107,6 +110,8 @@ const getDetails = {
             heatNoAndBatchNo: 'ooopp',
             mete: 252900,
             weight: 252900,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.03,
             amount: 9174,
             amountExcludingVAT: 8188.58,
@@ -149,6 +154,8 @@ const getDetails = {
             width: 1000,
             mete: 200000,
             weight: 1000000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.05,
             amount: 500,
             amountExcludingVAT: 450,
@@ -184,6 +191,8 @@ const getDetails = {
             basicClass: matClsEnum.MATERIAL.V,
             brand: '嘻嘻',
             mete: 80,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,
@@ -220,6 +229,8 @@ const getDetails = {
             brand: '嘻嘻',
             color: '蓝色',
             mete: 100000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,
@@ -255,6 +266,8 @@ const getDetails = {
             quantity: 10,
             brand: '嘻嘻',
             mete: 200000,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             unitPrice: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,

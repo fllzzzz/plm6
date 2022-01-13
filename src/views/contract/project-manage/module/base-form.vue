@@ -187,6 +187,7 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
+import { isNotBlank } from '@data-type/index'
 import { digitUppercase } from '@/utils/data-type/number'
 
 const formRef = ref()
@@ -220,6 +221,13 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 
+const validateMoney = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('合同金额必须大于0'))
+  } else {
+    callback()
+  }
+}
 const rules = {
   serialNumber: [
     { required: true, message: '请填写合同编号', trigger: 'blur' },
@@ -235,7 +243,7 @@ const rules = {
     { required: true, message: '请填写项目简称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
-  contractAmount: [{ required: true, message: '请填写合同金额', trigger: 'blur' }],
+  contractAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
   address: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }],
   signingAddress: [{ max: 220, message: '长度不超过 220 个字符', trigger: 'blur' }]
 }

@@ -71,6 +71,13 @@ const technicalDataTypeEnum = {
 }
 constantize(technicalDataTypeEnum)
 
+// 围护创建类型
+const enclosureCreateTypeEnum = {
+  UPLOAD: { L: '导入', K: 'UPLOAD', V: 1 },
+  TYPE_IN: { L: '输入', K: 'TYPE_IN', V: 2 }
+}
+constantize(enclosureCreateTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -79,7 +86,8 @@ export {
   processingEnum,
   planTypeEnum,
   technicalDataTypeEnum,
-  areaPlanTypeEnum
+  areaPlanTypeEnum,
+  enclosureCreateTypeEnum
 }
 
 export default {
@@ -90,5 +98,6 @@ export default {
   processingEnum,
   planTypeEnum,
   technicalDataTypeEnum,
-  areaPlanTypeEnum
+  areaPlanTypeEnum,
+  enclosureCreateTypeEnum
 }

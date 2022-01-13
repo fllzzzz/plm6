@@ -95,7 +95,7 @@
                 value-format="x"
                 placeholder="出库时间"
               />
-              <span v-else v-parse-time="{ val: row.outboundTime }" />
+              <span v-else v-parse-time="row.outboundTime" />
             </template>
           </el-table-column>
           <el-table-column

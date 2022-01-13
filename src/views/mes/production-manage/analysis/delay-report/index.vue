@@ -22,7 +22,7 @@
         min-width="70px"
       >
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.askCompleteTime }}</span>
+          <span v-parse-time="{ val: scope.row.askCompleteTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -34,7 +34,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.taskQuantity }} {{unitObj.measure}} | {{ scope.row.taskMete }} {{unitObj.unit}}</span>
+          <span>{{ scope.row.taskQuantity }} {{ unitObj.measure }} | {{ scope.row.taskMete }} {{ unitObj.unit }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -46,7 +46,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.completeQuantity }} {{unitObj.measure}} | {{ scope.row.completeMete }} {{unitObj.unit}}</span>
+          <span>{{ scope.row.completeQuantity }} {{ unitObj.measure }} | {{ scope.row.completeMete }} {{ unitObj.unit }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -58,7 +58,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.diffQuantity }} {{unitObj.measure}} | {{ scope.row.diffMete }} {{unitObj.unit}}</span>
+          <span>{{ scope.row.diffQuantity }} {{ unitObj.measure }} | {{ scope.row.diffMete }} {{ unitObj.unit }}</span>
         </template>
       </el-table-column>
       <el-table-column

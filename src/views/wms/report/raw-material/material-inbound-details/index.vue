@@ -29,17 +29,17 @@
       >
         <template #afterIndex>
           <el-table-column
-            v-if="columns.visible('inboundReceipt.reviewTime')"
-            key="inboundReceipt.reviewTime"
+            v-if="columns.visible('inboundReceipt.inboundTime')"
+            key="inboundReceipt.inboundTime"
             :show-overflow-tooltip="true"
-            prop="inboundReceipt.reviewTime"
+            prop="inboundReceipt.inboundTime"
             label="入库时间"
             align="center"
             width="125"
             fixed="left"
           >
             <template #default="{ row }">
-              <span v-parse-time>{{ row.inboundReceipt.reviewTime }}</span>
+              <span v-parse-time="row.inboundReceipt.inboundTime" />
             </template>
           </el-table-column>
         </template>
@@ -50,7 +50,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" />
+        <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
       </template>
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
@@ -151,14 +151,26 @@
         width="125"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.inboundReceipt.createTime }}</span>
+          <span v-parse-time="row.inboundReceipt.createTime" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('inboundReceipt.reviewTime')"
+        key="inboundReceipt.reviewTime"
+        :show-overflow-tooltip="true"
+        prop="inboundReceipt.reviewTime"
+        label="入库时间"
+        align="center"
+        width="125"
+        fixed="left"
+      >
+        <template #default="{ row }">
+          <span v-parse-time="row.inboundReceipt.reviewTime" />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 查看详情 -->
-    <m-detail />
     <!-- 采购订单详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
       <purchase-order-detail />
@@ -187,7 +199,6 @@ import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
-import MDetail from './module/detail.vue'
 
 import InboundReceiptDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
 import PurchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
@@ -220,8 +231,11 @@ const { CRUD, crud, columns } = useCRUD(
       'inboundReceipt.reviewerName',
       'inboundReceipt.createTime',
       'inboundReceipt.reviewTime',
+      'inboundReceipt.inboundTime',
       'inboundReceipt.licensePlate',
-      'inboundReceipt.shipmentNumber'
+      'inboundReceipt.shipmentNumber',
+      'invoiceType',
+      'taxRate'
     ],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -235,7 +249,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 // 是否有权限显示金额
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
-const basicClass = computed(() => crud.query ? crud.query.basicClass : undefined)
+const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
 
 // 采购单详情
 const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()

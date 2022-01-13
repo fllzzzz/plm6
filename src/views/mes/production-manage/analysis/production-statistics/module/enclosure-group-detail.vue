@@ -64,14 +64,9 @@
           width="90"
         >
           <template #header>
-            <span>已完成({{ showUnit }})</span>
-            <common-button
-              size="mini"
-              type="primary"
-              style="margin-left: 5px"
-              icon="el-icon-view"
-              @click="handleHeaderClick"
-            ></common-button>
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+              已完成({{ showUnit }})
+            </common-button>
           </template>
           <template v-slot="scope">
             <span class="tc-success">{{ scope.row.completeQuantity }}</span>
@@ -98,14 +93,9 @@
           width="90"
         >
           <template #header>
-            <span>在制品({{ showUnit }})</span>
-            <common-button
-              size="mini"
-              type="primary"
-              style="margin-left: 5px"
-              icon="el-icon-view"
-              @click="handleHeaderClick"
-            ></common-button>
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+              在制品({{ showUnit }})
+            </common-button>
           </template>
           <template v-slot="scope">
             <span class="tc-warning">{{ scope.row.inProductionQuantity }}</span>
@@ -132,14 +122,9 @@
           width="90"
         >
           <template #header>
-            <span>未生产({{ showUnit }})</span>
-            <common-button
-              size="mini"
-              type="primary"
-              style="margin-left: 5px"
-              icon="el-icon-view"
-              @click="handleHeaderClick"
-            ></common-button>
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+              未生产({{ showUnit }})
+            </common-button>
           </template>
           <template v-slot="scope">
             <span class="tc-danger">{{ scope.row.unProducedQuantity }}</span>

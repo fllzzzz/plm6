@@ -25,13 +25,21 @@
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="200" />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" min-width="180">
           <template v-slot="scope">
-            <span v-parse-time="'{y}-{m}-{d}'">{{scope.row.createTime}}</span>
+            <span v-parse-time="{ val: scope.row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column label="操作" width="130px">
           <template v-slot="scope">
             <common-button v-if="!isShow" type="danger" icon="el-icon-delete" size="mini" @click="toDelete(scope.$index)" />
-            <common-button v-show="props.showDownload && currentUpload.indexOf(scope.row.id) == -1" v-permission="props.downloadPerm" :loading="downloadLoading" size="mini" type="warning" icon="el-icon-download" @click="downloadFile(scope.$index)" />
+            <common-button
+              v-show="props.showDownload && currentUpload.indexOf(scope.row.id) == -1"
+              v-permission="props.downloadPerm"
+              :loading="downloadLoading"
+              size="mini"
+              type="warning"
+              icon="el-icon-download"
+              @click="downloadFile(scope.$index)"
+            />
           </template>
         </el-table-column>
       </common-table>
@@ -117,7 +125,7 @@ function handleSuccess(response) {
   if (response && response.code === 20000) {
     const data = response.data
     emit('update:files', props.files.concat(response.data))
-    currentUpload.value = currentUpload.value.concat(data.map(v => v.id))
+    currentUpload.value = currentUpload.value.concat(data.map((v) => v.id))
     ElMessage.success('上传成功')
   } else {
     ElMessage.error(response && response.message ? response.message : '上传失败')

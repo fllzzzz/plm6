@@ -65,7 +65,7 @@
         >
           <template v-slot="scope">
             <el-tag :type="logisticsPriceTypeEnum.V[scope.row.priceType].T" style="width: 100%" effect="plain">
-              <span>{{ toFixed(scope.row.price, DP.YUAN)}}</span>
+              <span>{{ toFixed(scope.row.price, DP.YUAN) }}</span>
               <span style="margin-left: 3px">{{ logisticsPriceTypeEnum.V[scope.row.priceType].unit }}</span>
             </el-tag>
           </template>
@@ -106,7 +106,7 @@
           min-width="90"
         >
           <template v-slot="scope">
-            <span v-parse-time>{{ scope.row.createTime }}</span>
+            <span v-parse-time="scope.row.createTime" />
           </template>
         </el-table-column>
         <!--编辑与删除-->
