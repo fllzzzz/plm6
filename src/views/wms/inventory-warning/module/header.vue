@@ -1,5 +1,14 @@
 <template>
   <div class="head-container">
+    <common-radio-button
+      v-model="query.enabled"
+      :options="enabledEnum.ENUM"
+      show-option-all
+      type="enum"
+      size="small"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
     <factory-select
       v-model="query.factoryId"
       class="filter-item"
@@ -41,8 +50,11 @@
 
 <script setup>
 import { ref } from 'vue'
-import materialCascader from '@comp-cls/material-cascader/index.vue'
+import { enabledEnum } from '@enum-ms/common'
+
 import { regHeader } from '@compos/use-crud'
+import materialCascader from '@comp-cls/material-cascader/index.vue'
+
 import crudOperation from '@crud/CRUD.operation.vue'
 import rrOperation from '@crud/RR.operation.vue'
 import factorySelect from '@comp-base/factory-select.vue'

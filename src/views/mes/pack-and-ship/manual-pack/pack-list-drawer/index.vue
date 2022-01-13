@@ -36,6 +36,7 @@ v-for="item in packTypeEnum.ENUM"
         empty-text="暂无数据"
         :max-height="maxHeight"
         style="width: 100%"
+        class="manual-pack-list"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <template v-if="packType === packTypeEnum.STRUCTURE.V">
@@ -135,7 +136,7 @@ v-for="item in packTypeEnum.ENUM"
         </template>
         <el-table-column key="inQuantity" prop="inQuantity" label="入库量" align="center" min-width="80px" />
         <el-table-column key="unPackageQuantity" prop="unPackageQuantity" label="可打包量" align="center" min-width="80px" />
-        <el-table-column key="productQuantity" prop="productQuantity" label="打包数量" align="center" width="120px" fixed="right">
+        <el-table-column prop="productQuantity" label="打包数量" align="center" width="120px" fixed="right">
           <template v-slot="scope">
             <el-input-number
               v-model="scope.row.productQuantity"
@@ -181,6 +182,7 @@ import { ElMessage, ElRadioGroup } from 'element-plus'
 import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
 import { toFixed } from '@data-type/index'
+import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -334,27 +336,12 @@ function del(id) {
 }
 
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (column.property === 'inQuantity' || column.property === 'productQuantity') {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-    }
-  })
-  return sums
+  return tableSummary(param, { props: ['inQuantity', 'productQuantity'] })
 }
 </script>
+
+<style>
+.manual-pack-list.el-table .el-table__cell.is-hidden > *{
+  visibility: visible;
+}
+</style>

@@ -115,6 +115,7 @@ import { ref, defineEmits, inject } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 
+import { configFactoryPM as permission } from '@/page-permission/config'
 import { enabledEnum } from '@enum-ms/common'
 import { TAG_FACTORY_DEF_COLOR } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
@@ -127,15 +128,6 @@ import mForm from './module/form'
 
 const store = useStore()
 const emit = defineEmits(['click-factory'])
-
-// crud交由presenter持有
-const permission = {
-  get: ['factory:get'],
-  add: ['factory:add'],
-  edit: ['factory:edit'],
-  del: ['factory:del'],
-  editStatus: ['factory:editStatus']
-}
 
 const optShow = {
   add: false,

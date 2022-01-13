@@ -214,6 +214,7 @@ import { getBoardForArtifact as get } from '@/api/mes/manufactures-manage/common
 import { ref } from 'vue'
 // import { mapGetters } from '@/store/lib'
 
+import { artifactWarehousePM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 
@@ -221,12 +222,6 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-
-const permission = {
-  get: ['artifactWarehouseState:get'],
-  print: ['artifactWarehouseState:print'],
-  download: ['artifactWarehouseState:download']
-}
 
 const optShow = {
   add: false,

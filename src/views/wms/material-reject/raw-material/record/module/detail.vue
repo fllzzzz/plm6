@@ -38,7 +38,7 @@
       </common-table>
       <p class="remark">
         <span class="label-after">备注</span>
-        <span v-empty-text="{ val: detail.remark }" />
+        <span v-empty-text="detail.remark" />
       </p>
     </template>
   </common-drawer>
@@ -107,7 +107,10 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
+  })
 }
 </script>
 

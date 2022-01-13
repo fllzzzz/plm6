@@ -8,6 +8,15 @@
     style="width: 250px"
     @keyup.enter="toQuery"
   />
+  <el-input
+    v-model.trim="queryVO.brand"
+    clearable
+    style="width: 150px"
+    size="small"
+    placeholder="品牌"
+    class="filter-item"
+    @keyup.enter="toQuery"
+  />
 </template>
 
 <script setup>

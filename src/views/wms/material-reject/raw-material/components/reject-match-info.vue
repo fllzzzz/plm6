@@ -220,7 +220,6 @@ function rejectNumberChange(row, newVal, oldVal) {
     if (number > props.material.rejectMaxNumber) {
       row.rejectNumber = oldVal
       ElMessage.warning('您填写的数量超过可退货数量，已为您取消本次操作')
-      console.log('row', row)
       return
     }
     rejectTotalNumber.value = number

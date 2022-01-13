@@ -147,6 +147,15 @@
         min-width="80px"
       />
       <el-table-column
+        v-if="columns.visible('unPackageQuantity')"
+        key="unPackageQuantity"
+        prop="unPackageQuantity"
+        sortable="custom"
+        label="可打包量"
+        align="center"
+        min-width="80px"
+      />
+      <el-table-column
         v-if="columns.visible('packageQuantity')"
         key="packageQuantity"
         prop="packageQuantity"
@@ -194,6 +203,7 @@
 import { getEnclosure as get } from '@/api/mes/pack-and-ship/manual-pack'
 import { computed, ref, watch, defineEmits, defineProps, defineExpose, inject } from 'vue'
 
+import { enclosureManualPackPM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { packTypeEnum } from '@enum-ms/mes'
@@ -202,12 +212,6 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag'
-
-// crud交由presenter持有
-const permission = {
-  get: ['enclosureManualPack:get'],
-  pack: ['manualPack:pack']
-}
 
 const optShow = {
   add: false,
@@ -224,7 +228,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['drawingNumber'],
+    invisibleColumns: ['drawingNumber', 'packageQuantity'],
     queryOnPresenterCreated: false,
     hasPagination: false
   },

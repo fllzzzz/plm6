@@ -124,6 +124,7 @@ const matSpecRef = ref() // 规格列表ref
 const formRef = ref() // form表单ref
 const drawerRef = ref()
 const order = ref() // 订单信息
+const orderLoaded = ref(false) // 订单加载状态
 const disabledBasicClass = ref({}) // 禁用的基础分类
 const materialSelectVisible = ref(false) // 显示物料选择
 const currentBasicClass = ref() // 当前基础分类
@@ -154,8 +155,26 @@ const setFormCallback = (form) => {
     steelCoilList: null
   }
   const list = ['steelPlateList', 'sectionSteelList', 'steelCoilList']
+  let hasDefaultSelect = false // 是否有默认选中，优先选中有数据的类型
   list.forEach((key) => {
     if (isNotBlank(form[key])) {
+      if (!hasDefaultSelect) {
+        hasDefaultSelect = true
+        // 等待订单加载后选中
+        const orderTrigger = watch(
+          orderLoaded,
+          (loaded) => {
+            if (loaded) {
+              nextTick(() => {
+                currentBasicClass.value = key
+                orderTrigger()
+              })
+            }
+          },
+          { immediate: true }
+        )
+      }
+
       form[key] = form[key].map((v) => reactive(v))
       trigger[key] = watch(
         steelRefList,
@@ -439,6 +458,7 @@ function handleOrderInfoChange(orderInfo) {
     })
   }
   calcWeight()
+  orderLoaded.value = true
 }
 
 // 信息初始化
@@ -449,8 +469,9 @@ function init() {
     sectionSteelList: true,
     steelCoilList: true
   }
-  currentBasicClass.value = undefined
-  totalWeight.value = 0
+  currentBasicClass.value = undefined // 当前分类
+  totalWeight.value = 0 // 总重
+  orderLoaded.value = false // 订单加载状态
 }
 </script>
 

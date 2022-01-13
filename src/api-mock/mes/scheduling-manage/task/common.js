@@ -1,5 +1,5 @@
 const getScheduling = {
-  url: '/api/mes/building/scheduling',
+  url: '/api/mes/building/scheduling/page',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -8,7 +8,7 @@ const getScheduling = {
       'message': '成功',
       'data': {
         'totalElements': 2,
-        'content': [{
+        'content|1-30': [{
           'createTime': null,
           'id': 1,
           'factoryId': 1,
@@ -34,36 +34,6 @@ const getScheduling = {
           'completeQuantity': 10,
           'askCompleteTime': null,
           'completeTime': 1636613990000,
-          'status': true,
-          'issueStatus': true,
-          'userId': 1,
-          'productProcessId': 1
-        }, {
-          'createTime': null,
-          'id': 7,
-          'factoryId': 1,
-          'factoryName': 'dzx一号工厂',
-          'workshopId': 1,
-          'workshopName': 'dzx一号车间',
-          'productionLineId': 4,
-          'productionLineName': 't111',
-          'projectId': 39,
-          'projectName': 'content测试',
-          'monomerId': 5,
-          'monomerName': '单体1',
-          'areaId': 8,
-          'areaName': '区域1',
-          'productId': 6,
-          'productName': null,
-          'serialNumber': 'L-115',
-          'specification': null,
-          'productType': null,
-          'processType': false,
-          'schedulingQuantity': 5,
-          'taskQuantity': 0,
-          'completeQuantity': 0,
-          'askCompleteTime': null,
-          'completeTime': null,
           'status': true,
           'issueStatus': false,
           'userId': 1,

@@ -1,18 +1,4 @@
 <template>
-  <el-table-column
-    v-if="showClassifyFullName"
-    :key="`${field}.classifyFullName`"
-    :prop="`${field}.classifyFullName`"
-    label="物料种类"
-    align="center"
-    min-width="180px"
-    :fixed="fixed"
-    show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ getInfo(row, 'classifyFullName') }}</span>
-    </template>
-  </el-table-column>
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
@@ -80,6 +66,5 @@ const props = defineProps({
 
 const getInfo = inject('getInfo')
 
-const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.classifyFullName`))
 const showSpecification = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.specification`))
 </script>

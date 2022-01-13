@@ -115,12 +115,14 @@ function steelCoilSpecTip(row) {
 // 辅材规格
 function auxMatSpecTip(row) {
   const tip = []
-  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
+  if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
   return tip.join(' * ')
 }
 
 // 气体规格
 function gasSpecTip(row) {
-  return row.specificationLabels
+  const tip = []
+  if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
+  return tip.join(' * ')
 }

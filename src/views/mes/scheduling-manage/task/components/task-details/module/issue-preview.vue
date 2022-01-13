@@ -1,5 +1,5 @@
 <template>
-  <common-dialog title="任务下发预览" v-model="dialogVisible" append-to-body :before-close="handleClose" :width="'70%'">
+  <common-dialog title="任务下发预览" v-model="dialogVisible" top="5vh" append-to-body :before-close="handleClose" :width="'70%'">
     <template #titleAfter>
       <el-tooltip
         effect="light"
@@ -24,7 +24,7 @@
           <span>{{ emptyTextFormatter(scope.row.workshop?.name) }}>{{ emptyTextFormatter(scope.row.productionLine?.name) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="180px" :fixed="fixed">
+      <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="180px">
         <template #default="{ row }">
           <span v-parse-project="{ project: row.project }" v-empty-text />
         </template>
@@ -99,7 +99,8 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    navbar: false
+    navbar: false,
+    extraHeight: 150
   },
   dialogVisible
 )

@@ -1,20 +1,12 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
-      <template v-if="showRejectStatus">
-        <table-cell-tag
-          v-if="isNotBlank(row.rejectStatus) && row.rejectStatus !== materialRejectStatusEnum.NONE.V"
-          :name="materialRejectStatusEnum.VL[row.rejectStatus]"
-          :color="materialRejectStatusEnum.V[row.rejectStatus].COLOR"
-        />
-      </template>
-      <template v-else>
-        <!-- 是否甲供材料 -->
-        <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
-      </template>
+      <!-- 是否甲供材料 -->
+      <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
+  <slot name="afterIndex" />
   <el-table-column
     v-if="showSerialNumber"
     prop="serialNumber"
@@ -32,35 +24,76 @@
         :color="partyAMatTransferEnum.V[row.partyATransferType].COLOR"
         :offset="15"
       />
-      <!-- 出库方式 -->
-      <table-cell-tag
-        v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
-        :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
-        :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
-        :offset="15"
-      />
+      <!-- 物料类型 与 出库方式同时存在-->
+      <!-- <template v-if="showIsWhole && showOutboundMode">
+        <table-cell-tag
+          v-if="row.materialIsWhole === materialIsWholeEnum.ODDMENT.V || row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
+          :name="`${materialIsWholeEnum.VL[row.materialIsWhole]}${
+            row.materialOutboundMode === materialOutboundModeEnum.HALF.V ? materialOutboundModeEnum.VL[row.materialOutboundMode] : ''
+          }`"
+          :color="
+            row.materialIsWhole === materialIsWholeEnum.ODDMENT.V && row.materialOutboundMode === materialOutboundModeEnum.HALF.V
+              ? '#e66f3c'
+              : materialIsWholeEnum.V[row.materialIsWhole].COLOR
+          "
+          :offset="15"
+        />
+      </template>
+      <template v-else> -->
+        <!-- 物料类型 整料/余料 -->
+        <table-cell-tag
+          v-if="showIsWhole && row.materialIsWhole === materialIsWholeEnum.ODDMENT.V"
+          :name="materialIsWholeEnum.VL[row.materialIsWhole]"
+          :color="materialIsWholeEnum.V[row.materialIsWhole].COLOR"
+          :offset="15"
+        />
+        <!-- 出库方式 -->
+        <table-cell-tag
+          v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
+          :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
+          :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
+          :offset="15"
+        />
+      <!-- </template> -->
+
+      <!-- 显示退货状态 -->
+      <template v-if="showRejectStatus">
+        <table-cell-tag
+          v-if="isNotBlank(row.rejectStatus) && row.rejectStatus !== materialRejectStatusEnum.NONE.V"
+          :name="materialRejectStatusEnum.VL[row.rejectStatus]"
+          :color="materialRejectStatusEnum.V[row.rejectStatus].COLOR"
+          :class="{ pointer: rejectDetailViewable }"
+          @click="openMatRejectDetail(row)"
+        />
+      </template>
       <span v-empty-text>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-  <!-- 钢材宽度100， 其他180 :min-width="basicClass > STEEL_ENUM ? 180 : undefined" -->
   <el-table-column
-    v-if="showClassifyFullName"
-    prop="classifyFullName"
+    v-if="showClassifyName"
+    prop="classifyName"
     label="物料种类"
     align="center"
     show-overflow-tooltip
-    :width="classifyFullNameWidth"
+    :width="classifyNameWidth"
     :fixed="fixed"
   >
     <template #default="{ row }">
       <!-- 是否显示冻结角标 -->
       <span v-if="showFrozenTip && row.boolHasFrozen" class="table-cell-triangle-frozen" />
-      <!-- 是否可以查看材料冻结 -->
-      <span v-if="frozenViewable && row.boolHasFrozen" class="freeze-text" v-empty-text @click="openMatFrozenDetail(row)">
-        {{ row.classifyFullName }}
-      </span>
-      <!-- 正常显示 -->
-      <span v-else v-empty-text>{{ row.classifyFullName }}</span>
+      <el-tooltip :content="row.classifyPathName" :disabled="!row.classifyPathName" :show-after="500" placement="top">
+        <span>
+          <!-- 是否可以查看材料冻结 -->
+          <span
+            v-if="frozenViewable && row.boolHasFrozen"
+            class="freeze-text"
+            v-empty-text="row.classifyName"
+            @click="openMatFrozenDetail(row)"
+          />
+          <!-- 正常显示 -->
+          <span v-else v-empty-text="row.classifyName" />
+        </span>
+      </el-tooltip>
     </template>
   </el-table-column>
   <component
@@ -73,8 +106,10 @@
     :show-length="showLength"
     :show-thickness="showThickness"
   />
+
+  <!-- 冻结记录 -->
   <common-dialog
-    :title="`冻结记录：${currentMaterial.classifyFullName} ${currentMaterial.specification}`"
+    :title="`冻结记录：${currentMaterial.classifyName} ${currentMaterial.specification}`"
     v-model="freezeDialogVisible"
     width="1300px"
     show-close
@@ -82,7 +117,25 @@
     custom-class="wms-material-freeze-record-view"
     top="10vh"
   >
-    <material-freeze-record :material="currentMaterial" :max-height="freezeMaxHeight" @unfreeze-success="handleUnfreezeSuccess" />
+    <material-freeze-record :material="currentMaterial" :max-height="maxHeight" @unfreeze-success="handleUnfreezeSuccess" />
+  </common-dialog>
+
+  <!-- 退货详情 -->
+  <common-dialog
+    :title="`退货记录：${currentMaterial.classifyName} ${currentMaterial.specification}`"
+    v-model="rejectMaterialDialogVisible"
+    width="80%"
+    show-close
+    custom-class="wms-material-reject-material-record-view"
+    top="10vh"
+  >
+    <reject-info-table
+      :material="currentMaterial"
+      :basic-class="currentMaterial.basicClass"
+      :list="currentMaterial.rejectList"
+      :max-height="maxHeight"
+      has-border
+    />
   </common-dialog>
 </template>
 
@@ -90,19 +143,21 @@
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialRejectStatusEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
+import { materialRejectStatusEnum, materialIsWholeEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
-import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
+import useMaxHeight from '@/composables/use-max-height'
 import steelPlate from './module/steel-plate.vue'
 import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import rawMat from './module/raw-mat.vue'
-import useMaxHeight from '@/composables/use-max-height'
+
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
+import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
+import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
 
 const emit = defineEmits(['refresh'])
 
@@ -138,8 +193,13 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  showIsWhole: {
+    // 显示 材料类型 （整料|余料）
+    type: Boolean,
+    default: false
+  },
   showOutboundMode: {
-    // 显示 出库方式 （整料半出）
+    // 显示 出库方式 （整出|半出）
     type: Boolean,
     default: false
   },
@@ -150,6 +210,11 @@ const props = defineProps({
   },
   frozenViewable: {
     // 可查看冻结
+    type: Boolean,
+    default: false
+  },
+  rejectDetailViewable: {
+    // 可查看退货详情
     type: Boolean,
     default: false
   },
@@ -179,38 +244,47 @@ const permission = {
 const currentMaterial = ref({})
 // 冻结记录窗口显示状态
 const freezeDialogVisible = ref(false)
+// 退货详情窗口显示状态
+const rejectMaterialDialogVisible = ref(false)
 // 操作次数(列如冻结)
 const operateNumber = ref(0)
 
 // 物料全名宽度
-const classifyFullNameWidth = computed(() => {
+const classifyNameWidth = computed(() => {
   // 基础分类不存在，或基础分类不为钢材，则宽度为100
-  return !props.basicClass || props.basicClass > STEEL_ENUM ? 250 : 120
+  return !props.basicClass || props.basicClass > STEEL_ENUM ? 160 : 120
 })
 
 // 是否显示物料种类全路径
-const showClassifyFullName = computed(() => isBlank(props.columns) || props.columns.visible('classifyFullName'))
+const showClassifyName = computed(() => isBlank(props.columns) || props.columns.visible('classifyName'))
 // 是否显示编号
 const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))
 // 可查看冻结信息
 const frozenViewable = computed(() => props.frozenViewable && checkPermission(permission.frozenDetail))
 
-// 冻结表格高度
-const { maxHeight: freezeMaxHeight } = useMaxHeight(
+// 表格高度
+const { maxHeight } = useMaxHeight(
   {
     mainBox: '.wms-material-freeze-record-view',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true
   },
-  freezeDialogVisible
+  computed(() => freezeDialogVisible.value || rejectMaterialDialogVisible.value)
 )
 
 // 打开冻结详情
 function openMatFrozenDetail(row) {
   operateNumber.value = 0
-  freezeDialogVisible.value = true
   currentMaterial.value = row
+  freezeDialogVisible.value = true
+}
+
+// 打开退货详情
+function openMatRejectDetail(row) {
+  if (!props.rejectDetailViewable) return
+  currentMaterial.value = row
+  rejectMaterialDialogVisible.value = true
 }
 
 // 解冻成功
@@ -248,5 +322,24 @@ const comp = computed(() => {
 .freeze-text {
   color: #409eff;
   cursor: pointer;
+}
+
+.material-classify {
+  line-height: 20px;
+  height: 35px;
+  overflow: visible;
+  // margin-top: -5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  .main-name {
+    font-weight: 700;
+  }
+  .path-name {
+    color: rgb(144, 147, 153);
+    // display: block;
+    // margin-top: 3px;
+  }
 }
 </style>

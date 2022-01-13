@@ -80,6 +80,7 @@ import { artifact, enclosure } from '@/api/mes/production-manage/dashboard/proje
 import { ref, computed, provide } from 'vue'
 
 import { projectComponentTypeEnum, componentTypeEnum } from '@enum-ms/mes'
+import { projectReportDashboardPM as permission } from '@/page-permission/mes'
 
 import artifactComponent from './artifact'
 import enclosureComponent from './enclosure'
@@ -90,11 +91,6 @@ import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['mesProjectReport:get']
-}
 
 const optShow = {
   add: false,

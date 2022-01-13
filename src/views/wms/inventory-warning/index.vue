@@ -85,7 +85,7 @@
         v-if="columns.visible('enabled')"
         :show-overflow-tooltip="true"
         prop="enabled"
-        label="状态"
+        label="启用状态"
         align="center"
         width="100"
       >

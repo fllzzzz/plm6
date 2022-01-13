@@ -111,9 +111,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('tinyImgs')"
-        key="tinyImgs"
-        prop="tinyImgs"
+        v-if="columns.visible('rectifyAttachmentDTOS')"
+        prop="rectifyAttachmentDTOS"
         :show-overflow-tooltip="false"
         label="整改图片"
         width="150px"
@@ -122,11 +121,11 @@
         <template v-slot="scope">
           <div class="imgs-box">
             <el-image
-              v-for="url in scope.row.tinyImgs"
-              :preview-src-list="scope.row.imgs"
+              v-for="url in scope.row.rectifyAttachmentDTOS"
+              :preview-src-list="scope.row.rectifyImgUrls"
               :initial-index="1"
-              :key="url"
-              :src="url"
+              :key="url.id"
+              :src="url.tinyImageUrl"
               lazy
             ></el-image>
           </div>
@@ -159,16 +158,12 @@ import { ref } from 'vue'
 
 import { problemTypeEnum } from '@enum-ms/production'
 import { improveStatusEnum } from '@enum-ms/mes'
+import { qhseDisclosurePM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['qhseDisclosure:get']
-}
 
 const optShow = {
   add: false,

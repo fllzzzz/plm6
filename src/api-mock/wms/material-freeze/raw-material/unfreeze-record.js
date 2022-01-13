@@ -29,7 +29,7 @@ const get = {
               boolPartyA: false, // 是否甲供材料
               serialNumber: /([0-9]{8})/,
               classifyId: 103,
-              basicClass: 1,
+              basicClass: matClsEnum.STEEL_PLATE.V,
               specification: 'Q325B',
               mete: 800000, // 解冻核算量
               quantity: 10, // 解冻数量
@@ -76,7 +76,7 @@ const get = {
               boolPartyA: false, // 是否甲供材料
               serialNumber: /([0-9]{8})/,
               classifyId: 103,
-              basicClass: 1,
+              basicClass: matClsEnum.STEEL_PLATE.V,
               specification: 'Q325B',
               mete: 200000, // 解冻核算量
               quantity: 2, // 解冻数量
@@ -123,7 +123,7 @@ const get = {
               boolPartyA: false, // 是否甲供材料
               serialNumber: /([0-9]{8})/,
               classifyId: 103,
-              basicClass: 1,
+              basicClass: matClsEnum.STEEL_PLATE.V,
               specification: 'Q325B',
               mete: 210000, // 解冻核算量
               quantity: 3, // 解冻数量

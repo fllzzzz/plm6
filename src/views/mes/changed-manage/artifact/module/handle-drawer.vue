@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="info.handleType && handleMethodEnumV[info.handleType].L"
+    :title="`${info.handleType && handleMethodEnumV[info.handleType].L}详情：${info.serialNumber}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -25,21 +25,17 @@
           <div class="handle-title">
             <el-tag size="medium" effect="plain">可处理列表</el-tag>
             <span>
-              <common-button size="mini" :disabled="remainHandleMete <= 0 || !canHandleList.length" type="success">一键处理</common-button>
+              <!-- <common-button size="mini" :disabled="remainHandleMete <= 0 || !canHandleList.length" type="success">一键处理</common-button> -->
             </span>
           </div>
           <common-table ref="tableRef" v-loading="tableLoading" :data="canHandleList" :max-height="maxHeight" style="width: 100%">
             <el-table-column label="序号" type="index" align="center" width="60" />
-            <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号">
+            <!-- <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号">
               <template v-slot="scope">
                 <span>{{ scope.row.serialNumber }}</span>
               </template>
-            </el-table-column>
-            <el-table-column prop="productionLineName" :show-overflow-tooltip="true" label="生产线">
-              <template v-slot="scope">
-                <span>{{ scope.row.productionLineName }}</span>
-              </template>
-            </el-table-column>
+            </el-table-column> -->
+            <belonging-info-columns showProductionLine showFactory />
             <!-- <el-table-column prop="teamName" :show-overflow-tooltip="true" label="班组">
               <template v-slot="scope">
                 <span>{{ scope.row.teamName }}</span>
@@ -74,16 +70,12 @@
           </div>
           <common-table ref="tableRef" v-loading="tableLoading" :data="previewList" :max-height="maxHeight" style="width: 100%">
             <el-table-column label="序号" type="index" align="center" width="60" />
-            <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号">
+            <!-- <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号">
               <template v-slot="scope">
                 <span>{{ scope.row.serialNumber }}</span>
               </template>
-            </el-table-column>
-            <el-table-column prop="productionLineName" :show-overflow-tooltip="true" label="生产线">
-              <template v-slot="scope">
-                <span>{{ scope.row.productionLineName }}</span>
-              </template>
-            </el-table-column>
+            </el-table-column> -->
+            <belonging-info-columns showProductionLine showFactory />
             <!-- <el-table-column prop="teamName" :show-overflow-tooltip="true" label="班组">
               <template v-slot="scope">
                 <span>{{ scope.row.teamName }}</span>
@@ -128,7 +120,8 @@
 </template>
 
 <script setup>
-import { exceptionList, extraTaskList, change } from '@/api/mes/changed-manage/artifact'
+import { exceptionList, exceptionChange, taskChange } from '@/api/mes/changed-manage/artifact'
+import { taskList } from '@/api/mes/changed-manage/common'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
@@ -137,6 +130,7 @@ import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 
 const tableRef = ref()
 const drawerRef = ref()
@@ -215,9 +209,12 @@ async function fetchList() {
     processLimitObj.value = {}
     tableLoading.value = true
     if (props.info.handleType === handleMethodEnum.DECREASE_TASK.V) {
-      const { content } = await extraTaskList()
+      const { content } = await taskList({
+        productType: props.info.productType,
+        productId: props.info.productId
+      })
       _list = content.map((v) => {
-        v.canHandleMete = v.extraQuantity
+        v.canHandleMete = v.taskQuantity - v.completeQuantity
         return v
       })
     } else {
@@ -244,8 +241,16 @@ async function fetchList() {
   }
 }
 
+function getCanHandleMete(row) {
+  if (props.info.handleType === handleMethodEnum.EXCEPTION_HANDLE.V) {
+    return row.canHandleMete > processLimitObj.value[row.processId] ? processLimitObj.value[row.processId] : row.canHandleMete
+  } else {
+    return row.canHandleMete
+  }
+}
+
 function getMax(row) {
-  const _quantity = row.canHandleMete > processLimitObj.value[row.processId] ? processLimitObj.value[row.processId] : row.canHandleMete
+  const _quantity = getCanHandleMete(row)
   if (_quantity < row.dealMete + remainHandleMete.value) {
     return _quantity
   } else {
@@ -254,7 +259,7 @@ function getMax(row) {
 }
 
 function addRow(index, row) {
-  const _quantity = row.canHandleMete > processLimitObj.value[row.processId] ? processLimitObj.value[row.processId] : row.canHandleMete
+  const _quantity = getCanHandleMete(row)
   if (_quantity > remainHandleMete.value) {
     row.dealMete = remainHandleMete.value
   } else {
@@ -275,18 +280,37 @@ async function submit() {
     ElMessage.warning('存在未处理数量！')
     return
   }
+  if (!previewList.value || !previewList.value.length) {
+    return
+  }
   try {
     submitLoading.value = true
-    const submitList = previewList.value.map((v) => {
-      const o = {}
-      o.id = v.id
-      o.quantity = v.dealMete
-      return o
-    })
-    await change({
-      abnormalId: props.info.id,
-      voList: submitList
-    })
+    // 处理异常处理的提交
+    if (props.info.handleType === handleMethodEnum.EXCEPTION_HANDLE.V) {
+      const submitList = previewList.value.map((v) => {
+        const o = {}
+        o.id = v.id
+        o.quantity = v.dealMete
+        return o
+      })
+      await exceptionChange({
+        abnormalId: props.info.id,
+        voList: submitList
+      })
+    }
+    // 处理多余任务的提交
+    if (props.info.handleType === handleMethodEnum.DECREASE_TASK.V) {
+      const submitList = previewList.value.map((v) => {
+        const o = {}
+        o.taskId = v.taskId
+        o.quantity = v.dealMete
+        return o
+      })
+      await taskChange({
+        abnormalId: props.info.id,
+        taskChange: submitList
+      })
+    }
     ElNotification({
       title: '构件变更处理成功',
       type: 'success',

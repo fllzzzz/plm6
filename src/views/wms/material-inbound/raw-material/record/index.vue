@@ -32,7 +32,12 @@
         prop="purchaseSN"
         label="采购单号"
         min-width="155"
-      />
+      >
+        <template #default="{ row }">
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" :offset="10" />
+          <span>{{ row.purchaseSN }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -174,7 +179,12 @@
       <!--编辑与删除-->
       <el-table-column label="操作" width="170px" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :disabled-edit="!row.editable" :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" show-detail />
+          <udOperation
+            :disabled-edit="!row.editable"
+            :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V"
+            :data="row"
+            show-detail
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -188,14 +198,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import crudApi from '@/api/wms/material-inbound/raw-material/record'
+import { ref } from 'vue'
+import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import mHeader from './module/header'
 import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'

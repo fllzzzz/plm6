@@ -71,7 +71,7 @@ const detail_id1 = {
             boolPartyA: true, // 甲供材料
             materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             outboundUnitType: measureTypeEnum.MEASURE.V,
             quantity: 10,

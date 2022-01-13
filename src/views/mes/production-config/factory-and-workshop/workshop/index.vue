@@ -114,6 +114,7 @@ import { ref, defineProps, computed, watch, inject } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import checkPermission from '@/utils/system/check-permission'
+import { configWorkshopPM as permission } from '@/page-permission/config'
 
 import { enabledEnum } from '@enum-ms/common'
 
@@ -124,15 +125,6 @@ import mHeader from './module/header'
 import mForm from './module/form'
 
 const store = useStore()
-
-// crud交由presenter持有
-const permission = {
-  get: ['workshop:get'],
-  add: ['workshop:add'],
-  edit: ['workshop:edit'],
-  del: ['workshop:del'],
-  editStatus: ['workshop:editStatus']
-}
 
 const optShow = {
   add: false,

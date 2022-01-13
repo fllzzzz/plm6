@@ -27,7 +27,7 @@
           :expand-row-keys="expandRowKeys"
           row-key="uid"
         >
-          <!-- 次要信息：当列过多的时候，在展开处显示次要信息-->
+          <!-- 次要信息：当列过多的时候，在展开处显示次要信息 -->
           <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
             <template #default="{ row }">
               <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />

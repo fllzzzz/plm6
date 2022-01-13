@@ -38,6 +38,7 @@
         v-model="query.supplierId"
         :basicClass="query.basicClass"
         :type="supplierTypeEnum.RAW_MATERIAL.V"
+        mode="cross"
         clearable
         class="filter-item"
         @change="crud.toQuery"
@@ -126,7 +127,7 @@ const defaultQuery = {
   purchaseSN: undefined, // 采购单号
   serialNumber: undefined, // 入库单号
   supplierId: undefined, // 供应商id
-  operatorName: undefined // 创建人
+  operatorName: undefined // 申请人/编辑人/审核人
 }
 
 const route = useRoute()

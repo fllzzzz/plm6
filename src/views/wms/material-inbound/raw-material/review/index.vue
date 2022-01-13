@@ -32,7 +32,12 @@
         prop="purchaseSN"
         label="采购单号"
         min-width="155"
-      />
+      >
+        <template #default="{ row }">
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" :offset="10" />
+          <span>{{ row.purchaseSN }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -194,8 +199,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import crudApi from '@/api/wms/material-inbound/raw-material/review'
+import { ref } from 'vue'
+import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
@@ -203,6 +209,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import MHeader from './module/header'
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'

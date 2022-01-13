@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="info.handleType && handleMethodEnumV[info.handleType].L+'详情'"
+    :title="`${info.handleType && handleMethodEnumV[info.handleType].L}详情：${info.serialNumber}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -18,16 +18,12 @@
       </div>
       <common-table ref="tableRef" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号">
+        <!-- <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="构件编号">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
           </template>
-        </el-table-column>
-        <el-table-column prop="productionLineName" :show-overflow-tooltip="true" label="生产线">
-          <template v-slot="scope">
-            <span>{{ scope.row.productionLineName }}</span>
-          </template>
-        </el-table-column>
+        </el-table-column> -->
+         <belonging-info-columns showProductionLine showFactory/>
         <!-- <el-table-column prop="teamName" :show-overflow-tooltip="true" label="班组">
           <template v-slot="scope">
             <span>{{ scope.row.teamName }}</span>
@@ -46,12 +42,14 @@
 </template>
 
 <script setup>
-import { exceptionList, extraTaskList } from '@/api/mes/changed-manage/artifact'
+import { exceptionList } from '@/api/mes/changed-manage/artifact'
+import { taskList } from '@/api/mes/changed-manage/common'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import { abnormalReportTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 
 const tableRef = ref()
 const drawerRef = ref()
@@ -105,14 +103,17 @@ async function fetchList() {
   try {
     tableLoading.value = true
     if (props.info.handleType === handleMethodEnum.DECREASE_TASK.V) {
-      const { content } = await extraTaskList()
+      const { content } = await taskList({
+        productType: props.info?.productType,
+        productId: props.info?.productId
+      })
       _list = content
     } else {
       const { reportList } = await exceptionList({
         productType: props.info.productType,
         productId: props.info.productId
       })
-      _list = reportList.map(v => {
+      _list = reportList.map((v) => {
         v.reportTypeText = abnormalReportTypeEnum.VL[v.reportType]
         return v
       })

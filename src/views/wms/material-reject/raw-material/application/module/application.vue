@@ -16,7 +16,7 @@
       <el-badge :value="curAddRecordNumber" :hidden="curAddRecordNumber < 1">
         <common-button size="mini" type="primary" @click="previewVisible = true">本次退货预览</common-button>
       </el-badge>
-      <purchase-detail-button v-permission="permission.purchaseDetail" :purchase-id="order.id" size="mini" />
+      <purchase-detail-button v-permission="permission.purchaseOrderDetail" :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
       <common-table
@@ -307,6 +307,9 @@ function handleSubmitSuccess() {
 
 // 合计
 function getSummaries(param) {
-  return tableSummary(param, { props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, {
+    props: ['quantity', 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
+  })
 }
 </script>

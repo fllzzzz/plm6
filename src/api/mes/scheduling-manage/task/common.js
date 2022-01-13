@@ -8,7 +8,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'scheduling',
+    url: 'scheduling/page',
     method: 'get',
     params
   })

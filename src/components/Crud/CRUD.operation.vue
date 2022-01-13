@@ -225,6 +225,12 @@ function toggleSearch() {
 .column-list {
   display: inline-flex;
   flex-direction: column;
+  max-height: 60vh;
+  overflow: auto;
+  .el-checkbox {
+    height: 22px;
+    flex: none;
+  }
 }
 .crud-opts {
   padding: 6px 0;

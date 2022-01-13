@@ -149,20 +149,15 @@ import { ref } from 'vue'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { convertUnits } from '@/utils/convert/unit'
+import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
+import { paintingDashboardPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import editArea from './module/edit-area.vue'
 import editForm from './module/edit-form.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['mesPainting:get'],
-  edit: ['mesPainting:edit'],
-  editArea: ['mesPaintingArea:edit']
-}
 
 const optShow = {
   add: false,
@@ -217,28 +212,6 @@ function toEditForm(row) {
 }
 
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (column.property === 'measure') {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-        sums[index] = sums[index].toFixed(DP.COM_VOLUME__L)
-      }
-    }
-  })
-  return sums
+  return tableSummary(param, { props: ['measure'] })
 }
 </script>

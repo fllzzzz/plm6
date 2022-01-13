@@ -1,12 +1,15 @@
 import { isBlank, toFixed } from './data-type'
+import { toThousand } from './data-type/number'
 
 /**
  * 合计通用
  * @param {*} param
  * @param {array} props 需要显示合计的列 ['a','b'] || [['a',1], 'b']  1:小数精度
+ * @param {number} precision 小数精度
+ * @param {array} toThousandFields 金额数字字段 10000 => 10,000
  * @returns
  */
-export function tableSummary(param, { props = [], precision = 2 }) {
+export function tableSummary(param, { props = [], precision = 2, toThousandFields = [] } = {}) {
   const { columns, data } = param
   const sums = []
   columns.forEach((column, index) => {
@@ -30,14 +33,16 @@ export function tableSummary(param, { props = [], precision = 2 }) {
       }
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
+          const value = +toFixed(curr, dp)
           if (!isNaN(value)) {
-            return prev + curr
+            return +toFixed(prev + curr, dp)
           } else {
             return prev
           }
         }, 0)
-        sums[index] = toFixed(sums[index], dp)
+        if (toThousandFields.includes(column.property)) {
+          sums[index] = toThousand(sums[index], dp)
+        }
       }
     }
   })

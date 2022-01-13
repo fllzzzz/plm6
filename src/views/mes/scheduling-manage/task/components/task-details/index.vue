@@ -11,7 +11,7 @@
     :max-height="maxHeight"
     :cell-class-name="wrongCellMask"
     style="width: 100%"
-    @selection-change="crud.selectionChangeHandler"
+    @selection-change="handleSelectChange"
   >
     <el-table-column v-if="modifying" type="selection" :selectable="selectableFunc" width="55" align="center" />
     <el-table-column label="序号" type="index" align="center" width="60" />
@@ -108,12 +108,7 @@
           <span :class="row.completeQuantity === row.schedulingQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="checkPermission([...taskPermission.add, ...assistPermission.get])"
-        label="操作"
-        align="center"
-        width="210px"
-      >
+      <el-table-column v-if="checkPermission([...taskPermission.add, ...assistPermission.get])" label="操作" align="center" width="210px">
         <template #default="{ row }">
           <common-button
             v-permission="taskPermission.add"
@@ -131,6 +126,8 @@
       </el-table-column>
     </template>
   </common-table>
+      <!--分页组件-->
+    <pagination />
   <issue-preview v-model:visible="previewVisible" :modified-data="crud.selections" @refresh="refresh" />
   <modifyQuantityDialog v-model:visible="modifyQuantityVisible" :details="detailRow" @modifySuccess="refresh" />
   <delTask v-model:visible="delTaskVisible" :details="detailRow" @delSuccess="refresh" />
@@ -151,6 +148,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
+import pagination from '@crud/Pagination'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header'
 import modifyQuantityDialog from './module/modify-quantity-dialog'
@@ -184,7 +182,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...taskPermission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )
@@ -204,8 +202,25 @@ const props = defineProps({
     default: () => {}
   }
 })
+watch(
+  () => props.visible,
+  (visible) => {
+    if (!visible) {
+      crud.resetQuery()
+    }
+  },
+  { immediate: true }
+)
 
-const { maxHeight } = useMaxHeight({ paginate: false })
+const { maxHeight } = useMaxHeight({
+  navbar: false,
+  extraBox: ['.el-drawer__header', '.head-container'],
+  wrapperBox: ['.el-drawer__body'],
+  clientHRepMainH: true,
+  paginate: true,
+  minHeight: 300,
+  extraHeight: 60
+})
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
 
 const buttonValue = computed(() => {
@@ -263,6 +278,13 @@ async function previewIt() {
   previewVisible.value = true
 }
 
+function handleSelectChange(val) {
+  val.forEach(v => {
+    v.askCompleteTime = v.askCompleteTime ? v.askCompleteTime : new Date()
+  })
+  crud.selectionChangeHandler(val)
+}
+
 function selectableFunc(row) {
   return row.operable
 }
@@ -300,12 +322,12 @@ CRUD.HOOK.beforeRefresh = () => {
   crud.query.productType = productType.value
 }
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
     v.operable = !v.issueStatus
     v.sourceSchedulingQuantity = v.schedulingQuantity
     v.modifySchedulingQuantity = v.schedulingQuantity
-    return v
+    // return v
   })
 }
 </script>

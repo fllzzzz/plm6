@@ -45,15 +45,12 @@ import { ref } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
+import { artifactProductionDashboardPM as permission } from '@/page-permission/mes'
 
 import useDashboardIndex from '@compos/mes/dashboard/use-dashboard-index'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-
-const permission = {
-  get: ['artifactProductionDashboard:get']
-}
 
 const optShow = {
   add: false,

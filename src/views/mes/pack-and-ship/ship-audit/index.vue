@@ -191,6 +191,7 @@ import crudApi, { detail, audit } from '@/api/mes/pack-and-ship/ship-audit'
 import { ref, reactive } from 'vue'
 import { ElNotification } from 'element-plus'
 
+import { shipAuditPM as permission } from '@/page-permission/mes'
 import { packTypeEnum, shipAuditStatusEnum } from '@enum-ms/mes'
 import { weightMeasurementModeEnum as measureModeEnum } from '@enum-ms/finance'
 import { cleanArray } from '@/utils/data-type/array'
@@ -209,13 +210,6 @@ import mDetail from './module/detail/index.vue'
 const shipAuditEnum = {
   PASS: { L: '同意', K: 'PASS', V: 1 },
   NO_PASS: { L: '不同意', K: 'NO_PASS', V: 2 }
-}
-
-const permission = {
-  get: ['shipAudit:get'],
-  detail: ['shipAudit:detail'],
-  print: ['shipAudit:print'],
-  audit: ['shipAudit:audit']
 }
 
 const optShow = {

@@ -110,6 +110,7 @@ import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 import { artifactProcessEnum } from '@enum-ms/mes'
 import { projectNameFormatter } from '@/utils/project'
 import { deepClone } from '@data-type/index'
+import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -141,7 +142,8 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
-    clientHRepMainH: true
+    clientHRepMainH: true,
+    extraHeight: 60
   },
   drawerRef
 )
@@ -157,31 +159,7 @@ watch(
 )
 
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (['taskQuantity', 'completeQuantity', 'unCompleteQuantity', 'completeMete'].includes(column.property)) {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-        if (['completeMete'].includes(column.property)) {
-          sums[index] = sums[index].toFixed(unitObj.value.DP)
-        }
-      }
-    }
-  })
-  return sums
+  return tableSummary(param, { props: ['taskQuantity', 'completeQuantity', 'unCompleteQuantity', ['completeMete', unitObj.value.DP]] })
 }
 const query = inject('query')
 const tableLoading = ref(false)

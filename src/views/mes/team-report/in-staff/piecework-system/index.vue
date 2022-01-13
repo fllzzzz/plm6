@@ -83,6 +83,7 @@ import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
 import { ref, provide, computed } from 'vue'
 
 // import { wageQuotaTypeEnum } from '@enum-ms/mes'
+import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -91,13 +92,6 @@ import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
-
-// crud交由presenter持有
-const permission = {
-  get: ['inStaffPieceworkSystem:get'],
-  detail: ['inStaffPieceworkSystem:detail'],
-  summaryDetail: ['inStaffPieceworkSystemSummary:detail']
-}
 
 const optShow = {
   add: false,

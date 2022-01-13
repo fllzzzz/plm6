@@ -88,6 +88,7 @@ import crudApi from '@/api/mes/production-manage/analysis/delay-report'
 import { ref, provide, computed } from 'vue'
 
 import { reportComponentTypeEnum } from '@enum-ms/mes'
+import { analysisDelayReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -95,12 +96,6 @@ import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import mHeader from './module/header'
 import mDetail from './module/detail'
-
-// crud交由presenter持有
-const permission = {
-  get: ['analysisDelayReport:get'],
-  detail: ['analysisDelayReport:detail']
-}
 
 const optShow = {
   add: false,

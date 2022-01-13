@@ -8,6 +8,8 @@
     :collapse-tags="collapseTags"
     :loading="!loaded"
     :clearable="clearable"
+    :showOptionAll="showOptionAll"
+    :allLabelText="'全部工厂'"
     filterable
     :placeholder="placeholder"
     :options="factories"
@@ -52,6 +54,10 @@ const props = defineProps({
     default: false
   },
   onlyOneDefault: {
+    type: Boolean,
+    default: false
+  },
+  showOptionAll: {
     type: Boolean,
     default: false
   },

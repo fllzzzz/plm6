@@ -6,7 +6,6 @@
           <purchase-sn-select
             class="input-underline"
             v-model="form.purchaseId"
-            v-model:info="purchaseOrderInfo"
             :basic-class="props.basicClass"
             @change="handlePurchaseIdChange"
             @info-change="handleOrderInfoChange"
@@ -78,7 +77,7 @@
           @success="handleExcelSuccess"
         />
       </el-tooltip>
-      <common-button icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
+      <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
     </div>
   </div>
 </template>
@@ -121,6 +120,12 @@ const { cu, form, FORM } = regExtra() // 表单
 const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff() // 过磅重量超出理论重量处理
 
 const validateLoadingWeight = (rule, value, callback) => {
+  // 为空通过
+  if (value === undefined || value === null) {
+    callback()
+    return
+  }
+  // 范围内通过
   if (diffSubmitValidate(trainsDiff.value.hasOver)) {
     callback()
     return
@@ -130,15 +135,22 @@ const validateLoadingWeight = (rule, value, callback) => {
   }
 }
 
+// 基础校验规则
 const baseRules = {
   purchaseId: [{ required: true, message: '请选择订单', trigger: 'change' }],
   licensePlate: [{ pattern: patternLicensePlate, message: '请填写正确的车牌号', trigger: 'blur' }],
+  loadingWeight: [{ validator: validateLoadingWeight, trigger: 'blur' }]
+}
+
+// 磅计校验规则
+const overWeightRules = {
   loadingWeight: [
     { required: true, message: '请填写过磅重量', trigger: 'blur' },
     { validator: validateLoadingWeight, trigger: 'blur' }
   ]
 }
 
+// 自提车牌校验规则
 const licensePlateRules = {
   licensePlate: [
     { required: true, message: '请填写车牌号', trigger: 'blur' },
@@ -154,17 +166,16 @@ const rules = computed(() => {
       Object.assign(rules, licensePlateRules)
     }
   }
+  // 磅计过磅重量必填，混合计选填，理计不填（TODO:待定）
+  if (props.basicClass & STEEL_ENUM && orderInfo.value.weightMeasurementMode === weightMeasurementModeEnum.OVERWEIGHT.V) {
+    Object.assign(rules, overWeightRules)
+  }
   return rules
 })
 
 const formRef = ref()
-// const form = ref(deepClone(defaultForm))
-const purchaseOrderInfo = ref({})
 const trainsDiff = ref({})
-
-const orderInfo = computed(() => {
-  return purchaseOrderInfo.value || {}
-})
+const orderInfo = ref({})
 
 watchEffect(() => {
   trainsDiff.value = weightOverDiff(form.loadingWeight, cu.props.totalWeight)
@@ -180,14 +191,15 @@ FORM.HOOK.afterSubmit = () => {
 
 // 重置表单
 function handleClear() {
+  init()
   nextTick(() => {
     formRef.value && formRef.value.clearValidate()
-    init()
   })
 }
 
 function init() {
   trainsDiff.value = {}
+  orderInfo.value = {}
   // 清除选中
   const trigger = watchEffect(() => {
     if (matSpecRef.value) {
@@ -209,13 +221,21 @@ function handlePurchaseIdChange(val) {
 }
 
 // 订单详情变更
-function handleOrderInfoChange(val) {
+function handleOrderInfoChange(order) {
   cu.props.requisitions = {} // 初始化申购单
   // 获取申购单详情
-  if (val && val.requisitionsSN) {
-    fetchRequisitionsDetail(val.requisitionsSN)
+  if (order && order.requisitionsSN) {
+    fetchRequisitionsDetail(order.requisitionsSN)
   }
-  emit('purchase-order-change', val)
+  // 物流运输方式更换后，清空对应信息
+  if (order.logisticsTransportType === logisticsTransportTypeEnum.POST.V) {
+    form.licensePlate = undefined
+  }
+  if (order.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
+    form.shipmentNumber = undefined
+  }
+  orderInfo.value = order
+  emit('purchase-order-change', order)
 }
 
 // 加载申购单

@@ -1,6 +1,5 @@
 <template>
   <section class="app-main">
-    <div class="drag" />
     <template v-if="!showNeedProjectTip">
       <!-- 正常路由显示的模块
         当路由route.component未正确配置路径或加载方式，
@@ -42,7 +41,7 @@ const key = computed(() => route.path)
 
 // 显示需要项目的提示模块
 const showNeedProjectTip = computed(() => {
-  if (globalProjectId) {
+  if (globalProjectId.value) {
     return false
   }
   // 从路由的meta中获取是否需要项目的配置（该配置在动态加载路由时处理）
