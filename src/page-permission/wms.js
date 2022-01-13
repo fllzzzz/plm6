@@ -7,6 +7,8 @@ export const commonPM = {
   rawMatInboundDetail: ['wms_inbound_rawMaterial_review:detail'],
   // 原材料-出库单详情
   rawMatOutboundReceiptDetail: ['wms_outbound_rawMaterial_review:detail'],
+  // 原材料-退库单详情
+  rawMaReturnReceiptDetail: ['wms_return_rawMaterial_review:detail'],
   // 原材料-调拨详情
   rawMatTransferDetail: ['wms_transfer_rawMaterial_review:detail']
 }
@@ -49,6 +51,14 @@ export const reportRawMaterialOutboundDetailsPM = {
   get: ['wms_outbound_rawMaterial_details_report:get'], // 查看
   showAmount: ['wms_outbound_rawMaterial_details_report:showAmount'], // 显示金额
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail // 出库详情
+}
+
+// 报表中心/原材料-退库明细
+export const reportRawMaterialReturnDetailsPM = {
+  get: ['wms_return_rawMaterial_details_report:get'], // 查看
+  showAmount: ['wms_return_rawMaterial_details_report:showAmount'], // 显示金额
+  outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
+  returnReceiptDetail: commonPM.rawMaReturnReceiptDetail // 退库详情
 }
 
 // ---------------------------- 报表中心 end -------------------------------

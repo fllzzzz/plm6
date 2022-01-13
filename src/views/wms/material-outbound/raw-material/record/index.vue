@@ -12,6 +12,7 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       @row-dblclick="(row) => crud.toDetail(row)"
+      @sort-change="crud.handleSortChange"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">

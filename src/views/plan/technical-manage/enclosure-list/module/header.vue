@@ -107,6 +107,10 @@
           btn-text="清单（按条件查询）"
           class="filter-item"
         />
+        <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength">
+          <span>{{`总长度:${sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M)}m`}}</span>
+          <span>{{` | 总数量:${sumData.totalQuantity}张`}}</span>
+        </el-tag>
       </template>
       <template #viewLeft>
         <common-button type="primary" size="mini" @click="techVisible=true" v-if="query.category!==TechnologyTypeAllEnum.BENDING.V">技术交底</common-button>
@@ -149,6 +153,8 @@ import sandwichTable from '@/views/contract/project-manage/module/enclosure-tabl
 import pressedColorTable from '@/views/contract/project-manage/module/enclosure-table/pressed-color-table'
 import trussSupportTable from '@/views/contract/project-manage/module/enclosure-table/truss-support-table'
 import { isNotBlank } from '@data-type/index'
+import { getTotalSum } from '@/api/plan/technical-manage/enclosure'
+import { DP } from '@/settings/config'
 
 const defaultQuery = {
   name: undefined,
@@ -186,6 +192,7 @@ const props = defineProps({
 const typeProp = { key: 'no', label: 'name', value: 'no' }
 const AllAreaInfo = ref([])
 const typeOption = ref([])
+const sumData = ref({})
 const techOptions = [
   {
     name: '压型彩板',
@@ -259,6 +266,7 @@ const exportParam = computed(() => {
 
 function categoryChange() {
   choseInfo()
+  getData()
   emit('categoryChange')
   crud.data = []
   crud.toQuery()
@@ -287,6 +295,16 @@ function tabClick(val) {
 function getAreaInfo(val) {
   AllAreaInfo.value = val || []
   choseInfo()
+  getData()
 }
 
+async function getData() {
+  if (crud.query.monomerId && crud.query.category) {
+    try {
+      sumData.value = await getTotalSum({ monomerId: crud.query.monomerId, category: crud.query.category })
+    } catch (e) {
+      console.log('获取围护汇总', e)
+    }
+  }
+}
 </script>

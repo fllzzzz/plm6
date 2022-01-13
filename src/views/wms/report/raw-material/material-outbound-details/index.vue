@@ -10,6 +10,7 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
+      @sort-change="crud.handleSortChange"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
@@ -19,7 +20,7 @@
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" spec-merge fixed="left">
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" spec-merge sortable fixed="left">
         <template #afterIndex>
           <el-table-column
             v-if="columns.visible('outboundReceipt.outboundTime')"
@@ -30,6 +31,8 @@
             align="center"
             width="125"
             fixed="left"
+            sortable="custom"
+
           >
             <template #default="{ row }">
               <span v-parse-time="row.outboundReceipt.outboundTime" />
@@ -208,8 +211,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 <style lang="scss" scoped>
 .report-material-outbound-details {
   .el-table {
-    ::v-deep(.cell) {
-      height: 28px;
+    ::v-deep(td .cell) {
+      min-height: 28px;
       line-height: 28px;
     }
   }

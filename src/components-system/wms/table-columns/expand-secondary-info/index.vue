@@ -34,15 +34,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
-  // showBatchNo: {
-  //   // 显示炉批号
-  //   type: Boolean,
-  //   default: true
-  // },
-  // showGraphics: { // 显示钢板图形
-  //   type: Boolean,
-  //   default: false
-  // }
 })
 
 const comp = computed(() => {

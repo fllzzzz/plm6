@@ -1,4 +1,5 @@
 import { materialFreezeTypeEnum } from '@/utils/enum/modules/wms'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 
 const get = {
   url: '/api/wms/freeze/raw-material',

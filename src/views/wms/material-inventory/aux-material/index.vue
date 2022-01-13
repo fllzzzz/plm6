@@ -12,11 +12,12 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      @sort-change="crud.handleSortChange"
       @selection-change="crud.selectionChangeHandler"
     >
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable fixed="left" @refresh="handleRefresh" />
+      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable sortable fixed="left" @refresh="handleRefresh" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" equal-disabled />
       <!-- 次要信息 -->

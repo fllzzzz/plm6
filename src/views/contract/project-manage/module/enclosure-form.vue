@@ -353,7 +353,7 @@ const FIELD_INFO = {
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
-        { field: 'plateType', name: '板型', dict: 'plateType', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
+        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
         { field: 'effectiveWidth', name: '有效宽度', dict: 'effective_width', placeholder: '请选择或填写有效宽度', rules: [
           { validator: validateWidth, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 0 }
@@ -382,7 +382,7 @@ const FIELD_INFO = {
         { field: 'intMaterial', name: '材质', dict: 'in_material', placeholder: '请选择或填写材质', rules: validateLength('请选择或填写材质', 10) },
         { field: 'intCoating', name: '涂层', dict: 'in_coating', placeholder: '请选择或填写涂层', rules: validateLength('请选择或填写涂层', 10) },
         { field: 'intPlating', name: '镀层', dict: 'in_plating', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
-        { field: 'intSteelPlateBrand', name: '品牌', dict: 'in_steel_plate_brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 20) },
+        { field: 'intSteelPlateBrand', name: '品牌', dict: 'in_Steel_Plate_brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 20) },
         { field: 'intThickness', name: '厚度', dict: 'in_thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
