@@ -82,17 +82,17 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
   // 出库成功处理
   function handleOutboundSuccess() {
     headerRef.value && headerRef.value.updateListNumber()
-    crud.toQuery()
+    crud.refresh()
   }
 
   // 调拨成功
   function handleTransferSuccess() {
-    crud.toQuery()
+    crud.refresh()
   }
   // 刷新
   function handleRefresh() {
     headerRef.value && headerRef.value.updateListNumber()
-    crud.toQuery()
+    crud.refresh()
   }
 
   return {
