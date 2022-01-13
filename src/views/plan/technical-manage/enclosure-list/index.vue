@@ -193,7 +193,7 @@
           v-if="columns.visible('quantity')"
           key="quantity"
           prop="quantity"
-          :label="crud.query.category===TechnologyTypeAllEnum.BENDING.V?'数量(件)':'数量(张)'"
+          :label="'数量(张)'"
           align="left"
           min-width="80px"
         >
@@ -258,7 +258,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('color') && crud.query.category===TechnologyTypeAllEnum.BENDING.V"
+          v-if="columns.visible('color') && crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
           key="color"
           prop="color"
           :show-overflow-tooltip="true"
@@ -412,11 +412,25 @@ const otherRules = {
   totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }]
 }
 
+const colorRules = {
+  serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
+  plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
+  effectiveWidth: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
+  thickness: [{ required: true, message: '厚度必填', trigger: 'change' }],
+  length: [{ required: true, message: '单长必填', trigger: 'change' }],
+  quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
+  totalArea: [{ required: true, message: '总面积必填', trigger: 'change' }],
+  totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }],
+  color: [{ required: true, message: '请输入颜色', trigger: 'blur' }]
+}
+
 function wrongCellMask({ row, column }) {
   if (!row) return
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
+  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+    rules = colorRules
   } else {
     rules = otherRules
   }
@@ -484,6 +498,7 @@ function plateChange(row, index) {
   crud.data[index].brand = choseVal.brand
   crud.data[index].effectiveWidth = choseVal.effectiveWidth
   crud.data[index].thickness = choseVal.thickness
+  crud.data[index].color = choseVal.colour
   getTotalData(row)
 }
 
@@ -552,6 +567,8 @@ async function rowSubmit(row) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
+  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+    rules = colorRules
   } else {
     rules = otherRules
   }
@@ -567,12 +584,6 @@ async function rowSubmit(row) {
     ElMessage.error('请填写表格中标红数据')
     return
   }
-  // const { validResult, dealList } = tableValidate(crud.data)
-  // if (validResult) {
-  //   crud.data = dealList
-  // } else {
-  //   return validResult
-  // }
   try {
     if (row.id) {
       await crudApi.edit(row)
