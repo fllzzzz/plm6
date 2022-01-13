@@ -162,8 +162,9 @@ async function submit(row) {
   try {
     submitLoading.value = true
     await change({
-      abnormalId: row.id,
-      quantity: row.quantity
+      // abnormalId: props.info.id,
+      taskId: row.taskId,
+      quantity: row.taskQuantity - row.quantity
     })
     ElNotification({
       title: '组立变更处理成功',

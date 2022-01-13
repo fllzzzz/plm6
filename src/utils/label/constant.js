@@ -25,8 +25,8 @@ const ARTIFACT_COMMON_L_HTML = function ({ component = defComponent, printConfig
   return `
 <div class="artifact-label">
 <div class="row">
-  <div class="col" style="${printConfig?.showMonomer ? '' : 'border:none;'}">${component.projectName}</div>
-  <div class="col" style="${printConfig?.showMonomer ? '' : 'display:none;'}">${component.monomerName}</div>
+  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'border:none;'}">${component.projectName}</div>
+  <div class="col" style="font-size:10pt;${printConfig?.showMonomer ? '' : 'display:none;'}">${component.monomerName}</div>
 </div>
 <div class="row row-2">
   <div class="col amplify-content">
@@ -85,12 +85,14 @@ const ARTIFACT_SIMPLE_L_HTML = function ({ component = defComponent }) {
 }
 
 // 构件-定制标签
-const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX', logo = 'https://mes.dev.hzchum.com/files/logo/1642044373620_logo_cmib_black_512.png' }) {
   return `
   <div class="artifact-label">
   <div class="row">
-    <div class="col">LOGO</div>
-    <div class="col">${manufacturerName}</div>
+    <div class="col" style="justify-content:center;">
+      <img src="${logo}" alt="logo" style="height:70%;vertical-align: middle;">
+    </div>
+    <div class="col" style="font-size:10pt;">${manufacturerName}</div>
   </div>
   <div class="row row-2">
     <div class="col amplify-content">
@@ -192,7 +194,8 @@ const ARTIFACT_STYLE = function ({
   
     .${fClass} .artifact-label .amplify-content .amplify-no{
       position: absolute; 
-      top: 10px;
+      top: 5px;
+      font-size:7pt;
     }
   
     .${fClass} .artifact-label .amplify-content .amplify-text{
@@ -203,8 +206,9 @@ const ARTIFACT_STYLE = function ({
   
     .${fClass} .artifact-label .amplify-content .amplify-date{
       position: absolute; 
-      bottom: 10px; 
+      bottom: 5px; 
       right: 10px;
+      font-size:7pt;
     }
     
     .${fClass} .artifact-label .contains-rows {

@@ -186,8 +186,9 @@ async function fetchPrintConfig() {
     configLoading.value = true
     const _data = await getPrintConfig(globalProjectId.value, printType)
     if (_data) {
-      const { weight, showArea, showMonomer, manufacturerName, copiesQuantity } = _data
+      const { type, weight, showArea, showMonomer, manufacturerName, copiesQuantity } = _data
       printConfig.weight = weight
+      printConfig.type = type
       // printConfig.showProductionLine = showProductionLine
       printConfig.showArea = showArea
       printConfig.showMonomer = showMonomer

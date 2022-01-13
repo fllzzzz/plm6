@@ -602,6 +602,17 @@ export default {
       }
     },
     {
+      name: 'MesTeamReportOffStaffSettlement',
+      path: 'off-staff/settlement',
+      hidden: false,
+      component: '/mes/team-report/off-staff/settlement/index',
+      meta: {
+        title: '编外-工资结算',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
       name: 'MesTeamReportWagesAdjust',
       path: 'wages-adjust',
       hidden: false,

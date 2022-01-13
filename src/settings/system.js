@@ -56,6 +56,7 @@ export const showProjectSearch = [
   { component: '/mes/team-report/in-staff/piecework-system/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/team-report/in-staff/allocation-system/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/team-report/off-staff/wages-config/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/mes/team-report/off-staff/settlement/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/team-report/wages-adjust/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/QHSE-manage/disclosure/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/label-print/artifact/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
