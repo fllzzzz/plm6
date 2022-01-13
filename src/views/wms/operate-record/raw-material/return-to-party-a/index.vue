@@ -60,7 +60,7 @@
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.createTime }}</span>
+          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
     </common-table>

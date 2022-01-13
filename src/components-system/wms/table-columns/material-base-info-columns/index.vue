@@ -1,17 +1,8 @@
 <template>
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
-      <!-- <template v-if="showRejectStatus">
-        <table-cell-tag
-          v-if="isNotBlank(row.rejectStatus) && row.rejectStatus !== materialRejectStatusEnum.NONE.V"
-          :name="materialRejectStatusEnum.VL[row.rejectStatus]"
-          :color="materialRejectStatusEnum.V[row.rejectStatus].COLOR"
-        />
-      </template>
-      <template v-else> -->
       <!-- 是否甲供材料 -->
       <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
-      <!-- </template> -->
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -33,46 +24,51 @@
         :color="partyAMatTransferEnum.V[row.partyATransferType].COLOR"
         :offset="15"
       />
-      <!-- 出库方式 -->
-      <table-cell-tag
-        v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
-        :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
-        :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
-        :offset="15"
-      />
+      <!-- 物料类型 与 出库方式同时存在-->
+      <!-- <template v-if="showIsWhole && showOutboundMode">
+        <table-cell-tag
+          v-if="row.materialIsWhole === materialIsWholeEnum.ODDMENT.V || row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
+          :name="`${materialIsWholeEnum.VL[row.materialIsWhole]}${
+            row.materialOutboundMode === materialOutboundModeEnum.HALF.V ? materialOutboundModeEnum.VL[row.materialOutboundMode] : ''
+          }`"
+          :color="
+            row.materialIsWhole === materialIsWholeEnum.ODDMENT.V && row.materialOutboundMode === materialOutboundModeEnum.HALF.V
+              ? '#e66f3c'
+              : materialIsWholeEnum.V[row.materialIsWhole].COLOR
+          "
+          :offset="15"
+        />
+      </template>
+      <template v-else> -->
+        <!-- 物料类型 整料/余料 -->
+        <table-cell-tag
+          v-if="showIsWhole && row.materialIsWhole === materialIsWholeEnum.ODDMENT.V"
+          :name="materialIsWholeEnum.VL[row.materialIsWhole]"
+          :color="materialIsWholeEnum.V[row.materialIsWhole].COLOR"
+          :offset="15"
+        />
+        <!-- 出库方式 -->
+        <table-cell-tag
+          v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
+          :name="materialOutboundModeEnum.VL[row.materialOutboundMode]"
+          :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
+          :offset="15"
+        />
+      <!-- </template> -->
+
       <!-- 显示退货状态 -->
       <template v-if="showRejectStatus">
         <table-cell-tag
           v-if="isNotBlank(row.rejectStatus) && row.rejectStatus !== materialRejectStatusEnum.NONE.V"
           :name="materialRejectStatusEnum.VL[row.rejectStatus]"
           :color="materialRejectStatusEnum.V[row.rejectStatus].COLOR"
-          :class="{ 'pointer': rejectDetailViewable }"
+          :class="{ pointer: rejectDetailViewable }"
           @click="openMatRejectDetail(row)"
         />
       </template>
       <span v-empty-text>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-  <!-- 钢材宽度100， 其他180 :min-width="basicClass > STEEL_ENUM ? 180 : undefined" -->
-  <!-- <el-table-column
-    v-if="showClassifyName"
-    prop="classifyName"
-    label="物料种类"
-    align="center"
-    show-overflow-tooltip
-    :width="classifyNameWidth"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-if="showFrozenTip && row.boolHasFrozen" class="table-cell-triangle-frozen" />
-      <div class="material-classify">
-        <span v-if="frozenViewable && row.boolHasFrozen" class="main-name freeze-text" v-empty-text @click="openMatFrozenDetail(row)">
-          {{ row.classifyName }}
-        </span>
-        <span v-else class="main-name">{{ row.classifyName }}</span>
-      </div>
-    </template>
-  </el-table-column> -->
   <el-table-column
     v-if="showClassifyName"
     prop="classifyName"
@@ -147,7 +143,7 @@
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { materialRejectStatusEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
+import { materialRejectStatusEnum, materialIsWholeEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -197,8 +193,13 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  showIsWhole: {
+    // 显示 材料类型 （整料|余料）
+    type: Boolean,
+    default: false
+  },
   showOutboundMode: {
-    // 显示 出库方式 （整料半出）
+    // 显示 出库方式 （整出|半出）
     type: Boolean,
     default: false
   },

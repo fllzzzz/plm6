@@ -41,17 +41,17 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('productType')"
-        key="productType"
-        prop="productType"
-        label="装载类型"
-        width="165"
-      >
+      <el-table-column v-if="columns.visible('productType')" key="productType" prop="productType" label="装载类型" width="165">
         <template v-slot="scope">
-          <el-tag v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))" style="margin-right:5px;" :key="item" :type="packTypeEnum.V[item].T" effect="light" disable-transitions>{{
-            packTypeEnum.VL[item]
-          }}</el-tag>
+          <el-tag
+            v-for="item in cleanArray(EO.getBits(packTypeEnum, scope.row.productType, 'V'))"
+            style="margin-right: 5px"
+            :key="item"
+            :type="packTypeEnum.V[item].T"
+            effect="light"
+            disable-transitions
+            >{{ packTypeEnum.VL[item] }}</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column
@@ -143,7 +143,7 @@
       />
       <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="发运日期" width="120">
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditTime }}</span>
+          <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -155,17 +155,11 @@
         width="120"
       >
         <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ scope.row.auditReceiptTime }}</span>
+          <span v-parse-time="{ val: scope.row.auditReceiptTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <!--详情与下载-->
-      <el-table-column
-        v-if="checkPermission([...permission.detail])"
-        label="操作"
-        width="100px"
-        align="center"
-        fixed="right"
-      >
+      <el-table-column v-if="checkPermission([...permission.detail])" label="操作" width="100px" align="center" fixed="right">
         <template v-slot="scope">
           <!-- 详情 -->
           <common-button type="primary" icon="el-icon-view" size="mini" @click.stop="showDetail(scope.row)" />

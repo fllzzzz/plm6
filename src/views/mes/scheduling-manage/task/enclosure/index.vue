@@ -28,7 +28,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column v-if="columns.visible('date')" prop="date" label="排产日期" align="center" width="140px">
         <template #default="{ row }">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.date }}</span>
+          <span v-parse-time="{ val: row.date, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column

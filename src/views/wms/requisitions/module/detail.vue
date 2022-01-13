@@ -82,11 +82,11 @@
               <span v-empty-text>{{ detail.lastOperatorName }}</span>
             </el-form-item>
 
-            <el-form-item label="创建日期" prop="founderName">
-              <span v-parse-time>{{ detail.createTime }}</span>
+            <el-form-item label="创建时间" prop="founderName">
+              <span v-parse-time="detail.createTime" />
             </el-form-item>
-            <el-form-item label="编辑日期" prop="founderName">
-              <span v-parse-time>{{ detail.userUpdateTime }}</span>
+            <el-form-item label="编辑时间" prop="founderName">
+              <span v-parse-time="detail.userUpdateTime" />
             </el-form-item>
 
             <el-form-item label="关联项目" class="el-form-item-4" prop="projectIds" style="width: 900px">

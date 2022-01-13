@@ -13,8 +13,15 @@
       row-key="id"
     >
       <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('purchaseNo')" key="purchaseNo" prop="purchaseNo" :show-overflow-tooltip="true" label="申购单号" min-width="180" />
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column
+        v-if="columns.visible('purchaseNo')"
+        key="purchaseNo"
+        prop="purchaseNo"
+        :show-overflow-tooltip="true"
+        label="申购单号"
+        min-width="180"
+      />
       <el-table-column
         v-if="columns.visible('basicClassNames')"
         key="basicClassNames"
@@ -35,16 +42,23 @@
           <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('writtenByName')" key="writtenByName" prop="writtenByName" :show-overflow-tooltip="true" label="填写人" min-width="120" />
-      <el-table-column v-if="columns.visible('purchaseOrderNos')" key="purchaseOrderNos" prop="purchaseOrderNos" :show-overflow-tooltip="true" label="关联采购单号" min-width="160" />
       <el-table-column
-        v-if="columns.visible('status')"
-        key="status"
-        label="采购状态"
-        prop="status"
-        align="center"
-        width="90px"
-      >
+        v-if="columns.visible('writtenByName')"
+        key="writtenByName"
+        prop="writtenByName"
+        :show-overflow-tooltip="true"
+        label="填写人"
+        min-width="120"
+      />
+      <el-table-column
+        v-if="columns.visible('purchaseOrderNos')"
+        key="purchaseOrderNos"
+        prop="purchaseOrderNos"
+        :show-overflow-tooltip="true"
+        label="关联采购单号"
+        min-width="160"
+      />
+      <el-table-column v-if="columns.visible('status')" key="status" label="采购状态" prop="status" align="center" width="90px">
         <template #header>
           <el-tooltip
             class="item"
@@ -64,8 +78,7 @@
             v-if="checkPermission(permission.editStatus)"
             v-model="row.status"
             :disabled="
-              row.enabledLoading ||
-              (row.status === settlementStatusEnum.SETTLED.V && row.status === purchaseStatusEnum.FINISHED.V)
+              row.enabledLoading || (row.status === settlementStatusEnum.SETTLED.V && row.status === purchaseStatusEnum.FINISHED.V)
             "
             active-color="#13ce66"
             :active-value="purchaseStatusEnum.UNFINISHED.V"
@@ -98,12 +111,12 @@
         key="userUpdateTime"
         :show-overflow-tooltip="true"
         prop="userUpdateTime"
-        label="编辑日期"
+        label="编辑时间"
         align="center"
         width="100"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.userUpdateTime }}</span>
+          <span v-parse-time="row.userUpdateTime" />
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -194,5 +207,4 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     return v
   })
 }
-
 </script>

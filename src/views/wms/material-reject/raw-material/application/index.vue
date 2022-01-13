@@ -124,12 +124,12 @@
         key="createTime"
         :show-overflow-tooltip="true"
         prop="createTime"
-        label="入库办理日期"
+        label="入库办理时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.createTime }}</span>
+          <span v-parse-time="row.createTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -137,12 +137,12 @@
         key="userUpdateTime"
         :show-overflow-tooltip="true"
         prop="userUpdateTime"
-        label="入库编辑日期"
+        label="入库编辑时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.userUpdateTime }}</span>
+          <span v-parse-time="row.userUpdateTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -150,12 +150,12 @@
         key="reviewTime"
         :show-overflow-tooltip="true"
         prop="reviewTime"
-        label="入库审核日期"
+        label="入库审核时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.reviewTime }}</span>
+          <span v-parse-time="row.reviewTime" />
         </template>
       </el-table-column>
       <!--编辑与删除-->

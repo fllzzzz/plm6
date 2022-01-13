@@ -110,7 +110,7 @@
         width="140"
       >
         <template #default="{ row: record }">
-          <span v-parse-time>{{ record.createTime }}</span>
+          <span v-parse-time="record.createTime" />
         </template>
       </el-table-column>
     </common-table>

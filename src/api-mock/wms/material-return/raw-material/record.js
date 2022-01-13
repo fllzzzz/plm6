@@ -247,7 +247,7 @@ const detail_id1 = {
           },
           {
             id: 2,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             classifyId: 103,
             specification: 'Q235B',
             quantity: 3,
@@ -340,7 +340,7 @@ const detail_id2 = {
             id: 1,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
-            basicClass: 2,
+            basicClass: matClsEnum.SECTION_STEEL.V,
             length: 10000,
             brand: '马钢',
             heatNoAndBatchNo: 'ooo-pp',

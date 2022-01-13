@@ -64,7 +64,7 @@ const props = defineProps({
 })
 
 const { globalProject, currentMenu, globalProjectId } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId'])
-const allEnclosure = ['PlanTrussSupportList', 'PlanSandwichList', 'PlanPressedSupportList', 'PlanPressedColorList', 'PlanAssemblyList', 'PlanBendingList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList']
+const allEnclosure = ['PlanEnclosureList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList']
 const enclosureItem = [
   { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
   { name: 'PlanSandwichList', no: TechnologyTypeAllEnum.SANDWICH_BOARD.V },
@@ -108,7 +108,7 @@ watch(
           }
         })
         if (projectContentData.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
-          arr.push('PlanBendingList')
+          arr.push('PlanEnclosureList')
         }
       }
       showItem.value = arr

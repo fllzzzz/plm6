@@ -12,11 +12,10 @@ export default {
 
 function resolve(el, binding) {
   const { value } = binding
-  const { innerText } = el
   if (value !== null && typeof value === 'object') {
     const { val, fmt = '{y}-{m}-{d} {h}:{i}' } = value
     el.innerText = parseTime(val, fmt)
   } else {
-    el.innerText = parseTime(innerText, value || '{y}-{m}-{d} {h}:{i}')
+    el.innerText = parseTime(value, '{y}-{m}-{d} {h}:{i}')
   }
 }

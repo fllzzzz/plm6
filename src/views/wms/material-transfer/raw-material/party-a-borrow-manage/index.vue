@@ -130,7 +130,7 @@
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.transferTime }}</span>
+          <span v-parse-time="{ val: row.transferTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -144,7 +144,7 @@
         sortable="custom"
       >
         <template #default="{ row }">
-          <span v-parse-time="'{y}-{m}-{d}'">{{ row.returnTime }}</span>
+          <span v-parse-time="{ val: row.returnTime, fmt: '{y}-{m}-{d}' }" />
         </template>
       </el-table-column>
       <!-- 归还 -->

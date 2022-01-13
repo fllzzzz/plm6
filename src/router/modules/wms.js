@@ -291,6 +291,13 @@ export default {
           hidden: false,
           component: '/wms/report/raw-material/material-inbound-details/index',
           meta: { title: '原材料-入库明细', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialOutboundDetails',
+          path: 'report/raw-material/material-outbound-details',
+          hidden: false,
+          component: '/wms/report/raw-material/material-outbound-details/index',
+          meta: { title: '原材料-出库明细', icon: 'project', noCache: true }
         }
       ]
     },

@@ -2,6 +2,7 @@
 const defaultDS = { key: 'id', label: 'name', value: 'id' }
 const dictDS = { key: 'id', label: 'label', value: 'value' }
 const enumDS = { key: 'K', label: 'L', value: 'V' }
+const enumSLDS = { key: 'K', label: 'SL', value: 'V' }
 
 /**
  * 获取数据结构（一般用于radio及select组件中）
@@ -12,11 +13,17 @@ const enumDS = { key: 'K', label: 'L', value: 'V' }
 export default function useCommonDataStructureByType(type, dataStructure) {
   let DS
   switch (type) {
-    case 'dict': DS = dictDS
+    case 'dict':
+      DS = dictDS
       break
-    case 'enum': DS = enumDS
+    case 'enum':
+      DS = enumDS
       break
-    default: DS = dataStructure || defaultDS
+    case 'enumSL':
+      DS = enumSLDS
+      break
+    default:
+      DS = dataStructure || defaultDS
   }
   return DS
 }

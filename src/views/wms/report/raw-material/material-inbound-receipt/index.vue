@@ -106,29 +106,29 @@
       />
       <template v-if="showAmount">
         <el-table-column
-          v-if="columns.visible('inboundAmount')"
-          key="inboundAmount"
+          v-if="columns.visible('inboundAmountExcludingVAT')"
+          key="inboundAmountExcludingVAT"
           :show-overflow-tooltip="true"
-          prop="inboundAmount"
-          label="入库金额"
+          prop="inboundAmountExcludingVAT"
+          label="入库金额(不含税)"
           min-width="120"
           align="right"
         >
           <template #default="{ row }">
-            <span v-thousand="{ val: row.inboundAmount }" v-empty-text />
+            <span v-thousand="{ val: row.inboundAmountExcludingVAT }" v-empty-text />
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('rejectAmount')"
-          key="rejectAmount"
+          v-if="columns.visible('rejectAmountExcludingVAT')"
+          key="rejectAmountExcludingVAT"
           :show-overflow-tooltip="true"
-          prop="rejectAmount"
-          label="退货金额"
+          prop="rejectAmountExcludingVAT"
+          label="退货金额(不含税)"
           min-width="120"
           align="right"
         >
           <template #default="{ row }">
-            <span v-thousand="{ val: row.rejectAmount }" v-empty-text />
+            <span v-thousand="{ val: row.rejectAmountExcludingVAT }" v-empty-text />
           </template>
         </el-table-column>
       </template>
@@ -160,16 +160,29 @@
         min-width="100"
       />
       <el-table-column
-        v-if="columns.visible('createTime')"
-        key="createTime"
+        v-if="columns.visible('inboundTime')"
+        key="inboundTime"
         :show-overflow-tooltip="true"
-        prop="createTime"
-        label="申请日期"
+        prop="inboundTime"
+        label="入库时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.createTime }}</span>
+          <span v-parse-time="row.inboundTime" />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('createTime')"
+        key="createTime"
+        :show-overflow-tooltip="true"
+        prop="createTime"
+        label="申请时间"
+        align="center"
+        width="140"
+      >
+        <template #default="{ row }">
+          <span v-parse-time="row.createTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -177,12 +190,12 @@
         key="userUpdateTime"
         :show-overflow-tooltip="true"
         prop="userUpdateTime"
-        label="编辑日期"
+        label="编辑时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.userUpdateTime }}</span>
+          <span v-parse-time="row.userUpdateTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -190,12 +203,12 @@
         key="reviewTime"
         :show-overflow-tooltip="true"
         prop="reviewTime"
-        label="审核日期"
+        label="审核时间"
         align="center"
         width="140"
       >
         <template #default="{ row }">
-          <span v-parse-time>{{ row.reviewTime }}</span>
+          <span v-parse-time="row.reviewTime" />
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -255,7 +268,15 @@ const { crud, columns } = useCRUD(
   {
     title: '入库记录',
     sort: ['id.desc'],
-    invisibleColumns: ['rejectAmount', 'editorName', 'userUpdateTime', 'reviewTime', 'licensePlate', 'shipmentNumber'],
+    invisibleColumns: [
+      'rejectAmountExcludingVAT',
+      'editorName',
+      'userUpdateTime',
+      'createTime',
+      'reviewTime',
+      'licensePlate',
+      'shipmentNumber'
+    ],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get, detail }

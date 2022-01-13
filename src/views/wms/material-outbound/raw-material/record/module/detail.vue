@@ -58,7 +58,7 @@
         </el-table-column>
         <el-table-column key="outboundTime" label="出库时间" width="125px" align="center">
           <template #default="{ row }">
-            <span v-parse-time="{ val: row.outboundTime }" />
+            <span v-parse-time="row.outboundTime" />
           </template>
         </el-table-column>
       </common-table>

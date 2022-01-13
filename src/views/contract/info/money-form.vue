@@ -184,6 +184,8 @@ const validateMoney = (rule, value, callback) => {
     callback(new Error('请填写变更金额'))
   } else if (value === 0) {
     callback(new Error('变更金额不能等于0'))
+  } else if (value === -props.detailInfo.contractAmount) {
+    callback(new Error('变更金额要大于-' + props.detailInfo.contractAmount))
   } else {
     callback()
   }
