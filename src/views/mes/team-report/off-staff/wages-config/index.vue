@@ -190,7 +190,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
       surfaceArea: v.mate,
       wageQuotaType: v.wageQuotaType
     }).convertMete
-    v.totalAmount = (v.checkMete * v.unitPrice).toFixed(2)
+    v.totalAmount = v.price?.toFixed(2)
     return v
   })
 }

@@ -2,7 +2,7 @@
   <div class="head-container">
     <div v-show="crud.searchToggle">
       <monomer-select-area-tabs :project-id="globalProjectId" :productType="productType" needConvert @change="fetchMonomerAndArea" />
-      <factory-select v-model="query.factoryId" showOptionAll class="filter-item" style="width: 200px" @change="crud.toQuery" />
+      <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <product-type-query :productType="productType" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
