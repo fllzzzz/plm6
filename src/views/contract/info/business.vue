@@ -372,14 +372,6 @@ watch(
   { deep: true, immediate: true }
 )
 
-// watch(
-//   () => props.isModify,
-//   (val) => {
-//     resetForm()
-//   },
-//   { deep: true, immediate: true }
-// )
-
 function resetForm() {
   if (formRef.value) {
     formRef.value.resetFields()

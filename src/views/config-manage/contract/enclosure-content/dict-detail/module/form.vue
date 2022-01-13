@@ -30,7 +30,7 @@
           controls-position="right"
           style="width: 200px"
           :min="0"
-          :max="9999999999"
+          :max="999999999"
         />
       </el-form-item>
       <el-form-item label="有效宽度(mm)" prop="dictionaryDetail.effectiveWidth" v-if="(props.line.type===TechnologyTypeEnum.PROFILED_PLATE.V || line.type===TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) && line.name==='plate_type'">
@@ -42,7 +42,7 @@
           controls-position="right"
           style="width: 200px"
           :min="0"
-          :max="9999999999"
+          :max="999999999"
         />
       </el-form-item>
       <el-form-item label="排序" prop="sort">
@@ -54,7 +54,7 @@
           controls-position="right"
           style="width: 200px"
           :min="0"
-          :max="9999999999"
+          :max="999999999"
         />
       </el-form-item>
     </el-form>

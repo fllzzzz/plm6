@@ -352,6 +352,13 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
+const validateMoney = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('合同金额必须大于0'))
+  } else {
+    callback()
+  }
+}
 const rules = {
   serialNumber: [
     { required: true, message: '请填写合同编号', trigger: 'blur' },
@@ -367,9 +374,7 @@ const rules = {
   ],
   startDate: [{ required: true, message: '请选择开工日期', trigger: 'change' }],
   endDate: [{ required: true, message: '请选择完工日期', trigger: 'change' }],
-  contractAmount: [
-    { required: true, message: '请填写合同金额', trigger: 'blur' }
-  ],
+  contractAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }],
   address: [
     { max: 200, message: '长度不超过 200 个字符', trigger: 'blur' }
   ],
