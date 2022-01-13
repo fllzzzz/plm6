@@ -21,7 +21,26 @@
             :rules="item.rules?item.rules:[]"
           >
             <template v-if="boardType!=TechnologyTypeEnum.STRUCTURE.V && boardType!=TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V">
+              <template v-if="item.field==='plateType' && boardType!==TechnologyTypeEnum.SANDWICH_BOARD.V">
+                <el-select
+                  v-model="form[item.field]"
+                  clearable
+                  size="small"
+                  :placeholder="item.name+ `${item.unit?'，单位:'+item.unit:''}`"
+                  style="min-width: 120px;margin-right:10px;"
+                  class="input-underline"
+                  @change="plateTypeChange"
+                >
+                  <el-option
+                    v-for="(option,i) in typeDict[item.dict]"
+                    :key="i"
+                    :label="option"
+                    :value="option"
+                  />
+                </el-select>
+              </template>
               <el-select
+                v-else
                 v-model="form[item.field]"
                 filterable
                 clearable
@@ -176,6 +195,7 @@ const trussDict = ref([])
 const loading = ref(false)
 const formRef = ref()
 const isEditing = ref(false)
+const plateTypeData = ref([])
 
 watch(
   () => boardType.value,
@@ -291,7 +311,7 @@ const FIELD_INFO = {
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
-        { field: 'plateType', name: '板型', dict: 'model', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
+        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
         { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
         { field: 'colour', name: '颜色', dict: 'color', placeholder: '请选择或填写颜色', rules: validateLength('请选择或填写颜色', 10) },
         { field: 'coating', name: '涂层', dict: 'coating', placeholder: '请选择或填写涂层', rules: validateLength('请选择或填写涂层', 10) },
@@ -314,12 +334,12 @@ const FIELD_INFO = {
       type: '产品信息',
       fields: [
         { field: 'mode', name: '类型', dict: 'mode', placeholder: '请选择或填写类型', rules: validateLength('请选择或填写类型', 10) },
-        { field: 'plateType', name: '板型', dict: 'model', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
+        { field: 'plateType', name: '板型', dict: 'plate_type', placeholder: '请选择或填写板型', rules: validateLength('请选择或填写板型', 10) },
         { field: 'thickness', name: '厚度', dict: 'thickness', placeholder: '请选择或填写厚度', rules: [
           { validator: validateThickness, trigger: ['change', 'blur'] }
         ], unit: 'mm', decimalPlace: 3 },
         { field: 'brand', name: '品牌', dict: 'brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 10) },
-        { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
+        { field: 'plating', name: '镀层', dict: 'plating', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
         { field: 'yieldStrength', name: '屈服强度', dict: 'yieldStrength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
       ]
     }
@@ -386,10 +406,16 @@ const FIELD_INFO = {
   ]
 }
 
+function plateTypeChange(val) {
+  const choseVal = plateTypeData.value.find(v => v.plateType === val)
+  if (choseVal) {
+    form.value.effectiveWidth = choseVal.effectiveWidth
+    form.value.unfoldedWidth = choseVal.unfoldedWidth
+  }
+}
 function handleBlur(e, field, dictName) {
   const val = e.target.value
   form.value[field] = val
-  // this.$set(this.form, field, val)
   // 储存 手动输入的值 项目保存的时候调用批量新增配置接口
   if (boardType.value !== TechnologyTypeEnum.STRUCTURE.V && boardType.value !== TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) {
     const labels = typeDict.value[dictName] && typeDict.value[dictName].map(v => v.label) || []
@@ -419,7 +445,6 @@ function addRow() {
           })
         }
       }
-      console.log(form.value)
       const row = Object.assign({}, form.value)
       tableData.value[boardType.value].push(row)
       reset()
@@ -447,6 +472,11 @@ async function fetchDict() {
         typeDict.value[o.name] = o.labels
       })
     }
+    if (boardType.value === TechnologyTypeEnum.PROFILED_PLATE.V || boardType.value === TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) {
+      plateTypeData.value = content.find(v => v.name === 'plate_type')['plateTypeList'] || []
+    } else {
+      plateTypeData.value = []
+    }
     trussDict.value = boardType.value === TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V ? content : []
     loading.value = false
   } catch (error) {
@@ -456,7 +486,9 @@ async function fetchDict() {
 }
 function reset() {
   form.value = {
-    dict: {}
+    dict: {},
+    effectiveWidth: undefined,
+    unfoldedWidth: undefined
   }
   isEditing.value = false
   if (formRef.value) {

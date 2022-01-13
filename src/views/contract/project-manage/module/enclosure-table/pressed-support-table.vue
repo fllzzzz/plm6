@@ -10,19 +10,14 @@
         <span>{{ scope.row.plateType }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="展宽(mm)">
+     <el-table-column prop="unfoldedWidth" :show-overflow-tooltip="true" align="center" label="展宽(mm)">
       <template v-slot="scope">
-        <span>{{ scope.row.plateType }}</span>
+        <span>{{ scope.row.unfoldedWidth }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="有效宽(mm)">
+    <el-table-column prop="effectiveWidth" :show-overflow-tooltip="true" align="center" label="有效宽(mm)">
       <template v-slot="scope">
-        <span>{{ scope.row.plateType }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="plateType" :show-overflow-tooltip="true" align="center" label="版型">
-      <template v-slot="scope">
-        <span>{{ scope.row.plateType }}</span>
+        <span>{{ scope.row.effectiveWidth }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="mode" :show-overflow-tooltip="true" align="center" label="类型">
@@ -35,9 +30,9 @@
         <span>{{ scope.row.thickness }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="plating" :show-overflow-tooltip="true" align="center" label="屈服强度">
+    <el-table-column prop="yieldStrength" :show-overflow-tooltip="true" align="center" label="屈服强度">
       <template v-slot="scope">
-        <span>{{ scope.row.plating }}</span>
+        <span>{{ scope.row.yieldStrength }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="brand" :show-overflow-tooltip="true" align="center" label="品牌">

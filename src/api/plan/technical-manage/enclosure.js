@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'plan',
-    url: `enclosure/list/${params.areaId}/${params.category}`,
+    url: `enclosure/listPage`,
     method: 'get',
     params
   })
@@ -14,6 +14,15 @@ export function edit(data) {
     module: 'plan',
     url: 'enclosure/update',
     method: 'put',
+    data
+  })
+}
+
+export function add(data) {
+  return request({
+    module: 'plan',
+    url: 'enclosure/save',
+    method: 'post',
     data
   })
 }
@@ -68,7 +77,7 @@ export function downloadEnclosureTemplate(params) {
 export function downloadEnclosureData(params) {
   return request({
     module: 'plan',
-    url: `enclosure/export/${params.areaId}/${params.category}`,
+    url: `enclosure/export`,
     responseType: 'blob',
     method: 'get',
     params
@@ -95,4 +104,4 @@ export function previewImg(attachmentId) {
     method: 'get'
   })
 }
-export default { get, edit, del }
+export default { get, edit, del, add }

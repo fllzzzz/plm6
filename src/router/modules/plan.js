@@ -112,39 +112,11 @@ export default {
           meta: { title: '构件-组立清单', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanTrussSupportList',
-          path: 'trussSupport',
+          name: 'PlanEnclosureList',
+          path: 'enclosureList',
           hidden: false,
-          component: '/plan/technical-manage/enclosure/trussSupport/index',
-          meta: { title: '围护-桁架楼层板清单', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanSandwichList',
-          path: 'sandwich',
-          hidden: false,
-          component: '/plan/technical-manage/enclosure/sandwich/index',
-          meta: { title: '围护-夹芯板清单', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanPressedSupportList',
-          path: 'pressedSupport',
-          hidden: false,
-          component: '/plan/technical-manage/enclosure/pressedSupport/index',
-          meta: { title: '围护-压型楼承板清单', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanPressedColorList',
-          path: 'pressedColor',
-          hidden: false,
-          component: '/plan/technical-manage/enclosure/pressedColor/index',
-          meta: { title: '围护-压型板清单', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanBendingList',
-          path: 'bending',
-          hidden: false,
-          component: '/plan/technical-manage/enclosure/bending/index',
-          meta: { title: '围护-折边件清单', icon: 'project', noCache: true }
+          component: '/plan/technical-manage/enclosure-list/index',
+          meta: { title: '围护清单', icon: 'project', noCache: true }
         },
         {
           name: 'PlanTechnicalDataManageDeepen',
