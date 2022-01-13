@@ -151,7 +151,7 @@ const getReturnableMatListById = {
             boolPartyA: false, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 800000, // 核算量
             frozenMete: 400000, // 冻结量
@@ -183,7 +183,7 @@ const getReturnableMatListById = {
             boolPartyA: false, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 500000, // 核算量
             frozenMete: 400000, // 冻结量
@@ -215,7 +215,7 @@ const getReturnableMatListById = {
             boolPartyA: false, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
-            basicClass: 1,
+            basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 500000, // 核算量
             frozenMete: 400000, // 冻结量

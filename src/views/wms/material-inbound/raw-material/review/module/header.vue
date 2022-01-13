@@ -126,7 +126,7 @@ const defaultQuery = {
   licensePlate: undefined, // 车牌号
   serialNumber: undefined, // 入库单号
   supplierId: undefined, // 供应商id
-  operatorName: undefined // 创建人
+  operatorName: undefined // 申请人/编辑人/审核人
 }
 
 const { crud, query } = regHeader(defaultQuery)

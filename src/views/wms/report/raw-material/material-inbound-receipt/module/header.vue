@@ -11,6 +11,15 @@
         @change="crud.toQuery"
       />
       <common-radio-button
+        v-model="query.orderSupplyType"
+        :options="orderSupplyTypeEnum.ENUM"
+        show-option-all
+        type="enumSL"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
         v-model="query.rejectStatus"
         :options="receiptRejectStatusEnum.ENUM"
         show-option-all
@@ -107,7 +116,7 @@ import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { rawMatClsEnum } from '@enum-ms/classification'
-import { receiptRejectStatusEnum } from '@/utils/enum/modules/wms'
+import { receiptRejectStatusEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -119,7 +128,8 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
-  basicClass: undefined, // 采购类型
+  basicClass: undefined, // 物料类型
+  orderSupplyType: undefined, // 供货类型
   rejectStatus: undefined, // 退货状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   shipmentNumber: undefined, // 物流单号
@@ -127,7 +137,7 @@ const defaultQuery = {
   purchaseSN: undefined, // 采购单号
   serialNumber: undefined, // 入库单号
   supplierId: undefined, // 供应商id
-  operatorName: undefined // 创建人
+  operatorName: undefined // 申请人/编辑人/审核人
 }
 
 const route = useRoute()
