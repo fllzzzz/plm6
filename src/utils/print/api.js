@@ -143,7 +143,7 @@ const mesShipmentSummary = mes.shipmentSummary
 const mesShipmentDetail = mes.shipmentDetail
 const mesReceiptStatusSummary = mes.receiptStatusSummary
 const mesShippingList = mes.shippingList
-// const STEEL_MES_LOGISTICS_SUMMARY = steelLogistics.logistics
+const mesLogisticsSummary = mes.logisticsSummary
 
 // const STEEL_MES_BUSINESS_ENTRY_STRUCTURE = steelBusiness.structureEntry
 // const STEEL_MES_BUSINESS_ENTRY_ENCLOSURE = steelBusiness.enclosureEntry
@@ -203,5 +203,6 @@ export default {
   mesShipmentSummary, // 发运汇总
   mesShipmentDetail, // 发运详情
   mesReceiptStatusSummary, // 收货状态汇总
-  mesShippingList // 发货清单
+  mesShippingList, // 发货清单
+  mesLogisticsSummary // 物流汇总
 }

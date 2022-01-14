@@ -96,7 +96,7 @@ const mesShipmentDetail = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 42,
+    height: 36,
     width: 190,
     emptyVal: '',
     /**
@@ -112,17 +112,15 @@ const mesShipmentDetail = {
      */
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, key: 'monomer', title: '单体', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: false, key: 'area', title: '区域', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'address', title: '项目地址：', width: 190, type: typeEnum.OTHER.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '物流单位：', width: 190, type: typeEnum.COMPANY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'customerUnit', title: '收货单位：', width: 135, type: typeEnum.COMPANY_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'deliveryTime', title: '发货时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'consignee', title: '收货人：', width: 45, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'tripNumber', title: '车次：', width: 90, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'leaderPhone', title: '联系电话：', width: 55, type: typeEnum.PHONE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'carrier', title: '承运人：', width: 45, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'actualTime', title: '发货时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'receiptName', title: '收货人：', width: 45, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '车次：', width: 90, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'receiptPhone', title: '联系电话：', width: 55, type: typeEnum.PHONE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'driverName', title: '承运人：', width: 45, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'licensePlate', title: '车牌号：', width: 90, type: typeEnum.LICENSE_PLATE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'driverPhone', title: '司机电话：', width: 55, type: typeEnum.PHONE.K }
     ]
@@ -223,14 +221,12 @@ const mesShipmentDetail = {
      */
     fields: [
       { show: true, key: 'name', title: '产品名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号/型号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
+      { show: true, key: 'serialNumber', title: '编号/型号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 19, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.ACCOUNTING_UNIT.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MATERIAL.K },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }},
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-      // { show: true, key: 'weight', title: '单重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }},
-      // { show: true, key: 'totalWeight', title: '总重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true }
       { show: true, key: 'netWeight', title: '单净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }},
       { show: true, key: 'totalNetWeight', title: '总净重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
       { show: false, key: 'grossWeight', title: '单毛重', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }},
