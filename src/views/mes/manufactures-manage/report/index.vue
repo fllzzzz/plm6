@@ -10,7 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
+      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -172,7 +172,8 @@ provide('query', crud.query)
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data = res.data.map((v) => {
+  res.data = res.data.map((v, i) => {
+    v.rowId = i + '' + Math.random()
     return v
   })
 }
