@@ -19,13 +19,13 @@ export const commonPM = {
 
 // --------------------------- 报表中心 start ------------------------------
 
-// 报表中心/归还甲方
+// 报表中心/原材料-归还甲方
 export const operateRecordReturnToPartyAPM = {
   get: ['wms_rawMaterial_partyABorrow_return:get'], // 查看
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 调拨详情
 }
 
-// 报表中心/甲供买入
+// 报表中心/原材料-甲供买入
 export const operateRecordPartyABuyInPM = {
   get: ['wms_rawMaterial_partyABorrow_buyIn:get'], // 查看
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 调拨详情
@@ -66,6 +66,14 @@ export const reportRawMaterialTransferDetailsPM = {
   get: ['wms_transfer_rawMaterial_details_report:get'], // 查看
   showAmount: ['wms_transfer_rawMaterial_details_report:showAmount'], // 显示金额
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 退库详情
+}
+
+// 报表中心/原材料-退货明细
+export const reportRawMaterialRejectReceiptPM = {
+  get: ['wms_reject_rawMaterial_details_report:get'], // 查看
+  showAmount: ['wms_reject_rawMaterial_details_report:showAmount'], // 显示金额
+  purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购订单详情
+  inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail // 入库详情
 }
 
 // ---------------------------- 报表中心 end -------------------------------

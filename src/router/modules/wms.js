@@ -269,14 +269,14 @@ export default {
           path: 'return-to-party-a',
           hidden: false,
           component: '/wms/operate-record/raw-material/return-to-party-a/index',
-          meta: { title: '归还甲方', icon: 'project', noCache: true }
+          meta: { title: '原材料-归还甲方', icon: 'project', noCache: true }
         },
         {
           name: 'WMSRawMaterialPartyABuyInRecord',
           path: 'party-a-buy-in',
           hidden: false,
           component: '/wms/operate-record/raw-material/party-a-buy-in/index',
-          meta: { title: '甲供买入', icon: 'project', noCache: true }
+          meta: { title: '原材料-甲供买入', icon: 'project', noCache: true }
         },
         {
           name: 'WMSReportRawMaterialMaterialInboundReceipt',
@@ -312,6 +312,13 @@ export default {
           hidden: false,
           component: '/wms/report/raw-material/material-transfer-details/index',
           meta: { title: '原材料-调拨明细', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialRejectReceipt',
+          path: 'report/raw-material/material-reject-receipt',
+          hidden: false,
+          component: '/wms/report/raw-material/material-reject-receipt/index',
+          meta: { title: '原材料-退货单表', icon: 'project', noCache: true }
         }
       ]
     },

@@ -1,12 +1,11 @@
 import { purchaseOrderPaymentModeEnum, orderSupplyTypeEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum } from '@enum-ms/finance'
-import { reviewStatusEnum } from '@/utils/enum/modules/common'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 
 // 退货申请列表
 const get = {
-  url: '/api/wms/reject/application/record/raw-materials',
+  url: '/api/wms/report/raw-materials/reject/receipt',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -41,11 +40,14 @@ const get = {
               id: 1,
               name: '杭州天天向上有限公司'
             },
-            reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
+            'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
+            'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             founderName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
-            // reviewerName: '@cname', // 审核人（审核的人）
-            createTime: '@datetime(T)' // 创建时间
+            reviewerName: '@cname', // 审核人（审核的人）
+            rejectTime: '@datetime(T)', // 退货时间
+            createTime: '@datetime(T)', // 创建时间
+            reviewTime: '@datetime(T)' // 审核时间
           },
           {
             id: 2, // 退货单id
@@ -73,10 +75,12 @@ const get = {
               id: 1,
               name: '杭州艾哈有限公司'
             },
-            reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
+            'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写退货的人）
             reviewerName: '@cname', // 审核人（审核的人）
+            rejectTime: '@datetime(T)', // 退货时间
             createTime: '@datetime(T)', // 创建时间
             reviewTime: '@datetime(T)' // 审核时间
           },
@@ -106,11 +110,13 @@ const get = {
               id: 1,
               name: '杭州艾哈有限公司'
             },
-            reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
+            'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
+            'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
+            rejectTime: '@datetime(T)', // 退货时间
             createTime: '@datetime(T)', // 创建时间
             reviewTime: '@datetime(T)' // 审核时间
           },
@@ -132,17 +138,18 @@ const get = {
               id: 1,
               name: '吖丫丫有限公司'
             },
-            reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
-            editable: false, // 可修改的
+            'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
+            'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             approvalComments: '@csentence',
             founderName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
+            rejectTime: '@datetime(T)', // 退货时间
             createTime: '@datetime(T)', // 创建时间
             reviewTime: '@datetime(T)' // 审核时间
           }
         ],
-        totalElements: 2
+        totalElements: 4
       }
     }
   }
@@ -150,7 +157,7 @@ const get = {
 
 // 钢材详情
 const detail_id1 = {
-  url: '/api/wms/reject/application/record/raw-materials/1',
+  url: '/api/wms/report/raw-materials/reject/receipt/1',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -193,7 +200,7 @@ const detail_id1 = {
         id: 1, // 退货单id
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-        loadingWeight: 2000.0, // 过磅重量
+        remark: '66666',
         list: [
           {
             id: 1,
@@ -332,7 +339,7 @@ const detail_id1 = {
 
 // 气体详情
 const detail_id2 = {
-  url: '/api/wms/reject/application/record/raw-materials/2',
+  url: '/api/wms/report/raw-materials/reject/receipt/2',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -405,7 +412,7 @@ const detail_id2 = {
 
 // 辅材详情
 const detail_id3 = {
-  url: '/api/wms/reject/application/record/raw-materials/3',
+  url: '/api/wms/report/raw-materials/reject/receipt/3',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -475,30 +482,4 @@ const detail_id3 = {
   }
 }
 
-// 修改采购订单
-const edit = {
-  url: '/api/wms/reject/application/record/raw-materials',
-  method: 'put',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-// 删除采购订单
-const del = {
-  url: '/api/wms/reject/application/record/raw-materials',
-  method: 'delete',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功'
-    }
-  }
-}
-
-export default [get, edit, del, detail_id1, detail_id2, detail_id3]
+export default [get, detail_id1, detail_id2, detail_id3]

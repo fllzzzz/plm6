@@ -6,7 +6,7 @@ const getFactorySimple = {
     return {
       'code': 20000,
       'data': {
-        'content|1-100': [{
+        'content': [{
           'id|+1': 1,
           'name|+1': ['一号工厂', '二号工厂', '三号工厂'],
           'shortName|+1': ['一工', '二工', '三工'],

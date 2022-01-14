@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader />
+    <m-header />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
@@ -15,28 +15,46 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <p>
+            备注：<span v-empty-text>{{ row.remark }}</span>
+          </p>
+          <p>
+            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
+          </p>
         </template>
       </el-expand-table-column>
-      <el-table-column label="序号" type="index" align="center" width="60">
-        <template #default="{ row, $index }">
-          <table-cell-tag
-            v-if="isNotBlank(row.rejectStatus) && row.rejectStatus !== receiptRejectStatusEnum.NONE.V"
-            :name="receiptRejectStatusEnum.VL[row.rejectStatus]"
-            :color="receiptRejectStatusEnum.V[row.rejectStatus].COLOR"
-          />
-          {{ $index + 1 }}
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column
+        v-if="columns.visible('rejectTime')"
+        key="rejectTime"
+        :show-overflow-tooltip="true"
+        prop="rejectTime"
+        label="退货时间"
+        align="center"
+        width="140"
+      >
+        <template #default="{ row }">
+          <span v-parse-time="row.rejectTime" />
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('purchaseSN')"
-        key="purchaseSN"
+        v-if="columns.visible('serialNumber')"
+        key="serialNumber"
         :show-overflow-tooltip="true"
-        prop="purchaseSN"
+        prop="serialNumber"
+        min-width="160"
+        label="退货单号"
+        align="left"
+      />
+      <el-table-column
+        v-if="columns.visible('purchaseOrder.serialNumber')"
+        key="purchaseOrder.serialNumber"
+        :show-overflow-tooltip="true"
+        prop="purchaseOrder.serialNumber"
         label="采购单号"
         min-width="155"
       >
         <template #default="{ row }">
-          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" :offset="10" />
           <clickable-permission-span
             v-if="row.purchaseOrder"
             :permission="permission.purchaseOrderDetail"
@@ -46,32 +64,23 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('serialNumber')"
-        key="serialNumber"
+        v-if="columns.visible('inboundReceipt.serialNumber')"
+        key="inboundReceipt.serialNumber"
         :show-overflow-tooltip="true"
-        prop="serialNumber"
+        prop="inboundReceipt.serialNumber"
         min-width="160"
         label="入库单号"
         align="left"
-      />
-      <el-table-column
-        v-if="columns.visible('licensePlate')"
-        key="licensePlate"
-        :show-overflow-tooltip="true"
-        prop="licensePlate"
-        label="车牌号"
-        align="left"
-        width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('shipmentNumber')"
-        key="shipmentNumber"
-        prop="shipmentNumber"
-        label="物流单号"
-        align="left"
-        min-width="150"
-        show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          <clickable-permission-span
+            v-if="row.inboundReceipt"
+            :permission="permission.inboundReceiptDetail"
+            @click="openInboundDetail(row.inboundReceipt.id)"
+            :text="row.inboundReceipt.serialNumber"
+          />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('materialTypeText')"
         key="materialTypeText"
@@ -104,49 +113,38 @@
         label="供应商"
         min-width="200"
       />
-      <template v-if="showAmount">
-        <el-table-column
-          v-if="columns.visible('inboundAmountExcludingVAT')"
-          key="inboundAmountExcludingVAT"
-          :show-overflow-tooltip="true"
-          prop="inboundAmountExcludingVAT"
-          label="入库金额(不含税)"
-          min-width="120"
-          align="right"
-        >
-          <template #default="{ row }">
-            <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('rejectAmountExcludingVAT')"
-          key="rejectAmountExcludingVAT"
-          :show-overflow-tooltip="true"
-          prop="rejectAmountExcludingVAT"
-          label="退货金额(不含税)"
-          min-width="120"
-          align="right"
-        >
-          <template #default="{ row }">
-            <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
-          </template>
-        </el-table-column>
-      </template>
+      <el-table-column
+        v-if="columns.visible('inboundAmountExcludingVAT')"
+        key="inboundAmountExcludingVAT"
+        :show-overflow-tooltip="true"
+        prop="inboundAmountExcludingVAT"
+        label="入库金额(不含税)"
+        min-width="120"
+        align="right"
+      >
+        <template #default="{ row }">
+          <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('rejectAmountExcludingVAT')"
+        key="rejectAmountExcludingVAT"
+        :show-overflow-tooltip="true"
+        prop="rejectAmountExcludingVAT"
+        label="本次退货金额(不含税)"
+        width="140"
+        align="right"
+      >
+        <template #default="{ row }">
+          <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('founderName')"
         key="founderName"
         :show-overflow-tooltip="true"
         prop="founderName"
         label="申请人"
-        align="center"
-        min-width="100"
-      />
-      <el-table-column
-        v-if="columns.visible('editorName')"
-        key="editorName"
-        :show-overflow-tooltip="true"
-        prop="editorName"
-        label="编辑人"
         align="center"
         min-width="100"
       />
@@ -160,19 +158,6 @@
         min-width="100"
       />
       <el-table-column
-        v-if="columns.visible('inboundTime')"
-        key="inboundTime"
-        :show-overflow-tooltip="true"
-        prop="inboundTime"
-        label="入库时间"
-        align="center"
-        width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.inboundTime" />
-        </template>
-      </el-table-column>
-      <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
         :show-overflow-tooltip="true"
@@ -183,19 +168,6 @@
       >
         <template #default="{ row }">
           <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('userUpdateTime')"
-        key="userUpdateTime"
-        :show-overflow-tooltip="true"
-        prop="userUpdateTime"
-        label="编辑时间"
-        align="center"
-        width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.userUpdateTime" />
         </template>
       </el-table-column>
       <el-table-column
@@ -212,9 +184,9 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column label="操作" width="70px" align="center" fixed="right">
+      <el-table-column label="操作" width="75px" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :data="row" :show-del="false" :show-edit="false" show-detail />
+          <ud-operation :data="row" :show-edit="false" :show-del="false" show-detail />
         </template>
       </el-table-column>
     </common-table>
@@ -222,6 +194,10 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
+    <!-- 入库单详情 -->
+    <detail-wrapper ref="inboundDetailRef" :api="getInboundDetail">
+      <inbound-detail />
+    </detail-wrapper>
     <!-- 采购订单详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
       <purchase-order-detail />
@@ -230,29 +206,26 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
+import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/reject'
+import { getReceiptDetail as getInboundDetail } from '@/api/wms/report/raw-material/inbound'
 import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
-import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
-import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
+import { reportRawMaterialRejectReceiptPM as permission } from '@/page-permission/wms'
+import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
-import { receiptRejectStatusEnum } from '@enum-ms/wms'
-import { isNotBlank } from '@/utils/data-type'
-import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
+import useOtherCrudDetail from '@compos/use-other-crud-detail'
 
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
-import MHeader from './module/header'
+import DetailWrapper from '@crud/detail-wrapper.vue'
+import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
 
+import InboundDetail from '@/views/wms/report/raw-material/material-inbound-receipt/module/detail.vue'
 import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
-import useOtherCrudDetail from '@/composables/use-other-crud-detail'
-import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import TableCellTag from '@comp-common/table-cell-tag/index.vue'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 
 const optShow = {
@@ -266,17 +239,9 @@ const expandRowKeys = ref([])
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '入库记录',
+    title: '退货记录',
     sort: ['id.desc'],
-    invisibleColumns: [
-      'rejectAmountExcludingVAT',
-      'editorName',
-      'userUpdateTime',
-      'createTime',
-      'reviewTime',
-      'licensePlate',
-      'shipmentNumber'
-    ],
+    invisibleColumns: ['founderName', 'reviewerName', 'createTime', 'reviewTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get, detail }
@@ -286,9 +251,6 @@ const { crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-// 是否有权限显示金额
-const showAmount = computed(() => checkPermission(permission.showAmount))
-
-// 采购单详情
+const { detailRef: inboundDetailRef, openDetail: openInboundDetail } = useOtherCrudDetail()
 const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
 </script>
