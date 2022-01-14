@@ -112,36 +112,35 @@
     </div>
     <crudOperation>
       <template v-slot:optLeft>
-        <!--
         <print-table
           v-permission="[...permission.print, ...permission.detailPrint]"
-          :current-key.sync="currentKey"
+          v-model:current-key="currentKey"
           :api-key="apiKey"
           :params="printParams"
           :before-print="handleBeforePrint"
           size="mini"
           type="warning"
           class="filter-item"
-        /> -->
+        />
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-// import { downloadLogistics } from '@/api/mes/pack-and-ship/receipt-status'
-import { inject, onMounted, ref } from 'vue'
+import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
 import { packTypeEnum, receiptStatusEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-// import { isNotBlank } from '@data-type/index'
+import { isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
   serialNumber: undefined,
@@ -159,36 +158,36 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const permission = inject('permission')
-// const currentKey = ref()
+const currentKey = ref()
 const apiKey = ref([])
 
 onMounted(() => {
   if (checkPermission(permission.print)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP')
+    apiKey.value.push('mesReceiptStatusSummary')
   }
   if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP_DETAIL')
+    apiKey.value.push('mesShippingList')
   }
 })
 
-// const printParams = computed(() => {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP') {
-//     return { ...query }
-//   }
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && isNotBlank(crud.selections)) {
-//     return crud.selections.map(row => {
-//       return row.id
-//     })
-//   }
-//   return undefined
-// })
+const printParams = computed(() => {
+  if (currentKey.value === 'mesReceiptStatusSummary') {
+    return { ...query }
+  }
+  if (currentKey.value === 'mesShippingList' && isNotBlank(crud.selections)) {
+    return crud.selections.map(row => {
+      return row.id
+    })
+  }
+  return undefined
+})
 
-// function handleBeforePrint() {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && !isNotBlank(printParams)) {
-//     $message.warning('至少选择一条需要打印的发运信息')
-//     return false
-//   }
-// }
+function handleBeforePrint() {
+  if (currentKey.value === 'mesShippingList' && !isNotBlank(printParams.value)) {
+    ElMessage.warning('至少选择一条需要打印的发运信息')
+    return false
+  }
+}
 
 function handleDeliveryDateChange() {
   if (query.deliveryDate && query.deliveryDate.length > 1) {

@@ -264,6 +264,13 @@ export default {
           hidden: false,
           component: '/config-manage/system/steel-classic/index',
           meta: { title: '钢材配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'TablePrinting',
+          path: 'table-printing',
+          hidden: false,
+          component: '/config-manage/system/table-print-template/index',
+          meta: { title: '表格模板', icon: 'project', noCache: true }
         }
       ]
     }
