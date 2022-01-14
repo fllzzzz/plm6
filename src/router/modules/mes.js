@@ -37,39 +37,51 @@ export default {
       icon: 'project',
       noCache: true
     },
-    children: [{
-      name: 'MesArtifactChanged',
-      path: 'artifact',
-      hidden: false,
-      component: '/mes/changed-manage/artifact/index',
-      meta: {
-        title: '构件变更',
-        icon: 'project',
-        noCache: true
+    children: [
+      // {
+      //   name: 'MesArtifactChanged',
+      //   path: 'artifact',
+      //   hidden: false,
+      //   component: '/mes/changed-manage/artifact/index',
+      //   meta: {
+      //     title: '构件变更',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'MesMachinePartChanged',
+      //   path: 'machine-part',
+      //   hidden: false,
+      //   component: '/mes/changed-manage/machine-part/index',
+      //   meta: {
+      //     title: '零件变更',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'MesAssembleChanged',
+      //   path: 'assemble',
+      //   hidden: false,
+      //   component: '/mes/changed-manage/assemble/index',
+      //   meta: {
+      //     title: '组立变更',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      {
+        name: 'MesCommonChanged',
+        path: 'common-change',
+        hidden: false,
+        component: '/mes/changed-manage/common-change/index',
+        meta: {
+          title: '变更管理',
+          icon: 'project',
+          noCache: true
+        }
       }
-    },
-    {
-      name: 'MesMachinePartChanged',
-      path: 'machine-part',
-      hidden: false,
-      component: '/mes/changed-manage/machine-part/index',
-      meta: {
-        title: '零件变更',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    {
-      name: 'MesAssembleChanged',
-      path: 'assemble',
-      hidden: false,
-      component: '/mes/changed-manage/assemble/index',
-      meta: {
-        title: '组立变更',
-        icon: 'project',
-        noCache: true
-      }
-    }
       //     {
       //       name: 'MesChangedListManage',
       //       path: 'changed-list',
@@ -597,6 +609,17 @@ export default {
       component: '/mes/team-report/off-staff/wages-config/index',
       meta: {
         title: '编外-工价',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesTeamReportOffStaffSettlement',
+      path: 'off-staff/settlement',
+      hidden: false,
+      component: '/mes/team-report/off-staff/settlement/index',
+      meta: {
+        title: '编外-工资结算',
         icon: 'project',
         noCache: true
       }

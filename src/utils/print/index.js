@@ -22,8 +22,8 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '99%', '95%', strHtml)
-    LODOP.ADD_PRINT_BARCODE('40mm', '75mm', '34mm', '34mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '68mm', strHtml)
+    LODOP.ADD_PRINT_BARCODE('40mm', '72mm', '34mm', '34mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
     LODOP.PRINT_DESIGN()/* 打印设计*/
@@ -208,15 +208,15 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(2, 1030, 680, '1') /* 纸张大小*/ // 100mm* 75mm
-    LODOP.ADD_PRINT_HTM('1mm', '1mm', '65mm', '24mm', headStrHtml)
+    LODOP.ADD_PRINT_HTM('3mm', '1.5mm', '67mm', '24mm', headStrHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_HTM('24mm', '1mm', '65mm', '66mm', strHtml)
-    LODOP.ADD_PRINT_HTM('96mm', '1mm', '65mm', '5mm', pageHtml)
+    LODOP.ADD_PRINT_HTM('26mm', '1.5mm', '67mm', '66mm', strHtml)
+    LODOP.ADD_PRINT_HTM('96mm', '1.5mm', '67mm', '5mm', pageHtml)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.ADD_PRINT_BARCODE('1.3mm', '1.3mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_BARCODE('3.3mm', '1.8mm', '16.4mm', '16.4mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 3)
     LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1)
-    LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -565,11 +565,11 @@ const PACKAGE_STYLE = `
   }
 
   .package-label .flex-1 {
-    width: 33.33%;
+    width: 34%;
   }
 
   .package-label .flex-2 {
-    width: 66.66%;
+    width: 67%;
   }
 
   .package-label .w-0 {
