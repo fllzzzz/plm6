@@ -16,7 +16,6 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
           <expand-secondary-info v-if="!basicClass" :basic-class="row.basicClass" :row="row" />
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->

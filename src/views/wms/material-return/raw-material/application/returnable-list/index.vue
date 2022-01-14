@@ -59,7 +59,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.outbound"
-            :permission="permission.outboundDetail"
+            :permission="permission.outboundReceiptDetail"
             @click="openOutboundDetailView(row.outbound.id)"
             :text="row.outbound.serialNumber"
           />
@@ -161,7 +161,7 @@ provide('basicClass', props.basicClass)
 const permission = {
   // get: ['wms_partyABorrow:get'],
   // return: ['wms_partyABorrow:return'],
-  outboundDetail: ['wms_outboundApplication_review:detail']
+  outboundReceiptDetail: ['wms_outboundApplication_review:detail']
 }
 
 const optShow = {

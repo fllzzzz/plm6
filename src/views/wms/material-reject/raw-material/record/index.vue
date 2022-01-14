@@ -62,7 +62,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.inboundReceipt"
-            :permission="permission.inboundDetail"
+            :permission="permission.inboundReceiptDetail"
             @click="openInboundDetail(row.inboundReceipt.id)"
             :text="row.inboundReceipt.serialNumber"
           />
@@ -206,7 +206,7 @@ import ClickablePermissionSpan from '@/components-system/common/clickable-permis
 const permission = {
   get: ['wms_rejectApplication_record:get'],
   del: ['wms_rejectApplication_record:del'],
-  inboundDetail: ['wms_inboundApplication_review:detail'],
+  inboundReceiptDetail: ['wms_inboundApplication_review:detail'],
   purchaseOrderDetail: ['wms_purchaseOrder:detail']
 }
 

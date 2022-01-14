@@ -72,47 +72,21 @@
           <span v-parse-enum="{ e: transferTypeEnum, v: row.transferType }" />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('source')" show-overflow-tooltip key="projects" prop="projects" label="来源" min-width="170">
+      <el-table-column v-if="columns.visible('source')" show-overflow-tooltip key="source" prop="source" label="来源" min-width="170">
         <template #default="{ row }">
-          <template v-for="(item, si) in row.source" :key="si">
-            <span
-              class="project-ware-text"
-              v-if="item.project"
-              v-parse-project="{ project: item.project, onlyShortName: true }"
-              v-empty-text
-            />
-            <span class="public-ware-text" v-else>公共库</span>
-            <span v-if="item.factory">（{{ item.factory.name }}）</span>
-            <span v-if="si !== row.source.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
-          </template>
-          <template v-if="row.boolBorrowReturnNotSelf">
-            <span class="borrow-direction-icon">▶</span>
-            <el-tooltip content="实际借用项目" placement="top">
-              <span class="project-ware-text" v-parse-project="{ project: row.borrowProject, onlyShortName: true }" v-empty-text />
-            </el-tooltip>
-          </template>
+          <source-text-info :transfer-receipt="row" class="ellipsis-text" />
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('direction')"
         show-overflow-tooltip
-        key="projects"
-        prop="projects"
+        key="direction"
+        prop="direction"
         label="目的"
         min-width="170"
       >
         <template #default="{ row }">
-          <template v-if="row.transferType !== transferTypeEnum.RETURN_PARTY_A.V">
-            <span
-              class="project-ware-text"
-              v-if="row.direction.project"
-              v-parse-project="{ project: row.direction.project, onlyShortName: true }"
-              v-empty-text
-            />
-            <span class="public-ware-text" v-else>公共库</span>
-            <span v-if="row.direction.factory">（{{ row.direction.factory.name }}）</span>
-          </template>
-          <span v-else v-empty-text />
+          <direction-text-info :transfer-receipt="row" class="ellipsis-text" />
         </template>
       </el-table-column>
       <el-table-column
@@ -227,12 +201,16 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import mHeader from './module/header'
+
 import udOperation from '@crud/UD.operation.vue'
+import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
 import review from './module/review.vue'
+
+import sourceTextInfo from '@/views/wms/material-transfer/raw-material/review/module/source-text-info.vue'
+import directionTextInfo from '@/views/wms/material-transfer/raw-material/review/module/direction-text-info.vue'
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
@@ -251,7 +229,7 @@ const optShow = {
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '入库记录',
+    title: '调拨审核',
     sort: ['id.desc'],
     invisibleColumns: ['editorName', 'userUpdateTime'],
     permission: { ...permission },
@@ -294,5 +272,12 @@ function toReview(row) {
 
 .borrow-direction-icon + span {
   color: #f00;
+}
+
+.el-table {
+  .ellipsis-text {
+    width: 100%;
+    display: inline-block;
+  }
 }
 </style>

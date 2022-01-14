@@ -179,6 +179,8 @@
 
 // 超出省略号
 .ellipsis-text {
+  // 解决vertical-align：baseline（默认，基线对齐）时，overflow:hidden 位置发生偏移
+  vertical-align: middle;
   overflow : hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
