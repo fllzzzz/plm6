@@ -64,6 +64,48 @@ export function logisticsSummary(params) {
   })
 }
 
+// 制成品管理
+/**
+ * 结构出入库状态
+ * @export
+ * @param {*} monomerId|required 单体id
+ * @param {*} factoryId 工厂id
+ * @returns
+ */
+export function warehouseStateStructure({ monomerId, factoryId }) {
+  return request({
+    url: 'api/mes/building/warehouse/artifact/print',
+    method: 'get',
+    params: { monomerId, factoryId }
+  })
+}
+
+/**
+ * 围护出入库状态
+ * @export
+ * @param {*} monomerId|required 单体id
+ * @param {*} factoryId 工厂id
+ * @returns
+ */
+export function warehouseStateEnclosure({ monomerId, factoryId }) {
+  return request({
+    url: 'api/mes/building/warehouse/enclosure/print',
+    method: 'get',
+    params: { monomerId, factoryId }
+  })
+}
+
+/**
+ * 入发存报表
+ */
+export function warehouseStateReport(params) {
+  return request({
+    url: `/api/mes/building/warehouse/report/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
   // 打包与发运
   packingList, // 打包清单
@@ -71,6 +113,11 @@ export default {
   shipmentDetail, // 发运详情
   receiptStatusSummary, // 收货状态汇总
   shippingList, // 发货清单
-  logisticsSummary // 物流汇总
+  logisticsSummary, // 物流汇总
+
+  // 制成品管理
+  warehouseStateStructure, // 结构出入库状态
+  warehouseStateEnclosure, // 围护出入库状态
+  warehouseStateReport // 入发存报表
 }
 

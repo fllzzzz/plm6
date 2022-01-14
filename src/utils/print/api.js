@@ -84,57 +84,6 @@ const CONTRACT_LEDGER = contract.contractLedger
 // const WMS_LOGISTICS_DELIVERY_METE = wmsLogistics.deliveryMete
 // const WMS_LOGISTICS_ORDER_MATERIAL_DETAIL = wmsLogistics.orderMaterialDetail
 
-// const BRIDGE_MES_AREA = bridgePlan.area
-// const BRIDGE_MES_AREA_PLAN = bridgePlan.plan
-
-// const BRIDGE_MES_BUSINESS_ENTRY_BOX = bridgeBusiness.boxEntry
-// const BRIDGE_MES_BUSINESS_ENTRY_SINGLE_ELEMENT = bridgeBusiness.singleElementEntry
-// const BRIDGE_MES_BUSINESS_ENTRY_AUXILIARY_MATERIAL = bridgeBusiness.auxiliaryMaterialEntry
-// const BRIDGE_MES_BUSINESS_OUTBOUND_PROJECT = bridgeBusiness.outbound
-// const BRIDGE_MES_BUSINESS_OUTBOUND_MONOMER = bridgeBusiness.outbound
-// const BRIDGE_MES_BUSINESS_INSTALLATION_PROJECT_BOX = bridgeBusiness.boxInstallation
-// const BRIDGE_MES_BUSINESS_INSTALLATION_PROJECT_SINGLE_ELEMENT = bridgeBusiness.singleElementInstallation
-// const BRIDGE_MES_BUSINESS_INSTALLATION_MONOMER_BOX = bridgeBusiness.boxInstallation
-// const BRIDGE_MES_BUSINESS_INSTALLATION_MONOMER_SINGLE_ELEMENT = bridgeBusiness.singleElementInstallation
-// const BRIDGE_MES_BUSINESS_INSTALLATION_AUXILIARY_MATERIAL = bridgeBusiness.auxiliaryMaterialInstallation
-// const BRIDGE_MES_BUSINESS_TRIP_TRACKING = bridgeBusiness.tripTracking
-
-// const BRIDGE_MES_PACK = bridgeLogistics.pack
-// const BRIDGE_MES_PACK_SHIP = bridgeLogistics.ship
-// const BRIDGE_MES_PACK_SHIP_DETAIL = bridgeLogistics.shipDetail
-// const BRIDGE_MES_PACK_RECEIPT = bridgeLogistics.receipt
-// const BRIDGE_MES_PACK_SHIPMENT_DETAIL = bridgeLogistics.shipmentDetail
-// const BRIDGE_MES_LOGISTICS_SUMMARY = bridgeLogistics.logistics
-
-// const BRIDGE_MES_TASK_BOX = bridgeProduction.boxProductionLineTask
-// const BRIDGE_MES_TASK_MACHINE_PART = bridgeProduction.machinePartProductionLineTask
-// const BRIDGE_MES_TASK_SINGLE_ELEMENT = bridgeProduction.elementProductionLineTask
-// const BRIDGE_MES_PRODUCTION_STATE_BOX = bridgeProduction.processCompleteState
-// const BRIDGE_MES_PRODUCTION_STATE_SINGLE_ELEMENT = bridgeProduction.processCompleteState
-// const BRIDGE_MES_PRODUCTION_STATE_MACHINE_PART = bridgeProduction.processCompleteState
-
-// const BRIDGE_MES_WAREHOUSE_STATE_BOX = bridgeProduction.warehouseStateBox
-// const BRIDGE_MES_WAREHOUSE_STATE_SINGLE_ELEMENT = bridgeProduction.warehouseStateElement
-// const BRIDGE_MES_WAREHOUSE_STATE_AUXILIARY_MATERIAL = bridgeProduction.warehouseStateAuxiliaryMaterial
-// const BRIDGE_MES_SITE_WAREHOUSE_STATE_BOX = bridgeProduction.siteWarehouseStateBox
-// const BRIDGE_MES_SITE_WAREHOUSE_STATE_SINGLE_ELEMENT = bridgeProduction.siteWarehouseStateElement
-// const BRIDGE_MES_SITE_WAREHOUSE_STATE_AUXILIARY_MATERIAL = bridgeProduction.siteWarehouseStateAuxiliaryMaterial
-// const BRIDGE_MES_COMPLEX_STATE_BOX = bridgeProduction.complexStateBox
-// const BRIDGE_MES_COMPLEX_STATE_SINGLE_ELEMENT = bridgeProduction.complexStateElement
-// const BRIDGE_MES_COMPLEX_STATE_AUXILIARY_MATERIAL = bridgeProduction.complexStateAuxiliaryMaterial
-// const BRIDGE_MES_REPORT_PROJECT_PRODUCTION = bridgeProduction.productionMeteDetail
-// const BRIDGE_MES_REPORT_FACTORY_PRODUCTION = bridgeProduction.productionMeteDetail
-// const BRIDGE_MES_REPORT_TEAM_OUTPUT_BOX = bridgeProduction.productionTeamDetail
-// const BRIDGE_MES_REPORT_TEAM_OUTPUT_MACHINE_PART = bridgeProduction.productionTeamDetail
-// const BRIDGE_MES_REPORT_TEAM_OUTPUT_SINGLE_ELEMENT = bridgeProduction.productionTeamDetail
-// const BRIDGE_MES_REPORT_OUTBOUND = bridgeProduction.outboundMeteDetail
-// const BRIDGE_MES_REPORT_OUTBOUND_PROJECT = bridgeProduction.outboundMeteDetail
-// const BRIDGE_MES_REPORT_OUTBOUND_AUXILIARY_MATERIAL = bridgeProduction.auxiliaryMaterialOutbound
-// const BRIDGE_MES_REPORT_OUTBOUND_PROJECT_AUXILIARY_MATERIAL = bridgeProduction.auxiliaryMaterialOutbound
-// const BRIDGE_MES_REPORT_INSTALLATION = bridgeProduction.installationDetail
-// const BRIDGE_MES_REPORT_TEAM_PIECE_WAGE = bridgeProduction.teamPieceWage
-// const BRIDGE_MES_REPORT_OUTPUT_WAGE = bridgeProduction.outputWage
-
 // const STEEL_MES_AREA = steelPlan.area
 // const STEEL_MES_AREA_PLAN = steelPlan.plan
 
@@ -161,10 +110,9 @@ const mesLogisticsSummary = mes.logisticsSummary
 // const STEEL_MES_PRODUCTION_STATE_ENCLOSURE = steelProduction.processCompleteState
 // const STEEL_MES_PRODUCTION_STATE_MACHINE_PART = steelProduction.processCompleteState
 
-// const STEEL_MES_WAREHOUSE_STATE_STRUCTURE = steelProduction.warehouseStateArtifact
-// const STEEL_MES_WAREHOUSE_STATE_ENCLOSURE = steelProduction.warehouseStateEnclosure
-// const STEEL_MES_WAREHOUSE_STATE_AUXILIARY_MATERIAL = steelProduction.warehouseStateAuxiliaryMaterial
-// const STEEL_MES_WAREHOUSE_STATE_REPORT = steelReport.warehouseStateReport
+const mesWarehouseStateStructure = mes.warehouseStateStructure
+const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
+const mesWarehouseStateReport = mes.warehouseStateReport
 // const STEEL_MES_WAREHOUSE_STATE_REPORT_PRODUCT_ENCLOSURE = steelReport.warehouseStateReportDetail
 // const STEEL_MES_WAREHOUSE_STATE_REPORT_PRODUCT_STRUCTURE = steelReport.warehouseStateReportDetail
 // const STEEL_MES_WAREHOUSE_STATE_REPORT_SUMMARY_ENCLOSURE = steelReport.warehouseStateReportDetail
@@ -204,5 +152,10 @@ export default {
   mesShipmentDetail, // 发运详情
   mesReceiptStatusSummary, // 收货状态汇总
   mesShippingList, // 发货清单
-  mesLogisticsSummary // 物流汇总
+  mesLogisticsSummary, // 物流汇总
+
+  // 制成品管理
+  mesWarehouseStateStructure, // 结构出入库状态
+  mesWarehouseStateEnclosure, // 围护出入库状态
+  mesWarehouseStateReport // 入发存报表
 }

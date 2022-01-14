@@ -2,41 +2,64 @@
   <span>
     <el-button-group class="button-group">
       <el-button class="input-button" :size="props.size" :type="props.btnType" plain>
-        <tableTemplateCascader
-          v-if="isCascader"
-          v-model:value="templateId"
-          :table-types="tableType"
-          :size="props.size"
-          :disabled="props.disabled"
-          :cache-template-id="cacheTemplateId"
-          initial
-          filterable
-          default
-          @change="handleTemplateSelect"
-          @onload="templateOnload = true"
-        />
-        <tableTemplateSelect
-          v-else
-          v-model:value="templateId"
-          :table-type="tableType"
-          :size="props.size"
-          :disabled="props.disabled"
-          :cache-template-id="cacheTemplateId"
-          default
-          filterable
-          @change="handleTemplateSelect"
-          @onload="templateOnload = true"
-        />
+        <template v-if="afterMounted">
+          <TableTemplateCascader
+            v-if="isCascader"
+            v-model:value="templateId"
+            :table-types="tableType"
+            :size="props.size"
+            :disabled="props.disabled"
+            :cache-template-id="cacheTemplateId"
+            initial
+            filterable
+            default
+            @change="handleTemplateSelect"
+            @onload="templateOnload = true"
+          />
+          <TableTemplateSelect
+            v-else
+            v-model:value="templateId"
+            :table-type="tableType"
+            :size="props.size"
+            :disabled="props.disabled"
+            :cache-template-id="cacheTemplateId"
+            default
+            filterable
+            @change="handleTemplateSelect"
+            @onload="templateOnload = true"
+          />
+        </template>
       </el-button>
-      <el-button :size="props.size" :disabled="!templateOnload || props.disabled" icon="el-icon-view" :type="props.btnType" plain @click="print(printModeEnum.PREVIEW.V)" />
-      <el-button :size="props.size" :disabled="!templateOnload || props.disabled" icon="el-icon-printer" :type="props.btnType" plain @click="print(printModeEnum.QUEUE.V)" />
-      <el-button :size="props.size" :disabled="!templateOnload || props.disabled" icon="el-icon-download" :type="props.btnType" plain @click="download" />
+      <el-button
+        :size="props.size"
+        :disabled="!templateOnload || props.disabled"
+        icon="el-icon-view"
+        :type="props.btnType"
+        plain
+        @click="print(printModeEnum.PREVIEW.V)"
+      />
+      <el-button
+        :size="props.size"
+        :disabled="!templateOnload || props.disabled"
+        icon="el-icon-printer"
+        :type="props.btnType"
+        plain
+        @click="print(printModeEnum.QUEUE.V)"
+      />
+      <el-button
+        :size="props.size"
+        :disabled="!templateOnload || props.disabled"
+        icon="el-icon-download"
+        :type="props.btnType"
+        plain
+        @click="download"
+      />
     </el-button-group>
   </span>
 </template>
 
 <script setup>
-import { ref, watch, computed, defineProps, defineEmits } from 'vue'
+import { ref, watch, computed, defineProps, defineEmits, onMounted } from 'vue'
 import { ElButtonGroup, ElButton } from 'element-plus'
 import { mapGetters } from '@/store/lib'
 
@@ -50,25 +73,27 @@ import { printModeEnum } from '@/utils/print/enum'
 import { ElLoading, ElMessage } from 'element-plus'
 import { uniqueArr } from '@/utils/data-type/array'
 import downloadXLSX from '@/utils/print/download'
-import tableTemplateSelect from '@comp-common/print/table-template-select'
-import tableTemplateCascader from '@comp-common/print/table-template-cascader'
+import TableTemplateSelect from '@comp-common/print/table-template-select'
+import TableTemplateCascader from '@comp-common/print/table-template-cascader'
 
 const emit = defineEmits(['update:currentKey', 'change'])
 
 const props = defineProps({
   /**
-     * api_key, 当模板只对应一个接口时，api_key === table_key(table_type)
-     * 当一个打印下，有多个apikey，且apikey对应的key相同时，默认会选择第一个apikey打印
-     */
+   * api_key, 当模板只对应一个接口时，api_key === table_key(table_type)
+   * 当一个打印下，有多个apikey，且apikey对应的key相同时，默认会选择第一个apikey打印
+   */
   apiKey: {
     type: [Array, String],
     default: undefined
   },
-  currentKey: { // 当前使用apikey
+  currentKey: {
+    // 当前使用apikey
     type: String,
     default: undefined
   },
-  beforePrint: { // 打印前调用的方法
+  beforePrint: {
+    // 打印前调用的方法
     type: Function,
     default: undefined
   },
@@ -80,7 +105,8 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  params: { // 打印参数，传入数组则批量打印
+  params: {
+    // 打印参数，传入数组则批量打印
     type: null,
     default: undefined
   },
@@ -92,8 +118,9 @@ const props = defineProps({
 
 const config = ref({})
 const templateId = ref(undefined) // 当前选择的模板id
-const cacheTemplateId = ref(undefined)// 用户上次使用的模板id
+const cacheTemplateId = ref(undefined) // 用户上次使用的模板id
 const templateOnload = ref(false)
+const afterMounted = ref(false)
 
 const { user } = mapGetters('user')
 
@@ -101,7 +128,8 @@ const userId = computed(() => {
   return user.value && user.value.id
 })
 
-const tableType = computed(() => { // table_key
+const tableType = computed(() => {
+  // table_key
   let _tableType = ''
   if (isNotBlank(props.apiKey)) {
     if (props.apiKey instanceof Array) {
@@ -109,9 +137,12 @@ const tableType = computed(() => { // table_key
         _tableType = props.apiKey[0]
       } else {
         _tableType = props.apiKey
-        const _t = uniqueArr(_tableType.map(v => { // 转换后去重
-          return apikey[v] || v
-        }))
+        const _t = uniqueArr(
+          _tableType.map((v) => {
+            // 转换后去重
+            return apikey[v] || v
+          })
+        )
         if (_t.length > 1) {
           return _t
         } else {
@@ -129,7 +160,8 @@ const isCascader = computed(() => {
   return tableType.value instanceof Array
 })
 
-const api_key = computed(() => { // api_key
+const api_key = computed(() => {
+  // api_key
   if (isNotBlank(config.value) && isNotBlank(config.value.type)) {
     const currentTableType = config.value.type
     if (props.apiKey instanceof Array) {
@@ -164,6 +196,10 @@ watch(
     selectChange(value)
   }
 )
+
+onMounted(() => {
+  afterMounted.value = true
+})
 
 function selectChange(val) {
   emit('update:currentKey', val)
@@ -214,10 +250,13 @@ async function download() {
       }
       for (const p of params) {
         printLoading.text = `正在加载数据：${config.value.name}`
-        const { header, footer, table, qrCode } = await fetch(p) || {}
+        const { header, footer, table, qrCode } = (await fetch(p)) || {}
         printLoading.text = `正在导出：${config.value.name}`
         const result = await downloadXLSX({
-          header, footer, table, qrCode,
+          header,
+          footer,
+          table,
+          qrCode,
           config: config.value
         })
         if (!result) {
@@ -257,11 +296,14 @@ async function print(printMode) {
       }
       for (const p of params) {
         printLoading.setText(`正在加载数据：${config.value.name}`)
-        const { header, footer, table, qrCode } = await fetch(p) || {}
+        const { header, footer, table, qrCode } = (await fetch(p)) || {}
         printLoading.setText(`正在打印：${config.value.name}`)
         const result = await printTable({
           printMode,
-          header, footer, table, qrCode,
+          header,
+          footer,
+          table,
+          qrCode,
           config: config.value
         })
         if (!result) {
@@ -285,8 +327,9 @@ async function fetch(params) {
     return
   }
   try {
-    const data = await fetchFn[key](params) || {}
-    if (formatFn[tableKey]) { // 数据装换
+    const data = (await fetchFn[key](params)) || {}
+    if (formatFn[tableKey]) {
+      // 数据装换
       return formatFn[tableKey](data)
     } else {
       return data
@@ -298,16 +341,16 @@ async function fetch(params) {
 </script>
 
 <style lang="scss" scoped>
-.button-group{
+.button-group {
   display: flex;
   width: 100%;
   .input-button {
     flex: auto;
     padding: 0;
-    >span:first-child >div:first-child{
+    > span:first-child > div:first-child {
       width: 100%;
     }
-    ::v-deep(.el-input--mini .el-input__inner){
+    ::v-deep(.el-input--mini .el-input__inner) {
       height: 27px;
       line-height: 27px;
     }
@@ -319,7 +362,7 @@ async function fetch(params) {
       height: 35px;
       line-height: 35px;
     }
-    ::v-deep(.el-input__inner){
+    ::v-deep(.el-input__inner) {
       border: none;
       width: 100%;
     }
@@ -334,8 +377,10 @@ async function fetch(params) {
     }
   }
   ::v-deep(.input-button.el-button.is-plain) {
-    &:active,&:hover,&:focus{
-      background-color: unset!important;
+    &:active,
+    &:hover,
+    &:focus {
+      background-color: unset !important;
       color: #fff;
       outline: none;
     }

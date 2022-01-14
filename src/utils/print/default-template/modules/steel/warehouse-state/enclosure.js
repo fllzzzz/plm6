@@ -1,12 +1,12 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, thicknessUnitEnum, lengthUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 围护出入库统计表
-const STEEL_MES_WAREHOUSE_STATE_ENCLOSURE = {
+// 围护出入库状态
+const mesWarehouseStateEnclosure = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'STEEL_MES_WAREHOUSE_STATE_ENCLOSURE', // 表格类型 KEY
+  type: 'mesWarehouseStateEnclosure', // 表格类型 KEY
   name: '围护出入库状态（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -61,7 +61,7 @@ const STEEL_MES_WAREHOUSE_STATE_ENCLOSURE = {
   title: {
     show: true,
     allPage: false,
-    title: '围护出入库统计表',
+    title: '围护出入库状态',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -105,9 +105,8 @@ const STEEL_MES_WAREHOUSE_STATE_ENCLOSURE = {
     fields: [ // 字段内容
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer', title: '单体：', width: 150, type: typeEnum.MONOMER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'monomer.name', title: '单体：', width: 150, type: typeEnum.MONOMER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
     ]
   },
@@ -202,22 +201,26 @@ const STEEL_MES_WAREHOUSE_STATE_ENCLOSURE = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'area', title: '区域名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
+      { show: true, key: 'area.name', title: '区域名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.AREA_NAME.K },
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.ENCLOSURE_NAME.K },
       { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: false, key: 'plateType', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },
+      { show: false, key: 'plate', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },
       { show: false, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COLOR.K },
       { show: true, key: 'thickness', title: '厚度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.THICKNESS.K, format: { toThousand: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
-      { show: true, key: 'effectiveWidth', title: '有效宽度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
+      { show: true, key: 'width', title: '有效宽度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.LENGTH.K },
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: true, key: 'inboundQuantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-      { show: true, key: 'outboundQuantity', title: '出库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-      { show: true, key: 'stockQuantity', title: '库存数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 16, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true }
+      { show: false, key: 'totalLength', title: '总长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: true, key: 'quantity', title: '清单数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
+      { show: true, key: 'inboundQuantity', title: '入库数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'outboundQuantity', title: '出库数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'stockQuantity', title: '库存数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: false, key: 'inboundMete', title: '入库长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: false, key: 'outboundMete', title: '出库长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true },
+      { show: false, key: 'stockMete', title: '库存长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }, sum: true }
     ]
   }
 }
 
 export default {
-  STEEL_MES_WAREHOUSE_STATE_ENCLOSURE //  围护出入库统计表
+  mesWarehouseStateEnclosure //  围护出入库状态
 }
