@@ -7,51 +7,43 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- <template v-slot:optRight>
-        <export-button
-          v-permission="permission.download"
-          :params="{ monomerId: query.monomerId, factoryId: query.factoryId }"
-          :fn="download"
-          show-btn-text
-          btn-text="下载单体出入库详情"
-          class="filter-item"
-        />
+      <template #optLeft>
         <print-table
-          v-permission="permission.print"
-          api-key="STEEL_MES_WAREHOUSE_STATE_STRUCTURE"
+          v-permission="crud.permission.print"
+          api-key="mesWarehouseStateStructure"
           :params="{ monomerId: query.monomerId, factoryId: query.factoryId }"
           size="mini"
           type="warning"
           class="filter-item"
         />
-      </template> -->
+      </template>
       <template #viewLeft>
         <span v-permission="crud.permission.get">
-          <el-tag effect="plain" class="filter-item">
+          <el-tag effect="plain" size="medium" class="filter-item">
             <span>清单量：</span>
             <span v-if="!summaryLoading">{{ summaryInfo.quantity }} 件 | {{ toFixed(summaryInfo.mete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" class="filter-item">
+          <el-tag effect="plain" size="medium" class="filter-item">
             <span>任务量：</span>
             <span v-if="!summaryLoading">{{ summaryInfo.taskQuantity }} 件 | {{ toFixed(summaryInfo.taskMete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" class="filter-item">
+          <el-tag effect="plain" size="medium" class="filter-item">
             <span>入库量：</span>
             <span v-if="!summaryLoading">
               {{ summaryInfo.inboundQuantity }} 件 | {{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg
             </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" class="filter-item">
+          <el-tag effect="plain" size="medium" class="filter-item">
             <span>出库量：</span>
             <span v-if="!summaryLoading">
               {{ summaryInfo.outboundQuantity }} 件 | {{ toFixed(summaryInfo.outboundMete, DP.COM_WT__KG) }} kg
             </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
-          <el-tag effect="plain" class="filter-item" type="success">
+          <el-tag effect="plain" size="medium" class="filter-item" type="success">
             <span>库存量：</span>
             <span v-if="!summaryLoading">{{ summaryInfo.stockQuantity }} 件 | {{ toFixed(summaryInfo.stockMete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
