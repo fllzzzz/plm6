@@ -55,6 +55,7 @@ const getReceiptList = {
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
+            inboundTime: '@datetime(T)', // 入库时间
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间
@@ -91,6 +92,7 @@ const getReceiptList = {
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
+            inboundTime: '@datetime(T)', // 入库时间
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -128,6 +130,7 @@ const getReceiptList = {
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
+            inboundTime: '@datetime(T)', // 入库时间
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -155,13 +158,14 @@ const getReceiptList = {
             founderName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
+            inboundTime: '@datetime(T)', // 入库时间
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)', // 用户修改时间
             reviewTime: '@datetime(T)' // 审核时间
           }
         ],
-        totalElements: 2
+        totalElements: 4
       }
     }
   }
@@ -884,6 +888,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -976,6 +981,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -1069,6 +1075,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -1126,6 +1133,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -1176,6 +1184,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -1226,6 +1235,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间
@@ -1277,6 +1287,7 @@ const getDetails = {
               founderName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
+              inboundTime: '@datetime(T)', // 入库时间
               createTime: '@datetime(T)', // 创建时间
               updateTime: '@datetime(T)', // 修改时间
               userUpdateTime: '@datetime(T)', // 用户修改时间

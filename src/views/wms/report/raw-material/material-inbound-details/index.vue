@@ -10,12 +10,12 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
+      @sort-change="crud.handleSortChange"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
           <expand-secondary-info v-if="!basicClass" :basic-class="row.basicClass" :row="row" />
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
@@ -25,6 +25,7 @@
         show-reject-status
         reject-detail-viewable
         spec-merge
+        sortable
         fixed="left"
       >
         <template #afterIndex>
@@ -37,6 +38,7 @@
             align="center"
             width="125"
             fixed="left"
+            sortable="custom"
           >
             <template #default="{ row }">
               <span v-parse-time="row.inboundReceipt.inboundTime" />
@@ -82,7 +84,7 @@
         <template #default="{ row }">
           <clickable-permission-span
             v-if="row.inboundReceipt"
-            :permission="permission.inboundDetail"
+            :permission="permission.inboundReceiptDetail"
             @click="openInboundReceiptDetail(row.inboundReceipt.id)"
             :text="row.inboundReceipt.serialNumber"
           />
@@ -231,7 +233,6 @@ const { CRUD, crud, columns } = useCRUD(
       'inboundReceipt.reviewerName',
       'inboundReceipt.createTime',
       'inboundReceipt.reviewTime',
-      'inboundReceipt.inboundTime',
       'inboundReceipt.licensePlate',
       'inboundReceipt.shipmentNumber',
       'invoiceType',
@@ -280,8 +281,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 <style lang="scss" scoped>
 .report-material-inbound-details {
   .el-table {
-    ::v-deep(.cell) {
-      height: 28px;
+    ::v-deep(td .cell) {
+      min-height: 28px;
       line-height: 28px;
     }
   }

@@ -97,18 +97,20 @@ function printDesign() {
 
 // 打印并判断是否进入打印队列
 async function printByInQueue() {
-  let _returnValue
-  if (LODOP.CVERSION) {
-    LODOP.On_Return = (TaskID, Value) => {
-      console.log('TaskID', TaskID, Value)
-      _returnValue = Value
-      return _returnValue
+  return new Promise((resolve, reject) => {
+    let _returnValue
+    if (LODOP.CVERSION) {
+      LODOP.On_Return = async (TaskID, Value) => {
+        console.log('TaskID', TaskID, Value)
+        _returnValue = Value
+        resolve(_returnValue)
+      }
+      LODOP.PRINT()
+    } else {
+      _returnValue = LODOP.PRINT()
+      resolve(_returnValue)
     }
-    LODOP.PRINT()
-  } else {
-    _returnValue = LODOP.PRINT()
-    return _returnValue
-  }
+  })
 }
 
 // 打印并判断是否打印成功（暂时用 是否成功 || 是否出打印队列 来判断）

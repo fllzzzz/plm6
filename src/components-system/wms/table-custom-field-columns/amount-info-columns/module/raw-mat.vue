@@ -9,7 +9,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-thousand="{ val: getInfo(row, 'unitPrice') }" v-empty-text />
+      <span v-thousand="getInfo(row, 'unitPrice')" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column
@@ -22,7 +22,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-thousand="{ val: getInfo(row, 'amount') }" v-empty-text />
+      <span v-thousand="getInfo(row, 'amount')" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column
@@ -35,7 +35,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-thousand="{ val: getInfo(row, 'amountExcludingVAT') }" v-empty-text />
+      <span v-thousand="getInfo(row, 'amountExcludingVAT')" v-empty-text />
     </template>
   </el-table-column>
   <el-table-column
@@ -48,7 +48,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <span v-thousand="{ val: getInfo(row, 'inputVAT') }" v-empty-text />
+      <span v-thousand="getInfo(row, 'inputVAT')" v-empty-text />
     </template>
   </el-table-column>
 </template>

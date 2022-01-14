@@ -22,7 +22,7 @@
     <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
-          <span v-empty-text>{{ row.specification }}</span>
+          <span v-empty-text="row.specification" />
         </el-tooltip>
       </template>
     </el-table-column>

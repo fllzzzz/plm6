@@ -135,8 +135,8 @@ function getSummaries(param) {
 <style lang="scss" scoped>
 .raw-mat-inbound-application-record-detail {
   .el-table {
-    ::v-deep(.cell) {
-      height: 28px;
+    ::v-deep(td .cell) {
+      min-height: 28px;
       line-height: 28px;
     }
   }

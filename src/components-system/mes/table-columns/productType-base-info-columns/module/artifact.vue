@@ -36,7 +36,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.specification }}</span>
+      <span v-empty-text="row.specification" />
     </template>
   </el-table-column>
   <el-table-column

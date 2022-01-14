@@ -45,7 +45,7 @@ import fetchFn from '@/utils/print/api'
 import { isNotBlank } from '@data-type/index'
 import { printTable } from '@/utils/print/table'
 import formatFn from '@/utils/print/format/index'
-import { apikey } from '@/utils/print/table-type'
+import { apikey } from '@/utils/print/table/type'
 import { printModeEnum } from '@/utils/print/enum'
 import { ElLoading, ElMessage } from 'element-plus'
 import { uniqueArr } from '@/utils/data-type/array'
@@ -256,9 +256,9 @@ async function print(printMode) {
         params = [params[0]]
       }
       for (const p of params) {
-        printLoading.text = `正在加载数据：${config.value.name}`
+        printLoading.setText(`正在加载数据：${config.value.name}`)
         const { header, footer, table, qrCode } = await fetch(p) || {}
-        printLoading.text = `正在打印：${config.value.name}`
+        printLoading.setText(`正在打印：${config.value.name}`)
         const result = await printTable({
           printMode,
           header, footer, table, qrCode,

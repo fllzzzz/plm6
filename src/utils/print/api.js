@@ -1,4 +1,5 @@
 import contract from '@/api/print/contract'
+import mes from '@/api/print/mes'
 // import costCenter from '@/api/print/cost-center'
 // import contractDetail from '@/api/print/contract-detail'
 // import supplier from '@/api/print/supplier'
@@ -137,12 +138,12 @@ const CONTRACT_LEDGER = contract.contractLedger
 // const STEEL_MES_AREA = steelPlan.area
 // const STEEL_MES_AREA_PLAN = steelPlan.plan
 
-// const STEEL_MES_PACK = steelLogistics.pack
-// const STEEL_MES_PACK_SHIP = steelLogistics.ship
-// const STEEL_MES_PACK_SHIP_DETAIL = steelLogistics.shipDetail
-// const STEEL_MES_PACK_RECEIPT = steelLogistics.receipt
-// const STEEL_MES_PACK_SHIPMENT_DETAIL = steelLogistics.shipmentDetail
-// const STEEL_MES_LOGISTICS_SUMMARY = steelLogistics.logistics
+const mesPackingList = mes.packingList
+const mesShipmentSummary = mes.shipmentSummary
+const mesShipmentDetail = mes.shipmentDetail
+const mesReceiptStatusSummary = mes.receiptStatusSummary
+const mesShippingList = mes.shippingList
+const mesLogisticsSummary = mes.logisticsSummary
 
 // const STEEL_MES_BUSINESS_ENTRY_STRUCTURE = steelBusiness.structureEntry
 // const STEEL_MES_BUSINESS_ENTRY_ENCLOSURE = steelBusiness.enclosureEntry
@@ -195,182 +196,13 @@ const CONTRACT_LEDGER = contract.contractLedger
 // const STEEL_MES_REPORT_STEEL_DOSAGE = steelReport.steelDosage
 
 export default {
-  CONTRACT_LEDGER // 合同台账
-  //   PROJECT_COLLECTION_SUMMARY, // 项目收款汇总
-  //   PROJECT_COLLECTION_DETAIL, // 项目收款明细
-  //   PROJECT_COLLECTION_TYPE_DETAIL, // 项目收款分类明细
-  //   PROJECT_INVOICE_DETAIL, // 项目开票明细
-  //   PROJECT_ARREARS_WARNING, // 项目欠款预警
-  //   COMPANY_COLLECTION_PLAN, // 项目收款计划（月）
-  //   COMPANY_COLLECTION_PLAN_EXECUTION, // 项目收款计划执行（月）
-  //   PROJECT_REIMBURSEMENT, // 项目报销记录
-  //   SHIP_INFO, // 发运信息
-  //   PROJECT_EXECUTION_LEDGER, // 项目台账
+  CONTRACT_LEDGER, // 合同台账
 
-  //   PROJECT_MATERIAL_COSTS_DETAIL, // 材料成本
-
-  //   PROJECT_DELIVER_AMOUNT, // 项目发货额
-  //   PROJECT_MANAGEMENT_FEE, // 项目管理费
-  //   PROJECT_MAIN_MATERIAL_CONT, // 项目主材出库成本
-  //   PROJECT_MAIN_MATERIAL_RETURN_CONT, // 项目主材还库成本
-  //   PROJECT_AUXILIARY_MAIN_MATERIAL_CONT, // 项目辅材出库成本
-  //   PROJECT_AUXILIARY_MAIN_MATERIAL_RETURN_CONT, // 项目辅材还库成本
-  //   PROJECT_PRODUCTION_CONT, // 项目人工成本
-
-  //   MATERIAL_SUPPLIER_PAYMENT_DETAIL, // 物料供应商付款记录
-  //   LOGISTICS_SUPPLIER_PAYMENT_DETAIL, // 物流供应商付款记录
-  //   MATERIAL_SUPPLIER_INVOICE_DETAIL, // 物料供应商开票记录
-  //   LOGISTICS_SUPPLIER_INVOICE_DETAIL, // 物流供应商开票记录
-  //   MATERIAL_SUPPLIER_STATEMENT, // 物料供应商对账单
-  //   LOGISTICS_SUPPLIER_STATEMENT, // 物流供应商对账单
-  //   MATERIAL_PAYMENT_AND_INVOICE, // 物料供应商付款及开票
-  //   WMS_IN_WAREHOUSE_VOUCHER, // wms-出入库记录-入库记录
-  //   WMS_OUT_WAREHOUSE_RECORD_SUMMARY, // wms-出入库记录-出库汇总单
-  //   WMS_RETURN_WAREHOUSE_VOUCHER, // wms-出入库记录-还库单
-  //   WMS_QUIT_WAREHOUSE_VOUCHER, // wms-出入库记录-退库单
-  //   WMS_MATERIAL_MOVE_HOUSE_VOUCHER, // wms-出入库记录-物料调拨单
-  //   WMS_LOGISTICS_DELIVERY_METE, // wms-物流汇总单（车牌，装载量）
-  //   WMS_LOGISTICS_ORDER_MATERIAL_DETAIL, // wms-订单收货详情
-
-  //   WMS_IN_RECORD_SUMMARY_DETAIL, // wms-入库记录-汇总明细
-  //   WMS_OUT_RECORD_SUMMARY_DETAIL, // wms-出库记录-汇总明细
-
-  //   WMS_PREPARES_CUSTOM_SUMMARY, // wms-备料定制-物料备料汇总单
-  //   WMS_PREPARES_CUSTOM_STEEL_PLATE, // wms-备料定制-钢板采购清单
-  //   WMS_PREPARES_CUSTOM_SECTION_STEEL, // wms-备料定制-型材采购清单
-  //   WMS_PREPARES_CUSTOM_STEEL_COIL, // wms-备料定制-钢卷采购清单
-  //   WMS_PREPARES_CUSTOM_ENCLOSURE, // wms-备料定制-成品围护采购清单
-  //   WMS_PREPARES_CUSTOM_MATERIAL, // wms-备料定制-辅材采购清单
-  //   WMS_PREPARES_TRACK_STEEL_PLATE, // wms-备料跟踪-钢板备料跟踪单
-  //   WMS_PREPARES_TRACK_SECTION_STEEL, // wms-备料跟踪-型材备料跟踪单
-  //   WMS_PREPARES_TRACK_STEEL_COIL, // wms-备料跟踪-钢卷备料跟踪单
-  //   WMS_PREPARES_TRACK_ENCLOSURE, // wms-备料跟踪-成品围护备料跟踪单
-  //   WMS_PREPARES_TRACK_MATERIAL, // wms-备料跟踪-辅材备料跟踪单
-  //   WMS_REPORT_IN_SUMMARY, // wms-报表中心-入库汇总
-  //   WMS_REPORT_OUT_SUMMARY, // wms-报表中心-出库汇总
-  //   WMS_REPORT_INVENTORY_SUMMARY, // wms-报表中心-库存汇总
-  //   WMS_INVENTORY_MANAGE_SUMMARY, // 物料盘存汇总表
-  //   WMS_INVENTORY_MANAGE_END_SUMMARY_DETAIL, // 物料盘存-当前库存汇总明细表
-  //   WMS_INVENTORY_MANAGE_INBOUND_SUMMARY_DETAIL, // 物料盘存-购入量汇总明细表
-  //   WMS_INVENTORY_MANAGE_OUTBOUND_SUMMARY_DETAIL, // 物料盘存-使用量汇总明细表
-  //   WMS_INVENTORY_MANAGE_BEGIN_SUMMARY, // 期初库存汇总表
-  //   WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY, // 期初库存汇总表-辅材
-  //   WMS_INVENTORY_MANAGE_IN_SUMMARY, // 原材料入库汇总表
-  //   WMS_INVENTORY_MANAGE_OUT_SUMMARY, // 原材料出库汇总表
-  //   WMS_INVENTORY_MANAGE_END_SUMMARY, // 期末库存汇总表
-
-  //   MES_LOGISTICS_ORDER_DELIVERY_DETAIL, // 制成品物流订单发运详情
-
-  //   BRIDGE_MES_AREA, // 桥梁-区域
-  //   BRIDGE_MES_AREA_PLAN, // 桥梁-计划
-
-  //   BRIDGE_MES_BUSINESS_ENTRY_BOX, // 桥梁-箱体清单计价表
-  //   BRIDGE_MES_BUSINESS_ENTRY_SINGLE_ELEMENT, // 桥梁-单元件清单计价表
-  //   BRIDGE_MES_BUSINESS_ENTRY_AUXILIARY_MATERIAL, // 桥梁-辅材清单计价表
-  //   BRIDGE_MES_BUSINESS_OUTBOUND_PROJECT, // 桥梁-项目汇总出库表
-  //   BRIDGE_MES_BUSINESS_OUTBOUND_MONOMER, // 桥梁-单体汇总出库表
-  //   BRIDGE_MES_BUSINESS_INSTALLATION_PROJECT_BOX, // 桥梁-箱体项目安装表
-  //   BRIDGE_MES_BUSINESS_INSTALLATION_PROJECT_SINGLE_ELEMENT, // 桥梁-单元件项目安装表
-  //   BRIDGE_MES_BUSINESS_INSTALLATION_MONOMER_BOX, // 桥梁-箱体单体安装表
-  //   BRIDGE_MES_BUSINESS_INSTALLATION_MONOMER_SINGLE_ELEMENT, // 桥梁-单元件单体安装表
-  //   BRIDGE_MES_BUSINESS_INSTALLATION_AUXILIARY_MATERIAL, // 桥梁-辅材安装表
-  //   BRIDGE_MES_BUSINESS_TRIP_TRACKING, // 桥梁-单次发货统计表
-
-  //   BRIDGE_MES_PACK, // 桥梁-打包清单
-  //   BRIDGE_MES_PACK_SHIP, // 桥梁-发运汇总表
-  //   BRIDGE_MES_PACK_SHIP_DETAIL, // 桥梁-发运详情
-  //   BRIDGE_MES_PACK_RECEIPT, // 桥梁-收货状态汇总
-  //   BRIDGE_MES_PACK_SHIPMENT_DETAIL, // 桥梁-发货清单
-  //   BRIDGE_MES_LOGISTICS_SUMMARY, // 桥梁-物流汇总表
-
-  //   BRIDGE_MES_TASK_BOX, // 桥梁-箱体任务清单
-  //   BRIDGE_MES_TASK_MACHINE_PART, // 桥梁-零件任务清单
-  //   BRIDGE_MES_TASK_SINGLE_ELEMENT, // 桥梁-单元件任务清单
-  //   BRIDGE_MES_PRODUCTION_STATE_BOX, // 桥梁-箱体工序任务表
-  //   BRIDGE_MES_PRODUCTION_STATE_SINGLE_ELEMENT, // 桥梁-单元件工序任务表
-  //   BRIDGE_MES_PRODUCTION_STATE_MACHINE_PART, // 桥梁-零件工序任务表
-
-  //   BRIDGE_MES_WAREHOUSE_STATE_BOX, // 桥梁-箱体出入库统计表
-  //   BRIDGE_MES_WAREHOUSE_STATE_SINGLE_ELEMENT, // 桥梁-单元件出入库统计表
-  //   BRIDGE_MES_WAREHOUSE_STATE_AUXILIARY_MATERIAL, // 桥梁-辅材出入库统计表
-  //   BRIDGE_MES_SITE_WAREHOUSE_STATE_BOX, // 桥梁-箱体收安统计表
-  //   BRIDGE_MES_SITE_WAREHOUSE_STATE_SINGLE_ELEMENT, // 桥梁-单元件收安统计表
-  //   BRIDGE_MES_SITE_WAREHOUSE_STATE_AUXILIARY_MATERIAL, // 桥梁-辅材收安统计表
-  //   BRIDGE_MES_COMPLEX_STATE_BOX, // 桥梁-箱体总看板统计表
-  //   BRIDGE_MES_COMPLEX_STATE_SINGLE_ELEMENT, // 桥梁-单元件总看板统计表
-  //   BRIDGE_MES_COMPLEX_STATE_AUXILIARY_MATERIAL, // 桥梁-辅材总看板统计表
-
-  //   BRIDGE_MES_REPORT_PROJECT_PRODUCTION, // 桥梁-项目生产表
-  //   BRIDGE_MES_REPORT_FACTORY_PRODUCTION, // 桥梁-工厂生产表
-  //   BRIDGE_MES_REPORT_TEAM_OUTPUT_BOX, // 桥梁-班组箱体产量表
-  //   BRIDGE_MES_REPORT_TEAM_OUTPUT_MACHINE_PART, // 桥梁-班组零件产量表
-  //   BRIDGE_MES_REPORT_TEAM_OUTPUT_SINGLE_ELEMENT, // 桥梁-班组单元件产量表
-  //   BRIDGE_MES_REPORT_OUTBOUND, // 桥梁-全部项目出库表
-  //   BRIDGE_MES_REPORT_OUTBOUND_PROJECT, // 桥梁-项目出库表
-  //   BRIDGE_MES_REPORT_OUTBOUND_AUXILIARY_MATERIAL, // 桥梁-全部辅材出库表
-  //   BRIDGE_MES_REPORT_OUTBOUND_PROJECT_AUXILIARY_MATERIAL, // 桥梁-辅材项目出库表
-  //   BRIDGE_MES_REPORT_INSTALLATION, // 桥梁-箱体项目安装表
-  //   BRIDGE_MES_REPORT_TEAM_PIECE_WAGE, // 桥梁-班组计件工资表
-  //   BRIDGE_MES_REPORT_OUTPUT_WAGE, // 桥梁-产量工资表
-
-  //   STEEL_MES_AREA, // 建钢-区域
-  //   STEEL_MES_AREA_PLAN, // 建钢-计划
-
-  //   STEEL_MES_PACK, // 建钢-打包清单
-  //   STEEL_MES_PACK_SHIP, // 建钢-发运汇总表
-  //   STEEL_MES_PACK_SHIP_DETAIL, // 建钢-发运详情
-  //   STEEL_MES_PACK_RECEIPT, // 建钢-收货状态汇总
-  //   STEEL_MES_PACK_SHIPMENT_DETAIL, // 建钢-发货清单
-  //   STEEL_MES_LOGISTICS_SUMMARY, // 建钢-物流汇总表
-
-  //   STEEL_MES_BUSINESS_ENTRY_STRUCTURE, // 建钢-结构清单计价表
-  //   STEEL_MES_BUSINESS_ENTRY_ENCLOSURE, // 建钢-围护清单计价表
-  //   STEEL_MES_BUSINESS_ENTRY_AUXILIARY_MATERIAL, // 建钢-辅材清单计价表
-  //   STEEL_MES_BUSINESS_OUTBOUND_PROJECT, // 建钢-出库汇总表
-  //   STEEL_MES_BUSINESS_OUTBOUND_MONOMER, // 建钢-单体出库表
-  //   STEEL_MES_BUSINESS_INSTALLATION_PROJECT, // 建钢-安装汇总表
-  //   STEEL_MES_BUSINESS_INSTALLATION_MONOMER, // 建钢-单体安装表
-  //   STEEL_MES_BUSINESS_TRIP_TRACKING, // 建钢-单次发货统计表
-
-  //   STEEL_MES_TASK_STRUCTURE, // 建钢-结构任务清单
-  //   STEEL_MES_TASK_MACHINE_PART, // 建钢-零件任务清单
-  //   STEEL_MES_TASK_ENCLOSURE, // 建钢-围护任务清单
-  //   STEEL_MES_PRODUCTION_STATE_STRUCTURE, // 建钢-结构工序任务表
-  //   STEEL_MES_PRODUCTION_STATE_ENCLOSURE, // 建钢-围护工序任务表
-  //   STEEL_MES_PRODUCTION_STATE_MACHINE_PART, // 建钢-零件工序任务表
-
-  //   STEEL_MES_WAREHOUSE_STATE_STRUCTURE, // 建钢-结构出入库统计表
-  //   STEEL_MES_WAREHOUSE_STATE_ENCLOSURE, // 建钢-围护出入库统计表
-  //   STEEL_MES_WAREHOUSE_STATE_AUXILIARY_MATERIAL, // 建钢-辅材出入库统计表
-  //   STEEL_MES_WAREHOUSE_STATE_REPORT, // 建钢-入发存报表
-  //   STEEL_MES_WAREHOUSE_STATE_REPORT_PRODUCT_ENCLOSURE, // 建刚-入发存项目明细报表-围护
-  //   STEEL_MES_WAREHOUSE_STATE_REPORT_PRODUCT_STRUCTURE, // 建刚-入发存项目明细报表-结构
-  //   STEEL_MES_WAREHOUSE_STATE_REPORT_SUMMARY_ENCLOSURE, // 建刚-入发存汇总明细报表-围护
-  //   STEEL_MES_WAREHOUSE_STATE_REPORT_SUMMARY_STRUCTURE, // 建刚-入发存汇总明细报表-结构
-  //   STEEL_MES_SITE_WAREHOUSE_STATE_STRUCTURE, // 建钢-结构收安统计表
-  //   STEEL_MES_SITE_WAREHOUSE_STATE_ENCLOSURE, // 建钢-围护收安统计表
-  //   STEEL_MES_SITE_WAREHOUSE_STATE_AUXILIARY_MATERIAL, // 建钢-辅材收安统计表
-  //   STEEL_MES_COMPLEX_STATE_STRUCTURE, // 建钢-结构总看板统计表
-  //   STEEL_MES_COMPLEX_STATE_ENCLOSURE, // 建钢-围护总看板统计表
-  //   STEEL_MES_COMPLEX_STATE_AUXILIARY_MATERIAL, // 建钢-辅材总看板统计表
-
-//   STEEL_MES_REPORT_PROJECT_PRODUCTION_STRUCTURE, // 建钢-结构项目生产表
-//   STEEL_MES_REPORT_FACTORY_PRODUCTION_STRUCTURE, // 建钢-结构工厂生产表
-//   STEEL_MES_REPORT_PROJECT_PRODUCTION_ENCLOSURE, // 建钢-围护项目生产表
-//   STEEL_MES_REPORT_FACTORY_PRODUCTION_ENCLOSURE, // 建钢-围护工厂生产表
-//   STEEL_MES_REPORT_TEAM_OUTPUT_STRUCTURE, // 建钢-班组构件产量表
-//   STEEL_MES_REPORT_TEAM_OUTPUT_MACHINE_PART, // 建钢-班组零件产量表
-//   STEEL_MES_REPORT_TEAM_OUTPUT_ENCLOSURE, // 建钢-班组围护产量表
-//   STEEL_MES_REPORT_OUTBOUND_STRUCTURE, // 建钢-全部结构出库表
-//   STEEL_MES_REPORT_OUTBOUND_PROJECT_STRUCTURE, // 建钢-结构项目出库表
-//   STEEL_MES_REPORT_OUTBOUND_ENCLOSURE, // 建钢-全部围护出库表
-//   STEEL_MES_REPORT_OUTBOUND_PROJECT_ENCLOSURE, // 建钢-围护工厂生产表
-//   STEEL_MES_REPORT_OUTBOUND_AUXILIARY_MATERIAL, // 建钢-全部辅材出库表
-//   STEEL_MES_REPORT_OUTBOUND_PROJECT_AUXILIARY_MATERIAL, // 建钢-辅材项目出库表
-//   STEEL_MES_REPORT_INSTALLATION_STRUCTURE, // 建钢-结构项目安装表
-//   STEEL_MES_REPORT_INSTALLATION_ENCLOSURE, // 建钢-围护项目安装表
-//   STEEL_MES_REPORT_TEAM_PIECE_WAGE_STRUCTURE, // 建钢-构件班组计件工资表
-//   STEEL_MES_REPORT_TEAM_PIECE_WAGE_ENCLOSURE, // 建钢-构件班组计件工资表
-//   STEEL_MES_REPORT_OUTPUT_WAGE, // 建钢-产量工资表
-//   STEEL_MES_REPORT_STEEL_DOSAGE // 建刚-钢材使用用量对比
+  // mes
+  mesPackingList, // 打包清单
+  mesShipmentSummary, // 发运汇总
+  mesShipmentDetail, // 发运详情
+  mesReceiptStatusSummary, // 收货状态汇总
+  mesShippingList, // 发货清单
+  mesLogisticsSummary // 物流汇总
 }

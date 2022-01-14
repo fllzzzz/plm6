@@ -115,7 +115,7 @@
           align="right"
         >
           <template #default="{ row }">
-            <span v-thousand="{ val: row.inboundAmountExcludingVAT }" v-empty-text />
+            <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
           </template>
         </el-table-column>
         <el-table-column
@@ -128,7 +128,7 @@
           align="right"
         >
           <template #default="{ row }">
-            <span v-thousand="{ val: row.rejectAmountExcludingVAT }" v-empty-text />
+            <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
           </template>
         </el-table-column>
       </template>

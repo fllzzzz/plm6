@@ -153,6 +153,8 @@ const props = defineProps({
 
 const selectValue = ref(props.modelValue)
 const key = ref(Math.random())
+// 是否已触发过默认选中
+const hasDefaultTriggered = ref(false)
 
 const allVal = computed(() => {
   if (isBlank(props.allVal) && props.mode === 'bit') {
@@ -252,7 +254,6 @@ function handleChange(val) {
   const isChange = !judgeSameValue(data, props.modelValue)
   // 两个值都为空
   const allBlank = isBlank(data) && isBlank(props.modelValue)
-
   if (isChange && !allBlank) {
     emit('update:modelValue', data)
     emit('change', data)
@@ -269,15 +270,25 @@ function handleBlur(event) {
  * 有默认值的情况，并且value为空，则给value赋值
  */
 function setDefault() {
-  if (isBlank(props.options) || isNotBlank(selectValue.value)) {
+  // 有值不处理
+  if (isNotBlank(selectValue.value)) {
     return
   }
+  // 无值返回undefined
+  if (isBlank(props.options) || hasDefaultTriggered.value) {
+    handleChange(undefined)
+    return
+  }
+  // 只有一个时默认选中
   if (props.onlyOneDefault && props.options.length === 1) {
+    hasDefaultTriggered.value = true
     selectValue.value = props.options[0][DS.value]
     handleChange(selectValue.value)
     return
   }
+  // 默认选中
   if (props.default) {
+    hasDefaultTriggered.value = true
     selectValue.value = props.options[0][DS.value]
     handleChange(selectValue.value)
     return

@@ -104,4 +104,14 @@ export function previewImg(attachmentId) {
     method: 'get'
   })
 }
+
+// 获取总计
+export function getTotalSum(params) {
+  return request({
+    module: 'plan',
+    url: `enclosure/getSum`,
+    method: 'get',
+    params
+  })
+}
 export default { get, edit, del, add }

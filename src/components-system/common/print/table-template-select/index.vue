@@ -74,10 +74,6 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择表格模板'
-  },
-  allLabelText: {
-    type: String,
-    default: '全部'
   }
 })
 

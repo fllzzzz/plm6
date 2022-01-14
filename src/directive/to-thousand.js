@@ -5,21 +5,22 @@ import { toThousand } from '@/utils/data-type/number'
 export default {
   mounted(el, binding) {
     resolve(el, binding)
+  },
+  updated(el, binding) {
+    resolve(el, binding)
   }
 }
 
 // value 小数精度
 function resolve(el, binding) {
   const { value } = binding
-  const { innerText } = el
   let val
   let precision
   if (value && typeof value === 'object') {
     val = value.val
     precision = value.dp
   } else {
-    val = innerText
-    precision = value
+    val = value
   }
   precision = isNotBlank(precision) ? precision : 2
   el.innerText = toThousand(val, precision)

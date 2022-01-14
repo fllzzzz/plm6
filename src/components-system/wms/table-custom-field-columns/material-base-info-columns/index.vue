@@ -35,7 +35,7 @@
   <el-table-column
     v-if="showSerialNumber"
     :prop="`${field}.serialNumber`"
-    label="编号"
+    label="物料编号"
     align="center"
     width="110px"
     :fixed="fixed"

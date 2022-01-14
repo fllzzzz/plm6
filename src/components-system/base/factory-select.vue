@@ -1,6 +1,7 @@
 <!-- 工厂:下拉选择框 -->
 <template>
   <common-select
+    v-bind="$attrs"
     v-model="selectValue"
     :size="size"
     :disabled="disabled"
@@ -13,6 +14,7 @@
     filterable
     :placeholder="placeholder"
     :options="factories"
+    :only-one-default="onlyOneDefault"
     @change="handleChange"
   />
 </template>
@@ -49,14 +51,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  default: {
-    type: Boolean,
-    default: false
-  },
-  onlyOneDefault: {
-    type: Boolean,
-    default: false
-  },
   showOptionAll: {
     type: Boolean,
     default: false
@@ -64,18 +58,21 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择工厂'
+  },
+  onlyOneDefault: {
+    type: Boolean,
+    default: true
   }
 })
 
 const selectValue = ref()
 
-const { loaded, factories } = useFactory(loadedCallBack)
+const { loaded, factories } = useFactory()
 
 watch(
   () => props.modelValue,
   (value) => {
     selectValue.value = value
-    setDefault()
   },
   { immediate: true }
 )
@@ -92,30 +89,5 @@ function handleChange(val) {
     emit('update:modelValue', data)
     emit('change', data)
   }
-}
-
-function loadedCallBack() {
-  setDefault()
-}
-
-/**
- * 设置默认值
- * 有默认值的情况，并且value为空，则给value赋值
- */
-function setDefault() {
-  if (isBlank(factories.value) || selectValue.value) {
-    return
-  }
-  if (props.onlyOneDefault && factories.value.length === 1) {
-    selectValue.value = factories.value[0].value
-    handleChange(selectValue.value)
-    return
-  }
-  if (props.default) {
-    selectValue.value = factories.value[0].value
-    handleChange(selectValue.value)
-    return
-  }
-  handleChange(selectValue.value)
 }
 </script>

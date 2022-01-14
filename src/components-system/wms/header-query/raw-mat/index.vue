@@ -26,6 +26,7 @@
       <slot name="beforeWarehouse" />
       <factory-select v-model="queryVO.factoryId" placeholder="工厂" class="filter-item" @change="toQuery" clearable />
       <warehouse-select
+        v-if="showWarehouse"
         v-model="queryVO.warehouseId"
         :factory-id="queryVO.factoryId"
         :basic-class="props.basicClass"
@@ -88,11 +89,18 @@ const props = defineProps({
   toQuery: {
     type: Function
   },
+  // 显示公共库/项目库
   showProjectWarehouseType: {
     type: Boolean,
     default: false
   },
+  // 显示整料/余料
   showMaterialIsWhole: {
+    type: Boolean,
+    default: true
+  },
+  // 显示仓库
+  showWarehouse: {
     type: Boolean,
     default: true
   }

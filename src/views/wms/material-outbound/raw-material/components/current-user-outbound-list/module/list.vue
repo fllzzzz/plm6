@@ -305,7 +305,7 @@ function printOrDownload() {
     margin-right: 10px;
   }
   .el-table {
-    ::v-deep(.cell) {
+    ::v-deep(td .cell) {
       min-height: 28px;
       line-height: 28px;
     }

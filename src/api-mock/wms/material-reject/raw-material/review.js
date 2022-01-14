@@ -68,7 +68,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -101,7 +100,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -135,7 +133,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -170,7 +167,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             supplier: {
               // 供应商
               id: 1,

@@ -126,14 +126,13 @@
 
 <script setup>
 import { detail as detailApi } from '@/api/wms/purchase-order'
-import { defineEmits, defineProps, ref, watch } from 'vue'
+import { defineEmits, defineProps, nextTick, ref, watch } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'
 import { weightMeasurementModeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { logisticsPayerEnum, logisticsTransportTypeEnum } from '@/utils/enum/modules/logistics'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
-import { isNotBlank } from '@/utils/data-type'
 
 import uploadList from '@comp/file-upload/UploadList.vue'
 import areaTableTree from '@/components-system/branch-sub-items/outsourcing-area-table-tree.vue'
@@ -173,14 +172,32 @@ async function getDetail(id) {
   detail.value = {}
   try {
     detail.value = await detailApi(id)
-    if (detail.value.auxMaterialIds) {
-      detail.value.auxMaterialNames = detail.value.auxMaterialIds.map((id) => {
-        const material = rawMatClsKV.value[id]
-        if (material) {
-          return material.name
-        }
-        return '-'
-      })
+    const setInfo = () => {
+      if (detail.value.auxMaterialIds) {
+        detail.value.auxMaterialNames = detail.value.auxMaterialIds.map((id) => {
+          const material = rawMatClsKV.value[id]
+          if (material) {
+            return material.name
+          }
+          return '-'
+        })
+      }
+    }
+    if (!clsLoaded.value) {
+      const trigger = watch(
+        clsLoaded,
+        (val) => {
+          if (val) {
+            setInfo()
+            nextTick(() => {
+              trigger()
+            })
+          }
+        },
+        { immediate: true }
+      )
+    } else {
+      setInfo()
     }
   } catch (error) {
     console.log('采购单详情', error)

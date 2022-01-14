@@ -28,7 +28,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -61,7 +60,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -95,7 +93,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             'projects|2': [
               {
                 'id|+1': 1,
@@ -130,7 +127,6 @@ const get = {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
             },
-            shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             supplier: {
               // 供应商
               id: 1,
@@ -197,7 +193,6 @@ const detail_id1 = {
         id: 1, // 退货单id
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-        shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
         loadingWeight: 2000.0, // 过磅重量
         list: [
           {
@@ -372,8 +367,6 @@ const detail_id2 = {
         id: 2, // 退货单id
         basicClass: matClsEnum.MATERIAL.V, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-        shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
-        loadingWeight: 2000.0, // 过磅重量
         list: [
           {
             id: 1,
@@ -447,8 +440,6 @@ const detail_id3 = {
         id: 3, // 退货单id
         basicClass: matClsEnum.GAS.V, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
-        shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
-        loadingWeight: 2000.0, // 过磅重量
         list: [
           {
             id: 1,

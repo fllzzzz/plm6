@@ -168,9 +168,9 @@ CRUD.HOOK.beforeDetailLoaded = (crud, detail) => {
       })
     }
   }
-  if (clsLoaded.value) {
+  if (!clsLoaded.value) {
     const trigger = watch(
-      () => clsLoaded,
+      clsLoaded,
       (val) => {
         if (val) {
           setInfo()
@@ -178,7 +178,8 @@ CRUD.HOOK.beforeDetailLoaded = (crud, detail) => {
             trigger()
           })
         }
-      }
+      },
+      { immediate: true }
     )
   } else {
     setInfo()

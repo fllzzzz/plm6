@@ -77,15 +77,16 @@
       <el-tag v-permission="permission.print" hit effect="plain" size="medium" style="margin-left: 5px">{{
         `份数：${printConfig.copies}`
       }}</el-tag>
-      <!-- <print-table
+      <print-table
         v-permission="permission.printPackList"
-        api-key="STEEL_MES_PACK"
+        api-key="mesPackingList"
         :params="printParams"
         :before-print="handleBeforePrint"
         size="mini"
         type="warning"
         class="filter-item"
-      /> -->
+        style="margin-left: 5px!important;"
+      />
     </template>
     <template #viewLeft>
       <common-button
@@ -112,12 +113,13 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'
 import { DP } from '@/settings/config'
-// import { isNotBlank } from '@data-type/index'
+import { isNotBlank } from '@data-type/index'
 
 import usePrintLabel from '@compos/mes/label-print/use-label-print'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['getDetail'])
 const permission = inject('permission')
@@ -139,21 +141,21 @@ const printConfig = reactive({
   copies: 1
 })
 
-// const printParams = computed(() => {
-//   if (isNotBlank(crud.selections)) {
-//     return crud.selections.map((row) => {
-//       return row.id
-//     })
-//   }
-//   return undefined
-// })
+const printParams = computed(() => {
+  if (isNotBlank(crud.selections)) {
+    return crud.selections.map((row) => {
+      return row.id
+    })
+  }
+  return undefined
+})
 
-// function handleBeforePrint() {
-//   if (!isNotBlank(printParams)) {
-//     ElMessage.warning('至少选择一条需要打印的包单信息')
-//     return false
-//   }
-// }
+function handleBeforePrint() {
+  if (!isNotBlank(printParams.value)) {
+    ElMessage.warning('至少选择一条需要打印的包单信息')
+    return false
+  }
+}
 
 const { batchPrint, print } = usePrintLabel({
   getPrintTotalNumber: () => computed(() => printConfig.copies).value,
