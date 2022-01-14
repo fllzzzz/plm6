@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 打包与发运
 /**
  * 打包清单
  */
@@ -52,11 +53,24 @@ export function shippingList(id) {
   })
 }
 
+/**
+ * 物流汇总
+ */
+export function logisticsSummary(params) {
+  return request({
+    url: `api/mes/building/cargo/logistics/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
+  // 打包与发运
   packingList, // 打包清单
   shipmentSummary, // 发运汇总
   shipmentDetail, // 发运详情
   receiptStatusSummary, // 收货状态汇总
-  shippingList // 发货清单
+  shippingList, // 发货清单
+  logisticsSummary // 物流汇总
 }
 

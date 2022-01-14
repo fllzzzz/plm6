@@ -65,17 +65,14 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <!--
         <print-table
-          v-permission="[...permission.print, ...permission.detailPrint]"
-          :current-key.sync="currentKey"
-          :api-key="apiKey"
-          :params="printParams"
-          :before-print="handleBeforePrint"
+          v-permission="permission.print"
+          api-key="mesLogisticsSummary"
+          :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
-        /> -->
+        />
       </template>
       <template #viewLeft>
         <common-button v-permission="permission.edit" @click="feeVisible = true" size="mini" type="primary">物流费设置</common-button>
@@ -86,14 +83,12 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref } from 'vue'
+import { inject, ref } from 'vue'
 import moment from 'moment'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
-// import { isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -116,37 +111,7 @@ const defaultQuery = {
 const { crud, query } = regHeader(defaultQuery)
 
 const permission = inject('permission')
-// const currentKey = ref()
-const apiKey = ref([])
 const feeVisible = ref(false)
-
-onMounted(() => {
-  if (checkPermission(permission.print)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP')
-  }
-  if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP_DETAIL')
-  }
-})
-
-// const printParams = computed(() => {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP') {
-//     return { ...query }
-//   }
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && isNotBlank(crud.selections)) {
-//     return crud.selections.map(row => {
-//       return row.id
-//     })
-//   }
-//   return undefined
-// })
-
-// function handleBeforePrint() {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && !isNotBlank(printParams)) {
-//     $message.warning('至少选择一条需要打印的发运信息')
-//     return false
-//   }
-// }
 
 function handleDeliveryDateChange() {
   if (query.deliveryDate && query.deliveryDate.length > 1) {

@@ -116,11 +116,11 @@ const mesShippingList = {
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'address', title: '项目地址：', width: 190, type: typeEnum.OTHER.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '物流单位：', width: 190, type: typeEnum.COMPANY_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'customerUnit', title: '收货单位：', width: 135, type: typeEnum.COMPANY_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'deliveryTime', title: '发货时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'consignee', title: '收货人：', width: 45, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'tripNumber', title: '车次：', width: 90, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'leaderPhone', title: '联系电话：', width: 55, type: typeEnum.PHONE.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'carrier', title: '承运人：', width: 45, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'actualTime', title: '发货时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'receiptName', title: '收货人：', width: 45, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '车次：', width: 90, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'receiptPhone', title: '联系电话：', width: 55, type: typeEnum.PHONE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'driverName', title: '承运人：', width: 45, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'licensePlate', title: '车牌号：', width: 90, type: typeEnum.LICENSE_PLATE.K },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'driverPhone', title: '司机电话：', width: 55, type: typeEnum.PHONE.K }
     ]
@@ -171,8 +171,8 @@ const mesShippingList = {
      * @param {*} format 格式转换
      */
     fields: [
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'shipper', title: '发货人：', width: 63, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'auditor', title: '审核：', width: 63, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'userName', title: '发货人：', width: 63, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'auditUserName', title: '审核：', width: 63, type: typeEnum.USER_NAME.K },
       { show: true, source: dataSourceEnum.CUSTOMIZE.V, key: 'approver', title: '签收：', width: 63 }
     ]
   },
