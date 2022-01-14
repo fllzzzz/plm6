@@ -88,13 +88,6 @@
     </div>
     <crudOperation>
       <template v-slot:optLeft>
-        <!-- <export-button
-          v-permission="permission.downloadLogistics"
-          :params="{...query}"
-          :fn="downloadLogistics"
-          btn-text="下载物流汇总表（根据查询条件下载）"
-          class="filter-item"
-        />
         <print-table
           v-permission="[...permission.print, ...permission.detailPrint]"
           v-model:current-key="currentKey"
@@ -104,7 +97,7 @@
           size="mini"
           type="warning"
           class="filter-item"
-        /> -->
+        />
       </template>
       <template v-slot:viewLeft>
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
@@ -119,20 +112,21 @@
 
 <script setup>
 import { getSummaryShipMete } from '@/api/mes/pack-and-ship/ship-list'
-import { inject, onMounted, ref } from 'vue'
+import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
-// import { isNotBlank } from '@data-type/index'
+import { isBlank, isNotBlank } from '@data-type/index'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
   serialNumber: undefined, licensePlate: undefined,
@@ -147,36 +141,36 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 const permission = inject('permission')
 const summaryLoading = ref(false)
 const shipWeight = ref(0)
-// const currentKey = ref()
+const currentKey = ref()
 const apiKey = ref([])
 
 onMounted(() => {
   if (checkPermission(permission.print)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP')
+    apiKey.value.push('mesShipmentSummary')
   }
   if (checkPermission(permission.detailPrint)) {
-    apiKey.value.push('STEEL_MES_PACK_SHIP_DETAIL')
+    apiKey.value.push('mesShipmentDetail')
   }
 })
 
-// const printParams = computed(() => {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP') {
-//     return { ...query }
-//   }
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && isNotBlank(crud.selections)) {
-//     return crud.selections.map(row => {
-//       return row.id
-//     })
-//   }
-//   return undefined
-// })
+const printParams = computed(() => {
+  if (currentKey.value === 'mesShipmentSummary') {
+    return { ...query }
+  }
+  if (currentKey.value === 'mesShipmentDetail' && isNotBlank(crud.selections)) {
+    return crud.selections.map(row => {
+      return row.id
+    })
+  }
+  return undefined
+})
 
-// function handleBeforePrint() {
-//   if (currentKey.value === 'STEEL_MES_PACK_SHIP_DETAIL' && !isNotBlank(printParams)) {
-//     $message.warning('至少选择一条需要打印的发运信息')
-//     return false
-//   }
-// }
+function handleBeforePrint() {
+  if (currentKey.value === 'mesShipmentDetail' && isBlank(printParams.value)) {
+    ElMessage.warning('至少选择一条需要打印的发运信息')
+    return false
+  }
+}
 
 CRUD.HOOK.afterToQuery = () => {
   fetchSummary()

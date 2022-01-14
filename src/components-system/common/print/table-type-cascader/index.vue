@@ -1,4 +1,4 @@
-<!-- 模块类型 -->
+<!-- 表格模板类型 -->
 <template>
   <el-cascader
     v-model="c_value"
@@ -15,9 +15,9 @@
 <script setup>
 import { ref, watch, computed, defineProps, defineEmits } from 'vue'
 
-import enumOperate, { moduleTypeEnum, tableTypeEnum } from '@/utils/print/table-type'
+import { moduleType, tableType } from '@/utils/print/table/type'
 
-const emit = defineEmits(['update:currentKey', 'change'])
+const emit = defineEmits(['update:value', 'change'])
 
 const props = defineProps({
   value: {
@@ -50,7 +50,7 @@ const props = defineProps({
   },
   showAllLevels: {
     type: Boolean,
-    default: false
+    default: true
   },
   placeholder: {
     type: String,
@@ -82,28 +82,51 @@ fetch()
 
 function handleChange(val) {
   emit('update:value', val)
-  emit('change', tableTypeEnum[val])
+  emit('change', tableType[val])
 }
 
 function fetch() {
   loading.value = true
-  let options = []
-  const _moduleTypeEnum = JSON.parse(JSON.stringify(moduleTypeEnum))
-  for (const moduleType in _moduleTypeEnum) {
-    // 将模块的value改为负数，使options能使用emitPath：false
-    if (!props.emitPath) {
-      _moduleTypeEnum[moduleType].V = -_moduleTypeEnum[moduleType].V
+  const _options = []
+  const typeMap = {}
+  for (const type in moduleType) {
+    const module = moduleType[type]
+    for (const key in module.V) {
+      const value = module.V[key]
+      const _module = {
+        K: key,
+        L: value,
+        children: []
+      }
+      typeMap[key] = _module
     }
-    _moduleTypeEnum[moduleType].children = []
   }
-  const tableTypeArr = enumOperate.toArr(tableTypeEnum)
-  for (const tableType of tableTypeArr) {
-    if (_moduleTypeEnum[tableType.T]) {
-      _moduleTypeEnum[tableType.T].children.push(tableType)
+  for (const key in tableType) {
+    if (typeMap[tableType[key].M]) {
+      typeMap[tableType[key].M].children.push({
+        K: key,
+        ...tableType[key]
+      })
     }
   }
-  options = enumOperate.toArr(_moduleTypeEnum)
-  options.value = options
+  for (const type in moduleType) {
+    const module = moduleType[type]
+    const _module = {
+      K: type,
+      L: module.L,
+      children: []
+    }
+    // 过滤没有模板的模块
+    for (const key in module.V) {
+      if (typeMap[key]?.children.length) {
+        _module.children.push(typeMap[key])
+      }
+    }
+    if (_module.children.length) {
+      _options.push(_module)
+    }
+  }
+  options.value = _options
   loading.value = false
 }
 </script>

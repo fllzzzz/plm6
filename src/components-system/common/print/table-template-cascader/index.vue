@@ -18,7 +18,8 @@
 import { ref, watch, computed, defineProps, defineEmits, nextTick } from 'vue'
 import { getByCondition } from '@/api/config/system-config/table-print-template'
 
-import { tableTypeEnum } from '@/utils/print/table-type'
+import { tableType } from '@/utils/print/table/type'
+
 import printTemplate from '@/utils/print/default-template'
 import { isBlank, isNotBlank, judgeSameValue } from '@data-type/index'
 
@@ -174,12 +175,14 @@ async function fetch() {
         })
         defaultValue = defaultValue || k
       }
-      _options.push({
-        id: `-${tableTypeEnum[k].V}`,
-        name: tableTypeEnum[k].L,
-        key: k,
-        children: typeMap[k]
-      })
+      if (tableType[k]) {
+        _options.push({
+          id: `-${tableType[k].V}`,
+          name: tableType[k].L,
+          key: k,
+          children: typeMap[k]
+        })
+      }
     }
     // 按key排序
     _options.sort((a, b) => {

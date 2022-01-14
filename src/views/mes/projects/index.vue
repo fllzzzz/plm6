@@ -27,7 +27,16 @@
           align="center"
           label="合同编号"
           fixed="left"
-        />
+        >
+          <template #default="{ row }">
+            <table-cell-tag
+              :show="row.status === projectStatusEnum.SUSPEND.V || row.status === projectStatusEnum.SETTLED.V"
+              :name="projectStatusEnum.V[row.status].L"
+              :offset="15"
+            />
+            <span>{{ row.serialNumber }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('name')"
           key="name"
@@ -132,9 +141,10 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import projectChart from './project-chart'
-import { businessTypeEnum } from '@enum-ms/contract'
+import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {
