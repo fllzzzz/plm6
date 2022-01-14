@@ -1,11 +1,11 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
 
 // 入发存报表
-const STEEL_MES_WAREHOUSE_STATE_REPORT = {
+const mesWarehouseStateReport = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'STEEL_MES_WAREHOUSE_STATE_REPORT', // 表格类型 KEY
+  type: 'mesWarehouseStateReport', // 表格类型 KEY
   name: '入发存报表（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -87,7 +87,7 @@ const STEEL_MES_WAREHOUSE_STATE_REPORT = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 11,
+    height: 6,
     width: 190,
     emptyVal: '',
     /**
@@ -198,18 +198,18 @@ const STEEL_MES_WAREHOUSE_STATE_REPORT = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'contractNo', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.CONTRACT_NO.K },
+      { show: true, key: 'serialNumber', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.CONTRACT_NO.K },
       { show: true, key: 'shortName', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.GUID.K },
       { show: true, key: 'productType', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'componentTypeEnum', key: 'L' }},
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
-      { show: true, key: 'grossMete', title: '期初库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
-      { show: true, key: 'inboundGrossMete', title: '入库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
-      { show: true, key: 'outboundGrossMete', title: '出库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
-      { show: true, key: 'endingInventory', title: '期末库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true }
+      { show: true, key: 'beginMete', title: '期初库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
+      { show: true, key: 'inboundMete', title: '入库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
+      { show: true, key: 'outboundMete', title: '出库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
+      { show: true, key: 'endMete', title: '期末库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true }
     ]
   }
 }
 
 export default {
-  STEEL_MES_WAREHOUSE_STATE_REPORT //  入发存报表
+  mesWarehouseStateReport //  入发存报表
 }

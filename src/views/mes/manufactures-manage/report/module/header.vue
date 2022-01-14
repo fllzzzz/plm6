@@ -26,6 +26,16 @@
     <rrOperation />
   </div>
   <crudOperation>
+    <template #optLeft>
+      <print-table
+        v-permission="permission.print"
+        api-key="mesWarehouseStateReport"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
+    </template>
     <template #viewLeft>
       <span v-if="query.productType" v-permission="permission.get">
         <el-tag effect="plain" style="cursor: pointer" class="filter-item" @click="showDetail(reportTypeEnum.BEGIN.V)">
