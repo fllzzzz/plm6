@@ -55,12 +55,12 @@
         </el-table-column>
         <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="'YUAN'">{{ scope.row.wage }}</span>
+            <span v-to-fixed="{ k: 'YUAN', val: scope.row.wage }"></span>
           </template>
         </el-table-column>
         <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="'YUAN'">{{ scope.row.price }}</span>
+            <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
           </template>
         </el-table-column>
       </common-table>

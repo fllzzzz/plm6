@@ -87,7 +87,7 @@
             placeholder="单价"
             @change="handleUnitPriceChange($event, row)"
           />
-          <span v-else v-to-fixed="'YUAN'">{{ row.unitPrice }}</span>
+          <span v-else v-to-fixed="{ k: 'YUAN', val: row.unitPrice }"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -102,7 +102,7 @@
           <span v-if="modifying">
             {{ row.totalAmount }}
           </span>
-          <span v-else v-to-fixed="'YUAN'">{{ row.totalAmount }}</span>
+          <span v-else v-to-fixed="{ k: 'YUAN', val: row.totalAmount }"></span>
         </template>
       </el-table-column>
     </common-table>
