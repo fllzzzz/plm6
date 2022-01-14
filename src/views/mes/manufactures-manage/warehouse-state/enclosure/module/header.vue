@@ -46,38 +46,38 @@
       <template #viewLeft>
         <span v-permission="crud.permission.get">
           <el-tag effect="plain" class="filter-item">
-            <span>{{ query.factoryId ? '任务量' : '清单量' }}：</span>
-            <span
-v-if="!summaryLoading"
-              >{{ summaryInfo.quantity }} 张 | {{ convertUnits(summaryInfo.mete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
-            >
+            <span>清单量：</span>
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.quantity }} 张 | {{ convertUnits(summaryInfo.mete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m
+            </span>
+            <i v-else class="el-icon-loading" />
+          </el-tag>
+          <el-tag effect="plain" class="filter-item">
+            <span>任务量：</span>
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.taskQuantity }} 张 | {{ convertUnits(summaryInfo.taskMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m
+            </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item">
             <span>入库量：</span>
-            <span
-v-if="!summaryLoading"
-              >{{ summaryInfo.inboundQuantity }} 张 |
-              {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
-            >
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.inboundQuantity }} 张 | {{ convertUnits(summaryInfo.inboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m
+            </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item">
             <span>出库量：</span>
-            <span
-v-if="!summaryLoading"
-              >{{ summaryInfo.outboundQuantity }} 张 |
-              {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
-            >
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.outboundQuantity }} 张 | {{ convertUnits(summaryInfo.outboundMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m
+            </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item" type="success">
             <span>库存量：</span>
-            <span
-v-if="!summaryLoading"
-              >{{ summaryInfo.stockQuantity }} 张 |
-              {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m</span
-            >
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.stockQuantity }} 张 | {{ convertUnits(summaryInfo.stockMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M, true) }} m
+            </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
         </span>
@@ -119,10 +119,12 @@ const productType = componentTypeEnum.ENCLOSURE.V
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const summaryInfo = ref({
   quantity: 0,
+  taskQuantity: 0,
   inboundQuantity: 0,
   outboundQuantity: 0,
   stockQuantity: 0,
   mete: 0,
+  taskMete: 0,
   inboundMete: 0,
   outboundMete: 0,
   stockMete: 0
@@ -161,20 +163,24 @@ async function fetchSummaryInfo() {
     }
     const {
       quantity = 0,
+      taskQuantity = 0,
       inboundQuantity = 0,
       outboundQuantity = 0,
       stockQuantity = 0,
       mete = 0,
+      taskMete = 0,
       outboundMete = 0,
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
     summaryInfo.value = {
       quantity,
+      taskQuantity,
       inboundQuantity,
       outboundQuantity,
       stockQuantity,
       mete,
+      taskMete,
       inboundMete,
       outboundMete,
       stockMete

@@ -72,6 +72,18 @@
     </template>
   </el-table-column>
   <el-table-column
+    v-if="showProcess && (isBlank(columns) || columns.visible('processName'))"
+    prop="processName"
+    :show-overflow-tooltip="true"
+    label="工序"
+    min-width="100px"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-empty-text>{{ row.processName }}</span>
+    </template>
+  </el-table-column>
+  <el-table-column
     v-if="showTeam && (isBlank(columns) || columns.visible('leaderName'))"
     prop="leaderName"
     :show-overflow-tooltip="true"
@@ -117,6 +129,11 @@ defineProps({
   },
   // 显示生产线
   showProductionLine: {
+    type: Boolean,
+    default: false
+  },
+  // 显示工序
+  showProcess: {
     type: Boolean,
     default: false
   },
