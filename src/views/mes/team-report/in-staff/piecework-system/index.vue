@@ -16,19 +16,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <belonging-info-columns :columns="columns" showWorkshop showProductionLine showTeam />
-      <el-table-column
-        v-if="columns.visible('processName')"
-        key="processName"
-        prop="processName"
-        :show-overflow-tooltip="true"
-        label="工序"
-        min-width="100px"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.processName }}</span>
-        </template>
-      </el-table-column>
+      <belonging-info-columns :columns="columns" showWorkshop showProductionLine showProcess showTeam />
       <!-- <el-table-column
         v-if="columns.visible('wageQuotaType')"
         key="wageQuotaType"

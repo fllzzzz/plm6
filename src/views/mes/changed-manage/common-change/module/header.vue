@@ -6,7 +6,7 @@
         <common-radio-button
           v-model="query.productType"
           :options="componentTypeEnum.ENUM"
-          type="enumSL"
+          type="enum"
           :unshowVal="[componentTypeEnum.ENCLOSURE.V, componentTypeEnum.AUXILIARY_MATERIAL.V]"
           default
           class="filter-item"

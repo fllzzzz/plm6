@@ -10,7 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
+      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -140,9 +140,9 @@ import mHeader from './module/header'
 import mDetail from './module/detail/index'
 
 const reportTypeEnum = {
-  INBOUND: { L: '入库', K: 'INBOUND', V: 0 },
-  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 },
-  BEGIN: { L: '期初库存', K: 'BEGIN', V: 2 },
+  BEGIN: { L: '期初库存', K: 'BEGIN', V: 1 },
+  INBOUND: { L: '入库', K: 'INBOUND', V: 2 },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 3 },
   END: { L: '期末库存', K: 'END', V: 4 }
 }
 constantize(reportTypeEnum)
@@ -172,7 +172,8 @@ provide('query', crud.query)
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data = res.data.map((v) => {
+  res.data = res.data.map((v, i) => {
+    v.rowId = i + '' + Math.random()
     return v
   })
 }

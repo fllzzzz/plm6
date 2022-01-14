@@ -77,7 +77,18 @@ export default {
         hidden: false,
         component: '/mes/changed-manage/common-change/index',
         meta: {
-          title: '变更管理',
+          title: '变更列表',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesSurplusList',
+        path: 'surplus-list',
+        hidden: false,
+        component: '/mes/changed-manage/surplus-list/index',
+        meta: {
+          title: '多余列表',
           icon: 'project',
           noCache: true
         }

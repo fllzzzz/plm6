@@ -115,7 +115,7 @@
         min-width="100px"
       />
       <el-table-column
-        v-if="crud.query.factoryId && columns.visible('taskQuantity')"
+        v-if="columns.visible('taskQuantity')"
         key="taskQuantity"
         prop="taskQuantity"
         label="任务数量"

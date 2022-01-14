@@ -152,11 +152,19 @@ constantize(shipAuditStatusEnum)
 
 // 变更异常处理状态
 const abnormalHandleStatusEnum = {
-  PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0 },
-  PROCESSING: { L: '处理中', K: 'PROCESSING', V: 1 << 1 },
-  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2 }
+  PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
+  PROCESSING: { L: '处理中', K: 'PROCESSING', V: 1 << 1, TAG: 'warning' },
+  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2, TAG: 'success' }
 }
 constantize(abnormalHandleStatusEnum)
+
+// 多余清单处理状态
+const surplusHandleStatusEnum = {
+  PENDING: { L: '未处理', K: 'PENDING', V: 1 << 0, TAG: '' },
+  SCRAPPED: { L: '报废', K: 'SCRAPPED', V: 1 << 1, TAG: 'danger' },
+  SECONDARY_USE: { L: '二次利用', K: 'SECONDARY_USE', V: 1 << 2, TAG: 'warning' }
+}
+constantize(surplusHandleStatusEnum)
 
 // 变更上报类型状态
 const abnormalReportTypeEnum = {
@@ -244,7 +252,8 @@ export {
   paintingTypeEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
-  printProductTypeEnum
+  printProductTypeEnum,
+  surplusHandleStatusEnum
 }
 
 export default {
@@ -273,5 +282,6 @@ export default {
   paintingTypeEnum,
   reportComponentTypeEnum,
   labelTypeEnum,
-  printProductTypeEnum
+  printProductTypeEnum,
+  surplusHandleStatusEnum
 }
