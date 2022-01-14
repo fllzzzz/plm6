@@ -28,24 +28,27 @@
       <template #viewLeft>
         <span v-permission="crud.permission.get">
           <el-tag effect="plain" class="filter-item">
-            <span>{{ query.factoryId ? '任务量' : '清单量' }}：</span>
+            <span>清单量：</span>
             <span v-if="!summaryLoading">{{ summaryInfo.quantity }} 件 | {{ toFixed(summaryInfo.mete, DP.COM_WT__KG) }} kg</span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item">
+            <span>任务量：</span>
+            <span v-if="!summaryLoading">{{ summaryInfo.taskQuantity }} 件 | {{ toFixed(summaryInfo.taskMete, DP.COM_WT__KG) }} kg</span>
+            <i v-else class="el-icon-loading" />
+          </el-tag>
+          <el-tag effect="plain" class="filter-item">
             <span>入库量：</span>
-            <span
-v-if="!summaryLoading"
-              >{{ summaryInfo.inboundQuantity }} 件 | {{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg</span
-            >
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.inboundQuantity }} 件 | {{ toFixed(summaryInfo.inboundMete, DP.COM_WT__KG) }} kg
+            </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item">
             <span>出库量：</span>
-            <span
-v-if="!summaryLoading"
-              >{{ summaryInfo.outboundQuantity }} 件 | {{ toFixed(summaryInfo.outboundMete, DP.COM_WT__KG) }} kg</span
-            >
+            <span v-if="!summaryLoading">
+              {{ summaryInfo.outboundQuantity }} 件 | {{ toFixed(summaryInfo.outboundMete, DP.COM_WT__KG) }} kg
+            </span>
             <i v-else class="el-icon-loading" />
           </el-tag>
           <el-tag effect="plain" class="filter-item" type="success">
@@ -92,10 +95,12 @@ const productType = componentTypeEnum.ARTIFACT.V
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const summaryInfo = ref({
   quantity: 0,
+  taskQuantity: 0,
   inboundQuantity: 0,
   outboundQuantity: 0,
   stockQuantity: 0,
   mete: 0,
+  taskMete: 0,
   inboundMete: 0,
   outboundMete: 0,
   stockMete: 0
@@ -134,20 +139,24 @@ async function fetchSummaryInfo() {
     }
     const {
       quantity = 0,
+      taskQuantity = 0,
       inboundQuantity = 0,
       outboundQuantity = 0,
       stockQuantity = 0,
       mete = 0,
+      taskMete = 0,
       outboundMete = 0,
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
     summaryInfo.value = {
       quantity,
+      taskQuantity,
       inboundQuantity,
       outboundQuantity,
       stockQuantity,
       mete,
+      taskMete,
       inboundMete,
       outboundMete,
       stockMete

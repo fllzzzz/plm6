@@ -20,12 +20,7 @@
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <belonging-info-columns showProject showMonomer showWorkshop showTeam />
-        <el-table-column prop="processName" :show-overflow-tooltip="true" label="工序">
-          <template v-slot="scope">
-            <span>{{ scope.row.processName }}</span>
-          </template>
-        </el-table-column>
+        <belonging-info-columns showProject showMonomer showWorkshop showProcess showTeam />
         <productType-base-info-columns :productType="query.productType" :unShowField="['specification', 'material', 'color']" />
         <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
           <template v-slot="scope">
