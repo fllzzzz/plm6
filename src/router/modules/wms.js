@@ -327,6 +327,13 @@ export default {
               hidden: false,
               component: '/wms/report/raw-material/material-reject-receipt/index',
               meta: { title: '退货单表', icon: 'project', noCache: true }
+            },
+            {
+              name: 'WMSReportRawMaterialSendAndReceiveStorageReceipt',
+              path: 'report/raw-material/send-and-receive-storage',
+              hidden: false,
+              component: '/wms/report/raw-material/send-and-receive-storage/index',
+              meta: { title: '收发存报表', icon: 'project', noCache: true }
             }
           ]
         }
