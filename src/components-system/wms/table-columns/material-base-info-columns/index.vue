@@ -83,7 +83,7 @@
     <template #default="{ row }">
       <!-- 是否显示冻结角标 -->
       <span v-if="showFrozenTip && row.boolHasFrozen" class="table-cell-triangle-frozen" />
-      <el-tooltip :content="row.classifyPathName" :disabled="!row.classifyPathName" :show-after="500" placement="top">
+      <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
         <span>
           <!-- 是否可以查看材料冻结 -->
           <span

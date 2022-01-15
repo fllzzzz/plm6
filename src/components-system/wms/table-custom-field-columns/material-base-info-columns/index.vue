@@ -81,8 +81,8 @@
       <!-- 是否显示冻结角标 -->
       <span v-if="showFrozenTip && getInfo(row, 'boolHasFrozen')" class="table-cell-triangle-frozen" />
       <el-tooltip
-        :content="getInfo(row, 'classifyPathName')"
-        :disabled="!getInfo(row, 'classifyPathName')"
+        :content="getInfo(row, 'classifyParentFullName')"
+        :disabled="!getInfo(row, 'classifyParentFullName')"
         :show-after="500"
         placement="top"
       >

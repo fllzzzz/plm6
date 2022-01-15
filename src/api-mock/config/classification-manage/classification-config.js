@@ -250,7 +250,7 @@ const getClassificationTree = {
 const getMatClsTree = {
   url: '/api/config/classification/material/tree',
   method: 'get',
-  timeout: 5000,
+  timeout: 500,
   response: () => {
     return {
       code: 20000,

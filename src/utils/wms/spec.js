@@ -27,7 +27,7 @@ export async function setSpecInfoToList(list) {
             row.classifyFullPathId = info.classify.fullPathId // 全路径id
             row.classifyFullName = info.classify.fullName // 全路径名称
             row.classifyName = info.classify.name // 当前科目名称
-            row.classifyPathName = info.classify.pathName // 父级路径名称
+            row.classifyParentFullName = info.classify.parentFullName // 父级路径名称
             row.measureUnit = info.classify.measureUnit // 计量单位
             row.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
             row.accountingUnit = info.classify.accountingUnit // 核算单位

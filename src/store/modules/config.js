@@ -382,7 +382,7 @@ const actions = {
         clsBrief.fullName = clsBrief.fullPathName.join(' > ') // 全称
         clsBrief.name = clsBrief.fullPathName[clsBrief.fullPathName.length - 1]
         clsBrief.parentPathName = clsBrief.fullPathName.slice(0, -1) // 路径
-        clsBrief.pathName = clsBrief.parentPathName.join(' > ') // 全称
+        clsBrief.parentFullName = clsBrief.parentPathName.join(' > ') // 全称
 
         const matCls = {
           ...clsBrief,
