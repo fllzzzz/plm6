@@ -19,6 +19,7 @@
     size="small"
     :default="areaDefault"
     :disabled="areaDisabled"
+    :multiple="areaMultiple"
     :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
     :clearable="clearable"
     :noDataText="copyMonomerId ? '暂无数据' : '未选择单体'"
@@ -42,7 +43,7 @@ const props = defineProps({
     type: [Number, String, undefined]
   },
   areaId: {
-    type: [Number, String, undefined]
+    type: [Number, String, Array, undefined]
   },
   projectId: {
     type: [Number, String, undefined]
@@ -74,6 +75,10 @@ const props = defineProps({
     default: false
   },
   areaDisabled: {
+    type: Boolean,
+    default: false
+  },
+  areaMultiple: {
     type: Boolean,
     default: false
   }

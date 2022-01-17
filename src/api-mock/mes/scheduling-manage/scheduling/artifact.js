@@ -1,7 +1,7 @@
 import { artifactListInfo } from '../../common-mock-data/product-type-data'
 
 const getArtifact = {
-  url: '/api/mes/building/artifact/scheduling/page',
+  url: '/api/mes/building/scheduling/artifact/page',
   method: 'get',
   timeout: 1000,
   response: () => {
