@@ -3,7 +3,7 @@ import {
 } from '@enum-ms/mes'
 
 const getEnclosure = {
-  url: '/api/mes/building/enclosure/scheduling/page',
+  url: '/api/mes/building/scheduling/enclosure/page',
   method: 'get',
   timeout: 1000,
   response: (res) => {

@@ -49,7 +49,7 @@
         min-width="100px"
       >
         <template #default="{ row }">
-          <span v-to-fixed="'YUAN'">{{ row.price }}</span>
+          <span v-to-fixed="{ k: 'YUAN', val: row.price }"></span>
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.detail]" label="操作" width="100px" align="center" fixed="right">

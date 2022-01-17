@@ -1,21 +1,27 @@
 <template>
   <div class="head-container">
-    <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :productType="productType" :category="category" needConvert :project-id="projectId" @change="fetchMonomerAndArea" />
+    <div v-if="!hiddenArea" v-show="crud.searchToggle">
+      <monomer-select-area-tabs
+        :productType="productType"
+        :category="category"
+        needConvert
+        :project-id="projectId"
+        @change="fetchMonomerAndArea"
+      />
       <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <crudOperation>
       <template v-slot:optRight>
         <!-- 任务录入按钮 -->
-        <template v-if="query.areaId && checkPermission(permission.save)">
+        <template v-if="(query.areaId || hiddenArea) && checkPermission(permission.save)">
           <common-button v-show="modifying" type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
           <common-button v-show="modifying" type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
           <common-button v-show="!modifying" type="primary" style="margin-left: 0px" size="mini" @click.stop="handelModifying(true)">
             任务录入
           </common-button>
           <el-popover
-            v-if="query.areaId && checkPermission(permission.clear)"
+            v-if="(query.areaId || hiddenArea) && checkPermission(permission.clear)"
             v-model:visible="clearPopVisible"
             placement="top"
             width="600"
@@ -86,6 +92,10 @@ const permission = inject('permission')
 
 const props = defineProps({
   modifying: {
+    type: Boolean,
+    default: false
+  },
+  hiddenArea: {
     type: Boolean,
     default: false
   },

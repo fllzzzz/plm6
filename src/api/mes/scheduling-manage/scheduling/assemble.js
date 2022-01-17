@@ -6,7 +6,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'assemble/scheduling/page',
+    url: 'scheduling/assemble/page',
     method: 'get',
     params
   })

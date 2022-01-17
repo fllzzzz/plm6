@@ -10,7 +10,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'MES_ENCLOSURE_T__MM'" v-empty-text>{{ row.thickness }}</span>
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_T__MM', val: row.thickness}" v-empty-text></span>
     </template>
   </el-table-column>
   <el-table-column
@@ -24,7 +24,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'MES_ENCLOSURE_W__MM'" v-empty-text>{{ row.width }}</span>
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
     </template>
   </el-table-column>
   <el-table-column
@@ -63,7 +63,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'COM_UNIT__KG_M3'" v-empty-text>{{ row.capacity }}</span>
+      <span v-to-fixed="{ k: 'COM_UNIT__KG_M3', val: row.capacity}" v-empty-text></span>
     </template>
   </el-table-column>
   <el-table-column
@@ -77,7 +77,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'MES_ENCLOSURE_L__MM'" v-empty-text>{{ row.length }}</span>
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_L__MM', val: row.length }" v-empty-text></span>
     </template>
   </el-table-column>
   <slot name="quantity" />
@@ -92,7 +92,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'COM_AREA__M2'" v-empty-text>{{ row.totalArea }}</span>
+      <span v-to-fixed="{ k: 'COM_AREA__M2', val: row.totalArea }" v-empty-text></span>
     </template>
   </el-table-column>
   <el-table-column
@@ -106,7 +106,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'MES_ENCLOSURE_L__M'" v-empty-text>{{ row.totalLength }}</span>
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_L__M', val: row.totalLength }" v-empty-text></span>
     </template>
   </el-table-column>
 </template>

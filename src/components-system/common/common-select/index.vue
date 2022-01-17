@@ -289,7 +289,7 @@ function setDefault() {
   // 默认选中
   if (props.default) {
     hasDefaultTriggered.value = true
-    selectValue.value = props.options[0][DS.value]
+    selectValue.value = props.multiple ? [props.options[0][DS.value]] : props.options[0][DS.value]
     handleChange(selectValue.value)
     return
   }

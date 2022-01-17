@@ -6,7 +6,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'machine_part/scheduling/page',
+    url: 'scheduling/machine_part/page',
     method: 'get',
     params
   })

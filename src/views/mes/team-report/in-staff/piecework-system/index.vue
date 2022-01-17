@@ -52,7 +52,7 @@
         min-width="100px"
       >
         <template v-slot="scope">
-          <span v-to-fixed="'YUAN'">{{ scope.row.price }}</span>
+          <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
         </template>
       </el-table-column>
       <!--编辑与删除-->

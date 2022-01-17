@@ -1,5 +1,5 @@
 const getAssemble = {
-  url: '/api/mes/building/assemble/scheduling/page',
+  url: '/api/mes/building/scheduling/assemble/page',
   method: 'get',
   timeout: 1000,
   response: () => {

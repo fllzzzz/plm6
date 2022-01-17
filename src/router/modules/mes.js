@@ -164,7 +164,7 @@ export default {
         name: 'MesSchedulingArtifactMachinePart',
         path: 'machine-part',
         hidden: false,
-        component: '/mes/scheduling-manage/scheduling/machine-part/index',
+        component: '/mes/scheduling-manage/scheduling/machine-part-summary/index',
         meta: {
           title: '零件排产',
           icon: 'project',
