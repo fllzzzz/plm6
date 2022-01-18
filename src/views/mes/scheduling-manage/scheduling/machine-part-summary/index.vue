@@ -19,10 +19,9 @@
       <el-table-column
         v-if="columns.visible('name')"
         prop="name"
-        sortable="custom"
         :show-overflow-tooltip="true"
         label="名称"
-        min-width="120px"
+        min-width="100px"
         align="center"
       >
         <template #default="{ row }">
@@ -35,37 +34,83 @@
         sortable="custom"
         :show-overflow-tooltip="true"
         label="板厚/规格"
+        min-width="100px"
         align="center"
       >
         <template #default="{ row }">
           <span v-empty-text="{ val: row.steelSpec, blank: '未分类' }"></span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('quantity')"
-        prop="quantity"
-        sortable="custom"
-        :show-overflow-tooltip="true"
-        label="数量"
-        align="center"
-      >
-        <template #default="{ row }">
-          <span v-empty-text="row.quantity"></span>
-        </template>
+      <!-- <el-table-column v-if="columns.visible('quantity')" prop="quantity" :show-overflow-tooltip="true" label="清单数量" align="center">
+        <template #default="{ row }"> <span v-empty-text="row.quantity"></span> 件 </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('totalNetWeight')"
         prop="totalNetWeight"
-        sortable="custom"
         :show-overflow-tooltip="true"
-        label="重量"
+        label="总净量"
         align="center"
       >
+        <template #default="{ row }"> <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span> kg </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalGrossWeight')"
+        prop="totalGrossWeight"
+        :show-overflow-tooltip="true"
+        label="总毛量"
+        align="center"
+      >
+        <template #default="{ row }"> <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalGrossWeight }" v-empty-text></span> kg </template>
+      </el-table-column> -->
+      <el-table-column
+        v-if="columns.visible('quantity')"
+        :show-overflow-tooltip="true"
+        prop="quantity"
+        :label="`清单量`"
+        align="center"
+        min-width="140px"
+      >
         <template #default="{ row }">
-          <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span>
+          <span class="quantity-mete-show">
+            <span class="left">{{ row.quantity }} 件</span>
+            <span class="line">|</span>
+            <span class="right"><span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }"></span> kg</span>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" align="center" width="130">
+      <el-table-column
+        v-if="columns.visible('totalSchedulingQuantity')"
+        :show-overflow-tooltip="true"
+        prop="totalSchedulingQuantity"
+        :label="`已排产`"
+        align="center"
+        min-width="140px"
+      >
+        <template #default="{ row }">
+          <span class="quantity-mete-show tc-success">
+            <span class="left">{{ row.totalSchedulingQuantity }} 件</span>
+            <span class="line">|</span>
+            <span class="right"><span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalSchedulingMete }"></span> kg</span>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('unSchedulingQuantity')"
+        :show-overflow-tooltip="true"
+        prop="unSchedulingQuantity"
+        :label="`未排产`"
+        align="center"
+        min-width="140px"
+      >
+        <template #default="{ row }">
+          <span class="quantity-mete-show tc-danger">
+            <span class="left">{{ row.unSchedulingQuantity }} 件</span>
+            <span class="line">|</span>
+            <span class="right"><span v-to-fixed="{ k: 'COM_WT__KG', val: row.unSchedulingMete }"></span> kg</span>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="130">
         <template #default="{ row }">
           <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
         </template>
@@ -136,6 +181,9 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v, i) => {
     v.rowId = i + '' + Math.random()
+    v.totalSchedulingMete = v.totalSchedulingNetWeight || 0
+    v.unSchedulingQuantity = v.quantity || 0 - v.totalSchedulingQuantity || 0
+    v.unSchedulingMete = v.totalNetWeight || 0 - v.totalSchedulingMete || 0
   })
 }
 
@@ -149,3 +197,24 @@ function showDetail(row) {
   drawerVisible.value = true
 }
 </script>
+
+<style lang="scss">
+.quantity-mete-show {
+  display: flex;
+
+  .left {
+    width: 50%;
+    text-align: right;
+  }
+
+  .right {
+    width: 50%;
+    text-align: left;
+  }
+
+  .line {
+    width: 15px;
+    text-align: center;
+  }
+}
+</style>

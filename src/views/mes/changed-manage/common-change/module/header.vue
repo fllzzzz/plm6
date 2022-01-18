@@ -12,6 +12,14 @@
           class="filter-item"
           @change="crud.toQuery"
         />
+        <common-radio-button
+          v-model="query.status"
+          :options="abnormalHandleStatusEnum.ENUM"
+          type="enum"
+          showOptionAll
+          class="filter-item"
+          @change="crud.toQuery"
+        />
         <el-input
           v-model.trim="query.serialNumber"
           placeholder="输入编号搜索"
@@ -28,7 +36,7 @@
 </template>
 
 <script setup>
-import { componentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum, abnormalHandleStatusEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
