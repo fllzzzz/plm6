@@ -8,10 +8,20 @@
         :type="'other'"
         :dataStructure="typeProp"
         @change="typeChange"
-        style="margin-bottom:20px;"
+        style="margin-bottom:10px;"
       />
+      <div style="margin-bottom:10px;" v-if="queryProductType!==7 && queryProductType!==9">
+        <monomer-select
+          ref="monomerSelectRef"
+          v-model="monomerId"
+          :project-id="globalProject.id"
+          class="filter-item"
+          @change="getEnclosureData"
+        />
+      </div>
       <!--表格渲染-->
       <common-table
+        v-if="queryProductType===7 || queryProductType===9"
         v-loading="loading"
         ref="tableRef"
         :data="tableData"
@@ -56,20 +66,24 @@
         </template>
       </el-table-column>
     </common-table>
+    <enclosureTable v-else :enclosureData="enclosureData" :category="enclosureCategory"/>
     <mDetail :current-info="currentInfo" v-model="detailVisible" :globalProject="globalProject" :enclosureCategory="enclosureCategory"/>
     </template>
   </div>
 </template>
 
 <script setup>
-import { getStructure, getPart, getEnclosure, structureMonomer, partMonomer, enclosureMonomer } from '@/api/plan/technical-manage/summary-list'
+// import { getStructure, getPart, getEnclosure, structureMonomer, partMonomer, enclosureMonomer } from '@/api/plan/technical-manage/summary-list'
+import { getStructure, getPart, getEnclosure, structureMonomer, partMonomer } from '@/api/plan/technical-manage/summary-list'
 import { ref, watch } from 'vue'
 // import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import mDetail from './module/detail'
+import enclosureTable from './module/enclosure-table'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import monomerSelect from '@/components-system/plan/monomer-select'
 import { DP } from '@/settings/config'
 
 const { globalProject } = mapGetters(['globalProject'])
@@ -83,6 +97,7 @@ const tableRef = ref()
 const currentInfo = ref([])
 const detailVisible = ref(false)
 const loading = ref(false)
+const monomerId = ref()
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.summary-list',
@@ -95,6 +110,7 @@ const enclosureCategory = ref()
 const typeProp = { key: 'no', label: 'name', value: 'no' }
 const currentOption = ref([])
 const tableData = ref([])
+const enclosureData = ref([])
 const techOptions = [
   { name: '构件', key: 'mainStructure', dateKey: 'mainStructureDate', no: TechnologyTypeAllEnum.STRUCTURE.V, alias: 'STRUCTURE' },
   {
@@ -199,6 +215,7 @@ function typeChange(val) {
 }
 async function getStructureData() {
   loading.value = true
+  enclosureData.value = []
   try {
     const { content } = await getStructure({ projectId: globalProject.value.id })
     if (content.length > 0) {
@@ -218,6 +235,7 @@ async function getStructureData() {
 
 async function getPartData() {
   loading.value = true
+  enclosureData.value = []
   try {
     const { content } = await getPart({ projectId: globalProject.value.id })
     if (content.length > 0) {
@@ -237,17 +255,12 @@ async function getPartData() {
 
 async function getEnclosureData() {
   loading.value = true
+  tableData.value = []
+  enclosureData.value = []
   try {
-    const { content } = await getEnclosure({ projectId: globalProject.value.id, category: enclosureCategory.value })
-    if (content.length > 0) {
-      content.forEach(v => {
-        v.monomerId = v.monomer.id
-        v.name = v.monomer.name
-      })
-    }
-    tableData.value = content
+    const { content } = await getEnclosure({ projectId: globalProject.value.id, category: enclosureCategory.value, monomerId: monomerId.value })
+    enclosureData.value = content || []
   } catch (e) {
-    tableData.value = []
     console.log('获取围护清单', e)
   } finally {
     loading.value = false
@@ -288,22 +301,22 @@ async function getPartMonomer(id) {
   }
 }
 
-async function getEnclosureMonomer(id) {
-  try {
-    const { content } = await enclosureMonomer({ projectId: globalProject.value.id, category: enclosureCategory.value, monomerId: id })
-    if (content.length > 0) {
-      content.forEach(v => {
-        v.areaId = v.area.id
-        v.name = v.area.name
-        v.axis = v.area.axis
-      })
-    }
-    currentInfo.value = content
-  } catch (e) {
-    currentInfo.value = []
-    console.log('获取围护单体清单', e)
-  }
-}
+// async function getEnclosureMonomer(id) {
+//   try {
+//     const { content } = await enclosureMonomer({ projectId: globalProject.value.id, category: enclosureCategory.value, monomerId: id })
+//     if (content.length > 0) {
+//       content.forEach(v => {
+//         v.areaId = v.area.id
+//         v.name = v.area.name
+//         v.axis = v.area.axis
+//       })
+//     }
+//     currentInfo.value = content
+//   } catch (e) {
+//     currentInfo.value = []
+//     console.log('获取围护单体清单', e)
+//   }
+// }
 
 function openDetail(row) {
   currentInfo.value = []
@@ -316,7 +329,7 @@ function openDetail(row) {
         getPartMonomer(row.monomerId)
         break
       default:
-        getEnclosureMonomer(row.monomerId)
+        // getEnclosureMonomer(row.monomerId)
         break
     }
   }

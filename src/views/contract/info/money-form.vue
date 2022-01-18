@@ -7,6 +7,7 @@
     :before-close="handleClose"
     title="合同金额变更"
     :center="false"
+    :close-on-click-modal="false"
   >
     <template #title>
       <div class="dialog-title">

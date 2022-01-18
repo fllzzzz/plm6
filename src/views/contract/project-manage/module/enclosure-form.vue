@@ -315,7 +315,7 @@ const FIELD_INFO = {
         { field: 'plating', name: '镀层', dict: 'cladding', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
         { field: 'colour', name: '颜色', dict: 'color', placeholder: '请选择或填写颜色', rules: validateLength('请选择或填写颜色', 10) },
         { field: 'coating', name: '涂层', dict: 'coating', placeholder: '请选择或填写涂层', rules: validateLength('请选择或填写涂层', 10) },
-        { field: 'yieldStrength', name: '屈服强度', dict: 'yieldStrength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
+        { field: 'yieldStrength', name: '屈服强度', dict: 'yield_strength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
       ]
     }
   ],
@@ -340,7 +340,7 @@ const FIELD_INFO = {
         ], unit: 'mm', decimalPlace: 3 },
         { field: 'brand', name: '品牌', dict: 'brand', placeholder: '请选择或填写品牌', rules: validateLength('请选择或填写品牌', 10) },
         { field: 'plating', name: '镀层', dict: 'plating', placeholder: '请选择或填写镀层', rules: validateLength('请选择或填写镀层', 20) },
-        { field: 'yieldStrength', name: '屈服强度', dict: 'yieldStrength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
+        { field: 'yieldStrength', name: '屈服强度', dict: 'yield_strength', placeholder: '请选择或填写屈服强度', rules: validateLength('请选择或填写屈服强度', 10) }
       ]
     }
   ],

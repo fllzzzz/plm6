@@ -108,23 +108,19 @@ async function nextStep() {
   }
 }
 
-// async function preStep() {
-//   try {
-//     const valid = await nextStepValidate()
-//     if (valid) {
-//       stepActive.value--
-//     }
-//   } catch (error) {
-//     console.log('error', error)
-//   }
-// }
-
 CRUD.HOOK.beforeToCU = (crud, form) => {
   stepActive.value = 0
 }
 
+async function handleSuccess() {
+  try {
+    await store.dispatch('project/fetchUserProjects')
+  } catch (e) {
+    console.log(e)
+  }
+}
 CRUD.HOOK.afterAddSuccess = () => {
-  store.dispatch('project/fetchUserProjects')
+  handleSuccess()
 }
 
 // 保存  手动输入不存在的配置信息
@@ -141,25 +137,6 @@ CRUD.HOOK.afterAddSuccess = () => {
 </script>
 
 <style  rel="stylesheet/scss" lang="scss" scoped>
-// >>>.el-dialog__body{
-//     padding: 10px 20px;
-// }
-// >>>.el-drawer__header {
-//     margin-bottom: 10px;
-// }
-// .el-drawer-container {
-//   padding: 0 20px 20px 20px;
-//   overflow: auto;
-// }
-// >>>.el-steps--simple {
-//   padding: 10px 8%;
-// }
-// >>>.el-input-number .el-input__inner {
-//   text-align: left;
-// }
-// >>>.el-form--label-top .el-form-item__label {
-//     padding: 0 0 1px 0;
-// }
 .form-content {
   height: calc(100vh - 120px);
   overflow: auto;

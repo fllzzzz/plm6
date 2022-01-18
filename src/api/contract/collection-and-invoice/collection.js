@@ -27,6 +27,14 @@ export function edit(data) {
   })
 }
 
+export function del(id) {
+  return request({
+    module: 'contract',
+    url: `contract/collection/deleteById/${id}`,
+    method: 'delete'
+  })
+}
+
 export function contractCollectionInfo(params) {
   return request({
     module: 'contract',
@@ -45,4 +53,12 @@ export function editStatus(id, status) {
   })
 }
 
-export default { get, add }
+export function bankData(companyId) {
+  return request({
+    module: 'contract',
+    url: `branchCompany/listBankAccountByCompanyId/${companyId}`,
+    method: 'get'
+  })
+}
+
+export default { get, add, edit, del }

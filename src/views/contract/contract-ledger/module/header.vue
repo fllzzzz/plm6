@@ -24,19 +24,19 @@
       </el-radio-group>
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-input
-        v-model="query.leader"
+        v-model="query.serialNumber"
         placeholder="编号搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.leader"
+        v-model="query.name"
         placeholder="项目搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.leader"
+        v-model="query.projectManagerName"
         placeholder="业务负责人搜索"
         style="width:200px"
         class="filter-item"
@@ -44,10 +44,10 @@
       <rrOperation/>
       <crudOperation>
         <template #optLeft>
-          <el-tag v-if="totalSum" size="medium">{{ `累计合同额:${toThousand(totalSum)}元` }}</el-tag>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计结算额:${toThousand(totalSum)}元` }}</el-tag>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计收款额:${toThousand(totalSum)}元` }}</el-tag>
-          <el-tag type="success" v-if="totalSum" size="medium">{{ `累计开票额:${toThousand(totalSum)}元` }}</el-tag>
+          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计合同额:${totalSum.contractAmountSum?toThousand(totalSum.contractAmountSum):'-'}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计结算额:${totalSum.settlementAmountSum?toThousand(totalSum.settlementAmountSum):'-'}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计收款额:${totalSum.collectionAmountSum?toThousand(totalSum.collectionAmountSum):'-'}元` }}</el-tag>
+          <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计开票额:${totalSum.invoiceAmountSum?toThousand(totalSum.invoiceAmountSum):'-'}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>
@@ -61,16 +61,30 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { settlementStatusEnum } from '@enum-ms/contract'
 import { ElRadioGroup } from 'element-plus'
+import { ledgerSum } from '@/api/contract/contract-ledger'
+import { toThousand } from '@data-type/number'
 
 const defaultQuery = {
   projectId: undefined,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
-  projectType: undefined,
-  businessType: undefined,
-  projectContent: undefined
+  serialNumber: undefined,
+  name: undefined,
+  year: String(new Date().getFullYear()),
+  projectManagerName: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
 
-const totalSum = ref()
+const totalSum = ref({})
+
+getSum()
+
+async function getSum() {
+  try {
+    const data = await ledgerSum()
+    totalSum.value = data || {}
+  } catch (e) {
+    console.log('获取累计金额', e)
+  }
+}
 </script>
