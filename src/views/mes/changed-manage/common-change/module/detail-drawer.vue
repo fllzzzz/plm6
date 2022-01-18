@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`${info.handleType && handleMethodEnumV[info.handleType].L}详情：${info.serialNumber}`"
+    :title="`${isNotBlank(info.handleType) && handleMethodEnumV[info.handleType].L}详情：${info.serialNumber}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -11,7 +11,7 @@
       <div class="tip">
         <span>* 注意：</span>
         <span>
-          可操作{{ info.handleType && handleMethodEnumV[info.handleType].L }}的数量总和为{{
+          可操作{{ isNotBlank(info.handleType) && handleMethodEnumV[info.handleType].L }}的数量总和为{{
             info.canHandleTotalMete
           }}，请谨慎操作！</span
         >
@@ -23,7 +23,7 @@
             <span>{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column> -->
-         <belonging-info-columns showProductionLine showFactory/>
+        <belonging-info-columns showProductionLine showFactory />
         <!-- <el-table-column prop="teamName" :show-overflow-tooltip="true" label="班组">
           <template v-slot="scope">
             <span>{{ scope.row.teamName }}</span>
@@ -46,6 +46,7 @@ import { exceptionList } from '@/api/mes/changed-manage/artifact'
 import { taskList } from '@/api/mes/changed-manage/common'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
+import { isNotBlank } from '@data-type/index'
 import { abnormalReportTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'

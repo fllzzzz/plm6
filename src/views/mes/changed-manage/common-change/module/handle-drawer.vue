@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`${info.handleType && handleMethodEnumV[info.handleType].L}详情：${info.serialNumber}`"
+    :title="`${isNotBlank(info.handleType) && handleMethodEnumV[info.handleType].L}详情：${info.serialNumber}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -15,7 +15,7 @@
       <div class="tip">
         <span>* 注意：</span>
         <span>
-          可操作{{ info.handleType && handleMethodEnumV[info.handleType].L }}的数量总和为{{
+          可操作{{ isNotBlank(info.handleType) && handleMethodEnumV[info.handleType].L }}的数量总和为{{
             info.canHandleTotalMete
           }}，请谨慎操作！</span
         >
@@ -126,7 +126,7 @@ import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
 import { abnormalReportTypeEnum } from '@enum-ms/mes'
-import { deepClone } from '@data-type/index'
+import { deepClone, isNotBlank } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'

@@ -26,7 +26,7 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
     LODOP.ADD_PRINT_BARCODE('40mm', '72mm', '34mm', '34mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
-    LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -63,7 +63,7 @@ async function printEnclosure({ productType, labelType, component, manufacturerN
     }
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
-    LODOP.PRINT_DESIGN()/* 打印设计*/
+    // LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {

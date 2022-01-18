@@ -42,6 +42,7 @@
 import crudApi from '@/api/mes/changed-manage/surplus-list'
 import { ref, computed } from 'vue'
 
+import { surplusListPM as permission } from '@/page-permission/mes'
 import { surplusHandleStatusEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -50,14 +51,6 @@ import pagination from '@crud/Pagination'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,

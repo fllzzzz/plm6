@@ -7,6 +7,26 @@ export const commonPM = {}
 
 // ########################################################################
 
+// --------------------------- 变更管理 start ------------------------------
+
+// 变更管理/变更列表
+export const changeListPM = {
+  get: ['mes_change_list:get'], // 变更列表
+  save: ['mes_change_list:save'], // 处理变更
+  detail: ['mes_change_list:detail'] // 查看详情
+}
+
+// 变更管理/多余列表
+export const surplusListPM = {
+  get: ['mes_surplus_list:get'], // 多余列表
+  secondUse: ['mes_surplus_list:secondUse'], // 二次利用
+  scrap: ['mes_surplus_list:scrap'] // 报废
+}
+
+// --------------------------- 变更管理 end --------------------------------
+
+// ########################################################################
+
 // --------------------------- 排产管理 start ------------------------------
 
 // 排产管理/构件排产/一次排产
