@@ -53,6 +53,7 @@ export const showProjectSearch = [
   { component: '/mes/production-manage/dashboard/artifact-dashboard/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/production-manage/dashboard/enclosure-dashboard/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/production-manage/dashboard/project-report/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/mes/production-manage/dashboard/assembly-match/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/production-manage/dashboard/painting/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/team-report/artifact-team/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/team-report/enclosure-team/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },

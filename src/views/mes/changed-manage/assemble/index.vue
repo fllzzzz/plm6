@@ -191,7 +191,7 @@ let detailInfo = reactive({})
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data = res.data.map((v) => {
     v.changTypeText = abnormalChangeTypeEnum.VL[v.changeType]
-    v.canHandleTotalMete = v.newQuantity - v.producedQuantity
+    v.canHandleTotalMete = 1000
     return v
   })
 }
