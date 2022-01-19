@@ -120,8 +120,7 @@
 </template>
 
 <script setup>
-import { exceptionList, exceptionChange, taskChange } from '@/api/mes/changed-manage/artifact'
-import { taskList } from '@/api/mes/changed-manage/common'
+import { exceptionList, taskList, exceptionChange, taskChange } from '@/api/mes/changed-manage/common'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 import { ElNotification, ElMessage } from 'element-plus'
 
