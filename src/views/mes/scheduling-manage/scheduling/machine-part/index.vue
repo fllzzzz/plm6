@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea />
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea @refreshSummary="handleRefreshSummary"/>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -119,7 +119,7 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/scheduling/machine-part'
-import { provide, ref, defineProps, watch } from 'vue'
+import { provide, ref, defineProps, watch, defineEmits } from 'vue'
 
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
@@ -130,6 +130,8 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
+
+const emit = defineEmits(['refresh'])
 
 const props = defineProps({
   fQuery: {
@@ -194,6 +196,10 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+function handleRefreshSummary() {
+  emit('refresh')
+}
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query = Object.assign(crud.query, { ...props.fQuery })
