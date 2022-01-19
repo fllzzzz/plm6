@@ -18,10 +18,19 @@ export function getPart(params) {
   })
 }
 
+// export function getEnclosure(params) {
+//   return request({
+//     module: 'plan',
+//     url: 'product/enclosure/project',
+//     method: 'get',
+//     params
+//   })
+// }
+
 export function getEnclosure(params) {
   return request({
     module: 'plan',
-    url: 'product/enclosure/project',
+    url: 'enclosure/listSum',
     method: 'get',
     params
   })

@@ -54,6 +54,11 @@ import baseInfo from './base'
 import businessInfo from './business'
 import customerInfo from './customer'
 import members from './members'
+import { useStore } from 'vuex'
+import { mapGetters } from '@/store/lib'
+
+const { globalProjectId } = mapGetters(['globalProjectId'])
+const store = useStore()
 
 const props = defineProps({
   auditStatus: [Number, String],
@@ -112,6 +117,18 @@ const inputValid = (val) => {
   }
   return true
 }
+
+async function handleSuccess() {
+  try {
+    await store.dispatch('project/fetchUserProjects')
+    if (globalProjectId.value) {
+      await store.dispatch('project/setProjectId', globalProjectId.value)
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 async function passConfirm(val) {
   try {
     const title = val === auditTypeEnum.PASS.V ? '通过' : '驳回'
@@ -129,6 +146,9 @@ async function passConfirm(val) {
     }
     await confirmContract(submitData)
     ElNotification({ title: '提交成功', type: 'success' })
+    if (val === auditTypeEnum.PASS.V) {
+      handleSuccess()
+    }
     emit('success')
     handleClose()
   } catch (error) {

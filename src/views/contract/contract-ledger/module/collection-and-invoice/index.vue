@@ -12,28 +12,18 @@
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
         <el-tab-pane label="收款列表" name="collection">
-          <collection class="tab-content" />
+          <collection class="tab-content" :projectId="props.projectId" :visibleValue="modelValue"/>
         </el-tab-pane>
         <el-tab-pane label="开票列表" name="invoice">
-          <invoice class="tab-content" />
+          <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue"/>
         </el-tab-pane>
       </el-tabs>
     </template>
   </common-drawer>
-  <!-- <div class="app-container">
-    <el-tabs v-model="activeName" class="tab-container">
-      <el-tab-pane label="收款列表" name="collection">
-        <collection class="tab-content" />
-      </el-tab-pane>
-      <el-tab-pane label="开票列表" name="invoice">
-        <invoice class="tab-content" />
-      </el-tab-pane>
-    </el-tabs>
-  </div> -->
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, watch, ref } from 'vue'
 import { ElTabs, ElTabPane } from 'element-plus'
 import useVisible from '@compos/use-visible'
 import Collection from './collection'
@@ -44,11 +34,26 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  projectId: {
+    type: [String, Number],
+    default: undefined
+  },
+  tabName: {
+    type: [String],
+    default: 'collection'
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
+watch(
+  () => props.tabName,
+  (val) => {
+    activeName.value = val
+  },
+  { deep: true, immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

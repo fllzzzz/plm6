@@ -92,7 +92,7 @@
         v-if="columns.visible('userName')"
         key="userName"
         prop="userName"
-        label="创建人"
+        label="发起人"
         align="center"
         width="90px"
       >
@@ -110,7 +110,7 @@
       >
         <template v-slot="scope">
           <template v-if="contractChangeTypeEnum.VARIATION_ORDER.V">
-            <div v-if="scope.row.leaderList && scope.row.leaderList.length>0"><span v-for="item in scope.row.leaderList" :key="item.id">{{ item.name }}</span></div>
+            <div v-if="scope.row.leaderList && scope.row.leaderList.length>0"><span v-for="(item,index) in scope.row.leaderList" :key="item.id">{{ index!==0? ','+item.name: item.name }}</span></div>
           </template>
         </template>
       </el-table-column>

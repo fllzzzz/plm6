@@ -50,6 +50,20 @@ export default {
           hidden: false,
           component: '/contract/contract-ledger/index',
           meta: { title: '项目台账', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'collectionLedger',
+          path: 'collection-ledger',
+          hidden: false,
+          component: '/contract/collection-ledger/index',
+          meta: { title: '收款台账', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'collectionWarn',
+          path: 'collection-warn',
+          hidden: false,
+          component: '/contract/collection-warn/index',
+          meta: { title: '欠款预警', icon: 'contract2', noCache: true }
         }
       ]
     },

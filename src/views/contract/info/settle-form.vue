@@ -7,6 +7,7 @@
     :before-close="handleClose"
     title="项目结算"
     :center="false"
+    :close-on-click-modal="false"
   >
     <template #title>
       <div class="dialog-title">

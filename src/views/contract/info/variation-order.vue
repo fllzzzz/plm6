@@ -7,6 +7,7 @@
     :before-close="handleClose"
     title="变更签证"
     :center="false"
+    :close-on-click-modal="false"
   >
     <template #title>
       <div class="dialog-title">

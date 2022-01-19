@@ -584,17 +584,17 @@ async function rowSubmit(row) {
     ElMessage.error('请填写表格中标红数据')
     return
   }
+  const messageName = row.id ? '修改' : '新增'
   try {
     if (row.id) {
       await crudApi.edit(row)
     } else {
       await crudApi.add(row)
     }
-    const messageName = row.id ? '修改' : '新增'
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
   } catch (e) {
-    console.log('输入新增', e)
+    console.log(messageName, e)
   }
 }
 </script>
