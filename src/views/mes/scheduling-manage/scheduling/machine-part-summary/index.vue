@@ -182,8 +182,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v, i) => {
     v.rowId = i + '' + Math.random()
     v.totalSchedulingMete = v.totalSchedulingNetWeight || 0
-    v.unSchedulingQuantity = v.quantity || 0 - v.totalSchedulingQuantity || 0
-    v.unSchedulingMete = v.totalNetWeight || 0 - v.totalSchedulingMete || 0
+    v.unSchedulingQuantity = v.quantity - v.totalSchedulingQuantity || 0
+    v.unSchedulingMete = v.totalNetWeight - v.totalSchedulingMete || 0
   })
 }
 

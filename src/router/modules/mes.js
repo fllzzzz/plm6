@@ -138,39 +138,41 @@ export default {
         icon: 'project',
         noCache: true
       },
-      children: [{
-        name: 'MesSchedulingArtifactAssemble',
-        path: 'assemble',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/assemble/index',
-        meta: {
-          title: '一次排产',
-          icon: 'project',
-          noCache: true
+      children: [
+        {
+          name: 'MesSchedulingArtifactMachinePart',
+          path: 'machine-part',
+          hidden: false,
+          component: '/mes/scheduling-manage/scheduling/machine-part-summary/index',
+          meta: {
+            title: '零件排产',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesSchedulingArtifactAssemble',
+          path: 'assemble',
+          hidden: false,
+          component: '/mes/scheduling-manage/scheduling/assemble/index',
+          meta: {
+            title: '一次排产',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesSchedulingArtifactArtifact',
+          path: 'artifact',
+          hidden: false,
+          component: '/mes/scheduling-manage/scheduling/artifact/index',
+          meta: {
+            title: '二次排产',
+            icon: 'project',
+            noCache: true
+          }
         }
-      },
-      {
-        name: 'MesSchedulingArtifactArtifact',
-        path: 'artifact',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/artifact/index',
-        meta: {
-          title: '二次排产',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSchedulingArtifactMachinePart',
-        path: 'machine-part',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/machine-part-summary/index',
-        meta: {
-          title: '零件排产',
-          icon: 'project',
-          noCache: true
-        }
-      }
+
       ]
     },
     {

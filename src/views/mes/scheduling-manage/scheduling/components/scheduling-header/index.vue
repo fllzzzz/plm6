@@ -43,7 +43,7 @@
           </el-popover>
         </template>
         <common-button
-          v-if="query.areaId && checkPermission(permission.save)"
+          v-if="(query.areaId || hiddenArea) && checkPermission(permission.save)"
           type="warning"
           size="mini"
           @click.stop="openQuicklyAssignDlg"
@@ -105,7 +105,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:lines', 'update:modifying'])
+const emit = defineEmits(['update:lines', 'update:modifying', 'refreshSummary'])
 
 const previewVisible = ref(false) // 分配预览dlg
 const quicklyAssignVisible = ref(false) // 快速分配dlg
@@ -160,6 +160,7 @@ function openQuicklyAssignDlg() {
 function handleSaveSuccess() {
   handelModifying(false)
   refresh()
+  emit('refreshSummary')
 }
 
 function refresh() {

@@ -127,7 +127,7 @@ CRUD.HOOK.beforeToQuery = () => {
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     const members = []
-    v.mesBuildingTeamUserLinkList.forEach((m) => {
+    v.userLinkList.forEach((m) => {
       if (m.boolLeaderEnum) {
         v.leaderName = m.userName
         v.leaderId = m.userId
