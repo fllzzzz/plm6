@@ -23,7 +23,7 @@
           controls-position="right"
           style="width: 200px"
           :min="0"
-          :max="999999999"
+          :max="10000"
         />
       </el-form-item>
       <common-table

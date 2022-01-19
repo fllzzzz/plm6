@@ -54,7 +54,7 @@
           controls-position="right"
           style="width: 200px"
           :min="0"
-          :max="999999999"
+          :max="1000"
         />
       </el-form-item>
     </el-form>

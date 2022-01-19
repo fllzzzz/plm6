@@ -46,7 +46,7 @@
           :maxlength="50"
           style="width: 320px;"
         />
-        <span v-else>{{ form.changeContent }}</span>
+        <span v-else>{{ detailInfo.changeContent }}</span>
       </el-form-item>
       <el-form-item label="变更金额(可增减)" prop="changeMoney">
         <el-input-number
@@ -91,7 +91,7 @@
           style="width: 320px;"
         />
         <template v-else>
-          <span v-for="item in detailInfo.leaderList" :key="item.id">{{item.name}}</span>
+          <span v-for="(item,index) in detailInfo.leaderList" :key="item.id">{{index!==0? ','+item.name: item.name}}</span>
         </template>
       </el-form-item>
       <el-form-item label="描述" prop="changeDesc">
