@@ -82,9 +82,9 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
-    title: '开票填报',
+    title: '开票台账',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -101,6 +101,15 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+CRUD.HOOK.beforeRefresh = () => {
+  if (crud.query.createTime.length > 0) {
+    crud.query.startDate = crud.query.createTime[0]
+    crud.query.endDate = crud.query.createTime[1]
+  } else {
+    crud.query.startDate = undefined
+    crud.query.endDate = undefined
+  }
+}
 </script>
 
 <style lang="scss" scoped>

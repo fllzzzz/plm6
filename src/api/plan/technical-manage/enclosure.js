@@ -43,6 +43,15 @@ export function del(id) {
   })
 }
 
+// 按区域一键清空
+export function delEnclosureByArea(areaId) {
+  return request({
+    module: 'plan',
+    url: `enclosure/clearByAreaId/${areaId}`,
+    method: 'delete'
+  })
+}
+
 /**
  *围护导入2021
  */

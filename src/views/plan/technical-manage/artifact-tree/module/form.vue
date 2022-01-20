@@ -239,9 +239,9 @@
                 <span v-else style="cursor: pointer">{{ scope.row.quantity }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="producedQuantity" prop="producedQuantity" :show-overflow-tooltip="true" label="已使用" min-width="100">
+            <el-table-column key="usedQuantity" prop="usedQuantity" :show-overflow-tooltip="true" label="已使用" min-width="100">
               <template v-slot="scope">
-                <span style="cursor: pointer">{{ scope.row.producedQuantity }}</span>
+                <span style="cursor: pointer">{{ scope.row.usedQuantity }}</span>
               </template>
             </el-table-column>
             <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`*长度\n(mm)`" align="left" min-width="85">

@@ -73,10 +73,8 @@
 </template>
 
 <script setup>
-// import { getStructure, getPart, getEnclosure, structureMonomer, partMonomer, enclosureMonomer } from '@/api/plan/technical-manage/summary-list'
 import { getStructure, getPart, getEnclosure, structureMonomer, partMonomer } from '@/api/plan/technical-manage/summary-list'
 import { ref, watch } from 'vue'
-// import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import mDetail from './module/detail'
@@ -87,11 +85,6 @@ import monomerSelect from '@/components-system/plan/monomer-select'
 import { DP } from '@/settings/config'
 
 const { globalProject } = mapGetters(['globalProject'])
-// crud交由presenter持有
-// const permission = {
-//   get: ['summaryList:get'],
-//   detail: ['summaryList:detail']
-// }
 
 const tableRef = ref()
 const currentInfo = ref([])

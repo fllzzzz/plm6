@@ -72,11 +72,7 @@ import { businessTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
-
-// crud交由presenter持有
-const permission = {
-  get: ['collectionWarn:get']
-}
+import { collectionWarnPM as permission } from '@/page-permission/contract'
 
 const optShow = {
   add: false,

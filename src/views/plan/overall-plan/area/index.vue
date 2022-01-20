@@ -65,15 +65,9 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import { manufactureTypeEnum } from '@enum-ms/plan'
 import { parseTime } from '@/utils/date'
+import { areaListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['area:get'],
-  add: ['area:add'],
-  edit: ['area:edit'],
-  del: ['area:del']
-}
 
 const optShow = {
   add: true,

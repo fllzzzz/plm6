@@ -98,15 +98,9 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 // import { planTypeEnum } from '@enum-ms/plan'
 import { parseTime } from '@/utils/date'
+import { deepenListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['deepen:get'],
-  download: ['deepen:download'],
-  del: ['deepen:del'],
-  import: ['deepen:import']
-}
 
 const optShow = {
   add: false,

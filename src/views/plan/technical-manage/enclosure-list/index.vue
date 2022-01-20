@@ -349,16 +349,9 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
+import { enclosureListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['enclosureList:get'],
-  edit: ['enclosureList:edit'],
-  del: ['enclosureList:del'],
-  editStatus: ['enclosureList:editStatus'],
-  importList: ['enclosureList:import']
-}
 
 const plateOption = ref([])
 const totalTechInfo = ref({})

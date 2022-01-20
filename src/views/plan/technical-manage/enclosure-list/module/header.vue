@@ -78,7 +78,7 @@
         <template v-if="query.createType===enclosureCreateTypeEnum.UPLOAD.V">
           <upload-btn
             v-if="currentArea && currentArea.id"
-            v-permission="crud.permission.importList"
+            v-permission="crud.permission.import"
             :data="carryParam"
             :upload-fun="listUpload"
             success-msg="导入成功"
@@ -107,7 +107,12 @@
           btn-text="清单（按条件查询）"
           class="filter-item"
         />
-        <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength">
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么？`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id">
+          <template #reference>
+            <common-button type="danger">一键清空(按区域)</common-button>
+          </template>
+        </el-popconfirm>
+        <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength" style="margin-left:10px !important;">
           <span>{{`总长度:${sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M)}m`}}</span>
           <span>{{` | 总数量:${sumData.totalQuantity}张`}}</span>
         </el-tag>
@@ -120,7 +125,7 @@
       append-to-body
       :before-close="()=>{techVisible=false}"
       :visible="techVisible"
-      title="技术交底"
+      :title="`技术交底(${query.category?TechnologyTypeAllEnum.VL[query.category]:''})`"
       size="80%"
     >
       <template #content>
@@ -155,6 +160,7 @@ import trussSupportTable from '@/views/contract/project-manage/module/enclosure-
 import { isNotBlank } from '@data-type/index'
 import { getTotalSum } from '@/api/plan/technical-manage/enclosure'
 import { DP } from '@/settings/config'
+import { delEnclosureByArea } from '@/api/plan/technical-manage/enclosure'
 
 const defaultQuery = {
   name: undefined,
@@ -171,7 +177,7 @@ const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
-const { crud, query } = regHeader(defaultQuery)
+const { crud, query, CRUD } = regHeader(defaultQuery)
 const techVisible = ref(false)
 const emit = defineEmits(['tableAdd', 'categoryChange'])
 
@@ -305,6 +311,16 @@ async function getData() {
     } catch (e) {
       console.log('获取围护汇总', e)
     }
+  }
+}
+
+async function deleteEnclosure() {
+  try {
+    await delEnclosureByArea(crud.query.areaId)
+    crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    crud.toQuery()
+  } catch (e) {
+    console.log('清空区域下围护', e)
   }
 }
 </script>

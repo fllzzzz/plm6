@@ -393,20 +393,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
+          v-if="checkPermission([...permission.del])"
           label="操作"
           width="260px"
           align="center"
           fixed="right"
         >
           <template v-slot="scope">
-            <template v-if="scope.row.mainEdit">
-              <common-button type="info" size="mini" plain @click="cancelMainRow(scope.row)">取消</common-button>
-              <common-button type="primary" size="mini" @click="confirmRow(scope.row, scope.$index)">保存</common-button>
-            </template>
-            <template v-else>
-              <common-button type="primary" icon="el-icon-edit" size="mini" @click="modifyRow(scope.row, scope.$index)" />
-            </template>
             <udOperation :data="scope.row" :show-edit="false" />
             <el-tooltip
               class="item"
@@ -428,9 +421,6 @@
       <!--分页组件-->
       <pagination />
     </template>
-    <!-- <template v-else>
-      <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
-    </template> -->
   </div>
 </template>
 
@@ -446,17 +436,9 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
+import { assemblyListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['assembly:get'],
-  edit: ['assembly:edit'],
-  importList: ['assembly:import'],
-  del: ['assembly:del'],
-  addArtifact: ['assembly:addArtifact'],
-  delArtifact: ['assembly:delArtifact']
-}
 
 const optShow = {
   add: false,
@@ -466,7 +448,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const originRow = ref({})
 const maxNubmer = 999999999
 const tableRules = {
   serialNumber: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
@@ -511,31 +492,6 @@ watch(
 
 function handleRowClassName({ row, rowIndex }) {
   return row.existStatus === 1 ? '' : 'abnormal-row'
-}
-
-function modifyRow(val) {
-  originRow.value = JSON.parse(JSON.stringify(val))
-  val.mainEdit = true
-}
-
-async function confirmRow(val) {
-  val.mainEdit = false
-  try {
-    const editAssem = {
-      id: val.id,
-      detailUpdateDTOParams: val.detailDTOList
-    }
-    await crudApi.edit(editAssem)
-  } catch (e) {
-    val = Object.assign(val, originRow.value)
-  } finally {
-    crud.toQuery()
-  }
-}
-
-function cancelMainRow(val) {
-  val.mainEdit = false
-  val = Object.assign(val, originRow.value)
 }
 
 function addRow(val, index) {
