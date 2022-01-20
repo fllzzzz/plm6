@@ -154,7 +154,8 @@ constantize(shipAuditStatusEnum)
 const abnormalHandleStatusEnum = {
   PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
   PROCESSING: { L: '处理中', K: 'PROCESSING', V: 1 << 1, TAG: 'warning' },
-  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2, TAG: 'success' }
+  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2, TAG: 'success' },
+  CANCEL: { L: '已取消', K: 'CANCEL', V: 1 << 3, TAG: 'info' }
 }
 constantize(abnormalHandleStatusEnum)
 
