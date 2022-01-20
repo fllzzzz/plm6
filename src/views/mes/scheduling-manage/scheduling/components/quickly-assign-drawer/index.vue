@@ -15,7 +15,7 @@
       <div class="el-drawer-container">
         <div class="table-content">
           <common-table
-            ref="table"
+            ref="tableRef"
             :max-height="maxHeight"
             :data="assignAbleList"
             row-key="id"
@@ -76,6 +76,7 @@
 import { computed, defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import { toFixed } from '@data-type'
+import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -114,6 +115,8 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
+
+const tableRef = ref()
 const selectLineId = ref()
 const previewVisible = ref(false)
 const multipleSelection = ref([])
@@ -128,6 +131,9 @@ watch(
   ([visible]) => {
     if (visible) {
       handleDataChange()
+    } else {
+      tableRef.value?.clearSelection()
+      multipleSelection.value = []
     }
   },
   { immediate: true }
@@ -144,12 +150,12 @@ function handleChange({ line }) {
 
 function handleDataChange() {
   // 处理在录入的情况下打开快速分配
-  let _data = JSON.parse(JSON.stringify(props.data)) || []
+  let _data = deepClone(props.data) || []
   _data = _data.filter((v) => {
     return v.unassignQuantity
   })
   assignAbleList.value = _data.map((v) => {
-    v.schedulingMap = JSON.parse(JSON.stringify(v.sourceSchedulingMap))
+    v.schedulingMap = v.sourceSchedulingMap && deepClone(v.sourceSchedulingMap)
     v.assignQuantity = v.sourceAssignQuantity // 已分配数量
     v.unassignQuantity = v.sourceUnassignQuantity // 未分配数量还原
     return v
@@ -158,18 +164,17 @@ function handleDataChange() {
 }
 
 function handleSubmitData() {
-  const _lines = JSON.parse(JSON.stringify(props.lines))
+  const _lines = deepClone(props.lines)
   console.log(_lines)
   selectLine.value = _lines.filter((f) => {
     // 过滤一遍生产线，以便加快预览界面数据处理
     f.productionLineList = f.productionLineList.filter((l) => l.id === selectLineId.value)
     return f.productionLineList && f.productionLineList.length > 0
   })
-  console.log(multipleSelection.value, 'multipleSelection.value')
-  submitData.value = JSON.parse(JSON.stringify(multipleSelection.value))
+  submitData.value = deepClone(multipleSelection.value)
+  console.log(submitData.value)
   submitData.value.forEach((v) => {
     // 处理任务数据，修改任务数量及未分配任务数量
-    console.log(v, 'v')
     v.schedulingMap[selectLineId.value].quantity = v.schedulingMap[selectLineId.value].quantity || 0
     v.schedulingMap[selectLineId.value].quantity += v.sourceUnassignQuantity
     v.assignQuantity += v.sourceUnassignQuantity

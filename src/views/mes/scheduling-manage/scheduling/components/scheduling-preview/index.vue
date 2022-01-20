@@ -64,14 +64,9 @@
           <common-button type="warning" size="mini">查看分配汇总</common-button>
         </template>
       </el-popover>
-      <common-button
-:loading="loading"
-size="mini"
-:disabled="!modifiedData || modifiedData.length == 0"
-type="primary"
-@click="submit"
-        >保 存</common-button
-      >
+      <common-button :loading="loading" size="mini" :disabled="!modifiedData || modifiedData.length == 0" type="primary" @click="submit">
+        保 存
+      </common-button>
     </template>
     <common-table :data="modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column fixed label="序号" type="index" align="center" width="60" />

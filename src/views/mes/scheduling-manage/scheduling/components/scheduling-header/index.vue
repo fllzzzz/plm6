@@ -23,7 +23,7 @@
           <el-popover
             v-if="(query.areaId || hiddenArea) && checkPermission(permission.clear)"
             v-model:visible="clearPopVisible"
-            placement="top"
+            placement="right"
             width="600"
           >
             <p>确认清空【{{ currentArea.name }}】下的所有任务么？</p>
@@ -67,6 +67,8 @@
 import { ref, defineProps, defineEmits, inject } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
+import { deepClone } from '@data-type/index'
+
 import useGetLines from '@compos/mes/scheduling/use-get-lines'
 import useFormatSchedulingList from '@compos/mes/scheduling/use-format-scheduling-list'
 import useSchedulingClear from '@compos/mes/scheduling/use-scheduling-clear'
@@ -109,7 +111,6 @@ const emit = defineEmits(['update:lines', 'update:modifying', 'refreshSummary'])
 
 const previewVisible = ref(false) // 分配预览dlg
 const quicklyAssignVisible = ref(false) // 快速分配dlg
-const dataHasFormat = ref(false) // 排产数据格式是否已转换，未转换则在生产线加载成功时转换
 // TODO
 const currentArea = {
   name: ''
@@ -120,7 +121,6 @@ const { productionLineVisible, loaded, lineLoad, schedulingMapTemplate } = useGe
 const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ successHook: refresh })
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  dataHasFormat.value = lineLoad.value // 数据格式是否已经转换，因为接口异步，所以dataHasFormat放在循环前赋值
   res.data.content = res.data.content.map((v) => {
     v.schedulingList = v.schedulingProductionLineDTOS || [] // 排产列表
     v.quantity = v.quantity || 0 // 清单数量
@@ -131,19 +131,19 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     if (lineLoad.value) {
       // 生产线已加载，则进行数据格式转换
       v.schedulingMap = useFormatSchedulingList(v.schedulingList, schedulingMapTemplate)
-      v.sourceSchedulingMap = JSON.parse(JSON.stringify(v.schedulingMap)) // 用于数据还原和比较
+      v.sourceSchedulingMap = deepClone(v.schedulingMap) // 用于数据还原和比较
     }
     return v
   })
 }
 
 function dataHasFormatHook() {
-  if (dataHasFormat.value) {
+  if (loaded.value) {
     // 如果列表已经加载则对列表数据做一次处理
     crud.data = crud.data.map((v) => {
       // 排产表单：schedulingMap，对于页面任务分配的数量存储在schedulingMap中， k-v, k:productionLineId, v:表单内容
       v.schedulingMap = useFormatSchedulingList(v.schedulingList, schedulingMapTemplate)
-      v.sourceSchedulingMap = JSON.parse(JSON.stringify(v.schedulingMap))
+      v.sourceSchedulingMap = deepClone(v.schedulingMap)
       return v
     })
   }
@@ -184,7 +184,7 @@ function handelModifying(modifying, reset = false) {
   // 取消分配，数据还原
   if (reset) {
     crud.data.forEach((v) => {
-      v.schedulingMap = JSON.parse(JSON.stringify(v.sourceSchedulingMap))
+      v.schedulingMap = deepClone(v.sourceSchedulingMap)
       v.assignQuantity = v.sourceAssignQuantity // 已分配数量还原
       v.unassignQuantity = v.sourceUnassignQuantity // 未分配数量还原
       return v

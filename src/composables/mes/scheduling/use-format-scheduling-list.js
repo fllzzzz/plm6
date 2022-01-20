@@ -1,6 +1,8 @@
+import { deepClone } from '@data-type/index'
+
 export default function useFormatSchedulingList(schedulingList, schedulingMapTemplate) {
   // 任务表单：schedulingMap，对于页面任务分配的数量存储在schedulingMap中， k-v, k:productionLineId, v:表单内容
-  const schedulingMap = JSON.parse(JSON.stringify(schedulingMapTemplate))
+  const schedulingMap = deepClone(schedulingMapTemplate)
   schedulingList.forEach((t) => {
     // 赋值
     const _t = schedulingMap[t.productionLineId]
