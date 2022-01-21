@@ -97,7 +97,8 @@
           />
        </template>
         <template v-else>
-          <common-button type="success" size="mini" @click="emit('tableAdd')" class="filter-item" v-if="currentArea && currentArea.id">添加一行</common-button>
+          <common-button type="success" size="mini" @click="crud.toAdd" class="filter-item" v-if="currentArea && currentArea.id">添加</common-button>
+          <!-- <common-button type="success" size="mini" @click="emit('tableAdd')" class="filter-item" v-if="currentArea && currentArea.id">添加</common-button> -->
         </template>
         <export-button
           v-if="currentArea && currentArea.id"

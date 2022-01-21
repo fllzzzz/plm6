@@ -24,7 +24,7 @@
           prop="name"
           :show-overflow-tooltip="true"
           label="名称"
-          min-width="120"
+          min-width="100"
         >
           <template v-slot="scope">
             <el-input
@@ -79,31 +79,33 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            <common-select
-              v-if="scope.row.isModify"
-              v-model="scope.row.plateId"
-              :options="plateOption"
-              :type="'other'"
-              :dataStructure="typeProp"
-              size="small"
-              placeholder="版型"
-              @change="plateChange(scope.row,scope.$index)"
-            />
+            <template v-if="scope.row.isModify">
+              <common-select
+                v-model="scope.row.plateId"
+                :options="plateOption"
+                :type="'other'"
+                :dataStructure="crud.query.category===TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V?trussProp:typeProp"
+                size="small"
+                placeholder="版型"
+                @change="plateChange(scope.row,scope.$index)"
+              />
+            </template>
+
             <div v-else>{{ scope.row.plate? scope.row.plate: '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('effectiveWidth') && crud.query.category!==TechnologyTypeAllEnum.BENDING.V"
-          key="effectiveWidth"
-          prop="effectiveWidth"
+          v-if="columns.visible('width') && crud.query.category!==TechnologyTypeAllEnum.BENDING.V"
+          key="width"
+          prop="width"
           :show-overflow-tooltip="true"
           :label="crud.query.category===TechnologyTypeAllEnum.SANDWICH_BOARD.V?'宽度\n(mm)':`有效宽度\n(mm)`"
-          min-width="120px"
+          min-width="100px"
         >
           <template v-slot="scope">
              <el-input-number
               v-if="scope.row.isModify && (crud.query.category!==TechnologyTypeAllEnum.PROFILED_PLATE.V && crud.query.category!==TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)"
-              v-model.number="scope.row.effectiveWidth"
+              v-model.number="scope.row.width"
               :min="0"
               :max="99999999999"
               :step="1"
@@ -113,7 +115,7 @@
               style="width:100%"
                @change="getTotalData(scope.row)"
             />
-            <div v-else>{{ scope.row.effectiveWidth? scope.row.effectiveWidth.toFixed(DP.MES_ENCLOSURE_W__MM): '-' }}</div>
+            <div v-else>{{ scope.row.width? scope.row.width.toFixed(DP.MES_ENCLOSURE_W__MM): '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -122,7 +124,7 @@
           prop="unfoldedWidth"
           :show-overflow-tooltip="true"
           :label="`展开宽度\n(mm)`"
-          min-width="120px"
+          min-width="100px"
         >
           <template v-slot="scope">
              <el-input-number
@@ -147,7 +149,7 @@
           :show-overflow-tooltip="true"
           :label="`板厚\n(mm)`"
           align="left"
-          min-width="120px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <el-input-number
@@ -171,7 +173,7 @@
           :show-overflow-tooltip="true"
           :label="`单长\n(㎜)`"
           align="left"
-          min-width="85px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <el-input-number
@@ -195,7 +197,7 @@
           prop="quantity"
           :label="'数量(张)'"
           align="left"
-          min-width="80px"
+          min-width="100px"
         >
           <template v-slot="scope">
             <el-input-number
@@ -276,14 +278,6 @@
             <div v-else>{{ scope.row.color ? scope.row.color : '-' }}</div>
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          v-if="columns.visible('remark')"
-          key="remark"
-          prop="remark"
-          :show-overflow-tooltip="true"
-          label="备注"
-          min-width="120"
-        /> -->
         <!--状态、编辑与删除-->
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
           <template v-slot="scope">
@@ -329,6 +323,7 @@
       </common-table>
       <!--分页组件-->
       <pagination />
+      <mForm/>
     </template>
   </div>
 </template>
@@ -336,13 +331,14 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/plan/technical-manage/enclosure'
 import { getContractTechInfo } from '@/api/contract/project'
-import { ref, watch } from 'vue'
+import { ref, watch, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
+import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { processingEnum } from '@enum-ms/plan'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -356,6 +352,8 @@ const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalP
 const plateOption = ref([])
 const totalTechInfo = ref({})
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
+const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
+provide('plateOption', plateOption)
 
 const optShow = {
   add: false,
@@ -397,7 +395,7 @@ const bendingRules = {
 const otherRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
-  effectiveWidth: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
+  width: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
   thickness: [{ required: true, message: '厚度必填', trigger: 'change' }],
   length: [{ required: true, message: '单长必填', trigger: 'change' }],
   quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
@@ -408,7 +406,7 @@ const otherRules = {
 const colorRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
-  effectiveWidth: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
+  width: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
   thickness: [{ required: true, message: '厚度必填', trigger: 'change' }],
   length: [{ required: true, message: '单长必填', trigger: 'change' }],
   quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
@@ -487,11 +485,15 @@ async function getTechInfo() {
 }
 function plateChange(row, index) {
   const choseVal = plateOption.value.find(v => v.id === row.plateId)
-  crud.data[index].plate = choseVal.plateType
-  crud.data[index].brand = choseVal.brand
-  crud.data[index].effectiveWidth = choseVal.effectiveWidth
-  crud.data[index].thickness = choseVal.thickness
-  crud.data[index].color = choseVal.colour
+  if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+    crud.data[index].plate = choseVal.serialNumber
+  } else {
+    crud.data[index].plate = choseVal.plateType
+    crud.data[index].brand = choseVal.brand
+    crud.data[index].thickness = choseVal.thickness
+    crud.data[index].color = choseVal.colour
+  }
+  crud.data[index].width = choseVal.effectiveWidth
   getTotalData(row)
 }
 
@@ -504,8 +506,8 @@ function getTotalData(row) {
       row.totalArea = row.unfoldedWidth * row.length * row.quantity / 1000000
     }
   } else {
-    if (row.length && row.quantity && row.effectiveWidth) {
-      row.totalArea = row.effectiveWidth * row.length * row.quantity / 1000000
+    if (row.length && row.quantity && row.width) {
+      row.totalArea = row.width * row.length * row.quantity / 1000000
     }
   }
 }
@@ -589,6 +591,15 @@ async function rowSubmit(row) {
   } catch (e) {
     console.log(messageName, e)
   }
+}
+
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  if (data.data.content.length > 0) {
+    data.data.content.forEach(v => {
+      v.type = crud.query.type
+    })
+  }
+  return data
 }
 </script>
 

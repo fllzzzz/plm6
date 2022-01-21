@@ -178,10 +178,11 @@ async function submit(row) {
     }
     await crudApi.edit(data)
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    row.modifying = false
   } catch (error) {
     console.log('区域计划保存', error)
   } finally {
-    crud.toQuery()
+    // crud.toQuery()
   }
 }
 
