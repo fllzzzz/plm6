@@ -41,7 +41,19 @@
     <product-type-query :productType="productType" :category="query.category" :toQuery="crud.toQuery" :query="query" />
     <rrOperation />
   </div>
-  <crudOperation />
+  <crudOperation>
+    <template #optLeft>
+      <print-table
+        v-if="query.category"
+        v-permission="crud.permission.print"
+        :api-key="apiKey"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
+    </template>
+  </crudOperation>
 </template>
 
 <script setup>
@@ -60,7 +72,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  category: projectComponentTypeEnum.ARTIFACT.V,
+  category: undefined,
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
   startDate: moment().startOf('month').valueOf(),
   endDate: moment().valueOf()
@@ -82,6 +94,16 @@ function handleDateChange() {
 
 const productType = computed(() => {
   return query.category === projectComponentTypeEnum.ARTIFACT.V ? componentTypeEnum.ARTIFACT.V : componentTypeEnum.ENCLOSURE.V
+})
+
+const apiKey = computed(() => {
+  if (productType.value === componentTypeEnum.ARTIFACT.V) {
+    return 'mesStructureProjectSummary'
+  }
+  if (productType.value === componentTypeEnum.ENCLOSURE.V) {
+    return 'mesEnclosureProjectSummary'
+  }
+  return undefined
 })
 
 const monomerRef = ref()

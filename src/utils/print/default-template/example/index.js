@@ -102,6 +102,8 @@ function getDataByType(field) {
       break
     case fieldTypeEnum.WAREHOUSE_NAME.K: _md = Random.warehouseName()
       break
+    case fieldTypeEnum.WORKSHOP.K: _md = Random.workshop()
+      break
     case fieldTypeEnum.PRODUCTION_LINE.K: _md = Random.productionLine()
       break
     case fieldTypeEnum.TEAM_NAME.K: _md = Random.componentProcess() + '/' + Random.cname()

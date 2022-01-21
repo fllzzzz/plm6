@@ -1,5 +1,17 @@
 <template>
   <common-drawer ref="drawerRef" title="生产统计-构件" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.print"
+          api-key="mesStructureProductionStatistics"
+          :params="{ ...query  }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table
         v-loading="tableLoading"
@@ -193,6 +205,7 @@ const { maxHeight } = useMaxHeight(
 
 const showUnit = '件/kg'
 const query = inject('query')
+const permission = inject('permission')
 const tableLoading = ref(false)
 const list = ref([])
 

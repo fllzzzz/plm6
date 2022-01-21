@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader>
+      <mHeader print-key="mesEnclosureProductionReport">
         <template #customSearch="{ query }">
           <common-radio-button
             v-model="query.category"

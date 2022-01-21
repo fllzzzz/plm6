@@ -12,7 +12,9 @@
       :max-height="maxHeight"
       row-key="id"
       style="width: 100%"
+      @selection-change="crud.selectionChangeHandler"
     >
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('workshop.name')"
@@ -42,7 +44,7 @@
         <template v-slot="scope">
           <div class="status-content">
             <div v-for="(item, index) in scope.row.completeStatus" :key="index" class="status-item">
-              <el-progress type="circle" :percentage="item.completeRate" :stroke-width="6" :width="70" :color="colors">
+              <el-progress type="circle" :percentage="+item.completeRate" :stroke-width="6" :width="70" :color="colors">
                 <template #default="{ percentage }">
                   <div style="display: flex; flex-direction: column">
                     <span class="percentage-label" style="margin-bottom: 5px">{{ item.name }}</span>

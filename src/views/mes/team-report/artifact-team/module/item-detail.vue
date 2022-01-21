@@ -7,7 +7,18 @@
     :before-close="handleClose"
     size="70%"
   >
-    <template #titleRight> </template>
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.printDetail"
+          api-key="mesStructureProcess"
+          :params="printParams"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table
         v-loading="tableLoading"
@@ -136,6 +147,8 @@ const props = defineProps({
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
+const permission = inject('permission')
+
 // 高度
 const { maxHeight } = useMaxHeight(
   {
@@ -172,17 +185,20 @@ const unitObj = computed(() => {
   return useProductSummaryMeteUnit({ productType: props.info.productType, w_unit: 'kg' })
 })
 
+const printParams = computed(() => {
+  return Object.assign(deepClone(query), {
+    factoryId: props.info.factory?.id,
+    processId: props.itemInfo.id,
+    productType: props.info.productType,
+    productionLineId: props.info.productionLine?.id
+  })
+})
+
 async function fetchList() {
   try {
     tableLoading.value = true
     const _productType = props.info.productType
-    const _query = Object.assign(deepClone(query), {
-      factoryId: props.info.factory?.id,
-      processId: props.itemInfo.id,
-      productType: _productType,
-      productionLineId: props.info.productionLine?.id
-    })
-    const _data = await detail(_query)
+    const _data = await detail(printParams.value)
     list.value = _data[dataPath[_productType]].map((v) => {
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
       v.completeMete = useProductMeteConvert({
