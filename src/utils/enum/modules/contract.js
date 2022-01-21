@@ -296,6 +296,7 @@ export default {
   projectTypeEnum, // 项目类型
   projectNameArrangementModeEnum, // 项目名称显示
   TechnologyTypeEnum, // 技术交底
+  businessTypeEnum, // 业务类型
   settlementStatusEnum, // 结算状态
   projectTypeEnumN, // 项目类型xin
   paymentModeEnum, // 付款方式

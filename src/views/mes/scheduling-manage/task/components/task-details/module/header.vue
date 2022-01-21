@@ -35,6 +35,14 @@
   </div>
   <crudOperation>
     <template v-slot:optLeft>
+      <print-table
+        v-permission="crud.permission.print"
+        api-key="mesSchedulingDetail"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
       <template v-if="query.issueStatus !== taskIssueTypeEnum.HAS_ISSUED.V">
         <template v-if="modifying">
           <el-tag type="info" style="margin-right: 5px" size="medium">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
