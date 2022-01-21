@@ -10,7 +10,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
-      row-key="id"
+      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -115,12 +115,12 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
     v.rowId = i + '' + Math.random()
     v.taskMete = useProductMeteConvert({
       productType: productType.value,
-      weight: { num: v.taskNetWeight },
+      weight: { num: v.taskNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp },
       length: { num: v.taskLength, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
     v.completeMete = useProductMeteConvert({
       productType: productType.value,
-      weight: { num: v.completeNetWeight },
+      weight: { num: v.completeNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp },
       length: { num: v.completeLength, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
     return v

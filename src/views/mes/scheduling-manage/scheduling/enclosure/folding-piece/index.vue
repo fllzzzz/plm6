@@ -30,7 +30,7 @@
       <productType-full-info-columns
         :productType="productType"
         enclosureShowItem
-        :category="productType"
+        :category="category"
         :columns="columns"
         :fixed="'left'"
         fixedWidth
