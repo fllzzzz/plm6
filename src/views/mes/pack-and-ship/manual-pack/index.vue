@@ -3,7 +3,16 @@
     <div>
       <div class="filter-container">
         <div class="filter-left-box">
-          <common-radio-button v-model="packType" :options="packTypeEnum.ENUM" type="enum" size="small" class="filter-item" />
+          <common-radio-button v-model="packType" :options="packTypeEnum.ENUM" :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]" type="enum" size="small" class="filter-item" />
+          <common-radio-button
+            v-if="packType === packTypeEnum.ENCLOSURE.V"
+            type="enum"
+            v-model="category"
+            :options="mesEnclosureTypeEnum.ENUM"
+            showOptionAll
+            placeholder="请选择围护类型"
+            class="filter-item"
+          />
           <factory-select
             v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
             v-model="factoryId"
@@ -27,6 +36,7 @@
       :factory-id="factoryId"
       :monomer-id="monomerId"
       :area-id="areaId"
+      :category="category"
       @add="addIn"
     />
     <pack-list-drawer v-model:visible="packVisible" :bagId="bagId" :edit-data="editData" @handleSuccess="handleSuccess" />
@@ -40,7 +50,7 @@ import { useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 
 import factorySelect from '@comp-base/factory-select'
 import structureTable from './structure'
@@ -57,6 +67,7 @@ const mainRef = ref()
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const packType = ref(packTypeEnum.STRUCTURE.V)
 const factoryId = ref()
+const category = ref()
 const monomerId = ref()
 const areaId = ref()
 // 编辑信息（打包记录页面传过来的参数）

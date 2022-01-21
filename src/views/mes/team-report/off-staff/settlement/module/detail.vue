@@ -151,7 +151,7 @@ async function fetchList() {
       v.checkMete = v.mate
       v.completeMete = useProductMeteConvert({
         productType: query.productType,
-        weight: { num: v.completeNetWeight },
+        weight: { num: v.completeNetWeight, to: unitObj.value.unit, dp: unitObj.value.dp },
         length: { num: v.completeLength, to: unitObj.value.unit, dp: unitObj.value.dp }
       })
       return v
