@@ -15,7 +15,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <belonging-info-columns :columns="columns" showProject />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
         prop="createTime"
@@ -27,7 +27,7 @@
         <template v-slot="scope">
           <span v-parse-time="scope.row.createTime" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
         <template v-slot="scope">
           <span v-empty-text>{{ scope.row.userName }}</span>
