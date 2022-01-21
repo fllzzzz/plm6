@@ -44,7 +44,7 @@
   <crudOperation>
     <template #optLeft>
       <print-table
-        v-if="query.category"
+        v-show="query.category"
         v-permission="crud.permission.print"
         :api-key="apiKey"
         :params="{ ...query }"
@@ -58,7 +58,7 @@
 
 <script setup>
 import moment from 'moment'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import EO from '@enum'
@@ -111,4 +111,17 @@ const monomerProductTypeEnum = computed(() => {
   const _productType = monomerRef.value?.getProductType() || 0
   return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
+
+watch(
+  () => monomerProductTypeEnum.value,
+  (typeEnum) => {
+    if (typeEnum.length) {
+      query.category = typeEnum[0].V
+    } else {
+      query.category = undefined
+    }
+  },
+  { deep: true }
+)
+
 </script>
