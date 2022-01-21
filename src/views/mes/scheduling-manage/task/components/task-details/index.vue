@@ -42,12 +42,7 @@
         <span>{{ emptyTextFormatter(scope.row.monomer?.name) }}>{{ emptyTextFormatter(scope.row.area?.name) }}</span>
       </template>
     </el-table-column>
-    <productType-base-info-columns
-      :productType="productType"
-      :category="category"
-      :columns="columns"
-      :unShowField="['specification', 'material']"
-    />
+    <productType-base-info-columns :productType="productType" :category="category" :columns="columns" :unShowField="['material']" />
     <el-table-column v-if="columns.visible('schedulingQuantity')" prop="schedulingQuantity" label="任务数" min-width="100px">
       <template v-slot:header>
         <span v-if="modifying">任务下发数</span>
