@@ -304,6 +304,16 @@ const otherRules = {
   totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }]
 }
 
+const trussRules = {
+  serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
+  plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
+  width: [{ required: true, message: '有效宽度必填', trigger: 'change' }],
+  length: [{ required: true, message: '单长必填', trigger: 'change' }],
+  quantity: [{ required: true, message: '数量必填', trigger: 'change' }],
+  totalArea: [{ required: true, message: '总面积必填', trigger: 'change' }],
+  totalLength: [{ required: true, message: '总长度必填', trigger: 'change' }]
+}
+
 const colorRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   plateId: [{ required: true, message: '请选择版型', trigger: 'change' }],
@@ -323,6 +333,8 @@ function wrongCellMask({ row, column }) {
     rules = bendingRules
   } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
+  } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+    rules = trussRules
   } else {
     rules = otherRules
   }
@@ -388,6 +400,8 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     rules = bendingRules
   } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
+  } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
+    rules = trussRules
   } else {
     rules = otherRules
   }
