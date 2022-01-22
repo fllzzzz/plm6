@@ -16,7 +16,7 @@
         <common-table
           ref="detailRef"
           border
-          :data="form.bankAccounts"
+          :data="form.list"
           :max-height="300"
           style="width: 100%"
           class="table-form"
@@ -274,7 +274,7 @@ import { validate } from '@compos/form/use-table-validate'
 const formRef = ref()
 const detailRef = ref()
 const defaultForm = {
-  bankAccounts: []
+  list: []
 }
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
 const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
@@ -339,11 +339,11 @@ function wrongCellMask({ row, column }) {
 }
 
 function deleteRow(index) {
-  form.bankAccounts.splice(index, 1)
+  form.list.splice(index, 1)
 }
 
 function addRow() {
-  form.bankAccounts.push({
+  form.list.push({
     areaId: crud.query.areaId
   })
 }
@@ -352,14 +352,14 @@ function plateChange(row, index) {
   const choseVal = plateOption.value.find(v => v.id === row.plateId)
   console.log(choseVal)
   if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
-    form.bankAccounts[index].plate = choseVal.serialNumber
+    form.list[index].plate = choseVal.serialNumber
   } else {
-    form.bankAccounts[index].plate = choseVal.plateType
-    form.bankAccounts[index].brand = choseVal.brand
-    form.bankAccounts[index].thickness = choseVal.thickness
-    form.bankAccounts[index].color = choseVal.colour
+    form.list[index].plate = choseVal.plateType
+    form.list[index].brand = choseVal.brand
+    form.list[index].thickness = choseVal.thickness
+    form.list[index].color = choseVal.colour
   }
-  form.bankAccounts[index].width = choseVal.effectiveWidth
+  form.list[index].width = choseVal.effectiveWidth
   getTotalData(row)
 }
 
@@ -379,7 +379,7 @@ function getTotalData(row) {
 }
 
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
-  if (crud.form.bankAccounts.length <= 0) {
+  if (crud.form.list.length <= 0) {
     ElMessage({ message: '请先添加围护信息', type: 'error' })
     return false
   }
@@ -392,7 +392,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     rules = otherRules
   }
   let flag = true
-  crud.form.bankAccounts.map(row => {
+  crud.form.list.map(row => {
     row.verify = {}
     for (const rule in rules) {
       row.verify[rule] = validate(rule, rules[rule], row[rule], row)
@@ -405,6 +405,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     ElMessage.error('请填写表格中标红数据')
     return false
   }
+  crud.form.areaId = crud.query.areaId
 }
 </script>
 <style lang="scss" scoped>

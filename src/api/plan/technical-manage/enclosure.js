@@ -18,12 +18,22 @@ export function edit(data) {
   })
 }
 
+// export function add(data) {
+//   return request({
+//     module: 'plan',
+//     url: 'enclosure/save',
+//     method: 'post',
+//     data
+//   })
+// }
+
 export function add(data) {
   return request({
     module: 'plan',
-    url: 'enclosure/save',
+    url: 'enclosure/saveList',
     method: 'post',
-    data
+    params: { areaId: data.areaId },
+    data: data.list
   })
 }
 
