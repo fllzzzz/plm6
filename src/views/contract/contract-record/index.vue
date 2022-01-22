@@ -64,14 +64,9 @@ import mHeader from './module/header'
 import { businessTypeEnum } from '@enum-ms/contract'
 import checkPermission from '@/utils/system/check-permission'
 import mDetail from './module/detail'
+import { contractRecordPM as permission } from '@/page-permission/contract'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
-// crud交由presenter持有
-const permission = {
-  get: ['contractRecord:get'],
-  detail: ['contractRecord:detail'],
-  download: ['contractRecord:download']
-}
 
 const optShow = {
   add: false,

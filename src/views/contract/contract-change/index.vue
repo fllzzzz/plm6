@@ -95,6 +95,7 @@
         label="发起人"
         align="center"
         width="90px"
+        :show-overflow-tooltip="true"
       >
         <template v-slot="scope">
           <div>{{ scope.row.userName }}</div>
@@ -107,6 +108,7 @@
         label="签证人"
         align="center"
         width="110px"
+        :show-overflow-tooltip="true"
       >
         <template v-slot="scope">
           <template v-if="contractChangeTypeEnum.VARIATION_ORDER.V">
@@ -121,6 +123,7 @@
         label="审核日期"
         align="center"
         width="110px"
+        :show-overflow-tooltip="true"
       >
         <template v-slot="scope">
            <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
@@ -133,6 +136,7 @@
         label="审核人"
         align="center"
         width="90px"
+        :show-overflow-tooltip="true"
       >
         <template v-slot="scope">
           <div>{{ scope.row.auditorName }}</div>
@@ -145,6 +149,7 @@
         label="来源"
         align="center"
         width="90px"
+        :show-overflow-tooltip="true"
       >
         <template v-slot="scope">
           <div>{{ scope.row.source? systemTypeEnum.VL[scope.row.source]: '' }}</div>
@@ -165,7 +170,7 @@
       <!--编辑与删除-->
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
+          <common-button icon="el-icon-view" type="primary" size="mini" v-permission="permission.detail" @click="openDetail(scope.row, 'detail')"/>
           <common-button icon="el-icon-s-check" type="primary" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V"/>
         </template>
       </el-table-column>
@@ -198,12 +203,7 @@ import variationOrder from '../info/variation-order'
 import settleForm from '../info/settle-form'
 import contractInfo from './module/contractInfo'
 import { projectNameFormatter } from '@/utils/project'
-
-// crud交由presenter持有
-const permission = {
-  get: ['contractChange:get'],
-  audit: ['contractChange:audit']
-}
+import { contractChangePM as permission } from '@/page-permission/contract'
 
 const optShow = {
   add: false,
@@ -247,7 +247,6 @@ function openDetail(row, type) {
   detailInfo.value = row
   projectId.value = row.project.id
   switch (row.type) {
-    // CONTRACT_INFO,CONTRACT_AMOUNT,CONTRACT_SETTLE
     case (contractChangeTypeEnum.CONTRACT_AMOUNT.V):
       moneyVisible.value = true
       break

@@ -39,7 +39,7 @@
         prop="businessType"
         label="业务类型"
         align="center"
-        width="100"
+        width="90"
       >
         <template v-slot="scope">
           <div>{{ scope.row.businessType ? businessTypeEnum.VL[scope.row.businessType] : '-' }}</div>
@@ -110,7 +110,8 @@
         key="signingDate"
         prop="signingDate"
         :show-overflow-tooltip="true"
-        width="100"
+        align="center"
+        width="90"
         label="签订日期"
       >
         <template v-slot="scope">
@@ -138,7 +139,7 @@
       <el-table-column v-if="checkPermission(permission.editMembers)" label="成员管理" width="90px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
-            v-permission="permission.editMembers"
+            v-permission="permission.editMember"
             type="info"
             icon="el-icon-user"
             size="mini"
@@ -226,18 +227,11 @@ import members from './members'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { useStore } from 'vuex'
+import { projectListPM as permission } from '@/page-permission/contract'
+// import eOperation from '@crud/E.operation'
 
 const store = useStore()
 const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
-// crud交由presenter持有
-const permission = {
-  get: ['contract:get'],
-  // add: ['contract:add'],
-  detail: ['contract:detail'],
-  editStatus: ['contract:editStatus'],
-  download: ['contract:download'],
-  editMembers: ['contract:editMembers']
-}
 
 const optShow = {
   add: true,

@@ -218,12 +218,9 @@ import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
 import { shearTypeEnum } from '@enum-ms/plan'
+import { machinePartPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['machine-part:get']
-}
 
 const optShow = {
   add: false,

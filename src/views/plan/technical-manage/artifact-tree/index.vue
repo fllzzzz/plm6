@@ -274,15 +274,9 @@ import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
+import { artifactTreePM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['artifact-tree:get'],
-  edit: ['artifact-tree:edit'],
-  del: ['artifact-tree:del'],
-  importList: ['artifact-tree:import']
-}
 
 const optShow = {
   add: false,

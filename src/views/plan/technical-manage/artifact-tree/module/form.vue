@@ -65,7 +65,7 @@
               <el-input-number
                 v-model.number="form.grossWeight"
                 :min="0"
-                :max="maxNubmer"
+                :max="maxNumber"
                 :step="1"
                 :precision="DP.COM_WT__KG"
                 placeholder="请填写构件毛重"
@@ -81,7 +81,7 @@
             <div style="width: 270px">
               <el-input-number
                 v-model.number="form.surfaceArea"
-                :max="maxNubmer"
+                :max="maxNumber"
                 :step="1"
                 :precision="DP.COM_AREA__M2"
                 placeholder="请填写构件面积"
@@ -96,7 +96,7 @@
               <el-input-number
                 v-model.number="form.length"
                 :min="0"
-                :max="maxNubmer"
+                :max="maxNumber"
                 :step="1"
                 :precision="DP.MES_ARTIFACT_L__MM"
                 placeholder="请填写构件长度"
@@ -111,7 +111,7 @@
               <el-input-number
                 v-model.number="form.netWeight"
                 :min="0"
-                :max="maxNubmer"
+                :max="maxNumber"
                 :step="1"
                 :precision="DP.COM_WT__KG"
                 placeholder="请填写构件净重"
@@ -139,7 +139,7 @@
               <el-input-number
                 v-model.number="form.newQuantity"
                 :min="minQuantity"
-                :max="maxNubmer"
+                :max="maxNumber"
                 :step="1"
                 step-strictly
                 placeholder="不变更无需填写"
@@ -194,7 +194,7 @@
           >
             <el-table-column type="selection" width="55" :disabled="form.changeAbleStatus != 3" />
             <el-table-column label="序号" type="index" align="center" width="60" />
-            <el-table-column key="serialNumber" prop="serialNumber" label="*零件编号" min-width="100">
+            <el-table-column key="serialNumber" prop="serialNumber" label="零件编号" min-width="100">
               <template v-slot="scope">
                 <el-input
                   v-if="scope.row.add"
@@ -204,10 +204,10 @@
                   style="min-width: 100px"
                   size="mini"
                 />
-                <span v-else style="cursor: pointer">{{ scope.row.serialNumber }}</span>
+                <span v-else >{{ scope.row.serialNumber }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="specification" prop="specification" label="*规格" min-width="160">
+            <el-table-column key="specification" prop="specification" label="规格" min-width="160">
               <template v-slot="scope">
                 <el-input
                   v-if="scope.row.add || editing"
@@ -220,13 +220,13 @@
                 <span v-else>{{ scope.row.specification }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="quantity" prop="quantity" label="*零件总数" min-width="140">
+            <el-table-column key="quantity" prop="quantity" label="零件总数" min-width="140">
               <template v-slot="scope">
                 <el-input-number
                   v-if="scope.row.add || editing"
                   v-model.number="scope.row.quantity"
                   :min="totalQuantity"
-                  :max="maxNubmer"
+                  :max="maxNumber"
                   :step="totalQuantity"
                   step-strictly
                   placeholder="请填写"
@@ -236,21 +236,21 @@
                   @change="partQuantityChange(scope.row)"
                   @blur="partQuantityChange(scope.row)"
                 />
-                <span v-else style="cursor: pointer">{{ scope.row.quantity }}</span>
+                <span v-else >{{ scope.row.quantity }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="producedQuantity" prop="producedQuantity" :show-overflow-tooltip="true" label="已使用" min-width="100">
+            <el-table-column key="usedQuantity" prop="usedQuantity" :show-overflow-tooltip="true" label="已使用" min-width="100">
               <template v-slot="scope">
-                <span style="cursor: pointer">{{ scope.row.producedQuantity }}</span>
+                <span >{{ scope.row.usedQuantity }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`*长度\n(mm)`" align="left" min-width="85">
+            <el-table-column key="length" prop="length" :show-overflow-tooltip="true" :label="`长度\n(mm)`" align="left" min-width="85">
               <template v-slot="scope">
                 <el-input-number
                   v-if="scope.row.add || editing"
                   v-model.number="scope.row.length"
                   :min="0"
-                  :max="maxNubmer"
+                  :max="maxNumber"
                   :step="1"
                   placeholder="请填写"
                   :precision="DP.MES_ARTIFACT_L__MM"
@@ -261,7 +261,7 @@
                 <span v-else>{{ scope.row.length ? scope.row.length.toFixed(DP.MES_MACHINE_PART_L__MM) : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="*材质" min-width="100">
+            <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="100">
               <template v-slot="scope">
                 <el-input
                   v-if="scope.row.add || editing"
@@ -274,13 +274,13 @@
                 <span v-else>{{ scope.row.material }}</span>
               </template> </el-table-column
             >>
-            <el-table-column key="netWeight" prop="netWeight" :label="`*单净重\n(kg)`" align="left" min-width="80">
+            <el-table-column key="netWeight" prop="netWeight" :label="`单净重\n(kg)`" align="left" min-width="80">
               <template v-slot="scope">
                 <el-input-number
                   v-if="scope.row.add || editing"
                   v-model.number="scope.row.netWeight"
                   :min="0"
-                  :max="maxNubmer"
+                  :max="maxNumber"
                   :step="1"
                   :precision="DP.COM_WT__KG"
                   placeholder="请填写"
@@ -291,13 +291,13 @@
                 <span v-else>{{ scope.row.netWeight ? scope.row.netWeight.toFixed(DP.COM_WT__KG) : '-' }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="grossWeight" prop="grossWeight" :label="`*单毛重\n(kg)`" align="left" min-width="80">
+            <el-table-column key="grossWeight" prop="grossWeight" :label="`单毛重\n(kg)`" align="left" min-width="80">
               <template v-slot="scope">
                 <el-input-number
                   v-if="scope.row.add || editing"
                   v-model.number="scope.row.grossWeight"
                   :min="0"
-                  :max="maxNubmer"
+                  :max="maxNumber"
                   :step="1"
                   :precision="DP.COM_WT__KG"
                   placeholder="请填写"
@@ -334,7 +334,7 @@
             :maxlength="500"
             placeholder="请填写原因描述"
             style="width: 320px"
-            :disabled="form.changeAbleStatu == 1"
+            :disabled="form.changeAbleStatus == 1"
           />
         </el-form-item>
         <el-form-item label="附件上传" prop="files" style="position: relative; width: 45%">
@@ -365,7 +365,7 @@ const formRef = ref()
 const editing = ref(false)
 const originData = ref([])
 const isdisable = ref(false)
-const maxNubmer = 999999999
+const maxNumber = 999999999
 const defaultForm = {
   changeReason: undefined,
   drawingNumber: undefined,

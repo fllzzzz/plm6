@@ -93,13 +93,9 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import checkPermission from '@/utils/system/check-permission'
 import mHeader from './module/header'
+import { planConfirmListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['planConfirm:get'],
-  edit: ['planConfirm:edit']
-}
 
 const optShow = {
   add: false,

@@ -97,7 +97,7 @@
 <script setup>
 import { ref } from 'vue'
 import { regForm } from '@compos/use-crud'
-import useTableValidate from '@compos/form/use-table-validate'
+import { validate } from '@compos/form/use-table-validate'
 import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessage } from 'element-plus'
 import { validatorEnOrNum } from '@/utils/validate/pattern'
@@ -105,14 +105,9 @@ import { validatorEnOrNum } from '@/utils/validate/pattern'
 const formRef = ref()
 const detailRef = ref()
 const defaultForm = {
-  bankAccounts: [
-    {
-      account: undefined,
-      depositBank: undefined
-    }
-  ],
-  enabled: systemEnabledEnum.ENUM.TRUE.V,
-  isParent: systemEnabledEnum.ENUM.FALSE.V,
+  bankAccounts: [],
+  enabled: systemEnabledEnum.TRUE.V,
+  isParent: systemEnabledEnum.FALSE.V,
   name: undefined,
   remark: undefined,
   socialCode: undefined,
@@ -133,7 +128,21 @@ const tableRules = {
   depositBank: [{ required: true, message: '请输入开户行', trigger: 'blur' }],
   account: [{ required: true, message: '请输入账号', trigger: 'blur' }]
 }
-const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+
+function wrongCellMask({ row, column }) {
+  if (!row) return
+  const rules = tableRules
+  let flag = true
+  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
+    if (row.verify[column.property] === false) {
+      flag = validate(column.property, rules[column.property], row[column.property], row)
+    }
+    if (flag) {
+      row.verify[column.property] = true
+    }
+  }
+  return flag ? '' : 'mask-td'
+}
 
 function deleteRow(index) {
   form.bankAccounts.splice(index, 1)
@@ -142,8 +151,7 @@ function deleteRow(index) {
 function addRow() {
   form.bankAccounts.push({
     account: undefined,
-    depositBank: undefined,
-    dataIndex: form.bankAccounts.length
+    depositBank: undefined
   })
 }
 
@@ -152,11 +160,20 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     ElMessage({ message: '请先填写银行账号明细', type: 'error' })
     return false
   }
-  const { validResult, dealList } = tableValidate(crud.form.bankAccounts)
-  if (validResult) {
-    crud.form.bankAccounts = dealList
-  } else {
-    return validResult
+  const rules = tableRules
+  let flag = true
+  crud.form.bankAccounts.map(row => {
+    row.verify = {}
+    for (const rule in rules) {
+      row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+      if (!row.verify[rule]) {
+        flag = false
+      }
+    }
+  })
+  if (!flag) {
+    ElMessage.error('请填写表格中标红数据')
+    return false
   }
 }
 </script>

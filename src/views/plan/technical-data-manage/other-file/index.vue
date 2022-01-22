@@ -89,15 +89,9 @@ import mHeader from './module/header'
 import { ElNotification } from 'element-plus'
 import eOperation from '@crud/E.operation'
 import { parseTime } from '@/utils/date'
+import { otherFileListPM as permission } from '@/page-permission/plan'
 
 const { globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['otherFile:get'],
-  download: ['otherFile:download'],
-  del: ['otherFile:del'],
-  import: ['otherFile:import']
-}
 
 const optShow = {
   add: false,

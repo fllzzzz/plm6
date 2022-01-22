@@ -121,13 +121,9 @@ import collectionAndInvoice from './module/collection-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
+import { contractLedgerPM as permission } from '@/page-permission/contract'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
-// crud交由presenter持有
-const permission = {
-  get: ['contractLedger:get'],
-  download: ['contractLedger:download']
-}
 
 const optShow = {
   add: false,

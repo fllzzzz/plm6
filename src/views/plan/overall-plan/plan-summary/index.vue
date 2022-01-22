@@ -97,11 +97,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import { isNotBlank } from '@data-type/index'
-
-// crud交由presenter持有
-const permission = {
-  get: ['planSummary:get']
-}
+import { planSummaryListPM as permission } from '@/page-permission/plan'
 
 const optShow = {
   add: false,

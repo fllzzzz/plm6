@@ -204,9 +204,6 @@
       <!--分页组件-->
       <pagination />
     </template>
-    <!-- <template v-else>
-      <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
-    </template> -->
   </div>
 </template>
 
@@ -220,12 +217,9 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
+import { artifactPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['artifact:get']
-}
 
 const optShow = {
   add: false,

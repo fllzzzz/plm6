@@ -49,7 +49,7 @@
       <template #optRight>
         <upload-btn
           v-if="currentArea && currentArea.id"
-          v-permission="crud.permission.importList"
+          v-permission="crud.permission.import"
           :data="carryParam"
           :upload-fun="listUpload"
           success-msg="导入成功"
