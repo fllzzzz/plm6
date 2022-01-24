@@ -227,7 +227,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
+            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V&& crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.SANDWICH_BOARD.V"
             key="color"
             prop="color"
             :show-overflow-tooltip="true"
@@ -331,7 +331,7 @@ function wrongCellMask({ row, column }) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     rules = trussRules
@@ -398,7 +398,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     rules = trussRules

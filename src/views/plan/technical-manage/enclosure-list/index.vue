@@ -27,14 +27,7 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <el-input
-              v-if="scope.row.isModify"
-              v-model="scope.row.name"
-              placeholder="名称"
-              maxlength="20"
-              style="width:100%;"
-            />
-            <div v-else>{{ scope.row.name  }}</div>
+            <div>{{ scope.row.name  }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -59,14 +52,7 @@
           </el-tooltip>
         </template> -->
           <template v-slot="scope">
-            <el-input
-              v-if="scope.row.isModify"
-              v-model="scope.row.serialNumber"
-              placeholder="编号"
-              maxlength="10"
-              style="width:100%;"
-            />
-            <div v-else>{{ scope.row.serialNumber  }}</div>
+            <div>{{ scope.row.serialNumber  }}</div>
             <!-- <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span> -->
           </template>
         </el-table-column>
@@ -260,7 +246,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('color') && crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
+          v-if="columns.visible('color') && crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.SANDWICH_BOARD.V"
           key="color"
           prop="color"
           :show-overflow-tooltip="true"
@@ -420,7 +406,7 @@ function wrongCellMask({ row, column }) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else {
     rules = otherRules
@@ -562,7 +548,7 @@ async function rowSubmit(row) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else {
     rules = otherRules
@@ -587,7 +573,8 @@ async function rowSubmit(row) {
       await crudApi.add(row)
     }
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
+    row.isModify = false
+    // crud.toQuery()
   } catch (e) {
     console.log(messageName, e)
   }
