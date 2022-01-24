@@ -17,7 +17,7 @@
           ref="detailRef"
           border
           :data="form.list"
-          :max-height="300"
+          :max-height="maxHeight"
           style="width: 100%"
           class="table-form"
           :cell-class-name="wrongCellMask"
@@ -270,6 +270,7 @@ import { ElMessage } from 'element-plus'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { validate } from '@compos/form/use-table-validate'
+import useMaxHeight from '@compos/use-max-height'
 
 const formRef = ref()
 const detailRef = ref()
@@ -282,6 +283,11 @@ const plateOption = inject('plateOption')
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.enclosureForm',
+  paginate: true,
+  extraHeight: 40
+})
 const bendingRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ required: true, message: '展开宽度必填', trigger: 'change' }],

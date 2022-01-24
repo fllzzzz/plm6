@@ -134,38 +134,6 @@
               <span v-else>{{ detail.projectManagerFullName || '-' }}</span>
             </div>
           </el-form-item>
-          <!-- <el-form-item label="业务负责人1" prop="businessLeaderId">
-            <div class="input-underline" style="width:300px">
-              <user-dept-cascader
-                v-if="isModify"
-                v-model="form.businessLeaderId"
-                filterable
-                :collapse-tags="false"
-                clearable
-                show-all-levels
-                class="input-underline"
-                style="width:200px"
-                placeholder="业务负责人1"
-              />
-              <span v-else>{{ detail.businessLeaderFullName }}</span>
-            </div>
-          </el-form-item>
-          <el-form-item label="业务负责人2" prop="businessLeaderTwoId">
-            <div class="input-underline" style="width:300px">
-              <user-dept-cascader
-                v-if="isModify"
-                v-model="form.businessLeaderTwoId"
-                filterable
-                :collapse-tags="false"
-                clearable
-                show-all-levels
-                class="input-underline"
-                style="width:200px"
-                placeholder="业务负责人2"
-              />
-              <span v-else>{{ detail.businessLeaderTwoFullName }}</span>
-            </div>
-          </el-form-item> -->
         </div>
         <el-divider><span class="title">合同金额</span></el-divider>
         <div class="form-row">
@@ -178,11 +146,12 @@
           <el-form-item label="预付款(元)" prop="prepayments">
             <div class="input-underline">
               <el-input-number
+                v-show-thousand
                 v-if="isModify"
                 v-model="form.prepayments"
                 :step="1"
                 :min="0"
-                :max="999999999999"
+                :max="detail.contractAmount?detail.contractAmount:999999999999"
                 :precision="DP.YUAN"
                 :controls="false"
                 controls-position="right"

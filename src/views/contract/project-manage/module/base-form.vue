@@ -94,10 +94,11 @@
         </el-form-item>
         <el-form-item label="预付款(元)" prop="prepayments">
           <el-input-number
+            v-show-thousand
             v-model="form.prepayments"
             :step="1"
             :min="0"
-            :max="999999999999"
+            :max="form.contractAmount?form.contractAmount:999999999999"
             :precision="DP.YUAN"
             :controls="false"
             controls-position="right"
@@ -187,7 +188,6 @@ import { fileClassifyEnum } from '@enum-ms/file'
 import uploadList from '@comp/file-upload/UploadList.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { DP } from '@/settings/config'
-import { isNotBlank } from '@data-type/index'
 import { digitUppercase } from '@/utils/data-type/number'
 
 const formRef = ref()
