@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentView" :columns="columns" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField">
+  <component :is="currentView" :columns="columns" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField" :category="category">
     <template #quantity>
       <slot name="quantity" />
     </template>
@@ -8,16 +8,11 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
-import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import artifact from './module/artifact'
 import machinePart from './module/machine-part'
 import enclosure from './module/enclosure'
 import assemble from './module/assemble'
-import pressedPlate from './module/pressed-plate'
-import sandwichBoard from './module/sandwich-board'
-import trussFloorPlate from './module/truss-floor-plate'
-import pressedFloorPlate from './module/pressed-floor-plate'
-import foldingPiece from './module/folding-piece'
 
 const props = defineProps({
   productType: {
@@ -26,10 +21,6 @@ const props = defineProps({
   // 围护子类型
   category: {
     type: Number
-  },
-  enclosureShowItem: {
-    type: Boolean,
-    default: false
   },
   unShowField: {
     type: Array,
@@ -54,11 +45,7 @@ const currentView = computed(() => {
     case componentTypeEnum.MACHINE_PART.V:
       return machinePart
     case componentTypeEnum.ENCLOSURE.V:
-      if (props.enclosureShowItem) {
-        return getEnclosureView()
-      } else {
-        return enclosure
-      }
+      return enclosure
     case componentTypeEnum.AUXILIARY_MATERIAL.V:
       return ''
     case componentTypeEnum.ASSEMBLE.V:
@@ -67,21 +54,4 @@ const currentView = computed(() => {
       return ''
   }
 })
-
-function getEnclosureView() {
-  switch (props.category) {
-    case mesEnclosureTypeEnum.PRESSED_PLATE.V:
-      return pressedPlate
-    case mesEnclosureTypeEnum.SANDWICH_BOARD.V:
-      return sandwichBoard
-    case mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V:
-      return trussFloorPlate
-    case mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V:
-      return pressedFloorPlate
-    case mesEnclosureTypeEnum.FOLDING_PIECE.V:
-      return foldingPiece
-    default:
-      return enclosure
-  }
-}
 </script>

@@ -44,9 +44,9 @@ export const planConfirmListPM = {
   edit: ['plan_confirm:edit'] // 计划确认
 }
 
-// 计划管理/排产汇总
+// 计划管理/工单汇总
 export const planSummaryListPM = {
-  get: ['plan_summary:get']// 排产汇总列表
+  get: ['plan_summary:get']// 工单汇总列表
 }
 // --------------------------- 计划管理 end --------------------------------
 

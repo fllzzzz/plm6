@@ -26,7 +26,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
-      <el-table-column v-if="columns.visible('date')" prop="date" label="排产日期" align="center" width="140px">
+      <el-table-column v-if="columns.visible('date')" prop="date" label="工单日期" align="center" width="140px">
         <template #default="{ row }">
           <span v-parse-time="{ val: row.date, fmt: '{y}-{m}-{d}' }" />
         </template>
@@ -35,7 +35,7 @@
         v-if="columns.visible('schedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="schedulingQuantity"
-        :label="`排产量（件/${unitObj.unit}）`"
+        :label="`工单量（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -49,7 +49,7 @@
         v-if="columns.visible('taskQuantity')"
         :show-overflow-tooltip="true"
         prop="taskQuantity"
-        :label="`已下发（件/${unitObj.unit}）`"
+        :label="`排产量（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -63,7 +63,7 @@
         v-if="columns.visible('unschedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="unschedulingQuantity"
-        :label="`未下发（件/${unitObj.unit}）`"
+        :label="`未排产（件/${unitObj.unit}）`"
         align="left"
       >
         <template #default="{ row }">
@@ -82,7 +82,7 @@
     <!-- 详情 -->
     <common-drawer
       v-model:visible="drawerVisible"
-      :title="`${parseTime(detailRow.date, '{y}年{m}月{d}日')} ：排产详情`"
+      :title="`${parseTime(detailRow.date, '{y}年{m}月{d}日')} ：工单详情`"
       direction="rtl"
       size="100%"
       :before-close="
@@ -124,7 +124,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '构件任务',
+    title: '构件排产',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

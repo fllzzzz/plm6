@@ -1,5 +1,61 @@
 <template>
   <el-table-column
+    v-if="!unShowField.includes('width') && !(unShowEWVal & category) && (isBlank(columns) || columns.visible('width'))"
+    :show-overflow-tooltip="true"
+    prop="width"
+    :label="`有效宽度\n(mm)`"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
+    </template>
+  </el-table-column>
+  <!-- <el-table-column
+    v-if="!unShowField.includes('width') && !(unShowWVal & category) && (isBlank(columns) || columns.visible('width'))"
+    :show-overflow-tooltip="true"
+    prop="width"
+    :label="`宽度\n(mm)`"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="!unShowField.includes('width') && !(unShowFWVal & category) && (isBlank(columns) || columns.visible('width'))"
+    :show-overflow-tooltip="true"
+    prop="width"
+    :label="`宽度\n(mm)`"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
+    </template>
+  </el-table-column> -->
+  <el-table-column
+    v-if="!unShowField.includes('thickness') && !(unShowTNVal & category) && (isBlank(columns) || columns.visible('thickness'))"
+    :show-overflow-tooltip="true"
+    prop="thickness"
+    :label="`板厚\n(mm)`"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-to-fixed="{ k: 'MES_ENCLOSURE_T__MM', val: row.thickness }" v-empty-text></span>
+    </template>
+  </el-table-column>
+  <el-table-column
     v-if="!unShowField.includes('length') && (isBlank(columns) || columns.visible('length'))"
     :show-overflow-tooltip="true"
     prop="length"
@@ -11,34 +67,6 @@
   >
     <template #default="{ row }">
       <span v-to-fixed="{ k: 'MES_ENCLOSURE_L__MM', val: row.length }" v-empty-text></span>
-    </template>
-  </el-table-column>
-  <el-table-column
-    v-if="!unShowField.includes('thickness') && (isBlank(columns) || columns.visible('thickness'))"
-    :show-overflow-tooltip="true"
-    prop="thickness"
-    :label="`板厚\n(mm)`"
-    :width="fixedWidth ? '80px' : ''"
-    :min-width="!fixedWidth ? '80px' : ''"
-    align="center"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_T__MM', val: row.thickness}" v-empty-text></span>
-    </template>
-  </el-table-column>
-  <el-table-column
-    v-if="!unShowField.includes('width') && (isBlank(columns) || columns.visible('width'))"
-    :show-overflow-tooltip="true"
-    prop="width"
-    :label="`有效宽度\n(mm)`"
-    :width="fixedWidth ? '80px' : ''"
-    :min-width="!fixedWidth ? '80px' : ''"
-    align="center"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
     </template>
   </el-table-column>
   <slot name="quantity" />
@@ -70,7 +98,7 @@
       <span v-to-fixed="{ k: 'MES_ENCLOSURE_L__M', val: row.totalLength }" v-empty-text></span>
     </template>
   </el-table-column>
-    <el-table-column
+  <el-table-column
     v-if="!unShowField.includes('weight') && (isBlank(columns) || columns.visible('weight'))"
     :show-overflow-tooltip="true"
     prop="weight"
@@ -87,7 +115,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
+import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { isBlank } from '@/utils/data-type'
 
 defineProps({
@@ -101,9 +130,40 @@ defineProps({
   fixedWidth: {
     type: Boolean
   },
+  // 围护子类型
+  category: {
+    type: Number
+  },
   unShowField: {
     type: Array,
     default: () => []
   }
+})
+
+const unShowEWVal = computed(() => {
+  // return mesEnclosureTypeEnum.SANDWICH_BOARD.V | mesEnclosureTypeEnum.FOLDING_PIECE.V
+  return 0
+})
+
+// const unShowWVal = computed(() => {
+//   return (
+//     mesEnclosureTypeEnum.PRESSED_PLATE.V |
+//     mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V |
+//     mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V |
+//     mesEnclosureTypeEnum.FOLDING_PIECE.V
+//   )
+// })
+
+// const unShowFWVal = computed(() => {
+//   return (
+//     mesEnclosureTypeEnum.PRESSED_PLATE.V |
+//     mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V |
+//     mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V |
+//     mesEnclosureTypeEnum.SANDWICH_BOARD.V
+//   )
+// })
+
+const unShowTNVal = computed(() => {
+  return mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V
 })
 </script>

@@ -27,14 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-full-info-columns
-        :productType="productType"
-        enclosureShowItem
-        :category="category"
-        :columns="columns"
-        :fixed="'left'"
-        fixedWidth
-      />
+      <productType-full-info-columns :productType="productType" :category="category" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -148,12 +141,6 @@ const optShow = {
 
 const category = mesEnclosureTypeEnum.FOLDING_PIECE.V
 const productType = componentTypeEnum.ENCLOSURE.V
-provide('needTableColumns', [
-  { label: '名称', width: '120px', field: 'name' },
-  { label: '编号', width: '140px', field: 'serialNumber' },
-  { label: '颜色', width: '100px', field: 'color' },
-  { label: '材质', width: '120px', field: 'material' }
-])
 provide('productType', productType)
 provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
@@ -161,13 +148,13 @@ provide('processType', processTypeEnum.TWICE.V)
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '折边件排产',
+    title: '折边件工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['areaId'],
-    invisibleColumns: ['areaName', 'length', 'thickness', 'width', 'totalArea', 'totalLength', 'weight', 'remark'],
+    invisibleColumns: ['areaName', 'totalArea', 'totalLength', 'weight', 'remark'],
     queryOnPresenterCreated: false
   },
   tableRef

@@ -35,7 +35,7 @@ const tableType = { // 如果一个表格属于两个模块，T: []
   wmsInventorySummary: { L: '物料库存汇总表', M: 'wms_warehouse', T: mt.wms.L + ' / ' + wms.wms_warehouse },
 
   // mes
-  mesSchedulingDetail: { L: '排产详情', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
+  mesSchedulingDetail: { L: '工单详情', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
 
   mesStructureProductionReport: { L: '结构生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesEnclosureProductionReport: { L: '围护生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },

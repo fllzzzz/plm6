@@ -3,8 +3,8 @@ import { ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
 export default function useSchedulingClear({ successHook }) {
-  const clearPopVisible = ref(false) // 清空排产提示
-  const clearLoading = ref(false) // 清空排产
+  const clearPopVisible = ref(false) // 清空工单提示
+  const clearLoading = ref(false) // 清空工单
 
   const handleClear = async (selects, productType) => {
     clearPopVisible.value = false

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * @description:新增排产
+ * @description:新增工单
  */
 export function save(data) {
   return request({
@@ -13,7 +13,7 @@ export function save(data) {
 }
 
 /**
- * @description:清空排产
+ * @description:清空工单
  */
 export function clear(data) {
   return request({

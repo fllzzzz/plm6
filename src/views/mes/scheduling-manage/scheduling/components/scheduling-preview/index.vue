@@ -70,25 +70,22 @@
     </template>
     <common-table :data="modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column fixed label="序号" type="index" align="center" width="60" />
-      <!-- <el-table-column prop="projectName" fixed :show-overflow-tooltip="true" label="项目" width="120px" />
-      <el-table-column prop="monomerName" fixed :show-overflow-tooltip="true" label="单体" width="120px" />
-      <el-table-column prop="areaName" fixed :show-overflow-tooltip="true" label="区域" width="120px" /> -->
-      <template v-for="item in needTableColumns" :key="item.field">
-        <el-table-column
-          v-if="item.toFixed"
-          fixed
-          :show-overflow-tooltip="true"
-          :prop="item.field"
-          :label="item.label"
-          align="center"
-          :width="item.width"
-        >
-          <template v-slot="scope">
-            {{ toFixed(scope.row[item.field], item.DP) }}
-          </template>
-        </el-table-column>
-        <el-table-column v-else fixed :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width" />
-      </template>
+      <productType-full-info-columns
+        :productType="productType"
+        :category="category"
+        :unShowField="[
+          'netWeight',
+          'grossWeight',
+          'totalNetWeight',
+          'totalGrossWeight',
+          'surfaceArea',
+          'weight',
+          'totalArea',
+          'totalLength',
+          'drawingNumber',
+          'remark',
+        ]"
+      />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -178,6 +175,7 @@ import { convertUnits } from '@/utils/convert/unit'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 
 const emit = defineEmits(['update:visible', 'success'])
 
@@ -196,8 +194,8 @@ const props = defineProps({
   }
 })
 
-const needTableColumns = inject('needTableColumns')
 const productType = inject('productType')
+const category = inject('category', undefined)
 const processType = inject('processType')
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 

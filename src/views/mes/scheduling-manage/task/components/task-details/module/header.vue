@@ -101,7 +101,7 @@ import rrOperation from '@crud/RR.operation'
 
 const operateButtonEnum = {
   TASK_ISSUE: { L: '任务下发', K: 'TASK_ISSUE', V: 1, T: 'primary' }
-  // MODIFY_TASK: { L: '修改排产任务', K: 'MODIFY_TASK', V: 2, T: 'warning' }
+  // MODIFY_TASK: { L: '修改工单任务', K: 'MODIFY_TASK', V: 2, T: 'warning' }
 }
 const operateButtonEnumV = EO.key2val(operateButtonEnum)
 

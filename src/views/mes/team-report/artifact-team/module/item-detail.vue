@@ -75,7 +75,7 @@
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="排产任务" align="center" min-width="100px">
+        <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="工单任务" align="center" min-width="100px">
           <template v-slot="scope">
             <span>{{ scope.row.taskQuantity }}</span>
           </template>

@@ -27,14 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-full-info-columns
-        :productType="productType"
-        enclosureShowItem
-        :category="category"
-        :columns="columns"
-        :fixed="'left'"
-        fixedWidth
-      />
+      <productType-full-info-columns :productType="productType" :category="category" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -131,7 +124,6 @@ import { provide, ref } from 'vue'
 import { componentTypeEnum, processTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
 import { enclosureSchedulingPM as permission } from '@/page-permission/mes'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -149,12 +141,6 @@ const optShow = {
 
 const category = mesEnclosureTypeEnum.SANDWICH_BOARD.V
 const productType = componentTypeEnum.ENCLOSURE.V
-provide('needTableColumns', [
-  { label: '名称', width: '120px', field: 'name' },
-  { label: '板型', width: '120px', field: 'plate' },
-  { label: `板厚\n(mm)`, width: '80px', field: 'thickness', toFixed: true, DP: DP.MES_ENCLOSURE_T__MM },
-  { label: `有效宽度\n(mm)`, width: '80px', field: 'width', toFixed: true, DP: DP.MES_ENCLOSURE_W__MM }
-])
 provide('productType', productType)
 provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
@@ -162,13 +148,13 @@ provide('processType', processTypeEnum.TWICE.V)
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '夹芯板排产',
+    title: '夹芯板工单',
     permission: { ...permission },
     sort: [],
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['areaId'],
-    invisibleColumns: ['areaName', 'length', 'totalArea', 'totalLength', 'brand', 'type', 'capacity', 'remark'],
+    invisibleColumns: ['areaName', 'weight', 'totalArea', 'totalLength', 'brand', 'remark'],
     queryOnPresenterCreated: false
   },
   tableRef

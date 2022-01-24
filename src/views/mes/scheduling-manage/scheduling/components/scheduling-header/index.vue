@@ -122,7 +122,7 @@ const { clearPopVisible, clearLoading, handleClear } = useSchedulingClear({ succ
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.schedulingList = v.schedulingProductionLineDTOS || [] // 排产列表
+    v.schedulingList = v.schedulingProductionLineDTOS || [] // 工单列表
     v.quantity = v.quantity || 0 // 清单数量
     v.sourceAssignQuantity = v.totalSchedulingQuantity || 0 // 已分配数量
     v.assignQuantity = v.sourceAssignQuantity || 0 // 已分配数量
@@ -138,10 +138,10 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 function dataHasFormatHook() {
-  if (loaded.value) {
+  if (loaded?.value) {
     // 如果列表已经加载则对列表数据做一次处理
     crud.data = crud.data.map((v) => {
-      // 排产表单：schedulingMap，对于页面任务分配的数量存储在schedulingMap中， k-v, k:productionLineId, v:表单内容
+      // 工单表单：schedulingMap，对于页面任务分配的数量存储在schedulingMap中， k-v, k:productionLineId, v:表单内容
       v.schedulingMap = useFormatSchedulingList(v.schedulingList, schedulingMapTemplate)
       v.sourceSchedulingMap = deepClone(v.schedulingMap)
       return v
