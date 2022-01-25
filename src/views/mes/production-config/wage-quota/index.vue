@@ -2,7 +2,15 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader />
+      <mHeader>
+        <template #optLeft v-permission="permission.edit">
+          <common-button v-show="!isEdit" type="primary" size="mini" @click="isEdit = true"> 编辑 </common-button>
+          <common-button v-show="isEdit" type="success" size="mini" style="margin-left: 0px" @click="previewVisible = true">
+            预览并保存
+          </common-button>
+          <common-button v-show="isEdit" type="info" size="mini" @click="isEdit = false">取消</common-button>
+        </template>
+      </mHeader>
     </div>
     <!--表格渲染-->
     <common-table
@@ -15,166 +23,134 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
-        v-if="columns.visible('name') && crud.query.sequenceType !== typeEnum.MACHINE_PART.V"
+        v-if="columns.visible('name')"
         key="name"
         prop="name"
         :show-overflow-tooltip="true"
-        label="名称"
-        width="140px"
+        label="工序名称"
+        min-width="140px"
+        align="center"
       />
+      <el-table-column v-if="columns.visible('wageQuotaType')" key="wageQuotaType" prop="wageQuotaType" label="计价方式" min-width="170px">
+        <template v-slot="scope">
+          <span v-parse-enum="{ e: wageQuotaTypeEnum, v: scope.row.wageQuotaType, bit: true }" />
+        </template>
+      </el-table-column>
+      <template v-for="item in wageQuotaTypeEnum.ENUM" :key="item.V">
+        <el-table-column :label="`${item.L} (${item.unit})`" min-width="170px" align="center">
+          <template #default="{ row }">
+            <template v-if="!isEdit">
+              <span v-if="row.priceMap[item.V]" v-to-fixed="{ k: 'YUAN', val: row.priceMap[item.V] }"></span>
+              <span v-else>{{ item.V & row.wageQuotaType ? '未设置' : '/' }}</span>
+            </template>
+            <template v-else>
+              <common-input-number
+                v-if="item.V & row.wageQuotaType"
+                v-model="row.priceMap[item.V]"
+                :precision="2"
+                :controls="false"
+                size="mini"
+                style="width: 100%"
+              >
+              </common-input-number>
+              <span v-else>/</span>
+            </template>
+          </template>
+        </el-table-column>
+      </template>
       <el-table-column
-        v-if="columns.visible('processType') && crud.query.sequenceType === typeEnum.ARTIFACT.V"
-        key="processType"
-        prop="processType"
+        v-if="columns.visible('type') && crud.query.sequenceType === typeEnum.ARTIFACT.V"
+        key="type"
+        prop="type"
         label="工序次序"
-        width="100px"
+        align="center"
+        min-width="100px"
       >
-        <template v-slot="scope">
-          <span>{{ processTypeEnum.VL[scope.row.processType] }}</span>
+        <template #default="{ row }">
+          <span>{{ processTypeEnum.VL[row.type] }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('processSequence')"
-        key="processSequence"
-        prop="processSequence"
-        :show-overflow-tooltip="true"
-        label="【工序 │ 单价】"
-        min-width="160px"
+        v-if="columns.visible('sequenceType')"
+        key="sequenceType"
+        prop="sequenceType"
+        label="类型"
+        align="center"
+        width="110px"
       >
-        <template v-slot="scope">
-            <span v-for="(item, index) in scope.row.processSequence" :key="item.processId">
-            <span style="cursor: pointer" v-html="item.html" @click="toEdit(item)" />
-            <span v-if="index !== scope.row.processSequence.length - 1">→</span>
-          </span>
+        <template #default="{ row }">
+          <el-tag :type="typeEnum.V[row.sequenceType].T">{{ typeEnum.VL[row.sequenceType] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="110px" />
-      <!-- <el-table-column
-        align="right"
-        :label="`合计:${crud.query.sequenceType === typeEnum.ENCLOSURE.V ? '（元/米）' : '（元/吨）'}`"
-        width="120"
-        fixed="right"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.totalPrice }}</span>
-        </template>
-      </el-table-column> -->
-      <!--编辑-->
-      <!-- <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="90px" align="center" fixed="right">
-        <template v-slot="scope">
-          <udOperation :data="scope.row" :show-del="false" />
-        </template>
-      </el-table-column> -->
     </common-table>
     <!--分页组件-->
     <pagination />
-    <mForm />
+    <m-preview v-model:visible="previewVisible" :data="crud.data" @saveSuccess="isEdit = false" />
   </div>
 </template>
 
 <script setup>
-import crudApi, { editWageQuota as edit } from '@/api/mes/production-config/product-process'
-import { getMachinePart } from '@/api/mes/production-config/wage-quota'
+import crudApi from '@/api/mes/production-config/process'
 import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { ElMessageBox } from 'element-plus'
 
-import { isNotBlank } from '@data-type/index'
-import { parseTime } from '@/utils/date'
-import { deepClone } from '@/utils/data-type'
-import { wageQuotaTypeEnum, processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
+import {
+  processTypeEnum,
+  processMaterialListTypeEnum as typeEnum,
+  processInspectTypeEnum as inspectTypeEnum,
+  processReportTypeEnum as reportTypeEnum,
+  wageQuotaTypeEnum,
+} from '@enum-ms/mes'
+import EO from '@enum'
 import checkPermission from '@/utils/system/check-permission'
 import { configWageQuotaPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-// import udOperation from '@crud/UD.operation'
+import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import mForm from './module/form'
+import mPreview from './module/preview'
+
+const store = useStore()
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '工价定额',
+    title: '工序',
     sort: [],
-    permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi, edit }
+    permission: { ...permission },
+    crudApi: { ...crudApi },
   },
   tableRef
 )
 
-function toEdit(item) {
-  if (!checkPermission([...permission.edit])) {
-    console.log('无编辑权限')
-    return
-  }
-  crud.toEdit(item)
-}
-
-CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get = crud.query.sequenceType === typeEnum.MACHINE_PART.V ? getMachinePart : crudApi.get
-}
-
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
-    if (crud.query.sequenceType === typeEnum.MACHINE_PART.V) {
-      v.processName = v.name
-      v.processId = v.id
-      v.sequenceType = typeEnum.MACHINE_PART.V
-      v.productProcessId = 0 // 零件没有总工序id
-      v.process = [{ ...v, wageQuota: deepClone(v) }]
-    } else {
-      v.createTime = parseTime(v.createTime)
-      v.process = deepClone(v.medBuildingProductProcessLinkList)
-    }
-    if (v.process && v.process.length > 0) {
-      v.processOption = {}
-      // v.totalPrice = 0
-      v.process.forEach((o) => {
-        v.processOption[o.processId] = {
-          id: o.processId,
-          name: o.processName,
-          price: o.wageQuota.price,
-          wageQuotaType: o.wageQuotaType,
-          productProcessId: o.productProcessId
-        }
-        // v.totalPrice += o.wageQuota.price || 0
-      })
-      // v.processSequence = v.process
-      //   .map((v) => {
-      //     const unit = isNotBlank(v.wageQuotaType) ? wageQuotaTypeEnum.V[v.wageQuotaType].unit : ''
-      //     return `<span>【${v.processName} │ <span style="color: #67C23A;">${
-      //       isNotBlank(v.wageQuota?.price) ? v.wageQuota.price + ' ' : '0'
-      //     }${unit}</span>】</span>`
-      //   })
-      //   .join('<span>→</span>')
-      v.processSequence = v.process.map((o) => {
-        const unit = isNotBlank(o.wageQuotaType) ? wageQuotaTypeEnum.V[o.wageQuotaType].unit : ''
-        return {
-          ...v,
-          processId: o.processId,
-          price: o.wageQuota?.price,
-          unit: unit,
-          html: `<span>【${o.processName} │ <span style="color: #67C23A;">${
-            isNotBlank(o.wageQuota?.price) ? o.wageQuota.price + ' ' : '0'
-          } ${unit}</span>】</span>`
-        }
-      })
-      v.processSequenceIds = v.process.map((v) => v.processId)
-    } else {
-      v.processSequence = ''
-      v.processSequenceIds = []
-    }
-    return v
+const previewVisible = ref(false)
+const isEdit = ref(false)
+
+function arr2obj(arr, mark = 'id') {
+  const newObj = {}
+  for (const item of arr) {
+    newObj[item[mark]] = item.price || 0
+  }
+  return newObj
+}
+
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
+    v.priceMap = arr2obj(v.processWageList, 'wageQuotaType')
+    v.originPriceMap = arr2obj(v.processWageList, 'wageQuotaType')
   })
 }
 </script>
