@@ -186,7 +186,7 @@ export function dightLowercase(num) {
  * @param {number/string} num
  */
 export function toThousand(num, precision = 2) {
-  if (num === '') {
+  if (num === '' || num === undefined || num === null) {
     return num
   }
   if (isNaN(+num)) {

@@ -71,7 +71,7 @@ const getMaterialMeasure = {
           'basicClass': rawMatClsEnum.SECTION_STEEL.V
         }, {
           'id': 109,
-          'name': '热轧H型钢',
+          'name': '热轧H型材',
           'measureUnit': '根',
           'accountingUnit': '千克',
           'accountingPrecision': 2,

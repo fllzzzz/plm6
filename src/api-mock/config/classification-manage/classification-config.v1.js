@@ -44,7 +44,7 @@ const getClassificationTree = {
         'basicClass': 2
       }, {
         'id': 109,
-        'name': '热轧H型钢',
+        'name': '热轧H型材',
         'isNormalPart': 1,
         'code': '7',
         'basicClass': 2

@@ -12,7 +12,7 @@ const useMatClsTree = (loadedCallBack, reload = false) => {
   const loaded = computed(() => store.state.config.loaded.matClsTree)
   // 未加载则拉取
   if (!loaded.value || reload) {
-    store.commit('SET_LOADED', { key: 'matClsTree', loaded: false })
+    store.commit('config/SET_LOADED', { key: 'matClsTree', loaded: false })
     store.dispatch('config/fetchMatClsTree')
   }
 

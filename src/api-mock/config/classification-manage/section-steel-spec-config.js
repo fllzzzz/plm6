@@ -68,7 +68,7 @@ const getSectionSteelList = {
           'serialNumber': '@natural(1000,9999)',
           'attachmentId': 44,
           'id': 19,
-          'name': '高频焊H型钢',
+          'name': '高频焊H型材',
           'standardId': 1
         }, {
           'serialNumber': '@natural(1000,9999)',
@@ -86,7 +86,7 @@ const getSectionSteelList = {
           'serialNumber': '@natural(1000,9999)',
           'attachmentId': 47,
           'id': 16,
-          'name': '热轧H型钢',
+          'name': '热轧H型材',
           'standardId': 1
         }, {
           'serialNumber': '@natural(1000,9999)',
@@ -116,7 +116,7 @@ const getSectionSteelList = {
           'serialNumber': '@natural(1000,9999)',
           'attachmentId': 51,
           'id': 11,
-          'name': '镀锌C型钢',
+          'name': '镀锌C型材',
           'standardId': 1
         }, {
           'serialNumber': '@natural(1000,9999)',

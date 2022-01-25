@@ -11,7 +11,7 @@ const steelPlateOutboundHandling = {
   }
 }
 
-// 型钢出库办理
+// 型材出库办理
 const sectionSteelOutboundHandling = {
   url: '/api/wms/outbound/application/section-steel',
   method: 'put',
@@ -76,7 +76,7 @@ const steelPlateBatchOutboundHandling = {
   }
 }
 
-// 型钢批量出库办理
+// 型材批量出库办理
 const sectionSteelBatchOutboundHandling = {
   url: '/api/wms/outbound/application/section-steel/batch',
   method: 'put',

@@ -81,8 +81,8 @@
           <warehouse-info-columns show-project show-transfer />
           <el-table-column label="领用人" width="100px" align="center">
             <template #default="{ row }">
-              <el-tooltip placement="top" effect="light" :content="`${row.recipient.deptName}`">
-                <span v-if="row.recipient">{{ row.recipient.name }}</span>
+              <el-tooltip v-if="row.recipient" placement="top" effect="light" :content="`${row.recipient.deptName}`">
+                <span>{{ row.recipient.name }}</span>
               </el-tooltip>
             </template>
           </el-table-column>

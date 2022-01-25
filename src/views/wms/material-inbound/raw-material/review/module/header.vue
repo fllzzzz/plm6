@@ -2,6 +2,15 @@
   <div class="head-container">
     <div v-if="crud.searchToggle">
       <common-radio-button
+        v-model="query.orderSupplyType"
+        :options="orderSupplyTypeEnum.ENUM"
+        show-option-all
+        type="enumSL"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
         type="enum"
         v-model="query.basicClass"
         :options="rawMatClsEnum.ENUM"
@@ -107,6 +116,7 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -118,6 +128,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
+  orderSupplyType: undefined, // 订单供货类型
   basicClass: undefined, // 采购类型
   reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
   projectId: { value: undefined, resetAble: false }, // 项目id

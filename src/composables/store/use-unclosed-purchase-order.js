@@ -2,11 +2,12 @@ import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
 // 获取未关闭的采购单
-const useUnclosedRequisition = (loadedCallBack) => {
+const useUnclosedRequisition = (loadedCallBack, reload = false) => {
   const store = useStore()
   const loaded = computed(() => store.state.config.loaded.unclosedPurchaseOrder)
   // 未加载则拉取
-  if (!loaded.value) {
+  if (!loaded.value || reload) {
+    store.commit('config/SET_LOADED', { key: 'unclosedPurchaseOrder', loaded: false })
     store.dispatch('config/fetchUnclosedPurchaseOrder')
   }
 

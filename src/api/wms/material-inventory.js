@@ -14,7 +14,7 @@ export function getSteelPlateInventory(params) {
 }
 
 /**
- * 型钢库存
+ * 型材库存
  * @returns
  */
 export function getSectionSteelInventory(params) {

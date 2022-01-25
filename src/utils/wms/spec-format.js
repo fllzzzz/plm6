@@ -97,7 +97,9 @@ function steelPlateSpecTip(row) {
 // 型材规格提示
 function sectionSteelSpecTip(row) {
   const tip = []
-  if (isNotBlank(row.length)) { tip.push('长(mm)') }
+  if (isNotBlank(row.length)) {
+    tip.push('长(mm)')
+  }
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   return tip.join(' * ')
 }

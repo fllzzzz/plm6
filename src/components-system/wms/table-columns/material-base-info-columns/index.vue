@@ -7,6 +7,18 @@
     </template>
   </el-table-column>
   <slot name="afterIndex" />
+  <el-table-column v-if="showProject" :prop="`project`" label="项目" align="left" min-width="120px" :fixed="fixed" show-overflow-tooltip>
+    <template #default="{ row }">
+      <table-cell-tag
+        v-if="showPartyA && partyAPosition === 'project'"
+        :show="!!row.boolPartyA"
+        name="甲供"
+        :color="TAG_PARTY_DEF_COLOR"
+        :offset="15"
+      />
+      <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
+    </template>
+  </el-table-column>
   <el-table-column
     v-if="showSerialNumber"
     prop="serialNumber"
@@ -98,14 +110,7 @@
       </el-tooltip>
     </template>
   </el-table-column>
-  <component
-    v-bind="$attrs"
-    :is="comp"
-    :columns="columns"
-    :basic-class="basicClass"
-    :spec-merge="specMerge"
-    :fixed="fixed"
-  />
+  <component v-bind="$attrs" :is="comp" :columns="columns" :basic-class="basicClass" :spec-merge="specMerge" :fixed="fixed" />
 
   <!-- 冻结记录 -->
   <common-dialog
@@ -177,6 +182,11 @@ const props = defineProps({
     // 显示 “序号”
     type: Boolean,
     default: true
+  },
+  showProject: {
+    // 显示项目
+    type: Boolean,
+    default: false
   },
   showRejectStatus: {
     // 显示 “退货状态”

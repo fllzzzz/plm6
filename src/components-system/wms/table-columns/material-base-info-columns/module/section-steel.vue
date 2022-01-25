@@ -41,6 +41,7 @@
       align="center"
       width="120px"
       :label="`长 (${baseUnit.length.unit})`"
+      :fixed="fixed"
       show-overflow-tooltip
     >
       <template #default="{ row }">

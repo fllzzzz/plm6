@@ -157,7 +157,7 @@ const tableRules = {
   ]
 }
 
-const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【型钢清单】中标红的信息' }) // 表格校验
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【型材清单】中标红的信息' }) // 表格校验
 
 // 行初始化
 function rowInit(row) {

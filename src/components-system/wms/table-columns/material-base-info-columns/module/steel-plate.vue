@@ -41,6 +41,7 @@
       align="center"
       width="100px"
       :label="`厚 (${baseUnit.thickness.unit})`"
+      :fixed="fixed"
       show-overflow-tooltip
     >
       <template #default="{ row }">
@@ -54,6 +55,7 @@
       align="center"
       width="120px"
       :label="`宽 (${baseUnit.width.unit})`"
+      :fixed="fixed"
       show-overflow-tooltip
     >
       <template #default="{ row }">
@@ -67,6 +69,7 @@
       align="center"
       width="120px"
       :label="`长 (${baseUnit.length.unit})`"
+      :fixed="fixed"
       show-overflow-tooltip
     >
       <template #default="{ row }">

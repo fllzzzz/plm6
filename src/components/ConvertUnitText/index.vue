@@ -22,7 +22,7 @@ export default {
       type: [String, Number],
       default: 0
     },
-    decimals: {
+    precision: {
       type: [Number],
       default: 0
     },
@@ -55,7 +55,7 @@ export default {
       num = convert(num)
         .from(this.from)
         .to(this.to)
-      num = num.toFixed(this.decimals)
+      num = num.toFixed(this.precision)
       return num
     },
     unit() {

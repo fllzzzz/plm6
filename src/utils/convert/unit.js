@@ -8,11 +8,11 @@ import convert from 'convert-units'
  * @param {number} num 数值
  * @param {string} from 转换前单位
  * @param {string} to 转换后单位
- * @param {number} decimals 小数
+ * @param {number} precision 小数
  * @param {boolean} showUnit 是否显示单位
  * @param {boolean} toNum 是否转为数字
  */
-export function convertUnits(num, from, to, decimals = 10, { showUnit = false, toNum = true } = {}) {
+export function convertUnits(num, from, to, precision = 10, { showUnit = false, toNum = true } = {}) {
   if (num === undefined || num === null || isNaN(+num)) return num
   if (!from || !to) return num
   const _to = getUsableUnit(to)
@@ -20,7 +20,7 @@ export function convertUnits(num, from, to, decimals = 10, { showUnit = false, t
   num = convert(+num)
     .from(_from)
     .to(_to)
-  num = num.toFixed(decimals)
+  num = num.toFixed(precision)
   if (toNum) {
     num = +num
   }

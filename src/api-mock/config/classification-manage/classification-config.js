@@ -39,7 +39,7 @@ const getClassificationTree = {
         'basicClass': 2
       }, {
         'id': 111,
-        'name': '热轧H型钢',
+        'name': '热轧H型材',
         'code': '7',
         'basicClass': 2
       }, {
@@ -287,7 +287,7 @@ const getMatClsTree = {
         'basicClass': 2
       }, {
         'id': 111,
-        'name': '热轧H型钢',
+        'name': '热轧H型材',
         'code': '7',
         'basicClass': 2
       }, {

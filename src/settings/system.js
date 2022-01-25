@@ -95,6 +95,7 @@ export const showProjectSearch = [
   { component: '/plan/technical-data-manage/other-file/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/plan/technical-manage/summary-list/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/plan/technical-manage/steel-statistical/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  // WMS
   { component: '/wms/purchase-order/index', type: allPT, required: false },
   { component: '/wms/logistics-order/index', type: allPT, required: false },
   { component: '/wms/inventory-warning/index', type: allPT, required: false },
@@ -118,5 +119,6 @@ export const showProjectSearch = [
   { component: '/wms/report/raw-material/material-inbound-receipt/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-inbound-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-outbound-details/index', type: allPT, required: false },
-  { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false }
+  { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false },
+  { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
 ]

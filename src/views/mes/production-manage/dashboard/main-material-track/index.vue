@@ -11,7 +11,7 @@
         <panel name="损耗" num-color="#1890ff" :end-val="summaryInfo.loss || 0" />
       </el-col>
       <el-col :span="6" class="card-panel-col">
-        <panel name="损耗率(%)" num-color="#1890ff" :end-val="summaryInfo.monthNewQuantity || 0" :decimals="2" />
+        <panel name="损耗率(%)" num-color="#1890ff" :end-val="summaryInfo.monthNewQuantity || 0" :precision="2" />
       </el-col>
     </el-row>
 

@@ -12,92 +12,320 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      highlight-current-row
+      @row-click="handleRowClick"
       @sort-change="crud.handleSortChange"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="crud.query.basicClass" :show-party-a="false" fixed="left" />
-      <!-- 次要信息 -->
-      <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
-      <!-- 单位及其数量 -->
-      <material-unit-quantity-columns :columns="columns" :basic-class="crud.query.basicClass" />
-      <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" show-project />
-      <!-- 价格 -->
-      <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
-      <el-table-column
-        v-if="columns.visible('transferSN')"
-        key="transferSN"
-        :show-overflow-tooltip="true"
-        prop="transferSN"
-        label="调拨单号"
-        align="center"
-        min-width="120"
-      >
-        <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.transfer"
-            :permission="permission.transferReceiptDetail"
-            @click="openTransferDetailView(row.transfer.id)"
-            :text="row.transfer.serialNumber"
-          />
+      <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
+        <template #default="{ row, $index }">
+          <!-- 是否甲供材料 -->
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+          <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
-        :show-overflow-tooltip="true"
-        prop="founderName"
-        label="操作人"
+        v-if="columns.visible('classifySerialNumber')"
+        prop="classifySerialNumber"
+        key="classifySerialNumber"
+        label="物料编号"
         align="center"
-        width="90"
-      />
-      <el-table-column
-        v-if="columns.visible('createTime')"
-        key="createTime"
-        :show-overflow-tooltip="true"
-        prop="createTime"
-        label="买入日期"
-        align="center"
-        width="100"
-        sortable="custom"
+        width="110px"
+        fixed="left"
+        show-overflow-tooltip
       >
         <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
+          <span v-empty-text>{{ row.serialNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('classifyName')"
+        prop="classifyName"
+        key="classifyName"
+        label="物料种类"
+        align="center"
+        show-overflow-tooltip
+        :width="classifyNameWidth"
+        fixed="left"
+      >
+        <template #default="{ row }">
+          <!-- 半出余料标签 -->
+          <table-cell-tag :show="!!row.boolOddmentByHalfOut" name="半出余料" color="#e6a23c" />
+          <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
+            <span v-empty-text="row.classifyName" />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('specification')"
+        key="specification"
+        prop="specification"
+        label="规格"
+        min-width="200"
+        align="left"
+        fixed="left"
+      >
+        <template #default="{ row }">
+          <div class="spec-box">
+            <el-tooltip :content="row.specTip" placement="top">
+              <span
+                class="spec-info ellipsis-text"
+                v-split="row.formatSpecArr"
+                v-empty-text
+                :style="{ 'padding-right': row.multipleSpec ? '20px' : 0 }"
+              />
+            </el-tooltip>
+            <el-popover
+              v-if="row.multipleSpec"
+              placement="top"
+              :title="`${row.classifyName}（${row.specTip}）【${row.formatSpecArr.length}种】`"
+              :width="500"
+              trigger="click"
+            >
+              <template #reference>
+                <span class="icon expand-click-8 pointer">
+                  <svg-icon icon-class="more" style="flex: none; color: #2c2c2c" />
+                </span>
+              </template>
+              <template #default>
+                <div style="margin-top: 20px">
+                  <template v-for="(spec, index) in row.formatSpecArr" :key="spec">
+                    <span style="font-weight: bold">{{ spec }}</span>
+                    <span v-if="index < row.formatSpecArr.length - 1">&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
+                  </template>
+                </div>
+              </template>
+            </el-popover>
+          </div>
+        </template>
+      </el-table-column>
+      <!-- 次要信息 -->
+      <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" fixed="left" />
+      <!-- 单位及其数量 -->
+      <el-table-column
+        v-if="columns.visible('currentUnit')"
+        key="currentUnit"
+        prop="currentUnit"
+        :show-overflow-tooltip="true"
+        label="单位"
+        width="70px"
+        align="center"
+        fixed="left"
+      />
+      <el-table-column v-if="showProject" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
+        <template #default="{ row }">
+          <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="!crud.query.factoryId && columns.visible('factory.name')"
+        key="factory.name"
+        prop="factory.name"
+        :show-overflow-tooltip="true"
+        label="工厂"
+        min-width="100px"
+      />
+      <!-- ############################ 期初数据 ############################ -->
+      <el-table-column key="beginPeriodData" prop="beginPeriodData" label="期初数据" align="center">
+        <el-table-column
+          v-if="columns.visible('beginPeriod.number')"
+          key="beginPeriod.number"
+          prop="beginPeriod.number"
+          :show-overflow-tooltip="true"
+          label="数量"
+          width="100px"
+          align="right"
+        >
+          <template #default="{ row }">
+            <span v-empty-text="row.beginPeriod.number" />
+          </template>
+        </el-table-column>
+        <template v-if="showAmount">
+          <el-table-column
+            v-if="showUnitPrice && columns.visible('beginPeriod.unitPriceExcludingVAT')"
+            key="beginPeriod.unitPriceExcludingVAT"
+            prop="beginPeriod.unitPriceExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="单价(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.beginPeriod.unitPriceExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('beginPeriod.amountExcludingVAT')"
+            key="beginPeriod.amountExcludingVAT"
+            prop="beginPeriod.amountExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="金额(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.beginPeriod.amountExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+        </template>
+      </el-table-column>
+      <!-- ############################ 入库数据 ############################ -->
+      <el-table-column key="inboundData" prop="beginPeriodData" label="入库数据" align="center">
+        <el-table-column
+          v-if="columns.visible('inbound.number')"
+          key="inbound.number"
+          prop="inbound.number"
+          :show-overflow-tooltip="true"
+          label="数量"
+          width="100px"
+          align="right"
+        >
+          <template #default="{ row }">
+            <span v-empty-text="row.inbound.number" />
+          </template>
+        </el-table-column>
+        <template v-if="showAmount">
+          <el-table-column
+            v-if="showUnitPrice && columns.visible('inbound.unitPriceExcludingVAT')"
+            key="inbound.unitPriceExcludingVAT"
+            prop="inbound.unitPriceExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="单价(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.inbound.unitPriceExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('inbound.amountExcludingVAT')"
+            key="inbound.amountExcludingVAT"
+            prop="inbound.amountExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="金额(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.inbound.amountExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+        </template>
+      </el-table-column>
+      <!-- ############################ 出库数据 ############################ -->
+      <el-table-column key="outboundData" prop="outboundData" label="出库数据" align="center">
+        <el-table-column
+          v-if="columns.visible('outbound.number')"
+          key="outbound.number"
+          prop="outbound.number"
+          :show-overflow-tooltip="true"
+          label="数量"
+          width="100px"
+          align="right"
+        >
+          <template #default="{ row }">
+            <span v-empty-text="row.outbound.number" />
+          </template>
+        </el-table-column>
+        <template v-if="showAmount">
+          <el-table-column
+            v-if="showUnitPrice && columns.visible('outbound.unitPriceExcludingVAT')"
+            key="outbound.unitPriceExcludingVAT"
+            prop="outbound.unitPriceExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="单价(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.outbound.unitPriceExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('outbound.amountExcludingVAT')"
+            key="outbound.amountExcludingVAT"
+            prop="outbound.amountExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="金额(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.outbound.amountExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+        </template>
+      </el-table-column>
+      <!-- ######################## 期末数据 ############################ -->
+      <el-table-column key="endPeriodData" prop="endPeriodData" label="期末数据" align="center">
+        <el-table-column
+          v-if="columns.visible('endPeriod.number')"
+          key="endPeriod.number"
+          prop="endPeriod.number"
+          :show-overflow-tooltip="true"
+          label="数量"
+          width="100px"
+          align="right"
+        >
+          <template #default="{ row }">
+            <span v-empty-text="row.endPeriod.number" />
+          </template>
+        </el-table-column>
+        <template v-if="showAmount">
+          <el-table-column
+            v-if="showUnitPrice && columns.visible('endPeriod.unitPriceExcludingVAT')"
+            key="endPeriod.unitPriceExcludingVAT"
+            prop="endPeriod.unitPriceExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="单价(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.endPeriod.unitPriceExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="columns.visible('endPeriod.amountExcludingVAT')"
+            key="endPeriod.amountExcludingVAT"
+            prop="endPeriod.amountExcludingVAT"
+            :show-overflow-tooltip="true"
+            label="金额(不含税)"
+            width="100px"
+            align="right"
+          >
+            <template #default="{ row }">
+              <span v-thousand="row.endPeriod.amountExcludingVAT" v-empty-text />
+            </template>
+          </el-table-column>
         </template>
       </el-table-column>
     </common-table>
-    <!--分页组件-->
-    <pagination />
-    <!-- 调拨详情 -->
-    <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
-      <transfer-detail />
-    </detail-wrapper>
-    <!-- -->
+    <!-- 分页组件 -->
+    <Pagination />
+    <!-- 详情 -->
+    <MDetail v-model:visible="detailVisible" :material-info="currentRow" />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/wms/material-transfer/raw-material/party-a-buy-in'
-import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
+import { getSendAndReceiveStorage, getSendAndReceiveStorageDetail } from '@/api/wms/report/raw-material/statistics'
 
-import { ref } from 'vue'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { setSpecInfoToList } from '@/utils/wms/spec'
-import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
+import { computed, ref, watch } from 'vue'
+import { reportRawMaterialSendAndReceiveStoragePM as permission } from '@/page-permission/wms'
+import { measureTypeEnum, projectWarehouseTypeEnum, unitTypeEnum } from '@/utils/enum/modules/wms'
+import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header'
+import MDetail from './module/detail'
 
-import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
+import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
+import checkPermission from '@/utils/system/check-permission'
 
 const optShow = {
   batchAdd: false,
@@ -109,34 +337,116 @@ const optShow = {
 
 // 展开行
 const expandRowKeys = ref([])
-// 调拨详情ref
-const transferDetailRef = ref()
+// 当前行
+const currentRow = ref({})
+// 详情显示
+const detailVisible = ref(false)
 // 表格ref
 const tableRef = ref()
-const { CRUD, crud, columns } = useCRUD(
+const { crud, columns } = useCRUD(
   {
-    title: '甲供买入',
+    title: '收发存报表',
     sort: ['id.desc'],
-    invisibleColumns: ['heatNoAndBatchNo', 'project', 'warehouse', 'invoiceType', 'taxRate', 'transferSN', 'founderName'],
+    invisibleColumns: ['classifySerialNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { get: getSendAndReceiveStorage, detail: getSendAndReceiveStorageDetail }
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-CRUD.HOOK.handleRefresh = async (crud, { data }) => {
-  await setSpecInfoToList(data.content)
-  data.content = await numFmtByBasicClass(data.content, {
-    toSmallest: false,
-    toNum: false
-  })
-}
+const showProject = computed(
+  // 未选择项目 && 当前仓库不为公共仓 && 显示项目
+  () => !crud.query.projectId && crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V && columns.value.visible('project')
+)
 
-// 打开调拨详情窗口
-function openTransferDetailView(transferId) {
-  transferDetailRef.value.toDetail(transferId)
+// 是否有权限显示金额
+const showAmount = computed(() => checkPermission(permission.showAmount))
+
+// 显示单价
+const showUnitPrice = computed(() => crud.query.unitType === measureTypeEnum.ACCOUNTING.V)
+
+// 物料全名宽度
+const classifyNameWidth = computed(() => {
+  // 基础分类不存在，或基础分类不为钢材，则宽度为100
+  return !crud.query.basicClass || crud.query.basicClass > STEEL_ENUM ? 160 : 120
+})
+
+// 监听，处理数据
+watch(
+  [() => crud.data, () => crud.query.unitType],
+  ([data, unitType]) => {
+    if (data && data.length > 0) {
+      unitType = data.forEach((row) => {
+        let measureType
+        switch (unitType) {
+          case unitTypeEnum.MEASURE.V:
+            if (data.measureUnit) {
+              measureType = measureTypeEnum.MEASURE.V
+            } else {
+              measureType = measureTypeEnum.ACCOUNTING.V
+            }
+            break
+          case unitTypeEnum.ACCOUNTING.V:
+            measureType = measureTypeEnum.ACCOUNTING.V
+            break
+          case unitTypeEnum.OUTBOUND.V:
+            measureType = row.outboundUnitType
+            break
+        }
+        if (!row.beginPeriod) row.beginPeriod = {}
+        if (!row.endPeriod) row.endPeriod = {}
+        if (!row.inbound) row.inbound = {}
+        if (!row.outbound) row.outbound = {}
+        if (measureType === measureTypeEnum.MEASURE.V) {
+          row.currentUnit = row.measureUnit
+          row.beginPeriod.number = row.beginPeriod.quantity
+          row.endPeriod.number = row.endPeriod.quantity
+          row.inbound.number = row.inbound.quantity
+          row.outbound.number = row.outbound.quantity
+        } else {
+          row.currentUnit = row.accountingUnit
+          row.beginPeriod.number = row.beginPeriod.mete
+          row.endPeriod.number = row.endPeriod.mete
+          row.inbound.number = row.inbound.mete
+          row.outbound.number = row.outbound.mete
+        }
+      })
+    }
+  },
+  { immediate: true }
+)
+
+// 表格行点击
+function handleRowClick(row, column, event) {
+  currentRow.value = row
+  detailVisible.value = true
 }
 </script>
+
+<style lang="scss" scoped>
+.el-table {
+  ::v-deep(td .cell) {
+    min-height: 28px;
+    line-height: 28px;
+  }
+}
+.spec-box {
+  position: relative;
+  .spec-info {
+    display: inline-block;
+    width: 100%;
+    padding-right: 20px;
+  }
+  .icon {
+    position: absolute;
+    right: 0;
+    font-size: 18px;
+    .svg-icon {
+      color: #409eff !important;
+    }
+  }
+}
+</style>

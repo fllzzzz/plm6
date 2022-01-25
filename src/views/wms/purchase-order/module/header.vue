@@ -11,6 +11,15 @@
         @change="crud.toQuery"
       />
       <common-radio-button
+        v-model="query.orderSupplyType"
+        :options="orderSupplyTypeEnum.ENUM"
+        show-option-all
+        type="enumSL"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
         type="enum"
         v-model="query.purchaseType"
         :options="baseMaterialTypeEnum.ENUM"
@@ -35,7 +44,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <br/>
+      <br />
       <branch-company-select
         v-model="query.branchCompanyId"
         placeholder="合同签订主体"
@@ -80,7 +89,7 @@
 <script setup>
 import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
+import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 
 import { regHeader } from '@compos/use-crud'
 import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
@@ -93,7 +102,8 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
-  purchaseType: undefined, // 采购类型
+  orderSupplyType: undefined, // 订单供货类型
+  purchaseType: undefined, // 采购材料类型
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
   projectId: { value: undefined, resetAble: false }, // 项目id
   serialNumber: undefined, // 采购单号搜索

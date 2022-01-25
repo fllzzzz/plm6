@@ -315,7 +315,7 @@ const detail_id1 = {
   }
 }
 
-// 型钢详情
+// 型材详情
 const detail_id2 = {
   url: '/api/wms/return/application/record/raw-materials/2',
   method: 'get',
@@ -404,7 +404,7 @@ const detail_id2 = {
   }
 }
 
-// 型钢详情
+// 型材详情
 const detail_id3 = {
   url: '/api/wms/return/application/record/raw-materials/3',
   method: 'get',

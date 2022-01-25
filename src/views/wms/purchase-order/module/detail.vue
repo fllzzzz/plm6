@@ -42,7 +42,7 @@
               prop="auxMaterialNames"
               style="width: 100%; word-break: break-all"
             >
-              <span v-arr-join>{{ detail.auxMaterialNames }}</span>
+              <span v-split="detail.auxMaterialNames" />
             </el-form-item>
 
             <template v-if="detail.supplyType == orderSupplyTypeEnum.SELF.V">

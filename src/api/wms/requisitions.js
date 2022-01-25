@@ -50,7 +50,7 @@ export function detail(id) {
  * @param {number} projectId 项目id
  * @param {string} purchaseNo 申购单号
  * @param {object} steelPlate 钢板
- * @param {object} sectionSteel 型钢
+ * @param {object} sectionSteel 型材
  * @param {object} steelCoil 钢卷
  * @param {object} enclosure 成品围护
  * @param {object} material 辅材
@@ -70,7 +70,7 @@ export function add({ projectId, purchaseNo, steelPlate, sectionSteel, steelCoil
  * @param {number} projectId 项目id
  * @param {string} purchaseNo 申购单号
  * @param {object} steelPlate 钢板
- * @param {object} sectionSteel 型钢
+ * @param {object} sectionSteel 型材
  * @param {object} steelCoil 钢卷
  * @param {object} enclosure 成品围护
  * @param {object} material 辅材

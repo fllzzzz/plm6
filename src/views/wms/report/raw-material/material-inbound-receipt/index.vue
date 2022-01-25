@@ -9,6 +9,7 @@
       :data="crud.data"
       :max-height="maxHeight"
       :default-expand-all="false"
+      highlight-current-row
       :expand-row-keys="expandRowKeys"
       row-key="id"
     >

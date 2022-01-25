@@ -107,7 +107,7 @@ import {
   auxMatBatchOutboundHandling,
   gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
-import { defineEmits, defineProps, watch, ref, watchEffect, computed } from 'vue'
+import { defineEmits, defineProps, watch, ref, watchEffect, computed, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
@@ -170,7 +170,8 @@ const expandRowKeys = ref([])
 const materialList = ref([])
 // 提交表单
 const form = ref({
-  list: []
+  list: [],
+  recipientId: undefined // 领用人id
 })
 // 提交loading
 const submitLoading = ref(false)
@@ -190,6 +191,9 @@ const { maxHeight } = useMaxHeight(
 )
 // 出库配置
 const { outboundCfg } = useWmsConfig()
+
+// 当前用户
+const { user } = mapGetters('user')
 
 // 全局项目
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
@@ -232,6 +236,22 @@ watch(
   { immediate: true }
 )
 
+const setRecipientId = watch(
+  dialogVisible,
+  (visible) => {
+    if (visible) {
+      form.value.recipientId = user.value.id // 领用人id
+      nextTick(() => {
+        // 首次设置默认领用人
+        setRecipientId()
+      })
+    }
+  },
+  {
+    immediate: true
+  }
+)
+
 // 监听传入的列表
 watchEffect(() => {
   // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
@@ -244,6 +264,7 @@ watchEffect(() => {
 function formInit() {
   form.value = { list: [] }
   formRef.value && formRef.value.resetFields()
+  form.value.recipientId = user.value.id // 领用人id
 }
 
 // 关闭回调

@@ -16,7 +16,7 @@ export function steelPlateReturnApplication(data) {
 }
 
 /**
- * 型钢入库申请
+ * 型材入库申请
  *
  * @export
  * @returns
