@@ -34,7 +34,7 @@
             <span>{{ form.productionQuantity }}</span>
           </el-form-item>
           <el-form-item label="关联组立号">
-            <span>{{ form.assembleSerialNumber }}</span>
+            <span>{{ form.assembleSerialNumberList.length>0? form.assembleSerialNumberList.join(','): '' }}</span>
           </el-form-item>
         </div>
         <div style="display: flex; width: 100%">
@@ -378,6 +378,7 @@ const defaultForm = {
   newQuantity: undefined,
   remark: undefined,
   serialNumber: undefined,
+  assembleSerialNumberList: [],
   specification: undefined,
   surfaceArea: undefined,
   machinePartDTOList: undefined,

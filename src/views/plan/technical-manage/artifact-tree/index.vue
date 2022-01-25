@@ -27,14 +27,18 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('assembleSerialNumber')"
-          key="assembleSerialNumber"
-          prop="assembleSerialNumber"
+          v-if="columns.visible('assembleSerialNumberList')"
+          key="assembleSerialNumberList"
+          prop="assembleSerialNumberList"
           sortable="custom"
           :show-overflow-tooltip="true"
           label="组立号"
           min-width="100px"
-        />
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.assembleSerialNumberList.length>0?scope.row.assembleSerialNumberList.join(','):'' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('name')"
           key="name"

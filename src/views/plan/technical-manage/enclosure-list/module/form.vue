@@ -17,7 +17,7 @@
           ref="detailRef"
           border
           :data="form.list"
-          :max-height="300"
+          :max-height="maxHeight"
           style="width: 100%"
           class="table-form"
           :cell-class-name="wrongCellMask"
@@ -227,7 +227,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
+            v-if="crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V&& crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.SANDWICH_BOARD.V"
             key="color"
             prop="color"
             :show-overflow-tooltip="true"
@@ -270,6 +270,7 @@ import { ElMessage } from 'element-plus'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { DP } from '@/settings/config'
 import { validate } from '@compos/form/use-table-validate'
+import useMaxHeight from '@compos/use-max-height'
 
 const formRef = ref()
 const detailRef = ref()
@@ -282,6 +283,11 @@ const plateOption = inject('plateOption')
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.enclosureForm',
+  paginate: true,
+  extraHeight: 40
+})
 const bendingRules = {
   serialNumber: [{ required: true, message: '请输入编号', trigger: 'blur' }],
   unfoldedWidth: [{ required: true, message: '展开宽度必填', trigger: 'change' }],
@@ -331,7 +337,7 @@ function wrongCellMask({ row, column }) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     rules = trussRules
@@ -398,7 +404,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     rules = trussRules

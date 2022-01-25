@@ -40,6 +40,7 @@
       </el-form-item>
       <el-form-item label="签证金额" prop="changeMoney">
         <el-input-number
+          v-show-thousand
           v-if="!auditStatus"
           v-model="form.changeMoney"
           :max="9999999999"

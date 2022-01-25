@@ -27,14 +27,7 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <el-input
-              v-if="scope.row.isModify"
-              v-model="scope.row.name"
-              placeholder="名称"
-              maxlength="20"
-              style="width:100%;"
-            />
-            <div v-else>{{ scope.row.name  }}</div>
+            <div>{{ scope.row.name  }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -59,14 +52,7 @@
           </el-tooltip>
         </template> -->
           <template v-slot="scope">
-            <el-input
-              v-if="scope.row.isModify"
-              v-model="scope.row.serialNumber"
-              placeholder="编号"
-              maxlength="10"
-              style="width:100%;"
-            />
-            <div v-else>{{ scope.row.serialNumber  }}</div>
+            <div>{{ scope.row.serialNumber  }}</div>
             <!-- <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span> -->
           </template>
         </el-table-column>
@@ -79,7 +65,7 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            <template v-if="scope.row.isModify">
+            <template v-if="scope.row.isModify && !scope.row.inProductionQuantity">
               <common-select
                 v-model="scope.row.plateId"
                 :options="plateOption"
@@ -90,7 +76,6 @@
                 @change="plateChange(scope.row,scope.$index)"
               />
             </template>
-
             <div v-else>{{ scope.row.plate? scope.row.plate: '-' }}</div>
           </template>
         </el-table-column>
@@ -104,7 +89,7 @@
         >
           <template v-slot="scope">
              <el-input-number
-              v-if="scope.row.isModify && (crud.query.category!==TechnologyTypeAllEnum.PROFILED_PLATE.V && crud.query.category!==TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)"
+              v-if="scope.row.isModify && (crud.query.category!==TechnologyTypeAllEnum.PROFILED_PLATE.V && crud.query.category!==TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) && !scope.row.inProductionQuantity"
               v-model.number="scope.row.width"
               :min="0"
               :max="99999999999"
@@ -128,7 +113,7 @@
         >
           <template v-slot="scope">
              <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.unfoldedWidth"
               :min="0"
               :max="99999999999"
@@ -153,7 +138,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.thickness"
               :min="0"
               :max="99999999999"
@@ -177,7 +162,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.length"
               :min="0"
               :max="99999999999"
@@ -201,7 +186,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.quantity"
               :min="0"
               :max="99999999999"
@@ -260,7 +245,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('color') && crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V"
+          v-if="columns.visible('color') && crud.query.category!=TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V && crud.query.category!=TechnologyTypeAllEnum.SANDWICH_BOARD.V"
           key="color"
           prop="color"
           :show-overflow-tooltip="true"
@@ -420,7 +405,7 @@ function wrongCellMask({ row, column }) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else {
     rules = otherRules
@@ -562,7 +547,7 @@ async function rowSubmit(row) {
   let rules = {}
   if (crud.query.category === TechnologyTypeAllEnum.BENDING.V) {
     rules = bendingRules
-  } else if (crud.query.category === TechnologyTypeAllEnum.SANDWICH_BOARD.V || crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
+  } else if (crud.query.category === TechnologyTypeAllEnum.PROFILED_PLATE.V) {
     rules = colorRules
   } else {
     rules = otherRules
@@ -587,7 +572,7 @@ async function rowSubmit(row) {
       await crudApi.add(row)
     }
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
+    row.isModify = false
   } catch (e) {
     console.log(messageName, e)
   }

@@ -46,6 +46,7 @@
           <template v-else>
             <el-input-number
               v-if="scope.row.isModify"
+              v-show-thousand
               v-model.number="scope.row.invoiceAmount"
               :min="0"
               :max="contractInfo.contractAmount"

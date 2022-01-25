@@ -63,7 +63,7 @@ export default {
           path: 'collection-warn',
           hidden: false,
           component: '/contract/collection-warn/index',
-          meta: { title: '欠款预警', icon: 'contract2', noCache: true }
+          meta: { title: '收款预警', icon: 'contract2', noCache: true }
         }
       ]
     },
