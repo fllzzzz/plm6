@@ -50,7 +50,7 @@
         <div>{{ scope.row.deliverInstallAmount? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('arrearAmount')" key="arrearAmount" prop="arrearAmount" label="余款(元)" align="center">
+    <el-table-column v-if="columns.visible('arrearAmount')" key="arrearAmount" prop="arrearAmount" label="欠款(元)" align="center">
       <template v-slot="scope">
         <el-tag class="collection-tag" :type="scope.row.arrearAmount<0?'warning':'success'" effect="plain">{{ scope.row.arrearAmount && scope.row.arrearAmount>0? toThousand(scope.row.arrearAmount): scope.row.arrearAmount }}</el-tag>
       </template>

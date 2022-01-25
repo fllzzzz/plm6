@@ -65,7 +65,7 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            <template v-if="scope.row.isModify">
+            <template v-if="scope.row.isModify && !scope.row.inProductionQuantity">
               <common-select
                 v-model="scope.row.plateId"
                 :options="plateOption"
@@ -76,7 +76,6 @@
                 @change="plateChange(scope.row,scope.$index)"
               />
             </template>
-
             <div v-else>{{ scope.row.plate? scope.row.plate: '-' }}</div>
           </template>
         </el-table-column>
@@ -90,7 +89,7 @@
         >
           <template v-slot="scope">
              <el-input-number
-              v-if="scope.row.isModify && (crud.query.category!==TechnologyTypeAllEnum.PROFILED_PLATE.V && crud.query.category!==TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V)"
+              v-if="scope.row.isModify && (crud.query.category!==TechnologyTypeAllEnum.PROFILED_PLATE.V && crud.query.category!==TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V) && !scope.row.inProductionQuantity"
               v-model.number="scope.row.width"
               :min="0"
               :max="99999999999"
@@ -114,7 +113,7 @@
         >
           <template v-slot="scope">
              <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.unfoldedWidth"
               :min="0"
               :max="99999999999"
@@ -139,7 +138,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.thickness"
               :min="0"
               :max="99999999999"
@@ -163,7 +162,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.length"
               :min="0"
               :max="99999999999"
@@ -187,7 +186,7 @@
         >
           <template v-slot="scope">
             <el-input-number
-              v-if="scope.row.isModify"
+              v-if="scope.row.isModify && !scope.row.inProductionQuantity"
               v-model.number="scope.row.quantity"
               :min="0"
               :max="99999999999"
@@ -574,7 +573,6 @@ async function rowSubmit(row) {
     }
     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     row.isModify = false
-    // crud.toQuery()
   } catch (e) {
     console.log(messageName, e)
   }
