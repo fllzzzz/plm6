@@ -39,31 +39,6 @@
       <span v-empty-text>{{ row.plate }}</span>
     </template>
   </el-table-column>
-  <el-table-column
-    v-if="!unShowField.includes('color') && !(unShowCOVal & category) && (isBlank(columns) || columns.visible('color'))"
-    :show-overflow-tooltip="true"
-    prop="color"
-    label="颜色"
-    :width="fixedWidth ? '120px' : ''"
-    :min-width="!fixedWidth ? '120px' : ''"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.color }}</span>
-    </template>
-  </el-table-column>
-  <el-table-column
-    v-if="!unShowField.includes('material') && !(unShowMAVal & category) && (isBlank(columns) || columns.visible('material'))"
-    :show-overflow-tooltip="true"
-    prop="material"
-    label="材质"
-    width="100px"
-    :fixed="fixed"
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.material }}</span>
-    </template>
-  </el-table-column>
 </template>
 
 <script setup>
@@ -97,18 +72,11 @@ const unShowNameVal = computed(() => {
 })
 
 const unShowSNVal = computed(() => {
-  return mesEnclosureTypeEnum.SANDWICH_BOARD.V
+  return 0
 })
 
 const unShowPLVal = computed(() => {
   return mesEnclosureTypeEnum.FOLDING_PIECE.V
 })
 
-const unShowCOVal = computed(() => {
-  return mesEnclosureTypeEnum.PRESSED_FLOOR_PLATE.V | mesEnclosureTypeEnum.SANDWICH_BOARD.V | mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V
-})
-
-const unShowMAVal = computed(() => {
-  return mesEnclosureTypeEnum.SANDWICH_BOARD.V | mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V
-})
 </script>

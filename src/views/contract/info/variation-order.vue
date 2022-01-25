@@ -7,6 +7,7 @@
     :before-close="handleClose"
     title="变更签证"
     :center="false"
+    :close-on-click-modal="false"
   >
     <template #title>
       <div class="dialog-title">
@@ -39,6 +40,7 @@
       </el-form-item>
       <el-form-item label="签证金额" prop="changeMoney">
         <el-input-number
+          v-show-thousand
           v-if="!auditStatus"
           v-model="form.changeMoney"
           :max="9999999999"

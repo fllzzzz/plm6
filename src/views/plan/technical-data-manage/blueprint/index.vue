@@ -90,15 +90,9 @@ import mHeader from './module/header'
 import { ElNotification } from 'element-plus'
 import eOperation from '@crud/E.operation'
 import { parseTime } from '@/utils/date'
+import { blueprintListPM as permission } from '@/page-permission/plan'
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['bluePrint:get'],
-  download: ['bluePrint:download'],
-  del: ['bluePrint:del'],
-  import: ['bluePrint:import']
-}
 
 const optShow = {
   add: false,

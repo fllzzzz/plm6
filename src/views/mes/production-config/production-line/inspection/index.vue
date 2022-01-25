@@ -114,7 +114,7 @@ CRUD.HOOK.beforeToQuery = () => {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.inspectors = v.mesBuildingInspectionTeamUserLinkDTOList.map(v => {
+    v.inspectors = v.userLinkList.map(v => {
       const user = {
         inspectionTeamId: v.inspectionTeamId,
         id: v.userId,

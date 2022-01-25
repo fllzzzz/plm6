@@ -49,7 +49,7 @@
       <template #optLeft>
         <upload-btn
           v-if="currentArea && currentArea.id"
-          v-permission="crud.permission.importList"
+          v-permission="crud.permission.import"
           :data="{ areaId: crud.query.areaId }"
           :upload-fun="listUpload"
           btn-name="零构件清单导入"

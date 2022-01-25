@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * @description:零件排产汇总
+ * @description:零件工单汇总
  */
 export function get(params) {
   return request({

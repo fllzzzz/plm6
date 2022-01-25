@@ -43,6 +43,8 @@ export const configMesBasePM = {
   safeAmountFactorEdit: ['safe_amount_factor:edit'], // 编辑安全余额系数
   driverFillConfigGet: ['driver_fill_config:get'], // 查看物流信息填写配置
   driverFillConfigEdit: ['driver_fill_config:edit'], // 编辑物流信息填写配置
+  appPrintConfigGet: ['app_print_config:get'], // 查看移动端打印配置
+  appPrintConfigEdit: ['app_print_config:edit'], // 编辑移动端打印配置
   carModelConfigGet: ['car_model_config:get'], // 查看车型配置
   carModelConfigEdit: ['car_model_config:edit'] // 编辑车型配置
 }

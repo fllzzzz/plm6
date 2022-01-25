@@ -1,6 +1,6 @@
 <template>
-  <div class="app-container">
-    <mHeader v-model:modifying="modifying" v-model:lines="lines" />
+  <div>
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea @refreshSummary="handleRefreshSummary"/>
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -119,7 +119,7 @@
 
 <script setup>
 import crudApi from '@/api/mes/scheduling-manage/scheduling/machine-part'
-import { provide, ref } from 'vue'
+import { provide, ref, defineProps, watch, defineEmits } from 'vue'
 
 import { machinePartSchedulingPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
@@ -130,6 +130,18 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
+
+const emit = defineEmits(['refresh'])
+
+const props = defineProps({
+  fQuery: {
+    type: Object
+  },
+  visible: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const optShow = {
   add: false,
@@ -149,14 +161,13 @@ provide('productType', productType)
 provide('processType', processTypeEnum.ONCE.V)
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
-    title: '零件排产',
+    title: '零件工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['areaId'],
     invisibleColumns: [
       'areaName',
       'length',
@@ -175,6 +186,25 @@ const { crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
+
+watch(
+  () => props.visible,
+  (val) => {
+    if (val) {
+      crud.refresh()
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+function handleRefreshSummary() {
+  emit('refresh')
+}
+
+CRUD.HOOK.beforeRefresh = () => {
+  crud.query = Object.assign(crud.query, { ...props.fQuery })
+  console.log(crud.query, props.fQuery)
+}
 </script>
 
 <style lang="scss" scoped>

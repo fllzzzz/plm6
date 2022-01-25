@@ -13,7 +13,7 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <belonging-info-columns :columns="columns" showFactory showWorkshop showProductionLine showProcess showTeam />
+      <belonging-info-columns :columns="columns" showProject showFactory showWorkshop showProductionLine showProcess showTeam />
       <productType-base-info-columns :productType="productType" :columns="columns" :unShowField="['specification', 'material', 'name']" />
       <el-table-column
         v-if="columns.visible('quantity')"
@@ -27,9 +27,9 @@
           <span v-empty-text>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('status')" :show-overflow-tooltip="true" prop="status" label="状态" align="center" width="100">
+      <el-table-column v-if="columns.visible('handleStatus')" :show-overflow-tooltip="true" prop="handleStatus" label="状态" align="center" width="100">
         <template #default="{ row }">
-          <el-tag :type="surplusHandleStatusEnum.V[row.status].TAG">{{ surplusHandleStatusEnum.VL[row.status] }}</el-tag>
+          <el-tag :type="surplusHandleStatusEnum.V[row.handleStatus].TAG">{{ surplusHandleStatusEnum.VL[row.handleStatus] }}</el-tag>
         </template>
       </el-table-column>
     </common-table>
@@ -42,6 +42,7 @@
 import crudApi from '@/api/mes/changed-manage/surplus-list'
 import { ref, computed } from 'vue'
 
+import { surplusListPM as permission } from '@/page-permission/mes'
 import { surplusHandleStatusEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -50,14 +51,6 @@ import pagination from '@crud/Pagination'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,

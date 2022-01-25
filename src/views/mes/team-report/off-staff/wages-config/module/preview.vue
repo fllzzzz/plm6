@@ -36,17 +36,17 @@ size="mini"
       </el-table-column>
       <el-table-column prop="originUnitPrice" align="center" width="115px" label="原单价(元)">
         <template #default="{ row }">
-          <span v-to-fixed="'YUAN'">{{ row.originUnitPrice }}</span>
+          <span v-to-fixed="{ k: 'YUAN', val: row.originUnitPrice }"></span>
         </template>
       </el-table-column>
       <el-table-column prop="unitPrice" align="center" width="115px" label="当前单价(元)">
         <template #default="{ row }">
-          <span v-to-fixed="'YUAN'">{{ row.unitPrice }}</span>
+          <span v-to-fixed="{ k: 'YUAN', val: row.unitPrice }"></span>
         </template>
       </el-table-column>
       <el-table-column prop="totalAmount" label="总价(元)" align="center" width="100px">
         <template #default="{ row }">
-          <span v-to-fixed="'YUAN'">{{ row.totalAmount }}</span>
+          <span v-to-fixed="{ k: 'YUAN', val: row.totalAmount }"></span>
         </template>
       </el-table-column>
     </common-table>

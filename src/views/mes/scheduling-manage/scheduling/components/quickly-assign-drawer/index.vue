@@ -15,7 +15,7 @@
       <div class="el-drawer-container">
         <div class="table-content">
           <common-table
-            ref="table"
+            ref="tableRef"
             :max-height="maxHeight"
             :data="assignAbleList"
             row-key="id"
@@ -24,25 +24,22 @@
           >
             <el-table-column fixed type="selection" width="55" align="center" />
             <el-table-column fixed label="序号" type="index" align="center" width="60" />
-            <!-- <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目" width="120px" />
-            <el-table-column prop="monomerName" :show-overflow-tooltip="true" label="单体" width="120px" />
-            <el-table-column prop="areaName" :show-overflow-tooltip="true" label="区域" width="120px" /> -->
-            <template v-for="item in needTableColumns" :key="item.field">
-              <el-table-column
-                v-if="item.toFixed"
-                fixed
-                :show-overflow-tooltip="true"
-                :prop="item.field"
-                :label="item.label"
-                align="center"
-                :width="item.width"
-              >
-                <template v-slot="scope">
-                  {{ toFixed(scope.row[item.field], item.DP) }}
-                </template>
-              </el-table-column>
-              <el-table-column v-else fixed :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width" />
-            </template>
+            <productType-full-info-columns
+              :productType="productType"
+              :category="category"
+              :unShowField="[
+                'netWeight',
+                'grossWeight',
+                'totalNetWeight',
+                'totalGrossWeight',
+                'surfaceArea',
+                'weight',
+                'totalArea',
+                'totalLength',
+                'drawingNumber',
+                'remark',
+              ]"
+            />
             <el-table-column key="unassignQuantity" fixed="right" prop="unassignQuantity" label="未分配" align="center" min-width="70px">
               <template v-slot="scope">
                 <span style="color: #13ce66">{{ scope.row.unassignQuantity }}</span>
@@ -75,12 +72,13 @@
 <script setup>
 import { computed, defineProps, defineEmits, ref, watch, inject } from 'vue'
 
-import { toFixed } from '@data-type'
+import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import productionLineBox from '../production-line-box'
 import mPreview from '../scheduling-preview'
+import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'success'])
@@ -99,7 +97,8 @@ const props = defineProps({
   }
 })
 
-const needTableColumns = inject('needTableColumns')
+const productType = inject('productType')
+const category = inject('category', undefined)
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 // 高度
@@ -114,6 +113,8 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
+
+const tableRef = ref()
 const selectLineId = ref()
 const previewVisible = ref(false)
 const multipleSelection = ref([])
@@ -128,6 +129,9 @@ watch(
   ([visible]) => {
     if (visible) {
       handleDataChange()
+    } else {
+      tableRef.value?.clearSelection()
+      multipleSelection.value = []
     }
   },
   { immediate: true }
@@ -144,12 +148,12 @@ function handleChange({ line }) {
 
 function handleDataChange() {
   // 处理在录入的情况下打开快速分配
-  let _data = JSON.parse(JSON.stringify(props.data)) || []
+  let _data = deepClone(props.data) || []
   _data = _data.filter((v) => {
     return v.unassignQuantity
   })
   assignAbleList.value = _data.map((v) => {
-    v.schedulingMap = JSON.parse(JSON.stringify(v.sourceSchedulingMap))
+    v.schedulingMap = v.sourceSchedulingMap && deepClone(v.sourceSchedulingMap)
     v.assignQuantity = v.sourceAssignQuantity // 已分配数量
     v.unassignQuantity = v.sourceUnassignQuantity // 未分配数量还原
     return v
@@ -158,18 +162,17 @@ function handleDataChange() {
 }
 
 function handleSubmitData() {
-  const _lines = JSON.parse(JSON.stringify(props.lines))
+  const _lines = deepClone(props.lines)
   console.log(_lines)
   selectLine.value = _lines.filter((f) => {
     // 过滤一遍生产线，以便加快预览界面数据处理
     f.productionLineList = f.productionLineList.filter((l) => l.id === selectLineId.value)
     return f.productionLineList && f.productionLineList.length > 0
   })
-  console.log(multipleSelection.value, 'multipleSelection.value')
-  submitData.value = JSON.parse(JSON.stringify(multipleSelection.value))
+  submitData.value = deepClone(multipleSelection.value)
+  console.log(submitData.value)
   submitData.value.forEach((v) => {
     // 处理任务数据，修改任务数量及未分配任务数量
-    console.log(v, 'v')
     v.schedulingMap[selectLineId.value].quantity = v.schedulingMap[selectLineId.value].quantity || 0
     v.schedulingMap[selectLineId.value].quantity += v.sourceUnassignQuantity
     v.assignQuantity += v.sourceUnassignQuantity

@@ -66,9 +66,9 @@ constantize(processMaterialListTypeEnum)
 
 // 工价定额单价类型
 const wageQuotaTypeEnum = {
-  WEIGHT: { L: '按重量计价', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨', meteUnit: '吨', C_UNIT: 't', DP: 'COM_WT__T' },
-  LENGTH: { L: '按长度计价', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米', meteUnit: '米', C_UNIT: 'm', DP: 'COM_L__M' },
-  AREA: { L: '按面积计价', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
+  WEIGHT: { L: '按重量计价', SL:'重量', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨', meteUnit: '吨', C_UNIT: 't', DP: 'COM_WT__T' },
+  LENGTH: { L: '按长度计价', SL:'长度', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米', meteUnit: '米', C_UNIT: 'm', DP: 'COM_L__M' },
+  AREA: { L: '按面积计价', SL:'面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
 }
 constantize(wageQuotaTypeEnum)
 
@@ -154,7 +154,8 @@ constantize(shipAuditStatusEnum)
 const abnormalHandleStatusEnum = {
   PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
   PROCESSING: { L: '处理中', K: 'PROCESSING', V: 1 << 1, TAG: 'warning' },
-  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2, TAG: 'success' }
+  PROCESSING_COMPLETE: { L: '处理完成', K: 'PROCESSING_COMPLETE', V: 1 << 2, TAG: 'success' },
+  CANCEL: { L: '已取消', K: 'CANCEL', V: 1 << 3, TAG: 'info' }
 }
 constantize(abnormalHandleStatusEnum)
 

@@ -16,6 +16,7 @@
         :expand-row-keys="expandArr"
         class="assembly-table"
         style="width: 100%"
+        :stripe="false"
       >
         <el-table-column type="expand">
           <template v-slot="scope">
@@ -162,230 +163,19 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="翼板腹板信息">
-          <el-table-column align="center" label="编号" width="120">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
+          <template v-for="item in keyList" :key="item.key">
+            <el-table-column align="center" :label="item.label" :prop="item.key">
+              <template v-slot="scope">
                 <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input
-                      v-model="scope.row.detailDTOList[0].serialNumber"
-                      type="text"
-                      placeholder="编号"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[0].serialNumber }}
+                  <template v-for="(k,i) in scope.row.detailDTOList" :key="k.id">
+                    <div :class="i===scope.row.detailDTOList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                      {{k[item.key]}}
+                    </div>
                   </template>
                 </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input
-                      v-model="scope.row.detailDTOList[1].serialNumber"
-                      type="text"
-                      placeholder="编号"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[1].serialNumber }}
-                  </template>
-                </template>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="规格" width="120">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input
-                      v-model="scope.row.detailDTOList[0].specification"
-                      type="text"
-                      placeholder="规格"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[0].specification }}
-                  </template>
-                </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input
-                      v-model="scope.row.detailDTOList[1].specification"
-                      type="text"
-                      placeholder="规格"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[1].specification }}
-                  </template>
-                </template>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="材质" width="120">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input
-                      v-model="scope.row.detailDTOList[0].material"
-                      type="text"
-                      placeholder="材质"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[0].material }}
-                  </template>
-                </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input
-                      v-model="scope.row.detailDTOList[1].material"
-                      type="text"
-                      placeholder="材质"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[1].material }}
-                  </template>
-                </template>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="长度" width="120">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input-number
-                      v-model.number="scope.row.detailDTOList[0].length"
-                      :min="0"
-                      :max="maxNubmer"
-                      :step="1"
-                      placeholder="长度"
-                      :precision="DP.MES_ARTIFACT_L__MM"
-                      controls-position="right"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[0].length ? scope.row.detailDTOList[0].length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
-                  </template>
-                </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input-number
-                      v-model.number="scope.row.detailDTOList[1].length"
-                      :min="0"
-                      :max="maxNubmer"
-                      :step="1"
-                      placeholder="长度"
-                      :precision="DP.MES_ARTIFACT_L__MM"
-                      controls-position="right"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[1].length ? scope.row.detailDTOList[1].length.toFixed(DP.MES_ARTIFACT_L__MM) : '-' }}
-                  </template>
-                </template>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="重量" width="120">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input-number
-                      v-model.number="scope.row.detailDTOList[0].netWeight"
-                      :min="0"
-                      :max="maxNubmer"
-                      :step="1"
-                      placeholder="重量"
-                      :precision="DP.COM_WT__KG"
-                      controls-position="right"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[0].netWeight ? scope.row.detailDTOList[0].netWeight.toFixed(DP.COM_WT__KG) : '-' }}
-                  </template>
-                </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-if="scope.row.mainEdit">
-                    <el-input-number
-                      v-model.number="scope.row.detailDTOList[1].netWeight"
-                      :min="0"
-                      :max="maxNubmer"
-                      :step="1"
-                      placeholder="重量"
-                      :precision="DP.COM_WT__KG"
-                      controls-position="right"
-                      style="width: 100px"
-                      size="mini"
-                    />
-                  </template>
-                  <template v-else>
-                    {{ scope.row.detailDTOList[1].netWeight ? scope.row.detailDTOList[1].netWeight.toFixed(DP.COM_WT__KG) : '-' }}
-                  </template>
-                </template>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="数量">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  {{ scope.row.detailDTOList[0].quantity }}
-                </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  {{ scope.row.detailDTOList[1].quantity }}
-                </template>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="已使用">
-            <template v-slot="scope">
-              <div class="sandwich-cell-top">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  {{ scope.row.detailDTOList[0].usedQuantity }}
-                </template>
-              </div>
-              <div class="sandwich-cell-bottom">
-                <template v-if="scope.row.detailDTOList.length > 0">
-                  {{ scope.row.detailDTOList[1].usedQuantity }}
-                </template>
-              </div>
-            </template>
-          </el-table-column>
+              </template>
+            </el-table-column>
+          </template>
         </el-table-column>
         <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注">
           <template v-slot="scope">
@@ -393,20 +183,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
+          v-if="checkPermission([...permission.del])"
           label="操作"
-          width="260px"
+          width="150px"
           align="center"
           fixed="right"
         >
           <template v-slot="scope">
-            <template v-if="scope.row.mainEdit">
-              <common-button type="info" size="mini" plain @click="cancelMainRow(scope.row)">取消</common-button>
-              <common-button type="primary" size="mini" @click="confirmRow(scope.row, scope.$index)">保存</common-button>
-            </template>
-            <template v-else>
-              <common-button type="primary" icon="el-icon-edit" size="mini" @click="modifyRow(scope.row, scope.$index)" />
-            </template>
             <udOperation :data="scope.row" :show-edit="false" />
             <el-tooltip
               class="item"
@@ -428,9 +211,6 @@
       <!--分页组件-->
       <pagination />
     </template>
-    <!-- <template v-else>
-      <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
-    </template> -->
   </div>
 </template>
 
@@ -446,17 +226,9 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
+import { assemblyListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['assembly:get'],
-  edit: ['assembly:edit'],
-  importList: ['assembly:import'],
-  del: ['assembly:del'],
-  addArtifact: ['assembly:addArtifact'],
-  delArtifact: ['assembly:delArtifact']
-}
 
 const optShow = {
   add: false,
@@ -466,8 +238,16 @@ const optShow = {
 }
 
 const tableRef = ref()
-const originRow = ref({})
 const maxNubmer = 999999999
+const keyList = [
+  { label: '编号', key: 'serialNumber' },
+  { label: '规格', key: 'specification' },
+  { label: '材质', key: 'material' },
+  { label: '长度', key: 'length' },
+  { label: '单净重(kg)', key: 'netWeight' },
+  { label: '数量', key: 'quantity' },
+  { label: '已使用', key: 'usedQuantity' }
+]
 const tableRules = {
   serialNumber: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   specification: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
@@ -511,31 +291,6 @@ watch(
 
 function handleRowClassName({ row, rowIndex }) {
   return row.existStatus === 1 ? '' : 'abnormal-row'
-}
-
-function modifyRow(val) {
-  originRow.value = JSON.parse(JSON.stringify(val))
-  val.mainEdit = true
-}
-
-async function confirmRow(val) {
-  val.mainEdit = false
-  try {
-    const editAssem = {
-      id: val.id,
-      detailUpdateDTOParams: val.detailDTOList
-    }
-    await crudApi.edit(editAssem)
-  } catch (e) {
-    val = Object.assign(val, originRow.value)
-  } finally {
-    crud.toQuery()
-  }
-}
-
-function cancelMainRow(val) {
-  val.mainEdit = false
-  val = Object.assign(val, originRow.value)
 }
 
 function addRow(val, index) {

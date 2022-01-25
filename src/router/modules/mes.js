@@ -124,7 +124,7 @@ export default {
     alwaysShow: false,
     redirect: '/mes/scheduling-manage/scheduling/artifact',
     meta: {
-      title: '排产管理',
+      title: '工单管理',
       icon: 'project',
       noCache: true
     },
@@ -134,43 +134,45 @@ export default {
       hidden: false,
       redirect: '/mes/task-manage/scheduling/artifact/assemble',
       meta: {
-        title: '构件排产',
+        title: '构件工单',
         icon: 'project',
         noCache: true
       },
-      children: [{
-        name: 'MesSchedulingArtifactAssemble',
-        path: 'assemble',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/assemble/index',
-        meta: {
-          title: '一次排产',
-          icon: 'project',
-          noCache: true
+      children: [
+        {
+          name: 'MesSchedulingArtifactMachinePart',
+          path: 'machine-part',
+          hidden: false,
+          component: '/mes/scheduling-manage/scheduling/machine-part-summary/index',
+          meta: {
+            title: '零件工单',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesSchedulingArtifactAssemble',
+          path: 'assemble',
+          hidden: false,
+          component: '/mes/scheduling-manage/scheduling/assemble/index',
+          meta: {
+            title: '一次工单',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesSchedulingArtifactArtifact',
+          path: 'artifact',
+          hidden: false,
+          component: '/mes/scheduling-manage/scheduling/artifact/index',
+          meta: {
+            title: '二次工单',
+            icon: 'project',
+            noCache: true
+          }
         }
-      },
-      {
-        name: 'MesSchedulingArtifactArtifact',
-        path: 'artifact',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/artifact/index',
-        meta: {
-          title: '二次排产',
-          icon: 'project',
-          noCache: true
-        }
-      },
-      {
-        name: 'MesSchedulingArtifactMachinePart',
-        path: 'machine-part',
-        hidden: false,
-        component: '/mes/scheduling-manage/scheduling/machine-part/index',
-        meta: {
-          title: '零件排产',
-          icon: 'project',
-          noCache: true
-        }
-      }
+
       ]
     },
     {
@@ -179,7 +181,7 @@ export default {
       hidden: false,
       redirect: '/mes/task-manage/scheduling/enclosure/contour-plate',
       meta: {
-        title: '围护排产',
+        title: '围护工单',
         icon: 'project',
         noCache: true
       },
@@ -189,7 +191,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/pressed-plate/index',
         meta: {
-          title: '压型板排产',
+          title: '压型板工单',
           icon: 'project',
           noCache: true
         }
@@ -200,7 +202,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/floor-plate/index',
         meta: {
-          title: '压型楼承板排产',
+          title: '压型楼承板工单',
           icon: 'project',
           noCache: true
         }
@@ -211,7 +213,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index',
         meta: {
-          title: '桁架式楼承板排产',
+          title: '桁架式楼承板工单',
           icon: 'project',
           noCache: true
         }
@@ -222,7 +224,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/sandwich-board/index',
         meta: {
-          title: '夹芯板排产',
+          title: '夹芯板工单',
           icon: 'project',
           noCache: true
         }
@@ -233,7 +235,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/folding-piece/index',
         meta: {
-          title: '折边件排产',
+          title: '折边件工单',
           icon: 'project',
           noCache: true
         }
@@ -246,7 +248,7 @@ export default {
       hidden: false,
       component: '/mes/scheduling-manage/task/artifact/index',
       meta: {
-        title: '构件任务',
+        title: '构件排产',
         icon: 'project',
         noCache: true
       }
@@ -257,7 +259,7 @@ export default {
       hidden: false,
       component: '/mes/scheduling-manage/task/machine-part/index',
       meta: {
-        title: '零件任务',
+        title: '零件排产',
         icon: 'project',
         noCache: true
       }
@@ -268,7 +270,7 @@ export default {
       hidden: false,
       component: '/mes/scheduling-manage/task/enclosure/index',
       meta: {
-        title: '围护任务',
+        title: '围护排产',
         icon: 'project',
         noCache: true
       }

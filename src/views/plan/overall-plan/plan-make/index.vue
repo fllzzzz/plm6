@@ -80,10 +80,10 @@
       >
         <template v-slot="scope">
           <template v-if="scope.row.modifying">
-            <common-button type="warning" size="mini" @click.stop="handelModifying(scope.row,false)">取消</common-button>
-            <common-button type="success" size="mini" @click.stop="submit(scope.row)">保存</common-button>
+            <common-button type="warning" size="mini" @click="handelModifying(scope.row,false)">取消</common-button>
+            <common-button type="success" size="mini" @click="submit(scope.row)">保存</common-button>
           </template>
-          <common-button v-else type="primary" size="mini" @click.stop="handelModifying(scope.row, true)">编辑</common-button>
+          <common-button v-else type="primary" size="mini" @click="handelModifying(scope.row, true)" v-permission="[...permission.edit]">编辑</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -109,13 +109,9 @@ import { manufactureTypeEnum } from '@enum-ms/plan'
 import { isNotBlank } from '@data-type/index'
 import { dateDifferenceReduce } from '@/utils/date'
 import { parseTime } from '@/utils/date'
+import { planMakeListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['plan:get'],
-  edit: ['plan:edit']
-}
 
 const optShow = {
   add: false,
@@ -182,10 +178,11 @@ async function submit(row) {
     }
     await crudApi.edit(data)
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    row.modifying = false
   } catch (error) {
     console.log('区域计划保存', error)
   } finally {
-    crud.toQuery()
+    // crud.toQuery()
   }
 }
 

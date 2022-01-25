@@ -18,7 +18,18 @@
         <span v-parse-time="{ val: query.endDate, fmt: '{y}-{m}-{d}' }" />
       </el-tag>
     </template>
-    <template #titleRight> </template>
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.printDetail"
+          api-key="mesPieceworkDetail"
+          :params="printParams"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table
         ref="tableRef"
@@ -55,12 +66,12 @@
         </el-table-column>
         <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="'YUAN'">{{ scope.row.wage }}</span>
+            <span v-to-fixed="{ k: 'YUAN', val: scope.row.wage }"></span>
           </template>
         </el-table-column>
         <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="'YUAN'">{{ scope.row.price }}</span>
+            <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
           </template>
         </el-table-column>
       </common-table>
@@ -120,6 +131,7 @@ watch(
 const tableLoading = ref(false)
 const list = ref([])
 const query = inject('query')
+const permission = inject('permission')
 
 const unitObj = computed(() => {
   return useProductSummaryMeteUnit({
@@ -127,20 +139,23 @@ const unitObj = computed(() => {
   })
 })
 
+const printParams = computed(() => {
+  return Object.assign(
+    {
+      factoryId: props.info?.factory?.id,
+      productionLineId: props.info?.productionLine?.id,
+      workshopId: props.info?.workshop?.id,
+      teamId: props.info.teamId
+    },
+    query
+  )
+})
+
 async function fetchList() {
   let _list = []
   try {
     tableLoading.value = true
-    const _query = Object.assign(
-      {
-        factoryId: props.info?.factory?.id,
-        productionLineId: props.info?.productionLine?.id,
-        workshopId: props.info?.workshop?.id,
-        teamId: props.info.teamId
-      },
-      query
-    )
-    const { content } = await detail(_query)
+    const { content } = await detail(printParams.value)
     _list = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.showUnit = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType }).meteUnit

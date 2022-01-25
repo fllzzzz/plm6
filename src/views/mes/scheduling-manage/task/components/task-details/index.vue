@@ -42,15 +42,11 @@
         <span>{{ emptyTextFormatter(scope.row.monomer?.name) }}>{{ emptyTextFormatter(scope.row.area?.name) }}</span>
       </template>
     </el-table-column>
-    <productType-base-info-columns
-      :productType="productType"
-      :category="category"
-      :columns="columns"
-      :unShowField="['specification', 'material']"
-    />
+    <productType-base-info-columns :productType="productType" :category="category" :columns="columns" :unShowField="['material']" />
     <el-table-column v-if="columns.visible('schedulingQuantity')" prop="schedulingQuantity" label="任务数" min-width="100px">
       <template v-slot:header>
-        <el-tooltip class="item" effect="light" :content="`‘未下发’状态下，可修改排产数`" placement="top">
+        <span v-if="modifying">任务下发数</span>
+        <el-tooltip v-else class="item" effect="light" :content="`‘未排产’状态下，可修改工单数`" placement="top">
           <div style="display: inline-block">
             <span>任务数</span>
             <i class="el-icon-edit" />
@@ -126,8 +122,8 @@
       </el-table-column>
     </template>
   </common-table>
-      <!--分页组件-->
-    <pagination />
+  <!--分页组件-->
+  <pagination />
   <issue-preview v-model:visible="previewVisible" :modified-data="crud.selections" @refresh="refresh" />
   <modifyQuantityDialog v-model:visible="modifyQuantityVisible" :details="detailRow" @modifySuccess="refresh" />
   <delTask v-model:visible="delTaskVisible" :details="detailRow" @delSuccess="refresh" />
@@ -279,7 +275,7 @@ async function previewIt() {
 }
 
 function handleSelectChange(val) {
-  val.forEach(v => {
+  val.forEach((v) => {
     v.askCompleteTime = v.askCompleteTime ? v.askCompleteTime : new Date()
   })
   crud.selectionChangeHandler(val)

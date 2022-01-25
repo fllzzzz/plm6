@@ -35,6 +35,14 @@
   </div>
   <crudOperation>
     <template v-slot:optLeft>
+      <print-table
+        v-permission="crud.permission.print"
+        api-key="mesSchedulingDetail"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
       <template v-if="query.issueStatus !== taskIssueTypeEnum.HAS_ISSUED.V">
         <template v-if="modifying">
           <el-tag type="info" style="margin-right: 5px" size="medium">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
@@ -93,7 +101,7 @@ import rrOperation from '@crud/RR.operation'
 
 const operateButtonEnum = {
   TASK_ISSUE: { L: '任务下发', K: 'TASK_ISSUE', V: 1, T: 'primary' }
-  // MODIFY_TASK: { L: '修改排产任务', K: 'MODIFY_TASK', V: 2, T: 'warning' }
+  // MODIFY_TASK: { L: '修改工单任务', K: 'MODIFY_TASK', V: 2, T: 'warning' }
 }
 const operateButtonEnumV = EO.key2val(operateButtonEnum)
 

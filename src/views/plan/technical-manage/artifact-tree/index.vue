@@ -27,14 +27,18 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="columns.visible('assembleSerialNumber')"
-          key="assembleSerialNumber"
-          prop="assembleSerialNumber"
+          v-if="columns.visible('assembleSerialNumberList')"
+          key="assembleSerialNumberList"
+          prop="assembleSerialNumberList"
           sortable="custom"
           :show-overflow-tooltip="true"
           label="组立号"
           min-width="100px"
-        />
+        >
+          <template v-slot="scope">
+            <span>{{ scope.row.assembleSerialNumberList.length>0?scope.row.assembleSerialNumberList.join(','):'' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('name')"
           key="name"
@@ -274,15 +278,9 @@ import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
+import { artifactTreePM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['artifact-tree:get'],
-  edit: ['artifact-tree:edit'],
-  del: ['artifact-tree:del'],
-  importList: ['artifact-tree:import']
-}
 
 const optShow = {
   add: false,

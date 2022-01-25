@@ -1,7 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <monomer-select-area-tabs :project-id="projectId" @change="fetchMonomerAndArea" />
+      <monomer-select-area-tabs :productType="componentTypeEnum.ARTIFACT.V" needConvert :project-id="projectId" @change="fetchMonomerAndArea" />
       <factory-select v-model="query.factoryId" show-all class="filter-item" style="width: 200px" @change="crud.toQuery" />
       <el-input
         v-model="query.name"
@@ -65,6 +65,8 @@
 
 <script setup>
 import { ref, defineExpose, defineProps, defineEmits } from 'vue'
+
+import { componentTypeEnum } from '@enum-ms/mes'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'

@@ -1,9 +1,11 @@
 <template>
   <div class="app-container project-dashboard">
-    <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" style="margin-bottom: 15px" />
+    <div style="margin-bottom: 15px; display: flex">
+      <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" style="margin-right: 10px" />
+      <common-radio-button v-model="projectType" default :options="monomerProductTypeEnum" type="enum" size="small" />
+    </div>
     <div class="project-state-view-main">
       <div class="view-left">
-        <common-radio-button v-model="projectType" default :options="monomerProductTypeEnum" type="enum" size="small" />
         <el-card class="left-item" v-loading="tableLoading">
           <div class="left-item-content">
             <el-progress type="circle" :percentage="Number(summaryInfo.completeRate)" :stroke-width="16" :width="210" :color="colors">
@@ -45,7 +47,7 @@
           type="month"
           size="small"
           class="date-item filter-item"
-          style="width: 150px !important;position: absolute; top: 0px; left: 0px; z-index: 1"
+          style="width: 150px !important; position: absolute; top: 0px; left: 0px; z-index: 1"
           placeholder="选择月"
           format="YYYY-MM"
           value-format="YYYY-MM"
@@ -206,6 +208,14 @@ const unitObj = computed(() => {
   return useProductSummaryMeteUnit({ productType: productType.value, w_unit: 'kg' })
 })
 
+watch(
+  () => monomerProductTypeEnum.value,
+  () => {
+    projectType.value = undefined
+  },
+  { immediate: true, deep: true }
+)
+
 async function fetchList() {
   if (!checkPermission(permission.get)) {
     return
@@ -349,8 +359,9 @@ watch(
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
     .left-item-content {
-      margin: 15px 0px;
+      margin: 45px 0px;
       display: flex;
       align-items: center;
 
@@ -401,17 +412,18 @@ watch(
   display: flex;
 
   .left {
-    width: 40%;
+    width: 50%;
     text-align: right;
   }
 
   .right {
-    width: 60%;
+    width: 50%;
     text-align: left;
   }
 
   .line {
     width: 15px;
+    text-align: center;
   }
 }
 </style>

@@ -28,12 +28,12 @@
         </el-table-column>
         <el-table-column prop="unitPrice" align="center" width="115px" label="单价(元)">
           <template #default="{ row }">
-            <span v-to-fixed="'YUAN'">{{ row.unitPrice }}</span>
+            <span v-to-fixed="{ k: 'YUAN', val: row.unitPrice }"></span>
           </template>
         </el-table-column>
         <el-table-column prop="totalAmount" label="总价(元)" align="center" width="100px">
           <template #default="{ row }">
-            <span v-to-fixed="'YUAN'">{{ row.totalAmount }}</span>
+            <span v-to-fixed="{ k: 'YUAN', val: row.totalAmount }"></span>
           </template>
         </el-table-column>
         <el-table-column prop="userName" show-overflow-tooltip label="操作人">

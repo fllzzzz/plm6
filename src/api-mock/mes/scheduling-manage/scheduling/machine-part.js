@@ -1,5 +1,5 @@
 const getMachinePart = {
-  url: '/api/mes/building/machine_part/scheduling/page',
+  url: '/api/mes/building/scheduling/machine_part/page',
   method: 'get',
   timeout: 1000,
   response: () => {

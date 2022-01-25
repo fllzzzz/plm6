@@ -78,7 +78,7 @@
       </common-button>
     </template>
     <template #viewLeft>
-      <el-badge v-permission="crud.permission?.audit" :value="auditNumberBadge" :hidden="auditNumberBadge === 0">
+      <el-badge v-permission="crud.permission?.audit" :value="auditNumberBadge" :hidden="auditNumberBadge === 0" style="margin-right:5px;">
         <common-button size="mini" type="primary" @click="auditVisible = true">审核</common-button>
       </el-badge>
     </template>

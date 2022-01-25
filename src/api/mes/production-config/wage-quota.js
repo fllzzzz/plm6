@@ -8,3 +8,13 @@ export function getMachinePart(params) {
     params
   })
 }
+
+//修改工序工价
+export function processWageQuotaSave(data) {
+  return request({
+    module: 'mes',
+    url: 'process/wage',
+    method: 'post',
+    data
+  })
+}

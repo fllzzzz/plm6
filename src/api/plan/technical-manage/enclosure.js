@@ -18,12 +18,22 @@ export function edit(data) {
   })
 }
 
+// export function add(data) {
+//   return request({
+//     module: 'plan',
+//     url: 'enclosure/save',
+//     method: 'post',
+//     data
+//   })
+// }
+
 export function add(data) {
   return request({
     module: 'plan',
-    url: 'enclosure/save',
+    url: 'enclosure/saveList',
     method: 'post',
-    data
+    params: { areaId: data.areaId },
+    data: data.list
   })
 }
 
@@ -39,6 +49,15 @@ export function del(id) {
   return request({
     module: 'plan',
     url: `enclosure/deleteEnclosure/${id}`,
+    method: 'delete'
+  })
+}
+
+// 按区域一键清空
+export function delEnclosureByArea(areaId) {
+  return request({
+    module: 'plan',
+    url: `enclosure/clearByAreaId/${areaId}`,
     method: 'delete'
   })
 }

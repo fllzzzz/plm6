@@ -1,48 +1,56 @@
 <template>
+  <div v-show="crud.searchToggle">
+    <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+    <common-radio-button
+      v-model="query.componentType"
+      :options="typeEnum.ENUM"
+      type="enum"
+      class="filter-item"
+      @change="handleComponentType"
+    />
+    <common-radio-button
+      v-if="query.componentType === typeEnum.ARTIFACT.V"
+      v-model="query.productType"
+      :options="artifactProcessEnum.ENUM"
+      type="enum"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+    <el-date-picker
+      v-model="query.date"
+      type="daterange"
+      range-separator=":"
+      size="small"
+      class="filter-item date-item"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      style="width: 240px"
+      :clearable="false"
+      :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+      value-format="x"
+      @change="handleDateChange"
+    />
+    <!-- <common-radio-button
+        v-if="query.componentType === typeEnum.ENCLOSURE.V"
+        v-model="query.category"
+        :options="mesEnclosureTypeEnum.ENUM"
+        type="enum"
+        class="filter-item"
+        @change="crud.toQuery"
+      /> -->
+    <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
+    <rrOperation />
+  </div>
   <crudOperation>
     <template #optLeft>
-      <div v-show="crud.searchToggle">
-        <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-        <common-radio-button
-          v-model="query.componentType"
-          :options="typeEnum.ENUM"
-          type="enum"
-          class="filter-item"
-          @change="handleComponentType"
-        />
-        <common-radio-button
-          v-if="query.componentType === typeEnum.ARTIFACT.V"
-          v-model="query.productType"
-          :options="artifactProcessEnum.ENUM"
-          type="enum"
-          class="filter-item"
-          @change="crud.toQuery"
-        />
-        <el-date-picker
-          v-model="query.date"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          class="filter-item date-item"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          style="width: 240px"
-          :clearable="false"
-          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-          value-format="x"
-          @change="handleDateChange"
-        />
-        <!-- <common-radio-button
-          v-if="query.componentType === typeEnum.ENCLOSURE.V"
-          v-model="query.category"
-          :options="mesEnclosureTypeEnum.ENUM"
-          type="enum"
-          class="filter-item"
-          @change="crud.toQuery"
-        /> -->
-        <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
-        <rrOperation />
-      </div>
+      <print-table
+        v-permission="crud.permission.print"
+        api-key="mesPiecework"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
     </template>
     <template #viewLeft>
       <common-button v-permission="crud.permission?.summaryDetail" size="mini" @click="summaryDetailVisible = true" type="success">汇总查看</common-button>

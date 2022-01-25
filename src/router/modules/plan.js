@@ -45,28 +45,28 @@ export default {
           meta: { title: '区域列表', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanOverallPlanManage',
+          name: 'PlanMakeManage',
           path: 'plan-make',
           hidden: false,
           component: '/plan/overall-plan/plan-make/index',
           meta: { title: '工作计划', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanOverallPlanSummary',
+          name: 'PlanSummary',
           path: 'plan-summary',
           hidden: false,
           component: '/plan/overall-plan/plan-summary/index',
-          meta: { title: '排产汇总', icon: 'project', noCache: true }
+          meta: { title: '工单汇总', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanOverallPlanProgress',
+          name: 'PlanProgress',
           path: 'plan-progress',
           hidden: false,
           component: '/plan/overall-plan/plan-progress/index',
           meta: { title: '计划跟踪', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanOverallPlanConfirm',
+          name: 'PlanConfirm',
           path: 'plan-confirm',
           hidden: false,
           component: '/plan/overall-plan/plan-confirm/index',
@@ -119,35 +119,35 @@ export default {
           meta: { title: '围护清单', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanTechnicalDataManageDeepen',
+          name: 'PlanDeepen',
           path: 'deepen',
           hidden: false,
           component: '/plan/technical-data-manage/deepen/index',
           meta: { title: '技术资料-深化图纸', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanTechnicalDataManageBlueprint',
+          name: 'PlanBlueprint',
           path: 'blueprint',
           hidden: false,
           component: '/plan/technical-data-manage/blueprint/index',
           meta: { title: '技术资料-蓝图', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanTechnicalDataManageChangeFile',
+          name: 'PlanChangeFile',
           path: 'change-file',
           hidden: false,
           component: '/plan/technical-data-manage/change-file/index',
           meta: { title: '技术资料-变更文件', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanTechnicalDataManageModel',
+          name: 'PlanModel',
           path: 'model',
           hidden: false,
           component: '/plan/technical-data-manage/model/index',
           meta: { title: '技术资料-模型', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanTechnicalDataManageOtherFile',
+          name: 'PlanOtherFile',
           path: 'other-file',
           hidden: false,
           component: '/plan/technical-data-manage/other-file/index',

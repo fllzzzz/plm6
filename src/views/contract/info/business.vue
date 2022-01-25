@@ -501,9 +501,6 @@ async function fetchDetail() {
   let _detail = {}
   try {
     const res = await getContractBusiness(props.projectId)
-    if (!res.enclosureMeasureMode) {
-      res.enclosureMeasureMode = enclosureSettlementTypeEnum.LENGTH.V
-    }
     _detail = JSON.parse(JSON.stringify(res))
     const data = await getContractTechInfo(props.projectId)
     _detail.enclosureInfo = {

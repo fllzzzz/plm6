@@ -70,12 +70,9 @@ import useCRUD from '@compos/use-crud'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { planProgressListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['planProgress:get']
-}
 
 const optShow = {
   add: false,

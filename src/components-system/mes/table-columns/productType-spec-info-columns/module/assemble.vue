@@ -10,7 +10,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'MES_ARTIFACT_L__MM'" v-empty-text>{{ row.length }}</span>
+      <span v-to-fixed="{ k: 'MES_ARTIFACT_L__MM', val: row.length }" v-empty-text></span>
     </template>
   </el-table-column>
   <slot name="quantity" />
@@ -25,7 +25,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'COM_WT__KG'" v-empty-text>{{ row.netWeight }}</span>
+      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.netWeight }" v-empty-text></span>
     </template>
   </el-table-column>
   <el-table-column
@@ -39,7 +39,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="'COM_WT__KG'" v-empty-text>{{ row.totalNetWeight }}</span>
+      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span>
     </template>
   </el-table-column>
 </template>

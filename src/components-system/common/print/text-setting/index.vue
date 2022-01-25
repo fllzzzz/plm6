@@ -3,21 +3,21 @@
     <span v-if="props.showDisplay">
       <el-tooltip content="是否显示" placement="bottom-start" effect="light" :open-delay="1000">
         <common-button :type="props.data.show ? 'info':''" size="small" class="icon-select-btn" @click="handleDisplayChange(data.show)">
-          <svg-icon icon-class="display" />
+          <svg-icon icon-class="doc-display" />
         </common-button>
       </el-tooltip>
     </span>
     <span v-if="props.showAllPage">
       <el-tooltip :content="`是否每页显示(显示的前提下)\n\n不选择则只在第一页（标题/表头）或最后一页（表尾）显示`" placement="bottom-start" effect="light" :open-delay="1000">
         <common-button :type="props.data.allPage ? 'info':''" size="small" class="icon-select-btn" @click="handleAllPageChange(data.allPage)">
-          <svg-icon icon-class="all-page" />
+          <svg-icon icon-class="doc-all-page" />
         </common-button>
       </el-tooltip>
     </span>
     <span v-if="props.showBold">
       <el-tooltip content="将字体加粗" placement="bottom-start" effect="light" :open-delay="1000">
         <common-button :type="props.data.bold === 'bold' ? 'info':''" size="small" class="icon-select-btn" @click="handleBoldChange(data.bold)">
-          <svg-icon icon-class="bold" />
+          <svg-icon icon-class="doc-bold" />
         </common-button>
       </el-tooltip>
     </span>
@@ -72,15 +72,15 @@ const props = defineProps({
 })
 
 const alignArr = ref([
-  { value: alignEnum.LEFT.V, icon: 'align-left', tip: '左对齐' },
-  { value: alignEnum.CENTER.V, icon: 'align-center', tip: '居中对齐' },
-  { value: alignEnum.RIGHT.V, icon: 'align-right', tip: '右对齐' }
+  { value: alignEnum.LEFT.V, icon: 'doc-align-left', tip: '左对齐' },
+  { value: alignEnum.CENTER.V, icon: 'doc-align-center', tip: '居中对齐' },
+  { value: alignEnum.RIGHT.V, icon: 'doc-align-right', tip: '右对齐' }
 ])
 
 const verticleAlignArr = ref([
-  { value: verticleAlignEnum.TOP.V, icon: 'verticle-align-top', tip: '顶端对齐' },
-  { value: verticleAlignEnum.CENTER.V, icon: 'verticle-align-center', tip: '垂直居中' },
-  { value: verticleAlignEnum.BOTTOM.V, icon: 'verticle-align-bottom', tip: '低端对齐' }
+  { value: verticleAlignEnum.TOP.V, icon: 'doc-verticle-align-top', tip: '顶端对齐' },
+  { value: verticleAlignEnum.CENTER.V, icon: 'doc-verticle-align-center', tip: '垂直居中' },
+  { value: verticleAlignEnum.BOTTOM.V, icon: 'doc-verticle-align-bottom', tip: '低端对齐' }
 ])
 
 init()

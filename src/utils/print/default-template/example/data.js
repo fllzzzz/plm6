@@ -138,6 +138,11 @@ Random.extend({
     var name = ['一号仓', '二号仓', '三号仓']
     return this.pick(name)
   },
+  workshop: function () {
+    // 生产线名称
+    var name = ['一车间', '二车间', '三车间']
+    return this.pick(name)
+  },
   productionLine: function () {
     // 生产线名称
     var name = ['重钢一线', '重钢二线', '零件班组', '次构件班组', '棱条班组', '围护生产车间', '轻钢一线', '轻钢二线']

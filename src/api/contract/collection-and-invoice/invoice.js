@@ -36,4 +36,12 @@ export function editStatus(id, status) {
   })
 }
 
-export default { get, add }
+export function del(id) {
+  return request({
+    module: 'contract',
+    url: `contract/invoice/deleteById/${id}`,
+    method: 'delete'
+  })
+}
+
+export default { get, add, edit, del }

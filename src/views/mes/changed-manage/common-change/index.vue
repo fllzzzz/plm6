@@ -15,7 +15,7 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <belonging-info-columns :columns="columns" showProject />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
         prop="createTime"
@@ -27,7 +27,7 @@
         <template v-slot="scope">
           <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.createTime }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
         <template v-slot="scope">
           <span v-empty-text>{{ scope.row.userName }}</span>
@@ -92,28 +92,22 @@
           <span v-empty-text>{{ scope.row.newQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="columns.visible('status')"
-        :show-overflow-tooltip="true"
-        prop="status"
-        label="状态"
-        align="center"
-        width="100"
-      >
+      <el-table-column v-if="columns.visible('status')" :show-overflow-tooltip="true" prop="status" label="状态" align="center" width="100">
         <template #default="{ row }">
           <el-tag :type="abnormalHandleStatusEnum.V[row.status].TAG">{{ abnormalHandleStatusEnum.VL[row.status] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="160px" align="center" fixed="right">
+      <el-table-column v-permission="[...permission.save, ...permission.detail]" label="操作" width="160px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
             size="mini"
-            v-if="scope.row.status !== abnormalHandleStatusEnum.PROCESSING_COMPLETE.V"
+            v-if="!(scope.row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V))"
             type="primary"
+            v-permission="[...permission.save]"
             @click="toHandle(scope.row)"
             >处理</common-button
           >
-          <common-button size="mini" type="info" @click="toDetail(scope.row)">查看</common-button>
+          <common-button v-permission="[...permission.detail]" size="mini" type="info" @click="toDetail(scope.row)">查看</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -132,6 +126,7 @@ import { ElMessageBox } from 'element-plus'
 
 import { abnormalHandleStatusEnum, abnormalChangeTypeEnum } from '@enum-ms/mes'
 import EO from '@/utils/enum'
+import { changeListPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -140,14 +135,6 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import handleDrawer from './module/handle-drawer'
 import detailDrawer from './module/detail-drawer'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,
@@ -178,7 +165,7 @@ const handleMethodEnum = {
   DECREASE_TASK: {
     K: 'DECREASE_TASK',
     L: '多余任务处理',
-    V: 1,
+    V: 0,
     COLUMNS: [
       // { label: '类型', field: 'type', width: '', preview: true },
       { label: '任务数', field: 'taskQuantity', width: '150px', align: 'center', preview: false }
@@ -187,7 +174,7 @@ const handleMethodEnum = {
   EXCEPTION_HANDLE: {
     K: 'EXCEPTION_HANDLE',
     L: '异常处理',
-    V: 2,
+    V: 1,
     COLUMNS: [
       { label: '工序', field: 'processName', width: '', preview: true },
       { label: '类型', field: 'reportTypeText', width: '', preview: true },
@@ -230,6 +217,7 @@ function toHandle(row) {
       try {
         const _handleType = await changeStatus(row.id)
         row.handleType = _handleType
+        row.status = abnormalHandleStatusEnum.PROCESSING.V
         openDrawer(handleVisible, row)
       } catch (error) {
         console.log('仍要处理', error)

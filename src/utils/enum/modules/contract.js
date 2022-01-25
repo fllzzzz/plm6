@@ -259,6 +259,20 @@ const projectModeEnum = {
 }
 constantize(projectModeEnum)
 
+// TODO: 有无应付
+const hasPayEnum = {
+  YES: { L: '有应付', K: 'YES', V: 1 },
+  NO: { L: '无应付', K: 'NO', V: 2 }
+}
+constantize(hasPayEnum)
+
+// TODO: 有无欠税
+const hasTaxEnum = {
+  YES: { L: '有欠税', K: 'YES', V: 1 },
+  NO: { L: '无欠税', K: 'NO', V: 2 }
+}
+constantize(hasTaxEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -288,7 +302,9 @@ export {
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
   reimbursementTypeEnum,
-  projectModeEnum
+  projectModeEnum,
+  hasTaxEnum,
+  hasPayEnum
 }
 
 export default {
@@ -296,6 +312,7 @@ export default {
   projectTypeEnum, // 项目类型
   projectNameArrangementModeEnum, // 项目名称显示
   TechnologyTypeEnum, // 技术交底
+  businessTypeEnum, // 业务类型
   settlementStatusEnum, // 结算状态
   projectTypeEnumN, // 项目类型xin
   paymentModeEnum, // 付款方式
@@ -319,5 +336,7 @@ export default {
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
   reimbursementTypeEnum,
-  projectModeEnum
+  projectModeEnum,
+  hasTaxEnum,
+  hasPayEnum
 }

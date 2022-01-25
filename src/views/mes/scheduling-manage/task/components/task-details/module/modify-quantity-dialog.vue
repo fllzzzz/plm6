@@ -1,7 +1,7 @@
 <template>
   <common-dialog
     append-to-body
-    title="排产数量修改"
+    title="工单数量修改"
     :close-on-click-modal="false"
     :before-close="handleClose"
     :visible="dialogVisible"
@@ -30,7 +30,7 @@
       <el-form-item label="编号">
         <span>{{ emptyTextFormatter(details.productSerialNumber) }}</span>
       </el-form-item>
-      <el-form-item label="排产数" prop="modifySchedulingQuantity">
+      <el-form-item label="工单数" prop="modifySchedulingQuantity">
         <el-input-number
           v-model="modifySchedulingQuantity"
           :step="1"
@@ -106,7 +106,7 @@ function submitIt() {
         schedulingQuantity: modifySchedulingQuantity.value
       }
       await modifyQuantity(data)
-      ElNotification({ title: '排产数量修改成功', type: 'success', duration: 2500 })
+      ElNotification({ title: '工单数量修改成功', type: 'success', duration: 2500 })
       emit('modifySuccess')
       handleClose()
     } else {

@@ -13,7 +13,7 @@
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px">
       <div class="form-row" style="display: flex">
         <el-form-item label="单体名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="请填写单体名称" style="width: 270px" />
+          <el-input v-model="form.name" type="text" placeholder="请填写单体名称" style="width: 270px" @blur="form.name=form.name.replace(/[ ]/g,'')"/>
         </el-form-item>
         <el-form-item label-width="5px" prop="date">
           <el-date-picker

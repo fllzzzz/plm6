@@ -157,15 +157,9 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { DP } from '@/settings/config'
+import { monomerListPM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-// crud交由presenter持有
-const permission = {
-  get: ['monomer:get'],
-  add: ['monomer:add'],
-  edit: ['monomer:edit'],
-  del: ['monomer:del']
-}
 
 const optShow = {
   add: true,

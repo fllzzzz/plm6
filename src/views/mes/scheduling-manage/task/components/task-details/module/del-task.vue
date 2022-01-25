@@ -8,7 +8,7 @@
     width="500px"
   >
     <template #titleRight>
-      <common-button :loading="submitLoading" size="mini" type="primary" :disabled="!form.quantity" @click="submitIt">确认</common-button>
+      <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt">确认</common-button>
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
       <el-form-item label="编号">
@@ -24,7 +24,7 @@
         <span>{{ unInProductionQuantity }}</span>
       </el-form-item>
       <el-form-item label="删除数量" prop="quantity">
-        <el-input-number
+        <common-input-number
           v-model="form.quantity"
           :step="1"
           :min="0"

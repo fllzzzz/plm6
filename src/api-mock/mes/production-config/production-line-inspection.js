@@ -12,7 +12,7 @@ const getInspection = {
             'createTime': '@datetime',
             'factoryId|1-10': 1,
             'id|+1': 1,
-            'mesBuildingInspectionTeamUserLinkDTOList|1-3': [
+            'userLinkList|1-3': [
               {
                 'boolDeleteEnum|1-2': false,
                 'createTime': '@datetime',

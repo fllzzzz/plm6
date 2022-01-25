@@ -41,12 +41,24 @@
     <product-type-query :productType="productType" :category="query.category" :toQuery="crud.toQuery" :query="query" />
     <rrOperation />
   </div>
-  <crudOperation />
+  <crudOperation>
+    <template #optLeft>
+      <print-table
+        v-show="query.category"
+        v-permission="crud.permission.print"
+        :api-key="apiKey"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
+    </template>
+  </crudOperation>
 </template>
 
 <script setup>
 import moment from 'moment'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import EO from '@enum'
@@ -60,7 +72,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
-  category: projectComponentTypeEnum.ARTIFACT.V,
+  category: undefined,
   date: [moment().startOf('month').valueOf(), moment().valueOf()],
   startDate: moment().startOf('month').valueOf(),
   endDate: moment().valueOf()
@@ -84,9 +96,32 @@ const productType = computed(() => {
   return query.category === projectComponentTypeEnum.ARTIFACT.V ? componentTypeEnum.ARTIFACT.V : componentTypeEnum.ENCLOSURE.V
 })
 
+const apiKey = computed(() => {
+  if (productType.value === componentTypeEnum.ARTIFACT.V) {
+    return 'mesStructureProjectSummary'
+  }
+  if (productType.value === componentTypeEnum.ENCLOSURE.V) {
+    return 'mesEnclosureProjectSummary'
+  }
+  return undefined
+})
+
 const monomerRef = ref()
 const monomerProductTypeEnum = computed(() => {
   const _productType = monomerRef.value?.getProductType() || 0
   return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
+
+watch(
+  () => monomerProductTypeEnum.value,
+  (typeEnum) => {
+    if (typeEnum.length) {
+      query.category = typeEnum[0].V
+    } else {
+      query.category = undefined
+    }
+  },
+  { deep: true }
+)
+
 </script>

@@ -86,6 +86,7 @@ const fieldTypeEnum = {
   WAREHOUSE_NAME: { L: '仓库', K: 'WAREHOUSE_NAME' },
 
   COMPONENT_PROCESS: { L: '工序', K: 'COMPONENT_PROCESS' },
+  WORKSHOP: { L: '车间', K: 'WORKSHOP' },
   PRODUCTION_LINE: { L: '生产线', K: 'PRODUCTION_LINE' },
   TEAM_NAME: { L: '班组名称', K: 'TEAM_NAME' },
 
