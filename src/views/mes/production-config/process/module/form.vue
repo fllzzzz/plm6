@@ -10,7 +10,7 @@
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
       <el-form-item label="工序类型" prop="sequenceType">
         <common-radio-button
           v-model="form.sequenceType"
@@ -72,16 +72,17 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="工价计价方式" prop="wageQuotaType">
-        <common-radio-button
-          v-model="form.wageQuotaType"
-          :options="wageQuotaTypeEnum.ENUM"
-          :disabled-val="wageQuotaTypeDisabled"
-          type="enum"
-          size="small"
-        >
-          <template v-slot:suffix="{ item }"> ({{ item.unit }}) </template>
-        </common-radio-button>
+      <el-form-item label="工价计价方式" prop="wageQuotaTypeArr">
+        <el-checkbox-group v-model="form.wageQuotaTypeArr">
+          <el-checkbox
+            v-for="item in wageQuotaTypeEnum.ENUM"
+            :key="item.V"
+            :label="item.V"
+            :disabled="wageQuotaTypeDisabled.indexOf(item.V) > -1"
+          >
+            {{ item.L }} ({{ item.unit }})
+          </el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
       <el-form-item label="工序名称" prop="name">
         <el-input v-model="form.name" type="text" placeholder="请填写工序名称" style="width: 270px" />
@@ -100,8 +101,9 @@ import {
   processMaterialListTypeEnum as typeEnum,
   processInspectTypeEnum as inspectTypeEnum,
   processReportTypeEnum as reportTypeEnum,
-  wageQuotaTypeEnum
+  wageQuotaTypeEnum,
 } from '@enum-ms/mes'
+import EO from '@enum'
 import { regForm } from '@compos/use-crud'
 import { isBlank } from '@/utils/data-type'
 
@@ -114,44 +116,41 @@ const defaultForm = {
   inspectType: inspectTypeEnum.BATCH_SCAN.V,
   reportType: reportTypeEnum.BATCH_SCAN.V,
   sequenceType: typeEnum.ARTIFACT.V,
-  type: processTypeEnum.ONCE.V
+  type: processTypeEnum.ONCE.V,
+  wageQuotaTypeArr:[]
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
 const rules = {
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
+  wageQuotaTypeArr: [{ required: true, message: '请选择工价计价方式', trigger: 'change' }],
   name: [
     { required: true, message: '请填写工序名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
-  ]
-}
-
-CRUD.HOOK.beforeToAdd = async (crud, form) => {
-  form.wageQuotaType = wageQuotaTypeEnum.WEIGHT.V
-  if (form.type === processTypeEnum.ONCE.V) {
-    form.wageQuotaType = wageQuotaTypeEnum.LENGTH.V
-  }
+    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' },
+  ],
 }
 
 CRUD.HOOK.beforeToCU = async (crud, form) => {
   typeChange(form.sequenceType)
 }
 
+CRUD.HOOK.beforeSubmit = async () => {
+  form.wageQuotaType = EO.getBitsSum(form.wageQuotaTypeArr)
+}
+
 const reportDisabled = ref([])
 const inspectDisabled = ref([])
 
 const disabledList = computed(() => {
-  return form.id
-    ? [typeEnum.ARTIFACT.V, typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V].filter((v) => v !== form.sequenceType)
-    : []// : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V] // TODO:正式部署打开现在
+  return form.id ? [typeEnum.ARTIFACT.V, typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V].filter((v) => v !== form.sequenceType) : [] // : [typeEnum.MACHINE_PART.V, typeEnum.ENCLOSURE.V] // TODO:正式部署打开现在
 })
 
 const wageQuotaTypeDisabled = computed(() => {
   if (form.sequenceType === typeEnum.MACHINE_PART.V) {
     return [wageQuotaTypeEnum.AREA.V]
   } else if (form.sequenceType === typeEnum.ARTIFACT.V && form.type === processTypeEnum.ONCE.V) {
-    return [wageQuotaTypeEnum.WEIGHT.V, wageQuotaTypeEnum.AREA.V]
+    return [wageQuotaTypeEnum.AREA.V]
   }
   return []
 })
@@ -176,9 +175,7 @@ function typeChange(sequenceType) {
 }
 
 function processTypeChange(type) {
-  if (type === processTypeEnum.ONCE.V) {
-    form.wageQuotaType = wageQuotaTypeEnum.LENGTH.V
-  }
+  form.wageQuotaTypeArr = []
 }
 </script>
 

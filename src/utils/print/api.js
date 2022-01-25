@@ -43,7 +43,7 @@ export default {
   myProject, // 我的项目
 
   // mes
-  mesSchedulingDetail, // 排产详情
+  mesSchedulingDetail, // 工单详情
 
   mesStructureProductionReport, // 结构生产报表
   mesEnclosureProductionReport, // 围护生产报表

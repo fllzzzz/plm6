@@ -213,7 +213,7 @@ export function unfinishedList(params) {
 }
 
 /**
- * 排产详情
+ * 工单详情
  */
 export function schedulingDetail(params) {
   return request({
@@ -296,8 +296,8 @@ export default {
   structureProjectSummary, // 结构项目汇总
   enclosureProjectSummary, // 围护项目汇总
 
-  // 排产管理
-  schedulingDetail, // 排产详情
+  // 工单管理
+  schedulingDetail, // 工单详情
 
   // 生产报表
   structureProductionReport, // 结构生产报表

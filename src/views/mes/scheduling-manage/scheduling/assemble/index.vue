@@ -160,17 +160,13 @@ const optShow = {
 }
 
 const productType = componentTypeEnum.ASSEMBLE.V
-provide('needTableColumns', [
-  { label: '区域', width: '140px', field: 'areaName' },
-  { label: '组立号', width: '140px', field: 'serialNumber' }
-])
 provide('productType', productType)
 provide('processType', processTypeEnum.ONCE.V)
 
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '一次排产',
+    title: '一次工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

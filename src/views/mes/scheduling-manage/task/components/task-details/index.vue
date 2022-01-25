@@ -46,7 +46,7 @@
     <el-table-column v-if="columns.visible('schedulingQuantity')" prop="schedulingQuantity" label="任务数" min-width="100px">
       <template v-slot:header>
         <span v-if="modifying">任务下发数</span>
-        <el-tooltip v-else class="item" effect="light" :content="`‘未下发’状态下，可修改排产数`" placement="top">
+        <el-tooltip v-else class="item" effect="light" :content="`‘未排产’状态下，可修改工单数`" placement="top">
           <div style="display: inline-block">
             <span>任务数</span>
             <i class="el-icon-edit" />

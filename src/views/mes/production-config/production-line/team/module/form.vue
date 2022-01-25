@@ -13,6 +13,7 @@
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="90px">
       <el-form-item label="工序" prop="processId">
         <process-select
+          ref="processSelectRef"
           v-model="form.processId"
           :productType="productType"
           containsMachinePart
@@ -49,25 +50,34 @@
           @change="memberChange"
         />
       </el-form-item>
+      <el-form-item label="工资单列" prop="boolExtraCountEnum">
+        <common-radio v-model="form.boolExtraCountEnum" :options="whetherEnum.ENUM" type="enum" />
+      </el-form-item>
+      <el-form-item label="计价方式" prop="wageQuotaType" v-if="showWageQuotaTypeEnum?.length">
+        <common-radio v-model="form.wageQuotaType" :options="showWageQuotaTypeEnum" type="enum" />
+      </el-form-item>
     </el-form>
   </common-dialog>
 </template>
 
 <script setup>
-import { ref, defineProps, computed } from 'vue'
+import { ref, defineProps, computed, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import processSelect from '@comp-mes/process-select'
 import userSelect from '@comp-common/user-select'
-import { teamAttributeEnum } from '@enum-ms/mes'
+import { whetherEnum } from '@enum-ms/common'
+import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import EO from '@enum'
 
 defineProps({
   productType: {
     type: Number,
-    default: undefined
-  }
+    default: undefined,
+  },
 })
 
 const formRef = ref()
+const processSelectRef = ref()
 const leaderSelectRef = ref()
 const memberSelectRef = ref()
 
@@ -76,18 +86,26 @@ const defaultForm = {
   processId: undefined,
   leaderId: undefined,
   organizationType: undefined,
-  memberIds: []
+  boolExtraCountEnum: false,
+  memberIds: [],
 }
 
-const { crud, form } = regForm(defaultForm, formRef)
+const { crud, form, CRUD } = regForm(defaultForm, formRef)
 const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
   processId: [{ required: true, message: '请选择工序', trigger: 'change' }],
   organizationType: [{ required: true, message: '请选择班组属性', trigger: 'change' }],
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
-  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }]
+  memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }],
+  boolExtraCountEnum: [{ required: true, message: '请选择工资是否单列', trigger: 'change', type: 'boolean' }],
+  wageQuotaType: [{ required: true, message: '请选择计价方式', trigger: 'change' }],
 }
+
+const showWageQuotaTypeEnum = computed(() => {
+  const _type = form.processId && processSelectRef.value?.getOption(form.processId)?.wageQuotaType
+  return _type && EO.getBits(wageQuotaTypeEnum, _type)
+})
 
 function leaderChange(userlist) {
   form.leader = userlist

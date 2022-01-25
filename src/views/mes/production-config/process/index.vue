@@ -61,9 +61,7 @@
               :disabled="scope.row.reportDisabled.includes(reportType.V)"
             />
           </el-select>
-          <el-tag v-else :type="reportTypeEnum.V[scope.row.reportType].T">{{
-            reportTypeEnum.VL[scope.row.reportType]
-          }}</el-tag>
+          <el-tag v-else :type="reportTypeEnum.V[scope.row.reportType].T">{{ reportTypeEnum.VL[scope.row.reportType] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -108,9 +106,26 @@
               :disabled="scope.row.inspectDisabled.includes(inspectType.V)"
             />
           </el-select>
-          <el-tag v-else :type="inspectTypeEnum.V[scope.row.inspectType].T">{{
-            inspectTypeEnum.VL[scope.row.inspectType]
-          }}</el-tag>
+          <el-tag v-else :type="inspectTypeEnum.V[scope.row.inspectType].T">{{ inspectTypeEnum.VL[scope.row.inspectType] }}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" width="100px" />
+      <el-table-column
+        v-if="columns.visible('type') && crud.query.sequenceType === typeEnum.ARTIFACT.V"
+        key="type"
+        prop="type"
+        label="工序次序"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="scope">
+          <span>{{ processTypeEnum.VL[scope.row.type] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('sequenceType')" key="sequenceType" prop="sequenceType" align="center" label="类型" width="110px">
+        <template v-slot="scope">
+          <el-tag :type="typeEnum.V[scope.row.sequenceType].T">{{ typeEnum.VL[scope.row.sequenceType] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -118,49 +133,10 @@
         key="wageQuotaType"
         prop="wageQuotaType"
         label="工价计价方式"
-        width="170px"
-        align="center"
+        min-width="170px"
       >
         <template v-slot="scope">
-          <el-select
-            v-if="checkPermission(permission.edit)"
-            v-model="scope.row.wageQuotaType"
-            size="small"
-            placeholder="请选择"
-            style="width: 100%"
-            @change="changeWageQuotaType(scope.row, scope.row.wageQuotaType)"
-          >
-            <el-option
-              v-for="item in wageQuotaTypeEnum.ENUM"
-              :key="item.V"
-              :label="item.L"
-              :value="item.V"
-              :disabled="scope.row.wageQuotaTypeDisabled.includes(item.V)"
-            >
-              <span style="float: left">{{ item.L }}</span>
-              <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px; margin-left: 15px">{{ item.unit }}</span>
-            </el-option>
-          </el-select>
-          <span v-else>
-            {{ wageQuotaTypeEnum.VL[scope.row.wageQuotaType] }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center" width="100px" />
-      <el-table-column
-        v-if="columns.visible('type') && crud.query.sequenceType === typeEnum.ARTIFACT.V"
-        key="type"
-        prop="type"
-        label="工序次序"
-        width="100px"
-      >
-        <template v-slot="scope">
-          <span>{{ processTypeEnum.VL[scope.row.type] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('sequenceType')" key="sequenceType" prop="sequenceType" label="类型" min-width="110px">
-        <template v-slot="scope">
-          <el-tag :type="typeEnum.V[scope.row.sequenceType].T">{{ typeEnum.VL[scope.row.sequenceType] }}</el-tag>
+          <span v-parse-enum="{ e: wageQuotaTypeEnum, v: scope.row.wageQuotaType, bit: true }" />
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" min-width="110px" />
@@ -194,8 +170,9 @@ import {
   processMaterialListTypeEnum as typeEnum,
   processInspectTypeEnum as inspectTypeEnum,
   processReportTypeEnum as reportTypeEnum,
-  wageQuotaTypeEnum
+  wageQuotaTypeEnum,
 } from '@enum-ms/mes'
+import EO from '@enum'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
 import { configProcessPM as permission } from '@/page-permission/config'
@@ -215,7 +192,7 @@ const { crud, columns, CRUD } = useCRUD(
     title: '工序',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
   },
   tableRef
 )
@@ -232,7 +209,7 @@ async function changeInspectType(data, val) {
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }
     )
     await crudApi.edit({ id: data.id, inspectType: val })
@@ -254,7 +231,7 @@ async function changeReportType(data, val) {
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }
     )
     await crudApi.edit({ id: data.id, reportType: val })
@@ -266,49 +243,49 @@ async function changeReportType(data, val) {
   }
 }
 
-async function changeWageQuotaType(data, val) {
-  try {
-    await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 工序的工价单位：\n由“${wageQuotaTypeEnum.VL[data.originReportType]}”变更为 “${
-        wageQuotaTypeEnum.VL[val]
-      }”, 是否继续？`,
-      '提示',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    await crudApi.edit({ id: data.id, wageQuotaType: val })
-    crud.notify(`“${data.name}” 工序,工价单位变更为 “${wageQuotaTypeEnum.VL[val]}” 成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.refresh()
-  } catch (error) {
-    console.log(error)
-    data.wageQuotaType = data.originWageQuotaType
-  }
-}
+// async function changeWageQuotaType(data, val) {
+//   try {
+//     await ElMessageBox.confirm(
+//       `此操作将把 “${data.name}” 工序的工价单位：\n由“${wageQuotaTypeEnum.VL[data.originReportType]}”变更为 “${
+//         wageQuotaTypeEnum.VL[val]
+//       }”, 是否继续？`,
+//       '提示',
+//       {
+//         confirmButtonText: '确定',
+//         cancelButtonText: '取消',
+//         type: 'warning'
+//       }
+//     )
+//     await crudApi.edit({ id: data.id, wageQuotaType: val })
+//     crud.notify(`“${data.name}” 工序,工价单位变更为 “${wageQuotaTypeEnum.VL[val]}” 成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     crud.refresh()
+//   } catch (error) {
+//     console.log(error)
+//     data.wageQuotaType = data.originWageQuotaType
+//   }
+// }
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach((v) => {
     v.createTime = parseTime(v.createTime)
     v.originInspectType = v.inspectType
     v.originReportType = v.reportType
-    v.originWageQuotaType = v.wageQuotaType
-    v.wageQuotaTypeDisabled = getWageQuotaTypeDisabled(v)
+    // v.originWageQuotaType = v.wageQuotaType
+    // v.wageQuotaTypeDisabled = getWageQuotaTypeDisabled(v)
     v.reportDisabled = getReportDisabled(v)
     v.inspectDisabled = getInspectDisabled(v)
-    return v
+    v.wageQuotaTypeArr = EO.getBits(wageQuotaTypeEnum, v.wageQuotaType, 'V')
   })
 }
 
-function getWageQuotaTypeDisabled(v) {
-  if (v.sequenceType === typeEnum.MACHINE_PART.V) {
-    return [wageQuotaTypeEnum.AREA.V]
-  } else if (v.sequenceType === typeEnum.ARTIFACT.V && v.type === processTypeEnum.ONCE.V) {
-    return [wageQuotaTypeEnum.WEIGHT.V, wageQuotaTypeEnum.AREA.V]
-  }
-  return []
-}
+// function getWageQuotaTypeDisabled(v) {
+//   if (v.sequenceType === typeEnum.MACHINE_PART.V) {
+//     return [wageQuotaTypeEnum.AREA.V]
+//   } else if (v.sequenceType === typeEnum.ARTIFACT.V && v.type === processTypeEnum.ONCE.V) {
+//     return [wageQuotaTypeEnum.AREA.V]
+//   }
+//   return []
+// }
 
 function getReportDisabled(v) {
   if (v.sequenceType === typeEnum.MACHINE_PART.V) {

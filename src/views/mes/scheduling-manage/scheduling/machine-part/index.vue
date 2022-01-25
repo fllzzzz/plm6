@@ -163,7 +163,7 @@ provide('processType', processTypeEnum.ONCE.V)
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '零件排产',
+    title: '零件工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

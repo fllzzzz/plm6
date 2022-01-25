@@ -24,25 +24,22 @@
           >
             <el-table-column fixed type="selection" width="55" align="center" />
             <el-table-column fixed label="序号" type="index" align="center" width="60" />
-            <!-- <el-table-column prop="projectName" :show-overflow-tooltip="true" label="项目" width="120px" />
-            <el-table-column prop="monomerName" :show-overflow-tooltip="true" label="单体" width="120px" />
-            <el-table-column prop="areaName" :show-overflow-tooltip="true" label="区域" width="120px" /> -->
-            <template v-for="item in needTableColumns" :key="item.field">
-              <el-table-column
-                v-if="item.toFixed"
-                fixed
-                :show-overflow-tooltip="true"
-                :prop="item.field"
-                :label="item.label"
-                align="center"
-                :width="item.width"
-              >
-                <template v-slot="scope">
-                  {{ toFixed(scope.row[item.field], item.DP) }}
-                </template>
-              </el-table-column>
-              <el-table-column v-else fixed :show-overflow-tooltip="true" :prop="item.field" :label="item.label" :width="item.width" />
-            </template>
+            <productType-full-info-columns
+              :productType="productType"
+              :category="category"
+              :unShowField="[
+                'netWeight',
+                'grossWeight',
+                'totalNetWeight',
+                'totalGrossWeight',
+                'surfaceArea',
+                'weight',
+                'totalArea',
+                'totalLength',
+                'drawingNumber',
+                'remark',
+              ]"
+            />
             <el-table-column key="unassignQuantity" fixed="right" prop="unassignQuantity" label="未分配" align="center" min-width="70px">
               <template v-slot="scope">
                 <span style="color: #13ce66">{{ scope.row.unassignQuantity }}</span>
@@ -75,13 +72,13 @@
 <script setup>
 import { computed, defineProps, defineEmits, ref, watch, inject } from 'vue'
 
-import { toFixed } from '@data-type'
 import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import productionLineBox from '../production-line-box'
 import mPreview from '../scheduling-preview'
+import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'success'])
@@ -100,7 +97,8 @@ const props = defineProps({
   }
 })
 
-const needTableColumns = inject('needTableColumns')
+const productType = inject('productType')
+const category = inject('category', undefined)
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 // 高度

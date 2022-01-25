@@ -124,7 +124,6 @@ import { provide, ref } from 'vue'
 import { componentTypeEnum, processTypeEnum } from '@enum-ms/mes'
 // import checkPermission from '@/utils/system/check-permission'
 import { artifactSchedulingPM as permission } from '@/page-permission/mes'
-import { DP } from '@/settings/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -141,20 +140,13 @@ const optShow = {
 }
 
 const productType = componentTypeEnum.ARTIFACT.V
-provide('needTableColumns', [
-  { label: '名称', width: '120px', field: 'name' },
-  { label: '编号', width: '140px', field: 'serialNumber' },
-  { label: '规格', width: '140px', field: 'specification' },
-  { label: '材质', width: '80px', field: 'material' },
-  { label: `长度\n(mm)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ARTIFACT_L__MM }
-])
 provide('productType', productType)
 provide('processType', processTypeEnum.TWICE.V)
 
 const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
-    title: '二次排产',
+    title: '二次工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

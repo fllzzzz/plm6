@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * @description: 获取排产详情
+ * @description: 获取工单详情
  * @param {*} params
  * @return {*}
  */
@@ -15,7 +15,7 @@ export function get(params) {
 }
 
 /**
- * @description: 修改排产数
+ * @description: 修改工单数
  * @param {*} data
  * @return {*}
  */
