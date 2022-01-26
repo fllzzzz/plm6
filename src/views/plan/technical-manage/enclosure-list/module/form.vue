@@ -368,7 +368,6 @@ function addRow() {
 
 function plateChange(row, index) {
   const choseVal = plateOption.value.find(v => v.id === row.plateId)
-  console.log(choseVal)
   if (crud.query.category === TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V) {
     form.list[index].plate = choseVal.serialNumber
   } else {

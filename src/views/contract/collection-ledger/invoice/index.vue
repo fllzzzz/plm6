@@ -20,9 +20,14 @@
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="项目">
+    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="所属项目">
       <template v-slot="scope">
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('invoiceUnit')" key="invoiceUnit" prop="invoiceUnit" :show-overflow-tooltip="true" label="签约主体" align="center">
+      <template v-slot="scope">
+        <div>{{ scope.row.invoiceUnit }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)">

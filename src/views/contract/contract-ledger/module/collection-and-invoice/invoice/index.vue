@@ -83,6 +83,7 @@
             class="filter-item"
             placeholder="发票类型"
             style="width: 100%"
+            @change="invoiceTypeChange(scope.row)"
           />
           <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
@@ -334,6 +335,9 @@ async function getContractInfo(id) {
   }
 }
 
+function invoiceTypeChange(row) {
+  row.taxRate = undefined
+}
 function moneyChange(row) {
   totalAmount.value = 0
   crud.data.map(v => {
