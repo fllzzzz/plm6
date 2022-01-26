@@ -13,9 +13,11 @@
     "Dittoable",
     "Echarts",
     "kanban",
+    "overable",
     "PROFILEDPLATE",
     "QHSE",
     "qrcode",
+    "SLDS",
     "STRUC",
     "styleable",
     "submenu",
@@ -24,6 +26,7 @@
     "Tmpl",
     "UNDIGIT",
     "UNREVIEWED",
+    "UNSUBMITTED",
     "vite"
   ]
 }
