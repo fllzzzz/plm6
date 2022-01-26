@@ -259,6 +259,20 @@ export default {
           meta: { title: '项目模式', icon: 'project', noCache: true }
         },
         {
+          name: 'artifactConfig',
+          path: 'artifact-config',
+          hidden: false,
+          component: '/config-manage/system/artifact-config/index',
+          meta: { title: '组立配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MachinePartConfig',
+          path: 'machine-part-config',
+          hidden: false,
+          component: '/config-manage/system/machine-part/index',
+          meta: { title: '零件配置', icon: 'project', noCache: true }
+        },
+        {
           name: 'SteelClassic',
           path: 'steel-classic',
           hidden: false,

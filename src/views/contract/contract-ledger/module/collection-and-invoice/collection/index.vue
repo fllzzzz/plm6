@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--表格渲染-->
-    <common-button type="primary" @click="addRow" style="margin-right:10px;">添加</common-button>
+    <common-button type="primary" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
     <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
     <common-table
       ref="tableRef"
@@ -194,6 +194,7 @@
         </template>
       </el-table-column>
     </common-table>
+    <mForm />
   <!--分页组件-->
   <pagination />
   </div>
@@ -201,7 +202,7 @@
 
 <script setup>
 import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
-import { ref, defineProps, watch, nextTick } from 'vue'
+import { ref, defineProps, watch, nextTick, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -215,6 +216,7 @@ import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
+import mForm from './form'
 
 // crud交由presenter持有
 const permission = {
@@ -242,6 +244,7 @@ const props = defineProps({
   }
 })
 
+provide('projectId', props.projectId)
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
 const contractInfo = ref({})
@@ -249,6 +252,9 @@ const originRow = ref({})
 const bankList = ref([])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const totalAmount = ref(0)
+provide('bankList', bankList)
+provide('contractInfo', contractInfo)
+provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
     title: '收款填报',
@@ -383,25 +389,25 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   })
 }
 
-function addRow() {
-  crud.data.unshift({
-    collectionAmount: undefined,
-    collectionBankAccount: undefined,
-    collectionBankAccountId: undefined,
-    collectionDate: undefined,
-    collectionDepositBank: undefined,
-    collectionMode: undefined,
-    collectionReason: undefined,
-    collectionUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
-    collectionUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
-    paymentBankAccount: contractInfo.value.customerBankCode || undefined,
-    paymentDepositBank: contractInfo.value.customerBankName || undefined,
-    paymentUnit: contractInfo.value.customerUnit || undefined,
-    projectId: props.projectId,
-    dataIndex: crud.data.length,
-    isModify: true
-  })
-}
+// function addRow() {
+//   crud.data.unshift({
+//     collectionAmount: undefined,
+//     collectionBankAccount: undefined,
+//     collectionBankAccountId: undefined,
+//     collectionDate: undefined,
+//     collectionDepositBank: undefined,
+//     collectionMode: undefined,
+//     collectionReason: undefined,
+//     collectionUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
+//     collectionUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
+//     paymentBankAccount: contractInfo.value.customerBankCode || undefined,
+//     paymentDepositBank: contractInfo.value.customerBankName || undefined,
+//     paymentUnit: contractInfo.value.customerUnit || undefined,
+//     projectId: props.projectId,
+//     dataIndex: crud.data.length,
+//     isModify: true
+//   })
+// }
 
 function modifyRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))

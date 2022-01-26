@@ -84,4 +84,13 @@ export function errorArtifact(params) {
   })
 }
 
+// 获取构件对应的零件
+export function artifactPart(params) {
+  return request({
+    module: 'plan',
+    url: 'artifactMachinePart/listMachinePart',
+    method: 'get',
+    params
+  })
+}
 export default { edit, del, get }
