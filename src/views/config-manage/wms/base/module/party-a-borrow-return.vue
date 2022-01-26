@@ -41,7 +41,7 @@
       <el-form-item label="钢板-边长度误差(mm)">
         <common-input-number v-model="form.steelPlateSideLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
-      <el-form-item label="型钢-长度误差(mm)">
+      <el-form-item label="型材-长度误差(mm)">
         <common-input-number v-model="form.sectionSteelLengthDiff" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
       <!-- 目前按长度还，不需要该配置，若按照卷或重量还则需要对应配置-->
@@ -72,7 +72,7 @@ const permission = inject('permission')
 const dataSource = ref({
   boolReturnByOtherProject: false, // 可从非借用项目归还
   steelPlateSideLengthDiff: undefined, // 钢板-长宽长度误差(mm)
-  sectionSteelLengthDiff: undefined, // 型钢-长度误差(mm)
+  sectionSteelLengthDiff: undefined, // 型材-长度误差(mm)
   steelCoilLengthDiff: undefined // 钢卷-长度误差(mm)
 })
 

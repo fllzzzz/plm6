@@ -23,9 +23,7 @@
                 </span>
                 <span>
                   {{ opt.name }}
-                  <span v-if="isNotBlank(opt.parent)" v-arr-join="'>'" class="parent-node-title">
-                    {{ opt.parent.fullPathName }}
-                  </span>
+                  <span v-if="isNotBlank(opt.parent)" v-split="{ val: opt.parent.fullPathName, symbol: '>' }" class="parent-node-title" />
                 </span>
               </div>
             </el-card>

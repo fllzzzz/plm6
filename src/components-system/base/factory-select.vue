@@ -59,10 +59,12 @@ const props = defineProps({
     type: String,
     default: '请选择工厂'
   },
+  // 当只有一个工厂时，默认选中
   onlyOneDefault: {
     type: Boolean,
     default: true
   }
+  // TODO: 默认选中当前用户所属工厂
 })
 
 const selectValue = ref()

@@ -1,7 +1,7 @@
 <template>
   <el-tag v-if="detail.licensePlate" effect="plain">{{ `车牌：${detail.licensePlate}` }}</el-tag>
   <el-tag v-if="detail.shipmentNumber" effect="plain">{{ `物流单号：${detail.shipmentNumber}` }}</el-tag>
-  <el-tag v-if="detail.basicClass & STEEL_ENUM && order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V" effect="plain">
+  <el-tag v-if="showLoadingWeight" effect="plain">
     {{ `过磅重量：${detail.loadingWeight}kg` }}
   </el-tag>
   <el-tag v-if="order.supplyType" v-parse-enum="{ e: orderSupplyTypeEnum, v: order.supplyType }" type="info" effect="plain" />
@@ -24,7 +24,7 @@
 import { STEEL_ENUM } from '@/settings/config'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { orderSupplyTypeEnum, purchaseOrderPaymentModeEnum } from '@/utils/enum/modules/wms'
-import { defineProps } from 'vue'
+import { computed, defineProps } from 'vue'
 
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -41,6 +41,15 @@ const props = defineProps({
     }
   }
 })
+
+// 是否显示车的过磅重量
+const showLoadingWeight = computed(
+  () =>
+    props.detail.basicClass & STEEL_ENUM &&
+    props.order.weightMeasurementMode !== weightMeasurementModeEnum.THEORY.V &&
+    props.detail.loadingWeight !== null &&
+    props.detail.loadingWeight !== undefined
+)
 </script>
 
 <style lang="scss" scoped>

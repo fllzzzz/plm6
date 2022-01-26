@@ -27,14 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-full-info-columns
-        :productType="productType"
-        enclosureShowItem
-        :category="category"
-        :columns="columns"
-        :fixed="'left'"
-        fixedWidth
-      />
+      <productType-full-info-columns :productType="productType" :category="category" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -148,11 +141,6 @@ const optShow = {
 
 const category = mesEnclosureTypeEnum.TRUSS_FLOOR_PLATE.V
 const productType = componentTypeEnum.ENCLOSURE.V
-provide('needTableColumns', [
-  { label: '名称', width: '120px', field: 'name' },
-  { label: '板型', width: '120px', field: 'plate' },
-  { label: '编号', width: '140px', field: 'serialNumber' }
-])
 provide('productType', productType)
 provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
@@ -160,13 +148,13 @@ provide('processType', processTypeEnum.TWICE.V)
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '桁架式楼承板排产',
+    title: '桁架式楼承板工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['areaId'],
-    invisibleColumns: ['areaName', 'length', 'width', 'totalArea', 'totalLength', 'remark'],
+    invisibleColumns: ['areaName', 'weight', 'totalArea', 'totalLength', 'remark'],
     queryOnPresenterCreated: false
   },
   tableRef

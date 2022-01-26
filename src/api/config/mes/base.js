@@ -90,6 +90,27 @@ export function setDriverConfig(data) {
 }
 
 /**
+ * 获取app-打印配置
+ */
+export function getPrintConfig() {
+  return request({
+    url: '/api/config/print',
+    method: 'get'
+  })
+}
+
+/**
+ * 设置app-打印配置
+ */
+export function setPrintConfig(data) {
+  return request({
+    url: '/api/config/print',
+    method: 'put',
+    data
+  })
+}
+
+/**
  * 获取车型配置
  */
 export function getCarModelConfig() {

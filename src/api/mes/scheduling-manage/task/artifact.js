@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * @description:组立排产汇总
+ * @description:组立工单汇总
  */
 export function get(params) {
   return request({
@@ -13,7 +13,7 @@ export function get(params) {
 }
 
 /**
- * @description:构件排产汇总
+ * @description:构件工单汇总
  */
 export function getArtifact(params) {
   return request({

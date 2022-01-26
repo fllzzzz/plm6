@@ -182,7 +182,7 @@ const getPartyABorrowReturnConf = {
       data: {
         boolReturnByOtherProject: true, // 可从非借用项目归还
         steelPlateSideLengthDiff: 0, // 钢板-长宽长度误差(mm)
-        sectionSteelLengthDiff: 0, // 型钢-长度误差(mm)
+        sectionSteelLengthDiff: 0, // 型材-长度误差(mm)
         steelCoilLengthDiff: 0 // 钢卷-长度误差(mm)
       }
     }

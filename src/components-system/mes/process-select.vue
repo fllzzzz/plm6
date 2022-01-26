@@ -38,37 +38,37 @@ const props = defineProps({
   productType: {
     // Value
     type: [Number, Boolean],
-    default: undefined
+    default: undefined,
   },
   // eslint-disable-next-line vue/require-default-prop
   modelValue: {
-    type: [Number, Array]
+    type: [Number, Array],
   },
   // 一次工序 是否展示 包含零件工序
   containsMachinePart: {
     type: Boolean,
-    default: false
+    default: false,
   },
   multiple: {
     type: Boolean,
-    default: true
+    default: true,
   },
   collapseTags: {
     type: Boolean,
-    default: true
+    default: true,
   },
   clearable: {
     type: Boolean,
-    default: false
+    default: false,
   },
   size: {
     type: String,
-    default: 'small'
+    default: 'small',
   },
   disabledValue: {
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 })
 
 const hasLoad = ref(false)
@@ -114,6 +114,11 @@ watch(
 function handleChange(val) {
   emit('update:modelValue', val)
   emit('change', val)
+}
+
+// 获取工序信息
+function getOption(val) {
+  return process.value.find((k) => k.id === val)
 }
 
 async function getSourceData() {
@@ -162,6 +167,7 @@ function dataFormat() {
 }
 
 defineExpose({
-  getSourceData
+  getSourceData,
+  getOption
 })
 </script>

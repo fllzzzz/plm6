@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader>
+      <mHeader print-key="mesStructureProductionReport">
         <template v-slot:summaryText="{ summary }">
           <span>{{ summary?.quantity }}件</span> /
           <span>{{ toFixed(summary?.totalNetWeight, DP.COM_WT__KG) }}kg</span>

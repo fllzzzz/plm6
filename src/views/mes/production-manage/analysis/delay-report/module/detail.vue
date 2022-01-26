@@ -1,5 +1,17 @@
 <template>
   <common-drawer ref="drawerRef" title="未完成清单" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.printDetail"
+          api-key="mesUnfinishedList"
+          :params="printParams"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table row-key="rowId" :data="list" v-loading="tableLoading" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -81,6 +93,7 @@ watch(
 )
 
 const query = inject('query')
+const permission = inject('permission')
 const tableLoading = ref(false)
 const list = ref([])
 
@@ -92,11 +105,14 @@ const unitObj = computed(() => {
   return useProductSummaryMeteUnit({ productType: query.productType, w_unit: 'kg' })
 })
 
+const printParams = computed(() => {
+  return Object.assign(deepClone(query), { dateTime: props.info.askCompleteTime })
+})
+
 async function fetchList() {
   try {
     tableLoading.value = true
-    const _query = Object.assign(deepClone(query), { dateTime: props.info.askCompleteTime })
-    const data = await detail(_query)
+    const data = await detail(printParams.value)
     list.value = data[dataPath[query.componentType]].map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity

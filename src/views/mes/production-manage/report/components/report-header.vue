@@ -32,6 +32,16 @@
     </div>
   </div>
   <crudOperation>
+    <template #optLeft>
+      <print-table
+        v-permission="permission.print"
+        :api-key="props.printKey"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
+    </template>
     <template v-slot:viewLeft>
       <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
         累计生产量：
@@ -43,7 +53,7 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { inject, ref, defineProps } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import checkPermission from '@/utils/system/check-permission'
@@ -56,6 +66,13 @@ import productTypeQuery from '@comp-mes/header-query/product-type-query'
 import factorySelect from '@comp-base/factory-select'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+
+const props = defineProps({
+  printKey: {
+    type: String,
+    default: ''
+  }
+})
 
 const defaultQuery = inject('defaultQuery')
 

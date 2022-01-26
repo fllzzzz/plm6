@@ -8,6 +8,18 @@
     :before-close="handleClose"
     size="50%"
   >
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.print"
+          api-key="mesMachinePartDetail"
+          :params="{ ids: props.ids }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <div>
         <span>构件：</span>
@@ -44,7 +56,7 @@
 
 <script setup>
 import { detail } from '@/api/mes/production-manage/dashboard/assembly-match'
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -91,6 +103,7 @@ watch(
 
 const tableLoading = ref(false)
 const list = ref([])
+const permission = inject('permission')
 
 async function fetchList() {
   try {

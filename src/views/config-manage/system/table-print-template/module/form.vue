@@ -1484,7 +1484,6 @@ const headerStyle = computed(() => {
   if (isNotBlank(itemConfig.verticleAlign)) {
     _style['align-items'] = setting.verticleAlign(itemConfig.verticleAlign)
   }
-  console.log('_style: ', JSON.parse(JSON.stringify(_style)))
   return _style
 })
 
@@ -1740,7 +1739,6 @@ function setData() {
   logoCfg.value = config.logo
   titleCfg.value = config.title
   headerCfg.value = config.header
-  console.log('config.header: ', JSON.parse(JSON.stringify(config.header)))
   footerCfg.value = config.footer
   pageCfg.value = config.page
 

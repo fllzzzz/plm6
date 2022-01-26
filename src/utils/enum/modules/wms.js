@@ -14,6 +14,14 @@ const measureTypeEnum = {
 }
 constantize(measureTypeEnum)
 
+// 单位类型(报表查询)
+const unitTypeEnum = {
+  MEASURE: { L: '计量单位', K: 'MEASURE', V: measureTypeEnum.MEASURE.V },
+  ACCOUNTING: { L: '核算单位', K: 'ACCOUNTING', V: measureTypeEnum.ACCOUNTING.V },
+  OUTBOUND: { L: '出库单位', K: 'OUTBOUND', V: 3 }
+}
+constantize(unitTypeEnum)
+
 // 仓库类型
 const warehouseTypeEnum = {
   NORMAL: { L: '普通', K: 'NORMAL', V: 1 << 0 },
@@ -154,6 +162,7 @@ constantize(receiptRejectStatusEnum)
 export {
   inboundFillWayEnum,
   measureTypeEnum,
+  unitTypeEnum,
   warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,
@@ -177,6 +186,7 @@ export {
 export default {
   inboundFillWayEnum,
   measureTypeEnum,
+  unitTypeEnum,
   warehouseTypeEnum,
   projectWarehouseTypeEnum,
   materialIsWholeEnum,

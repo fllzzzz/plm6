@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * @description: 围护可排产列表
+ * @description: 围护可工单列表
  */
 export function get(params) {
   return request({

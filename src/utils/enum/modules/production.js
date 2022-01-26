@@ -11,7 +11,7 @@ const processingColorsEnum = {
   UNSTART: { L: '未开始', K: 'NORMAL', V: 1 << 0, T: 'info', COLOR: '#f5f7fa' },
   PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 1, T: 'warning', COLOR: '#ffba00' },
   COMPLETE: { L: '已完成', K: 'NORMAL', V: 1 << 2, T: 'success', COLOR: '#40ed8d' },
-  ABNORMAL: { L: '异常', K: 'ABNORMAL', V: 1 << 3, T: 'danger', COLOR: '#e64242' }
+  ABNORMAL: { L: '异常', K: 'ABNORMAL', V: 1 << 3, T: 'danger', COLOR: '#ff6d6d' }
 }
 constantize(processingColorsEnum)
 

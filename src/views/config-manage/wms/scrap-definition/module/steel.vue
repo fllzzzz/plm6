@@ -23,7 +23,7 @@
       <el-form-item label="钢板-最短边长度(mm)">
         <common-input-number v-model="form.steelPlateShortestSideMinLength" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
-      <el-form-item label="型钢-长度(mm)">
+      <el-form-item label="型材-长度(mm)">
         <common-input-number v-model="form.sectionSteelMinLength" controls-position="right" :precision="0" :min="0" :max="100000" style="width: 200px" />
       </el-form-item>
       <el-form-item label="钢卷-长度(mm)">

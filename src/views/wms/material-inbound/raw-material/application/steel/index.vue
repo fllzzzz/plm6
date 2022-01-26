@@ -103,7 +103,7 @@ const permission = ['wms_steelInboundApplication:submit']
 // 基础分类
 const steelBasicClassKV = {
   steelPlateList: { K: 'steelPlateList', L: '钢板', V: matClsEnum.STEEL_PLATE.V, TABLE: steelPlateTable },
-  sectionSteelList: { K: 'sectionSteelList', L: '型钢', V: matClsEnum.SECTION_STEEL.V, TABLE: sectionSteelTable },
+  sectionSteelList: { K: 'sectionSteelList', L: '型材', V: matClsEnum.SECTION_STEEL.V, TABLE: sectionSteelTable },
   steelCoilList: { K: 'steelCoilList', L: '钢卷', V: matClsEnum.STEEL_COIL.V, TABLE: steelCoilTable }
 }
 
@@ -115,7 +115,7 @@ const defaultForm = {
   logistics: {}, // 物流信息
   list: [], // 钢材列表，提交时合并
   steelPlateList: [], // 钢板列表
-  sectionSteelList: [], // 型钢列表
+  sectionSteelList: [], // 型材列表
   steelCoilList: [] // 钢卷列表
 }
 
@@ -354,7 +354,7 @@ function automaticAssignWeight() {
   let spList = []
   let ssList = []
   let spAndSsTheoryTotalWeight = 0
-  // 遍历钢板与型钢列表 计算这两种钢材的总理论重量
+  // 遍历钢板与型材列表 计算这两种钢材的总理论重量
   if (isNotBlank(form.steelPlateList)) {
     spList = form.steelPlateList.filter((v) => {
       spAndSsTheoryTotalWeight += v.theoryTotalWeight ? v.theoryTotalWeight : 0
@@ -367,9 +367,9 @@ function automaticAssignWeight() {
       return v.theoryTotalWeight
     })
   }
-  // 可计算钢板及型钢数据为空
+  // 可计算钢板及型材数据为空
   if (isBlank(spList) && isBlank(ssList)) {
-    ElMessage.warning('您未填写完整钢板或型钢的信息, 或它们的理论重量过小')
+    ElMessage.warning('您未填写完整钢板或型材的信息, 或它们的理论重量过小')
     return
   }
 

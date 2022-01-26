@@ -13,7 +13,7 @@ const get = {
         content: [
           {
             id: 1,
-            boolPartyA: false, // 是否甲供材料
+            boolPartyA: true, // 是否甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: matClsEnum.STEEL_PLATE.V,

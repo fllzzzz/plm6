@@ -18,10 +18,10 @@ export const purchaseApplyList_SteelPlate = {
 }
 
 /**
- * 型钢申购清单
+ * 型材申购清单
  */
 export const purchaseApplyList_SectionSteel = {
-  title: '型钢申购清单',
+  title: '型材申购清单',
   startRow: 2,
   field: {
     classifyName: '__EMPTY', // 科目

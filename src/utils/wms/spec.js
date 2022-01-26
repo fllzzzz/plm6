@@ -4,25 +4,40 @@ import { uniqueArr } from '../data-type/array'
 import { measureTypeEnum } from '../enum/modules/wms'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
-// 为列表设置规格
-export async function setSpecInfoToList(list) {
+/**
+ * 为列表设置规格
+ * @param {array} list 需要转换的列表
+ * @param {boolean} multipleSpec 多规格模式
+ */
+export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
   if (isBlank(list)) return list
   try {
+    // 所有的promise
     const allPromise = []
+    // 单个promise
     let p
     // 加载科目信息, 只处理有classifyId的数据
-    const _list = list.filter(v => v && v.classifyId)
+    const _list = list.filter((v) => v && v.classifyId)
     const classifyIds = uniqueArr(_list.map((v) => v.classifyId))
     await fetchSpecInfoByFullSpec(classifyIds)
     _list.forEach((row) => {
       if (isNotBlank(row.classifyId)) {
-        // 无规格
-        if (isBlank(row.specification)) row.specification = ''
-        p = fetchSpecInfo(row.classifyId, row.specification).then((info) => {
+        let spec
+        if (multipleSpec) {
+          spec = Array.isArray(row.specifications) && row.specifications.length > 0 ? row.specifications[0] : ''
+        } else {
+          spec = row.specification
+        }
+        spec = isNotBlank(spec) ? spec : ''
+        p = fetchSpecInfo(row.classifyId, spec).then((info) => {
           if (info) {
-            row.sn = info.sn // 该科目规格唯一编号
+            // 单规格模式下，设置规格唯一编号
+            if (!multipleSpec) {
+              row.sn = info.sn // 该规格唯一编号
+              row.serialNumber = info.serialNumber // 科目编号 - 规格
+            }
             row.specificationLabels = info.specificationLabels // 规格中文
-            row.serialNumber = info.serialNumber // 科目编号 - 规格
+            row.classifySerialNumber = info.classify.serialNumber // 科目编号
             row.classifyId = info.classify.id // 科目id
             row.classifyFullPathId = info.classify.fullPathId // 全路径id
             row.classifyFullName = info.classify.fullName // 全路径名称
@@ -34,8 +49,7 @@ export async function setSpecInfoToList(list) {
             row.accountingPrecision = info.classify.accountingPrecision // 核算单位小数精度
             row.outboundUnitType = info.classify.outboundUnitType // 出库方式
             row.outboundUnit = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
-            row.outboundUnitPrecision =
-              row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
+            row.outboundUnitPrecision = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
             row.basicClass = info.classify.basicClass // 基础类型
             // row.specification = info.spec // 规格
             row.specificationMap = info.specKV // 规格KV格式

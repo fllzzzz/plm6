@@ -101,7 +101,7 @@
         <template v-slot="scope">
           <common-button
             size="mini"
-            v-if="scope.row.status !== abnormalHandleStatusEnum.PROCESSING_COMPLETE.V"
+            v-if="!(scope.row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V))"
             type="primary"
             v-permission="[...permission.save]"
             @click="toHandle(scope.row)"

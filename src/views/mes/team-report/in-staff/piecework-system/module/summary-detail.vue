@@ -7,7 +7,18 @@
         <span v-parse-time="{ val: query.endDate, fmt: '{y}-{m}-{d}' }" />
       </el-tag>
     </template>
-    <template #titleRight> </template>
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.printDetail"
+          api-key="mesPieceworkSummary"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table
         ref="tableRef"
@@ -105,6 +116,7 @@ watch(
 const tableLoading = ref(false)
 const list = ref([])
 const query = inject('query')
+const permission = inject('permission')
 
 const unitObj = computed(() => {
   return useProductSummaryMeteUnit({

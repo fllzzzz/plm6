@@ -1,5 +1,6 @@
 <template>
   <component
+    v-bind="$attrs"
     :is="comp"
     :columns="props.columns"
     :basic-class="props.basicClass"
@@ -33,14 +34,17 @@ const props = defineProps({
   columns: {
     type: Object
   },
-  labelPrefix: { // 数量label前缀
+  labelPrefix: {
+    // 数量label前缀
     type: String
   },
-  quantityField: { // 数量字段
+  quantityField: {
+    // 数量字段
     type: String,
     default: 'quantity'
   },
-  meteField: { // 核算量字段
+  meteField: {
+    // 核算量字段
     type: String,
     default: 'mete'
   }

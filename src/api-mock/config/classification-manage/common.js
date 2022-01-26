@@ -39,7 +39,7 @@ const getFinalMatClsByIdForSteelPlate = {
   }
 }
 
-// 型钢
+// 型材
 const getFinalMatClsByIdForSectionSteel = {
   url: RegExp('/api/config/classification/final-material/' + '[1][1][0-9]'),
   method: 'get',

@@ -5,7 +5,7 @@ import useProductLines from '@compos/store/use-product-lines'
 export default function useGetLines({ emit, dataHasFormatHook }) {
   const productionLineVisible = ref(false) // 生产线dlg
   const lineLoad = ref(false) // 生产线是否已经加载
-  // 排产表单模板 k-v  k-v, k:productionLineId, v:{ id: 任务id， productionLineId: 生产线id, quantity , sourceQuantity }
+  // 工单表单模板 k-v  k-v, k:productionLineId, v:{ id: 任务id， productionLineId: 生产线id, quantity , sourceQuantity }
   const schedulingMapTemplate = reactive({})
 
   const { loaded, productLines } = useProductLines()
@@ -31,7 +31,7 @@ export default function useGetLines({ emit, dataHasFormatHook }) {
               const productionLineList = workshop.productionLineList || []
               productionLineList.forEach((line) => {
                 line.selected = false // 默认未选中生产线
-                // 生成排产表单模板
+                // 生成工单表单模板
                 schedulingMapTemplate[line.id] = {
                   productionLineId: line.id,
                   factoryId: line.factoryId,

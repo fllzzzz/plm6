@@ -29,7 +29,6 @@
       />
       <productType-full-info-columns
         :productType="productType"
-        enclosureShowItem
         :category="category"
         :columns="columns"
         :fixed="'left'"
@@ -148,13 +147,6 @@ const optShow = {
 
 const category = mesEnclosureTypeEnum.PRESSED_PLATE.V
 const productType = componentTypeEnum.ENCLOSURE.V
-provide('needTableColumns', [
-  { label: '名称', width: '120px', field: 'name' },
-  { label: '板型', width: '120px', field: 'plate' },
-  { label: '编号', width: '140px', field: 'serialNumber' },
-  { label: '颜色', width: '100px', field: 'color' },
-  { label: '材质', width: '120px', field: 'material' }
-])
 provide('productType', productType)
 provide('category', category)
 provide('processType', processTypeEnum.TWICE.V)
@@ -162,13 +154,13 @@ provide('processType', processTypeEnum.TWICE.V)
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '压型板排产',
+    title: '压型板工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     requiredQuery: ['areaId'],
-    invisibleColumns: ['areaName', 'length', 'thickness', 'width', 'totalArea', 'totalLength', 'weight', 'remark'],
+    invisibleColumns: ['areaName', 'thickness', 'totalArea', 'totalLength', 'weight', 'brand', 'remark'],
     queryOnPresenterCreated: false
   },
   tableRef

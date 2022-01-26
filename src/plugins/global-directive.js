@@ -5,7 +5,7 @@ import parseProject from '@/directive/parse-project'
 import emptyText from '@/directive/empty-text'
 import empty from '@/directive/empty'
 import suffix from '@/directive/suffix'
-import arrJoin from '@/directive/arr-join'
+import split from '@/directive/split'
 import toFixed from '@/directive/to-fixed'
 import toThousand from '@/directive/to-thousand'
 import convertWeight from '@/directive/convert-weight'
@@ -19,7 +19,7 @@ const directive = new Map([
   ['empty-text', emptyText],
   ['empty', empty],
   ['suffix', suffix],
-  ['arr-join', arrJoin],
+  ['split', split],
   ['to-fixed', toFixed],
   ['thousand', toThousand],
   ['convert-weight', convertWeight],

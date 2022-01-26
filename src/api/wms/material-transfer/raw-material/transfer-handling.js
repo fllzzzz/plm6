@@ -14,7 +14,7 @@ export function steelPlateTransferHandling(data) {
 }
 
 /**
- * 型钢出库办理
+ * 型材出库办理
  * @returns
  */
 export function sectionSteelTransferHandling(data) {
@@ -80,7 +80,7 @@ export function steelPlateBatchTransferHandling(data) {
 }
 
 /**
- * 型钢出库办理
+ * 型材出库办理
  * @returns
  */
 export function sectionSteelBatchTransferHandling(data) {

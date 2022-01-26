@@ -217,6 +217,7 @@ const detail_id1 = {
             remark: '66666',
             mete: 800000,
             unitPrice: 0.01,
+            unitPriceExcludingVAT: 0.01,
             amount: 8000,
             amountExcludingVAT: 7079.64,
             inputVAT: 920.36,

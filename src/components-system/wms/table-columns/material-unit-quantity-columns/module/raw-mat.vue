@@ -8,6 +8,7 @@
         label="单位"
         align="center"
         width="70px"
+        :fixed="fixed"
         show-overflow-tooltip
       >
         <template #default="{ row }">
@@ -21,6 +22,7 @@
         label="数量"
         align="right"
         width="100px"
+        :fixed="fixed"
         show-overflow-tooltip
       >
         <template #default="{ row }">
@@ -42,13 +44,22 @@
         label="计量单位"
         align="center"
         width="70px"
+        :fixed="fixed"
         show-overflow-tooltip
       >
         <template #default="{ row }">
           <span v-empty-text>{{ row.measureUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showQuantity" :prop="quantityField" :label="quantityLabel" align="right" width="100px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showQuantity"
+        :prop="quantityField"
+        :label="quantityLabel"
+        align="right"
+        width="100px"
+        show-overflow-tooltip
+        :fixed="fixed"
+      >
         <template #default="{ row }">
           <span v-if="row.measureUnit" v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" v-empty-text />
           <span v-else v-empty-text />
@@ -61,13 +72,22 @@
         label="核算单位"
         align="center"
         width="70px"
+        :fixed="fixed"
         show-overflow-tooltip
       >
         <template #default="{ row }">
           <span v-empty-text>{{ row.accountingUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
+      <el-table-column
+        v-if="showMete"
+        :prop="meteField"
+        :label="mateLabel"
+        align="right"
+        width="100px"
+        show-overflow-tooltip
+        :fixed="fixed"
+      >
         <template #default="{ row }">
           <span v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" v-empty-text />
         </template>
@@ -88,6 +108,25 @@ const props = defineProps({
   basicClass: {
     // 基础分类
     type: Number
+  },
+  fixed: {
+    // 固定列
+    type: String
+  },
+  showQuantity: {
+    // 是否显示计量量
+    type: Boolean,
+    default: true
+  },
+  showMete: {
+    // 是否显示核算量
+    type: Boolean,
+    default: true
+  },
+  showNumber: {
+    // 是否显示数量
+    type: Boolean,
+    default: true
   },
   showUnit: {
     // 是否显示单位
@@ -200,9 +239,9 @@ const showUnit = computed(() => {
 
 const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
 const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
-const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible(props.quantityField))
-const showMete = computed(() => isBlank(props.columns) || props.columns.visible(props.meteField))
+const showQuantity = computed(() => props.showQuantity && (isBlank(props.columns) || props.columns.visible(props.quantityField)))
+const showMete = computed(() => props.showMete && (isBlank(props.columns) || props.columns.visible(props.meteField)))
 
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
-const showNumber = computed(() => isBlank(props.columns) || props.columns.visible(props.numberPropField))
+const showNumber = computed(() => props.showNumber && (isBlank(props.columns) || props.columns.visible(props.numberPropField)))
 </script>

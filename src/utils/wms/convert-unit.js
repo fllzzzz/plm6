@@ -150,7 +150,7 @@ function steelFormat(
   // 厚
   if (thickness && thickness instanceof Array) {
     if (unitCfg[basicClass].thickness) {
-      // 型钢没有厚度
+      // 型材没有厚度
       const curUnit = toSmallest ? unitCfg[basicClass].thickness.unit : MIN_UNIT.THICKNESS
       const fmtUnit = toSmallest ? MIN_UNIT.THICKNESS : unitCfg[basicClass].thickness.unit
       const precision = toSmallest ? MIN_UNIT.THICKNESS_DP : unitCfg[basicClass].thickness.precision
@@ -161,48 +161,6 @@ function steelFormat(
       })
     }
   }
-  // 金额
-  // if (amount && amount instanceof Array) {
-  //   let curUnit
-  //   let fmtUnit
-  //   const precision = 2
-  //   if (basicClass & STEEL_ENUM) {
-  //     // 元/g
-  //     curUnit = toSmallest ? unitCfg[basicClass].weight.unit : MIN_UNIT.WEIGHT
-  //     fmtUnit = toSmallest ? MIN_UNIT.WEIGHT : unitCfg[basicClass].weight.unit
-  //   }
-  //   if (basicClass & matClsEnum.ENCL_MANUFACTURED.V) {
-  //     // 元/mm
-  //     curUnit = toSmallest ? unitCfg[basicClass].length.unit : MIN_UNIT.LENGTH
-  //     fmtUnit = toSmallest ? MIN_UNIT.LENGTH : unitCfg[basicClass].length.unit
-  //   }
-  //   amount.forEach((at) => {
-  //     if (patternNumerical.test(data[at])) {
-  //       if (!(basicClass & matClsEnum.MATERIAL.V)) {
-  //         data[at] = convertUnits(data[at], fmtUnit, curUnit, precision, { showUnit, toNum })
-  //       } else {
-  //         data[at] = data[at].toFixed(precision)
-  //       }
-  //     }
-  //   })
-  // }
-  // // 核算单位
-  // if (unit && unit instanceof Array) {
-  //   let fmtUnit
-  //   if (basicClass & STEEL_ENUM) {
-  //     // 重量单位
-  //     fmtUnit = unitCfg[basicClass].weight.unit
-  //   }
-  //   if (basicClass & matClsEnum.ENCL_MANUFACTURED.V) {
-  //     // 长度单位
-  //     fmtUnit = unitCfg[basicClass].length.unit
-  //   }
-  //   unit.forEach((ut) => {
-  //     if (!(basicClass & matClsEnum.MATERIAL.V)) {
-  //       data[ut] = fmtUnit
-  //     }
-  //   })
-  // }
 }
 
 /**
@@ -280,7 +238,8 @@ function otherRawMatFormat(
         data,
         fields: amount,
         symbol: _accountingUnit.symbol,
-        unitPrecision: !toSmallest ? 8 : 2,
+        // unitPrecision: !toSmallest ? 8 : 2,
+        unitPrecision: 10,
         type: _accountingUnit.type,
         toSmallest: !toSmallest,
         showUnit,

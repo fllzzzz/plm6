@@ -15,7 +15,7 @@
       </el-col>
     </el-row>
     <crudOperation>
-      <template v-slot:optRight>
+      <template #optRight>
          <div v-show="crud.searchToggle">
           <el-input
             v-model="query.noOrName"
@@ -29,10 +29,10 @@
             <rrOperation/>
         </div>
       </template>
-      <template v-slot:viewLeft>
+      <template #viewLeft>
         <print-table
           v-permission="crud.permission.print"
-          api-key="CONTRACT_LEDGER"
+          api-key="myProject"
           :params="{year: crud.query.year}"
           size="mini"
           type="warning"

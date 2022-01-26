@@ -106,7 +106,214 @@ export function warehouseStateReport(params) {
   })
 }
 
+// 班组报表
+/**
+ * 围护生产线报表
+ */
+export function enclosureProductionLine(params) {
+  return request({
+    url: `/api/mes/building/team_form/enclosure/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 结构生产线报表
+ */
+export function structureProductionLine(params) {
+  return request({
+    url: `/api/mes/building/team_form/artifact_assemble/process/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 结构生产线报表
+ */
+export function structureProcess(params) {
+  return request({
+    url: `/api/mes/building/team_form/artifact_assemble/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 计件制报表
+ */
+export function piecework(params) {
+  return request({
+    url: `/api/mes/building/wages/in_staff/reckon/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 计件汇总报表（项目、班组汇总）
+ */
+export function pieceworkSummary(params) {
+  return request({
+    url: `/api/mes/building/wages/in_staff/reckon/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 结构生产报表
+ */
+export function structureProductionReport(params) {
+  return request({
+    url: `/api/mes/building/production_statements/artifact/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 围护生产报表
+ */
+export function enclosureProductionReport(params) {
+  return request({
+    url: `/api/mes/building/production_statements/enclosure/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 生产统计
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatistics(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/group/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 未完成清单
+ */
+export function unfinishedList(params) {
+  return request({
+    url: `/api/mes/building/analysis/hysteresis/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工单详情
+ */
+export function schedulingDetail(params) {
+  return request({
+    url: `/api/mes/building/scheduling/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 编外工资汇总
+ */
+export function wageSummary(params) {
+  return request({
+    url: `/api/mes/building/wages/out_staff/summary/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 编外工资详情
+ */
+export function wageDetail(params) {
+  return request({
+    url: `/api/mes/building/wages/out_staff/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 零件生产详情
+ */
+export function machinePartDetail(params) {
+  return request({
+    url: `/api/mes/building/kanban/assemble_matching/detail/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 零件生产详情
+ */
+export function paintingList(params) {
+  return request({
+    url: `/api/mes/building/kanban/painting/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 结构项目汇总
+ */
+export function structureProjectSummary(params) {
+  return request({
+    url: `/api/mes/building/kanban/form/artifact/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 围护项目汇总
+ */
+export function enclosureProjectSummary(params) {
+  return request({
+    url: `/api/mes/building/kanban/form/enclosure/print`,
+    method: 'get',
+    params
+  })
+}
+
 export default {
+  // 项目看板
+  machinePartDetail, // 零件生产详情
+  paintingList, // 涂装列表
+  structureProjectSummary, // 结构项目汇总
+  enclosureProjectSummary, // 围护项目汇总
+
+  // 工单管理
+  schedulingDetail, // 工单详情
+
+  // 生产报表
+  structureProductionReport, // 结构生产报表
+  enclosureProductionReport, // 围护生产报表
+  productionStatistics, // 生产统计
+  unfinishedList, // 未完成清单
+
+  // 班组报表
+  enclosureProductionLine, // 围护生产线报表
+  structureProductionLine, // 结构生产线报表
+  structureProcess, // 结构工序报表
+  piecework, // 计件制报表
+  pieceworkSummary, // 计件汇总报表（项目、班组汇总）
+  wageSummary, // 编外工资汇总
+  wageDetail, // 编外工资详情
+
   // 打包与发运
   packingList, // 打包清单
   shipmentSummary, // 发运汇总

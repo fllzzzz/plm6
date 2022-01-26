@@ -79,6 +79,11 @@ const props = defineProps({
   info: {
     type: Object
   },
+  reload: {
+    // 重新加载选项
+    type: Boolean,
+    default: true
+  },
   detailable: {
     // 可查看详情
     type: Boolean,
@@ -139,7 +144,7 @@ const purchaseOrderKV = ref({})
 const visible = ref(false)
 const currentId = ref()
 
-const { loaded, purchaseOrder } = useUnclosedPurchaseOrder(loadedCallBack)
+const { loaded, purchaseOrder } = useUnclosedPurchaseOrder(loadedCallBack, props.reload)
 
 const options = computed(() => {
   let list = deepClone(purchaseOrder.value)

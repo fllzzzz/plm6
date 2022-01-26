@@ -24,20 +24,49 @@
           prop="processName"
           :show-overflow-tooltip="true"
           label="工序名称"
-          width="120px"
-        />
+          min-width="100px"
+        >
+          <template #default="{ row }">
+            <span>{{ row.processName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('wageQuotaType')"
+          key="wageQuotaType"
+          prop="wageQuotaType"
+          label="计价方式"
+          align="center"
+          width="75px"
+        >
+          <template #default="{ row }">
+            <span v-parse-enum="{ e: wageQuotaTypeEnum, v: row.wageQuotaType, f: 'SL' }" v-suffix="'计价'"></span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('organizationType')"
           key="organizationType"
           prop="organizationType"
           label="属性"
-          width="100px"
+          align="center"
+          width="75px"
         >
           <template v-slot="scope">
             {{ teamAttributeEnum.VL[scope.row.organizationType] }}
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('leaderName')" key="leaderName" prop="leaderName" label="组长" width="100px" />
+        <el-table-column
+          v-if="columns.visible('boolExtraCountEnum')"
+          key="boolExtraCountEnum"
+          prop="boolExtraCountEnum"
+          label="工资单列"
+          width="75px"
+          align="center"
+        >
+          <template v-slot="scope">
+            {{ whetherEnum.VL[scope.row.boolExtraCountEnum] }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="columns.visible('leaderName')" key="leaderName" prop="leaderName" label="组长" width="80px" />
         <el-table-column
           v-if="columns.visible('memberNames')"
           key="memberNames"
@@ -69,7 +98,8 @@
 <script setup>
 import crudApi from '@/api/mes/production-config/production-line-team'
 import { defineExpose, ref, defineProps, watch, computed, inject } from 'vue'
-import { teamAttributeEnum } from '@enum-ms/mes'
+import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
+import { whetherEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineTeamPM as permission } from '@/page-permission/config'
 
@@ -86,7 +116,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false
+    queryOnPresenterCreated: false,
   },
   tableRef
 )
@@ -96,8 +126,8 @@ const maxHeight = inject('maxHeight')
 const props = defineProps({
   line: {
     type: Object,
-    default: () => {}
-  }
+    default: () => {},
+  },
 })
 
 const lineId = computed(() => {
@@ -127,19 +157,19 @@ CRUD.HOOK.beforeToQuery = () => {
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     const members = []
-    v.mesBuildingTeamUserLinkList.forEach((m) => {
+    v.userLinkList.forEach((m) => {
       if (m.boolLeaderEnum) {
         v.leaderName = m.userName
         v.leaderId = m.userId
         v.leader = {
           id: m.userId,
-          name: m.userName
+          name: m.userName,
         }
       } else {
         members.push({
           teamId: m.teamId,
           id: m.userId,
-          name: m.userName
+          name: m.userName,
         })
       }
     })
@@ -166,7 +196,7 @@ CRUD.HOOK.beforeSubmit = () => {
     boolLeaderEnum: true,
     userId: crud.form.leader.id,
     userName: crud.form.leader.name,
-    teamId: crud.form.id
+    teamId: crud.form.id,
   })
   for (let i = 0; i < members.length; i++) {
     if (members[i]) {
@@ -174,7 +204,7 @@ CRUD.HOOK.beforeSubmit = () => {
         boolLeaderEnum: false,
         userId: members[i].id,
         userName: members[i].name,
-        teamId: crud.form.id
+        teamId: crud.form.id,
       })
     }
   }
@@ -183,6 +213,6 @@ CRUD.HOOK.beforeSubmit = () => {
 
 defineExpose({
   permission,
-  toAdd: crud.toAdd
+  toAdd: crud.toAdd,
 })
 </script>

@@ -18,7 +18,7 @@
     label="项目"
     align="left"
     min-width="120px"
-    fixed="left"
+    :fixed="fixed"
     show-overflow-tooltip
   >
     <template #default="{ row }">

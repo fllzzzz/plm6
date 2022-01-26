@@ -10,6 +10,7 @@
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
+      highlight-current-row
       @sort-change="crud.handleSortChange"
       row-key="id"
     >

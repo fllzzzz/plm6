@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="head-container">
-      <mHeader>
+      <mHeader print-key="mesEnclosureProductionReport">
         <template #customSearch="{ query }">
           <common-radio-button
             v-model="query.category"
@@ -32,7 +32,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <belonging-info-columns :columns="columns" showProject showMonomer />
       <productType-base-info-columns :productType="productType" :category="crud.query.category" :columns="columns" />
-      <productType-spec-info-columns :productType="productType" :category="crud.query.category" enclosureShowItem :columns="columns">
+      <productType-spec-info-columns :productType="productType" :category="crud.query.category" :columns="columns">
         <template #quantity>
           <el-table-column
             v-if="columns.visible('quantity')"
@@ -102,7 +102,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['remark', 'material', 'width', 'weight']
+    invisibleColumns: ['remark', 'weight']
   },
   tableRef
 )

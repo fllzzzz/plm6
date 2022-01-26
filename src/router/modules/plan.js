@@ -56,7 +56,7 @@ export default {
           path: 'plan-summary',
           hidden: false,
           component: '/plan/overall-plan/plan-summary/index',
-          meta: { title: '排产汇总', icon: 'project', noCache: true }
+          meta: { title: '工单汇总', icon: 'project', noCache: true }
         },
         {
           name: 'PlanProgress',

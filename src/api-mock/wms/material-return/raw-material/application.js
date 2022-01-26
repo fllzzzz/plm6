@@ -11,7 +11,7 @@ const steelPlateReturnApplication = {
   }
 }
 
-// 型钢退库申请
+// 型材退库申请
 const sectionSteelReturnApplication = {
   url: '/api/wms/return/application/section-steel',
   method: 'post',

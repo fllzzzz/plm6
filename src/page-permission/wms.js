@@ -19,61 +19,67 @@ export const commonPM = {
 
 // --------------------------- 报表中心 start ------------------------------
 
-// 报表中心/原材料-归还甲方
+// 报表中心/原材料/归还甲方
 export const operateRecordReturnToPartyAPM = {
   get: ['wms_rawMaterial_partyABorrow_return:get'], // 查看
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 调拨详情
 }
 
-// 报表中心/原材料-甲供买入
+// 报表中心/原材料/甲供买入
 export const operateRecordPartyABuyInPM = {
   get: ['wms_rawMaterial_partyABorrow_buyIn:get'], // 查看
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 调拨详情
 }
 
-// 报表中心/原材料-入库单表
+// 报表中心/原材料/入库单表
 export const reportRawMaterialInboundReceiptPM = {
-  get: ['wms_inbound_rawMaterial_receipt_report:get'], // 查看
-  showAmount: ['wms_inbound_rawMaterial_receipt_report:showAmount'], // 显示金额
+  get: ['wms_report_rawMaterial_inbound_receipt:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_inbound_receipt:showAmount'], // 显示金额
   purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单详情
 }
 
-// 报表中心/原材料-入库单表
+// 报表中心/原材料/入库单表
 export const reportRawMaterialInboundDetailsPM = {
-  get: ['wms_inbound_rawMaterial_details_report:get'], // 查看
-  showAmount: ['wms_inbound_rawMaterial_details_report:showAmount'], // 显示金额
+  get: ['wms_report_rawMaterial_inbound_details:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_inbound_details:showAmount'], // 显示金额
   purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购订单详情
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail // 入库详情
 }
 
-// 报表中心/原材料-出库明细
+// 报表中心/原材料/出库明细
 export const reportRawMaterialOutboundDetailsPM = {
-  get: ['wms_outbound_rawMaterial_details_report:get'], // 查看
-  showAmount: ['wms_outbound_rawMaterial_details_report:showAmount'], // 显示金额
+  get: ['wms_report_rawMaterial_outbound_details:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_outbound_details:showAmount'], // 显示金额
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail // 出库详情
 }
 
-// 报表中心/原材料-退库明细
+// 报表中心/原材料/退库明细
 export const reportRawMaterialReturnDetailsPM = {
-  get: ['wms_return_rawMaterial_details_report:get'], // 查看
-  showAmount: ['wms_return_rawMaterial_details_report:showAmount'], // 显示金额
+  get: ['wms_report_rawMaterial_return_details:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_return_details:showAmount'], // 显示金额
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
   returnReceiptDetail: commonPM.rawMatReturnReceiptDetail // 退库详情
 }
 
-// 报表中心/原材料-调拨明细
+// 报表中心/原材料/调拨明细
 export const reportRawMaterialTransferDetailsPM = {
-  get: ['wms_transfer_rawMaterial_details_report:get'], // 查看
-  showAmount: ['wms_transfer_rawMaterial_details_report:showAmount'], // 显示金额
+  get: ['wms_report_rawMaterial_transfer_details:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_transfer_details:showAmount'], // 显示金额
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail // 退库详情
 }
 
-// 报表中心/原材料-退货明细
+// 报表中心/原材料/退货明细
 export const reportRawMaterialRejectReceiptPM = {
-  get: ['wms_reject_rawMaterial_details_report:get'], // 查看
-  showAmount: ['wms_reject_rawMaterial_details_report:showAmount'], // 显示金额
+  get: ['wms_report_rawMaterial_reject_details:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_reject_details:showAmount'], // 显示金额
   purchaseOrderDetail: commonPM.purchaseOrderDetail, // 采购订单详情
   inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail // 入库详情
+}
+
+// 报表中心/原材料/收发存报表
+export const reportRawMaterialSendAndReceiveStoragePM = {
+  get: ['wms_report_rawMaterial_sendAndReceiveStorage:get'], // 查看
+  showAmount: ['wms_report_rawMaterial_sendAndReceiveStorage:showAmount'] // 显示金额
 }
 
 // ---------------------------- 报表中心 end -------------------------------

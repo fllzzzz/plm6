@@ -9,6 +9,7 @@
       :data="crud.data"
       :max-height="maxHeight"
       :default-expand-all="false"
+      highlight-current-row
       :expand-row-keys="expandRowKeys"
       row-key="id"
     >
@@ -113,32 +114,34 @@
         label="供应商"
         min-width="200"
       />
-      <el-table-column
-        v-if="columns.visible('inboundAmountExcludingVAT')"
-        key="inboundAmountExcludingVAT"
-        :show-overflow-tooltip="true"
-        prop="inboundAmountExcludingVAT"
-        label="入库金额(不含税)"
-        min-width="120"
-        align="right"
-      >
-        <template #default="{ row }">
-          <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('rejectAmountExcludingVAT')"
-        key="rejectAmountExcludingVAT"
-        :show-overflow-tooltip="true"
-        prop="rejectAmountExcludingVAT"
-        label="本次退货金额(不含税)"
-        width="140"
-        align="right"
-      >
-        <template #default="{ row }">
-          <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
-        </template>
-      </el-table-column>
+      <template v-if="showAmount">
+        <el-table-column
+          v-if="columns.visible('inboundAmountExcludingVAT')"
+          key="inboundAmountExcludingVAT"
+          :show-overflow-tooltip="true"
+          prop="inboundAmountExcludingVAT"
+          label="入库金额(不含税)"
+          min-width="120"
+          align="right"
+        >
+          <template #default="{ row }">
+            <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('rejectAmountExcludingVAT')"
+          key="rejectAmountExcludingVAT"
+          :show-overflow-tooltip="true"
+          prop="rejectAmountExcludingVAT"
+          label="本次退货金额(不含税)"
+          width="140"
+          align="right"
+        >
+          <template #default="{ row }">
+            <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
+          </template>
+        </el-table-column>
+      </template>
       <el-table-column
         v-if="columns.visible('founderName')"
         key="founderName"
@@ -210,7 +213,7 @@ import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/rep
 import { getReceiptDetail as getInboundDetail } from '@/api/wms/report/raw-material/inbound'
 import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
 import { reportRawMaterialRejectReceiptPM as permission } from '@/page-permission/wms'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
 import useCRUD from '@compos/use-crud'
@@ -227,6 +230,7 @@ import InboundDetail from '@/views/wms/report/raw-material/material-inbound-rece
 import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import checkPermission from '@/utils/system/check-permission'
 
 const optShow = {
   add: false,
@@ -250,6 +254,9 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+// 是否有权限显示金额
+const showAmount = computed(() => checkPermission(permission.showAmount))
 
 const { detailRef: inboundDetailRef, openDetail: openInboundDetail } = useOtherCrudDetail()
 const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()

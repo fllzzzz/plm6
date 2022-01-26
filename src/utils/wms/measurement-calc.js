@@ -56,7 +56,7 @@ export async function calcSteelPlateWeight({ name, length, width, thickness, qua
 }
 
 /**
- * 型钢总长度计算
+ * 型材总长度计算
  * @param {Number} length 定尺长度
  * @param {Number} quantity 数量
  * @returns {Number | null}
@@ -67,7 +67,7 @@ export function calcSectionSteelTotalLength({ length = 0, lengthUnit = 'mm', qua
 }
 
 /**
- * 型钢计算重量的公式
+ * 型材计算重量的公式
  * @param {Number} length 长
  * @param {Number} quantity 数量
  * @param {Number} specWeight 规格理论重量

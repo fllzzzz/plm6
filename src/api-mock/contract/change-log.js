@@ -619,7 +619,7 @@ const getContractTechInfo = {
           'project_id': 39,
           'coating': '白色',
           'colour': '红绿',
-          'plateType': '压型钢板',
+          'plateType': '压型材板',
           'plating': '绿色',
           'status': 1,
           'thickness': 4.0,

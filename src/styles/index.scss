@@ -158,15 +158,15 @@ div:focus {
 }
 
 // text-color
-.tc-success{
-  color: #13bd5e
+.tc-success {
+  color: #13bd5e;
 }
 
-.tc-warning{
+.tc-warning {
   color: #ffba00;
 }
 
-.tc-danger{
+.tc-danger {
   color: #e64242;
 }
 
@@ -229,6 +229,20 @@ div:focus {
 // 文字居中
 .text-center {
   text-align: center;
+}
+
+// 扩大点击范围
+.expand-click-8 {
+  position: relative;
+}
+
+.expand-click-8::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
 }
 
 // 超链
@@ -354,7 +368,7 @@ div:focus {
 }
 
 .child-mr-10 > :nth-child(n) {
-  margin-left: 0!important;
+  margin-left: 0 !important;
   margin-right: 10px;
 }
 
@@ -363,7 +377,7 @@ div:focus {
 }
 
 .child-mr-7 > :nth-child(n) {
-  margin-left: 0!important;
+  margin-left: 0 !important;
   margin-right: 7px;
 }
 
@@ -371,9 +385,8 @@ div:focus {
   margin-right: 0;
 }
 
-
 .child-mr-6 > :nth-child(n) {
-  margin-left: 0!important;
+  margin-left: 0 !important;
   margin-right: 6px;
 }
 
@@ -391,7 +404,7 @@ div:focus {
   background-color: red;
   font-size: 12px;
   height: 16px;
-  min-width: 20px; 
+  min-width: 20px;
   line-height: 16px;
   text-align: center;
   border-radius: 15px;
@@ -467,12 +480,10 @@ div:focus {
   background: #ededed;
 }
 
-
 .color-coral {
-  color:coral
+  color: coral;
 }
 
-
 .color-green {
-  color:#25d325
+  color: #25d325;
 }

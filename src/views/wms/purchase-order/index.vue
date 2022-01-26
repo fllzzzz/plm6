@@ -15,9 +15,7 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="serialNumber">
         <template #default="{ row }">
-          <p v-if="isNotBlank(row.auxMaterialIds)">
-            辅材明细：<span v-arr-join>{{ row.auxMaterialNames }}</span>
-          </p>
+          <p v-if="isNotBlank(row.auxMaterialIds)">辅材明细：<span v-split="row.auxMaterialNames" /></p>
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
             关联申购单：<span v-empty-text>{{ row.requisitionsSNStr }}</span>

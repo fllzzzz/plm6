@@ -260,7 +260,7 @@ export async function printSteelPlateLabel({ secondClassName, projectName, third
 }
 
 /**
- * 物料仓 --型钢打印
+ * 物料仓 --型材打印
  */
 export async function printSectionSteelLabel({ secondClassName, projectName, thirdClassName, specification, brand, qrCode, number = 1, printMode = PrintMode.QUEUE.V }) {
   const bodyHtml =

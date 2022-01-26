@@ -34,7 +34,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column v-if="showColor" prop="color" align="center" width="120px" :label="`颜色`" show-overflow-tooltip>
+    <el-table-column v-if="showColor" prop="color" align="center" width="120px" :label="`颜色`" show-overflow-tooltip :fixed="fixed">
       <template #default="{ row }">
         <span v-empty-text="row.color" />
       </template>
