@@ -9,12 +9,22 @@ export function get(params) {
   })
 }
 
+// export function add(data) {
+//   return request({
+//     module: 'contract',
+//     url: 'contract/collection/save',
+//     method: 'post',
+//     data
+//   })
+// }
+
 export function add(data) {
   return request({
     module: 'contract',
-    url: 'contract/collection/save',
+    url: 'contract/collection/saveList',
     method: 'post',
-    data
+    params: { projectId: data.projectId },
+    data: data.list
   })
 }
 

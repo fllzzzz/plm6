@@ -14,8 +14,10 @@
         :max-height="maxHeight"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :row-class-name="handleRowClassName"
-        row-key="rowKey"
+        row-key="id"
         style="width: 100%"
+        lazy
+        :load="load"
         @sort-change="crud.handleSortChange"
         @selection-change="crud.selectionChangeHandler"
       >
@@ -36,7 +38,7 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.assembleSerialNumberList.length>0?scope.row.assembleSerialNumberList.join(','):'' }}</span>
+            <span>{{ scope.row.assembleSerialNumberList && scope.row.assembleSerialNumberList.length>0?scope.row.assembleSerialNumberList.join(','):'' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -258,14 +260,11 @@
       <pagination />
       <mForm />
     </template>
-    <!-- <template v-else>
-      <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
-    </template> -->
   </div>
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/plan/technical-manage/artifact-tree'
+import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
 import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -281,7 +280,6 @@ import { parseTime } from '@/utils/date'
 import { artifactTreePM as permission } from '@/page-permission/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-
 const optShow = {
   add: false,
   edit: false,
@@ -329,21 +327,11 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   let index = 1
   data.data.content = data.data.content.map((v) => {
     v.dataType = 2
-    v.rowKey = `${v.id}`
     v.index = index
     index++
-    let childIndex = 1
-    if (v.machinePartDTOList && v.machinePartDTOList.length > 0) {
-      v.children = v.machinePartDTOList.map((child) => {
-        child.dataType = 1
-        child.rowKey = `${v.id}__${child.id}`
-        child.childIndex = childIndex
-        childIndex++
-        return child
-      })
-    } else {
-      v.children = []
-    }
+    v.machinePartDTOList = []
+    v.children = []
+    v.hasChildren = !!v.hasMachinePart
     return v
   })
 }
@@ -370,6 +358,24 @@ async function changeStatus(data, val) {
 CRUD.HOOK.beforeSubmit = () => {
   crud.form.projectId = globalProjectId
   return !!crud.form.projectId
+}
+
+async function load(row, treeNode, resolve) {
+  try {
+    const { content } = await artifactPart({ artifactId: row.id })
+    let childIndex = 1
+    if (content.length > 0) {
+      content.map(v => {
+        v.dataType = 1
+        v.rowKey = `${row.id}__${v.id}`
+        v.childIndex = childIndex
+        childIndex++
+      })
+    }
+    resolve(content)
+  } catch (error) {
+    console.log('获取零件信息', error)
+  }
 }
 </script>
 

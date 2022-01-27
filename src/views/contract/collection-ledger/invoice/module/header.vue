@@ -14,9 +14,15 @@
       />
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-input
+        v-model="query.name"
+        placeholder="项目名称"
+        style="width:200px"
+        class="filter-item"
+      />
+      <el-input
         v-model="query.contractSignBodyName"
         placeholder="合同签订主体"
-        style="width:120px"
+        style="width:200px"
         class="filter-item"
       />
       <common-select
@@ -45,6 +51,7 @@ const defaultQuery = {
   startDate: undefined,
   endDate: undefined,
   projectId: undefined,
+  name: undefined,
   auditStatus: { value: auditTypeEnum.PASS.V, resetAble: false }
 }
 

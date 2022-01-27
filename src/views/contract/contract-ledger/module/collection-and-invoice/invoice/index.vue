@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--表格渲染-->
-    <common-button type="primary" @click="addRow" style="margin-right:10px;">添加</common-button>
+    <common-button type="primary" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
     <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
     <common-table
       ref="tableRef"
@@ -83,6 +83,7 @@
             class="filter-item"
             placeholder="发票类型"
             style="width: 100%"
+            @change="invoiceTypeChange(scope.row)"
           />
           <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
@@ -192,13 +193,14 @@
     </common-table>
   <!--分页组件-->
   <pagination />
+  <mForm :existInvoiceNo="invoiceNoArr"/>
   </div>
 </template>
 
 <script setup>
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
-import { ref, defineProps, watch, nextTick } from 'vue'
+import { ref, defineProps, watch, nextTick, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -211,6 +213,7 @@ import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
+import mForm from './form'
 
 // crud交由presenter持有
 const permission = {
@@ -237,13 +240,15 @@ const props = defineProps({
     default: false
   }
 })
-
+provide('projectId', props.projectId)
 const tableRef = ref()
 const contractInfo = ref({})
 const originRow = ref({})
 const bankList = ref([])
 const totalAmount = ref(0)
 const invoiceNoArr = ref([])
+provide('contractInfo', contractInfo)
+provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
     title: '开票填报',
@@ -334,6 +339,9 @@ async function getContractInfo(id) {
   }
 }
 
+function invoiceTypeChange(row) {
+  row.taxRate = undefined
+}
 function moneyChange(row) {
   totalAmount.value = 0
   crud.data.map(v => {
@@ -403,22 +411,22 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   })
 }
 
-function addRow() {
-  crud.data.unshift({
-    invoiceAmount: undefined,
-    invoiceDate: undefined,
-    invoiceType: undefined,
-    invoiceNo: undefined,
-    taxRate: undefined,
-    tax: undefined,
-    invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
-    invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
-    collectionUnit: contractInfo.value.customerUnit || undefined,
-    projectId: props.projectId,
-    dataIndex: crud.data.length,
-    isModify: true
-  })
-}
+// function addRow() {
+//   crud.data.unshift({
+//     invoiceAmount: undefined,
+//     invoiceDate: undefined,
+//     invoiceType: undefined,
+//     invoiceNo: undefined,
+//     taxRate: undefined,
+//     tax: undefined,
+//     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
+//     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
+//     collectionUnit: contractInfo.value.customerUnit || undefined,
+//     projectId: props.projectId,
+//     dataIndex: crud.data.length,
+//     isModify: true
+//   })
+// }
 
 function modifyRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
