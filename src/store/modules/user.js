@@ -86,6 +86,14 @@ const actions = {
     // dept
     const { permissions = [], roles = [] } = res
     let { menus = [] } = res
+    menus.push({
+      'id': 4,
+      'name': '成本管理',
+      'icon': 'config',
+      redirect: '/cost',
+      'realRedirect': '/cost/business-manage/trip-tracking'
+    })
+    console.log('menus: ', menus)
 
     // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
     if (permissions.length === 0 && roles.length === 0) {

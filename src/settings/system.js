@@ -125,5 +125,8 @@ export const showProjectSearch = [
   { component: '/wms/report/raw-material/material-inbound-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-outbound-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false },
-  { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
+  { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false },
+  { component: '/cost/business-manage/trip-tracking/index', type: allPT, required: false },
+  { component: '/cost/business-manage/business-tracking/index', type: allPT, required: true },
+  { component: '/cost/business-manage/shipment-ledger/index', type: allPT, required: false }
 ]
