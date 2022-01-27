@@ -366,6 +366,11 @@ function dataFormat() {
       }
       v.corProjectOperableQuantity = v.outboundUnitType === measureTypeEnum.MEASURE.V ? v.projectOperableQuantity : v.projectOperableMete
     })
+  } else {
+    // 项目库的情况
+    form.value.list.forEach((v) => {
+      v.corProjectOperableQuantity = v.outboundUnitType === measureTypeEnum.MEASURE.V ? v.operableQuantity : v.operableMete
+    })
   }
 }
 

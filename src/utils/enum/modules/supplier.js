@@ -10,7 +10,9 @@ const supplierClassEnum = {
   GAS: { L: '气体', K: 'GAS', V: 1 << 4 },
   STRUC_MANUFACTURED: { L: '成品构件', K: 'STRUC_MANUFACTURED', V: 1 << 5 },
   ENCL_MANUFACTURED: { L: '成品围护', K: 'ENCL_MANUFACTURED', V: 1 << 6 },
-  LOGISTICS: { L: '物流', K: 'LOGISTICS', V: 1 << 10 }
+  LOGISTICS: { L: '物流', K: 'LOGISTICS', V: 1 << 10 },
+  PROFESSIONAL_SUBCONTRACTING: { L: '专业分包', K: 'PROFESSIONAL_SUBCONTRACTING', V: 1 << 15 },
+  LABOR_SUBCONTRACTING: { L: '劳务分包', K: 'LABOR_SUBCONTRACTING', V: 1 << 16 }
 }
 constantize(supplierClassEnum)
 
@@ -18,7 +20,8 @@ constantize(supplierClassEnum)
 const supplierTypeEnum = {
   RAW_MATERIAL: { L: '原材料', K: 'RAW_MATERIAL', V: 1 << 0 },
   MANUFACTURED: { L: '制成品', K: 'MANUFACTURED', V: 1 << 1 },
-  LOGISTICS: { L: '物流', K: 'LOGISTICS', V: 1 << 2 }
+  LOGISTICS: { L: '物流', K: 'LOGISTICS', V: 1 << 2 },
+  SUBCONTRACTING: { L: '分包', K: 'SUBCONTRACTING', V: 1 << 3 }
 }
 constantize(supplierTypeEnum)
 
