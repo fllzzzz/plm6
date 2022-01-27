@@ -210,7 +210,7 @@ const mesSchedulingDetail = {
       { show: false, key: 'plate', title: '板型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.PLATE_TYPE.K },
       { show: false, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.COLOR.K },
       { show: true, key: 'schedulingQuantity', title: '任务数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: true, key: 'status', title: '状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'taskIssueTypeEnum', key: 'L' }},
+      { show: true, key: 'issueStatus', title: '状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'taskIssueTypeEnum', key: 'L' }},
       { show: true, key: 'askCompleteTime', title: '要求完成', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' }
     ]
   }
