@@ -154,7 +154,6 @@ const basicClass = rawMatClsEnum.SECTION_STEEL.V
 const { baseUnit } = useMatBaseUnit(basicClass)
 
 const tableRules = {
-  id: [{ required: true, message: '请选择退库物料', trigger: 'change' }],
   length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
   mete: [{ required: true, message: '请填写重量', trigger: 'blur' }],
   quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],

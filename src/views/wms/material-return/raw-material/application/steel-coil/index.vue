@@ -132,7 +132,6 @@ const basicClass = rawMatClsEnum.STEEL_COIL.V
 const { baseUnit } = useMatBaseUnit(basicClass)
 
 const tableRules = {
-  id: [{ required: true, message: '请选择退库物料', trigger: 'change' }],
   mete: [{ required: true, message: '请填写重量', trigger: 'blur' }],
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
