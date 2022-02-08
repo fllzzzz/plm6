@@ -59,6 +59,7 @@ watch(
   (val) => {
     if (val.length > 0) {
       boardType.value = props.showItem[0]
+      typeChange(boardType.value)
     }
   },
   { deep: true, immediate: true }

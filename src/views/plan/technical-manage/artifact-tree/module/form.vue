@@ -566,8 +566,15 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
   originQuantity.value = crud.form.quantity
   totalQuantity.value = crud.form.quantity
   preVal.value = crud.form.quantity
-  crud.form.machinePartDTOList = []
-  getPart(crud.form)
+  if (crud.form.machinePartDTOList.length > 0) {
+    crud.form.machinePartDTOList.map((val) => {
+      if (crud.form.quantity && val.quantity) {
+        val.unitData = val.quantity / crud.form.quantity
+      }
+    })
+  } else {
+    getPart(crud.form)
+  }
   minQuantity.value = crud.form.changeAbleStatus === 1 ? crud.form.quantity : crud.form.productionQuantity
 }
 
