@@ -417,7 +417,7 @@ function headerDragend(newWidth, oldWidth, column, event) {
 // 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
 function expandChange(row, expandedRowsOrExpanded) {
   // 配合组件el-expand-table-column 使用
-  const keys = props.expandRowKeys
+  const keys = props.expandRowKeys || []
   const index = keys.indexOf(row[props.rowKey])
   if (index > -1) {
     keys.splice(index, 1)
