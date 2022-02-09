@@ -36,19 +36,20 @@ export default function useCommonCalc({ cu, form, basicClass }) {
     const length = {}
     const sourceKV = {}
     form.list.forEach((v) => {
-      if (row.id === v.id) {
+      if (row.source.id === v.source.id) {
+        const sourceId = v.source.id
         // 做转换，避免草稿或修改与退库列表不一致
-        if (sourceKV[v.source.id]) {
-          v.source = sourceKV[v.source.id]
+        if (sourceKV[sourceId]) {
+          v.source = sourceKV[sourceId]
         } else {
-          sourceKV[v.source.id] = v.source
+          sourceKV[sourceId] = v.source
         }
-        if (isNotBlank(mete[v.id])) {
-          mete[v.id] += v.mete || 0
-          length[v.id] += v.length || 0
+        if (isNotBlank(mete[sourceId])) {
+          mete[sourceId] += v.mete || 0
+          length[sourceId] += v.length || 0
         } else {
-          mete[v.id] = v.mete || 0
-          length[v.id] = v.length || 0
+          mete[sourceId] = v.mete || 0
+          length[sourceId] = v.length || 0
         }
       }
     })
@@ -76,14 +77,14 @@ export default function useCommonCalc({ cu, form, basicClass }) {
       const overTipColor = getDarkColor()
       row.overTipColor = overTipColor
       form.list.forEach((r) => {
-        if (r.id === row.id) {
+        if (r.source.id === row.source.id) {
           r.overTipColor = overTipColor
         }
       })
     }
     if (unshowFlag) {
       form.list.forEach((r) => {
-        if (r.id === row.id) {
+        if (r.source.id === row.source.id) {
           r.overTipColor = undefined
         }
       })

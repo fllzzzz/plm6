@@ -241,7 +241,7 @@ function handleAddReturn(row) {
   const selectList = props.selectList
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
-    id: row.id, // 物料id
+    // id: row.id, // 物料id
     source: row,
     basicClass: row.basicClass, // 基础类型
     measureUnit: row.measureUnit, // 计量单位
@@ -255,7 +255,7 @@ function handleAddReturn(row) {
     newData.warehouseId = -1 // 仓库 同上
   }
   // setBasicInfoForData(row, newData)
-  const index = selectList.findLastIndex((v) => v.id === row.id)
+  const index = selectList.findLastIndex((v) => v.source.id === row.id)
 
   if (index > -1) {
     selectList.splice(index + 1, 0, newData)
@@ -272,15 +272,20 @@ function handleAddReturn(row) {
 function calcReturnInfo() {
   const number = {}
   const mete = {}
-  props.selectList.forEach((scRow) => {
-    if (number[scRow.id]) {
-      number[scRow.id]++
-      mete[scRow.id] += scRow.mete || 0
+  // 遍历退库列表，计算相同物料的可退库量及可退库数
+  for (const scRow of props.selectList) {
+    const source = scRow.source
+    const sourceId = source ? source.id : undefined
+    if (!sourceId) continue
+    if (number[sourceId]) {
+      number[sourceId]++
+      mete[sourceId] += scRow.mete || 0
     } else {
-      number[scRow.id] = 1
-      mete[scRow.id] = scRow.mete || 0
+      number[sourceId] = 1
+      mete[sourceId] = scRow.mete || 0
     }
-  })
+  }
+  // 遍历当前列表，设置可退库量
   crud.data.forEach((row) => {
     row.returnableMete = row.sourceReturnableMete - (mete[row.id] || 0)
   })

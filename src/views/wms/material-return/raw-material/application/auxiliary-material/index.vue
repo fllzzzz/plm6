@@ -157,7 +157,6 @@ const validateQuantity = (value, row) => {
 }
 
 const tableRules = {
-  id: [{ required: true, message: '请选择退库物料' }],
   mete: [
     { required: true, message: '请填写核算量' },
     { pattern: positiveNumPattern, message: '核算量必须大于0' }

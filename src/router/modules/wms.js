@@ -38,7 +38,7 @@ export default {
           path: 'material-inbound/raw-material/record',
           hidden: false,
           component: '/wms/material-inbound/raw-material/record/index',
-          meta: { title: '原材料-入库申请', icon: 'project', noCache: true }
+          meta: { title: '入库申请', icon: 'project', noCache: true }
         }
       ]
     },
@@ -91,7 +91,7 @@ export default {
           path: 'material-return/raw-material/record',
           hidden: false,
           component: '/wms/material-return/raw-material/record/index',
-          meta: { title: '原材料-退库申请', icon: 'project', noCache: true }
+          meta: { title: '退库申请', icon: 'project', noCache: true }
         }
       ]
     },
@@ -109,14 +109,14 @@ export default {
           path: 'raw-mat',
           hidden: false,
           component: '/wms/material-reject/raw-material/application/index',
-          meta: { title: '原材料-退货', icon: 'project', noCache: true }
+          meta: { title: '退货', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatRejectRecord',
           path: 'reject-record/raw-mat',
           hidden: false,
           component: '/wms/material-reject/raw-material/record/index',
-          meta: { title: '原材料-退货申请', icon: 'project', noCache: true }
+          meta: { title: '退货申请', icon: 'project', noCache: true }
         }
       ]
     },
@@ -134,28 +134,28 @@ export default {
           path: 'material-inbound/raw-material/review',
           hidden: false,
           component: '/wms/material-inbound/raw-material/review/index',
-          meta: { title: '原材料-入库审核', icon: 'project', noCache: true }
+          meta: { title: '入库审核', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatTransferApplicationReview',
           path: 'material-transfer/raw-material/review',
           hidden: false,
           component: '/wms/material-transfer/raw-material/review/index',
-          meta: { title: '原材料-调拨审核', icon: 'project', noCache: true }
+          meta: { title: '调拨审核', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatReturnApplicationReview',
           path: 'material-return/raw-material/review',
           hidden: false,
           component: '/wms/material-return/raw-material/review/index',
-          meta: { title: '原材料-退库审核', icon: 'project', noCache: true }
+          meta: { title: '退库审核', icon: 'project', noCache: true }
         },
         {
           name: 'RawMatRejectReview',
           path: 'material-reject/raw-material/review',
           hidden: false,
           component: '/wms/material-reject/raw-material/review/index',
-          meta: { title: '原材料-退货审核', icon: 'project', noCache: true }
+          meta: { title: '退货审核', icon: 'project', noCache: true }
         }
       ]
     },
@@ -194,14 +194,14 @@ export default {
           path: 'material-outbound/raw-material/review',
           hidden: false,
           component: '/wms/material-outbound/raw-material/review/index',
-          meta: { title: '原材料-出库审核', icon: 'project', noCache: true }
+          meta: { title: '出库审核', icon: 'project', noCache: true }
         },
         {
           name: 'WMSOutboundRecord',
           path: 'material-outbound/raw-material/record',
           hidden: false,
           component: '/wms/material-outbound/raw-material/record/index',
-          meta: { title: '原材料-出库记录', icon: 'project', noCache: true }
+          meta: { title: '出库记录', icon: 'project', noCache: true }
         },
         {
           name: 'WMSPartyABorrowManage',
@@ -244,14 +244,14 @@ export default {
           path: 'raw-mat-record',
           hidden: false,
           component: '/wms/material-freeze/raw-material/record/index',
-          meta: { title: '原材料-冻结列表', icon: 'project', noCache: true }
+          meta: { title: '冻结列表', icon: 'project', noCache: true }
         },
         {
           name: 'WMSRawMatUnfreezeRecord',
           path: 'raw-mat-unfreeze-record',
           hidden: false,
           component: '/wms/material-freeze/raw-material/unfreeze-record/index',
-          meta: { title: '原材料-解冻记录', icon: 'project', noCache: true }
+          meta: { title: '解冻记录', icon: 'project', noCache: true }
         }
       ]
     },
@@ -265,77 +265,67 @@ export default {
       meta: { title: '报表中心', icon: 'contract', noCache: true },
       children: [
         {
-          name: 'WMSReportRawMaterial',
-          path: '/wms/report/raw-material',
-          alwaysShow: true,
+          name: 'WMSRawMaterialReturnToPartyARecord',
+          path: 'return-to-party-a',
           hidden: false,
-          redirect: '/wms/report/raw-material/material-inbound-receipt',
-          meta: { title: '原材料', icon: 'contract', noCache: true },
-          children: [
-            {
-              name: 'WMSRawMaterialReturnToPartyARecord',
-              path: 'return-to-party-a',
-              hidden: false,
-              component: '/wms/operate-record/raw-material/return-to-party-a/index',
-              meta: { title: '归还甲方', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSRawMaterialPartyABuyInRecord',
-              path: 'party-a-buy-in',
-              hidden: false,
-              component: '/wms/operate-record/raw-material/party-a-buy-in/index',
-              meta: { title: '甲供买入', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialMaterialInboundReceipt',
-              path: 'report/raw-material/material-inbound-receipt',
-              hidden: false,
-              component: '/wms/report/raw-material/material-inbound-receipt/index',
-              meta: { title: '入库单表', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialMaterialInboundDetails',
-              path: 'report/raw-material/material-inbound-details',
-              hidden: false,
-              component: '/wms/report/raw-material/material-inbound-details/index',
-              meta: { title: '入库明细', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialMaterialOutboundDetails',
-              path: 'report/raw-material/material-outbound-details',
-              hidden: false,
-              component: '/wms/report/raw-material/material-outbound-details/index',
-              meta: { title: '出库明细', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialMaterialReturnDetails',
-              path: 'report/raw-material/material-return-details',
-              hidden: false,
-              component: '/wms/report/raw-material/material-return-details/index',
-              meta: { title: '退库明细', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialMaterialTransferDetails',
-              path: 'report/raw-material/material-transfer-details',
-              hidden: false,
-              component: '/wms/report/raw-material/material-transfer-details/index',
-              meta: { title: '调拨明细', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialMaterialRejectReceipt',
-              path: 'report/raw-material/material-reject-receipt',
-              hidden: false,
-              component: '/wms/report/raw-material/material-reject-receipt/index',
-              meta: { title: '退货单表', icon: 'project', noCache: true }
-            },
-            {
-              name: 'WMSReportRawMaterialSendAndReceiveStorageReceipt',
-              path: 'report/raw-material/send-and-receive-storage',
-              hidden: false,
-              component: '/wms/report/raw-material/send-and-receive-storage/index',
-              meta: { title: '收发存报表', icon: 'project', noCache: true }
-            }
-          ]
+          component: '/wms/operate-record/raw-material/return-to-party-a/index',
+          meta: { title: '归还甲方', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSRawMaterialPartyABuyInRecord',
+          path: 'party-a-buy-in',
+          hidden: false,
+          component: '/wms/operate-record/raw-material/party-a-buy-in/index',
+          meta: { title: '甲供买入', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialInboundReceipt',
+          path: 'report/raw-material/material-inbound-receipt',
+          hidden: false,
+          component: '/wms/report/raw-material/material-inbound-receipt/index',
+          meta: { title: '入库单表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialInboundDetails',
+          path: 'report/raw-material/material-inbound-details',
+          hidden: false,
+          component: '/wms/report/raw-material/material-inbound-details/index',
+          meta: { title: '入库明细', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialOutboundDetails',
+          path: 'report/raw-material/material-outbound-details',
+          hidden: false,
+          component: '/wms/report/raw-material/material-outbound-details/index',
+          meta: { title: '出库明细', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialReturnDetails',
+          path: 'report/raw-material/material-return-details',
+          hidden: false,
+          component: '/wms/report/raw-material/material-return-details/index',
+          meta: { title: '退库明细', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialTransferDetails',
+          path: 'report/raw-material/material-transfer-details',
+          hidden: false,
+          component: '/wms/report/raw-material/material-transfer-details/index',
+          meta: { title: '调拨明细', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialMaterialRejectReceipt',
+          path: 'report/raw-material/material-reject-receipt',
+          hidden: false,
+          component: '/wms/report/raw-material/material-reject-receipt/index',
+          meta: { title: '退货单表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialSendAndReceiveStorageReceipt',
+          path: 'report/raw-material/send-and-receive-storage',
+          hidden: false,
+          component: '/wms/report/raw-material/send-and-receive-storage/index',
+          meta: { title: '收发存报表', icon: 'project', noCache: true }
         }
       ]
     },

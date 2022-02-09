@@ -360,6 +360,7 @@ import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
+import { artifactPart } from '@/api/plan/technical-manage/artifact-tree'
 
 const formRef = ref()
 const editing = ref(false)
@@ -540,15 +541,33 @@ function partQuantityChange(row) {
   }
 }
 
+async function getPart(form) {
+  try {
+    const { content } = await artifactPart({ artifactId: form.id })
+    let childIndex = 1
+    if (content.length > 0) {
+      content.map(v => {
+        v.dataType = 1
+        v.rowKey = `${form.id}__${v.id}`
+        v.childIndex = childIndex
+        childIndex++
+        if (form.quantity && v.quantity) {
+          v.unitData = v.quantity / form.quantity
+        }
+      })
+    }
+    crud.form.machinePartDTOList = content
+  } catch (error) {
+    console.log('获取零件信息', error)
+  }
+}
+
 CRUD.HOOK.afterToEdit = (crud, form) => {
   originQuantity.value = crud.form.quantity
   totalQuantity.value = crud.form.quantity
   preVal.value = crud.form.quantity
-  crud.form.machinePartDTOList.map((val) => {
-    if (crud.form.quantity && val.quantity) {
-      val.unitData = val.quantity / crud.form.quantity
-    }
-  })
+  crud.form.machinePartDTOList = []
+  getPart(crud.form)
   minQuantity.value = crud.form.changeAbleStatus === 1 ? crud.form.quantity : crud.form.productionQuantity
 }
 

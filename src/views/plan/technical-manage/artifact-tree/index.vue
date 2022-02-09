@@ -265,7 +265,7 @@
 
 <script setup>
 import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -370,9 +370,14 @@ async function load(row, treeNode, resolve) {
         v.rowKey = `${row.id}__${v.id}`
         v.childIndex = childIndex
         childIndex++
+        return v
       })
     }
     resolve(content)
+    // 解决lazy首次异步加载数据完成后不展开
+    nextTick(() => {
+      tableRef.value.toggleRowExpansion(row, true)
+    })
   } catch (error) {
     console.log('获取零件信息', error)
   }
