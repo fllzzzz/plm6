@@ -11,7 +11,7 @@
       <span v-parse-project="{ project: row.project }" v-empty-text />
     </template>
   </el-table-column>
-   <el-table-column
+  <el-table-column
     v-if="showMonomer && (isBlank(columns) || columns.visible('monomer.name'))"
     prop="monomer.name"
     :show-overflow-tooltip="true"

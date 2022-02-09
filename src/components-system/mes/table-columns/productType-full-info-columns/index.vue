@@ -11,6 +11,7 @@
     :productType="productType"
     :category="category"
     :columns="columns"
+    :unitNewLine="unitNewLine"
     :fixed="fixed"
     :unShowField="unShowField"
     :fixedWidth="fixedWidth"
@@ -45,6 +46,10 @@ defineProps({
   },
   columns: {
     type: Object
+  },
+  unitNewLine: {
+    type: Boolean,
+    default: true
   },
   fixed: {
     // 定位
