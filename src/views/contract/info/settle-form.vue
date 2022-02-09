@@ -12,9 +12,9 @@
     <template #title>
       <div class="dialog-title">
         <span class="title-left">项目结算</span>
-        <common-button v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStatus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
+        <el-tag v-if="auditStatus" size="medium" :type="auditStatus==auditTypeEnum.ENUM.REJECT.V?'info':(auditStatus==auditTypeEnum.ENUM.PASS.V?'success':'warning')">
           {{ auditStatus==auditTypeEnum.ENUM.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.ENUM.PASS.V?'已通过':'审核中') }}
-        </common-button>
+        </el-tag>
         <span style="position:absolute;right:20px;">
           <template v-if="auditStatus">
             <common-button v-if="auditStatus==auditTypeEnum.ENUM.AUDITING.V && showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.ENUM.REJECT.V)">驳回</common-button>

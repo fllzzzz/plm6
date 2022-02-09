@@ -138,9 +138,9 @@
       </div>
       <el-divider><span class="title">技术交底</span></el-divider>
       <div style="text-align: right; margin-right: 20px">
-        <common-button style="margin-left: 20px" type="success" size="small" @click="handleAddEnclosure">添加</common-button>
+        <common-button style="margin-left: 20px" type="success" size="small" :disabled="!(showItem && showItem.length > 0)" @click="handleAddEnclosure">添加</common-button>
       </div>
-      <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"/>
+      <enclosure-show :table-data="form.enclosureInfo" :show-item="showItem" @clickChange="typeChange"  v-if="showItem && showItem.length > 0"/>
       <!--围护产品数据弹窗  -->
       <common-drawer
         v-model:visible="enclosureVisible"
@@ -191,6 +191,7 @@ import { getContentInfo } from '@/api/contract/project'
 import { ElMessage } from 'element-plus'
 import enclosureForm from './enclosure-form'
 import enclosureShow from './enclosure-show'
+import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
 let projectContent1 = []
@@ -338,6 +339,13 @@ function handleAddEnclosure() {
 function getShowItem(val) {
   showItem.value = []
   showCategory.value = []
+  const totalItems = [
+    TechnologyTypeEnum.STRUCTURE.V,
+    TechnologyTypeEnum.SANDWICH_BOARD.V,
+    TechnologyTypeEnum.PROFILED_PLATE.V,
+    TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
+    TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V
+  ]
   const totalArr = [
     TechnologyTypeEnum.SANDWICH_BOARD.V,
     TechnologyTypeEnum.PROFILED_PLATE.V,
@@ -372,6 +380,13 @@ function getShowItem(val) {
           } else if (val.alias === 'ENCLOSURE') {
             showItem.value = [...showItem.value, ...totalArr]
           }
+        }
+      }
+    })
+    totalItems.forEach(v => {
+      if (showItem.value.indexOf(v) < 0) {
+        if (isNotBlank(form.value.enclosureInfo)) {
+          form.value.enclosureInfo[v] = []
         }
       }
     })

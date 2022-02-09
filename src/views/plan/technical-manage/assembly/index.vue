@@ -134,7 +134,11 @@
                       plain
                       @click="addArtifact(scope.row)"
                       >保存</common-button>
-                    <common-button type="danger" size="mini" plain @click="deleteRow(scope.row, scope.$index)">删除</common-button>
+                      <el-popconfirm title="确定删除吗?" @confirm="deleteRow(scope.row, scope.$index)">
+                        <template #reference>
+                          <common-button type="danger" size="mini" plain>删除</common-button>
+                        </template>
+                      </el-popconfirm>
                   </template>
                 </el-table-column>
               </common-table>
@@ -327,7 +331,7 @@ async function addArtifact(val) {
 }
 
 async function deleteRow(val, index) {
-  if (val.id) {
+  if (!val.add) {
     try {
       val.popoverVisible = false
       await delAssemblyArtifact({ artifactNo: val.serialNumber, assembleId: crud.data[val.mainIndex].id })
