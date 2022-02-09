@@ -14,6 +14,7 @@
       <el-form-item label="工序类型" prop="sequenceType">
         <common-radio-button
           v-model="form.sequenceType"
+          :disabled="isEdit"
           :options="typeEnum.ENUM"
           :unshow-val="[typeEnum.MACHINE_PART.V]"
           type="enum"
@@ -22,7 +23,7 @@
         />
       </el-form-item>
       <el-form-item v-if="form.sequenceType === typeEnum.ARTIFACT.V" label="工序次序" prop="processType">
-        <common-radio-button v-model="form.processType" :options="processTypeEnum.ENUM" size="small" type="enum" />
+        <common-radio-button v-model="form.processType" :disabled="isEdit" :options="processTypeEnum.ENUM" size="small" type="enum" />
       </el-form-item>
       <el-form-item label="名称" prop="name">
         <el-input v-model="form.name" type="text" :placeholder="`请填写${typeEnum.VL[form.sequenceType]}类型名称`" style="width: 270px" />
@@ -38,7 +39,7 @@
                 :multiple="false"
                 :clearable="true"
                 :product-type="productType"
-                style="width: 220px;"
+                style="width: 220px"
                 :disabled-value="processDisabled(form.processSequenceIds, form.processSequenceIds[index])"
               />
               <common-button
@@ -46,10 +47,16 @@
                 icon="el-icon-delete"
                 size="mini"
                 type="danger"
-                style="margin-left:3px;"
+                style="margin-left: 3px"
                 @click="delProcess(index)"
               />
-              <common-button v-show="index === form.processSequenceIds.length-1" icon="el-icon-plus" size="mini" type="success" @click="addProcess" />
+              <common-button
+                v-show="index === form.processSequenceIds.length - 1"
+                icon="el-icon-plus"
+                size="mini"
+                type="success"
+                @click="addProcess"
+              />
             </div>
           </div>
         </div>
@@ -82,6 +89,8 @@ const defaultForm = {
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
+
+const isEdit = computed(() => crud.status.edit >= 1)
 
 const rules = {
   name: [
