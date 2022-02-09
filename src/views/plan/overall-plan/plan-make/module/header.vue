@@ -6,6 +6,8 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
+        :default="monomerDefault"
+        :defaultValue="queryMonomerId"
         @change="monomerChange"
       />
       <common-radio-button
@@ -30,7 +32,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue'
+import { defineProps, ref, computed, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -63,25 +65,27 @@ const props = defineProps({
   }
 })
 
+watch(
+  () => props.projectId,
+  (val) => {
+    queryMonomerId.value = undefined
+  },
+  { immediate: true, deep: true }
+)
+
 const disabledVal = computed(() => {
   return props.globalProject.businessType === businessTypeEnum.MACHINING.V ? [areaPlanTypeEnum.INSTALL.V] : []
 })
-// watch(
-//   () => route.params.monomerId,
-//   (val) => {
-//     if (val) {
-//       crud.query.projectId = props.projectId
-//       queryMonomerId.value = +route.params.monomerId
-//       console.log(route.params.productType)
-//       if (queryMonomerId.value) {
-//         crud.query.monomerId =  queryMonomerId.value
-//         crud.query.productType = route.params.productType
-//         monomerChange()
-//       }
-//     }
-//   },
-//   { deep: true, immediate: true }
-// )
+const monomerDefault = computed(() => {
+  return !queryMonomerId.value
+})
+if (route.params.monomerId) {
+  queryMonomerId.value = +route.params.monomerId
+  if (queryMonomerId.value) {
+    crud.query.monomerId = queryMonomerId.value
+    monomerChange()
+  }
+}
 
 async function monomerChange() {
   try {
@@ -117,7 +121,6 @@ async function getTypeInfo() {
     } else {
       crud.query.productType = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
     }
-    console.log(crud.query.productType)
   } catch (e) {
     console.log(e)
   }

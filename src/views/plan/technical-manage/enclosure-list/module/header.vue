@@ -105,10 +105,11 @@
           :fn="downloadEnclosureData"
           :params="exportParam"
           show-btn-text
-          btn-text="清单（按条件查询）"
+          btn-text="清单(按条件查询)"
           class="filter-item"
+          :disabled="crud.data.length===0"
         />
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么？`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id">
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么?`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id">
           <template #reference>
             <common-button type="danger">一键清空(按区域)</common-button>
           </template>

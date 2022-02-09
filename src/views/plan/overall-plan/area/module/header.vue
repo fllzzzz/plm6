@@ -91,6 +91,6 @@ async function getTypeInfo() {
 }
 
 function goPlanView() {
-  router.push({ name: 'PlanOverallPlanManage', params: { monomerId: crud.query.monomerId, productType: crud.query.productType }})
+  router.push({ name: 'PlanMakeManage', params: { monomerId: crud.query.monomerId, productType: crud.query.productType }})
 }
 </script>

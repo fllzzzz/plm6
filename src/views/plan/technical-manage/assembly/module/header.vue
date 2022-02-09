@@ -66,9 +66,10 @@
           show-btn-text
           btn-text="下载组立清单"
           class="filter-item"
+          :disabled="crud.data.length===0"
         />
         <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" />
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么？`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
           <template #reference>
             <common-button type="danger">一键清空(按区域)</common-button>
           </template>

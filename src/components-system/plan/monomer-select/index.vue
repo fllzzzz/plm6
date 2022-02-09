@@ -63,6 +63,10 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  defaultValue: {
+    type: [Number, String],
+    default: undefined
+  },
   placeholder: {
     type: String,
     default: '请选择单体'
@@ -131,7 +135,7 @@ async function fetchData() {
       selectValue.value = optionData[0].value
       selectChange(selectValue.value)
     } else {
-      selectValue.value = undefined
+      selectValue.value = props.defaultValue ? props.defaultValue : undefined
     }
     loading.value = false
   }
