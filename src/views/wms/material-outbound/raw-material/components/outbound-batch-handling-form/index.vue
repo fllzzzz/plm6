@@ -307,7 +307,8 @@ async function submit() {
           quantity: v.batchOutboundQuantity, // 数量
           outboundUnit: v.outboundUnit, // 出库单位
           outboundUnitPrecision: v.outboundUnitPrecision, // 单位精度
-          outboundUnitType: v.outboundUnitType // 出库单位类型
+          outboundUnitType: v.outboundUnitType, // 出库单位类型
+          remark: v.remark // 备注
         })
       }
     })
