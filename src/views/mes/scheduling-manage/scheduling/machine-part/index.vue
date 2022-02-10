@@ -151,12 +151,6 @@ const optShow = {
 }
 
 const productType = componentTypeEnum.MACHINE_PART.V
-provide('needTableColumns', [
-  { label: '编号', width: '140px', field: 'serialNumber' },
-  { label: '规格', width: '140px', field: 'specification' },
-  { label: '材质', width: '80px', field: 'material' }
-  //  { label: `长度\n(mm)`, width: '80px', field: 'length', toFixed: true, DP: DP.MES_ARTIFACT_L__MM }
-])
 provide('productType', productType)
 provide('processType', processTypeEnum.ONCE.V)
 

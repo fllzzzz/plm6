@@ -63,8 +63,9 @@
           :fn="downloadArtifactTree"
           :params="carryParam"
           show-btn-text
-          btn-text="零构件清单（按构件条件查询）"
+          btn-text="零构件清单(按构件条件查询)"
           class="filter-item"
+          :disabled="crud.data.length===0"
         />
         <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" />
       </template>
@@ -75,7 +76,7 @@
           placement="top"
         >
           <div class="filter-item">
-            <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">存在{{ mismatchList.length }}条错误数据，鼠标悬停查看</el-tag>
+            <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">存在{{ mismatchList.length }}条错误数据,鼠标悬停查看</el-tag>
           </div>
         </el-tooltip>
       </template>

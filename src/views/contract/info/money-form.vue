@@ -12,9 +12,9 @@
     <template #title>
       <div class="dialog-title">
         <span class="title-left">合同金额变更</span>
-        <common-button v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.REJECT.V?'info':(auditStatus==auditTypeEnum.PASS.V?'success':'warning')">
+        <el-tag v-if="auditStatus" size="medium" :type="auditStatus==auditTypeEnum.REJECT.V?'info':(auditStatus==auditTypeEnum.PASS.V?'success':'warning')">
           {{ auditStatus==auditTypeEnum.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.PASS.V?'已通过':'审核中') }}
-        </common-button>
+        </el-tag>
         <span style="position:absolute;right:20px;">
           <template v-if="auditStatus">
             <common-button v-if="auditStatus==auditTypeEnum.AUDITING.V && showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>

@@ -373,6 +373,7 @@ async function load(row, treeNode, resolve) {
         return v
       })
     }
+    row.machinePartDTOList = content
     resolve(content)
     // 解决lazy首次异步加载数据完成后不展开
     nextTick(() => {
