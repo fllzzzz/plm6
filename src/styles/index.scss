@@ -480,6 +480,15 @@ div:focus {
   background: #ededed;
 }
 
+// input设置type=‘number’去掉上下箭头
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 .color-coral {
   color: coral;
 }

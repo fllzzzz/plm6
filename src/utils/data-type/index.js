@@ -65,6 +65,15 @@ export function toFixed(num, precision, { toNum = false } = {}) {
 }
 
 /**
+ * toPrecision，精度
+ * @param {number/string} num 需要处理的值
+ * @param {*} precision 精度，可为null，null与0结果相同
+ */
+export function toPrecision(num, precision = 0) {
+  return parseFloat(`${Math.round(num * Math.pow(10, precision)) / Math.pow(10, precision)}`)
+}
+
+/**
  * 比较两个值是否相同
  * TODO:待优化
  * @param {*} a 比较的值

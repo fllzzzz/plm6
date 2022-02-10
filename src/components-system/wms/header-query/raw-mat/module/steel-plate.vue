@@ -8,8 +8,9 @@
     class="filter-item"
     @keyup.enter="toQuery"
   />
-  <el-input
-    v-model.trim="queryVO.thickness"
+  <common-input-number
+    v-model="queryVO.thickness"
+    mode="input"
     clearable
     style="width: 130px"
     size="small"
@@ -17,8 +18,9 @@
     class="filter-item"
     @keyup.enter="toQuery"
   />
-  <el-input
+  <common-input-number
     v-model.trim="queryVO.theoryThickness"
+    mode="input"
     clearable
     style="width: 130px"
     size="small"
@@ -26,8 +28,9 @@
     class="filter-item"
     @keyup.enter="toQuery"
   />
-  <el-input
+  <common-input-number
     v-model.trim="queryVO.width"
+    mode="input"
     clearable
     style="width: 130px"
     size="small"
@@ -35,8 +38,9 @@
     class="filter-item"
     @keyup.enter="toQuery"
   />
-  <el-input
+  <common-input-number
     v-model.trim="queryVO.length"
+    mode="input"
     clearable
     style="width: 130px"
     size="small"
