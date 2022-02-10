@@ -105,8 +105,7 @@ const { crud, columns, CRUD } = useCRUD(
     title: '项目报表',
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { get: artifact },
-    requiredQuery: ['areaId']
+    crudApi: { get: artifact }
   },
   tableRef
 )

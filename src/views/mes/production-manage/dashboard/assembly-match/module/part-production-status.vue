@@ -21,7 +21,7 @@
       </div>
     </template>
     <template #content>
-      <div>
+      <div class="nameViews">
         <span>构件：</span>
         <span v-for="n in names" :key="n.name">
           <el-tag :type="n.tagType" effect="plain" style="margin-right:5px;margin-bottom:5px;">{{ n.name }}</el-tag>
@@ -83,7 +83,8 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.nameViews'],
+    extraHeight: 10,
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true

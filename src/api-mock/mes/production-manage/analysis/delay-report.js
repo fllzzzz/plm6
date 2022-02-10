@@ -99,7 +99,7 @@ const getDetail = {
             'id': 3,
             'name': '单体#1'
           },
-          'name': '桁架式楼承板',
+          'name': '桁架楼承板',
           'plate': 'TD-75-1',
           'productionLine': {
             'id': 1,

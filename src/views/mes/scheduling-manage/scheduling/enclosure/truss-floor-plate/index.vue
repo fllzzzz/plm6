@@ -148,7 +148,7 @@ provide('processType', processTypeEnum.TWICE.V)
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '桁架式楼承板工单',
+    title: '桁架楼承板工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

@@ -134,7 +134,7 @@ export default {
       hidden: false,
       redirect: '/mes/task-manage/scheduling/artifact/assemble',
       meta: {
-        title: '构件工单',
+        title: '结构工单',
         icon: 'project',
         noCache: true
       },
@@ -156,7 +156,7 @@ export default {
           hidden: false,
           component: '/mes/scheduling-manage/scheduling/assemble/index',
           meta: {
-            title: '一次工单',
+            title: '组立工单',
             icon: 'project',
             noCache: true
           }
@@ -167,7 +167,7 @@ export default {
           hidden: false,
           component: '/mes/scheduling-manage/scheduling/artifact/index',
           meta: {
-            title: '二次工单',
+            title: '构件工单',
             icon: 'project',
             noCache: true
           }
@@ -213,7 +213,7 @@ export default {
         hidden: false,
         component: '/mes/scheduling-manage/scheduling/enclosure/truss-floor-plate/index',
         meta: {
-          title: '桁架式楼承板工单',
+          title: '桁架楼承板工单',
           icon: 'project',
           noCache: true
         }
@@ -347,7 +347,7 @@ export default {
         //   path: 'truss-floor-plate',
         //   hidden: false,
         //   component: '/mes/production-manage/report/truss-floor-plate/index',
-        //   meta: { title: '桁架式楼承板报表', icon: 'project', noCache: true }
+        //   meta: { title: '桁架楼承板报表', icon: 'project', noCache: true }
         // },
         // {
         //   name: 'MesProductionReportPressedFloorPlate',

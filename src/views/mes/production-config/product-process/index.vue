@@ -37,7 +37,13 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('processType')" key="processType" prop="processType" label="工序次序" width="100px">
+      <el-table-column
+        v-if="columns.visible('processType') && crud.query.sequenceType & typeEnum.ARTIFACT.V"
+        key="processType"
+        prop="processType"
+        label="工序次序"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ processTypeEnum.VL[scope.row.processType] }}</span>
         </template>
@@ -76,7 +82,7 @@ import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 import { enabledEnum } from '@enum-ms/common'
-import { processTypeEnum } from '@enum-ms/mes'
+import { processTypeEnum, processMaterialListTypeEnum as typeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductProcessPM as permission } from '@/page-permission/config'
