@@ -32,7 +32,7 @@
             value-format="x"
             placeholder="选择日期"
             style="width:160px"
-            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() < globalProject.createTime - 1 * 24 * 60 * 60 * 1000 || date.getTime() - 8.64e6 > scope.row.endDate } else { return date.getTime() < globalProject.createTime - 1 * 24 * 60 * 60 * 1000 || date.getTime() - 8.64e6 > scope.row.date }}"
+            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() < globalProject.startDate || date.getTime() > scope.row.endDate-1 * 24 * 60 * 60 * 1000 } else { return date.getTime() < globalProject.startDate || date.getTime() > scope.row.date-1 * 24 * 60 * 60 * 1000 }}"
             @change="handleDateChange($event, scope.row)"
           />
           <template v-else>
@@ -50,7 +50,7 @@
             value-format="x"
             placeholder="选择日期"
             style="width:160px"
-            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() < scope.row.startDate - 8.64e6 || date.getTime() - 8.64e6 > scope.row.date } else { return date.getTime() < globalProject.createTime - 1 * 24 * 60 * 60 * 1000 || date.getTime() - 8.64e6 > scope.row.date }}"
+            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() -1 * 24 * 60 * 60 * 1000 < scope.row.startDate || date.getTime() > scope.row.date } else { return date.getTime()-1 * 24 * 60 * 60 * 1000 < globalProject.startDate || date.getTime() > scope.row.date }}"
             @change="handleDateChange($event, scope.row)"
           />
           <template v-else>
@@ -110,6 +110,7 @@ import { isNotBlank } from '@data-type/index'
 import { dateDifferenceReduce } from '@/utils/date'
 import { parseTime } from '@/utils/date'
 import { planMakeListPM as permission } from '@/page-permission/plan'
+import { ElMessage } from 'element-plus'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
@@ -169,6 +170,10 @@ function handleDateChange(val, row) {
   }
 }
 async function submit(row) {
+  if (!row.startDate || !row.endDate) {
+    ElMessage.error('开始和结束时间必填！')
+    return
+  }
   try {
     const data = {
       id: row.id,
