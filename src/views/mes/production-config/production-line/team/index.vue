@@ -116,7 +116,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     permission: { ...permission },
     crudApi: { ...crudApi },
-    queryOnPresenterCreated: false,
+    queryOnPresenterCreated: false
   },
   tableRef
 )
@@ -126,8 +126,8 @@ const maxHeight = inject('maxHeight')
 const props = defineProps({
   line: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const lineId = computed(() => {
@@ -163,13 +163,13 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
         v.leaderId = m.userId
         v.leader = {
           id: m.userId,
-          name: m.userName,
+          name: m.userName
         }
       } else {
         members.push({
           teamId: m.teamId,
           id: m.userId,
-          name: m.userName,
+          name: m.userName
         })
       }
     })
@@ -196,7 +196,7 @@ CRUD.HOOK.beforeSubmit = () => {
     boolLeaderEnum: true,
     userId: crud.form.leader.id,
     userName: crud.form.leader.name,
-    teamId: crud.form.id,
+    teamId: crud.form.id
   })
   for (let i = 0; i < members.length; i++) {
     if (members[i]) {
@@ -204,7 +204,7 @@ CRUD.HOOK.beforeSubmit = () => {
         boolLeaderEnum: false,
         userId: members[i].id,
         userName: members[i].name,
-        teamId: crud.form.id,
+        teamId: crud.form.id
       })
     }
   }
@@ -213,6 +213,6 @@ CRUD.HOOK.beforeSubmit = () => {
 
 defineExpose({
   permission,
-  toAdd: crud.toAdd,
+  toAdd: crud.toAdd
 })
 </script>

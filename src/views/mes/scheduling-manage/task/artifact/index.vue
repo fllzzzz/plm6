@@ -9,9 +9,11 @@
             size="small"
             default
             class="filter-item"
-            type="enum"
+            type="enumSL"
             @change="crud.toQuery"
-          />
+          >
+            <template #suffix>排产</template>
+          </common-radio-button>
         </template>
       </mHeader>
     </div>
