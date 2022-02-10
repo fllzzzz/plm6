@@ -5,10 +5,10 @@
     </template>
     <el-form ref="formRef" :model="form" size="small" label-width="120px">
       <el-form-item label="名称" prop="name">
-        <span v-empty-text>{{ form.name }}</span>
+        <span>{{ form.name }}</span>
       </el-form-item>
       <el-form-item label="材质" prop="material">
-        <span v-empty-text>{{ form.material }}</span>
+        <span>{{ form.material }}</span>
       </el-form-item>
       <el-form-item label="油漆类别" prop="paintCategory">
         <el-input v-model="form.paintCategory" size="small" placeholder="请输入油漆类别" />
@@ -73,12 +73,12 @@ const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   info: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
