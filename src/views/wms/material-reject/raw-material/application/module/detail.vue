@@ -53,10 +53,11 @@ import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { isNotBlank } from '@/utils/data-type'
+import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -66,13 +67,11 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
-import { isNotBlank } from '@/utils/data-type'
 
 const permission = inject('permission')
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
-const { rejectCfg } = useWmsConfig()
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
@@ -86,13 +85,8 @@ const { maxHeight } = useMaxHeight(
   },
   () => computed(() => !crud.detailLoading)
 )
-
-// 物料金额显示
-const materialAmountDisplayWay = computed(() => {
-  return rejectCfg.value ? rejectCfg.value.materialAmountDisplayWay : {}
-})
-// 显示金额
-const showAmount = computed(() => !!materialAmountDisplayWay.value.application)
+// 是否有显示金额权限
+const showAmount = computed(() => checkPermission(permission.showAmount))
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
 // 是否甲供订单

@@ -116,7 +116,7 @@ const { CRUD, crud, query } = regHeader(defaultQuery)
 const { globalProjectId } = mapGetters('globalProjectId')
 const totalAmount = ref({})
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 选中项目库时， 根据项目id的变化刷新列表
