@@ -23,7 +23,7 @@
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.links" :key="index" class="process-drawer">
-                <el-input v-model="item.keyword" type="text" placeholder="大写字母" style="width: 270px" oninput="value=value.replace(/[^/A-Z]/g,'')" @change="checkName(item,index)"/>
+                <el-input v-model="item.keyword" type="text" placeholder="大写字母" style="width: 270px" oninput="value=value.replace(/[^/A-Z]/g,'')" @blur="checkName(item,index)"/>
                 <common-select
                   v-model="item.specIndex"
                   :options="specIndexEnum"
@@ -35,6 +35,7 @@
                   class="filter-item"
                   placeholder="索引"
                   style="width: 250px"
+                  @change="item.add=false"
                 />
                 <common-button
                   v-show="form.links && form.links.length > 1"
@@ -72,23 +73,33 @@ const defaultForm = {
   iid: undefined,
   name: '',
   sort: 1,
-  links: []
+  links: [
+    {
+      keyword: undefined,
+      specIndex: undefined,
+      add: true
+    }
+  ]
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 const validateLinks = (rule, value, callback) => {
   if (value && value.length) {
     for (const i in value) {
-      if (!value[i].keyword) {
-        callback(new Error('请填写关键字母'))
-      }
-      if (!isNotBlank(value[i].specIndex)) {
-        callback(new Error('请选择索引'))
+      if (!value[i].add) {
+        if (!value[i].keyword) {
+          callback(new Error('请填写关键字母1'))
+        }
+        if (!isNotBlank(value[i].specIndex)) {
+          callback(new Error('请选择索引1'))
+        }
+      } else {
+        callback()
       }
     }
     callback()
   } else {
-    callback(new Error('请填写关键字母'))
+    callback(new Error('请填写关键字母2'))
   }
 }
 
@@ -107,7 +118,8 @@ const rules = {
 function addProcess() {
   form.links.push({
     keyword: undefined,
-    specIndex: undefined
+    specIndex: undefined,
+    add: true
   })
 }
 function delProcess(index) {
@@ -115,31 +127,45 @@ function delProcess(index) {
 }
 
 function checkName(item, index) {
-  if (item.keyword) {
-    const val = nameArr.value.find(v => v.index === index)
-    if (nameArr.value.findIndex(v => v.keyword === item.keyword) > -1) {
-      ElMessage({
-        message: '关键字母已存在，请重新填写',
-        type: 'error'
-      })
-      item.keyword = undefined
-      if (val) {
+  item.add = false
+  const val = nameArr.value.find(v => v.index === index)
+  if (val) {
+    if (item.keyword) {
+      if (val.keyword === item.keyword) {
+        return
+      }
+      if (nameArr.value.findIndex(v => v.keyword === item.keyword) > -1) {
+        ElMessage({
+          message: '关键字母已存在，请重新填写',
+          type: 'error'
+        })
+        item.keyword = undefined
         val.keyword = undefined
+      } else {
+        val.keyword = item.keyword
       }
     } else {
-      if (val) {
-        val.keyword = item.keyword
-      } else {
-        nameArr.value.push({
-          keyword: item.keyword,
-          index: index
-        })
-      }
+      val.keyword = undefined
+    }
+  } else {
+    if (item.keyword) {
+      nameArr.value.push({
+        keyword: item.keyword,
+        index: index
+      })
     }
   }
 }
 
-CRUD.HOOK.afterAddSuccess = () => {
+CRUD.HOOK.beforeValidateCU = (crud, form) => {
+  if (crud.form.links && crud.form.links.length > 0) {
+    crud.form.links.map(v => {
+      v.add = false
+    })
+  }
+}
+
+CRUD.HOOK.afterToAdd = () => {
   nameArr.value = []
 }
 </script>
