@@ -223,13 +223,6 @@ const detail_id1 = {
             name: '杭州天马钢材有限公司'
           }
         },
-        'requisitionsList|2': [
-          {
-            'basicClass|1-16': 1,
-            'serialNumber|+1': ['SG-AFTER-123456', 'SG-AFTER-133456'],
-            'projectId|+1': 1
-          }
-        ],
         id: 1, // 退货单id
         basicClass: 7, // 采购物料基础类型
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
