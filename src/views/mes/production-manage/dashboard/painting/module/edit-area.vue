@@ -1,13 +1,13 @@
 <template>
   <common-dialog title="表面积修改" v-model="dialogVisible" width="400px" :before-close="handleClose">
     <template #titleRight>
-      <common-button :loading="saveLoading" :disabled="form.changeArea === form.originChangeArea" type="primary" size="mini" @click="save"
-        >保 存</common-button
-      >
+      <common-button :loading="saveLoading" :disabled="form.changeArea === form.originChangeArea" type="primary" size="mini" @click="save">
+        保 存
+      </common-button>
     </template>
     <el-form ref="formRef" :model="form" size="small" label-width="100px">
       <el-form-item label="清单量(㎡)" prop="surfaceArea">
-        <span v-empty-text>{{ toFixed(form.surfaceArea, DP.COM_AREA__M2) }}</span>
+        <span>{{ toFixed(form.surfaceArea, DP.COM_AREA__M2) }}</span>
       </el-form-item>
       <el-form-item label="修改量(㎡)" prop="changeArea">
         <el-input-number
@@ -47,12 +47,12 @@ const emit = defineEmits(['update:visible', 'refresh'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   info: {
     type: Object,
-    default: () => {},
-  },
+    default: () => {}
+  }
 })
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
