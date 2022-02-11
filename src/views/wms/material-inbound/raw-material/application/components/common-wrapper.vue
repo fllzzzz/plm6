@@ -1,6 +1,12 @@
 <template>
   <div class="inbound-application-container" :style="heightStyle">
-    <common-header :basic-class="props.basicClass" :edit="props.edit" class="header" ref="headerRef" @purchase-order-change="handleOrderInfoChange" />
+    <common-header
+      :basic-class="props.basicClass"
+      :edit="props.edit"
+      class="header"
+      ref="headerRef"
+      @purchase-order-change="handleOrderInfoChange"
+    />
     <div class="main-content">
       <slot />
     </div>
@@ -65,7 +71,13 @@ const previewVisible = ref(false)
 
 let heightCfg = {}
 if (props.edit) {
-  heightCfg = { mainBox: '.raw-mat-inbound-application-record-form', extraBox: ['.el-drawer__header'], wrapperBox: ['.el-drawer__body'], clientHRepMainH: true, navbar: false }
+  heightCfg = {
+    mainBox: '.raw-mat-inbound-application-record-form',
+    extraBox: ['.el-drawer__header'],
+    wrapperBox: ['.el-drawer__body'],
+    clientHRepMainH: true,
+    navbar: false
+  }
 } else {
   heightCfg = { extraBox: null, wrapperBox: null }
 }
@@ -85,8 +97,8 @@ async function submit() {
 }
 
 // 订单详情变更
-function handleOrderInfoChange(val) {
-  emit('purchase-order-change', val)
+function handleOrderInfoChange(val, oldVal) {
+  emit('purchase-order-change', val, oldVal)
 }
 </script>
 

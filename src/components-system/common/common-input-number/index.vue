@@ -140,7 +140,6 @@ function changeCallBack(currentValue, oldValue) {
   emit('change', currentValue, oldValue)
 }
 function blurCallBack(event) {
-  console.log('blur', currentValue.value)
   if (props.mode === 'input') setCurrentValue()
   emit('blur', event)
 }

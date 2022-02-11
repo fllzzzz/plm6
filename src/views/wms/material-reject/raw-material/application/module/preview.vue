@@ -104,6 +104,7 @@ watch(
 // 格式装换
 function dataFormat(info) {
   const list = []
+  // 遍历退货信息
   for (const inboundMaterialId in info) {
     // 具体物料退货信息
     const item = info[inboundMaterialId]
