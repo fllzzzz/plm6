@@ -15,7 +15,7 @@
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         v-model="query.type"
-        :options="arrearsStatusEnum.ENUM"
+        :options="newArrearsStatusEnum.ENUM"
         showOptionAll
         :optionAllValue="undefined"
         type="enum"
@@ -30,12 +30,12 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
-import { arrearsStatusEnum } from '@enum-ms/finance'
+import { newArrearsStatusEnum } from '@enum-ms/finance'
 
 const defaultQuery = {
   year: String(new Date().getFullYear()),
   projectId: undefined,
-  type: arrearsStatusEnum.ARREARS.V
+  type: newArrearsStatusEnum.ARREARS.V
 }
 
 const { crud, query } = regHeader(defaultQuery)
