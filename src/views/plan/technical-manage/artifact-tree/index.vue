@@ -291,7 +291,7 @@ const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '零构件清单',
-    sort: ['id.desc'],
+    sort: ['id.asc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['areaId'],
