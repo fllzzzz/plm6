@@ -185,11 +185,11 @@ async function getLabelInfo(row) {
       emit('getDetail', row.id, _data)
     }
     _list = _data[dataField[row.productType]].map((v) => {
-      const { serialNumber, material, quantity, totalNetWeight, plate, length } = v
+      const { serialNumber, material, packageQuantity, totalNetWeight, plate, length } = v
       return {
         serialNumber,
         material,
-        quantity,
+        quantity: packageQuantity,
         totalNetWeight: totalNetWeight ? totalNetWeight.toFixed(DP.COM_WT__KG) : 0,
         plate,
         length: length ? length.toFixed(DP.MES_ENCLOSURE_L__MM) : 0
