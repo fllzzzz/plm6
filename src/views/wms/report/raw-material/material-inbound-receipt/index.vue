@@ -287,7 +287,7 @@ const { crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 采购单详情

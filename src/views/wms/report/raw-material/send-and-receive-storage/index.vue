@@ -362,7 +362,7 @@ const showProject = computed(
   () => !crud.query.projectId && crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V && columns.value.visible('project')
 )
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 显示单价

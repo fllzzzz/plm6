@@ -74,15 +74,15 @@
 
 <script setup>
 import { getPendingReviewIdList, detail as getDetail, reviewPassed, reviewReturned } from '@/api/wms/material-reject/raw-material/review'
-import { computed, ref, defineEmits, defineProps, watch } from 'vue'
+import { computed, ref, defineEmits, defineProps, watch, inject } from 'vue'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import checkPermission from '@/utils/system/check-permission'
 
 import { regExtra } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
 import useVisible from '@compos/use-visible'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -111,6 +111,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 const drawerRef = ref() // 当前drawer
 const detailLoading = ref(false) // 详情loading
 const expandRowKeys = ref([]) // 展开
@@ -121,17 +122,11 @@ const form = ref({})
 const detail = ref({})
 
 const { crud } = regExtra()
-// 退货配置
-const { rejectCfg } = useWmsConfig()
 
-// 物料金额显示
-const materialAmountDisplayWay = computed(() => {
-  return rejectCfg.value ? rejectCfg.value.materialAmountDisplayWay : {}
-})
 // 采购订单信息
 const order = computed(() => detail.value.purchaseOrder || {})
-// 显示金额
-const showAmount = computed(() => (materialAmountDisplayWay.value ? !!materialAmountDisplayWay.value.review : false))
+// 是否有显示金额权限
+const showAmount = computed(() => checkPermission(permission.showAmount))
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题

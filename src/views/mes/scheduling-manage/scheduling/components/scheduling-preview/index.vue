@@ -74,7 +74,6 @@
         :productType="productType"
         :category="category"
         :unShowField="[
-          'netWeight',
           'grossWeight',
           'totalNetWeight',
           'totalGrossWeight',

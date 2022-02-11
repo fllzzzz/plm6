@@ -202,17 +202,17 @@ watch(
 )
 function mainDateOptionFn(time) {
   if (props.globalProject.endDate) {
-    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.createTime1 - 1 * 24 * 60 * 60 * 1000
+    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.startDate
   } else {
-    return time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
+    return time.getTime() < props.globalProject.startDate
   }
 }
 
 function subDateOptionFn(time) {
   if (crud.form.date) {
-    return time.getTime() - 8.64e6 > crud.form.date || time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
+    return time.getTime() - 8.64e6 > crud.form.date || time.getTime() < props.globalProject.startDate
   } else {
-    return time.getTime() < props.globalProject.createTime - 1 * 24 * 60 * 60 * 1000
+    return time.getTime() - 8.64e6 > props.globalProject.endDate || time.getTime() < props.globalProject.startDate
   }
 }
 

@@ -8,8 +8,9 @@
     class="filter-item"
     @keyup.enter="toQuery"
   />
-  <el-input
+  <common-input-number
     v-model.trim="queryVO.length"
+    mode="input"
     clearable
     style="width: 200px"
     size="small"
