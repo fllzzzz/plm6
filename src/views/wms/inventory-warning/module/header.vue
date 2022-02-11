@@ -26,7 +26,7 @@
       size="small"
       class="filter-item"
       style="width: 300px"
-      placeholder="可选择/输入科目、编码搜索"
+      placeholder="可选择/输入科目、编号搜索"
       @change="crud.toQuery"
     />
     <el-input

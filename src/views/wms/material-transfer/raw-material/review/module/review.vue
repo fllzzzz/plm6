@@ -80,7 +80,7 @@
             class="approval-comments"
             v-model="form.approvalComments"
             :rows="2"
-            maxLength="1000"
+            maxlength="1000"
             type="textarea"
             show-word-limit
             placeholder="审核意见"
