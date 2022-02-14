@@ -135,7 +135,7 @@ import checkPermission from '@/utils/system/check-permission'
 import EO from '@enum'
 import { projectComponentTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { dateDifference } from '@/utils/date'
-import { toFixed } from '@data-type/index'
+import { toFixed, deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useShipRecordCharts from '@compos/mes/production-manage/use-ship-record-charts'
@@ -199,7 +199,7 @@ const monomerProductTypeEnum = computed(() => {
 
 const tableLoading = ref(false)
 const list = ref([])
-const summaryInfo = ref(initSummaryInfo)
+const summaryInfo = ref(deepClone(initSummaryInfo))
 const productType = computed(() => {
   return projectType.value & projectComponentTypeEnum.ARTIFACT.V ? componentTypeEnum.ARTIFACT.V : componentTypeEnum.ENCLOSURE.V
 })
@@ -225,7 +225,7 @@ async function fetchList() {
   }
   try {
     list.value = []
-    summaryInfo.value = initSummaryInfo
+    summaryInfo.value = deepClone(initSummaryInfo)
     tableLoading.value = true
     const content = await getSummaryList({
       projectId: globalProjectId.value,
@@ -238,7 +238,7 @@ async function fetchList() {
         res[key] += cur[key] || 0
       }
       return res
-    }, initSummaryInfo)
+    }, deepClone(initSummaryInfo))
     summaryInfo.value.totalMete = useProductMeteConvert({
       productType: productType.value,
       weight: { num: summaryInfo.value.totalNetWeight },
@@ -258,9 +258,9 @@ async function fetchList() {
     summaryInfo.value.unShipQuantity = summaryInfo.value.quantity - summaryInfo.value.shipQuantity || 0
     summaryInfo.value.unCompleteMete = (summaryInfo.value.totalMete - summaryInfo.value.completeMete).toFixed(unitObj.value.DP) || 0
     summaryInfo.value.completeRate =
-      (summaryInfo.value.totalMete && (summaryInfo.value.completeMete / summaryInfo.value.totalMete).toFixed(2)) || 0
+      (summaryInfo.value.totalMete && (summaryInfo.value.completeMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
     summaryInfo.value.unShipMete = (summaryInfo.value.totalMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
-    summaryInfo.value.shipRate = (summaryInfo.value.totalMete && (summaryInfo.value.shipMete / summaryInfo.value.totalMete).toFixed(2)) || 0
+    summaryInfo.value.shipRate = (summaryInfo.value.totalMete && (summaryInfo.value.shipMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.totalQuantity = v.quantity
