@@ -107,7 +107,7 @@ import {
   auxMatBatchOutboundHandling,
   gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
-import { defineEmits, defineProps, watch, ref, watchEffect, computed, nextTick } from 'vue'
+import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
@@ -253,12 +253,15 @@ const setRecipientId = watch(
 )
 
 // 监听传入的列表
-watchEffect(() => {
-  // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
-  materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
-  form.value.list = materialList.value
-  dataFormat()
-})
+watch(
+  () => props.materialList,
+  () => {
+    // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
+    materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+    form.value.list = materialList.value
+    dataFormat()
+  }
+)
 
 // 表单初始化
 function formInit() {
@@ -350,6 +353,7 @@ function handleProjectChange(val) {
   dataFormat()
 }
 
+// 数据格式化
 function dataFormat() {
   if (props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V) {
     // 公共库的情况，重新计算最大数量
