@@ -10,6 +10,7 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     :cell-class-name="wrongCellMask"
+    row-key="rowId"
     style="width: 100%"
     @selection-change="handleSelectChange"
   >
@@ -319,7 +320,8 @@ CRUD.HOOK.beforeRefresh = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
+  data.content.forEach((v, i) => {
+    v.rowId = i + '' + Math.random()
     v.operable = !v.issueStatus
     v.sourceSchedulingQuantity = v.schedulingQuantity
     v.modifySchedulingQuantity = v.schedulingQuantity
