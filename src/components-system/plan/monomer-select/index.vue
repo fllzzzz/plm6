@@ -172,6 +172,7 @@ function selectChange(val) {
   emit('update:modelValue', val)
   emit('change', val)
   emit('getAreaInfo', areaInfo)
+  emit('getCurrentInfo', monomerVal)
 }
 
 defineExpose({

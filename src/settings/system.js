@@ -96,6 +96,7 @@ export const showProjectSearch = [
   { component: '/plan/technical-data-manage/other-file/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/plan/technical-manage/summary-list/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/plan/technical-manage/steel-statistical/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/plan/technical-manage/auxiliary-material/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/contract/contract-change/index', type: allPT, required: false },
   { component: '/contract/contract-record/index', type: allPT, required: false },
   { component: '/contract/contract-ledger/index', type: allPT, required: false },

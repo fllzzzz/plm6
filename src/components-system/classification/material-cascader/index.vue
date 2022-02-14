@@ -88,7 +88,7 @@ const props = defineProps({
   // 提示
   placeholder: {
     type: String,
-    default: '可搜索：科目名称、编码'
+    default: '可搜索：科目名称、编号'
   },
   // 多选
   multiple: {
@@ -196,7 +196,7 @@ function filterMethod(node, keyword) {
   //
   const pathLabelsMatch = pathLabels.includes(keyword)
   // 编码匹配
-  const codeMatch = data.code && data.code.substr(0, length) === keyword
+  const codeMatch = data.serialNumber && data.serialNumber.substr(0, length) === keyword
   return nameMatch || pathLabelsMatch || codeMatch
 }
 
@@ -247,7 +247,7 @@ function dataFormat(tree, deep = 1) {
   if (isBlank(props.deep) || deep <= props.deep) {
     const t = tree.map((node) => {
       let maxDeep = 1
-      const n = { id: node.id, name: node.name, disabled: false }
+      const n = { id: node.id, name: node.name, serialNumber: node.serialNumber, disabled: false }
       // 显示层级
       if (isNotBlank(node.children)) {
         const children = dataFormat(node.children, deep + 1)

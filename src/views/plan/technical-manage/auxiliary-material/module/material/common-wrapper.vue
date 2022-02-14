@@ -1,12 +1,5 @@
 <template>
   <div class="inbound-application-container" :style="heightStyle">
-    <common-header
-      :basic-class="props.basicClass"
-      :edit="props.edit"
-      class="header"
-      ref="headerRef"
-      @purchase-order-change="handleOrderInfoChange"
-    />
     <div class="main-content">
       <slot />
     </div>
@@ -19,19 +12,18 @@
       :btn-name="props.btnName"
       @submit="submit"
     />
-    <confirm-dialog v-model="previewVisible" :basic-class="props.basicClass" />
+    <confirm-dialog v-model="previewVisible" :basic-class="props.basicClass"/>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, ref } from 'vue'
 
 import useMaxHeight from '@/composables/use-max-height'
-import commonHeader from '@/views/wms/material-inbound/raw-material/application/components/common-header.vue'
 import commonFooter from '@/views/wms/material-inbound/raw-material/application/components/common-footer.vue'
 import confirmDialog from './confirm-dialog.vue'
 
-const emit = defineEmits(['purchase-order-change', 'submit'])
+// const emit = defineEmits(['purchase-order-change', 'submit'])
 
 const props = defineProps({
   basicClass: {
@@ -66,18 +58,11 @@ const props = defineProps({
   }
 })
 
-const headerRef = ref()
 const previewVisible = ref(false)
 
 let heightCfg = {}
 if (props.edit) {
-  heightCfg = {
-    mainBox: '.raw-mat-inbound-application-record-form',
-    extraBox: ['.el-drawer__header'],
-    wrapperBox: ['.el-drawer__body'],
-    clientHRepMainH: true,
-    navbar: false
-  }
+  heightCfg = { mainBox: '.raw-mat-inbound-application-record-form', extraBox: ['.el-drawer__header'], wrapperBox: ['.el-drawer__body'], clientHRepMainH: true, navbar: false }
 } else {
   heightCfg = { extraBox: null, wrapperBox: null }
 }
@@ -86,20 +71,15 @@ const { heightStyle } = useMaxHeight(heightCfg)
 
 // 表单提交（预览）
 async function submit() {
-  const headerValidate = await headerRef.value.validate()
   let formValidate = true
   if (typeof props.validate === 'function') {
     formValidate = await props.validate()
   }
-  if (headerValidate && formValidate) {
+  if (formValidate) {
     previewVisible.value = true
   }
 }
 
-// 订单详情变更
-function handleOrderInfoChange(val, oldVal) {
-  emit('purchase-order-change', val, oldVal)
-}
 </script>
 
 <style lang="scss" scoped>

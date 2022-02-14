@@ -140,7 +140,8 @@ async function fetchList() {
         break
     }
     total.value = _data.totalElements
-    tableData.value = _data.content.map((v) => {
+    tableData.value = _data.content.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       return v
     })
   } catch (error) {

@@ -179,6 +179,8 @@ const orderInfo = ref({})
 
 watchEffect(() => {
   trainsDiff.value = weightOverDiff(form.loadingWeight, cu.props.totalWeight)
+  // 在入库列表重量发生变化时，触发校验
+  formRef.value && formRef.value.validateField('loadingWeight')
 })
 
 // 提交后清除校验结果
@@ -221,7 +223,7 @@ function handlePurchaseIdChange(val) {
 }
 
 // 订单详情变更
-function handleOrderInfoChange(order) {
+function handleOrderInfoChange(order, oldOrder) {
   cu.props.requisitions = {} // 初始化申购单
   // 获取申购单详情
   if (order && order.requisitionsSN) {
@@ -234,8 +236,13 @@ function handleOrderInfoChange(order) {
   if (order.logisticsTransportType === logisticsTransportTypeEnum.FREIGHT.V) {
     form.shipmentNumber = undefined
   }
+  // 当订单切换时，若订单计量方式发生变化，则重置车次过磅重量
+  if (orderInfo.value && orderInfo.value.weightMeasurementMode !== order.weightMeasurementMode) {
+    form.loadingWeight = undefined
+  }
+  // 订单信息对象重新赋值
   orderInfo.value = order
-  emit('purchase-order-change', order)
+  emit('purchase-order-change', order, oldOrder)
 }
 
 // 加载申购单

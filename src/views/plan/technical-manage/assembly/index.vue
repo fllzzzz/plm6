@@ -266,7 +266,7 @@ const expandArr = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '组立清单',
-    sort: ['id.desc'],
+    sort: ['id.asc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['areaId', 'monomerId'],

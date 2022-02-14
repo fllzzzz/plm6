@@ -12,13 +12,26 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="110px">
       <el-form-item label="选择项目" prop="projectId">
-        <project-cascader class="input-underline" v-model="form.projectId" style="width: 300px" clearable />
+        <project-cascader class="input-underline" :disabled="form.boolUseEnum" v-model="form.projectId" style="width: 300px" clearable />
       </el-form-item>
       <el-form-item label="选择物流公司" prop="supplierId">
-        <supplier-select class="input-underline" v-model="form.supplierId" :type="supplierTypeEnum.LOGISTICS.V" style="width: 300px" />
+        <supplier-select
+          class="input-underline"
+          v-model="form.supplierId"
+          :disabled="form.boolUseEnum"
+          :type="supplierTypeEnum.LOGISTICS.V"
+          style="width: 300px"
+        />
       </el-form-item>
       <el-form-item label="计价方式" prop="priceType">
-        <common-radio-button class="filter-item" v-model="form.priceType" :options="logisticsPriceTypeEnum.ENUM" type="enum" size="small" />
+        <common-radio-button
+          class="filter-item"
+          v-model="form.priceType"
+          :disabled="form.boolUseEnum"
+          :options="logisticsPriceTypeEnum.ENUM"
+          type="enum"
+          size="small"
+        />
       </el-form-item>
       <el-form-item label="填写单价" prop="price">
         <el-input-number
@@ -35,12 +48,13 @@
         <span>{{ logisticsPriceTypeEnum.V[form.priceType].unit }}</span>
       </el-form-item>
       <el-form-item label="是否含税" prop="boolContainTaxEnum" class="form-label-require">
-        <el-checkbox v-model="form.boolContainTaxEnum" label="含税"></el-checkbox>
+        <el-checkbox v-model="form.boolContainTaxEnum" label="含税" :disabled="form.boolUseEnum"></el-checkbox>
       </el-form-item>
       <el-form-item label="税率" prop="tax" v-show="form.boolContainTaxEnum" class="form-label-require">
         <el-input-number
           v-model="form.tax"
           :max="999999999999"
+          :disabled="form.boolUseEnum"
           class="input-underline"
           :precision="DP.YUAN"
           :step="100"
@@ -73,6 +87,7 @@ const defaultForm = {
   supplierId: undefined,
   priceType: logisticsPriceTypeEnum.WEIGHT.V,
   boolContainTaxEnum: false,
+  boolUseEnum: false,
   price: undefined,
   tax: undefined
 }

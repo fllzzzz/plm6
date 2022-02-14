@@ -70,16 +70,10 @@ const specIndexEnum = {
   4: { L: '4', K: '4', V: 4 }
 }
 const defaultForm = {
-  iid: undefined,
+  id: undefined,
   name: '',
   sort: 1,
-  links: [
-    {
-      keyword: undefined,
-      specIndex: undefined,
-      add: true
-    }
-  ]
+  links: []
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -88,10 +82,10 @@ const validateLinks = (rule, value, callback) => {
     for (const i in value) {
       if (!value[i].add) {
         if (!value[i].keyword) {
-          callback(new Error('请填写关键字母1'))
+          callback(new Error('请填写大写关键字母'))
         }
         if (!isNotBlank(value[i].specIndex)) {
-          callback(new Error('请选择索引1'))
+          callback(new Error('请选择索引'))
         }
       } else {
         callback()
@@ -99,7 +93,7 @@ const validateLinks = (rule, value, callback) => {
     }
     callback()
   } else {
-    callback(new Error('请填写关键字母2'))
+    callback(new Error('请填写大写关键字母'))
   }
 }
 
@@ -117,8 +111,6 @@ const rules = {
 
 function addProcess() {
   form.links.push({
-    keyword: undefined,
-    specIndex: undefined,
     add: true
   })
 }

@@ -26,7 +26,7 @@
         <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
           提 交
         </common-button>
-        <common-button type="success" @click="openReturnableList" size="mini">检索退库材料</common-button>
+        <common-button type="success" @click="openReturnableList" size="mini">检索可退库材料</common-button>
         <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toReturnRecord" />
       </div>
     </div>

@@ -232,7 +232,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '构件清单',
-    sort: ['id.desc'],
+    sort: ['id.asc'],
     permission: { ...permission },
     optShow: { ...optShow },
     requiredQuery: ['areaId'],

@@ -119,6 +119,13 @@ export default {
           meta: { title: '围护清单', icon: 'project', noCache: true }
         },
         {
+          name: 'PlanAuxiliaryMaterialList',
+          path: 'planAuxiliaryMaterialList',
+          hidden: false,
+          component: '/plan/technical-manage/auxiliary-material/index',
+          meta: { title: '配套件清单', icon: 'project', noCache: true }
+        },
+        {
           name: 'PlanDeepen',
           path: 'deepen',
           hidden: false,
