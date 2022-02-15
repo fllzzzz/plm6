@@ -255,18 +255,18 @@ async function fetchList() {
       length: { num: summaryInfo.value.cargoLength, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
     summaryInfo.value.unCompleteQuantity = summaryInfo.value.quantity - summaryInfo.value.completeQuantity || 0
-    summaryInfo.value.unShipQuantity = summaryInfo.value.completeQuantity - summaryInfo.value.shipQuantity || 0
+    summaryInfo.value.unShipQuantity = summaryInfo.value.quantity - summaryInfo.value.shipQuantity || 0
     summaryInfo.value.unCompleteMete = (summaryInfo.value.totalMete - summaryInfo.value.completeMete).toFixed(unitObj.value.DP) || 0
     summaryInfo.value.completeRate =
       (summaryInfo.value.totalMete && (summaryInfo.value.completeMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
-    summaryInfo.value.unShipMete = (summaryInfo.value.completeMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
+    summaryInfo.value.unShipMete = (summaryInfo.value.totalMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
     summaryInfo.value.shipRate = (summaryInfo.value.totalMete && (summaryInfo.value.shipMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.totalQuantity = v.quantity
       v.shipQuantity = v.cargoQuantity
       v.unCompleteQuantity = v.quantity - v.completeQuantity || 0
-      v.unShipQuantity = v.completeQuantity - v.shipQuantity || 0
+      v.unShipQuantity = v.quantity - v.shipQuantity || 0
       v.totalMete = useProductMeteConvert({
         productType: productType.value,
         weight: { num: v.totalNetWeight },
@@ -283,7 +283,7 @@ async function fetchList() {
         weight: { num: v.cargoNetWeight },
         length: { num: v.cargoLength, to: unitObj.value.unit, dp: unitObj.value.dp }
       })
-      v.unShipMete = (v.completeMete - v.shipMete).toFixed(unitObj.value.DP) || 0
+      v.unShipMete = (v.totalMete - v.shipMete).toFixed(unitObj.value.DP) || 0
       return v
     })
     console.log(summaryInfo.value)
