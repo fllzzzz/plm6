@@ -34,6 +34,7 @@ import { defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { transferNormalTypeEnum } from '@/utils/enum/modules/wms'
 import { deepClone, isBlank } from '@/utils/data-type'
+import { numFmtByUnit } from '@/utils/wms/convert-unit'
 
 import useVisible from '@compos/use-visible'
 import useWatchFormValidate from '@/composables/form/use-watch-form-validate'
@@ -43,7 +44,7 @@ import sectionSteel from './module/section-steel.vue'
 import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
-import { numFmtByUnit } from '@/utils/wms/convert-unit'
+import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -165,6 +166,7 @@ async function submit() {
       toNum: true
     })
     await submitApi(formData)
+    ElMessage.success('已提交调拨申请')
     emit('success')
     handleClose()
     resetForm()

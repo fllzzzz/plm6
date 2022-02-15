@@ -108,10 +108,13 @@ import {
   gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
 import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
+import { mapGetters } from '@/store/lib'
+import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
-import { STEEL_ENUM } from '@/settings/config'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -124,10 +127,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
-import { mapGetters } from '@/store/lib'
 import { ElMessage } from 'element-plus'
-import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 const emit = defineEmits(['success', 'update:visible'])
 const props = defineProps({
@@ -327,6 +327,7 @@ async function submit() {
       return
     }
     await submitApi(data)
+    ElMessage.success('已加入出库清单')
     emit('success')
     handleClose()
     setTimeout(() => {
