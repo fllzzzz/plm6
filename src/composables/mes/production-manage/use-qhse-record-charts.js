@@ -58,7 +58,7 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
 
   function initChart(elementId, xAxisData) {
     var chartDom = document.getElementById(elementId)
-    myChart = echarts.init(chartDom)
+    myChart = echarts.init(chartDom, null, { locale: 'ZH' })
     var option
 
     option = {
@@ -76,6 +76,7 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
       },
       color: ['#48cfae'],
       toolbox: {
+        right: 20,
         show: true,
         feature: {
           magicType: {
