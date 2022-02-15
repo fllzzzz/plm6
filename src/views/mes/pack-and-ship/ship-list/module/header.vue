@@ -1,12 +1,7 @@
 <template>
   <div class="head-container">
     <div v-show="crud.searchToggle">
-      <project-radio-button
-        size="small"
-        v-model="query.projectId"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         v-model="query.manufactureType"
         :options="manufactureTypeEnum.ENUM"
@@ -25,6 +20,16 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-if="query.productType & packTypeEnum.ENCLOSURE.V"
+        v-model="query.category"
+        :options="mesEnclosureTypeEnum.ENUM"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.deliveryDate"
         type="daterange"
@@ -33,8 +38,8 @@
         class="filter-item date-item"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
-        style="width:240px"
-         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+        style="width: 240px"
+        :shortcuts="PICKER_OPTIONS_SHORTCUTS"
         @change="handleDateChange"
       />
       <div>
@@ -42,7 +47,7 @@
           v-model="query.blurry"
           placeholder="可按名称或编号搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter="crud.toQuery"
@@ -51,7 +56,7 @@
           v-model="query.serialNumber"
           placeholder="可输入车次搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter="crud.toQuery"
@@ -60,7 +65,7 @@
           v-model="query.licensePlate"
           placeholder="可输入车牌搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter="crud.toQuery"
@@ -69,7 +74,7 @@
           v-model="query.driverName"
           placeholder="可输入司机搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter="crud.toQuery"
@@ -78,12 +83,12 @@
           v-model="query.auditUserName"
           placeholder="可输入办理人搜索"
           class="filter-item"
-          style="width: 200px;"
+          style="width: 200px"
           size="small"
           clearable
           @keyup.enter="crud.toQuery"
         />
-        <rrOperation/>
+        <rrOperation />
       </div>
     </div>
     <crudOperation>
@@ -102,7 +107,7 @@
       <template v-slot:viewLeft>
         <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
           累计发运重量（查询）：
-          <span v-if="!summaryLoading">{{ convertUnits(shipWeight,'kg','t',DP.COM_WT__T) }} t</span>
+          <span v-if="!summaryLoading">{{ convertUnits(shipWeight, 'kg', 't', DP.COM_WT__T) }} t</span>
           <i v-else class="el-icon-loading" />
         </el-tag>
       </template>
@@ -115,7 +120,7 @@ import { getSummaryShipMete } from '@/api/mes/pack-and-ship/ship-list'
 import { inject, onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
@@ -129,9 +134,12 @@ import rrOperation from '@crud/RR.operation'
 import { ElMessage } from 'element-plus'
 
 const defaultQuery = {
-  serialNumber: undefined, licensePlate: undefined,
-  driverName: undefined, auditUserName: undefined,
-  auditStartDate: undefined, auditEndDate: undefined,
+  serialNumber: undefined,
+  licensePlate: undefined,
+  driverName: undefined,
+  auditUserName: undefined,
+  auditStartDate: undefined,
+  auditEndDate: undefined,
   projectId: { value: undefined, resetAble: false },
   productType: { value: undefined, resetAble: false },
   manufactureType: { value: undefined, resetAble: false }
@@ -158,7 +166,7 @@ const printParams = computed(() => {
     return { ...query }
   }
   if (currentKey.value === 'mesShipmentDetail' && isNotBlank(crud.selections)) {
-    return crud.selections.map(row => {
+    return crud.selections.map((row) => {
       return row.id
     })
   }
@@ -177,10 +185,10 @@ CRUD.HOOK.afterToQuery = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map(v => {
-    v.acceptDifference = (v.totalNetWeight - v.actualWeight) >= 0
+  res.data.content = res.data.content.map((v) => {
+    v.acceptDifference = v.totalNetWeight - v.actualWeight >= 0
     v.difference = Math.abs(v.totalNetWeight - v.actualWeight)
-    v.differenceRate = v.totalNetWeight ? (v.difference / v.totalNetWeight * 100).toFixed(1) + '%' : '-'
+    v.differenceRate = v.totalNetWeight ? ((v.difference / v.totalNetWeight) * 100).toFixed(1) + '%' : '-'
     return v
   })
 }

@@ -9,6 +9,16 @@
       class="filter-item"
       @change="crud.toQuery"
     />
+    <common-radio-button
+      v-if="query.productType & packTypeEnum.ENCLOSURE.V"
+      v-model="query.category"
+      :options="mesEnclosureTypeEnum.ENUM"
+      showOptionAll
+      type="enum"
+      size="small"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
     <el-date-picker
       v-model="query.date"
       type="daterange"
@@ -85,7 +95,7 @@
         size="mini"
         type="warning"
         class="filter-item"
-        style="margin-left: 5px!important;"
+        style="margin-left: 5px !important"
       />
     </template>
     <template #viewLeft>
@@ -108,7 +118,7 @@ import { inject, reactive, defineExpose, computed, defineEmits } from 'vue'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { printPackageLabel } from '@/utils/print/index'
 import { QR_SCAN_F_TYPE, QR_SCAN_TYPE } from '@/settings/config'

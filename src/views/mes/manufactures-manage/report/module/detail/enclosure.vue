@@ -51,7 +51,7 @@
         <span v-empty-text>{{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(mm)" align="center">
+    <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(m)" align="center">
       <template v-slot="scope">
         <span v-empty-text>{{ convertUnits(scope.row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
       </template>

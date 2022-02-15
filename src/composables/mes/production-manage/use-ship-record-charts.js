@@ -55,7 +55,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
 
   function initChart(elementId) {
     var chartDom = document.getElementById(elementId)
-    myChart = echarts.init(chartDom)
+    myChart = echarts.init(chartDom, null, { locale: 'ZH' })
     var option
 
     option = {
@@ -72,6 +72,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
         trigger: 'axis'
       },
       toolbox: {
+        right: 20,
         show: true,
         feature: {
           magicType: {

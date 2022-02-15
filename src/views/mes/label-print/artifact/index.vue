@@ -223,7 +223,6 @@ import { weightTypeEnum as printWeightTypeEnum } from '@enum-ms/common'
 import { componentTypeEnum, printProductTypeEnum } from '@enum-ms/mes'
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
-import { convertUnits } from '@/utils/convert/unit'
 import { parseTime } from '@/utils/date'
 import { printArtifact as printComponent } from '@/utils/print/index'
 import { artifactLabelPM as permission } from '@/page-permission/mes'
@@ -305,7 +304,7 @@ function getLabelInfo(row) {
     specification: row.specification,
     drawingNumber: row.drawingNumber,
     weight: printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
-    length: convertUnits(row.length, 'mm', 'm', DP.MES_ARTIFACT_L__M)
+    length: row.length
   }
   // 生产线信息
   // const productionLine = getLine()
