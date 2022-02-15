@@ -12,7 +12,7 @@
     <template #title>
       <div class="dialog-title">
         <span class="title-left">合同信息变更</span>
-        <el-tag v-if="auditStatus" size="mini" :type="auditStatus==auditTypeEnum.REJECT.V?'info':(auditStatus==auditTypeEnum.PASS.V?'success':'warning')">
+        <el-tag v-if="auditStatus" size="medium" :type="auditStatus==auditTypeEnum.REJECT.V?'info':(auditStatus==auditTypeEnum.PASS.V?'success':'warning')">
           {{ auditStatus==auditTypeEnum.REJECT.V?'已驳回':(auditStatus==auditTypeEnum.PASS.V?'已通过':'审核中') }}
         </el-tag>
         <span style="position:absolute;right:20px;">
