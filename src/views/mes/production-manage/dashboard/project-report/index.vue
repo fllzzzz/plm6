@@ -105,6 +105,7 @@ const { crud, columns, CRUD } = useCRUD(
     title: '项目报表',
     permission: { ...permission },
     optShow: { ...optShow },
+    requiredQuery: ['monomerId'],
     crudApi: { get: artifact }
   },
   tableRef
@@ -128,8 +129,12 @@ const productType = computed(() => {
   }
 })
 
-CRUD.HOOK.beforeToQuery = () => {
-  crud.crudApi.get = crud.query.category === projectComponentTypeEnum.ARTIFACT.V ? artifact : enclosure
+CRUD.HOOK.beforeRefresh = () => {
+  if (crud.query.category) {
+    crud.crudApi.get = crud.query.category === projectComponentTypeEnum.ARTIFACT.V ? artifact : enclosure
+  } else {
+    return false
+  }
 }
 
 const unitObj = computed(() => {
