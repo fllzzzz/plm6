@@ -78,6 +78,13 @@ const enclosureCreateTypeEnum = {
 }
 constantize(enclosureCreateTypeEnum)
 
+// 配套件使用属性
+const auxiliaryMaterialUseTypeEnum = {
+  CONSTRUCTION_SITE: { L: '工地使用', K: 'CONSTRUCTION_SITE', V: 1 },
+  FACTORY: { L: '工厂使用', K: 'FACTORY', V: 2 }
+}
+constantize(auxiliaryMaterialUseTypeEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -87,7 +94,8 @@ export {
   planTypeEnum,
   technicalDataTypeEnum,
   areaPlanTypeEnum,
-  enclosureCreateTypeEnum
+  enclosureCreateTypeEnum,
+  auxiliaryMaterialUseTypeEnum
 }
 
 export default {
@@ -99,5 +107,6 @@ export default {
   planTypeEnum,
   technicalDataTypeEnum,
   areaPlanTypeEnum,
-  enclosureCreateTypeEnum
+  enclosureCreateTypeEnum,
+  auxiliaryMaterialUseTypeEnum
 }

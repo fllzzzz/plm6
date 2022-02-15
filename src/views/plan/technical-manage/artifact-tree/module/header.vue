@@ -7,11 +7,12 @@
         :project-id="props.projectId"
         class="filter-item"
         :productType="TechnologyTypeAllEnum.STRUCTURE.V"
+        :show-tips="areaInfo.length<=0"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
         class="filter-item"
-        style="width: calc(100% - 230px)"
+        :style="areaInfo.length>0?'width:calc(100% - 230px)':'width:calc(100% - 380px)'"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"

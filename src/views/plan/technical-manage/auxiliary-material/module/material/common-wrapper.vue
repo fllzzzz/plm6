@@ -46,7 +46,7 @@ const props = defineProps({
   },
   btnName: {
     type: String,
-    default: '下一步'
+    default: '提交预览'
   },
   showTotal: {
     type: Boolean,

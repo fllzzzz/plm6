@@ -115,6 +115,20 @@
           <span v-else v-empty-text>{{ row.color }}</span>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('useProperty')" prop="useProperty" label="属性" align="center" min-width="120px">
+      <template #default="{ row }">
+        <common-select
+          v-if="row.isModify"
+          v-model="row.useProperty"
+          :options="auxiliaryMaterialUseTypeEnum.ENUM"
+          type="enum"
+          size="small"
+          clearable
+          placeholder="属性"
+        />
+        <span v-else v-empty-text>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
+      </template>
+    </el-table-column>
       <el-table-column
         v-if="checkPermission([...permission.edit, ...permission.del])"
         label="操作"
@@ -166,6 +180,7 @@ import { artifactTreePM as permission } from '@/page-permission/plan'
 import { validate } from '@compos/form/use-table-validate'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { positiveNumPattern } from '@/utils/validate/pattern'
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const optShow = {
@@ -218,7 +233,8 @@ const tableRules = {
   mete: [
     { required: true, message: '请填写核算量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
-  ]
+  ],
+  useProperty: [{ required: true, message: '请选择属性', trigger: 'change' }]
 }
 
 function wrongCellMask({ row, column }) {
