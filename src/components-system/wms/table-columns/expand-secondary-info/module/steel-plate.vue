@@ -51,6 +51,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .square-content {
+  flex: none;
   margin: 10px 10px 10px 10px;
   max-width: 1000px;
   overflow: auto;
@@ -63,8 +64,10 @@ const props = defineProps({
 .info {
   flex: auto;
   min-width: 200px;
+  max-width: 1000px;
   p {
     margin: 0;
+    word-break: break-all;
   }
   >p:nth-child(n){
     margin-top: 12px;

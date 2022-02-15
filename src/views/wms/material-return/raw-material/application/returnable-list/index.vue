@@ -111,7 +111,7 @@
 import crudApi from '@/api/wms/material-return/raw-material/returnable-list'
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 
-import { computed, defineEmits, defineProps, provide, reactive, ref, watchEffect } from 'vue'
+import { computed, defineEmits, defineProps, defineExpose, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -296,6 +296,15 @@ function calcReturnInfo() {
 function openOutboundDetailView(outboundId) {
   outboundDetailRef.value.toDetail(outboundId)
 }
+
+// 刷新
+function refresh() {
+  crud.refresh()
+}
+
+defineExpose({
+  refresh
+})
 </script>
 
 <style lang="scss" scoped>

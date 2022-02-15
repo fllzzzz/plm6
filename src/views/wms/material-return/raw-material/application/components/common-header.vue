@@ -31,7 +31,7 @@
       </div>
     </div>
   </div>
-  <returnable-list-drawer v-model="returnableVisible" :basic-class="basicClass" :select-list="form.list" @add="handleAdd" />
+  <returnable-list-drawer ref="returnableListRef" v-model="returnableVisible" :basic-class="basicClass" :select-list="form.list" @add="handleAdd" />
   <common-dialog ref="drawerRef" v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
     <abnormal-list :basicClass="basicClass" :list="cu.props.abnormalList" :maxHeight="700" />
   </common-dialog>
@@ -77,6 +77,8 @@ const props = defineProps({
 })
 
 const router = useRouter()
+// 可退库列表
+const returnableListRef = ref()
 // 总重量
 const allMete = ref()
 // 总数量
@@ -93,6 +95,7 @@ const { baseUnit } = useMatBaseUnit(props.basicClass)
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
+  returnableListRef.value && returnableListRef.value.refresh()
   init()
 }
 

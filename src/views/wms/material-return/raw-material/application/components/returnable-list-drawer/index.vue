@@ -10,13 +10,13 @@
     custom-class="returnable-list-drawer"
   >
     <template #content>
-      <returnable-list :basicClass="basicClass" :select-list="selectList" is-component @add="handleAdd" />
+      <returnable-list ref="returnableListRef" :basicClass="basicClass" :select-list="selectList" is-component @add="handleAdd" />
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue'
+import { ref, defineEmits, defineProps, defineExpose } from 'vue'
 import useVisible from '@/composables/use-visible'
 import ReturnableList from '../../returnable-list/index.vue'
 
@@ -39,8 +39,18 @@ const props = defineProps({
 
 const { visible, handleClose } = useVisible({ emit, props })
 
+// 可退库列表
+const returnableListRef = ref()
+
 function handleAdd(data) {
   emit('add', data)
 }
 
+function refresh() {
+  returnableListRef.value && returnableListRef.value.refresh()
+}
+
+defineExpose({
+  refresh
+})
 </script>
