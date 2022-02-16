@@ -270,7 +270,7 @@ async function fetchList() {
       v.completeMete = convertUnits(v.completeLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
       v.inProductionMete = convertUnits(v.inProductionLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
       v.unProducedQuantity = v.taskQuantity - v.completeQuantity - v.inProductionQuantity
-      v.unProducedMete = convertUnits(v.taskMete - v.completeMete - v.inProductionMete, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
+      v.unProducedMete = v.taskMete - v.completeMete - v.inProductionMete
       return v
     })
   } catch (error) {

@@ -26,6 +26,7 @@ import steelCoil from './module/steel-coil.vue'
 import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import useWmsConfig from '@/composables/store/use-wms-config'
+import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['success', 'update:visible'])
 
@@ -82,6 +83,7 @@ async function submit() {
   try {
     submitLoading.value = true
     await outboundFormRef.value.submit()
+    ElMessage.success('已加入出库清单')
     emit('success')
     handleClose()
     resetForm()

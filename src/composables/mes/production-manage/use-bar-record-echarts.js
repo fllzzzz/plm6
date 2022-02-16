@@ -75,7 +75,7 @@ export default function useBarRecordEcharts({ elementId, globalProjectId, year, 
     var app = {}
 
     var chartDom = document.getElementById(elementId)
-    myChart = echarts.init(chartDom)
+    myChart = echarts.init(chartDom, null, { locale: 'ZH' })
     var option
 
     const posList = [

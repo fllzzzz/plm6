@@ -20,6 +20,16 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-if="query.productType & packTypeEnum.ENCLOSURE.V"
+        v-model="query.category"
+        :options="mesEnclosureTypeEnum.ENUM"
+        showOptionAll
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.deliveryDate"
         type="daterange"
@@ -86,7 +96,7 @@
 import { inject, ref } from 'vue'
 import moment from 'moment'
 
-import { packTypeEnum } from '@enum-ms/mes'
+import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { manufactureTypeEnum } from '@enum-ms/production'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 

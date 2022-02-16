@@ -111,10 +111,12 @@ const productType = componentTypeEnum.ENCLOSURE.V
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const summaryInfo = ref({
   quantity: 0,
+  taskQuantity: 0,
   inboundQuantity: 0,
   outboundQuantity: 0,
   stockQuantity: 0,
   mete: 0,
+  taskMete: 0,
   inboundMete: 0,
   outboundMete: 0,
   stockMete: 0
@@ -153,20 +155,24 @@ async function fetchSummaryInfo() {
     }
     const {
       quantity = 0,
+      taskQuantity = 0,
       inboundQuantity = 0,
       outboundQuantity = 0,
       stockQuantity = 0,
       mete = 0,
+      taskMete = 0,
       outboundMete = 0,
       inboundMete = 0,
       stockMete = 0
     } = await getSummary(params)
     summaryInfo.value = {
       quantity,
+      taskQuantity,
       inboundQuantity,
       outboundQuantity,
       stockQuantity,
       mete,
+      taskMete,
       inboundMete,
       outboundMete,
       stockMete
