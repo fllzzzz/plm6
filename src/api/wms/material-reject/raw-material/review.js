@@ -48,6 +48,7 @@ export function reviewReturned(data) {
   return request({
     module: 'wms',
     url: `reject/application/review/raw-materials/returned`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     method: 'put',
     data
   })
@@ -61,6 +62,7 @@ export function reviewPassed(data) {
   return request({
     module: 'wms',
     url: `reject/application/review/raw-materials/passed`,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     method: 'put',
     data
   })
