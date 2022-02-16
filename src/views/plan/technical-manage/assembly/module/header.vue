@@ -72,7 +72,7 @@
         <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" />
         <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
           <template #reference>
-            <common-button type="danger">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
       </template>

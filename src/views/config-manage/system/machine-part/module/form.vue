@@ -13,11 +13,11 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="标记明细" prop="list">
+        <el-form-item label="标记明细(大写)" prop="list">
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.list" :key="index" class="process-drawer">
-                <el-input v-model="form.list[index]" type="text" placeholder="请填写大写字母标记" style="width: 200px" maxlength="10" oninput="value=value.replace(/[^/A-Z]/g,'')"/>
+                <el-input v-model="form.list[index]" type="text" placeholder="请填写大写字母标记" style="width: 200px" maxlength="10" @blur="getName(form.list[index],index)"/>
                 <common-button
                   v-show="form.list && form.list.length > 0"
                   icon="el-icon-delete"
@@ -76,12 +76,19 @@ const validateLinks = (rule, value, callback) => {
   if (value && value.length > 0) {
     for (const i in value) {
       if (!value[i]) {
-        callback(new Error('请输入字母标记'))
+        callback(new Error('请输入大写字母标记'))
       }
     }
   }
   callback()
 }
+
+function getName(val, index) {
+  if (val && !/^[A-Z]+$/.test(val)) {
+    form.value.list[index] = undefined
+  }
+}
+
 const rules = {
   list: [{ validator: validateLinks, trigger: 'change' }]
 }

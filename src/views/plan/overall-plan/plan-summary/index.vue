@@ -161,7 +161,7 @@ function getSummaries(param) {
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v) => {
-    v.projectName = v.project && v.project.shortName ? v.project.shortName : '-'
+    v.projectName = v.project && v.project.shortName ? v.project.serialNumber + ' ' + v.project.shortName : '-'
     v.monomerName = v.monomer && v.monomer.name ? v.monomer.name : '-'
     if (v.details && v.details.length > 0) {
       v.monthSummary = 0
