@@ -193,7 +193,7 @@
     </common-table>
   <!--分页组件-->
   <pagination />
-  <mForm :existInvoiceNo="invoiceNoArr"/>
+  <mForm :existInvoiceNo="invoiceNoArr" :projectId="projectId"/>
   </div>
 </template>
 
@@ -240,7 +240,6 @@ const props = defineProps({
     default: false
   }
 })
-provide('projectId', props.projectId)
 const tableRef = ref()
 const contractInfo = ref({})
 const originRow = ref({})
@@ -410,23 +409,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     return v
   })
 }
-
-// function addRow() {
-//   crud.data.unshift({
-//     invoiceAmount: undefined,
-//     invoiceDate: undefined,
-//     invoiceType: undefined,
-//     invoiceNo: undefined,
-//     taxRate: undefined,
-//     tax: undefined,
-//     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
-//     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
-//     collectionUnit: contractInfo.value.customerUnit || undefined,
-//     projectId: props.projectId,
-//     dataIndex: crud.data.length,
-//     isModify: true
-//   })
-// }
 
 function modifyRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))

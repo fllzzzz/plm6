@@ -38,7 +38,7 @@
                   value-format="x"
                   placeholder="选择日期"
                   style="width:100%"
-                  :disabledDate="(date) => {if (scope.row.invoiceDate) { return date.getTime() > scope.row.invoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
+                  :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
                 />
                 <template v-else>
                   <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -165,11 +165,11 @@ import { ref, inject, nextTick, defineProps, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
-import { validate } from '@compos/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import { digitUppercase } from '@/utils/data-type/number'
 import { toThousand } from '@data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
+import useTableValidate from '@compos/form/use-table-validate'
 
 const formRef = ref()
 const detailRef = ref()
@@ -179,7 +179,6 @@ const defaultForm = {
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
-const projectId = inject('projectId')
 const contractInfo = inject('contractInfo')
 const totalAmount = inject('totalAmount')
 const extraAmount = ref(0)
@@ -189,6 +188,10 @@ const props = defineProps({
   existInvoiceNo: {
     type: Array,
     default: () => {}
+  },
+  projectId: {
+    type: [String, Number],
+    default: undefined
   }
 })
 
@@ -211,42 +214,22 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+const validateTaxRate = (value, row) => {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) return !!value
+
+  return true
+}
+
 const tableRules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
   invoiceAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
-  taxRate: [{ required: true, message: '请输入税率', trigger: 'blur' }],
+  taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
   collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
 }
 
-const otherRules = {
-  invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
-  invoiceAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
-  invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
-  invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
-  collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
-}
-
-function wrongCellMask({ row, column }) {
-  if (!row) return
-  let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
-    rules = tableRules
-  } else {
-    rules = otherRules
-  }
-  let flag = true
-  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
-    if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
-    }
-    if (flag) {
-      row.verify[column.property] = true
-    }
-  }
-  return flag ? '' : 'mask-td'
-}
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
 function deleteRow(index) {
   form.list.splice(index, 1)
@@ -263,31 +246,10 @@ function addRow() {
     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
     collectionUnit: contractInfo.value.customerUnit || undefined,
-    projectId: projectId,
+    projectId: props.projectId,
     isModify: true
   })
 }
-
-// function moneyChange(row) {
-//   extraAmount.value = 0
-//   form.list.map(v => {
-//     if (v.collectionAmount) {
-//       extraAmount.value += v.collectionAmount
-//     }
-//   })
-//   if (extraAmount.value > (contractInfo.value.contractAmount - totalAmount.value)) {
-//     const num = row.collectionAmount - (extraAmount.value - (contractInfo.value.contractAmount - totalAmount.value))
-//     nextTick(() => {
-//       row.collectionAmount = num || 0
-//       extraAmount.value = 0
-//       form.list.map(v => {
-//         if (v.collectionAmount) {
-//           extraAmount.value += v.collectionAmount
-//         }
-//       })
-//     })
-//   }
-// }
 
 function invoiceTypeChange(row) {
   row.taxRate = undefined
@@ -349,30 +311,23 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     ElMessage({ message: '请添加开票明细', type: 'error' })
     return false
   }
-  const rules = tableRules
-  let flag = true
+  const { validResult, dealList } = tableValidate(crud.form.list)
+  if (validResult) {
+    crud.form.list = dealList
+  } else {
+    return validResult
+  }
   let moneyFlag = true
   crud.form.list.map(row => {
-    row.verify = {}
-    for (const rule in rules) {
-      row.verify[rule] = validate(rule, rules[rule], row[rule], row)
-      if (!row.verify[rule]) {
-        flag = false
-      }
-    }
     if (row.collectionAmount === 0) {
       moneyFlag = false
     }
   })
-  if (!flag) {
-    ElMessage.error('请填写表格中标红数据')
-    return false
-  }
   if (!moneyFlag) {
     ElMessage.error('开票金额必须大于0')
     return false
   }
-  crud.form.projectId = projectId
+  crud.form.projectId = props.projectId
 }
 </script>
 <style lang="scss" scoped>

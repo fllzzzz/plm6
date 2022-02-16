@@ -1,21 +1,25 @@
 <!-- 单体:下拉选择框 -->
 <template>
-  <el-select
-    v-model="selectValue"
-    :size="size"
-    :disabled="disabled"
-    :multiple="multiple"
-    :collapse-tags="collapseTags"
-    :loading="loading"
-    :clearable="clearable"
-    filterable
-    :placeholder="placeholder"
-    :no-data-text="projectId ? '无数据' : '未选择项目'"
-    @change="selectChange"
-  >
-    <el-option v-if="showAll" label="全部单体" :value="undefined" />
-    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-  </el-select>
+  <div style="display:inline-block;">
+    <el-select
+      v-model="selectValue"
+      :size="size"
+      :disabled="disabled"
+      :multiple="multiple"
+      :collapse-tags="collapseTags"
+      :loading="loading"
+      :clearable="clearable"
+      filterable
+      :placeholder="placeholder"
+      :no-data-text="projectId ? '无数据' : '未选择项目'"
+      @change="selectChange"
+    >
+      <el-option v-if="showAll" label="全部单体" :value="undefined" />
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+    <span v-if="showTips" style="font-size:12px;color:red;margin-left:10px;">*当前单体下未创建区域</span>
+  </div>
+
 </template>
 
 <script setup>
@@ -78,6 +82,10 @@ const props = defineProps({
   filterArea: {
     type: Boolean,
     default: true
+  },
+  showTips: {
+    type: Boolean,
+    default: false
   }
 })
 

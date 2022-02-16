@@ -7,7 +7,7 @@
       :show-total="false"
     >
       <div class="filter-container">
-        <div class="filter-right-box">
+        <div class="filter-left-box">
           <common-button class="filter-item" type="success" @click="materialSelectVisible = true">
             添加物料
           </common-button>
