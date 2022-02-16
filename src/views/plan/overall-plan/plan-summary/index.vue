@@ -17,7 +17,13 @@
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column v-if="columns.visible('projectName')" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="150" />
+        <el-table-column v-if="columns.visible('projectName')" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="150">
+          <template v-slot="scope">
+            <el-tooltip :content="scope.row.project.serialNumber+' '+scope.row.project.name" :disabled="!scope.row.project" :show-after="50" placement="top">
+              <span>{{scope.row.projectName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column v-if="columns.visible('monomerName')" key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="150" />
         <el-table-column align="center" label="计划交期">
           <el-table-column key="month1" prop="month1" align="center" label="1月">
@@ -155,7 +161,7 @@ function getSummaries(param) {
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v) => {
-    v.projectName = v.project && v.project.name ? v.project.name : '-'
+    v.projectName = v.project && v.project.shortName ? v.project.shortName : '-'
     v.monomerName = v.monomer && v.monomer.name ? v.monomer.name : '-'
     if (v.details && v.details.length > 0) {
       v.monthSummary = 0
