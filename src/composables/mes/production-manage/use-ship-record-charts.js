@@ -94,7 +94,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
       },
       series: [{
         data: [],
-        type: 'line'
+        type: 'bar'
       }]
     }
 

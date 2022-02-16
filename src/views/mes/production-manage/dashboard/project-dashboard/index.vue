@@ -1,7 +1,7 @@
 <template>
   <div class="app-container project-dashboard">
     <div style="margin-bottom: 15px; display: flex">
-      <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" style="margin-right: 10px" />
+      <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" :default="false" clearable style="margin-right: 10px" />
       <common-radio-button v-model="projectType" default :options="monomerProductTypeEnum" type="enum" size="small" />
     </div>
     <div class="project-state-view-main">
@@ -170,7 +170,7 @@ const initSummaryInfo = {
 }
 const monomerId = ref()
 const projectType = ref()
-const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
+const { globalProjectId, globalProject, globalProContentBit } = mapGetters(['globalProjectId', 'globalProject', 'globalProContentBit'])
 const diffDate = computed(() => {
   const _endDate = globalProject.value.endDate ? globalProject.value.endDate : new Date()
   return (globalProject.value && dateDifference(globalProject.value.startDate, _endDate)) || 0
@@ -193,7 +193,7 @@ const { updateChart: qhseUpdateChart, echartsLoading: qhseEchartsLoading } = use
 
 const monomerRef = ref()
 const monomerProductTypeEnum = computed(() => {
-  const _productType = monomerRef.value?.getProductType(monomerId.value) || 0
+  const _productType = monomerRef.value?.getProductType(monomerId.value) || globalProContentBit.value
   return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
 
@@ -220,7 +220,7 @@ async function fetchList() {
   if (!checkPermission(permission.get)) {
     return
   }
-  if (!projectType.value || !monomerId.value || !globalProjectId.value) {
+  if (!projectType.value || !globalProjectId.value) {
     return
   }
   try {
