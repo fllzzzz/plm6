@@ -36,6 +36,13 @@ const arrearsStatusEnum = {
 }
 constantize(arrearsStatusEnum)
 
+// 新欠款状态
+const newArrearsStatusEnum = {
+  ARREARS: { L: '有欠款', K: 'ARREARS', V: 1 },
+  NO_ARREARS: { L: '未欠款', K: 'NO_ARREARS', V: 0 }
+}
+constantize(newArrearsStatusEnum)
+
 // 票据类型
 const invoiceTypeEnum = {
   SPECIAL: { L: '增值税专用发票', SL: '专票', K: 'SPECIAL', V: 1 << 0 },
@@ -67,6 +74,7 @@ export default {
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
   arrearsStatusEnum, // 欠款状态
+  newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式
   settlementStatusEnum, // 结算状态
   enclosureSettlementTypeEnum //  围护结算类型
@@ -78,6 +86,7 @@ export {
   paymentModeEnum, // 付款方式
   paymentFineModeEnum, // 付款（精细）方式
   arrearsStatusEnum, // 欠款状态
+  newArrearsStatusEnum,
   weightMeasurementModeEnum, // 工程结算方式
   settlementStatusEnum, // 结算状态
   enclosureSettlementTypeEnum //  围护结算类型

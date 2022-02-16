@@ -229,7 +229,6 @@ async function fetchDetail() {
   let _detail = {}
   try {
     const res = await getContractCustomer(props.projectId)
-    console.log(res)
     _detail = JSON.parse(JSON.stringify(res))
     _detail.region = cleanArray([_detail.customerCountryId, _detail.customerProvinceId, _detail.customerCityId, _detail.customerRegionId])
   } catch (error) {

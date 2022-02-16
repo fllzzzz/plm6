@@ -33,9 +33,63 @@
             </template>
           </el-expand-table-column>
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="props.basicClass" fixed="left" />
-          <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="props.basicClass" />
+          <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
+          <el-table-column
+            prop="classifyName"
+            label="名称"
+            align="center"
+            fixed="left"
+            min-width="150"
+            show-overflow-tooltip
+          >
+            <template #default="{ row }">
+              <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
+                <span v-empty-text="row.classifyName" />
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="specification" label="规格" align="center" min-width="200px" fixed="left" show-overflow-tooltip>
+            <template #default="{ row }">
+              <el-tooltip :content="row.specificationLabels" placement="top">
+                <span v-empty-text="row.specification" />
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
+            <template #default="{ row }">
+              <span v-empty-text>{{ row.measureUnit }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
+            <template #default="{ row }">
+              <span v-empty-text>{{ row.quantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
+            <template #default="{ row }">
+              <span v-empty-text>{{ row.accountingUnit }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
+            <template #default="{ row }">
+              <span v-empty-text>{{ row.mete }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="color" label="颜色" align="center" min-width="120px">
+            <template #default="{ row }">
+              <span v-empty-text>{{ row.color }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="brand" label="品牌" align="center" min-width="120px">
+            <template #default="{ row }">
+              <span v-empty-text>{{ row.brand }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="useProperty" label="属性" align="center">
+            <template #default="{ row }">
+              <span v-empty-text>{{ auxiliaryMaterialUseTypeEnum.VL[row.useProperty] }}</span>
+            </template>
+          </el-table-column>
         </common-table>
       </el-form>
     </template>
@@ -49,14 +103,11 @@ import { tableSummary } from '@/utils/el-extra'
 import { isNotBlank } from '@/utils/data-type'
 
 import { regExtra } from '@/composables/form/use-form'
-// import useTableValidate from '@/composables/form/use-table-validate'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-// import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import commonFooter from '@/views/wms/material-inbound/raw-material/application/components/common-footer.vue'
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 const emit = defineEmits(['saveSuccess', 'update:modelValue'])
 

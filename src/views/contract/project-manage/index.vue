@@ -279,7 +279,6 @@ function memberChangeSuccess() {
 
 async function changeStatus(data, val) {
   try {
-    console.log(data, val)
     const msg = val === projectStatusEnum.ENUM.SUSPEND.V ? '暂停' : '继续'
     await ElMessageBox.confirm(`确定${msg}“${data.name}” 项目吗 ？`, '提示', {
       confirmButtonText: '确定',

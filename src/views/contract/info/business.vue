@@ -57,7 +57,7 @@
                   style="width: 320px"
                   @change="getShowItem"
                 >
-                  <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" />
+                  <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" :disabled="detail.monomerQuantity>0 && originContent.indexOf(item.id)>-1"/>
                 </el-select>
                 <template v-else>
                   <span v-for="item in detail.projectContentList" :key="item.id">{{ item.name }}&nbsp;</span>
@@ -222,6 +222,7 @@
             type="success"
             size="small"
             @click="enclosureVisible = true"
+            :disabled="!(showItem && showItem.length > 0)"
             >添加</common-button
           >
         </div>
@@ -306,24 +307,25 @@ const defaultForm = {
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
   payTypeDesc: undefined, // 付款方式描述
   enclosureInfo: {},
-  structureSaveRequestVOS: [],
-  profiledPlateSaveRequestVOS: [],
-  pressureBearingPlateSaveVOS: [],
-  trussFloorPlateSaveRequestVOS: [],
-  sandwichBoardSaveRequestVOS: []
+  structureList: [],
+  profiledPlateList: [],
+  pressureBearingPlateList: [],
+  trussFloorPlateList: [],
+  sandwichBoardList: []
 }
 const techForm = {
   enclosureInfo: {},
   structureSaveRequestVOS: [],
-  profiledPlateSaveRequestVOS: [],
-  pressureBearingPlateSaveVOS: [],
-  trussFloorPlateSaveRequestVOS: [],
-  sandwichBoardSaveRequestVOS: []
+  profiledPlateList: [],
+  pressureBearingPlateList: [],
+  trussFloorPlateList: [],
+  sandwichBoardList: []
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
 const originContent = ref()
+const originContentValue = ref([])
 const defaultType = ref()
 const validateContent = (rule, value, callback) => {
   if (value.length <= 0) {
@@ -417,6 +419,23 @@ function businessChange() {
 function getShowItem(val) {
   showItem.value = []
   showCategory.value = []
+  const allItems = [
+    TechnologyTypeEnum.STRUCTURE.V,
+    TechnologyTypeEnum.SANDWICH_BOARD.V,
+    TechnologyTypeEnum.PROFILED_PLATE.V,
+    TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
+    TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V
+  ]
+  let totalItems = []
+  if (detail.value.monomerQuantity > 0) {
+    allItems.forEach(v => {
+      if (originContentValue.value && originContentValue.value.indexOf(v) < 0) {
+        totalItems.push(v)
+      }
+    })
+  } else {
+    totalItems = allItems
+  }
   const totalArr = [
     TechnologyTypeEnum.SANDWICH_BOARD.V,
     TechnologyTypeEnum.PROFILED_PLATE.V,
@@ -451,6 +470,13 @@ function getShowItem(val) {
           } else if (val.alias === 'ENCLOSURE') {
             showItem.value = [...showItem.value, ...totalArr]
           }
+        }
+      }
+    })
+    totalItems.forEach(v => {
+      if (showItem.value.indexOf(v) < 0) {
+        if (isNotBlank(form.value.enclosureInfo)) {
+          form.value.enclosureInfo[v] = []
         }
       }
     })
@@ -503,6 +529,7 @@ async function fetchDetail() {
     const res = await getContractBusiness(props.projectId)
     _detail = JSON.parse(JSON.stringify(res))
     const data = await getContractTechInfo(props.projectId)
+    _detail.signingDate = _detail.signingDate ? String(_detail.signingDate) : ''
     _detail.enclosureInfo = {
       [TechnologyTypeEnum.STRUCTURE.V]: data.structureList ? data.structureList : [],
       [TechnologyTypeEnum.PROFILED_PLATE.V]: data.profiledPlateList ? data.profiledPlateList : [],
@@ -510,10 +537,15 @@ async function fetchDetail() {
       [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: data.pressureBearingPlateList ? data.pressureBearingPlateList : [],
       [TechnologyTypeEnum.SANDWICH_BOARD.V]: data.sandwichBoardList ? data.sandwichBoardList : []
     }
+    _detail.structureList = data.structureList ? data.structureList : []
+    _detail.profiledPlateList = data.profiledPlateList ? data.profiledPlateList : []
+    _detail.trussFloorPlateList = data.trussFloorPlateList ? data.trussFloorPlateList : []
+    _detail.pressureBearingPlateList = data.pressureBearingPlateList ? data.pressureBearingPlateList : []
+    _detail.sandwichBoardList = data.sandwichBoardList ? data.sandwichBoardList : []
     const options = []
     originConstruct = []
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.ENUM.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.ENUM.INSTALLATION.V })
+    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
     if (data1 && data1.projectContentVOList.length > 0) {
       data1.projectContentVOList.forEach((v) => {
         if (v.contentList.length > 0) {
@@ -537,10 +569,18 @@ async function fetchDetail() {
     detail.value = _detail
     resetForm()
     form.value.projectContent = []
+    originContentValue.value = []
     projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.INSTALLATION.V ? projectContent2 : projectContent1
     if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
       detail.value.projectContentList.forEach((v) => {
         form.value.projectContent.push(v.id)
+        if (detail.value.businessType === businessTypeEnum.MACHINING.V) {
+          originContentValue.value.push(v.no)
+        } else {
+          v.childrenList.forEach(k => {
+            originContentValue.value.push(k.no)
+          })
+        }
       })
     }
     originContent.value = JSON.parse(JSON.stringify(form.value.projectContent))

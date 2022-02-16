@@ -38,7 +38,7 @@
                   value-format="x"
                   placeholder="选择日期"
                   style="width:100%"
-                  :disabledDate="(date) => {if (scope.row.collectionDate) { return date.getTime() > scope.row.collectionDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
+                  :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
                 />
                 <template v-else>
                   <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -164,7 +164,7 @@
 </template>
 
 <script setup>
-import { ref, inject, nextTick } from 'vue'
+import { ref, inject, nextTick, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -181,9 +181,17 @@ const defaultForm = {
   projectId: undefined,
   list: []
 }
-
+const props = defineProps({
+  existInvoiceNo: {
+    type: Array,
+    default: () => {}
+  },
+  projectId: {
+    type: [String, Number],
+    default: undefined
+  }
+})
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
-const projectId = inject('projectId')
 const contractInfo = inject('contractInfo')
 const bankList = inject('bankList')
 const totalAmount = inject('totalAmount')
@@ -237,7 +245,7 @@ function addRow() {
     paymentBankAccount: contractInfo.value.customerBankCode || undefined,
     paymentDepositBank: contractInfo.value.customerBankName || undefined,
     paymentUnit: contractInfo.value.customerUnit || undefined,
-    projectId: projectId,
+    projectId: props.projectId,
     isModify: true
   })
 }
@@ -302,7 +310,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     ElMessage.error('收款金额必须大于0')
     return false
   }
-  crud.form.projectId = projectId
+  crud.form.projectId = props.projectId
 }
 </script>
 <style lang="scss" scoped>
