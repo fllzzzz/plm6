@@ -17,7 +17,7 @@
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.list" :key="index" class="process-drawer">
-                <el-input v-model="form.list[index]" type="text" placeholder="请填写大写字母标记" style="width: 200px" maxlength="10" oninput="value=value.replace(/[^/A-Z]/g,'')"/>
+                <el-input v-model="form.list[index]" type="text" placeholder="请填写大写字母标记" style="width: 200px" maxlength="10" @blur="getName(form.list[index],index)"/>
                 <common-button
                   v-show="form.list && form.list.length > 0"
                   icon="el-icon-delete"
@@ -81,6 +81,11 @@ const validateLinks = (rule, value, callback) => {
     }
   }
   callback()
+}
+function getName(val, index) {
+  if (val && !/^[A-Z]+$/.test(val)) {
+    form.value.list[index] = undefined
+  }
 }
 const rules = {
   list: [{ validator: validateLinks, trigger: 'change' }]
