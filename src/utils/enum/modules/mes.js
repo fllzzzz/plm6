@@ -187,10 +187,10 @@ constantize(abnormalChangeTypeEnum)
 
 // 问题整改状态
 const improveStatusEnum = {
-  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 0, T: 'danger' },
-  RECTIFIED: { L: '已整改', K: 'RECTIFIED', V: 1 << 1, T: 'success' },
-  ADOPT: { L: '整改通过', K: 'ADOPT', V: 1 << 2, T: 'warning' },
-  UN_ADOPT: { L: '整改未通过', K: 'UN_ADOPT', V: 1 << 3, T: 'info' }
+  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 0, T: '' },
+  RECTIFIED: { L: '已反馈', K: 'RECTIFIED', V: 1 << 1, T: 'warning' },
+  ADOPT: { L: '整改通过', K: 'ADOPT', V: 1 << 2, T: 'success' },
+  UN_ADOPT: { L: '整改未通过', K: 'UN_ADOPT', V: 1 << 3, T: 'danger' }
 }
 constantize(improveStatusEnum)
 
