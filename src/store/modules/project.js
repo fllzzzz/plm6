@@ -1,7 +1,7 @@
 import { getUserProjects } from '@/api/contract/project'
 import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
-import { projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
 import storage from '@/utils/storage'
 import { projectsToCascade } from '@/utils/project'
 import { isNotBlank, isBlank } from '@data-type/index'
@@ -14,6 +14,8 @@ const state = {
   id: storage.get('projectId'),
   // 当前项目
   curProject: storage.get('curProject'),
+  // 当前项目内容（位运算结果）
+  curProContentBit: storage.get('curProContentBit'),
   // 当前路由项目类型
   routeProjectType: storage.get('routeProjectType'),
   // 当前项目类型
@@ -44,8 +46,20 @@ const mutations = {
   SET_PROJECT_ID: (state, id) => {
     state.id = id
     state.curProject = state.userProjectKV[id]
+    // 计算项目内容的位运算结果
+    state.curProContentBit = state.curProject?.projectContentList.reduce((res, cur) => {
+      cur.bit = cur.no || cur?.childrenList?.reduce((cRes, cCur) => {
+        return cRes | cCur.no
+      }, 0)
+      return res | cur.bit
+    }, 0)
+    // 有围护内容需手动加上折边件
+    if (state.curProContentBit > TechnologyTypeAllEnum.STRUCTURE.V) {
+      state.curProContentBit = state.curProContentBit | TechnologyTypeAllEnum.BENDING.V
+    }
     storage.set('projectId', id)
     storage.set('curProject', state.curProject)
+    storage.set('curProContentBit', state.curProContentBit)
   },
   // SET_CURRENT_PROJECT: (state, project) => {
   //   state.currentProject = project
