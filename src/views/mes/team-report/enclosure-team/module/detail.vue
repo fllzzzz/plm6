@@ -122,12 +122,12 @@ const list = ref([])
 async function fetchList() {
   try {
     tableLoading.value = true
-    const _query = Object.assign(deepClone(query), {
+    const _query = Object.assign({
       factoryId: props.info.factory?.id,
       productType: props.info.productType,
       productionLineId: props.info.productionLine?.id,
       projectId: props.info.project?.id
-    })
+    }, deepClone(query))
     const content = await detail(_query)
     list.value = content
   } catch (error) {

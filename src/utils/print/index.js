@@ -163,7 +163,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
             <div class="qr-content"></div>
           </div>
           <div class="flex w-3 flex-column">
-            <div class="row-1 col border-b" style="font-weight:bold">${packageInfo.companyName}</div>
+            <div class="row-1 col border-b" style="font-weight:bold;font-size: 10pt;">打包单</div>
             <div class="flex">
               <div class="flex-1 row-1 col border-b border-r">包单号</div>
               <div class="flex-2 row-1 col border-b" style="font-weight:bold">${packageInfo.serialNumber}</div>
