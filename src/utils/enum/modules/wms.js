@@ -115,7 +115,7 @@ const materialFreezeTypeEnum = {
   REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 1 << 0, DOC: '申购单' },
   OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 << 1, DOC: '出库申请单' },
   TRANSFER: { L: '调拨', K: 'TRANSFER', V: 1 << 2, DOC: '调拨单' },
-  REJECTED: { L: '退货', K: 'REJECTED', V: 1 << 4, DOC: '退货单' }
+  REJECTED: { L: '退货', K: 'REJECTED', V: 1 << 3, DOC: '退货单' }
 }
 constantize(materialFreezeTypeEnum)
 

@@ -84,7 +84,7 @@ import amountInfoColumns from '@/components-system/wms/table-columns/amount-info
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import commonTitleInfo from './common-title-info.vue'
-import unfreezeInfo from './unfreeze-info.vue'
+import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 
 const drawerRef = ref()
 const expandRowKeys = ref([]) // 展开key

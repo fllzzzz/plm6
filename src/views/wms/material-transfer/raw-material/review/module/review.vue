@@ -115,7 +115,7 @@ import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-se
 import ReviewConvenientOperate from '@/components-system/common/review-convenient-operate.vue'
 import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
 import invoiceTypeSelect from '@/components-system/base/invoice-type-select.vue'
-import unfreezeInfo from './unfreeze-info.vue'
+import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 import commonTitleInfo from './common-title-info.vue'
 import setPartyAInfo from './set-party-a-info.vue'
 

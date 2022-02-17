@@ -32,6 +32,7 @@
       />
     </template>
     <template #content>
+      <unfreeze-info class="unfreeze-info" v-if="detail.boolHasUnfreeze" :basic-class="detail.basicClass" :list="detail.unfreezeList" />
       <el-form class="form" :model="form" :disabled="formDisabled">
         <common-table
           :data="detail.list"
@@ -93,6 +94,7 @@ import reviewConvenientOperate from '@/components-system/common/review-convenien
 import ReviewConfirmButton from '@/components-system/common/review-confirm-button.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 
+import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
 import useContinuousReview from '@/composables/use-continuous-review'
 
@@ -140,7 +142,7 @@ const drawerTitle = computed(() =>
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-reject-application-review-form',
-    extraBox: ['.el-drawer__header', '.approval-comments'],
+    extraBox: ['.el-drawer__header', '.approval-comments', '.unfreeze-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300

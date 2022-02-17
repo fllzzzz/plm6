@@ -72,6 +72,8 @@ const getters = {
   globalProjectId: state => state.project.id,
   // 系统当前项目
   globalProject: state => state.project.curProject,
+  // 系统当前项目项目内容(位运算结果)
+  globalProContentBit: state => state.project.curProContentBit,
   // 系统当前项目类型（Navbar）
   currentProjectType: state => state.project.projectType,
   // 显示所有项目

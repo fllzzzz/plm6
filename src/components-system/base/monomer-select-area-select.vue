@@ -8,7 +8,6 @@
     :disabled="monomerDisabled"
     :default="monomerDefault"
     :filterArea="false"
-    style="width: 250px"
     class="filter-item"
     @getAreaInfo="getAreaInfo"
   />
@@ -21,7 +20,7 @@
     :disabled="areaDisabled"
     :multiple="areaMultiple"
     :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
-    :clearable="clearable"
+    :clearable="areaClearable"
     :noDataText="copyMonomerId ? '暂无数据' : '未选择单体'"
     class="filter-item"
     placeholder="请选择区域"
@@ -59,6 +58,10 @@ const props = defineProps({
     default: false
   },
   clearable: {
+    type: Boolean,
+    default: false
+  },
+  areaClearable: {
     type: Boolean,
     default: false
   },

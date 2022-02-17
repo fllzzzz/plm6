@@ -28,7 +28,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60">
         <template #default="{ row, $index }">
-          <table-cell-tag :show="row.supplyType == orderSupplyTypeEnum.PARTY_A.V" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+          <table-cell-tag :show="row.supplyType == orderSupplyTypeEnum.PARTY_A.V" name="甲供" type="partyA" />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
@@ -221,7 +221,6 @@ import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import checkPermission from '@/utils/system/check-permission'
-import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { isNotBlank } from '@/utils/data-type'
 
 import useCRUD from '@compos/use-crud'

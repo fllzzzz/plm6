@@ -63,12 +63,16 @@
   <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
     <outbound-detail />
   </detail-wrapper>
+  <detail-wrapper ref="rejectDetailRef" :api="getRejectDetail">
+    <reject-detail />
+  </detail-wrapper>
 </template>
 
 <script setup>
 import { getMaterialFreezeRecordById } from '@/api/wms/material-freeze/raw-material/record'
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
+import { detail as getRejectDetail } from '@/api/wms/material-reject/raw-material/review'
 import { defineEmits, defineProps, ref, watch } from 'vue'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import checkPermission from '@/utils/system/check-permission'
@@ -77,6 +81,7 @@ import DetailWrapper from '@crud/detail-wrapper.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 import OutboundDetail from '@/views/wms/material-outbound/raw-material/review/module/detail.vue'
+import RejectDetail from '@/views/wms/material-reject/raw-material/review/module/detail.vue'
 import UnfreezeForm from '../components/unfreeze/index.vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
@@ -104,9 +109,11 @@ const permission = {
   requisitionsUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_requisitions'],
   outboundUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_outbound'],
   transferUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_transfer'],
+  rejectUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_reject'],
   transferReceiptDetail: ['wms_transferApplication_review:detail'],
   outboundReceiptDetail: ['wms_outboundApplication_review:detail'],
-  requisitionsDetail: ['wms_requisitions:detail']
+  requisitionsDetail: ['wms_requisitions:detail'],
+  rejectDetail: ['wms_reject:detail']
 }
 
 // 详情加载
@@ -117,6 +124,8 @@ const list = ref([])
 const transferDetailRef = ref()
 // 出库详情组件
 const outboundDetailRef = ref()
+// 退货详情组件
+const rejectDetailRef = ref()
 // 解冻显示
 const unfreezeFormVisible = ref(false)
 // 当前解冻记录
@@ -193,11 +202,16 @@ function openDocumentDetail(freezeType, id) {
     case materialFreezeTypeEnum.REQUISITIONS.V:
       break
     case materialFreezeTypeEnum.OUTBOUND.V:
+      // 出库详情
       outboundDetailRef.value.toDetail(id)
       break
     case materialFreezeTypeEnum.TRANSFER.V:
       // 打开调拨详情
       transferDetailRef.value.toDetail(id)
+      break
+    case materialFreezeTypeEnum.REJECTED.V:
+      // 退货详情
+      rejectDetailRef.value.toDetail(id)
       break
   }
 }
@@ -217,6 +231,8 @@ function unfreezePermission(freezeType) {
       return permission.outboundUnFreeze
     case materialFreezeTypeEnum.TRANSFER.V:
       return permission.transferUnFreeze
+    case materialFreezeTypeEnum.REJECTED.V:
+      return permission.rejectUnFreeze
   }
 }
 
@@ -229,6 +245,8 @@ function openDetailPermission(freezeType) {
       return permission.outboundReceiptDetail
     case materialFreezeTypeEnum.TRANSFER.V:
       return permission.transferReceiptDetail
+    case materialFreezeTypeEnum.REJECTED.V:
+      return permission.rejectDetail
   }
 }
 </script>

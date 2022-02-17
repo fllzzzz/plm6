@@ -10,14 +10,19 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { TAG_DEF_COLOR } from '@/settings/config'
+
 const props = defineProps({
   name: {
     type: String,
     default: ''
   },
+  type: { // type 与 color 同时存在时，优先type
+    type: String
+  },
   color: {
     type: String,
-    default: '#1682e6'
+    default: TAG_DEF_COLOR
   },
   textColor: {
     type: String,
@@ -37,14 +42,39 @@ const props = defineProps({
   }
 })
 
+// 不同类型的标签背景色
+const typeBgColor = {
+  // 工厂标签默认颜色
+  factory: '#1682e6',
+
+  // 甲供标签默认颜色
+  partyA: '#e64242',
+
+  // 调拨标签默认颜色
+  transfer: '#e64242',
+
+  // 出库调拨标签颜色
+  transferOutbound: '#409eff',
+
+  // 解冻标签颜色
+  unfreeze: '#f78989',
+
+  // 已打印标签默认颜色
+  printed: '#0f9747'
+}
+
 const unshowTooltip = computed(() => {
   return props.name.length <= 4
 })
 
 const tagStyle = computed(() => {
   if (props.name) {
+    let bgColor = props.color
+    if (props.type && typeBgColor[props.type]) {
+      bgColor = typeBgColor[props.type]
+    }
     return {
-      'background-color': props.color,
+      'background-color': bgColor,
       color: props.textColor
     }
   }

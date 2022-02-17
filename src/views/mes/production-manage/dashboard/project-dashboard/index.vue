@@ -1,7 +1,15 @@
 <template>
   <div class="app-container project-dashboard">
     <div style="margin-bottom: 15px; display: flex">
-      <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" style="margin-right: 10px" />
+      <monomer-select
+        ref="monomerRef"
+        v-model="monomerId"
+        size="small"
+        :project-id="globalProjectId"
+        :default="false"
+        clearable
+        style="margin-right: 10px"
+      />
       <common-radio-button v-model="projectType" default :options="monomerProductTypeEnum" type="enum" size="small" />
     </div>
     <div class="project-state-view-main">
@@ -39,7 +47,7 @@
             <span class="tc-success">{{ diffDate }}</span>
           </el-descriptions-item>
         </el-descriptions>
-        <div id="QCMain" class="QC-echarts"></div>
+        <div v-loading="qhseEchartsLoading" id="QCMain" class="QC-echarts"></div>
       </div>
       <div class="view-right" style="position: relative" v-loading="shipEchartsLoading">
         <el-date-picker
@@ -53,7 +61,7 @@
           value-format="YYYY-MM"
           @change="shipUpdateChart"
         />
-        <div v-loading="qhseEchartsLoading" id="shipMain" class="ship-echarts"></div>
+        <div v-loading="shipEchartsLoading" id="shipMain" class="ship-echarts"></div>
       </div>
     </div>
     <div v-loading="tableLoading">
@@ -170,7 +178,7 @@ const initSummaryInfo = {
 }
 const monomerId = ref()
 const projectType = ref()
-const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
+const { globalProjectId, globalProject, globalProContentBit } = mapGetters(['globalProjectId', 'globalProject', 'globalProContentBit'])
 const diffDate = computed(() => {
   const _endDate = globalProject.value.endDate ? globalProject.value.endDate : new Date()
   return (globalProject.value && dateDifference(globalProject.value.startDate, _endDate)) || 0
@@ -193,7 +201,7 @@ const { updateChart: qhseUpdateChart, echartsLoading: qhseEchartsLoading } = use
 
 const monomerRef = ref()
 const monomerProductTypeEnum = computed(() => {
-  const _productType = monomerRef.value?.getProductType(monomerId.value) || 0
+  const _productType = monomerRef.value?.getProductType(monomerId.value) || globalProContentBit.value
   return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
 
@@ -220,7 +228,7 @@ async function fetchList() {
   if (!checkPermission(permission.get)) {
     return
   }
-  if (!projectType.value || !monomerId.value || !globalProjectId.value) {
+  if (!projectType.value || !globalProjectId.value) {
     return
   }
   try {
@@ -255,18 +263,19 @@ async function fetchList() {
       length: { num: summaryInfo.value.cargoLength, to: unitObj.value.unit, dp: unitObj.value.dp }
     })
     summaryInfo.value.unCompleteQuantity = summaryInfo.value.quantity - summaryInfo.value.completeQuantity || 0
-    summaryInfo.value.unShipQuantity = summaryInfo.value.completeQuantity - summaryInfo.value.shipQuantity || 0
+    summaryInfo.value.unShipQuantity = summaryInfo.value.quantity - summaryInfo.value.shipQuantity || 0
     summaryInfo.value.unCompleteMete = (summaryInfo.value.totalMete - summaryInfo.value.completeMete).toFixed(unitObj.value.DP) || 0
     summaryInfo.value.completeRate =
-      (summaryInfo.value.totalMete && (summaryInfo.value.completeMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
-    summaryInfo.value.unShipMete = (summaryInfo.value.completeMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
-    summaryInfo.value.shipRate = (summaryInfo.value.totalMete && (summaryInfo.value.shipMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
+      (summaryInfo.value.totalMete && ((summaryInfo.value.completeMete / summaryInfo.value.totalMete) * 100).toFixed(2)) || 0
+    summaryInfo.value.unShipMete = (summaryInfo.value.totalMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
+    summaryInfo.value.shipRate =
+      (summaryInfo.value.totalMete && ((summaryInfo.value.shipMete / summaryInfo.value.totalMete) * 100).toFixed(2)) || 0
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.totalQuantity = v.quantity
       v.shipQuantity = v.cargoQuantity
       v.unCompleteQuantity = v.quantity - v.completeQuantity || 0
-      v.unShipQuantity = v.completeQuantity - v.shipQuantity || 0
+      v.unShipQuantity = v.quantity - v.shipQuantity || 0
       v.totalMete = useProductMeteConvert({
         productType: productType.value,
         weight: { num: v.totalNetWeight },
@@ -283,7 +292,7 @@ async function fetchList() {
         weight: { num: v.cargoNetWeight },
         length: { num: v.cargoLength, to: unitObj.value.unit, dp: unitObj.value.dp }
       })
-      v.unShipMete = (v.completeMete - v.shipMete).toFixed(unitObj.value.DP) || 0
+      v.unShipMete = (v.totalMete - v.shipMete).toFixed(unitObj.value.DP) || 0
       return v
     })
     console.log(summaryInfo.value)
