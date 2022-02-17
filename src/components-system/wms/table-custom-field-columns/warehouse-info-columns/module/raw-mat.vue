@@ -9,7 +9,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <table-cell-tag v-if="showTransfer && getInfo(row, 'boolTransfer')" name="调拨" :color="TAG_TRANSFER_COLOR" :offset="15" />
+      <table-cell-tag v-if="showTransfer && getInfo(row, 'boolTransfer')" name="调拨" type="transfer" :offset="15" />
       <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
@@ -35,10 +35,8 @@
 <script setup>
 import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
-import { TAG_TRANSFER_COLOR } from '@/settings/config'
 import factoryTableCellTag from '@comp-base/factory-table-cell-tag.vue'
 
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 const props = defineProps({
   showProject: {
     // 显示项目

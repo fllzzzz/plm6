@@ -16,6 +16,7 @@
       <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
+      <unfreeze-info class="unfreeze-info" v-if="detail.boolHasUnfreeze" :basic-class="detail.basicClass" :list="detail.unfreezeList" />
       <common-table
         :data="detail.list"
         :max-height="maxHeight"
@@ -59,8 +60,9 @@ import materialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
+import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
+import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
 
 const permission = inject('permission')
 const drawerRef = ref()
@@ -71,7 +73,7 @@ const { CRUD, crud, detail } = regDetail()
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-inbound-application-review-detail',
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.unfreeze-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,

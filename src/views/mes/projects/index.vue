@@ -144,7 +144,6 @@ import projectChart from './project-chart'
 import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {

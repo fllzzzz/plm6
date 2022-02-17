@@ -1,6 +1,6 @@
 <template>
   <span v-bind="$attrs" class="tip" @click="openView">
-    * 当前调拨单存在解冻操作，被解冻的物料数量已在调拨单中减少，点击可查看解冻的物料信息
+    * 当前单据存在解冻操作，被解冻的物料数量已在单据中减少，点击可查看解冻的物料信息
   </span>
   <common-dialog
     title="解冻办理"
@@ -122,5 +122,12 @@ function openView() {
   color: red;
   text-decoration: underline;
   margin-bottom: 10px;
+}
+
+.el-table {
+  ::v-deep(td .cell) {
+    min-height: 28px;
+    line-height: 28px;
+  }
 }
 </style>
