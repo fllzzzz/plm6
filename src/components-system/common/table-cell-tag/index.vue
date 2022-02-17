@@ -17,7 +17,7 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  type: {
+  type: { // type 与 color 同时存在时，优先type
     type: String
   },
   color: {
@@ -42,6 +42,7 @@ const props = defineProps({
   }
 })
 
+// 不同类型的标签背景色
 const typeBgColor = {
   // 工厂标签默认颜色
   factory: '#1682e6',
