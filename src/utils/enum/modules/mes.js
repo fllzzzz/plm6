@@ -124,8 +124,9 @@ const packStatusTypeEnum = {
   // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
   // ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 2 },
   // CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
-  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: false, T: '' },
-  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: true, T: 'warning' }
+  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 0, T: '' },
+  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 1, T: 'warning' },
+  SHIPMENT: { L: '已发运', K: 'SHIPMENT', V: 2, T: 'success' }
 }
 constantize(packStatusTypeEnum)
 

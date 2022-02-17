@@ -3,7 +3,7 @@
     v-if="!unShowField.includes('length') && (isBlank(columns) || columns.visible('length'))"
     :show-overflow-tooltip="true"
     prop="length"
-    label="长度(mm)"
+    :label="`长度${unitNewLine ? '\n' : ''}(mm)`"
     :width="fixedWidth ? '80px' : ''"
     :min-width="!fixedWidth ? '80px' : ''"
     align="center"
