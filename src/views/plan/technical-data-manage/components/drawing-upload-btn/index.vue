@@ -26,21 +26,23 @@
       <div class="zip-box">
         <ul v-if="errorList && errorList.length > 0" class="zip-list">
           <li v-for="(file,index) in errorList" :key="index">
-            <span v-if="props.materialType === 2" :style="{'color':(file.isPDF || file.isPNG || file.isJPG || file.isJPEG) || dataType ? 'green':'red'}">{{ file.name }}</span>
-            <span v-else :style="{'color':file.isPDF || dataType ? 'green':'red'}">{{ file.name }}</span>
+            <span style="color:red">{{ file.name }}</span>
           </li>
         </ul>
         <ul class="zip-list">
           <li v-for="(file,index) in zipList" :key="index">
-            <span v-if="props.materialType === 2" :style="{'color':(file.isPDF || file.isPNG || file.isJPG || file.isJPEG) || dataType ? 'green':'red'}">{{ file.name }}</span>
-            <span v-else :style="{'color':file.isPDF || dataType ? 'green':'red'}">{{ file.name }}</span>
+            <span style="color:green">{{ file.name }}</span>
           </li>
         </ul>
       </div>
       <template #footer>
         <span class="dialog-footer">
           <common-button @click="handleZipDlgClose">取 消</common-button>
-          <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0" @click="uploadZip">确认上传</common-button>
+          <el-popconfirm title="保存后无法删除,确定上传?" @confirm="uploadZip">
+            <template #reference>
+              <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0">上传</common-button>
+            </template>
+          </el-popconfirm>
         </span>
       </template>
     </common-dialog>
@@ -48,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps, watch } from 'vue'
+import { ref, defineEmits, defineProps } from 'vue'
 import { getToken } from '@/utils/storage'
 import { getFileSuffix } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
@@ -114,6 +116,10 @@ const props = defineProps({
   materialType: {
     type: Number,
     default: undefined
+  },
+  tip: {
+    type: String,
+    default: undefined
   }
 })
 
@@ -124,22 +130,22 @@ const zipList = ref([])
 const errorList = ref([])
 const uploadZipLoading = ref(false)
 const dialogVisible = ref(false)
-const tip = ref()
+// const tip = ref()
 const currentFile = ref()
 const uploadRef = ref()
 
-watch(
-  () => props.materialType,
-  (val) => {
-    if (val === 2) {
-      tip.value = '.png, .jpg, .jpeg ,.pdf'
-      // 修改可解析的zip格式
-    } else {
-      tip.value = '.pdf'
-    }
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => props.materialType,
+//   (val) => {
+//     if (val === 2) {
+//       tip.value = '.png, .jpg, .jpeg ,.pdf'
+//       // 修改可解析的zip格式
+//     } else {
+//       tip.value = '.pdf'
+//     }
+//   },
+//   { deep: true, immediate: true }
+// )
 
 // function handleClose() {
 //   dialogVisible.value = false
@@ -149,10 +155,16 @@ async function handleRequest(file) {
     uploadLoading.value = true
     const fileObj = file.file
     const formData = new FormData() // 添加参数
-    formData.append('file', fileObj)
-    formData.append('fileType', props.fileClassify)
+    if (props.data.id) {
+      formData.append('multipartFile', fileObj)
+    } else {
+      formData.append('file', fileObj)
+    }
+    // formData.append('fileType', props.fileClassify)
     for (const key in props.data) {
-      formData.append(key, props.data[key])
+      if (props.data[key]) {
+        formData.append(key, props.data[key])
+      }
     }
     await props.uploadFun(formData)
     ElNotification({
@@ -195,6 +207,7 @@ function handleBefore(file) {
     ElMessage({ message: `上传文件大小不能超过 ${props.sizeLimit}MB!`, type: 'error' })
     return false
   }
+  console.log(file)
   if (suffix === '.zip') { // 文件类型为zip时做处理
     currentFile.value = file
     handleZip(file)
@@ -205,6 +218,7 @@ async function handleZip(zip) {
   const jsZip = new JSZip()
   const zipListData = []
   const errorListData = []
+  const tipArr = props.tip && props.tip.length > 0 ? props.tip.split(',') : []
   // 获取解析zip对象
   const resolveZip = await jsZip.loadAsync(zip)
   resolveZip.forEach((relativePath, zipEntry) => { // 2) print entries
@@ -212,17 +226,23 @@ async function handleZip(zip) {
     if (zipEntry.name.indexOf('.') > -1) { // 判断是否是目录
       const data = {
         name: zipEntry.name,
-        isPDF: suffix === '.pdf',
-        isJPG: suffix === '.jpg',
-        isPNG: suffix === '.png',
-        isJPEG: suffix === '.jpeg'
+        '.PDF': suffix === '.pdf',
+        '.JPG': suffix === '.jpg',
+        '.PNG': suffix === '.png',
+        '.JPEG': suffix === '.jpeg',
+        '.DWG': suffix === '.dwg',
+        '.DXF': suffix === '.dxf'
       }
-      if (!data.isPDF && !props.dataType && props.materialType !== 2) {
-        errorListData.push(data)
-      } else if (!(data.isPDF || data.isJPG || data.isPNG || data.isJPEG) && !props.dataType && props.materialType === 2) {
-        errorListData.push(data)
-      } else {
-        zipListData.push(data)
+      if (props.tip && props.tip.length > 0) {
+        const errArr = []
+        tipArr.forEach(v => {
+          errArr.push(data[v.toUpperCase()])
+        })
+        if (errArr.indexOf(true) < 0) {
+          errorListData.push(data)
+        } else {
+          zipListData.push(data)
+        }
       }
     }
   })

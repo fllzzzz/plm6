@@ -13,11 +13,14 @@
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
         row-key="id"
+        :row-class-name="handleAssemblyRowClassName"
         :expand-row-keys="expandArr"
         class="assembly-table"
         style="width: 100%"
         :stripe="false"
+        @selection-change="crud.selectionChangeHandler"
       >
+        <el-table-column key="selection" type="selection" width="55" />
         <el-table-column type="expand">
           <template v-slot="scope">
             <div :key="`'singleTable${scope.row.id}'`">
@@ -237,7 +240,7 @@ const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalP
 const optShow = {
   add: false,
   edit: false,
-  del: false,
+  del: true,
   download: false
 }
 
@@ -292,6 +295,10 @@ watch(
   },
   { immediate: true, deep: true }
 )
+
+function handleAssemblyRowClassName({ row, rowIndex }) {
+  return row.abnormal === 1 ? 'abnormal-row' : ''
+}
 
 function handleRowClassName({ row, rowIndex }) {
   return row.existStatus === 1 ? '' : 'abnormal-row'
@@ -365,7 +372,7 @@ CRUD.HOOK.beforeSubmit = () => {
 
 <style lang="scss" scoped>
 ::v-deep(.abnormal-row) {
-  background: #fdf5e6;
+  background: #ffecec;
 }
 .customer-table {
   ::v-deep(th) {

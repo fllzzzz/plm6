@@ -1,145 +1,196 @@
 <template>
   <div class="app-container">
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
-      <!--工具栏-->
-      <div class="head-container">
-        <mHeader :project-id="globalProjectId"/>
+      <div style="height:60px;">
+        <common-button size="small" style="float:right;">操作日志</common-button>
       </div>
       <!--表格渲染-->
       <common-table
+        v-loading="loading"
         ref="tableRef"
-        v-loading="crud.loading"
-        :data="crud.data"
-        :empty-text="crud.emptyText"
+        :data="tableData"
+        :empty-text="'暂无数据'"
         :max-height="maxHeight"
         style="width: 100%"
-        @selection-change="crud.selectionChangeHandler"
+        :loading="loading"
+        class="upload-table"
+        :stripe="false"
+        :span-method="objectSpanMethod"
       >
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-        <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" width="140px">
-        <!-- <template slot="header">
-          <el-tooltip
-            class="item"
-            effect="light"
-            :content="`双击编号可预览图纸`"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>编号</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template> -->
-        <template v-slot="scope">
-          <span style="cursor: pointer;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column v-if="columns.visible('drawingNumber')" key="drawingNumber" prop="drawingNumber" :show-overflow-tooltip="true" label="图号" width="140px" /> -->
-      <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" min-width="160px">
-        <!-- <template slot="header"> -->
-          <!-- <el-tooltip
-            class="item"
-            effect="light"
-            :content="`双击文件名可预览图纸`"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>文件</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip> -->
-        <!-- </template> -->
-        <template v-slot="scope">
-          <span style="cursor: pointer;" @dblclick="drawingPreview(scope.row)">{{ scope.row.fileName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" width="160px" />
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="160px">
-        <template v-slot="scope">
-          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
-        </template>
-      </el-table-column>
-      <!--编辑与删除-->
-      <el-table-column
-        v-if="checkPermission([ ...permission.download,...permission.del])"
-        label="操作"
-        width="200px"
-        align="center"
-        fixed="right"
+        <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" align="center">
+          <template v-slot="scope">
+            <el-tooltip :content="scope.row.projectSerialNumber+' '+scope.row.projectName" :disabled="!scope.row.projectName" :show-after="50" placement="top">
+              <span>{{scope.row.projectName}}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="单体" align="center">
+          <template v-slot="scope">
+            <span style="cursor: pointer;">{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="单元">
+          <template v-slot="scope">
+            <template v-if="scope.row.areaArr.length > 0">
+              <template v-for="(k,i) in scope.row.areaArr" :key="k.id">
+                <div :class="i===scope.row.areaArr.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  {{k.name}}
+                </div>
+              </template>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column key="model" prop="model" :show-overflow-tooltip="true" label="模型" align="center">
+          <template v-slot="scope">
+            <common-button size="small" type="primary" @click="uploadModel(scope.row)">导入</common-button>
+          </template>
+        </el-table-column>
+        <el-table-column key="deepen" prop="deepen" :show-overflow-tooltip="true" label="深化图纸" align="center">
+          <template v-slot="scope">
+            <common-button size="small" type="primary" @click="uploadDeepen(scope.row)">操作</common-button>
+          </template>
+        </el-table-column>
+        <el-table-column key="machPart" prop="machPart" :show-overflow-tooltip="true" label="零件图(DXF格式)" align="center">
+          <template v-slot="scope">
+            <common-button size="small" type="primary" @click="uploadMachPart(scope.row)">操作</common-button>
+          </template>
+        </el-table-column>
+      </common-table>
+      <common-drawer
+        ref="deepenRef"
+        :show-close="true"
+        size="80%"
+        title="深化图纸"
+        append-to-body
+        v-model="deepenVisible"
+        :close-on-click-modal="false"
       >
-        <template v-slot="scope">
-          <!-- <common-button v-if="crud.query.type === planTypeEnum.ENCLOSURE.V" size="mini" type="primary" icon="el-icon-edit" @click="editDraw(scope.row)" /> -->
-          <udOperation
-            :data="scope.row"
-            :show-edit="false"
-          />
-          <!-- 下载 -->
-          <e-operation :data="scope.row" :permission="permission.download" style="margin-left:5px;"/>
+        <template #content>
+          <deepenTable :queryMonomerId="queryMonomerId" :currentProject="currentProject"/>
         </template>
-      </el-table-column>
-    </common-table>
-      <!--分页组件-->
-      <pagination />
+      </common-drawer>
+      <common-drawer
+        ref="drawerRef"
+        :show-close="true"
+        size="80%"
+        title="零件图纸"
+        append-to-body
+        v-model="machinePartVisible"
+        :close-on-click-modal="false"
+      >
+        <template #content>
+          <machinePartTable :queryMonomerId="queryMonomerId" :currentProject="currentProject"/>
+        </template>
+      </common-drawer>
     </template>
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/plan/technical-data-manage/deepen'
+import { monomerAll as getAll } from '@/api/plan/monomer'
 import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
-import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
-import eOperation from '@crud/E.operation'
-import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
-// import { planTypeEnum } from '@enum-ms/plan'
-import { parseTime } from '@/utils/date'
-import { deepenListPM as permission } from '@/page-permission/plan'
+import { isNotBlank } from '@data-type/index'
+import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import deepenTable from './module/deepen-table'
+import machinePartTable from './module/machine-part-table'
 
-const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-
-const optShow = {
-  add: false,
-  edit: false,
-  del: true,
-  download: false
-}
+const { globalProject } = mapGetters(['globalProject'])
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
-  {
-    title: '深化图纸',
-    sort: ['id.desc'],
-    permission: { ...permission },
-    optShow: { ...optShow },
-    requiredQuery: ['monomerId', 'productType'],
-    crudApi: { ...crudApi },
-    hasPagination: true
-  },
-  tableRef
-)
+const loading = ref(false)
+const deepenVisible = ref(false)
+const machinePartVisible = ref(false)
+const queryMonomerId = ref()
+const currentProject = ref()
+const deepenRef = ref()
+const drawerRef = ref()
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.deepen',
+  wrapperBox: '.deep',
   paginate: true,
   extraHeight: 40
 })
 
+const tableData = ref([])
 watch(
-  () => globalProjectId,
+  () => globalProject.value,
   (val) => {
-    if (val) {
-      crud.query.projectId = globalProjectId
-      crud.toQuery()
+    if (isNotBlank(val)) {
+      const projectContent = []
+      val.projectContentList.forEach((v) => {
+        if (val.businessType === businessTypeEnum.MACHINING.V) {
+          if (v.no) {
+            projectContent.push(Number(v.no))
+          }
+        } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
+          if (v.childrenList && v.childrenList.length > 0) {
+            v.childrenList.forEach((value) => {
+              if (value.no) {
+                projectContent.push(Number(value.no))
+              }
+            })
+          }
+        }
+      })
+      if (projectContent.indexOf(TechnologyTypeAllEnum.STRUCTURE.V) > -1) {
+        currentProject.value = val
+        fetchData(val.id)
+      } else {
+        tableData.value = []
+        currentProject.value = {}
+      }
+    } else {
+      tableData.value = []
+      currentProject.value = {}
     }
   },
-  { immediate: true, deep: true }
+  { deep: true, immediate: true }
 )
 
+async function fetchData(val) {
+  loading.value = true
+  try {
+    const { content = [] } = (await getAll(val)) || {}
+    content.map((v, index) => {
+      v.projectName = globalProject.value.name
+      v.projectShortName = globalProject.value.shortName
+      v.projectSerialNumber = globalProject.value.serialNumber
+      v.areaArr = v.areaSimpleList.filter(k => k.productType === TechnologyTypeAllEnum.STRUCTURE.V)
+      if (index === 0) {
+        v.rowSpanNum = content.length
+      }
+    })
+    tableData.value = content
+    loading.value = false
+  } catch (error) {
+    console.log('获取单体列表', error)
+    loading.value = false
+  }
+}
+
+function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+  if (columnIndex === 0) {
+    return {
+      rowspan: row.rowSpanNum,
+      colspan: 1
+    }
+  }
+}
+
+function uploadModel(row) {
+
+}
+function uploadDeepen(row) {
+  deepenVisible.value = true
+  queryMonomerId.value = row.id
+}
+function uploadMachPart(row) {
+  machinePartVisible.value = true
+  queryMonomerId.value = row.id
+}
 </script>
 
 <style lang="scss" scoped>
@@ -161,5 +212,32 @@ $font-size: 1.5em;
   border: 1px solid;
   border-radius: 50%;
   line-height: $font-size;
+}
+.sandwich-cell-top {
+  border-bottom: 1px solid #dfe6ec;
+}
+.sandwich-cell-top,
+.sandwich-cell-bottom {
+  padding: 5px;
+  height: 40px;
+  line-height: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+  ::v-deep(.el-input__inner) {
+    padding: 0;
+    padding-left: 2px;
+  }
+}
+.upload-table {
+  ::v-deep(.cell) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  ::v-deep(thead.is-group th) {
+    background: #fff;
+  }
+}
+::v-deep(.el-table--small .el-table__cell){
+  padding:4px 0;
 }
 </style>

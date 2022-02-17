@@ -25,7 +25,6 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.specification"
@@ -34,7 +33,6 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.material"
@@ -43,18 +41,30 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
+      <rrOperation />
     </div>
     <crudOperation>
-      <template #optRight>
+      <template #optLeft>
+        <upload-btn
+          v-if="currentArea && currentArea.id"
+          v-permission="crud.permission.import"
+          :data="AddParam"
+          :upload-fun="listUpload"
+          success-msg="导入成功"
+          btn-name="清单增量导入"
+          btn-type="primary"
+          btn-size="mini"
+          class="filter-item"
+          @success="crud.toQuery"
+        />
         <upload-btn
           v-if="currentArea && currentArea.id"
           v-permission="crud.permission.import"
           :data="carryParam"
           :upload-fun="listUpload"
           success-msg="导入成功"
-          btn-name="组立清单导入"
+          btn-name="清单覆盖导入"
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
@@ -67,14 +77,25 @@
           show-btn-text
           btn-text="下载组立清单"
           class="filter-item"
-          :disabled="crud.data.length===0"
+          :disabled="crud.data.length===0 || deleteLoading"
         />
-        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" />
+        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading"/>
         <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
           <template #reference>
-            <common-button type="danger" size="mini">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
+      </template>
+      <template #viewLeft>
+        <el-tooltip
+          effect="light"
+          :content="`${errorList.join(',')}`"
+          placement="top"
+        >
+          <div class="filter-item">
+            <el-tag v-if="errorList.length>0" type="danger" class="filter-item" effect="plain">本区域存在{{ errorList.length }}条未绑定构件,鼠标悬停查看</el-tag>
+          </div>
+        </el-tooltip>
       </template>
     </crudOperation>
   </div>
@@ -90,7 +111,8 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/assembly'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea } from '@/api/plan/technical-manage/assembly'
+import rrOperation from '@crud/RR.operation'
+import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
 
 const defaultQuery = {
   name: '',
@@ -105,6 +127,8 @@ const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
+const deleteLoading = ref(false)
+const errorList = ref([])
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
@@ -118,8 +142,12 @@ const exportParam = computed(() => {
   return param
 })
 
+const AddParam = computed(() => {
+  return { areaId: crud.query.areaId, importType: 1 }
+})
+
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId }
+  return { areaId: crud.query.areaId, importType: 2 }
 })
 
 function tabClick(val) {
@@ -128,6 +156,7 @@ function tabClick(val) {
     id: name,
     name: label
   }
+  getAssembleError()
   crud.toQuery()
 }
 function getAreaInfo(val) {
@@ -143,12 +172,29 @@ function getAreaInfo(val) {
 }
 
 async function deleteAssemle() {
+  deleteLoading.value = true
   try {
     await delAssemblyByArea({ areaId: crud.query.areaId })
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
+    deleteLoading.value = false
   } catch (e) {
     console.log('清空组立', e)
+    deleteLoading.value = false
   }
 }
+
+async function getAssembleError() {
+  if (!crud.query.areaId) {
+    errorList.value = []
+    return
+  }
+  try {
+    const { content } = await assembleError({ areaId: crud.query.areaId })
+    errorList.value = content
+  } catch (e) {
+    console.log('组立错误数据', e)
+  }
+}
+assembleError
 </script>

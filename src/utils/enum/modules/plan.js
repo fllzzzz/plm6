@@ -62,12 +62,25 @@ const planTypeEnum = {
 }
 constantize(planTypeEnum)
 
+// 深化图纸类型
+const deepenTypeEnum = {
+  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 1 },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 0 },
+  ASSEMBLY: { L: '组立', K: 'ASSEMBLY', V: 1 << 4 }
+}
+constantize(deepenTypeEnum)
 // 技术资料类型
+// const technicalDataTypeEnum = {
+//   BLUEPRINT: { L: '蓝图', K: 'BLUEPRINT', V: 1 },
+//   CHANGE_FILE: { L: '变更文件', K: 'CHANGE_FILE', V: 2 },
+//   MODEL: { L: '模型', K: 'MODEL', V: 3 },
+//   OTHER_FILE: { L: '其他文件', K: 'OTHER_FILE', V: 4 }
+// }
 const technicalDataTypeEnum = {
-  BLUEPRINT: { L: '蓝图', K: 'BLUEPRINT', V: 1 },
-  CHANGE_FILE: { L: '变更文件', K: 'CHANGE_FILE', V: 2 },
-  MODEL: { L: '模型', K: 'MODEL', V: 3 },
-  OTHER_FILE: { L: '其他文件', K: 'OTHER_FILE', V: 4 }
+  DEEPEN: { L: '深化图', K: 'DEEPEN', V: 1 << 0 },
+  MACHINE_PART: { L: '零件图', K: 'MACHINE_PART', V: 1 << 1 },
+  CHANGE_FILE: { L: '变更文件', K: 'CHANGE_FILE', V: 1 << 2 },
+  BLUEPRINT: { L: '施工蓝图', K: 'BLUEPRINT', V: 1 << 3 }
 }
 constantize(technicalDataTypeEnum)
 
@@ -95,7 +108,8 @@ export {
   technicalDataTypeEnum,
   areaPlanTypeEnum,
   enclosureCreateTypeEnum,
-  auxiliaryMaterialUseTypeEnum
+  auxiliaryMaterialUseTypeEnum,
+  deepenTypeEnum
 }
 
 export default {
@@ -108,5 +122,6 @@ export default {
   technicalDataTypeEnum,
   areaPlanTypeEnum,
   enclosureCreateTypeEnum,
-  auxiliaryMaterialUseTypeEnum
+  auxiliaryMaterialUseTypeEnum,
+  deepenTypeEnum
 }

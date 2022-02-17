@@ -25,7 +25,6 @@
         style="width: 170px; margin-left: 0"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.artifactSerialNumber"
@@ -34,7 +33,6 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.machinePartSerialNumber"
@@ -43,8 +41,8 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
+      <rrOperation />
     </div>
     <crudOperation>
       <template #optLeft>
@@ -88,6 +86,7 @@
 <script setup>
 import { defineProps, ref, computed, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
