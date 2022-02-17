@@ -184,6 +184,8 @@ function otherRawMatFormat(
     toSmallest = false
   } = {},
   {
+    unitNetCalcMete = 'mete',
+    unitNetCalcQuantity = 'quantity',
     mete = ['mete', 'frozenMete'],
     quantity = ['quantity', 'frozenQuantity'],
     unitNet = 'unitNet',
@@ -200,8 +202,8 @@ function otherRawMatFormat(
   if (isNotBlank(accountingUnit) && isBlank(_accountingUnit)) console.error(`“${accountingUnit}”:无法从当前系统获取当该单位配置`)
 
   // 计算钢材的单位净量
-  if (STEEL_ENUM) {
-    data['unitNet'] = toFixed(data.mete / data.quantity, UNIT_NET_PRECISION)
+  if (isBlank(data['unitNet'])) {
+    data['unitNet'] = toFixed(data[unitNetCalcMete] / data[unitNetCalcQuantity], UNIT_NET_PRECISION)
   }
 
   // 数量

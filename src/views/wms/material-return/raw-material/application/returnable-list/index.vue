@@ -220,6 +220,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       toNum: false
     },
     {
+      unitNetCalcMete: 'returnableMete',
+      unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
       mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
     }
