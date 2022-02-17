@@ -15,13 +15,6 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
-          <!-- TODO:入库单增加备注？ -->
-          <!-- <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
-          </p> -->
-          <p>
-            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
-          </p>
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />

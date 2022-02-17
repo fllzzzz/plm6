@@ -89,6 +89,18 @@
         <el-input v-model.trim="row.brand" maxlength="60" size="mini" placeholder="品牌" />
       </template>
     </el-table-column>
+    <el-table-column prop="useProperty" label="属性" align="center" min-width="120px">
+      <template #default="{ row }">
+        <common-select
+          v-model="row.useProperty"
+          :options="auxiliaryMaterialUseTypeEnum.ENUM"
+          type="enum"
+          size="small"
+          clearable
+          placeholder="属性"
+        />
+      </template>
+    </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">
       <template #default="{ row, $index }">
         <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sn, $index)" />
@@ -105,6 +117,7 @@ import { positiveNumPattern } from '@/utils/validate/pattern'
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
@@ -123,7 +136,8 @@ const tableRules = {
   mete: [
     { required: true, message: '请填写核算量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '核算量必须大于0', trigger: 'blur' }
-  ]
+  ],
+  useProperty: [{ required: true, message: '请选择属性', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
@@ -147,7 +161,8 @@ function rowInit(row) {
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
     measurePrecision: row.classify.measurePrecision, // 计量单位小数精度
-    quantity: undefined // 数量
+    quantity: undefined, // 数量
+    useProperty: undefined
   })
   return _row
 }

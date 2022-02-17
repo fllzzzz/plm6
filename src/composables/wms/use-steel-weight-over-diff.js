@@ -41,7 +41,7 @@ function weightOverDiff(row, { inboundSteelCfg, baseUnit }) {
   const steelDiff = inboundSteelCfg.value.steelDiff
   const steelDiffType = inboundSteelCfg.value.steelDiffType
   if (steelDiffType === numOrPctEnum.PERCENTAGE.V) {
-    hasOver = Math.abs(row.weighingTotalWeight / row.theoryTotalWeight - 1) * 100 > steelDiff
+    hasOver = Math.abs((row.weighingTotalWeight / row.theoryTotalWeight) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5) * 100 > steelDiff
   }
   if (steelDiffType === numOrPctEnum.NUMBER.V) {
     hasOver =

@@ -194,7 +194,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm />
+    <mForm :projectId="projectId" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -244,7 +244,6 @@ const props = defineProps({
   }
 })
 
-provide('projectId', props.projectId)
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
 const contractInfo = ref({})
