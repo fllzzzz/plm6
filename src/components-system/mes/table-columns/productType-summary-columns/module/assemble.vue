@@ -7,35 +7,38 @@
     :width="fixedWidth ? '120px' : ''"
     :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
+    align="center"
   >
     <template #default="{ row }">
       <span v-empty-text>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-  <el-table-column
-    v-if="!unShowField.includes('specification') && (isBlank(columns) || columns.visible('specification'))"
+    <el-table-column
+    v-if="!unShowField.includes('quantity') && (isBlank(columns) || columns.visible('quantity'))"
     :show-overflow-tooltip="true"
-    prop="specification"
-    label="规格"
-    :width="fixedWidth ? '140px' : ''"
-    :min-width="!fixedWidth ? '140px' : ''"
+    prop="quantity"
+    label="数量(件)"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text="row.specification" />
+      <span v-empty-text>{{ row.quantity }}</span>
     </template>
   </el-table-column>
   <el-table-column
-    v-if="!unShowField.includes('material') && (isBlank(columns) || columns.visible('material'))"
+    v-if="!unShowField.includes('netWeight') && (isBlank(columns) || columns.visible('netWeight'))"
     :show-overflow-tooltip="true"
-    prop="material"
-    label="材质"
+    prop="netWeight"
+    :label="`重量${unitNewLine ? '\n' : ''}(kg)`"
     :width="fixedWidth ? '80px' : ''"
     :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.material }}</span>
+      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.netWeight }" v-empty-text></span>
     </template>
   </el-table-column>
 </template>
@@ -58,6 +61,10 @@ defineProps({
   unShowField: {
     type: Array,
     default: () => []
+  },
+  unitNewLine: {
+    type: Boolean,
+    default: true
   },
   // 围护子类型
   category: {
