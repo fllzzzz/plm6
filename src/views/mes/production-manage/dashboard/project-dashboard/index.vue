@@ -1,7 +1,15 @@
 <template>
   <div class="app-container project-dashboard">
     <div style="margin-bottom: 15px; display: flex">
-      <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" :default="false" clearable style="margin-right: 10px" />
+      <monomer-select
+        ref="monomerRef"
+        v-model="monomerId"
+        size="small"
+        :project-id="globalProjectId"
+        :default="false"
+        clearable
+        style="margin-right: 10px"
+      />
       <common-radio-button v-model="projectType" default :options="monomerProductTypeEnum" type="enum" size="small" />
     </div>
     <div class="project-state-view-main">
@@ -39,7 +47,7 @@
             <span class="tc-success">{{ diffDate }}</span>
           </el-descriptions-item>
         </el-descriptions>
-        <div id="QCMain" class="QC-echarts"></div>
+        <div v-loading="qhseEchartsLoading" id="QCMain" class="QC-echarts"></div>
       </div>
       <div class="view-right" style="position: relative" v-loading="shipEchartsLoading">
         <el-date-picker
@@ -53,7 +61,7 @@
           value-format="YYYY-MM"
           @change="shipUpdateChart"
         />
-        <div v-loading="qhseEchartsLoading" id="shipMain" class="ship-echarts"></div>
+        <div v-loading="shipEchartsLoading" id="shipMain" class="ship-echarts"></div>
       </div>
     </div>
     <div v-loading="tableLoading">
@@ -258,9 +266,10 @@ async function fetchList() {
     summaryInfo.value.unShipQuantity = summaryInfo.value.quantity - summaryInfo.value.shipQuantity || 0
     summaryInfo.value.unCompleteMete = (summaryInfo.value.totalMete - summaryInfo.value.completeMete).toFixed(unitObj.value.DP) || 0
     summaryInfo.value.completeRate =
-      (summaryInfo.value.totalMete && (summaryInfo.value.completeMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
+      (summaryInfo.value.totalMete && ((summaryInfo.value.completeMete / summaryInfo.value.totalMete) * 100).toFixed(2)) || 0
     summaryInfo.value.unShipMete = (summaryInfo.value.totalMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
-    summaryInfo.value.shipRate = (summaryInfo.value.totalMete && (summaryInfo.value.shipMete / summaryInfo.value.totalMete * 100).toFixed(2)) || 0
+    summaryInfo.value.shipRate =
+      (summaryInfo.value.totalMete && ((summaryInfo.value.shipMete / summaryInfo.value.totalMete) * 100).toFixed(2)) || 0
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.totalQuantity = v.quantity

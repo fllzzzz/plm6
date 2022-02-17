@@ -8,7 +8,6 @@
     :disabled="monomerDisabled"
     :default="monomerDefault"
     :filterArea="false"
-    style="width: 250px"
     class="filter-item"
     @getAreaInfo="getAreaInfo"
   />

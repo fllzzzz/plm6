@@ -8,9 +8,9 @@
     width="500px"
   >
     <template #titleRight>
-      <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt">确认</common-button>
+      <common-button :loading="submitLoading" size="mini" type="primary" :disabled="!form.quantity" @click="submitIt">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" @submit.prevent>
       <el-form-item label="编号">
         <span v-empty-text>{{ details.serialNumber }}</span>
       </el-form-item>
