@@ -181,7 +181,7 @@ async function printPackageLabel({ packageInfo, qrCode, printMode = PrintMode.QU
           <div class="row-0 w-1 col border-b border-r">${item.serialNumber}</div>
           <div class="row-0 w-1 col border-b border-r">${item.material}</div>
           <div class="row-0 w-1 col border-b border-r">${item.quantity}</div>
-          <div class="row-0 w-1 col border-b">${item.totalNetWeight}</div>
+          <div class="row-0 w-1 col border-b">${item.totalWeight}</div>
         </div>
       `
     },
