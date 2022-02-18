@@ -1,6 +1,17 @@
 <template>
-  <common-drawer ref="drawerRef" title="汇总详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
+  <common-drawer
+    ref="drawerRef"
+    :title="`${info.processName}`"
+    v-model="drawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    size="60%"
+  >
     <template #titleAfter>
+      <el-tag effect="plain" size="medium">
+        <span>班组：</span>
+        <span>{{ info.leaderName }}</span>
+      </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>统计日期：</span>
         <span v-parse-time="{ val: query.startDate, fmt: '{y}-{m}-{d}' }" /> ~
@@ -11,8 +22,8 @@
       <div class="print-wrap">
         <print-table
           v-permission="permission.printDetail"
-          api-key="mesPieceworkSummary"
-          :params="{ ...query }"
+          api-key="mesPieceworkDetail"
+          :params="printParams"
           size="mini"
           type="warning"
           class="filter-item"
@@ -25,17 +36,17 @@
         v-loading="tableLoading"
         :data="list"
         :max-height="maxHeight"
+        row-key="rowId"
         show-summary
         :summary-method="getSummaries"
-        row-key="rowId"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <belonging-info-columns showProject showFactory showProductionLine showProcess showTeam />
-        <productType-base-info-columns :productType="query.productType" :unShowField="['color']" />
-        <el-table-column prop="completeQuantity" :show-overflow-tooltip="true" label="数量" align="center">
+        <belonging-info-columns showProject showMonomer />
+        <productType-base-info-columns :productType="query.productType" :unShowField="['specification', 'material', 'color']" />
+        <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.completeQuantity }}</span>
+            <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="mete" :show-overflow-tooltip="true" :label="`${unitObj.label}(${unitObj.unit})`" align="center">
@@ -87,6 +98,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  info: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -124,11 +139,24 @@ const unitObj = computed(() => {
   })
 })
 
+const printParams = computed(() => {
+  return Object.assign(
+    {
+      factoryId: props.info?.factory?.id,
+      productionLineId: props.info?.productionLine?.id,
+      workshopId: props.info?.workshop?.id,
+      teamId: props.info.teamId
+    },
+    query
+  )
+})
+
 async function fetchList() {
+  let _list = []
   try {
     tableLoading.value = true
-    const { content } = await detail(query)
-    list.value = content.map((v, i) => {
+    const { content } = await detail(printParams.value)
+    _list = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.showUnit = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType }).meteUnit
       // v.checkMete = useWageQuotaMeteConvert({
@@ -140,14 +168,15 @@ async function fetchList() {
       v.checkMete = v.mate
       v.mete = useProductMeteConvert({
         productType: query.productType,
-        length: { num: v.length * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp },
-        weight: { num: v.netWeight * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+        length: { num: v.length * v.quantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+        weight: { num: v.netWeight * v.quantity, to: unitObj.value.unit, dp: unitObj.value.dp }
       })
       return v
     })
   } catch (error) {
     console.log('获取详情列表失败')
   } finally {
+    list.value = _list
     tableLoading.value = false
   }
 }
@@ -160,7 +189,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'price' || column.property === 'completeQuantity') {
+    if (column.property === 'price' || column.property === 'quantity') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {

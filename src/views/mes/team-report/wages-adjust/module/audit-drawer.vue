@@ -1,78 +1,88 @@
 <template>
-  <common-drawer ref="drawerRef" title="项目工价审核" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="70%">
+  <common-drawer ref="drawerRef" title="班组工价审核列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="60%">
     <template #titleRight> </template>
     <template #content>
+      <div class="head-container">
+        <common-radio-button
+          v-model="query.status"
+          :options="reviewStatusEnum.ENUM"
+          type="enum"
+          showOptionAll
+          class="filter-item"
+          @change="fetchList"
+        />
+        <monomer-select
+          v-model="query.monomerId"
+          clearable
+          :default="false"
+          :project-id="query?.projectId"
+          class="filter-item"
+          @change="fetchList"
+        />
+      </div>
       <common-table row-key="rowId" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="monomer.name" show-overflow-tooltip label="单体">
-          <template v-slot="scope">
-            <span>{{ scope.row.monomer?.name }}</span>
+        <belonging-info-columns showProject showMonomer />
+        <el-table-column prop="userName" show-overflow-tooltip label="编辑人">
+          <template #default="{ row }">
+            <span>{{ row.userName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="productProcessName" show-overflow-tooltip label="名称">
-          <template v-slot="scope">
-            <span>{{ scope.row.productProcessName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="processName" show-overflow-tooltip label="工序">
-          <template v-slot="scope">
-            <span>{{ scope.row.processName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="oldPrice" show-overflow-tooltip label="定额单价" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.oldPrice }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="newPrice" show-overflow-tooltip label="调整后" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.newPrice }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="userName" show-overflow-tooltip label="操作人">
-          <template v-slot="scope">
-            <span>{{ scope.row.userName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" show-overflow-tooltip label="日期" align="center">
-          <template v-slot="scope">
-            <span v-parse-time="{ val: scope.row.createTime, fmt: '{y}-{m}-{d}' }" />
+        <el-table-column prop="createTime" show-overflow-tooltip label="编辑日期" align="center">
+          <template #default="{ row }">
+            <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
         <el-table-column prop="auditUserName" show-overflow-tooltip label="审核人">
-          <template v-slot="scope">
-            <span v-empty-text>{{ scope.row.auditUserName }}</span>
+          <template #default="{ row }">
+            <span v-empty-text>{{ row.auditUserName }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">
-          <template v-slot="scope">
-            <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
+          <template #default="{ row }">
+            <span v-parse-time="{ val: row.auditTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column prop="auditStatus" show-overflow-tooltip label="操作" width="170px" align="center">
-          <template v-slot="scope">
-            <span v-if="scope.row.auditStatus === reviewStatusEnum.UNREVIEWED.V">
-              <common-button size="mini" type="success" :disabled="scope.row.auditLoading" @click="auditIt(scope.row, reviewStatusEnum.PASS.V)">同意</common-button>
-              <common-button size="mini" type="danger" :disabled="scope.row.auditLoading" @click="auditIt(scope.row, reviewStatusEnum.REFUSE.V)">拒绝</common-button>
-            </span>
-            <el-tag v-else :type="reviewStatusEnum.V[scope.row.auditStatus].TAG">
-              {{ reviewStatusEnum.VL[scope.row.auditStatus] }}
+        <el-table-column prop="auditStatus" show-overflow-tooltip label="状态" width="100px" align="center">
+          <template #default="{ row }">
+            <el-tag :type="reviewStatusEnum.V[row.auditStatus].TAG">
+              {{ reviewStatusEnum.VL[row.auditStatus] }}
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="操作" width="100">
+          <template #default="{ row }">
+            <common-button size="mini" type="primary" @click="showDetail(row)">查看</common-button>
+          </template>
+        </el-table-column>
       </common-table>
+      <!--分页组件-->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
+  <detail-drawer v-model:visible="detailVisible" :itemInfo="itemInfo" @success="handleAuditSuccess"></detail-drawer>
 </template>
 
 <script setup>
-import { checkList, check } from '@/api/mes/team-report/wages-adjust'
+import { checkList } from '@/api/mes/team-report/wages-adjust'
 import { defineProps, defineEmits, inject, ref, watch } from 'vue'
 
 import { reviewStatusEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import monomerSelect from '@/components-system/plan/monomer-select'
+import detailDrawer from './audit-detail-drawer'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'refresh'])
@@ -83,7 +93,8 @@ const props = defineProps({
   }
 })
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook: beforeClose })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -95,12 +106,21 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
-const query = inject('query')
+const fQuery = inject('fQuery')
+const organizationType = inject('organizationType')
+const query = ref({})
+const detailVisible = ref(false)
+const itemInfo = ref()
+const hasAudit = ref(false)
 
 watch(
   () => props.visible,
   (visible) => {
     if (visible) {
+      query.value = {
+        projectId: fQuery.value?.projectId
+      }
+      hasAudit.value = false
       fetchList()
     }
   },
@@ -112,12 +132,15 @@ const list = ref([])
 async function fetchList() {
   try {
     tableLoading.value = true
-    const { content } = await checkList(query)
+    const { content, totalElements } = await checkList({
+      organizationType: organizationType,
+      ...query.value
+    })
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
-      v.auditLoading = false
       return v
     })
+    setTotalPage(totalElements)
   } catch (error) {
     console.log('获取工价调整审核列表失败', error)
   } finally {
@@ -125,19 +148,19 @@ async function fetchList() {
   }
 }
 
-async function auditIt(row, status) {
-  try {
-    row.auditLoading = true
-    await check({
-      id: row.id,
-      status
-    })
-    fetchList()
+function showDetail(row) {
+  itemInfo.value = row
+  detailVisible.value = true
+}
+
+function handleAuditSuccess() {
+  hasAudit.value = true
+  fetchList()
+}
+
+function beforeClose() {
+  if (hasAudit.value) {
     emit('refresh')
-  } catch (error) {
-    console.log('工价调整审核失败', error)
-  } finally {
-    row.auditLoading = false
   }
 }
 </script>

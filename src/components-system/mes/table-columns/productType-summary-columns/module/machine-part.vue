@@ -1,0 +1,103 @@
+<template>
+  <el-table-column
+    v-if="!unShowField.includes('name') && (isBlank(columns) || columns.visible('name'))"
+    :show-overflow-tooltip="true"
+    prop="name"
+    label="名称"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
+    :fixed="fixed"
+    align="center"
+  >
+    <template #default="{ row }">
+      <slot name="namePrefix" :row="row"></slot>
+      <span v-empty-text>{{ row.name }}</span>
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="!unShowField.includes('steelSpec') && (isBlank(columns) || columns.visible('steelSpec'))"
+    :show-overflow-tooltip="true"
+    prop="steelSpec"
+    label="厚度/规格"
+    :width="fixedWidth ? '140px' : ''"
+    :min-width="!fixedWidth ? '140px' : ''"
+    :fixed="fixed"
+    align="center"
+  >
+    <template #default="{ row }">
+      <span v-empty-text="row.steelSpec" />
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="!unShowField.includes('material') && (isBlank(columns) || columns.visible('material'))"
+    :show-overflow-tooltip="true"
+    prop="material"
+    label="材质"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    :fixed="fixed"
+    align="center"
+  >
+    <template #default="{ row }">
+      <span v-empty-text>{{ row.material }}</span>
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="!unShowField.includes('quantity') && (isBlank(columns) || columns.visible('quantity'))"
+    :show-overflow-tooltip="true"
+    prop="quantity"
+    label="零件数"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-empty-text>{{ row.quantity }}</span>
+    </template>
+  </el-table-column>
+  <el-table-column
+    v-if="!unShowField.includes('totalNetWeight') && (isBlank(columns) || columns.visible('totalNetWeight'))"
+    :show-overflow-tooltip="true"
+    prop="totalNetWeight"
+    :label="`零件量${unitNewLine ? '\n' : ''}(kg)`"
+    :width="fixedWidth ? '80px' : ''"
+    :min-width="!fixedWidth ? '80px' : ''"
+    align="center"
+    :fixed="fixed"
+  >
+    <template #default="{ row }">
+      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span>
+    </template>
+  </el-table-column>
+</template>
+
+<script setup>
+import { defineProps } from 'vue'
+import { isBlank } from '@/utils/data-type'
+
+defineProps({
+  columns: {
+    type: Object
+  },
+  fixed: {
+    // 定位
+    type: String
+  },
+  fixedWidth: {
+    type: Boolean
+  },
+  unitNewLine: {
+    type: Boolean,
+    default: true
+  },
+  unShowField: {
+    type: Array,
+    default: () => []
+  },
+  // 围护子类型
+  category: {
+    type: Number
+  }
+})
+</script>

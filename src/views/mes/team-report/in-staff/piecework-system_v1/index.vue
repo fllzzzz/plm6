@@ -16,47 +16,70 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <belonging-info-columns :columns="columns" showFactory showWorkshop showProductionLine />
-      <template v-for="item in processList" :key="item.id">
-        <el-table-column align="center" :label="item.name">
-          <template #default="{ row }">
-            <span style="cursor: pointer" @click="showDetail(row, item.id)">{{ row.processMap[item.id]?.price }}</span>
-          </template>
-        </el-table-column>
-      </template>
+      <belonging-info-columns :columns="columns" showWorkshop showProductionLine showProcess showTeam />
+      <!-- <el-table-column
+        v-if="columns.visible('wageQuotaType')"
+        key="wageQuotaType"
+        prop="wageQuotaType"
+        :show-overflow-tooltip="true"
+        label="单位"
+        align="center"
+        width="100px"
+      >
+        <template v-slot="scope">
+          <span>{{ wageQuotaTypeEnum.V[scope.row.wageQuotaType].meteUnit }}</span>
+        </template>
+      </el-table-column> -->
+      <el-table-column
+        v-if="columns.visible('productMete')"
+        prop="productMete"
+        align="center"
+        :show-overflow-tooltip="true"
+        :label="`生产量(${unitObj.unit})`"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.productMete }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('price')"
+        key="price"
+        prop="price"
+        align="center"
+        :show-overflow-tooltip="true"
+        label="工资总额(元)"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.detail]" label="操作" width="100px" align="center" fixed="right">
-        <template #default="{ row }">
-          <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
+        <template v-slot="scope">
+          <common-button type="primary" size="mini" @click="showDetail(scope.row)">查看</common-button>
         </template>
       </el-table-column>
     </common-table>
-    <mDetail v-model:visible="detailVisible" :info="itemInfo" />
+    <mDetail v-model:visible="detailVisible" :info="itemInfo"/>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
-import { ref, provide, defineProps } from 'vue'
+import { ref, provide, computed } from 'vue'
 
-import { teamAttributeEnum } from '@enum-ms/mes'
+// import { wageQuotaTypeEnum } from '@enum-ms/mes'
 import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
-import { arr2obj } from '@/utils/convert/type'
-import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 // import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
-
-const props = defineProps({
-  organizationType: {
-    type: Boolean,
-    default: teamAttributeEnum.IN_STAFF.V
-  }
-})
 
 const optShow = {
   add: false,
@@ -81,19 +104,23 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: false })
 
 provide('query', crud.query)
-provide('organizationType', props.organizationType)
 
-const processList = ref([])
-
-CRUD.HOOK.beforeRefresh = () => {
-  crud.query.organizationType = props.organizationType
-}
+const unitObj = computed(() => {
+  return useProductSummaryMeteUnit({
+    productType: crud.query.productType
+  })
+})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
-  processList.value = res.data.content.length && res.data.content[0]?.processPrice
   res.data.content = res.data.content.map((v, i) => {
     v.rowId = i + '' + Math.random()
-    v.processMap = arr2obj(v.processPrice, 'id')
+    // v.productMete = useWageQuotaMeteConvert({
+    //   length: v.mate,
+    //   weight: v.mate,
+    //   surfaceArea: v.mate,
+    //   wageQuotaType: v.wageQuotaType
+    // }).convertMete
+    v.productMete = v.mate
     return v
   })
 }
@@ -127,9 +154,8 @@ function getSummaries(param) {
 const detailVisible = ref(false)
 const itemInfo = ref({})
 
-function showDetail(row, processId) {
-  itemInfo.value = deepClone(row)
-  if (processId) itemInfo.value.processId = processId
+function showDetail(row) {
+  itemInfo.value = row
   detailVisible.value = true
 }
 </script>
