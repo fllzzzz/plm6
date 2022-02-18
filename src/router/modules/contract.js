@@ -1,4 +1,4 @@
-// 路由：计划管理
+// 路由：合同管理
 export default {
   id: 3,
   name: '合同管理',
@@ -117,6 +117,31 @@ export default {
           hidden: false,
           component: '/contract/payment-manage/supplier-manage/payment-ledger/index',
           meta: { title: '付款台账', icon: 'contract2', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/contract/sales-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'SalesManage',
+      alwaysShow: false,
+      redirect: '/contract/sales-manage/visa-manage/change/index',
+      meta: { title: '销售管理', icon: 'contract2', noCache: true },
+      children: [
+        {
+          name: 'VisaManage',
+          path: 'visa-manage',
+          hidden: false,
+          redirect: '/contract/sales-manage/visa-manage/change',
+          meta: { title: '签证管理', icon: 'contract2', noCache: true },
+          children: [{
+            name: 'VisaChange',
+            path: 'change',
+            hidden: false,
+            component: '/contract/sales-manage/visa-manage/change/index',
+            meta: { title: '签证变更', icon: 'contract2', noCache: true }
+          }]
         }
       ]
     }
