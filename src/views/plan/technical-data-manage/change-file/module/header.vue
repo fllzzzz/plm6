@@ -35,9 +35,9 @@
           type="warning"
           icon="el-icon-download"
           size="mini"
-          :disabled="!projectId"
+          :disabled="!projectId || crud.data.length===0"
           @click="downloadAll()"
-        >下载项目下所有文件</common-button>
+        >{{query.monomerId?'下载本单体下所有文件':'下载项目下所有文件'}}</common-button>
       </template>
     </crudOperation>
   </div>
@@ -49,7 +49,7 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
-import { downloadByProject } from '@/api/plan/technical-data-manage/other'
+import { downloadByMonomer } from '@/api/plan/technical-data-manage/deepen'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { fileDownload } from '@/utils/file'
 
@@ -70,7 +70,7 @@ const props = defineProps({
 async function downloadAll() {
   try {
     downloadLoading.value = true
-    await fileDownload(downloadByProject, crud.query.projectId, crud.query.type)
+    await fileDownload(downloadByMonomer, { projectId: crud.query.projectId, dataType: crud.query.dataType, monomerId: crud.query.monomerId })
   } catch (error) {
     console.log('根据单体下载', error)
   } finally {

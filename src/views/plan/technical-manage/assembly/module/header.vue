@@ -56,7 +56,7 @@
           btn-type="primary"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <upload-btn
           v-if="currentArea && currentArea.id"
@@ -68,7 +68,7 @@
           btn-type="success"
           btn-size="mini"
           class="filter-item"
-          @success="crud.toQuery"
+          @success="uploadSuccess"
         />
         <export-button
           v-if="currentArea && currentArea.id"
@@ -82,16 +82,16 @@
         <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading"/>
         <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
           <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
       </template>
       <template #viewLeft>
         <el-tooltip
           effect="light"
-          :content="`${errorList.join(',')}`"
           placement="top"
         >
+          <template #content> <div>{{errorList.join(',')}}</div> </template>
           <div class="filter-item">
             <el-tag v-if="errorList.length>0" type="danger" class="filter-item" effect="plain">本区域存在{{ errorList.length }}条未绑定构件,鼠标悬停查看</el-tag>
           </div>
@@ -156,8 +156,7 @@ function tabClick(val) {
     id: name,
     name: label
   }
-  getAssembleError()
-  crud.toQuery()
+  uploadSuccess()
 }
 function getAreaInfo(val) {
   areaInfo.value = val || []
@@ -176,7 +175,7 @@ async function deleteAssemle() {
   try {
     await delAssemblyByArea({ areaId: crud.query.areaId })
     crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
+    uploadSuccess()
     deleteLoading.value = false
   } catch (e) {
     console.log('清空组立', e)
@@ -196,5 +195,9 @@ async function getAssembleError() {
     console.log('组立错误数据', e)
   }
 }
-assembleError
+
+function uploadSuccess() {
+  getAssembleError()
+  crud.toQuery()
+}
 </script>

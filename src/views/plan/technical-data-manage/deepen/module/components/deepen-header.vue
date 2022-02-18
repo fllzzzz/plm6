@@ -48,7 +48,7 @@
           type="warning"
           icon="el-icon-download"
           size="mini"
-          :disabled="!query.monomerId"
+          :disabled="!query.monomerId || crud.data.length===0"
           @click="downloadAll()"
         >下载单体下所有图纸</common-button>
       </template>
@@ -90,7 +90,7 @@ const props = defineProps({
 async function downloadAll() {
   try {
     downloadLoading.value = true
-    await fileDownload(downloadByMonomer, crud.query.monomerId, crud.query.type)
+    await fileDownload(downloadByMonomer, { projectId: crud.query.projectId, dataType: crud.query.dataType, monomerId: crud.query.monomerId, productType: crud.query.productType })
   } catch (error) {
     console.log('根据单体下载', error)
   } finally {
