@@ -142,6 +142,13 @@ export default {
             component: '/contract/sales-manage/visa-manage/change/index',
             meta: { title: '签证变更', icon: 'contract2', noCache: true }
           }]
+        },
+        {
+          name: 'TransactionRecord',
+          path: 'transaction-record',
+          hidden: false,
+          component: '/contract/sales-manage/transaction-record/index',
+          meta: { title: '客户交易记录', icon: 'contract2', noCache: true }
         }
       ]
     }
