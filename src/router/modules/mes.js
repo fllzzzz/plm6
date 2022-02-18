@@ -634,8 +634,8 @@ export default {
     //   }
     // },
     {
-      name: 'MesTeamReportInStaffPiecework',
-      path: 'in-staff/piecework-system',
+      name: 'MesTeamReportOffStaffPiecework',
+      path: 'off-staff/piecework-system',
       hidden: false,
       component: '/mes/team-report/off-staff/piecework-system/index',
       meta: {
