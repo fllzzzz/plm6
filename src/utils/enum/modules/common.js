@@ -58,6 +58,21 @@ const installationAuditStatusEnum = {
 }
 constantize(installationAuditStatusEnum)
 
+// 签证审核状态
+const visaReviewStatusEnum = {
+  UNREVIEWED: { L: '待确签', K: 'UNREVIEWED', V: 0, TAG: '' },
+  PASS: { L: '已确签', K: 'PASS', V: 1, TAG: 'success' },
+  REFUSE: { L: '已拒绝', K: 'REFUSE', V: 2, TAG: 'danger' }
+}
+constantize(visaReviewStatusEnum)
+
+// 签证类型
+const visaTypeEnum = {
+  VISA: { L: '签证单', K: 'VISA', V: 1 },
+  SETTLEMENT: { L: '结算单', K: 'SETTLEMENT', V: 2 }
+}
+constantize(visaTypeEnum)
+
 // 单位类型
 const unitTypeEnum = {
   DIGIT: { L: '计数单位', K: 'DIGIT', V: 1 },
@@ -117,6 +132,8 @@ export {
   weightTypeEnum, // 重量类型
   unitTypeEnum, // 单位类型
   reviewStatusEnum, // 审核状态
+  visaReviewStatusEnum, // 签证审核状态
+  visaTypeEnum, // 签证类型
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
   operationTypeEnum // 操作类型
@@ -133,6 +150,8 @@ export default {
   weightTypeEnum, // 重量类型
   unitTypeEnum, // 单位类型
   reviewStatusEnum, // 审核状态
+  visaReviewStatusEnum, // 签证审核状态
+  visaTypeEnum, // 签证类型
   businessAuditStatusEnum, // 商务审核状态
   installationAuditStatusEnum, // 安装审核状态
   operationTypeEnum // 操作类型

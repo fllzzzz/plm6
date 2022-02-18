@@ -30,7 +30,7 @@
         >
           <template #default="{ row }">
             <table-cell-tag
-              :show="row.status === projectStatusEnum.SUSPEND.V || row.status === projectStatusEnum.SETTLED.V"
+              :show="row.status && row.status !== projectStatusEnum.PROCESS.V"
               :name="projectStatusEnum.V[row.status].L"
               :offset="15"
             />
@@ -51,7 +51,7 @@
           key="shortName"
           prop="shortName"
           :show-overflow-tooltip="true"
-          min-width="130"
+          min-width="140"
           align="center"
           label="项目简称"
         />
@@ -73,13 +73,13 @@
           prop="startDate"
           label="计划开工日期"
           align="center"
-          width="100"
+          width="110"
         >
           <template v-slot="scope">
             <span v-parse-time="{ val: scope.row.startDate, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="100">
+        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="110">
           <template v-slot="scope">
             <span v-parse-time="{ val: scope.row.endDate, fmt: '{y}-{m}-{d}' }" />
           </template>
@@ -90,7 +90,7 @@
           prop="completeDate"
           label="完成日期"
           align="center"
-          width="100"
+          width="110"
         >
           <template v-slot="scope">
             <span v-parse-time="{ val: scope.row.completeDate, fmt: '{y}-{m}-{d}' }" />
@@ -175,7 +175,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['completeDate', 'createTime'],
+    invisibleColumns: ['name', 'completeDate', 'createTime'],
     hasPagination: true
   },
   tableRef
