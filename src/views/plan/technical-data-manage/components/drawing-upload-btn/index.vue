@@ -38,11 +38,16 @@
       <template #footer>
         <span class="dialog-footer">
           <common-button @click="handleZipDlgClose">取 消</common-button>
-          <el-popconfirm title="保存后无法删除,确定上传?" @confirm="uploadZip">
-            <template #reference>
-              <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0">上传</common-button>
-            </template>
-          </el-popconfirm>
+          <template v-if="dataType===technicalDataTypeEnum.DEEPEN.V || dataType===technicalDataTypeEnum.MACHINE_PART.V">
+            <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0" @click="uploadZip">上传</common-button>
+          </template>
+          <template v-else>
+            <el-popconfirm title="保存后无法删除,确定上传?" @confirm="uploadZip">
+              <template #reference>
+                <common-button :loading="uploadZipLoading" type="primary" :disabled="errorList && errorList.length > 0">上传</common-button>
+              </template>
+            </el-popconfirm>
+          </template>
         </span>
       </template>
     </common-dialog>
@@ -55,6 +60,7 @@ import { getToken } from '@/utils/storage'
 import { getFileSuffix } from '@/utils/file'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { ElUpload, ElMessage, ElNotification } from 'element-plus'
+import { technicalDataTypeEnum } from '@enum-ms/plan'
 import JSZip from 'jszip'
 
 const emit = defineEmits(['success'])

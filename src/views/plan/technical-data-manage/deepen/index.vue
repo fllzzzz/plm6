@@ -2,7 +2,7 @@
   <div class="app-container">
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
       <div style="height:60px;">
-        <common-button size="small" style="float:right;">操作日志</common-button>
+        <common-button size="small" style="float:right;" type="primary">操作日志</common-button>
       </div>
       <!--表格渲染-->
       <common-table
@@ -26,7 +26,8 @@
         </el-table-column>
         <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="单体" align="center">
           <template v-slot="scope">
-            <span style="cursor: pointer;">{{ scope.row.name }}</span>
+            <div style="cursor: pointer;">{{ scope.row.name }}</div>
+            <el-tag effect="plain">结构</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="单元">
