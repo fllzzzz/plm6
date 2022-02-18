@@ -93,4 +93,14 @@ export function artifactPart(params) {
     params
   })
 }
+
+// 按区域一键清空
+export function delArtifactTreeByArea(params) {
+  return request({
+    module: 'plan',
+    url: 'artifactMachinePart/clear',
+    method: 'delete',
+    params
+  })
+}
 export default { edit, del, get }

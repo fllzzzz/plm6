@@ -114,7 +114,7 @@ const techOptions = [
     alias: 'ENCLOSURE'
   },
   {
-    name: '压型板',
+    name: '压型彩板',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
     no: TechnologyTypeAllEnum.PROFILED_PLATE.V,

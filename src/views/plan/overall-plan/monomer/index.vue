@@ -61,7 +61,7 @@
           key="contourPlate"
           prop="contourPlate"
           :show-overflow-tooltip="true"
-          label="压型板(m)"
+          label="压型彩板(m)"
         >
           <template v-slot="scope">
             <span>{{ scope.row.contourPlate? scope.row.contourPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
@@ -180,7 +180,7 @@ const techOptions = [
     unit: '(m)'
   },
   {
-    label: '压型板',
+    label: '压型彩板',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
     no: TechnologyTypeAllEnum.PROFILED_PLATE.V,

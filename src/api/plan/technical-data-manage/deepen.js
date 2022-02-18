@@ -45,14 +45,14 @@ export function download({ id }) {
   })
 }
 
-export function downloadByMonomer(monomerId, type) {
+export function downloadByMonomer(params) {
   return request({
     module: 'plan',
     url: `drawing/struct/export`,
     method: 'get',
     timeout: 6000000,
     responseType: 'blob',
-    params: { monomerId, type }
+    params
   })
 }
 
