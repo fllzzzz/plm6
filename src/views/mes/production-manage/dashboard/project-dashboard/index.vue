@@ -247,6 +247,7 @@ async function fetchList() {
       }
       return res
     }, deepClone(initSummaryInfo))
+    summaryInfo.value.shipQuantity = summaryInfo.value.cargoQuantity
     summaryInfo.value.totalMete = useProductMeteConvert({
       productType: productType.value,
       weight: { num: summaryInfo.value.totalNetWeight },

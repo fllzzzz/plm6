@@ -31,7 +31,7 @@ export default function useDashboardHeader({ colorCardTitles = ['未入库', '�
   )
 
   function getColor(row, { quantity = 'inboundQuantity', compare = 'compareQuantity' }) {
-    if (row[quantity] === 0) {
+    if (row[quantity] === 0 && !row.isProcess) {
       return processingColorsEnum.UNSTART.COLOR
     }
     if (row[quantity] === row[compare]) {

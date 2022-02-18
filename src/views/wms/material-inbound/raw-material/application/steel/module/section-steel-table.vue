@@ -38,7 +38,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left">
+    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>

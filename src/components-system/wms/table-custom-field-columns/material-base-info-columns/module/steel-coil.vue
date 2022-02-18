@@ -6,12 +6,12 @@
       :prop="`${field}.specification`"
       label="规格"
       align="center"
-      width="220px"
+      width="260px"
       :fixed="fixed"
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <el-tooltip :content="specTip(getInfo(row))" placement="top">
+        <el-tooltip :content="specTip(getInfo(row))" placement="left">
           <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>
         </el-tooltip>
       </template>
@@ -24,12 +24,12 @@
       :prop="`${field}.specification`"
       label="规格"
       align="center"
-      width="100px"
+      width="140px"
       :fixed="fixed"
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="top">
+        <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="left">
           <span v-empty-text>{{ getInfo(row, 'specification') }}</span>
         </el-tooltip>
       </template>

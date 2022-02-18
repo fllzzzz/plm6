@@ -11,7 +11,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <el-tooltip :content="specTip(getInfo(row))" placement="top">
+        <el-tooltip :content="specTip(getInfo(row))" placement="left">
           <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>
         </el-tooltip>
       </template>
@@ -29,7 +29,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="top">
+        <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="left">
           <span v-empty-text>{{ getInfo(row, 'specification') }}</span>
         </el-tooltip>
       </template>

@@ -32,7 +32,7 @@
           材质：${item.material}\n
           单净重：${item.netWeight.toFixed(DP.COM_WT__KG)} kg\n
           单毛重：${item.grossWeight.toFixed(DP.COM_WT__KG)} kg\n
-          清单数量：${item.quantity}\n
+          所需数量：${item.needQuantity}\n
           `"
           placement="left-start"
         >
@@ -44,7 +44,7 @@
           >
             <span class="ellipsis-text">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.quantity }}</span>
+            <span class="ellipsis-text">{{ item.needQuantity }}</span>
             <el-checkbox
               style="position: absolute; right: 10px; bottom: 0px"
               v-model="item.checked"
@@ -101,7 +101,7 @@ const { crud, CRUD } = useCRUD(
 )
 const { maxHeight } = useMaxHeight({ paginate: false })
 
-const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
+const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, pageSize: 20, intervalTime: 1000 })
 
 const checkAll = ref(false)
 const detailIds = ref([])

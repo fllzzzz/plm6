@@ -316,10 +316,10 @@ function changeIndex(val) {
 }
 
 function handleRowClassName({ row, rowIndex }) {
-  if (row.children) {
+  if (row.abnormal === 1) {
     return 'abnormal-row'
   } else {
-    return 'hidden-select'
+    return row.children ? 'parent-row' : 'hidden-select'
   }
 }
 
@@ -386,8 +386,11 @@ async function load(row, treeNode, resolve) {
 </script>
 
 <style lang="scss" scoped>
-::v-deep(.abnormal-row) {
+::v-deep(.parent-row) {
   background: #e8f4ff;
+}
+::v-deep(.abnormal-row) {
+  background: #ffecec;
 }
 ::v-deep(.hidden-select) {
   td:nth-child(1) {
@@ -404,5 +407,10 @@ $font-size: 1.5em;
   border: 1px solid;
   border-radius: 50%;
   line-height: $font-size;
+}
+</style>
+<style>
+.el-popper {
+  max-width: calc(100% - 60px) !important;
 }
 </style>

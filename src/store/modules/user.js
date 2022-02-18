@@ -1,5 +1,5 @@
 import { addRoutes, resetRouter } from '@/router'
-import { login, logout, getInfo, fetchMenus } from '@/api/user'
+import { login, logout as logoutApi, getInfo, fetchMenus } from '@/api/user'
 import { repairStartSymbol } from '@/utils'
 import { getToken, setToken, removeToken, getRequestUrl, setRequestUrl as storeSetRequestUrl, removeRequestUrl } from '@/utils/storage' // get token from cookie
 import checkPermission from '@/utils/system/check-permission'
@@ -119,7 +119,7 @@ const actions = {
   // 用户退出登录
   async logout({ commit, state, dispatch }) {
     try {
-      logout(state.token)
+      logoutApi(state.token)
       await dispatch('resetToken')
     } catch (error) {
       console.log('退出登录', error)

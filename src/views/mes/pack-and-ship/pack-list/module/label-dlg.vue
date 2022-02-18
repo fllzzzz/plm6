@@ -32,7 +32,7 @@
           <td class="col-1">{{ item.serialNumber }}</td>
           <td class="col-1">{{ item.material }}</td>
           <td class="col-1">{{ item.quantity }}</td>
-          <td class="col-1">{{ item.totalNetWeight }}</td>
+          <td class="col-1">{{ item.totalWeight }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">
