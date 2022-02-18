@@ -49,12 +49,22 @@ const manufClsEnum = {
 }
 constantize(manufClsEnum)
 
+// 项目备料材料类型
+const projectPreparationMatClsEnum = {
+  STEEL_PLATE: matClsEnum.STEEL_PLATE,
+  SECTION_STEEL: matClsEnum.SECTION_STEEL,
+  STEEL_COIL: matClsEnum.STEEL_COIL,
+  MATERIAL: matClsEnum.MATERIAL
+}
+constantize(projectPreparationMatClsEnum)
+
 export {
   classificationEnum,
   matClsEnum,
   rawMatClsEnum,
   manufClsEnum,
-  steelClsEnum
+  steelClsEnum,
+  projectPreparationMatClsEnum
 }
 
 export default {
@@ -62,5 +72,6 @@ export default {
   matClsEnum,
   rawMatClsEnum,
   manufClsEnum,
-  steelClsEnum
+  steelClsEnum,
+  projectPreparationMatClsEnum
 }

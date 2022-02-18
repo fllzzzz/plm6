@@ -69,6 +69,19 @@ export function upload(data) {
   })
 }
 
+export function uploadCompile(data) {
+  return request({
+    module: 'plan',
+    url: `drawing/struct/compile`,
+    method: 'put',
+    timeout: 6000000,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
+
 /**
  * 预览图纸
  *

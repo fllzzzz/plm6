@@ -6,6 +6,7 @@
       :basic-class="basicClass"
       :list="form.list"
       :current-source="currentSource"
+      :source-return-ids="sourceReturnIds"
       @add="rowWatch"
     />
     <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
@@ -182,7 +183,7 @@ const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
 // 表单信息及校验
-const { wrongCellMask } = useFormSet({
+const { sourceReturnIds, wrongCellMask } = useFormSet({
   FORM,
   form,
   cu,

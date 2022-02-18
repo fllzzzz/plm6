@@ -62,12 +62,25 @@ const planTypeEnum = {
 }
 constantize(planTypeEnum)
 
+// 深化图纸类型
+const deepenTypeEnum = {
+  ARTIFACT: { L: '构件', K: 'ARTIFACT', V: 1 << 1 },
+  MACHINE_PART: { L: '零件', K: 'MACHINE_PART', V: 1 << 0 },
+  ASSEMBLY: { L: '组立', K: 'ASSEMBLY', V: 1 << 4 }
+}
+constantize(deepenTypeEnum)
 // 技术资料类型
+// const technicalDataTypeEnum = {
+//   BLUEPRINT: { L: '蓝图', K: 'BLUEPRINT', V: 1 },
+//   CHANGE_FILE: { L: '变更文件', K: 'CHANGE_FILE', V: 2 },
+//   MODEL: { L: '模型', K: 'MODEL', V: 3 },
+//   OTHER_FILE: { L: '其他文件', K: 'OTHER_FILE', V: 4 }
+// }
 const technicalDataTypeEnum = {
-  BLUEPRINT: { L: '蓝图', K: 'BLUEPRINT', V: 1 },
-  CHANGE_FILE: { L: '变更文件', K: 'CHANGE_FILE', V: 2 },
-  MODEL: { L: '模型', K: 'MODEL', V: 3 },
-  OTHER_FILE: { L: '其他文件', K: 'OTHER_FILE', V: 4 }
+  DEEPEN: { L: '深化图', K: 'DEEPEN', V: 1 << 0 },
+  MACHINE_PART: { L: '零件图', K: 'MACHINE_PART', V: 1 << 1 },
+  CHANGE_FILE: { L: '变更文件', K: 'CHANGE_FILE', V: 1 << 2 },
+  BLUEPRINT: { L: '施工蓝图', K: 'BLUEPRINT', V: 1 << 3 }
 }
 constantize(technicalDataTypeEnum)
 
@@ -85,6 +98,23 @@ const auxiliaryMaterialUseTypeEnum = {
 }
 constantize(auxiliaryMaterialUseTypeEnum)
 
+// ------------------------------------------------------------------
+
+// 备料范围（类型）
+const preparationRangeEnum = {
+  PROJECT: { L: '项目', K: 'PROJECT', V: 1 },
+  MONOMER: { L: '单体', K: 'MONOMER', V: 2 },
+  AREA: { L: '区域', K: 'AREA', V: 3 }
+}
+constantize(preparationRangeEnum)
+
+// 备料状态
+const preparationStatusEnum = {
+  UNFINISHED: { L: '未备料', K: 'UNFINISHED', V: 0 },
+  FINISHED: { L: '已备料', K: 'FINISHED', V: 1 }
+}
+constantize(preparationStatusEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -95,7 +125,10 @@ export {
   technicalDataTypeEnum,
   areaPlanTypeEnum,
   enclosureCreateTypeEnum,
-  auxiliaryMaterialUseTypeEnum
+  auxiliaryMaterialUseTypeEnum,
+  preparationRangeEnum, // 备料范围（类型）
+  preparationStatusEnum, // 备料状态
+  deepenTypeEnum
 }
 
 export default {
@@ -108,5 +141,8 @@ export default {
   technicalDataTypeEnum,
   areaPlanTypeEnum,
   enclosureCreateTypeEnum,
-  auxiliaryMaterialUseTypeEnum
+  auxiliaryMaterialUseTypeEnum,
+  preparationRangeEnum, // 备料范围（类型）
+  preparationStatusEnum, // 备料状态
+  deepenTypeEnum
 }

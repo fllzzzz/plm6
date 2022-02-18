@@ -17,9 +17,14 @@ function resolve(el, binding) {
   } else if (value && typeof value === 'object') {
     val = value.val
     symbol = value.symbol
+  } else {
+    val = value
   }
   // 非数组返回
-  if (!Array.isArray(val)) return
+  if (!Array.isArray(val)) {
+    el.innerText = val
+    return
+  }
   symbol = symbol || '、'
   el.innerText = val.join(symbol)
 }

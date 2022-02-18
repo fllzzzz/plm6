@@ -29,7 +29,7 @@ export const STEEL_DIFF_UNIT = 'g'
 export const STEEL_SIZE_DIFF_UNIT = 'mm'
 
 // 单位净量小数精度
-export const UNIT_NET_PRECISION = 5
+export const UNIT_NET_PRECISION = 8
 
 // 物料基础单位
 export const MAT_BASE_UNIT = {}

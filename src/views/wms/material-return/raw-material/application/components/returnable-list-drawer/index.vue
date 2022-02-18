@@ -10,7 +10,16 @@
     custom-class="returnable-list-drawer"
   >
     <template #content>
-      <returnable-list ref="returnableListRef" :basicClass="basicClass" :select-list="selectList" is-component @add="handleAdd" />
+      <returnable-list
+        v-if="basicClass"
+        ref="returnableListRef"
+        :basicClass="basicClass"
+        :select-list="selectList"
+        :source-return-ids="sourceReturnIds"
+        is-component
+        @add="handleAdd"
+        :edit="edit"
+      />
     </template>
   </common-drawer>
 </template>
@@ -23,6 +32,14 @@ import ReturnableList from '../../returnable-list/index.vue'
 const emit = defineEmits(['add', 'update:modelValue'])
 
 const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
+  sourceReturnIds: {
+    type: Array,
+    default: () => []
+  },
   modelValue: {
     type: Boolean,
     require: true

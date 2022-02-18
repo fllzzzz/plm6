@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :project-id="globalProjectId"/>
+      <mHeader :project-id="globalProjectId" @currentChange="currentChange" @handleUpload="handleUpload"/>
     </div>
     <!--表格渲染-->
     <common-table
@@ -17,56 +17,23 @@
     >
     <el-table-column type="selection" width="55" align="center" />
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="文件" min-width="160px" />
-    <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" width="350px">
-      <template #header>
-        <el-tooltip
-          class="item"
-          effect="light"
-          :content="`双击备注可修改`"
-          placement="top"
-        >
-          <div style="display:inline-block;">
-            <span>备注</span>
-            <i class="el-icon-info" />
-          </div>
-        </el-tooltip>
-      </template>
-      <template v-slot="scope">
-        <span v-if="!scope.row.edit">{{ scope.row.remark }}</span>
-        <span v-else>
-          <el-input
-            v-model="scope.row.remark"
-            type="textarea"
-            :rows="1"
-            size="mini"
-            :maxlength="200"
-            style="width:180px;margin-right:2px;"
-          />
-          <common-button size="mini" type="primary" :loading="scope.row.editLoading" @click="saveIt(scope.row)">保存</common-button>
-          <common-button size="mini" type="info" @click="cancelIt(scope.row)">取消</common-button>
-        </span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" width="200px" />
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="160px">
+    <el-table-column key="createTime" prop="createTime" label="日期" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
+    <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="导入人" align="center"/>
+    <el-table-column v-if="columns.visible('fileName')" key="fileName" prop="fileName" :show-overflow-tooltip="true" label="文件" align="center"/>
     <!--编辑与删除-->
     <el-table-column
       v-if="checkPermission([ ...permission.download,...permission.del])"
       label="操作"
-      width="130px"
+      width="150px"
       align="center"
       fixed="right"
     >
       <template v-slot="scope">
-        <udOperation
-          :data="scope.row"
-          :show-edit="false"
-        />
+        <common-button size="mini" type="primary" @click="editRow(scope.row)">替换</common-button>
         <!-- 下载 -->
         <e-operation :data="scope.row" :permission="permission.download" />
       </template>
@@ -74,25 +41,26 @@
   </common-table>
   <!--分页组件-->
   <pagination />
+  <uploadForm v-model="uploadVisible" :currentMonomer="currentMonomer" :globalProject="globalProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow"/>
   </div>
 </template>
 
 <script setup>
-import crudApi, { edit } from '@/api/plan/technical-data-manage/other'
+import crudApi from '@/api/plan/technical-data-manage/deepen'
 import { ref, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { ElNotification } from 'element-plus'
+// import { ElNotification } from 'element-plus'
 import eOperation from '@crud/E.operation'
 import { parseTime } from '@/utils/date'
 import { blueprintListPM as permission } from '@/page-permission/plan'
+import uploadForm from './module/upload-form'
 
-const { globalProjectId } = mapGetters(['globalProjectId'])
+const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
 
 const optShow = {
   add: false,
@@ -102,6 +70,9 @@ const optShow = {
 }
 
 const tableRef = ref()
+const currentRow = ref({})
+const currentMonomer = ref({})
+const uploadVisible = ref(false)
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '蓝图',
@@ -133,30 +104,44 @@ watch(
 )
 
 function dbclick(row, column, event) {
-  if (column.property === 'remark' && !row.edit) {
-    row.edit = true
-  }
+  // if (column.property === 'remark' && !row.edit) {
+  //   row.edit = true
+  // }
 }
 
-function cancelIt(row) {
-  row.remark = row.originalRemark
-  row.edit = false
+// function cancelIt(row) {
+//   row.remark = row.originalRemark
+//   row.edit = false
+// }
+
+// async function saveIt(row) {
+//   try {
+//     row.editLoading = true
+//     await edit(row.id, {
+//       remark: row.remark
+//     })
+//     ElNotification({ title: '修改成功', type: 'success', duration: 2500 })
+//     row.originalRemark = row.remark
+//   } catch (error) {
+//     console.log('编辑备注', error)
+//   } finally {
+//     row.edit = false
+//     row.editLoading = false
+//   }
+// }
+
+function editRow(row) {
+  currentRow.value = row
+  uploadVisible.value = true
 }
 
-async function saveIt(row) {
-  try {
-    row.editLoading = true
-    await edit(row.id, {
-      remark: row.remark
-    })
-    ElNotification({ title: '修改成功', type: 'success', duration: 2500 })
-    row.originalRemark = row.remark
-  } catch (error) {
-    console.log('编辑备注', error)
-  } finally {
-    row.edit = false
-    row.editLoading = false
-  }
+function currentChange(val) {
+  currentMonomer.value = val
+}
+
+function handleUpload() {
+  currentRow.value = {}
+  uploadVisible.value = true
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

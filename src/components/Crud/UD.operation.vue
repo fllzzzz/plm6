@@ -5,8 +5,8 @@
       v-permission="permission.get"
       :disabled="props.disabledDetail"
       size="mini"
-      :type="props.detailBtnType"
-      icon="el-icon-view"
+      :type="props.detailType"
+      :icon="props.detailIcon"
       @click.stop="crud.toDetail(props.data)"
     />
     <common-button
@@ -14,7 +14,7 @@
       v-permission="permission.edit"
       :disabled="props.disabledEdit"
       size="mini"
-      :type="props.editBtnType"
+      :type="props.editType"
       icon="el-icon-edit"
       @click.stop="crud.toEdit(props.data)"
     />
@@ -80,13 +80,17 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  editBtnType: {
+  editType: {
     type: String,
     default: 'primary'
   },
-  detailBtnType: {
+  detailType: {
     type: String,
     default: 'info'
+  },
+  detailIcon: {
+    type: String,
+    default: 'el-icon-view'
   },
   delPrompt: {
     type: String,
