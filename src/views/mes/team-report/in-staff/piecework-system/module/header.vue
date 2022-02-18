@@ -2,17 +2,11 @@
   <div v-show="crud.searchToggle">
     <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
     <common-radio-button
-      v-model="query.componentType"
-      :options="typeEnum.ENUM"
-      type="enum"
-      class="filter-item"
-      @change="handleComponentType"
-    />
-    <common-radio-button
-      v-if="query.componentType === typeEnum.ARTIFACT.V"
       v-model="query.productType"
-      :options="artifactProcessEnum.ENUM"
-      type="enum"
+      :options="componentTypeEnum.ENUM"
+      type="enumSL"
+      :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V]"
+      default
       class="filter-item"
       @change="crud.toQuery"
     />
@@ -63,7 +57,7 @@
 import { ref } from 'vue'
 import moment from 'moment'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
-import { processMaterialListTypeEnum as typeEnum, artifactProcessEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -73,22 +67,10 @@ import summaryDetail from './summary-detail'
 const defaultQuery = {
   date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
   startDate: moment().subtract(1, 'month').valueOf(),
-  endDate: moment().valueOf(),
-  productType: artifactProcessEnum.ONCE.V,
-  componentType: typeEnum.ARTIFACT.V
-  // category: mesEnclosureTypeEnum.PRESSED_PLATE.V,
+  endDate: moment().valueOf()
 }
 
 const summaryDetailVisible = ref(false)
-
-function handleComponentType(val) {
-  if (val === typeEnum.ARTIFACT.V) {
-    query.productType = artifactProcessEnum.ONCE.V
-  } else {
-    query.productType = val
-  }
-  crud.toQuery()
-}
 
 const { crud, query } = regHeader(defaultQuery)
 

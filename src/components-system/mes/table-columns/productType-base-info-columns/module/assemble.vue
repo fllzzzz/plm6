@@ -12,7 +12,7 @@
       <span v-empty-text>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-  <!-- <el-table-column
+  <el-table-column
     v-if="!unShowField.includes('specification') && (isBlank(columns) || columns.visible('specification'))"
     :show-overflow-tooltip="true"
     prop="specification"
@@ -37,7 +37,7 @@
     <template #default="{ row }">
       <span v-empty-text>{{ row.material }}</span>
     </template>
-  </el-table-column> -->
+  </el-table-column>
 </template>
 
 <script setup>

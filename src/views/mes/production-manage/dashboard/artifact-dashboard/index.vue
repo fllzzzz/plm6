@@ -25,7 +25,7 @@
           <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
             <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
             <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
+            <span class="ellipsis-text">{{ item.compareQuantity }}/{{ item.quantity }}</span>
           </div>
         </el-tooltip>
       </template>

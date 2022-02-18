@@ -146,20 +146,20 @@ export default {
           component: '/plan/technical-data-manage/change-file/index',
           meta: { title: '技术资料-变更文件', icon: 'project', noCache: true }
         },
-        {
-          name: 'PlanModel',
-          path: 'model',
-          hidden: false,
-          component: '/plan/technical-data-manage/model/index',
-          meta: { title: '技术资料-模型', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanOtherFile',
-          path: 'other-file',
-          hidden: false,
-          component: '/plan/technical-data-manage/other-file/index',
-          meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
-        },
+        // {
+        //   name: 'PlanModel',
+        //   path: 'model',
+        //   hidden: false,
+        //   component: '/plan/technical-data-manage/model/index',
+        //   meta: { title: '技术资料-模型', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'PlanOtherFile',
+        //   path: 'other-file',
+        //   hidden: false,
+        //   component: '/plan/technical-data-manage/other-file/index',
+        //   meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
+        // },
         {
           name: 'SummaryList',
           path: 'summary-list',

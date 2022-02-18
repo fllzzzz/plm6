@@ -1,17 +1,13 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`${info.processName}`"
+    title="计价制详情"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
-    size="60%"
+    size="100%"
   >
     <template #titleAfter>
-      <el-tag effect="plain" size="medium">
-        <span>班组：</span>
-        <span>{{ info.leaderName }}</span>
-      </el-tag>
       <el-tag type="success" effect="plain" size="medium">
         <span>统计日期：</span>
         <span v-parse-time="{ val: query.startDate, fmt: '{y}-{m}-{d}' }" /> ~
@@ -42,11 +38,11 @@
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <belonging-info-columns showProject showMonomer />
-        <productType-base-info-columns :productType="query.productType" :unShowField="['specification', 'material', 'color']" />
-        <el-table-column prop="quantity" :show-overflow-tooltip="true" label="数量" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
+        <belonging-info-columns showProject showFactory showProductionLine showProcess showTeam />
+        <productType-base-info-columns :productType="query.productType" :unShowField="['color']" />
+        <el-table-column prop="completeQuantity" :show-overflow-tooltip="true" label="生产数量" align="center">
+          <template #default="{ row }">
+            <span>{{ row.completeQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="mete" :show-overflow-tooltip="true" :label="`${unitObj.label}(${unitObj.unit})`" align="center">
@@ -55,23 +51,23 @@
           </template>
         </el-table-column>
         <el-table-column prop="showUnit" :show-overflow-tooltip="true" label="核算单位" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.showUnit }}</span>
+          <template #default="{ row }">
+            <span>{{ row.showUnit }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="checkMete" :show-overflow-tooltip="true" label="核算量" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.checkMete }}</span>
+        <el-table-column prop="checkMete" :show-overflow-tooltip="true" label="产量" align="center">
+          <template #default="{ row }">
+            <span>{{ row.checkMete }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
-          <template v-slot="scope">
-            <span v-to-fixed="{ k: 'YUAN', val: scope.row.wage }"></span>
+          <template #default="{ row }">
+            <span v-to-fixed="{ k: 'YUAN', val: row.wage }"></span>
           </template>
         </el-table-column>
         <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
-          <template v-slot="scope">
-            <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
+          <template #default="{ row }">
+            <span v-to-fixed="{ k: 'YUAN', val: row.price }"></span>
           </template>
         </el-table-column>
       </common-table>
@@ -145,7 +141,8 @@ const printParams = computed(() => {
       factoryId: props.info?.factory?.id,
       productionLineId: props.info?.productionLine?.id,
       workshopId: props.info?.workshop?.id,
-      teamId: props.info.teamId
+      teamId: props.info.teamId,
+      processId: props.info.processId
     },
     query
   )
@@ -168,8 +165,8 @@ async function fetchList() {
       v.checkMete = v.mate
       v.mete = useProductMeteConvert({
         productType: query.productType,
-        length: { num: v.length * v.quantity, to: unitObj.value.unit, dp: unitObj.value.dp },
-        weight: { num: v.netWeight * v.quantity, to: unitObj.value.unit, dp: unitObj.value.dp }
+        length: { num: v.length * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp },
+        weight: { num: v.netWeight * v.completeQuantity, to: unitObj.value.unit, dp: unitObj.value.dp }
       })
       return v
     })
@@ -189,7 +186,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'price' || column.property === 'quantity') {
+    if (column.property === 'price' || column.property === 'completeQuantity') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {

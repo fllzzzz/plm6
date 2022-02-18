@@ -1,6 +1,16 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
+      <monomer-select
+        ref="monomerSelectRef"
+        v-model="query.monomerId"
+        :project-id="props.projectId"
+        :default="false"
+        clearable
+        class="filter-item"
+        @change="crud.toQuery"
+        @getCurrentInfo="handleCurrent"
+      />
       <el-input
         v-model="query.fileName"
         placeholder="输入文件名搜索"
@@ -13,19 +23,9 @@
     </div>
     <crudOperation>
       <template #optLeft>
-        <upload-btn
-          ref="bluePrintRef"
-          :upload-fun="upload"
-          :data="carryParam"
-          :btn-name="'文件上传'"
-          :btn-type="'warning'"
-          :btn-size="'mini'"
-          :data-type="crud.query.type"
-          :icon="'el-icon-upload'"
-          :accept="'.zip'"
-          class="filter-item"
-          @success="crud.toQuery"
-        />
+        <common-button type="warning" size="mini" @click="emit('handleUpload')" v-permission="crud.permission.import" class="filter-item">
+          文件导入
+        </common-button>
       </template>
       <template #viewLeft>
         <common-button
@@ -44,19 +44,21 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue'
+import { defineProps, ref, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
-import uploadBtn from '../../components/drawing-upload-btn'
-import { upload, downloadByProject } from '@/api/plan/technical-data-manage/other'
+import { downloadByProject } from '@/api/plan/technical-data-manage/other'
+import monomerSelect from '@/components-system/plan/monomer-select'
 import { fileDownload } from '@/utils/file'
 
 const defaultQuery = {
-  type: technicalDataTypeEnum.BLUEPRINT.V // 类型 1蓝图 2变更文件 3模型 4其他文件
+  monomerId: undefined,
+  dataType: technicalDataTypeEnum.BLUEPRINT.V// 类型 1蓝图 2变更文件 3模型 4其他文件
 }
 
+const emit = defineEmits(['currentChange', 'handleUpload'])
 const { crud, query } = regHeader(defaultQuery)
 const downloadLoading = ref(false)
 const props = defineProps({
@@ -65,11 +67,6 @@ const props = defineProps({
     default: undefined
   }
 })
-
-const carryParam = computed(() => {
-  return { projectId: props.projectId, type: crud.query.type }
-})
-const bluePrintRef = ref()
 async function downloadAll() {
   try {
     downloadLoading.value = true
@@ -80,4 +77,11 @@ async function downloadAll() {
     downloadLoading.value = false
   }
 }
+
+function handleCurrent(val) {
+  emit('currentChange', val)
+}
+// function handleCurrent(val) {
+//   currentMonomer.value = val
+// }
 </script>
