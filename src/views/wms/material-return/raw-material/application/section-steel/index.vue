@@ -178,7 +178,7 @@ const { cu, form, FORM } = useForm(
 )
 
 // 通用计算校验
-const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
+const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass, baseUnit })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })

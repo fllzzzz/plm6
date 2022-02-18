@@ -1,10 +1,10 @@
 import { ElMessage } from 'element-plus'
 
 import { getDarkColor } from '@/utils/color'
-import { deepClone, isNotBlank } from '@/utils/data-type'
+import { deepClone, isNotBlank, toPrecision } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
-export default function useCommonCalc({ cu, form, basicClass }) {
+export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
   // 计算最大重量
   function calcMaxMete(row) {
     if (basicClass !== rawMatClsEnum.STEEL_COIL.V) {
@@ -65,13 +65,15 @@ export default function useCommonCalc({ cu, form, basicClass }) {
   // 校验是否超出原材料的可退库量
   function checkOverSource(row) {
     calcReturnInfo(row)
-    let showFlag = row.source.returnableMete < 0 && !row.overTipColor
-    let unshowFlag = row.source.returnableMete >= 0 && row.overTipColor
+    const returnableMete = toPrecision(row.source.returnableMete, row.source.accountingPrecision)
+    let showFlag = returnableMete < 0 && !row.overTipColor
+    let unshowFlag = returnableMete >= 0 && row.overTipColor
 
     // 型材还需校验长度
     if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
-      showFlag = (row.source.returnableMete < 0 || row.source.returnableLength < 0) && !row.overTipColor
-      unshowFlag = row.source.returnableMete >= 0 && row.source.returnableLength >= 0 && row.overTipColor
+      const returnableLength = toPrecision(row.source.returnableLength, baseUnit.value ? baseUnit.value.length.precision : 0)
+      showFlag = (returnableMete < 0 || returnableLength < 0) && !row.overTipColor
+      unshowFlag = returnableMete >= 0 && returnableLength >= 0 && row.overTipColor
     }
     if (showFlag) {
       const overTipColor = getDarkColor()
