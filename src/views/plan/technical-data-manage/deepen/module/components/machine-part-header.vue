@@ -1,84 +1,100 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-      <el-input
-        v-model="query.fileName"
-        placeholder="输入文件名搜索"
+      <monomer-select
+        ref="monomerSelectRef"
+        v-model="query.monomerId"
+        :project-id="props.projectId"
         class="filter-item"
-        style="width: 200px;"
-        size="small"
-        clearable
+        :default="false"
+        :defaultValue="queryMonomerId"
+        @change="crud.toQuery"
+        @getCurrentInfo="handleCurrent"
       />
-      <rrOperation/>
     </div>
     <crudOperation>
       <template #optLeft>
         <upload-btn
-          ref="otherFileRef"
+          ref="deepenRef"
+          v-if="query.monomerId"
           v-permission="crud.permission.import"
+          :disabled="!query.monomerId"
           :upload-fun="upload"
           :data="carryParam"
           :btn-name="'文件上传'"
           :btn-type="'warning'"
           :btn-size="'mini'"
-          :data-type="crud.query.type"
           :icon="'el-icon-upload'"
           :accept="'.zip'"
           class="filter-item"
+          :data-type="query.dataType"
+          tip=".dxf"
+          :material-type="crud.query.type"
           @success="crud.toQuery"
         />
       </template>
       <template #viewLeft>
         <common-button
-          v-if="projectId"
+          v-if="query.monomerId"
           v-permission="crud.permission.download"
           :loading="downloadLoading"
           type="warning"
           icon="el-icon-download"
           size="mini"
-          :disabled="!projectId"
+          :disabled="!query.monomerId"
           @click="downloadAll()"
-        >下载项目下所有文件</common-button>
+        >下载单体下所有图纸</common-button>
       </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue'
+import { defineProps, ref, defineEmits, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import monomerSelect from '@/components-system/plan/monomer-select'
 import { technicalDataTypeEnum } from '@enum-ms/plan'
-import uploadBtn from '../../components/drawing-upload-btn'
-import { upload, downloadByProject } from '@/api/plan/technical-data-manage/other'
+import { upload, downloadByMonomer } from '@/api/plan/technical-data-manage/deepen'
 import { fileDownload } from '@/utils/file'
+import uploadBtn from '../../../components/drawing-upload-btn'
 
 const defaultQuery = {
-  type: technicalDataTypeEnum.OTHER_FILE.V // 类型 1蓝图 2变更文件 3模型 4其他文件
+  dataType: { value: technicalDataTypeEnum.MACHINE_PART.V, resetAble: false },
+  monomerId: { value: undefined, resetAble: false }
 }
 
-const otherFileRef = ref()
+const emit = defineEmits(['currentChange', 'handleUpload'])
+const monomerSelectRef = ref()
 const downloadLoading = ref(false)
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  queryMonomerId: {
+    type: [Number, String],
+    default: undefined
   }
 })
 
-const carryParam = computed(() => {
-  return { projectId: props.projectId, type: crud.query.type }
-})
 async function downloadAll() {
   try {
     downloadLoading.value = true
-    await fileDownload(downloadByProject, crud.query.projectId, crud.query.type)
+    await fileDownload(downloadByMonomer, crud.query.monomerId, crud.query.type)
   } catch (error) {
     console.log('根据单体下载', error)
   } finally {
     downloadLoading.value = false
   }
 }
+
+function handleCurrent(val) {
+  emit('currentChange', val)
+}
+
+const carryParam = computed(() => {
+  return { projectId: props.projectId, monomerId: crud.query.monomerId, dataType: crud.query.dataType }
+})
 </script>

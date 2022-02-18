@@ -18,11 +18,19 @@ export function edit(data) {
   })
 }
 
-export function del(id) {
+// export function del(id) {
+//   return request({
+//     module: 'plan',
+//     url: 'assemble/deleteAssemble/' + id,
+//     method: 'delete'
+//   })
+// }
+export function del(data) {
   return request({
     module: 'plan',
-    url: 'assemble/deleteAssemble/' + id,
-    method: 'delete'
+    url: 'assemble/deleteAssembleList',
+    method: 'delete',
+    data
   })
 }
 
@@ -89,6 +97,16 @@ export function downloadAssembleTemplate() {
     url: 'assemble/download',
     responseType: 'blob',
     method: 'get'
+  })
+}
+
+// 获取异常编号
+export function assembleError(params) {
+  return request({
+    module: 'plan',
+    url: 'assemble/listAbnormal',
+    method: 'get',
+    params
   })
 }
 

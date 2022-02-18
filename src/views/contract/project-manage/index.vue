@@ -24,15 +24,13 @@
         label="合同编号"
         fixed="left"
       />
-      <el-table-column
-        v-if="columns.visible('name')"
-        key="name"
-        prop="name"
-        :show-overflow-tooltip="true"
-        min-width="150"
-        align="center"
-        label="项目名称"
-      />
+      <el-table-column v-if="columns.visible('shortName')" key="shortName" prop="shortName" :show-overflow-tooltip="true" label="项目" min-width="150">
+        <template v-slot="scope">
+          <el-tooltip :content="scope.row.serialNumber+' '+scope.row.name" :show-after="50" placement="top">
+            <span>{{scope.row.shortName}}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('businessType')"
         key="businessType"
