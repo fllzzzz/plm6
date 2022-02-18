@@ -1,4 +1,4 @@
-import { getUserProjects } from '@/api/contract/project'
+import { getUserProjects, getUserVisaProjects } from '@/api/contract/project'
 import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
 import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
@@ -34,6 +34,10 @@ const state = {
   userProjectsCascadeMap: {},
   // 加载状态
   loaded: false,
+  // 用户可签证的项目列表
+  userVisaProjects: [],
+  // 可签证项目加载状态
+  visaLoaded: false,
   // 显示所有
   navbarShowAll: storage.get('navbarShowAll') || false
   // currentProject: storage.get('currentProject') || {}
@@ -42,6 +46,9 @@ const state = {
 const mutations = {
   SET_LOADED(state, loaded) {
     state.loaded = loaded
+  },
+  SET_VISA_LOADED(state, loaded) {
+    state.visaLoaded = loaded
   },
   SET_PROJECT_ID: (state, id) => {
     state.id = id
@@ -89,6 +96,9 @@ const mutations = {
   },
   SET_USER_PROJECTS_CASCADE: (state, cascade) => {
     state.userProjectsCascade = cascade
+  },
+  SET_USER_VISA_PROJECTS: (state, projects) => {
+    state.userVisaProjects = projects
   },
   // 设置showAll
   SET_NAVBAR_SHOW_ALL: (state, showAll) => {
@@ -147,6 +157,13 @@ const actions = {
     dispatch('permission/setRoutes', null, { root: true }).then(asyncRoutes => {
       addRoutes(asyncRoutes)
     })
+  },
+  // 获取可签证项目
+  async fetchUserVisaProjects({ commit, state }, params) {
+    commit('SET_VISA_LOADED', false)
+    const { content: projects = [] } = await getUserVisaProjects(params)
+    commit('SET_USER_VISA_PROJECTS', projects)
+    commit('SET_VISA_LOADED', true)
   }
 }
 
