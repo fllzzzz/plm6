@@ -26,6 +26,7 @@ const userLogin = {
 const userInfo = {
   url: '/api/user/info',
   method: 'get',
+  timeout: 1000,
   response: () => {
     return {
       code: 20000,
