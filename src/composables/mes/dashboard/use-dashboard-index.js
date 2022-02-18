@@ -2,7 +2,7 @@ import { computed, ref, onUnmounted, onMounted, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import RAF from '@/utils/raf'
 
-export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD }) {
+export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, pageSize = 100, intervalTime = 250 }) {
   const { globalProjectId } = mapGetters(['globalProjectId'])
   const boardList = ref([])
   watch(
@@ -45,6 +45,7 @@ export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
     const flag = !boxEl || !crud.page.hasNextPage || boxEl.scrollHeight > boxEl.clientHeight + distance
     if (flag) return
     let pollingTimes = 0 // 避免异常无限轮询
+    console.log(intervalTime)
     RAF.setInterval(() => {
       const _flag = boxEl && crud.page.hasNextPage && boxEl.scrollHeight < boxEl.clientHeight + distance
       if (_flag && ++pollingTimes <= 10) {
@@ -52,17 +53,17 @@ export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
       } else {
         RAF.clearInterval()
       }
-    }, 250)
+    }, intervalTime)
   }
 
-  function load() {
+  async function load() {
     if (crud.firstLoaded && crud.page.hasNextPage) {
-      crud.pageChangeHandler(++crud.page.page)
+      await crud.pageChangeHandler(++crud.page.page)
     }
   }
 
   CRUD.HOOK.beforeRefresh = () => {
-    crud.page.size = 100
+    crud.page.size = pageSize
     if (crud.page.page === 1) {
       boardList.value = []
     }

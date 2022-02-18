@@ -39,14 +39,14 @@
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="100">
+        <el-table-column key="needQuantity" prop="needQuantity" :show-overflow-tooltip="true" label="所需数量" min-width="100">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
+            <span>{{ scope.row.needQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="producedQuantity" prop="producedQuantity" :show-overflow-tooltip="true" label="已生产" min-width="100">
+        <el-table-column key="usableQuantity" prop="usableQuantity" :show-overflow-tooltip="true" label="可使用" min-width="100">
           <template v-slot="scope">
-            <span>{{ scope.row.producedQuantity }}</span>
+            <span>{{ scope.row.usableQuantity }}</span>
           </template>
         </el-table-column>
       </common-table>

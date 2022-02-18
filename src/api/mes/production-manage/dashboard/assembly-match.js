@@ -12,6 +12,7 @@ export function get(params) {
   return request({
     module: 'mes',
     url: 'kanban/assemble_matching/page',
+    cancelKey: false,
     method: 'get',
     params
   })

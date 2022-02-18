@@ -66,7 +66,7 @@
         value-format="YYYY"
         @change="updateChart"
       />
-      <div id="recordMain" style="width: 100%; height: 350px"></div>
+      <div v-loading="echartsLoading" id="recordMain" style="width: 100%; height: 350px"></div>
     </div>
     <production-record-detail v-model:visible="prDetailVisible" :projectId="globalProjectId" :month="month" />
     <outbound-record-detail v-model:visible="orDetailVisible" :projectId="globalProjectId" :month="month" />

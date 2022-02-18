@@ -21,7 +21,7 @@
         <span>{{ details.sourceSchedulingQuantity }}</span>
       </el-form-item>
       <el-form-item label="未生产数">
-        <span>{{ unInProductionQuantity }}</span>
+        <span>{{ details.unInProductionQuantity }}</span>
       </el-form-item>
       <el-form-item label="选择生产线班组" prop="teamId">
         <common-select
@@ -51,7 +51,7 @@
           v-model="form.quantity"
           :step="1"
           :min="0"
-          :max="unInProductionQuantity"
+          :max="details.unInProductionQuantity"
           size="small"
           controls-position="right"
           style="width: 305px"
@@ -63,7 +63,7 @@
 
 <script setup>
 import { add, teamList } from '@/api/mes/scheduling-manage/task/assistance'
-import { defineProps, ref, defineEmits, computed, reactive, watch } from 'vue'
+import { defineProps, ref, defineEmits, reactive, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import useVisible from '@compos/use-visible'
@@ -87,10 +87,6 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const submitLoading = ref(false)
 const form = reactive({ quantity: null })
-
-const unInProductionQuantity = computed(() => {
-  return (props.details?.sourceSchedulingQuantity || 0) - (props.details?.inProductionQuantity || 0)
-})
 
 watch(
   () => props.visible,
