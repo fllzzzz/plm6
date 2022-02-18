@@ -103,6 +103,8 @@ export const showProjectSearch = [
   { component: '/contract/contract-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
+  { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
+  { component: '/contract/sales-manage/visa-manage/change/index', type: allPT, required: false },
   { component: '/wms/purchase-order/index', type: allPT, required: false },
   { component: '/wms/logistics-order/index', type: allPT, required: false },
   { component: '/wms/inventory-warning/index', type: allPT, required: false },
@@ -128,8 +130,5 @@ export const showProjectSearch = [
   { component: '/wms/report/raw-material/material-inbound-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-outbound-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false },
-  { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false },
-  { component: '/cost/business-manage/trip-tracking/index', type: allPT, required: false },
-  { component: '/cost/business-manage/business-tracking/index', type: allPT, required: true },
-  { component: '/cost/business-manage/shipment-ledger/index', type: allPT, required: false }
+  { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
 ]
