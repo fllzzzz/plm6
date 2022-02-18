@@ -133,18 +133,18 @@ export default {
           meta: { title: '技术资料-深化图纸', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanBlueprint',
-          path: 'blueprint',
-          hidden: false,
-          component: '/plan/technical-data-manage/blueprint/index',
-          meta: { title: '技术资料-蓝图', icon: 'project', noCache: true }
-        },
-        {
           name: 'PlanChangeFile',
           path: 'change-file',
           hidden: false,
           component: '/plan/technical-data-manage/change-file/index',
           meta: { title: '技术资料-变更文件', icon: 'project', noCache: true }
+        },
+        {
+          name: 'PlanBlueprint',
+          path: 'blueprint',
+          hidden: false,
+          component: '/plan/technical-data-manage/blueprint/index',
+          meta: { title: '技术资料-蓝图', icon: 'project', noCache: true }
         },
         // {
         //   name: 'PlanModel',
