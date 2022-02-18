@@ -124,15 +124,19 @@
     .el-select {
       width: 100%;
     }
-    .cell {
-      overflow: visible;
+    .el-button + .el-button {
+      margin-left: 7px;
     }
+    // 会使单元格超出省略号无法正常显示，未找到之前为何写该样式
+    // .cell {
+    // overflow: visible;
+    // }
   }
   .el-table__expanded-cell {
-    padding: 0!important;
-    border-bottom: none!important;
+    padding: 0 !important;
+    border-bottom: none !important;
   }
-  .expanded + tr + .el-table__row{
+  .expanded + tr + .el-table__row {
     .el-table__cell {
       border-top: var(--el-table-border);
     }
@@ -140,7 +144,7 @@
 }
 
 .tree-table {
-  .expanded + tr + .el-table__row{
+  .expanded + tr + .el-table__row {
     .el-table__cell {
       border-top: none;
     }
@@ -342,7 +346,7 @@ body .el-table th.gutter {
 
 // 选择框禁用状态下，右侧箭头禁用
 .el-select {
-  .el-input.is-disabled .el-select__caret{
+  .el-input.is-disabled .el-select__caret {
     cursor: not-allowed;
   }
 }

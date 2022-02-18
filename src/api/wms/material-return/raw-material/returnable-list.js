@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * 可还库列表
+ * 可退库列表
  *
  * @param {Number} page 页码
  * @param {Number} size 每页数量
