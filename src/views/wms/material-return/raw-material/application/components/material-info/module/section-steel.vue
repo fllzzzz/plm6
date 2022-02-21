@@ -105,5 +105,5 @@ const props = defineProps({
 const { baseUnit } = useMatBaseUnit(props.basicClass)
 // 退库量
 const materialReturnableMete = computed(() => toPrecision(props.material.returnableMete, props.material.accountingPrecision))
-const materialReturnableLength = computed(() => toPrecision(props.material.returnableLength, baseUnit.length.precision))
+const materialReturnableLength = computed(() => toPrecision(props.material.returnableLength, baseUnit.value ? baseUnit.value.length.precision : 0))
 </script>

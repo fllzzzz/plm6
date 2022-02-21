@@ -57,12 +57,12 @@
       <span>长度({{ baseUnit.measure.unit }})</span>
       <span class="returnable-number" v-to-fixed="{ val: material.quantity || 0, dp: baseUnit.measure.precision }" />
     </span>
-    <span class="info-item">
+    <!-- <span class="info-item">
       <span>单重({{ baseUnit.weight.unit }})</span>
       <span class="returnable-number" v-to-fixed="{ val: material.singleReturnableMete || 0, dp: baseUnit.weight.precision }" />
       <span>&nbsp;/&nbsp;</span>
       <span v-to-fixed="{ val: material.singleMete || 0, dp: baseUnit.weight.precision }" />
-    </span>
+    </span> -->
     <span class="info-item">
       <span>总重({{ baseUnit.weight.unit }})</span>
       <span
