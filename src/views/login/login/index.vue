@@ -194,15 +194,15 @@ export default {
       await codeWait(1000)
       this.loading = false
       this.changeAuthentBox(false)
-      const logoinSuccess = Boolean(this.token && this.roles && this.roles.length > 0)
-      if (logoinSuccess) {
+      const loginSuccess = Boolean(this.token && this.roles && this.roles.length > 0)
+      if (loginSuccess) {
         await this.removeLoginBox()
       } else {
         this.$store.dispatch('user/logout')
         await this.changeLoginBox(false)
       }
 
-      this.$emit('login', { success: logoinSuccess })
+      this.$emit('login', { success: loginSuccess })
     },
     async removeLoginBox() {
       const duration = 1000 // 动画持续时间

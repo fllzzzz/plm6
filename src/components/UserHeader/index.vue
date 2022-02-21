@@ -39,7 +39,7 @@
 // TODO: 配置访问地址/菜单页链接修改/ 头像目前写死
 import { defineProps, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 import RightPanel from '@comp/RightPanel/index.vue'
 import settings from '@comp/RightPanel/settings/index.vue'
@@ -67,6 +67,7 @@ const props = defineProps({
 
 const store = useStore()
 const router = useRouter()
+const route = useRoute()
 
 const { user } = mapGetters('user')
 
@@ -85,7 +86,12 @@ async function logout() {
     await store.dispatch('user/logout')
     // TODO: redirect 暂时无效
     // router.push(`/login?redirect=${route.fullPath}`)
-    router.push(`/login`)
+    if (route.path === '/' || route.path.indexOf('/login?') > -1) {
+      // TODO: 后期可直接切回login组件，或拆分login与menu页面
+      router.go(0)
+    } else {
+      router.push(`/`)
+    }
   } catch (error) {
     console.log(error)
   } finally {
