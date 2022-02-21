@@ -29,11 +29,6 @@
           fixed="left"
         >
           <template #default="{ row }">
-            <table-cell-tag
-              :show="row.status && row.status !== projectStatusEnum.PROCESS.V"
-              :name="projectStatusEnum.V[row.status].L"
-              :offset="15"
-            />
             <span>{{ row.serialNumber }}</span>
           </template>
         </el-table-column>
@@ -65,6 +60,11 @@
         >
           <template v-slot="scope">
             <span v-empty-text>{{ scope.row.businessType && businessTypeEnum.VL[scope.row.businessType] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="90" align="center">
+          <template v-slot="scope">
+            <span v-empty-text>{{ projectStatusEnum.VL[scope.row.status] }}</span>
           </template>
         </el-table-column>
         <el-table-column
