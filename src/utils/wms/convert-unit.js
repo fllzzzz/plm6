@@ -2,7 +2,7 @@ import { MIN_UNIT, STEEL_ENUM, UNIT_NET_PRECISION } from '@/settings/config'
 import store from '@/store'
 import { codeWait } from '..'
 import { convertUnits } from '../convert/unit'
-import { deepClone, isBlank, isNotBlank, toFixed } from '../data-type'
+import { deepClone, isBlank, isNotBlank, toFixed, toPrecision } from '../data-type'
 import { unitTypeEnum } from '../enum/modules/common'
 import { patternNumerical } from '../validate/pattern'
 
@@ -299,8 +299,8 @@ function unitNetFormat({
     const ratio = accountingScale / measureScale
     if (patternNumerical.test(data[unitNet])) {
       const un = toSmallest ? data[unitNet] * ratio : data[unitNet] / ratio
-      data[unitNet] = toFixed(un, accountingPrecision)
-      data[accountingUnitNet] = toFixed(1 / un, measurePrecision)
+      data[unitNet] = toPrecision(un, UNIT_NET_PRECISION)
+      data[accountingUnitNet] = toPrecision(1 / un, UNIT_NET_PRECISION)
     }
   } else {
     // 计量单位为空，单位净量为1
