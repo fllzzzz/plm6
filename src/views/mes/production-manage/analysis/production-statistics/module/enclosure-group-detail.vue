@@ -1,5 +1,5 @@
 <template>
-  <common-drawer ref="drawerRef" title="生产统计-围护" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
+  <common-drawer ref="drawerRef" title="在制品统计-围护" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
     <template #titleRight>
       <div class="print-wrap">
         <print-table
@@ -274,7 +274,7 @@ async function fetchList() {
       return v
     })
   } catch (error) {
-    console.log('分组获取生产统计', error)
+    console.log('分组获取在制品统计', error)
   } finally {
     tableLoading.value = false
   }

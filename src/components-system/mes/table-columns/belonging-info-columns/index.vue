@@ -4,7 +4,8 @@
     prop="project.shortName"
     :show-overflow-tooltip="true"
     label="所属项目"
-    min-width="180px"
+    :width="fixedWidth ? '180px' : ''"
+    :min-width="!fixedWidth ? '180px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -16,7 +17,8 @@
     prop="monomer.name"
     :show-overflow-tooltip="true"
     label="单体"
-    min-width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -28,7 +30,8 @@
     prop="areaDetail.name"
     :show-overflow-tooltip="true"
     label="区域"
-    min-width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -40,7 +43,8 @@
     prop="factory.name"
     :show-overflow-tooltip="true"
     label="工厂"
-    min-width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -52,7 +56,8 @@
     prop="workshop.name"
     :show-overflow-tooltip="true"
     label="车间"
-    min-width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -64,7 +69,8 @@
     prop="productionLine.name"
     :show-overflow-tooltip="true"
     label="生产线"
-    min-width="120px"
+    :width="fixedWidth ? '120px' : ''"
+    :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -76,7 +82,8 @@
     prop="processName"
     :show-overflow-tooltip="true"
     label="工序"
-    min-width="100px"
+    :width="fixedWidth ? '100px' : ''"
+    :min-width="!fixedWidth ? '100px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -88,7 +95,9 @@
     prop="leaderName"
     :show-overflow-tooltip="true"
     label="班组"
-    min-width="100px"
+    :align="teamAlign"
+    :width="fixedWidth ? '100px' : ''"
+    :min-width="!fixedWidth ? '100px' : ''"
     :fixed="fixed"
   >
     <template #default="{ row }">
@@ -145,9 +154,16 @@ defineProps({
   columns: {
     type: Object
   },
+  teamAlign: {
+    type: String,
+    default: 'left'
+  },
   fixed: {
     // 定位
     type: String
+  },
+  fixedWidth: {
+    type: Boolean
   }
 })
 </script>

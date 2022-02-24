@@ -8,14 +8,14 @@
             <template #title class="system-menu-title">{{ lastChild.meta.title }}</template>
           </el-menu-item>
         </template>
-        <el-menu-item v-else :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
+        <el-menu-item v-else-if="judgeShowing(lastChild.meta)" :index="resolvePath(basePath, lastChild.path)" :class="{ 'submenu-title-noDropdown': !props.isNest }">
           <svg-icon :icon-class="lastChild.meta.icon || (props.item.meta && props.item.meta.icon)" />
           <template #title class="system-menu-title">{{ lastChild.meta.title }}</template>
         </el-menu-item>
       </app-link>
     </template>
     <template v-else>
-      <el-sub-menu v-if="childNeedProject" ref="subMenu" :index="resolvePath(basePath, props.item.path)" popper-append-to-body>
+      <el-sub-menu v-if="childNeedProject && judgeShowing(item.meta)" ref="subMenu" :index="resolvePath(basePath, props.item.path)" popper-append-to-body>
         <template #title>
           <item v-if="props.item.meta" :icon="props.item.meta.icon" :title="props.item.meta.title" />
         </template>
@@ -63,7 +63,7 @@ const props = defineProps({
   }
 })
 
-const { globalProject, currentMenu, globalProjectId } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId'])
+const { globalProject, currentMenu, globalProjectId, globalProContentBit } = mapGetters(['globalProject', 'currentMenu', 'globalProjectId', 'globalProContentBit'])
 const allEnclosure = ['PlanEnclosureList', 'PlanArtifactTreeList', 'PlanArtifactList', 'PlanMachinePartList', 'PlanAssemblyList']
 const enclosureItem = [
   { name: 'PlanTrussSupportList', no: TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V },
@@ -174,4 +174,10 @@ const childNeedProject = computed(() => {
   }
   return false
 })
+
+// 根据meta内的 productType 和 projectMode 判断是否显示菜单
+function judgeShowing(meta) {
+  return (!meta.productType || (meta.productType && meta.productType & globalProContentBit.value)) &&
+  (!meta.projectMode || (meta.projectMode && meta.projectMode & globalProject.value?.mode))
+}
 </script>

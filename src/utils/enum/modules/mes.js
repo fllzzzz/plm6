@@ -9,8 +9,8 @@ constantize(teamTypeEnum)
 
 // 班组属性
 const teamAttributeEnum = {
-  IN_STAFF: { L: '编内', K: 'IN_STAFF', V: true },
-  OFF_STAFF: { L: '编外', K: 'OFF_STAFF', V: false }
+  IN_STAFF: { L: '编制内', K: 'IN_STAFF', V: true, T: 'success' },
+  OFF_STAFF: { L: '编制外', K: 'OFF_STAFF', V: false, T: 'warning' }
 }
 constantize(teamAttributeEnum)
 
@@ -41,11 +41,11 @@ constantize(processReportTypeEnum)
 
 // mes 产品类型
 const componentTypeEnum = {
-  ASSEMBLE: { L: '组立', SL: '一次工序', K: 'ASSEMBLE', V: 1 << 4, COLOR: '#40ed8d' },
-  ARTIFACT: { L: '构件', SL: '二次工序', K: 'ARTIFACT', V: 1 << 1, COLOR: '#00babd' },
-  MACHINE_PART: { L: '零件', SL: '零件', K: 'MACHINE_PART', V: 1 << 0, COLOR: '#fad400' },
-  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: 1 << 2, COLOR: '#ff7800' },
-  AUXILIARY_MATERIAL: { L: '辅材', SL: '辅材', K: 'AUXILIARY_MATERIAL', V: 1 << 3, COLOR: '#f5f7fa' }
+  MACHINE_PART: { L: '零件', SL: '零件', K: 'MACHINE_PART', V: 1 << 0, T: '', COLOR: '#fad400' },
+  ASSEMBLE: { L: '组立', SL: '一次工序', K: 'ASSEMBLE', V: 1 << 4, T: 'success', COLOR: '#40ed8d' },
+  ARTIFACT: { L: '构件', SL: '二次工序', K: 'ARTIFACT', V: 1 << 1, T: 'success', COLOR: '#00babd' },
+  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: 1 << 2, T: 'warning', COLOR: '#ff7800' },
+  AUXILIARY_MATERIAL: { L: '辅材', SL: '辅材', K: 'AUXILIARY_MATERIAL', T: 'info', V: 1 << 3, COLOR: '#f5f7fa' }
 }
 constantize(componentTypeEnum)
 

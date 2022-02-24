@@ -121,10 +121,10 @@ export const enclosureProductionReportPM = {
   get: ['mes_production_enclosure_report:get'] // 结构报表列表
 }
 
-// 生产管理/生产分析/生产统计
+// 生产管理/生产分析/在制品统计
 export const productionStatisticsPM = {
-  get: ['mes_production_statistics:get'], // 生产统计列表
-  detail: ['mes_production_statistics:detail'] // 生产统计详情
+  get: ['mes_production_statistics:get'], // 在制品统计列表
+  detail: ['mes_production_statistics:detail'] // 在制品统计详情
 }
 
 // 生产管理/生产分析/迟滞报表
@@ -137,59 +137,59 @@ export const analysisDelayReportPM = {
 
 // ########################################################################
 
-// --------------------------- 项目看板 start ------------------------------
+// --------------------------- 项目制造 start ------------------------------
 
-// 项目看板/项目看板
+// 项目制造/项目看板
 export const projectDashboardPM = {
   get: ['mes_project_dashboard_product:get'], // 项目看板查看
   shipGet: ['mes_project_dashboard_product_ship:get'], // 项目看板查看
   qcGet: ['mes_project_dashboard_product_qc:get'] //
 }
 
-// 项目看板/结构看板
+// 项目制造/结构看板
 export const artifactProductionDashboardPM = {
   get: ['mes_artifact_production_dashboard:get'] // 结构看板列表
 }
 
-// 项目看板/围护看板
+// 项目制造/围护看板
 export const enclosureProductionDashboardPM = {
   get: ['mes_enclosure_production_dashboard:get'] // 围护看板列表
 }
 
-// 项目看板/项目报表
+// 项目制造/项目报表
 export const projectReportDashboardPM = {
   get: ['mes_project_report:get'] // 项目报表列表
 }
 
-// 项目看板/零件齐套
+// 项目制造/零件齐套
 export const assemblyMatchDashboardPM = {
   get: ['mes_assembly_match:get'] // 零件齐套列表
 }
 
-// 项目看板/涂装计算
+// 项目制造/涂装计算
 export const paintingDashboardPM = {
   get: ['mes_painting:get'], // 涂装计算列表
   edit: ['mes_painting:edit'], // 涂装计算编辑
   editArea: ['mes_painting:editArea'] // 涂装计算面积编辑
 }
 
-// --------------------------- 项目看板 end --------------------------------
+// --------------------------- 项目制造 end --------------------------------
 
 // ########################################################################
 
 // --------------------------- 班组报表 start ------------------------------
 
-// 班组报表/结构班组
+// 班组报表/结构班组进度
 export const artifactTeamReportPM = {
-  get: ['mes_team_report_artifact:get'], // 结构班组列表
-  detail: ['mes_team_report_artifact:detail'], // 结构班组-全景看板
-  processDetail: ['mes_team_report_artifact_process:detail'] // 结构班组-工序详情
+  get: ['mes_team_report_artifact:get'], // 结构班组进度列表
+  detail: ['mes_team_report_artifact:detail'], // 结构班组进度-全景看板
+  processDetail: ['mes_team_report_artifact_process:detail'] // 结构班组进度-工序详情
 }
 
-// 班组报表/围护班组
+// 班组报表/围护班组进度
 export const enclosureTeamReportPM = {
-  get: ['mes_team_report_enclosure:get'], // 围护班组列表
-  detail: ['mes_team_report_enclosure:detail'] // 围护班组-全景看板
+  get: ['mes_team_report_enclosure:get'], // 围护班组进度列表
+  detail: ['mes_team_report_enclosure:detail'] // 围护班组进度-全景看板
 }
 
 // 班组报表/编内-计件制

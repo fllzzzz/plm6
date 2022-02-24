@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 /**
  *
- * 获取生产统计汇总
+ * 获取在制品统计汇总
  */
 export function get(params) {
   return request({
@@ -15,7 +15,7 @@ export function get(params) {
 
 /**
  *
- * 分组获取生产统计汇总
+ * 分组获取在制品统计汇总
  */
 export function getByGroup(params) {
   return request({
@@ -28,7 +28,7 @@ export function getByGroup(params) {
 
 /**
  *
- * 获取生产统计详情
+ * 获取在制品统计详情
  */
 export function getDetail(params) {
   return request({

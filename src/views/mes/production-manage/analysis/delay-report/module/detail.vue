@@ -99,6 +99,8 @@ const list = ref([])
 
 const dataPath = {
   [componentTypeEnum.ARTIFACT.V]: 'artifactAssembleList',
+  [componentTypeEnum.ASSEMBLE.V]: 'artifactAssembleList',
+  [componentTypeEnum.MACHINE_PART.V]: 'artifactAssembleList',
   [componentTypeEnum.ENCLOSURE.V]: 'enclosureList'
 }
 const unitObj = computed(() => {
@@ -113,7 +115,7 @@ async function fetchList() {
   try {
     tableLoading.value = true
     const data = await detail(printParams.value)
-    list.value = data[dataPath[query.componentType]].map((v, i) => {
+    list.value = data[dataPath[query.productType]].map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
       v.unCompleteMete = useProductMeteConvert({

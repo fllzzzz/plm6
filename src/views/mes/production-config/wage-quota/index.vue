@@ -19,6 +19,7 @@
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
+      row-key="rowId"
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -92,34 +93,25 @@
 <script setup>
 import crudApi from '@/api/mes/production-config/process'
 import { ref } from 'vue'
-import { useStore } from 'vuex'
-import { ElMessageBox } from 'element-plus'
 
 import {
   processTypeEnum,
   processMaterialListTypeEnum as typeEnum,
-  processInspectTypeEnum as inspectTypeEnum,
-  processReportTypeEnum as reportTypeEnum,
-  wageQuotaTypeEnum,
+  wageQuotaTypeEnum
 } from '@enum-ms/mes'
-import EO from '@enum'
-import checkPermission from '@/utils/system/check-permission'
 import { configWageQuotaPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mPreview from './module/preview'
-
-const store = useStore()
 
 const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const tableRef = ref()
@@ -129,7 +121,7 @@ const { crud, columns, CRUD } = useCRUD(
     sort: [],
     optShow: { ...optShow },
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { ...crudApi }
   },
   tableRef
 )
@@ -148,7 +140,8 @@ function arr2obj(arr, mark = 'id') {
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
+  data.content.forEach((v, i) => {
+    v.rowId = i + '' + Math.random()
     v.priceMap = arr2obj(v.processWageList, 'wageQuotaType')
     v.originPriceMap = arr2obj(v.processWageList, 'wageQuotaType')
   })

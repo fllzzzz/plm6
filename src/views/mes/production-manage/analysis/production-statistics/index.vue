@@ -138,7 +138,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '生产统计',
+    title: '在制品统计',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

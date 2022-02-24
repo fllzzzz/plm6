@@ -41,12 +41,12 @@ const emit = defineEmits(['saveSuccess', 'update:visible'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   data: {
     type: Array,
-    default: () => [],
-  },
+    default: () => []
+  }
 })
 
 const crud = inject('crud')
@@ -58,7 +58,7 @@ const { maxHeight } = useMaxHeight(
     mainBox: '.wage-quota',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
-    clientHRepMainH: true,
+    clientHRepMainH: true
   },
   dialogVisible
 )
@@ -74,6 +74,7 @@ async function submit() {
             processId: v.id,
             wageQuotaType: item,
             price: v.priceMap[item],
+            organizationType: crud?.query?.organizationType
           })
         }
       }
