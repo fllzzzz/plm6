@@ -41,12 +41,12 @@
       </el-table-column>
       <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="合计毛重(kg)" min-width="150px" v-if="!enclosureCategory">
         <template v-slot="scope">
-          <span>{{ scope.row.totalNetWeight?scope.row.totalNetWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
+          <span>{{ scope.row.totalGrossWeight?scope.row.totalGrossWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalGrossWeight" prop="totalGrossWeight" :show-overflow-tooltip="true" label="合计净重(kg)" min-width="150px" v-if="!enclosureCategory">
         <template v-slot="scope">
-          <span>{{ scope.row.totalGrossWeight?scope.row.totalGrossWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
+          <span>{{ scope.row.totalNetWeight?scope.row.totalNetWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalLength" prop="totalLength" :show-overflow-tooltip="true" label="合计量(m)" min-width="160px" v-if="enclosureCategory">
