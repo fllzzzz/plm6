@@ -23,6 +23,7 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
 import { monomerAll } from '@/api/plan/monomer'
+import { get as getChangeReasonConfig } from '@/api/config/system-config/change-reason'
 
 /**
  * TODO: 后期设计配置变更，增加接口加载状态：未加载，加载中，加载完成，加载失败
@@ -63,6 +64,7 @@ const state = {
   unclosedRequisitions: [], // 未关闭的申购单
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
   monomers: {}, // 单体
+  changeReasonConfig: [],
   loaded: {
     // 接口是否加载
     factories: false,
@@ -80,7 +82,8 @@ const state = {
     suppliers: false,
     taxRate: false,
     unclosedRequisitions: false,
-    unclosedPurchaseOrder: false
+    unclosedPurchaseOrder: false,
+    changeReasonConfig: false
   }
 }
 
@@ -168,6 +171,9 @@ const mutations = {
   },
   SET_UNCLOSED_PURCHASE_ORDER(state, order) {
     state.unclosedPurchaseOrder = order
+  },
+  SET_CHANGE_REASON_CONFIG(state, changeReasonConfig) {
+    state.changeReasonConfig = changeReasonConfig
   }
 }
 
@@ -428,6 +434,13 @@ const actions = {
     const monomers = state.monomers
     const { content = [] } = await monomerAll(projectId)
     monomers[projectId] = content
+  },
+  // 变更原因
+  async fetchChangeReasonConfig({ commit }) {
+    const { content = [] } = await getChangeReasonConfig()
+    commit('SET_CHANGE_REASON_CONFIG', content)
+    commit('SET_LOADED', { key: 'changeReasonConfig' })
+    return content
   }
 }
 

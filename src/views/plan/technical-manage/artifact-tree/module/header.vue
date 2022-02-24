@@ -9,6 +9,7 @@
         :productType="TechnologyTypeAllEnum.STRUCTURE.V"
         :show-tips="areaInfo.length<=0"
         @getAreaInfo="getAreaInfo"
+        @change="monomerChange"
       />
       <area-tabs
         class="filter-item"
@@ -100,7 +101,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed, watch } from 'vue'
+import { defineProps, ref, computed, watch, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -111,6 +112,7 @@ import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact, delArtifactTreeByArea } from '@/api/plan/technical-manage/artifact-tree'
+import { isNotBlank } from '@data-type/index'
 
 const defaultQuery = {
   artifactName: '',
@@ -127,6 +129,7 @@ const areaInfo = ref([])
 const defaultTab = ref({})
 const deleteLoading = ref(false)
 const { crud, query, CRUD } = regHeader(defaultQuery)
+const emit = defineEmits(['getAreaData'])
 const mismatchList = ref([])
 const props = defineProps({
   projectId: {
@@ -161,6 +164,19 @@ const carryParam = computed(() => {
   delete param.machinePartSerialNumber
   return param
 })
+
+function monomerChange() {
+  let areaArr = []
+  if (monomerSelectRef.value) {
+    const val = monomerSelectRef.value.getOption(query.monomerId) || {}
+    if (isNotBlank(val)) {
+      if (val.areaSimpleList && val.areaSimpleList.length > 0) {
+        areaArr = val.areaSimpleList.filter(v => v.productType === TechnologyTypeAllEnum.STRUCTURE.V)
+      }
+    }
+  }
+  emit('getAreaData', areaArr)
+}
 
 function uploadSuccess() {
   getErrorArtifactData()

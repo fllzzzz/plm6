@@ -280,6 +280,13 @@ export default {
           meta: { title: '钢材配置', icon: 'project', noCache: true }
         },
         {
+          name: 'ChangeReason',
+          path: 'change-reason',
+          hidden: false,
+          component: '/config-manage/system/change-reason-config/index',
+          meta: { title: '变更原因配置', icon: 'project', noCache: true }
+        },
+        {
           name: 'TablePrinting',
           path: 'table-printing',
           hidden: false,
