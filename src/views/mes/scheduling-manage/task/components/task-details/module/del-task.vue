@@ -8,9 +8,9 @@
     width="500px"
   >
     <template #titleRight>
-      <common-button :loading="submitLoading" size="mini" type="primary" @click="submitIt">确认</common-button>
+      <common-button :loading="submitLoading" size="mini" type="primary" :disabled="!form.quantity" @click="submitIt">确认</common-button>
     </template>
-    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px">
+    <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="100px" @submit.prevent>
       <el-form-item label="编号">
         <span v-empty-text>{{ details.serialNumber }}</span>
       </el-form-item>
@@ -21,14 +21,14 @@
         <span>{{ details.sourceSchedulingQuantity }}</span>
       </el-form-item>
       <el-form-item label="未生产数">
-        <span>{{ unInProductionQuantity }}</span>
+        <span>{{ details.unInProductionQuantity }}</span>
       </el-form-item>
       <el-form-item label="删除数量" prop="quantity">
         <common-input-number
           v-model="form.quantity"
           :step="1"
           :min="0"
-          :max="unInProductionQuantity"
+          :max="details.unInProductionQuantity"
           :precision="0"
           size="small"
           controls-position="right"
@@ -41,7 +41,7 @@
 
 <script setup>
 import { delTask } from '@/api/mes/scheduling-manage/task/common'
-import { defineProps, ref, defineEmits, computed, reactive, watch } from 'vue'
+import { defineProps, ref, defineEmits, reactive, watch } from 'vue'
 import { ElNotification } from 'element-plus'
 
 import useVisible from '@compos/use-visible'
@@ -65,10 +65,6 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 const submitLoading = ref(false)
 const form = reactive({ quantity: null })
-
-const unInProductionQuantity = computed(() => {
-  return (props.details?.sourceSchedulingQuantity || 0) - (props.details?.inProductionQuantity || 0)
-})
 
 watch(
   () => props.visible,

@@ -89,7 +89,7 @@ const { maxHeight } = useMaxHeight(
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 是否甲供订单

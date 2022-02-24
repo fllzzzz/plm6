@@ -16,8 +16,8 @@ constantize(teamAttributeEnum)
 
 // 工序类型
 const processTypeEnum = {
-  ONCE: { L: '一次工序', K: 'ONCE', V: false },
-  TWICE: { L: '二次工序', K: 'TWICE', V: true }
+  ONCE: { L: '一次工序', SL: '组立', K: 'ONCE', V: false },
+  TWICE: { L: '二次工序', SL: '构件', K: 'TWICE', V: true }
 }
 constantize(processTypeEnum)
 
@@ -66,15 +66,15 @@ constantize(processMaterialListTypeEnum)
 
 // 工价定额单价类型
 const wageQuotaTypeEnum = {
-  WEIGHT: { L: '按重量计价', SL:'重量', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨', meteUnit: '吨', C_UNIT: 't', DP: 'COM_WT__T' },
-  LENGTH: { L: '按长度计价', SL:'长度', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米', meteUnit: '米', C_UNIT: 'm', DP: 'COM_L__M' },
-  AREA: { L: '按面积计价', SL:'面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
+  WEIGHT: { L: '按重量计价', SL: '重量', K: 'WEIGHT', V: 1 << 0, F: 'weightPrice', unit: '元/吨', meteUnit: '吨', C_UNIT: 't', DP: 'COM_WT__T' },
+  LENGTH: { L: '按长度计价', SL: '长度', K: 'LENGTH', V: 1 << 1, F: 'lengthPrice', unit: '元/米', meteUnit: '米', C_UNIT: 'm', DP: 'COM_L__M' },
+  AREA: { L: '按面积计价', SL: '面积', K: 'AREA', V: 1 << 2, F: 'areaPice', unit: '元/平方米', meteUnit: '平方米', C_UNIT: '㎡', DP: 'COM_AREA__M2' }
 }
 constantize(wageQuotaTypeEnum)
 
 // 楼承板子类型
 const floorPlateTypeEnum = {
-  TRUSS_FLOOR_PLATE: { L: '桁架式楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
+  TRUSS_FLOOR_PLATE: { L: '桁架楼承板', K: 'TRUSS_FLOOR_PLATE', V: 1 << 3 },
   PRESSED_FLOOR_PLATE: { L: '压型楼承板', K: 'PRESSED_FLOOR_PLATE', V: 1 << 4 }
   // OPEN_CLOSED_FLOOR_PLATE: { L: '开闭口楼承板', K: 'OPEN_CLOSED_FLOOR_PLATE', V: 1 << 4 }
 }
@@ -124,8 +124,9 @@ const packStatusTypeEnum = {
   // UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 1 },
   // ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 2 },
   // CHECKED: { L: '已出库', K: 'CHECKED', V: 3 }
-  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: false, T: '' },
-  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: true, T: 'warning' }
+  UNENTRUCK: { L: '未装车', K: 'UNENTRUCK', V: 0, T: '' },
+  ENTRUCK: { L: '已装车', K: 'ENTRUCK', V: 1, T: 'warning' },
+  SHIPMENT: { L: '已发运', K: 'SHIPMENT', V: 2, T: 'success' }
 }
 constantize(packStatusTypeEnum)
 
@@ -187,10 +188,10 @@ constantize(abnormalChangeTypeEnum)
 
 // 问题整改状态
 const improveStatusEnum = {
-  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 0, T: 'danger' },
-  RECTIFIED: { L: '已整改', K: 'RECTIFIED', V: 1 << 1, T: 'success' },
-  ADOPT: { L: '整改通过', K: 'ADOPT', V: 1 << 2, T: 'warning' },
-  UN_ADOPT: { L: '整改未通过', K: 'UN_ADOPT', V: 1 << 3, T: 'info' }
+  WAIT_RECTIFIED: { L: '未整改', K: 'WAIT_RECTIFIED', V: 1 << 0, T: '' },
+  RECTIFIED: { L: '已反馈', K: 'RECTIFIED', V: 1 << 1, T: 'warning' },
+  ADOPT: { L: '整改通过', K: 'ADOPT', V: 1 << 2, T: 'success' },
+  UN_ADOPT: { L: '整改未通过', K: 'UN_ADOPT', V: 1 << 3, T: 'danger' }
 }
 constantize(improveStatusEnum)
 

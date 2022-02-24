@@ -1,7 +1,7 @@
-import { getUserProjects } from '@/api/contract/project'
+import { getUserProjects, getUserVisaProjects } from '@/api/contract/project'
 import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
-import { projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
 import storage from '@/utils/storage'
 import { projectsToCascade } from '@/utils/project'
 import { isNotBlank, isBlank } from '@data-type/index'
@@ -14,6 +14,8 @@ const state = {
   id: storage.get('projectId'),
   // 当前项目
   curProject: storage.get('curProject'),
+  // 当前项目内容（位运算结果）
+  curProContentBit: storage.get('curProContentBit'),
   // 当前路由项目类型
   routeProjectType: storage.get('routeProjectType'),
   // 当前项目类型
@@ -32,6 +34,10 @@ const state = {
   userProjectsCascadeMap: {},
   // 加载状态
   loaded: false,
+  // 用户可签证的项目列表
+  userVisaProjects: [],
+  // 可签证项目加载状态
+  visaLoaded: false,
   // 显示所有
   navbarShowAll: storage.get('navbarShowAll') || false
   // currentProject: storage.get('currentProject') || {}
@@ -41,11 +47,26 @@ const mutations = {
   SET_LOADED(state, loaded) {
     state.loaded = loaded
   },
+  SET_VISA_LOADED(state, loaded) {
+    state.visaLoaded = loaded
+  },
   SET_PROJECT_ID: (state, id) => {
     state.id = id
     state.curProject = state.userProjectKV[id]
+    // 计算项目内容的位运算结果
+    state.curProContentBit = state.curProject?.projectContentList.reduce((res, cur) => {
+      cur.bit = cur.no || cur?.childrenList?.reduce((cRes, cCur) => {
+        return cRes | cCur.no
+      }, 0)
+      return res | cur.bit
+    }, 0)
+    // 有围护内容需手动加上折边件
+    if (state.curProContentBit > TechnologyTypeAllEnum.STRUCTURE.V) {
+      state.curProContentBit = state.curProContentBit | TechnologyTypeAllEnum.BENDING.V
+    }
     storage.set('projectId', id)
     storage.set('curProject', state.curProject)
+    storage.set('curProContentBit', state.curProContentBit)
   },
   // SET_CURRENT_PROJECT: (state, project) => {
   //   state.currentProject = project
@@ -75,6 +96,9 @@ const mutations = {
   },
   SET_USER_PROJECTS_CASCADE: (state, cascade) => {
     state.userProjectsCascade = cascade
+  },
+  SET_USER_VISA_PROJECTS: (state, projects) => {
+    state.userVisaProjects = projects
   },
   // 设置showAll
   SET_NAVBAR_SHOW_ALL: (state, showAll) => {
@@ -133,6 +157,13 @@ const actions = {
     dispatch('permission/setRoutes', null, { root: true }).then(asyncRoutes => {
       addRoutes(asyncRoutes)
     })
+  },
+  // 获取可签证项目
+  async fetchUserVisaProjects({ commit, state }, params) {
+    commit('SET_VISA_LOADED', false)
+    const { content: projects = [] } = await getUserVisaProjects(params)
+    commit('SET_USER_VISA_PROJECTS', projects)
+    commit('SET_VISA_LOADED', true)
   }
 }
 

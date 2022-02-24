@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader />
+    <m-header />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
@@ -32,7 +32,13 @@
         min-width="160"
         label="退货单号"
         align="left"
-      />
+      >
+        <template #default="{ row }">
+          <!-- 解冻 -->
+          <table-cell-tag v-if="row.boolHasUnfreeze" name="解冻" type="unfreeze" :offset="15" />
+          <span>{{ row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('purchaseOrder.serialNumber')"
         key="purchaseOrder.serialNumber"
@@ -160,7 +166,7 @@
       <!--编辑与删除-->
       <el-table-column label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" :show-edit="false" show-detail />
+          <ud-operation :disabled-del="row.reviewStatus !== reviewStatusEnum.UNREVIEWED.V" :data="row" :show-edit="false" show-detail />
         </template>
       </el-table-column>
     </common-table>
@@ -183,6 +189,8 @@
 import crudApi from '@/api/wms/material-reject/raw-material/record'
 import { detail as getInboundDetail } from '@/api/wms/material-inbound/raw-material/review'
 import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { rawMaterialRejectRecordPM as permission } from '@/page-permission/wms'
+
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -201,14 +209,6 @@ import InboundDetail from '@/views/wms/material-inbound/raw-material/review/modu
 import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_rejectApplication_record:get'],
-  del: ['wms_rejectApplication_record:del'],
-  inboundReceiptDetail: ['wms_inboundApplication_review:detail'],
-  purchaseOrderDetail: ['wms_purchaseOrder:detail']
-}
 
 const optShow = {
   add: false,

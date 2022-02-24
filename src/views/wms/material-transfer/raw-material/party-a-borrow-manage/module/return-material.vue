@@ -96,7 +96,7 @@
                 v-model="row.returnedQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
-                :max="row.operableQuantity"
+                :max="row.corOperableQuantity"
                 controls-position="right"
                 @change="handleQuantityChange($event, row)"
               />

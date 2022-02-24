@@ -6,7 +6,7 @@
         v-if="showPartyA && partyAPosition === 'index'"
         :show="!!getInfo(row, 'boolPartyA')"
         name="甲供"
-        :color="TAG_PARTY_DEF_COLOR"
+        type="partyA"
       />
       <span>{{ $index + 1 }}</span>
     </template>
@@ -26,7 +26,7 @@
         v-if="showPartyA && partyAPosition === 'project'"
         :show="!!getInfo(row, 'boolPartyA')"
         name="甲供"
-        :color="TAG_PARTY_DEF_COLOR"
+        type="partyA"
         :offset="15"
       />
       <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
@@ -145,7 +145,7 @@
 
 <script setup>
 import { defineEmits, defineProps, computed, provide, ref } from 'vue'
-import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
+import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { materialRejectStatusEnum, materialOutboundModeEnum, partyAMatTransferEnum } from '@/utils/enum/modules/wms'
 import { isBlank } from '@/utils/data-type'
@@ -159,7 +159,6 @@ import auxMat from './module/aux-mat.vue'
 import gas from './module/gas.vue'
 import rawMat from './module/raw-mat.vue'
 
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
 

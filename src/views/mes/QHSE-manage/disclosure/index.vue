@@ -21,8 +21,8 @@
         align="center"
         width="100px"
       >
-        <template v-slot="scope">
-          <span>{{ problemTypeEnum.VL[scope.row.type] }}</span>
+        <template #default="{ row }">
+          <span>{{ problemTypeEnum.VL[row.type] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -33,16 +33,16 @@
         align="center"
         width="140px"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <span style="white-space: pre-line">
-            <span>{{ scope.row.userName + '\n' }}</span>
-            <span v-parse-time="scope.row.createTime" />
+            <span>{{ row.userName + '\n' }}</span>
+            <span v-parse-time="row.createTime" />
           </span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('projectName')" prop="projectName" :show-overflow-tooltip="true" label="项目" min-width="250">
-        <template v-slot="scope">
-          <span>{{ scope.row.projectName }}</span>
+        <template #default="{ row }">
+          <span>{{ row.projectName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -52,8 +52,8 @@
         label="问题"
         min-width="100px"
       >
-        <template v-slot="scope">
-          <span>{{ scope.row.qualityTypeListStr }}</span>
+        <template #default="{ row }">
+          <span>{{ row.qualityTypeListStr }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -82,11 +82,11 @@
         width="150px"
         align="left"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <div class="imgs-box">
             <el-image
-              v-for="url in scope.row.attachmentDTOS"
-              :preview-src-list="scope.row.imgUrls"
+              v-for="url in row.attachmentDTOS"
+              :preview-src-list="row.imgUrls"
               :initial-index="1"
               :key="url.id"
               :src="url.tinyImageUrl"
@@ -104,9 +104,9 @@
         min-width="80px"
         align="center"
       >
-        <template v-slot="scope">
-          <el-tag v-if="improveStatusEnum.VK[scope.row.status]" :type="improveStatusEnum.V[scope.row.status].T">{{
-            improveStatusEnum.VL[scope.row.status]
+        <template #default="{ row }">
+          <el-tag v-if="improveStatusEnum.VK[row.status]" :type="improveStatusEnum.V[row.status].T">{{
+            improveStatusEnum.VL[row.status]
           }}</el-tag>
         </template>
       </el-table-column>
@@ -118,11 +118,11 @@
         width="150px"
         align="left"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <div class="imgs-box">
             <el-image
-              v-for="url in scope.row.rectifyAttachmentDTOS"
-              :preview-src-list="scope.row.rectifyImgUrls"
+              v-for="url in row.rectifyAttachmentDTOS"
+              :preview-src-list="row.rectifyImgUrls"
               :initial-index="1"
               :key="url.id"
               :src="url.tinyImageUrl"
@@ -139,12 +139,17 @@
         align="center"
         width="140px"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <span style="white-space: pre-line">
-            <span v-empty-text>{{ scope.row.rectifyName }}</span
+            <span v-empty-text>{{ row.rectifyName }}</span
             >{{ '\n' }}
-            <span v-parse-time="scope.row.rectifyTime" />
+            <span v-parse-time="row.rectifyTime" />
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('forfeit')" :show-overflow-tooltip="true" prop="forfeit" label="罚金(元)" align="center">
+        <template #default="{ row }">
+          <span v-to-fixed="{ k: 'YUAN', val: row.forfeit }"></span>
         </template>
       </el-table-column>
     </common-table>

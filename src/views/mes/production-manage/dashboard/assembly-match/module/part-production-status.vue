@@ -21,7 +21,7 @@
       </div>
     </template>
     <template #content>
-      <div>
+      <div class="nameViews">
         <span>构件：</span>
         <span v-for="n in names" :key="n.name">
           <el-tag :type="n.tagType" effect="plain" style="margin-right:5px;margin-bottom:5px;">{{ n.name }}</el-tag>
@@ -39,14 +39,14 @@
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="100">
+        <el-table-column key="needQuantity" prop="needQuantity" :show-overflow-tooltip="true" label="所需数量" min-width="100">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
+            <span>{{ scope.row.needQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="producedQuantity" prop="producedQuantity" :show-overflow-tooltip="true" label="已生产" min-width="100">
+        <el-table-column key="usableQuantity" prop="usableQuantity" :show-overflow-tooltip="true" label="可使用" min-width="100">
           <template v-slot="scope">
-            <span>{{ scope.row.producedQuantity }}</span>
+            <span>{{ scope.row.usableQuantity }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -83,7 +83,8 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 // 高度
 const { maxHeight } = useMaxHeight(
   {
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.nameViews'],
+    extraHeight: 10,
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
     clientHRepMainH: true

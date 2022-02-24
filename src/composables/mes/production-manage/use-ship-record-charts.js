@@ -1,5 +1,5 @@
 import * as echarts from 'echarts'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { getShipList } from '@/api/mes/production-manage/dashboard/project-dashboard'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -29,7 +29,9 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
 
   onMounted(async () => {
     initChart(elementId, [])
-    await updateChart()
+    nextTick(async () => {
+      await updateChart()
+    })
   })
 
   async function updateChart() {
@@ -55,7 +57,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
 
   function initChart(elementId) {
     var chartDom = document.getElementById(elementId)
-    myChart = echarts.init(chartDom)
+    myChart = echarts.init(chartDom, null, { locale: 'ZH' })
     var option
 
     option = {
@@ -72,6 +74,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
         trigger: 'axis'
       },
       toolbox: {
+        right: 20,
         show: true,
         feature: {
           magicType: {
@@ -93,7 +96,7 @@ export default function useShipRecordEcharts({ elementId, title, globalProjectId
       },
       series: [{
         data: [],
-        type: 'line'
+        type: 'bar'
       }]
     }
 

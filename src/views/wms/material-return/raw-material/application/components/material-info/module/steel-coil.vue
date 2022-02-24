@@ -57,17 +57,17 @@
       <span>长度({{ baseUnit.measure.unit }})</span>
       <span class="returnable-number" v-to-fixed="{ val: material.quantity || 0, dp: baseUnit.measure.precision }" />
     </span>
-    <span class="info-item">
+    <!-- <span class="info-item">
       <span>单重({{ baseUnit.weight.unit }})</span>
       <span class="returnable-number" v-to-fixed="{ val: material.singleReturnableMete || 0, dp: baseUnit.weight.precision }" />
       <span>&nbsp;/&nbsp;</span>
       <span v-to-fixed="{ val: material.singleMete || 0, dp: baseUnit.weight.precision }" />
-    </span>
+    </span> -->
     <span class="info-item">
       <span>总重({{ baseUnit.weight.unit }})</span>
       <span
-        :style="{ color: material.returnableMete < 0 ? 'red' : '#67c23a' }"
-        v-to-fixed="{ val: material.returnableMete || 0, dp: baseUnit.weight.precision }"
+        :style="{ color: materialReturnableMete < 0 ? 'red' : '#67c23a' }"
+        v-to-fixed="{ val: materialReturnableMete || 0, dp: baseUnit.weight.precision }"
       />
       <span>&nbsp;/&nbsp;</span>
       <span v-to-fixed="{ val: material.mete || 0, dp: baseUnit.weight.precision }" />
@@ -76,8 +76,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { isNotBlank } from '@/utils/data-type'
+import { computed, defineProps } from 'vue'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 // eslint-disable-next-line no-unused-vars
@@ -96,4 +96,6 @@ const props = defineProps({
 
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(props.basicClass)
+// 退库量
+const materialReturnableMete = computed(() => toPrecision(props.material.returnableMete, props.material.accountingPrecision))
 </script>

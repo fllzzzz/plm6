@@ -14,7 +14,7 @@ const service = axios.create({
   // api的base_url：null
   // baseURL: process.env.BASE_API,
   timeout: 600000, // 请求超时时间
-  // Content-Type: 默认使用application/json; 如特殊接口后端有要求可以使用：application/x-www-form-urlencoded
+  // Content-Type: 默认使用application/json; 如特殊接口服务端有要求可以使用：application/x-www-form-urlencoded
   headers: { 'Content-Type': 'application/json' },
   // 接口取消的key值，true：表示可取消（true时使用url作为key）。也可赋值为其他类型，用来表示接口取消对应的key值
   cancelKey: true

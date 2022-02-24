@@ -1,7 +1,9 @@
 <template>
   <el-input-number
+    v-if="mode !== 'input'"
+    v-bind="$attrs"
     ref="inputRef"
-    v-model="copyValue"
+    v-model="currentValue"
     :min="min"
     :max="max"
     :step="step"
@@ -18,10 +20,24 @@
     @blur="blurCallBack"
     @focus="focusCallBack"
   />
+  <el-input
+    v-else
+    v-bind="$attrs"
+    ref="inputRef"
+    v-model="currentValue"
+    type="number"
+    clearable
+    :size="size"
+    :disabled="disabled"
+    :placeholder="placeholder"
+    @change="changeCallBack"
+    @blur="blurCallBack"
+    @focus="focusCallBack"
+  />
 </template>
 
 <script setup>
-import { isNotBlank } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { ref, defineExpose, defineProps, defineEmits, watchEffect, computed } from 'vue'
 
 const emit = defineEmits(['change', 'blur', 'focus', 'update:modelValue'])
@@ -30,6 +46,10 @@ const emit = defineEmits(['change', 'blur', 'focus', 'update:modelValue'])
 const props = defineProps({
   modelValue: {
     type: [Number, String, null]
+  },
+  mode: {
+    // 模式，普通模式，input模式
+    type: String
   },
   min: {
     type: [String, Number],
@@ -81,7 +101,7 @@ const props = defineProps({
 })
 
 const inputRef = ref()
-const copyValue = ref()
+const currentValue = ref()
 
 const max = computed(() => {
   if (typeof props.max === 'string') return +props.max
@@ -96,21 +116,21 @@ const min = computed(() => {
 watchEffect(() => {
   let value = !isNaN(props.modelValue) && isNotBlank(props.modelValue) ? props.modelValue : undefined
   if (typeof value === 'string') value = +value
-  copyValue.value = value
+  currentValue.value = value
 })
 
 watchEffect(() => {
-  if (isNotBlank(copyValue.value) && isNotBlank(props.max)) {
-    if (copyValue.value > props.max) {
-      changeCallBack(props.max, copyValue.value)
+  if (isNotBlank(currentValue.value) && isNotBlank(props.max)) {
+    if (currentValue.value > props.max) {
+      changeCallBack(props.max, currentValue.value)
     }
   }
 })
 
 watchEffect(() => {
-  if (isNotBlank(copyValue.value) && isNotBlank(props.max)) {
-    if (copyValue.value < props.min) {
-      changeCallBack(props.min, copyValue.value)
+  if (isNotBlank(currentValue.value) && isNotBlank(props.max)) {
+    if (currentValue.value < props.min) {
+      changeCallBack(props.min, currentValue.value)
     }
   }
 })
@@ -120,8 +140,26 @@ function changeCallBack(currentValue, oldValue) {
   emit('change', currentValue, oldValue)
 }
 function blurCallBack(event) {
+  if (props.mode === 'input') setCurrentValue()
   emit('blur', event)
 }
+
+function setCurrentValue() {
+  const oldValue = currentValue.value
+  let val = currentValue.value
+  if (typeof val !== 'number') {
+    val = void 0
+  }
+  if (typeof val === 'number' && props.precision !== void 0) {
+    val = toPrecision(val, props.precision)
+  }
+  if (val !== void 0 && val >= props.max) val = props.max
+  if (val !== void 0 && val <= props.min) val = props.min
+  if (val === currentValue.value) return
+  currentValue.value = val
+  changeCallBack(currentValue.value, oldValue)
+}
+
 function focusCallBack(event) {
   emit('focus', event)
 }

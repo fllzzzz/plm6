@@ -100,3 +100,19 @@ export function compareArray(a, b, key, order = true) {
   return true
 }
 
+/**
+ * 为数组根据sourceMap赋值
+ * @param {*} data 需要赋值的对象
+ * @param {*} sourceMap key:id, value:sourceId
+ * @returns
+ */
+export function setSourceInfo(data = {}, sourceMap, reversed = false) {
+  sourceMap.forEach((val, key) => {
+    if (reversed) {
+      data[key] = data[val]
+    } else {
+      data[val] = data[key]
+    }
+  })
+  return data
+}

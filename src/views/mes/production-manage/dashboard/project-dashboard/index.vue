@@ -1,7 +1,15 @@
 <template>
   <div class="app-container project-dashboard">
     <div style="margin-bottom: 15px; display: flex">
-      <monomer-select ref="monomerRef" v-model="monomerId" size="small" :project-id="globalProjectId" style="margin-right: 10px" />
+      <monomer-select
+        ref="monomerRef"
+        v-model="monomerId"
+        size="small"
+        :project-id="globalProjectId"
+        :default="false"
+        clearable
+        style="margin-right: 10px"
+      />
       <common-radio-button v-model="projectType" default :options="monomerProductTypeEnum" type="enum" size="small" />
     </div>
     <div class="project-state-view-main">
@@ -39,7 +47,7 @@
             <span class="tc-success">{{ diffDate }}</span>
           </el-descriptions-item>
         </el-descriptions>
-        <div id="QCMain" class="QC-echarts"></div>
+        <div v-loading="qhseEchartsLoading" id="QCMain" class="QC-echarts"></div>
       </div>
       <div class="view-right" style="position: relative" v-loading="shipEchartsLoading">
         <el-date-picker
@@ -53,7 +61,7 @@
           value-format="YYYY-MM"
           @change="shipUpdateChart"
         />
-        <div v-loading="qhseEchartsLoading" id="shipMain" class="ship-echarts"></div>
+        <div v-loading="shipEchartsLoading" id="shipMain" class="ship-echarts"></div>
       </div>
     </div>
     <div v-loading="tableLoading">
@@ -135,7 +143,7 @@ import checkPermission from '@/utils/system/check-permission'
 import EO from '@enum'
 import { projectComponentTypeEnum, componentTypeEnum } from '@enum-ms/mes'
 import { dateDifference } from '@/utils/date'
-import { toFixed } from '@data-type/index'
+import { toFixed, deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useShipRecordCharts from '@compos/mes/production-manage/use-ship-record-charts'
@@ -170,7 +178,7 @@ const initSummaryInfo = {
 }
 const monomerId = ref()
 const projectType = ref()
-const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globalProject'])
+const { globalProjectId, globalProject, globalProContentBit } = mapGetters(['globalProjectId', 'globalProject', 'globalProContentBit'])
 const diffDate = computed(() => {
   const _endDate = globalProject.value.endDate ? globalProject.value.endDate : new Date()
   return (globalProject.value && dateDifference(globalProject.value.startDate, _endDate)) || 0
@@ -193,13 +201,13 @@ const { updateChart: qhseUpdateChart, echartsLoading: qhseEchartsLoading } = use
 
 const monomerRef = ref()
 const monomerProductTypeEnum = computed(() => {
-  const _productType = monomerRef.value?.getProductType(monomerId.value) || 0
+  const _productType = monomerRef.value?.getProductType(monomerId.value) || globalProContentBit.value
   return EO.getBits(projectComponentTypeEnum.ENUM, _productType)
 })
 
 const tableLoading = ref(false)
 const list = ref([])
-const summaryInfo = ref(initSummaryInfo)
+const summaryInfo = ref(deepClone(initSummaryInfo))
 const productType = computed(() => {
   return projectType.value & projectComponentTypeEnum.ARTIFACT.V ? componentTypeEnum.ARTIFACT.V : componentTypeEnum.ENCLOSURE.V
 })
@@ -220,12 +228,12 @@ async function fetchList() {
   if (!checkPermission(permission.get)) {
     return
   }
-  if (!projectType.value || !monomerId.value || !globalProjectId.value) {
+  if (!projectType.value || !globalProjectId.value) {
     return
   }
   try {
     list.value = []
-    summaryInfo.value = initSummaryInfo
+    summaryInfo.value = deepClone(initSummaryInfo)
     tableLoading.value = true
     const content = await getSummaryList({
       projectId: globalProjectId.value,
@@ -238,7 +246,8 @@ async function fetchList() {
         res[key] += cur[key] || 0
       }
       return res
-    }, initSummaryInfo)
+    }, deepClone(initSummaryInfo))
+    summaryInfo.value.shipQuantity = summaryInfo.value.cargoQuantity
     summaryInfo.value.totalMete = useProductMeteConvert({
       productType: productType.value,
       weight: { num: summaryInfo.value.totalNetWeight },
@@ -258,9 +267,10 @@ async function fetchList() {
     summaryInfo.value.unShipQuantity = summaryInfo.value.quantity - summaryInfo.value.shipQuantity || 0
     summaryInfo.value.unCompleteMete = (summaryInfo.value.totalMete - summaryInfo.value.completeMete).toFixed(unitObj.value.DP) || 0
     summaryInfo.value.completeRate =
-      (summaryInfo.value.totalMete && (summaryInfo.value.completeMete / summaryInfo.value.totalMete).toFixed(2)) || 0
+      (summaryInfo.value.totalMete && ((summaryInfo.value.completeMete / summaryInfo.value.totalMete) * 100).toFixed(2)) || 0
     summaryInfo.value.unShipMete = (summaryInfo.value.totalMete - summaryInfo.value.shipMete).toFixed(unitObj.value.DP) || 0
-    summaryInfo.value.shipRate = (summaryInfo.value.totalMete && (summaryInfo.value.shipMete / summaryInfo.value.totalMete).toFixed(2)) || 0
+    summaryInfo.value.shipRate =
+      (summaryInfo.value.totalMete && ((summaryInfo.value.shipMete / summaryInfo.value.totalMete) * 100).toFixed(2)) || 0
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.totalQuantity = v.quantity

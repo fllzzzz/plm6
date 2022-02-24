@@ -281,7 +281,7 @@
             v-model="form.remark"
             type="textarea"
             :autosize="{ minRows: 6, maxRows: 8 }"
-            :maxLength="500"
+            :maxlength="500"
             placeholder="可填写备注"
             style="max-width: 500px"
           />

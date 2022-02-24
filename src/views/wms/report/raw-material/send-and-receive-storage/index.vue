@@ -20,7 +20,7 @@
       <el-table-column label="序号" type="index" align="center" width="55" fixed="left">
         <template #default="{ row, $index }">
           <!-- 是否甲供材料 -->
-          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" />
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
@@ -315,7 +315,7 @@ import { getSendAndReceiveStorage, getSendAndReceiveStorageDetail } from '@/api/
 import { computed, ref, watch } from 'vue'
 import { reportRawMaterialSendAndReceiveStoragePM as permission } from '@/page-permission/wms'
 import { measureTypeEnum, projectWarehouseTypeEnum, unitTypeEnum } from '@/utils/enum/modules/wms'
-import { STEEL_ENUM, TAG_PARTY_DEF_COLOR } from '@/settings/config'
+import { STEEL_ENUM } from '@/settings/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -324,7 +324,6 @@ import MHeader from './module/header'
 import MDetail from './module/detail'
 
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import checkPermission from '@/utils/system/check-permission'
 
 const optShow = {
@@ -362,7 +361,7 @@ const showProject = computed(
   () => !crud.query.projectId && crud.query.projectWarehouseType !== projectWarehouseTypeEnum.PUBLIC.V && columns.value.visible('project')
 )
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 显示单价

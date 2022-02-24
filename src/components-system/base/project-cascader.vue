@@ -7,6 +7,7 @@
       :props="cascaderProps"
       :filterable="props.filterable"
       :clearable="props.clearable"
+      :disabled="props.disabled"
       :show-all-levels="props.showAllLevels"
       :placeholder="props.placeholder"
       @change="handleChange"
@@ -57,6 +58,10 @@ const props = defineProps({
     default: false
   },
   clearable: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
     type: Boolean,
     default: false
   },

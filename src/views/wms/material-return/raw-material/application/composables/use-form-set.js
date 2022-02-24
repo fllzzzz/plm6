@@ -1,7 +1,9 @@
 import useTableValidate from '@/composables/form/use-table-validate'
+import { uniqueArr } from '@/utils/data-type/array'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 import { ElMessage } from 'element-plus'
+import { ref } from 'vue'
 
 export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, init, setFormCallback }) {
   // 同上数据
@@ -9,6 +11,9 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
     ['factoryId', -1],
     ['warehouseId', -1]
   ])
+
+  // 初始退库列表id，修改时使用，在退库列表中使用，避免显示
+  const sourceReturnIds = ref([])
 
   // 表格校验
   const { tableValidate, wrongCellMask, cleanUpData } = useTableValidate({
@@ -21,13 +26,18 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
   cu.submitFormFormat = async (form) => {
     cleanUpData(form.list)
     form.list = await numFmtByBasicClass(form.list, { toSmallest: true, toNum: true })
-    return form.list
+    if (isEdit) {
+      return form
+    } else {
+      return form.list
+    }
   }
 
   FORM.HOOK.beforeToEdit = async (crud, form) => {
     if (!isEdit) return
     // 设置监听等
     setFormCallback(form)
+    sourceReturnIds.value = uniqueArr(form.list.map(row => row.source.id))
   }
 
   // 校验
@@ -63,6 +73,7 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
   }
 
   return {
-    wrongCellMask
+    wrongCellMask,
+    sourceReturnIds
   }
 }

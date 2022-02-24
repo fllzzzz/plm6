@@ -105,6 +105,21 @@ const serialNumChangeTypeEnum = {
 }
 constantize(serialNumChangeTypeEnum)
 
+// 备料范围（类型）
+const preparationRangeEnum = {
+  PROJECT: { L: '项目', K: 'PROJECT', V: 1 },
+  MONOMER: { L: '单体', K: 'MONOMER', V: 2 },
+  AREA: { L: '区域', K: 'AREA', V: 3 }
+}
+constantize(preparationRangeEnum)
+
+// 备料状态
+const preparationStatusEnum = {
+  UNFINISHED: { L: '未备料', K: 'UNFINISHED', V: 0 },
+  FINISHED: { L: '已备料', K: 'FINISHED', V: 1 }
+}
+constantize(preparationStatusEnum)
+
 export {
   manufactureTypeEnum, // 制造类型
   overallPlanTypeEnum, // 部门计划类型
@@ -117,7 +132,9 @@ export {
   enclosureCreateTypeEnum,
   auxiliaryMaterialUseTypeEnum,
   deepenTypeEnum,
-  serialNumChangeTypeEnum
+  serialNumChangeTypeEnum,
+  preparationRangeEnum, // 备料范围（类型）
+  preparationStatusEnum, // 备料状态
 }
 
 export default {
@@ -132,5 +149,7 @@ export default {
   enclosureCreateTypeEnum,
   auxiliaryMaterialUseTypeEnum,
   deepenTypeEnum,
-  serialNumChangeTypeEnum
+  serialNumChangeTypeEnum,
+  preparationRangeEnum, // 备料范围（类型）
+  preparationStatusEnum, // 备料状态
 }

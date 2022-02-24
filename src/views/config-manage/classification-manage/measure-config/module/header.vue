@@ -23,6 +23,7 @@
 <script setup>
 import { inject, provide, ref, reactive } from 'vue'
 import { isNotBlank } from '@data-type'
+import { setSourceInfo } from '@data-type/array'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -64,13 +65,6 @@ function configDetail(level) {
   config.visible = true
 }
 
-function recordSource(row = {}) {
-  sourceMap.forEach((val, key) => {
-    row[val] = row[key]
-  })
-  return row
-}
-
 function classificationTreeFormat(tree, deep = 1, extendsData = { fullId: [], fullName: [], fullCode: [], fullSerialNumber: [] }) {
   // 表格展示的数据（所有末级科目）
   const tableData = []
@@ -95,7 +89,7 @@ function classificationTreeFormat(tree, deep = 1, extendsData = { fullId: [], fu
     node.fullCode = [...extendsData.fullCode, node.code] // code（编码）-全路径
     node.fullSerialNumber = [...extendsData.fullSerialNumber, extendsData.fullCode.join('') + node.code] // 科目完整编码-全路径
     // 单位设置时用的map
-    currentList[index] = recordSource(node)
+    currentList[index] = setSourceInfo(node, sourceMap)
     // 设置节点信息
     const leafNode = {}
     Object.assign(leafNode, JSON.parse(JSON.stringify(extendsData)), node)

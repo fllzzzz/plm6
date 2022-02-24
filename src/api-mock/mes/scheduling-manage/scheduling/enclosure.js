@@ -188,7 +188,7 @@ const getEnclosure = {
               'areaId': 8,
               'boolStatusEnum': true,
               'category': 3,
-              'name': '桁架式楼承板',
+              'name': '桁架楼承板',
               'serialNumber': 'B1',
               'plate': 'TD-75-1',
               'color': null,

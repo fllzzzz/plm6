@@ -37,7 +37,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" :offset="10" />
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="10" />
           <clickable-permission-span
             v-if="row.purchaseOrder"
             :permission="permission.purchaseOrderDetail"
@@ -235,7 +235,6 @@ import { computed, ref } from 'vue'
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
 import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
 import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
-import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@/utils/data-type'
@@ -287,7 +286,7 @@ const { crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 采购单详情

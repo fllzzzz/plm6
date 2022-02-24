@@ -10,6 +10,7 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     :cell-class-name="wrongCellMask"
+    row-key="rowId"
     style="width: 100%"
     @selection-change="handleSelectChange"
   >
@@ -108,14 +109,20 @@
         <template #default="{ row }">
           <common-button
             v-permission="taskPermission.add"
-            :disabled="row.completeQuantity === row.schedulingQuantity"
+            :disabled="row.unInProductionQuantity <= 0"
             size="mini"
             type="danger"
             @click="toDelTask(row)"
           >
             删除任务
           </common-button>
-          <common-button v-permission="assistPermission.get" size="mini" type="warning" @click="toAssistanceTask(row)">
+          <common-button
+            v-permission="assistPermission.get"
+            :disabled="row.unInProductionQuantity <= 0"
+            size="mini"
+            type="warning"
+            @click="toAssistanceTask(row)"
+          >
             协同任务
           </common-button>
         </template>
@@ -319,10 +326,12 @@ CRUD.HOOK.beforeRefresh = () => {
 }
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
-  data.content.forEach((v) => {
+  data.content.forEach((v, i) => {
+    v.rowId = i + '' + Math.random()
     v.operable = !v.issueStatus
     v.sourceSchedulingQuantity = v.schedulingQuantity
     v.modifySchedulingQuantity = v.schedulingQuantity
+    v.unInProductionQuantity = v.sourceSchedulingQuantity - v.inProductionQuantity
     // return v
   })
 }

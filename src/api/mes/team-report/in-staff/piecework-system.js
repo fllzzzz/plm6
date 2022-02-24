@@ -7,7 +7,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'mes',
-    url: 'wages/in_staff/reckon',
+    url: 'wages/reckon/page',
     method: 'get',
     params
   })
@@ -20,7 +20,7 @@ export function get(params) {
 export function detail(params) {
   return request({
     module: 'mes',
-    url: 'wages/in_staff/reckon/details',
+    url: 'wages/reckon/details/list',
     method: 'get',
     params
   })

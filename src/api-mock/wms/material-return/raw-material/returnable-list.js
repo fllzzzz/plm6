@@ -299,9 +299,9 @@ const getAuxMaterialList = {
             outboundUnitType: measureTypeEnum.ACCOUNTING.V, // 出库单位类型
             classifyId: 204,
             specification: 'M27 * 60',
-            unitNet: 1, // 单位净量
             color: '天蓝',
             basicClass: rawMatClsEnum.MATERIAL.V,
+            unitNet: 1, // 单位净量
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',
@@ -373,7 +373,7 @@ const getAuxMaterialList = {
   }
 }
 
-// 辅材退库列表
+// 气体退库列表
 const getGasList = {
   url: '/api/wms/return/returnable/16',
   method: 'get',

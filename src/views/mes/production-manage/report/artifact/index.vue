@@ -90,7 +90,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
+    invisibleColumns: ['grossWeight', 'totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
   },
   tableRef
 )

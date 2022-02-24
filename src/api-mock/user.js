@@ -5,6 +5,7 @@ import projectRouter from '@/router/modules/project'
 import wmsRouter from '@/router/modules/wms'
 import planRouter from '@/router/modules/plan'
 import contractRouter from '@/router/modules/contract'
+// import supplyChainRouter from '@/router/modules/supply-chain'
 
 // 用户登录（获取token）
 const userLogin = {
@@ -15,7 +16,7 @@ const userLogin = {
       code: 20000,
       message: '成功',
       data: {
-        'token': 'TOKEN_MYJ_XCJ_CCJ_HHHHHH'
+        token: 'TOKEN_MYJ_XCJ_CCJ_HHHHHH'
       }
     }
   }
@@ -30,62 +31,69 @@ const userInfo = {
       code: 20000,
       message: '成功',
       data: {
-        'id': 1,
-        'name': '@cname',
-        'username': '@name',
+        id: 1,
+        name: '@cname',
+        username: '@name',
         'sex|0-1': 0,
-        'phone': validatorPhone,
-        'email': '@email',
-        'companyName': '杭州初鸣建筑科技有限公司',
-        'inventoryNotifyPerm': true,
-        'roles': ['admin'],
-        'roleNames': ['超级管理员'],
-        'dept': '管理部门',
-        'job': null,
-        'permissions': [],
-        'menus': [
+        phone: validatorPhone,
+        email: '@email',
+        companyName: '杭州初鸣建筑科技有限公司',
+        inventoryNotifyPerm: true,
+        roles: ['admin'],
+        roleNames: ['超级管理员'],
+        dept: '管理部门',
+        job: null,
+        permissions: [],
+        menus: [
           {
-            'id': 1,
-            'name': '配置管理',
-            'icon': 'config',
-            'redirect': 'config-manage'
+            id: 1,
+            name: '配置管理',
+            icon: 'config',
+            redirect: 'config-manage'
           },
           {
-            'id': 2,
-            'name': '建刚MES',
-            'icon': 'mes-steel',
-            'redirect': 'mes-project'
+            id: 2,
+            name: '建刚MES',
+            icon: 'mes-steel',
+            redirect: 'mes-project'
           },
           {
-            'id': 3,
-            'name': '合同管理',
-            'icon': 'config',
-            'redirect': 'contract'
+            id: 3,
+            name: '合同管理',
+            icon: 'config',
+            redirect: 'contract'
           },
           {
-            'id': 4,
-            'name': '项目管理',
-            'icon': 'config',
-            'redirect': 'project-manage'
+            id: 4,
+            name: '项目管理',
+            icon: 'config',
+            redirect: 'project-manage'
           },
           {
-            'id': 5,
-            'name': 'WMS',
-            'icon': 'wms-wms',
-            'redirect': 'wms'
+            id: 5,
+            name: 'WMS',
+            icon: 'wms-wms',
+            redirect: 'wms'
           },
           {
-            'id': 6,
-            'name': '计划管理',
-            'icon': 'config',
-            'redirect': 'plan'
+            id: 6,
+            name: '计划管理',
+            icon: 'config',
+            redirect: 'plan'
           },
           {
-            'id': 7,
-            'name': '成本管理',
-            'icon': 'config',
-            'redirect': 'cost-manage'
-          }]
+            id: 7,
+            name: '成本管理',
+            icon: 'config',
+            redirect: 'cost-manage'
+          }
+          // {
+          //   id: 100,
+          //   name: '供应链',
+          //   icon: 'supply-chain',
+          //   redirect: 'supply-chain'
+          // }
+        ]
       }
     }
   }
@@ -111,24 +119,11 @@ const userMenu = {
     return {
       code: 20000,
       message: '成功',
-      data: {
-        'content': [
-          configRouter,
-          projectRouter,
-          wmsRouter,
-          mesRouter,
-          projectRouter,
-          planRouter,
-          contractRouter
-        ]
-      }
+      data: [configRouter, projectRouter, wmsRouter, mesRouter, projectRouter, planRouter, contractRouter
+        //  supplyChainRouter
+      ]
     }
   }
 }
 
-export default [
-  userLogin,
-  userLogout,
-  userInfo,
-  userMenu
-]
+export default [userLogin, userLogout, userInfo, userMenu]

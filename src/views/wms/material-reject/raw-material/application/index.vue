@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader />
+    <m-header />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
@@ -15,13 +15,6 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
-          <!-- TODO:入库单增加备注？ -->
-          <!-- <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
-          </p> -->
-          <p>
-            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
-          </p>
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" />
@@ -161,7 +154,7 @@
       <!--编辑与删除-->
       <el-table-column label="操作" width="170" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :data="row" show-detail :show-edit="false" :show-del="false" />
+          <ud-operation :data="row" show-detail :show-edit="false" :show-del="false" />
           <common-button type="primary" size="mini" @click="handleRejectApplication(row)">退货办理</common-button>
         </template>
       </el-table-column>
@@ -182,6 +175,8 @@
 <script setup>
 import crudApi from '@/api/wms/material-reject/raw-material/application'
 import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { rawMaterialRejectApplicationPM as permission } from '@/page-permission/wms'
+
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
@@ -199,14 +194,6 @@ import MApplication from './module/application.vue'
 import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_rejectApplication:get'],
-  edit: ['wms_rejectApplication:edit'],
-  del: ['wms_rejectApplication:del'],
-  purchaseOrderDetail: ['wms_purchaseOrder:detail']
-}
 
 const optShow = {
   add: false,

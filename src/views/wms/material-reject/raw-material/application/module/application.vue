@@ -94,10 +94,10 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@/composables/use-visible'
-import useWmsConfig from '@/composables/store/use-wms-config'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
@@ -156,15 +156,8 @@ const { maxHeight } = useMaxHeight(
   dialogVisible
 )
 
-// 退货配置
-const { rejectCfg } = useWmsConfig()
-
-// 物料金额显示
-const materialAmountDisplayWay = computed(() => {
-  return rejectCfg.value ? rejectCfg.value.materialAmountDisplayWay : {}
-})
-// 显示金额
-const showAmount = computed(() => !!materialAmountDisplayWay.value.application)
+// 是否有显示金额权限
+const showAmount = computed(() => checkPermission(permission.showAmount))
 // 采购订单信息
 const order = computed(() => detail.value.purchaseOrder || {})
 // 是否甲供订单

@@ -183,15 +183,16 @@ function handleChange(val) {
 
   if (isChange && !allBlank) {
     emit('update:modelValue', data)
-    emit('change', data)
-    emitInfo(data)
+    emit('change', data, props.modelValue)
+    emitInfo(data, props.modelValue)
   }
 }
 
-function emitInfo(val) {
+function emitInfo(val, oldVal) {
   const res = val ? purchaseOrderKV.value[val] : null
+  const oldRes = oldVal ? purchaseOrderKV.value[oldVal] : null
   emit('update:info', res)
-  emit('info-change', res)
+  emit('info-change', res, oldRes)
 }
 
 function loadedCallBack() {

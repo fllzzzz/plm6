@@ -6,11 +6,11 @@
       v-model:areaId="query.areaId"
       :productType="query.category"
       :project-id="globalProjectId"
+      areaClearable
       :monomerDisabled="!globalProjectId"
       :areaDisabled="!globalProjectId"
       monomerDefault
-      areaDefault
-      @change="crud.toQuery()"
+      @change="crud.toQuery"
     >
       <template #middle>
         <common-radio-button
@@ -117,6 +117,7 @@ watch(
   (typeEnum) => {
     if (typeEnum.length) {
       query.category = typeEnum[0].V
+      crud.refresh()
     } else {
       query.category = undefined
     }

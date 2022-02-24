@@ -10,7 +10,6 @@
             v-if="!isComponent"
             v-model="query.basicClass"
             :options="rawMatClsEnum.ENUM"
-            show-option-all
             type="enum"
             size="small"
             class="filter-item"

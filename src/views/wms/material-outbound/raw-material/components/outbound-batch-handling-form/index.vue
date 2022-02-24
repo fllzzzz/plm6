@@ -107,11 +107,14 @@ import {
   auxMatBatchOutboundHandling,
   gasBatchOutboundHandling
 } from '@/api/wms/material-outbound/raw-material/outbound-handling'
-import { defineEmits, defineProps, watch, ref, watchEffect, computed, nextTick } from 'vue'
+import { defineEmits, defineProps, watch, ref, computed, nextTick } from 'vue'
+import { mapGetters } from '@/store/lib'
+import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
-import { STEEL_ENUM } from '@/settings/config'
+import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -124,10 +127,7 @@ import materialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
-import { mapGetters } from '@/store/lib'
 import { ElMessage } from 'element-plus'
-import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 
 const emit = defineEmits(['success', 'update:visible'])
 const props = defineProps({
@@ -253,12 +253,15 @@ const setRecipientId = watch(
 )
 
 // 监听传入的列表
-watchEffect(() => {
-  // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
-  materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
-  form.value.list = materialList.value
-  dataFormat()
-})
+watch(
+  () => props.materialList,
+  () => {
+    // 无需在打开dlg时，判断batchOutboundQuantity是否大于corOperableQuantity，因为当corOperableQuantity发生变化时，页面及数据会刷新
+    materialList.value = props.materialList.filter((v) => v.corOperableQuantity > 0) // 过滤不可操作的列表
+    form.value.list = materialList.value
+    dataFormat()
+  }
+)
 
 // 表单初始化
 function formInit() {
@@ -307,7 +310,8 @@ async function submit() {
           quantity: v.batchOutboundQuantity, // 数量
           outboundUnit: v.outboundUnit, // 出库单位
           outboundUnitPrecision: v.outboundUnitPrecision, // 单位精度
-          outboundUnitType: v.outboundUnitType // 出库单位类型
+          outboundUnitType: v.outboundUnitType, // 出库单位类型
+          remark: v.remark // 备注
         })
       }
     })
@@ -323,6 +327,7 @@ async function submit() {
       return
     }
     await submitApi(data)
+    ElMessage.success('已加入出库清单')
     emit('success')
     handleClose()
     setTimeout(() => {
@@ -349,6 +354,7 @@ function handleProjectChange(val) {
   dataFormat()
 }
 
+// 数据格式化
 function dataFormat() {
   if (props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V) {
     // 公共库的情况，重新计算最大数量
@@ -365,6 +371,11 @@ function dataFormat() {
         v.projectOperableMete = v.operableMete + (projectFrozen.mete || 0)
       }
       v.corProjectOperableQuantity = v.outboundUnitType === measureTypeEnum.MEASURE.V ? v.projectOperableQuantity : v.projectOperableMete
+    })
+  } else {
+    // 项目库的情况
+    form.value.list.forEach((v) => {
+      v.corProjectOperableQuantity = v.outboundUnitType === measureTypeEnum.MEASURE.V ? v.operableQuantity : v.operableMete
     })
   }
 }

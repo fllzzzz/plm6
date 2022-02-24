@@ -118,7 +118,7 @@ const { maxHeight } = useMaxHeight(
   detailLoading
 )
 
-// 是否有权限显示金额
+// 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
 // 因为报表变动可能比较频繁,每次显示重新加载详情
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: fetchDetail })

@@ -279,6 +279,7 @@ async function submit() {
       return
     }
     await submitApi(data)
+    ElMessage.success('已提交调拨申请')
     emit('success')
     handleClose()
     setTimeout(() => {

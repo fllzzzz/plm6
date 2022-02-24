@@ -1,6 +1,13 @@
 <template>
   <div v-for="workshop in lines" :key="workshop.id">
-    <div class="workshop-content" v-if="workshop.productionLineList && workshop.productionLineList.length">
+    <div
+      class="workshop-content"
+      v-if="
+        workshop.productionLineList &&
+        workshop.productionLineList.length &&
+        workshop.productionLineList.filter((v) => productType === v.productType)?.length > 0
+      "
+    >
       <div class="workshop-title">{{ workshop.name }}【{{ workshop.factoryName }}】</div>
       <div class="production-lines-content">
         <template v-for="line in workshop.productionLineList" :key="line.id">

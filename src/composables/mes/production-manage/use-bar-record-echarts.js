@@ -1,5 +1,5 @@
 import * as echarts from 'echarts'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { productionRecord, outboundRecord } from '@/api/mes/production-manage/dashboard/main-material-track'
 
 export default function useBarRecordEcharts({ elementId, globalProjectId, year, showPRDetail, showORDetail }) {
@@ -53,7 +53,9 @@ export default function useBarRecordEcharts({ elementId, globalProjectId, year, 
 
   onMounted(async () => {
     initChart(elementId, xData.value)
-    await updateChart()
+    nextTick(async () => {
+      await updateChart()
+    })
   })
 
   async function updateChart() {
@@ -75,7 +77,7 @@ export default function useBarRecordEcharts({ elementId, globalProjectId, year, 
     var app = {}
 
     var chartDom = document.getElementById(elementId)
-    myChart = echarts.init(chartDom)
+    myChart = echarts.init(chartDom, null, { locale: 'ZH' })
     var option
 
     const posList = [

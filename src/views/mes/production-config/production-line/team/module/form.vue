@@ -17,6 +17,7 @@
           v-model="form.processId"
           :productType="productType"
           containsMachinePart
+          :disabled="isEdit"
           :size="'small'"
           :multiple="false"
           style="width: 270px"
@@ -72,8 +73,8 @@ import EO from '@enum'
 defineProps({
   productType: {
     type: Number,
-    default: undefined,
-  },
+    default: undefined
+  }
 })
 
 const formRef = ref()
@@ -87,7 +88,7 @@ const defaultForm = {
   leaderId: undefined,
   organizationType: undefined,
   boolExtraCountEnum: false,
-  memberIds: [],
+  memberIds: []
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -99,7 +100,7 @@ const rules = {
   leaderId: [{ required: true, message: '请选择组长', trigger: 'change' }],
   memberIds: [{ required: true, message: '请选择组员', trigger: 'change' }],
   boolExtraCountEnum: [{ required: true, message: '请选择工资是否单列', trigger: 'change', type: 'boolean' }],
-  wageQuotaType: [{ required: true, message: '请选择计价方式', trigger: 'change' }],
+  wageQuotaType: [{ required: true, message: '请选择计价方式', trigger: 'change' }]
 }
 
 const showWageQuotaTypeEnum = computed(() => {

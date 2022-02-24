@@ -17,6 +17,37 @@ export const commonPM = {
 
 // ########################################################################
 
+// --------------------------- 退货办理 start ------------------------------
+
+// 退货办理/退货申请
+export const rawMaterialRejectApplicationPM = {
+  get: ['wms_rawMaterial_reject_application:get'], // 查看
+  showAmount: ['wms_rawMaterial_reject_application:showAmount'], // 显示金额
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+}
+
+// 退货办理/退货记录
+export const rawMaterialRejectRecordPM = {
+  get: ['wms_rawMaterial_reject_record:get'], // 查看
+  del: ['wms_rawMaterial_reject_record:del'], // 删除
+  showAmount: ['wms_rawMaterial_reject_record:showAmount'], // 显示金额
+  inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail, // 入库详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+}
+
+// 出入库审核/退货审核
+export const rawMaterialRejectReviewPM = {
+  get: ['wms_rawMaterial_reject_review:get'], // 查看
+  review: ['wms_rawMaterial_reject_review:review'], // 审核
+  showAmount: ['wms_rawMaterial_reject_review:showAmount'], // 显示金额
+  inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail, // 入库详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
+}
+
+// --------------------------- 退货办理 end --------------------------------
+
+// ########################################################################
+
 // --------------------------- 报表中心 start ------------------------------
 
 // 报表中心/原材料/归还甲方

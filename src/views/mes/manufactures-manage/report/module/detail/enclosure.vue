@@ -1,5 +1,5 @@
 <template>
-  <common-table :data="tableData" :max-height="maxHeight" style="width: 100%">
+  <common-table :data="tableData" :max-height="maxHeight" row-key="rowId" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
      <el-table-column v-if="isSummary" prop="project" label="项目" min-width="120px" show-overflow-tooltip>
       <template #default="{ row }">
@@ -36,7 +36,7 @@
         <span v-empty-text>{{ scope.row.quantity }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="thickness" prop="thickness" show-overflow-tooltip label="长度(mm)" align="center">
+    <el-table-column key="thickness" prop="thickness" show-overflow-tooltip label="厚度(mm)" align="center">
       <template v-slot="scope">
         <span v-empty-text>{{ toFixed(scope.row.thickness, DP.MES_ENCLOSURE_T__MM) }}</span>
       </template>
@@ -51,7 +51,7 @@
         <span v-empty-text>{{ toFixed(scope.row.length, DP.MES_ARTIFACT_L__MM) }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(mm)" align="center">
+    <el-table-column key="totalLength" prop="totalLength" show-overflow-tooltip label="总长度(m)" align="center">
       <template v-slot="scope">
         <span v-empty-text>{{ convertUnits(scope.row.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M) }}</span>
       </template>

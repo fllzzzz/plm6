@@ -22,7 +22,7 @@
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="70">
         <template #default="{ row, $index }">
-          <table-cell-tag :show="row.boolPrinted" name="已打印" :color="TAG_PRINTED_DEF_COLOR" />
+          <table-cell-tag :show="row.boolPrinted" name="已打印" type="printed" />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
@@ -135,13 +135,11 @@
 <script setup>
 import crudApi from '@/api/wms/material-outbound/raw-material/record'
 import { ref } from 'vue'
-import { TAG_PRINTED_DEF_COLOR } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 import Pagination from '@crud/Pagination'
 import UdOperation from '@crud/UD.operation.vue'
 import MHeader from './module/header'

@@ -82,7 +82,7 @@
         v-if="columns.visible('totalSchedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="totalSchedulingQuantity"
-        :label="`已排产`"
+        :label="`已分配`"
         align="center"
         min-width="140px"
       >
@@ -98,7 +98,7 @@
         v-if="columns.visible('unSchedulingQuantity')"
         :show-overflow-tooltip="true"
         prop="unSchedulingQuantity"
-        :label="`未排产`"
+        :label="`未分配`"
         align="center"
         min-width="140px"
       >
@@ -121,7 +121,7 @@
     <!-- 详情 -->
     <common-drawer
       v-model:visible="drawerVisible"
-      :title="`零件明细表：${detailRow?.name} - ${detailRow?.steelSpec}`"
+      :title="`零件明细表：${detailRow?.name || '未分类'} - ${detailRow?.steelSpec || '未分类'}`"
       direction="rtl"
       size="100%"
       :before-close="

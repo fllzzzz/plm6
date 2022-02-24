@@ -1,5 +1,5 @@
 import * as echarts from 'echarts'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { getQhseList } from '@/api/mes/production-manage/dashboard/project-dashboard'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -7,7 +7,6 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
   let myChart = null
   const echartsLoading = ref(false)
   const list = ref([])
-
   async function fetchList() {
     if (!checkPermission(permission.shipGet)) {
       return
@@ -28,7 +27,9 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
 
   onMounted(async () => {
     initChart(elementId, [])
-    await updateChart()
+    nextTick(async () => {
+      await updateChart()
+    })
   })
 
   async function updateChart() {
@@ -58,7 +59,9 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
 
   function initChart(elementId, xAxisData) {
     var chartDom = document.getElementById(elementId)
-    myChart = echarts.init(chartDom)
+    myChart = echarts.init(chartDom, null, {
+      locale: 'ZH'
+    })
     var option
 
     option = {
@@ -76,6 +79,7 @@ export default function useQhseRecordEcharts({ elementId, title, xAxisData, glob
       },
       color: ['#48cfae'],
       toolbox: {
+        right: 20,
         show: true,
         feature: {
           magicType: {

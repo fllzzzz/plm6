@@ -65,7 +65,7 @@ const getByGroup = {
             'id': null,
             'name': '区域'
           },
-          'name': '桁架式楼承板',
+          'name': '桁架楼承板',
           'material': null,
           'surplusTaskQuantity': 0,
           'surplusLength': 0,
@@ -143,7 +143,7 @@ const getDetail = {
             'name': '区域'
           },
           'id': 17,
-          'name': '桁架式楼承板',
+          'name': '桁架楼承板',
           'material': null,
           'serialNumber': 'B1',
           'surplusTaskQuantity': 0,

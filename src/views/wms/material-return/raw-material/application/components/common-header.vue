@@ -26,12 +26,20 @@
         <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
           提 交
         </common-button>
-        <common-button type="success" @click="openReturnableList" size="mini">检索退库材料</common-button>
+        <common-button type="success" @click="openReturnableList" size="mini">检索可退库材料</common-button>
         <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toReturnRecord" />
       </div>
     </div>
   </div>
-  <returnable-list-drawer v-model="returnableVisible" :basic-class="basicClass" :select-list="form.list" @add="handleAdd" />
+  <returnable-list-drawer
+    ref="returnableListRef"
+    v-model="returnableVisible"
+    :basic-class="basicClass"
+    :select-list="form.list"
+    :source-return-ids="sourceReturnIds"
+    @add="handleAdd"
+    :edit="props.edit"
+  />
   <common-dialog ref="drawerRef" v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
     <abnormal-list :basicClass="basicClass" :list="cu.props.abnormalList" :maxHeight="700" />
   </common-dialog>
@@ -61,6 +69,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  sourceReturnIds: {
+    type: Array,
+    default: () => []
+  },
   currentSource: {
     type: Object,
     default: () => {
@@ -77,6 +89,8 @@ const props = defineProps({
 })
 
 const router = useRouter()
+// 可退库列表
+const returnableListRef = ref()
 // 总重量
 const allMete = ref()
 // 总数量
@@ -93,6 +107,7 @@ const { baseUnit } = useMatBaseUnit(props.basicClass)
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
+  if (!props.edit) returnableListRef.value && returnableListRef.value.refresh()
   init()
 }
 

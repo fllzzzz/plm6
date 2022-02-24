@@ -64,7 +64,13 @@
           <common-button type="warning" size="mini">查看分配汇总</common-button>
         </template>
       </el-popover>
-      <common-button :loading="loading" size="mini" :disabled="!modifiedData || modifiedData.length == 0" type="primary" @click="submit">
+      <common-button
+        :loading="loading"
+        size="mini"
+        :disabled="!modifiedData || modifiedData.length == 0"
+        type="primary"
+        @click="handleClickSave"
+      >
         保 存
       </common-button>
     </template>
@@ -74,7 +80,6 @@
         :productType="productType"
         :category="category"
         :unShowField="[
-          'netWeight',
           'grossWeight',
           'totalNetWeight',
           'totalGrossWeight',
@@ -160,12 +165,38 @@ style="color: #11b95c"
       <div class="dialog-footer"></div>
     </template>
   </common-dialog>
+  <common-dialog title="排产选择" v-model="chooseVisible" :center="false" width="450px">
+    <template #titleRight>
+      <common-button :loading="loading" size="mini" type="primary" @click="handleClickConfirm"> 确定 </common-button>
+    </template>
+    <el-form :model="chooseForm" label-width="120px">
+      <el-form-item label="是否直接排产">
+        <el-radio-group v-model="chooseForm.booleanSaveTask">
+          <el-radio :label="true">是</el-radio>
+          <el-radio :label="false">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="要求完成日期">
+        <el-date-picker
+          v-model="chooseForm.askCompleteTime"
+          type="date"
+          size="mini"
+          :disabled="!chooseForm.booleanSaveTask"
+          style="width: 200px;"
+          value-format="x"
+          :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
+          placeholder="要求完成日期"
+        />
+      </el-form-item>
+    </el-form>
+  </common-dialog>
 </template>
 
 <script setup>
 import { save } from '@/api/mes/scheduling-manage/scheduling/common'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage, ElRadioGroup } from 'element-plus'
+import moment from 'moment'
 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
@@ -214,12 +245,21 @@ const loading = ref(false)
 const changedLineData = ref({})
 const changeQuantity = ref(0)
 const workshopList = ref([])
+const chooseVisible = ref(false)
+const chooseForm = ref({
+  booleanSaveTask: true,
+  askCompleteTime: undefined
+})
 
 watch(
   () => props.visible,
   (visible) => {
     if (visible) {
       handleDataChange()
+      chooseForm.value = {
+        booleanSaveTask: true,
+        askCompleteTime: undefined
+      }
     }
   },
   { immediate: true }
@@ -239,6 +279,22 @@ function ellipsisTextTip(workshop, line) {
                 新增分配重量（净重）：${toFixed(_data.netWeightIncrease, DP.COM_WT__KG)} kg\n
                 新增分配重量（毛重）：${toFixed(_data.grossWeightIncrease, DP.COM_WT__KG)} kg\n`
   }
+}
+
+function handleClickSave() {
+  if ((productType & componentTypeEnum.MACHINE_PART.V) | componentTypeEnum.ENCLOSURE.V) {
+    chooseVisible.value = true
+  } else {
+    submit()
+  }
+}
+
+function handleClickConfirm() {
+  if (chooseForm.value.booleanSaveTask && !chooseForm.value.askCompleteTime) {
+    ElMessage.warning('请选择要求完成日期')
+    return
+  }
+  submit()
 }
 
 async function submit() {
@@ -265,14 +321,20 @@ async function submit() {
         })
       })
     })
-    await save({ schedulingList: list })
+    let saveParams = { schedulingList: list }
+    if ((productType & componentTypeEnum.MACHINE_PART.V) | componentTypeEnum.ENCLOSURE.V) {
+      saveParams = Object.assign(saveParams, { ...chooseForm.value })
+    }
+    const successTitle = saveParams.booleanSaveTask ? '排产成功' : '任务分配成功'
+    await save(saveParams)
     handleClose()
     emit('success', list)
-    ElNotification({ title: '任务分配成功', type: 'success' })
+    ElNotification({ title: successTitle, type: 'success' })
   } catch (error) {
     console.log('任务分配提交', error)
   } finally {
     loading.value = false
+    chooseVisible.value = false
   }
 }
 

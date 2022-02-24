@@ -56,7 +56,7 @@ const getEnclosureDetail = {
           'id': null,
           'name': '区域'
         },
-        'name': '桁架式楼承板',
+        'name': '桁架楼承板',
         'serialNumber': 'B1',
         'plate': 'TD-75-1',
         'color': null,
@@ -88,7 +88,7 @@ const getEnclosureDetail = {
           'id': null,
           'name': '区域'
         },
-        'name': '桁架式楼承板',
+        'name': '桁架楼承板',
         'serialNumber': 'B1',
         'plate': 'TD-75-1',
         'color': null,

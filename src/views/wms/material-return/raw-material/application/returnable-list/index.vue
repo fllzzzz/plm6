@@ -91,9 +91,10 @@
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">
         <template #default="{ row }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
-            <common-button :disabled="row.boolReviewPending" type="warning" size="mini" @click="handleAddReturn(row)">退库</common-button>
+            <!-- 编辑状态下， -->
+            <common-button :disabled="row.showReviewPending" type="warning" size="mini" @click="handleAddReturn(row)"> 退库 </common-button>
           </el-badge>
-          <table-cell-tag v-if="row.boolReviewPending" name="退库中" color="#909399" />
+          <table-cell-tag v-if="row.showReviewPending" name="退库中" color="#909399" />
         </template>
       </el-table-column>
     </common-table>
@@ -111,7 +112,7 @@
 import crudApi from '@/api/wms/material-return/raw-material/returnable-list'
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 
-import { computed, defineEmits, defineProps, provide, reactive, ref, watchEffect } from 'vue'
+import { computed, defineEmits, defineProps, defineExpose, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -138,6 +139,14 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 const emit = defineEmits(['add'])
 
 const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
+  sourceReturnIds: {
+    type: Array,
+    default: () => []
+  },
   basicClass: {
     // 基础类型
     type: Number,
@@ -191,7 +200,18 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight(
+  props.isComponent
+    ? {
+      mainBox: '.returnable-list-drawer',
+      extraBox: ['.el-drawer__header', '.head-container'],
+      wrapperBox: ['.el-drawer__body'],
+      paginate: true
+    }
+    : {
+      paginate: true
+    }
+)
 
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit()
@@ -209,6 +229,7 @@ const basicClass = computed(() => {
   return null
 })
 
+// 实时计算归还信息
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
@@ -220,6 +241,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       toNum: false
     },
     {
+      unitNetCalcMete: 'returnableMete',
+      unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
       mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
     }
@@ -233,6 +256,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
     }
+    // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
+    row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))
   })
 }
 
@@ -241,7 +266,7 @@ function handleAddReturn(row) {
   const selectList = props.selectList
   const newData = reactive({
     uid: createUniqueString(), // 当前退库记录唯一id
-    id: row.id, // 物料id
+    // id: row.id, // 物料id
     source: row,
     basicClass: row.basicClass, // 基础类型
     measureUnit: row.measureUnit, // 计量单位
@@ -255,7 +280,7 @@ function handleAddReturn(row) {
     newData.warehouseId = -1 // 仓库 同上
   }
   // setBasicInfoForData(row, newData)
-  const index = selectList.findLastIndex((v) => v.id === row.id)
+  const index = selectList.findLastIndex((v) => v.source.id === row.id)
 
   if (index > -1) {
     selectList.splice(index + 1, 0, newData)
@@ -272,15 +297,20 @@ function handleAddReturn(row) {
 function calcReturnInfo() {
   const number = {}
   const mete = {}
-  props.selectList.forEach((scRow) => {
-    if (number[scRow.id]) {
-      number[scRow.id]++
-      mete[scRow.id] += scRow.mete || 0
+  // 遍历退库列表，计算相同物料的可退库量及可退库数
+  for (const scRow of props.selectList) {
+    const source = scRow.source
+    const sourceId = source ? source.id : undefined
+    if (!sourceId) continue
+    if (number[sourceId]) {
+      number[sourceId]++
+      mete[sourceId] += scRow.mete || 0
     } else {
-      number[scRow.id] = 1
-      mete[scRow.id] = scRow.mete || 0
+      number[sourceId] = 1
+      mete[sourceId] = scRow.mete || 0
     }
-  })
+  }
+  // 遍历当前列表，设置可退库量
   crud.data.forEach((row) => {
     row.returnableMete = row.sourceReturnableMete - (mete[row.id] || 0)
   })
@@ -291,6 +321,15 @@ function calcReturnInfo() {
 function openOutboundDetailView(outboundId) {
   outboundDetailRef.value.toDetail(outboundId)
 }
+
+// 刷新
+function refresh() {
+  crud.refresh()
+}
+
+defineExpose({
+  refresh
+})
 </script>
 
 <style lang="scss" scoped>

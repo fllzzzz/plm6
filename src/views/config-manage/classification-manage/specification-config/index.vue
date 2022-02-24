@@ -4,28 +4,30 @@
       <div class="head-container">
         <el-input v-model.trim="filterText" size="small" clearable placeholder="输入科目名称、编码搜索" />
       </div>
-      <el-tree
-        ref="treeMenuRef"
-        v-loading="!loaded && loading.clsTree"
-        :data="treeMenu"
-        :props="defaultProps"
-        :filter-node-method="filterDeptNode"
-        :style="heightStyle"
-        highlight-current
-        expand-on-click-node
-        node-key="id"
-        default-expand-all
-        @node-click="handleNodeClick"
-      >
-        <template #default="{ node, data }">
-          <div style="padding: 3px 5px; border-radius: 3px; width: 100%;">
-            <span style="font-weight:bold">{{ node.label }}</span>
-            <span v-if="data.isLeaf" style="float: right; padding: 0 2px 0 6px;">
+      <div :style="heightStyle">
+        <el-tree
+          ref="treeMenuRef"
+          v-loading="!loaded && loading.clsTree"
+          :data="treeMenu"
+          :props="defaultProps"
+          :filter-node-method="filterDeptNode"
+          style="height: 100%"
+          highlight-current
+          expand-on-click-node
+          node-key="id"
+          default-expand-all
+          @node-click="handleNodeClick"
+        >
+          <template #default="{ node, data }">
+            <div style="padding: 3px 5px; border-radius: 3px; width: 100%">
+              <span style="font-weight: bold">{{ node.label }}</span>
+              <span v-if="data.isLeaf" style="float: right; padding: 0 2px 0 6px">
                 <span>{{ data.serialNumber }}</span>
-            </span>
-          </div>
-        </template>
-      </el-tree>
+              </span>
+            </div>
+          </template>
+        </el-tree>
+      </div>
     </div>
     <div class="wrap-right">
       <m-header id="header" ref="header" />
@@ -43,7 +45,7 @@
           </template>
           <div class="card-box">
             <common-table :data="item.list" :maxHeight="maxHeight - 105" row-key="id">
-              <el-table-column prop="code" label="编码" width="80" align="left"/>
+              <el-table-column prop="code" label="编码" width="80" align="left" />
               <el-table-column prop="value" label="规格" min-width="140" />
             </common-table>
           </div>
@@ -183,7 +185,7 @@ function handleNodeClick(data) {
   border-radius: 6px;
 }
 
-.card-wrap{
+.card-wrap {
   white-space: nowrap;
   overflow-y: auto;
   // margin-top: 12px;

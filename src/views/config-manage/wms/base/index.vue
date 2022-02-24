@@ -11,7 +11,7 @@
         <!-- 出库基础-->
         <basic-outbound v-permission="permission.steelInboundGet" class="card" />
         <!-- 退货基础 -->
-        <basic-reject v-permission="permission.basicRejectGet" class="card" />
+        <!-- <basic-reject v-permission="permission.basicRejectGet" class="card" /> -->
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="8">
         <!-- 甲供归还 -->
@@ -25,7 +25,7 @@
 import BasicInbound from './module/basic-inbound.vue'
 import SteelInbound from './module/steel-inbound.vue'
 import BasicOutbound from './module/basic-outbound.vue'
-import BasicReject from './module/basic-reject.vue'
+// import BasicReject from './module/basic-reject.vue'
 import PartyABorrowReturn from './module/party-a-borrow-return.vue'
 import { provide } from 'vue'
 

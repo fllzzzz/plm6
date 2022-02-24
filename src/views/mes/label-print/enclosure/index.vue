@@ -57,7 +57,7 @@
           <span>{{ scope.row.color }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('material')"
         key="material"
         prop="material"
@@ -69,7 +69,7 @@
         <template v-slot="scope">
           <span>{{ scope.row.material }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('length')"
         key="length"
@@ -139,7 +139,7 @@
           <span>{{ toFixed(scope.row.totalLength, DP.MES_ENCLOSURE_L__M) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('weight')"
         key="weight"
         prop="weight"
@@ -152,7 +152,7 @@
         <template v-slot="scope">
           <span>{{ toFixed(scope.row.weight, DP.COM_WT__KG) }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('remark')"
         key="remark"
@@ -210,7 +210,6 @@ import { componentTypeEnum, mesEnclosureTypeEnum, printProductTypeEnum } from '@
 import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
-import { convertUnits } from '@/utils/convert/unit'
 import { printEnclosure as printComponent } from '@/utils/print/index'
 import { enclosureLabelPM as permission } from '@/page-permission/mes'
 
@@ -293,7 +292,7 @@ function getLabelInfo(row) {
     color: row.color,
     plate: row.plate,
     thickness: row.thickness && row.thickness.toFixed(DP.MES_ENCLOSURE_T__MM),
-    length: convertUnits(row.length, 'mm', 'm', DP.MES_ARTIFACT_L__M),
+    length: row.length,
     quantity: row.quantity,
     specification: row.specification,
     drawingNumber: row.drawingNumber

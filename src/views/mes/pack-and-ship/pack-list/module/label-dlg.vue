@@ -8,7 +8,7 @@
           </div>
         </td>
         <td colspan="3">
-          <span style="font-weight: bold">{{ packageInfo.companyName }}</span>
+          <span style="font-weight: bold; font-size: 10pt">打包单</span>
         </td>
       </tr>
       <tr>
@@ -32,7 +32,7 @@
           <td class="col-1">{{ item.serialNumber }}</td>
           <td class="col-1">{{ item.material }}</td>
           <td class="col-1">{{ item.quantity }}</td>
-          <td class="col-1">{{ item.totalNetWeight }}</td>
+          <td class="col-1">{{ item.totalWeight }}</td>
         </tr>
       </template>
       <template v-if="packageInfo.productType === packTypeEnum.ENCLOSURE.V">

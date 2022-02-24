@@ -16,6 +16,7 @@
       <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
+      <unfreeze-info class="unfreeze-info" v-if="detail.boolHasUnfreeze" :basic-class="detail.basicClass" :list="detail.unfreezeList" />
       <common-table
         :data="detail.list"
         :max-height="maxHeight"
@@ -45,23 +46,26 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, inject } from 'vue'
 import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useWmsConfig from '@/composables/store/use-wms-config'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
 
+import titleAfterInfo from '@/views/wms/material-reject/raw-material/components/title-after-info.vue'
+import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/unfreeze-info.vue'
+
+const permission = inject('permission')
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
@@ -70,7 +74,7 @@ const { CRUD, crud, detail } = regDetail()
 const { maxHeight } = useMaxHeight(
   {
     mainBox: '.raw-mat-inbound-application-record-detail',
-    extraBox: ['.el-drawer__header'],
+    extraBox: ['.el-drawer__header', '.unfreeze-info'],
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
@@ -79,17 +83,10 @@ const { maxHeight } = useMaxHeight(
   () => computed(() => !crud.detailLoading)
 )
 
-// 退货配置
-const { rejectCfg } = useWmsConfig()
-
-// 物料金额显示
-const materialAmountDisplayWay = computed(() => {
-  return rejectCfg.value ? rejectCfg.value.materialAmountDisplayWay : {}
-})
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
-// 显示金额
-const showAmount = computed(() => (materialAmountDisplayWay.value ? !!materialAmountDisplayWay.value.application : false))
+// 是否有显示金额权限
+const showAmount = computed(() => checkPermission(permission.showAmount))
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题

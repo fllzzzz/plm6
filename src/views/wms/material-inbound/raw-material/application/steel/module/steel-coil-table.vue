@@ -18,21 +18,14 @@
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column
-      prop="classifyName"
-      label="物料种类"
-      align="center"
-      fixed="left"
-      width="120"
-      show-overflow-tooltip
-    >
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="120px" fixed="left">
+    <el-table-column prop="specification" label="规格" align="center" width="160px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -150,6 +143,7 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['calc-weight'])
 
@@ -158,10 +152,22 @@ const basicClass = matClsEnum.STEEL_COIL.V
 
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  width: [{ required: true, message: '请填写宽度', trigger: 'blur' }],
-  thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
-  weighingTotalWeight: [{ required: true, message: '请填写重量', trigger: 'blur' }],
-  length: [{ required: true, message: '请填写长度', trigger: 'blur' }]
+  width: [
+    { required: true, message: '请填写宽度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
+  ],
+  thickness: [
+    { required: true, message: '请填写厚度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }
+  ],
+  weighingTotalWeight: [
+    { required: true, message: '请填写重量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
+  ],
+  length: [
+    { required: true, message: '请填写长度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
+  ]
   // quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
 }
 

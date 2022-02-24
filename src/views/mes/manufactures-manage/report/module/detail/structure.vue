@@ -1,5 +1,5 @@
 <template>
-  <common-table :data="tableData" :max-height="maxHeight" style="width: 100%">
+  <common-table :data="tableData" :max-height="maxHeight" row-key="rowId" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column v-if="isSummary" prop="project" label="项目" min-width="120px" show-overflow-tooltip>
       <template #default="{ row }">

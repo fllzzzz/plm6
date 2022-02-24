@@ -4,7 +4,7 @@
     v-model="dialogVisible"
     :before-close="handleClose"
     title="退货匹配列表"
-    size="70%"
+    size="80%"
     direction="btt"
     custom-class="reject-match-list-drawer"
   >

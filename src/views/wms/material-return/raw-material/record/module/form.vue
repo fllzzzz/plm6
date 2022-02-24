@@ -74,8 +74,9 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, detail) => {
     }
   })
   detail.list.forEach((row) => {
+    // 处理为表单可使用的数据
     row.warehouseId = row.warehouse ? row.warehouse.id : row.warehouseId
-    row.factoryId = row.factory ? row.warehouse.id : row.factoryId
+    row.factoryId = row.factory ? row.factory.id : row.factoryId
     // 计算单重
     row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete)
   })

@@ -1,7 +1,7 @@
 <template>
   <div class="upload-container">
     <div class="attachment-content">
-      <common-table :data="curFiles" :empty-text="emptyText" style="width: 100%">
+      <common-table :data="curFiles" :empty-text="emptyText" style="width: 100%" :max-height="props.maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="name" label="名称" :show-overflow-tooltip="true" min-width="150" />
         <el-table-column prop="createTime" label="上传时间" :show-overflow-tooltip="true" width="100" align="center">
@@ -140,6 +140,9 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  maxHeight: {
+    type: [String, Number]
   }
 })
 
