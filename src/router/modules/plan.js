@@ -3,24 +3,24 @@ export default {
   id: 6,
   name: '计划管理',
   children: [
-    // {
-    //   path: '/plan-project',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'Plan',
-    //   alwaysShow: false,
-    //   redirect: '/plan-project/projects',
-    //   meta: { title: '项目列表', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'PlanProject',
-    //       path: 'projects',
-    //       hidden: false,
-    //       component: '/plan/projects/index',
-    //       meta: { title: '我的项目', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
+    {
+      path: '/plan-project',
+      component: 'Layout',
+      hidden: false,
+      name: 'Plan',
+      alwaysShow: false,
+      redirect: '/plan-project/projects',
+      meta: { title: '项目列表', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'PlanProject',
+          path: 'plan-projects',
+          hidden: false,
+          component: '/mes/projects/index',
+          meta: { title: '我的项目', icon: 'project', noCache: true }
+        }
+      ]
+    },
     {
       path: '/plan/overall-plan',
       component: 'Layout',

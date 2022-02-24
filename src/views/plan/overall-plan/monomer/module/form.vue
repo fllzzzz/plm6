@@ -27,13 +27,13 @@
         </el-form-item>
       </div>
       <div v-for="item in currentOption" :key="item.key" class="form-row" style="display: flex">
-        <el-form-item :label="item.label+item.unit" :prop="item.key">
+        <el-form-item :label="item.label+'('+item.unit+')'" :prop="item.key">
           <el-input-number
             v-model="form[item.key]"
             :step="10"
             :min="0"
             :max="999999999999"
-            :precision="DP.COM_WT__KG"
+            :precision="item.no===TechnologyTypeAllEnum.STRUCTURE.V?DP.COM_WT__KG:DP.MES_ENCLOSURE_L__M"
             controls-position="right"
             style="width: 270px"
           />
@@ -46,6 +46,7 @@
             placeholder="选择完成日期"
             style="width: 160px"
             :disabledDate="subDateOptionFn"
+            :disabled="!form[item.key]"
           />
         </el-form-item>
       </div>
@@ -126,33 +127,44 @@ const checkDate = (rule, value, callback) => {
     }
   }
 }
+// const checkOtherDate = (rule, value, callback) => {
+//   if (!value) {
+//     callback(new Error('请选择完成日期'))
+//   } else {
+//     if (crud.form.date && value > crud.form.date) {
+//       callback(new Error('不能超过单体完成时间'))
+//     } else {
+//       callback()
+//     }
+//   }
+// }
+
 const checkOtherDate = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请选择完成日期'))
-  } else {
+  if (value) {
     if (crud.form.date && value > crud.form.date) {
       callback(new Error('不能超过单体完成时间'))
     } else {
       callback()
     }
   }
+  callback()
 }
 const rules = {
   date: [{ validator: checkDate, trigger: 'change' }],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  battenBoard: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  battenBoard: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   battenBoardDate: [{ validator: checkOtherDate, trigger: 'change' }],
-  contourPlate: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  contourPlate: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   contourPlateDate: [{ validator: checkOtherDate, trigger: 'change' }],
-  flangingPiece: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  flangingPiece: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   flangingPieceDate: [{ validator: checkOtherDate, trigger: 'change' }],
-  mainStructure: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  mainStructure: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   mainStructureDate: [{ validator: checkOtherDate, trigger: 'change' }],
-  pressureBearingPlate: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  pressureBearingPlate: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   pressureBearingPlateDate: [{ validator: checkOtherDate, trigger: 'change' }],
-  subStructure: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  subStructure: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   subStructureDate: [{ validator: checkOtherDate, trigger: 'change' }],
-  trussFloorPlate: [{ required: true, message: '请填写', trigger: 'blur', type: 'number' }],
+  trussFloorPlate: [{ message: '请填写', trigger: 'blur', type: 'number' }],
   trussFloorPlateDate: [{ validator: checkOtherDate, trigger: 'change' }],
   name: [
     { required: true, message: '请填写单体名称', trigger: 'blur' },
@@ -165,12 +177,7 @@ watch(
   () => props.globalProject,
   (val) => {
     if (isNotBlank(val)) {
-      const unitData = '(m)'
-      props.originOption.forEach(v => {
-        if (v.no !== TechnologyTypeAllEnum.STRUCTURE.V) {
-          v.unit = unitData
-        }
-      })
+      const unitData = 'm'
       currentOption.value = []
       props.originOption.forEach(v => {
         if (val.businessType === businessTypeEnum.MACHINING.V) {
@@ -223,16 +230,18 @@ CRUD.HOOK.beforeSubmit = () => {
     if (crud.form.id) {
       val = crud.form.monomerDetailList.find(k => k.type === v.no)
     }
-    if (val) {
-      val.mete = crud.form[v.key]
-      val.date = crud.form[v.dateKey]
-      crud.form.detailSaveDTOParamList.push(val)
-    } else {
-      crud.form.detailSaveDTOParamList.push({
-        mete: crud.form[v.key],
-        date: crud.form[v.dateKey],
-        type: v.no
-      })
+    if (crud.form[v.key]) {
+      if (val) {
+        val.mete = crud.form[v.key]
+        val.date = crud.form[v.dateKey]
+        crud.form.detailSaveDTOParamList.push(val)
+      } else {
+        crud.form.detailSaveDTOParamList.push({
+          mete: crud.form[v.key],
+          date: crud.form[v.dateKey],
+          type: v.no
+        })
+      }
     }
   })
   crud.form.projectId = props.projectId

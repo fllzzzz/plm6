@@ -28,8 +28,7 @@ import { defineProps } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { parseTime } from '@/utils/date'
-import { dateDifferenceReduce } from '@/utils/date'
+import { parseTime, dateDifferenceReduce } from '@/utils/date'
 
 const defaultQuery = {
   name: undefined
