@@ -2,45 +2,63 @@
   <div class="app-container">
     <!--工具栏-->
     <mHeader ref="headRef" @load="load" />
-    <!--看板渲染-->
-    <div
-      v-if="crud.firstLoaded"
-      ref="scrollBoxRef"
-      v-infinite-scroll="load"
-      class="board-container"
-      :infinite-scroll-disabled="crud.loading || !crud.page.hasNextPage"
-      :infinite-scroll-delay="200"
-      :infinite-scroll-distance="200"
-      :infinite-scroll-immediate-check="true"
-      :style="{ 'max-height': `${maxHeight}px` }"
-    >
-      <template v-for="item in boardList" :key="item.id">
-        <el-tooltip
-          :show-after="300"
-          class="item"
-          effect="light"
-          :content="`${item.detailLoading ? '正在加载中...' : `${item.processInfo}`}`"
-          placement="left-start"
-        >
-          <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
-            <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
-            <span class="ellipsis-text">{{ item.serialNumber }}</span>
-            <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
-          </div>
-        </el-tooltip>
-      </template>
-      <span v-if="!boardList.length && !crud.loading" class="red-tip">* 暂无数据</span>
-      <div v-if="crud.loading" class="loading-box" :style="boxStyle">
-        <span>加载中</span>
-        <i class="el-icon-loading" />
+    <div style="display: flex" class="artifact-dashboard">
+      <common-table
+        v-if="crud.query.productType & componentTypeEnum.MACHINE_PART.V"
+        :data="specList"
+        highlight-current-row
+        :stripe="false"
+        ref="tableRef"
+        style="width: 60px; margin-right: 10px"
+        @row-click="handleRowClick"
+      >
+        <el-table-column header-align="center" align="center" prop="name" label="板厚" min-width="50">
+          <template #default="{ row }">
+            <span>{{ row.name }}</span>
+          </template>
+        </el-table-column>
+      </common-table>
+      <!--看板渲染-->
+      <div
+        v-if="crud.firstLoaded"
+        ref="scrollBoxRef"
+        v-infinite-scroll="load"
+        class="board-container"
+        :infinite-scroll-disabled="crud.loading || !crud.page.hasNextPage"
+        :infinite-scroll-delay="200"
+        :infinite-scroll-distance="200"
+        :infinite-scroll-immediate-check="true"
+        style="flex: 1"
+        :style="{ 'max-height': `${maxHeight}px` }"
+      >
+        <template v-for="item in boardList" :key="item.id">
+          <el-tooltip
+            :show-after="300"
+            class="item"
+            effect="light"
+            :content="`${item.detailLoading ? '正在加载中...' : `${item.processInfo}`}`"
+            placement="left-start"
+          >
+            <div class="board-box" :style="{ 'background-color': `${item.boxColor}`, ...boxStyle }" @mouseenter="getDetail(item)">
+              <span class="ellipsis-text" v-if="item.name">{{ item.name }}</span>
+              <span class="ellipsis-text">{{ item.serialNumber }}</span>
+              <span class="ellipsis-text">{{ item.completeQuantity }}/{{ item.compareQuantity }}</span>
+            </div>
+          </el-tooltip>
+        </template>
+        <span v-if="!boardList.length && !crud.loading" class="red-tip">* 暂无数据</span>
+        <div v-if="crud.loading" class="loading-box" :style="boxStyle">
+          <span>加载中</span>
+          <i class="el-icon-loading" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { productDashboard as get } from '@/api/mes/production-manage/dashboard/common'
-import { artifactDetail, assembleDetail } from '@/api/mes/production-manage/dashboard/artifact'
+import { productDashboard as get, productSpec } from '@/api/mes/production-manage/dashboard/common'
+import { artifactDetail, assembleDetail, machinePartDetail } from '@/api/mes/production-manage/dashboard/artifact'
 import { ref } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
@@ -75,14 +93,58 @@ const { crud, CRUD } = useCRUD(
 )
 const { maxHeight } = useMaxHeight({ paginate: false })
 
-const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD })
+const { boxStyle, load, boardList } = useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, beforeRefreshHook })
 
 async function getDetail(item) {
-  if (crud.query.productType === componentTypeEnum.ARTIFACT.V) {
-    getArtifactDetail(item)
-  } else {
-    getAssembleDetail(item)
+  switch (crud.query.productType) {
+    case componentTypeEnum.ARTIFACT.V:
+      getArtifactDetail(item)
+      break
+    case componentTypeEnum.ASSEMBLE.V:
+      getAssembleDetail(item)
+      break
+    case componentTypeEnum.MACHINE_PART.V:
+      getMachinePartDetail(item)
+      break
+    default:
+      break
   }
+}
+
+const specList = ref([])
+const specLoading = ref(false)
+const isSpecQuery = ref(false)
+const curSpec = ref({})
+
+function handleRowClick(row) {
+  if (curSpec.value?.name && row.name === curSpec.value?.name) {
+    tableRef.value.setCurrentRow()
+    curSpec.value = {}
+    crud.query.steelSpec = undefined
+  } else {
+    tableRef.value.setCurrentRow(row)
+    curSpec.value = row
+    crud.query.steelSpec = row.name
+  }
+  isSpecQuery.value = true
+  crud.toQuery()
+}
+
+async function fetchSpec() {
+  try {
+    specLoading.value = true
+    const { content } = await productSpec(crud.query)
+    specList.value = content
+  } catch (error) {
+    console.log('获取规格', error)
+  }
+}
+
+function beforeRefreshHook() {
+  if (crud.query.productType & componentTypeEnum.MACHINE_PART.V && !isSpecQuery.value) {
+    fetchSpec()
+  }
+  isSpecQuery.value = false
 }
 
 async function getArtifactDetail(item) {
@@ -138,6 +200,31 @@ async function getAssembleDetail(item) {
     item.detailLoading = false
   }
 }
+
+async function getMachinePartDetail(item) {
+  if (item.hasDetail) return
+  try {
+    item.detailLoading = true
+    const _data = await machinePartDetail({ id: item.id })
+    item.hasDetail = true
+    _data.processInfo = `${_data.serialNumber}\n
+          清单数量：${_data.quantity}\n
+          已生产数量：${_data.producedQuantity}\n
+          已使用数量：${_data.usedQuantity}\n`
+    _data.processInfo += '-----------------------\n\n生产上报 / 已质检\n\n'
+    const processList = _data.processSummaryDetailsList || []
+    processList.forEach((process) => {
+      const _completed = _data.quantity === process.completeQuantity && process.quantity === process.inspectionQuantity
+      const _processInfo = _completed ? `√` : `${process.completeQuantity} / ${process.inspectionQuantity}`
+      _data.processInfo += `${process.name}：${_processInfo}\n\n`
+    })
+    item = Object.assign(item, { processInfo: _data.processInfo })
+  } catch (error) {
+    console.log('获取详情失败', error)
+  } finally {
+    item.detailLoading = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -145,7 +232,7 @@ async function getAssembleDetail(item) {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  // align-items: center;
   flex-wrap: wrap;
   overflow: auto;
 
@@ -185,5 +272,15 @@ async function getAssembleDetail(item) {
     width: 260px;
     height: 120px;
   }
+}
+</style>
+
+<style lang="scss">
+.artifact-dashboard .el-table__body tr:hover > td {
+  background-color: transparent !important;
+}
+.artifact-dashboard .el-table__body tr.current-row > td {
+  background-color: #999 !important;
+  color: #fff;
 }
 </style>

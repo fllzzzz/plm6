@@ -9,6 +9,8 @@ const myProject = contract.myProject
 const mesSchedulingDetail = mes.schedulingDetail
 
 const mesStructureProductionReport = mes.structureProductionReport
+const mesAssemblePartProductionReport = mes.structureProductionReport
+const mesMachinePartProductionReport = mes.structureProductionReport
 const mesEnclosureProductionReport = mes.enclosureProductionReport
 const mesStructureProductionStatistics = mes.productionStatistics
 const mesEnclosureProductionStatistics = mes.productionStatistics
@@ -46,9 +48,11 @@ export default {
   mesSchedulingDetail, // 工单详情
 
   mesStructureProductionReport, // 结构生产报表
+  mesAssemblePartProductionReport, // 组立生产报表
+  mesMachinePartProductionReport, // 零件生产报表
   mesEnclosureProductionReport, // 围护生产报表
-  mesStructureProductionStatistics, // 结构生产统计
-  mesEnclosureProductionStatistics, // 围护生产统计
+  mesStructureProductionStatistics, // 结构在制品统计
+  mesEnclosureProductionStatistics, // 围护在制品统计
   mesUnfinishedList, // 未完成清单
   mesEnclosureProductionLine, // 围护生产线报表
   mesStructureProductionLine, // 结构生产线报表

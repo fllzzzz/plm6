@@ -2,7 +2,7 @@ import { constantRoutes } from '@/router/index'
 import systemModule from '@/router/modules/system'
 import Layout from '@/layout/index.vue'
 import BlankLayout from '@/layout/components/AppMain.vue'
-import { showProjectSearch } from '@/settings/system'
+import { showProjectSearch, routerMetaSetting } from '@/settings/system'
 import { repairStartSymbol } from '@/utils'
 import checkPermission from '@/utils/system/check-permission'
 import { arr2obj } from '@/utils/convert/type'
@@ -146,6 +146,13 @@ export const filterAsyncRoutes = (commit, routes, moduleId, basePath, hasLayout 
             route.meta.needProject = item.required
             route.meta.projectType = item.type
           }
+        }
+      }
+      const name = route.name
+      for (const item of routerMetaSetting) {
+        if (item.name === name) {
+          route.meta.projectMode = item.mode
+          route.meta.productType = item.productType
         }
       }
       // }

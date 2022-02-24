@@ -37,10 +37,12 @@ const tableType = { // 如果一个表格属于两个模块，T: []
   // mes
   mesSchedulingDetail: { L: '工单详情', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
 
+  mesAssemblePartProductionReport: { L: '组立生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
+  mesMachinePartProductionReport: { L: '零件生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesStructureProductionReport: { L: '结构生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesEnclosureProductionReport: { L: '围护生产报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
-  mesStructureProductionStatistics: { L: '结构生产统计', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
-  mesEnclosureProductionStatistics: { L: '围护生产统计', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
+  mesStructureProductionStatistics: { L: '结构在制品统计', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
+  mesEnclosureProductionStatistics: { L: '围护在制品统计', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesUnfinishedList: { L: '未完成清单', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesStructureProductionLine: { L: '结构生产线报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesStructureProcess: { L: '结构工序报表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },

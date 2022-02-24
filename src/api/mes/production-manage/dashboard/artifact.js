@@ -31,3 +31,19 @@ export function assembleDetail(params) {
     params
   })
 }
+
+/**
+ *
+ * 获取生产看板-零件详情
+ * @export
+ * @param {*} id|required 产品id
+ * @returns
+ */
+export function machinePartDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'kanban/product/detail/machine_part',
+    method: 'get',
+    params
+  })
+}

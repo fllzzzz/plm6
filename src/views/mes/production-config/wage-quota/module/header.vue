@@ -1,6 +1,15 @@
 <template>
   <div v-show="crud.searchToggle">
     <common-radio-button
+      v-model="query.organizationType"
+      :options="teamAttributeEnum.ENUM"
+      class="filter-item"
+      default
+      type="enum"
+      size="small"
+      @change="crud.toQuery"
+    />
+    <common-radio-button
       v-model="query.sequenceType"
       :options="typeEnum.ENUM"
       class="filter-item"
@@ -30,6 +39,7 @@
 import {
   processTypeEnum,
   processMaterialListTypeEnum as typeEnum,
+  teamAttributeEnum
 } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'

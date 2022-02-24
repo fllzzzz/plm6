@@ -87,7 +87,7 @@
 import crudApi from '@/api/mes/production-manage/analysis/delay-report'
 import { ref, provide, computed } from 'vue'
 
-import { reportComponentTypeEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { analysisDelayReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -130,8 +130,10 @@ function toDetail(row) {
 }
 
 const dataPath = {
-  [reportComponentTypeEnum.ARTIFACT.V]: 'artifactAssembleList',
-  [reportComponentTypeEnum.ENCLOSURE.V]: 'enclosureList'
+  [componentTypeEnum.MACHINE_PART.V]: 'artifactAssembleList',
+  [componentTypeEnum.ARTIFACT.V]: 'artifactAssembleList',
+  [componentTypeEnum.ASSEMBLE.V]: 'artifactAssembleList',
+  [componentTypeEnum.ENCLOSURE.V]: 'enclosureList'
 }
 const unitObj = computed(() => {
   return useProductSummaryMeteUnit({ productType: crud.query.productType, w_unit: 'kg' })
@@ -139,7 +141,7 @@ const unitObj = computed(() => {
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   const productType = crud.query.productType
-  res.data = res.data[dataPath[crud.query.componentType]].map((v) => {
+  res.data = res.data[dataPath[crud.query.productType]].map((v) => {
     v.taskMete = useProductMeteConvert({
       productType: productType,
       weight: { num: v.taskNetWeight },

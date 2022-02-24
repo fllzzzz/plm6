@@ -1,5 +1,5 @@
 const productDashboard = {
-  url: '/api/mes/building/kanban/product',
+  url: '/api/mes/building/kanban/product/page',
   method: 'get',
   timeout: 1000,
   response: () => {

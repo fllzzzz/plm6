@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, lengthUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 围护生产统计
+// 围护在制品统计
 const mesEnclosureProductionStatistics = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'mesEnclosureProductionStatistics', // 表格类型 KEY
-  name: '围护生产统计（平台）', // 表格名称
+  name: '围护在制品统计（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const mesEnclosureProductionStatistics = {
   title: {
     show: true,
     allPage: false,
-    title: '围护生产统计',
+    title: '围护在制品统计',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -234,5 +234,5 @@ const mesEnclosureProductionStatistics = {
 }
 
 export default {
-  mesEnclosureProductionStatistics //  围护生产统计
+  mesEnclosureProductionStatistics //  围护在制品统计
 }

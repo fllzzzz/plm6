@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import crudApi, { getSummary } from '@/api/mes/production-manage/report/artifact'
+import crudApi, { getSummary } from '@/api/mes/production-manage/report/common'
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
@@ -81,7 +81,7 @@ const optShow = {
 const productType = componentTypeEnum.ARTIFACT.V
 provide('getSummaryApi', getSummary)
 provide('productType', productType)
-provide('defaultQuery', {})
+provide('defaultQuery', { productType })
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -90,7 +90,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['grossWeight', 'totalNetWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
+    invisibleColumns: ['grossWeight', 'netWeight', 'totalGrossWeight', 'drawingNumber', 'surfaceArea', 'remark']
   },
   tableRef
 )
