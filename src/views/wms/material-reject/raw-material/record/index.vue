@@ -188,7 +188,7 @@
 <script setup>
 import crudApi from '@/api/wms/material-reject/raw-material/record'
 import { detail as getInboundDetail } from '@/api/wms/material-inbound/raw-material/review'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { rawMaterialRejectRecordPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'

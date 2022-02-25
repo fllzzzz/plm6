@@ -188,7 +188,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { detail as getInboundReceiptDetail } from '@/api/wms/material-inbound/raw-material/review'
 import { reportRawMaterialInboundDetailsPM as permission } from '@/page-permission/wms'
 import checkPermission from '@/utils/system/check-permission'

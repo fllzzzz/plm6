@@ -38,6 +38,7 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
             }
             row.specificationLabels = info.specificationLabels // 规格中文
             row.classifySerialNumber = info.classify.serialNumber // 科目编号
+            row.basicClass = info.classify.basicClass // 基础类型
             row.classifyId = info.classify.id // 科目id
             row.classifyFullPathId = info.classify.fullPathId // 全路径id
             row.classifyFullName = info.classify.fullName // 全路径名称
@@ -50,7 +51,10 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
             row.outboundUnitType = info.classify.outboundUnitType // 出库方式
             row.outboundUnit = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
             row.outboundUnitPrecision = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
-            row.basicClass = info.classify.basicClass // 基础类型
+
+            row.rejectUnitType = row.basicClass === rawMatClsEnum.STEEL_COIL.V ? measureTypeEnum.ACCOUNTING.V : row.outboundUnitType // 退库方式
+            row.rejectUnit = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 退库单位
+            row.rejectUnitPrecision = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 退库单位精度
             // row.specification = info.spec // 规格
             row.specificationMap = info.specKV // 规格KV格式
             if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {

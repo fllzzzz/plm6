@@ -2,13 +2,13 @@ import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import { amountUnitEnum } from '../../../enum'
 
-// 还库单
+// 退库单
 const WMS_RETURN_WAREHOUSE_VOUCHER = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'WMS_RETURN_WAREHOUSE_VOUCHER', // 表格类型 KEY
-  name: '还库单（平台）', // 表格名称
+  name: '退库单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -62,7 +62,7 @@ const WMS_RETURN_WAREHOUSE_VOUCHER = {
   title: {
     show: true,
     allPage: false,
-    title: '还库单',
+    title: '退库单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -105,10 +105,10 @@ const WMS_RETURN_WAREHOUSE_VOUCHER = {
      */
     fields: [ // 字段内容
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'returnNo', title: 'NO：', width: 135, type: typeEnum.GUID.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'createTime', title: '还库时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'createTime', title: '退库时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'originProject', title: '原属地：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'createUserName', title: '办理人：', width: 55, type: typeEnum.USER_NAME.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'targetProject', title: '还库至：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'targetProject', title: '退库至：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'checkUserName', title: '审核人：', width: 55, type: typeEnum.USER_NAME.K },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
@@ -217,9 +217,9 @@ const WMS_RETURN_WAREHOUSE_VOUCHER = {
       { show: true, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COLOR.K },
       { show: true, key: 'brand', title: '品牌', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.BRAND.K },
       { show: false, key: 'unit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MEASUREMENT_UNIT.K },
-      { show: false, key: 'number', title: '还库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
+      { show: false, key: 'number', title: '退库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
       { show: true, key: 'checkUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'value', title: '还库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: false },
+      { show: true, key: 'value', title: '退库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: false },
       { show: false, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: false },
       { show: true, key: 'totalAmount', title: '总金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
       { show: false, key: 'warehouse', title: '存储位置', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.WAREHOUSE_NAME.K }
@@ -228,5 +228,5 @@ const WMS_RETURN_WAREHOUSE_VOUCHER = {
 }
 
 export default {
-  WMS_RETURN_WAREHOUSE_VOUCHER // 还库单
+  WMS_RETURN_WAREHOUSE_VOUCHER // 退库单
 }

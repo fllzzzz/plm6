@@ -15,7 +15,7 @@ const downloadAttachment = {
 
 // 获取供应商（简要信息）
 const getSuppliersBrief = {
-  url: '/api/wms/supplier/all/brief',
+  url: '/api/scm/supplier/all/brief',
   method: 'get',
   timeout: 1000,
   response: () => {

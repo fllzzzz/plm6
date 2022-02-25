@@ -7,7 +7,7 @@
       size="mini"
       :type="props.detailType"
       :icon="props.detailIcon"
-      @click.stop="crud.toDetail(props.data)"
+      @click.stop="toDetail(props.data)"
     />
     <common-button
       v-if="props.showEdit"
@@ -16,7 +16,7 @@
       size="mini"
       :type="props.editType"
       icon="el-icon-edit"
-      @click.stop="crud.toEdit(props.data)"
+      @click.stop="toEdit(props.data)"
     />
     <el-popover
       v-if="props.showDel && checkPermission(permission.del)"
@@ -95,6 +95,14 @@ const props = defineProps({
   delPrompt: {
     type: String,
     default: '确定删除本条数据吗？'
+  },
+  beforeToDetail: {
+    // 打开详情之前
+    type: Function
+  },
+  beforeToEdit: {
+    // 打开编辑之前
+    type: Function
   }
 })
 
@@ -131,6 +139,26 @@ function onPopoverShow() {
 // 隐藏删除提示窗
 function onPopoverHide() {
   document.removeEventListener('click', handleDocumentClick)
+}
+
+// 打开详情
+function toDetail(data) {
+  if (typeof props.beforeToDetail === 'function') {
+    props.beforeToDetail(data)
+  }
+  setTimeout(() => {
+    crud.toDetail(data)
+  }, 0)
+}
+
+// 打开编辑
+function toEdit(data) {
+  if (typeof props.beforeToEdit === 'function') {
+    props.beforeToEdit(data)
+  }
+  setTimeout(() => {
+    crud.toEdit(data)
+  }, 0)
 }
 
 function handleDocumentClick(event) {

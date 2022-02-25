@@ -125,7 +125,7 @@
 </template>
 
 <script setup>
-import { detail as detailApi } from '@/api/wms/purchase-order'
+import { detail as detailApi } from '@/api/supply-chain/purchase-order'
 import { defineEmits, defineProps, nextTick, ref, watch } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum, baseMaterialTypeEnum, purchaseOrderPaymentModeEnum, purchaseStatusEnum } from '@enum-ms/wms'

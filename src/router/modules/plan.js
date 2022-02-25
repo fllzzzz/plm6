@@ -170,6 +170,24 @@ export default {
       ]
     },
     {
+      path: '/plan/material-preparation',
+      component: 'Layout',
+      hidden: false,
+      name: 'PlanMaterialPreparation',
+      alwaysShow: false,
+      redirect: '/plan/material-preparation/project-preparation',
+      meta: { title: '备料管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'MaterialProjectPreparation',
+          path: 'project-preparation',
+          hidden: false,
+          component: '/plan/material-preparation/project-preparation/index',
+          meta: { title: '项目备料', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/plan/dosage-statistical',
       component: 'Layout',
       hidden: false,

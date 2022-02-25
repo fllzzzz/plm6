@@ -203,7 +203,7 @@ async function fetchInboundDetail(id) {
     detail.value.list.forEach((row) => {
       rejectInfo.value[row.id] = { KV: {}, material: row }
       // 总数
-      row.totalNumber = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete
+      row.totalNumber = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete
       // 退货总数
       row.rejectNumber = 0
       // 待退货总数
@@ -211,8 +211,8 @@ async function fetchInboundDetail(id) {
       if (Array.isArray(row.rejectList)) {
         row.rejectList.forEach((rr) => {
           const rejectMaterialInfo = rr.material
-          let number = row.outboundUnitType === measureTypeEnum.MEASURE.V ? rejectMaterialInfo.quantity : rejectMaterialInfo.mete
-          number = +toFixed(number, row.outboundUnitPrecision)
+          let number = row.rejectUnitType === measureTypeEnum.MEASURE.V ? rejectMaterialInfo.quantity : rejectMaterialInfo.mete
+          number = +toFixed(number, row.rejectUnitPrecision)
           // 待审核状态
           if (rr.reviewStatus === reviewStatusEnum.UNREVIEWED.V) {
             row.rejectPendingNumber += number
@@ -223,10 +223,10 @@ async function fetchInboundDetail(id) {
           }
         })
       }
-      row.rejectNumber = +toFixed(row.rejectNumber, row.outboundUnitPrecision)
-      row.rejectPendingNumber = +toFixed(row.rejectPendingNumber, row.outboundUnitPrecision)
+      row.rejectNumber = +toFixed(row.rejectNumber, row.rejectUnitPrecision)
+      row.rejectPendingNumber = +toFixed(row.rejectPendingNumber, row.rejectUnitPrecision)
       // 当前最大可退货数量
-      row.rejectMaxNumber = +toFixed(row.totalNumber - row.rejectNumber - row.rejectPendingNumber, row.outboundUnitPrecision)
+      row.rejectMaxNumber = +toFixed(row.totalNumber - row.rejectNumber - row.rejectPendingNumber, row.rejectUnitPrecision)
     })
   } catch (error) {
     console.error('退库-获取入库详情', error)
@@ -271,13 +271,13 @@ function handRejectChange(row) {
       // 存在计量单位，设置计量量
       if (row.measureUnit) {
         _material.quantity =
-          row.outboundUnitType === measureTypeEnum.MEASURE.V
+          row.rejectUnitType === measureTypeEnum.MEASURE.V
             ? rj.rejectNumber
             : toFixed(rj.rejectNumber * row.accountingUnitNet, row.measurePrecision)
       }
       // 设置核算量
       _material.mete =
-        row.outboundUnitType === measureTypeEnum.ACCOUNTING.V
+        row.rejectUnitType === measureTypeEnum.ACCOUNTING.V
           ? rj.rejectNumber
           : toFixed(rj.rejectNumber * row.unitNet, row.accountingPrecision)
 

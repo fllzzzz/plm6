@@ -13,8 +13,9 @@ import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
-import { getPurchasingPurchaseOrderBrief } from '@/api/wms/purchase-order'
+import { getPurchasingPurchaseOrderBrief } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
+import { getSteelMaterialClassifyBrief } from '@/api/config/system-config/steel-classic'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
@@ -63,6 +64,7 @@ const state = {
   unclosedRequisitions: [], // 未关闭的申购单
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
   monomers: {}, // 单体
+  steelMaterialClassify: [], // 钢材材料分类配置
   loaded: {
     // 接口是否加载
     factories: false,
@@ -80,7 +82,8 @@ const state = {
     suppliers: false,
     taxRate: false,
     unclosedRequisitions: false,
-    unclosedPurchaseOrder: false
+    unclosedPurchaseOrder: false,
+    steelMaterialClassify: false
   }
 }
 
@@ -168,6 +171,9 @@ const mutations = {
   },
   SET_UNCLOSED_PURCHASE_ORDER(state, order) {
     state.unclosedPurchaseOrder = order
+  },
+  SET_STEEL_MATERIAL_CLASSIFY(state, list) {
+    state.steelMaterialClassify = list
   }
 }
 
@@ -358,6 +364,12 @@ const actions = {
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
     return content
   },
+  async fetchSteelMaterialClassify({ commit }) {
+    const { content = [] } = await getSteelMaterialClassifyBrief()
+    commit('SET_STEEL_MATERIAL_CLASSIFY', content)
+    commit('SET_LOADED', { key: 'steelMaterialClassify' })
+    return content
+  },
   // 原材料规格
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
@@ -490,7 +502,7 @@ function getSpecList(classify, specConfig) {
   }
   arr.forEach((v) => {
     // 唯一编号
-    v.serialNumber = classify.serialNumber + v.code.join('')
+    v.serialNumber = classify.serialNumber + '-' + v.code.join('')
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}

@@ -17,11 +17,11 @@
         <span>
           <span class="label">本次退货统计</span>
           <span class="color-green">{{ rejectTotalNumber }}</span> &nbsp;
-          <span>{{ `/ ${material.rejectMaxNumber} ${material.outboundUnit}` }}</span>
+          <span>{{ `/ ${material.rejectMaxNumber} ${material.rejectUnit}` }}</span>
         </span>
         <span>
           <span class="label">审核中的数量</span>
-          <span>{{ `${material.rejectPendingNumber} ${material.outboundUnit}` }}</span>
+          <span>{{ `${material.rejectPendingNumber} ${material.rejectUnit}` }}</span>
         </span>
       </div>
     </template>
@@ -47,7 +47,7 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns :basic-class="material.basicClass" />
           <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="material.basicClass" outbound-type-mode />
+          <material-unit-quantity-columns :basic-class="material.basicClass" reject-type-mode />
           <!-- 仓库位置信息 -->
           <warehouse-info-columns show-project />
           <el-table-column label="退货数量" width="170px" align="center" fixed="right">
@@ -56,12 +56,12 @@
                 <common-input-number
                   v-model="row.rejectNumber"
                   :min="0"
-                  :precision="row.outboundUnitPrecision"
+                  :precision="row.rejectUnitPrecision"
                   :max="material.rejectMaxNumber > row.maxNumber ? row.maxNumber : material.rejectMaxNumber"
                   controls-position="right"
                   @change="(newVal, oldVal) => rejectNumberChange(row, newVal, oldVal)"
                 />
-                <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
+                <span style="flex: none; margin-left: 10px">{{ row.rejectUnit }}</span>
               </span>
             </template>
           </el-table-column>
@@ -179,7 +179,7 @@ async function fetchMatchList(materialId) {
     // 列表中存在的退库信息
     const exitRejectIds = {}
     matchList.value.forEach((row) => {
-      row.maxNumber = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete
+      row.maxNumber = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete
       // 数据回填
       const rejectRow = rejectKV.value[row.id]
       if (rejectRow) {
