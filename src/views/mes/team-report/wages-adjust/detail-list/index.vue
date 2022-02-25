@@ -40,7 +40,7 @@
           />
         </template>
       </productType-spec-info-columns>
-      <el-table-column align="center" prop="prop" label="操作" width="100">
+      <el-table-column align="center" prop="prop" label="操作" width="110">
         <template #default="{ row }">
           <common-button type="primary" size="mini" @click="handleSingleEdit(row)">工价调整</common-button>
         </template>

@@ -14,7 +14,7 @@
       >
         <el-table-column header-align="center" align="center" prop="name" label="板厚" min-width="50">
           <template #default="{ row }">
-            <span>{{ row.name }}</span>
+            <span style="cursor: default">{{ row.name }}</span>
           </template>
         </el-table-column>
       </common-table>

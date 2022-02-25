@@ -12,7 +12,6 @@
     </template>
     <template #content>
       <div class="tag-content">
-        <el-tag>选择工序</el-tag>
         <template v-for="item in processList" :key="item.id">
           <el-tag
             hit
@@ -23,6 +22,7 @@
             {{ item.name }}
           </el-tag>
         </template>
+        <span v-if="!processList || !processList.length" style="font-size: 12px; color: red; margin-left: 10px">*暂未获取到工序</span>
       </div>
       <common-table ref="tableRef" v-loading="loading" :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -132,6 +132,10 @@ async function fetchProcess() {
       productType: props.productType
     })
     processList.value = content
+    if (content && content.length) {
+      selectProcessId.value = content[0]?.id
+      fetchTeam()
+    }
   } catch (error) {
     console.log('获取工序', error)
   }
