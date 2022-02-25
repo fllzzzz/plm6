@@ -98,10 +98,10 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => globalProjectId,
+  () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId
+      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
@@ -119,7 +119,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.projectId = globalProjectId
+  crud.form.projectId = globalProjectId.value
   return !!crud.form.projectId
 }
 </script>

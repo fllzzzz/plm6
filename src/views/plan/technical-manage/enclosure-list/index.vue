@@ -263,6 +263,18 @@
             <div v-else>{{ scope.row.color ? scope.row.color : '-' }}</div>
           </template>
         </el-table-column>
+        <el-table-column
+         v-if="columns.visible('draw') && crud.query.category===TechnologyTypeAllEnum.BENDING.V"
+          key="draw"
+          prop="draw"
+          :show-overflow-tooltip="true"
+          label="画图"
+          width="100px"
+        >
+          <template v-slot="scope">
+            <common-button size="mini" type="primary" @click="handleDraw(scope.row)">画图</common-button>
+          </template>
+        </el-table-column>
         <!--状态、编辑与删除-->
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="70px" fixed="right">
           <template v-slot="scope">
@@ -309,6 +321,8 @@
       <!--分页组件-->
       <pagination />
       <mForm/>
+      <!-- 画图 -->
+    <SimpleDrawing ref="simpleDrawRef" v-model="drawVisible" :current="currentRow" @toQuery="crud.toQuery"/>
     </template>
   </div>
 </template>
@@ -331,14 +345,18 @@ import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
 import { enclosureListPM as permission } from '@/page-permission/plan'
+import SimpleDrawing from '../components/simple-drawing'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
 const plateOption = ref([])
 const totalTechInfo = ref({})
+const simpleDrawRef = ref()
 const typeProp = { key: 'id', label: 'plateType', value: 'id' }
 const trussProp = { key: 'id', label: 'serialNumber', value: 'id' }
 provide('plateOption', plateOption)
+const drawVisible = ref(false)
+const currentRow = ref({})
 
 const optShow = {
   add: false,
@@ -427,7 +445,7 @@ watch(
   (val) => {
     if (val) {
       getTechInfo()
-      crud.query.projectId = globalProjectId
+      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
@@ -576,6 +594,11 @@ async function rowSubmit(row) {
   } catch (e) {
     console.log(messageName, e)
   }
+}
+
+function handleDraw(row) {
+  drawVisible.value = true
+  currentRow.value = row
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
