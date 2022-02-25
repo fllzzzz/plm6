@@ -9,7 +9,7 @@
       />
       <common-radio-button
         v-model="query.status"
-        :options="visaReviewStatusEnum.ENUM"
+        :options="reviewStatusEnum.ENUM"
         showOptionAll
         type="enum"
         size="small"
@@ -59,7 +59,7 @@
 <script setup>
 import { defineEmits } from 'vue'
 
-import { visaReviewStatusEnum, visaTypeEnum } from '@enum-ms/common'
+import { reviewStatusEnum, visaTypeEnum } from '@enum-ms/common'
 import { businessTypeEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
