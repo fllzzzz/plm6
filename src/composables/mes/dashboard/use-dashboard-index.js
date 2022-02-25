@@ -2,7 +2,7 @@ import { computed, ref, onUnmounted, onMounted, watch } from 'vue'
 import { mapGetters } from '@/store/lib'
 import RAF from '@/utils/raf'
 
-export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, pageSize = 100, intervalTime = 250 }) {
+export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, pageSize = 100, intervalTime = 250, beforeRefreshHook }) {
   const { globalProjectId } = mapGetters(['globalProjectId'])
   const boardList = ref([])
   watch(
@@ -63,6 +63,7 @@ export default function useDashboardIndex({ headRef, scrollBoxRef, crud, CRUD, p
   }
 
   CRUD.HOOK.beforeRefresh = () => {
+    if (typeof beforeRefreshHook === 'function') beforeRefreshHook()
     crud.page.size = pageSize
     if (crud.page.page === 1) {
       boardList.value = []

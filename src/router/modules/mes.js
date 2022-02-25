@@ -299,28 +299,51 @@ export default {
         icon: 'project',
         noCache: false
       },
-      children: [{
-        name: 'MesProductionReportArtifact',
-        path: 'artifact',
-        hidden: false,
-        component: '/mes/production-manage/report/artifact/index',
-        meta: {
-          title: '结构报表',
-          icon: 'project',
-          noCache: true
+      children: [
+        {
+          name: 'MesProductionReportMachinePart',
+          path: 'machine-part',
+          hidden: false,
+          component: '/mes/production-manage/report/machine-part/index',
+          meta: {
+            title: '零件报表',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionReportAssemble',
+          path: 'assemble',
+          hidden: false,
+          component: '/mes/production-manage/report/assemble/index',
+          meta: {
+            title: '组立报表',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionReportArtifact',
+          path: 'artifact',
+          hidden: false,
+          component: '/mes/production-manage/report/artifact/index',
+          meta: {
+            title: '结构报表',
+            icon: 'project',
+            noCache: true
+          }
+        },
+        {
+          name: 'MesProductionReportEnclosure',
+          path: 'enclosure',
+          hidden: false,
+          component: '/mes/production-manage/report/enclosure/index',
+          meta: {
+            title: '围护报表',
+            icon: 'project',
+            noCache: true
+          }
         }
-      },
-      {
-        name: 'MesProductionReportEnclosure',
-        path: 'enclosure',
-        hidden: false,
-        component: '/mes/production-manage/report/enclosure/index',
-        meta: {
-          title: '围护报表',
-          icon: 'project',
-          noCache: true
-        }
-      }
         // {
         //   name: 'MesProductionReportPressedPlate',
         //   path: 'pressed-plate',
@@ -382,7 +405,7 @@ export default {
         hidden: false,
         component: '/mes/production-manage/analysis/production-statistics/index',
         meta: {
-          title: '生产统计',
+          title: '在制品统计',
           icon: 'project',
           noCache: true
         }
@@ -408,7 +431,7 @@ export default {
     hidden: false,
     redirect: '/mes/production-manage/dashboard/project-state',
     meta: {
-      title: '项目看板',
+      title: '项目制造',
       icon: 'project',
       noCache: true
     },
@@ -571,147 +594,125 @@ export default {
       icon: 'project',
       noCache: true
     },
-    children: [{
-      name: 'MesTeamReportArtifact',
-      path: 'artifact-team',
-      hidden: false,
-      component: '/mes/team-report/artifact-team/index',
-      meta: {
-        title: '结构班组',
-        icon: 'project',
-        noCache: true
+    children: [
+      {
+        name: 'MesTeamReportArtifact',
+        path: 'artifact-team',
+        hidden: false,
+        component: '/mes/team-report/artifact-team/index',
+        meta: {
+          title: '结构班组进度',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesTeamReportEnclosure',
+        path: 'enclosure-team',
+        hidden: false,
+        component: '/mes/team-report/enclosure-team/index',
+        meta: {
+          title: '围护班组进度',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesTeamReportArtifactWage',
+        path: 'artifact-team-wage',
+        hidden: false,
+        component: '/mes/team-report/artifact-team-wage/index',
+        meta: {
+          title: '结构班组工资',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesTeamReportEnclosureWage',
+        path: 'enclosure-team-wage',
+        hidden: false,
+        component: '/mes/team-report/enclosure-team-wage/index',
+        meta: {
+          title: '围护班组工资',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      // {
+      //   name: 'MesTeamReportInStaffPiecework',
+      //   path: 'in-staff/piecework-system',
+      //   hidden: false,
+      //   component: '/mes/team-report/in-staff/piecework-system/index',
+      //   meta: {
+      //     title: '编内-计件制',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'MesTeamReportInStaffAllocation',
+      //   path: 'in-staff/allocation-system',
+      //   hidden: false,
+      //   component: '/mes/team-report/in-staff/allocation-system/index',
+      //   meta: {
+      //     title: '编内-分配制',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+
+      // {
+      //   name: 'MesTeamReportOffStaffSettlement',
+      //   path: 'off-staff/settlement',
+      //   hidden: false,
+      //   component: '/mes/team-report/off-staff/settlement/index',
+      //   meta: {
+      //     title: '编外-工资结算',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'MesTeamReportOffStaffPiecework',
+      //   path: 'off-staff/piecework-system',
+      //   hidden: false,
+      //   component: '/mes/team-report/off-staff/piecework-system/index',
+      //   meta: {
+      //     title: '编外-计件制',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      {
+        name: 'MesTeamReportWagesAdjust',
+        path: 'wages-adjust',
+        hidden: false,
+        component: '/mes/team-report/wages-adjust/index',
+        meta: { title: '编内-工价调整', icon: 'project', noCache: true }
+      },
+      // {
+      //   name: 'MesTeamReportInStaffAllocation',
+      //   path: 'in-staff/allocation-system',
+      //   hidden: false,
+      //   component: '/mes/team-report/in-staff/allocation-system/index',
+      //   meta: {
+      //     title: '编外-分配制',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      {
+        name: 'MesTeamReportOffStaffWagesConfig',
+        path: 'off-staff/wages-config',
+        hidden: false,
+        component: '/mes/team-report/off-staff/wages-config/index',
+        meta: {
+          title: '编外-工价调整',
+          icon: 'project',
+          noCache: true
+        }
       }
-    },
-    {
-      name: 'MesTeamReportEnclosure',
-      path: 'enclosure-team',
-      hidden: false,
-      component: '/mes/team-report/enclosure-team/index',
-      meta: {
-        title: '围护班组',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    {
-      name: 'MesTeamReportInStaffPiecework',
-      path: 'in-staff/piecework-system',
-      hidden: false,
-      component: '/mes/team-report/in-staff/piecework-system/index',
-      meta: {
-        title: '编内-计件制',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    // {
-    //   name: 'MesTeamReportInStaffAllocation',
-    //   path: 'in-staff/allocation-system',
-    //   hidden: false,
-    //   component: '/mes/team-report/in-staff/allocation-system/index',
-    //   meta: {
-    //     title: '编内-分配制',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // },
-    {
-      name: 'MesTeamReportWagesAdjust',
-      path: 'wages-adjust',
-      hidden: false,
-      component: '/mes/team-report/wages-adjust/index',
-      meta: { title: '编内-工价调整', icon: 'project', noCache: true }
-    },
-    // {
-    //   name: 'MesTeamReportOffStaffSettlement',
-    //   path: 'off-staff/settlement',
-    //   hidden: false,
-    //   component: '/mes/team-report/off-staff/settlement/index',
-    //   meta: {
-    //     title: '编外-工资结算',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // },
-    {
-      name: 'MesTeamReportOffStaffPiecework',
-      path: 'off-staff/piecework-system',
-      hidden: false,
-      component: '/mes/team-report/off-staff/piecework-system/index',
-      meta: {
-        title: '编外-计件制',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    // {
-    //   name: 'MesTeamReportInStaffAllocation',
-    //   path: 'in-staff/allocation-system',
-    //   hidden: false,
-    //   component: '/mes/team-report/in-staff/allocation-system/index',
-    //   meta: {
-    //     title: '编外-分配制',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // },
-    {
-      name: 'MesTeamReportOffStaffWagesConfig',
-      path: 'off-staff/wages-config',
-      hidden: false,
-      component: '/mes/team-report/off-staff/wages-config/index',
-      meta: {
-        title: '编外-工价调整',
-        icon: 'project',
-        noCache: true
-      }
-    }
-      //     {
-      //       name: 'MesTeamReportInStaffPayroll',
-      //       path: 'in-staff-payroll',
-      //       hidden: false,
-      //       redirect: '/mes/team-report/in-staff-payroll/payroll',
-      //       meta: { title: '班组工资表-编内', icon: 'project', noCache: true },
-      //       children: [
-      //         {
-      //           name: 'MesTeamReportInStaffPayrollPayroll',
-      //           path: 'payroll',
-      //           hidden: false,
-      //           component: '/mes/team-report/in-staff-payroll/payroll/index',
-      //           meta: { title: '工资结算', icon: 'project', noCache: true }
-      //         },
-      //         {
-      //           name: 'MesTeamReportInStaffPayrollWageAdjust',
-      //           path: 'wage-adjust',
-      //           hidden: false,
-      //           component: '/mes/team-report/in-staff-payroll/wage-adjust/index',
-      //           meta: { title: '工价调整', icon: 'project', noCache: true }
-      //         }
-      //       ]
-      //     },
-      //     {
-      //       name: 'MesTeamReportOffStaffPayroll',
-      //       path: 'off-staff-payroll',
-      //       hidden: false,
-      //       redirect: '/mes/team-report/off-staff-payroll/payroll',
-      //       meta: { title: '班组工资表-编外', icon: 'project', noCache: true },
-      //       children: [
-      //         {
-      //           name: 'MesTeamReportWageAdjust',
-      //           path: 'wage-adjust',
-      //           hidden: false,
-      //           component: '/mes/team-report/off-staff-payroll/wage-adjust/index',
-      //           meta: { title: '工价定额', icon: 'project', noCache: true }
-      //         },
-      //         {
-      //           name: 'MesTeamReportWageAdjust',
-      //           path: 'payroll',
-      //           hidden: false,
-      //           component: '/mes/team-report/off-staff-payroll/payroll/index',
-      //           meta: { title: '工资结算', icon: 'project', noCache: true }
-      //         }
-      //       ]
-      //     }
     ]
   },
   {
@@ -720,23 +721,35 @@ export default {
     hidden: false,
     name: 'MesQHSEManage',
     alwaysShow: false,
-    redirect: '/mes/QHSE-manage/disclosure',
+    redirect: '/mes/QHSE-manage/quality-inspection-report',
     meta: {
-      title: 'QHSE管理',
+      title: '质检管理',
       icon: 'project',
       noCache: true
     },
-    children: [{
-      name: 'MesQHSEManageDisclosure',
-      path: 'disclosure',
-      hidden: false,
-      component: '/mes/QHSE-manage/disclosure/index',
-      meta: {
-        title: '问题曝光',
-        icon: 'project',
-        noCache: true
+    children: [
+      {
+        name: 'MesQHSEManageQualityInspectionReport',
+        path: 'quality-inspection-report',
+        hidden: false,
+        component: '/mes/QHSE-manage/quality-inspection-report/index',
+        meta: {
+          title: '质检报表',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesQHSEManageDisclosure',
+        path: 'disclosure',
+        hidden: false,
+        component: '/mes/QHSE-manage/disclosure/index',
+        meta: {
+          title: '问题曝光',
+          icon: 'project',
+          noCache: true
+        }
       }
-    }
       // {
       //   name: 'MesQHSEManageExFactoryData',
       //   path: 'ex-factory-data',

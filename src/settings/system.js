@@ -1,4 +1,4 @@
-import { projectTypeEnum as pt, projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { projectTypeEnum as pt, projectNameArrangementModeEnum, TechnologyTypeAllEnum as ttEnum, projectModeEnum } from '@/utils/enum/modules/contract'
 import { allPT } from './config'
 import assetsLogo from '@/assets/logo/logo-colorful-title.png'
 import assetsSidebarLogo from '@/assets/logo/logo-white.png'
@@ -44,6 +44,8 @@ export const showProjectSearch = [
   { component: '/mes/scheduling-manage/task/artifact/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/scheduling-manage/task/machine-part/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/scheduling-manage/task/enclosure/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/mes/production-manage/report/machine-part/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/mes/production-manage/report/assemble/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/production-manage/report/artifact/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/production-manage/report/enclosure/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/production-manage/analysis/production-statistics/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
@@ -57,9 +59,8 @@ export const showProjectSearch = [
   { component: '/mes/production-manage/dashboard/painting/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/team-report/artifact-team/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/team-report/enclosure-team/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
-  { component: '/mes/team-report/in-staff/piecework-system/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
-  { component: '/mes/team-report/in-staff/allocation-system/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
-  { component: '/mes/team-report/off-staff/piecework-system/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/mes/team-report/artifact-team-wage/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
+  { component: '/mes/team-report/enclosure-team-wage/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/team-report/off-staff/wages-config/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   // { component: '/mes/team-report/off-staff/settlement/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/team-report/wages-adjust/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
@@ -132,4 +133,41 @@ export const showProjectSearch = [
   { component: '/wms/report/raw-material/material-outbound-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/material-return-details/index', type: allPT, required: false },
   { component: '/wms/report/raw-material/send-and-receive-storage/index', type: allPT, required: false }
+]
+
+/**
+ * @description 设置路由的自定义meta属性
+ * @param {string} name 路由名称
+ * @param {number} productType 所属产品类型
+ * @param {number} mode 项目模式
+ */
+const ENCLOSURE_ALL_BIT = ttEnum.PROFILED_PLATE.V | ttEnum.TRUSS_FLOOR_PLATE.V | ttEnum.PRESSURE_BEARING_PLATE.V | ttEnum.SANDWICH_BOARD.V | ttEnum.BENDING.V
+
+export const routerMetaSetting = [
+  { name: 'MesSchedulingManage', productType: ENCLOSURE_ALL_BIT | ttEnum.STRUCTURE.V },
+  { name: 'MesSchedulingArtifact', productType: ttEnum.STRUCTURE.V },
+  { name: 'MesSchedulingArtifactAssemble', productType: ttEnum.STRUCTURE.V,
+    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+  },
+  { name: 'MesSchedulingArtifactArtifact', productType: ttEnum.STRUCTURE.V,
+    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+  },
+  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V,
+    mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+  },
+  { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
+  { name: 'MesSchedulingPressedPlate', productType: ttEnum.PROFILED_PLATE.V },
+  { name: 'MesSchedulingFloorPlate', productType: ttEnum.PRESSURE_BEARING_PLATE.V },
+  { name: 'MesSchedulingTrussFloorPlate', productType: ttEnum.TRUSS_FLOOR_PLATE.V },
+  { name: 'MesSchedulingSandwichBoard', productType: ttEnum.SANDWICH_BOARD.V },
+  { name: 'MesSchedulingFoldingPiece', productType: ttEnum.BENDING.V },
+  { name: 'MesTaskArtifact', productType: ttEnum.STRUCTURE.V,
+    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+  },
+  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V,
+    mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+  },
+  { name: 'MesTaskEnclosure', productType: ENCLOSURE_ALL_BIT },
+  { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
+  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
 ]

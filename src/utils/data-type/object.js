@@ -39,7 +39,7 @@ export function objectMerge(target, source) {
   if (Array.isArray(source)) {
     return source.slice()
   }
-  Object.keys(source).forEach(property => {
+  Object.keys(source).forEach((property) => {
     const sourceProperty = source[property]
     if (typeof sourceProperty === 'object') {
       target[property] = objectMerge(target[property], sourceProperty)
@@ -48,4 +48,13 @@ export function objectMerge(target, source) {
     }
   })
   return target
+}
+
+export function clearObject(target) {
+  if (typeof target !== 'object') {
+    throw Error('不是“object”类型', typeof target)
+  }
+  Object.keys(target).forEach((key) => {
+    target[key] = undefined
+  })
 }

@@ -13,6 +13,6 @@ export default function useWageQuotaUnit({ wageQuotaType }) {
     unit,
     meteUnit,
     field,
-    DP: DP[dp]
+    precision: DP[dp]
   }
 }

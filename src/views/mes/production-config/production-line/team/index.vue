@@ -54,7 +54,7 @@
             {{ teamAttributeEnum.VL[scope.row.organizationType] }}
           </template>
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           v-if="columns.visible('boolExtraCountEnum')"
           key="boolExtraCountEnum"
           prop="boolExtraCountEnum"
@@ -65,7 +65,7 @@
           <template v-slot="scope">
             {{ whetherEnum.VL[scope.row.boolExtraCountEnum] }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column v-if="columns.visible('leaderName')" key="leaderName" prop="leaderName" label="组长" width="80px" />
         <el-table-column
           v-if="columns.visible('memberNames')"
@@ -99,7 +99,7 @@
 import crudApi from '@/api/mes/production-config/production-line-team'
 import { defineExpose, ref, defineProps, watch, computed, inject } from 'vue'
 import { teamAttributeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
-import { whetherEnum } from '@enum-ms/common'
+// import { whetherEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
 import { configProductionLineTeamPM as permission } from '@/page-permission/config'
 

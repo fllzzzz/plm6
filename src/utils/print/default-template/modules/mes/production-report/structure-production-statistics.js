@@ -1,13 +1,13 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 结构生产统计
+// 结构在制品统计
 const mesStructureProductionStatistics = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
   type: 'mesStructureProductionStatistics', // 表格类型 KEY
-  name: '结构生产统计（平台）', // 表格名称
+  name: '结构在制品统计（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +61,7 @@ const mesStructureProductionStatistics = {
   title: {
     show: true,
     allPage: false,
-    title: '结构生产统计',
+    title: '结构在制品统计',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -234,5 +234,5 @@ const mesStructureProductionStatistics = {
 }
 
 export default {
-  mesStructureProductionStatistics //  结构生产统计
+  mesStructureProductionStatistics //  结构在制品统计
 }

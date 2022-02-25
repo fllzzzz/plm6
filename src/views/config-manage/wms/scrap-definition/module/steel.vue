@@ -17,7 +17,7 @@
         </common-tip-button>
       </div>
       <!-- <span class="tip">出库：小于限定的尺寸，必须全部出库</span> -->
-      <span class="tip">出库/入库/还库：小于限定的尺寸，直接进入废料列表</span>
+      <span class="tip">出库/入库/退库：小于限定的尺寸，直接进入废料列表</span>
     </template>
     <el-form v-loading="dataLoading" :disabled="formDisabled" :model="form" label-position="left" label-width="160px">
       <el-form-item label="钢板-最短边长度(mm)">

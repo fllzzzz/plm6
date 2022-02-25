@@ -4,10 +4,12 @@
       <monomer-select-area-tabs :productType="query.productType" needConvert :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <common-radio-button
         v-model="query.productType"
-        :options="artifactProcessEnum.ENUM"
+        :options="componentTypeEnum.ENUM"
         size="small"
         class="filter-item"
-        type="enum"
+        type="enumSL"
+        default
+        :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V]"
         @change="crud.toQuery"
       />
       <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
@@ -28,7 +30,7 @@
 <script setup>
 import { ref, defineExpose, defineEmits } from 'vue'
 
-import { artifactProcessEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
 
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
@@ -49,8 +51,7 @@ const defaultQuery = {
   status: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
-  factoryId: { value: undefined, resetAble: false },
-  productType: artifactProcessEnum.ONCE.V
+  factoryId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
 

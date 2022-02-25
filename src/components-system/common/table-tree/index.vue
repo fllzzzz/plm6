@@ -151,6 +151,7 @@ function handleChange() {
 .table-tree {
   min-height: 60px;
   border: 1px solid #e5e5e5;
+  overflow: hidden;
   // border-bottom: 0;
   .tip {
     display: inline-block;

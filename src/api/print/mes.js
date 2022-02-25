@@ -185,7 +185,7 @@ export function enclosureProductionReport(params) {
 }
 
 /**
- * 生产统计
+ * 在制品统计
  * @export
  * @param {*} productType|required 产品类型
  * @param {*} dateTime|required 统计日期
@@ -290,7 +290,7 @@ export function enclosureProjectSummary(params) {
 }
 
 export default {
-  // 项目看板
+  // 项目制造
   machinePartDetail, // 零件生产详情
   paintingList, // 涂装列表
   structureProjectSummary, // 结构项目汇总
@@ -302,7 +302,7 @@ export default {
   // 生产报表
   structureProductionReport, // 结构生产报表
   enclosureProductionReport, // 围护生产报表
-  productionStatistics, // 生产统计
+  productionStatistics, // 在制品统计
   unfinishedList, // 未完成清单
 
   // 班组报表

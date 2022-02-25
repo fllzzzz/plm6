@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import crudApi, { getSummary } from '@/api/mes/production-manage/report/enclosure'
+import crudApi, { getSummary } from '@/api/mes/production-manage/report/common'
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
@@ -93,7 +93,7 @@ const optShow = {
 const productType = componentTypeEnum.ENCLOSURE.V
 provide('getSummaryApi', getSummary)
 provide('productType', productType)
-provide('defaultQuery', {})
+provide('defaultQuery', { productType })
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

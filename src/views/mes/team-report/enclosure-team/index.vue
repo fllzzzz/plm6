@@ -16,18 +16,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        v-if="columns.visible('productionLine.name')"
-        key="productionLine.name"
-        prop="productionLine.name"
-        :show-overflow-tooltip="true"
-        label="生产线"
-        min-width="180px"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.productionLine?.name }}</span>
-        </template>
-      </el-table-column>
+      <belonging-info-columns :columns="columns" showFactory showWorkshop showProductionLine fixedWidth/>
       <el-table-column
         v-if="columns.visible('taskLength')"
         key="taskLength"
@@ -87,6 +76,7 @@ import { enclosureTeamReportPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 
@@ -107,7 +97,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '围护班组',
+    title: '围护班组进度',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

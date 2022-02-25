@@ -16,18 +16,7 @@
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column
-        v-if="columns.visible('workshop.name')"
-        key="workshop.name"
-        prop="workshop.name"
-        :show-overflow-tooltip="true"
-        label="车间"
-        width="150px"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.workshop?.name }}</span>
-        </template>
-      </el-table-column>
+      <belonging-info-columns :columns="columns" showFactory showWorkshop fixedWidth />
       <el-table-column
         v-if="columns.visible('productionLine.name')"
         key="productionLine.name"
@@ -37,7 +26,7 @@
         width="250px"
       >
         <template v-slot="scope">
-          <span>{{ artifactProcessEnum.VL[scope.row.productType] }} > {{ scope.row.productionLine?.name }}</span>
+          <el-tag :type="componentTypeEnum.V[scope.row.productType].T" effect="plain"> {{ scope.row.productionLine?.name }} > {{ componentTypeEnum.V[scope.row.productType].SL }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="完成状态">
@@ -55,7 +44,9 @@
               <div class="status-detail">
                 <div>任务量：{{ item.taskMeteShow }}</div>
                 <div>已完成：{{ item.completeMeteShow }}</div>
-                <common-button v-permission="permission.processDetail" type="text" size="mini" @click="showItemDetail(item, scope.row)">查看详情</common-button>
+                <common-button v-permission="permission.processDetail" type="text" size="mini" @click="showItemDetail(item, scope.row)">
+                  查看详情
+                </common-button>
               </div>
             </div>
           </div>
@@ -77,12 +68,13 @@ import crudApi from '@/api/mes/team-report/artifact-team'
 import { ref, reactive, provide } from 'vue'
 
 import { artifactTeamReportPM as permission } from '@/page-permission/mes'
-import { artifactProcessEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { toFixed } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import mHeader from './module/header'
 import mDetail from './module/detail'
 import itemDetail from './module/item-detail'
@@ -103,7 +95,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '结构班组',
+    title: '结构班组进度',
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },

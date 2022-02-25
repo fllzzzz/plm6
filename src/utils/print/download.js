@@ -32,15 +32,15 @@ const borderStyle = {
 }
 
 /**
-   * Export Excel
-   * @param {object} title customize title
-   * @param {object} header header data
-   * @param {object} footer footer data
-   * @param {object} table table data
-   * @param {object} qrCode QR Code
-   * @param {object} config config
-   * @author duhh
-   */
+ * Export Excel
+ * @param {object} title customize title
+ * @param {object} header header data
+ * @param {object} footer footer data
+ * @param {object} table table data
+ * @param {object} qrCode QR Code
+ * @param {object} config config
+ * @author duhh
+ */
 async function download({ filename, title, header = {}, table = [], footer = {}, qrCode, config }) {
   if (!isNotBlank(config)) {
     throw new Error('未配置')
@@ -142,9 +142,9 @@ async function download({ filename, title, header = {}, table = [], footer = {},
 
   XLSX.write(wb, { file: _filename, bookType: 'xlsx', bookSST: false, type: 'file', cellStyles: false })
   return true
-//   } catch (e) {
-//     throw new Error(e)
-//   }
+  //   } catch (e) {
+  //     throw new Error(e)
+  //   }
 }
 
 /**
@@ -246,10 +246,10 @@ function setImage(ws, baseCfg, { name, data, type, width, height, top, left }) {
   // Distance from image bottom to excel top
   const imgB2excelT = _top + _height
 
-  const cols = ws['!cols'].map(c => c.wpx)
+  const cols = ws['!cols'].map((c) => c.wpx)
   const colsSum = cols.reduce((sum, cur) => sum + cur, 0)
   // 1.33, The actual height is different from the calculation
-  const rows = ws['!rows'].map(c => (c.hpx || pt2px(c.hpt)) * 1.33)
+  const rows = ws['!rows'].map((c) => (c.hpx || pt2px(c.hpt)) * 1.33)
 
   // Print beyond the width doesn't show, at this point the image moves to the left
   const beyondWidth = imgR2excelL - colsSum
@@ -351,6 +351,7 @@ function setImage(ws, baseCfg, { name, data, type, width, height, top, left }) {
       to: posTo
     }
   })
+  console.log('drawing', ws['!drawing'])
 }
 
 /**
@@ -398,10 +399,11 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
     // If there only one column then the column width is equal to the length
     if (lastCell.c === 0) {
       ws['!rows'].push({ hpx: lengthUnit2px(baseCfg.aclHeight, baseCfg.unit) })
-    } else { // lastCell.c > 0
+    } else {
+      // lastCell.c > 0
       // Gets the rows with the most fields
-      const headerRowsLengthArr = headerRows.map(r => r.length)
-      const footerRowsLengthArr = footerRows.map(r => r.length)
+      const headerRowsLengthArr = headerRows.map((r) => r.length)
+      const footerRowsLengthArr = footerRows.map((r) => r.length)
       const headerMaxFieldsI = headerRowsLengthArr.maxIndex()
       const footerMaxFieldsI = footerRowsLengthArr.maxIndex()
       const headerMax = headerRowsLengthArr[headerMaxFieldsI]
@@ -415,22 +417,24 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
       if (headerMax >= footerMax) {
         _startIndex = _.sum(headerRowsLengthArr.slice(0, headerMaxFieldsI))
         _endIndex = _startIndex + headerMax - 1
-        _fields = headerCfg.fields ? headerCfg.fields.filter(f => f.show) : []
+        _fields = headerCfg.fields ? headerCfg.fields.filter((f) => f.show) : []
       } else {
         _startIndex = _.sum(footerRowsLengthArr.slice(0, footerMaxFieldsI))
         _endIndex = _startIndex + footerMax - 1
-        _fields = footerCfg.fields ? footerCfg.fields.filter(f => f.show) : []
+        _fields = footerCfg.fields ? footerCfg.fields.filter((f) => f.show) : []
       }
       const _maxFields = JSON.parse(JSON.stringify(_fields.slice(_startIndex, _endIndex + 1)))
 
       // Calculate the columns width based on the fields width
-      const _widthSum = _.sum(_maxFields.map(f => {
-        f.realWidth = isNotBlank(f.width) ? f.width : f.maxWidth
-        return f.realWidth
-      }))
-      const _percentWidth = _maxFields.map(f => Math.floor((f.realWidth / _widthSum) * 100) / 100)
-      _percentWidth.forEach(p => {
-        const _w = Math.floor((p * baseCfg.aclWidth) * 100) / 100
+      const _widthSum = _.sum(
+        _maxFields.map((f) => {
+          f.realWidth = isNotBlank(f.width) ? f.width : f.maxWidth
+          return f.realWidth
+        })
+      )
+      const _percentWidth = _maxFields.map((f) => Math.floor((f.realWidth / _widthSum) * 100) / 100)
+      _percentWidth.forEach((p) => {
+        const _w = Math.floor(p * baseCfg.aclWidth * 100) / 100
         ws['!cols'].push({ wpx: lengthUnit2px(_w, baseCfg.unit), MDW })
       })
       // }
@@ -438,7 +442,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
     // FIXME: table fields number < header/footer fields number
   }
 
-  const wsCols = ws['!cols'].map(c => c.wpx)
+  const wsCols = ws['!cols'].map((c) => c.wpx)
 
   if (rn.title) {
     wsMerges.push({ s: { r: firstCell.r, c: firstCell.c }, e: { r: firstCell.r, c: lastCell.c }})
@@ -447,7 +451,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
     wsMerges.push({ s: { r: sr.footerTip, c: firstCell.c }, e: { r: sr.footerTip, c: lastCell.c }})
   }
   if (rn.header) {
-    const fields = headerCfg.fields ? headerCfg.fields.filter(f => f.show) : []
+    const fields = headerCfg.fields ? headerCfg.fields.filter((f) => f.show) : []
     const newHeaderRows = []
     const rowIndex = sr.header
     const rowEndIndex = rowIndex + rn.header
@@ -455,7 +459,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
       const _row = headerRows[ri - rowIndex]
       const _fields = fields.splice(0, _row.length)
       // get the current row fields width
-      const _rw = _fields.map(v => {
+      const _rw = _fields.map((v) => {
         const width = isNotBlank(v.width) ? v.width : v.maxWidth
         return lengthUnit2px(width, baseCfg.unit)
       })
@@ -519,9 +523,13 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
         ws[cellAddress].s = {
           font: {
             name: 'Microsoft YaHei',
-            sz: pt2px(headerCfg.size), color: { rgb: '000000' },
-            bold: headerCfg.bold === 'bold', underline: false,
-            outline: false, italic: false, strike: false
+            sz: pt2px(headerCfg.size),
+            color: { rgb: '000000' },
+            bold: headerCfg.bold === 'bold',
+            underline: false,
+            outline: false,
+            italic: false,
+            strike: false
           },
           alignment: {
             vertical: verticleAlign(headerCfg.verticleAlign),
@@ -531,12 +539,12 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
         }
         // Line height varies with font size
       }
-      ws['!rows'].splice(rowIndex, 0, ({ hpt: headerCfg.size + 10 }))
+      ws['!rows'].splice(rowIndex, 0, { hpt: headerCfg.size + 10 })
     }
   }
 
   if (rn.footerExtra) {
-    const fields = footerCfg.fields.filter(f => f.show)
+    const fields = footerCfg.fields.filter((f) => f.show)
     const newFooterRows = []
     const rowIndex = sr.footerExtra
     const rowEndIndex = rowIndex + rn.footerExtra
@@ -544,7 +552,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
       const _row = footerRows[ri - rowIndex]
       const _fields = fields.splice(0, _row.length)
       // get the current row fields width
-      const _rw = _fields.map(v => {
+      const _rw = _fields.map((v) => {
         const width = isNotBlank(v.width) ? v.width : v.maxWidth
         return lengthUnit2px(width, baseCfg.unit)
       })
@@ -608,9 +616,13 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
         ws[cellAddress].s = {
           font: {
             name: 'Microsoft YaHei',
-            sz: pt2px(footerCfg.size), color: { rgb: '000000' },
-            bold: footerCfg.bold === 'bold', underline: false,
-            outline: false, italic: false, strike: false
+            sz: pt2px(footerCfg.size),
+            color: { rgb: '000000' },
+            bold: footerCfg.bold === 'bold',
+            underline: false,
+            outline: false,
+            italic: false,
+            strike: false
           },
           alignment: {
             vertical: verticleAlign(footerCfg.verticleAlign),
@@ -620,7 +632,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
         }
         // Line height varies with font size
       }
-      ws['!rows'].splice(rowIndex, 0, ({ hpt: footerCfg.size + 10 }))
+      ws['!rows'].splice(rowIndex, 0, { hpt: footerCfg.size + 10 })
     }
   }
 
@@ -634,7 +646,7 @@ function mergerCells({ ws, headerCfg, tableCfg, footerCfg, baseCfg, sr, rn, head
     columnRows.forEach((row, i) => {
       const r = _sr + i
       let c = 1
-      row.forEach(col => {
+      row.forEach((col) => {
         const range = { s: { r: r, c: c }, e: { r: r + col.rowSpan - 1, c: c + col.colSpan - 1 }}
         // col.colSpan - 1 + 1
         c += col.colSpan
@@ -669,9 +681,13 @@ function setTitle({ config, baseCfg, ws, sr, rn }) {
     const titleStyle = {
       font: {
         name: '宋体',
-        sz: pt2px(config.size), color: { rgb: '000000' },
-        bold: config.bold === 'bold', underline: false,
-        outline: false, italic: false, strike: false
+        sz: pt2px(config.size),
+        color: { rgb: '000000' },
+        bold: config.bold === 'bold',
+        underline: false,
+        outline: false,
+        italic: false,
+        strike: false
       },
       alignment: {
         vertical: verticleAlign(config.verticleAlign),
@@ -790,16 +806,18 @@ function setTHeader(ws, sr, config) {
   // NO. displayed
   if (config.index.show) {
     columnRows[0].unshift({
-      ...config.index, colSpan: 1, rowSpan: columnRows.length
+      ...config.index,
+      colSpan: 1,
+      rowSpan: columnRows.length
     })
   }
 
-  columnRows.forEach(v => rows.push([]))
+  columnRows.forEach((v) => rows.push([]))
 
   // columnRows.for
   columnRows.forEach((rowCols, i) => {
     const row = rows[i]
-    rowCols.forEach(col => {
+    rowCols.forEach((col) => {
       row.push(col.title)
       row.push.apply(row, new Array(col.colSpan - 1).fill(''))
 
@@ -811,20 +829,27 @@ function setTHeader(ws, sr, config) {
 
   XLSX.utils.sheet_add_aoa(ws, rows, { skipHeader: true, origin: sr.tHeader })
   const scMap = {}
-  columnRows.forEach((cr, i) => { scMap[i + sr.tHeader] = 0 })
+  columnRows.forEach((cr, i) => {
+    scMap[i + sr.tHeader] = 0
+  })
   columnRows.forEach((rowCols, i) => {
-    rowCols.forEach(col => {
+    rowCols.forEach((col) => {
       for (let r = 0; r < col.rowSpan; r++) {
         const _r = sr.tHeader + i + r
         for (let c = 0; c < col.colSpan; c++) {
           const _c = scMap[_r] + c
           const cellAddress = XLSX.utils.encode_cell({ c: _c, r: _r })
-          ws[cellAddress].s = { // Header style
+          ws[cellAddress].s = {
+            // Header style
             font: {
               name: 'Microsoft YaHei',
-              sz: pt2px(config.th.size), color: { rgb: '000000' },
-              bold: config.th.bold === 'bold', underline: false,
-              outline: false, italic: false, strike: false
+              sz: pt2px(config.th.size),
+              color: { rgb: '000000' },
+              bold: config.th.bold === 'bold',
+              underline: false,
+              outline: false,
+              italic: false,
+              strike: false
             },
             alignment: {
               vertical: 'center',
@@ -876,7 +901,7 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
     if (columns.length === 0) {
       return _sr
     }
-    columns.forEach(f => {
+    columns.forEach((f) => {
       if (f.show) {
         keys.push(f.key)
         colNames.push(f.title)
@@ -884,19 +909,21 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
     })
     const needSummary = config.summary && config.summary.show
     const summary = {}
-    const summaryKeys = columns.filter(f => {
-      summary[f.key] = ''
-      return f.sum
-    }).map(f => {
-      summary[f.key] = 0
-      return f.key
-    })
+    const summaryKeys = columns
+      .filter((f) => {
+        summary[f.key] = ''
+        return f.sum
+      })
+      .map((f) => {
+        summary[f.key] = 0
+        return f.key
+      })
     summary['__index'] = config.summary.title || '合计'
 
     // Data to rewrite and calculated summary data
     const _data = data.map((v, i) => {
       const _v = {}
-      columns.forEach(f => {
+      columns.forEach((f) => {
         if (needSummary && summaryKeys.includes(f.key)) {
           summary[f.key] += keyParse(v, f.key)
         }
@@ -909,7 +936,7 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
     })
 
     // Summary Data to rewrite
-    columns.forEach(f => {
+    columns.forEach((f) => {
       if (f.sum) {
         // 下载时汇总数据默认显示0
         summary[f.key] = dataFormat({ val: summary[f.key] || 0, field: f, emptyVal: '', kParse: false })
@@ -927,7 +954,11 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
     const widthRemain = setColumnWidth({ baseCfg, columns: columns, ws })
 
     // Line increase and set table body json to the sheet
-    XLSX.utils.sheet_add_json(ws, _data, { header: widthRemain > 0 ? [...keys, `blankColumn_${Math.random}`] : keys, skipHeader: true, origin: sr.tBody })
+    XLSX.utils.sheet_add_json(ws, _data, {
+      header: widthRemain > 0 ? [...keys, `blankColumn_${Math.random}`] : keys,
+      skipHeader: true,
+      origin: sr.tBody
+    })
 
     // New starting row(footer starting row)
     const _nsr = sr.tBody + _data.length
@@ -939,9 +970,13 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
         ws[cellAddress].s = {
           font: {
             name: 'Microsoft YaHei',
-            sz: pt2px(config.td.size), color: { rgb: '000000' },
-            bold: config.td.bold === 'bold', underline: false,
-            outline: false, italic: false, strike: false
+            sz: pt2px(config.td.size),
+            color: { rgb: '000000' },
+            bold: config.td.bold === 'bold',
+            underline: false,
+            outline: false,
+            italic: false,
+            strike: false
           },
           alignment: {
             vertical: 'center',
@@ -971,7 +1006,7 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
  * @returns
  */
 function setFooter({ data, config, baseCfg, ws, sr, rn, footerRows }) {
-  const _sr = sr.all = sr.footer
+  const _sr = (sr.all = sr.footer)
   if (!config || !config.show) {
     return _sr
   }
@@ -1017,9 +1052,13 @@ function setFooterTip({ config, footerCfg, baseCfg, ws, sr, rn }) {
     ws[cellAddress].s = {
       font: {
         name: 'Microsoft YaHei',
-        sz: pt2px(config.size), color: { rgb: 'FFFF0000' },
-        bold: config.bold === 'bold', underline: false,
-        outline: false, italic: false, strike: false
+        sz: pt2px(config.size),
+        color: { rgb: 'FFFF0000' },
+        bold: config.bold === 'bold',
+        underline: false,
+        outline: false,
+        italic: false,
+        strike: false
       },
       alignment: {
         vertical: 'center',
@@ -1160,7 +1199,7 @@ function setColumnWidth({ baseCfg, columns, ws }) {
   const _fieldsW = []
   let totalFieldWidth = 0
   let avgWNum = 0
-  columns.forEach(col => {
+  columns.forEach((col) => {
     let fieldWidth = 0
     let distributable = false
     // Priority：1.width 2.minWidth
@@ -1188,7 +1227,7 @@ function setColumnWidth({ baseCfg, columns, ws }) {
   if (dWidth > 0 && avgWNum) {
     argDWidth = dWidth / avgWNum
   }
-  _fieldsW.forEach(f => {
+  _fieldsW.forEach((f) => {
     let _w = f.width
     if (argDWidth && f.distributable) {
       _w += argDWidth
@@ -1213,10 +1252,14 @@ function setColumnWidth({ baseCfg, columns, ws }) {
  */
 function verticleAlign(align) {
   switch (align) {
-    case verticleAlignEnum.TOP.V: return 'top'
-    case verticleAlignEnum.BOTTOM.V: return 'bottom'
-    case verticleAlignEnum.CENTER.V: return 'center'
-    default: return 'top'
+    case verticleAlignEnum.TOP.V:
+      return 'top'
+    case verticleAlignEnum.BOTTOM.V:
+      return 'bottom'
+    case verticleAlignEnum.CENTER.V:
+      return 'center'
+    default:
+      return 'top'
   }
 }
 
@@ -1226,10 +1269,14 @@ function verticleAlign(align) {
  */
 function horizontalAlign(align) {
   switch (align) {
-    case alignEnum.LEFT.V: return 'left'
-    case alignEnum.RIGHT.V: return 'right'
-    case alignEnum.CENTER.V: return 'center'
-    default: return 'left'
+    case alignEnum.LEFT.V:
+      return 'left'
+    case alignEnum.RIGHT.V:
+      return 'right'
+    case alignEnum.CENTER.V:
+      return 'center'
+    default:
+      return 'left'
   }
 }
 
@@ -1248,22 +1295,41 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
     val = keyParse(row, field.key)
   }
   switch (field.type) {
-    case fieldTypeEnum.PROJECT.K: return emptyTextFormatter(projectNameFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.DATE.K: return emptyTextFormatter(dateFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.DATES.K: return emptyTextFormatter(dateFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.AMOUNT.K: return emptyTextFormatter(amountFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.WEIGHT.K: return emptyTextFormatter(weightFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.LENGTH.K: return emptyTextFormatter(lengthFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.RATE.K: return emptyTextFormatter(rateFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.THICKNESS.K: return emptyTextFormatter(thicknessFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.METE.K: return emptyTextFormatter(meteFormat({
-      val, format: field.format, basicClass: row.basicClass,
-      materialType: row.materialType, materialListType: row.materialListType,
-      unit: row.unit, checkUnit: row.checkUnit
-    }), emptyVal)
-    case fieldTypeEnum.QUANTITY.K: return emptyTextFormatter(quantityFormat(val, field.format), emptyVal)
-    case fieldTypeEnum.ENUM.K: return emptyTextFormatter(enumFormat(val, field.format), emptyVal)
-    default: return emptyTextFormatter(val, emptyVal)
+    case fieldTypeEnum.PROJECT.K:
+      return emptyTextFormatter(projectNameFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.DATE.K:
+      return emptyTextFormatter(dateFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.DATES.K:
+      return emptyTextFormatter(dateFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.AMOUNT.K:
+      return emptyTextFormatter(amountFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.WEIGHT.K:
+      return emptyTextFormatter(weightFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.LENGTH.K:
+      return emptyTextFormatter(lengthFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.RATE.K:
+      return emptyTextFormatter(rateFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.THICKNESS.K:
+      return emptyTextFormatter(thicknessFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.METE.K:
+      return emptyTextFormatter(
+        meteFormat({
+          val,
+          format: field.format,
+          basicClass: row.basicClass,
+          materialType: row.materialType,
+          materialListType: row.materialListType,
+          unit: row.unit,
+          checkUnit: row.checkUnit
+        }),
+        emptyVal
+      )
+    case fieldTypeEnum.QUANTITY.K:
+      return emptyTextFormatter(quantityFormat(val, field.format), emptyVal)
+    case fieldTypeEnum.ENUM.K:
+      return emptyTextFormatter(enumFormat(val, field.format), emptyVal)
+    default:
+      return emptyTextFormatter(val, emptyVal)
   }
 }
 
@@ -1277,10 +1343,11 @@ function enumFormat(val, format) {
   if (flag) {
     const key = format.key || 'L'
     const enumK = enumAll[format.enum]
-    if (format.bit) { // 位运算的值
+    if (format.bit) {
+      // 位运算的值
       const enums = EO.toArr(enumK)
       const res = []
-      enums.forEach(e => {
+      enums.forEach((e) => {
         if (e.V & val) {
           res.push(e[key] || e['L'])
         }
@@ -1303,7 +1370,12 @@ function enumFormat(val, format) {
 function projectNameFormat(val, format = {}) {
   if (!isNotBlank(format)) {
     // 默认只显示项目简称
-    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: true }
+    format = {
+      showProjectFullName: false,
+      showSerialNumber: false,
+      projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V,
+      lineBreak: true
+    }
   }
   return projectNameFormatter(val, format, format.lineBreak)
 }
@@ -1320,16 +1392,19 @@ function dateFormat(val, format = 'YY/MM/DD') {
       return moment(+val).format(format)
     }
   }
-  if (typeof val === 'string') { // 'xx,xx,xx'
+  if (typeof val === 'string') {
+    // 'xx,xx,xx'
     val = val.split(',')
     if (val instanceof Array) {
       if (val.length === 1) {
         return filterDate(val[0])
       }
       if (val.length > 1) {
-        return val.map(t => {
-          return filterDate(t)
-        }).join('，')
+        return val
+          .map((t) => {
+            return filterDate(t)
+          })
+          .join('，')
       }
     }
   }
@@ -1533,10 +1608,10 @@ function rateFormat(val, format = {}) {
 }
 
 /**
-   * key解析，处理key为'xxx.xx'的情况
-   * @param {object} data 数据
-   * @param {string} key 字段名
-   */
+ * key解析，处理key为'xxx.xx'的情况
+ * @param {object} data 数据
+ * @param {string} key 字段名
+ */
 function keyParse(data, key) {
   const parseable = isNotBlank(data) && isNotBlank(key) && typeof key === 'string'
   if (parseable) {

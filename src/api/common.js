@@ -49,7 +49,7 @@ export function getUserTree() {
 // 获取所有供应商（简要的）
 export function getSuppliersBrief() {
   return request({
-    module: 'wms',
+    module: 'scm',
     url: `supplier/all/brief`,
     method: 'get'
   })

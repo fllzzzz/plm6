@@ -12,7 +12,7 @@
     <!-- 次要信息 -->
     <material-secondary-info-columns :basic-class="basicClass" />
     <!-- 单位及其数量 -->
-    <material-unit-quantity-columns :basic-class="basicClass" outbound-type-mode :number-prop-field="numberPropField" />
+    <material-unit-quantity-columns :basic-class="basicClass" reject-type-mode :number-prop-field="numberPropField" />
     <warehouse-info-columns show-project />
     <el-table-column key="status" prop="status" label="状态" align="center" width="80" show-overflow-tooltip>
       <template #default="{ row }">
@@ -71,10 +71,10 @@ const props = defineProps({
   }
 })
 
-// 出库单位对应的字段
+// 退库单位对应的字段
 const numberPropField = computed(() => {
   if (isBlank(props.material)) return
-  if (props.material.outboundUnitType === measureTypeEnum.MEASURE.V) {
+  if (props.material.rejectUnitType === measureTypeEnum.MEASURE.V) {
     return 'quantity'
   } else {
     return 'mete'

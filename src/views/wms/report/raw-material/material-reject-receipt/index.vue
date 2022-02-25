@@ -211,7 +211,7 @@
 <script setup>
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/reject'
 import { getReceiptDetail as getInboundDetail } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialRejectReceiptPM as permission } from '@/page-permission/wms'
 import { computed, ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'

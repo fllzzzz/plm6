@@ -11,7 +11,7 @@ export default function useProductMeteConvert({
   const convertFn = {
     [componentTypeEnum.ARTIFACT.V]: weightConvert,
     [componentTypeEnum.MACHINE_PART.V]: weightConvert,
-    [componentTypeEnum.ASSEMBLE.V]: lengthConvert,
+    [componentTypeEnum.ASSEMBLE.V]: weightConvert,
     [componentTypeEnum.ENCLOSURE.V]: lengthConvert
   }
   return convertFn[productType]({ weight, length, showUnit })

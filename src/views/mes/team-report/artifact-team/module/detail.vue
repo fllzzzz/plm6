@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
-    :title="`生产线：${info.workshop?.name}>${artifactProcessEnum.VL[info.productType]}>${info.productionLine?.name}`"
+    :title="`生产线：${info.workshop?.name}>${componentTypeEnum.V[info.productType]?.SL}>${info.productionLine?.name}`"
     v-model="drawerVisible"
     direction="rtl"
     :before-close="handleClose"
@@ -9,31 +9,19 @@
   >
     <template #titleRight> </template>
     <template #content>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
+      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="140">
+        <belonging-info-columns showProject showMonomer showArea fixedWidth />
+        <productType-base-info-columns :productType="info?.productType" :unShowField="['material']" />
+        <el-table-column
+          prop="mete"
+          :show-overflow-tooltip="true"
+          :label="`${unitObj.label}(${unitObj.unit})`"
+          align="center"
+          width="100px"
+        >
           <template v-slot="scope">
-            <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="100px">
-          <template v-slot="scope">
-            <span>{{ scope.row.serialNumber }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="specification" :show-overflow-tooltip="true" label="规格" min-width="100px">
-          <template v-slot="scope">
-            <span>{{ scope.row.specification }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="material" :show-overflow-tooltip="true" label="材质" min-width="80px">
-          <template v-slot="scope">
-            <span>{{ scope.row.material }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="mete" :show-overflow-tooltip="true" :label="`${unitObj.label}(${unitObj.unit})`" align="center" width="100px">
-          <template v-slot="scope">
-            {{ scope.row.mete}}
+            {{ scope.row.mete }}
           </template>
         </el-table-column>
         <el-table-column key="taskQuantity" prop="taskQuantity" :show-overflow-tooltip="true" label="任务总数" align="center" width="100px">
@@ -55,14 +43,15 @@
 import { detail } from '@/api/mes/team-report/artifact-team'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
-import { artifactProcessEnum } from '@enum-ms/mes'
-import { projectNameFormatter } from '@/utils/project'
+import { componentTypeEnum } from '@enum-ms/mes'
 import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
@@ -119,7 +108,8 @@ async function fetchList() {
       productionLineId: props.info.productionLine?.id
     })
     const content = await detail(_query)
-    list.value = content.map((v) => {
+    list.value = content.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.processSequence = v.processSummaryDetailsDOList
         .map((o) => {
           return `<span>【 ${o.name} │ <span style="color: #67C23A;">${
@@ -135,7 +125,7 @@ async function fetchList() {
       return v
     })
   } catch (error) {
-    console.log('获取结构班组详情', error)
+    console.log('获取结构班组进度详情', error)
   } finally {
     tableLoading.value = false
   }
