@@ -55,7 +55,12 @@
     </span>
     <span class="info-item">
       <span>数量({{ baseUnit.measure.unit }})</span>
-      <span class="returnable-number" v-to-fixed="{ val: material.quantity || 0, dp: baseUnit.measure.precision }" />
+      <span
+        :style="{ color: materialReturnableQuantity < 0 ? 'red' : '#67c23a' }"
+        v-to-fixed="{ val: materialReturnableQuantity || 0, dp: baseUnit.measure.precision }"
+      />
+      <span>&nbsp;/&nbsp;</span>
+      <span v-to-fixed="{ val: material.quantity || 0, dp: baseUnit.measure.precision }" />
     </span>
     <span class="info-item">
       <span>单重({{ baseUnit.weight.unit }})</span>
@@ -96,6 +101,8 @@ const props = defineProps({
 
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(props.basicClass)
-// 退库量
+// 退库核算量
 const materialReturnableMete = computed(() => toPrecision(props.material.returnableMete, props.material.accountingPrecision))
+// 退库数量
+const materialReturnableQuantity = computed(() => toPrecision(props.material.returnableQuantity, props.material.measurePrecision))
 </script>
