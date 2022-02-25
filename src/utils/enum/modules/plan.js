@@ -134,7 +134,7 @@ export {
   deepenTypeEnum,
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
-  preparationStatusEnum, // 备料状态
+  preparationStatusEnum // 备料状态
 }
 
 export default {
@@ -151,5 +151,5 @@ export default {
   deepenTypeEnum,
   serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
-  preparationStatusEnum, // 备料状态
+  preparationStatusEnum // 备料状态
 }

@@ -170,19 +170,19 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="翼板腹板信息">
-          <template v-for="item in keyList" :key="item.key">
+          <div v-for="item in keyList" :key="item.key">
             <el-table-column align="center" :label="item.label" :prop="item.key">
               <template v-slot="scope">
                 <template v-if="scope.row.detailDTOList.length > 0">
-                  <template v-for="(k,i) in scope.row.detailDTOList" :key="k.id">
+                  <div v-for="(k,i) in scope.row.detailDTOList" :key="k.id">
                     <div :class="i===scope.row.detailDTOList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                       {{k[item.key]}}
                     </div>
-                  </template>
+                  </div>
                 </template>
               </template>
             </el-table-column>
-          </template>
+          </div>
         </el-table-column>
         <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注">
           <template v-slot="scope">
@@ -286,10 +286,10 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => globalProjectId,
+  () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId
+      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
