@@ -250,10 +250,10 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => globalProjectId,
+  () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId
+      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },

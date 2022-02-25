@@ -62,11 +62,11 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   {{k.label}}
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
@@ -80,11 +80,11 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   {{k.unit}}
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
@@ -98,7 +98,7 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   <el-input-number
                     v-if="scope.row.monomerDetailList[i].isModify"
@@ -111,7 +111,7 @@
                   />
                   <span v-else>{{ k.type===TechnologyTypeAllEnum.STRUCTURE.V?k.mete.toFixed(DP.COM_WT__KG):k.mete.toFixed(DP.MES_ENCLOSURE_L__M) }}</span>
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
@@ -125,11 +125,11 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   {{ globalProject.startDate?parseTime(globalProject.startDate,'{y}-{m}-{d}'):'-' }}
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
@@ -143,7 +143,7 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   <el-date-picker
                     v-if="scope.row.monomerDetailList[i].isModify"
@@ -155,7 +155,7 @@
                   />
                   <span>{{ k.date?parseTime(k.date,'{y}-{m}-{d}'):'-' }}</span>
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
@@ -169,11 +169,11 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   {{ globalProject.startDate && k.date?dateDifferenceReduce(globalProject.startDate,k.date):'-' }}
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
@@ -188,7 +188,7 @@
         >
           <template v-slot="scope">
             <template v-if="scope.row.monomerDetailList.length > 0">
-              <template v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
+              <div v-for="(k,i) in scope.row.monomerDetailList" :key="k.type">
                 <div :class="i===scope.row.monomerDetailList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   <template v-if="k.isModify">
                     <common-button type="info" size="mini" @click="rowCancel(scope.row,i)">取消</common-button>
@@ -199,93 +199,11 @@
                     <common-button size="mini" @click="handleDelete(scope.row,k)" icon="el-icon-delete" type="danger"/>
                   </template>
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          v-if="columns.visible('mainStructure')"
-          key="mainStructure"
-          prop="mainStructure"
-          :show-overflow-tooltip="true"
-          label="构件(t)"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.mainStructure? scope.row.mainStructure.toFixed(DP.COM_WT__KG): '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('battenBoard')"
-          key="battenBoard"
-          prop="battenBoard"
-          :show-overflow-tooltip="true"
-          label="夹芯板(m)"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.battenBoard? scope.row.battenBoard.toFixed(DP.COM_WT__KG): '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('contourPlate')"
-          key="contourPlate"
-          prop="contourPlate"
-          :show-overflow-tooltip="true"
-          label="压型彩板(m)"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.contourPlate? scope.row.contourPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('flangingPiece')"
-          key="flangingPiece"
-          prop="flangingPiece"
-          :show-overflow-tooltip="true"
-          label="折边件(m)"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.flangingPiece? scope.row.flangingPiece.toFixed(DP.COM_WT__KG): '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('trussFloorPlate')"
-          key="trussFloorPlate"
-          prop="trussFloorPlate"
-          :show-overflow-tooltip="true"
-          label="桁架楼承板(m)"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.trussFloorPlate? scope.row.trussFloorPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="columns.visible('pressureBearingPlate')"
-          key="pressureBearingPlate"
-          prop="pressureBearingPlate"
-          :show-overflow-tooltip="true"
-          label="压型楼承板(m)"
-        >
-          <template v-slot="scope">
-            <span>{{ scope.row.pressureBearingPlate?scope.row.pressureBearingPlate.toFixed(DP.COM_WT__KG): '-' }}</span>
-          </template>
-        </el-table-column> -->
-
-        <!--编辑与删除-->
-        <!-- <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
-          label="操作"
-          width="130px"
-          align="center"
-          fixed="right"
-        >
-          <template v-slot="scope">
-            <udOperation
-              :data="scope.row"
-              :permission="permission"
-            />
-          </template>
-        </el-table-column> -->
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -393,10 +311,10 @@ const { maxHeight } = useMaxHeight({
 })
 
 watch(
-  () => globalProjectId,
+  () => globalProjectId.value,
   (val) => {
     if (val) {
-      crud.query.projectId = globalProjectId
+      crud.query.projectId = globalProjectId.value
       crud.toQuery()
     }
   },
