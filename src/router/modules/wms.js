@@ -329,24 +329,24 @@ export default {
         }
       ]
     },
-    {
-      path: '/wms/purchase-manage',
-      component: 'Layout',
-      hidden: false,
-      name: 'WMSPurchaseOrder',
-      alwaysShow: false,
-      redirect: '/wms/purchase-order',
-      meta: { title: '采购订单管理', icon: 'contract', noCache: true },
-      children: [
-        {
-          name: 'PurchaseOrder',
-          path: 'purchase-order',
-          hidden: false,
-          component: '/wms/purchase-order/index',
-          meta: { title: '采购订单', icon: 'project', noCache: true }
-        }
-      ]
-    },
+    // {
+    //   path: '/wms/purchase-manage',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'WMSPurchaseOrder',
+    //   alwaysShow: false,
+    //   redirect: '/wms/purchase-order',
+    //   meta: { title: '采购订单管理', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'TwoPurchaseOrder',
+    //       path: 'purchase-order',
+    //       hidden: false,
+    //       component: '/wms/purchase-order/index',
+    //       meta: { title: '采购订单', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // },
     // {
     //   path: '/wms/requisitions-manage',
     //   component: 'Layout',
@@ -365,24 +365,24 @@ export default {
     //     }
     //   ]
     // },
-    {
-      path: '/wms/logistics-manage',
-      component: 'Layout',
-      hidden: false,
-      name: 'WMSLogisticsOrder',
-      alwaysShow: false,
-      redirect: '/wms/logistics-order',
-      meta: { title: '物流订单管理', icon: 'contract', noCache: true },
-      children: [
-        {
-          name: 'LogisticsOrder',
-          path: 'purchase-order',
-          hidden: false,
-          component: '/wms/logistics-order/index',
-          meta: { title: '物流订单', icon: 'project', noCache: true }
-        }
-      ]
-    },
+    // {
+    //   path: '/wms/logistics-manage',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'WMSTwoLogisticsOrder',
+    //   alwaysShow: false,
+    //   redirect: '/wms/logistics-order',
+    //   meta: { title: '物流订单管理', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'TwoLogisticsOrder',
+    //       path: 'purchase-order',
+    //       hidden: false,
+    //       component: '/wms/logistics-order/index',
+    //       meta: { title: '物流订单', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // },
     {
       path: '/wms/inventory-warning-manage',
       component: 'Layout',
@@ -400,7 +400,7 @@ export default {
           meta: { title: '库存预警', icon: 'project', noCache: true }
         }
       ]
-    },
+    }
     // {
     //   path: '/wms/prepares-materials',
     //   component: 'Layout',
@@ -426,23 +426,23 @@ export default {
     //     }
     //   ]
     // },
-    {
-      path: '/wms/supplier',
-      component: 'Layout',
-      hidden: false,
-      name: 'SupplierManage',
-      alwaysShow: false,
-      redirect: '/wms/supplier/manage',
-      meta: { title: '供应商管理', icon: 'contract', noCache: true },
-      children: [
-        {
-          name: 'PurchaseSupplier',
-          path: 'manage',
-          hidden: false,
-          component: '/wms/supplier/manage/index',
-          meta: { title: '供应商列表', icon: 'project', noCache: true }
-        }
-      ]
-    }
+    // {
+    //   path: '/wms/supplier',
+    //   component: 'Layout',
+    //   hidden: false,
+    //   name: 'SupplierManage',
+    //   alwaysShow: false,
+    //   redirect: '/wms/supplier/manage',
+    //   meta: { title: '供应商管理', icon: 'contract', noCache: true },
+    //   children: [
+    //     {
+    //       name: 'PurchaseSupplier',
+    //       path: 'manage',
+    //       hidden: false,
+    //       component: '/wms/supplier/manage/index',
+    //       meta: { title: '供应商列表', icon: 'project', noCache: true }
+    //     }
+    //   ]
+    // }
   ]
 }

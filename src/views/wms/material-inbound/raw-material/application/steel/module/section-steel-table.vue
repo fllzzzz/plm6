@@ -24,21 +24,14 @@
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column
-      prop="classifyName"
-      label="物料种类"
-      align="center"
-      fixed="left"
-      width="120"
-      show-overflow-tooltip
-    >
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left">
+    <el-table-column prop="specification" label="规格" align="center" width="200px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -133,6 +126,7 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['calc-weight'])
 
@@ -149,11 +143,18 @@ const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(ba
 // 校验规则
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  length: [{ required: true, message: '请填写定尺长度', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
+  length: [
+    { required: true, message: '请填写定尺长度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '定尺长度必须大于0', trigger: 'blur' }
+  ],
+  quantity: [
+    { required: true, message: '请填写数量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+  ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
-    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' }
+    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ]
 }
 

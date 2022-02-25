@@ -45,14 +45,14 @@ export function download({ id }) {
   })
 }
 
-export function downloadByMonomer(monomerId, type) {
+export function downloadByMonomer(params) {
   return request({
     module: 'plan',
     url: `drawing/struct/export`,
     method: 'get',
     timeout: 6000000,
     responseType: 'blob',
-    params: { monomerId, type }
+    params
   })
 }
 
@@ -61,6 +61,19 @@ export function upload(data) {
     module: 'plan',
     url: `drawing/struct/upload`,
     method: 'post',
+    timeout: 6000000,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data
+  })
+}
+
+export function uploadCompile(data) {
+  return request({
+    module: 'plan',
+    url: `drawing/struct/compile`,
+    method: 'put',
     timeout: 6000000,
     headers: {
       'Content-Type': 'multipart/form-data'

@@ -18,7 +18,7 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" />
         <!-- 单位及其数量 -->
-        <material-unit-quantity-columns :basic-class="basicClass" outbound-type-mode />
+        <material-unit-quantity-columns :basic-class="basicClass" reject-type-mode />
         <!-- 仓库位置信息 -->
         <warehouse-info-columns show-project />
       </common-table>
@@ -117,13 +117,13 @@ function dataFormat(info) {
         // 存在计量单位，设置计量量
         if (sourceMaterial.measureUnit) {
           _material.quantity =
-            sourceMaterial.outboundUnitType === measureTypeEnum.MEASURE.V
+            sourceMaterial.rejectUnitType === measureTypeEnum.MEASURE.V
               ? rj.rejectNumber
               : toFixed(rj.rejectNumber * sourceMaterial.accountingUnitNet, sourceMaterial.measurePrecision)
         }
         // 设置核算量
         _material.mete =
-          sourceMaterial.outboundUnitType === measureTypeEnum.ACCOUNTING.V
+          sourceMaterial.rejectUnitType === measureTypeEnum.ACCOUNTING.V
             ? rj.rejectNumber
             : toFixed(rj.rejectNumber * sourceMaterial.unitNet, sourceMaterial.accountingPrecision)
 

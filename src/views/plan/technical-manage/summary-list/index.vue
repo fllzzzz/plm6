@@ -32,27 +32,27 @@
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="单体" width="200px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.name }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="合计数量" width="200px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.quantity }}</span>
+          <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="合计毛重(kg)" width="200px" v-if="!enclosureCategory">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.totalNetWeight?scope.row.totalNetWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
+          <span>{{ scope.row.totalGrossWeight?scope.row.totalGrossWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalGrossWeight" prop="totalGrossWeight" :show-overflow-tooltip="true" label="合计净重(kg)" width="200px" v-if="!enclosureCategory">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.totalGrossWeight?scope.row.totalGrossWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
+          <span>{{ scope.row.totalNetWeight?scope.row.totalNetWeight.toFixed(DP.COM_WT__KG):'-' }}</span>
         </template>
       </el-table-column>
       <el-table-column key="totalLength" prop="totalLength" :show-overflow-tooltip="true" label="合计量(m)" width="200px" v-if="enclosureCategory">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.totalLength?scope.row.totalLength.toFixed(DP.COM_L__M):'-' }}</span>
+          <span>{{ scope.row.totalLength?scope.row.totalLength.toFixed(DP.COM_L__M):'-' }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -114,7 +114,7 @@ const techOptions = [
     alias: 'ENCLOSURE'
   },
   {
-    name: '压型板',
+    name: '压型彩板',
     key: 'contourPlate',
     dateKey: 'contourPlateDate',
     no: TechnologyTypeAllEnum.PROFILED_PLATE.V,

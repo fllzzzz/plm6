@@ -67,8 +67,8 @@
     <span class="info-item">
       <span>核算量({{ material.accountingUnit }})</span>
       <span
-        :style="{ color: material.returnableMete < 0 ? 'red' : '#67c23a' }"
-        v-to-fixed="{ val: material.returnableMete || 0, dp: material.accountingPrecision }"
+        :style="{ color: materialReturnableMete < 0 ? 'red' : '#67c23a' }"
+        v-to-fixed="{ val: materialReturnableMete || 0, dp: material.accountingPrecision }"
       />
       <span>&nbsp;/&nbsp;</span>
       <span v-to-fixed="{ val: material.mete || 0, dp: material.accountingPrecision }" />
@@ -77,8 +77,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { isNotBlank } from '@/utils/data-type'
+import { computed, defineProps } from 'vue'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 // eslint-disable-next-line no-unused-vars
 const props = defineProps({
@@ -93,4 +93,7 @@ const props = defineProps({
     }
   }
 })
+
+// 退库量
+const materialReturnableMete = computed(() => toPrecision(props.material.returnableMete, props.material.accountingPrecision))
 </script>

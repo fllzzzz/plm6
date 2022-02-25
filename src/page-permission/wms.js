@@ -1,8 +1,9 @@
+import { commonPM as SCM_COMMON_PM } from './supply-chain'
 // --------------------------- 公共权限 start ------------------------------
 
 export const commonPM = {
   // 采购订单详情
-  purchaseOrderDetail: ['wms_purchaseOrder:detail'],
+  purchaseOrderDetail: SCM_COMMON_PM.purchaseOrderDetail,
   // 原材料-入库单详情：
   rawMatInboundReceiptDetail: ['wms_inbound_rawMaterial_review:detail'],
   // 原材料-出库单详情

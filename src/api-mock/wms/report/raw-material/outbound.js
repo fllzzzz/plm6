@@ -26,7 +26,7 @@ const getDetails = {
             length: 1000,
             width: 1000,
             brand: '嘻嘻',
-            heatNoAndBatchNo: 'aaff',
+            heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/,
             mete: 800000,
             project: {
               'id|+1': 1,

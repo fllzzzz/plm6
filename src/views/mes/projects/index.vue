@@ -29,11 +29,6 @@
           fixed="left"
         >
           <template #default="{ row }">
-            <table-cell-tag
-              :show="row.status === projectStatusEnum.SUSPEND.V || row.status === projectStatusEnum.SETTLED.V"
-              :name="projectStatusEnum.V[row.status].L"
-              :offset="15"
-            />
             <span>{{ row.serialNumber }}</span>
           </template>
         </el-table-column>
@@ -51,7 +46,7 @@
           key="shortName"
           prop="shortName"
           :show-overflow-tooltip="true"
-          min-width="130"
+          min-width="140"
           align="center"
           label="项目简称"
         />
@@ -67,19 +62,24 @@
             <span v-empty-text>{{ scope.row.businessType && businessTypeEnum.VL[scope.row.businessType] }}</span>
           </template>
         </el-table-column>
+        <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="90" align="center">
+          <template v-slot="scope">
+            <span v-empty-text>{{ projectStatusEnum.VL[scope.row.status] }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('startDate')"
           key="startDate"
           prop="startDate"
           label="计划开工日期"
           align="center"
-          width="100"
+          width="110"
         >
           <template v-slot="scope">
             <span v-parse-time="{ val: scope.row.startDate, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="100">
+        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="110">
           <template v-slot="scope">
             <span v-parse-time="{ val: scope.row.endDate, fmt: '{y}-{m}-{d}' }" />
           </template>
@@ -90,7 +90,7 @@
           prop="completeDate"
           label="完成日期"
           align="center"
-          width="100"
+          width="110"
         >
           <template v-slot="scope">
             <span v-parse-time="{ val: scope.row.completeDate, fmt: '{y}-{m}-{d}' }" />
@@ -144,7 +144,6 @@ import projectChart from './project-chart'
 import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
-import TableCellTag from '@/components-system/common/table-cell-tag/index.vue'
 
 // crud交由presenter持有
 const permission = {
@@ -176,7 +175,7 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get },
-    invisibleColumns: ['completeDate', 'createTime'],
+    invisibleColumns: ['name', 'completeDate', 'createTime'],
     hasPagination: true
   },
   tableRef

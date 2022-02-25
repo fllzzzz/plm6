@@ -5,18 +5,18 @@
       v-permission="permission.get"
       :disabled="props.disabledDetail"
       size="mini"
-      :type="props.detailBtnType"
-      icon="el-icon-view"
-      @click.stop="crud.toDetail(props.data)"
+      :type="props.detailType"
+      :icon="props.detailIcon"
+      @click.stop="toDetail(props.data)"
     />
     <common-button
       v-if="props.showEdit"
       v-permission="permission.edit"
       :disabled="props.disabledEdit"
       size="mini"
-      :type="props.editBtnType"
+      :type="props.editType"
       icon="el-icon-edit"
-      @click.stop="crud.toEdit(props.data)"
+      @click.stop="toEdit(props.data)"
     />
     <el-popover
       v-if="props.showDel && checkPermission(permission.del)"
@@ -80,17 +80,29 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  editBtnType: {
+  editType: {
     type: String,
     default: 'primary'
   },
-  detailBtnType: {
+  detailType: {
     type: String,
     default: 'info'
+  },
+  detailIcon: {
+    type: String,
+    default: 'el-icon-view'
   },
   delPrompt: {
     type: String,
     default: '确定删除本条数据吗？'
+  },
+  beforeToDetail: {
+    // 打开详情之前
+    type: Function
+  },
+  beforeToEdit: {
+    // 打开编辑之前
+    type: Function
   }
 })
 
@@ -127,6 +139,26 @@ function onPopoverShow() {
 // 隐藏删除提示窗
 function onPopoverHide() {
   document.removeEventListener('click', handleDocumentClick)
+}
+
+// 打开详情
+function toDetail(data) {
+  if (typeof props.beforeToDetail === 'function') {
+    props.beforeToDetail(data)
+  }
+  setTimeout(() => {
+    crud.toDetail(data)
+  }, 0)
+}
+
+// 打开编辑
+function toEdit(data) {
+  if (typeof props.beforeToEdit === 'function') {
+    props.beforeToEdit(data)
+  }
+  setTimeout(() => {
+    crud.toEdit(data)
+  }, 0)
 }
 
 function handleDocumentClick(event) {

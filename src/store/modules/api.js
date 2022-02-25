@@ -28,7 +28,9 @@ const state = {
     config: `/api/config/`,
     project: `/api/project/`,
     mes: `/api/mes/building/`,
-    system: `/api/`
+    system: `/api/`,
+    cost: `/api/`,
+    scm: `/api/scm/`
   }
 }
 
@@ -38,11 +40,12 @@ const mutations = {
     apiVersion
   }) => {
     state.baseApi = {
-      contract: `/api/contract/v${apiVersion.contract}`,
       user: `/api/user/v${apiVersion.user}`,
+      contract: `/api/contract/v${apiVersion.contract}`,
+      project: `/api/project/v${apiVersion.common}`,
       wms: `/api/wms/v${apiVersion.wms}`,
-      common: `/api/common/v${apiVersion.common}`,
-      project: `/api/project/v${apiVersion.common}`
+      scm: `/api/wms/v${apiVersion.scm}`,
+      common: `/api/common/v${apiVersion.common}`
     }
   }
 }

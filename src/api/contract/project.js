@@ -20,6 +20,16 @@ export function getUserProjects(params) {
   })
 }
 
+// 查询可签证项目信息（签证用）
+export function getUserVisaProjects(params) {
+  return request({
+    module: 'contract',
+    url: 'user/project/visa/simple',
+    method: 'get',
+    params
+  })
+}
+
 // 获取项目内容
 export function getContentInfo(params) {
   return request({

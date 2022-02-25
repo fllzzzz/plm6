@@ -37,7 +37,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <table-cell-tag :show="!!row.boolPartyA" name="甲供" :color="TAG_PARTY_DEF_COLOR" :offset="10" />
+          <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="10" />
           <clickable-permission-span
             v-if="row.purchaseOrder"
             :permission="permission.purchaseOrderDetail"
@@ -233,9 +233,8 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
-import { TAG_PARTY_DEF_COLOR } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@/utils/data-type'

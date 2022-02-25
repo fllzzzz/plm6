@@ -10,7 +10,7 @@
     show-overflow-tooltip
   >
     <template #default="{ row }">
-      <el-tooltip :content="specTip(row)" placement="top">
+      <el-tooltip :content="specTip(row)" placement="left">
         <span v-empty-text="specFormat(row)" />
       </el-tooltip>
     </template>

@@ -26,7 +26,7 @@
 import { ref, defineProps, defineEmits, watch, defineExpose } from 'vue'
 import { monomerAll as getAll } from '@/api/plan/monomer'
 import { isNotBlank } from '@data-type/index'
-const emit = defineEmits(['change', 'update:modelValue', 'getAreaInfo'])
+const emit = defineEmits(['change', 'update:modelValue', 'getAreaInfo', 'getCurrentInfo'])
 
 const loading = ref(false)
 const selectValue = ref()
@@ -144,6 +144,9 @@ async function fetchData() {
       selectChange(selectValue.value)
     } else {
       selectValue.value = props.defaultValue ? props.defaultValue : undefined
+      if (selectValue.value) {
+        selectChange(selectValue.value)
+      }
     }
     loading.value = false
   }

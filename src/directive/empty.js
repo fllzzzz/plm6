@@ -1,6 +1,6 @@
-import { emptyTextFormatter, isBlank } from '@/utils/data-type'
+import { emptyTextFormatter } from '@/utils/data-type'
 
-// 时间转换
+// 空字符串 判断，可配合表格row-key使用，否则该数据不会更新
 export default {
   mounted(el, binding) {
     resolve(el, binding)
@@ -11,8 +11,12 @@ export default {
 }
 
 function resolve(el, binding) {
-  const { value: { val, blank = '-' }} = binding
-  let v = val
-  if (isBlank(v)) v = undefined
-  el.innerText = emptyTextFormatter(v, blank)
+  const { value } = binding
+  const { innerText } = el
+  if (value !== null && typeof value === 'object') {
+    const { val, blank = '-' } = value
+    el.innerText = emptyTextFormatter(val, blank)
+  } else {
+    el.innerText = emptyTextFormatter(value || innerText, '-')
+  }
 }

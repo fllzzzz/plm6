@@ -32,7 +32,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column prop="specification" label="规格" align="center" width="100px" fixed="left">
+    <el-table-column prop="specification" label="规格" align="center" width="100px" fixed="left" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" placement="top">
           <span>{{ row.specification }}</span>
@@ -154,6 +154,7 @@ import useWeightOverDiff from '@/composables/wms/use-steel-weight-over-diff'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['calc-weight'])
 
@@ -169,14 +170,19 @@ const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(ba
 
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  width: [{ required: true, message: '请填写宽度', trigger: 'blur' }],
-  thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' }],
+  width: [{ required: true, message: '请填写宽度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }],
+  thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
-    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' }
+    { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ],
-  length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }]
+  length: [{ required: true, message: '请填写长度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }],
+  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验

@@ -25,7 +25,6 @@
         style="width: 170px; margin-left: 0"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.artifactSerialNumber"
@@ -34,7 +33,6 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.machinePartSerialNumber"
@@ -43,18 +41,29 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
+      <rrOperation />
     </div>
     <crudOperation>
       <template #optLeft>
         <upload-btn
           v-if="currentArea && currentArea.id"
           v-permission="crud.permission.import"
-          :data="{ areaId: crud.query.areaId }"
+          :data="{ areaId: crud.query.areaId, importType: 1 }"
           :upload-fun="listUpload"
-          btn-name="零构件清单导入"
+          btn-name="清单增量导入"
           btn-type="primary"
+          btn-size="mini"
+          class="filter-item"
+          @success="uploadSuccess"
+        />
+        <upload-btn
+          v-if="currentArea && currentArea.id"
+          v-permission="crud.permission.import"
+          :data="{ areaId: crud.query.areaId, importType: 2 }"
+          :upload-fun="listUpload"
+          btn-name="清单覆盖导入"
+          btn-type="success"
           btn-size="mini"
           class="filter-item"
           @success="uploadSuccess"
@@ -69,6 +78,11 @@
           :disabled="crud.data.length===0"
         />
         <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" />
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`" @confirm="deleteArtifact" v-if="currentArea && currentArea.id">
+          <template #reference>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
+          </template>
+        </el-popconfirm>
       </template>
       <template #viewLeft>
         <el-tooltip
@@ -77,7 +91,7 @@
           placement="top"
         >
           <div class="filter-item">
-            <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">存在{{ mismatchList.length }}条错误数据,鼠标悬停查看</el-tag>
+            <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">本区域下存在{{ mismatchList.length }}条错误数据,鼠标悬停查看</el-tag>
           </div>
         </el-tooltip>
       </template>
@@ -88,6 +102,7 @@
 <script setup>
 import { defineProps, ref, computed, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
@@ -95,7 +110,7 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact } from '@/api/plan/technical-manage/artifact-tree'
+import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact, delArtifactTreeByArea } from '@/api/plan/technical-manage/artifact-tree'
 
 const defaultQuery = {
   artifactName: '',
@@ -110,7 +125,8 @@ const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
-const { crud, query } = regHeader(defaultQuery)
+const deleteLoading = ref(false)
+const { crud, query, CRUD } = regHeader(defaultQuery)
 const mismatchList = ref([])
 const props = defineProps({
   projectId: {
@@ -181,6 +197,19 @@ async function getErrorArtifactData() {
     }
   } catch (e) {
     console.log('获取异常构件', e)
+  }
+}
+
+async function deleteArtifact() {
+  deleteLoading.value = true
+  try {
+    await delArtifactTreeByArea({ areaId: crud.query.areaId })
+    crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+    uploadSuccess()
+    deleteLoading.value = false
+  } catch (e) {
+    console.log('清空组立', e)
+    deleteLoading.value = false
   }
 }
 </script>

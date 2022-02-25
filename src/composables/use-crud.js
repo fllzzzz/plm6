@@ -128,7 +128,7 @@ export function regHeader(defaultQuery) {
  * @param {object} defaultForm 默认表单
  * @param {object} formRef
  */
-export function regForm(defaultForm, formRef) {
+export function regForm(defaultForm, formRef, customizeFormStoreKey) {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件
@@ -141,7 +141,8 @@ export function regForm(defaultForm, formRef) {
   // 添加表单缓存
   let fmStore = {}
   if (crud.formStore) {
-    const store = useAddFormLocalStorage(crud.formStoreKey, {
+    const formStoreKey = isNotBlank(customizeFormStoreKey) ? customizeFormStoreKey : crud.formStoreKey
+    const store = useAddFormLocalStorage(formStoreKey, {
       useDraftCallback: crud.useFormDraftCallback,
       clearDraftCallback: crud.clearFormDraftCallback
     })
@@ -579,6 +580,7 @@ function addCrudBusinessMethod(crud) {
     // 避免detailLoading未正确重置为false的情况，因此在头部初始化
     crud.detailLoading = false
     if (crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
+      crud.resetRowDetail(data)
       crud.detailLoading = true
       // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
       crud.crudApi

@@ -73,3 +73,34 @@ export const collectionWarnPM = {
   get: ['collection_warn:get'] // 合同预警列表
 }
 // --------------------------- 合同管理 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 销售管理 start ------------------------------
+
+// 销售管理/价格管理
+export const priceManagePM = {
+  get: ['sale_price_manage:get'], // 列表
+  cost: ['sale_price_manage:cost'], // 项目造价
+  detail: ['sale_price_manage:detail'], // 详情
+  print: ['sale_price_manage:print'] // 打印
+}
+
+// 销售管理/客户交易记录
+export const transactionRecordPM = {
+  get: ['transaction_record:get'], // 列表
+  detail: ['transaction_record:detail'], // 详情
+  print: ['transaction_record:print'] // 打印
+}
+
+// 销售管理/签证变更
+export const visaChangePM = {
+  get: ['contract_visa_change:get'], // 签证列表
+  add: ['contract_visa_change:add'], // 新增签证单
+  edit: ['contract_visa_change:edit'], // 修改签证单
+  detail: ['contract_visa_change:detail'], // 签证单详情
+  audit: ['contract_visa_change:audit'], // 审核签证单
+  download: ['contract_visa_change:download'] // 签证单下载
+}
+
+// --------------------------- 销售管理 end --------------------------------

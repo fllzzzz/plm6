@@ -146,3 +146,16 @@ export const steelStatisticalPM = {
   get: ['steel_statistical:get'] // 钢材使用量列表
 }
 // --------------------------- 技术管理 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 备料管理 start ------------------------------
+
+// 计划管理/备料管理
+export const materialProjectPreparationPM = {
+  get: ['plan_materialPreparation_projectPreparation:get'],
+  edit: ['plan_materialPreparation_projectPreparation:edit'],
+  download: ['plan_materialPreparation_projectPreparation:download'],
+  config: ['plan_materialPreparation_projectPreparation:config']
+}
+// --------------------------- 备料管理 end --------------------------------

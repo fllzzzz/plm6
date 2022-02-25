@@ -105,6 +105,8 @@ export const showProjectSearch = [
   { component: '/contract/contract-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
+  { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
+  { component: '/contract/sales-manage/visa-manage/change/index', type: allPT, required: false },
   { component: '/wms/purchase-order/index', type: allPT, required: false },
   { component: '/wms/logistics-order/index', type: allPT, required: false },
   { component: '/wms/inventory-warning/index', type: allPT, required: false },

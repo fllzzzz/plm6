@@ -6,6 +6,7 @@
       :basic-class="basicClass"
       :list="form.list"
       :current-source="currentSource"
+      :source-return-ids="sourceReturnIds"
       @add="rowWatch"
     />
     <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
@@ -122,6 +123,7 @@ import CommonHeader from '../components/common-header.vue'
 import useCurrentRow from '../composables/use-current-row'
 import useFormSet from '../composables/use-form-set'
 import useCommonCalc from '../composables/use-common-calc'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['success'])
 
@@ -154,9 +156,18 @@ const basicClass = rawMatClsEnum.SECTION_STEEL.V
 const { baseUnit } = useMatBaseUnit(basicClass)
 
 const tableRules = {
-  length: [{ required: true, message: '请填写长度', trigger: 'blur' }],
-  mete: [{ required: true, message: '请填写重量', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' }],
+  length: [
+    { required: true, message: '请填写长度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
+  ],
+  mete: [
+    { required: true, message: '请填写重量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
+  ],
+  quantity: [
+    { required: true, message: '请填写数量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+  ],
   factoryId: [{ required: true, message: '请选择工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择存储位置', trigger: 'change' }]
 }
@@ -177,12 +188,12 @@ const { cu, form, FORM } = useForm(
 )
 
 // 通用计算校验
-const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass })
+const { calcMaxMete, extractSource, checkOverSource, initCheckOverMaxWeight } = useCommonCalc({ cu, form, basicClass, baseUnit })
 
 // 高亮行处理
 const { currentSource, currentUid, delRow, handleRowClick } = useCurrentRow({ form, tableRef, delCallback: checkOverSource })
 // 表单信息及校验
-const { wrongCellMask } = useFormSet({
+const { sourceReturnIds, wrongCellMask } = useFormSet({
   FORM,
   form,
   cu,

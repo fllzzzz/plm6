@@ -80,10 +80,22 @@
           <upload-btn
             v-if="currentArea && currentArea.id"
             v-permission="crud.permission.import"
+            :data="addParam"
+            :upload-fun="listUpload"
+            success-msg="导入成功"
+            btn-name="清单增量导入"
+            btn-type="primary"
+            btn-size="mini"
+            class="filter-item"
+            @success="crud.toQuery"
+          />
+          <upload-btn
+            v-if="currentArea && currentArea.id"
+            v-permission="crud.permission.import"
             :data="carryParam"
             :upload-fun="listUpload"
             success-msg="导入成功"
-            btn-name="清单导入"
+            btn-name="清单覆盖导入"
             btn-type="primary"
             btn-size="mini"
             class="filter-item"
@@ -99,7 +111,6 @@
        </template>
         <template v-else>
           <common-button type="success" size="mini" @click="crud.toAdd" class="filter-item" v-if="currentArea && currentArea.id">添加</common-button>
-          <!-- <common-button type="success" size="mini" @click="emit('tableAdd')" class="filter-item" v-if="currentArea && currentArea.id">添加</common-button> -->
         </template>
         <export-button
           v-if="currentArea && currentArea.id"
@@ -107,12 +118,12 @@
           :params="exportParam"
           show-btn-text
           btn-text="清单(按条件查询)"
-          class="filter-item"
           :disabled="crud.data.length===0"
+          class="filter-item"
         />
         <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么?`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id">
           <template #reference>
-            <common-button type="danger">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" class="filter-item">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
         <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength" style="margin-left:10px !important;">
@@ -264,8 +275,11 @@ watch(
   },
   { deep: true, immediate: true }
 )
+const addParam = computed(() => {
+  return { areaId: crud.query.areaId, category: query.category, importType: 1 }
+})
 const carryParam = computed(() => {
-  return { areaId: crud.query.areaId, category: query.category }
+  return { areaId: crud.query.areaId, category: query.category, importType: 2 }
 })
 
 const exportParam = computed(() => {

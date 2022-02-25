@@ -8,21 +8,6 @@ export const TAG_DEF_COLOR = '#1682e6'
 // 工厂标签默认颜色
 export const TAG_FACTORY_DEF_COLOR = '#1682e6'
 
-// 甲供标签默认颜色
-export const TAG_PARTY_DEF_COLOR = '#e64242'
-
-// 调拨标签默认颜色
-export const TAG_TRANSFER_COLOR = '#e64242'
-
-// 出库调拨标签颜色
-export const TAG_TRANSFER_OUTBOUND_COLOR = '#409eff'
-
-// 出库调拨标签颜色
-export const TAG_TRANSFER_UNFREEZE_COLOR = '#e64242'
-
-// 打印标签默认颜色
-export const TAG_PRINTED_DEF_COLOR = '#0f9747'
-
 // 钢板密度
 export const STEEL_DENSITY = 7.85
 
@@ -44,7 +29,7 @@ export const STEEL_DIFF_UNIT = 'g'
 export const STEEL_SIZE_DIFF_UNIT = 'mm'
 
 // 单位净量小数精度
-export const UNIT_NET_PRECISION = 5
+export const UNIT_NET_PRECISION = 8
 
 // 物料基础单位
 export const MAT_BASE_UNIT = {}

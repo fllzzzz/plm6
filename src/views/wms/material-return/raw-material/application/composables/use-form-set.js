@@ -1,7 +1,9 @@
 import useTableValidate from '@/composables/form/use-table-validate'
+import { uniqueArr } from '@/utils/data-type/array'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 import { ElMessage } from 'element-plus'
+import { ref } from 'vue'
 
 export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, init, setFormCallback }) {
   // 同上数据
@@ -9,6 +11,9 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
     ['factoryId', -1],
     ['warehouseId', -1]
   ])
+
+  // 初始退库列表id，修改时使用，在退库列表中使用，避免显示
+  const sourceReturnIds = ref([])
 
   // 表格校验
   const { tableValidate, wrongCellMask, cleanUpData } = useTableValidate({
@@ -32,6 +37,7 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
     if (!isEdit) return
     // 设置监听等
     setFormCallback(form)
+    sourceReturnIds.value = uniqueArr(form.list.map(row => row.source.id))
   }
 
   // 校验
@@ -57,16 +63,17 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
     return false
   }
 
-  // 校验是否超过原材料可还库最大值
+  // 校验是否超过原材料可退库最大值
   function validateOverSource() {
     const hasOver = form.list.some((v) => v.overTipColor)
     if (hasOver) {
-      ElMessage.error('请修正序号前带“三角形标志”的数据，他们的合计量，超过了可还库的总量')
+      ElMessage.error('请修正序号前带“三角形标志”的数据，他们的合计量，超过了可退库的总量')
     }
     return !hasOver
   }
 
   return {
-    wrongCellMask
+    wrongCellMask,
+    sourceReturnIds
   }
 }

@@ -3,24 +3,24 @@ export default {
   id: 6,
   name: '计划管理',
   children: [
-    // {
-    //   path: '/plan-project',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'Plan',
-    //   alwaysShow: false,
-    //   redirect: '/plan-project/projects',
-    //   meta: { title: '项目列表', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'PlanProject',
-    //       path: 'projects',
-    //       hidden: false,
-    //       component: '/plan/projects/index',
-    //       meta: { title: '我的项目', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
+    {
+      path: '/plan-project',
+      component: 'Layout',
+      hidden: false,
+      name: 'Plan',
+      alwaysShow: false,
+      redirect: '/plan-project/projects',
+      meta: { title: '项目列表', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'PlanProject',
+          path: 'plan-projects',
+          hidden: false,
+          component: '/mes/projects/index',
+          meta: { title: '我的项目', icon: 'project', noCache: true }
+        }
+      ]
+    },
     {
       path: '/plan/overall-plan',
       component: 'Layout',
@@ -133,13 +133,6 @@ export default {
           meta: { title: '技术资料-深化图纸', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanBlueprint',
-          path: 'blueprint',
-          hidden: false,
-          component: '/plan/technical-data-manage/blueprint/index',
-          meta: { title: '技术资料-蓝图', icon: 'project', noCache: true }
-        },
-        {
           name: 'PlanChangeFile',
           path: 'change-file',
           hidden: false,
@@ -147,25 +140,50 @@ export default {
           meta: { title: '技术资料-变更文件', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanModel',
-          path: 'model',
+          name: 'PlanBlueprint',
+          path: 'blueprint',
           hidden: false,
-          component: '/plan/technical-data-manage/model/index',
-          meta: { title: '技术资料-模型', icon: 'project', noCache: true }
+          component: '/plan/technical-data-manage/blueprint/index',
+          meta: { title: '技术资料-蓝图', icon: 'project', noCache: true }
         },
-        {
-          name: 'PlanOtherFile',
-          path: 'other-file',
-          hidden: false,
-          component: '/plan/technical-data-manage/other-file/index',
-          meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
-        },
+        // {
+        //   name: 'PlanModel',
+        //   path: 'model',
+        //   hidden: false,
+        //   component: '/plan/technical-data-manage/model/index',
+        //   meta: { title: '技术资料-模型', icon: 'project', noCache: true }
+        // },
+        // {
+        //   name: 'PlanOtherFile',
+        //   path: 'other-file',
+        //   hidden: false,
+        //   component: '/plan/technical-data-manage/other-file/index',
+        //   meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
+        // },
         {
           name: 'SummaryList',
           path: 'summary-list',
           hidden: false,
           component: '/plan/technical-manage/summary-list/index',
           meta: { title: '清单合计', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/plan/material-preparation',
+      component: 'Layout',
+      hidden: false,
+      name: 'PlanMaterialPreparation',
+      alwaysShow: false,
+      redirect: '/plan/material-preparation/project-preparation',
+      meta: { title: '备料管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'MaterialProjectPreparation',
+          path: 'project-preparation',
+          hidden: false,
+          component: '/plan/material-preparation/project-preparation/index',
+          meta: { title: '项目备料', icon: 'project', noCache: true }
         }
       ]
     },

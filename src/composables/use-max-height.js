@@ -133,7 +133,7 @@ function calcMaxHeight({ clientHRepMainH, mainBox, extraBox, wrapperBox, navbar,
   // -1 避免特殊情况下高度正好卡在滚动条出与不出之间，因此-1 避免这种情况（理论浏览器全屏，显示大小未125%状态下）若有功能需要定位到底部，请在页面处理
   const height =
     mainHeight - navbarHeight - wrapperBoxHeight - extraBoxHeight - paginateHeight - realExtraHeight - horizontalScrollBarHeight - 1
-  // console.log(extraBox, mainBoxHeight, mainHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
+  // console.log(height, extraBox, mainBoxHeight, mainHeight, navbarHeight, wrapperBoxHeight, extraBoxHeight, paginateHeight, realExtraHeight, horizontalScrollBarHeight)
 
   return height > realMiniHeight ? height : realMiniHeight
 }

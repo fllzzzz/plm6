@@ -270,10 +270,7 @@ const getDetailByCurrentUser = {
             brand: '嘻嘻',
             remark: '66666',
             mete: 222,
-            recipient: {
-              name: '@cname',
-              deptName: '生产部'
-            },
+            recipient: undefined,
             project: {
               id: 1,
               name: '你脸红个泡泡茶壶666号主路',
@@ -420,10 +417,7 @@ const detail_id1 = {
             length: 3907,
             width: 1000,
             mete: 10000,
-            recipient: {
-              name: '@cname',
-              deptName: '生产部'
-            },
+            recipient: undefined,
             project: {
               id: 1,
               name: '长安街666666号辅路',

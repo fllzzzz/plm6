@@ -40,7 +40,6 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.specification"
@@ -49,7 +48,6 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
       <el-input
         v-model="query.material"
@@ -58,8 +56,8 @@
         style="width: 170px"
         class="filter-item"
         clearable
-        @blur="crud.toQuery"
       />
+      <rrOperation />
     </div>
     <crudOperation />
   </div>
@@ -68,6 +66,7 @@
 <script setup>
 import { defineProps, ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'

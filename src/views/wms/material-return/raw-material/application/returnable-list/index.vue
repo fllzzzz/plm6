@@ -91,9 +91,10 @@
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">
         <template #default="{ row }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
-            <common-button :disabled="row.boolReviewPending" type="warning" size="mini" @click="handleAddReturn(row)">退库</common-button>
+            <!-- 编辑状态下， -->
+            <common-button :disabled="row.showReviewPending" type="warning" size="mini" @click="handleAddReturn(row)"> 退库 </common-button>
           </el-badge>
-          <table-cell-tag v-if="row.boolReviewPending" name="退库中" color="#909399" />
+          <table-cell-tag v-if="row.showReviewPending" name="退库中" color="#909399" />
         </template>
       </el-table-column>
     </common-table>
@@ -138,6 +139,14 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 const emit = defineEmits(['add'])
 
 const props = defineProps({
+  edit: {
+    type: Boolean,
+    default: false
+  },
+  sourceReturnIds: {
+    type: Array,
+    default: () => []
+  },
   basicClass: {
     // 基础类型
     type: Number,
@@ -191,7 +200,18 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({ paginate: true })
+const { maxHeight } = useMaxHeight(
+  props.isComponent
+    ? {
+      mainBox: '.returnable-list-drawer',
+      extraBox: ['.el-drawer__header', '.head-container'],
+      wrapperBox: ['.el-drawer__body'],
+      paginate: true
+    }
+    : {
+      paginate: true
+    }
+)
 
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit()
@@ -209,6 +229,7 @@ const basicClass = computed(() => {
   return null
 })
 
+// 实时计算归还信息
 watchEffect(() => calcReturnInfo())
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
@@ -220,6 +241,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       toNum: false
     },
     {
+      unitNetCalcMete: 'returnableMete',
+      unitNetCalcQuantity: 'quantity',
       length: ['length', 'singleReturnableLength'],
       mete: ['mete', 'returnableMete', 'singleMete', 'singleReturnableMete']
     }
@@ -233,6 +256,8 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       row.totalLength = row.length * row.quantity
       row.sourceReturnableLength = row.returnableLength
     }
+    // 编辑模式，不是当前退库单的在退库中的物料 “显示退库中”
+    row.showReviewPending = row.boolReviewPending && (!props.edit || (props.edit && !props.sourceReturnIds.includes(row.id)))
   })
 }
 

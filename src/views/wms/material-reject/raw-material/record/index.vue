@@ -32,7 +32,13 @@
         min-width="160"
         label="退货单号"
         align="left"
-      />
+      >
+        <template #default="{ row }">
+          <!-- 解冻 -->
+          <table-cell-tag v-if="row.boolHasUnfreeze" name="解冻" type="unfreeze" :offset="15" />
+          <span>{{ row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="columns.visible('purchaseOrder.serialNumber')"
         key="purchaseOrder.serialNumber"
@@ -182,7 +188,7 @@
 <script setup>
 import crudApi from '@/api/wms/material-reject/raw-material/record'
 import { detail as getInboundDetail } from '@/api/wms/material-inbound/raw-material/review'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { rawMaterialRejectRecordPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'

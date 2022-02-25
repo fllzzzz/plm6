@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 
+// 获取钢材对应材料配置的简要信息
+export function getSteelMaterialClassifyBrief() {
+  return request({
+    module: 'config',
+    url: 'steel-material/classification/all/brief',
+    method: 'get'
+  })
+}
+
+// TODO:修改url并增加module
 export function get(params) {
   return request({
     url: '/api/steel/classification',

@@ -1,5 +1,8 @@
 <template>
-  <div class="avatar-container" :style="{ width: `${+props.avatarStyle['width'].split('px')[0] + 20}px`, height: props.avatarStyle['height'] }">
+  <div
+    class="avatar-container"
+    :style="{ width: `${+props.avatarStyle['width'].split('px')[0] + 20}px`, height: props.avatarStyle['height'] }"
+  >
     <el-dropdown trigger="click">
       <el-tooltip class="item" effect="dark" :content="`当前用户：${user.name}`" :placement="placement">
         <div class="avatar-wrapper">
@@ -36,7 +39,7 @@
 // TODO: 配置访问地址/菜单页链接修改/ 头像目前写死
 import { defineProps, computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { mapGetters } from '@/store/lib'
 import RightPanel from '@comp/RightPanel/index.vue'
 import settings from '@comp/RightPanel/settings/index.vue'
@@ -63,8 +66,8 @@ const props = defineProps({
 })
 
 const store = useStore()
-const route = useRoute()
 const router = useRouter()
+const route = useRoute()
 
 const { user } = mapGetters('user')
 
@@ -81,11 +84,21 @@ const show = computed({
 async function logout() {
   try {
     await store.dispatch('user/logout')
-    router.push(`/login?redirect=${route.fullPath}`)
+    // TODO: redirect 暂时无效
+    // router.push(`/login?redirect=${route.fullPath}`)
+    if (route.path === '/' || route.path.indexOf('/login?') > -1) {
+      // TODO: 后期可直接切回login组件，或拆分login与menu页面
+      router.go(0)
+    } else {
+      router.push(`/`)
+    }
   } catch (error) {
     console.log(error)
   } finally {
-    location.reload() // 为了重新实例化vue-router对象 避免bug
+    // TODO:使用会白屏，先注释
+    // setTimeout(() => {
+    //   location.reload() // 为了重新实例化vue-router对象 避免bug
+    // }, 0)
   }
 }
 </script>

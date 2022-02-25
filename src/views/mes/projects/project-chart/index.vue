@@ -14,7 +14,7 @@
       />
     </div>
     <div v-loading="projectInfo.loading" class="chart-container" :style="{height: maxHeight + 'px'}">
-      <chart id="projectChart" width="300px" />
+      <chart id="projectChart" width="300px" v-if="route.name!=='PlanProject'"/>
     </div>
   </div>
 </template>
@@ -25,9 +25,10 @@ import { ref, inject, defineEmits, onMounted } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import { parseTime } from '@/utils/date'
 import chart from './module/chart'
+import { useRoute } from 'vue-router'
 
 const emit = defineEmits(['update:year'])
-
+const route = useRoute()
 const projectInfo = inject('projectInfo')
 
 const year = ref(parseTime(new Date(), '{y}'))

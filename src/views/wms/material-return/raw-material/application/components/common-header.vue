@@ -31,7 +31,15 @@
       </div>
     </div>
   </div>
-  <returnable-list-drawer ref="returnableListRef" v-model="returnableVisible" :basic-class="basicClass" :select-list="form.list" @add="handleAdd" />
+  <returnable-list-drawer
+    ref="returnableListRef"
+    v-model="returnableVisible"
+    :basic-class="basicClass"
+    :select-list="form.list"
+    :source-return-ids="sourceReturnIds"
+    @add="handleAdd"
+    :edit="props.edit"
+  />
   <common-dialog ref="drawerRef" v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
     <abnormal-list :basicClass="basicClass" :list="cu.props.abnormalList" :maxHeight="700" />
   </common-dialog>
@@ -60,6 +68,10 @@ const props = defineProps({
   edit: {
     type: Boolean,
     default: false
+  },
+  sourceReturnIds: {
+    type: Array,
+    default: () => []
   },
   currentSource: {
     type: Object,
@@ -95,7 +107,7 @@ const { baseUnit } = useMatBaseUnit(props.basicClass)
 
 // 提交后清除校验结果
 FORM.HOOK.afterSubmit = () => {
-  returnableListRef.value && returnableListRef.value.refresh()
+  if (!props.edit) returnableListRef.value && returnableListRef.value.refresh()
   init()
 }
 
