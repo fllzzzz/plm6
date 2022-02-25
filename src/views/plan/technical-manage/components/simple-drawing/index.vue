@@ -17,7 +17,7 @@
 import { saveDraw } from '@/api/plan/technical-manage/enclosure'
 import { defineProps, defineEmits, ref } from 'vue'
 import useVisible from '@compos/use-visible'
-import simpleJpg from './simpleJpg'
+import simpleJpg from './simple-jpg'
 import { ElMessage } from 'element-plus'
 const draw = ref()
 const props = defineProps({
