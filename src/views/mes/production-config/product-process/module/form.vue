@@ -33,7 +33,7 @@
           <div class="process-box">
             <div v-for="(item, index) in form.processSequenceIds" :key="index" class="process-drawer">
               <process-select
-                ref="processSelectRef"
+                :ref="(el) => (processSelectRef[index] = el)"
                 v-model="form.processSequenceIds[index]"
                 :size="'small'"
                 :multiple="false"
@@ -78,7 +78,7 @@ import processSelect from '@comp-mes/process-select'
 import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
-const processSelectRef = ref()
+const processSelectRef = ref([])
 
 const defaultForm = {
   id: undefined,
@@ -145,7 +145,7 @@ CRUD.HOOK.afterValidateCU = () => {
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   const isRepeat = arrIsRepeat(crud.form.processSequenceIds)
-  const sourceData = await processSelectRef.value.getSourceData()
+  const sourceData = await processSelectRef.value[0].getSourceData()
   const processArr = arr2obj(sourceData.value, 'id')
   const processSequence = crud.form.processSequenceIds.map((id) => `【${processArr[id].name}】`).join('→')
   try {
