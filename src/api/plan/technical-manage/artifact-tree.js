@@ -103,4 +103,44 @@ export function delArtifactTreeByArea(params) {
     params
   })
 }
+
+// 数量变更
+export function numChange(data) {
+  return request({
+    module: 'plan',
+    url: 'artifact/change/quantity',
+    method: 'put',
+    data
+  })
+}
+
+// 获取构件详情
+export function artifactInfo(params) {
+  return request({
+    module: 'plan',
+    url: 'artifact/info',
+    method: 'get',
+    params
+  })
+}
+
+// 清单变更
+export function listChange(data) {
+  return request({
+    module: 'plan',
+    url: 'artifact/change/info',
+    method: 'put',
+    data
+  })
+}
+
+// 清单变更
+export function serialChange(data) {
+  return request({
+    module: 'plan',
+    url: 'artifact/change/serialNumber',
+    method: 'put',
+    data
+  })
+}
 export default { edit, del, get }

@@ -96,7 +96,7 @@
             :upload-fun="listUpload"
             success-msg="导入成功"
             btn-name="清单覆盖导入"
-            btn-type="primary"
+            btn-type="success"
             btn-size="mini"
             class="filter-item"
             @success="crud.toQuery"
