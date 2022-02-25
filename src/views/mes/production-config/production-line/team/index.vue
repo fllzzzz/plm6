@@ -145,12 +145,12 @@ watch(
 )
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.productionLineId = lineId
+  crud.query.productionLineId = lineId.value
   return !!crud.query.productionLineId
 }
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.productionLineId = lineId
+  crud.query.productionLineId = lineId.value
   return !!crud.query.productionLineId
 }
 
@@ -186,7 +186,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.productionLineId = lineId
+  crud.form.productionLineId = lineId.value
   crud.form.factoryId = props.line.factoryId
   crud.form.workshopId = props.line.workshopId
 

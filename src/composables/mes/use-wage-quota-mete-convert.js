@@ -5,7 +5,7 @@ import useWageQuotaUnit from './use-wage-quota-unit'
 export default function useWageQuotaMeteConvert({
   W_CUR_UNIT = 'kg', weight,
   L_CUR_UNIT = 'mm', length,
-  A_CUR_UNIT = '㎡', surfaceArea,
+  A_CUR_UNIT = 'mm2', surfaceArea,
   showUnit = false,
   wageQuotaType
 }) {
