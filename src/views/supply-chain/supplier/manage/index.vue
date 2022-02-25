@@ -77,9 +77,9 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/supply-chain/supplier/manage'
-import { ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
+import { supplierPM as permission } from '@/page-permission/supply-chain'
 
+import { ref } from 'vue'
 import { supplierClassEnum, supplierIsHideEnum } from '@enum-ms/supplier'
 import { getLabelByBit } from '@/utils/enum/base'
 import { parseTime } from '@/utils/date'
@@ -94,15 +94,7 @@ import mForm from './module/form'
 import mDetail from './module/detail'
 import mBatchForm from './module/batch-form'
 
-// crud交由presenter持有
-const permission = {
-  get: ['scm_supplier:get'],
-  add: ['scm_supplier:add'],
-  edit: ['scm_supplier:edit'],
-  del: ['scm_supplier:del'],
-  editStatus: ['scm_supplier:editStatus'],
-  downloadAttachments: ['scm_supplier:downloadAttachments']
-}
+import { ElMessageBox } from 'element-plus'
 
 const optShow = {
   batchAdd: true,

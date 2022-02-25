@@ -202,6 +202,8 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-order'
+import { logisticsOrderPM as permission } from '@/page-permission/supply-chain'
+
 import { ref, computed } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum } from '@enum-ms/finance'
@@ -214,14 +216,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useSuppliers from '@compos/store/use-suppliers'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
-const permission = {
-  get: ['scm_logisticsOrder:get'],
-  edit: ['scm_logisticsOrder:edit'],
-  del: ['scm_logisticsOrder:del'],
-  add: ['scm_logisticsOrder:add']
-}
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
 const optShow = {
   batchAdd: false,
