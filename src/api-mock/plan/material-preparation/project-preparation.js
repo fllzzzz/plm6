@@ -237,7 +237,7 @@ const getProjectListForRangeInfo = {
             boolAuxPrepared: false, // 辅材备料状态
             strucPreparationRangeType: preparationRangeEnum.AREA.V, // 结构备料范围
             enclPreparationRangeType: preparationRangeEnum.AREA.V, // 围护备料范围
-            auxPreparationRangeType: preparationRangeEnum.AREA.V// 辅材备料范围
+            auxPreparationRangeType: preparationRangeEnum.MONOMER.V// 辅材备料范围
           },
           {
             id: 4,

@@ -1,14 +1,11 @@
 <!-- 枚举类型通用单选按钮：单选按钮 -->
 <template>
   <el-radio-group v-model="copyValue" :size="size" :disabled="disabled" @change="selectChange">
-    <el-radio
-      v-for="item in options"
-      :key="item[DS.key]"
-      :label="item[DS.value]"
-      :disabled="disabledVal.indexOf(item[DS.value]) > -1"
-    >
-      {{ item[DS.label] }}
-    </el-radio>
+    <template v-for="item in options" :key="item[DS.key]">
+      <el-radio v-if="!unshowVal.includes(item[DS.value])"  :label="item[DS.value]" :disabled="disabledVal.includes(item[DS.value])">
+        {{ item[DS.label] }}
+      </el-radio>
+    </template>
   </el-radio-group>
 </template>
 
@@ -59,7 +56,9 @@ const DS = useCommonDataStructureByType(props.type, props.dataStructure)
 
 watch(
   () => props.modelValue,
-  (value) => { copyValue.value = value },
+  (value) => {
+    copyValue.value = value
+  },
   { immediate: true }
 )
 

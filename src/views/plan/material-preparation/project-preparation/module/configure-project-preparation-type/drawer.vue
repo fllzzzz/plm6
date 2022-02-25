@@ -78,10 +78,12 @@
           </el-table-column>
           <el-table-column label="“辅材”备料范围" align="center" width="250" prop="auxPreparationRangeType">
             <template #default="{ row }">
+              <!-- 辅材没有区域 -->
               <common-radio
                 v-if="isEditMode"
                 v-model="row.auxPreparationRangeType"
                 :options="preparationRangeEnum.ENUM"
+                :unshowVal="[preparationRangeEnum.AREA.V]"
                 type="enum"
                 :disabled="row.boolAuxPrepared"
               />
