@@ -9,7 +9,6 @@ export function get(params) {
   })
 }
 
-
 export function edit(data) {
   return request({
     module: 'plan',
@@ -18,6 +17,5 @@ export function edit(data) {
     data
   })
 }
-
 
 export default { edit, get }
