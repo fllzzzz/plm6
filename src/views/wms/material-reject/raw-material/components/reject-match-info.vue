@@ -47,7 +47,7 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns :basic-class="material.basicClass" />
           <!-- 单位及其数量 -->
-          <!-- <material-unit-operate-quantity-columns :basic-class="material.basicClass" reject-type-mode /> -->
+          <material-unit-operate-quantity-columns :basic-class="material.basicClass" reject-type-mode />
           <!-- 仓库位置信息 -->
           <warehouse-info-columns show-project />
           <el-table-column label="退货数量" width="170px" align="center" fixed="right">
