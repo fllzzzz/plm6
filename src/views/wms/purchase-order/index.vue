@@ -214,7 +214,7 @@
 </template>
 
 <script setup>
-import crudApi, { editPurchaseStatus } from '@/api/wms/purchase-order'
+import crudApi, { editPurchaseStatus } from '@/api/supply-chain/purchase-order'
 import { ref, computed } from 'vue'
 import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'

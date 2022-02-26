@@ -63,11 +63,11 @@ export default function useFormSet({ FORM, form, cu, emit, isEdit, tableRules, i
     return false
   }
 
-  // 校验是否超过原材料可还库最大值
+  // 校验是否超过原材料可退库最大值
   function validateOverSource() {
     const hasOver = form.list.some((v) => v.overTipColor)
     if (hasOver) {
-      ElMessage.error('请修正序号前带“三角形标志”的数据，他们的合计量，超过了可还库的总量')
+      ElMessage.error('请修正序号前带“三角形标志”的数据，他们的合计量，超过了可退库的总量')
     }
     return !hasOver
   }

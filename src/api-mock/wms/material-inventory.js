@@ -194,8 +194,7 @@ const getAuxMatInventory = {
             id: 1,
             classifyId: 204,
             specification: 'M27 * 60',
-            color: '天蓝',
-            basicClass: matClsEnum.STEEL_PLATE.V,
+            basicClass: matClsEnum.MATERIAL.V,
             quantity: 10,
             frozenMete: 1, // 冻结量
             frozenQuantity: 1, // 冻结数量
@@ -234,7 +233,7 @@ const getGasInventory = {
             id: 1,
             classifyId: 901,
             // specification: '',
-            basicClass: matClsEnum.STEEL_PLATE.V,
+            basicClass: matClsEnum.GAS.V,
             quantity: 10,
             brand: '嘻嘻',
             remark: '66666',

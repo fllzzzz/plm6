@@ -1,4 +1,9 @@
-import { projectTypeEnum as pt, projectNameArrangementModeEnum, TechnologyTypeAllEnum as ttEnum, projectModeEnum } from '@/utils/enum/modules/contract'
+import {
+  projectTypeEnum as pt,
+  projectNameArrangementModeEnum,
+  TechnologyTypeAllEnum as ttEnum,
+  projectModeEnum
+} from '@/utils/enum/modules/contract'
 import { allPT } from './config'
 import assetsLogo from '@/assets/logo/logo-colorful-title.png'
 import assetsSidebarLogo from '@/assets/logo/logo-white.png'
@@ -107,8 +112,10 @@ export const showProjectSearch = [
   { component: '/contract/collection-warn/index', type: allPT, required: false },
   { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
   { component: '/contract/sales-manage/visa-manage/change/index', type: allPT, required: false },
-  { component: '/wms/purchase-order/index', type: allPT, required: false },
-  { component: '/wms/logistics-order/index', type: allPT, required: false },
+
+  { component: '/supply-chain/purchase-order/index', type: allPT, required: false },
+  { component: '/supply-chain/logistics-order/index', type: allPT, required: false },
+
   { component: '/wms/inventory-warning/index', type: allPT, required: false },
   { component: '/wms/material-reject/raw-material/application/index', type: allPT, required: false },
   { component: '/wms/material-inbound/raw-material/record/index', type: allPT, required: false },
@@ -141,32 +148,35 @@ export const showProjectSearch = [
  * @param {number} productType 所属产品类型
  * @param {number} mode 项目模式
  */
-const ENCLOSURE_ALL_BIT = ttEnum.PROFILED_PLATE.V | ttEnum.TRUSS_FLOOR_PLATE.V | ttEnum.PRESSURE_BEARING_PLATE.V | ttEnum.SANDWICH_BOARD.V | ttEnum.BENDING.V
+const ENCLOSURE_ALL_BIT =
+  ttEnum.PROFILED_PLATE.V | ttEnum.TRUSS_FLOOR_PLATE.V | ttEnum.PRESSURE_BEARING_PLATE.V | ttEnum.SANDWICH_BOARD.V | ttEnum.BENDING.V
 
 export const routerMetaSetting = [
   { name: 'MesSchedulingManage', productType: ENCLOSURE_ALL_BIT | ttEnum.STRUCTURE.V },
   { name: 'MesSchedulingArtifact', productType: ttEnum.STRUCTURE.V },
-  { name: 'MesSchedulingArtifactAssemble', productType: ttEnum.STRUCTURE.V,
+  {
+    name: 'MesSchedulingArtifactAssemble',
+    productType: ttEnum.STRUCTURE.V,
     mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
   },
-  { name: 'MesSchedulingArtifactArtifact', productType: ttEnum.STRUCTURE.V,
+  {
+    name: 'MesSchedulingArtifactArtifact',
+    productType: ttEnum.STRUCTURE.V,
     mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
   },
-  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
-  },
+  { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesSchedulingPressedPlate', productType: ttEnum.PROFILED_PLATE.V },
   { name: 'MesSchedulingFloorPlate', productType: ttEnum.PRESSURE_BEARING_PLATE.V },
   { name: 'MesSchedulingTrussFloorPlate', productType: ttEnum.TRUSS_FLOOR_PLATE.V },
   { name: 'MesSchedulingSandwichBoard', productType: ttEnum.SANDWICH_BOARD.V },
   { name: 'MesSchedulingFoldingPiece', productType: ttEnum.BENDING.V },
-  { name: 'MesTaskArtifact', productType: ttEnum.STRUCTURE.V,
+  {
+    name: 'MesTaskArtifact',
+    productType: ttEnum.STRUCTURE.V,
     mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
   },
-  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
-  },
+  { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesTaskEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }

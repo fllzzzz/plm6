@@ -500,3 +500,11 @@ input[type='number'] {
 span {
   word-break: break-all;
 }
+
+// 垂直虚线
+.vertical-dashed-divider{
+  width: 1px;
+  border-left: 1px dashed #dcdfe6;
+  height: 100%;
+  margin: 0 20px;
+}

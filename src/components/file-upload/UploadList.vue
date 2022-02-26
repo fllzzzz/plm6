@@ -9,7 +9,7 @@
             <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" :width="uploadable && props.showDownload ? 117 : 67" align="left">
           <template #default="{ row, $index }">
             <common-button v-if="uploadable" type="danger" icon="el-icon-delete" size="mini" @click="toDelete($index)" />
             <export-button

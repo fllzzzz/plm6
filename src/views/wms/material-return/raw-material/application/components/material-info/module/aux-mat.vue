@@ -61,7 +61,12 @@
       </span>
       <span class="info-item">
         <span>数量({{ material.measureUnit }})</span>
-        <span class="returnable-number" v-to-fixed="{ val: material.quantity || 0, dp: material.measurePrecision }" />
+        <span
+          :style="{ color: materialReturnableQuantity < 0 ? 'red' : '#67c23a' }"
+          v-to-fixed="{ val: materialReturnableQuantity || 0, dp: material.measurePrecision }"
+        />
+        <span>&nbsp;/&nbsp;</span>
+        <span v-to-fixed="{ val: material.quantity || 0, dp: material.measurePrecision }" />
       </span>
     </template>
     <span class="info-item">
@@ -94,6 +99,8 @@ const props = defineProps({
   }
 })
 
-// 退库量
+// 退库核算量
 const materialReturnableMete = computed(() => toPrecision(props.material.returnableMete, props.material.accountingPrecision))
+// 退库数量
+const materialReturnableQuantity = computed(() => toPrecision(props.material.returnableQuantity, props.material.measurePrecision))
 </script>

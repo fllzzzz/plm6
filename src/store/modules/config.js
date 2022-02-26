@@ -13,8 +13,9 @@ import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
-import { getPurchasingPurchaseOrderBrief } from '@/api/wms/purchase-order'
+import { getPurchasingPurchaseOrderBrief } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
+import { getSteelMaterialClassifyBrief } from '@/api/config/system-config/steel-classic'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
@@ -23,6 +24,7 @@ import { isBlank, isNotBlank } from '@/utils/data-type'
 import { arr2obj } from '@/utils/convert/type'
 import { formatClsTree } from '@/utils/system/classification'
 import { monomerAll } from '@/api/plan/monomer'
+import { get as getChangeReasonConfig } from '@/api/config/system-config/change-reason'
 
 /**
  * TODO: 后期设计配置变更，增加接口加载状态：未加载，加载中，加载完成，加载失败
@@ -63,6 +65,8 @@ const state = {
   unclosedRequisitions: [], // 未关闭的申购单
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
   monomers: {}, // 单体
+  changeReasonConfig: [],
+  steelMaterialClassify: [], // 钢材材料分类配置
   loaded: {
     // 接口是否加载
     factories: false,
@@ -80,7 +84,9 @@ const state = {
     suppliers: false,
     taxRate: false,
     unclosedRequisitions: false,
-    unclosedPurchaseOrder: false
+    unclosedPurchaseOrder: false,
+    changeReasonConfig: false,
+    steelMaterialClassify: false
   }
 }
 
@@ -168,6 +174,12 @@ const mutations = {
   },
   SET_UNCLOSED_PURCHASE_ORDER(state, order) {
     state.unclosedPurchaseOrder = order
+  },
+  SET_CHANGE_REASON_CONFIG(state, changeReasonConfig) {
+    state.changeReasonConfig = changeReasonConfig
+  },
+  SET_STEEL_MATERIAL_CLASSIFY(state, list) {
+    state.steelMaterialClassify = list
   }
 }
 
@@ -358,6 +370,12 @@ const actions = {
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
     return content
   },
+  async fetchSteelMaterialClassify({ commit }) {
+    const { content = [] } = await getSteelMaterialClassifyBrief()
+    commit('SET_STEEL_MATERIAL_CLASSIFY', content)
+    commit('SET_LOADED', { key: 'steelMaterialClassify' })
+    return content
+  },
   // 原材料规格
   async fetchMarClsSpec({ state }, classifyIds = []) {
     const allInterFace = []
@@ -428,6 +446,13 @@ const actions = {
     const monomers = state.monomers
     const { content = [] } = await monomerAll(projectId)
     monomers[projectId] = content
+  },
+  // 变更原因
+  async fetchChangeReasonConfig({ commit }) {
+    const { content = [] } = await getChangeReasonConfig()
+    commit('SET_CHANGE_REASON_CONFIG', content)
+    commit('SET_LOADED', { key: 'changeReasonConfig' })
+    return content
   }
 }
 
@@ -490,7 +515,7 @@ function getSpecList(classify, specConfig) {
   }
   arr.forEach((v) => {
     // 唯一编号
-    v.serialNumber = classify.serialNumber + v.code.join('')
+    v.serialNumber = classify.serialNumber + '-' + v.code.join('')
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {}

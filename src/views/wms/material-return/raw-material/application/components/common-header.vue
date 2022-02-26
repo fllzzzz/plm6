@@ -132,7 +132,7 @@ function openReturnableList() {
 function calcAllWeight() {
   nextTick(() => {
     allMete.value = form.list.reduce((sum, cur) => {
-      return +toFixed(sum + cur.mete, baseUnit.value.weight.precision)
+      return +toFixed(sum + (cur.mete || 0), baseUnit.value.weight.precision)
     }, 0)
   })
 }

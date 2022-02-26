@@ -98,7 +98,12 @@ const auxiliaryMaterialUseTypeEnum = {
 }
 constantize(auxiliaryMaterialUseTypeEnum)
 
-// ------------------------------------------------------------------
+// 构件编号修改范围
+const serialNumChangeTypeEnum = {
+  AREA: { L: '当前区域', K: 'AREA', V: 1 },
+  MONOMER: { L: '当前单体', K: 'MONOMER', V: 2 }
+}
+constantize(serialNumChangeTypeEnum)
 
 // 备料范围（类型）
 const preparationRangeEnum = {
@@ -126,9 +131,10 @@ export {
   areaPlanTypeEnum,
   enclosureCreateTypeEnum,
   auxiliaryMaterialUseTypeEnum,
+  deepenTypeEnum,
+  serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
-  preparationStatusEnum, // 备料状态
-  deepenTypeEnum
+  preparationStatusEnum // 备料状态
 }
 
 export default {
@@ -142,7 +148,8 @@ export default {
   areaPlanTypeEnum,
   enclosureCreateTypeEnum,
   auxiliaryMaterialUseTypeEnum,
+  deepenTypeEnum,
+  serialNumChangeTypeEnum,
   preparationRangeEnum, // 备料范围（类型）
-  preparationStatusEnum, // 备料状态
-  deepenTypeEnum
+  preparationStatusEnum // 备料状态
 }

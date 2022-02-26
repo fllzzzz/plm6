@@ -233,7 +233,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/wms/purchase-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum } from '@enum-ms/wms'

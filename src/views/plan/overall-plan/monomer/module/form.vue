@@ -74,6 +74,7 @@ import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
 import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { ElMessage } from 'element-plus'
 
 const formRef = ref()
 const currentOption = ref([])
@@ -244,6 +245,16 @@ CRUD.HOOK.beforeSubmit = () => {
       }
     }
   })
+  let flag = true
+  crud.form.detailSaveDTOParamList.map(v => {
+    if (!v.date) {
+      flag = false
+    }
+  })
+  if (!flag) {
+    ElMessage.error('完成日期必填')
+    return false
+  }
   crud.form.projectId = props.projectId
   return !!crud.form.projectId
 }

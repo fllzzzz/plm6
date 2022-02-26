@@ -16,6 +16,7 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
     } else {
       row.maxMete = row.source.singleReturnableMete
     }
+    row.maxQuantity = row.source.quantity
   }
 
   // 提取退库材料相同的对象
@@ -32,9 +33,10 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
 
   // 计算退库信息
   function calcReturnInfo(row) {
-    const mete = {}
-    const length = {}
-    const sourceKV = {}
+    const mete = {} // 核算量
+    const quantity = {} // 计量量
+    const length = {} // 长度
+    const sourceKV = {} // 退库源材料，key：id，value: info
     form.list.forEach((v) => {
       if (row.source.id === v.source.id) {
         const sourceId = v.source.id
@@ -45,9 +47,11 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
           sourceKV[sourceId] = v.source
         }
         if (isNotBlank(mete[sourceId])) {
+          quantity[sourceId] += v.quantity || 0
           mete[sourceId] += v.mete || 0
           length[sourceId] += v.length || 0
         } else {
+          quantity[sourceId] = v.quantity || 0
           mete[sourceId] = v.mete || 0
           length[sourceId] = v.length || 0
         }
@@ -56,6 +60,9 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
     Object.keys(sourceKV).forEach((key) => {
       const sourceMaterial = sourceKV[key]
       sourceMaterial.returnableMete = sourceMaterial.sourceReturnableMete - (mete[sourceMaterial.id] || 0)
+      if (sourceMaterial.measureUnit) {
+        sourceMaterial.returnableQuantity = (sourceMaterial.quantity || 0) - (quantity[sourceMaterial.id] || 0)
+      }
       if (basicClass === rawMatClsEnum.SECTION_STEEL.V) {
         sourceMaterial.returnableLength = sourceMaterial.sourceReturnableLength - (length[sourceMaterial.id] || 0)
       }
@@ -66,15 +73,27 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
   function checkOverSource(row) {
     calcReturnInfo(row)
     const returnableMete = toPrecision(row.source.returnableMete, row.source.accountingPrecision)
-    let showFlag = returnableMete < 0 && !row.overTipColor
-    let unshowFlag = returnableMete >= 0 && row.overTipColor
+    // 需要展示
+    let showFlag = returnableMete < 0
+    // 不需要展示
+    let unshowFlag = returnableMete >= 0
+
+    // 有核算单位的物料需要校验可退库数量
+    if (row.source.measureUnit) {
+      const returnableQuantity = toPrecision(row.source.returnableQuantity, row.source.measurePrecision)
+      showFlag = showFlag || returnableQuantity < 0
+      unshowFlag = unshowFlag && returnableQuantity >= 0
+    }
 
     // 型材还需校验长度
     if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
       const returnableLength = toPrecision(row.source.returnableLength, baseUnit.value ? baseUnit.value.length.precision : 0)
-      showFlag = (returnableMete < 0 || returnableLength < 0) && !row.overTipColor
-      unshowFlag = returnableMete >= 0 && returnableLength >= 0 && row.overTipColor
+      showFlag = showFlag || returnableLength < 0
+      unshowFlag = unshowFlag && returnableLength >= 0
     }
+
+    showFlag = !!(showFlag && !row.overTipColor)
+    unshowFlag = !!(unshowFlag && row.overTipColor)
     if (showFlag) {
       const overTipColor = getDarkColor()
       row.overTipColor = overTipColor

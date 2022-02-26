@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
+        <mHeader :project-id="globalProjectId" @getAreaData="getAreaData"/>
       </div>
       <!--表格渲染-->
       <common-table
@@ -16,6 +16,7 @@
         :row-class-name="handleRowClassName"
         row-key="id"
         style="width: 100%"
+        :stripe="false"
         lazy
         :load="load"
         @sort-change="crud.handleSortChange"
@@ -247,18 +248,31 @@
         <el-table-column
           v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
-          width="130px"
+          width="220px"
           align="center"
           fixed="right"
         >
           <template v-slot="scope">
-            <udOperation :data="scope.row" :permission="permission" :show-del="false" v-if="scope.row.dataType===2"/>
+            <template v-if="scope.row.dataType===2">
+              <el-tooltip class="item" effect="dark" content="数量更改" placement="top">
+                <common-button size="mini" @click="handleNum(scope.row)"><svg-icon icon-class="document" /></common-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="信息修改" placement="top">
+                <common-button size="mini" @click="handleList(scope.row)" icon="el-icon-edit" type="primary"/>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="编号更改" placement="top">
+                <common-button size="mini" @click="handleSerial(scope.row)" type="success"><svg-icon icon-class="expand" /></common-button>
+              </el-tooltip>
+            </template>
           </template>
         </el-table-column>
       </common-table>
       <!--分页组件-->
       <pagination />
       <mForm />
+      <numForm v-model="numVisible" :detailInfo="currentRow" @success="crud.toQuery"/>
+      <listForm v-model="listVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea"/>
+      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea"/>
     </template>
   </div>
 </template>
@@ -269,7 +283,6 @@ import { ref, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
@@ -278,6 +291,9 @@ import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
 import { artifactTreePM as permission } from '@/page-permission/plan'
+import numForm from './module/num-form'
+import listForm from './module/list-form'
+import serialNumForm from './module/serialNum-form'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const optShow = {
@@ -288,6 +304,11 @@ const optShow = {
 }
 
 const tableRef = ref()
+const currentRow = ref({})
+const numVisible = ref(false)
+const listVisible = ref(false)
+const serialVisible = ref(false)
+const allArea = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '零构件清单',
@@ -315,6 +336,21 @@ function changeIndex(val) {
   }
 }
 
+function handleNum(row) {
+  currentRow.value = row
+  numVisible.value = true
+}
+
+function handleList(row) {
+  currentRow.value = row
+  listVisible.value = true
+}
+
+function handleSerial(row) {
+  currentRow.value = row
+  serialVisible.value = true
+}
+
 function handleRowClassName({ row, rowIndex }) {
   if (row.abnormal === 1) {
     return 'abnormal-row'
@@ -326,6 +362,8 @@ function handleRowClassName({ row, rowIndex }) {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   let index = 1
   data.data.content = data.data.content.map((v) => {
+    v.monomerId = crud.query.monomerId
+    v.areaId = crud.query.areaId
     v.dataType = 2
     v.index = index
     index++
@@ -383,6 +421,10 @@ async function load(row, treeNode, resolve) {
     console.log('获取零件信息', error)
   }
 }
+
+function getAreaData(val) {
+  allArea.value = val
+}
 </script>
 
 <style lang="scss" scoped>
@@ -407,6 +449,9 @@ $font-size: 1.5em;
   border: 1px solid;
   border-radius: 50%;
   line-height: $font-size;
+}
+::v-deep(.el-drawer__body){
+  padding-top:0 !important;
 }
 </style>
 <style>

@@ -80,7 +80,7 @@ export default {
       hidden: false,
       name: 'PlanTechnicalManage',
       alwaysShow: false,
-      redirect: '/plan/technical-manage/artifact',
+      redirect: '/plan/technical-manage/artifact-tree',
       meta: { title: '技术管理', icon: 'contract', noCache: true },
       children: [
         {
@@ -126,46 +126,61 @@ export default {
           meta: { title: '配套件清单', icon: 'project', noCache: true }
         },
         {
-          name: 'PlanDeepen',
-          path: 'deepen',
+          path: 'plan-document',
+          component: '',
           hidden: false,
-          component: '/plan/technical-data-manage/deepen/index',
-          meta: { title: '技术资料-深化图纸', icon: 'project', noCache: true }
+          name: 'PlanDocument',
+          alwaysShow: false,
+          redirect: '/plan/technical-manage/plan-document/deepen',
+          meta: { title: '技术资料', icon: 'contract', noCache: true },
+          children: [
+            {
+              name: 'PlanDeepen',
+              path: 'deepen',
+              hidden: false,
+              component: '/plan/technical-data-manage/deepen/index',
+              meta: { title: '技术成果', icon: 'project', noCache: true }
+            },
+            {
+              name: 'PlanChangeFile',
+              path: 'change-file',
+              hidden: false,
+              component: '/plan/technical-data-manage/change-file/index',
+              meta: { title: '变更文件', icon: 'project', noCache: true }
+            },
+            {
+              name: 'PlanBlueprint',
+              path: 'blueprint',
+              hidden: false,
+              component: '/plan/technical-data-manage/blueprint/index',
+              meta: { title: '施工蓝图', icon: 'project', noCache: true }
+            }
+          ]
         },
-        {
-          name: 'PlanChangeFile',
-          path: 'change-file',
-          hidden: false,
-          component: '/plan/technical-data-manage/change-file/index',
-          meta: { title: '技术资料-变更文件', icon: 'project', noCache: true }
-        },
-        {
-          name: 'PlanBlueprint',
-          path: 'blueprint',
-          hidden: false,
-          component: '/plan/technical-data-manage/blueprint/index',
-          meta: { title: '技术资料-蓝图', icon: 'project', noCache: true }
-        },
-        // {
-        //   name: 'PlanModel',
-        //   path: 'model',
-        //   hidden: false,
-        //   component: '/plan/technical-data-manage/model/index',
-        //   meta: { title: '技术资料-模型', icon: 'project', noCache: true }
-        // },
-        // {
-        //   name: 'PlanOtherFile',
-        //   path: 'other-file',
-        //   hidden: false,
-        //   component: '/plan/technical-data-manage/other-file/index',
-        //   meta: { title: '技术资料-其他文件', icon: 'project', noCache: true }
-        // },
         {
           name: 'SummaryList',
           path: 'summary-list',
           hidden: false,
           component: '/plan/technical-manage/summary-list/index',
           meta: { title: '清单合计', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
+      path: '/plan/material-preparation',
+      component: 'Layout',
+      hidden: false,
+      name: 'PlanMaterialPreparation',
+      alwaysShow: false,
+      redirect: '/plan/material-preparation/project-preparation',
+      meta: { title: '备料管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'MaterialProjectPreparation',
+          path: 'project-preparation',
+          hidden: false,
+          component: '/plan/material-preparation/project-preparation/index',
+          meta: { title: '项目备料', icon: 'project', noCache: true }
         }
       ]
     },
