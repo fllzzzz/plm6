@@ -635,14 +635,16 @@ const getMatchList_1 = {
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             boolHasFrozen: true, // 有冻结
-            quantity: 11,
+            frozenQuantity: 7, // 冻结数量
+            quantity: 8, // 数量
+            frozenMete: 700000, // 冻结核算量
+            mete: 800000,
             thickness: 10,
             length: 1000,
             width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: 'aaff',
             remark: '66666',
-            mete: 800000,
             project: {
               id: 1,
               name: '长安街666666号辅路',

@@ -1,90 +1,122 @@
 <template>
-  <template v-if="loaded">
-    <template v-if="outboundTypeMode">
-      <el-table-column
-        v-if="showOutboundUnit"
-        :key="`${field}.outboundUnit`"
-        :prop="`${field}.outboundUnit`"
-        label="单位"
-        align="center"
-        width="70px"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showNumber"
-        :key="`${field}.${numberPropField}`"
-        :prop="`${field}.${numberPropField}`"
-        label="数量"
-        align="right"
-        width="100px"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span
-            v-empty-text
-            v-to-fixed="{
-              val: getInfo(row, 'outboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField),
-              dp: getInfo(row, 'outboundUnitPrecision'),
-            }"
-          />
-        </template>
-      </el-table-column>
-    </template>
-    <template v-else>
-      <el-table-column
-        v-if="showMeasureUnit"
-        :key="`${field}.measureUnit`"
-        :prop="`${field}.measureUnit`"
-        label="计量单位"
-        align="center"
-        width="70px"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showQuantity"
-        :key="`${field}.${quantityField}`"
-        :prop="`${field}.${quantityField}`"
-        :label="quantityLabel"
-        align="right"
-        width="100px"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span
-            v-if="getInfo(row, 'measureUnit')"
-            v-empty-text
-            v-to-fixed="{ val: getInfo(row, quantityField), dp: getInfo(row, 'measurePrecision') }"
-          />
-          <span v-else v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showAccountingUnit"
-        :key="`${field}.accountingUnit`"
-        :prop="`${field}.accountingUnit`"
-        label="核算单位"
-        align="center"
-        width="70px"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text v-to-fixed="{ val: getInfo(row, meteField), dp: getInfo(row, 'accountingPrecision') }" />
-        </template>
-      </el-table-column>
-    </template>
+  <template v-if="outboundTypeMode">
+    <el-table-column
+      v-if="showOutboundUnit"
+      :key="`${field}.outboundUnit`"
+      :prop="`${field}.outboundUnit`"
+      label="单位"
+      align="center"
+      width="70px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showNumber"
+      :key="`${field}.${numberPropField}`"
+      :prop="`${field}.${numberPropField}`"
+      label="数量"
+      align="right"
+      width="100px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: getInfo(row, 'outboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField),
+            dp: getInfo(row, 'outboundUnitPrecision'),
+          }"
+        />
+      </template>
+    </el-table-column>
+  </template>
+  <template v-else-if="rejectTypeMode">
+    <el-table-column
+      v-if="showRejectUnit"
+      :key="`${field}.rejectUnit`"
+      :prop="`${field}.rejectUnit`"
+      label="单位"
+      align="center"
+      width="70px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ getInfo(row, 'rejectUnit') }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showNumber"
+      :key="`${field}.${numberPropField}`"
+      :prop="`${field}.${numberPropField}`"
+      label="数量"
+      align="right"
+      width="100px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: getInfo(row, 'rejectUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField),
+            dp: getInfo(row, 'rejectUnitPrecision'),
+          }"
+        />
+      </template>
+    </el-table-column>
+  </template>
+  <template v-else>
+    <el-table-column
+      v-if="showMeasureUnit"
+      :key="`${field}.measureUnit`"
+      :prop="`${field}.measureUnit`"
+      label="计量单位"
+      align="center"
+      width="70px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showQuantity"
+      :key="`${field}.${quantityField}`"
+      :prop="`${field}.${quantityField}`"
+      :label="quantityLabel"
+      align="right"
+      width="100px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span
+          v-if="getInfo(row, 'measureUnit')"
+          v-empty-text
+          v-to-fixed="{ val: getInfo(row, quantityField), dp: getInfo(row, 'measurePrecision') }"
+        />
+        <span v-else v-empty-text />
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showAccountingUnit"
+      :key="`${field}.accountingUnit`"
+      :prop="`${field}.accountingUnit`"
+      label="核算单位"
+      align="center"
+      width="70px"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
+      <template #default="{ row }">
+        <span v-empty-text v-to-fixed="{ val: getInfo(row, meteField), dp: getInfo(row, 'accountingPrecision') }" />
+      </template>
+    </el-table-column>
   </template>
 </template>
 
@@ -93,7 +125,7 @@ import { defineProps, computed, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
-import { STEEL_ENUM } from '@/settings/config'
+import { MAT_BASE_UNIT, STEEL_ENUM } from '@/settings/config'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 
 const props = defineProps({
@@ -113,6 +145,11 @@ const props = defineProps({
   },
   outboundTypeMode: {
     // 出库单位 模式(显示出库单位对应的数量及单位)
+    type: Boolean,
+    default: false
+  },
+  rejectTypeMode: {
+    // 退库单位 模式（显示退库单位对应的数量及单位）
     type: Boolean,
     default: false
   },
@@ -147,11 +184,16 @@ const props = defineProps({
 
 const getInfo = inject('getInfo')
 
+// 当前分类基础单位
 const { loaded, baseUnit } = useMatBaseUnit()
 
 const unitInfo = computed(() => {
   if (props.basicClass) {
-    return baseUnit.value[props.basicClass] || {}
+    if (loaded.value) {
+      return baseUnit.value[props.basicClass] || {}
+    } else {
+      return MAT_BASE_UNIT[props.basicClass] || {}
+    }
   } else {
     return {}
   }
@@ -224,5 +266,6 @@ const showQuantity = computed(() => isBlank(props.columns) || props.columns.visi
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.${props.meteField}`))
 
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.outboundUnit`))
+const showRejectUnit = computed(() => isBlank(props.columns) || props.columns.visible('rejectUnit'))
 const showNumber = computed(() => isBlank(props.columns) || props.columns.visible(`${props.field}.${props.numberPropField}`))
 </script>
