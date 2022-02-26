@@ -80,8 +80,8 @@ import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
-import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
+import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
+import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import pagination from '@crud/Pagination'
 import mDetail from './detail'
@@ -117,13 +117,16 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   processList.value = res.data.content.length && res.data.content[0]?.processPrice
   res.data.content = res.data.content.map((v, i) => {
     v.rowId = i + '' + Math.random()
-    const { c_unit, unit, dp } = useProductSummaryMeteUnit({ productType: v.productType })
-    v.showUnit = c_unit
-    v.mete = useProductMeteConvert({
-      productType: v.productType,
-      weight: { num: v.mate, to: unit, dp },
-      length: { num: v.mate, to: unit, dp }
-    })
+    if (v.wageQuotaType) {
+      const _unitObj = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType })
+      v.showUnit = _unitObj.meteUnit
+      v.mete = useWageQuotaMeteConvert({
+        length: v.mate,
+        weight: v.mate,
+        surfaceArea: v.mate,
+        wageQuotaType: v.wageQuotaType
+      }).convertMete
+    }
     return v
   })
 }
