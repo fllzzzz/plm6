@@ -1,6 +1,65 @@
 <template>
-  <template v-if="loaded">
-    <el-table-column v-if="showMeasureUnit" prop="measureUnit" key="measureUnit" label="计量单位" align="center" width="70px" show-overflow-tooltip>
+  <!-- 退货 -->
+  <template v-if="rejectTypeMode">
+    <el-table-column
+      v-if="showRejectUnit"
+      key="rejectUnit"
+      prop="rejectUnit"
+      label="单位"
+      align="center"
+      width="70px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.rejectUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showNumber"
+      :key="numberPropField"
+      :prop="numberPropField"
+      label="数量"
+      align="right"
+      :fixed="fixed"
+      show-overflow-tooltip
+      :min-width="!equalDisabled ? '150px' : '70px'"
+    >
+      <template #default="{ row }">
+        <!-- 计量 -->
+        <template v-if="row.rejectUnitType === measureTypeEnum.MEASURE.V">
+          <template v-if="!equalDisabled || row[operableQuantityField] != row[quantityField]">
+            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            /
+          </template>
+        </template>
+        <!-- 计量 -->
+        <template v-if="row.rejectUnitType === measureTypeEnum.ACCOUNTING.V">
+          <template v-if="!equalDisabled || row[operableMeteField] != row[meteField]">
+            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+            /
+          </template>
+        </template>
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
+            dp: row.rejectUnitPrecision,
+          }"
+        />
+      </template>
+    </el-table-column>
+  </template>
+  <template v-else>
+    <el-table-column
+      v-if="showMeasureUnit"
+      prop="measureUnit"
+      key="measureUnit"
+      label="计量单位"
+      align="center"
+      width="70px"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <span v-empty-text>{{ row.measureUnit }}</span>
       </template>
@@ -25,7 +84,15 @@
         <span v-else v-empty-text />
       </template>
     </el-table-column>
-    <el-table-column v-if="showAccountingUnit" key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip>
+    <el-table-column
+      v-if="showAccountingUnit"
+      key="accountingUnit"
+      prop="accountingUnit"
+      label="核算单位"
+      align="center"
+      width="70px"
+      show-overflow-tooltip
+    >
       <template #default="{ row }">
         <span v-empty-text>{{ row.accountingUnit }}</span>
       </template>
@@ -43,11 +110,12 @@
 </template>
 <script setup>
 import { defineProps, computed } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
+import { MAT_BASE_UNIT, STEEL_ENUM } from '@/settings/config'
 import { isBlank, isNotBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 const props = defineProps({
   basicClass: {
     // 基础分类
@@ -62,6 +130,10 @@ const props = defineProps({
     // 是否显示钢材单位
     type: Boolean,
     default: false
+  },
+  fixed: {
+    // 固定列
+    type: String
   },
   columns: {
     type: Object
@@ -111,6 +183,20 @@ const props = defineProps({
   equalDisabled: {
     type: Boolean,
     default: false
+  },
+  rejectTypeMode: {
+    type: Boolean,
+    default: false
+  },
+  showNumber: {
+    // 是否显示数量
+    type: Boolean,
+    default: true
+  },
+  numberPropField: {
+    // 默认计量，用于合计时
+    type: String,
+    default: 'quantity'
   }
 })
 
@@ -119,7 +205,11 @@ const { loaded, baseUnit } = useMatBaseUnit()
 
 const unitInfo = computed(() => {
   if (props.basicClass) {
-    return baseUnit.value[props.basicClass] || {}
+    if (loaded.value) {
+      return baseUnit.value[props.basicClass] || {}
+    } else {
+      return MAT_BASE_UNIT[props.basicClass] || {}
+    }
   } else {
     return {}
   }
@@ -193,4 +283,7 @@ const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns)
 const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
+
+const showRejectUnit = computed(() => isBlank(props.columns) || props.columns.visible('rejectUnit'))
+const showNumber = computed(() => props.showNumber && (isBlank(props.columns) || props.columns.visible(props.numberPropField)))
 </script>

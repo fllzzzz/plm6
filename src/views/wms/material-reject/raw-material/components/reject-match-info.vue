@@ -47,7 +47,7 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns :basic-class="material.basicClass" />
           <!-- 单位及其数量 -->
-          <material-unit-quantity-columns :basic-class="material.basicClass" reject-type-mode />
+          <material-unit-operate-quantity-columns :basic-class="material.basicClass" reject-type-mode />
           <!-- 仓库位置信息 -->
           <warehouse-info-columns show-project />
           <el-table-column label="退货数量" width="170px" align="center" fixed="right">
@@ -78,6 +78,7 @@ import useVisible from '@/composables/use-visible'
 
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
+import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import verticalLabel from '@/components-system/common/vertical-label.vue'
@@ -179,7 +180,21 @@ async function fetchMatchList(materialId) {
     // 列表中存在的退库信息
     const exitRejectIds = {}
     matchList.value.forEach((row) => {
-      row.maxNumber = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete
+      row.operableQuantity = row.quantity - (row.frozenQuantity || 0)
+      row.operableMete = row.mete - (row.frozenMete || 0)
+      if (row.rejectUnitType === measureTypeEnum.MEASURE.V) {
+        // 实际在出库中使用的数量
+        row.corQuantity = row.quantity // 数量
+        row.corFrozenQuantity = row.frozenQuantity // 冻结数量
+        row.corOperableQuantity = row.operableQuantity // 可操作数量
+      } else {
+        // 核算量
+        row.corQuantity = row.mete
+        row.corFrozenQuantity = row.frozenMete
+        row.corOperableQuantity = row.operableMete
+      }
+
+      row.maxNumber = row.corOperableQuantity
       // 数据回填
       const rejectRow = rejectKV.value[row.id]
       if (rejectRow) {
