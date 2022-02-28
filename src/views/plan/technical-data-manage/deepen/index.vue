@@ -33,11 +33,11 @@
         <el-table-column align="center" label="单元">
           <template v-slot="scope">
             <template v-if="scope.row.areaArr.length > 0">
-              <template v-for="(k,i) in scope.row.areaArr" :key="k.id">
+              <div v-for="(k,i) in scope.row.areaArr" :key="k.id">
                 <div :class="i===scope.row.areaArr.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
                   {{k.name}}
                 </div>
-              </template>
+              </div>
             </template>
             <div v-else class="sandwich-cell-bottom"></div>
           </template>

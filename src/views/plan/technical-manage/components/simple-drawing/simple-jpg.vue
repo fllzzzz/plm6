@@ -163,6 +163,10 @@ export default {
           height: 400 // 默认高度 px 【默认400】
         }
       }
+    },
+    reset: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -179,6 +183,16 @@ export default {
         'height': this.currentImg.height,
         'padding': '30px'
       }
+    }
+  },
+  watch: {
+    reset: {
+      handler(val) {
+        if (val && this.canvas_front) {
+          this.handleClearCanvas()
+        }
+      },
+      immediate: true
     }
   },
   data() {
@@ -465,6 +479,7 @@ export default {
       // let canvas = this.canvas_back;
       const canvas = document.getElementById('ctx_back')
       this.$emit('download', canvas.toDataURL())
+      this.handleClearCanvas()
       // this.$refs.download.href = canvas.toDataURL();
       // this.$refs.download.click();
       // base64
@@ -673,8 +688,7 @@ export default {
       this.handleInitCanvas()
       this.handleChangeToolType(1)
     })
-  },
-  watch: {}
+  }
 }
 </script>
 

@@ -453,6 +453,7 @@ async function changeStatus(data, val) {
     crud.toQuery()
   } catch (error) {
     console.log('修改围护状态', error)
+    data.boolStatusEnum = data.boolStatusEnum === processingEnum.PROCESS.V ? processingEnum.PAUSE.V : processingEnum.PROCESS.V
   }
 }
 function getPlate() {
