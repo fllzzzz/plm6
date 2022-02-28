@@ -38,22 +38,8 @@
           label="编号"
           min-width="90px"
         >
-          <!-- <template slot="header">
-          <el-tooltip
-            class="item"
-            effect="light"
-            :content="`双击编号可预览图纸`"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>编号</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template> -->
           <template v-slot="scope">
-            <div>{{ scope.row.serialNumber  }}</div>
-            <!-- <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span> -->
+            <div>{{ scope.row.serialNumber }}</div>
           </template>
         </el-table-column>
         <el-table-column
@@ -269,10 +255,11 @@
           prop="draw"
           :show-overflow-tooltip="true"
           label="画图"
-          width="100px"
+          min-width="100px"
         >
           <template v-slot="scope">
-            <common-button size="mini" type="primary" @click="handleDraw(scope.row)">画图</common-button>
+            <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify">{{scope.row.attachmentId?'修改':'画图'}}</common-button>
+            <export-button :params="{id: scope.row.attachmentId}" v-if="scope.row.attachmentId" :disabled="scope.row.isModify"/>
           </template>
         </el-table-column>
         <!--状态、编辑与删除-->
@@ -346,6 +333,7 @@ import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
 import { enclosureListPM as permission } from '@/page-permission/plan'
 import SimpleDrawing from '../components/simple-drawing'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 
@@ -531,7 +519,7 @@ const originRow = ref({})
 function editRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   const chosePlate = plateOption.value.find(k => k.plateType === row.plate)
-  row.plateId = chosePlate.id
+  row.plateId = isNotBlank(chosePlate) ? chosePlate.id : undefined
   row.isModify = true
 }
 async function deleteRow(row) {
