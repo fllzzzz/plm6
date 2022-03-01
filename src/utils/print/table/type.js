@@ -3,7 +3,8 @@ import { constantize } from '../../enum/base'
 
 // 模块类型
 const contract = {
-  contract_report: '合同报表'
+  contract_report: '合同报表',
+  sales_manage: '销售管理'
 }
 
 const wms = {
@@ -30,6 +31,14 @@ const tableType = { // 如果一个表格属于两个模块，T: []
   // 合同
   contractLedger: { L: '合同台账', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
   myProject: { L: '我的项目', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
+
+  contractStructurePrice: { L: '结构计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosurePrice: { L: '围护计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractAuxiliaryMaterialPrice: { L: '配套件计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectCollectionDetail: { L: '项目收款明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectInvoiceDetail: { L: '项目开票明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectHappenedDetail: { L: '项目发运明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
   // wms
   wmsInventorySummary: { L: '物料库存汇总表', M: 'wms_warehouse', T: mt.wms.L + ' / ' + wms.wms_warehouse },
