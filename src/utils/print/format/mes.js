@@ -6,6 +6,7 @@ import { DP } from '@/settings/config'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
+import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
 
 // 结构生产线的量和工序完成数
 function productionLineMete({ header, table = [], footer, qrCode }) {
@@ -61,20 +62,25 @@ function processMete({ header, table = [], footer, qrCode }) {
 // 计件制生产量单位
 function meteUnit({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
-    const unitObj = useProductSummaryMeteUnit({ productType: row.productType })
+    const unitObj = row.productType && useProductSummaryMeteUnit({ productType: row.productType })
     // 核算量
-    const wageQuotaType = useWageQuotaUnit({ wageQuotaType: row.wageQuotaType })
-    row.checkMete = row.mate + wageQuotaType?.meteUnit
+    row.checkMete = row.wageQuotaType && useWageQuotaMeteConvert({
+      length: row.mate,
+      weight: row.mate,
+      surfaceArea: row.mate,
+      wageQuotaType: row.wageQuotaType,
+      showUnit: true
+    }).convertMete
     // 生产量
-    row.productMete = row.mate + unitObj.unit
+    row.productMete = row.mate + unitObj?.unit
     // 长度/重量
-    row.mete = useProductMeteConvert({
+    row.mete = row.productType && useProductMeteConvert({
       productType: row.productType,
       length: { num: row.length * row.quantity, to: unitObj.unit, dp: unitObj.dp },
       weight: { num: row.netWeight * row.quantity, to: unitObj.unit, dp: unitObj.dp }
     })
     if (row.mete) {
-      row.mete += unitObj.unit
+      row.mete += unitObj?.unit
     }
     return row
   })

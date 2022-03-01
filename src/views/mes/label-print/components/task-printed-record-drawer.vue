@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import { getForTask as getPrintRecord } from '@/api/mes/label-print/print-record'
 import { defineProps, defineEmits, ref, watch } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -35,6 +34,10 @@ const props = defineProps({
   taskId: {
     type: [Number, String],
     default: undefined
+  },
+  getPrintRecord: {
+    type: Function,
+    required: true
   }
 })
 
@@ -67,7 +70,7 @@ watch(
 async function fetchRecord() {
   loading.value = true
   try {
-    const { content = [] } = await getPrintRecord(props.taskId)
+    const { content = [] } = await props.getPrintRecord(props.taskId)
     recordList.value = content
   } catch (error) {
     console.log('获取打印记录', error)
