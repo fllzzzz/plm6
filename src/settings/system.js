@@ -113,6 +113,7 @@ export const showProjectSearch = [
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
   { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
+  { component: '/contract/sales-manage/order-tracking/index', type: allPT, required: false },
   { component: '/contract/sales-manage/visa-manage/change/index', type: allPT, required: false },
 
   { component: '/supply-chain/purchase-order/index', type: allPT, required: false },
