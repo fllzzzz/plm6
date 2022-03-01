@@ -210,6 +210,33 @@ const getAuxMatInventory = {
               id: 4,
               name: '622号仓库'
             }
+          },
+          {
+            id: 1,
+            classifyId: 204,
+            specification: 'M27 * 60',
+            basicClass: matClsEnum.MATERIAL.V,
+            quantity: 10,
+            frozenMete: 1, // 冻结量
+            frozenQuantity: 1, // 冻结数量
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 10,
+            project: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '你脸红个泡泡茶壶',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 4,
+              name: '622号仓库'
+            }
           }
         ],
         totalElements: 1

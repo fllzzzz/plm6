@@ -9,13 +9,13 @@
     custom-class="dialog-class"
   >
     <common-button type="danger" icon="el-icon-close" circle class="btn-close" @click="handleClose" />
-    <simpleJpg ref="draw" @download="saveJPG" />
+    <simpleJpg ref="draw" @download="saveJPG" :reset="isReset"/>
   </el-dialog>
 </template>
 
 <script setup>
 import { saveDraw } from '@/api/plan/technical-manage/enclosure'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 import useVisible from '@compos/use-visible'
 import simpleJpg from './simple-jpg'
 import { ElMessage } from 'element-plus'
@@ -40,7 +40,18 @@ const props = defineProps({
 
 const emit = defineEmits(['toQuery', 'success'])
 const { visible, handleClose } = useVisible({ emit, props })
-
+const isReset = ref(true)
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      isReset.value = true
+    } else {
+      isReset.value = false
+    }
+  },
+  { deep: true, immediate: true }
+)
 async function saveJPG(base64) {
   try {
     const data = {

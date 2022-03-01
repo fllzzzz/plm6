@@ -170,7 +170,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="翼板腹板信息">
-          <div v-for="item in keyList" :key="item.key">
+          <template v-for="item in keyList" :key="item.key">
             <el-table-column align="center" :label="item.label" :prop="item.key">
               <template v-slot="scope">
                 <template v-if="scope.row.detailDTOList.length > 0">
@@ -182,7 +182,7 @@
                 </template>
               </template>
             </el-table-column>
-          </div>
+          </template>
         </el-table-column>
         <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注">
           <template v-slot="scope">
