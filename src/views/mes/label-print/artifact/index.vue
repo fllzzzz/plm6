@@ -210,12 +210,13 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <printed-record-drawer v-model:visible="recordVisible" :task-id="currentTaskId" />
+    <printed-record-drawer v-model:visible="recordVisible" :task-id="currentTaskId" :getPrintRecord="getPrintRecord"/>
     <label-dlg v-model:visible="labelVisible" :label-data="currentLabel" :productType="productType" :labelType="labelType" />
   </div>
 </template>
 
 <script setup>
+import { getForTask as getPrintRecord } from '@/api/mes/label-print/print-record'
 import crudApi from '@/api/mes/label-print/artifact'
 import { ref, provide, computed } from 'vue'
 
