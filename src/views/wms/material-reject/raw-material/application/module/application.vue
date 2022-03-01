@@ -37,6 +37,7 @@
                 :list="row.allRejectList"
                 operable
                 @del="handleRejectDel"
+                style="width: 1500px"
               />
             </div>
           </template>
