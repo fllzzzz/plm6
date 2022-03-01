@@ -52,11 +52,10 @@ const tableType = { // 如果一个表格属于两个模块，T: []
   mesMachinePartDetail: { L: '零件生产详情', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesPaintingList: { L: '涂装列表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
 
-  mesPiecework: { L: '计件制报表报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesPieceworkSummary: { L: '计件制汇总报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesPieceworkDetail: { L: '计件制详情报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesWageSummary: { L: '编外工资汇总', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesWageDetail: { L: '编外工资详情', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesStructureTeamWage: { L: '结构班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesEnclosureTeamWage: { L: '围护班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesStructureTeamWageDetail: { L: '结构班组工资详情报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesEnclosureTeamWageDetail: { L: '围护班组工资详情报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
 
   mesWarehouseStateStructure: { L: '结构出入库状态', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   mesWarehouseStateEnclosure: { L: '围护出入库状态', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },

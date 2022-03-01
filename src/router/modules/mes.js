@@ -723,7 +723,7 @@ export default {
     alwaysShow: false,
     redirect: '/mes/QHSE-manage/quality-inspection-report',
     meta: {
-      title: '质检管理',
+      title: '质安管理',
       icon: 'project',
       noCache: true
     },
@@ -789,6 +789,17 @@ export default {
       component: '/mes/label-print/enclosure/index',
       meta: {
         title: '围护',
+        icon: 'project',
+        noCache: true
+      }
+    },
+    {
+      name: 'MesLabelPrintAuxiliaryMaterial',
+      path: 'auxiliary-material',
+      hidden: false,
+      component: '/mes/label-print/auxiliary-material/index',
+      meta: {
+        title: '配套件',
         icon: 'project',
         noCache: true
       }

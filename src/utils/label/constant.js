@@ -345,6 +345,126 @@ const ENCLOSURE_STYLE = function ({
   }
 }
 
+// 配套件-常规标签
+const AUX_MAT_COMMON_L_HTML = function ({ component = defComponent, printConfig }) {
+  return `
+  <div class="aux-mat-label">
+    <div class="row">
+      <div class="col col-center" style="font-size:10pt;">${component.projectName}</div>
+    </div>
+    <div class="row">
+      <div class="col col-center" style="font-size:10pt;">${component.monomerName}</div>
+    </div>
+    <div class="contains-rows">
+      <div class="col" style="flex: 2">
+        <div class="row row-3">
+          <div class="col" style="font-size:20pt;text-align:center;font-weight: 600;">${component.name}</div>
+        </div>
+        <div class="row">
+          <div class="col">规格：${component.specification}</div>
+          <div class="col">总数：${component.quantity}</div>
+        </div>
+        <div class="row">
+          <div class="col">颜色：${component.color}</div>
+          <div class="col">品牌：${component.brand}</div>
+        </div>
+      </div>
+      <div class="col" style="flex: 1">
+        <div class="row row-5">
+          <div class="col qr-content">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  `
+}
+
+// 配套件标签样式
+const AUX_MAT_STYLE = function ({
+  fClass = '',
+  colContent = 'start',
+  rowHeight = 60,
+  colPadding = 10,
+  unit = 'px',
+  qrPosition = {}
+}) {
+  return {
+    fClass,
+    qrPosition,
+    style: `
+    <style>
+    .${fClass} .aux-mat-label {
+      font-family: "微软雅黑";
+      font-size: 9pt;
+      color: black;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .${fClass} .aux-mat-label .row {
+      display: flex;
+      border: 1px solid #000;
+      box-sizing: border-box;
+      height: ${rowHeight}${unit};
+    }
+    
+    .${fClass} .aux-mat-label .row-2 {
+      height: ${rowHeight * 2}${unit};
+    }
+    
+    .${fClass} .aux-mat-label .row-3 {
+      height: ${rowHeight * 3}${unit};
+    }
+    
+    .${fClass} .aux-mat-label .row-5 {
+      height: ${rowHeight * 5}${unit};
+    }
+    
+    .${fClass} .aux-mat-label .row:not(:last-child) {
+      border-bottom: none;
+    }
+  
+    .${fClass} .aux-mat-label .row > .col {
+      height: 100%;
+      padding: 0 ${colPadding}${unit};
+      box-sizing: border-box;
+      word-break: break-all;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: ${colContent};
+    }
+  
+    .${fClass} .aux-mat-label .row > .col-center {
+      justify-content: center;
+    }
+      
+    .${fClass} .aux-mat-label .row > .col:not(:last-child) {
+      border-right: 1px solid #000;
+    }
+    
+    .${fClass} .aux-mat-label .contains-rows {
+      display: flex;
+      box-sizing: border-box;
+      border-left: 1px solid #000;
+    }
+    
+    .${fClass} .aux-mat-label .contains-rows .row {
+      border-left: none;
+    }
+    .${fClass} .aux-mat-label .contains-rows .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+    }
+    </style>
+    `
+  }
+}
+
 export const LABEL_HTML = {
   [componentTypeEnum.ARTIFACT.V]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_COMMON_L_HTML,
@@ -355,9 +475,15 @@ export const LABEL_HTML = {
     [labelTypeEnum.COMMON.V]: ENCLOSURE_COMMON_L_HTML,
     [labelTypeEnum.SIMPLE.V]: '',
     [labelTypeEnum.CUSTOM.V]: ENCLOSURE_CUSTOM_L_HTML
+  },
+  [componentTypeEnum.AUXILIARY_MATERIAL.V]: {
+    [labelTypeEnum.COMMON.V]: AUX_MAT_COMMON_L_HTML,
+    [labelTypeEnum.SIMPLE.V]: '',
+    [labelTypeEnum.CUSTOM.V]: ''
   }
 }
 
+// 产品标签预览样式
 export const PRE_LABEL_STYLE = {
   [componentTypeEnum.ARTIFACT.V]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
@@ -389,9 +515,17 @@ export const PRE_LABEL_STYLE = {
       qrPosition: { top: '75px', left: '', right: '15px', size: 130 },
       rowHeight: 40
     })
+  },
+  [componentTypeEnum.AUXILIARY_MATERIAL.V]: {
+    [labelTypeEnum.COMMON.V]: AUX_MAT_STYLE({
+      fClass: 'pre-com-al',
+      qrPosition: { right: '20px', bottom: '65px', size: 160 },
+      rowHeight: 60
+    })
   }
 }
 
+// 产品标签打印配置预览样式
 export const MINI_LABEL_STYLE = {
   [componentTypeEnum.ARTIFACT.V]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
@@ -422,6 +556,7 @@ export const MINI_LABEL_STYLE = {
   }
 }
 
+// 产品标签打印样式
 export const PRINT_LABEL_STYLE = {
   [componentTypeEnum.ARTIFACT.V]: {
     [labelTypeEnum.COMMON.V]: ARTIFACT_STYLE({
@@ -461,5 +596,15 @@ export const PRINT_LABEL_STYLE = {
       border: 0,
       unit: 'mm'
     })
+  },
+  [componentTypeEnum.AUXILIARY_MATERIAL.V]: {
+    [labelTypeEnum.COMMON.V]: AUX_MAT_STYLE({
+      fClass: 'print-com-al',
+      rowHeight: 9,
+      colPadding: 1,
+      unit: 'mm'
+    }),
+    [labelTypeEnum.SIMPLE.V]: '',
+    [labelTypeEnum.CUSTOM.V]: ''
   }
 }

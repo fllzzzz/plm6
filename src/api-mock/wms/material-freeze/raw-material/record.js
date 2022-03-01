@@ -303,6 +303,24 @@ const getMaterialFreezeRecordById = {
             mete: 1000,
             operatorName: '@cname',
             frozenTime: '@datetime(T)'
+          },
+          {
+            id: 4,
+            freezeType: materialFreezeTypeEnum.REJECTED.V,
+            document: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            quantity: 3,
+            mete: 1000,
+            operatorName: '@cname',
+            frozenTime: '@datetime(T)'
           }
         ]
       }

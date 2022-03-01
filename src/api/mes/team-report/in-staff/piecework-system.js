@@ -33,7 +33,7 @@ export function getSummary({ endDate, startDate, factoryId, productType, project
 export function detail(params) {
   return request({
     module: 'mes',
-    url: 'wages/reckon/details/list',
+    url: 'wages/reckon/details/page',
     method: 'get',
     params
   })

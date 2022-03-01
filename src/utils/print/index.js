@@ -26,7 +26,7 @@ async function printArtifact({ productType, labelType, component, manufacturerNa
     LODOP.ADD_PRINT_BARCODE('40mm', '72mm', '34mm', '34mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
-    // LODOP.PRINT_DESIGN()/* 打印设计*/
+    LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -81,48 +81,17 @@ async function printEnclosure({ productType, labelType, component, manufacturerN
    * @param printMode 打印模式
    * @author duhh
    */
-async function printAuxiliaryMaterial({ component, manufacturerName, qrCode, printMode = PrintMode.QUEUE.V }) {
-  const bodyHtml = `
-        <table border="1" bordercolor="#000000">
-            <tr>
-                <td class="col-2" colspan="2">${component.projectName}</td>
-                <td>${component.monomerName}</td>
-            </tr>
-            <tr>
-                <td class="col-3" style="font-size: 18pt;font-weight:bold" colspan="3">${component.thirdName}</td>
-            </tr>
-            <tr>
-                <td>编号： ${component.serialNumber}</td>
-                <td>颜色：${component.color}</td>
-                <td>规格：${component.specification}</td>
-            </tr>
-            <tr>
-              <td>分类： ${component.firstName}</td>
-              <td>种类： ${component.secondName}</td>
-              <td>单位： ${component.unit}</td>
-            </tr>
-            <tr>
-                <td class="col-2" colspan="2">数量： ${component.quantity}</td>
-                <td rowspan="3">
-                    <div class="qr-content"></div>
-                </td>
-            </tr>
-            <tr>
-              <td class="col-2" colspan="2">区域： ${component.areaName}</td>
-            </tr>
-            <tr>
-            <td class="col-2" colspan="2">${manufacturerName}</td>
-          </tr>
-      </table>`
-  const strHtml = combineHtml(COMPONENT_STYLE, bodyHtml)
+async function printAuxiliaryMaterial({ productType, labelType, component, manufacturerName, qrCode, printConfig, printMode = PrintMode.QUEUE.V }) {
+  const strHtml = getPrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig })
   let result = false
   try {
     LODOP = await getLODOP()
     LODOP.SET_PRINT_PAGESIZE(1, 1030, 680, '1') /* 纸张大小*/
-    LODOP.ADD_PRINT_HTM('2mm', '3mm', '100%', '90%', strHtml)
-    LODOP.ADD_PRINT_BARCODE('39.5mm', '71mm', '34mm', '34mm', 'QRCode', qrCode)
+    LODOP.ADD_PRINT_HTM('2mm', '3mm', '98mm', '68mm', strHtml)
+    LODOP.ADD_PRINT_BARCODE('32mm', '72mm', '34mm', '34mm', 'QRCode', qrCode)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 7)
     LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+    LODOP.PRINT_DESIGN()/* 打印设计*/
     // LODOP.PREVIEW()/* 打印预览*/
     result = await printByMode(printMode)
   } catch (error) {
@@ -498,30 +467,6 @@ export async function printDetailOutboundOrder({ date, handler, orderNo, list, n
   }
   return result
 }
-
-const COMPONENT_STYLE = `
-<style>
-    table {
-        font-family:'微软雅黑';
-        border-collapse:collapse;
-        text-align: left;
-        font-size: 9pt;
-        color: black;
-    }
-    table tr td {
-        box-sizing: border-box;
-        padding: 0 1mm;
-        height: 9mm;
-        width: 32mm;
-        word-break: break-all;
-    }
-    table tr td.col-2 {
-      width: 64mm;
-    }
-    table tr td.col-3 {
-      width: 96mm;
-    }
-</style>`
 
 const GAS_STYLE = `
 <style>

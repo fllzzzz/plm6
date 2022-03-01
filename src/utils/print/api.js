@@ -23,11 +23,10 @@ const mesPaintingList = mes.paintingList
 const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
 
-const mesPiecework = mes.piecework
-const mesPieceworkSummary = mes.pieceworkSummary
-const mesPieceworkDetail = mes.pieceworkSummary
-const mesWageSummary = mes.wageSummary
-const mesWageDetail = mes.wageDetail
+const mesStructureTeamWage = mes.teamWage
+const mesEnclosureTeamWage = mes.teamWage
+const mesStructureTeamWageDetail = mes.teamWageDetail
+const mesEnclosureTeamWageDetail = mes.teamWageDetail
 
 const mesPackingList = mes.packingList
 const mesShipmentSummary = mes.shipmentSummary
@@ -62,11 +61,10 @@ export default {
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总
 
-  mesPiecework, // 计件制报表报表
-  mesPieceworkSummary, // 计件制汇总报表
-  mesPieceworkDetail, // 计件制详情报表
-  mesWageSummary, // 工资汇总
-  mesWageDetail, // 工资详情
+  mesStructureTeamWage, // 结构班组工资
+  mesEnclosureTeamWage, // 围护班组工资
+  mesStructureTeamWageDetail, // 结构班组工资详情
+  mesEnclosureTeamWageDetail, // 围护班组工资详情
 
   mesPackingList, // 打包清单
   mesShipmentSummary, // 发运汇总

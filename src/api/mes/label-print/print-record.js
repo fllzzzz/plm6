@@ -19,15 +19,13 @@ export function getForTask(taskId) {
  * 获取材料打印记录
  * @export
  * @param {number} materialId|required 材料id
- * @param {number} materialListType|required 材料类型
  * @returns
  */
-export function getForMaterial({ materialId, materialListType }) {
+export function getForMaterial(materialId) {
   return request({
     module: 'mes',
     url: `print/record/material/${materialId}`,
-    method: 'get',
-    params: { materialId, materialListType }
+    method: 'get'
   })
 }
 
@@ -73,12 +71,12 @@ export function taskAdd({ id, quantity, startTime, endTime }) {
  * @param {number} endTime|required 打印结束时间【时间戳】
  * @returns
  */
-export function materialAdd({ materialId, materialListType, quantity, startTime, endTime }) {
+export function materialAdd({ id, quantity, startTime, endTime }) {
   return request({
     module: 'mes',
     url: 'print/record/material',
     method: 'post',
-    data: { materialId, materialListType, quantity, startTime, endTime }
+    data: { materialId: id, quantity, startTime, endTime }
   })
 }
 

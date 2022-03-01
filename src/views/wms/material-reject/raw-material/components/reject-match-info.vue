@@ -43,7 +43,13 @@
       <div class="match-list-table">
         <common-table v-loading="matchListLoading" :data="filterMatchList" row-key="id" :max-height="maxHeight">
           <!-- 基础信息 -->
-          <material-base-info-columns :basic-class="material.basicClass" show-frozen-tip frozen-viewable @refresh="handleRefresh" />
+          <material-base-info-columns
+            :basic-class="material.basicClass"
+            show-frozen-tip
+            frozen-viewable
+            @refresh="handleRefresh"
+            @unfreeze-success="handleUnfreeze"
+          />
           <!-- 次要信息 -->
           <material-secondary-info-columns :basic-class="material.basicClass" />
           <!-- 单位及其数量 -->
@@ -84,7 +90,7 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import verticalLabel from '@/components-system/common/vertical-label.vue'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank } from '@/utils/data-type'
 import { ElMessage } from 'element-plus'
 import useMaxHeight from '@/composables/use-max-height'
@@ -177,8 +183,8 @@ async function fetchMatchList(materialId) {
     matchList.value = content
     // 记录是否有数量应超过可退货数量而变化
     let numberHasChange = false
-    // 列表中存在的退库信息
-    const exitRejectIds = {}
+    // 列表中仍要保留的退库信息
+    const retainRejectIds = {}
     matchList.value.forEach((row) => {
       row.operableQuantity = row.quantity - (row.frozenQuantity || 0)
       row.operableMete = row.mete - (row.frozenMete || 0)
@@ -198,12 +204,11 @@ async function fetchMatchList(materialId) {
       // 数据回填
       const rejectRow = rejectKV.value[row.id]
       if (rejectRow) {
-        exitRejectIds[row.id] = true
-        rejectKV.value[row.id] = row
-        if (rejectRow.rejectNumber > row.maxNumber) {
-          rejectNumberChange(undefined, row)
-          numberHasChange = true
-        } else {
+        // 退货数量 <= 当前匹配物料记录最大可退货数量
+        if (rejectRow.rejectNumber <= row.maxNumber) {
+          retainRejectIds[row.id] = true
+          rejectKV.value[row.id] = row
+          // 设置退货数量
           row.rejectNumber = rejectRow.rejectNumber
         }
       }
@@ -211,15 +216,16 @@ async function fetchMatchList(materialId) {
     // 重新计算退货统计
     rejectTotalNumber.value = 0
     Object.keys(rejectKV.value).forEach((id) => {
-      if (!exitRejectIds[id]) {
+      if (!retainRejectIds[id]) {
         delete rejectKV.value[id]
         numberHasChange = true
       } else {
-        rejectTotalNumber.value += rejectKV.value[id].rejectNumber
+        rejectTotalNumber.value += rejectKV.value[id].rejectNumber || 0
       }
     })
     if (numberHasChange) {
-      ElMessage.warning('清除了匹配列表中“可退货数量小于填写数量”的数量')
+      emit('change')
+      ElMessage.warning('清除了匹配列表中“可退货数量小于填写数量”的物料数量')
     }
   } catch (error) {
     console.error('加载匹配列表', error)
@@ -238,6 +244,7 @@ function rejectNumberChange(row, newVal, oldVal) {
       return
     }
     rejectTotalNumber.value = number
+
     const hasVal = isNotBlank(newVal) && newVal > 0
     // 在退货列表中，数量为0或不存在
     if (rejectKV.value[row.id] && !hasVal) {
@@ -254,6 +261,16 @@ function rejectNumberChange(row, newVal, oldVal) {
 // 刷新
 function handleRefresh() {
   fetchMatchList(props.material.id)
+}
+
+// 解冻
+function handleUnfreeze(changeInfo, record, unfreezeMaterial) {
+  const rejectMaterial = props.material
+  const needEdit = record.freezeType === materialFreezeTypeEnum.REJECTED.V
+  if (needEdit) {
+    rejectMaterial.rejectMaxNumber += changeInfo.quantity
+    rejectMaterial.rejectPendingNumber -= changeInfo.quantity
+  }
 }
 </script>
 
