@@ -182,12 +182,12 @@ async function dataUnitFormat(material, recordList = []) {
 }
 
 // 处理解冻成功
-function handleFreezeSuccess() {
+function handleFreezeSuccess(data) {
   if (props.mode === 'fetch') {
     // 刷新
     fetchMaterialFreezeDetailById()
   }
-  emit('unfreeze-success')
+  emit('unfreeze-success', data, currentRecord.value, props.material)
 }
 
 // 去解冻

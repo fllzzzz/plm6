@@ -150,7 +150,7 @@ async function submit() {
       toNum: true
     })
     await unfreezeHandling(formData)
-    emit('success')
+    emit('success', formData)
     handleClose()
     resetForm()
   } catch (error) {

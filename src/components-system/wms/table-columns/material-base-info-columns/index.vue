@@ -9,13 +9,7 @@
   <slot name="afterIndex" />
   <el-table-column v-if="showProject" :prop="`project`" label="项目" align="left" min-width="120px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
-      <table-cell-tag
-        v-if="showPartyA && partyAPosition === 'project'"
-        :show="!!row.boolPartyA"
-        name="甲供"
-        type="partyA"
-        :offset="15"
-      />
+      <table-cell-tag v-if="showPartyA && partyAPosition === 'project'" :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="15" />
       <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
@@ -163,7 +157,7 @@ import rawMat from './module/raw-mat.vue'
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
 
-const emit = defineEmits(['refresh'])
+const emit = defineEmits(['refresh', 'unfreeze-success'])
 
 const props = defineProps({
   specMerge: {
@@ -290,8 +284,9 @@ function openMatRejectDetail(row) {
 }
 
 // 解冻成功
-function handleUnfreezeSuccess() {
+function handleUnfreezeSuccess(changeInfo, record, material) {
   ++operateNumber.value
+  emit('unfreeze-success', changeInfo, record, material)
 }
 
 // 关闭窗口
