@@ -128,7 +128,7 @@ export function regHeader(defaultQuery) {
  * @param {object} defaultForm 默认表单
  * @param {object} formRef
  */
-export function regForm(defaultForm, formRef, customizeFormStoreKey) {
+export function regForm(defaultForm = {}, formRef, customizeFormStoreKey) {
   const crud = inject('crud')
   const internalInstance = getCurrentInstance()
   // 注册组件

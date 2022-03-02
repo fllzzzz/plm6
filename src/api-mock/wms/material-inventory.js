@@ -28,7 +28,8 @@ const getSteelPlate = {
             width: 990,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
-            projectFrozen: [// 针对不同项目可出库的冻结数量（目前只针对申购冻结）
+            projectFrozen: [
+              // 针对不同项目可出库的冻结数量（目前只针对申购冻结）
               { projectId: 1, quantity: 2, mete: 200000 }
             ],
             project: {
@@ -99,6 +100,7 @@ const getSectionSteel = {
             id: 4,
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
+            nationalStandard: 'GB-06', // 国家标准
             specification: '10*10*200*500 * Q325B',
             quantity: 10,
             frozenQuantity: 5, // 冻结数量

@@ -258,7 +258,7 @@ function rowInit(row) {
       classifyId: row.classify.id, // 科目id
       classifyFullName: row.classify.fullName, // 全路径名称
       specification: row.spec, // 规格
-      specificationMap: row.specKV, // 规格KV格式
+      specKV: row.specKV, // 规格KV格式
       measureUnit: row.classify.measureUnit, // 计量单位
       accountingUnit: row.classify.accountingUnit, // 核算单位
       accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度
