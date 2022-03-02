@@ -26,7 +26,7 @@ export function getMiniLabelHtml({ productType, labelType, labelData }) {
   `
 }
 
-// 产品标签打印配置预览样式
+// 产品标签打印样式
 export function getPrintLabelHtml({ productType, labelType, component, manufacturerName, printConfig }) {
   const html = LABEL_HTML[productType][labelType]({ component, manufacturerName, printConfig })
   const { style, fClass } = PRINT_LABEL_STYLE[productType][labelType]

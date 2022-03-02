@@ -73,6 +73,7 @@ export const showProjectSearch = [
   { component: '/mes/QHSE-manage/quality-inspection-report/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: false },
   { component: '/mes/label-print/artifact/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/label-print/enclosure/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
+  { component: '/mes/label-print/auxiliary-material/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/manufactures-manage/inbound-state/artifact-dashboard/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/manufactures-manage/inbound-state/enclosure-dashboard/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
   { component: '/mes/manufactures-manage/outbound-state/artifact-dashboard/index', type: pt.STEEL.V | pt.ENCLOSURE.V, required: true },
@@ -112,6 +113,7 @@ export const showProjectSearch = [
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-warn/index', type: allPT, required: false },
   { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
+  { component: '/contract/sales-manage/order-tracking/index', type: allPT, required: false },
   { component: '/contract/sales-manage/visa-manage/change/index', type: allPT, required: false },
 
   { component: '/supply-chain/purchase-order/index', type: allPT, required: false },

@@ -1,5 +1,12 @@
 <template>
-  <component :is="currentView" :columns="columns" :category="category" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField" />
+  <component :is="currentView" :columns="columns" :category="category" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField">
+    <template #snPrefix="{ row }">
+      <slot name="snPrefix" :row="row"></slot>
+    </template>
+    <template #namePrefix="{ row }">
+      <slot name="namePrefix" :row="row"></slot>
+    </template>
+  </component>
 </template>
 
 <script setup>
@@ -9,6 +16,7 @@ import artifact from './module/artifact'
 import machinePart from './module/machine-part'
 import enclosure from './module/enclosure'
 import assemble from './module/assemble'
+import auxiliaryMaterial from './module/auxiliary-material'
 
 const props = defineProps({
   productType: {
@@ -43,7 +51,7 @@ const currentView = computed(() => {
     case componentTypeEnum.ENCLOSURE.V:
       return enclosure
     case componentTypeEnum.AUXILIARY_MATERIAL.V:
-      return ''
+      return auxiliaryMaterial
     case componentTypeEnum.ASSEMBLE.V:
       return assemble
     default:

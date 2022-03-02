@@ -140,23 +140,45 @@ export function structureProcess(params) {
   })
 }
 
+// /**
+//  * 计件制报表
+//  */
+// export function piecework(params) {
+//   return request({
+//     url: `/api/mes/building/wages/in_staff/reckon/print`,
+//     method: 'get',
+//     params
+//   })
+// }
+
+// /**
+//  * 计件汇总报表（项目、班组汇总）
+//  */
+// export function pieceworkSummary(params) {
+//   return request({
+//     url: `/api/mes/building/wages/in_staff/reckon/details/print`,
+//     method: 'get',
+//     params
+//   })
+// }
+
 /**
- * 计件制报表
+ * 班组工资
  */
-export function piecework(params) {
+export function teamWage(params) {
   return request({
-    url: `/api/mes/building/wages/in_staff/reckon/print`,
+    url: `/api/mes/building/wages/reckon/print`,
     method: 'get',
     params
   })
 }
 
 /**
- * 计件汇总报表（项目、班组汇总）
+ * 班组工资详情
  */
-export function pieceworkSummary(params) {
+export function teamWageDetail(params) {
   return request({
-    url: `/api/mes/building/wages/in_staff/reckon/details/print`,
+    url: `/api/mes/building/wages/reckon/details/print`,
     method: 'get',
     params
   })
@@ -223,27 +245,27 @@ export function schedulingDetail(params) {
   })
 }
 
-/**
- * 编外工资汇总
- */
-export function wageSummary(params) {
-  return request({
-    url: `/api/mes/building/wages/out_staff/summary/print`,
-    method: 'get',
-    params
-  })
-}
+// /**
+//  * 编外工资汇总
+//  */
+// export function wageSummary(params) {
+//   return request({
+//     url: `/api/mes/building/wages/out_staff/summary/print`,
+//     method: 'get',
+//     params
+//   })
+// }
 
-/**
- * 编外工资详情
- */
-export function wageDetail(params) {
-  return request({
-    url: `/api/mes/building/wages/out_staff/details/print`,
-    method: 'get',
-    params
-  })
-}
+// /**
+//  * 编外工资详情
+//  */
+// export function wageDetail(params) {
+//   return request({
+//     url: `/api/mes/building/wages/out_staff/details/print`,
+//     method: 'get',
+//     params
+//   })
+// }
 
 /**
  * 零件生产详情
@@ -309,10 +331,9 @@ export default {
   enclosureProductionLine, // 围护生产线报表
   structureProductionLine, // 结构生产线报表
   structureProcess, // 结构工序报表
-  piecework, // 计件制报表
-  pieceworkSummary, // 计件汇总报表（项目、班组汇总）
-  wageSummary, // 编外工资汇总
-  wageDetail, // 编外工资详情
+
+  teamWage, // 班组工资
+  teamWageDetail, // 班组工资详情
 
   // 打包与发运
   packingList, // 打包清单

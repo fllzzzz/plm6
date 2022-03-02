@@ -104,6 +104,8 @@
 }
 
 .print-wrap {
+  display: inline-block;
+  vertical-align: middle;
   .el-button {
     margin-left: 0!important;
   }

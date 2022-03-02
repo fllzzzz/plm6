@@ -3,7 +3,8 @@ import { constantize } from '../../enum/base'
 
 // 模块类型
 const contract = {
-  contract_report: '合同报表'
+  contract_report: '合同报表',
+  sales_manage: '销售管理'
 }
 
 const wms = {
@@ -31,6 +32,14 @@ const tableType = { // 如果一个表格属于两个模块，T: []
   contractLedger: { L: '合同台账', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
   myProject: { L: '我的项目', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
 
+  contractStructurePrice: { L: '结构计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractEnclosurePrice: { L: '围护计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  contractAuxiliaryMaterialPrice: { L: '配套件计价表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectCollectionDetail: { L: '项目收款明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectInvoiceDetail: { L: '项目开票明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  projectHappenedDetail: { L: '项目发运明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+  transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
+
   // wms
   wmsInventorySummary: { L: '物料库存汇总表', M: 'wms_warehouse', T: mt.wms.L + ' / ' + wms.wms_warehouse },
 
@@ -52,11 +61,10 @@ const tableType = { // 如果一个表格属于两个模块，T: []
   mesMachinePartDetail: { L: '零件生产详情', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
   mesPaintingList: { L: '涂装列表', M: 'mes_production', T: mt.mes.L + ' / ' + mes.mes_production },
 
-  mesPiecework: { L: '计件制报表报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesPieceworkSummary: { L: '计件制汇总报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesPieceworkDetail: { L: '计件制详情报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesWageSummary: { L: '编外工资汇总', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
-  mesWageDetail: { L: '编外工资详情', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesStructureTeamWage: { L: '结构班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesEnclosureTeamWage: { L: '围护班组工资', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesStructureTeamWageDetail: { L: '结构班组工资详情报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
+  mesEnclosureTeamWageDetail: { L: '围护班组工资详情报表', M: 'mes_wage', T: mt.mes.L + ' / ' + mes.mes_wage },
 
   mesWarehouseStateStructure: { L: '结构出入库状态', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },
   mesWarehouseStateEnclosure: { L: '围护出入库状态', M: 'mes_warehouse', T: mt.mes.L + ' / ' + mes.mes_warehouse },

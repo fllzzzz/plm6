@@ -15,7 +15,7 @@
         :fn="downloadSettlement"
         btnText="下载结算单"
       />
-      <span v-if="props.status === visaReviewStatusEnum.UNREVIEWED.V">
+      <span v-if="props.status === reviewStatusEnum.UNREVIEWED.V">
         <common-button :loading="submitLoading" size="mini" type="success" @click="handleSubmit(true)">确 签</common-button>
         <el-popconfirm title="确定要拒绝此条结算单吗？" @confirm="handleSubmit(false)">
           <template #reference>
@@ -103,21 +103,21 @@
             <div>{{ detail.remark }}</div>
           </el-form-item>
         </div>
-        <div class="rule-row" v-if="props.status === visaReviewStatusEnum.PASS.V">
+        <div class="rule-row" v-if="props.status === reviewStatusEnum.PASS.V">
           <el-form-item label="确签备注" prop="attachmentRemark">
             <div>{{ detail.attachmentRemark }}</div>
           </el-form-item>
         </div>
         <div class="item-center">
           <upload-list
-            :uploadable="props.status === visaReviewStatusEnum.UNREVIEWED.V"
+            :uploadable="props.status === reviewStatusEnum.UNREVIEWED.V"
             :file-classify="fileClassifyEnum.CONTRACT_VISA.V"
             showDownload
             v-model:files="detail.files"
             style="padding-bottom: 20px"
           />
           <el-input
-            v-if="props.status === visaReviewStatusEnum.UNREVIEWED.V"
+            v-if="props.status === reviewStatusEnum.UNREVIEWED.V"
             v-model="detail.attachmentRemark"
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 4 }"
@@ -137,7 +137,7 @@ import { ref, defineProps, defineEmits, computed } from 'vue'
 
 import { fileClassifyEnum } from '@enum-ms/file'
 import { projectNameFormatter } from '@/utils/project'
-import { visaReviewStatusEnum } from '@enum-ms/common'
+import { reviewStatusEnum } from '@enum-ms/common'
 import { digitUppercase } from '@data-type/number'
 
 import { regDetail } from '@compos/use-crud'
@@ -156,7 +156,7 @@ const props = defineProps({
 
 // 标题
 const detailTitle = computed(() => {
-  return props.status === visaReviewStatusEnum.UNREVIEWED.V ? '结算单待确签' : '结算单详情'
+  return props.status === reviewStatusEnum.UNREVIEWED.V ? '结算单待确签' : '结算单详情'
 })
 
 // 欠款额
@@ -196,11 +196,11 @@ async function handleSubmit(status) {
         crud.notify('请上传确签附件', CRUD.NOTIFICATION_TYPE.WARNING)
         return
       }
-      params.status = visaReviewStatusEnum.PASS.V
+      params.status = reviewStatusEnum.PASS.V
       params.attachmentRemark = detail.attachmentRemark
       params.attachmentIds = detail.files.map(f => f.id)
     } else {
-      params.status = visaReviewStatusEnum.REFUSE.V
+      params.status = reviewStatusEnum.REFUSE.V
     }
     await check(params)
     crud.cancelDetail()

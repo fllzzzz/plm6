@@ -6,9 +6,10 @@ const myProject = contract.durationCalculation
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
 
-const mesPiecework = mes.meteUnit
-const mesPieceworkSummary = mes.meteUnit
-const mesPieceworkDetail = mes.meteUnit
+const mesStructureTeamWage = mes.meteUnit
+const mesEnclosureTeamWage = mes.meteUnit
+const mesStructureTeamWageDetail = mes.meteUnit
+const mesEnclosureTeamWageDetail = mes.meteUnit
 
 const mesStructureProductionStatistics = mes.unProducedMete
 const mesEnclosureProductionStatistics = mes.unProducedMete
@@ -25,12 +26,13 @@ export default {
   myProject,
   mesStructureProcess,
   mesStructureProductionLine,
-  mesPiecework,
+  mesStructureTeamWage,
+  mesEnclosureTeamWage,
+  mesStructureTeamWageDetail,
+  mesEnclosureTeamWageDetail,
   mesWageSummary,
   mesWageDetail,
   mesPaintingList,
-  mesPieceworkSummary,
-  mesPieceworkDetail,
   mesUnfinishedList,
   mesStructureProjectSummary,
   mesEnclosureProjectSummary,

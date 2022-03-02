@@ -19,7 +19,7 @@
       <div class="print-wrap">
         <print-table
           v-permission="permission.printDetail"
-          api-key="mesPieceworkDetail"
+          :api-key="apiKey"
           :params="printParams"
           size="mini"
           type="warning"
@@ -34,8 +34,6 @@
         :data="list"
         :max-height="maxHeight"
         row-key="rowId"
-        show-summary
-        :summary-method="getSummaries"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -72,6 +70,16 @@
           </template>
         </el-table-column>
       </common-table>
+      <!--分页组件-->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
 </template>
@@ -81,11 +89,13 @@ import { detail } from '@/api/mes/team-report/in-staff/piecework-system'
 import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { deepClone } from '@data-type/index'
+import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import useWageQuotaUnit from '@compos/mes/use-wage-quota-unit'
 import useWageQuotaMeteConvert from '@compos/mes/use-wage-quota-mete-convert'
+import usePagination from '@compos/use-pagination'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
 
@@ -106,6 +116,7 @@ const props = defineProps({
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -144,11 +155,24 @@ const printParams = computed(() => {
   })
 })
 
+const apiKey = computed(() => {
+  if (props.info?.productType & (componentTypeEnum.ARTIFACT.V | componentTypeEnum.ASSEMBLE.V | componentTypeEnum.MACHINE_PART.V)) {
+    return 'mesStructureTeamWageDetail'
+  }
+  if (props.info?.productType & componentTypeEnum.ENCLOSURE.V) {
+    return 'mesEnclosureTeamWageDetail'
+  }
+  return undefined
+})
+
 async function fetchList() {
   let _list = []
   try {
     tableLoading.value = true
-    const { content } = await detail(printParams.value)
+    const { content, totalElements } = await detail({
+      ...printParams.value,
+      ...queryPage
+    })
     _list = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       const _unitObj = useWageQuotaUnit({ wageQuotaType: v.wageQuotaType })
@@ -162,39 +186,12 @@ async function fetchList() {
       // v.checkMete = v.mate
       return v
     })
+    setTotalPage(totalElements)
   } catch (error) {
     console.log('获取详情列表失败')
   } finally {
     list.value = _list
     tableLoading.value = false
   }
-}
-
-function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (column.property === 'price' || column.property === 'completeQuantity') {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-        if (column.property === 'price') {
-          sums[index] = sums[index].toFixed(2)
-        }
-      }
-    }
-  })
-  return sums
 }
 </script>

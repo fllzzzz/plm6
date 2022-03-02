@@ -42,7 +42,7 @@
           :name="`制成品生产量（${showUnit}）`"
           num-color="#1890ff"
           :end-val="summaryInfo.mete || 0"
-          :precision="summaryInfo.mete_dp"
+          :precision="2"
         />
       </el-col>
       <el-col :span="8" class="card-panel-col">
@@ -97,7 +97,7 @@
     <template #viewLeft>
       <print-table
         v-permission="crud.permission.print"
-        api-key="mesPiecework"
+        :api-key="apiKey"
         :params="{ ...query }"
         size="mini"
         type="warning"
@@ -155,6 +155,16 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 
 const summaryProductType = computed(() => {
   return componentTypeEnum.ENCLOSURE.V & query.productType ? componentTypeEnum.ENCLOSURE.V : componentTypeEnum.ARTIFACT.V
+})
+
+const apiKey = computed(() => {
+  if (summaryProductType.value === componentTypeEnum.ARTIFACT.V) {
+    return 'mesStructureTeamWage'
+  }
+  if (summaryProductType.value === componentTypeEnum.ENCLOSURE.V) {
+    return 'mesEnclosureTeamWage'
+  }
+  return undefined
 })
 
 const summaryLoading = ref(false)

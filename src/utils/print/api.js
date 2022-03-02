@@ -4,6 +4,13 @@ import mes from '@/api/print/mes'
 // 合同
 const contractLedger = contract.contractLedger
 const myProject = contract.myProject
+const contractStructurePrice = contract.structurePrice
+const contractEnclosurePrice = contract.enclosurePrice
+const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
+const projectCollectionDetail = contract.collectionDetail
+const projectInvoiceDetail = contract.invoiceDetail
+const projectHappenedDetail = contract.happenedDetail
+const transactionRecord = contract.transactionRecord
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
@@ -23,11 +30,10 @@ const mesPaintingList = mes.paintingList
 const mesStructureProjectSummary = mes.structureProjectSummary
 const mesEnclosureProjectSummary = mes.enclosureProjectSummary
 
-const mesPiecework = mes.piecework
-const mesPieceworkSummary = mes.pieceworkSummary
-const mesPieceworkDetail = mes.pieceworkSummary
-const mesWageSummary = mes.wageSummary
-const mesWageDetail = mes.wageDetail
+const mesStructureTeamWage = mes.teamWage
+const mesEnclosureTeamWage = mes.teamWage
+const mesStructureTeamWageDetail = mes.teamWageDetail
+const mesEnclosureTeamWageDetail = mes.teamWageDetail
 
 const mesPackingList = mes.packingList
 const mesShipmentSummary = mes.shipmentSummary
@@ -43,6 +49,13 @@ const mesWarehouseStateReport = mes.warehouseStateReport
 export default {
   contractLedger, // 合同台账
   myProject, // 我的项目
+  contractStructurePrice, // 结构计价表
+  contractEnclosurePrice, // 围护计价表
+  contractAuxiliaryMaterialPrice, // 配套件计价表
+  projectCollectionDetail, // 项目收款详情
+  projectInvoiceDetail, // 项目开票详情
+  projectHappenedDetail, // 项目发运详情
+  transactionRecord, // 客户交易记录
 
   // mes
   mesSchedulingDetail, // 工单详情
@@ -62,11 +75,10 @@ export default {
   mesStructureProjectSummary, // 结构项目汇总
   mesEnclosureProjectSummary, // 围护项目汇总
 
-  mesPiecework, // 计件制报表报表
-  mesPieceworkSummary, // 计件制汇总报表
-  mesPieceworkDetail, // 计件制详情报表
-  mesWageSummary, // 工资汇总
-  mesWageDetail, // 工资详情
+  mesStructureTeamWage, // 结构班组工资
+  mesEnclosureTeamWage, // 围护班组工资
+  mesStructureTeamWageDetail, // 结构班组工资详情
+  mesEnclosureTeamWageDetail, // 围护班组工资详情
 
   mesPackingList, // 打包清单
   mesShipmentSummary, // 发运汇总

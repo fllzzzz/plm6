@@ -83,7 +83,17 @@ export const priceManagePM = {
   get: ['sale_price_manage:get'], // 列表
   cost: ['sale_price_manage:cost'], // 项目造价
   detail: ['sale_price_manage:detail'], // 详情
+  save: ['sale_price_manage:edit'], // 录入价格
+  list: ['sale_price_manage:modify'], // 变更列表
+  audit: ['sale_price_manage:audit'], // 变更审核
   print: ['sale_price_manage:print'] // 打印
+}
+
+// 销售管理/订单跟踪
+export const orderTrackingPM = {
+  get: ['order_tracking:get'], // 列表
+  detail: ['order_tracking:detail'], // 详情
+  print: ['order_tracking:print'] // 打印
 }
 
 // 销售管理/客户交易记录
