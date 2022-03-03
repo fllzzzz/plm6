@@ -1,8 +1,8 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 // 钢板库存
-const getSteelPlate = {
-  url: '/api/wms/material-inventory/steel-plate',
+const getMatchSteelPlateList = {
+  url: '/api/wms/material-preparation/match/steel-plate',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -23,13 +23,13 @@ const getSteelPlate = {
             frozenMete: 400000, // 冻结量
             quantity: 10, // 数量
             frozenQuantity: 5, // 冻结数量
-            thickness: 10,
+            thickness: 9.5,
+            theoryThickness: 10, // 理论厚度
             length: 11000,
             width: 990,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
-            projectFrozen: [
-              // 针对不同项目可出库的冻结数量（目前只针对申购冻结）
+            projectFrozen: [// 针对不同项目可出库的冻结数量（目前只针对申购冻结）
               { projectId: 1, quantity: 2, mete: 200000 }
             ],
             project: {
@@ -50,14 +50,14 @@ const getSteelPlate = {
           },
           {
             id: 2,
-            boolPartyA: true, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
             basicClass: matClsEnum.STEEL_PLATE.V,
             specification: 'Q325B',
             mete: 500000, // 核算量
             quantity: 5, // 数量
-            thickness: 10,
+            thickness: 9.6,
+            theoryThickness: 10, // 理论厚度
             length: 15000,
             width: 1000,
             brand: '嘻嘻',
@@ -212,33 +212,6 @@ const getAuxMatInventory = {
               id: 4,
               name: '622号仓库'
             }
-          },
-          {
-            id: 1,
-            classifyId: 204,
-            specification: 'M27 * 60',
-            basicClass: matClsEnum.MATERIAL.V,
-            quantity: 10,
-            frozenMete: 1, // 冻结量
-            frozenQuantity: 1, // 冻结数量
-            brand: '嘻嘻',
-            remark: '66666',
-            mete: 10,
-            project: {
-              id: 2,
-              name: '你脸红个泡泡茶壶666号主路',
-              shortName: '你脸红个泡泡茶壶',
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factory: {
-              id: 1,
-              name: '一号工厂',
-              shortName: '一工'
-            },
-            warehouse: {
-              id: 4,
-              name: '622号仓库'
-            }
           }
         ],
         totalElements: 1
@@ -286,4 +259,4 @@ const getGasInventory = {
   }
 }
 
-export default [getSteelPlate, getSectionSteel, getSteelCoil, getAuxMatInventory, getGasInventory]
+export default [getMatchSteelPlateList, getSectionSteel, getSteelCoil, getAuxMatInventory, getGasInventory]

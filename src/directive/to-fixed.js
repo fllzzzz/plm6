@@ -25,6 +25,7 @@ function resolve(el, binding) {
     val = innerText
     precision = value
   }
+  console.log('val, precision', val, precision)
   precision = isNotBlank(precision) ? precision : isNotBlank(DP_precision) ? DP_precision : 2
   el.innerText = toFixed(val, precision)
 }

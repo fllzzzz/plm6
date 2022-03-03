@@ -29,7 +29,9 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
           spec = row.specification
         }
         spec = isNotBlank(spec) ? spec : ''
-        p = fetchSpecInfo(row.classifyId, spec).then((info) => {
+        // 型材key:分类id_国标；其他材料key:分类id
+        const fullSpecMapKey = row.nationalStandard ? `${row.classifyId}_${row.nationalStandard}` : row.classifyId
+        p = fetchSpecInfo(fullSpecMapKey, spec).then((info) => {
           if (info) {
             // 单规格模式下，设置规格唯一编号
             if (!multipleSpec) {
@@ -75,10 +77,10 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
 }
 
 // 获取规格信息
-export async function fetchSpecInfo(classifyId, spec) {
+export async function fetchSpecInfo(fullSpecMapKey, spec) {
   // 加载科目
   // await fetchSpecInfoByFullSpec(classifyId)
-  const classifySpec = store.state.config.classifySpec[classifyId]
+  const classifySpec = store.state.config.classifySpec[fullSpecMapKey]
   return classifySpec.fullSpecMap.get(spec)
 }
 

@@ -170,6 +170,7 @@ const getDetailByCurrentUser = {
             id: 3,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
@@ -377,6 +378,7 @@ const detail_id1 = {
             id: 3,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
             quantity: 1,
@@ -506,6 +508,7 @@ const detail_id2 = {
             id: 3,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             basicClass: matClsEnum.SECTION_STEEL.V,
             outboundUnitType: measureTypeEnum.MEASURE.V,
             quantity: 1,

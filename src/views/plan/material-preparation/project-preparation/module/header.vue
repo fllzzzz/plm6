@@ -21,11 +21,11 @@
       />
       <div class="filter-item">
         <el-tooltip :show-after="1000" content="有清单更新：未备料 或 清单更新时间“晚于”备料更新时间" placement="right">
-          <el-checkbox v-model="query.hasListUpdate" label="只看有清单更新" size="small" border @change="crud.toQuery" />
+          <el-checkbox v-model="query.hasListUpdate" label="只显示有清单更新" size="small" border @change="crud.toQuery" />
         </el-tooltip>
       </div>
       <div class="filter-item">
-          <el-checkbox v-model="query.boolPreparationLessThanList" label="只看备料量小于清单量" size="small" border @change="crud.toQuery" />
+        <el-checkbox v-model="query.boolPreparationLessThanList" label="只显示备料量小于清单量" size="small" border @change="crud.toQuery" />
       </div>
       <br />
       <el-date-picker
@@ -116,8 +116,8 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 const defaultQuery = {
   listUpdateTime: [], // 清单更新时间
   preparationUpdateTime: [], // 备料更新时间
-  hasListUpdate: false, // 只看有清单更新的列表（未备料 或 清单更新时间“晚于”备料更新时间）
-  boolPreparationLessThanList: false, // 只看备料量小于清单量
+  hasListUpdate: false, // 只显示有清单更新的列表（未备料 或 清单更新时间“晚于”备料更新时间）
+  boolPreparationLessThanList: false, // 只显示备料量小于清单量
   preparationStatus: undefined, // 备料状态
   classification: undefined, // 科目类型
   projectId: { value: undefined, resetAble: false }, // 项目id

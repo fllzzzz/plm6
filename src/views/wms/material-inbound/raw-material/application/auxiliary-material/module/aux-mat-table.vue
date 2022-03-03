@@ -142,7 +142,7 @@ function rowInit(row) {
     classifyParentFullName: row.classify.parentFullName, // 父级路径名称
     basicClass: row.classify.basicClass, // 基础类型
     specification: row.spec, // 规格
-    specKV: row.specKV, // 规格KV格式
+    specificationMap: row.specKV, // 规格KV格式
     measureUnit: row.classify.measureUnit, // 计量单位
     accountingUnit: row.classify.accountingUnit, // 核算单位
     accountingPrecision: row.classify.accountingPrecision, // 核算单位小数精度

@@ -1,6 +1,6 @@
 // 获取钢材对应材料配置的简要信息
-const getSteelMaterialClassifyBrief = {
-  url: '/api/config/steel-material/classification/all/brief',
+const getSteelClassifyConfBrief = {
+  url: '/api/config/structure-steel/classification/all/brief',
   timeout: 500,
   method: 'get',
   response: () => {
@@ -10,10 +10,10 @@ const getSteelMaterialClassifyBrief = {
       data: {
         content: [
           {
-            id: 1,
-            name: '钢板',
-            boundSubjectIds: [103, 104, 105, 106, 107],
-            links: [
+            id: 1, // id
+            name: '钢板', // 名称
+            boundFinalClassifyIds: [103, 104, 105, 106, 107], // 所绑定的科目的所有末级科目id集合
+            links: [ // 关联
               { specIndex: 1, keyword: 'PL' },
               { specIndex: 1, keyword: 'P' }
             ]
@@ -28,4 +28,4 @@ const getSteelMaterialClassifyBrief = {
   }
 }
 
-export default [getSteelMaterialClassifyBrief]
+export default [getSteelClassifyConfBrief]

@@ -194,7 +194,7 @@ crud.submitBatchFormFormat = async (form) => {
     return {
       classifyId: row.classifyId,
       specification: row.specification,
-      specKV: row.specKV,
+      specificationMap: row.specKV,
       minimumInventory: row.minimumInventory,
       unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
       unitPrecision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,

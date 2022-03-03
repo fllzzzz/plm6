@@ -287,6 +287,7 @@ const detail_id1 = {
           //   sn: '110_0',
           //   specification: '57*21*3*9 * Q325B',
           //   classifyId: 110,
+          // nationalStandard: 'GB-10', // 国家标准
           //   basicClass: matClsEnum.SECTION_STEEL.V,
           //   quantity: 1,
           //   length: 10000,
@@ -316,6 +317,7 @@ const detail_id1 = {
           //   uid: 4,
           //   // sn: '110_1',
           //   classifyId: 110,
+          // nationalStandard: 'GB-10', // 国家标准
           //   quantity: 2,
           //   length: 2500,
           //   totalLength: 5,

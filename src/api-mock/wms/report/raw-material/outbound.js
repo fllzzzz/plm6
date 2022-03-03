@@ -100,6 +100,7 @@ const getDetails = {
           {
             id: 3,
             specification: '57*21*3*9 * Q325B',
+            nationalStandard: 'GB-10', // 国家标准
             classifyId: 110,
             materialIsWhole: materialIsWholeEnum.ODDMENT.V, // 物料类型（整料|余料）
             materialOutboundMode: materialOutboundModeEnum.HALF.V, // 物料出库方式
