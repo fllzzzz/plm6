@@ -14,7 +14,7 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <p>退货关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
             备注：<span v-empty-text>{{ row.remark }}</span>
           </p>
@@ -79,7 +79,7 @@
         key="materialTypeText"
         :show-overflow-tooltip="true"
         prop="materialTypeText"
-        label="物料种类"
+        label="退货物料种类"
         width="120"
       >
         <template #default="{ row }">
@@ -91,7 +91,7 @@
         show-overflow-tooltip
         key="projects"
         prop="projects"
-        label="关联项目"
+        label="退货关联项目"
         min-width="170"
       >
         <template #default="{ row }">

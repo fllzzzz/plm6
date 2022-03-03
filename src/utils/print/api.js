@@ -4,6 +4,13 @@ import mes from '@/api/print/mes'
 // 合同
 const contractLedger = contract.contractLedger
 const myProject = contract.myProject
+const contractStructurePrice = contract.structurePrice
+const contractEnclosurePrice = contract.enclosurePrice
+const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
+const projectCollectionDetail = contract.collectionDetail
+const projectInvoiceDetail = contract.invoiceDetail
+const projectHappenedDetail = contract.happenedDetail
+const transactionRecord = contract.transactionRecord
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
@@ -42,6 +49,13 @@ const mesWarehouseStateReport = mes.warehouseStateReport
 export default {
   contractLedger, // 合同台账
   myProject, // 我的项目
+  contractStructurePrice, // 结构计价表
+  contractEnclosurePrice, // 围护计价表
+  contractAuxiliaryMaterialPrice, // 配套件计价表
+  projectCollectionDetail, // 项目收款详情
+  projectInvoiceDetail, // 项目开票详情
+  projectHappenedDetail, // 项目发运详情
+  transactionRecord, // 客户交易记录
 
   // mes
   mesSchedulingDetail, // 工单详情

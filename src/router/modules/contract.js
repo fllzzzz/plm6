@@ -126,9 +126,16 @@ export default {
       hidden: false,
       name: 'SalesManage',
       alwaysShow: false,
-      redirect: '/contract/sales-manage/visa-manage/change/index',
+      redirect: '/contract/sales-manage/price-manage/index',
       meta: { title: '销售管理', icon: 'contract2', noCache: true },
       children: [
+        {
+          name: 'SalesPriceManage',
+          path: 'price-manage',
+          hidden: false,
+          component: '/contract/sales-manage/price-manage/index',
+          meta: { title: '价格管理', icon: 'contract2', noCache: true }
+        },
         {
           name: 'VisaManage',
           path: 'visa-manage',
@@ -142,6 +149,13 @@ export default {
             component: '/contract/sales-manage/visa-manage/change/index',
             meta: { title: '签证变更', icon: 'contract2', noCache: true }
           }]
+        },
+        {
+          name: 'OrderTracking',
+          path: 'order-tracking',
+          hidden: false,
+          component: '/contract/sales-manage/order-tracking/index',
+          meta: { title: '订单跟踪', icon: 'contract2', noCache: true }
         },
         {
           name: 'TransactionRecord',

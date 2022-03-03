@@ -28,7 +28,8 @@ const getSteelPlate = {
             width: 990,
             brand: '嘻嘻',
             heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
-            projectFrozen: [// 针对不同项目可出库的冻结数量（目前只针对申购冻结）
+            projectFrozen: [
+              // 针对不同项目可出库的冻结数量（目前只针对申购冻结）
               { projectId: 1, quantity: 2, mete: 200000 }
             ],
             project: {
@@ -99,6 +100,7 @@ const getSectionSteel = {
             id: 4,
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
+            nationalStandard: 'GB-06', // 国家标准
             specification: '10*10*200*500 * Q325B',
             quantity: 10,
             frozenQuantity: 5, // 冻结数量
@@ -201,6 +203,33 @@ const getAuxMatInventory = {
             brand: '嘻嘻',
             remark: '66666',
             mete: 10,
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 4,
+              name: '622号仓库'
+            }
+          },
+          {
+            id: 1,
+            classifyId: 204,
+            specification: 'M27 * 60',
+            basicClass: matClsEnum.MATERIAL.V,
+            quantity: 10,
+            frozenMete: 1, // 冻结量
+            frozenQuantity: 1, // 冻结数量
+            brand: '嘻嘻',
+            remark: '66666',
+            mete: 10,
+            project: {
+              id: 2,
+              name: '你脸红个泡泡茶壶666号主路',
+              shortName: '你脸红个泡泡茶壶',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             factory: {
               id: 1,
               name: '一号工厂',

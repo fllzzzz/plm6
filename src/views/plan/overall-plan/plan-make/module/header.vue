@@ -43,7 +43,6 @@ import { businessTypeEnum } from '@enum-ms/contract'
 
 const route = useRoute()
 const defaultQuery = {
-  projectId: undefined,
   monomerId: { value: undefined, resetAble: false },
   productType: { value: undefined, resetAble: false },
   type: { value: areaPlanTypeEnum.DEEPEN.V, resetAble: false }

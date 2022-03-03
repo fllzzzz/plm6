@@ -56,7 +56,8 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
             row.rejectUnit = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 退库单位
             row.rejectUnitPrecision = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 退库单位精度
             // row.specification = info.spec // 规格
-            row.specificationMap = info.specKV // 规格KV格式
+            row.specKV = info.specKV // 规格KV格式（例：key: 材质id ， val: 'Q235B'）
+            row.specNameKV = info.specNameKV // 规格KV格式 （例：key: 材质 ， val: 'Q235B'）
             if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
               row.unitWeight = info.unitWeight // 单位重量 kg/m
             }

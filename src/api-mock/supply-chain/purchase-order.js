@@ -31,14 +31,13 @@ const getPurchaseOrder = {
             requisitionsSN: ['SG-AFTER-123456', 'SG-AFTER-133456'], // 采购申请单
             preparationSNList: ['SP-PSN-QER-IOP-KOL-1', 'SP-PSN-QER-IOP-KOL-2'], // 备料单
             supplier: {
-              id: 1,
+              id: 5,
               name: '杭州天马钢材有限公司'
             },
             branchCompany: {
               id: 2,
               name: '杭州初鸣建筑科技有限公司'
             },
-            supplierId: 5, // 供应商id
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
             meteUnit: '千克', // 单位
@@ -80,7 +79,10 @@ const getPurchaseOrder = {
               id: 2,
               name: '杭州初鸣建筑科技有限公司'
             },
-            supplierId: 5, // 供应商id
+            supplier: {
+              id: 5,
+              name: '杭州天马钢材有限公司'
+            },
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
             meteUnit: '千克', // 单位
@@ -122,7 +124,10 @@ const getPurchaseOrder = {
               id: 1,
               name: '杭州初鸣建筑科技有限公司'
             },
-            supplierId: 1, // 供应商id
+            supplier: {
+              id: 1,
+              name: '杭州天马钢材有限公司'
+            },
             'mete|1000-10000.1-2': 1000, // 合同量量
             'amount|100000-1000000.1-2': 100000, // 合同金额
             meteUnit: '千克', // 单位

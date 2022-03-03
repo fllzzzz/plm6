@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { batchAdd } from '@/api/wms/supplier/manage'
+import { batchAdd } from '@/api/supply-chain/supplier/manage'
 import { ref, defineEmits } from 'vue'
 import { useStore } from 'vuex'
 import { supplierClassEnum } from '@enum-ms/supplier'

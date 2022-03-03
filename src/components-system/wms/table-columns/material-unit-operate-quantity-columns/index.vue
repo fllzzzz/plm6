@@ -1,5 +1,6 @@
 <template>
   <component
+    v-bind="$attrs"
     :is="comp"
     :columns="columns"
     :basic-class="basicClass"

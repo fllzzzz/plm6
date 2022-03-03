@@ -1,11 +1,11 @@
 <template>
-  <el-table-column v-if="showProject" key="project" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
+  <el-table-column v-if="showProject" key="project" prop="project" label="项目" align="left" min-width="120px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <table-cell-tag v-if="showTransfer && row.boolTransfer" name="调拨" type="transfer" :offset="15" />
       <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
     </template>
   </el-table-column>
-  <el-table-column v-if="showWarehouse" key="warehouse" prop="warehouse" label="仓库" align="left" min-width="110px" show-overflow-tooltip>
+  <el-table-column v-if="showWarehouse" key="warehouse" prop="warehouse" label="仓库" align="left" min-width="110px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <factory-table-cell-tag v-if="props.showFactory" :id="row.factory ? row.factory.id : row.factoryId" />
       <span v-empty-text>{{ row.warehouse ? row.warehouse.name : row.warehouseName }}</span>
@@ -33,6 +33,10 @@ const props = defineProps({
   },
   columns: { // 用于crud组件的列显隐
     type: Object
+  },
+  fixed: {
+    // 固定列
+    type: String
   }
 })
 

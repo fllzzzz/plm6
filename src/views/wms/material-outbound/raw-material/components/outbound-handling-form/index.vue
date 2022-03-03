@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, provide, computed, ref } from 'vue'
+import { defineEmits, defineProps, provide, computed, ref, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import useVisible from '@compos/use-visible'
@@ -64,7 +64,7 @@ const comp = computed(() => {
 
 const outboundFormRef = ref()
 const submitLoading = ref(false)
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: showHook })
 const { outboundCfg } = useWmsConfig()
 provide('outboundCfg', outboundCfg)
 
@@ -76,6 +76,13 @@ function resetForm() {
 // 清空校验
 function clearValidate() {
   outboundFormRef.value && outboundFormRef.value.clearValidate()
+}
+
+// 显示钩子
+function showHook() {
+  nextTick(() => {
+    clearValidate()
+  })
 }
 
 // 表单提交

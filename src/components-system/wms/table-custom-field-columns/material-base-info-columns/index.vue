@@ -105,7 +105,6 @@
     :columns="props.columns"
     :basic-class="props.basicClass"
     :spec-merge="props.specMerge"
-    :show-factory="props.showFactory"
     :fixed="fixed"
     :field="field"
     v-bind="$attrs"

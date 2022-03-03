@@ -234,7 +234,6 @@ import { isNotBlank } from '@/utils/data-type'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
-import useSuppliers from '@compos/store/use-suppliers'
 import pagination from '@crud/Pagination'
 import eOperation from '@crud/E.operation'
 import udOperation from '@crud/UD.operation.vue'
@@ -272,7 +271,6 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 
-const { loaded: supplierLoaded, supplierKV } = useSuppliers(toQuery)
 const { loaded: clsLoaded, rawMatClsKV } = useMatClsList(toQuery)
 const { maxHeight } = useMaxHeight({ paginate: true })
 const { handleEnabledChange } = useCrudEnabledChange(
@@ -280,17 +278,17 @@ const { handleEnabledChange } = useCrudEnabledChange(
   { enabledField: 'purchaseStatus', enumObj: purchaseStatusEnum, t: 'UNFINISHED', f: 'FINISHED' }
 )
 
-const tableLoading = computed(() => !clsLoaded.value || !supplierLoaded.value || crud.loading)
+const tableLoading = computed(() => !clsLoaded.value || crud.loading)
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content = data.content.map((v) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = baseMaterialTypeEnum.VL[v.purchaseType] + ' - ' + basicClassArr.join(' | ')
     v.branchCompanyId = v.branchCompany ? v.branchCompany.id : undefined
-    v.supplier = supplierKV.value[v.supplierId]
     v.requisitionsSNStr = v.requisitionsSN ? v.requisitionsSN.join('　、　') : ''
     v.projectIds = v.projects ? v.projects.map((p) => p.id) : []
     v.boolPartyA = v.supplyType === orderSupplyTypeEnum.PARTY_A.V
+    v.supplierId = v.supplier ? v.supplier.id : undefined
     if (v.auxMaterialIds) {
       v.auxMaterialNames = v.auxMaterialIds.map((id) => {
         const material = rawMatClsKV.value[id]
@@ -315,7 +313,7 @@ function beforeToEdit(row) {
 }
 
 function toQuery() {
-  if (clsLoaded.value && supplierLoaded.value) {
+  if (clsLoaded.value) {
     crud.queryable = true
     crud.toQuery()
   }

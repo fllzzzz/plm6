@@ -44,12 +44,10 @@ const validateQuantity = (rule, value, callback) => {
   callback()
 }
 
-const rules = {
-  quantity: [
-    { required: true, validator: validateQuantity, trigger: 'blur' }
-  ],
+const rules = ref({
+  quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
   remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
-}
+})
 
 const formRef = ref()
 // 表单
@@ -87,6 +85,14 @@ function formInit(data) {
     remark: undefined // 备注
   }
   form.value = newForm
+
+  rules.value = {
+    quantity: [{ required: true, validator: validateQuantity, trigger: 'blur' }],
+    remark: [{ max: 200, message: '不能超过200个字符', trigger: 'blur' }]
+  }
+  if (newForm.projectId) {
+    rules.value.projectId = { required: true, message: '项目库辅材必须选择项目出库', trigger: 'change' }
+  }
 }
 
 // 出库办理，表单提交

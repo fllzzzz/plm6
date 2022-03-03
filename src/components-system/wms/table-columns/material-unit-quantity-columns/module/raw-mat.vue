@@ -1,142 +1,134 @@
 <template>
-  <template v-if="loaded">
-    <!-- 出库 -->
-    <template v-if="outboundTypeMode">
-      <el-table-column
-        v-if="showOutboundUnit"
-        key="outboundUnit"
-        prop="outboundUnit"
-        label="单位"
-        align="center"
-        width="70px"
-        :fixed="fixed"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.outboundUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showNumber"
-        :key="numberPropField"
-        :prop="numberPropField"
-        label="数量"
-        align="right"
-        width="100px"
-        :fixed="fixed"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span
-            v-empty-text
-            v-to-fixed="{
-              val: row.outboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
-              dp: row.outboundUnitPrecision,
-            }"
-          />
-        </template>
-      </el-table-column>
-    </template>
-    <!-- 退货 -->
-    <template v-else-if="rejectTypeMode">
-      <el-table-column
-        v-if="showRejectUnit"
-        key="rejectUnit"
-        prop="rejectUnit"
-        label="单位"
-        align="center"
-        width="70px"
-        :fixed="fixed"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.rejectUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showNumber"
-        :key="numberPropField"
-        :prop="numberPropField"
-        label="数量"
-        align="right"
-        width="100px"
-        :fixed="fixed"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span
-            v-empty-text
-            v-to-fixed="{
-              val: row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
-              dp: row.rejectUnitPrecision,
-            }"
-          />
-        </template>
-      </el-table-column>
-    </template>
-    <template v-else>
-      <el-table-column
-        v-if="showMeasureUnit"
-        key="measureUnit"
-        prop="measureUnit"
-        label="计量单位"
-        align="center"
-        width="70px"
-        :fixed="fixed"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.measureUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showQuantity"
-        :prop="quantityField"
-        :label="quantityLabel"
-        align="right"
-        width="100px"
-        show-overflow-tooltip
-        :fixed="fixed"
-      >
-        <template #default="{ row }">
-          <span v-if="row.measureUnit" v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" v-empty-text />
-          <span v-else v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showAccountingUnit"
-        key="accountingUnit"
-        prop="accountingUnit"
-        label="核算单位"
-        align="center"
-        width="70px"
-        :fixed="fixed"
-        show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.accountingUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="showMete"
-        :prop="meteField"
-        :label="mateLabel"
-        align="right"
-        width="100px"
-        show-overflow-tooltip
-        :fixed="fixed"
-      >
-        <template #default="{ row }">
-          <span v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" v-empty-text />
-        </template>
-      </el-table-column>
-    </template>
+  <!-- <template v-if="loaded"> -->
+  <!-- 出库 -->
+  <template v-if="outboundTypeMode">
+    <el-table-column
+      v-if="showOutboundUnit"
+      key="outboundUnit"
+      prop="outboundUnit"
+      label="单位"
+      align="center"
+      width="70px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.outboundUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showNumber"
+      :key="numberPropField"
+      :prop="numberPropField"
+      label="数量"
+      align="right"
+      width="100px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: row.outboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
+            dp: row.outboundUnitPrecision,
+          }"
+        />
+      </template>
+    </el-table-column>
   </template>
+  <!-- 退货 -->
+  <template v-else-if="rejectTypeMode">
+    <el-table-column
+      v-if="showRejectUnit"
+      key="rejectUnit"
+      prop="rejectUnit"
+      label="单位"
+      align="center"
+      width="70px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.rejectUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showNumber"
+      :key="numberPropField"
+      :prop="numberPropField"
+      label="数量"
+      align="right"
+      width="100px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
+            dp: row.rejectUnitPrecision,
+          }"
+        />
+      </template>
+    </el-table-column>
+  </template>
+  <template v-else>
+    <el-table-column
+      v-if="showMeasureUnit"
+      key="measureUnit"
+      prop="measureUnit"
+      label="计量单位"
+      align="center"
+      width="70px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.measureUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showQuantity"
+      :prop="quantityField"
+      :label="quantityLabel"
+      align="right"
+      width="100px"
+      show-overflow-tooltip
+      :fixed="fixed"
+    >
+      <template #default="{ row }">
+        <span v-if="row.measureUnit" v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" v-empty-text />
+        <span v-else v-empty-text />
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showAccountingUnit"
+      key="accountingUnit"
+      prop="accountingUnit"
+      label="核算单位"
+      align="center"
+      width="70px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.accountingUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="showMete" :prop="meteField" :label="mateLabel" align="right" width="100px" show-overflow-tooltip :fixed="fixed">
+      <template #default="{ row }">
+        <span v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" v-empty-text />
+      </template>
+    </el-table-column>
+  </template>
+  <!-- </template> -->
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
-import { STEEL_ENUM } from '@/settings/config'
+import { MAT_BASE_UNIT, STEEL_ENUM } from '@/settings/config'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
@@ -182,7 +174,7 @@ const props = defineProps({
     default: false
   },
   rejectTypeMode: {
-    // 退库单位 模式（显示出库单位对应的数量及单位）
+    // 退库单位 模式（显示退库单位对应的数量及单位）
     type: Boolean,
     default: false
   },
@@ -215,7 +207,11 @@ const { loaded, baseUnit } = useMatBaseUnit()
 
 const unitInfo = computed(() => {
   if (props.basicClass) {
-    return baseUnit.value[props.basicClass] || {}
+    if (loaded.value) {
+      return baseUnit.value[props.basicClass] || {}
+    } else {
+      return MAT_BASE_UNIT[props.basicClass] || {}
+    }
   } else {
     return {}
   }

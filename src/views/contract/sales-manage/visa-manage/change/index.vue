@@ -31,15 +31,15 @@
       <el-table-column v-if="columns.visible('checkUserName')" key="checkUserName" prop="checkUserName" :show-overflow-tooltip="true" align="center" label="审核人" min-width="110" />
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" :show-overflow-tooltip="true" align="center" label="状态" min-width="110">
         <template #default="{ row }">
-          <el-tag :type="visaReviewStatusEnum.V[row.status].TAG" size="medium" effect="plain">{{ visaReviewStatusEnum.VL[row.status] }}</el-tag>
+          <el-tag :type="reviewStatusEnum.V[row.status].TAG" size="medium" effect="plain">{{ reviewStatusEnum.V[row.status]?.SL }}</el-tag>
         </template>
       </el-table-column>
       <!--详情与审核-->
       <el-table-column v-permission="[...permission.detail, ...permission.edit, ...permission.audit]" label="操作" width="150px" align="center" fixed="right">
         <template #default="{ row }">
-          <common-button v-if="row.status === visaReviewStatusEnum.PASS.V" v-permission="permission.detail" type="primary" size="mini" @click.stop="toDetail(row)">查看</common-button>
+          <common-button v-if="row.status === reviewStatusEnum.PASS.V" v-permission="permission.detail" type="primary" size="mini" @click.stop="toDetail(row)">查看</common-button>
           <common-button v-else v-permission="permission.edit" type="primary" size="mini" @click.stop="toEdit(row)">编辑</common-button>
-          <common-button v-if="row.status === visaReviewStatusEnum.UNREVIEWED.V" v-permission="permission.audit" type="success" size="mini" @click.stop="toDetail(row)">确签</common-button>
+          <common-button v-if="row.status === reviewStatusEnum.UNREVIEWED.V" v-permission="permission.audit" type="success" size="mini" @click.stop="toDetail(row)">确签</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -56,7 +56,7 @@ import { ref, computed } from 'vue'
 
 import { visaChangePM as permission } from '@/page-permission/contract'
 import { projectNameFormatter } from '@/utils/project'
-import { visaReviewStatusEnum, visaTypeEnum } from '@enum-ms/common'
+import { reviewStatusEnum, visaTypeEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
