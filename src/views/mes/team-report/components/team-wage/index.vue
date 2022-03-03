@@ -57,7 +57,6 @@
           <span v-to-fixed="{ k: 'YUAN', val: row.price }"></span>
         </template>
       </el-table-column>
-      <!--编辑与删除-->
       <el-table-column v-permission="[...permission.detail]" label="操作" width="100px" align="center" fixed="right">
         <template #default="{ row }">
           <common-button type="primary" size="mini" @click="showDetail(row)">查看</common-button>
@@ -75,7 +74,6 @@ import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
 import { ref, provide, inject } from 'vue'
 
 import { teamAttributeEnum } from '@enum-ms/mes'
-import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -94,6 +92,7 @@ const optShow = {
 }
 
 const tableRef = ref()
+const permission = inject('permission')
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '班组工资',

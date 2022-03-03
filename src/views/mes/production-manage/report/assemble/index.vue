@@ -59,7 +59,7 @@ import crudApi, { getSummary } from '@/api/mes/production-manage/report/common'
 import { ref, provide } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { artifactProductionReportPM as permission } from '@/page-permission/mes'
+import { assembleProductionReportPM as permission } from '@/page-permission/mes'
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 

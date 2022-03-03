@@ -53,10 +53,9 @@
 
 <script setup>
 import crudApi from '@/api/mes/team-report/wages-adjust/detail'
-import { ref, defineProps, defineExpose, defineEmits, computed, watch } from 'vue'
+import { ref, defineProps, defineExpose, defineEmits, inject, computed, watch } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { wagesAdjustPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -66,6 +65,8 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
 const emit = defineEmits(['setInfo', 'clearInfo'])
+
+const permission = inject('permission')
 
 const props = defineProps({
   fQuery: {

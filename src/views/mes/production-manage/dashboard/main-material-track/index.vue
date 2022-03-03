@@ -76,6 +76,9 @@
 <script setup>
 import { getSummary, getCompare } from '@/api/mes/production-manage/dashboard/main-material-track'
 import { reactive, ref, watch } from 'vue'
+
+import { mainMaterialTrackPM as permission } from '@/page-permission/mes'
+import checkPermission from '@/utils/system/check-permission'
 import { mapGetters } from '@/store/lib'
 import moment from 'moment'
 import panel from '@/components/Panel'
@@ -114,6 +117,9 @@ const summaryInfo = reactive({
 const summaryLoading = ref(false)
 
 async function fetchSummary() {
+  if (!checkPermission(permission.get)) {
+    return
+  }
   try {
     summaryLoading.value = true
     const data = await getSummary({
@@ -134,6 +140,9 @@ const compareLoading = ref(false)
 const compareList = ref([])
 
 async function fetchCompareList() {
+  if (!checkPermission(permission.get)) {
+    return
+  }
   try {
     compareLoading.value = true
     const { content } = await getCompare({
