@@ -445,7 +445,7 @@ const actions = {
                   name: v.name,
                   // 型材国标加入单位净重
                   unitWeight: v.unitWeight,
-                  boolStandard: std.boolStandard
+                  boolStandard: true // 是否国标
                 }
                 return spec
               })
