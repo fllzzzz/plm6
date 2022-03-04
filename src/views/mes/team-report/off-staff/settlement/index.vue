@@ -66,7 +66,7 @@
 import crudApi from '@/api/mes/team-report/off-staff-settlement'
 import { ref, provide, computed } from 'vue'
 
-import { offStaffSettlementPM as permission } from '@/page-permission/mes'
+// import { offStaffSettlementPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -81,6 +81,10 @@ const optShow = {
   edit: false,
   del: false,
   download: false
+}
+
+const permission = {
+  get: []
 }
 
 const tableRef = ref()

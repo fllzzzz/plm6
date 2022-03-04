@@ -12,7 +12,8 @@ export function getSteelMaterialClassifyBrief() {
 // TODO:修改url并增加module
 export function get(params) {
   return request({
-    url: '/api/steel/classification',
+    module: 'config',
+    url: 'structure-steel/classification',
     method: 'get',
     params
   })
@@ -20,7 +21,8 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    url: '/api/steel/classification',
+    module: 'config',
+    url: 'structure-steel/classification',
     method: 'post',
     data
   })
@@ -28,7 +30,8 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    url: '/api/steel/classification',
+    module: 'config',
+    url: 'structure-steel/classification',
     method: 'put',
     data
   })
@@ -36,7 +39,8 @@ export function edit(data) {
 
 export function del(ids) {
   return request({
-    url: '/api/steel/classification',
+    module: 'config',
+    url: 'structure-steel/classification',
     method: 'delete',
     data: ids
   })

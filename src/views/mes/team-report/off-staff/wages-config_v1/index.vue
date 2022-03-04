@@ -113,7 +113,7 @@
 import crudApi from '@/api/mes/team-report/off-staff'
 import { ref, provide, computed } from 'vue'
 
-import { offStaffWagesConfigPM as permission } from '@/page-permission/mes'
+// import { offStaffWagesConfigPM as permission } from '@/page-permission/mes'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -130,6 +130,10 @@ const optShow = {
   edit: false,
   del: false,
   download: false
+}
+
+const permission = {
+  get: []
 }
 
 const tableRef = ref()
