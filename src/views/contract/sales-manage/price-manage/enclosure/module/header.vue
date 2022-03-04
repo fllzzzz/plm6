@@ -145,7 +145,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     v.originUnitPrice = v.unitPrice
     v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
-    v.totalArea = convertUnits(v.totalArea, 'mm2', 'm2', DP.COM_AREA__M2)
+    v.totalArea = convertUnits(v.totalArea, 'm2', 'm2', DP.COM_AREA__M2)
     v.totalPrice = (enclosureMeasureMode.value === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
   })
   fetchCost()
