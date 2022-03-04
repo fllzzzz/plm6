@@ -228,6 +228,14 @@ const printProductTypeEnum = {
 }
 constantize(printProductTypeEnum)
 
+// 在制品详情报表类型
+const inProductionDetailReportEnum = {
+  COMPLETE: { L: '完成品', K: 'COMPLETE', V: 1 << 0 },
+  IN_PRODUCTION: { L: '在制品', K: 'IN_PRODUCTION', V: 1 << 1 },
+  UN_PRODUCTION: { L: '未生产', K: 'UN_PRODUCTION', V: 1 << 2 }
+}
+constantize(inProductionDetailReportEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -255,7 +263,8 @@ export {
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
-  surplusHandleStatusEnum
+  surplusHandleStatusEnum,
+  inProductionDetailReportEnum
 }
 
 export default {
@@ -285,5 +294,6 @@ export default {
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
-  surplusHandleStatusEnum
+  surplusHandleStatusEnum,
+  inProductionDetailReportEnum
 }

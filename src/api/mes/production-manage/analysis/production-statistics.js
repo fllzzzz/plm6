@@ -28,12 +28,38 @@ export function getByGroup(params) {
 
 /**
  *
- * 获取在制品统计详情
+ * 获取在制品统计详情-完成品
  */
-export function getDetail(params) {
+export function getCompleteDetail(params) {
   return request({
     module: 'mes',
-    url: 'analysis/production_summary/details',
+    url: 'analysis/production_summary/complete/details',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 获取在制品统计详情-在制品
+ */
+export function getInProductionDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'analysis/production_summary/in_production/details',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ *
+ * 获取在制品统计详情-未生产
+ */
+export function getUnProductionDetail(params) {
+  return request({
+    module: 'mes',
+    url: 'analysis/production_summary/un_production/details',
     method: 'get',
     params
   })
