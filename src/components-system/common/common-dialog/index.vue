@@ -29,6 +29,7 @@
           <span class="title-left">
             <span class="title-text">{{ props.title }}</span>
             <span class="child-mr-6" v-if="!props.contentLoading"><slot name="titleAfter" /></span>
+            <slot name="titleLeft" />
           </span>
           <span class="dialog-title-right child-mr-6" v-if="!props.contentLoading">
             <slot name="titleRight" />
