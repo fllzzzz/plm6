@@ -21,7 +21,7 @@
       @clearInfo="clearFInfo"
     >
       <template #auditBox>
-        <el-badge :value="auditNumberBadge" :hidden="!auditNumberBadge" style="margin-right: 5px">
+        <el-badge v-permission="commonPermission.audit" :value="auditNumberBadge" :hidden="!auditNumberBadge" style="margin-right: 5px">
           <common-button size="mini" type="primary" @click="auditVisible = true">审核记录</common-button>
         </el-badge>
       </template>
@@ -39,8 +39,9 @@
 
 <script setup>
 import { checkNumber } from '@/api/mes/team-report/wages-adjust'
-import { computed, provide, ref, defineProps } from 'vue'
+import { computed, provide, ref, defineProps, inject } from 'vue'
 
+import { inStaffWagesAdjustPM as permission } from '@/page-permission/mes'
 import { mapGetters } from '@/store/lib'
 import { componentTypeEnum, teamAttributeEnum } from '@enum-ms/mes'
 
@@ -55,6 +56,9 @@ const props = defineProps({
     default: teamAttributeEnum.IN_STAFF.V
   }
 })
+
+const commonPermission = inject('permission', permission)
+provide('permission', commonPermission)
 
 const summaryListRef = ref()
 const detailListRef = ref()

@@ -175,9 +175,11 @@ watch(
 )
 
 watch(
-  () => props.disabledVal,
+  [() => props.disabledVal, () => classification.tree],
   () => {
-    setNodeDisabled(classification.tree)
+    if (isNotBlank(classification.tree)) {
+      setNodeDisabled(classification.tree)
+    }
   },
   { immediate: true, deep: true }
 )

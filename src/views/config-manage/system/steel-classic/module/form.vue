@@ -14,7 +14,21 @@
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
         <el-form-item label="钢材分类名称" prop="name">
-          <el-input v-model="form.name" type="text" placeholder="钢材分类名称" style="width: 270px" maxlength="30"/>
+          <el-input v-model="form.name" type="text" placeholder="钢材分类名称" style="width: 270px" maxlength="30" />
+        </el-form-item>
+        <el-form-item label="钢材科目" prop="classifyIds">
+          <material-cascader
+            v-model="form.classifyIds"
+            :basic-class="(matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V |matClsEnum.STEEL_COIL.V)"
+            multiple
+            :collapse-tags="false"
+            separator=" > "
+            clearable
+            :disabledVal="disabledClassifyIds"
+            placeholder="请选择钢材科目"
+            size="small"
+            style="width: 270px"
+          />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
@@ -23,7 +37,14 @@
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.links" :key="index" class="process-drawer">
-                <el-input v-model="item.keyword" type="text" placeholder="大写字母" style="width: 270px" oninput="value=value.replace(/[^/A-Z]/g,'')" @blur="checkName(item,index)"/>
+                <el-input
+                  v-model="item.keyword"
+                  type="text"
+                  placeholder="大写字母"
+                  style="width: 270px;margin-right:5px;"
+                  oninput="value=value.replace(/[^/A-Z]/g,'')"
+                  @blur="checkName(item, index)"
+                />
                 <common-select
                   v-model="item.specIndex"
                   :options="specIndexEnum"
@@ -35,7 +56,7 @@
                   class="filter-item"
                   placeholder="索引"
                   style="width: 250px"
-                  @change="item.add=false"
+                  @change="item.add = false"
                 />
                 <common-button
                   v-show="form.links && form.links.length > 1"
@@ -56,13 +77,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { regForm } from '@compos/use-crud'
+import { ref, defineProps, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-import { isNotBlank } from '@data-type/index'
+
+import { isNotBlank, deepClone } from '@data-type/index'
+import { matClsEnum } from '@enum-ms/classification'
+
+import { regForm } from '@compos/use-crud'
+import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+
+const props = defineProps({
+  boundAllClassifyIds: {
+    type: Array,
+    default: () => {}
+  }
+})
 
 const formRef = ref()
 const nameArr = ref([])
+const disabledClassifyIds = ref([])
 const specIndexEnum = {
   1: { L: '1', K: '1', V: 1 },
   2: { L: '2', K: '2', V: 2 },
@@ -103,6 +136,7 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
+  classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }],
   links: [
     { required: true, message: '请选择关键字母' },
     { validator: validateLinks, trigger: 'change' }
@@ -120,13 +154,13 @@ function delProcess(index) {
 
 function checkName(item, index) {
   item.add = false
-  const val = nameArr.value.find(v => v.index === index)
+  const val = nameArr.value.find((v) => v.index === index)
   if (val) {
     if (item.keyword) {
       if (val.keyword === item.keyword) {
         return
       }
-      if (nameArr.value.findIndex(v => v.keyword === item.keyword) > -1) {
+      if (nameArr.value.findIndex((v) => v.keyword === item.keyword) > -1) {
         ElMessage({
           message: '关键字母已存在，请重新填写',
           type: 'error'
@@ -151,7 +185,7 @@ function checkName(item, index) {
 
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
   if (crud.form.links && crud.form.links.length > 0) {
-    crud.form.links.map(v => {
+    crud.form.links.map((v) => {
       v.add = false
     })
   }
@@ -159,6 +193,16 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
 
 CRUD.HOOK.afterToAdd = () => {
   nameArr.value = []
+}
+
+CRUD.HOOK.beforeToCU = () => {
+  nextTick(() => {
+    disabledClassifyIds.value = deepClone(props.boundAllClassifyIds)
+    form.classifyIds && form.classifyIds.forEach((v) => {
+      const _index = disabledClassifyIds.value.indexOf(v)
+      if (_index !== -1) { disabledClassifyIds.value.splice(_index, 1) }
+    })
+  })
 }
 </script>
 <style lang="scss" scoped>

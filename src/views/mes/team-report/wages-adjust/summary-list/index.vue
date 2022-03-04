@@ -31,10 +31,9 @@
 <script setup>
 import crudApi from '@/api/mes/team-report/wages-adjust/summary'
 import detailApi from '@/api/mes/team-report/wages-adjust/detail'
-import { ref, provide, defineExpose, defineEmits } from 'vue'
+import { ref, provide, defineExpose, defineEmits, inject } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { wagesAdjustPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -51,6 +50,7 @@ const optShow = {
 
 const emit = defineEmits(['setInfo', 'setDetailInfo', 'refreshAuditNumber'])
 
+const permission = inject('permission')
 const headRef = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

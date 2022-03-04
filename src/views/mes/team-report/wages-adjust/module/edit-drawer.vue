@@ -8,7 +8,7 @@
     size="60%"
   >
     <template #titleRight>
-      <common-button type="primary" size="mini" :disabled="!modifiedData.length" @click="previewVisible = true">预览并保存</common-button>
+      <common-button v-permission="permission.edit" type="primary" size="mini" :disabled="!modifiedData.length" @click="previewVisible = true">预览并保存</common-button>
     </template>
     <template #content>
       <div class="tag-content">
@@ -86,6 +86,8 @@ const props = defineProps({
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook: beforeClose })
+
+const permission = inject('permission')
 
 // 高度
 const { maxHeight } = useMaxHeight(
