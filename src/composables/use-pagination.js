@@ -6,7 +6,7 @@ export default function usePagination({ fetchHook }) {
 
   const queryPage = reactive({
     pageNumber: 1,
-    pageSize: tablePageSize
+    pageSize: tablePageSize.value
   })
   const total = ref(0)
 

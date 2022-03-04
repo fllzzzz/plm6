@@ -68,7 +68,7 @@ export function auxiliaryMaterialPrice(params) {
 export function collectionDetail(params) {
   return request({
     module: 'contract',
-    url: 'contract/collection/listPage/print',
+    url: 'contract/collection/print',
     method: 'get',
     params
   })
@@ -80,7 +80,7 @@ export function collectionDetail(params) {
 export function invoiceDetail(params) {
   return request({
     module: 'contract',
-    url: 'contract/invoice/listPage/print',
+    url: 'contract/invoice/print',
     method: 'get',
     params
   })
