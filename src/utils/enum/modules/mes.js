@@ -113,9 +113,9 @@ constantize(taskIssueTypeEnum)
 
 // 可打包类型
 const packTypeEnum = {
-  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
-  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
+  STRUCTURE: { L: '结构', SL: '结构', K: 'STRUCTURE', V: componentTypeEnum.ARTIFACT.V, T: '' },
+  ENCLOSURE: { L: '围护', SL: '围护', K: 'ENCLOSURE', V: componentTypeEnum.ENCLOSURE.V, T: 'warning' },
+  AUXILIARY_MATERIAL: { L: '辅材', SL: '配套件', K: 'AUXILIARY_MATERIAL', V: componentTypeEnum.AUXILIARY_MATERIAL.V, T: 'success' }
 }
 constantize(packTypeEnum)
 

@@ -29,7 +29,9 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
           spec = row.specification
         }
         spec = isNotBlank(spec) ? spec : ''
-        p = fetchSpecInfo(row.classifyId, spec).then((info) => {
+        // 型材key:分类id_国标；其他材料key:分类id
+        const fullSpecMapKey = row.nationalStandard ? `${row.classifyId}_${row.nationalStandard}` : row.classifyId
+        p = fetchSpecInfo(fullSpecMapKey, spec).then((info) => {
           if (info) {
             // 单规格模式下，设置规格唯一编号
             if (!multipleSpec) {
@@ -56,7 +58,8 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
             row.rejectUnit = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 退库单位
             row.rejectUnitPrecision = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 退库单位精度
             // row.specification = info.spec // 规格
-            row.specificationMap = info.specKV // 规格KV格式
+            row.specKV = info.specKV // 规格KV格式（例：key: 材质id ， val: 'Q235B'）
+            row.specNameKV = info.specNameKV // 规格KV格式 （例：key: 材质 ， val: 'Q235B'）
             if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
               row.unitWeight = info.unitWeight // 单位重量 kg/m
             }
@@ -74,10 +77,10 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
 }
 
 // 获取规格信息
-export async function fetchSpecInfo(classifyId, spec) {
+export async function fetchSpecInfo(fullSpecMapKey, spec) {
   // 加载科目
   // await fetchSpecInfoByFullSpec(classifyId)
-  const classifySpec = store.state.config.classifySpec[classifyId]
+  const classifySpec = store.state.config.classifySpec[fullSpecMapKey]
   return classifySpec.fullSpecMap.get(spec)
 }
 

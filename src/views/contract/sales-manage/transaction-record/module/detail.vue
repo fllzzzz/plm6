@@ -4,6 +4,7 @@
     :title="info.name"
     v-model="drawerVisible"
     direction="rtl"
+    :close-on-click-modal="false"
     :before-close="handleClose"
     size="60%"
   >
@@ -24,14 +25,14 @@
     </template>
     <template #titleRight>
       <div class="print-wrap">
-        <!-- <print-table
+        <print-table
           v-permission="permission.printDetail"
-          api-key="mesPieceworkDetail"
+          api-key="transactionRecord"
           :params="info"
           size="mini"
           type="warning"
           class="filter-item"
-        /> -->
+        />
       </div>
     </template>
     <template #content>
@@ -75,7 +76,7 @@
 
 <script setup>
 import { detail } from '@/api/contract/sales-manage/transaction-record'
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
 
@@ -120,7 +121,7 @@ watch(
 
 const tableLoading = ref(false)
 const list = ref([])
-// const permission = inject('permission')
+const permission = inject('permission')
 
 async function fetchList() {
   let _list = []

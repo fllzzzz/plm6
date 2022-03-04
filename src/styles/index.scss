@@ -367,6 +367,15 @@ div:focus {
   padding-bottom: 20px;
 }
 
+.child-mr-20 > :nth-child(n) {
+  margin-left: 0 !important;
+  margin-right: 20px;
+}
+
+.child-mr-20 > :last-child {
+  margin-right: 0;
+}
+
 .child-mr-10 > :nth-child(n) {
   margin-left: 0 !important;
   margin-right: 10px;

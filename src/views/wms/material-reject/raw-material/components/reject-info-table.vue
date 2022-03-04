@@ -38,13 +38,13 @@
 import { tableSummary } from '@/utils/el-extra'
 import { defineProps, defineEmits, computed } from 'vue'
 import { materialStatusEnum } from '@/views/wms/material-reject/enum'
+import { isBlank } from '@/utils/data-type'
+import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
 import materialBaseInfoColumns from '@/components-system/wms/table-custom-field-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-custom-field-columns/material-unit-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-custom-field-columns/warehouse-info-columns/index.vue'
-import { isBlank } from '@/utils/data-type'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['del'])
 const props = defineProps({

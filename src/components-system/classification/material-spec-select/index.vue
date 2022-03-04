@@ -39,14 +39,9 @@
         <el-icon class="is-loading"><el-icon-loading /></el-icon>
         科目加载中
       </el-tag>
-      <el-tag
-v-else-if="matCls.hasUnitConfig === false"
-class="tip-tag"
-type="danger"
-size="medium"
-effect="plain"
-        >请先在“配置管理-计量配置”中进行该科目的核算单位配置</el-tag
-      >
+      <el-tag v-else-if="matCls.hasUnitConfig === false" class="tip-tag" type="danger" size="medium" effect="plain">
+        请先在“配置管理-计量配置”中进行该科目的核算单位配置
+      </el-tag>
       <div v-else-if="matCls.specList" class="tag-container" :style="tagContainerStyle">
         <template v-if="props.mode === 'accumulator'">
           <template v-for="item in specList" :key="item.sn">

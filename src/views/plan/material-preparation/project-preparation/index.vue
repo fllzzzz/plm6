@@ -3,13 +3,7 @@
     <!--工具栏-->
     <mHeader />
     <!-- 表格渲染 -->
-    <common-table
-      ref="tableRef"
-      v-loading="steelMaterialClassifyLoaded || crud.loading"
-      :data="crud.data"
-      :max-height="maxHeight"
-      row-key="id"
-    >
+    <common-table ref="tableRef" v-loading="!steelClassifyConfLoaded || crud.loading" :data="crud.data" :max-height="maxHeight" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('serialNumber')"
@@ -49,16 +43,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('listType')"
-        key="listType"
+        v-if="columns.visible('technologyListType')"
+        key="technologyListType"
         :show-overflow-tooltip="true"
-        prop="listType"
+        prop="technologyListType"
         label="清单类型"
         align="center"
         width="70"
       >
         <template #default="{ row }">
-          <span v-parse-enum="{ e: componentTypeEnum, v: row.listType }" />
+          <span v-parse-enum="{ e: componentTypeEnum, v: row.technologyListType }" />
         </template>
       </el-table-column>
       <el-table-column
@@ -221,7 +215,7 @@ import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
-import useSteelMaterialClassify from '@/composables/store/use-steel-material-classify'
+import useSteelClassifyConf from '@/composables/store/use-steel-material-classify'
 
 const optShow = {
   add: false,
@@ -239,16 +233,15 @@ const { CRUD, crud, columns } = useCRUD(
     invisibleColumns: ['createTime'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
-    detailFormApi: false
+    crudApi: { ...crudApi }
   },
   tableRef
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 // 获取钢材材料配置
-const { steelMaterialClassifyLoaded } = useSteelMaterialClassify((content) => {
-  crud.props.steelMaterialClassify = content
+const { loaded: steelClassifyConfLoaded } = useSteelClassifyConf((content) => {
+  crud.props.steelClassifyConfICKV = content || {}
 }, true)
 
 CRUD.HOOK.handleRefresh = (crud, { data }) => {

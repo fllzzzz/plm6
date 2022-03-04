@@ -154,6 +154,7 @@ const getSendAndReceiveStorage = {
             boolOddmentByHalfOut: true, // 是否为整料半出剩下的余料
             unitType: measureTypeEnum.ACCOUNTING.V,
             specifications: ['57*21*3*9 * Q325B'],
+            nationalStandard: 'GB-10', // 国家标准
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             length: 10000,
@@ -562,6 +563,7 @@ const getSendAndReceiveStorageDetail = {
           {
             id: 3,
             specification: '57*21*3*9 * Q325B',
+            nationalStandard: 'GB-10', // 国家标准
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,

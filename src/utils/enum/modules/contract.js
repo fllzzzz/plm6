@@ -78,6 +78,14 @@ const businessTypeEnum = {
 }
 constantize(businessTypeEnum)
 
+// 商务变更
+const businessModifyTypeEnum = {
+  // MODIFY_PRICE: { L: '修改价格', K: 'MODIFY_PRICE', V: 1 << 0 },
+  SEPARATE: { L: '单独计价', K: 'SEPARATE', V: 1 << 1 },
+  MERGER: { L: '合并计价', K: 'MERGER', V: 1 << 2 }
+}
+constantize(businessModifyTypeEnum)
+
 // // 合同订单类型
 // const orderTypeEnum = {
 //   MACHINING: { L: '加工订单', K: 'MACHINING', V: 0 },
@@ -279,6 +287,7 @@ export {
   projectNameArrangementModeEnum, // 项目名称显示
   TechnologyTypeEnum, // 技术交底
   businessTypeEnum, // 业务类型
+  businessModifyTypeEnum, // 商务变更
   settlementStatusEnum, // 结算状态
   projectTypeEnumN, // 项目类型xin
   paymentModeEnum, // 付款方式
@@ -313,6 +322,7 @@ export default {
   projectNameArrangementModeEnum, // 项目名称显示
   TechnologyTypeEnum, // 技术交底
   businessTypeEnum, // 业务类型
+  businessModifyTypeEnum, // 商务变更
   settlementStatusEnum, // 结算状态
   projectTypeEnumN, // 项目类型xin
   paymentModeEnum, // 付款方式

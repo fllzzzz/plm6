@@ -26,9 +26,6 @@
                 @change="handleProjectChange"
               />
             </el-form-item>
-            <el-form-item label="签证单号" prop="mainBusiness">
-              <span>{{ form.mainBusiness }}</span>
-            </el-form-item>
           </div>
           <div class="rule-row">
             <el-form-item label="施工单位" prop="contractSignBodyName">

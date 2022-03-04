@@ -1,6 +1,56 @@
 <template>
   <!-- 退货 -->
-  <template v-if="rejectTypeMode">
+  <template v-if="outboundTypeMode">
+    <el-table-column
+      v-if="showOutboundUnit"
+      key="rejectUnit"
+      prop="rejectUnit"
+      label="单位"
+      align="center"
+      width="70px"
+      :fixed="fixed"
+      show-overflow-tooltip
+    >
+      <template #default="{ row }">
+        <span v-empty-text>{{ row.outboundUnit }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      v-if="showNumber"
+      :key="numberPropField"
+      :prop="numberPropField"
+      label="可操作数量/数量"
+      align="right"
+      :fixed="fixed"
+      show-overflow-tooltip
+      :min-width="!equalDisabled ? '150px' : '70px'"
+    >
+      <template #default="{ row }">
+        <!-- 计量 -->
+        <template v-if="row.outboundUnitType === measureTypeEnum.MEASURE.V">
+          <template v-if="!equalDisabled || row[operableQuantityField] != row[quantityField]">
+            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            /
+          </template>
+        </template>
+        <!-- 计量 -->
+        <template v-if="row.outboundUnitType === measureTypeEnum.ACCOUNTING.V">
+          <template v-if="!equalDisabled || row[operableMeteField] != row[meteField]">
+            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+            /
+          </template>
+        </template>
+        <span
+          v-empty-text
+          v-to-fixed="{
+            val: row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
+            dp: row.rejectUnitPrecision,
+          }"
+        />
+      </template>
+    </el-table-column>
+  </template>
+  <template v-else-if="rejectTypeMode">
     <el-table-column
       v-if="showRejectUnit"
       key="rejectUnit"
@@ -19,7 +69,7 @@
       v-if="showNumber"
       :key="numberPropField"
       :prop="numberPropField"
-      label="数量"
+      label="可操作数量/数量"
       align="right"
       :fixed="fixed"
       show-overflow-tooltip
@@ -188,6 +238,11 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  // 出库模式
+  outboundTypeMode: {
+    type: Boolean,
+    default: false
+  },
   showNumber: {
     // 是否显示数量
     type: Boolean,
@@ -284,6 +339,7 @@ const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.colum
 const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
 
+const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
 const showRejectUnit = computed(() => isBlank(props.columns) || props.columns.visible('rejectUnit'))
 const showNumber = computed(() => props.showNumber && (isBlank(props.columns) || props.columns.visible(props.numberPropField)))
 </script>

@@ -338,6 +338,7 @@ const getInboundDetail_1 = {
             rejectStatus: materialRejectStatusEnum.PART.V,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,
             length: 10000,
@@ -373,6 +374,7 @@ const getInboundDetail_1 = {
                   rejectStatus: materialRejectStatusEnum.PART.V,
                   specification: '57*21*3*9 * Q325B',
                   classifyId: 110,
+                  nationalStandard: 'GB-10', // 国家标准
                   basicClass: matClsEnum.STEEL_PLATE.V,
                   quantity: 1,
                   length: 10000,
@@ -709,6 +711,7 @@ const getMatchList_3 = {
             id: 31,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 1,
             length: 10000,
@@ -736,6 +739,7 @@ const getMatchList_3 = {
             id: 32,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 1,
             length: 10000,

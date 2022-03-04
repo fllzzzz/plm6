@@ -108,6 +108,7 @@ const getSectionSteelList = {
           {
             id: 1,
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             boolPartyA: false, // 是否甲供材料
             outboundUnitType: measureTypeEnum.MEASURE.V, // 出库单位类型
             basicClass: rawMatClsEnum.SECTION_STEEL.V,
@@ -145,6 +146,7 @@ const getSectionSteelList = {
           {
             id: 2,
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             boolPartyA: true, // 是否甲供材料
             outboundUnitType: measureTypeEnum.MEASURE.V, // 出库单位类型
             basicClass: rawMatClsEnum.SECTION_STEEL.V,

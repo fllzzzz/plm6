@@ -11,17 +11,19 @@
     <template #titleRight>
       <div class="statistical-info">
         <span>
-          <span class="label">只看填写退货数量的材料</span>
+          <span class="label">只显示填写退货数量的材料</span>
           <el-checkbox v-model="filterParams.hasRejectNumber" size="mini"></el-checkbox>
         </span>
         <span>
           <span class="label">本次退货统计</span>
-          <span class="color-green">{{ rejectTotalNumber }}</span> &nbsp;
-          <span>{{ `/ ${material.rejectMaxNumber} ${material.rejectUnit}` }}</span>
+          <span class="color-green" v-to-fixed="{ val: rejectTotalNumber, dp: material.rejectUnitPrecision }" /> &nbsp; <span>/</span>&nbsp;
+          <span v-to-fixed="{ val: material.rejectMaxNumber, dp: material.rejectUnitPrecision }" />&nbsp;
+          <span>{{ material.rejectUnit }}</span>
         </span>
         <span>
           <span class="label">审核中的数量</span>
-          <span>{{ `${material.rejectPendingNumber} ${material.rejectUnit}` }}</span>
+          <span v-to-fixed="{ val: material.rejectPendingNumber, dp: material.rejectUnitPrecision }" />&nbsp;
+          <span>{{ material.rejectUnit }}</span>
         </span>
       </div>
     </template>
@@ -80,20 +82,20 @@
 <script setup>
 import { getMatchList } from '@/api/wms/material-reject/raw-material/application'
 import { defineEmits, defineProps, ref, watch, computed, nextTick } from 'vue'
-import useVisible from '@/composables/use-visible'
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
+import { isNotBlank } from '@/utils/data-type'
 
+import useVisible from '@/composables/use-visible'
+import useMaxHeight from '@/composables/use-max-height'
 import materialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import materialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import materialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import warehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import verticalLabel from '@/components-system/common/vertical-label.vue'
-import { setSpecInfoToList } from '@/utils/wms/spec'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
-import { isNotBlank } from '@/utils/data-type'
 import { ElMessage } from 'element-plus'
-import useMaxHeight from '@/composables/use-max-height'
 
 const emit = defineEmits(['change', 'update:visible'])
 

@@ -460,6 +460,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
   // 是否甲供
   form.boolPartyA = form.supplyType === orderSupplyTypeEnum.PARTY_A.V
+  // 供应商id
+  form.supplierId = form.supplier ? form.supplier.id : undefined
   if (Array.isArray(form.preparationList) && form.preparationList.length > 0) {
     // 获取规格信息以及单位转换
     await setSpecInfoToList(form.preparationList)

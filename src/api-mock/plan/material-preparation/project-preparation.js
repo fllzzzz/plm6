@@ -1,4 +1,4 @@
-import { projectPreparationMatClsEnum } from '@/utils/enum/modules/classification'
+import { projectPreparationMatClsEnum, rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { preparationRangeEnum } from '@/utils/enum/modules/plan'
 import { componentTypeEnum } from '@/utils/enum/modules/building-steel'
 
@@ -34,7 +34,7 @@ const get = {
               name: '1区'
             },
             preparationRangeType: preparationRangeEnum.AREA.V, // 备料范围
-            listType: componentTypeEnum.STRUCTURE.V, // 清单类型
+            technologyListType: componentTypeEnum.STRUCTURE.V, // 清单类型
             materialBasicClass: projectPreparationMatClsEnum.STEEL_PLATE.V | projectPreparationMatClsEnum.SECTION_STEEL.V, // 物料种类，清单中对应的类型
             listMete: 10000, // 清单量
             preparationMete: 5000, // 备料量
@@ -61,7 +61,7 @@ const get = {
               name: 'A楼'
             },
             preparationRangeType: preparationRangeEnum.MONOMER.V, // 备料范围
-            listType: componentTypeEnum.STRUCTURE.V, // 清单类型
+            technologyListType: componentTypeEnum.STRUCTURE.V, // 清单类型
             materialBasicClass: projectPreparationMatClsEnum.STEEL_PLATE.V, // 物料种类，清单中对应的类型
             listMete: 20000, // 清单量
             preparationMete: 0, // 备料量
@@ -88,7 +88,7 @@ const get = {
               name: 'A楼'
             },
             preparationRangeType: preparationRangeEnum.MONOMER.V, // 备料范围
-            listType: componentTypeEnum.ENCLOSURE.V, // 清单类型
+            technologyListType: componentTypeEnum.ENCLOSURE.V, // 清单类型
             materialBasicClass: projectPreparationMatClsEnum.STEEL_COIL.V, // 物料种类，清单中对应的类型
             listMete: 10000, // 清单量
             preparationMete: 0, // 备料量
@@ -110,7 +110,7 @@ const get = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             preparationRangeType: preparationRangeEnum.PROJECT.V, // 备料范围
-            listType: componentTypeEnum.AUXILIARY_MATERIAL.V, // 清单类型
+            technologyListType: componentTypeEnum.AUXILIARY_MATERIAL.V, // 清单类型
             materialBasicClass: projectPreparationMatClsEnum.MATERIAL.V, // 物料种类，清单中对应的类型
             listMete: 20000, // 清单量
             preparationMete: 0, // 备料量
@@ -158,7 +158,7 @@ const detail_1 = {
           name: '1区'
         },
         preparationRangeType: preparationRangeEnum.AREA.V, // 备料范围
-        listType: componentTypeEnum.STRUCTURE.V, // 清单类型
+        technologyListType: componentTypeEnum.STRUCTURE.V, // 清单类型
         materialBasicClass: projectPreparationMatClsEnum.STEEL_PLATE.V | projectPreparationMatClsEnum.SECTION_STEEL.V, // 物料种类，清单中对应的类型
         listMete: 10000, // 清单量
         preparationMete: 5000, // 备料量
@@ -171,7 +171,54 @@ const detail_1 = {
         // 技术清单
         technologyList: [
           {
-            classifyName: '钢板'
+            steelClassifyConfId: 1, // 钢材分类配置id
+            steelClassifyConfName: '钢板', // 钢材配置名称
+            basicClass: rawMatClsEnum.STEEL_PLATE.V, // 主科目分类（列如：钢板\型材\钢卷）
+            material: 'Q325B', // 材质
+            specification: '10', // 规格/厚度
+            listMete: 1000 // 清单量
+          }
+        ],
+        inventoryList: [
+          {
+            recordId: 1, // 记录id
+            id: 1, // 材料id
+            boolPartyA: false, // 甲供材料
+            boolHasFrozen: true, // 有冻结
+            classifyId: 103,
+            basicClass: rawMatClsEnum.STEEL_PLATE.V,
+            specification: 'Q325B',
+            thickness: 9.6, // 厚度
+            theoryThickness: 10, // 理论厚度
+            length: 11000,
+            width: 990,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
+            project: {
+              id: 1,
+              name: '长安街666666号辅路',
+              shortName: '长安街',
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            },
+            mete: 800000, // 仓库核算量
+            frozenMete: 400000, // 仓库冻结量
+            quantity: 10, // 仓库数量
+            frozenQuantity: 8, // 仓库冻结数量
+            usedQuantity: 3, // 当前备料单利用的数量
+            usedMete: 300000, // 当前备料单利用的核算量
+            projectUsedQuantity: 5, // 项目利用数量
+            projectUsedMete: 500000, // 项目利用数量
+            projectOutboundUsedQuantity: 3, // 项目利用且已经出库的数量
+            projectOutboundUsedMete: 300000 // 项目利用且已经出库的数量
           }
         ]
       }

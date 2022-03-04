@@ -2,11 +2,11 @@ import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 项目开票明细表
-const PROJECT_INVOICE_DETAIL = {
+const projectInvoiceDetail = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'PROJECT_INVOICE_DETAIL', // 表格类型 KEY
+  type: 'projectInvoiceDetail', // 表格类型 KEY
   name: '项目开票明细表（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -88,7 +88,7 @@ const PROJECT_INVOICE_DETAIL = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 6,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -103,12 +103,12 @@ const PROJECT_INVOICE_DETAIL = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 150, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'statisticsDate', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 100, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'contractAmount', title: '合同金额：', width: 60, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'invoiceAmount', title: '开票金额：', width: 60, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 60, type: typeEnum.OTHER.K },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 60, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -202,26 +202,19 @@ const PROJECT_INVOICE_DETAIL = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: false, key: 'applicationDate', title: '申请日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
       { show: true, key: 'invoiceDate', title: '开票日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, key: 'applicationDept', title: '申请部门', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DEPT.K },
-      { show: true, key: 'applicantName', title: '申请人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 17, type: typeEnum.USER_NAME.K },
-      { show: false, key: 'invoiceNo', title: '发票编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.INVOICE_NO.K },
-      { show: true, key: 'invoiceType', title: '发票类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
       { show: true, key: 'invoiceAmount', title: '开票金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 20, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'invoiceType', title: '发票类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'invoiceTypeEnum', key: 'SL' }},
       { show: true, key: 'taxRate', title: '税率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
-      { show: true, key: 'tax', title: '税额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'invoiceUnit', title: '开票方', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
-      { show: true, key: 'invoiceCollector', title: '收票方', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
-      { show: false, key: 'collectionDepositBank', title: '开户行', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.BANK.K },
-      { show: false, key: 'collectionBankAccount', title: '账号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.BANK_ACCOUNT.K },
-      { show: false, key: 'collectionAddress', title: '地址', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 22, type: typeEnum.ADDRESS.K },
-      { show: false, key: 'collectionTel', title: '电话', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.TEL.K },
-      { show: false, key: 'handlerName', title: '办理人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 17, type: typeEnum.USER_NAME.K }
+      { show: true, key: 'contractSignBodyName', title: '购方单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
+      { show: true, key: 'marketingUnit', title: '销售单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.COMPANY_NAME.K },
+      { show: true, key: 'serialNumber', title: '发票编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.INVOICE_NO.K },
+      { show: true, key: 'writtenByName', title: '办理人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'auditorName', title: '审核人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K }
     ]
   }
 }
 
 export default {
-  PROJECT_INVOICE_DETAIL // 项目开票明细表
+  projectInvoiceDetail // 项目开票明细表
 }

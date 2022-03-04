@@ -194,7 +194,7 @@ crud.submitBatchFormFormat = async (form) => {
     return {
       classifyId: row.classifyId,
       specification: row.specification,
-      specificationMap: row.specificationMap,
+      specificationMap: row.specKV,
       minimumInventory: row.minimumInventory,
       unit: row.unitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit,
       unitPrecision: row.unitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision,
@@ -226,7 +226,7 @@ function rowInit(row) {
     classifyId: row.classify.id, // 科目id
     classifyFullName: row.classify.fullName, // 全路径名称
     specification: row.spec, // 规格
-    specificationMap: row.specKV, // 规格KV格式
+    specKV: row.specKV, // 规格KV格式
     unitType: row.classify.outboundUnitType, // 单位配置
     unitTypeDisabled: [], // 禁用单位
     measureUnit: row.classify.measureUnit, // 计量单位

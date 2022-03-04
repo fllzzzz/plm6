@@ -15,7 +15,7 @@ import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
-import { getSteelMaterialClassifyBrief } from '@/api/config/system-config/steel-classic'
+import { getSteelClassifyConfBrief } from '@/api/config/system-config/steel-classic'
 
 import { unitTypeEnum } from '@enum-ms/common'
 import { matClsEnum } from '@enum-ms/classification'
@@ -66,7 +66,8 @@ const state = {
   unclosedPurchaseOrder: [], // 采购中（未完成）的采购订单
   monomers: {}, // 单体
   changeReasonConfig: [],
-  steelMaterialClassify: [], // 钢材材料分类配置
+  steelClassifyConf: [], // 钢材材料分类配置
+  steelClassifyConfICKV: {}, // 钢材材料分类配置 key: id, value: boundFinalClassifyIds
   loaded: {
     // 接口是否加载
     factories: false,
@@ -86,7 +87,7 @@ const state = {
     unclosedRequisitions: false,
     unclosedPurchaseOrder: false,
     changeReasonConfig: false,
-    steelMaterialClassify: false
+    steelClassifyConf: false
   }
 }
 
@@ -178,8 +179,12 @@ const mutations = {
   SET_CHANGE_REASON_CONFIG(state, changeReasonConfig) {
     state.changeReasonConfig = changeReasonConfig
   },
-  SET_STEEL_MATERIAL_CLASSIFY(state, list) {
-    state.steelMaterialClassify = list
+  SET_STEEL_CLASSIFY_CONF(state, list) {
+    state.steelClassifyConf = list
+    state.steelClassifyConfKV = {}
+    list.forEach((row) => {
+      state.steelClassifyConfICKV[row.id] = row.boundFinalClassifyIds
+    })
   }
 }
 
@@ -370,10 +375,10 @@ const actions = {
     commit('SET_LOADED', { key: 'unclosedPurchaseOrder' })
     return content
   },
-  async fetchSteelMaterialClassify({ commit }) {
-    const { content = [] } = await getSteelMaterialClassifyBrief()
-    commit('SET_STEEL_MATERIAL_CLASSIFY', content)
-    commit('SET_LOADED', { key: 'steelMaterialClassify' })
+  async fetchSteelClassifyConf({ commit }) {
+    const { content = [] } = await getSteelClassifyConfBrief()
+    commit('SET_STEEL_CLASSIFY_CONF', content)
+    commit('SET_LOADED', { key: 'steelClassifyConf' })
     return content
   },
   // 原材料规格
@@ -392,7 +397,7 @@ const actions = {
           accountingPrecision: res.accountingPrecision || 0, // 核算单位小数精度
           measurePrecision: res.measurePrecision || 0, // 计量单位小数精度
           outboundUnitType: res.outboundUnitType, // 出库方式
-          basicClass: res.basicClass,
+          basicClass: res.basicClass, // 基础分类
           hasUnitConfig: !!res.accountingUnit
         }
         clsBrief.fullPathId = res.fullPathId // 全路径id
@@ -402,44 +407,101 @@ const actions = {
         clsBrief.parentPathName = clsBrief.fullPathName.slice(0, -1) // 路径
         clsBrief.parentFullName = clsBrief.parentPathName.join(' > ') // 全称
 
-        const matCls = {
-          ...clsBrief,
-          specConfig: [],
-          specKV: {}
-        }
-        if (isNotBlank(res.specConfig)) {
-          matCls.specConfig = res.specConfig.map((sc, ci) => {
-            return {
-              id: sc.boolStandard ? `standard_${sc.id}` : sc.id,
-              name: sc.name,
-              index: ci,
-              list: sc.list.map((v, i) => {
+        // 型材处理
+        if (res.basicClass === matClsEnum.SECTION_STEEL.V) {
+          const nationalStandard = res.nationalStandard || []
+          nationalStandard.forEach((std) => {
+            const matCls = {
+              ...clsBrief,
+              specConfig: [],
+              specKV: {}
+            }
+            if (isNotBlank(res.specConfig)) {
+              matCls.specConfig = res.specConfig.map((sc, ci) => {
+                return {
+                  id: sc.id,
+                  name: sc.name,
+                  index: ci + 1,
+                  list: sc.list.map((v, i) => {
+                    const spec = {
+                      index: i,
+                      code: v.code,
+                      name: v.name
+                    }
+                    return spec
+                  })
+                }
+              })
+            }
+
+            matCls.specConfig.unshift({
+              id: `standard_${std.id}`,
+              name: std.name,
+              index: 0,
+              list: std.list.map((v, i) => {
                 const spec = {
                   index: i,
-                  code: v.code,
-                  name: v.name
-                }
-                // 型材国标加入单位净重
-                if (res.basicClass === matClsEnum.SECTION_STEEL.V && sc.boolStandard) {
-                  spec.boolStandard = sc.boolStandard
-                  spec.unitWeight = v.unitWeight
+                  code: v.code || v.id, // 型材国标编码，没有code使用id
+                  name: v.name,
+                  // 型材国标加入单位净重
+                  unitWeight: v.unitWeight,
+                  boolStandard: std.boolStandard
                 }
                 return spec
               })
+            })
+
+            const key = `${id}_${std.name}`
+            if (std.boolDefault) {
+              // classifySpec[id] 已在compos中创建对象
+              classifySpec[key] = classifySpec[id]
+            } else {
+              classifySpec[key] = {}
             }
+            classifySpec[key].fullSpecKV = new Map()
+            classifySpec[key].specList = getSpecList(clsBrief, matCls.specConfig)
+            // fullSpecMap：可通过classifyId及“全规格（例：M27*60）”，获取规格的详细信息
+            classifySpec[key].fullSpecMap = new Map(classifySpec[key].specList.map((v) => [v.spec, v]))
+            Object.assign(matCls.specKV, arr2obj(classifySpec[key].specList, 'sn'))
+            Object.assign(classifySpec[key], matCls)
+            Object.assign(classifySpec.specKV, matCls.specKV)
           })
+        } else {
+          const matCls = {
+            ...clsBrief,
+            specConfig: [],
+            specKV: {}
+          }
+          if (isNotBlank(res.specConfig)) {
+            matCls.specConfig = res.specConfig.map((sc, ci) => {
+              return {
+                id: sc.id,
+                name: sc.name,
+                index: ci,
+                list: sc.list.map((v, i) => {
+                  const spec = {
+                    index: i,
+                    code: v.code,
+                    name: v.name
+                  }
+                  return spec
+                })
+              }
+            })
+          }
+          classifySpec[id].fullSpecKV = new Map()
+          classifySpec[id].specList = getSpecList(clsBrief, matCls.specConfig)
+          // fullSpecMap：可通过classifyId及“全规格（例：M27*60）”，获取规格的详细信息
+          classifySpec[id].fullSpecMap = new Map(classifySpec[id].specList.map((v) => [v.spec, v]))
+          Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
+          Object.assign(classifySpec[id], matCls)
+          Object.assign(classifySpec.specKV, matCls.specKV)
         }
-        classifySpec[id].fullSpecKV = new Map()
-        classifySpec[id].specList = getSpecList(clsBrief, matCls.specConfig)
-        // fullSpecMap：可通过classifyId及“全规格（例：M27*60）”，获取规格的详细信息
-        classifySpec[id].fullSpecMap = new Map(classifySpec[id].specList.map((v) => [v.spec, v]))
-        Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
-        Object.assign(classifySpec[id], matCls)
-        Object.assign(classifySpec.specKV, matCls.specKV)
       })
       allInterFace.push(ps)
     }
     await Promise.all(allInterFace)
+    console.log('classifySpec', classifySpec)
   },
   // 单体
   async fetchMonomer({ state }, projectId) {
@@ -471,7 +533,8 @@ function getSpecList(classify, specConfig) {
         specNameKV: {},
         specArrKV: [],
         serialNumber: classify.serialNumber,
-        sn: classify.id + '_' + '-1'
+        // sn: classify.id + '_' + '-1'
+        sn: classify.serialNumber
       }
     ]
   }
@@ -518,9 +581,9 @@ function getSpecList(classify, specConfig) {
     v.serialNumber = classify.serialNumber + '-' + v.code.join('')
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
-    v.specKV = {}
+    v.specKV = {} // 例：key: 材质id ， val: 'Q235B'
     v.specificationLabels = specConfig.map((v) => v.name).join(' * ')
-    v.specNameKV = {}
+    v.specNameKV = {} // 例：key: 材质 ， val: 'Q235B'
     v.specArrKV = []
     v.arr.forEach((c, i) => {
       v.specArrKV.push({
@@ -533,7 +596,8 @@ function getSpecList(classify, specConfig) {
     // TODO:map可删除
     v.specMap = new Map(v.arr.map((c, i) => [specConfig[i].id, c])) // id - value
     v.specNameMap = new Map(v.arr.map((c, i) => [specConfig[i].name, c])) // name - value
-    v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号
+    v.sn = v.serialNumber // 唯一编号
+    // v.sn = v.classify.id + '_' + v.index.join('_') // 唯一编号
     // TODO:之所以使用index作为唯一标识，而不使用规格的code最后拼接的serialNumber, 是因为一开始未设计code
   })
   return arr

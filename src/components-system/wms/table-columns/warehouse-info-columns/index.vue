@@ -1,5 +1,5 @@
 <template>
-  <component :is="comp" :columns="columns" :show-project="showProject" :show-transfer="showTransfer" />
+  <component v-bind="$attrs" :is="comp" :columns="columns" :show-project="showProject" :show-transfer="showTransfer" />
 </template>
 
 <script setup>

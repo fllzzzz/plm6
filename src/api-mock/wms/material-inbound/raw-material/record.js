@@ -253,6 +253,7 @@ const detail_id1 = {
           //   sn: '110_0',
           //   specification: '57*21*3*9 * Q325B',
           //   classifyId: 110,
+          // nationalStandard: 'GB-10', // 国家标准
           //   basicClass: matClsEnum.SECTION_STEEL.V,
           //   quantity: 1,
           //   length: 10000,
@@ -287,6 +288,7 @@ const detail_id1 = {
           //   totalLength: 5,
           //   brand: '鞍钢',
           //   heatNoAndBatchNo: 'qqwww',
+          // nationalStandard: 'GB-10', // 国家标准
           //   requisitionsSN: 'SG-AFTER-123456',
           //   mete: 150000,
           //   weight: 150000,
