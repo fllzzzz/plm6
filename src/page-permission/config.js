@@ -11,6 +11,14 @@ export const commonPM = {
 
 // --------------------------- 基础配置 start ------------------------------
 
+// 基础配置/单位配置
+export const unitConfigPM = {
+  get: ['config_unitConfig:get'], // 单位配置列表
+  batchAdd: ['config_unitConfig:batchAdd'], // 批量添加单位配置
+  edit: ['config_unitConfig:edit'], // 编辑单位配置
+  del: ['config_unitConfig:del'] // 删除单位配置
+}
+
 // 基础配置/工厂管理
 export const configFactoryPM = {
   get: ['factory:get'], // 工厂列表
@@ -27,6 +35,48 @@ export const configWorkshopPM = {
   edit: ['workshop:edit'], // 编辑车间
   del: ['workshop:del'], // 删除车间
   editStatus: ['workshop:editStatus'] // 更改车间状态
+}
+
+// 基础配置/编号配置
+export const numberConfigPM = {
+  get: ['config_numberConfig:get'], // 编号配置列表
+  edit: ['config_numberConfig:edit'] // 编辑编号配置
+}
+
+// ---------------------------- 基础配置 end -------------------------------
+
+// ########################################################################
+
+// --------------------------- 科目管理 start ------------------------------
+
+// 科目管理/科目配置
+export const classConfigPM = {
+  get: ['config_classConfig:get'], // 科目配置列表
+  add: ['config_classConfig:add'], // 添加科目配置
+  del: ['config_classConfig:del'] // 删除科目配置
+}
+
+// 科目管理/规格配置
+export const specConfigPM = {
+  get: ['config_specConfig:get'], // 规格配置列表
+  add: ['config_specConfig:add'], // 添加规格配置
+  edit: ['config_specConfig:edit'], // 编辑规格配置
+  del: ['config_specConfig:del'], // 删除规格配置
+  weightedAverage: ['config_specConfig:weightedAverage'] // 加权平均价
+}
+
+// 科目管理/计量配置
+export const measureConfigPM = {
+  get: ['config_class_measureConfig:get'], // 计量配置列表
+  edit: ['config_class_measureConfig:edit'] // 编辑计量配置
+}
+
+// 科目管理/型材库
+export const sectionSteelLibraryPM = {
+  get: ['config_class_sectionSteelLibrary:get'], // 型材库列表
+  add: ['config_class_sectionSteelLibrary:add'], // 添加型材库
+  edit: ['config_class_sectionSteelLibrary:edit'], // 编辑型材库
+  del: ['config_class_sectionSteelLibrary:del'] // 删除型材库
 }
 
 // ---------------------------- 基础配置 end -------------------------------

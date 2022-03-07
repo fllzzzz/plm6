@@ -66,18 +66,11 @@ import * as lodash from 'lodash'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useMatClsTree from '@/composables/store/use-mat-cls-tree'
+import { specConfigPM as permission } from '@/page-permission/config'
 
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-const permission = {
-  get: ['config_specConfig:get'],
-  add: ['config_specConfig:add'],
-  edit: ['config_specConfig:edit'],
-  del: ['config_specConfig:del'],
-  weightedAverage: ['config_specConfig:weightedAverage']
-}
 
 const optShow = {
   add: true,

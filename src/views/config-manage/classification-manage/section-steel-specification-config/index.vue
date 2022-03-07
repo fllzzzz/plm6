@@ -124,13 +124,7 @@ import { ElMessage, ElCheckTag } from 'element-plus'
 import mHeader from './module/header'
 import mForm from './module/form'
 import specDetail from './detail/index.vue'
-
-const permission = {
-  get: ['config_class_sectionSteelLibrary:get'],
-  add: ['config_class_sectionSteelLibrary:add'],
-  edit: ['config_class_sectionSteelLibrary:edit'],
-  del: ['config_class_sectionSteelLibrary:del']
-}
+import { sectionSteelLibraryPM as permission } from '@/page-permission/config'
 
 const optShow = {
   add: false,
