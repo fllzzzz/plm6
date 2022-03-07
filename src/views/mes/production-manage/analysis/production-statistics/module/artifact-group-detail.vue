@@ -175,6 +175,7 @@ import { defineProps, defineEmits, ref, watch, inject, nextTick } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
+import { tableSummary } from '@/utils/el-extra'
 // import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import { inProductionDetailReportEnum as reportEnum } from '@enum-ms/mes'
@@ -229,28 +230,9 @@ function setColSpan() {
 }
 
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (index > 4) {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-    }
+  return tableSummary(param, {
+    props: ['taskQuantity', ['taskMete', DP.COM_WT__KG], 'completeQuantity', ['completeMete', DP.COM_WT__KG], 'inProductionQuantity', ['inProductionMete', DP.COM_WT__KG], 'unProducedQuantity', ['unProducedMete', DP.COM_WT__KG]]
   })
-  return sums
 }
 
 const detailVisible = ref(false)

@@ -246,7 +246,7 @@ async function fetchList() {
           .map((v) => {
             return `<span>【${v.name} │ <span style="color: #67C23A;">${v.inspectionQuantity}</span>】</span>`
           })
-          .join('<span>→</span>')
+          .join('<span> </span>')
       return v
     })
   } catch (error) {
