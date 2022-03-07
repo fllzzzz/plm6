@@ -112,7 +112,7 @@
         min-width="100"
       >
         <template #default="{ row }">
-          <span v-split="row.listUploaderNames" />
+          <span v-split="row.listUploaderNames" v-empty />
         </template>
       </el-table-column>
       <el-table-column

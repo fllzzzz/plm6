@@ -23,13 +23,24 @@ export function isJSON(str) {
 }
 
 /**
+ * 添加前缀
+ * @param {*} value 值
+ * @param {*} suffix 前缀
+ * @returns
+ */
+export function addPrefix(value, prefix) {
+  if (isBlank(value)) return ''
+  return prefix + value
+}
+
+/**
  * 添加后缀
  * @param {*} value 值
  * @param {*} suffix 后缀
  * @returns
  */
 export function addSuffix(value, suffix) {
-  if (isBlank(value)) return value
+  if (isBlank(value)) return ''
   return value + suffix
 }
 
@@ -58,7 +69,7 @@ export function toFixed(num, precision, { toNum = false } = {}) {
   if (num === undefined || num === null || isNaN(+num)) return num
   // isNaN(num) 字符串类型的数字是false，所以使用 +num 转为数字,但为了保险在上面的isNaN中的num也使用+num
   if (toNum) {
-    return +((+num).toFixed(precision))
+    return +(+num).toFixed(precision)
   } else {
     return (+num).toFixed(precision)
   }
@@ -168,7 +179,7 @@ export function deepClone(source) {
     throw new Error('error arguments', 'deepClone')
   }
   const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
+  Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
       targetObj[keys] = deepClone(source[keys])
     } else {
@@ -182,7 +193,9 @@ export function deepClone(source) {
 export function convertVal(val) {
   switch (val.constructor.name) {
     case 'RefImpl':
-    case 'ComputedRefImpl': return val.value
-    default: return val
+    case 'ComputedRefImpl':
+      return val.value
+    default:
+      return val
   }
 }

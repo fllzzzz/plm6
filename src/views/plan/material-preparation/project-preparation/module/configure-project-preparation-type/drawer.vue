@@ -60,6 +60,18 @@
               <span v-parse-project="{ project: row }" v-empty-text />
             </template>
           </el-table-column>
+          <el-table-column label="是否无清单备料" align="center" width="170" prop="withoutList">
+            <template #default="{ row }">
+              <common-radio
+                v-if="isEditMode"
+                v-model="row.withoutList"
+                :options="whetherEnum.ENUM"
+                type="enum"
+                :disabled="row.boolStrucPrepared"
+              />
+              <span v-else v-parse-enum="{ e: whetherEnum, v: row.withoutList }" v-empty />
+            </template>
+          </el-table-column>
           <el-table-column label="“结构”备料范围" align="center" width="250" prop="strucPreparationRangeType">
             <template #default="{ row }">
               <common-radio
@@ -110,7 +122,7 @@
 import { getProjectListForRangeInfo } from '@/api/plan/material-preparation/project-preparation'
 import { defineProps, defineEmits, ref, computed, provide } from 'vue'
 import { preparationRangeEnum } from '@enum-ms/plan'
-import { configureStatusEnum } from '@enum-ms/common'
+import { configureStatusEnum, whetherEnum } from '@enum-ms/common'
 import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
 import { setSourceInfo } from '@data-type/array'
 import { pinyinFuzzyMatching, pinyinForField } from '@/utils/pinyin'
@@ -144,6 +156,7 @@ const queryFilter = ref({
 })
 
 const sourceMap = new Map([
+  ['withoutList', 'sourceWithoutList'],
   ['strucPreparationRangeType', 'sourceStrucPreparationRangeType'],
   ['enclPreparationRangeType', 'sourceEnclPreparationRangeType'],
   ['auxPreparationRangeType', 'sourceAuxPreparationRangeType']

@@ -9,8 +9,8 @@ constantize(enabledEnum)
 
 // 是否
 const whetherEnum = {
-  TRUE: { L: '是', K: 'TRUE', V: true },
-  FALSE: { L: '否', K: 'FALSE', V: false }
+  TRUE: { L: '是', K: 'TRUE', V: true, COLOR: '' },
+  FALSE: { L: '否', K: 'FALSE', V: false, COLOR: '' }
 }
 constantize(whetherEnum)
 

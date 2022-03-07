@@ -4,7 +4,8 @@ import { matClsEnum } from '../enum/modules/classification'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { convertUnits } from '@/utils/convert/unit'
 import store from '@/store'
-import { isNotBlank } from '../data-type'
+import { isNotBlank, toPrecision } from '../data-type'
+import { materialIsWholeEnum } from '../enum/modules/wms'
 
 const STEEL_PLATE = matClsEnum.STEEL_PLATE.V
 const SECTION_STEEL = matClsEnum.SECTION_STEEL.V
@@ -181,9 +182,14 @@ export async function steelInboundFormFormat(form) {
 // 计算列表理论重量
 export async function calcTheoryWeight(list) {
   const psList = []
-  list.forEach((row) => {
+  for (const row of list) {
     let ps
     if (row.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
+      // 为余料的钢板，以实际重量作为理论重量
+      if (row.materialIsWhole === materialIsWholeEnum.ODDMENT.V) {
+        row.theoryWeight = toPrecision(row.mete / row.quantity, row.accountingPrecision)
+        continue
+      }
       ps = calcSteelPlateWeight({
         name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
         length: row.length,
@@ -213,7 +219,7 @@ export async function calcTheoryWeight(list) {
       })
     }
     if (ps) psList.push(ps)
-  })
+  }
   await Promise.all(psList)
 }
 

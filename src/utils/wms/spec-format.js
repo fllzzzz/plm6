@@ -48,7 +48,17 @@ export function specTip(row) {
 // 钢板规格
 function steelPlateSpec(row) {
   const spec = []
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness}*${row.width}*${row.length}`)
+  const twl = []
+  if (isNotBlank(row.thickness)) {
+    twl.push(row.thickness)
+  }
+  if (isNotBlank(row.width)) {
+    twl.push(row.width)
+  }
+  if (isNotBlank(row.length)) {
+    twl.push(row.length)
+  }
+  spec.push(twl.join('*'))
   if (isNotBlank(row.specification)) spec.push(row.specification)
   return spec.join(' * ')
 }
@@ -64,10 +74,16 @@ function sectionSteelSpec(row) {
 // 钢卷规格
 function steelCoilSpec(row) {
   const spec = []
-  if (isNotBlank(row.thickness) && isNotBlank(row.width)) spec.push(`${row.thickness}*${row.width}`)
+  const twl = []
+  if (isNotBlank(row.thickness)) {
+    twl.push(row.thickness)
+  }
+  if (isNotBlank(row.width)) {
+    twl.push(row.width)
+  }
+  spec.push(twl.join('*'))
   if (isNotBlank(row.specification)) spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
-  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) spec.push(`${row.thickness}*${row.width}*${row.length}`)
   return spec.join(' * ')
 }
 
@@ -89,7 +105,17 @@ function gasSpec(row) {
 // 钢板规格提示
 function steelPlateSpecTip(row) {
   const tip = []
-  if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm)*宽(mm)*长(mm)')
+  const twl = []
+  if (isNotBlank(row.thickness)) {
+    twl.push('厚(mm)')
+  }
+  if (isNotBlank(row.width)) {
+    twl.push('宽(mm)')
+  }
+  if (isNotBlank(row.length)) {
+    twl.push('长(mm)')
+  }
+  tip.push(twl.join('*'))
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   return tip.join(' * ')
 }
@@ -107,10 +133,16 @@ function sectionSteelSpecTip(row) {
 // 钢卷规格提示
 function steelCoilSpecTip(row) {
   const tip = []
-  if (isNotBlank(row.thickness) && isNotBlank(row.width)) tip.push('厚(mm)*宽(mm)')
+  const twl = []
+  if (isNotBlank(row.thickness)) {
+    twl.push('厚(mm)')
+  }
+  if (isNotBlank(row.width)) {
+    twl.push('宽(mm)')
+  }
+  tip.push(twl.join('*'))
   if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
-  // if (isNotBlank(row.thickness) && isNotBlank(row.width) && isNotBlank(row.length)) tip.push('厚(mm)*宽(mm)*长(mm)')
   return tip.join(' * ')
 }
 

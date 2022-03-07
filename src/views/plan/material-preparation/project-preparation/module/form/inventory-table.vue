@@ -5,8 +5,6 @@
     :data="inventoryList"
     :height="props.height"
     :default-expand-all="false"
-    show-summary
-    :summary-method="getSummaries"
     highlight-current-row
     row-key="recordId"
   >
@@ -66,17 +64,15 @@
 </template>
 
 <script setup>
-import { defineProps, defineExpose, reactive, ref } from 'vue'
+import { defineProps, defineExpose, reactive, ref, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
+import { deepClone, isNotBlank, toPrecision } from '@/utils/data-type'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
-import { tableSummary } from '@/utils/el-extra'
 import { createUniqueString } from '@/utils/data-type/string'
-import { DP } from '@/settings/config'
-
+import { DP, STEEL_ENUM } from '@/settings/config'
 import lodash from 'lodash'
 
 import { regExtra } from '@compos/use-crud'
@@ -97,11 +93,15 @@ const props = defineProps({
 // 获取crud实例，并将实例注册进crud
 const { CRUD, crud } = regExtra()
 const inventoryList = ref([])
+// 是钢板或者型钢
+const isSPorSS = computed(
+  () => crud.form.materialBasicClass & matClsEnum.STEEL_PLATE.V || crud.form.materialBasicClass & matClsEnum.SECTION_STEEL.V
+)
 
 // 初始化表单
 CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
-  // 设置技术清单汇总
-  inventoryList.value = await inventoryListFM(deepClone(form.inventoryList))
+  // 设置库存利用清单
+  inventoryList.value = await listFM(deepClone(form.inventoryList || []))
   // TODO: 目前仅适用于钢板型材 库存列表中存在的id map
   const inventoryExitIdMap = new Map()
   inventoryList.value.forEach((row) => {
@@ -110,13 +110,15 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   crud.props.inventoryExitIdMap = inventoryExitIdMap
 
   // 绑定清单汇总列表
-  initialBindingTechnologyList(inventoryList.value, form.technologyList, form.materialBasicClass)
+  initialBindingTechnologyList(inventoryList.value, form.technologyList)
   // 计算清单备料量及差值
-  initialCalcTechPrepMete(inventoryList.value, form.technologyList, form.materialBasicClass)
+  initialCalcTechPrepMete(inventoryList.value, form.technologyList)
+  // 计算库存利用总量
+  calcInventoryTotalMete(inventoryList.value)
 }
 
 // 库存利用清单格式转换
-async function inventoryListFM(list) {
+async function listFM(list) {
   if (!list) return []
   // 格式装换
   await setSpecInfoToList(list)
@@ -148,14 +150,16 @@ async function inventoryListFM(list) {
     row.lowerLimitNumber = row.usedNumber - row.projectOperableNumber >= 0 ? row.usedNumber - row.projectOperableNumber : 0
     row = reactive(row)
     // 计算理论重量
-    calcSteelPlateTotalWeight(row)
+    if (row.basicClass & STEEL_ENUM) {
+      calcSteelTotalWeight(row)
+    }
     // rowWatch(row)
   })
   return list
 }
 
 // 处理添加
-function add(row, technologyRow) {
+function addRow(row, technologyRow) {
   // 加入map
   crud.props.inventoryExitIdMap.set(row.id, true)
   const invRow = reactive(lodash.cloneDeep(row))
@@ -176,29 +180,36 @@ function delRow(row, index) {
   const techRow = row.boundTech
   techRow.boundInvIds.remove(row.recordId)
   // 重新计算备料量
-  calcTechPrepMete(inventoryList.value, techRow, crud.form.materialBasicClass)
+  calcTechPrepMete(inventoryList.value, techRow)
+  // 重新计算库存利用总量
+  calcInventoryTotalMete(inventoryList.value)
 }
 
 // 处理数量变化
 function handleNumberChange(row) {
-  if (row.basicClass === matClsEnum.STEEL_PLATE.V) {
-    calcSteelPlateTotalWeight(row)
+  if (row.basicClass & STEEL_ENUM) {
+    calcSteelTotalWeight(row)
   }
-  calcTechPrepMete(inventoryList.value, row.boundTech, crud.form.materialBasicClass)
+  calcTechPrepMete(inventoryList.value, row.boundTech)
+  calcInventoryTotalMete(inventoryList.value)
 }
 
-// // 数据监听
-// function rowWatch(row) {
-//   if (row.basicClass === matClsEnum.STEEL_PLATE.V) {
-//     watchEffect(() => calcSteelPlateTotalWeight(row))
-//   }
-// }
+// 计算总库存利用量
+function calcInventoryTotalMete(inventoryList) {
+  if (isNotBlank(inventoryList)) {
+    // 钢板或型材
+    if (isSPorSS.value) {
+      crud.props.inventoryTotalMete = inventoryList.reduce((sum, cur) => {
+        return (sum += cur.usedTheoryTotalWeight || 0)
+      }, 0)
+    }
+  } else {
+    crud.props.inventoryTotalMete = 0
+  }
+}
 
-// // 根据数量的变化计算清单备料量
-// function calcTechPrepMeteForNumberChange() {}
-
-// // 计算钢板总重
-function calcSteelPlateTotalWeight(row) {
+// 计算钢板总重
+function calcSteelTotalWeight(row) {
   if (isNotBlank(row.theoryWeight) && row.usedNumber) {
     row.usedTheoryTotalWeight = row.theoryWeight * row.usedNumber
   } else {
@@ -207,9 +218,9 @@ function calcSteelPlateTotalWeight(row) {
 }
 
 // 初始-绑定清单汇总列表
-function initialBindingTechnologyList(inventoryList, technologyList, materialBasicClass) {
+function initialBindingTechnologyList(inventoryList, technologyList) {
   // 类型是钢板或者型钢
-  if (materialBasicClass & matClsEnum.STEEL_PLATE.V || materialBasicClass & matClsEnum.SECTION_STEEL.V) {
+  if (isSPorSS.value) {
     const steelClassifyConfICKV = crud.props.steelClassifyConfICKV // 钢材配置
     inventoryList.forEach((invRow) => {
       for (const techRow of technologyList) {
@@ -247,12 +258,12 @@ function initialBindingTechnologyList(inventoryList, technologyList, materialBas
  * @param {array} technologyList 技术汇总清单
  * @param {number} materialBasicClass 备料基础分类（bit）
  */
-function initialCalcTechPrepMete(inventoryList, technologyList, materialBasicClass) {
+function initialCalcTechPrepMete(inventoryList, technologyList) {
   technologyList.forEach((techRow) => {
     // 初始化赋值
-    crud.props.techPrepMeteKV[techRow.id] = {}
+    crud.props.techPrepMeteKV[techRow.id] = crud.props.techPrepMeteKV[techRow.id] || {}
     // 计算当前技术清单行的备料量
-    calcTechPrepMete(inventoryList, techRow, materialBasicClass)
+    calcTechPrepMete(inventoryList, techRow)
   })
 }
 
@@ -262,7 +273,7 @@ function initialCalcTechPrepMete(inventoryList, technologyList, materialBasicCla
  * @param {object} technologyRow 技术汇总清单 行数据
  * @param {number} materialBasicClass 备料基础分类（bit）
  */
-function calcTechPrepMete(inventoryList, technologyRow, materialBasicClass) {
+function calcTechPrepMete(inventoryList, technologyRow) {
   const info = crud.props.techPrepMeteKV[technologyRow.id]
   const boundMaterial = [] // 绑定物料的数组
   // 遍历“技术清单行”绑定的库存利用清单id
@@ -276,29 +287,29 @@ function calcTechPrepMete(inventoryList, technologyRow, materialBasicClass) {
     }
   })
   // -------------- 钢板或型钢 ----------------
-  if (materialBasicClass & matClsEnum.STEEL_PLATE.V || materialBasicClass & matClsEnum.SECTION_STEEL.V) {
+  if (isSPorSS.value) {
     // 累加理论重量
     const summary = boundMaterial.reduce((sum, cur) => {
       return (sum += cur.usedTheoryTotalWeight || 0)
     }, 0)
 
-    info.inventory = toFixed(summary, DP.COM_WT__KG) // 库存利用量
-    info.diff = toFixed(info.inventory + (info.purchase || 0) - technologyRow.listMete, DP.COM_WT__KG) // 差值 = 库存利用量 + 采购量 - 清单量
-    if (info.diff > 0) info.diff = '+' + info.diff
+    info.inventory = toPrecision(summary, DP.COM_WT__KG) // 库存利用量
+    info.preparation = toPrecision((info.inventory || 0) + (info.purchase || 0), DP.COM_WT__KG) // 总备料量
+    info.diff = toPrecision(info.preparation - technologyRow.listMete, DP.COM_WT__KG) // 差值 = 总备料量 - 清单量
     info.isEnough = info.diff >= 0 // 是否超出
   }
 }
 
 // 合计
-function getSummaries(param) {
-  return tableSummary(param, {
-    props: [
-      ['usedNumber', 0],
-      ['usedTheoryTotalWeight', DP.COM_WT__KG]
-    ]
-  })
-}
+// function getSummaries(param) {
+//   return tableSummary(param, {
+//     props: [
+//       ['usedNumber', 0],
+//       ['usedTheoryTotalWeight', DP.COM_WT__KG]
+//     ]
+//   })
+// }
 defineExpose({
-  add
+  add: addRow
 })
 </script>

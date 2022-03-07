@@ -49,11 +49,11 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
         if (isNotBlank(mete[sourceId])) {
           quantity[sourceId] += v.quantity || 0
           mete[sourceId] += v.mete || 0
-          length[sourceId] += v.length || 0
+          length[sourceId] += v.length * Number(v.quantity) || 0
         } else {
           quantity[sourceId] = v.quantity || 0
           mete[sourceId] = v.mete || 0
-          length[sourceId] = v.length || 0
+          length[sourceId] = v.length * Number(v.quantity) || 0
         }
       }
     })

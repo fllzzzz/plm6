@@ -1,7 +1,6 @@
 import { MIN_UNIT } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 
-// 时间转换
 export default {
   mounted(el, binding) {
     resolve(el, binding)
