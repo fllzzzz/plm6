@@ -11,11 +11,12 @@
 
 <script setup>
 import crudApi from '@/api/config/classification-manage/classification-config'
+import { classConfigPM as permission } from '@/page-permission/config'
+
 import { reactive, ref, provide } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
-import { classConfigPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
 import useRefreshStore from '@/composables/store/use-refresh-store'

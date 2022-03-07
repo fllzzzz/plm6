@@ -200,6 +200,8 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-inbound/raw-material/review'
+import { rawMaterialInboundReviewPM as permission } from '@/page-permission/wms'
+
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -213,12 +215,6 @@ import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import MDetail from './module/detail.vue'
 import Review from './module/review.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_inboundApplication_review:get'],
-  review: ['wms_inboundApplication_review:review']
-}
 
 const optShow = {
   add: false,

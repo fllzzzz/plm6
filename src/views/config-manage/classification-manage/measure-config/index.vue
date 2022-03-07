@@ -133,14 +133,14 @@
 
 <script setup>
 import crudApi from '@/api/config/classification-manage/measure-config'
-import { nextTick, onUnmounted, ref } from 'vue'
+import { measureConfigPM as permission } from '@/page-permission/config'
+
+import { nextTick, onUnmounted, ref, computed } from 'vue'
 import { isNotBlank, emptyTextFormatter } from '@data-type'
 import { measureTypeEnum } from '@enum-ms/wms'
-import { measureConfigPM as permission } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { computed } from '@vue/reactivity'
 import mHeader from './module/header'
 
 const optShow = {

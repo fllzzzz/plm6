@@ -55,19 +55,20 @@
 <script setup>
 // 系统字段添加标识
 import crudApi, { editEnabled } from '@/api/config/main/unit-config'
+import { configUnitPM as permission } from '@/page-permission/config'
+
 import { ref } from 'vue'
 import { enabledEnum, unitTypeEnum } from '@enum-ms/common'
 import { parseTime } from '@/utils/date'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
-import checkPermission from '@/utils/system/check-permission'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
-import { unitConfigPM as permission } from '@/page-permission/config'
 
 const optShow = {
   batchAdd: true,

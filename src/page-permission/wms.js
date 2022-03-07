@@ -1,4 +1,5 @@
 import { commonPM as SCM_COMMON_PM } from './supply-chain'
+
 // --------------------------- 公共权限 start ------------------------------
 
 export const commonPM = {
@@ -11,10 +12,70 @@ export const commonPM = {
   // 原材料-退库单详情
   rawMatReturnReceiptDetail: ['wms_return_rawMaterial_review:detail'],
   // 原材料-调拨详情
-  rawMatTransferReceiptDetail: ['wms_transfer_rawMaterial_review:detail']
+  rawMatTransferReceiptDetail: ['wms_transfer_rawMaterial_review:detail'],
+  // 原材料-查看原材料冻结列表
+  rawMatFreezeList: ['wms_rawMaterial_freeze_list:get']
 }
 
 // --------------------------- 公共权限 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 入库办理 start ------------------------------
+
+// 入库办理/钢材入库办理
+export const steelInboundApplicationPM = ['wms_steelInboundApplication:submit']
+
+// 入库办理/辅材入库办理
+export const auxMatInboundApplicationPM = ['wms_auxMatInboundApplication:submit']
+
+// 入库办理/气体入库办理
+export const gasInboundApplicationPM = ['wms_gasInboundApplication:submit']
+
+// 入库办理/入库申请
+export const rawMaterialInboundRecordPM = {
+  get: ['wms_rawMaterial_inbound_record:get'],
+  edit: ['wms_rawMaterial_inbound_record:edit'],
+  del: ['wms_rawMaterial_inbound_record:del']
+}
+
+// 出入库审核/入库审核
+export const rawMaterialInboundReviewPM = {
+  get: ['wms_rawMaterial_inbound_review:get'],
+  review: ['wms_rawMaterial_inbound_review:review']
+}
+
+// --------------------------- 入库办理 end --------------------------------
+
+// ########################################################################
+
+// --------------------------- 物料仓 start ------------------------------
+
+// 物料仓/钢材仓库
+export const steelMaterialWarehousePM = {
+  get: ['wms_matWarehouse_steel:get'], // 查看 钢材仓库
+  outbound: ['wms_matWarehouse_steel:outbound'], // 钢材出库
+  transfer: ['wms_matWarehouse_steel:transfer'], // 钢材调拨
+  freezeList: commonPM.rawMatFreezeList // 查看原材料冻结列表
+}
+
+// 物料仓/辅材仓库
+export const auxMatMaterialWarehousePM = {
+  get: ['wms_matWarehouse_auxMaterial:get'], // 查看 辅材仓库
+  outbound: ['wms_matWarehouse_auxMaterial:outbound'], // 辅材出库
+  transfer: ['wms_matWarehouse_auxMaterial:transfer'], // 辅材调拨
+  freezeList: commonPM.rawMatFreezeList // 查看原材料冻结列表
+}
+
+// 物料仓/气体仓库
+export const gasMaterialWarehousePM = {
+  get: ['wms_matWarehouse_gas:get'], // 查看 气体仓库
+  outbound: ['wms_matWarehouse_gas:outbound'], // 气体出库
+  transfer: ['wms_matWarehouse_gas:transfer'], // 气体调拨
+  freezeList: commonPM.rawMatFreezeList // 查看原材料冻结列表
+}
+
+// --------------------------- 物料仓 end --------------------------------
 
 // ########################################################################
 

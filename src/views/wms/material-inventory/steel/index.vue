@@ -28,7 +28,15 @@
       </el-expand-table-column>
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable sortable fixed="left" @refresh="handleRefresh" />
+      <material-base-info-columns
+        :columns="columns"
+        :basic-class="basicClass"
+        show-frozen-tip
+        frozen-viewable
+        sortable
+        fixed="left"
+        @refresh="handleRefresh"
+      />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" equal-disabled />
       <!-- 次要信息 -->
@@ -70,30 +78,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { getSteelPlateInventory } from '@/api/wms/material-inventory'
+import { steelMaterialWarehousePM as permission } from '@/page-permission/wms'
+
+import { ref } from 'vue'
 import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
 
 import useCRUD from '@compos/use-crud'
 import useIndexInfo from '../compos/use-index-info'
+import OutboundHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/index.vue'
+import TransferHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-handling-form/index.vue'
+import MHeader from './module/header'
+import Pagination from '@crud/Pagination'
+
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import OutboundHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/index.vue'
-import TransferHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-handling-form/index.vue'
-import MHeader from './module/header'
-import Pagination from '@crud/Pagination'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_matWarehouse_steel:get'],
-  outbound: ['wms_matWarehouse_steel:outbound'],
-  transfer: ['wms_matWarehouse_steel:transfer'],
-  freezeList: ['wms_raw_mat_freeze_list:get']
-}
 
 const optShow = {
   add: false,
@@ -131,5 +134,4 @@ const {
   handleTransferSuccess,
   handleRefresh
 } = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
-
 </script>
