@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea @refreshSummary="handleRefreshSummary"/>
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea @refreshSummary="handleRefreshSummary" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -27,7 +27,14 @@
         label="区域"
         width="120px"
       />
-      <productType-full-info-columns :productType="productType" :columns="columns" :fixed="'left'" fixedWidth />
+      <productType-full-info-columns
+        :productType="productType"
+        snClickable
+        @drawingPreview="drawingPreview"
+        :columns="columns"
+        :fixed="'left'"
+        fixedWidth
+      />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -114,6 +121,13 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- pdf预览 -->
+    <drawing-pdf
+      v-model="showDrawing"
+      :serial-number="drawingRow?.serialNumber"
+      :productId="drawingRow?.productId"
+      :productType="drawingRow?.productType"
+    />
   </div>
 </template>
 
@@ -130,6 +144,10 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
+import useDrawing from '@compos/use-drawing'
+import drawingPdf from '@comp-base/drawing-pdf.vue'
+
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
 
 const emit = defineEmits(['refresh'])
 
