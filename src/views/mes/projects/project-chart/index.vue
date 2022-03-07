@@ -13,7 +13,7 @@
         @change="handleYearChange"
       />
     </div>
-    <div v-loading="projectInfo.loading" class="chart-container" :style="{height: maxHeight + 'px'}">
+    <div v-loading="projectInfo.loading" v-permission="permission.statistics" class="chart-container" :style="{height: maxHeight + 'px'}">
       <chart id="projectChart" width="300px" v-if="route.name!=='PlanProject'"/>
     </div>
   </div>
@@ -30,6 +30,7 @@ import { useRoute } from 'vue-router'
 const emit = defineEmits(['update:year'])
 const route = useRoute()
 const projectInfo = inject('projectInfo')
+const permission = inject('permission')
 
 const year = ref(parseTime(new Date(), '{y}'))
 

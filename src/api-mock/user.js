@@ -83,12 +83,6 @@ const userInfo = {
           },
           {
             id: 7,
-            name: '成本管理',
-            icon: 'config',
-            redirect: 'cost-manage'
-          },
-          {
-            id: 170,
             name: '供应链',
             icon: 'supply-chain',
             redirect: 'supply-chain'

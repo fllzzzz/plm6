@@ -136,19 +136,17 @@
 import { getProjectList as get, getProjectInfo } from '@/api/common'
 import { ref, watch, provide, reactive } from 'vue'
 
+import { dateDifference } from '@/utils/date'
+import { isNotBlank } from '@data-type/index'
+import checkPermission from '@/utils/system/check-permission'
+import { myProjectPM as permission } from '@/page-permission/mes'
+import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import projectChart from './project-chart'
-import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-import { isNotBlank } from '@data-type/index'
-import { dateDifference } from '@/utils/date'
-
-// crud交由presenter持有
-const permission = {
-  get: ['projects:get']
-}
 
 const optShow = {
   add: false,
@@ -215,6 +213,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 
 // 获取项目汇总数据
 async function fetchProjectInfo() {
+  if (!checkPermission(permission.statistics)) return
   projectInfo.loading = true
   try {
     const res = (await getProjectInfo({ year: year.value })) || {}
