@@ -50,10 +50,10 @@ export const machinePartSchedulingPM = {
   clear: ['mes_scheduling_machine_part:clear'] // 清空任务
 }
 
-// 工单管理/构件工单
+// 工单管理/围护工单
 export const enclosureSchedulingPM = {
-  get: ['mes_scheduling_enclosure:get'], // 零件工单列表
-  save: ['mes_scheduling_enclosure:save'], // 分配零件工单
+  get: ['mes_scheduling_enclosure:get'], // 围护工单列表
+  save: ['mes_scheduling_enclosure:save'], // 分配围护工单
   clear: ['mes_scheduling_enclosure:clear'] // 清空任务
 }
 

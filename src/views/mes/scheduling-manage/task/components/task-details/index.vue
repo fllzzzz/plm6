@@ -105,10 +105,10 @@
           <span :class="row.completeQuantity === row.schedulingQuantity ? 'tc-success' : 'tc-danger'">{{ row.completeQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission([...taskPermission.add, ...assistPermission.get])" label="操作" align="center" width="210px">
+      <el-table-column v-if="checkPermission([...taskPermission.del, ...assistPermission.get])" label="操作" align="center" width="210px">
         <template #default="{ row }">
           <common-button
-            v-permission="taskPermission.add"
+            v-permission="taskPermission.del"
             :disabled="row.unInProductionQuantity <= 0"
             size="mini"
             type="danger"
@@ -293,6 +293,10 @@ function selectableFunc(row) {
 }
 
 function editSchedulingQuantity(row) {
+  if (!checkPermission(taskPermission.del)) {
+    console.log('无权限')
+    return
+  }
   if (!row.operable) return
   detailRow.value = Object.assign({}, row)
   modifyQuantityVisible.value = true

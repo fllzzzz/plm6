@@ -150,8 +150,17 @@
         </el-table-column>
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="组立号">
+          <template #header>
+            <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
+              <div style="display: inline-block">
+                <span>组立号</span>
+                <i class="el-icon-info" />
+              </div>
+            </el-tooltip>
+          </template>
           <template v-slot="scope">
-            <span>{{ scope.row.serialNumber }}</span>
+            <!-- <span>{{ scope.row.serialNumber }}</span> -->
+            <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('quantity')" prop="quantity" :show-overflow-tooltip="true" align="center" label="总数">
@@ -217,6 +226,13 @@
       </common-table>
       <!--分页组件-->
       <pagination />
+      <!-- pdf预览 -->
+      <drawing-pdf
+        v-model="showDrawing"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
     </template>
   </div>
 </template>
@@ -234,8 +250,11 @@ import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 import { assemblyListPM as permission } from '@/page-permission/plan'
+import useDrawing from '@compos/use-drawing'
+import drawingPdf from '@comp-base/drawing-pdf.vue'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
 
 const optShow = {
   add: false,

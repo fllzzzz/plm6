@@ -274,7 +274,7 @@ async function fetchList() {
             }
             return `<span>【${o.name} │ <span class="${_class}">${o.inspectionQuantity}</span>】</span>`
           })
-          .join('<span>→</span>')
+          .join('<span> </span>')
       return v
     })
   } catch (error) {

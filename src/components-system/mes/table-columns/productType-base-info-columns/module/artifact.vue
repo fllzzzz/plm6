@@ -22,8 +22,17 @@
     :min-width="!fixedWidth ? '120px' : ''"
     :fixed="fixed"
   >
+    <template v-if="snClickable" #header>
+      <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
+        <div style="display: inline-block">
+          <span>构件编号</span>
+          <i class="el-icon-info" />
+        </div>
+      </el-tooltip>
+    </template>
     <template #default="{ row }">
-      <span v-empty-text>{{ row.serialNumber }}</span>
+      <span v-if="!snClickable" v-empty-text>{{ row.serialNumber }}</span>
+      <span v-else v-empty-text style="cursor: pointer" @dblclick="drawingPreview(row)">{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -55,8 +64,10 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import { isBlank } from '@/utils/data-type'
+
+const emit = defineEmits(['drawingPreview'])
 
 defineProps({
   columns: {
@@ -70,6 +81,10 @@ defineProps({
     type: Boolean,
     default: false
   },
+  snClickable: {
+    type: Boolean,
+    default: false
+  },
   // 围护子类型
   category: {
     type: Number
@@ -79,4 +94,8 @@ defineProps({
     default: () => []
   }
 })
+
+function drawingPreview(row) {
+  emit('drawingPreview', row)
+}
 </script>
