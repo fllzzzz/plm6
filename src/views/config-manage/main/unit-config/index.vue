@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.edit" label="操作" width="130px" align="center">
+      <el-table-column v-permission="permission.del" label="操作" width="130px" align="center">
         <template v-slot="scope">
             <udOperation :show-del="!scope.row.boolSystem" :show-edit="false" :data="scope.row" />
         </template>
@@ -67,14 +67,7 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
-
-// // crud交由presenter持有
-const permission = {
-  get: ['config_unitConfig:get'],
-  edit: ['config_unitConfig:edit'],
-  del: ['config_unitConfig:del'],
-  add: ['config_unitConfig:add']
-}
+import { unitConfigPM as permission } from '@/page-permission/config'
 
 const optShow = {
   batchAdd: true,

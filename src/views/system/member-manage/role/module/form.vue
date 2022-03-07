@@ -12,10 +12,10 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="80px" :inline="true">
       <el-form-item label="角色名称" prop="name">
-        <el-input v-model="form.name" style="width: 145px;" />
+        <el-input v-model="form.name" style="width: 450px;" />
       </el-form-item>
       <el-form-item label="描述信息" prop="remark">
-        <el-input v-model="form.remark" style="width: 380px;" rows="5" type="textarea" />
+        <el-input v-model="form.remark" style="width: 450px;" rows="5" type="textarea" />
       </el-form-item>
     </el-form>
   </common-dialog>

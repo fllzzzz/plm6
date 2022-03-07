@@ -49,7 +49,8 @@ const current = computed(() => {
       c.checked = keys.has(c[showprops.key])
     }
   }
-  return props.item
+  const checked = keys.has(props.item[showprops.key])
+  return { ...props.item, checked }
 })
 function onClick(state, value) {
   emit('on-click', state, value)
