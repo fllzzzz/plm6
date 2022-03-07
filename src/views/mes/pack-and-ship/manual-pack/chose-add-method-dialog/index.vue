@@ -7,7 +7,7 @@
       <el-radio :label="true">生成新包单</el-radio>
       <el-radio :label="false">使用原有包单</el-radio>
     </el-radio-group>
-    <div v-show="!isNew" style="margin-top: 15px">
+    <div v-if="!isNew" style="margin-top: 15px">
       <pack-select v-model="selectBagId" :project-id="projectId" :packType="packType" style="width:100%;"/>
     </div>
   </common-dialog>
