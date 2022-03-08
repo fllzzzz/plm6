@@ -5,7 +5,7 @@
       <el-tag v-if="factory && factory.name" type="success">{{ factory.name }}</el-tag>
       <!-- 新增 -->
       <common-button
-        v-permission="permission.add"
+        v-if="checkPermission(permission.add)"
         :disabled="!factoryId"
         class="filter-item"
         style="float: right; padding: 6px 10px"
