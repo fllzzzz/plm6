@@ -187,11 +187,11 @@ async function changeStatus(data, val) {
 }
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.factoryId = factoryId
+  crud.query.factoryId = factoryId.value
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.factoryId = factoryId
+  crud.form.factoryId = factoryId.value
 }
 
 // 编辑之后 取消缓存的已加载设置
