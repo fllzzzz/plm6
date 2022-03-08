@@ -531,6 +531,7 @@ function addCrudBusinessMethod(crud) {
   // 刷新
   const refresh = async () => {
     if (!checkPermission(crud.permission.get)) {
+      crud.emptyText = '暂无权限'
       return
     }
     crud.emptyText = '加载中'

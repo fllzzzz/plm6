@@ -153,10 +153,10 @@ const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field:
 
 // crud交由presenter持有
 const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
+  get: [],
+  edit: [],
+  add: [],
+  del: []
 }
 
 const optShow = {
