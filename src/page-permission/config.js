@@ -97,10 +97,11 @@ export const changeReasonPM = {
   del: ['change_reason:del'] // 删除变更原因
 }
 
-// 系统配置/表格模板
+// 基础配置/表格模板
 export const tablePrintTemplatePM = {
   get: ['table_print_template:get'], // 表格模板列表
   add: ['table_print_template:add'], // 新增表格模板
+  detail: ['table_print_template:detail'], // 查看表格模板详情
   edit: ['table_print_template:edit'], // 编辑表格模板
   del: ['table_print_template:del'] // 删除表格模板
 }
