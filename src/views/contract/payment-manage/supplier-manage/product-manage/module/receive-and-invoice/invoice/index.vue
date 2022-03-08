@@ -148,7 +148,7 @@
       >
         <template v-slot="scope">
           <template v-if="!scope.row.isModify">
-            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V"/>
+            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V" v-permission="permission.edit"/>
             <template v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V">
               <el-popconfirm
                 confirm-button-text="确定"
@@ -157,7 +157,7 @@
                 @confirm="rowDelete(scope.row)"
               >
                 <template #reference>
-                  <common-button icon="el-icon-delete" type="danger" size="mini"/>
+                  <common-button icon="el-icon-delete" type="danger" size="mini" v-permission="permission.del"/>
                 </template>
               </el-popconfirm>
               <el-popconfirm
@@ -198,6 +198,7 @@
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
 import { ref, defineProps, watch, nextTick } from 'vue'
+import { contractSupplierProductPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -211,13 +212,7 @@ import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
 
-// crud交由presenter持有
-const permission = {
-  get: ['invoice:get'],
-  add: ['invoice:add'],
-  edit: ['invoice:edit'],
-  audit: ['invoice:audit']
-}
+const permission = contractSupplierProductPM.invoice
 
 const optShow = {
   add: true,

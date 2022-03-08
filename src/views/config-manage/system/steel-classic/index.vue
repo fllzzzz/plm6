@@ -63,20 +63,13 @@
 <script setup>
 import crudApi from '@/api/config/system-config/steel-classic'
 import { ref } from 'vue'
+import { steelClassicPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['steelClassic:get'],
-  add: ['steelClassic:add'],
-  edit: ['steelClassic:edit'],
-  del: ['steelClassic:del']
-}
 
 const optShow = {
   add: true,

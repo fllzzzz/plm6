@@ -38,7 +38,7 @@
         >
           <template v-slot="scope">
             <span>{{ scope.row.name? scope.row.name: '-' }}</span>
-            <div>
+            <div v-if="checkPermission([...permission.edit,...permission.del])">
               <udOperation
                 :data="scope.row"
                 :permission="permission"
@@ -180,7 +180,6 @@
         </el-table-column>
         <!--单产品类型编辑与删除-->
        <el-table-column
-          v-if="checkPermission([...permission.edit])"
           label="操作"
           width="160px"
           align="center"
@@ -195,8 +194,8 @@
                     <common-button type="primary" size="mini" @click="rowSubmit(scope.row,i)">保存</common-button>
                   </template>
                   <template v-else>
-                    <common-button size="mini" @click="handleRow(scope.row,i)" icon="el-icon-edit" type="primary"/>
-                    <common-button size="mini" @click="handleDelete(scope.row,k)" icon="el-icon-delete" type="danger"/>
+                    <common-button size="mini" @click="handleRow(scope.row,i)" icon="el-icon-edit" type="primary" v-permission="permission.productTypeEdit"/>
+                    <common-button size="mini" @click="handleDelete(scope.row,k)" icon="el-icon-delete" type="danger" v-permission="permission.productTypeDel"/>
                   </template>
                 </div>
               </div>
@@ -222,6 +221,7 @@
 <script setup>
 import crudApi from '@/api/plan/monomer'
 import { ref, watch } from 'vue'
+import { monomerListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import useMaxHeight from '@compos/use-max-height'
@@ -232,7 +232,6 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { DP } from '@/settings/config'
-import { monomerListPM as permission } from '@/page-permission/plan'
 import { parseTime, dateDifferenceReduce } from '@/utils/date'
 import { ElMessage } from 'element-plus'
 

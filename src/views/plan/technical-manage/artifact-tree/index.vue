@@ -245,7 +245,6 @@
         </el-table-column>
         <!--编辑与删除-->
         <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="220px"
           align="center"
@@ -254,13 +253,13 @@
           <template v-slot="scope">
             <template v-if="scope.row.dataType === 2">
               <el-tooltip class="item" effect="dark" content="数量更改" placement="top">
-                <common-button size="mini" @click="handleNum(scope.row)"><svg-icon icon-class="document" /></common-button>
+                <common-button size="mini" @click="handleNum(scope.row)" v-permission="permission.editNum"><svg-icon icon-class="document" /></common-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="信息修改" placement="top">
-                <common-button size="mini" @click="handleList(scope.row)" icon="el-icon-edit" type="primary" />
+                <common-button size="mini" @click="handleList(scope.row)" icon="el-icon-edit" type="primary" v-permission="permission.editInfo"/>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="编号更改" placement="top">
-                <common-button size="mini" @click="handleSerial(scope.row)" type="success"><svg-icon icon-class="expand" /></common-button>
+                <common-button size="mini" @click="handleSerial(scope.row)" type="success"><svg-icon icon-class="expand" v-permission="permission.editSerialNum"/></common-button>
               </el-tooltip>
             </template>
           </template>
@@ -286,9 +285,8 @@
 <script setup>
 import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
 import { ref, nextTick } from 'vue'
+import { artifactTreePM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
-
-import { componentTypeEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -300,11 +298,11 @@ import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
-import { artifactTreePM as permission } from '@/page-permission/plan'
 import numForm from './module/num-form'
 import listForm from './module/list-form'
 import serialNumForm from './module/serialNum-form'
 import drawingPdf from '@comp-base/drawing-pdf.vue'
+import { componentTypeEnum } from '@enum-ms/mes'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })

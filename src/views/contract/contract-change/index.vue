@@ -191,6 +191,7 @@
 <script setup>
 import crudApi from '@/api/contract/change-audit-log'
 import { ref } from 'vue'
+import { contractChangePM as permission } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -203,7 +204,6 @@ import variationOrder from '../info/variation-order'
 import settleForm from '../info/settle-form'
 import contractInfo from './module/contractInfo'
 import { projectNameFormatter } from '@/utils/project'
-import { contractChangePM as permission } from '@/page-permission/contract'
 
 const optShow = {
   add: false,

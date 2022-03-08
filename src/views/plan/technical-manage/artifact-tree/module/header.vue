@@ -71,6 +71,7 @@
         />
         <export-button
           v-if="currentArea && currentArea.id"
+          v-permission="crud.permission.download"
           :fn="downloadArtifactTree"
           :params="carryParam"
           show-btn-text
@@ -78,10 +79,10 @@
           class="filter-item"
           :disabled="crud.data.length===0"
         />
-        <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" />
+        <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" v-permission="crud.permission.templateDownload"/>
         <el-popconfirm :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`" @confirm="deleteArtifact" v-if="currentArea && currentArea.id">
           <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0" v-permission="crud.permission.del">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
       </template>

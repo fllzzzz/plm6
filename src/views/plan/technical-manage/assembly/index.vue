@@ -139,7 +139,7 @@
                       >保存</common-button>
                       <el-popconfirm title="确定删除吗?" @confirm="deleteRow(scope.row, scope.$index)">
                         <template #reference>
-                          <common-button type="danger" size="mini" plain>删除</common-button>
+                          <common-button type="danger" size="mini" plain v-if="checkPermission(permission.artifactDel) || scope.row.add">删除</common-button>
                         </template>
                       </el-popconfirm>
                   </template>
@@ -217,6 +217,7 @@
                 type="primary"
                 icon="el-icon-plus"
                 size="mini"
+                v-permission="crud.permission.artifactAdd"
                 @click="addRow(scope.row, scope.$index)"
                 style="margin-left: 8px"
               />

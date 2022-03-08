@@ -53,6 +53,7 @@
 <script setup>
 import crudApi from '@/api/contract/expense-config'
 import { ref } from 'vue'
+import { expenseManagementPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -60,14 +61,6 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['expenseConfig:get'],
-  add: ['expenseConfig:add'],
-  edit: ['expenseConfig:edit'],
-  del: ['expenseConfig:del']
-}
 
 const optShow = {
   add: true,

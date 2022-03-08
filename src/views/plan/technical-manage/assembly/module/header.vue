@@ -78,11 +78,12 @@
           btn-text="下载组立清单"
           class="filter-item"
           :disabled="crud.data.length===0 || deleteLoading"
+          v-permission="crud.permission.download"
         />
-        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading"/>
+        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading" v-permission="crud.permission.templateDownLoad"/>
         <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
           <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0" v-permission="crud.permission.del">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
       </template>

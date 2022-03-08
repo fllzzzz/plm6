@@ -19,7 +19,7 @@
     </div>
     <crudOperation :disabled="!query.productType">
       <template #viewLeft>
-        <common-button type="primary" size="mini" @click.stop="goPlanView">办理计划</common-button>
+        <common-button type="primary" size="mini" @click.stop="goPlanView" v-permission="crud.permission.planList">办理计划</common-button>
       </template>
     </crudOperation>
   </div>

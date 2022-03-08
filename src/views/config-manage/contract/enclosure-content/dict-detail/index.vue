@@ -57,7 +57,7 @@
 <script setup>
 import crudApi from '@/api/contract/enclosure-config/enclosure-detail'
 import { defineExpose, ref, defineProps, watch, computed } from 'vue'
-
+import { enclosureInfoConfigPM } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -67,13 +67,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
 
-// crud交由presenter持有
-const permission = {
-  get: ['enclosureConfigDetail:get'],
-  add: ['enclosureConfigDetail:add'],
-  edit: ['enclosureConfigDetail:edit'],
-  del: ['enclosureConfigDetail:del']
-}
+const permission = enclosureInfoConfigPM.detailInfo
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

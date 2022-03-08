@@ -70,7 +70,7 @@ import eOperation from '@crud/E.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './components/deepen-header'
 import { parseTime } from '@/utils/date'
-import { deepenListPM as permission } from '@/page-permission/plan'
+import { deepenListPM } from '@/page-permission/plan'
 import uploadForm from './components/upload-form'
 
 const props = defineProps({
@@ -89,7 +89,7 @@ const optShow = {
   del: true,
   download: false
 }
-
+const permission = deepenListPM.deepen
 const tableRef = ref()
 const currentRow = ref({})
 const uploadVisible = ref(false)

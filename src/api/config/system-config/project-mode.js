@@ -18,6 +18,7 @@ export function edit(data) {
   })
 }
 
+// 获取当前项目的项目模式
 export function modeData(data) {
   return request({
     module: 'contract',
@@ -26,4 +27,12 @@ export function modeData(data) {
   })
 }
 
+// 获取当前用户可以更改的项目模式
+export function modeList(data) {
+  return request({
+    module: 'contract',
+    url: 'config/listProjectMode',
+    method: 'get'
+  })
+}
 export default { get, edit }

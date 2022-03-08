@@ -49,6 +49,7 @@
 <script setup>
 import crudApi from '@/api/contract/collection-and-invoice/collection'
 import { ref } from 'vue'
+import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -57,10 +58,7 @@ import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 // import { projectNameFormatter } from '@/utils/project'
 
-// crud交由presenter持有
-const permission = {
-  get: ['paymentLedger:get']
-}
+const permission = contractSupplierPaymentLedgerPM.collection
 
 const optShow = {
   add: false,

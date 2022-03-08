@@ -280,10 +280,10 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify">{{
+            <common-button size="mini" type="primary" @click="handleDraw(scope.row)" :disabled="scope.row.isModify" v-permission="permission.draw">{{
               scope.row.attachmentId ? '修改' : '画图'
             }}</common-button>
-            <export-button :params="{ id: scope.row.attachmentId }" v-if="scope.row.attachmentId" :disabled="scope.row.isModify" />
+            <export-button :params="{ id: scope.row.attachmentId }" v-if="scope.row.attachmentId" :disabled="scope.row.isModify" v-permission="permission.drawDownload"/>
           </template>
         </el-table-column>
         <!--状态、编辑与删除-->
@@ -313,7 +313,7 @@
               <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
             </template>
             <template v-else>
-              <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" />
+              <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
               <el-popconfirm
                 confirm-button-text="确定"
                 cancel-button-text="取消"
@@ -322,7 +322,7 @@
                 @confirm="deleteRow(scope.row)"
               >
                 <template #reference>
-                  <common-button size="small" class="el-icon-delete" type="danger" />
+                  <common-button size="small" class="el-icon-delete" type="danger" v-permission="permission.del"/>
                 </template>
               </el-popconfirm>
             </template>
@@ -348,6 +348,7 @@
 import crudApi, { editStatus } from '@/api/plan/technical-manage/enclosure'
 import { getContractTechInfo } from '@/api/contract/project'
 import { ref, watch, provide } from 'vue'
+import { enclosureListPM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -361,7 +362,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { isNotBlank } from '@data-type/index'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { validate } from '@compos/form/use-table-validate'
-import { enclosureListPM as permission } from '@/page-permission/plan'
 import SimpleDrawing from '../components/simple-drawing'
 import ExportButton from '@comp-common/export-button/index.vue'
 import useDrawing from '@compos/use-drawing'
