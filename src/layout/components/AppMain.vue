@@ -17,7 +17,7 @@
       <transition name="fade-transform" mode="out-in">
         <div style="margin: 20px">
           <el-tag type="danger" size="medium" style="margin-bottom: 10px"> * 您好，请先选择项目，当前页面需要选择项目方可查看 </el-tag><br />
-          <el-tag type="primary" size="medium">
+          <el-tag size="medium">
             可通过网页头部的“项目下拉选择框”选择项目，若选择框中不存在您所在的项目，请联系项目负责人将您拉入项目中
           </el-tag>
         </div>
