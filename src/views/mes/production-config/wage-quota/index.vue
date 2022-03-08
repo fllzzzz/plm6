@@ -3,8 +3,10 @@
     <!--工具栏-->
     <div class="head-container">
       <mHeader>
-        <template #optLeft v-permission="permission.edit">
-          <common-button v-show="!isEdit" type="primary" size="mini" @click="isEdit = true"> 编辑 </common-button>
+        <template #optLeft>
+          <common-button v-permission="permission.edit" v-show="!isEdit" type="primary" size="mini" @click="isEdit = true">
+            编辑
+          </common-button>
           <common-button v-show="isEdit" type="success" size="mini" style="margin-left: 0px" @click="previewVisible = true">
             预览并保存
           </common-button>
@@ -94,11 +96,7 @@
 import crudApi from '@/api/mes/production-config/process'
 import { ref } from 'vue'
 
-import {
-  processTypeEnum,
-  processMaterialListTypeEnum as typeEnum,
-  wageQuotaTypeEnum
-} from '@enum-ms/mes'
+import { processTypeEnum, processMaterialListTypeEnum as typeEnum, wageQuotaTypeEnum } from '@enum-ms/mes'
 import { configWageQuotaPM as permission } from '@/page-permission/config'
 
 import useMaxHeight from '@compos/use-max-height'
