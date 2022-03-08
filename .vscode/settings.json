@@ -28,6 +28,7 @@
     "UNDIGIT",
     "UNREVIEWED",
     "UNSUBMITTED",
-    "vite"
+    "vite",
+    "WMSPM"
   ]
 }

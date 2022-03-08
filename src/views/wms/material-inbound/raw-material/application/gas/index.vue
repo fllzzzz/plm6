@@ -49,10 +49,10 @@
 </template>
 
 <script setup>
-// TODO: 编辑，反向赋值
-
 import { gasInboundApplication } from '@/api/wms/material-inbound/raw-material/application'
 import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-material/record'
+import { gasInboundApplicationPM as permission } from '@/page-permission/wms'
+
 import { defineProps, defineEmits, ref, watch, provide, nextTick, reactive, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
@@ -73,9 +73,6 @@ const props = defineProps({
     type: Object
   }
 })
-
-// 权限
-const permission = ['wms_gasInboundApplication:submit']
 
 const defaultForm = {
   purchaseId: null, // 采购单id

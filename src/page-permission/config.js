@@ -1,15 +1,21 @@
 // 配置管理
 // --------------------------- 公共权限 start ------------------------------
 
-export const commonPM = {
-
-}
+export const commonPM = {}
 
 // --------------------------- 公共权限 end --------------------------------
 
 // ########################################################################
 
 // --------------------------- 基础配置 start ------------------------------
+
+// 基础配置/单位配置
+export const configUnitPM = {
+  get: ['config_unitConfig:get'], // 单位配置列表
+  batchAdd: ['config_unitConfig:batchAdd'], // 批量添加单位配置
+  edit: ['config_unitConfig:edit'], // 编辑单位配置
+  del: ['config_unitConfig:del'] // 删除单位配置
+}
 
 // 基础配置/工厂管理
 export const configFactoryPM = {
@@ -29,11 +35,59 @@ export const configWorkshopPM = {
   editStatus: ['workshop:editStatus'] // 更改车间状态
 }
 
+// 基础配置/编号配置
+export const numberConfigPM = {
+  get: ['config_numberConfig:get'], // 编号配置列表
+  edit: ['config_numberConfig:edit'] // 编辑编号配置
+}
+
+// 基础配置/常用税率
+export const configCommonTaxRatePM = {
+  get: ['config_commonTaxRate:get'],
+  edit: ['config_commonTaxRate:edit']
+}
+
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################
 
-// --------------------------- MES-配置管理 start ------------------------------
+// --------------------------- 科目管理 start ------------------------------
+
+// 科目管理/科目配置
+export const classConfigPM = {
+  get: ['config_classConfig:get'], // 科目配置列表
+  add: ['config_classConfig:add'], // 添加科目配置
+  del: ['config_classConfig:del'] // 删除科目配置
+}
+
+// 科目管理/规格配置
+export const specConfigPM = {
+  get: ['config_specConfig:get'], // 规格配置列表
+  add: ['config_specConfig:add'], // 添加规格配置
+  edit: ['config_specConfig:edit'], // 编辑规格配置
+  del: ['config_specConfig:del'], // 删除规格配置
+  weightedAverage: ['config_specConfig:weightedAverage'] // 加权平均价
+}
+
+// 科目管理/计量配置
+export const measureConfigPM = {
+  get: ['config_class_measureConfig:get'], // 计量配置列表
+  edit: ['config_class_measureConfig:edit'] // 编辑计量配置
+}
+
+// 科目管理/型材库
+export const sectionSteelLibraryPM = {
+  get: ['config_class_sectionSteelLibrary:get'], // 型材库列表
+  add: ['config_class_sectionSteelLibrary:add'], // 添加型材库
+  edit: ['config_class_sectionSteelLibrary:edit'], // 编辑型材库
+  del: ['config_class_sectionSteelLibrary:del'] // 删除型材库
+}
+
+// ---------------------------- 基础配置 end -------------------------------
+
+// ########################################################################
+
+// --------------------------- MES-配置管理 start --------------------------
 
 // MES-配置管理/基础配置
 export const configMesBasePM = {
@@ -53,7 +107,7 @@ export const configMesBasePM = {
 
 // ########################################################################
 
-// --------------------------- 建钢-生产配置 start ------------------------------
+// --------------------------- 建钢-生产配置 start -------------------------
 
 // 建钢-生产配置/生产线管理
 export const configProductionLinePM = {
@@ -104,6 +158,40 @@ export const configWageQuotaPM = {
 }
 
 // ---------------------------- 基础配置 end -------------------------------
+
+// ########################################################################
+
+// --------------------------- WMS-配置管理 start --------------------------
+
+// WMS-配置管理/基础配置
+export const configWmsBasicForPM = {
+  basicInboundGet: ['config_wms_basicInbound:get'], // 查看 基础入库配置信息
+  basicInboundEdit: ['config_wms_basicInbound:edit'], // 编辑 基础入库配置信息
+  steelInboundGet: ['config_wms_steelInbound:get'], // 查看 钢材入库配置信息
+  steelInboundEdit: ['config_wms_steelInbound:edit'], // 编辑 钢材入库配置信息
+  basicOutboundGet: ['config_wms_basicOutbound:get'], // 查看 基础出库配置信息
+  basicOutboundEdit: ['config_wms_basicOutbound:edit'], // 编辑 基础出库配置信息
+  partyABorrowReturnGet: ['config_wms_partyABorrowReturn:get'], // 查看 甲供借用归还配置信息
+  partyABorrowReturnEdit: ['config_wms_partyABorrowReturn:edit'] // 编辑 甲供借用归还配置信息
+  // basicRejectGet: ['config_wms_basicReject:get'], // 查看 基础退货信息
+  // basicRejectEdit: ['config_wms_basicReject:edit'] // 编辑 基础退货信息
+}
+
+// WMS-配置管理/仓库设置
+export const configWmsFactoryWarehousePM = {
+  get: ['config_wms_factory_warehouse:get'], // 查看 工厂仓库设置
+  add: ['config_wms_factory_warehouse:add'], // 添加 工厂仓库设置
+  edit: ['config_wms_factory_warehouse:edit'], // 编辑 工厂仓库设置
+  del: ['config_wms_factory_warehouse:del'] // 删除 工厂仓库设置
+}
+
+// WMS-配置管理/废料定义
+export const configWmsScrapDefinitionPM = {
+  steelScrapDefinitionGet: ['config_wms_steelScrapDefinition:get'],
+  steelScrapDefinitionEdit: ['config_wms_steelScrapDefinition:edit']
+}
+
+// --------------------------- WMS-配置管理 end ----------------------------
 
 // ########################################################################
 

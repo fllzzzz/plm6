@@ -153,6 +153,7 @@ const getDetails = {
           {
             id: 3,
             specification: '57*21*3*9 * Q325B',
+            nationalStandard: 'GB-10', // 国家标准
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,

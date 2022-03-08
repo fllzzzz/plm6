@@ -38,17 +38,14 @@
 
 <script setup>
 import crudApi from '@/api/config/wms/tax-rate'
+import { configCommonTaxRatePM as permission } from '@/page-permission/config'
+
 import { ref } from 'vue'
 import { supplierClassEnum } from '@enum-ms/supplier'
 
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mForm from './module/form.vue'
-
-const permission = {
-  get: ['config_wms_commonTaxRate:get'],
-  edit: ['config_wms_commonTaxRate:edit']
-}
 
 const optShow = {
   add: false,

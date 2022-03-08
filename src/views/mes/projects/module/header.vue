@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row v-loading="projectInfo.loading" :gutter="20" class="panel-group">
+    <el-row v-loading="projectInfo.loading" v-permission="crud.permission.statistics" :gutter="20" class="panel-group">
       <el-col :span="6" class="card-panel-col">
         <panel name="全部项目" num-color="#1890ff" :end-val="projectInfo.summary.quantity || 0" />
       </el-col>

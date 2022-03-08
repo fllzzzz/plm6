@@ -30,6 +30,7 @@ const oldValue = computed(() => {
 
 const newValue = computed(() => {
   if (props.enum) {
+    console.log('props.enum.VL[props.new]', props.enum.VL[props.new])
     return props.enum.VL[props.new]
   }
   return props.new

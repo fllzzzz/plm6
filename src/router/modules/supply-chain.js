@@ -1,6 +1,6 @@
 // 路由：供应链
 export default {
-  id: 170,
+  id: 7,
   name: '供应链',
   children: [
     {

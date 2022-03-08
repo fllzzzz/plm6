@@ -74,7 +74,7 @@
             <div><span v-thousand="projectInfo.marginAmount || 0" /><span v-if="projectInfo.marginType">（{{ dict.label['margin_type'][projectInfo.marginType] }}）</span></div>
           </el-form-item>
           <el-form-item label="发运额" prop="happenedAmount">
-            <div><span v-thousand="projectInfo.happenedAmount" />（{{ digitUppercase(projectInfo.happenedAmount || 0) }}）</div>
+            <div><span v-thousand="projectInfo.happenedAmount || 0" />（{{ digitUppercase(projectInfo.happenedAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">

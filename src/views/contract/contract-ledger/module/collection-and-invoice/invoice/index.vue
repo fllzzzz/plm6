@@ -214,14 +214,9 @@ import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
 import mForm from './form'
+import { contractLedgerPM } from '@/page-permission/contract'
 
-// crud交由presenter持有
-const permission = {
-  get: ['invoice:get'],
-  add: ['invoice:add'],
-  edit: ['invoice:edit'],
-  audit: ['invoice:audit']
-}
+const permission = contractLedgerPM.invoice
 
 const optShow = {
   add: true,

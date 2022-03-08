@@ -4,7 +4,7 @@
     key="specification"
     prop="specification"
     label="规格"
-    width="200"
+    min-width="200"
     align="center"
     :fixed="fixed"
     show-overflow-tooltip

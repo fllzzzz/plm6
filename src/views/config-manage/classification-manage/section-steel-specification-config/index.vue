@@ -111,6 +111,8 @@
 
 <script setup>
 import crudApi, { addStandard, getStandard, setStandard } from '@/api/config/classification-manage/section-steel-spec-config'
+import { sectionSteelLibraryPM as permission } from '@/page-permission/config'
+
 import { provide, ref, computed } from 'vue'
 import { isNotBlank, isBlank } from '@data-type/index'
 import sectionSteelSpecITmpl from '@/utils/excel/import-template/config/section-steel-spec-template'
@@ -124,13 +126,6 @@ import { ElMessage, ElCheckTag } from 'element-plus'
 import mHeader from './module/header'
 import mForm from './module/form'
 import specDetail from './detail/index.vue'
-
-const permission = {
-  get: ['config_class_sectionSteelLibrary:get'],
-  add: ['config_class_sectionSteelLibrary:add'],
-  edit: ['config_class_sectionSteelLibrary:edit'],
-  del: ['config_class_sectionSteelLibrary:del']
-}
 
 const optShow = {
   add: false,

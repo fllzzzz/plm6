@@ -380,6 +380,7 @@ const detail_id2 = {
             id: 1,
             specification: '57*21*3*9 * Q325B',
             classifyId: 110,
+            nationalStandard: 'GB-10', // 国家标准
             basicClass: matClsEnum.SECTION_STEEL.V,
             length: 10000,
             brand: '马钢',
@@ -403,6 +404,7 @@ const detail_id2 = {
             source: {
               id: 1,
               classifyId: 110,
+              nationalStandard: 'GB-10', // 国家标准
               boolPartyA: false, // 是否甲供材料
               outboundUnitType: measureTypeEnum.MEASURE.V, // 出库单位类型
               basicClass: rawMatClsEnum.SECTION_STEEL.V,

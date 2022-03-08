@@ -24,7 +24,7 @@
     </template>
     <common-table :data="list" :max-height="maxHeight">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="collectionDate" label="收款日期" align="center" width="130" show-overflow-tooltip>
+      <el-table-column prop="collectionDate" label="收款日期" align="center" width="100" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-parse-time="{ val: row.collectionDate, fmt: '{y}-{m}-{d}' }" />
         </template>
@@ -34,27 +34,27 @@
           <span v-thousand="row.collectionAmount" v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column prop="collectionReason" label="收款事由" align="center" min-width="100" show-overflow-tooltip>
+      <el-table-column prop="collectionReason" label="收款事由" align="center" width="100" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text="row.collectionReason" />
         </template>
       </el-table-column>
-      <el-table-column prop="collectionMode" label="收款方式" align="center" min-width="100" show-overflow-tooltip>
+      <el-table-column prop="collectionMode" label="收款方式" align="center" width="100" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text="paymentFineModeEnum.VL[row.collectionMode]" />
         </template>
       </el-table-column>
-      <el-table-column prop="collectionUnit" label="收款单位" align="center" min-width="120" show-overflow-tooltip>
+      <el-table-column prop="collectionUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text="row.collectionUnit" />
         </template>
       </el-table-column>
-      <el-table-column prop="collectionDepositBank" label="收款开户行" align="center" min-width="120" show-overflow-tooltip>
+      <el-table-column prop="collectionDepositBank" label="收款开户行" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text="row.collectionDepositBank" />
         </template>
       </el-table-column>
-      <el-table-column prop="paymentUnit" label="付款单位" align="center" min-width="120" show-overflow-tooltip>
+      <el-table-column prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
           <span v-empty-text="row.paymentUnit" />
         </template>
@@ -70,6 +70,16 @@
         </template>
       </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </common-dialog>
 </template>
 
@@ -81,6 +91,7 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
+import usePagination from '@compos/use-pagination'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -100,6 +111,7 @@ const props = defineProps({
 })
 
 const { visible, handleClose } = useVisible({ emit, props })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 // 请求参数
 const params = computed(() => {
@@ -139,8 +151,9 @@ async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [] } = await collectionRecord(params.value)
+    const { content = [], totalElements } = await collectionRecord({ ...params.value, ...queryPage })
     _list = content
+    setTotalPage(totalElements)
   } catch (error) {
     console.log('获取收款记录失败', error)
   } finally {

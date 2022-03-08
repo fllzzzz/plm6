@@ -60,22 +60,36 @@ const getFinalMatClsByIdForSectionSteel = {
         measurePrecision: 0, // 计量单位小数精度
         outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
         basicClass: matClsEnum.SECTION_STEEL.V,
-        specConfig: [
+        nationalStandard: [
           {
             id: 1,
             name: 'GB-06',
-            boolStandard: true,
+            boolDefault: true,
             list: [
-              { code: '01', name: '10*10*200*500', 'unitWeight|10-30.1-2': 1 },
-              { code: '02', name: '12*10*200*500', 'unitWeight|10-30.1-2': 1 },
-              { code: '03', name: '13*10*200*500', 'unitWeight|10-30.1-2': 1 },
-              { code: '04', name: '13*10*100*200', 'unitWeight|10-30.1-2': 1 },
-              { code: '05', name: '15*15*110*300', 'unitWeight|10-30.1-2': 1 },
-              { code: '06', name: '57*21*3*9', 'unitWeight|10-30.1-2': 1 }
+              { code: '1-01', name: '10*10*200*500', 'unitWeight|100-300.1-2': 1 },
+              { code: '1-02', name: '12*10*200*500', 'unitWeight|100-300.1-2': 1 },
+              { code: '1-03', name: '13*10*200*500', 'unitWeight|100-300.1-2': 1 },
+              { code: '1-04', name: '13*10*100*200', 'unitWeight|100-300.1-2': 1 },
+              { code: '1-05', name: '15*15*110*300', 'unitWeight|100-300.1-2': 1 },
+              { code: '1-06', name: '57*21*3*9', 'unitWeight|100-300.1-2': 1 }
             ]
           },
           {
             id: 2,
+            name: 'GB-10',
+            list: [
+              { code: '2-01', name: '10*10*200*500', 'unitWeight|100-300.1-2': 1 },
+              { code: '2-02', name: '12*10*200*500', 'unitWeight|100-300.1-2': 1 },
+              { code: '2-03', name: '13*10*200*500', 'unitWeight|100-300.1-2': 1 },
+              { code: '2-04', name: '13*10*100*200', 'unitWeight|100-300.1-2': 1 },
+              { code: '2-05', name: '15*15*110*300', 'unitWeight|100-300.1-2': 1 },
+              { code: '2-06', name: '57*21*3*9', 'unitWeight|100-300.1-2': 1 }
+            ]
+          }
+        ],
+        specConfig: [
+          {
+            id: 1,
             name: '材质',
             list: [
               { code: '01', name: 'Q325B' },

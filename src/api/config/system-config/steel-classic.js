@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
 // 获取钢材对应材料配置的简要信息
-export function getSteelMaterialClassifyBrief() {
+export function getSteelClassifyConfBrief() {
   return request({
     module: 'config',
-    url: 'steel-material/classification/all/brief',
+    url: 'structure-steel/classification/all/brief',
     method: 'get'
   })
 }

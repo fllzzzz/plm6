@@ -4,7 +4,7 @@
       <input ref="checkbox" type="checkbox" :value="props.value">
       <span class="checkbox-inner" />
     </span>
-    <span><slot /></span>
+    <span style="margin-left: 6px"><slot /></span>
   </label>
 </template>
 <script setup>

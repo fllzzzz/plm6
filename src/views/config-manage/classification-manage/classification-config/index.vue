@@ -11,6 +11,8 @@
 
 <script setup>
 import crudApi from '@/api/config/classification-manage/classification-config'
+import { classConfigPM as permission } from '@/page-permission/config'
+
 import { reactive, ref, provide } from 'vue'
 import { classificationEnum } from '@enum-ms/classification'
 import { isNotBlank } from '@data-type/index'
@@ -21,13 +23,6 @@ import useRefreshStore from '@/composables/store/use-refresh-store'
 import rootCard from './module/root-card.vue'
 import childCard from './module/child-card.vue'
 import batchAdd from './module/batch-add.vue'
-
-// 权限
-const permission = {
-  get: ['config_classConfig:get'],
-  add: ['config_classConfig:add'],
-  del: ['config_classConfig:del']
-}
 
 // 最大高度
 const { maxHeight } = useMaxHeight({ extraBox: null, wrapperBox: ['.app-container', '#card-main-content'] })

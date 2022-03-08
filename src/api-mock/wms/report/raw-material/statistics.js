@@ -28,8 +28,8 @@ const getSendAndReceiveStorage = {
             basicClass: matClsEnum.STEEL_PLATE.V,
             specifications: ['Q325B'],
             thickness: 10,
-            length: 1000,
-            width: 1000,
+            // length: 1000,
+            // width: 1000,
             brand: '嘻嘻',
             heatNoAndBatchNo: 'aaff',
             invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
@@ -89,8 +89,8 @@ const getSendAndReceiveStorage = {
             specifications: ['Q325B'],
             quantity: 5,
             thickness: 20,
-            length: 1500,
-            width: 2000,
+            // length: 1500,
+            // width: 2000,
             brand: '哈哈',
             heatNoAndBatchNo: 'fddfd',
             mete: 2355000,
@@ -154,9 +154,10 @@ const getSendAndReceiveStorage = {
             boolOddmentByHalfOut: true, // 是否为整料半出剩下的余料
             unitType: measureTypeEnum.ACCOUNTING.V,
             specifications: ['57*21*3*9 * Q325B'],
+            nationalStandard: 'GB-10', // 国家标准
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
-            length: 10000,
+            // length: 10000,
             brand: '马钢',
             heatNoAndBatchNo: 'ooopp',
             weight: 252900,
@@ -562,6 +563,7 @@ const getSendAndReceiveStorageDetail = {
           {
             id: 3,
             specification: '57*21*3*9 * Q325B',
+            nationalStandard: 'GB-10', // 国家标准
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             quantity: 2,

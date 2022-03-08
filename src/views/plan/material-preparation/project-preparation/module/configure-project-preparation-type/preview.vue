@@ -18,19 +18,36 @@
           <span v-parse-project="{ project: row }" v-empty-text />
         </template>
       </el-table-column>
+      <el-table-column label="是否无清单备料" align="center" width="140">
+        <template v-slot="scope">
+          <cell-change-preview :old="scope.row.sourceWithoutList" :new="scope.row.withoutList" :enum="whetherEnum" />
+        </template>
+      </el-table-column>
       <el-table-column label="“结构”备料范围" align="center" width="140">
         <template v-slot="scope">
-          <cell-change-preview :old="scope.row.sourceStrucPreparationRangeType" :new="scope.row.strucPreparationRangeType" :enum="preparationRangeEnum" />
+          <cell-change-preview
+            :old="scope.row.sourceStrucPreparationRangeType"
+            :new="scope.row.strucPreparationRangeType"
+            :enum="preparationRangeEnum"
+          />
         </template>
       </el-table-column>
       <el-table-column label="“围护”备料范围" align="center" width="140">
         <template v-slot="scope">
-          <cell-change-preview :old="scope.row.sourceEnclPreparationRangeType" :new="scope.row.enclPreparationRangeType" :enum="preparationRangeEnum" />
+          <cell-change-preview
+            :old="scope.row.sourceEnclPreparationRangeType"
+            :new="scope.row.enclPreparationRangeType"
+            :enum="preparationRangeEnum"
+          />
         </template>
       </el-table-column>
       <el-table-column label="“辅材”备料范围" align="center" width="140">
         <template v-slot="scope">
-          <cell-change-preview :old="scope.row.sourceAuxPreparationRangeType" :new="scope.row.auxPreparationRangeType" :enum="preparationRangeEnum" />
+          <cell-change-preview
+            :old="scope.row.sourceAuxPreparationRangeType"
+            :new="scope.row.auxPreparationRangeType"
+            :enum="preparationRangeEnum"
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -43,12 +60,12 @@ import { computed, defineEmits, defineProps, inject, ref } from 'vue'
 import { isBlank } from '@data-type'
 import { judgeItemFieldChange } from '@/utils'
 import { preparationRangeEnum } from '@enum-ms/plan'
+import { whetherEnum } from '@/utils/enum/modules/common'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import { ElMessage } from 'element-plus'
 import cellChangePreview from '@comp-common/cell-change-preview'
-
 const emit = defineEmits(['saveSuccess', 'update:visible'])
 
 const props = defineProps({

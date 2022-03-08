@@ -18,6 +18,14 @@
       <div class="class-unit-config">
         <div class="filter-container">
           <div class="filter-left-box">
+            <el-input
+              v-model.trim="queryFilter.projectInfo"
+              clearable
+              size="small"
+              placeholder="项目编号/名称"
+              class="filter-item"
+              style="width: 250px"
+            />
             <common-radio-button
               v-model="queryFilter.configureStatus"
               show-option-all
@@ -50,6 +58,18 @@
           <el-table-column label="项目" align="left">
             <template #default="{ row }">
               <span v-parse-project="{ project: row }" v-empty-text />
+            </template>
+          </el-table-column>
+          <el-table-column label="是否无清单备料" align="center" width="170" prop="withoutList">
+            <template #default="{ row }">
+              <common-radio
+                v-if="isEditMode"
+                v-model="row.withoutList"
+                :options="whetherEnum.ENUM"
+                type="enum"
+                :disabled="row.boolStrucPrepared"
+              />
+              <span v-else v-parse-enum="{ e: whetherEnum, v: row.withoutList }" v-empty />
             </template>
           </el-table-column>
           <el-table-column label="“结构”备料范围" align="center" width="250" prop="strucPreparationRangeType">
@@ -102,9 +122,10 @@
 import { getProjectListForRangeInfo } from '@/api/plan/material-preparation/project-preparation'
 import { defineProps, defineEmits, ref, computed, provide } from 'vue'
 import { preparationRangeEnum } from '@enum-ms/plan'
-import { configureStatusEnum } from '@enum-ms/common'
+import { configureStatusEnum, whetherEnum } from '@enum-ms/common'
 import { deepClone, isBlank, isNotBlank } from '@/utils/data-type'
 import { setSourceInfo } from '@data-type/array'
+import { pinyinFuzzyMatching, pinyinForField } from '@/utils/pinyin'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -135,11 +156,14 @@ const queryFilter = ref({
 })
 
 const sourceMap = new Map([
+  ['withoutList', 'sourceWithoutList'],
   ['strucPreparationRangeType', 'sourceStrucPreparationRangeType'],
   ['enclPreparationRangeType', 'sourceEnclPreparationRangeType'],
   ['auxPreparationRangeType', 'sourceAuxPreparationRangeType']
 ])
 provide('sourceMap', sourceMap)
+
+const pinyinFields = ['name', 'shortName']
 
 const drawerRef = ref()
 // 项目列表
@@ -179,18 +203,26 @@ const filterList = computed(() => {
   return list.value.filter((row) => {
     // 满足条件判断
     let meets = true
-    // if (queryFilter.value.preparationRangeType) {
-    //   meets = row.preparationRangeType === queryFilter.value.preparationRangeType
-    // }
-    // if (!meets) return meets
-
+    const projectInfo = queryFilter.value.projectInfo
+    if (projectInfo) {
+      // 编号/项目名称/项目简称
+      meets = row.serialNumber.indexOf(projectInfo) > -1 || pinyinFuzzyMatching(row, projectInfo, pinyinFields)
+    }
     // 校验
     if (queryFilter.value.configureStatus === configureStatusEnum.UNFINISHED.V) {
-      meets = isBlank(row.sourcePreparationRangeType)
+      meets =
+        meets &&
+        isBlank(row.sourceStrucPreparationRangeType) &&
+        isBlank(row.sourceEnclPreparationRangeType) &&
+        isBlank(row.sourceAuxPreparationRangeType)
       return meets
     }
     if (queryFilter.value.configureStatus === configureStatusEnum.FINISHED.V) {
-      meets = isNotBlank(row.sourcePreparationRangeType)
+      meets =
+        meets &&
+        (isNotBlank(row.sourceStrucPreparationRangeType) ||
+          isNotBlank(row.sourceEnclPreparationRangeType) ||
+          isNotBlank(row.sourceAuxPreparationRangeType))
       return meets
     }
     return meets
@@ -208,6 +240,7 @@ async function fetchList() {
     list.value = content.map((row) => {
       return setSourceInfo(row, sourceMap)
     })
+    pinyinForField(list.value, pinyinFields)
     sourceList.value = deepClone(list.value)
   } catch (error) {
     console.error(error)

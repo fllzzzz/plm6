@@ -100,7 +100,7 @@ const getSectionSteel = {
             id: 4,
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
-            nationalStandard: 'GB-06', // 国家标准
+            nationalStandard: 'GB-10', // 国家标准
             specification: '10*10*200*500 * Q325B',
             quantity: 10,
             frozenQuantity: 5, // 冻结数量

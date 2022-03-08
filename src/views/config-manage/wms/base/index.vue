@@ -22,25 +22,14 @@
 </template>
 
 <script setup>
+import { configWmsBasicForPM as permission } from '@/page-permission/config'
+import { provide } from 'vue'
+
 import BasicInbound from './module/basic-inbound.vue'
 import SteelInbound from './module/steel-inbound.vue'
 import BasicOutbound from './module/basic-outbound.vue'
 // import BasicReject from './module/basic-reject.vue'
 import PartyABorrowReturn from './module/party-a-borrow-return.vue'
-import { provide } from 'vue'
-
-const permission = {
-  basicInboundGet: ['config_wms_basicInbound:get'],
-  basicInboundEdit: ['config_wms_basicInbound:edit'],
-  steelInboundGet: ['config_wms_steelInbound:get'],
-  steelInboundEdit: ['config_wms_steelInbound:edit'],
-  basicOutboundGet: ['config_wms_basicOutbound:get'],
-  basicOutboundEdit: ['config_wms_basicOutbound:edit'],
-  partyABorrowReturnGet: ['config_wms_partyABorrowReturn:get'],
-  partyABorrowReturnEdit: ['config_wms_partyABorrowReturn:edit'],
-  basicRejectGet: ['config_wms_basicReject:get'],
-  basicRejectEdit: ['config_wms_basicReject:edit']
-}
 
 provide('permission', permission)
 </script>

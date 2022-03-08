@@ -58,26 +58,20 @@
 
 <script setup>
 import crudApi from '@/api/config/classification-manage/specification-config'
+import { specConfigPM as permission } from '@/page-permission/config'
+
 import { nextTick, provide, reactive, ref, watch } from 'vue'
 // import { rawMatClsEnum } from '@enum-ms/classification'
 import { getFirstLeafNode } from '@/utils/system/classification'
 import * as lodash from 'lodash'
 
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import useMatClsTree from '@/composables/store/use-mat-cls-tree'
-
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
 
-const permission = {
-  get: ['config_specConfig:get'],
-  add: ['config_specConfig:add'],
-  edit: ['config_specConfig:edit'],
-  del: ['config_specConfig:del'],
-  weightedAverage: ['config_specConfig:weightedAverage']
-}
+import useMatClsTree from '@/composables/store/use-mat-cls-tree'
+import useMaxHeight from '@compos/use-max-height'
 
 const optShow = {
   add: true,

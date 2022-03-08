@@ -32,6 +32,13 @@ export default {
           hidden: false,
           component: '/config-manage/project-config/number-config/index',
           meta: { title: '编号配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'CommonTaxRate',
+          path: 'common-tax-rate',
+          hidden: false,
+          component: '/config-manage/main/common-tax-rate/index',
+          meta: { title: '常用税率', icon: 'Steve-Jobs', noCache: true }
         }
       ]
     },
@@ -113,7 +120,7 @@ export default {
       name: 'WMSConfig',
       alwaysShow: false,
       redirect: '/config-manage/wms/base',
-      meta: { title: 'WMS配置管理', icon: 'config-2', noCache: true },
+      meta: { title: 'WMS-配置管理', icon: 'config-2', noCache: true },
       children: [
         {
           name: 'WmsBaseConfig',
@@ -135,13 +142,6 @@ export default {
           hidden: false,
           component: '/config-manage/wms/scrap-definition/index',
           meta: { title: '废料定义', icon: 'Steve-Jobs', noCache: true }
-        },
-        {
-          name: 'CommonTaxRate',
-          path: 'common-tax-rate',
-          hidden: false,
-          component: '/config-manage/wms/common-tax-rate/index',
-          meta: { title: '常用税率', icon: 'Steve-Jobs', noCache: true }
         }
       ]
     },

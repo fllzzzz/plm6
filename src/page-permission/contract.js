@@ -15,6 +15,7 @@ export const projectListPM = {
   add: ['contract_project:add'], // 新增项目
   edit: ['contract_project:edit'], // 修改项目
   editStatus: ['contract_project:editStatus'], // 修改状态
+  print: ['contract_project:print'], // 打印
   download: ['contract_project:download'], // 下载
   del: ['contract_project:del'], // 删除项目
   detail: ['contract_project:detail'], // 项目详情
@@ -47,30 +48,35 @@ export const contractLedgerPM = {
     add: ['contract_ledger_collection:add'], // 收款添加
     edit: ['contract_ledger_collection:edit'], // 收款修改
     del: ['contract_ledger_collection:del'], // 收款删除
-    audit: ['contract_ledger_collection:audit'] // 收款审核
+    audit: ['contract_ledger_collection:audit'], // 收款审核
+    print: ['contract_ledger_collection:print'] // 打印下载
   },
   invoice: {
     get: ['contract_ledger_invoice:get'], // 开票列表
     add: ['contract_ledger_invoice:add'], // 开票添加
     edit: ['contract_ledger_invoice:edit'], // 开票修改
     del: ['contract_ledger_invoice:del'], // 开票删除
-    audit: ['contract_ledger_invoice:audit'] // 开票审核
+    audit: ['contract_ledger_invoice:audit'], // 开票审核
+    print: ['contract_ledger_invoice:print'] // 打印下载
   }
 }
 
 // 合同管理/收款台账
 export const collectionLedgerPM = {
   collection: {
-    get: ['collection_ledger_collection:get'] // 收款列表
+    get: ['collection_ledger_collection:get'], // 收款列表
+    print: ['collection_ledger_collection:print'] // 打印下载
   },
   invoice: {
-    get: ['collection_ledger_invoice:get'] // 开票列表
+    get: ['collection_ledger_invoice:get'], // 开票列表
+    print: ['collection_ledger_invoice:print'] // 打印下载
   }
 }
 
 // 合同管理/合同预警
 export const collectionWarnPM = {
-  get: ['collection_warn:get'] // 合同预警列表
+  get: ['collection_warn:get'], // 合同预警列表
+  print: ['collection_warn:print'] // 打印下载
 }
 // --------------------------- 合同管理 end --------------------------------
 

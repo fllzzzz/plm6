@@ -9,14 +9,9 @@
 </template>
 
 <script setup>
-import steel from './module/steel.vue'
-
+import { configWmsScrapDefinitionPM as permission } from '@/page-permission/config'
 import { provide } from 'vue'
-
-const permission = {
-  steelScrapDefinitionGet: ['config_wms_steelScrapDefinition:get'],
-  steelScrapDefinitionEdit: ['config_wms_steelScrapDefinition:edit']
-}
+import steel from './module/steel.vue'
 
 provide('permission', permission)
 </script>
