@@ -45,7 +45,7 @@
           </el-table-column>
         </template>
         <!--编辑与删除-->
-        <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="100px" align="center" fixed="right">
+        <el-table-column v-permission="permission.edit" label="操作" width="100px" align="center" fixed="right">
           <template v-slot="scope">
             <udOperation :show-del="false" :data="scope.row" :permission="permission" />
           </template>
@@ -61,6 +61,7 @@
 <script setup>
 import crudApi from '@/api/config/classification-manage/section-steel-spec-config-detail'
 import { defineProps, defineEmits, provide, inject, ref } from 'vue'
+import { sectionSteelLibraryPM } from '@/page-permission/config'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -89,7 +90,7 @@ const optShow = {
   download: false
 }
 
-const permission = inject('permission')
+const permission = sectionSteelLibraryPM.specification
 const standard = inject('standard')
 const sectionSteel = inject('sectionSteel')
 const drawerRef = ref()

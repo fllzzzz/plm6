@@ -78,9 +78,18 @@ export const measureConfigPM = {
 // 科目管理/型材库
 export const sectionSteelLibraryPM = {
   get: ['config_class_sectionSteelLibrary:get'], // 型材库列表
-  add: ['config_class_sectionSteelLibrary:add'], // 添加型材库
-  edit: ['config_class_sectionSteelLibrary:edit'], // 编辑型材库
-  del: ['config_class_sectionSteelLibrary:del'] // 删除型材库
+  add: ['config_class_sectionSteelLibrary:add'], // 添加型材
+  detail: ['config_class_sectionSteelLibrary:detail'], // 查看型材规格
+  upload: ['config_class_sectionSteelLibrary:upload'], // 上传执行标准
+  download: ['config_class_sectionSteelLibrary:upload'], // 下载执行标准
+  del: ['config_class_sectionSteelLibrary:del'], // 删除执行标准
+  specification: {
+    get: ['config_class_sectionSteelLibrary_specification:get'], // 型材规格列表
+    add: ['config_class_sectionSteelLibrary_specification:add'], // 新增型材规格
+    batchAdd: ['config_class_sectionSteelLibrary_specification:batchAdd'], // 批量新增型材规格
+    edit: ['config_class_sectionSteelLibrary_specification:edit'], // 编辑型材规格
+    del: ['config_class_sectionSteelLibrary_specification:del'] // 删除型材规格
+  }
 }
 
 // ---------------------------- 基础配置 end -------------------------------

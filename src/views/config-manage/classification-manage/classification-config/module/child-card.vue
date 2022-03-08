@@ -25,7 +25,7 @@
               v-model.trim="search.serialNumber"
               class="search-name"
               size="small"
-              :placeholder="`编号查询（${title}}）`"
+              :placeholder="`编号查询（${title}）`"
               clearable
               style="margin-left: 15px"
             />

@@ -4,10 +4,12 @@
       <template #optLeft>
         <el-input v-model.trim="query.nameOrCode" placeholder="输入科目名称、编号搜索" class="filter-item" style="width: 250px" size="small" clearable />
       </template>
-      <template v-permission="permission.edit" #viewLeft>
-        <common-button class="filter-item" type="primary" size="mini" @click="configDetail(1)">一级科目设置</common-button>
-        <common-button class="filter-item" type="primary" size="mini" @click="configDetail(2)">二级科目设置</common-button>
-        <common-button class="filter-item" type="primary" size="mini" @click="configDetail(3)">三级科目设置</common-button>
+      <template #viewLeft>
+        <span v-permission="permission.get">
+          <common-button class="filter-item" type="primary" size="mini" @click="configDetail(1)">一级科目设置</common-button>
+          <common-button class="filter-item" type="primary" size="mini" @click="configDetail(2)">二级科目设置</common-button>
+          <common-button class="filter-item" type="primary" size="mini" @click="configDetail(3)">三级科目设置</common-button>
+        </span>
       </template>
     </crudOperation>
 
@@ -15,6 +17,7 @@
     <config-view
       v-model:visible="config.visible"
       :level="config.level"
+      :permission="permission"
       :classificationList="classificationMap.get(config.level)"
     />
   </div>
