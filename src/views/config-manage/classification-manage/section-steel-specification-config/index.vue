@@ -61,6 +61,7 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('attachmentId')"
+        v-permission="[...permission.detail, ...permission.upload, ...permission.download]"
         key="attachmentId"
         :show-overflow-tooltip="true"
         prop="attachmentId"
@@ -84,7 +85,7 @@
                 @success="crud.refresh"
               />
               <template #reference>
-                <common-button size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
+                <common-button v-permission="permission.upload" size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
               </template>
             </el-popover>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
@@ -99,7 +100,7 @@
                 :params="{ sectionSteelId: scope.row.id, standardId: sd.id }"
               />
               <template #reference>
-                <common-button size="mini" icon="el-icon-download" type="success">下载</common-button>
+                <common-button v-permission="permission.download" size="mini" icon="el-icon-download" type="success">下载</common-button>
               </template>
             </el-popover>
           </div>

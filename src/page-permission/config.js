@@ -138,8 +138,9 @@ export const sectionSteelLibraryPM = {
   get: ['config_class_sectionSteelLibrary:get'], // 型材库列表
   add: ['config_class_sectionSteelLibrary:add'], // 添加型材
   detail: ['config_class_sectionSteelLibrary:detail'], // 查看型材规格
+  edit: ['config_class_sectionSteelLibrary:edit'], // 修改执行标准
   upload: ['config_class_sectionSteelLibrary:upload'], // 上传执行标准
-  download: ['config_class_sectionSteelLibrary:upload'], // 下载执行标准
+  download: ['config_class_sectionSteelLibrary:download'], // 下载执行标准
   del: ['config_class_sectionSteelLibrary:del'], // 删除执行标准
   specification: {
     get: ['config_class_sectionSteelLibrary_specification:get'], // 型材规格列表

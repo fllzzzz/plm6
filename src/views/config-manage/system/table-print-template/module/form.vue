@@ -1723,7 +1723,7 @@ function rowDrop() {
 function handleTemplateSelect(val) {
   // config = reactive(isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig)))
   const _config = isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig))
-  Object.assign(config, _config)
+  Object.assign(config, { qrCode: {}, ..._config })
   setData()
   splicingHtml()
   componentKey.value++
