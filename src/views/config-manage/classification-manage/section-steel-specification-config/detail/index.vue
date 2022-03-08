@@ -90,7 +90,7 @@ const optShow = {
   download: false
 }
 
-const permission = sectionSteelLibraryPM.specification
+const permission = sectionSteelLibraryPM
 const standard = inject('standard')
 const sectionSteel = inject('sectionSteel')
 const drawerRef = ref()

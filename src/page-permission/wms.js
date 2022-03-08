@@ -75,7 +75,12 @@ export const gasMaterialWarehousePM = {
   freezeList: commonPM.rawMatFreezeList // 查看原材料冻结列表
 }
 
-// --------------------------- 物料仓 end --------------------------------
+//
+export const permission = {
+  get: ['wms_outboundApplication_record:get']
+}
+
+// --------------------------- 物料仓 end ---------------------------------
 
 // ########################################################################
 

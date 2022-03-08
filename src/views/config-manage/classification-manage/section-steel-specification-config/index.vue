@@ -43,7 +43,7 @@
       >
         <template v-slot="scope">
           <template v-if="scope.row.isLeaf">
-            <span v-if="checkPermission(permission.edit)">
+            <template v-if="checkPermission(permission.edit)">
               <el-check-tag
                 class="check-tag"
                 v-for="sd in standard"
@@ -54,14 +54,13 @@
               >
                 {{ sd.name }}
               </el-check-tag>
-            </span>
+            </template>
             <el-tag v-else type="primary" size="medium">{{ standardMap.get(scope.row.standardId) }}</el-tag>
           </template>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('attachmentId')"
-        v-permission="[...permission.detail, ...permission.upload, ...permission.download]"
         key="attachmentId"
         :show-overflow-tooltip="true"
         prop="attachmentId"
@@ -70,7 +69,7 @@
       >
         <template v-slot="scope">
           <div v-if="scope.row.isLeaf" style="display: flex; justify-content: flex-start">
-            <common-button v-permission="permission.detail" size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)">
+            <common-button size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)">
               查看
             </common-button>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
@@ -85,7 +84,7 @@
                 @success="crud.refresh"
               />
               <template #reference>
-                <common-button v-permission="permission.upload" size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
+                <common-button v-permission="permission.add" size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
               </template>
             </el-popover>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
@@ -100,7 +99,7 @@
                 :params="{ sectionSteelId: scope.row.id, standardId: sd.id }"
               />
               <template #reference>
-                <common-button v-permission="permission.download" size="mini" icon="el-icon-download" type="success">下载</common-button>
+                <common-button size="mini" icon="el-icon-download" type="success">下载</common-button>
               </template>
             </el-popover>
           </div>

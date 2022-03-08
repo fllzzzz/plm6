@@ -12,7 +12,7 @@ export const commonPM = {}
 // 基础配置/单位配置
 export const configUnitPM = {
   get: ['config_unitConfig:get'], // 单位配置列表
-  batchAdd: ['config_unitConfig:batchAdd'], // 批量添加单位配置
+  add: ['config_unitConfig:add'], // 添加单位配置
   edit: ['config_unitConfig:edit'], // 编辑单位配置
   del: ['config_unitConfig:del'] // 删除单位配置
 }
@@ -136,20 +136,10 @@ export const measureConfigPM = {
 
 // 科目管理/型材库
 export const sectionSteelLibraryPM = {
-  get: ['config_class_sectionSteelLibrary:get'], // 型材库列表
-  add: ['config_class_sectionSteelLibrary:add'], // 添加型材
-  detail: ['config_class_sectionSteelLibrary:detail'], // 查看型材规格
-  edit: ['config_class_sectionSteelLibrary:edit'], // 修改执行标准
-  upload: ['config_class_sectionSteelLibrary:upload'], // 上传执行标准
-  download: ['config_class_sectionSteelLibrary:download'], // 下载执行标准
-  del: ['config_class_sectionSteelLibrary:del'], // 删除执行标准
-  specification: {
-    get: ['config_class_sectionSteelLibrary_specification:get'], // 型材规格列表
-    add: ['config_class_sectionSteelLibrary_specification:add'], // 新增型材规格
-    batchAdd: ['config_class_sectionSteelLibrary_specification:batchAdd'], // 批量新增型材规格
-    edit: ['config_class_sectionSteelLibrary_specification:edit'], // 编辑型材规格
-    del: ['config_class_sectionSteelLibrary_specification:del'] // 删除型材规格
-  }
+  get: ['config_class_sectionSteelLibrary:get'], // 列表
+  add: ['config_class_sectionSteelLibrary:add'], // 添加
+  edit: ['config_class_sectionSteelLibrary:edit'], // 编辑
+  del: ['config_class_sectionSteelLibrary:del'] // 删除
 }
 
 // ---------------------------- 基础配置 end -------------------------------

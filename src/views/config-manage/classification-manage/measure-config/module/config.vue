@@ -230,6 +230,7 @@ const props = defineProps({
 })
 
 const sourceMap = inject('sourceMap')
+const permission = inject('permission')
 
 const drawerRef = ref()
 const list = ref([])

@@ -5,7 +5,7 @@
       <slot name="optLeft" />
       <common-button
         v-if="crud.optShow.batchAdd"
-        v-permission="permission.batchAdd"
+        v-permission="permission.add"
         class="filter-item"
         size="mini"
         type="primary"

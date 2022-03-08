@@ -13,9 +13,23 @@
         />
       </div>
       <div class="filter-right-box">
-        <el-tag v-permission="permission.edit" v-for="sd in standard" :key="sd.id" size="medium" effect="plain" style="cursor: pointer" @click.self="toSetStandard(sd)">
+        <el-tag
+          v-permission="permission.edit"
+          v-for="sd in standard"
+          :key="sd.id"
+          size="medium"
+          effect="plain"
+          style="cursor: pointer"
+          @click.self="toSetStandard(sd)"
+        >
           {{ sd.name }}
-          <i v-permission="permission.del" v-if="sd.deletable" class="el-icon-delete" style="cursor: pointer" @click.self="toDelStandard(sd.id)" />
+          <i
+            v-permission="permission.del"
+            v-if="sd.deletable"
+            class="el-icon-delete"
+            style="cursor: pointer"
+            @click.self="toDelStandard(sd.id)"
+          />
         </el-tag>
         <common-button v-permission="permission.add" size="mini" type="success" icon="el-icon-plus" @click="crud.toAdd" />
       </div>
