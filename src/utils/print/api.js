@@ -20,7 +20,13 @@ const mesAssemblePartProductionReport = mes.structureProductionReport
 const mesMachinePartProductionReport = mes.structureProductionReport
 const mesEnclosureProductionReport = mes.enclosureProductionReport
 const mesStructureProductionStatistics = mes.productionStatistics
+const mesStructureProductionStatisticsIn = mes.productionStatisticsIn
+const mesStructureProductionStatisticsUn = mes.productionStatisticsUn
+const mesStructureProductionStatisticsComplete = mes.productionStatisticsComplete
 const mesEnclosureProductionStatistics = mes.productionStatistics
+const mesEnclosureProductionStatisticsIn = mes.productionStatisticsIn
+const mesEnclosureProductionStatisticsUn = mes.productionStatisticsUn
+const mesEnclosureProductionStatisticsComplete = mes.productionStatisticsComplete
 const mesUnfinishedList = mes.unfinishedList
 const mesEnclosureProductionLine = mes.enclosureProductionLine
 const mesStructureProductionLine = mes.structureProductionLine
@@ -65,7 +71,13 @@ export default {
   mesMachinePartProductionReport, // 零件生产报表
   mesEnclosureProductionReport, // 围护生产报表
   mesStructureProductionStatistics, // 结构在制品统计
+  mesStructureProductionStatisticsIn, // 结构在制品统计明细
+  mesStructureProductionStatisticsUn, // 结构未生产统计明细
+  mesStructureProductionStatisticsComplete, // 结构完成品统计明细
   mesEnclosureProductionStatistics, // 围护在制品统计
+  mesEnclosureProductionStatisticsIn, // 围护在制品统计明细
+  mesEnclosureProductionStatisticsUn, // 围护未生产统计明细
+  mesEnclosureProductionStatisticsComplete, // 围护完成品统计明细
   mesUnfinishedList, // 未完成清单
   mesEnclosureProductionLine, // 围护生产线报表
   mesStructureProductionLine, // 结构生产线报表

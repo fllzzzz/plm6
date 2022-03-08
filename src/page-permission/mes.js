@@ -155,7 +155,8 @@ export const enclosureProductionReportPM = {
 export const productionStatisticsPM = {
   get: ['mes_production_statistics:get'], // 在制品统计列表
   detail: ['mes_production_statistics:detail'], // 在制品统计详情
-  print: ['mes_production_statistics:print'] // 在制品统计详情
+  print: ['mes_production_statistics:print'], // 在制品统计打印
+  printDetail: ['mes_production_statistics:printDetail'] // 在制品统计详情打印
 }
 
 // 生产管理/生产分析/迟滞报表
