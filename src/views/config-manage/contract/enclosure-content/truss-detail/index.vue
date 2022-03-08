@@ -9,7 +9,7 @@
         <mHeader />
       </div> -->
       <!--表格渲染-->
-      <common-button class="filter-item" size="mini" type="primary" @click.stop="isEdit=true" v-if="isEdit===false" :disabled="handleDisabled">修改</common-button>
+      <common-button class="filter-item" size="mini" type="primary" @click.stop="isEdit=true" v-if="isEdit===false" :disabled="handleDisabled" v-permission="permission.edit">修改</common-button>
       <template v-else>
         <common-button class="filter-item" size="mini" @click.stop="onCancel" :disabled="handleDisabled">取消</common-button>
         <common-button class="filter-item" size="mini" type="primary" @click.stop="onSubmit" :disabled="handleDisabled">提交</common-button>
@@ -69,12 +69,10 @@ import { defineExpose, ref, defineProps, watch, computed } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableValidate from '@compos/form/use-table-validate'
+import { enclosureInfoConfigPM } from '@/page-permission/config'
 
 // crud交由presenter持有
-const permission = {
-  get: ['trussDetailConfig:get'],
-  edit: ['trussDetailConfig:edit']
-}
+const permission = enclosureInfoConfigPM.detailInfo
 
 const tableRef = ref()
 const isEdit = ref(false)

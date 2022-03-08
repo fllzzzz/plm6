@@ -73,11 +73,9 @@ import { invoiceTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
+import { collectionLedgerPM } from '@/page-permission/contract'
 
-// crud交由presenter持有
-const permission = {
-  get: ['invoice:get']
-}
+const permission = collectionLedgerPM.invoice
 
 const optShow = {
   add: false,

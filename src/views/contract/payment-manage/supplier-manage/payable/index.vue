@@ -8,7 +8,7 @@
     <common-table
     ref="tableRef"
     v-loading="crud.loading"
-    :data="crud.data"
+    :data="[{}]"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
@@ -61,18 +61,14 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/supplier-manage/payable'
+import crudApi from '@/api/contract/contract-warn'
 import { ref } from 'vue'
+import { contractSupplierPayablePM as permission } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import { toThousand } from '@data-type/number'
-
-// crud交由presenter持有
-const permission = {
-  get: ['supplierPayable:get']
-}
 
 const optShow = {
   add: false,

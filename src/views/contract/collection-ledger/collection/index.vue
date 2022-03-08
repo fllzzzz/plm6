@@ -68,11 +68,9 @@ import useDict from '@compos/store/use-dict'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { projectNameFormatter } from '@/utils/project'
+import { collectionLedgerPM } from '@/page-permission/contract'
 
-// crud交由presenter持有
-const permission = {
-  get: ['collection:get']
-}
+const permission = collectionLedgerPM.collection
 
 const optShow = {
   add: false,

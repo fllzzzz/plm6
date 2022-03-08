@@ -15,13 +15,14 @@
         <div style="width: 260px">
           <common-select
             v-model="form.projectMode"
-            :options="projectModeEnum.ENUM"
-            type="enum"
+            :options="modeOption"
+            type="other"
             size="small"
             clearable
             class="filter-item"
             placeholder="项目模式"
             style="width: 250px"
+            :dataStructure="typeProp"
           />
         </div>
       </el-form-item>
@@ -31,10 +32,9 @@
 
 <script setup>
 import { ref, watch, defineProps, defineEmits } from 'vue'
-import { projectModeEnum } from '@enum-ms/contract'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import useVisible from '@compos/use-visible'
-import { modeData, edit } from '@/api/config/system-config/project-mode'
+import { modeList, modeData, edit } from '@/api/config/system-config/project-mode'
 import { ElNotification } from 'element-plus'
 
 const formRef = ref()
@@ -49,6 +49,12 @@ const props = defineProps({
   }
 })
 
+const originData = [
+  { L: '构件', K: 'STRUCTURE', V: 1 << 0 },
+  { L: '构件&组立', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
+  { L: '构件&零件&组立', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
+]
+const typeProp = { key: 'V', label: 'L', value: 'V' }
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const submitLoading = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])
@@ -65,7 +71,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-// const modeOption = ref([])
+const modeOption = ref([])
 const rules = {
   projectMode: [{ required: true, message: '请选择项目模式', trigger: 'change' }]
 }
@@ -84,10 +90,18 @@ function handleSuccess() {
 }
 
 async function getProjectMode() {
+  modeOption.value = []
   try {
     const data = await modeData()
+    const { content } = await modeList()
+    if (content && content.length > 0) {
+      content.forEach(v => {
+        if (originData.findIndex(k => k.V === v) > -1) {
+          modeOption.value.push(originData.find(k => k.V === v))
+        }
+      })
+    }
     form.value.projectMode = data.projectMode
-    // modeOption.value = data
   } catch (e) {
     console.log('获取项目模式', e)
   }

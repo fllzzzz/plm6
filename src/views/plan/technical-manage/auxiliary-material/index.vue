@@ -142,7 +142,7 @@
             <common-button type="primary" size="mini" @click="rowSubmit(scope.row)">保存</common-button>
           </template>
           <template v-else>
-            <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" />
+            <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.row)" v-permission="permission.edit"/>
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
@@ -151,7 +151,7 @@
               @confirm="deleteRow(scope.row)"
             >
               <template #reference>
-                <common-button size="small" class="el-icon-delete" type="danger"/>
+                <common-button size="small" class="el-icon-delete" type="danger" v-permission="permission.del"/>
               </template>
             </el-popconfirm>
           </template>
@@ -176,7 +176,7 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { ElMessage } from 'element-plus'
-import { artifactTreePM as permission } from '@/page-permission/plan'
+import { auxiliaryMaterialPM as permission } from '@/page-permission/plan'
 import { validate } from '@compos/form/use-table-validate'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { positiveNumPattern } from '@/utils/validate/pattern'

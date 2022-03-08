@@ -69,6 +69,7 @@
 <script setup>
 import crudApi from '@/api/contract/contract-ledger'
 import { ref } from 'vue'
+import { contractSupplierLogisticsPM as permission } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -80,7 +81,6 @@ import contractMoney from './module/contract-money'
 import receiveAndInvoice from './module/receive-and-invoice'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
-import { contractLedgerPM as permission } from '@/page-permission/contract'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
 
@@ -121,6 +121,9 @@ const { maxHeight } = useMaxHeight({
 // }
 
 function openLogisticsAmount(row) {
+  if (!crud.permission.logisticsLog.get) {
+    return
+  }
   currentProjectId.value = row
   logisticsVisible.value = true
 }
