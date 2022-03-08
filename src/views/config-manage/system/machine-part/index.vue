@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!--表格渲染-->
-    <common-button type="primary" @click="formVisible=true">添加</common-button>
+    <common-button type="primary" @click="formVisible=true" v-permission="permission.add">添加</common-button>
     <common-table
     ref="tableRef"
     :data="tableData"
@@ -23,15 +23,9 @@
 <script setup>
 import crudApi from '@/api/config/system-config/machine-part-config'
 import { ref } from 'vue'
-// import checkPermission from '@/utils/system/check-permission'
+import { machinePartConfigPM as permission } from '@/page-permission/config'
 import useMaxHeight from '@compos/use-max-height'
 import mForm from './module/form'
-
-// crud交由presenter持有
-// const permission = {
-//   get: ['machinePartConfig:get'],
-//   add: ['machinePartConfig:add']
-// }
 
 const tableRef = ref()
 const tableData = ref([])

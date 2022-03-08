@@ -18,25 +18,25 @@
               <template v-if="!isModify">
                 <template v-if="projectStatus===projectStatusEnum.PROCESS.V">
                   <el-tooltip class="item" effect="dark" content="修改" placement="top">
-                    <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" />
+                    <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" v-permission="permission.edit"/>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="合同金额变更" placement="top">
-                    <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" />
+                    <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" v-permission="permission.changeAmount"/>
                   </el-tooltip>
                 </template>
-                <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V || projectStatus!==projectStatusEnum.SETTLED.V">
+                <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V && projectStatus!==projectStatusEnum.SETTLED.V">
                   <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
-                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
+                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" v-permission="permission.settle"/>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="变更签证" placement="top">
-                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" />
+                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" v-permission="permission.variationChange"/>
                   </el-tooltip>
                 </template>
                 <el-tooltip class="item" effect="dark" content="打印" placement="top">
-                  <common-button size="mini" icon="el-icon-printer" plain class="next_btn" />
+                  <common-button size="mini" icon="el-icon-printer" plain class="next_btn" v-permission="permission.print"/>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="下载" placement="top">
-                  <common-button size="mini" icon="el-icon-download" plain class="next_btn" />
+                  <common-button size="mini" icon="el-icon-download" plain class="next_btn" v-permission="permission.download"/>
                 </el-tooltip>
               </template>
             </div>
@@ -91,6 +91,7 @@ import { editContract } from '@/api/contract/project'
 import { projectStatusEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import { judgeSameValue } from './judgeSameValue'
+import { projectListPM as permission } from '@/page-permission/contract'
 
 const props = defineProps({
   projectId: {

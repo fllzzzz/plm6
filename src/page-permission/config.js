@@ -47,6 +47,64 @@ export const configCommonTaxRatePM = {
   edit: ['config_commonTaxRate:edit']
 }
 
+// 基础配置/费用归类
+export const expenseManagementPM = {
+  get: ['expense_management:get'], // 费用归类列表
+  add: ['expense_management:add'], // 新增费用归类
+  edit: ['expense_management:edit'], // 修改费用归类
+  del: ['expense_management:del'] // 删除费用归类
+}
+
+// 基础配置/分支机构
+export const branchCompanyPM = {
+  get: ['branch_company:get'], // 分支机构列表
+  add: ['branch_company:add'], // 新增分支机构
+  edit: ['branch_company:edit'], // 修改分支机构
+  del: ['branch_company:del'] // 删除分支机构
+}
+
+// 基础配置/项目模式
+export const projectModePM = {
+  get: ['project_mode:get'], // 项目模式列表
+  edit: ['project_mode:edit'] // 修改项目模式
+}
+
+// 基础配置/组立配置
+export const artifactConfigPM = {
+  get: ['artifact_config:get'], // 组立配置列表
+  add: ['artifact_config:add'] // 添加组立配置
+}
+
+// 基础配置/零件配置
+export const machinePartConfigPM = {
+  get: ['machine_part_config:get'], // 零件配置列表
+  add: ['machine_part_config:add'] // 添加零件配置
+}
+
+// 基础配置/钢材配置
+export const steelClassicPM = {
+  get: ['steel_classic:get'], // 钢材配置列表
+  add: ['steel_classic:add'], // 新增钢材配置
+  edit: ['steel_classic:edit'], // 修改钢材配置
+  del: ['steel_classic:del'] // 删除钢材配置
+}
+
+// 基础配置/变更原因
+export const changeReasonPM = {
+  get: ['change_reason:get'], // 变更原因列表
+  add: ['change_reason:add'], // 新增变更原因
+  edit: ['change_reason:edit'], // 修改变更原因
+  del: ['change_reason:del'] // 删除变更原因
+}
+
+// 系统配置/表格模板
+export const tablePrintTemplatePM = {
+  get: ['table_print_template:get'], // 表格模板列表
+  add: ['table_print_template:add'], // 新增表格模板
+  edit: ['table_print_template:edit'], // 编辑表格模板
+  del: ['table_print_template:del'] // 删除表格模板
+}
+
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################
@@ -205,16 +263,30 @@ export const configWmsScrapDefinitionPM = {
 
 // ########################################################################
 
-// --------------------------- 系统配置 start ------------------------------
+// --------------------------- 项目配置 start --------------------------
 
-// 系统配置/表格模板
-export const tablePrintTemplatePM = {
-  get: ['table_print_template:get'], // 表格模板列表
-  add: ['table_print_template:add'], // 新增表格模板
-  edit: ['table_print_template:edit'], // 编辑表格模板
-  del: ['table_print_template:del'] // 删除表格模板
+// 项目配置/围护信息配置
+export const enclosureInfoConfigPM = {
+  get: ['enclosure_info_config:get'], // 围护列表
+  add: ['enclosure_info_config:add'], // 新增桁架楼承板
+  editStatus: ['enclosure_info_config:editStatus'], // 修改桁架楼承板状态
+  del: ['enclosure_info_config:del'], // 删除桁架楼承板
+  detailInfo: {
+    get: ['enclosure_info_detail:get'], // 围护详情列表
+    add: ['enclosure_info_detail:add'], // 新增围护详情
+    edit: ['enclosure_info_detail:editStatus'], // 修改围护详情
+    del: ['enclosure_info_detail:del'] // 删除围护详情
+  }
 }
 
-// ---------------------------- 系统配置 end -------------------------------
+// 项目配置/项目成员模板配置
+export const memberConfigPM = {
+  get: ['member-config:get'], // 项目成员模板列表
+  add: ['member-config:add'], // 新增项目成员模板
+  edit: ['member-config:edit'], // 修改项目成员模板
+  del: ['member-config:del'] // 删除项目成员模板
+}
+
+// --------------------------- 项目配置 end ----------------------------
 
 // ########################################################################

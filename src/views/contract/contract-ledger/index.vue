@@ -108,6 +108,8 @@
 <script setup>
 import crudApi from '@/api/contract/contract-ledger'
 import { ref } from 'vue'
+import { contractLedgerPM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -121,7 +123,6 @@ import collectionAndInvoice from './module/collection-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
-import { contractLedgerPM as permission } from '@/page-permission/contract'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
 
@@ -157,11 +158,17 @@ const { maxHeight } = useMaxHeight({
 })
 
 function openContractMoney(row) {
+  if (!checkPermission(permission.amountLog)) {
+    return
+  }
   currentProjectId.value = row
   moneyVisible.value = true
 }
 
 function openOccurAmount(row) {
+  if (!checkPermission(permission.amountLog)) {
+    return
+  }
   currentProjectId.value = row
   occurVisible.value = true
 }

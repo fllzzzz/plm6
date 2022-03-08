@@ -146,7 +146,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-if="checkPermission([...permission.download])" label="操作" width="260px" align="center" fixed="right">
+      <el-table-column label="操作" width="260px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
             v-if="checkPermission(permission.detail)"
@@ -167,7 +167,7 @@
               @click="changeStatus(scope.row, projectStatusEnum.PROCESS.V)"
               >继续</common-button>
           </template>
-          <udOperation :data="scope.row" :show-edit="false" />
+          <udOperation :data="scope.row" :show-edit="false" :permission="permission"/>
           <!-- 下载 -->
           <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
         </template>

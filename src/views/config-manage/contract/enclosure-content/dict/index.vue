@@ -68,8 +68,6 @@
           </template>
         </el-table-column>
     </common-table>
-    <!--分页组件-->
-    <!-- <pagination /> -->
     <mForm />
   </el-card>
 </template>
@@ -77,25 +75,17 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/enclosure-config/enclosure'
 import { ref, defineEmits } from 'vue'
-import { TechnologyTypeEnum } from '@enum-ms/contract'
-import { ElMessageBox } from 'element-plus'
-
-import { enabledEnum } from '@enum-ms/common'
+import { enclosureInfoConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-// import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
+import { TechnologyTypeEnum } from '@enum-ms/contract'
+import { ElMessageBox } from 'element-plus'
+import { enabledEnum } from '@enum-ms/common'
 
 const emit = defineEmits(['click-line'])
-
-// crud交由presenter持有
-const permission = {
-  get: ['enclosureConfig:get'],
-  editStatus: ['enclosureConfig:editStatus'],
-  del: ['enclosureConfig:del']
-}
 
 const optShow = {
   add: true,
