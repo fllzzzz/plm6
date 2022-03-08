@@ -101,7 +101,7 @@ import {
   processMaterialListTypeEnum as typeEnum,
   processInspectTypeEnum as inspectTypeEnum,
   processReportTypeEnum as reportTypeEnum,
-  wageQuotaTypeEnum,
+  wageQuotaTypeEnum
 } from '@enum-ms/mes'
 import EO from '@enum'
 import { regForm } from '@compos/use-crud'
@@ -117,7 +117,7 @@ const defaultForm = {
   reportType: reportTypeEnum.BATCH_SCAN.V,
   sequenceType: typeEnum.ARTIFACT.V,
   type: processTypeEnum.ONCE.V,
-  wageQuotaTypeArr:[]
+  wageQuotaTypeArr: []
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
@@ -127,11 +127,11 @@ const rules = {
   wageQuotaTypeArr: [{ required: true, message: '请选择工价计价方式', trigger: 'change' }],
   name: [
     { required: true, message: '请填写工序名称', trigger: 'blur' },
-    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' },
-  ],
+    { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+  ]
 }
 
-CRUD.HOOK.beforeToCU = async (crud, form) => {
+CRUD.HOOK.beforeToAdd = async (crud, form) => {
   typeChange(form.sequenceType)
 }
 

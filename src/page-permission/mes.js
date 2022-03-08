@@ -402,6 +402,7 @@ export const enclosureManualPackPM = {
 export const mesPackPM = {
   get: ['mes_pack:get'], // 打包列表
   detail: ['mes_pack:detail'], // 查看打包清单
+  pack: manualPackPM.pack, // 手工打包
   edit: ['mes_pack:edit'], // 编辑打包清单
   del: ['mes_pack:del'], // 删除打包清单
   print: ['mes_pack:print'], // 查看及打印标签
