@@ -14,10 +14,10 @@
     <crudOperation>
       <template v-slot:optRight>
         <!-- 任务录入按钮 -->
-        <template v-if="(query.areaId || hiddenArea) && checkPermission(permission.save)">
+        <template v-if="(query.areaId || hiddenArea)">
           <common-button v-show="modifying" type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
           <common-button v-show="modifying" type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
-          <common-button v-show="!modifying" type="primary" style="margin-left: 0px" size="mini" @click.stop="handelModifying(true)">
+          <common-button v-if="checkPermission(permission.save)" v-show="!modifying" type="primary" style="margin-left: 0px" size="mini" @click.stop="handelModifying(true)">
             任务录入
           </common-button>
           <el-popover
