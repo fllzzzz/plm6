@@ -241,7 +241,10 @@ async function handleProjectChange(id) {
   try {
     if (id) {
       projectInfo.value = await getProjectInfo(id)
-      form.visaAmount = projectInfo.value.visaAmount
+      // 新增的时候赋值
+      if (!isEdit.value) {
+        form.visaAmount = projectInfo.value.visaAmount
+      }
     }
   } catch (error) {
     crud.notify('获取项目详情失败', CRUD.NOTIFICATION_TYPE.ERROR)

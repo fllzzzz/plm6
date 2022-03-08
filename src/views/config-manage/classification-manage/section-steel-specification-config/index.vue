@@ -43,16 +43,19 @@
       >
         <template v-slot="scope">
           <template v-if="scope.row.isLeaf">
-            <el-check-tag
-              class="check-tag"
-              v-for="sd in standard"
-              :key="sd.id"
-              type="success"
-              :checked="scope.row.standardId === sd.id"
-              @click="changeStandard(scope.row, sd.id)"
-            >
-              {{ sd.name }}
-            </el-check-tag>
+            <span v-if="checkPermission(permission.edit)">
+              <el-check-tag
+                class="check-tag"
+                v-for="sd in standard"
+                :key="sd.id"
+                type="success"
+                :checked="scope.row.standardId === sd.id"
+                @click="changeStandard(scope.row, sd.id)"
+              >
+                {{ sd.name }}
+              </el-check-tag>
+            </span>
+            <el-tag v-else type="primary" size="medium">{{ standardMap.get(scope.row.standardId) }}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -117,6 +120,7 @@ import { provide, ref, computed } from 'vue'
 import { isNotBlank, isBlank } from '@data-type/index'
 import sectionSteelSpecITmpl from '@/utils/excel/import-template/config/section-steel-spec-template'
 import sectionSteelSpecETmpl from '@/utils/excel/export-template/config/section-steel-spec-template'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'

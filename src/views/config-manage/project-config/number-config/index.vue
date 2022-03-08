@@ -164,7 +164,7 @@ const saveAll = debounce(
   async function (row) {
     const params = getParams()
     if (!params.length) {
-      this.closeEditAll()
+      closeEditAll()
       return
     }
     if (!crud.data.every(v => !!v.code)) {
