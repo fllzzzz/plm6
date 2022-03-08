@@ -7,6 +7,18 @@
     :before-close="handleClose"
     size="80%"
   >
+      <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.printDetail"
+          :api-key="apiKey"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table
         v-loading="tableLoading"
@@ -158,7 +170,7 @@
 
 <script setup>
 import { getCompleteDetail, getInProductionDetail, getUnProductionDetail } from '@/api/mes/production-manage/analysis/production-statistics'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { DP } from '@/settings/config'
 // import { toFixed } from '@data-type/index'
@@ -195,9 +207,23 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
+const permission = inject('permission')
 const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
+
+const apiKey = computed(() => {
+  switch (props.reportType) {
+    case reportEnum.IN_PRODUCTION.V:
+      return 'mesEnclosureProductionStatisticsIn'
+    case reportEnum.UN_PRODUCTION.V:
+      return 'mesEnclosureProductionStatisticsUn'
+    case reportEnum.COMPLETE.V:
+      return 'mesEnclosureProductionStatisticsComplete'
+    default:
+      return ''
+  }
+})
 
 watch(
   () => props.visible,

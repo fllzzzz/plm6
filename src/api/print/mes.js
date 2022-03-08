@@ -224,6 +224,57 @@ export function productionStatistics(params) {
 }
 
 /**
+ * 在制品统计明细
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatisticsIn(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/in_production/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 在制品统计明细
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatisticsUn(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/un_production/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 在制品统计明细
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatisticsComplete(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/complete/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 未完成清单
  */
 export function unfinishedList(params) {
@@ -325,6 +376,9 @@ export default {
   structureProductionReport, // 结构生产报表
   enclosureProductionReport, // 围护生产报表
   productionStatistics, // 在制品统计
+  productionStatisticsIn, // 在制品统计明细-在制品
+  productionStatisticsUn, // 在制品统计明细-未生产
+  productionStatisticsComplete, // 在制品统计明细-完成品
   unfinishedList, // 未完成清单
 
   // 班组报表

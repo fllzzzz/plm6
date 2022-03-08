@@ -12,7 +12,9 @@ const mesStructureTeamWageDetail = mes.meteUnit
 const mesEnclosureTeamWageDetail = mes.meteUnit
 
 const mesStructureProductionStatistics = mes.unProducedMete
+const mesStructureProductionStatisticsIn = mes.productionStatisticsMete
 const mesEnclosureProductionStatistics = mes.unProducedMete
+const mesEnclosureProductionStatisticsIn = mes.productionStatisticsMete
 
 const mesUnfinishedList = mes.unCompleteMete
 const mesStructureProjectSummary = mes.projectSummary
@@ -37,5 +39,7 @@ export default {
   mesStructureProjectSummary,
   mesEnclosureProjectSummary,
   mesStructureProductionStatistics,
-  mesEnclosureProductionStatistics
+  mesStructureProductionStatisticsIn,
+  mesEnclosureProductionStatistics,
+  mesEnclosureProductionStatisticsIn
 }
