@@ -34,15 +34,6 @@
         value-format="YYYY"
         @change="crud.toQuery"
       />
-      <el-input
-        v-model="query.noOrProjectName"
-        size="small"
-        placeholder="输入合同编号或项目简称"
-        style="width: 200px;"
-        class="filter-item"
-        clearable
-        @blur="crud.toQuery"
-      />
       <common-select
         v-model="query.businessType"
         :options="businessTypeEnum.ENUM"
@@ -79,6 +70,15 @@
       />
       <div>
         <el-input
+          v-model="query.noOrProjectName"
+          size="small"
+          placeholder="输入合同编号或项目简称"
+          style="width: 200px;"
+          class="filter-item"
+          clearable
+          @blur="crud.toQuery"
+        />
+        <el-input
           v-model="query.signerName"
           size="small"
           placeholder="输入签约人"
@@ -90,19 +90,16 @@
         <rrOperation/>
       </div>
       <crudOperation add-text="合同立项">
-        <!-- <template slot="optRight">
-          <el-button type="info" size="mini" icon="el-icon-time" @click="changeLogVisible = true">项目变更记录</el-button>
-        </template>
-        <template slot="viewLeft">
+        <template #viewLeft>
           <print-table
-            v-permission="permission.print"
-            api-key="CONTRACT_LEDGER"
-            :params="{year:query.year}"
+            v-permission="crud.permission.print"
+            api-key="projectList"
+            :params="{year: crud.query.year}"
             size="mini"
             type="warning"
             class="filter-item"
           />
-        </template> -->
+        </template>
       </crudOperation>
     </div>
   </div>

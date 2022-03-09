@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column prop="collectionReason" label="收款事由" align="center" width="100" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text="row.collectionReason" />
+          <span v-empty-text="dict.label?.['payment_reason']?.[row.collectionReason]" />
         </template>
       </el-table-column>
       <el-table-column prop="collectionMode" label="收款方式" align="center" width="100" show-overflow-tooltip>
@@ -92,6 +92,7 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
+import useDict from '@compos/store/use-dict'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -110,6 +111,7 @@ const props = defineProps({
   }
 })
 
+const dict = useDict(['payment_reason'])
 const { visible, handleClose } = useVisible({ emit, props })
 const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 

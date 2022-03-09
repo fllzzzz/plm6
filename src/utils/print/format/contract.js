@@ -1,6 +1,7 @@
 import { isNotBlank } from '@data-type/index'
 import { dateDifference } from '@/utils/date'
 
+// 计算用时天数
 function durationCalculation({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
     // 计算天数
@@ -25,6 +26,22 @@ function durationCalculation({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理合同台账收付款比例
+function handleRate({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.collectionRate *= 100 || 0
+    row.invoiceRate *= 100 || 0
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
+  handleRate,
   durationCalculation
 }

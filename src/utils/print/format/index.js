@@ -2,6 +2,8 @@ import mes from './mes'
 import contract from './contract'
 
 const myProject = contract.durationCalculation
+const projectList = contract.durationCalculation
+const contractLedger = contract.handleRate
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -26,6 +28,8 @@ const mesPaintingList = mes.surfaceArea
 
 export default {
   myProject,
+  projectList,
+  contractLedger,
   mesStructureProcess,
   mesStructureProductionLine,
   mesStructureTeamWage,
