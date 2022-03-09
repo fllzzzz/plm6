@@ -140,7 +140,7 @@ import { ref, watch, provide, reactive } from 'vue'
 import { dateDifference } from '@/utils/date'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
-import { planProjectsPM as permission } from '@/page-permission/mes'
+import { planProjectsPM as permission } from '@/page-permission/plan'
 import { businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 
 import useMaxHeight from '@compos/use-max-height'
