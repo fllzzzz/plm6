@@ -124,7 +124,7 @@ async function changeStatus(data, val) {
       type: 'warning'
     })
     const submitData = {
-      type: this.crud.query.type,
+      type: crud.query.type,
       data: { code: data.code, status: val ? 1 : 0 }
     }
     await editStatus(submitData)

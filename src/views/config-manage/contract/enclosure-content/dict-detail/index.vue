@@ -96,7 +96,7 @@ const props = defineProps({
 })
 
 const lineName = computed(() => {
-  return props.line && props.line.name
+  return props.line ? props.line.name : undefined
 })
 
 watch(
@@ -112,13 +112,13 @@ watch(
 )
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.name = lineName
+  crud.query.name = props.line.name
   crud.query.type = props.line.type
   return !!crud.query.name
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.name = lineName
+  crud.form.name = props.line.name
   crud.form.type = props.line.type
 }
 

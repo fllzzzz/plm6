@@ -35,7 +35,6 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.download,...permission.del])"
         label="操作"
         width="200px"
         align="center"
@@ -46,7 +45,7 @@
             :data="scope.row"
             :show-edit="false"
           />
-          <common-button size="mini" type="primary" @click="editRow(scope.row)">替换</common-button>
+          <common-button size="mini" type="primary" @click="editRow(scope.row)" v-permission="permission.edit">替换</common-button>
           <!-- 下载 -->
           <e-operation :data="scope.row" :permission="permission.download" style="margin-left:5px;"/>
         </template>
@@ -62,7 +61,6 @@
 <script setup>
 import crudApi from '@/api/plan/technical-data-manage/deepen'
 import { ref, watch, defineProps } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
