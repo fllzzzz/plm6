@@ -46,7 +46,7 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column key="collectionAmount" prop="collectionAmount" label="*收款金额" align="center" min-width="170" class="money-column">
+          <el-table-column key="collectionAmount2" prop="collectionAmount2" label="*收款金额" align="center" min-width="170" class="money-column">
             <el-table-column key="collectionAmount" prop="collectionAmount" label="金额" align="center" min-width="85">
               <template v-slot="scope">
               <template v-if="scope.row.type===2">
@@ -70,7 +70,7 @@
               </template>
             </template>
             </el-table-column>
-            <el-table-column key="collectionAmount1" prop="collectionAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+            <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
               <template v-slot="scope">
               <template v-if="scope.row.type===2">
                 <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
@@ -203,9 +203,16 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
+
+// 金额校验
+const validateAmount = (value, row) => {
+  if (!value) return false
+  return true
+}
+
 const tableRules = {
   collectionDate: [{ required: true, message: '请选择收款日期', trigger: 'change' }],
-  collectionAmount: [{ required: true, message: '请选择收款金额', trigger: 'change', type: 'number' }],
+  collectionAmount: [{ validator: validateAmount, message: '请选择收款金额', trigger: 'change', type: 'number' }],
   collectionBankAccountId: [{ required: true, message: '请选择收款银行', trigger: 'change' }],
   collectionMode: [{ required: true, message: '请选择收款方式', trigger: 'change' }],
   collectionReason: [{ required: true, message: '请选择收款事由', trigger: 'change' }],

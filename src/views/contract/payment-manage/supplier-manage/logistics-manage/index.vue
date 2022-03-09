@@ -70,6 +70,7 @@
 import crudApi from '@/api/contract/contract-ledger'
 import { ref } from 'vue'
 import { contractSupplierLogisticsPM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -121,7 +122,7 @@ const { maxHeight } = useMaxHeight({
 // }
 
 function openLogisticsAmount(row) {
-  if (!crud.permission.logisticsLog.get) {
+  if (!checkPermission(permission.logisticsLog.get)) {
     return
   }
   currentProjectId.value = row

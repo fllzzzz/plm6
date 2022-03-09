@@ -315,7 +315,7 @@ const defaultForm = {
 }
 const techForm = {
   enclosureInfo: {},
-  structureSaveRequestVOS: [],
+  structureList: [],
   profiledPlateList: [],
   pressureBearingPlateList: [],
   trussFloorPlateList: [],

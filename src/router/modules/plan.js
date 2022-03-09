@@ -16,7 +16,7 @@ export default {
           name: 'PlanProject',
           path: 'plan-projects',
           hidden: false,
-          component: '/mes/projects/index',
+          component: '/plan/project-list/index',
           meta: { title: '我的项目', icon: 'project', noCache: true }
         }
       ]
