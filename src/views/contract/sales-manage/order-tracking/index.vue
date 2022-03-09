@@ -98,7 +98,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('transportQuantity')" key="transportQuantity" prop="transportQuantity" label="运输车次" align="center" width="90" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.detail)" #header>
+        <!-- <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
             placement="top"
@@ -109,9 +109,10 @@
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
-        </template>
+        </template> -->
         <template #default="{ row }">
-          <el-tag effect="plain" class="clickable" v-empty-text @click.stop="openRecord(row, 'happened')">{{ row.transportQuantity }}</el-tag>
+          <span v-empty-text>{{ row.transportQuantity }}</span>
+          <!-- <el-tag effect="plain" class="clickable" v-empty-text @click.stop="openRecord(row, 'happened')">{{ row.transportQuantity }}</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="80" :show-overflow-tooltip="true">

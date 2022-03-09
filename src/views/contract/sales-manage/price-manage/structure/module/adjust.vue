@@ -59,7 +59,7 @@
 
 <script setup>
 import { businessList, businessBind } from '@/api/contract/sales-manage/price-manage/structure'
-import { ref, computed, watch, defineProps, defineEmits } from 'vue'
+import { ref, computed, watch, defineProps, defineEmits, nextTick } from 'vue'
 
 import { businessModifyTypeEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
@@ -143,6 +143,11 @@ function submit() {
 // 初始化数据
 function init() {
   form.value = { ...formData }
+  nextTick(() => {
+    if (formRef.value) {
+      formRef.value.resetFields()
+    }
+  })
 }
 
 // 获取商务构件列表

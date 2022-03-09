@@ -2,8 +2,14 @@ import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
 
 // 合同
-const contractLedger = contract.contractLedger
 const myProject = contract.myProject
+const projectList = contract.projectList
+const contractLedger = contract.contractLedger
+const collectionRecord = contract.collectionLedger
+const collectionLedger = contract.collectionLedger
+const invoiceRecord = contract.invoiceLedger
+const invoiceLedger = contract.invoiceLedger
+const arrearsList = contract.arrearsList
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
@@ -53,8 +59,14 @@ const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
 const mesWarehouseStateReport = mes.warehouseStateReport
 
 export default {
-  contractLedger, // 合同台账
   myProject, // 我的项目
+  projectList, // 项目列表
+  contractLedger, // 合同台账
+  collectionLedger, // 收款台账
+  collectionRecord, // 项目收款记录
+  invoiceLedger, // 开票台账
+  invoiceRecord, // 项目开票记录
+  arrearsList, // 欠款清单
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表

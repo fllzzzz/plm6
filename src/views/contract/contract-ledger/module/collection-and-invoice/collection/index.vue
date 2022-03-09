@@ -1,8 +1,19 @@
 <template>
   <div class="app-container">
     <!--表格渲染-->
-    <common-button type="primary" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
-    <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+    <div>
+      <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
+      <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <print-table
+        v-permission="crud.permission.print"
+        api-key="collectionRecord"
+        :params="crud.query"
+        style="float: right"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
+    </div>
     <common-table
       ref="tableRef"
       v-loading="crud.loading"

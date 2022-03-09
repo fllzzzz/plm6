@@ -81,7 +81,7 @@
           <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="100px">
+      <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="80">
         <template v-slot="scope">
           <div>{{ scope.row.allDays }}</div>
         </template>
@@ -92,7 +92,7 @@
         prop="alreadyDays"
         label="已用时(天)"
         align="center"
-        width="100px"
+        width="80"
       >
         <template v-slot="scope">
           <div>{{ scope.row.alreadyDays }}</div>
@@ -129,12 +129,12 @@
           <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="110px" align="center" fixed="right">
+      <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="70" align="center" fixed="right">
         <template v-slot="scope">
           <span>{{ isNotBlank(scope.row.status) ? projectStatusEnum.VL[scope.row.status] : '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(permission.editMembers)" label="成员管理" width="90px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(permission.editMembers)" label="成员管理" width="80" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
             v-permission="permission.editMember"
@@ -146,7 +146,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column label="操作" width="260px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.detail, ...permission.editStatus,  ...permission.del])" label="操作" width="180px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
             v-if="checkPermission(permission.detail)"
