@@ -200,9 +200,15 @@ async function submit() {
   memberRef.value.getUser()
   const baseChange = judgeSameValue(baseRef.value.form, baseRef.value.detail)
   const businessChange = judgeSameValue(businessRef.value.form, businessRef.value.detail)
+  const contentChange = judgeSameValue(businessRef.value.form.projectContent, businessRef.value.detail.projectContent)
+  const structureChange = judgeSameValue(businessRef.value.form.structureList, businessRef.value.detail.structureList)
+  const profiledPlateChange = judgeSameValue(businessRef.value.form.profiledPlateList, businessRef.value.detail.profiledPlateList)
+  const pressureBearingPlateChange = judgeSameValue(businessRef.value.form.pressureBearingPlateList, businessRef.value.detail.pressureBearingPlateList)
+  const trussFloorPlateChange = judgeSameValue(businessRef.value.form.trussFloorPlateList, businessRef.value.detail.trussFloorPlateList)
+  const sandwichBoardChange = judgeSameValue(businessRef.value.form.sandwichBoardList, businessRef.value.detail.sandwichBoardList)
   const customerChange = judgeSameValue(customerRef.value.form, customerRef.value.detail)
   const userChange = judgeSameValue(memberRef.value.checkedList, memberRef.value.originUserList)
-  if (baseChange && businessChange && customerChange && userChange) {
+  if (baseChange && businessChange && customerChange && userChange && contentChange && structureChange && profiledPlateChange && pressureBearingPlateChange && trussFloorPlateChange && sandwichBoardChange) {
     ElMessage.error('项目未改动，请修改后提交')
     return
   }

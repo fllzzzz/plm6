@@ -91,6 +91,7 @@
 import crudApi from '@/api/contract/contract-ledger'
 import { ref } from 'vue'
 import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -138,7 +139,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 function openStockAmount(row) {
-  if (!crud.permission.inbound.get) {
+  if (!checkPermission(permission.inbound.get)) {
     return
   }
   currentProjectId.value = row

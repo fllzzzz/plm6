@@ -46,7 +46,7 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*开票额" align="center" min-width="170" class="money-column">
+          <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
             <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
               <template v-slot="scope">
               <template v-if="scope.row.type===2">
@@ -69,7 +69,7 @@
               </template>
             </template>
             </el-table-column>
-            <el-table-column key="invoiceAmount1" prop="invoiceAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+            <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
               <template v-slot="scope">
               <template v-if="scope.row.type===2">
                 <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
@@ -220,9 +220,15 @@ const validateTaxRate = (value, row) => {
   return true
 }
 
+// 金额校验
+const validateAmount = (value, row) => {
+  if (!value) return false
+  return true
+}
+
 const tableRules = {
   invoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
-  invoiceAmount: [{ required: true, message: '请选择开票额', trigger: 'change', type: 'number' }],
+  invoiceAmount: [{ validator: validateAmount, message: '请选择开票额', trigger: 'change', type: 'number' }],
   taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
