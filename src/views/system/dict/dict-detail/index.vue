@@ -130,12 +130,12 @@ watch(
 )
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.name = lineName
+  crud.query.name = props.line.name
   return !!crud.query.name
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.name = lineName
+  crud.form.name = props.line.name
 }
 
 defineExpose({

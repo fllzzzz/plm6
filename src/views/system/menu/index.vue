@@ -12,6 +12,9 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
+      lazy
+      :load="load"
+      :tree-props="{children: 'newChildren', hasChildren: 'hasChildren'}"
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
     >
@@ -96,7 +99,7 @@
 
 <script setup>
 import crudApi from '@/api/system/menu'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { systemMenusTypeEnum, systemMenusCategoryEnum } from '@enum-ms/system'
@@ -116,6 +119,7 @@ const permission = {
 }
 
 const tableRef = ref()
+// const allData = ref([])
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '菜单',
@@ -132,33 +136,38 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 157
 })
 
-// const props = defineProps({
-//   line: {
-//     type: Object,
-//     default: () => {}
-//   }
-// })
-
-// const lineName = computed(() => {
-//   return props.line && props.line.name
-// })
-
-// watch(
-//   () => lineName,
-//   (val) => {
-//     if (val.value) {
-//       crud.toQuery()
-//     }
-//   },
-//   { deep: true, immediate: true }
-// )
-
-CRUD.HOOK.beforeRefresh = () => {
-  // crud.query.name = lineName
-  // return !!crud.query.name
+// 获取所有数据
+function getAllData(data, pid) {
+  data.map(v => {
+    v.parentArray = [...pid]
+    if (v.pid) {
+      v.parentArray.push(v.pid)
+    }
+    if (v.children && v.children.length > 0) {
+      getAllData(v.children, v.parentArray)
+    }
+  })
+}
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  getAllData(data.data.content, [])
+  data.data.content = data.data.content.map(v => {
+    v.hasChildren = !!v.children
+    return v
+  })
 }
 
-CRUD.HOOK.beforeSubmit = () => {
-  // crud.form.name = lineName
+function load(tree, treeNode, resolve) {
+  const newChildren = tree.children.map(v => {
+    v.hasChildren = !!v.children
+    if (v.hasChildren) {
+      v.newChildren = JSON.parse(JSON.stringify(v.children))
+      delete v.newChildren.children
+    }
+    return v
+  })
+  resolve([...newChildren])
+  nextTick(() => {
+    tableRef.value.expandParent(tree, true)
+  })
 }
 </script>

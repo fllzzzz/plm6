@@ -77,7 +77,7 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/config/system-config/branch-company'
 import { ref } from 'vue'
-import { expenseManagementPM as permission } from '@/page-permission/config'
+import { branchCompanyPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
