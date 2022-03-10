@@ -236,6 +236,19 @@ watch(
   (val) => {
     if (isNotBlank(val)) {
       tableData.value = JSON.parse(JSON.stringify(val))
+    } else {
+      tableData.value = {
+        [TechnologyTypeEnum.STRUCTURE.V]: [],
+        [TechnologyTypeEnum.PROFILED_PLATE.V]: [],
+        [TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V]: [],
+        [TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V]: [],
+        [TechnologyTypeEnum.SANDWICH_BOARD.V]: []
+      }
+    }
+    if (formRef.value) {
+      nextTick(() => {
+        formRef.value.clearValidate()
+      })
     }
   },
   { deep: true, immediate: true }
