@@ -111,7 +111,7 @@
 <script setup>
 import crudApi from '@/api/wms/material-return/raw-material/returnable-list'
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
-
+import { rawMaterialReturnableListPM as permission } from '@/page-permission/wms'
 import { computed, defineEmits, defineProps, defineExpose, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -166,12 +166,6 @@ const props = defineProps({
 
 provide('isComponent', props.isComponent)
 provide('basicClass', props.basicClass)
-
-const permission = {
-  // get: ['wms_partyABorrow:get'],
-  // return: ['wms_partyABorrow:return'],
-  outboundReceiptDetail: ['wms_outboundApplication_review:detail']
-}
 
 const optShow = {
   batchAdd: false,

@@ -129,6 +129,7 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-freeze/raw-material/unfreeze-record'
+import { rawMaterialUnFreezeListPM as permission } from '@/page-permission/wms'
 
 import { computed, ref } from 'vue'
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
@@ -137,11 +138,11 @@ import { materialFreezeTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/m
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
+import useCRUD from '@compos/use-crud'
+import useMaxHeight from '@compos/use-max-height'
 import MHeader from './module/header'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
-import useCRUD from '@compos/use-crud'
-import useMaxHeight from '@compos/use-max-height'
 import RejectDetail from '@/views/wms/material-reject/raw-material/review/module/detail.vue'
 import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 
@@ -152,17 +153,6 @@ import MaterialUnitQuantityColumns from '@/components-system/wms/table-custom-fi
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-custom-field-columns/warehouse-info-columns/index.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_raw_mat_freeze_list:get'],
-  requisitionsUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_requisitions'],
-  outboundUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_outbound'],
-  transferUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_transfer'],
-  transferReceiptDetail: ['wms_transferApplication_review:detail'],
-  outboundReceiptDetail: ['wms_outboundApplication_review:detail'],
-  requisitionsDetail: ['wms_requisitions:detail']
-}
 
 const optShow = {
   add: false,
@@ -219,7 +209,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
 function openDetailPermission(freezeType) {
   switch (freezeType) {
     case materialFreezeTypeEnum.REQUISITIONS.V:
-      return permission.requisitionsDetail
+      return permission.preparationReceiptDetail
     case materialFreezeTypeEnum.OUTBOUND.V:
       return permission.outboundReceiptDetail
     case materialFreezeTypeEnum.TRANSFER.V:

@@ -106,6 +106,7 @@
 <script setup>
 import { sectionSteelReturnApplication } from '@/api/wms/material-return/raw-material/application'
 import { edit as editReturnApplication } from '@/api/wms/material-return/raw-material/record'
+import { sectionSteelReturnApplicationPM as permission } from '@/page-permission/wms'
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
@@ -137,8 +138,6 @@ const props = defineProps({
   }
 })
 
-// 权限
-const permission = ['wms_sectionSteelReturnApplication:submit']
 // 默认表单
 const defaultForm = {
   list: []
@@ -257,10 +256,13 @@ function rowWatch(row) {
 
 // 计算单件理论重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSectionSteelWeight({
-    length: row.length, // 长度
-    unitWeight: row.source.unitWeight // 单位重量
-  })
+  row.theoryWeight = await calcSectionSteelWeight(
+    {
+      length: row.length, // 长度
+      unitWeight: row.source.unitWeight // 单位重量
+    },
+    false
+  )
   if (row.theoryWeight) {
     row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
   } else {
@@ -280,10 +282,13 @@ function calcTotalWeight(row) {
 // 计算总长
 function calcTotalLength(row) {
   if (isNotBlank(row.length) && row.quantity) {
-    row.totalLength = calcSectionSteelTotalLength({
-      length: row.length, // 长度
-      quantity: row.quantity // 数量
-    })
+    row.totalLength = calcSectionSteelTotalLength(
+      {
+        length: row.length, // 长度
+        quantity: row.quantity // 数量
+      },
+      false
+    )
   } else {
     row.totalLength = undefined
   }

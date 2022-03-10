@@ -8,7 +8,6 @@
           <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
           <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
           <common-button
-            v-permission="permission.freezeList"
             type="info"
             size="mini"
             icon="el-icon-lock"

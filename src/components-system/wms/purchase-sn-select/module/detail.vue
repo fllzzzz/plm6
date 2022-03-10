@@ -113,7 +113,7 @@
             <upload-list
               show-download
               :file-classify="fileClassifyEnum.PURCHASE_ORDER_ATT.V"
-              v-model:files="detail.attachment"
+              v-model:files="detail.attachments"
               :uploadable="false"
               empty-text="暂未上传采购订单附件"
             />

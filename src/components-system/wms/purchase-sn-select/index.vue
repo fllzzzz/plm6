@@ -20,13 +20,7 @@
         <span class="customize-option-item">
           <span class="flex-rsc label">
             <el-tooltip content="点击可查看详情" placement="left" :show-after="1000">
-              <el-icon
-                v-if="props.detailable"
-                v-permission="permission.get"
-                @click.stop="openDetail(data.id)"
-                class="pointer"
-                color="#1881ef"
-              >
+              <el-icon v-if="props.detailable" v-permission="permission" @click.stop="openDetail(data.id)" class="pointer" color="#1881ef">
                 <el-icon-view />
               </el-icon>
             </el-tooltip>
@@ -55,7 +49,7 @@
       :class="{ 'not-allowed': !selectValue }"
       @click.stop="openDetail(selectValue)"
     >
-      <el-icon v-permission="permission.get" :color="selectValue ? '#1881ef' : '#c1c2c5'">
+      <el-icon v-permission="permission" :color="selectValue ? '#1881ef' : '#c1c2c5'">
         <el-icon-view />
       </el-icon>
     </span>
@@ -64,6 +58,7 @@
 </template>
 
 <script setup>
+import { purchaseOrderDetailCPM as permission } from '@/page-permission/wms'
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'
@@ -126,10 +121,6 @@ const props = defineProps({
     default: '选择采购订单'
   }
 })
-
-const permission = {
-  get: ['wms_purchaseOrder:get']
-}
 
 const DS = computed(() => {
   return {

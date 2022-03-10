@@ -32,7 +32,7 @@ async function getBaseUnit() {
  * @param {Number} weightToUnit 重量转化至什么单位
  * @param {Number} precision 保留小数位
  */
-export async function calcSteelPlateWeight({ name, length, width, thickness, quantity = 1 }) {
+export async function calcSteelPlateWeight({ name, length, width, thickness, quantity = 1 }, boolPrecise = true) {
   if (!name || !length || !width || !thickness) {
     return null
   }
@@ -40,7 +40,7 @@ export async function calcSteelPlateWeight({ name, length, width, thickness, qua
   const baseUnit = await getBaseUnit()
   const lengthUnit = baseUnit[STEEL_PLATE].length.unit
   const weightUnit = baseUnit[STEEL_PLATE].weight.unit
-  const precision = baseUnit[STEEL_PLATE].weight.precision
+  const dp = boolPrecise ? baseUnit[STEEL_PLATE].weight.precision : 10
 
   let density = STEEL_DENSITY // 密度 t/m³
   if (name && name.indexOf('不锈钢') > -1) {
@@ -52,8 +52,8 @@ export async function calcSteelPlateWeight({ name, length, width, thickness, qua
   const wth = convertUnits(width, lengthUnit, 'm')
   // 长宽以m为基础单位，换算出来的重量为kg
   theoryWeight = len * wth * thickness * density
-  theoryWeight = convertUnits(theoryWeight, 'kg', weightUnit, precision)
-  return Number((theoryWeight * quantity).toFixed(precision))
+  theoryWeight = convertUnits(theoryWeight, 'kg', weightUnit, dp)
+  return toPrecision(theoryWeight * quantity, dp)
 }
 
 /**
@@ -62,9 +62,10 @@ export async function calcSteelPlateWeight({ name, length, width, thickness, qua
  * @param {Number} quantity 数量
  * @returns {Number | null}
  */
-export function calcSectionSteelTotalLength({ length = 0, lengthUnit = 'mm', quantity = 1, precision = 3 }) {
-  const totalLength = (length * quantity).toFixed(precision)
-  return convertUnits(totalLength, lengthUnit, 'm', precision)
+export function calcSectionSteelTotalLength({ length = 0, lengthUnit = 'mm', quantity = 1, precision = 3 }, boolPrecise = true) {
+  const dp = boolPrecise ? precision : 10
+  const totalLength = (length * quantity).toFixed(dp)
+  return convertUnits(totalLength, lengthUnit, 'm', dp)
 }
 
 /**
@@ -76,21 +77,21 @@ export function calcSectionSteelTotalLength({ length = 0, lengthUnit = 'mm', qua
  * @param {Number} weightToUnit 重量转化至什么单位
  * @param {Number} precision 保留小数位
  */
-export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight }) {
+export async function calcSectionSteelWeight({ length, quantity = 1, unitWeight }, boolPrecise = true) {
   if (!length || !quantity || !unitWeight) {
     return null
   }
   const baseUnit = await getBaseUnit()
   const lengthUnit = baseUnit[SECTION_STEEL].length.unit
   const weightUnit = baseUnit[SECTION_STEEL].weight.unit
-  const precision = baseUnit[SECTION_STEEL].weight.precision
+  const dp = boolPrecise ? baseUnit[SECTION_STEEL].weight.precision : 10
 
   let theoryWeight
   const _length = convertUnits(length, lengthUnit, 'm', 3)
   // 长宽以m为基础单位，换算出来的重量为kg
   theoryWeight = _length * unitWeight
-  theoryWeight = convertUnits(theoryWeight, weightUnit, 'kg', precision)
-  return Number((theoryWeight * quantity).toFixed(precision))
+  theoryWeight = convertUnits(theoryWeight, weightUnit, 'kg', dp)
+  return toPrecision(theoryWeight * quantity, dp)
 }
 
 /**

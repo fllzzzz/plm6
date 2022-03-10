@@ -137,6 +137,8 @@
 
 <script setup>
 import crudApi, { editEnabled, editMinimumInventory } from '@/api/wms/inventory-warning'
+import { rawMaterialInventoryWarningPM as permission } from '@/page-permission/wms'
+
 import { ref } from 'vue'
 import { enabledEnum } from '@enum-ms/common'
 import { measureTypeEnum } from '@enum-ms/wms'
@@ -154,13 +156,6 @@ import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
 import { numFmtByBasicClass, numFmtByUnit } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-
-const permission = {
-  get: ['wms_inventoryWarning:get'],
-  edit: ['wms_inventoryWarning:edit'],
-  del: ['wms_inventoryWarning:del'],
-  add: ['wms_inventoryWarning:add']
-}
 
 const optShow = {
   batchAdd: true,

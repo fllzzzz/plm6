@@ -127,6 +127,7 @@
 <script setup>
 import { steelPlateReturnApplication } from '@/api/wms/material-return/raw-material/application'
 import { edit as editReturnApplication } from '@/api/wms/material-return/raw-material/record'
+import { steelPlateReturnApplicationPM as permission } from '@/page-permission/wms'
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
@@ -158,8 +159,6 @@ const props = defineProps({
   }
 })
 
-// 权限
-const permission = ['wms_steelPlateReturnApplication:submit']
 // 默认表单
 const defaultForm = {
   list: []
@@ -276,12 +275,15 @@ function rowWatch(row) {
 
 // 计算单件理论重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight({
-    name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-    length: row.length,
-    width: row.width,
-    thickness: row.source.thickness
-  })
+  row.theoryWeight = await calcSteelPlateWeight(
+    {
+      name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+      length: row.length,
+      width: row.width,
+      thickness: row.source.thickness
+    },
+    false
+  )
   if (row.theoryWeight) {
     row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
   } else {

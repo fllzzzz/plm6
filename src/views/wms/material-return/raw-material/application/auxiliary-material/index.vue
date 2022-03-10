@@ -105,6 +105,7 @@
 <script setup>
 import { auxMatReturnApplication } from '@/api/wms/material-return/raw-material/application'
 import { edit as editReturnApplication } from '@/api/wms/material-return/raw-material/record'
+import { auxMatReturnApplicationPM as permission } from '@/page-permission/wms'
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
@@ -135,8 +136,6 @@ const props = defineProps({
   }
 })
 
-// 权限
-const permission = ['wms_auxMatReturnApplication:submit']
 // 默认表单
 const defaultForm = {
   list: []

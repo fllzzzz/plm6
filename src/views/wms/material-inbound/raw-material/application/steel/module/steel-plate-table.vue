@@ -18,14 +18,7 @@
     </el-expand-table-column>
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" />
-    <el-table-column
-      prop="classifyName"
-      label="物料种类"
-      align="center"
-      fixed="left"
-      width="120"
-      show-overflow-tooltip
-    >
+    <el-table-column prop="classifyName" label="物料种类" align="center" fixed="left" width="120" show-overflow-tooltip>
       <template #default="{ row }">
         <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
           <span v-empty-text="row.classifyName" />
@@ -170,19 +163,27 @@ const { overDiffTip, weightOverDiff, diffSubmitValidate } = useWeightOverDiff(ba
 
 const tableRules = {
   classifyId: [{ required: true, message: '请选择物料种类', trigger: 'change' }],
-  width: [{ required: true, message: '请填写宽度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }],
-  thickness: [{ required: true, message: '请填写厚度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }],
+  width: [
+    { required: true, message: '请填写宽度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '宽度必须大于0', trigger: 'blur' }
+  ],
+  thickness: [
+    { required: true, message: '请填写厚度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '厚度必须大于0', trigger: 'blur' }
+  ],
   weighingTotalWeight: [
     { required: true, message: '请填写重量', trigger: 'blur' },
     { validator: diffSubmitValidate, message: '超出误差允许范围,不可提交', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '重量必须大于0', trigger: 'blur' }
   ],
-  length: [{ required: true, message: '请填写长度', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请填写数量', trigger: 'blur' },
-    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }]
+  length: [
+    { required: true, message: '请填写长度', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '长度必须大于0', trigger: 'blur' }
+  ],
+  quantity: [
+    { required: true, message: '请填写数量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+  ]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【钢板清单】中标红的信息' }) // 表格校验
@@ -240,12 +241,15 @@ function rowWatch(row) {
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight({
-    name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-    length: row.length,
-    width: row.width,
-    thickness: row.thickness
-  })
+  row.theoryWeight = await calcSteelPlateWeight(
+    {
+      name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+      length: row.length,
+      width: row.width,
+      thickness: row.thickness
+    },
+    false
+  )
 }
 
 // 计算总重

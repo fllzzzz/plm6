@@ -73,9 +73,12 @@ import { getMaterialFreezeRecordById } from '@/api/wms/material-freeze/raw-mater
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 import { detail as getRejectDetail } from '@/api/wms/material-reject/raw-material/review'
+import { materialFreezeRecordCPM as permission } from '@/page-permission/wms'
+
 import { defineEmits, defineProps, ref, watch } from 'vue'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import checkPermission from '@/utils/system/check-permission'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
@@ -83,7 +86,6 @@ import TransferDetail from '@/views/wms/material-transfer/raw-material/review/mo
 import OutboundDetail from '@/views/wms/material-outbound/raw-material/review/module/detail.vue'
 import RejectDetail from '@/views/wms/material-reject/raw-material/review/module/detail.vue'
 import UnfreezeForm from '../components/unfreeze/index.vue'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 const emit = defineEmits(['unfreeze-success'])
 
@@ -104,17 +106,6 @@ const props = defineProps({
     default: () => []
   }
 })
-
-const permission = {
-  requisitionsUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_requisitions'],
-  outboundUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_outbound'],
-  transferUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_transfer'],
-  rejectUnFreeze: ['wms_raw_mat_freeze_list:unfreeze_reject'],
-  transferReceiptDetail: ['wms_transferApplication_review:detail'],
-  outboundReceiptDetail: ['wms_outboundApplication_review:detail'],
-  requisitionsDetail: ['wms_requisitions:detail'],
-  rejectDetail: ['wms_reject:detail']
-}
 
 // 详情加载
 const detailLoading = ref(false)
@@ -226,7 +217,7 @@ function checkUnFreezePermission(freezeType) {
 function unfreezePermission(freezeType) {
   switch (freezeType) {
     case materialFreezeTypeEnum.REQUISITIONS.V:
-      return permission.requisitionsUnFreeze
+      return permission.preparationUnFreeze
     case materialFreezeTypeEnum.OUTBOUND.V:
       return permission.outboundUnFreeze
     case materialFreezeTypeEnum.TRANSFER.V:
@@ -240,13 +231,13 @@ function unfreezePermission(freezeType) {
 function openDetailPermission(freezeType) {
   switch (freezeType) {
     case materialFreezeTypeEnum.REQUISITIONS.V:
-      return permission.requisitionsDetail
+      return permission.preparationReceiptDetail
     case materialFreezeTypeEnum.OUTBOUND.V:
       return permission.outboundReceiptDetail
     case materialFreezeTypeEnum.TRANSFER.V:
       return permission.transferReceiptDetail
     case materialFreezeTypeEnum.REJECTED.V:
-      return permission.rejectDetail
+      return permission.rejectReceiptDetail
   }
 }
 </script>

@@ -134,20 +134,19 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-outbound/raw-material/record'
+import { rawMaterialOutboundRecordPM as permission } from '@/page-permission/wms'
+
 import { ref } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import Pagination from '@crud/Pagination'
 import UdOperation from '@crud/UD.operation.vue'
 import MHeader from './module/header'
 import MDetail from './module/detail.vue'
-// crud交由presenter持有
-const permission = {
-  get: ['wms_outboundApplication_record:get']
-}
+
+import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 
 const optShow = {
   batchAdd: false,
