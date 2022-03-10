@@ -75,9 +75,9 @@ export const collectionLedgerPM = {
   }
 }
 
-// 合同管理/合同预警
+// 合同管理/收款预警
 export const collectionWarnPM = {
-  get: ['collection_warn:get'], // 合同预警列表
+  get: ['collection_warn:get'], // 合同收款列表
   print: ['collection_warn:print'] // 打印下载
 }
 // --------------------------- 合同管理 end --------------------------------
@@ -88,7 +88,7 @@ export const collectionWarnPM = {
 
 // 供应商付款/采购订单
 export const contractSupplierMaterialPM = {
-  get: ['contract_supplier_material:get'], // 项目台账列表
+  get: ['contract_supplier_material:get'], // 采购订单列表
   print: ['contract_supplier_material:print'], // 打印下载
   inbound: {
     get: ['contract_supplier_material_inbound:get'], // 入库记录列表
@@ -96,7 +96,7 @@ export const contractSupplierMaterialPM = {
   },
   payment: {
     get: ['contract_supplier_material_payment:get'], // 付款列表
-    detail: ['contract_supplier_material_payment:detail'], // 查看
+    detail: ['contract_supplier_material_payment:detail'], // 付款详情
     audit: ['contract_supplier_material_payment:audit'], // 付款审核
     print: ['contract_supplier_material_payment:print'] // 打印下载
   },
@@ -106,14 +106,14 @@ export const contractSupplierMaterialPM = {
     edit: ['contract_supplier_material_invoice:edit'], // 开票修改
     del: ['contract_supplier_material_invoice:del'], // 开票删除
     audit: ['contract_supplier_material_invoice:audit'], // 开票审核
-    detail: ['contract_supplier_material_invoice:detail'], // 查看
+    detail: ['contract_supplier_material_invoice:detail'], // 开票详情
     print: ['contract_supplier_material_invoice:print'] // 打印下载
   }
 }
 
 // 供应商付款/制成品订单
 export const contractSupplierProductPM = {
-  get: ['contract_supplier_product:get'], // 项目台账列表
+  get: ['contract_supplier_product:get'], // 制成品订单列表
   print: ['contract_supplier_product:print'], // 打印下载
   inbound: {
     get: ['contract_supplier_product_inbound:get'], // 入库记录列表
@@ -121,7 +121,7 @@ export const contractSupplierProductPM = {
   },
   payment: {
     get: ['contract_supplier_product_payment:get'], // 付款列表
-    detail: ['contract_supplier_product_payment:detail'], // 查看
+    detail: ['contract_supplier_product_payment:detail'], // 付款详情
     audit: ['contract_supplier_product_payment:audit'], // 付款审核
     print: ['contract_supplier_product_payment:print'] // 付款打印下载
   },
@@ -131,14 +131,14 @@ export const contractSupplierProductPM = {
     edit: ['contract_supplier_product_invoice:edit'], // 开票修改
     del: ['contract_supplier_product_invoice:del'], // 开票删除
     audit: ['contract_supplier_product_invoice:audit'], // 开票审核
-    detail: ['contract_supplier_product_invoice:detail'], // 查看
+    detail: ['contract_supplier_product_invoice:detail'], // 开票详情
     print: ['contract_supplier_product_invoice:print'] // 开票打印下载
   }
 }
 
 // 供应商付款/物流
 export const contractSupplierLogisticsPM = {
-  get: ['contract_supplier_logistics:get'], // 项目台账列表
+  get: ['contract_supplier_logistics:get'], // 物流列表
   print: ['contract_supplier_logistics:print'], // 打印下载
   logisticsLog: {
     get: ['contract_supplier_logistics_log:get'], // 物流记录列表
@@ -146,7 +146,7 @@ export const contractSupplierLogisticsPM = {
   },
   payment: {
     get: ['contract_supplier_logistics_payment:get'], // 付款列表
-    detail: ['contract_supplier_logistics_payment:detail'], // 查看
+    detail: ['contract_supplier_logistics_payment:detail'], // 付款详情
     audit: ['contract_supplier_logistics_payment:audit'], // 付款审核
     print: ['contract_supplier_logistics_payment:print'] // 付款打印下载
   },
@@ -156,7 +156,7 @@ export const contractSupplierLogisticsPM = {
     edit: ['contract_supplier_logistics_invoice:edit'], // 开票修改
     del: ['contract_supplier_logistics_invoice:del'], // 开票删除
     audit: ['contract_supplier_logistics_invoice:audit'], // 开票审核
-    detail: ['contract_supplier_logistics_invoice:detail'], // 查看
+    detail: ['contract_supplier_logistics_invoice:detail'], // 开票详情
     print: ['contract_supplier_logistics_invoice:print'] // 开票打印下载
   }
 }

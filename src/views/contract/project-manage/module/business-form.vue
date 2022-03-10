@@ -163,7 +163,7 @@
           </span>
         </template>
         <template #content>
-          <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :default-type="defaultType"/>
+          <enclosure-form ref="enclosureFormRef" :show-item="showItem" :show-category="showCategory" :default-type="defaultType" :init-form="form.enclosureInfo"/>
         </template>
       </common-drawer>
     </div>
@@ -254,6 +254,7 @@ const rules = {
     { required: true, message: '请选择合同签订主体（签订主体可在配置管理-基础配置-分支机构中创建）', trigger: 'change' }
   ]
 }
+const defaultType = ref()
 
 watch(
   () => props.formData,
@@ -264,7 +265,6 @@ watch(
   { deep: true, immediate: true }
 )
 
-const defaultType = ref()
 function resetForm(data) {
   // 清除表单信息
   if (formRef.value) {
@@ -276,6 +276,7 @@ function resetForm(data) {
   } else {
     formVal = JSON.parse(JSON.stringify(defaultForm))
     Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
+    defaultType.value = undefined
   }
   form.value = JSON.parse(JSON.stringify(formVal))
   if (formRef.value) {

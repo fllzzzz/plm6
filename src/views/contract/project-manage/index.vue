@@ -142,6 +142,7 @@
             icon="el-icon-user"
             size="mini"
             @click="showMemberList(scope.row.id)"
+            :disabled="scope.row.status !== projectStatusEnum.ENUM.PROCESS.V"
           />
         </template>
       </el-table-column>
