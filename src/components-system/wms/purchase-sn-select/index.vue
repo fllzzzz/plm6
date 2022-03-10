@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { purchaseOrderDetailCPM as permission } from '@/page-permission/wms'
+import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-chain'
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'

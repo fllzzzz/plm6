@@ -501,7 +501,6 @@ const actions = {
       allInterFace.push(ps)
     }
     await Promise.all(allInterFace)
-    console.log('classifySpec', classifySpec)
   },
   // 单体
   async fetchMonomer({ state }, projectId) {

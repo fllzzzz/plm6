@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { purchaseOrderDetailCPM as permission } from '@/page-permission/wms'
+import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-chain'
 
 import { defineProps, ref } from 'vue'
 import mDetail from '@/components-system/wms/purchase-sn-select/module/detail.vue'
