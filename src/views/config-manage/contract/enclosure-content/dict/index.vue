@@ -11,7 +11,7 @@
       highlight-current-row
       :data="crud.data"
       :empty-text="crud.emptyText"
-      :max-height="maxHeight"
+      :max-height="600"
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
       v-if="crud.query.type!=TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V"
@@ -32,7 +32,7 @@
       highlight-current-row
       :data="crud.data"
       :empty-text="crud.emptyText"
-      :max-height="maxHeight"
+      :max-height="600"
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"
@@ -77,7 +77,6 @@ import crudApi, { editStatus } from '@/api/contract/enclosure-config/enclosure'
 import { ref, defineEmits } from 'vue'
 import { enclosureInfoConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
-import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import mForm from './module/form'
@@ -109,12 +108,6 @@ const { crud, columns, CRUD } = useCRUD(
   tableRef,
   multipleTable
 )
-
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.dict-box',
-  paginate: true,
-  extraHeight: 40
-})
 
 async function changeStatus(data, val) {
   try {

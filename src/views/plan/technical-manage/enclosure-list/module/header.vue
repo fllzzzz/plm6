@@ -298,6 +298,7 @@ function categoryChange() {
 }
 
 function choseInfo() {
+  currentArea.value = {}
   areaInfo.value = crud.query.category && AllAreaInfo.value.length > 0 ? AllAreaInfo.value.filter(v => v.productType === crud.query.category) : AllAreaInfo.value
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
@@ -330,6 +331,8 @@ async function getData() {
     } catch (e) {
       console.log('获取围护汇总', e)
     }
+  } else {
+    sumData.value = {}
   }
 }
 

@@ -5,7 +5,6 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="props.projectId"
-        :default="false"
         clearable
         class="filter-item"
         @change="crud.toQuery"
