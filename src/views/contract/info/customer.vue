@@ -5,7 +5,7 @@
         <div class="form-row">
           <el-form-item label="客户名称" prop="customerUnit">
             <div class="input-underline">
-              <el-input v-if="isModify" v-model.trim="form.customerUnit" placeholder="客户名称" maxlength="20"/>
+              <el-input v-if="isModify" v-model.trim="form.customerUnit" placeholder="客户名称" maxlength="30"/>
               <span v-else>{{ detail.customerUnit }}</span>
             </div>
           </el-form-item>
@@ -144,7 +144,7 @@ const defaultForm = {
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const detail = ref(JSON.parse(JSON.stringify(defaultForm)))
 const rules = {
-  customerUnit: [{ max: 50, message: '长度不超过 50 个字符', trigger: 'blur' }],
+  customerUnit: [{ required: true, max: 30, message: '必填,长度不超过 30 个字符', trigger: 'blur' }],
   socialCode: [
     { max: 50, message: '长度不超过 30 个字符', trigger: 'blur' },
     { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }

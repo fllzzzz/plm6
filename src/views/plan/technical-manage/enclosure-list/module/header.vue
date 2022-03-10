@@ -78,8 +78,7 @@
         />
         <template v-if="query.createType===enclosureCreateTypeEnum.UPLOAD.V">
           <upload-btn
-            v-if="currentArea && currentArea.id"
-            v-permission="crud.permission.import"
+            v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
             :data="addParam"
             :upload-fun="listUpload"
             success-msg="导入成功"
@@ -90,8 +89,7 @@
             @success="crud.toQuery"
           />
           <upload-btn
-            v-if="currentArea && currentArea.id"
-            v-permission="crud.permission.import"
+            v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
             :data="carryParam"
             :upload-fun="listUpload"
             success-msg="导入成功"
@@ -111,21 +109,20 @@
           />
        </template>
         <template v-else>
-          <common-button type="success" size="mini" @click="crud.toAdd" class="filter-item" v-if="currentArea && currentArea.id" v-permission="crud.permission.save">添加</common-button>
+          <common-button type="success" size="mini" @click="crud.toAdd" class="filter-item" v-if="currentArea && currentArea.id && checkPermission(crud.permission.save)">添加</common-button>
         </template>
         <export-button
-          v-if="currentArea && currentArea.id"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadEnclosureData"
           :params="exportParam"
           show-btn-text
           btn-text="清单(按条件查询)"
           :disabled="crud.data.length===0"
           class="filter-item"
-          v-permission="crud.permission.download"
         />
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么?`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id">
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么?`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
           <template #reference>
-            <common-button type="danger" size="mini" class="filter-item" v-permission="crud.permission.del">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" class="filter-item">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
         <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength" style="margin-left:10px !important;">
@@ -134,7 +131,7 @@
         </el-tag>
       </template>
       <template #viewLeft>
-        <common-button type="primary" size="mini" @click="techVisible=true" v-if="query.category!==TechnologyTypeAllEnum.BENDING.V" v-permission="crud.permission.techDetail">技术交底</common-button>
+        <common-button type="primary" size="mini" @click="techVisible=true" v-if="query.category!==TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.techDetail)">技术交底</common-button>
       </template>
     </crudOperation>
     <common-drawer
@@ -177,6 +174,7 @@ import { isNotBlank } from '@data-type/index'
 import { getTotalSum } from '@/api/plan/technical-manage/enclosure'
 import { DP } from '@/settings/config'
 import { delEnclosureByArea } from '@/api/plan/technical-manage/enclosure'
+import checkPermission from '@/utils/system/check-permission'
 
 const defaultQuery = {
   name: undefined,

@@ -61,9 +61,6 @@
           </el-tabs>
         </div>
       </transition>
-      <transition name="el-fade-in">
-        <change-audit-log v-if="showName=='changeLog'" style="margin-top:10px;" :project-id="projectId" />
-      </transition>
       <!-- 金额变更 -->
       <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose"/>
       <!-- 结算填报 -->
@@ -86,7 +83,6 @@ import members from './members'
 import moneyForm from './money-form'
 import settleForm from './settle-form'
 import variationOrder from './variation-order'
-import changeAuditLog from './change-audit-log'
 import { editContract } from '@/api/contract/project'
 import { projectStatusEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'

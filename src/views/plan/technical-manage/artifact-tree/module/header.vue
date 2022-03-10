@@ -48,8 +48,7 @@
     <crudOperation>
       <template #optLeft>
         <upload-btn
-          v-if="currentArea && currentArea.id"
-          v-permission="crud.permission.import"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
           :data="{ areaId: crud.query.areaId, importType: 1 }"
           :upload-fun="listUpload"
           btn-name="清单增量导入"
@@ -59,8 +58,7 @@
           @success="uploadSuccess"
         />
         <upload-btn
-          v-if="currentArea && currentArea.id"
-          v-permission="crud.permission.import"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
           :data="{ areaId: crud.query.areaId, importType: 2 }"
           :upload-fun="listUpload"
           btn-name="清单覆盖导入"
@@ -70,8 +68,7 @@
           @success="uploadSuccess"
         />
         <export-button
-          v-if="currentArea && currentArea.id"
-          v-permission="crud.permission.download"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadArtifactTree"
           :params="carryParam"
           show-btn-text
@@ -80,9 +77,9 @@
           :disabled="crud.data.length===0"
         />
         <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" v-permission="crud.permission.templateDownload"/>
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`" @confirm="deleteArtifact" v-if="currentArea && currentArea.id">
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`" @confirm="deleteArtifact" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
           <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0" v-permission="crud.permission.del">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
       </template>
@@ -114,6 +111,7 @@ import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact, delArtifactTreeByArea } from '@/api/plan/technical-manage/artifact-tree'
 import { isNotBlank } from '@data-type/index'
+import checkPermission from '@/utils/system/check-permission'
 
 const defaultQuery = {
   artifactName: '',

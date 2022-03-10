@@ -16,8 +16,7 @@
       <template #optLeft>
         <upload-btn
           ref="deepenRef"
-          v-if="query.monomerId"
-          v-permission="crud.permission.import"
+          v-if="query.monomerId && checkPermission(crud.permission.import)"
           :disabled="!query.monomerId"
           :upload-fun="upload"
           :data="carryParam"
@@ -35,8 +34,7 @@
       </template>
       <template #viewLeft>
         <common-button
-          v-if="query.monomerId"
-          v-permission="crud.permission.download"
+          v-if="query.monomerId && checkPermission(crud.permission.download)"
           :loading="downloadLoading"
           type="warning"
           icon="el-icon-download"
@@ -58,6 +56,7 @@ import { technicalDataTypeEnum } from '@enum-ms/plan'
 import { upload, downloadByMonomer } from '@/api/plan/technical-data-manage/deepen'
 import { fileDownload } from '@/utils/file'
 import uploadBtn from '../../../components/drawing-upload-btn'
+import checkPermission from '@/utils/system/check-permission'
 
 const defaultQuery = {
   dataType: { value: technicalDataTypeEnum.MACHINE_PART.V, resetAble: false },

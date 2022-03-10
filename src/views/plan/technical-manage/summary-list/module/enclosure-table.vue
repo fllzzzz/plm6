@@ -4,7 +4,7 @@
       <common-table
         ref="tableRef"
         :data="enclosureData"
-        :empty-text="'暂无数据'"
+        :empty-text="blankText"
         :max-height="maxHeight"
         style="width: 100%"
       >
@@ -126,6 +126,10 @@ const props = defineProps({
   category: {
     type: [String, Number],
     default: undefined
+  },
+  blankText: {
+    type: [String],
+    default: '暂无数据'
   }
 })
 const { maxHeight } = useMaxHeight({
