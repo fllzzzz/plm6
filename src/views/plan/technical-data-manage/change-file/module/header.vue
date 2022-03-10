@@ -29,8 +29,7 @@
       </template>
       <template #viewLeft>
         <common-button
-          v-if="projectId"
-          v-permission="crud.permission.download"
+          v-if="projectId && checkPermission(crud.permission.download)"
           :loading="downloadLoading"
           type="warning"
           icon="el-icon-download"
@@ -52,6 +51,7 @@ import { technicalDataTypeEnum } from '@enum-ms/plan'
 import { downloadByMonomer } from '@/api/plan/technical-data-manage/deepen'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { fileDownload } from '@/utils/file'
+import checkPermission from '@/utils/system/check-permission'
 
 const defaultQuery = {
   monomerId: undefined,

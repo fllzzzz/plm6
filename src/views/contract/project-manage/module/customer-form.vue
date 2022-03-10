@@ -101,7 +101,7 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const rules = {
-  customerUnit: [{ max: 30, message: '长度不超过 30 个字符', trigger: 'blur' }],
+  customerUnit: [{ required: true, max: 30, message: '必填,长度不超过 30 个字符', trigger: 'blur' }],
   socialCode: [
     { max: 18, message: '长度不超过 18 个字符', trigger: 'blur' },
     { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }

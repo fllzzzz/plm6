@@ -231,9 +231,8 @@
             icon="el-icon-s-check"
             type="primary"
             size="mini"
-            v-permission="permission.audit"
             @click="openConfirm(scope.row, 'audit')"
-            v-if="scope.row.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V"
+            v-if="scope.row.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && checkPermission(permission.audit)"
           />
         </template>
       </el-table-column>
