@@ -5,7 +5,6 @@
         ref="monomerSelectRef"
         v-model="query.monomerId"
         :project-id="props.projectId"
-        clearable
         class="filter-item"
         @change="crud.toQuery"
         @getCurrentInfo="handleCurrent"
@@ -30,8 +29,10 @@
       />
       <rrOperation />
     </div>
-    <crudOperation>
-    </crudOperation>
+    <template v-if="query.monomerId">
+      <crudOperation>
+      </crudOperation>
+    </template>
   </div>
 </template>
 

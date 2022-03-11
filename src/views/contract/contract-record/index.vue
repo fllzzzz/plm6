@@ -47,7 +47,7 @@
       </template>
     </el-table-column>
   </common-table>
-  <mDetail  v-model="detailVisible" />
+  <mDetail  v-model="detailVisible" :currentInfo="currentInfo"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -55,7 +55,7 @@
 
 <script setup>
 import crudApi from '@/api/contract/contract-record'
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -67,7 +67,8 @@ import mDetail from './module/detail'
 import { contractRecordPM as permission } from '@/page-permission/contract'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
-
+const currentInfo = ref([])
+provide('permission', permission)
 const optShow = {
   add: false,
   edit: false,
@@ -97,6 +98,7 @@ const { maxHeight } = useMaxHeight({
 
 function openDetail(row) {
   detailVisible.value = true
+  currentInfo.value = row.attachmentDTOList || []
 }
 </script>
 
