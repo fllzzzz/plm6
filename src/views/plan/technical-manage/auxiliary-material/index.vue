@@ -16,29 +16,7 @@
         @sort-change="crud.handleSortChange"
         class="enclosure-table"
         :cell-class-name="wrongCellMask"
-        :expand-row-keys="expandRowKeys"
-        row-key="id"
       >
-        <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-        <template #default="{ row }">
-          <div class="mtb-10">
-            <el-input
-              v-if="row.isModify"
-              v-model="row.remark"
-              :rows="1"
-              :autosize="{ minRows: 1, maxRows: 1 }"
-              type="textarea"
-              placeholder="备注"
-              maxlength="200"
-              show-word-limit
-              style="width: 400px"
-            />
-            <div v-else>
-              备注:<span v-empty-text>{{ row.remark }}</span>
-            </div>
-          </div>
-        </template>
-      </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
       <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" v-if="columns.visible('serialNumber')" :show-overflow-tooltip="true" />
       <el-table-column
@@ -178,7 +156,6 @@ import mForm from './module/form'
 import { ElMessage } from 'element-plus'
 import { auxiliaryMaterialPM as permission } from '@/page-permission/plan'
 import { validate } from '@compos/form/use-table-validate'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
@@ -191,7 +168,6 @@ const optShow = {
 }
 
 const tableRef = ref()
-const expandRowKeys = ref([]) // 展开行key
 const originRow = ref({})
 const currentMonomer = ref({})
 const { crud, columns, CRUD } = useCRUD(
@@ -253,9 +229,6 @@ function wrongCellMask({ row, column }) {
 }
 
 function editRow(row) {
-  if (expandRowKeys.value.indexOf(row.id) < 0) {
-    expandRowKeys.value.push(row.id)
-  }
   originRow.value = JSON.parse(JSON.stringify(row))
   row.isModify = true
 }
@@ -269,9 +242,6 @@ async function deleteRow(row) {
   }
 }
 function rowCancel(row) {
-  if (expandRowKeys.value.indexOf(row.id) > -1) {
-    expandRowKeys.value.splice(expandRowKeys.value.findIndex(v => v === row.id), 1)
-  }
   row = Object.assign(row, JSON.parse(JSON.stringify(originRow.value)))
   row.isModify = false
 }

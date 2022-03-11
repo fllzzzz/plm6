@@ -64,10 +64,10 @@ constantize(TechnologyTypeAllEnum)
 
 // 项目类型xin
 const projectTypeEnumN = {
-  STEEL: { L: '建筑钢结构', K: 'STEEL', V: 1 },
-  BRIDGE: { L: '桥梁钢结构', K: 'BRIDGE', V: 2 },
-  CARBARN: { L: '立体停车库', K: 'CARBARN', V: 3 }
-  // ENCLOSURE: { L: '围护材料', K: 'ENCLOSURE', V: 4 }
+  STEEL: { L: '建筑钢结构', SL: '建钢', K: 'STEEL', V: 1 },
+  BRIDGE: { L: '桥梁钢结构', SL: '桥梁', K: 'BRIDGE', V: 2 },
+  CARBARN: { L: '立体停车库', SL: '停车库', K: 'CARBARN', V: 3 }
+  // ENCLOSURE: { L: '围护材料', SL:'围护', K: 'ENCLOSURE', V: 4 }
 }
 constantize(projectTypeEnumN)
 

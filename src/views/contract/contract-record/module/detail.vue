@@ -20,34 +20,34 @@
     <template #content>
       <common-table
         ref="tableRef"
-        :data="[{id:1}]"
+        :data="currentInfo"
         :max-height="maxHeight"
         style="width: 100%"
       >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="文件源" width="140px">
+      <el-table-column key="sourceName" prop="sourceName" :show-overflow-tooltip="true" label="文件源" width="140px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.name }}</span>
+          <span>{{ scope.row.sourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="文件名" min-width="160px">
+      <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="文件名" min-width="160px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="上传时间" min-width="150px">
+      <el-table-column key="createTime" prop="createTime" :show-overflow-tooltip="true" label="上传时间" min-width="150px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.quantity }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="操作人" min-width="150px" v-if="!enclosureCategory">
+      <el-table-column key="createUserName" prop="createUserName" :show-overflow-tooltip="true" label="操作人" min-width="150px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.totalNetWeight }}</span>
+          <span>{{ scope.row.createUserName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="totalGrossWeight" prop="totalGrossWeight" :show-overflow-tooltip="true" label="附件" min-width="150px" v-if="!enclosureCategory">
+      <el-table-column key="filePath" prop="filePath" :show-overflow-tooltip="true" label="附件" min-width="150px">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.totalGrossWeight }}</span>
+          <export-button :params="{id: scope.row.id}" v-permission="permission.download"/>
         </template>
       </el-table-column>
     </common-table>
@@ -56,10 +56,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, inject } from 'vue'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
+import ExportButton from '@comp-common/export-button/index.vue'
 
+const permission = inject('permission')
 const props = defineProps({
   currentInfo: {
     type: Array,
@@ -68,14 +70,6 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
-  },
-  enclosureCategory: {
-    type: [String, Number],
-    default: undefined
-  },
-  globalProject: {
-    type: Object,
-    default: () => {}
   }
 })
 

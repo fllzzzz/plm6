@@ -21,17 +21,7 @@
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
-          :expand-row-keys="expandRowKeys"
-          row-key="uid"
         >
-          <!-- 次要信息：当列过多的时候，在展开处显示次要信息 -->
-          <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-            <template #default="{ row }">
-              <p>
-                备注：<span v-empty-text>{{ row.remark }}</span>
-              </p>
-            </template>
-          </el-expand-table-column>
           <!-- 基础信息 -->
           <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
           <el-table-column
@@ -105,7 +95,6 @@ import { isNotBlank } from '@/utils/data-type'
 import { regExtra } from '@/composables/form/use-form'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import commonFooter from '@/views/wms/material-inbound/raw-material/application/components/common-footer.vue'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 

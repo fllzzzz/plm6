@@ -42,7 +42,6 @@
                   type="text"
                   placeholder="大写字母"
                   style="width: 270px;margin-right:5px;"
-                  oninput="value=value.replace(/[^/A-Z]/g,'')"
                   @blur="checkName(item, index)"
                 />
                 <common-select
@@ -168,6 +167,11 @@ function checkName(item, index) {
         item.keyword = undefined
         val.keyword = undefined
       } else {
+        if (!/^[A-Z]+$/.test(item.keyword)) {
+          form.links[index].keyword = undefined
+          val.keyword = undefined
+          return
+        }
         val.keyword = item.keyword
       }
     } else {
@@ -175,6 +179,17 @@ function checkName(item, index) {
     }
   } else {
     if (item.keyword) {
+      if (!/^[A-Z]+$/.test(item.keyword)) {
+        form.links[index].keyword = undefined
+        return
+      }
+      if (nameArr.value.findIndex((v) => v.keyword === item.keyword) > -1) {
+        ElMessage({
+          message: '关键字母已存在，请重新填写',
+          type: 'error'
+        })
+        form.links[index].keyword = undefined
+      }
       nameArr.value.push({
         keyword: item.keyword,
         index: index

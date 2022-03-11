@@ -1,21 +1,5 @@
 <template>
-  <common-table v-bind="$attrs" :data="form.list" :cell-class-name="wrongCellMask" :expand-row-keys="expandRowKeys" row-key="uid">
-    <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-      <template #default="{ row }">
-        <div class="mtb-10">
-          <el-input
-            v-model="row.remark"
-            :rows="1"
-            :autosize="{ minRows: 1, maxRows: 1 }"
-            type="textarea"
-            placeholder="备注"
-            maxlength="200"
-            show-word-limit
-            style="width: 400px"
-          />
-        </div>
-      </template>
-    </el-expand-table-column>
+  <common-table v-bind="$attrs" :data="form.list" :cell-class-name="wrongCellMask">
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
     <el-table-column
@@ -110,18 +94,16 @@
 </template>
 
 <script setup>
-import { defineExpose, ref, inject, reactive } from 'vue'
+import { defineExpose, inject, reactive } from 'vue'
 import { createUniqueString } from '@/utils/data-type/string'
 import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@compos/form/use-table-validate'
-import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import { auxiliaryMaterialUseTypeEnum } from '@enum-ms/plan'
 
 const matSpecRef = inject('matSpecRef') // 调用父组件matSpecRef
 const { form } = regExtra() // 表单
-const expandRowKeys = ref([]) // 展开行key
 
 // 数量校验方式
 const validateQuantity = (value, row) => {
