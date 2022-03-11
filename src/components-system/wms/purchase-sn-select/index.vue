@@ -44,26 +44,35 @@
       </template>
     </common-select>
     <span
+      v-permission="permission"
       v-if="props.detailable"
       class="detail-icon pointer"
       :class="{ 'not-allowed': !selectValue }"
       @click.stop="openDetail(selectValue)"
     >
-      <el-icon v-permission="permission" :color="selectValue ? '#1881ef' : '#c1c2c5'">
+      <el-icon :color="selectValue ? '#1881ef' : '#c1c2c5'">
         <el-icon-view />
       </el-icon>
     </span>
-    <m-detail v-model="visible" :detail-id="currentId" />
+    <!-- 采购订单详情 -->
+    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
+      <purchase-order-detail />
+    </detail-wrapper>
   </span>
 </template>
 
 <script setup>
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-chain'
+
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'
 import useUnclosedPurchaseOrder from '@compos/store/use-unclosed-purchase-order'
-import mDetail from './module/detail.vue'
+
+import useOtherCrudDetail from '@/composables/use-other-crud-detail'
+import DetailWrapper from '@crud/detail-wrapper.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 
 const emit = defineEmits(['change', 'info-change', 'update:modelValue', 'update:info'])
 
@@ -132,8 +141,6 @@ const DS = computed(() => {
 
 const selectValue = ref()
 const purchaseOrderKV = ref({})
-const visible = ref(false)
-const currentId = ref()
 
 const { loaded, purchaseOrder } = useUnclosedPurchaseOrder(loadedCallBack, props.reload)
 
@@ -149,6 +156,9 @@ const options = computed(() => {
   return list
 })
 
+// 采购单详情
+const { detailRef: purchaseOrderRef, openDetail } = useOtherCrudDetail()
+
 watch(
   () => props.modelValue,
   (value) => {
@@ -157,12 +167,6 @@ watch(
   },
   { immediate: true }
 )
-
-function openDetail(id) {
-  if (!id) return
-  visible.value = true
-  currentId.value = id
-}
 
 function handleChange(val) {
   let data = val

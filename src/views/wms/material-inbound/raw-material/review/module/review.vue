@@ -22,7 +22,7 @@
         @change="handleConvenientChange"
         class="convenient-operation"
       />
-      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+      <purchase-detail-button :purchase-id="order.id" size="mini" />
       <!-- 审核按钮 -->
       <review-confirm-button
         :passed-loading="passedLoading"

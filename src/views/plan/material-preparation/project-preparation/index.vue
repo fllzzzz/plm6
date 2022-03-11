@@ -3,7 +3,13 @@
     <!--工具栏-->
     <mHeader />
     <!-- 表格渲染 -->
-    <common-table ref="tableRef" v-loading="!steelClassifyConfLoaded || crud.loading" :data="crud.data" :max-height="maxHeight" row-key="id">
+    <common-table
+      ref="tableRef"
+      v-loading="!steelClassifyConfLoaded || crud.loading"
+      :data="crud.data"
+      :max-height="maxHeight"
+      row-key="id"
+    >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('serialNumber')"
@@ -78,7 +84,7 @@
         width="110"
       >
         <template #default="{ row }">
-          <template v-if="!(row.materialBasicClass & projectPreparationMatClsEnum.MATERIAL.V)">
+          <template v-if="!(row.materialBasicClass & projectPreparationMatClsEnum.MATERIAL.V) && isNotBlank(row.listMete)">
             <span v-text="row.listMete" v-empty />
             <span>&nbsp;&nbsp;kg</span>
           </template>
@@ -95,7 +101,7 @@
         width="110"
       >
         <template #default="{ row }">
-          <template v-if="!(row.materialBasicClass & projectPreparationMatClsEnum.MATERIAL.V)">
+          <template v-if="!(row.materialBasicClass & projectPreparationMatClsEnum.MATERIAL.V) && isNotBlank(row.preparationMete)">
             <span v-text="row.preparationMete" v-empty />
             <span>&nbsp;&nbsp;kg</span>
           </template>
@@ -206,6 +212,7 @@ import { ref } from 'vue'
 import { projectPreparationMatClsEnum } from '@enum-ms/classification'
 import checkPermission from '@/utils/system/check-permission'
 import { componentTypeEnum } from '@/utils/enum/modules/building-steel'
+import { isNotBlank } from '@/utils/data-type'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -215,6 +222,7 @@ import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mDetail from './module/detail'
+
 import useSteelClassifyConf from '@/composables/store/use-steel-material-classify'
 
 const optShow = {
