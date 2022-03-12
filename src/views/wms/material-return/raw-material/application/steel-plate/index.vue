@@ -132,7 +132,7 @@ import { steelPlateReturnApplicationPM as permission } from '@/page-permission/w
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -285,7 +285,7 @@ async function calcTheoryWeight(row) {
     false
   )
   if (row.theoryWeight) {
-    row.singleMete = +toFixed((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision)
+    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 10)
   } else {
     row.singleMete = undefined
   }
@@ -294,7 +294,7 @@ async function calcTheoryWeight(row) {
 // 计算总重
 function calcTotalWeight(row) {
   if (isNotBlank(row.singleMete) && row.quantity) {
-    row.mete = +toFixed(row.singleMete * row.quantity, baseUnit.value.weight.precision)
+    row.mete = toPrecision(row.singleMete * row.quantity, baseUnit.value.weight.precision)
   } else {
     row.mete = undefined
   }

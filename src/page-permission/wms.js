@@ -33,29 +33,6 @@ export const commonPM = {
 
 // ########################################################################
 
-// --------------------------- 其他模块/组件 start -------------------------
-
-// 组件·物料基础信息
-export const materialBaseInfoCPM = {
-  frozenDetail: commonPM.rawMatMaterialFreezeDetail // 查看物料冻结详情
-}
-
-// 组件·物料冻结记录
-export const materialFreezeRecordCPM = {
-  outboundUnFreeze: commonPM.rawMatOutboundUnFreeze, // 出库解冻
-  transferUnFreeze: commonPM.rawMatTransferUnFreeze, // 调拨解冻
-  rejectUnFreeze: commonPM.rawMatRejectUnFreeze, // 退货解冻
-
-  transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
-  outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
-  preparationReceiptDetail: commonPM.rawMatPreparationReceiptDetail, // 备料详情
-  rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
-}
-
-// --------------------------- 其他模块/组件 end ---------------------------
-
-// ########################################################################
-
 // --------------------------- 入库模块 start ------------------------------
 
 // 入库办理/钢材入库办理
@@ -330,3 +307,26 @@ export const rawMaterialInventoryWarningPM = {
 }
 
 // ---------------------------- 库存预警 end -------------------------------
+
+// ########################################################################
+
+// --------------------------- 其他模块/组件 start -------------------------
+
+// 组件·物料基础信息
+export const materialBaseInfoCPM = {
+  frozenDetail: commonPM.rawMatMaterialFreezeDetail // 查看物料冻结详情
+}
+
+// 组件·物料冻结记录
+export const materialFreezeRecordCPM = {
+  outboundUnFreeze: commonPM.rawMatOutboundUnFreeze, // 出库解冻
+  transferUnFreeze: commonPM.rawMatTransferUnFreeze, // 调拨解冻
+  rejectUnFreeze: commonPM.rawMatRejectUnFreeze, // 退货解冻
+
+  transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
+  outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
+  preparationReceiptDetail: commonPM.rawMatPreparationReceiptDetail, // 备料详情
+  rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
+}
+
+// --------------------------- 其他模块/组件 end ---------------------------
