@@ -190,7 +190,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.user',
   paginate: true,
-  extraHeight: 157
+  extraHeight: 90
 })
 
 const treeMenuRef = ref() // 菜单ref

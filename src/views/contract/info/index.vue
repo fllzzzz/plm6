@@ -62,11 +62,11 @@
         </div>
       </transition>
       <!-- 金额变更 -->
-      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
       <!-- 结算填报 -->
-      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
       <!-- 变更签证 -->
-      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
     </div>
     </template>
   </common-drawer>
@@ -122,6 +122,7 @@ const businessRef = ref()
 const customerRef = ref()
 const memberRef = ref()
 const baseInfoValue = ref()
+const memberList = ref([])
 const moneyRef = ref()
 const settleRef = ref()
 const variationRef = ref()
@@ -139,6 +140,7 @@ watch(
 
 function confirmSettle() {
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
   if (props.projectStatus === projectStatusEnum.PROCESS.V) {
     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
       confirmButtonText: '确定',
@@ -156,11 +158,13 @@ function confirmSettle() {
 function moneyChange() {
   moneyVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
 }
 
 function variationChange() {
   variationVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
 }
 
 function ModifyCancel() {

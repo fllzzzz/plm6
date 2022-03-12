@@ -60,7 +60,6 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.edit])"
         label="操作"
         width="160px"
         align="center"
@@ -91,7 +90,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import checkPermission from '@/utils/system/check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import mHeader from './module/header'
 import { planConfirmListPM as permission } from '@/page-permission/plan'
 

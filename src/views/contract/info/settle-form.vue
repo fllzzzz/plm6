@@ -82,6 +82,7 @@
           clearable
           show-all-levels
           placeholder="负责人"
+          :noDisabledVal="memberList"
           style="width: 320px;"
         />
         <template v-else>
@@ -105,7 +106,7 @@ import { ref, defineProps, computed, watch, defineEmits, nextTick } from 'vue'
 import { auditTypeEnum, contractChangeTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import useVisible from '@compos/use-visible'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import userDeptCascader from './components/user-dept-cascader'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { DP } from '@/settings/config'
 import { editContract, confirmContract } from '@/api/contract/project'
@@ -132,6 +133,10 @@ const props = defineProps({
   showType: {
     type: String,
     default: undefined
+  },
+  memberList: {
+    type: Array,
+    default: () => []
   }
 })
 

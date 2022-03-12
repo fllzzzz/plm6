@@ -127,9 +127,10 @@
               icon-color="red"
               title="确定删除吗?"
               @confirm="deleteRow(scope.row)"
+              v-if="checkPermission(permission.del)"
             >
               <template #reference>
-                <common-button size="small" class="el-icon-delete" type="danger" v-permission="permission.del"/>
+                <common-button size="small" class="el-icon-delete" type="danger"/>
               </template>
             </el-popconfirm>
           </template>
