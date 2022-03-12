@@ -8,7 +8,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { arr2obj } from '@/utils/convert/type'
 import { deepClone } from '@data-type/index'
 import { resolvePath } from '@/utils/resolve-path'
-import { projectTypeEnumN } from '@/utils/enum/modules/contract'
+import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import storage from '@/utils/storage'
 
 const globalProject = storage.get('curProject')
@@ -75,7 +75,7 @@ const actions = {
           }
           let _routes = deepClone(state.treeRoutes[moduleId])
           // 建刚mes 处理菜单隐藏 ；全局项目类型为桥梁时不做处理
-          if (menu && menu.id === 2 && rootGetters.currentProjectType && _routes && _routes.length && !(rootGetters.currentProjectType & projectTypeEnumN.BRIDGE.V)) {
+          if (menu && menu.id === 2 && rootGetters.currentProjectType && _routes && _routes.length && !(rootGetters.currentProjectType & projectTypeEnum.BRIDGE.V)) {
             _routes = filterRoutesByProjectType(_routes, rootGetters.currentProjectType)
           }
           moduleRoutes = moduleRoutes.concat(_routes)

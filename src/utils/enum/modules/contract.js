@@ -35,9 +35,9 @@ constantize(projectNameArrangementModeEnum)
 
 // 项目类型
 const projectTypeEnum = {
-  STEEL: { L: '建钢', K: 'STEEL', V: 1 << 0 },
-  BRIDGE: { L: '桥梁', K: 'BRIDGE', V: 1 << 1 },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 2 }
+  STEEL: { L: '建筑钢结构', SL: '建钢', K: 'STEEL', V: 1 << 0 },
+  BRIDGE: { L: '桥梁钢结构', SL: '桥梁', K: 'BRIDGE', V: 1 << 1 },
+  CARBARN: { L: '立体停车库', SL: '停车库', K: 'CARBARN', V: 1 << 2 }
 }
 constantize(projectTypeEnum)
 
@@ -61,15 +61,6 @@ const TechnologyTypeAllEnum = {
   BENDING: { L: '折边件', K: 'BENDING', V: 1 << 5 }
 }
 constantize(TechnologyTypeAllEnum)
-
-// 项目类型xin
-const projectTypeEnumN = {
-  STEEL: { L: '建筑钢结构', SL: '建钢', K: 'STEEL', V: 1 },
-  BRIDGE: { L: '桥梁钢结构', SL: '桥梁', K: 'BRIDGE', V: 2 },
-  CARBARN: { L: '立体停车库', SL: '停车库', K: 'CARBARN', V: 3 }
-  // ENCLOSURE: { L: '围护材料', SL:'围护', K: 'ENCLOSURE', V: 4 }
-}
-constantize(projectTypeEnumN)
 
 // 业务类型
 const businessTypeEnum = {
@@ -289,7 +280,6 @@ export {
   businessTypeEnum, // 业务类型
   businessModifyTypeEnum, // 商务变更
   settlementStatusEnum, // 结算状态
-  projectTypeEnumN, // 项目类型xin
   paymentModeEnum, // 付款方式
   invoiceTypeEnum,
   isTaxEnum,
@@ -324,7 +314,6 @@ export default {
   businessTypeEnum, // 业务类型
   businessModifyTypeEnum, // 商务变更
   settlementStatusEnum, // 结算状态
-  projectTypeEnumN, // 项目类型xin
   paymentModeEnum, // 付款方式
   invoiceTypeEnum,
   isTaxEnum,

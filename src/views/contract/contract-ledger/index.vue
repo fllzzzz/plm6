@@ -16,7 +16,7 @@
     <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
     <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" :show-overflow-tooltip="true" label="项目类型" width="80" align="center" fixed="left">
       <template v-slot="scope">
-        <span>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</span>
+        <span>{{ scope.row.projectType? projectTypeEnum.VL[scope.row.projectType]: '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -115,7 +115,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { businessTypeEnum, projectTypeEnumN, projectStatusEnum } from '@enum-ms/contract'
+import { businessTypeEnum, projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { projectNameFormatter } from '@/utils/project'
 import occurAmount from './module/occur-amount'
 import contractMoney from './module/contract-money'

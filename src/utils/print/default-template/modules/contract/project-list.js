@@ -202,7 +202,7 @@ const projectList = {
       { show: true, key: 'serialNumber', title: '合同编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.CONTRACT_NO.K },
       { show: true, key: 'name', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 28, type: typeEnum.OTHER.K },
       { show: true, key: 'businessType', title: '业务类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'businessTypeEnum', key: 'L' }},
-      { show: true, key: 'projectType', title: '项目类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'projectTypeEnumN', key: 'L' }},
+      { show: true, key: 'projectType', title: '项目类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'projectTypeEnum', key: 'L' }},
       { show: false, key: 'projectContent', title: '项目内容', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K },
       { show: true, key: 'contractAmount', title: '合同金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
       { show: true, key: 'allDays', title: '工期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},

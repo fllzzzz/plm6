@@ -43,7 +43,7 @@
           <el-form-item label="项目类型" prop="projectType">
             <common-select
               v-model="form.projectType"
-              :options="projectTypeEnumN.ENUM"
+              :options="projectTypeEnum.ENUM"
               type="enum"
               size="small"
               clearable
@@ -177,7 +177,7 @@ import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElRadioGroup } from 'element-plus'
 import {
-  projectTypeEnumN,
+  projectTypeEnum,
   businessTypeEnum,
   paymentModeEnum,
   invoiceTypeEnum,

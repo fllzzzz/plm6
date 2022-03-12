@@ -52,7 +52,7 @@
         width="100"
       >
         <template v-slot="scope">
-          <div>{{ scope.row.projectType ? projectTypeEnumN.VL[scope.row.projectType] : '-' }}</div>
+          <div>{{ scope.row.projectType ? projectTypeEnum.VL[scope.row.projectType] : '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -218,7 +218,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { projectTypeEnumN, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { projectTypeEnum, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'

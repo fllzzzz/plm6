@@ -1,4 +1,4 @@
-import { projectTypeEnumN } from '@/utils/enum/modules/contract'
+import { projectTypeEnum } from '@/utils/enum/modules/contract'
 import { componentListTypeEnum, componentTypeEnum, enclosureSettlementTypeEnum } from '@enum-ms/building-steel'
 import { matClsEnum } from '@enum-ms/classification'
 
@@ -18,7 +18,9 @@ export const STAINLESS_STEEL_DENSITY = 7.93
 export const STEEL_ENUM = matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V | matClsEnum.STEEL_COIL.V
 
 // 项目类型：全部
-export const allPT = Object.keys(projectTypeEnumN.VL).length + 1
+export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {
+  return res | cur
+}, 0)
 
 // 基础配置，钢材误差单位g
 export const STEEL_DIFF_UNIT = 'g'

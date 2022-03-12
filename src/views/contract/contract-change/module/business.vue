@@ -35,7 +35,7 @@
           <div class="form-row">
             <el-form-item label="项目类型" prop="projectType">
               <div style="width: 200px">
-                <span>{{ detail.projectType?projectTypeEnumN.VL[detail.projectType]:'-' }}</span>
+                <span>{{ detail.projectType?projectTypeEnum.VL[detail.projectType]:'-' }}</span>
               </div>
             </el-form-item>
             <el-form-item label="签约人" prop="signerId">
@@ -114,7 +114,7 @@
 <script setup>
 import { ref, defineProps, watch } from 'vue'
 import {
-  projectTypeEnumN,
+  projectTypeEnum,
   businessTypeEnum,
   paymentModeEnum,
   invoiceTypeEnum,
