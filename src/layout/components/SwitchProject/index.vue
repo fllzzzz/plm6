@@ -3,7 +3,7 @@
   <div v-show="showable" class="cascader-container">
     <common-select
       v-model="projectType"
-      :options="projectTypeEnumN.ENUM"
+      :options="projectTypeEnum.ENUM"
       :all-val="allPT"
       :disabled-val="disabledTypeArr"
       show-option-all
@@ -55,7 +55,7 @@ import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 import { allPT } from '@/settings/config'
 import { isNotBlank } from '@data-type/index'
-import { projectTypeEnumN, businessTypeEnum, projectModeEnum } from '@enum-ms/contract'
+import { projectTypeEnum, businessTypeEnum, projectModeEnum } from '@enum-ms/contract'
 
 import useUserProjects from '@compos/store/use-user-projects'
 import { getBitwiseBack } from '@/utils/data-type/number'
@@ -144,7 +144,7 @@ const cascaderProps = computed(() => {
 const disabledTypeArr = computed(() => {
   const types = []
   if (routeProjectType !== allPT) {
-    Object.keys(projectTypeEnumN.VL).forEach((v) => {
+    Object.keys(projectTypeEnum.VL).forEach((v) => {
       if (!(v & routeProjectType)) {
         types.push(v)
       }

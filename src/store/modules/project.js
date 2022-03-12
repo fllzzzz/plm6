@@ -1,13 +1,13 @@
 import { getUserProjects, getUserVisaProjects } from '@/api/contract/project'
 import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
-import { projectTypeEnumN, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
+import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
 import storage from '@/utils/storage'
 import { projectsToCascade } from '@/utils/project'
 import { isNotBlank, isBlank } from '@data-type/index'
 import { allPT } from '@/settings/config'
 
-const projectTypeEnumArr = EO.toArr(projectTypeEnumN)
+const projectTypeEnumArr = EO.toArr(projectTypeEnum)
 
 const state = {
   // 项目id

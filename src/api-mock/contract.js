@@ -47,16 +47,7 @@ const allProjectSimple = {
             'projectType': projectTypeEnum.BRIDGE.V,
             'shortName': '北广场制作安装站',
             'status': projectStatusEnum.PROCESS.V
-          },
-          {
-            'contractNo': '@guid',
-            'createTime': '@datetime(T)',
-            'id': 3,
-            'name': '石家庄美的电器加工车间',
-            'projectType': projectTypeEnum.ENCLOSURE.V,
-            'shortName': '美的电器加工车间',
-            'status': projectStatusEnum.PROCESS.V
-          },
+          }
         ],
         totalElements: 3
       }
@@ -111,16 +102,7 @@ const projectSimple = {
             'projectType': projectTypeEnum.BRIDGE.V,
             'shortName': '北广场制作安装站',
             'status': projectStatusEnum.PROCESS.V
-          },
-          {
-            'contractNo': '@guid',
-            'createTime': '@datetime(T)',
-            'id': 3,
-            'name': '石家庄美的电器加工车间',
-            'projectType': projectTypeEnum.ENCLOSURE.V,
-            'shortName': '美的电器加工车间',
-            'status': projectStatusEnum.SUSPEND.V
-          },
+          }
         ],
         totalElements: 3
       }

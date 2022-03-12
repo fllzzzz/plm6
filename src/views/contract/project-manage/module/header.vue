@@ -46,7 +46,7 @@
       />
       <common-select
         v-model="query.projectType"
-        :options="projectTypeEnumN.ENUM"
+        :options="projectTypeEnum.ENUM"
         type="enum"
         size="small"
         clearable
@@ -110,7 +110,7 @@ import { defineProps, ref, watch } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { projectStatusEnum, settlementStatusEnum, projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
+import { projectStatusEnum, settlementStatusEnum, projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
 
