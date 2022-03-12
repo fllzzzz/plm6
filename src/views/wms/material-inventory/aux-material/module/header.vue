@@ -7,7 +7,7 @@
           <span class="child-mr-6">
             <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
             <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
-            <common-button v-permission="permission.freezeList" type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords">
+            <common-button type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords">
               冻结记录
             </common-button>
           </span>

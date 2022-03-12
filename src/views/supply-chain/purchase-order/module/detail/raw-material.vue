@@ -207,7 +207,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
 
 // 标题
 const detailTitle = computed(() => {
-  if (isNotBlank(detail)) {
+  if (isNotBlank(detail) && detail.serialNumber) {
     return `订单：${detail.serialNumber}`
   } else {
     return `订单`

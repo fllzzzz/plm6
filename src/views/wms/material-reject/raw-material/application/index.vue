@@ -191,7 +191,7 @@ import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
 import MApplication from './module/application.vue'
 
-import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 

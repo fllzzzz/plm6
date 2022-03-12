@@ -1,15 +1,21 @@
 <template>
-  <span class="purchase-detail-button">
-    <common-button v-bind="$attrs" @click="openDetail" type="info">{{ props.btnName }}</common-button>
-    <m-detail v-if="props.purchaseId" v-model="visible" :detail-id="props.purchaseId" />
+  <span v-permission="permission" class="purchase-detail-button">
+    <common-button v-bind="$attrs" @click="openDetail(props.purchaseId)" type="info">{{ props.btnName }}</common-button>
+    <!-- 采购订单详情 -->
+    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
+      <purchase-order-detail />
+    </detail-wrapper>
   </span>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
-import mDetail from '@/components-system/wms/purchase-sn-select/module/detail.vue'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
+import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-chain'
 
-const visible = ref(false)
+import { defineProps } from 'vue'
+import useOtherCrudDetail from '@/composables/use-other-crud-detail'
+import DetailWrapper from '@crud/detail-wrapper.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 
 const props = defineProps({
   purchaseId: {
@@ -21,8 +27,7 @@ const props = defineProps({
   }
 })
 
-function openDetail() {
-  if (!props.purchaseId) return
-  visible.value = true
-}
+// 采购单详情
+const { detailRef: purchaseOrderRef, openDetail } = useOtherCrudDetail()
+
 </script>

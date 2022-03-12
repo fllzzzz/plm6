@@ -9,9 +9,9 @@ constantize(enclosureSettlementTypeEnum)
 
 // 产品类型
 const componentTypeEnum = {
-  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 },
-  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 2 },
-  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: 3 }
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 0 },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 1 },
+  AUXILIARY_MATERIAL: { L: '辅材', K: 'AUXILIARY_MATERIAL', V: 1 << 2 }
 }
 constantize(componentTypeEnum)
 
@@ -25,11 +25,7 @@ const componentListTypeEnum = {
 }
 constantize(componentListTypeEnum)
 
-export {
-  componentTypeEnum,
-  componentListTypeEnum,
-  enclosureSettlementTypeEnum
-}
+export { componentTypeEnum, componentListTypeEnum, enclosureSettlementTypeEnum }
 
 export default {
   componentTypeEnum,

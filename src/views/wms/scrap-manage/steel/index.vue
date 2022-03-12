@@ -44,6 +44,7 @@
 
 <script setup>
 import { getSteelList } from '@/api/wms/scrap-manage/list'
+import { steelScrapPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -58,12 +59,6 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
-
-const permission = {
-  get: ['wms_partyABorrow:get'],
-  return: ['wms_partyABorrow:return'],
-  transferReceiptDetail: ['wms_transferApplication_review:detail']
-}
 
 const optShow = {
   batchAdd: false,

@@ -173,6 +173,7 @@
 <script setup>
 import crudApi from '@/api/wms/material-transfer/raw-material/party-a-borrow-manage'
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
+import { rawMaterialPartyABorrowPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -193,12 +194,6 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import returnMaterial from './module/return-material.vue'
-
-const permission = {
-  get: ['wms_partyABorrow:get'],
-  return: ['wms_partyABorrow:return'],
-  transferReceiptDetail: ['wms_transferApplication_review:detail']
-}
 
 const optShow = {
   batchAdd: false,

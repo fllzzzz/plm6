@@ -170,7 +170,12 @@
         min-width="170"
       >
         <template #default="{ row }">
-          <span class="text-clickable" @click="openInboundDetailView">{{ row.inboundSN }}</span>
+          <clickable-permission-span
+            v-if="row.purchaseOrder"
+            :permission="permission.purchaseOrderDetail"
+            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
+            :text="row.purchaseOrder.serialNumber"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -183,7 +188,12 @@
         min-width="170"
       >
         <template #default="{ row }">
-          <span class="text-clickable" @click="openInboundDetailView">{{ row.inboundSN }}</span>
+          <clickable-permission-span
+            v-if="row.inboundReceipt"
+            :permission="permission.inboundReceiptDetail"
+            @click="openInboundReceiptDetail(row.inboundReceipt.id)"
+            :text="row.inboundReceipt.serialNumber"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -197,11 +207,21 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- 采购订单详情 -->
+    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
+      <purchase-order-detail />
+    </detail-wrapper>
+    <!-- 入库单详情 -->
+    <detail-wrapper ref="inboundReceiptDetailRef" :api="getInboundReceiptDetail">
+      <inbound-receipt-detail />
+    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-order'
+import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
+import { detail as getInboundReceiptDetail } from '@/api/wms/material-inbound/raw-material/review'
 import { logisticsOrderPM as permission } from '@/page-permission/supply-chain'
 
 import { ref, computed } from 'vue'
@@ -214,10 +234,15 @@ import { logisticsTransportTypeEnum } from '@enum-ms/logistics'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useSuppliers from '@compos/store/use-suppliers'
+import useOtherCrudDetail from '@/composables/use-other-crud-detail'
+import DetailWrapper from '@crud/detail-wrapper.vue'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
+import InboundReceiptDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 
 const optShow = {
   batchAdd: false,
@@ -253,6 +278,8 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   })
 }
 
-// TODO:打开入库详情窗口
-function openInboundDetailView() {}
+// 采购单详情
+const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
+// 入库单详情
+const { detailRef: inboundReceiptDetailRef, openDetail: openInboundReceiptDetail } = useOtherCrudDetail()
 </script>

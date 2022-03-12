@@ -329,60 +329,6 @@ export default {
         }
       ]
     },
-    // {
-    //   path: '/wms/purchase-manage',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'WMSPurchaseOrder',
-    //   alwaysShow: false,
-    //   redirect: '/wms/purchase-order',
-    //   meta: { title: '采购订单管理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'TwoPurchaseOrder',
-    //       path: 'purchase-order',
-    //       hidden: false,
-    //       component: '/wms/purchase-order/index',
-    //       meta: { title: '采购订单', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/wms/requisitions-manage',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'WMSRequisitions',
-    //   alwaysShow: false,
-    //   redirect: '/wms/requisitions',
-    //   meta: { title: '申购订单管理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'requisitions',
-    //       path: 'requisitions',
-    //       hidden: false,
-    //       component: '/wms/requisitions/index',
-    //       meta: { title: '申购订单', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/wms/logistics-manage',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'WMSTwoLogisticsOrder',
-    //   alwaysShow: false,
-    //   redirect: '/wms/logistics-order',
-    //   meta: { title: '物流订单管理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'TwoLogisticsOrder',
-    //       path: 'purchase-order',
-    //       hidden: false,
-    //       component: '/wms/logistics-order/index',
-    //       meta: { title: '物流订单', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
     {
       path: '/wms/inventory-warning-manage',
       component: 'Layout',
@@ -401,48 +347,5 @@ export default {
         }
       ]
     }
-    // {
-    //   path: '/wms/prepares-materials',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'WmsPreparesMaterials',
-    //   alwaysShow: false,
-    //   redirect: '/wms/prepares-materials/custom',
-    //   meta: { title: '备料管理', icon: 'contract', onCache: true },
-    //   children: [
-    //     {
-    //       name: 'WmsPreparesMaterialsCustom',
-    //       path: 'custom',
-    //       hidden: false,
-    //       component: '/wms/prepares-materials/custom/index',
-    //       meta: { title: '备料定制', icon: 'project', noCache: true }
-    //     },
-    //     {
-    //       name: 'WmsPreparesMaterialsTrack',
-    //       path: 'track',
-    //       hidden: false,
-    //       component: '/wms/prepares-materials/track/index',
-    //       meta: { title: '备料跟踪', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/wms/supplier',
-    //   component: 'Layout',
-    //   hidden: false,
-    //   name: 'SupplierManage',
-    //   alwaysShow: false,
-    //   redirect: '/wms/supplier/manage',
-    //   meta: { title: '供应商管理', icon: 'contract', noCache: true },
-    //   children: [
-    //     {
-    //       name: 'PurchaseSupplier',
-    //       path: 'manage',
-    //       hidden: false,
-    //       component: '/wms/supplier/manage/index',
-    //       meta: { title: '供应商列表', icon: 'project', noCache: true }
-    //     }
-    //   ]
-    // }
   ]
 }

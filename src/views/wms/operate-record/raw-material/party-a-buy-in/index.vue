@@ -79,11 +79,11 @@
 <script setup>
 import crudApi from '@/api/wms/material-transfer/raw-material/party-a-buy-in'
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
+import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
