@@ -1,6 +1,6 @@
 
 const getDept = {
-  url: '/api/dept',
+  url: '/api/dept/list',
   method: 'get',
   timeout: 1000,
   response: () => {

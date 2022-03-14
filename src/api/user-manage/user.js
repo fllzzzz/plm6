@@ -2,8 +2,8 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'system',
-    url: 'role',
+    module: 'user',
+    url: 'user',
     method: 'get',
     params
   })
@@ -11,8 +11,8 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    module: 'system',
-    url: 'role',
+    module: 'user',
+    url: 'user',
     method: 'post',
     data
   })
@@ -20,8 +20,8 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    module: 'system',
-    url: 'role',
+    module: 'user',
+    url: 'user',
     method: 'put',
     data
   })
@@ -29,28 +29,19 @@ export function edit(data) {
 
 export function del(ids) {
   return request({
-    module: 'system',
-    url: 'role',
+    module: 'user',
+    url: 'user',
     method: 'delete',
     data: ids
   })
 }
 
-export function bindMenu(data) {
+export function editStatus(data) {
   return request({
-    module: 'system',
-    url: 'role/menu',
+    module: 'user',
+    url: 'user/enabled',
     method: 'put',
     data
   })
 }
-
-export function roleAll() {
-  return request({
-    module: 'system',
-    url: 'role/all',
-    method: 'get'
-  })
-}
-
 export default { add, edit, del, get }

@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="80px" :inline="true">
        <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" style="width: 370px;" />
+        <el-input v-model="form.name" style="width: 450px;" />
       </el-form-item>
       <el-form-item label="上级部门" prop="pid" v-if="form.id!=1">
         <el-popover
@@ -33,11 +33,13 @@
 </template>
 
 <script setup>
+import { deptTree } from '@/api/user-manage/dept'
+
 import { ref } from 'vue'
+import { isNotBlank } from '@data-type/index'
+
 import { regForm } from '@compos/use-crud'
 import menuSelect from '@/components-system/common/tree-select.vue'
-import { deptTree } from '@/api/system/member-manage/dept'
-import { isNotBlank } from '@data-type/index'
 
 const formRef = ref()
 const menuPopover = ref()

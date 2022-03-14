@@ -1,17 +1,20 @@
 <template>
   <div>
     <table-tree
-      :data-source="props.menus"
-      :keys="props.menuIds"
-      @change="onChange"
+      v-model="copyValue"
+      checkable
+      :returnLeaf="false"
+      return-indeterminate
+      :options="props.menus"
+      @change="handleChange"
     />
   </div>
 
 </template>
 
 <script setup>
-import { defineEmits, defineProps } from 'vue'
-import TableTree from './auth-tree'
+import { ref, defineEmits, defineProps, watch } from 'vue'
+import tableTree from '@/components-system/common/table-tree/index.vue'
 
 const props = defineProps({
   currentId: {
@@ -35,8 +38,20 @@ const props = defineProps({
     default: ''
   }
 })
+
+const copyValue = ref([])
 const emit = defineEmits(['updateSelect'])
-function onChange(value) {
+
+watch(
+  props.menuIds,
+  (val) => {
+    console.log('val: ', val)
+    copyValue.value = val
+  },
+  { immediate: true, deep: true }
+)
+
+function handleChange(value) {
   const selectMenus = Array.from(value)
   emit('updateSelect', selectMenus)
 }

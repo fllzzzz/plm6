@@ -44,6 +44,7 @@ const OPT = {
 const checkedSet = inject('checkedSet')
 const checkStrictly = inject('checkStrictly')
 const returnLeaf = inject('returnLeaf')
+const returnIndeterminate = inject('returnIndeterminate')
 const disabled = inject('disabled')
 const checkable = inject('checkable')
 const onlyShowChecked = inject('onlyShowChecked')
@@ -88,6 +89,24 @@ function setParentNode(cur, opt) {
   if (!pNode) return
   // 是否将值加入返回的列表
   const changeable = !returnLeaf || (returnLeaf && isBlank(pNode.children))
+
+  // 半选状态是否将值加入返回的列表
+  if (returnIndeterminate && changeable) {
+    // 当前是选中状态，父级值加入返回的列表
+    if (cur.checked || cur.semiChecked) {
+      checkedSet.value.add(pNode.key)
+    } else {
+      // 当前父级是选中状态并且子级取消选中，父级遍历子级,都没选中就清除列表内父级值
+      if (pNode.checked || pNode.semiChecked) {
+        const unchecked = pNode.children.some((v) => v.semiChecked || v.checked)
+        // 子级无选中状态时，清除列表内父级值
+        if (!unchecked) {
+          checkedSet.value.delete(pNode.key)
+        }
+      }
+    }
+  }
+
   // 子节点：选中
   if (opt === OPT.CHECKED) {
     if (!pNode.semiChecked) {
@@ -133,7 +152,8 @@ function setParentNode(cur, opt) {
     pNode.semiChecked = semiChecked // 设置节点的半选状态
     if (pNode.checked) {
       pNode.checked = false
-      if (changeable) {
+      // 不返回半选值时，删除全选变半选的值
+      if (changeable && !returnIndeterminate) {
         checkedSet.value.delete(pNode.key)
       }
     }

@@ -17,7 +17,7 @@
       >
         <el-input
           v-model="form.name"
-          style="width: 370px;"
+          style="width: 450px;"
         />
       </el-form-item>
       <el-form-item
@@ -29,7 +29,7 @@
           :min="0"
           :max="999"
           controls-position="right"
-          style="width: 370px;"
+          style="width: 450px;"
         />
       </el-form-item>
       <el-form-item
@@ -61,11 +61,14 @@
 </template>
 
 <script setup>
+import { deptTree } from '@/api/user-manage/dept'
+
 import { ref } from 'vue'
+import { systemEnabledEnum } from '@enum-ms/system'
+
 import { regForm } from '@compos/use-crud'
 import menuSelect from '@/components-system/common/tree-select.vue'
-import { deptTree } from '@/api/system/member-manage/dept'
-import { systemEnabledEnum } from '@enum-ms/system'
+
 const formRef = ref()
 const menuPopover = ref()
 const menuSelectRef = ref()
