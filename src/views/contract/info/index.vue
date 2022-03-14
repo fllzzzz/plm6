@@ -15,7 +15,7 @@
         <div v-show="showName=='contract'" style="margin-bottom:10px;position:relative;">
           <div style="position:absolute;right:0;z-index:2;">
             <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
-              <template v-if="!isModify">
+              <template v-if="!isModify && btnShow">
                 <template v-if="projectStatus===projectStatusEnum.PROCESS.V">
                   <el-tooltip class="item" effect="dark" content="修改" placement="top">
                     <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" v-permission="permission.edit"/>
@@ -105,6 +105,10 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  btnShow: {
+    type: Boolean,
+    default: true
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])
