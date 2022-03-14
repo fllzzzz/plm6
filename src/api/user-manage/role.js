@@ -2,8 +2,8 @@ import request from '@/utils/request'
 
 export function get(params) {
   return request({
-    module: 'system',
-    url: 'job',
+    module: 'user',
+    url: 'role',
     method: 'get',
     params
   })
@@ -11,8 +11,8 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    module: 'system',
-    url: 'job',
+    module: 'user',
+    url: 'role',
     method: 'post',
     data
   })
@@ -20,8 +20,8 @@ export function add(data) {
 
 export function edit(data) {
   return request({
-    module: 'system',
-    url: 'job',
+    module: 'user',
+    url: 'role',
     method: 'put',
     data
   })
@@ -29,28 +29,27 @@ export function edit(data) {
 
 export function del(ids) {
   return request({
-    module: 'system',
-    url: 'job',
+    module: 'user',
+    url: 'role',
     method: 'delete',
     data: ids
   })
 }
 
-export function editStatus(params) {
+export function bindMenu(data) {
   return request({
-    module: 'system',
-    url: 'job/enabled',
+    module: 'user',
+    url: 'role/menu',
     method: 'put',
-    params
+    data
   })
 }
 
-export function jobAll(params) {
+export function roleAll() {
   return request({
-    module: 'system',
-    url: 'job/all',
-    method: 'get',
-    params
+    module: 'user',
+    url: 'role/all',
+    method: 'get'
   })
 }
 

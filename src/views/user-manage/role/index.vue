@@ -28,7 +28,7 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <common-button size="mini" type="info" icon="el-icon-key" @click="showMenuAssigntion(scope.row)" />
+          <common-button size="mini" type="info" icon="el-icon-key" @click="showMenuAssignation(scope.row)" />
           <udOperation :data="scope.row" :permission="permission"/>
         </template>
       </el-table-column>
@@ -65,7 +65,7 @@
         </div>
         <span style="float:right;">
           <common-button type="primary" size="small" :loading="menuLoading" @click="saveMenu">保存</common-button>
-          <common-button type="info" size="small" @click="closeMenuAssigntion">取消</common-button>
+          <common-button type="info" size="small" @click="closeMenuAssignation">取消</common-button>
         </span>
       </template>
       <template #content>
@@ -87,10 +87,13 @@
 </template>
 
 <script setup>
-import crudApi, { bindMenu } from '@/api/system/member-manage/role'
+import crudApi, { bindMenu } from '@/api/user-manage/role'
 import { menuTree } from '@/api/system/menu'
+import { roleConfigPM as permission } from '@/page-permission/user'
+
 import { reactive, ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
@@ -98,13 +101,6 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import MenuAssignation from './module/menu-assignation'
 import pagination from '@crud/Pagination'
-
-const permission = {
-  get: ['role:get'],
-  add: ['role:add'],
-  edit: ['role:edit'],
-  del: ['role:del']
-}
 
 const tableRef = ref()
 const menuVisible = ref(false)
@@ -146,7 +142,7 @@ async function getMenus() {
   }
 }
 // 关闭权限菜单
-function closeMenuAssigntion() {
+function closeMenuAssignation() {
   menuIds.value = []
   selectMenus.value = []
   menuVisible.value = false
@@ -208,7 +204,7 @@ async function saveMenu() {
   }
 }
 // 打开权限菜单
-function showMenuAssigntion(row) {
+function showMenuAssignation(row) {
   if (row) {
     menuVisible.value = true
     currentId.value = row.id

@@ -36,26 +36,20 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/system/member-manage/dept'
-import { ref } from 'vue'
+import crudApi from '@/api/user-manage/dept'
+import { deptConfigPM as permission } from '@/page-permission/user'
 
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
 
-// crud交由presenter持有
-const permission = {
-  get: ['dept:get'],
-  add: ['dept:add'],
-  edit: ['dept:edit'],
-  del: ['dept:del']
-}
-
 const tableRef = ref()
-const { crud, columns, CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '部门',
     sort: [],
@@ -73,13 +67,5 @@ const { maxHeight } = useMaxHeight({
 
 function checkboxT(row, rowIndex) {
   return row.id !== 1
-}
-CRUD.HOOK.beforeRefresh = () => {
-  // crud.query.name = lineName
-  // return !!crud.query.name
-}
-
-CRUD.HOOK.beforeSubmit = () => {
-  // crud.form.name = lineName
 }
 </script>

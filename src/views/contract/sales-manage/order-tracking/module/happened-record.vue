@@ -20,7 +20,7 @@
       </el-tag>
       <el-tag effect="plain" size="medium">
         <span>运输车次：</span>
-        <span v-thousand="detailInfo.transportQuantity" v-empty-text />
+        <span v-empty-text>{{ detailInfo.transportQuantity }}</span>
       </el-tag>
     </template>
     <template #content>

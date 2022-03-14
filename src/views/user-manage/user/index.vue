@@ -117,6 +117,7 @@
               inactive-color="#F56C6C"
               :active-value="enabledEnum.TRUE.V"
               :inactive-value="enabledEnum.FALSE.V"
+            :disabled="!checkPermission(permission.edit)"
               @change="changeStatus(scope.row, scope.row.enabled)"
             />
           </template>
@@ -145,28 +146,23 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/system/member-manage/user'
-import { deptTree } from '@/api/system/member-manage/dept'
+import crudApi, { editStatus } from '@/api/user-manage/user'
+import { deptTree } from '@/api/user-manage/dept'
+import { userConfigPM as permission } from '@/page-permission/user'
+
 import { provide, reactive, ref, watch } from 'vue'
+import { enabledEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation.vue'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { enabledEnum } from '@enum-ms/common'
 import pagination from '@crud/Pagination'
 import { ElMessageBox } from 'element-plus'
 import { userSexEnum } from '@enum-ms/system'
 import { isNotBlank } from '@data-type/index'
-
-const permission = {
-  get: ['user:get'],
-  add: ['user:add'],
-  edit: ['user:edit'],
-  del: ['user:del'],
-  editStatus: ['user:editStatus']
-}
 
 const optShow = {
   add: true,
@@ -296,9 +292,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 .card-wrap {
   white-space: nowrap;
   overflow-y: auto;
-  // margin-top: 12px;
-  // display: flex;
-  // flex-wrap: wrap;
   .el-card {
     display: inline-block;
     width: 280px;

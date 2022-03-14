@@ -1,19 +1,20 @@
 <template>
-  <div class="head-container">
+  <div>
     <div v-show="crud.searchToggle">
-      <el-input
-        v-model="query.blurry"
-        size="small"
-        placeholder="输入名称、手机号或者邮箱搜索"
-        style="width: 260px;"
+        <el-input
+        v-model="query.name"
+        placeholder="按岗位名称搜索"
         class="filter-item"
+        style="width: 200px"
+        size="small"
         clearable
-        @keyup.enter="crud.toQuery"
+        @blur="crud.toQuery"
       />
       <common-radio-button
         v-model="query.enabled"
-        :options="enabledEnum.ENUM"
+        :options="systemEnabledEnum.ENUM"
         type="enum"
+        showOptionAll
         class="filter-item"
         size="small"
         @change="crud.toQuery"
@@ -25,23 +26,15 @@
 </template>
 
 <script setup>
-import { enabledEnum } from '@enum-ms/common'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
+import { systemEnabledEnum } from '@enum-ms/system'
 
 const defaultQuery = {
-  blurry: undefined,
-  deptId: undefined,
+  name: undefined,
   enabled: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)
 </script>
-
-<style lang="scss" scoped>
-.head-container {
-  height: 82px;
-  margin-left: 20px;
-}
-</style>

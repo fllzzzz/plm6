@@ -36,6 +36,7 @@
             inactive-color="#F56C6C"
             :active-value="systemEnabledEnum.TRUE.V"
             :inactive-value="systemEnabledEnum.FALSE.V"
+            :disabled="!checkPermission(permission.edit)"
             @change="changeStatus(scope.row, scope.row.enabled)"
           />
         </template>
@@ -60,25 +61,20 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/system/member-manage/job'
+import crudApi, { editStatus } from '@/api/user-manage/job'
+import { jobConfigPM as permission } from '@/page-permission/user'
+
 import { ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
 import { systemEnabledEnum } from '@enum-ms/system'
 import checkPermission from '@/utils/system/check-permission'
+
+import { ElMessageBox } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
 import pagination from '@crud/Pagination'
-
-// crud交由presenter持有
-const permission = {
-  get: ['job:get'],
-  add: ['job:add'],
-  edit: ['job:edit'],
-  del: ['job:del']
-}
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

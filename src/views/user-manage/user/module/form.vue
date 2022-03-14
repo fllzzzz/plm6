@@ -26,14 +26,14 @@
       <el-form-item label="部门" prop="deptId">
         <el-popover
           placement="bottom-start"
-          width="450"
+          width="460"
           trigger="click"
           v-model:visible="menuVisible"
           ref="menuPopover"
         >
           <menuSelect ref="menuSelectRef" @selected="menuSelected" style="width:400px;" :pid="form.deptId" :treeMenu="props.deptTree" :defaultProps="{ children: 'children', label: 'name' }"/>
           <template #reference>
-            <el-input v-model="form.deptName" style="width: 450px;" placeholder="点击选择所属部门" readonly />
+            <el-input v-model="form.deptName" style="width: 460px;" placeholder="点击选择所属部门" readonly />
           </template>
         </el-popover>
       </el-form-item>
@@ -81,17 +81,20 @@
 </template>
 
 <script setup>
+import { roleAll } from '@/api/user-manage/role'
+import { jobAll } from '@/api/user-manage/job'
+
 import { defineProps, ref } from 'vue'
+import { mapGetters } from '@/store/lib'
+import { isNotBlank } from '@data-type/index'
+import { validatorPhone, validatorUsername } from '@/utils/validate/pattern'
+
 import { regForm } from '@compos/use-crud'
-import { roleAll } from '@/api/system/member-manage/role'
-import { jobAll } from '@/api/system/member-manage/job'
-import menuSelect from '@/components-system/common/tree-select.vue'
 import { userSexEnum } from '@enum-ms/system'
 import { enabledEnum } from '@enum-ms/common'
-import { mapGetters } from '@/store/lib'
-import { validatorPhone, validatorUsername } from '@/utils/validate/pattern'
-import { isNotBlank } from '@data-type/index'
+import menuSelect from '@/components-system/common/tree-select.vue'
 import { ElRadioGroup } from 'element-plus'
+
 const { user } = mapGetters(['user'])
 
 const formRef = ref()
