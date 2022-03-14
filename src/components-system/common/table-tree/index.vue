@@ -9,7 +9,7 @@
 
 <script setup>
 import { isNotBlank } from '@/utils/data-type'
-import { defineEmits, defineProps, ref, watch, provide } from 'vue'
+import { defineEmits, defineProps, ref, watch, provide, nextTick } from 'vue'
 import TableItem from './TableItem.vue'
 import lodash from 'lodash'
 
@@ -45,6 +45,11 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  returnIndeterminate: {
+    // 是否返回半选状态的值
+    type: Boolean,
+    default: false
+  },
   disabled: {
     // 是否禁用
     type: Boolean,
@@ -69,6 +74,7 @@ const checkedSet = ref()
 provide('checkedSet', checkedSet)
 provide('checkStrictly', props.checkStrictly)
 provide('returnLeaf', props.returnLeaf)
+provide('returnIndeterminate', props.returnIndeterminate)
 provide('disabled', props.disabled)
 provide('checkable', props.checkable)
 provide('onlyShowChecked', props.onlyShowChecked)
@@ -80,8 +86,10 @@ watch(
   () => props.options,
   (tree) => {
     if (!props.loading) { // 传入options，且options加载中时，不触发（即接口情况下，第一次加载不触发，即option为undefined时）
-      key.value += 1
-      copyOptions.value = format(tree)
+      nextTick(() => {
+        key.value += 1
+        copyOptions.value = format(tree)
+      })
     }
   },
   { immediate: true, deep: true }
@@ -100,7 +108,7 @@ watch(
   () => {
     handleChange()
   },
-  { deep: true }
+  { immediate: true, deep: true }
 )
 
 // 格式化
@@ -109,7 +117,7 @@ function format(tree) {
   const surplusSet = lodash.cloneDeep(checkedSet.value)
   const opt = treeFormat(tree, null, surplusSet)
   // 删除options中不存在的选项
-  surplusSet.forEach((val) => {
+  surplusSet && surplusSet.forEach((val) => {
     checkedSet.value.delete(val)
   })
   return opt
@@ -117,7 +125,7 @@ function format(tree) {
 
 function treeFormat(tree = [], parent, surplusSet) {
   return tree.map((n) => {
-    const checked = checkedSet.value.has(n[props.dataStructure.key])
+    const checked = checkedSet.value?.has(n[props.dataStructure.key])
     if (checked) { // surplusSet删除存在的key
       surplusSet.delete(n[props.dataStructure.key])
     }
