@@ -15,7 +15,7 @@
         <div v-show="showName=='contract'" style="margin-bottom:10px;position:relative;">
           <div style="position:absolute;right:0;z-index:2;">
             <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
-              <template v-if="!isModify">
+              <template v-if="!isModify && btnShow">
                 <template v-if="projectStatus===projectStatusEnum.PROCESS.V">
                   <el-tooltip class="item" effect="dark" content="修改" placement="top">
                     <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" v-permission="permission.edit"/>
@@ -62,11 +62,11 @@
         </div>
       </transition>
       <!-- 金额变更 -->
-      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
       <!-- 结算填报 -->
-      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
       <!-- 变更签证 -->
-      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
     </div>
     </template>
   </common-drawer>
@@ -105,6 +105,10 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  btnShow: {
+    type: Boolean,
+    default: true
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])
@@ -122,6 +126,7 @@ const businessRef = ref()
 const customerRef = ref()
 const memberRef = ref()
 const baseInfoValue = ref()
+const memberList = ref([])
 const moneyRef = ref()
 const settleRef = ref()
 const variationRef = ref()
@@ -139,6 +144,7 @@ watch(
 
 function confirmSettle() {
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
   if (props.projectStatus === projectStatusEnum.PROCESS.V) {
     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
       confirmButtonText: '确定',
@@ -156,11 +162,13 @@ function confirmSettle() {
 function moneyChange() {
   moneyVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
 }
 
 function variationChange() {
   variationVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
 }
 
 function ModifyCancel() {

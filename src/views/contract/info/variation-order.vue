@@ -79,6 +79,7 @@
           show-all-levels
           placeholder="签证人"
           style="width: 320px;"
+          :noDisabledVal="memberList"
         />
         <template v-else>
           <span v-for="item in detailInfo.leaderList" :key="item.id">{{item.name}}</span>
@@ -125,7 +126,7 @@ import { ref, defineProps, computed, watch, defineEmits, nextTick } from 'vue'
 import { auditTypeEnum, contractChangeTypeEnum } from '@enum-ms/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import useVisible from '@compos/use-visible'
-import userDeptCascader from '@comp-base/user-dept-cascader.vue'
+import userDeptCascader from './components/user-dept-cascader'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { DP } from '@/settings/config'
 import { editContract, confirmContract } from '@/api/contract/project'
@@ -151,6 +152,10 @@ const props = defineProps({
   detailInfo: {
     type: Object,
     default: () => {}
+  },
+  memberList: {
+    type: Array,
+    default: () => []
   }
 })
 

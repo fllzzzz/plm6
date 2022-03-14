@@ -22,7 +22,9 @@ export const projectListPM = {
   changeAmount: ['contract_project:changeAmount'], // 合同金额修改
   settle: ['contract_project:settle'], // 结算
   variationChange: ['contract_project:variationChange'], // 签证变更
-  editMember: ['contract_project:editMember'] // 修改成员
+  editMember: ['contract_project:editMember'], // 修改成员
+  completeList: ['contract_project:completeList'], // 可完工列表
+  completeConfirm: ['contract_project:completeConfirm'] // 可完工列表
 }
 
 // 合同管理/合同变更

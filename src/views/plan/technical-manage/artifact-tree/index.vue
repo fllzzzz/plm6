@@ -466,8 +466,3 @@ $font-size: 1.5em;
   padding-top: 0 !important;
 }
 </style>
-<style>
-.el-popper {
-  max-width: calc(100% - 60px) !important;
-}
-</style>

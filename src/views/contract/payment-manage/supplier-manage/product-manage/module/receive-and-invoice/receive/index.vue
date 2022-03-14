@@ -157,25 +157,15 @@
       >
         <template v-slot="scope">
           <template v-if="!scope.row.isModify">
-            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.edit)"/>
-            <el-popconfirm
-              confirm-button-text="确定"
-              cancel-button-text="取消"
-              title="确定删除吗?"
-              @confirm="rowDelete(scope.row)"
-            >
-              <template #reference>
-                <common-button icon="el-icon-delete" type="danger" size="mini" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.del)" />
-              </template>
-            </el-popconfirm>
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
               title="确定通过吗?"
               @confirm="passConfirm(scope.row)"
+              v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)"
             >
               <template #reference>
-                <common-button type="success" size="mini" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)">通过</common-button>
+                <common-button type="success" size="mini" >通过</common-button>
               </template>
             </el-popconfirm>
             <el-tag type="success" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" class="pass-tag">已复核</el-tag>
@@ -400,21 +390,6 @@ function addRow() {
   })
 }
 
-function modifyRow(row) {
-  originRow.value = JSON.parse(JSON.stringify(row))
-  row.isModify = true
-  row.collectionDate = String(row.collectionDate)
-}
-
-async function rowDelete(row) {
-  try {
-    await crudApi.del(row.id)
-    crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
-  } catch (e) {
-    console.log(`删除失败`, e)
-  }
-}
 function rowCancel(row) {
   row.isModify = false
   if (row.id) {

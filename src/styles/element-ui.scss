@@ -157,6 +157,7 @@
 
 .el-popper {
   white-space: pre-line;
+  max-width: calc(100% - 80px) !important;
 }
 
 // .el-form-item__label {

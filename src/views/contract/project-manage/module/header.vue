@@ -91,6 +91,7 @@
       </div>
       <crudOperation add-text="合同立项">
         <template #viewLeft>
+          <common-button size="mini" type="primary" class="filter-item" @click="completeVisible=true" v-permission="crud.permission.completeList">可完工项目</common-button>
           <print-table
             v-permission="crud.permission.print"
             api-key="projectList"
@@ -102,6 +103,24 @@
         </template>
       </crudOperation>
     </div>
+    <common-drawer
+      title="可完工列表"
+      v-model="completeVisible"
+      :append-to-body="true"
+      :show-close="true"
+      :close-on-click-modal="false"
+      direction="rtl"
+      size="80%"
+      :before-close="
+        () => {
+          completeVisible = false
+        }
+      "
+    >
+      <template #content>
+        <completeList @success="handleSuccess"/>
+      </template>
+    </common-drawer>
   </div>
 </template>
 
@@ -113,11 +132,13 @@ import crudOperation from '@crud/CRUD.operation'
 import { projectStatusEnum, settlementStatusEnum, projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
+import completeList from './complete-list'
 
 const projectContentOption = ref([])
 let projectContent1 = []
 let projectContent2 = []
 const typeProp = { key: 'id', label: 'name', value: 'id' }
+const completeVisible = ref(false)
 const defaultQuery = {
   projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContentId: undefined,
   signerName: '',
@@ -175,6 +196,11 @@ function businessChange() {
   } else {
     projectContentOption.value = []
   }
+  crud.toQuery()
+}
+
+function handleSuccess() {
+  completeVisible.value = false
   crud.toQuery()
 }
 </script>

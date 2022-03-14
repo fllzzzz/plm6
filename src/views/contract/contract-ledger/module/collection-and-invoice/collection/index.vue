@@ -170,9 +170,10 @@
               cancel-button-text="取消"
               title="确定删除吗?"
               @confirm="rowDelete(scope.row)"
+              v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.del)"
             >
               <template #reference>
-                <common-button icon="el-icon-delete" type="danger" size="mini" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.del)"/>
+                <common-button icon="el-icon-delete" type="danger" size="mini" />
               </template>
             </el-popconfirm>
             <el-popconfirm
@@ -180,9 +181,10 @@
               cancel-button-text="取消"
               title="确定通过吗?"
               @confirm="passConfirm(scope.row)"
+              v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)"
             >
               <template #reference>
-                <common-button type="success" size="mini" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)">通过</common-button>
+                <common-button type="success" size="mini">通过</common-button>
               </template>
             </el-popconfirm>
             <el-tag type="success" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" class="pass-tag">已复核</el-tag>
