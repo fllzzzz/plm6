@@ -67,7 +67,7 @@ const getDetails = {
               },
               boolBorrowReturnNotSelf: true, // 是否其他项目借用归还
               transferType: transferTypeEnum.BORROW_RETURN.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间
@@ -143,7 +143,7 @@ const getDetails = {
                 }
               },
               transferType: transferTypeEnum.PUBLIC_WARE.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间
@@ -218,7 +218,7 @@ const getDetails = {
                 }
               },
               transferType: transferTypeEnum.PUBLIC_WARE.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间
@@ -292,7 +292,7 @@ const getDetails = {
                 }
               },
               transferType: transferTypeEnum.PROJECT_WARE.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间
@@ -352,7 +352,7 @@ const getDetails = {
                 }
               },
               transferType: transferTypeEnum.PROJECT_WARE.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间
@@ -413,7 +413,7 @@ const getDetails = {
                 }
               },
               transferType: transferTypeEnum.RETURN_PARTY_A.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间
@@ -473,7 +473,7 @@ const getDetails = {
                 }
               },
               transferType: transferTypeEnum.PUBLIC_WARE.V, // 调拨类型
-              founderName: '@cname', // 创建人（填写调拨的人）
+              applicantName: '@cname', // 创建人（填写调拨的人）
               reviewerName: '@cname', // 审核人（审核的人）
               transferTime: '@datetime(T)', // 调拨时间
               createTime: '@datetime(T)', // 创建时间

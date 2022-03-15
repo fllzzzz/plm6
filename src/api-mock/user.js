@@ -6,6 +6,7 @@ import wmsRouter from '@/router/modules/wms'
 import planRouter from '@/router/modules/plan'
 import contractRouter from '@/router/modules/contract'
 import supplyChainRouter from '@/router/modules/supply-chain'
+import userRouter from '@/router/modules/user'
 
 // 用户登录（获取token）
 const userLogin = {
@@ -86,6 +87,12 @@ const userInfo = {
             name: '供应链',
             icon: 'supply-chain',
             redirect: 'supply-chain'
+          },
+          {
+            id: 794,
+            name: '人员管理',
+            icon: 'user-setting',
+            redirect: 'user-manage'
           }
         ]
       }
@@ -113,7 +120,7 @@ const userMenu = {
     return {
       code: 20000,
       message: '成功',
-      data: [configRouter, projectRouter, wmsRouter, mesRouter, projectRouter, planRouter, contractRouter, supplyChainRouter]
+      data: [configRouter, projectRouter, wmsRouter, mesRouter, projectRouter, planRouter, contractRouter, supplyChainRouter, userRouter]
     }
   }
 }

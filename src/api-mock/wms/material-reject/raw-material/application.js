@@ -38,7 +38,7 @@ const getInboundListForRejectable = {
               id: 1,
               name: '杭州天天向上有限公司'
             },
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -70,7 +70,7 @@ const getInboundListForRejectable = {
             },
 
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -103,7 +103,7 @@ const getInboundListForRejectable = {
             },
 
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间

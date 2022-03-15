@@ -86,10 +86,10 @@
         min-width="200"
       />
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="入库申请人"
         align="center"
         min-width="100"
@@ -211,7 +211,7 @@ const { crud, columns } = useCRUD(
   {
     title: '退货办理',
     sort: ['id.desc'],
-    invisibleColumns: ['founderName', 'reviewerName', 'reviewTime', 'editorName', 'userUpdateTime', 'licensePlate'],
+    invisibleColumns: ['applicantName', 'reviewerName', 'reviewTime', 'editorName', 'userUpdateTime', 'licensePlate'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

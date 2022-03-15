@@ -52,7 +52,7 @@ const getReceiptList = {
             },
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
             editable: true, // 可修改的
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             inboundTime: '@datetime(T)', // 入库时间
@@ -89,7 +89,7 @@ const getReceiptList = {
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             editable: true, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             inboundTime: '@datetime(T)', // 入库时间
@@ -127,7 +127,7 @@ const getReceiptList = {
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             editable: true, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             inboundTime: '@datetime(T)', // 入库时间
@@ -155,7 +155,7 @@ const getReceiptList = {
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
             editable: false, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             inboundTime: '@datetime(T)', // 入库时间
@@ -887,7 +887,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间
@@ -980,7 +980,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间
@@ -1076,7 +1076,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间
@@ -1134,7 +1134,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间
@@ -1185,7 +1185,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间
@@ -1236,7 +1236,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间
@@ -1288,7 +1288,7 @@ const getDetails = {
                 id: 1,
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 采购单号
               },
-              founderName: '@cname', // 创建人（填写入库的人）
+              applicantName: '@cname', // 创建人（填写入库的人）
               editorName: '@cname', // 编辑人（最后编辑的用户）
               reviewerName: '@cname', // 审核人（审核的人）
               inboundTime: '@datetime(T)', // 入库时间

@@ -71,7 +71,7 @@ const getRequisitionsList = {
             ], // 关联采购单号
             status: purchaseStatusEnum.UNFINISHED.V, // 采购状态
             writtenByName: '@cname', // 填写人
-            founderName: '@cname', // 创建人
+            applicantName: '@cname', // 创建人
             lastOperatorName: '@cname', // 最后编辑人
             'project': {
               'contractNo': '11001',

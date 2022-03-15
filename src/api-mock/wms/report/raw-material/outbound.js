@@ -45,7 +45,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间
@@ -90,7 +90,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间
@@ -134,7 +134,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间
@@ -178,7 +178,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间
@@ -215,7 +215,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间
@@ -253,7 +253,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间
@@ -290,7 +290,7 @@ const getDetails = {
             outboundReceipt: {
               id: 1, // 出库单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-              founderName: '@cname', // 创建人（填写出库的人）
+              applicantName: '@cname', // 创建人（填写出库的人）
               reviewerName: '@cname', // 审核人（审核的人）
               outboundTime: '@datetime(T)', // 出库时间
               createTime: '@datetime(T)', // 创建时间

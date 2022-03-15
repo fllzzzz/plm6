@@ -104,7 +104,7 @@ export async function numFmtByBasicClass(
   }
 }
 
-// 钢板转换
+// 钢材转换
 function steelFormat(
   data,
   unitCfg,
@@ -316,7 +316,7 @@ function fieldsFormat({ data, fields, symbol, unitPrecision, type, toSmallest, s
   if (type && symbol) {
     const curUnit = toSmallest ? symbol : MIN_UNIT[UT] // 当前单位
     const fmtUnit = toSmallest ? MIN_UNIT[UT] : symbol // 转换单位
-    const precision = toSmallest ? unitPrecision : MIN_UNIT[`${UT}_DP`] // 小数精度
+    const precision = toSmallest ? MIN_UNIT[`${UT}_DP`] : unitPrecision // 小数精度
     fields.forEach((field) => {
       if (patternNumerical.test(data[field])) {
         data[field] = convertUnits(data[field], curUnit, fmtUnit, precision, { showUnit, toNum })

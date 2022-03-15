@@ -86,17 +86,17 @@
               />
             </el-form-item>
 
-            <el-form-item label="创建人" prop="founderName">
-              <span v-empty-text>{{ detail.founderName }}</span>
+            <el-form-item label="创建人" prop="applicantName">
+              <span v-empty-text>{{ detail.applicantName }}</span>
             </el-form-item>
             <el-form-item label="最后操作人" prop="lastOperatorName">
               <span v-empty-text>{{ detail.lastOperatorName }}</span>
             </el-form-item>
 
-            <el-form-item label="创建时间" prop="founderName">
+            <el-form-item label="创建时间" prop="applicantName">
               <span v-parse-time="detail.createTime" />
             </el-form-item>
-            <el-form-item label="编辑时间" prop="founderName">
+            <el-form-item label="编辑时间" prop="applicantName">
               <span v-parse-time="detail.userUpdateTime" />
             </el-form-item>
 

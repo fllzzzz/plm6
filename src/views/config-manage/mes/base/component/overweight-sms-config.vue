@@ -22,6 +22,7 @@
         <user-select
           v-if="checkPermission(permission.overweightSMSRecipientEdit)"
           v-model="form.id"
+          ref="userSelectRef"
           size="small"
           placeholder="请选择过磅短信接收人"
           style="width: 200px"
@@ -54,7 +55,7 @@
 
 <script setup>
 import { getOverweightSMSRecipient as getConfig, setOverweightSMSRecipient as setConfig } from '@/api/config/mes/base'
-import { ref, computed, onMounted, inject } from 'vue'
+import { ref, computed, onMounted, inject, watch } from 'vue'
 
 import { isObjectValueEqual } from '@data-type/object'
 import { deepClone } from '@/utils/data-type'
@@ -75,6 +76,7 @@ const rules = {
   ]
 }
 const formRef = ref()
+const userSelectRef = ref()
 // 数据源
 const dataSource = ref({
   id: undefined,
@@ -87,6 +89,7 @@ const form = ref(dataSource.value)
 // loading
 const dataLoading = ref(false)
 const submitLoading = ref(false)
+const init = ref(false)
 
 const submitDisabled = computed(() => isObjectValueEqual(form.value, dataSource.value))
 const formDisabled = computed(() => dataLoading.value || submitLoading.value)
@@ -95,12 +98,24 @@ onMounted(() => {
   fetchData()
 })
 
+watch(
+  () => form.value.id,
+  (val, oldVal) => {
+    if (val && !init.value) {
+      const { phone } = userSelectRef.value.getUser(val)
+      form.value.phone = phone
+    }
+    init.value = false
+  }
+)
+
 async function fetchData() {
   dataLoading.value = true
   try {
     const { id, name, phone, maxWeight } = await getConfig()
     form.value = { id, name, phone, maxWeight: isNotBlank(maxWeight) ? maxWeight : undefined }
     dataSource.value = { id, name, phone, maxWeight: isNotBlank(maxWeight) ? maxWeight : undefined }
+    init.value = true
   } catch (error) {
     console.log('获取过磅超标短信接收人', error)
   } finally {

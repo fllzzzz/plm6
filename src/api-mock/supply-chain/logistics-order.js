@@ -47,7 +47,7 @@ const getList = {
             inputVAT: 34.95, // 进项税
             remark: '@cparagraph', // 备注
             supplierId: 1, // 供应商id
-            founderName: '@cname', // 创建人（填写物流信息的人）
+            applicantName: '@cname', // 创建人（填写物流信息的人）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间
@@ -86,7 +86,7 @@ const getList = {
             inputVAT: 75.63, // 进项税
             remark: '@cparagraph', // 备注
             supplierId: 2, // 供应商id
-            founderName: '@cname', // 创建人
+            applicantName: '@cname', // 创建人
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间

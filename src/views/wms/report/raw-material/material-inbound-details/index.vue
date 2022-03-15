@@ -118,10 +118,10 @@
         min-width="200"
       />
       <el-table-column
-        v-if="columns.visible('inboundReceipt.founderName')"
-        key="inboundReceipt.founderName"
+        v-if="columns.visible('inboundReceipt.applicantName')"
+        key="inboundReceipt.applicantName"
         :show-overflow-tooltip="true"
-        prop="inboundReceipt.founderName"
+        prop="inboundReceipt.applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -228,7 +228,7 @@ const { CRUD, crud, columns } = useCRUD(
     title: '入库明细',
     sort: ['id.desc'],
     invisibleColumns: [
-      'inboundReceipt.founderName',
+      'inboundReceipt.applicantName',
       'inboundReceipt.editorName',
       'inboundReceipt.reviewerName',
       'inboundReceipt.createTime',

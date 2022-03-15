@@ -38,14 +38,14 @@ export default {
           path: 'common-tax-rate',
           hidden: false,
           component: '/config-manage/main/common-tax-rate/index',
-          meta: { title: '常用税率', icon: 'Steve-Jobs', noCache: true }
+          meta: { title: '常用税率', icon: 'project', noCache: true }
         },
         {
           name: 'ExpenseManagement',
           path: 'expense-management',
           hidden: false,
           component: '/config-manage/system/expense-management/index',
-          meta: { title: '费用归类', icon: 'tax', noCache: true }
+          meta: { title: '费用归类', icon: 'project', noCache: true }
         },
         {
           name: 'BranchCompany',
@@ -151,7 +151,7 @@ export default {
           path: 'section-steel-specification-config',
           hidden: false,
           component: '/config-manage/classification-manage/section-steel-specification-config/index',
-          meta: { title: '型材库', icon: 'warehouse', noCache: true }
+          meta: { title: '型材库', icon: 'project', noCache: true }
         }
         // {
         //   name: 'OutboundMethod',
@@ -190,14 +190,14 @@ export default {
           path: 'warehouse',
           hidden: false,
           component: '/config-manage/wms/warehouse/index',
-          meta: { title: '仓库设置', icon: 'Steve-Jobs', noCache: true }
+          meta: { title: '仓库设置', icon: 'project', noCache: true }
         },
         {
           name: 'ScrapDefinition',
           path: 'scrap-definition',
           hidden: false,
           component: '/config-manage/wms/scrap-definition/index',
-          meta: { title: '废料定义', icon: 'Steve-Jobs', noCache: true }
+          meta: { title: '废料定义', icon: 'project', noCache: true }
         }
       ]
     },

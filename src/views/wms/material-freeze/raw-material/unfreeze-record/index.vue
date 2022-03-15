@@ -92,10 +92,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="解冻人"
         align="center"
         width="90"

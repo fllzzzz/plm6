@@ -191,6 +191,7 @@ function handleCheckAllChange(val) {
 function handleCheckedTableColumnsChange(item) {
   let totalCount = 0
   let selectedCount = 0
+  // TODO: object.key
   for (const key in crud.tableColumns) {
     if (key !== 'visible') {
       ++totalCount

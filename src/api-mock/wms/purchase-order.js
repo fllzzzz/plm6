@@ -46,7 +46,7 @@ const getPurchaseOrder = {
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '@cparagraph', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
-            founderName: '@cname', // 创建人
+            applicantName: '@cname', // 创建人
             lastOperatorName: '@cname', // 最后编辑人
             purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
             settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
@@ -88,7 +88,7 @@ const getPurchaseOrder = {
             purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
             remark: '@cparagraph', // 备注
             attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
-            founderName: '@cname', // 创建人
+            applicantName: '@cname', // 创建人
             lastOperatorName: '@cname', // 最后编辑人
             purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
             settlementStatus: settlementStatusEnum.SETTLED.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
@@ -304,7 +304,7 @@ const detail = {
         purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
         remark: '@cparagraph', // 备注
         attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
-        founderName: '@cname', // 创建人
+        applicantName: '@cname', // 创建人
         lastOperatorName: '@cname', // 最后编辑人
         purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
         settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）
@@ -362,7 +362,7 @@ const detail_3 = {
         purchaseOrderPaymentMode: purchaseOrderPaymentModeEnum.ARRIVAL.V, // 付款方式
         remark: '@cparagraph', // 备注
         attachments: [{ id: 1, name: '钢板清单.png', createTime: 1635470149881 }], // 附件
-        founderName: '@cname', // 创建人
+        applicantName: '@cname', // 创建人
         lastOperatorName: '@cname', // 最后编辑人
         purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
         settlementStatus: settlementStatusEnum.UNSETTLEMENT.V, // 结算状态（订单是否结算，结算时，自动将采购状态设置为完成，且无法再发开采购状态）

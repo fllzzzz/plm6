@@ -188,34 +188,43 @@ export async function calcTheoryWeight(list) {
     if (row.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
       // 为余料的钢板，以实际重量作为理论重量
       if (row.materialIsWhole === materialIsWholeEnum.ODDMENT.V) {
-        row.theoryWeight = toPrecision(row.mete / row.quantity, row.accountingPrecision)
+        row.theoryWeight = toPrecision(row.mete / row.quantity)
         continue
       }
-      ps = calcSteelPlateWeight({
-        name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-        length: row.length,
-        width: row.width,
-        thickness: row.thickness
-      }).then((data) => {
+      ps = calcSteelPlateWeight(
+        {
+          name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+          length: row.length,
+          width: row.width,
+          thickness: row.thickness
+        },
+        false
+      ).then((data) => {
         row.theoryWeight = data
       })
     }
 
     if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
-      ps = calcSectionSteelWeight({
-        length: row.length, // 长度
-        unitWeight: row.unitWeight // 单位重量
-      }).then((data) => {
+      ps = calcSectionSteelWeight(
+        {
+          length: row.length, // 长度
+          unitWeight: row.unitWeight // 单位重量
+        },
+        false
+      ).then((data) => {
         row.theoryWeight = data
       })
     }
 
     if (row.basicClass === rawMatClsEnum.STEEL_COIL.V) {
-      ps = calcSteelCoilLength({
-        weight: row.mete,
-        width: row.width,
-        thickness: row.thickness
-      }).then((data) => {
+      ps = calcSteelCoilLength(
+        {
+          weight: row.mete,
+          width: row.width,
+          thickness: row.thickness
+        },
+        false
+      ).then((data) => {
         row.theoryLength = data
       })
     }
