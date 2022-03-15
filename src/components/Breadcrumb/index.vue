@@ -72,7 +72,9 @@ export default {
     handleLink(item) {
       const { redirect, path } = item
       if (redirect) {
-        this.$router.push(redirect)
+        // 获取真实跳转路径，由于权限等原因redirect所指定的页面不一定存在
+        const _realRedirect = item.children && item.children.length ? path + '/' + item.children[0].path : redirect
+        this.$router.push(_realRedirect)
         return
       }
       this.$router.push(this.pathCompile(path))
