@@ -127,9 +127,9 @@ export const filterAsyncRoutes = (commit, routes, moduleId, basePath, hasLayout 
         } else {
           route.component = BlankLayout
         }
-        // 未设置redirect，则将其设置为noRedirect
+        // 未设置redirect，则将其设置为null
         if (!route.redirect) {
-          route.redirect = 'noRedirect'
+          route.redirect = null
         } else {
           route.redirect = repairStartSymbol(route.redirect, '/')
         }

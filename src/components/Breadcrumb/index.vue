@@ -3,7 +3,7 @@
     <transition-group name="breadcrumb">
       <template v-for="(item, index) in levelList">
         <el-breadcrumb-item v-if="device !== 'mobile' || index == levelList.length - 1" :key="index">
-          <span v-if="item.redirect === 'noRedirect' || index == levelList.length - 1" class="no-redirect">{{ item.meta.title }}</span>
+          <span v-if="item.redirect === null || index == levelList.length - 1" class="no-redirect">{{ item.meta.title }}</span>
           <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
         </el-breadcrumb-item>
       </template>
