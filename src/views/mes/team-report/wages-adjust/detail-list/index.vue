@@ -80,7 +80,7 @@ const props = defineProps({
 })
 
 const productType = computed(() => {
-  return props.fQuery?.productType || componentTypeEnum.ASSEMBLE.V
+  return props.fQuery?.productType || componentTypeEnum.MACHINE_PART.V
 })
 
 watch(

@@ -14,15 +14,7 @@
           <!-- <object :data="src" type="application/pdf" width="100%" height="900px" /> -->
           <!-- <embed :src="src" type="application/pdf" width="100%" height="700px"> -->
           <!-- <iframe :src="src" width="100%" height="500px" content-type="application/adobe-pdf" /> -->
-          <vue-pdf-embed
-            v-if="!fileLoading"
-            disableTextLayer
-            disableAnnotationLayer
-            ref="pdfRef"
-            class="pdf"
-            :source="source"
-            @loading-failed="pdfError"
-          />
+          <pdf :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
         </div>
       </div>
       <div v-show="showOperate" class="operate-content">
@@ -43,12 +35,12 @@
         <div class="icon-box" @click="scaleZoomOut">
           <svg-icon class="icon" icon-class="comp-zoom-out" />
         </div>
-        <!-- <div class="icon-box" @click="clockwiseRotate">
+        <div class="icon-box" @click="clockwiseRotate">
           <svg-icon class="icon" icon-class="comp-clockwise-rotate" />
         </div>
         <div class="icon-box" @click="counterclockwiseRotate">
           <svg-icon class="icon" icon-class="comp-counterclockwise-rotate" />
-        </div> -->
+        </div>
         <div class="icon-box" @click="reset">
           <svg-icon class="icon" icon-class="comp-restore-size" />
         </div>
@@ -64,7 +56,7 @@
 </template>
 
 <script setup>
-import VuePdfEmbed from 'vue-pdf-embed'
+import pdf from '@/components/PDF/pdf'
 import { ElNotification } from 'element-plus'
 import { defineEmits, defineProps, ref } from 'vue'
 import { previewPDF } from '@/api/plan/technical-data-manage/deepen'
@@ -98,9 +90,10 @@ const props = defineProps({
 
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: fetch })
 
-const pdfRef = ref()
+const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
+console.log(pdfjsDistPath)
 const source = ref()
-const scale = ref(100)
+const scale = ref(1)
 const viewRotate = ref(0)
 const showOperate = ref(false)
 const pageNum = ref()
@@ -133,7 +126,6 @@ async function fetch() {
 
 function getUrlByFileReader(res) {
   return new Promise((resolve, reject) => {
-    console.log(res, 'getUrlByFileReader')
     if (res && res.data && res.data.size) {
       const dataInfo = res.data
       const reader = new window.FileReader()
@@ -174,29 +166,26 @@ function pdfError(error) {
 // function pageTurning(next = true) {}
 
 function scaleZoom() {
-  scale.value += 20
-  setPdfWidth()
+  scale.value += 0.2
+  // setPdfWidth()
 }
 function scaleZoomOut() {
-  if (scale.value <= 20) {
-    return
-  }
-  scale.value += -20
-  setPdfWidth()
+  scale.value -= 0.2
+  // setPdfWidth()
 }
-// function clockwiseRotate() {
-//   viewRotate.value += 90
-//   setPdfRotate()
-// }
-// function counterclockwiseRotate() {
-//   viewRotate.value -= 90
-//   setPdfRotate()
-// }
+function clockwiseRotate() {
+  viewRotate.value += 90
+  // setPdfRotate()
+}
+function counterclockwiseRotate() {
+  viewRotate.value -= 90
+  // setPdfRotate()
+}
 function reset() {
   viewRotate.value = 0
-  scale.value = 100
+  scale.value = 1
   // setPdfRotate()
-  setPdfWidth()
+  // setPdfWidth()
   // resetPosition()
 }
 // function resetPosition() {
@@ -214,14 +203,14 @@ function reset() {
 //     pdf.render()
 //   }
 // }
-function setPdfWidth() {
-  const pdf = pdfRef.value
-  if (pdf) {
-    pdf.$el.style.width = parseInt(scale.value) + '%'
-    pdf.$el.style.height = parseInt(scale.value) + '%'
-    pdf.render()
-  }
-}
+// function setPdfWidth() {
+//   const pdf = pdfRef.value
+//   if (pdf) {
+//     pdf.$el.style.width = parseInt(scale.value) + '%'
+//     pdf.$el.style.height = parseInt(scale.value) + '%'
+//     pdf.render()
+//   }
+// }
 </script>
 
 <style lang="scss">
