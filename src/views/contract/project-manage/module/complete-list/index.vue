@@ -113,7 +113,7 @@
             <template #reference>
               <common-button
               size="mini"
-              >确认完工</common-button>
+              >完工</common-button>
             </template>
           </el-popconfirm>
         </template>
@@ -176,7 +176,7 @@ const { maxHeight } = useMaxHeight({
 
 async function changeStatus(data, val) {
   try {
-    await editStatus(data.id, val)
+    await editStatus(data.id, val, true)
     crud.notify(`“${data.name}” 确认完工成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.refresh()
     setTimeout(() => {

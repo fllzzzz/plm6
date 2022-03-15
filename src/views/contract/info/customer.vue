@@ -114,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineExpose } from 'vue'
+import { ref, defineProps, watch, defineExpose, nextTick } from 'vue'
 import regionCascader from '@comp-base/region-cascader'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/validate/pattern'
@@ -219,6 +219,11 @@ function resetForm() {
     formRef.value.resetFields()
   }
   form.value = JSON.parse(JSON.stringify(detail.value))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 

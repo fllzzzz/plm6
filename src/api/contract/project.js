@@ -86,10 +86,10 @@ export function del(ids) {
   })
 }
 
-export function editStatus(projectId, status) {
+export function editStatus(projectId, status, data) {
   return request({
     module: 'contract',
-    url: `project/${projectId}/status/${status}`,
+    url: `project/${projectId}/status/${status}?isCheckOutFinishStatus=${data}`,
     method: 'put'
   })
 }

@@ -104,7 +104,7 @@
       </crudOperation>
     </div>
     <common-drawer
-      title="可完工列表"
+      title="可完工项目"
       v-model="completeVisible"
       :append-to-body="true"
       :show-close="true"
@@ -125,7 +125,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
+import { defineProps, ref, watch, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
@@ -145,7 +145,7 @@ const defaultQuery = {
   status: projectStatusEnum.PROCESS.V,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
 }
-
+const emit = defineEmits(['projectChange'])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   currentProjectType: {
@@ -153,7 +153,6 @@ const props = defineProps({
     default: undefined
   }
 })
-
 watch(
   () => props.currentProjectType,
   (val) => {
@@ -202,5 +201,6 @@ function businessChange() {
 function handleSuccess() {
   completeVisible.value = false
   crud.toQuery()
+  emit('projectChange')
 }
 </script>

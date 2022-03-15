@@ -14,22 +14,22 @@
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('serialNumber')" align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="合同编号" min-width="150">
+    <el-table-column v-if="columns.visible('serialNumber')" align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="合同编号">
       <template v-slot="scope">
         <span>{{ scope.row.serialNumber }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('name')" align="center" key="name" prop="name" :show-overflow-tooltip="true" label="项目名称" min-width="250">
+    <el-table-column v-if="columns.visible('shortName')" align="center" key="shortName" prop="shortName" :show-overflow-tooltip="true" label="项目名称">
       <template v-slot="scope">
-        <span class="project-name">{{ scope.row.name }}</span>
+        <span class="project-name">{{ scope.row.shortName }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="订单类型" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="订单类型" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.businessType? businessTypeEnum.VL[scope.row.businessType]: '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="文件份数" align="center" width="110px">
+    <el-table-column v-if="columns.visible('attachmentCount')" key="attachmentCount" prop="attachmentCount" label="文件份数" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.attachmentCount }}</div>
       </template>
