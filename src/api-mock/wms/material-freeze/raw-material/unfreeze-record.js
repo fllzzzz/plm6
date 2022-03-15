@@ -55,7 +55,7 @@ const get = {
                 name: '666号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           },
           {
@@ -102,7 +102,7 @@ const get = {
                 name: '667号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           },
           {
@@ -149,7 +149,7 @@ const get = {
                 name: '667号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           },
           {
@@ -196,7 +196,7 @@ const get = {
                 name: '667号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           }
         ],

@@ -97,7 +97,7 @@ const get = {
             boolBorrowReturnNotSelf: true, // 是否其他项目借用归还
             transferType: transferTypeEnum.BORROW_RETURN.V, // 调拨类型
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
-            founderName: '@cname', // 创建人（填写调拨的人）
+            applicantName: '@cname', // 创建人（填写调拨的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             // reviewTime: '@datetime(T)', // 审核时间
@@ -158,7 +158,7 @@ const get = {
             },
             transferType: transferTypeEnum.PUBLIC_WARE.V, // 调拨类型
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
-            founderName: '@cname', // 创建人（填写调拨的人）
+            applicantName: '@cname', // 创建人（填写调拨的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -201,7 +201,7 @@ const get = {
             },
             transferType: transferTypeEnum.PROJECT_WARE.V, // 调拨类型
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
-            founderName: '@cname', // 创建人（填写调拨的人）
+            applicantName: '@cname', // 创建人（填写调拨的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -252,7 +252,7 @@ const get = {
             transferType: transferTypeEnum.PROJECT_WARE.V, // 调拨类型
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
             approvalComments: '尴尬咯', // 审批意见
-            founderName: '@cname', // 创建人（填写调拨的人）
+            applicantName: '@cname', // 创建人（填写调拨的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -303,7 +303,7 @@ const get = {
             transferType: transferTypeEnum.RETURN_PARTY_A.V, // 调拨类型
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
             approvalComments: '咋办咯', // 审批意见
-            founderName: '@cname', // 创建人（填写调拨的人）
+            applicantName: '@cname', // 创建人（填写调拨的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -353,7 +353,7 @@ const get = {
             },
             transferType: transferTypeEnum.PUBLIC_WARE.V, // 调拨类型
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
-            founderName: '@cname', // 创建人（填写调拨的人）
+            applicantName: '@cname', // 创建人（填写调拨的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -530,7 +530,7 @@ const detail_id1 = {
                 name: '666号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           },
           {
@@ -577,7 +577,7 @@ const detail_id1 = {
                 name: '667号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           }
         ]

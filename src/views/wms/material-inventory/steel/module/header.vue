@@ -125,7 +125,9 @@ async function handleBasicClassChange(val) {
 
 // TODO:
 // 批量打印
-function toBatchPrint() {}
+function toBatchPrint() {
+
+}
 
 // 打印 未打印标签的物料
 function toPrintNotPrintedLabel() {}

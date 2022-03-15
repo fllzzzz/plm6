@@ -41,10 +41,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="操作人"
         align="center"
         width="90"
@@ -114,7 +114,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '归还甲方',
     sort: ['id.desc'],
-    invisibleColumns: ['heatNoAndBatchNo', 'warehouse', 'transferSN', 'founderName'],
+    invisibleColumns: ['heatNoAndBatchNo', 'warehouse', 'transferSN', 'applicantName'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

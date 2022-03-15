@@ -143,10 +143,10 @@
         </el-table-column>
       </template>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -245,7 +245,7 @@ const { crud, columns } = useCRUD(
   {
     title: '退货记录',
     sort: ['id.desc'],
-    invisibleColumns: ['founderName', 'reviewerName', 'createTime', 'reviewTime'],
+    invisibleColumns: ['applicantName', 'reviewerName', 'createTime', 'reviewTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get, detail }

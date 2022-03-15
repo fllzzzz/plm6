@@ -1,6 +1,5 @@
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank } from '@/utils/data-type'
-
 // 规格格式化
 export function specFormat(row) {
   switch (row.basicClass) {
@@ -101,6 +100,7 @@ function gasSpec(row) {
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------------
+// 提示
 
 // 钢板规格提示
 function steelPlateSpecTip(row) {
@@ -159,4 +159,37 @@ function gasSpecTip(row) {
   const tip = []
   if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   return tip.join(' * ')
+}
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------------
+// 拼接 自定义规格（如：材质）
+export function spliceMaterialSpec(material) {
+  const specNameKV = material.specNameKV
+  const keys = Object.keys(specNameKV)
+  const specArr = []
+  if (keys) {
+    keys.forEach((key) => {
+      // 排除型材的国标
+      if (material.basicClass !== rawMatClsEnum.SECTION_STEEL.V || key !== material.nationalStandard) {
+        specArr.push(`${key}: ${specNameKV[key]}`)
+      }
+    })
+  }
+  return specArr.join('　')
+}
+
+// 拼接 钢材形状尺寸
+export function spliceSteelSize(material) {
+  if (!material) return ''
+  switch (material.basicClass) {
+    case rawMatClsEnum.STEEL_PLATE.V:
+      // 厚度mm
+      return `${Number(material.thickness)} * ${material.width} * ${material.length}`
+    case rawMatClsEnum.SECTION_STEEL.V:
+      return `${material.specNameKV[material.nationalStandard]}`
+    case rawMatClsEnum.STEEL_COIL.V:
+      return `${Number(material.thickness)} * ${material.width}`
+    default:
+      return ''
+  }
 }

@@ -108,10 +108,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('transferReceipt.founderName')"
-        key="transferReceipt.founderName"
+        v-if="columns.visible('transferReceipt.applicantName')"
+        key="transferReceipt.applicantName"
         :show-overflow-tooltip="true"
-        prop="transferReceipt.founderName"
+        prop="transferReceipt.applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -206,7 +206,7 @@ const { CRUD, crud, columns } = useCRUD(
     title: '调拨明细',
     sort: ['id.desc'],
     invisibleColumns: [
-      'transferReceipt.founderName',
+      'transferReceipt.applicantName',
       'transferReceipt.reviewerName',
       'transferReceipt.createTime',
       'transferReceipt.reviewTime',

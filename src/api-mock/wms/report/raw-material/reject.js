@@ -42,7 +42,7 @@ const get = {
             },
             'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
             'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             rejectTime: '@datetime(T)', // 退货时间
@@ -78,7 +78,7 @@ const get = {
             'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
             'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             reviewerName: '@cname', // 审核人（审核的人）
             rejectTime: '@datetime(T)', // 退货时间
             createTime: '@datetime(T)', // 创建时间
@@ -113,7 +113,7 @@ const get = {
             'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
             'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             rejectTime: '@datetime(T)', // 退货时间
@@ -141,7 +141,7 @@ const get = {
             'inboundAmountExcludingVAT|100000-1000000.2': 1000000, // 入库金额
             'rejectAmountExcludingVAT|10000-100000.2': 10000, // 退货金额
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             rejectTime: '@datetime(T)', // 退货时间

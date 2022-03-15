@@ -13,6 +13,7 @@ const getSteelPlate = {
         content: [
           {
             id: 1,
+            barcode: 100000000001,
             boolPartyA: false, // 甲供材料
             boolHasFrozen: true, // 有冻结
             serialNumber: /([0-9]{8})/,
@@ -50,6 +51,7 @@ const getSteelPlate = {
           },
           {
             id: 2,
+            barcode: 111000000001,
             boolPartyA: true, // 甲供材料
             serialNumber: /([0-9]{8})/,
             classifyId: 103,
@@ -98,6 +100,7 @@ const getSectionSteel = {
         content: [
           {
             id: 4,
+            barcode: 200000000001,
             classifyId: 110,
             basicClass: matClsEnum.SECTION_STEEL.V,
             nationalStandard: 'GB-10', // 国家标准
@@ -145,6 +148,7 @@ const getSteelCoil = {
         content: [
           {
             id: 5,
+            barcode: 300000000001,
             classifyId: 120,
             basicClass: matClsEnum.STEEL_COIL.V,
             specification: 'DC51D+Z',
