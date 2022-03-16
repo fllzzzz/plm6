@@ -78,7 +78,8 @@ export const artifactTreePM = {
   del: ['plan_artifact_tree_list:del'], // 删除零构件
   download: ['plan_artifact_tree_list:download'], // 下载零构件
   import: ['plan_artifact_tree_list:import'], // 导入零构件
-  templateDownLoad: ['plan_artifact_tree_list:templateDownLoad'] // 下载零构件模板
+  templateDownLoad: ['plan_artifact_tree_list:templateDownLoad'], // 下载零构件模板
+  techDetail: ['plan_artifact_tree_list:techDetail'] // 技术交底
 }
 
 // 技术管理/零件列表

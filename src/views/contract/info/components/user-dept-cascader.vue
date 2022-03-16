@@ -1,7 +1,7 @@
 <!-- 项目：部门人员列表 -->
 <template>
   <el-cascader
-    ref="userDeptCascaderRef"
+    ref="userDeptRef"
     class="user-dept-cascader"
     v-model="copyValue"
     :placeholder="placeholder"
@@ -99,7 +99,7 @@ const props = defineProps({
   }
 })
 
-const userDeptCascaderRef = ref()
+const userDeptRef = ref()
 const copyValue = ref()
 
 const options = ref([])
@@ -210,7 +210,7 @@ function setNodeDisabled(list) {
 
 // 单选 获取选中节点信息
 function getNodeInfo() {
-  const node = userDeptCascaderRef.value.getCheckedNodes(true)
+  const node = userDeptRef.value.getCheckedNodes(true)
   return node.length ? node[0].data : {}
 }
 

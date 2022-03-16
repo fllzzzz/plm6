@@ -103,17 +103,17 @@
       <el-table-column label="操作" width="180px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
-            v-if="checkPermission(permission.detail)"
             size="mini"
             icon="el-icon-view"
             type="primary"
             @click="openContractInfo(scope.row)"
+            v-if="checkPermission(projectListPM.detail)"
           />
           <el-popconfirm title="确认完工么?" @confirm="changeStatus(scope.row, projectStatusEnum.COMPLETE.V)" v-if="checkPermission(permission.completeConfirm)">
             <template #reference>
               <common-button
               size="mini"
-              >确认完工</common-button>
+              >完工</common-button>
             </template>
           </el-popconfirm>
         </template>
@@ -141,7 +141,9 @@ import pagination from '@crud/Pagination'
 import { projectTypeEnum, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import contractInfo from '@/views/contract/info/index'
 import { toThousand } from '@data-type/number'
-import { projectListPM as permission } from '@/page-permission/contract'
+import { projectListPM } from '@/page-permission/contract'
+
+const permission = projectListPM.completeList
 
 const optShow = {
   add: true,
@@ -176,7 +178,7 @@ const { maxHeight } = useMaxHeight({
 
 async function changeStatus(data, val) {
   try {
-    await editStatus(data.id, val)
+    await editStatus(data.id, val, true)
     crud.notify(`“${data.name}” 确认完工成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.refresh()
     setTimeout(() => {

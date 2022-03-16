@@ -64,7 +64,7 @@ const tableData = ref([])
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.contractChange',
+  wrapperBox: '.contractMoneyLog',
   paginate: true,
   extraHeight: 40
 })

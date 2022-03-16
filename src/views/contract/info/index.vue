@@ -32,11 +32,8 @@
                     <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" v-permission="permission.variationChange"/>
                   </el-tooltip>
                 </template>
-                <el-tooltip class="item" effect="dark" content="打印" placement="top">
-                  <common-button size="mini" icon="el-icon-printer" plain class="next_btn" v-permission="permission.print"/>
-                </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="下载" placement="top">
-                  <common-button size="mini" icon="el-icon-download" plain class="next_btn" v-permission="permission.download"/>
+                  <export-button :fn="downloadProjectInfo" class="next_btn" :params="{ projectId: projectId }" v-permission="permission.download"/>
                 </el-tooltip>
               </template>
             </div>
@@ -83,11 +80,12 @@ import members from './members'
 import moneyForm from './money-form'
 import settleForm from './settle-form'
 import variationOrder from './variation-order'
-import { editContract } from '@/api/contract/project'
+import { editContract, downloadProjectInfo } from '@/api/contract/project'
 import { projectStatusEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import { judgeSameValue } from './judgeSameValue'
 import { projectListPM as permission } from '@/page-permission/contract'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const props = defineProps({
   projectId: {

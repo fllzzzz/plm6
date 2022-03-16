@@ -12,7 +12,7 @@
     </template>
     <el-form ref="formRef" :model="form" size="small" label-width="150px">
       <el-form-item label="所属项目">
-        <span class="project-name">{{ projectNameFormatter(globalProject) }}</span>
+        <span class="project-name">{{ projectNameFormatter(currentProject) }}</span>
       </el-form-item>
       <el-form-item label="单体" v-if="currentMonomer && currentMonomer.name">
         <span>{{ currentMonomer.name }}</span>
@@ -53,7 +53,7 @@ const props = defineProps({
     type: Object,
     default: () => {}
   },
-  globalProject: {
+  currentProject: {
     type: Object,
     default: () => {}
   },

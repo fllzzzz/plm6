@@ -28,4 +28,13 @@ export function ledgerSum() {
   })
 }
 
+// 获取发生额记录
+export function occurLog(params) {
+  return request({
+    module: 'contract',
+    url: 'project/happened/record',
+    method: 'get',
+    params
+  })
+}
 export default { get }

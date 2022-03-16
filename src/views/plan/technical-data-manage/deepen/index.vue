@@ -155,15 +155,17 @@ async function fetchData(val) {
   loading.value = true
   try {
     const { content = [] } = (await getAll(val)) || {}
-    content.map((v, index) => {
-      v.projectName = globalProject.value.name
-      v.projectShortName = globalProject.value.shortName
-      v.projectSerialNumber = globalProject.value.serialNumber
-      v.areaArr = v.areaSimpleList.filter(k => k.productType === TechnologyTypeAllEnum.STRUCTURE.V)
-      if (index === 0) {
-        v.rowSpanNum = content.length
-      }
-    })
+    if (content.length > 0) {
+      content.map((v, index) => {
+        v.projectName = globalProject.value.name
+        v.projectShortName = globalProject.value.shortName
+        v.projectSerialNumber = globalProject.value.serialNumber
+        v.areaArr = v.areaSimpleList.filter(k => k.productType === TechnologyTypeAllEnum.STRUCTURE.V)
+        if (index === 0) {
+          v.rowSpanNum = content.length
+        }
+      })
+    }
     tableData.value = content
     loading.value = false
   } catch (error) {

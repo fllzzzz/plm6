@@ -9,7 +9,7 @@
         @change="monomerChange"
       />
       <common-radio-button
-        v-model="query.productType"
+        v-model="query.areaProductType"
         :options="typeOption"
         :type="'other'"
         :dataStructure="typeProp"
@@ -33,7 +33,7 @@ const route = useRoute()
 const defaultQuery = {
   projectId: undefined,
   monomerId: undefined,
-  productType: undefined
+  areaProductType: undefined
 }
 const monomerSelectRef = ref()
 const queryMonomerId = ref()
@@ -95,9 +95,9 @@ async function getTypeInfo() {
       typeOption.value = option
     }
     if (queryMonomerId.value === crud.query.monomerId) {
-      crud.query.productType = route.params.productType
+      crud.query.areaProductType = route.params.productType
     } else {
-      crud.query.productType = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
+      crud.query.areaProductType = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
     }
   } catch (e) {
     console.log(e)
