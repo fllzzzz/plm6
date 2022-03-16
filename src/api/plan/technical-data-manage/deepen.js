@@ -5,7 +5,8 @@ export function get(params) {
     module: 'plan',
     url: 'drawing/struct',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 

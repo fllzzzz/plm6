@@ -24,7 +24,6 @@
         <upload-btn
           ref="deepenRef"
           v-if="query.monomerId && checkPermission(crud.permission.import)"
-          :disabled="!query.monomerId"
           :upload-fun="upload"
           :data="carryParam"
           :btn-name="'文件上传'"
@@ -46,7 +45,7 @@
           type="warning"
           icon="el-icon-download"
           size="mini"
-          :disabled="!query.monomerId || crud.data.length===0"
+          :disabled="crud.data.length===0"
           @click="downloadAll()"
         >下载单体下所有图纸</common-button>
       </template>
