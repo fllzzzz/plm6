@@ -90,8 +90,14 @@
         <rrOperation/>
       </div>
       <crudOperation add-text="合同立项">
+        <template #optRight>
+          <template v-if="checkPermission(crud.permission.completeList.get)">
+            <el-badge :value="outFinishCount" :max="99" :hidden="outFinishCount < 1">
+              <common-button size="mini" type="primary" @click="completeVisible=true" class="filter-item">可完工项目</common-button>
+            </el-badge>
+          </template>
+        </template>
         <template #viewLeft>
-          <common-button size="mini" type="primary" class="filter-item" @click="completeVisible=true" v-permission="crud.permission.completeList">可完工项目</common-button>
           <print-table
             v-permission="crud.permission.print"
             api-key="projectList"
@@ -127,12 +133,14 @@
 <script setup>
 import { defineProps, ref, watch, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import checkPermission from '@/utils/system/check-permission'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { projectStatusEnum, settlementStatusEnum, projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
 import completeList from './complete-list'
+import { completeData } from '@/api/contract/project'
 
 const projectContentOption = ref([])
 let projectContent1 = []
@@ -145,6 +153,7 @@ const defaultQuery = {
   status: projectStatusEnum.PROCESS.V,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
 }
+const outFinishCount = ref()
 const emit = defineEmits(['projectChange'])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
@@ -202,5 +211,16 @@ function handleSuccess() {
   completeVisible.value = false
   crud.toQuery()
   emit('projectChange')
+}
+
+getCompleteData()
+
+async function getCompleteData() {
+  try {
+    const data = await completeData()
+    outFinishCount.value = data.outFinishCount || 0
+  } catch (error) {
+    console.log('获取完工列表', error)
+  }
 }
 </script>

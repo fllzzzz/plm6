@@ -180,4 +180,26 @@ export function downloadBaseAttachments({ id }) {
     responseType: 'blob'
   })
 }
+
+// 获取可完工数量
+export function completeData() {
+  return request({
+    module: 'contract',
+    url: 'project/getOutFinishCount',
+    method: 'get'
+  })
+}
+
+/**
+ * 下载合同详情
+ */
+export function downloadProjectInfo({ projectId }) {
+  return request({
+    module: 'contract',
+    url: `project/${projectId}/export`,
+    method: 'get',
+    timeout: 6000000,
+    responseType: 'blob'
+  })
+}
 export default { get, add, del }

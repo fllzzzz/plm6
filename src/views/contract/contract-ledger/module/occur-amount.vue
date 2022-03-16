@@ -12,59 +12,59 @@
     <template #content>
       <common-table
         ref="tableRef"
-        :data="[{id:1}]"
+        :data="tableData"
         :max-height="maxHeight"
         style="width: 100%"
       >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称" width="140px">
+      <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称">
         <template v-slot="scope">
           <span style="cursor: pointer;">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="编号" min-width="120px">
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="规格" min-width="160px">
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="材质" min-width="120px">
+      <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="计量单位" min-width="120px">
+      <el-table-column key="measure" prop="measure" :show-overflow-tooltip="true" label="计量单位">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.measure }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="数量" min-width="160px">
+      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="核算单位" min-width="80px">
+      <el-table-column key="nuclear" prop="nuclear" :show-overflow-tooltip="true" label="核算单位">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.nuclear }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="axis" prop="axis" :show-overflow-tooltip="true" label="总量" min-width="160px">
+      <el-table-column key="totalMete" prop="totalMete" :show-overflow-tooltip="true" label="总量">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.axis }}</span>
+          <span>{{ scope.row.totalMete }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="单价" min-width="120px">
+      <el-table-column key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="单价">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.quantity }}</span>
+          <span>{{ scope.row.unitPrice?toThousand(scope.row.unitPrice):0 }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总价" min-width="150px" v-if="!enclosureCategory">
+      <el-table-column key="totalPrice" prop="totalPrice" :show-overflow-tooltip="true" label="总价">
         <template v-slot="scope">
-          <span style="cursor: pointer;">{{ scope.row.totalNetWeight }}</span>
+          <span>{{ scope.row.totalPrice?toThousand(scope.row.totalPrice):0 }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -73,36 +73,52 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, watch, ref } from 'vue'
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
+import { occurLog } from '@/api/contract/contract-ledger'
+import { toThousand } from '@data-type/number'
 
 const props = defineProps({
-  currentInfo: {
-    type: Array,
-    default: () => []
-  },
   modelValue: {
     type: Boolean,
     require: true
   },
-  enclosureCategory: {
+  projectId: {
     type: [String, Number],
     default: undefined
-  },
-  globalProject: {
-    type: Object,
-    default: () => {}
   }
 })
 
+const tableData = ref([])
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.contractChange',
+  wrapperBox: '.occurAmountLog',
   paginate: true,
   extraHeight: 40
 })
+
+watch(
+  () => props.projectId,
+  (val) => {
+    if (val) {
+      getOccurLog()
+    } else {
+      tableData.value = []
+    }
+  },
+  { deep: true, immediate: true }
+)
+
+async function getOccurLog() {
+  try {
+    const { content } = await occurLog({ projectId: props.projectId })
+    tableData.value = content || []
+  } catch (e) {
+    console.log('获取变更金额记录', e)
+  }
+}
 </script>
 <style lang="scss" scoped>
 ::v-deep(.el-input-number .el-input__inner) {

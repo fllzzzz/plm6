@@ -157,7 +157,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-if="checkPermission([...permission.detail, ...permission.del])" label="操作" width="120px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.detail, ...permission.del,, ...permission.download])" label="操作" width="180px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
             v-if="checkPermission(permission.detail)"
@@ -166,21 +166,9 @@
             type="primary"
             @click="openContractInfo(scope.row)"
           />
-          <!-- <template v-if="checkPermission(permission.editStatus)">
-            <common-button
-              v-if="scope.row.status === projectStatusEnum.ENUM.PROCESS.V"
-              size="mini"
-              @click="changeStatus(scope.row, projectStatusEnum.ENUM.SUSPEND.V)"
-              >暂停</common-button>
-            <common-button
-              v-else-if="scope.row.status === projectStatusEnum.ENUM.SUSPEND.V"
-              size="mini"
-              @click="changeStatus(scope.row, projectStatusEnum.PROCESS.V)"
-              >继续</common-button>
-          </template> -->
           <udOperation :data="scope.row" :show-edit="false" :permission="permission"/>
           <!-- 下载 -->
-          <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+           <export-button :fn="downloadProjectInfo" :params="{ projectId: scope.row.id }" v-permission="permission.download"/>
         </template>
       </el-table-column>
     </common-table>
@@ -218,7 +206,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/contract/project'
+import crudApi, { editStatus, downloadProjectInfo } from '@/api/contract/project'
 import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -229,7 +217,6 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
 import { projectTypeEnum, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-// import { isNotBlank } from '@data-type/index'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
 import members from './members'
@@ -238,7 +225,7 @@ import { parseTime } from '@/utils/date'
 import { useStore } from 'vuex'
 import { projectListPM as permission } from '@/page-permission/contract'
 import { ElSelect } from 'element-plus'
-// import eOperation from '@crud/E.operation'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const store = useStore()
 const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])

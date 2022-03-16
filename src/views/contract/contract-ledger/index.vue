@@ -84,7 +84,6 @@
     <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="累计发生额" align="center">
       <template v-slot="scope">
         <div @click="openOccurAmount(scope.row.id)" style="color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
-        <!-- <el-tag @click="openOccurAmount(scope.row.id)" effect="plain" style="width:100%;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</el-tag> -->
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance:" prop="availableBalance:" label="可用余额" align="center">
@@ -101,7 +100,7 @@
   <!-- 合同额 -->
   <contract-money v-model="moneyVisible" :projectId="currentProjectId"/>
   <!-- 发生额 -->
-  <occur-amount v-model="occurVisible"/>
+  <occur-amount v-model="occurVisible" :projectId="currentProjectId"/>
   <!-- 收付款 -->
   <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName"/>
   <!--分页组件-->
@@ -170,7 +169,7 @@ function openContractMoney(row) {
 }
 
 function openOccurAmount(row) {
-  if (!checkPermission(permission.amountLog)) {
+  if (!checkPermission(permission.occurLog)) {
     return
   }
   currentProjectId.value = row

@@ -23,8 +23,10 @@ export const projectListPM = {
   settle: ['contract_project:settle'], // 结算
   variationChange: ['contract_project:variationChange'], // 签证变更
   editMember: ['contract_project:editMember'], // 修改成员
-  completeList: ['contract_project:completeList'], // 可完工项目
-  completeConfirm: ['contract_project:completeConfirm'] // 完工项目确认完工
+  completeList: {
+    get: ['contract_project_complete:get'], // 可完工项目列表
+    completeConfirm: ['contract_project_complete:completeConfirm']// 完工项目确认完工
+  }
 }
 
 // 合同管理/合同变更
