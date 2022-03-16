@@ -44,7 +44,7 @@
             />
           </el-form-item>
           <div>
-            <el-form-item label="只显示填写归还数量的材料" label-width="170px">
+            <el-form-item label="只显示填写归还数量的材料" label-width="180px">
               <el-checkbox v-model="filterParams.hasReturnedQuantity" size="mini"></el-checkbox>
             </el-form-item>
             <el-form-item label="本次归还统计" label-width="100px">

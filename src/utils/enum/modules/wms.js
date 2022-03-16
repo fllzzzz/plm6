@@ -119,6 +119,28 @@ const materialFreezeTypeEnum = {
 }
 constantize(materialFreezeTypeEnum)
 
+// 单据类型
+const receiptTypeEnum = {
+  // REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 1 << 0, DOC: '申购单' },
+  PURCHASE: { L: '采购', K: 'PURCHASE', V: 1, DOC: '采购单' },
+  INBOUND: { L: '入库', K: 'INBOUND', V: 2, DOC: '入库单' },
+  OUTBOUND_APPLY: { L: '出库申请', K: 'OUTBOUND_APPLY', V: 3, DOC: '出库申请单' },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 4, DOC: '出库单' },
+  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 5, DOC: '调拨单' },
+  RETURN: { L: '退库', K: 'RETURN', V: 6, DOC: '退库单' },
+  REJECTED: { L: '退货', K: 'REJECTED', V: 7, DOC: '退货单' }
+}
+constantize(receiptTypeEnum)
+
+// 物料打印标签类型
+const materialLabelPrintTypeEnum = {
+  INBOUND: { L: '入库', K: 'INBOUND', V: 1 << 0, DOC: '申购单' },
+  HALF_OUTBOUND: { L: '半出', K: 'HALF_OUTBOUND', V: 1 << 1, DOC: '出库单' },
+  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 1 << 2, DOC: '调拨单' },
+  RETURN: { L: '退库', K: 'RETURN', V: 1 << 3, DOC: '退库单' }
+}
+constantize(materialLabelPrintTypeEnum)
+
 // 提货方式
 const pickUpModeEnum = {
   SELF: { L: '自提', K: 'SELF', V: 1 << 0 },
@@ -160,6 +182,7 @@ const receiptRejectStatusEnum = {
 constantize(receiptRejectStatusEnum)
 
 export {
+  receiptTypeEnum, // 单据类型
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
@@ -180,10 +203,12 @@ export {
   transferTypeEnum,
   transferCreateTypeEnum,
   materialRejectStatusEnum,
-  receiptRejectStatusEnum
+  receiptRejectStatusEnum,
+  materialLabelPrintTypeEnum
 }
 
 export default {
+  receiptTypeEnum, // 单据类型
   inboundFillWayEnum,
   measureTypeEnum,
   unitTypeEnum,
@@ -204,5 +229,6 @@ export default {
   transferTypeEnum,
   transferCreateTypeEnum,
   materialRejectStatusEnum,
-  receiptRejectStatusEnum
+  receiptRejectStatusEnum,
+  materialLabelPrintTypeEnum
 }

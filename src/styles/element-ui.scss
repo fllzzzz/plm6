@@ -352,6 +352,13 @@ body .el-table th.gutter {
   }
 }
 
+.select-mini {
+  .el-input--mini .el-input__inner {
+    height: 30px;
+    line-height: 30px;
+  }
+}
+
 .icon-button {
   padding: 0px 9px !important;
   min-height: 22px !important;

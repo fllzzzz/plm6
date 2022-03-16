@@ -14,6 +14,13 @@ const whetherEnum = {
 }
 constantize(whetherEnum)
 
+// 是否打印
+const boolPrintedEnum = {
+  FALSE: { L: '未打印', K: 'TRUE', V: false, COLOR: '' },
+  TRUE: { L: '已打印', K: 'FALSE', V: true, COLOR: '' }
+}
+constantize(boolPrintedEnum)
+
 // 配置状态
 const configureStatusEnum = {
   UNFINISHED: { L: '未配置', K: 'UNFINISHED', V: 0 },
@@ -119,6 +126,7 @@ export {
   processingEnum, // 进行中/暂停  流程状态
   enabledEnum, // 使用状态
   whetherEnum, // 是否
+  boolPrintedEnum, // 是否打印
   configureStatusEnum, // 配置状态
   numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型
@@ -136,6 +144,7 @@ export default {
   processingEnum, // 进行中/暂停  流程状态
   enabledEnum, // 使用状态
   whetherEnum, // 是否
+  boolPrintedEnum, // 是否打印
   configureStatusEnum, // 配置状态
   numOrPctEnum, // 数字或者百分比类型
   weightTypeEnum, // 重量类型

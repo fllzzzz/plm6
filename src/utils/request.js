@@ -134,7 +134,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error.message) // for debug
+    // console.log(error.message) // for debug
     return Promise.reject(error)
   }
 )
