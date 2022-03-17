@@ -3,33 +3,16 @@
     <div v-show="crud.searchToggle">
       <crudOperation>
         <template #optLeft>
-          <el-input
-            v-model="query.projectName"
-            placeholder="请输入项目名称"
-            class="filter-item"
-            style="width: 200px"
+          <el-date-picker
+            style="margin-right: 5px; width: 150px"
+            v-model="date"
+            type="date"
             size="small"
-            clearable
-            @keyup.enter="crud.toQuery"
-          />
-          <el-input
-            v-model="query.monomerValue"
-            placeholder="请选择单体"
             class="filter-item"
-            style="width: 200px"
-            size="small"
-            clearable
-            @keyup.enter="crud.toQuery"
+            placeholder="请选择日期"
+            @change="changeDate"
           />
-          <el-input
-            v-model="query.areaValue"
-            placeholder="请选择单元"
-            class="filter-item"
-            style="width: 200px"
-            size="small"
-            clearable
-            @keyup.enter="crud.toQuery"
-          />
+
           <rrOperation />
         </template>
       </crudOperation>
@@ -38,14 +21,23 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
+const date = ref('')
+
 const defaultQuery = {
-  projectName: undefined,
-  monomerValue: undefined,
-  areaValue: undefined
+  importTime: undefined
+}
+
+function changeDate() {
+  const a = new Date(date.value.getTime()).getFullYear()
+  const b = new Date(date.value.getTime()).getMonth() + 1
+  const c = new Date(date.value.getTime()).getDate()
+  query.importTime = a + '-' + b + '-' + c
+  crud.toQuery()
 }
 
 const { crud, query } = regHeader(defaultQuery)

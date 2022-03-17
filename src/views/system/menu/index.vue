@@ -15,7 +15,7 @@
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
     >
-    <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column
         v-if="columns.visible('name')"
         key="name"
@@ -24,21 +24,14 @@
         label="菜单名称"
         min-width="280px"
       />
-      <el-table-column
-        v-if="columns.visible('type')"
-        key="type"
-        prop="type"
-        :show-overflow-tooltip="true"
-        label="菜单类型"
-        width="120px"
-      >
+      <el-table-column v-if="columns.visible('type')" key="type" prop="type" :show-overflow-tooltip="true" label="菜单类型" width="120px">
         <template v-slot="scope">
           {{ systemMenusTypeEnum.VL[scope.row.type] }}
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('icon')" key="icon" prop="icon" label="图标" align="center" width="60px">
         <template v-slot="scope">
-          <svg-icon :icon-class="scope.row.icon?scope.row.icon:''" />
+          <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" label="排序" align="center">
@@ -47,8 +40,20 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('path')" key="path" prop="path" :show-overflow-tooltip="true" label="路由地址" />
-      <el-table-column v-if="columns.visible('permission')" key="permission" prop="permission" :show-overflow-tooltip="true" label="权限标识" />
-      <el-table-column v-if="columns.visible('component')" key="component" prop="component" :show-overflow-tooltip="true" label="组件路径" />
+      <el-table-column
+        v-if="columns.visible('permission')"
+        key="permission"
+        prop="permission"
+        :show-overflow-tooltip="true"
+        label="权限标识"
+      />
+      <el-table-column
+        v-if="columns.visible('component')"
+        key="component"
+        prop="component"
+        :show-overflow-tooltip="true"
+        label="组件路径"
+      />
       <el-table-column v-if="columns.visible('iframe')" key="iframe" prop="iframe" label="外链" align="center" width="75px">
         <template v-slot="scope">
           <span v-if="scope.row.iframe">是</span>
@@ -86,7 +91,7 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <udOperation :data="scope.row" :permission="permission"  del-prompt="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！"/>
+          <udOperation :data="scope.row" :permission="permission" del-prompt="确定删除吗,如果存在下级节点则一并删除，此操作不能撤销！" />
         </template>
       </el-table-column>
     </common-table>

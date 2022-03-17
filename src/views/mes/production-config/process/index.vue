@@ -123,7 +123,14 @@
           <span>{{ processTypeEnum.VL[scope.row.type] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('sequenceType')" key="sequenceType" prop="sequenceType" align="center" label="类型" width="110px">
+      <el-table-column
+        v-if="columns.visible('sequenceType')"
+        key="sequenceType"
+        prop="sequenceType"
+        align="center"
+        label="类型"
+        width="110px"
+      >
         <template v-slot="scope">
           <el-tag :type="typeEnum.V[scope.row.sequenceType].T">{{ typeEnum.VL[scope.row.sequenceType] }}</el-tag>
         </template>
@@ -170,7 +177,7 @@ import {
   processMaterialListTypeEnum as typeEnum,
   processInspectTypeEnum as inspectTypeEnum,
   processReportTypeEnum as reportTypeEnum,
-  wageQuotaTypeEnum,
+  wageQuotaTypeEnum
 } from '@enum-ms/mes'
 import EO from '@enum'
 import { parseTime } from '@/utils/date'
@@ -192,7 +199,7 @@ const { crud, columns, CRUD } = useCRUD(
     title: '工序',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { ...crudApi }
   },
   tableRef
 )
@@ -202,14 +209,13 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 async function changeInspectType(data, val) {
   try {
     await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 工序的检验方式：\n由“${inspectTypeEnum.VL[data.originInspectType]}”变更为 “${
-        inspectTypeEnum.VL[val]
+      `此操作将把 “${data.name}” 工序的检验方式：\n由“${inspectTypeEnum.VL[data.originInspectType]}”变更为 “${inspectTypeEnum.VL[val]
       }”, 是否继续？`,
       '提示',
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }
     )
     await crudApi.edit({ id: data.id, inspectType: val })
@@ -224,14 +230,13 @@ async function changeInspectType(data, val) {
 async function changeReportType(data, val) {
   try {
     await ElMessageBox.confirm(
-      `此操作将把 “${data.name}” 工序的上报方式：\n由“${reportTypeEnum.VL[data.originReportType]}”变更为 “${
-        reportTypeEnum.VL[val]
+      `此操作将把 “${data.name}” 工序的上报方式：\n由“${reportTypeEnum.VL[data.originReportType]}”变更为 “${reportTypeEnum.VL[val]
       }”, 是否继续？`,
       '提示',
       {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }
     )
     await crudApi.edit({ id: data.id, reportType: val })

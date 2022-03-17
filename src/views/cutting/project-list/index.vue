@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 工具栏 -->
-    <mHeader />
+    <mHeader @change="headerChange" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -12,171 +12,89 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+      <template v-if="crud.data && transformTab === 0">
+        <el-table-column key="workshopInf" align="center" prop="workshopInf" :show-overflow-tooltip="true" label="车间" min-width="40">
+          <template v-slot="scope">
+            <span>{{ scope.row.cutMachine.workshopInf }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column key="machineName" align="center" prop="machineName" :show-overflow-tooltip="true" label="设备名称" min-width="40">
+          <template v-slot="scope">
+            <el-tag style="width: 100%" effect="plain">
+              <span>{{ scope.row.cutMachine.machineName }}</span>
+            </el-tag>
+          </template>
+        </el-table-column>
+      </template>
+      <template v-else>
+        <el-table-column key="projectName" :show-overflow-tooltip="true" label="项目名称" align="center" min-width="90">
+          <template v-slot="scope">
+            <span>{{ scope.row.projectName }}</span>
+          </template>
+        </el-table-column>
+      </template>
+      <el-table-column key="plateNum" align="center" prop="plateNum" :show-overflow-tooltip="true" label="任务数（张）" min-width="40">
+        <template v-slot="scope">
+          <span>{{ scope.row.plateNum ? scope.row.plateNum : 0 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
+        key="plateWeight"
         align="center"
-        v-if="columns.visible('projectName')"
-        key="projectName"
-        prop="projectName"
+        prop="plateWeight"
         :show-overflow-tooltip="true"
-        label="项目名称"
-        min-width="100"
+        label="任务量（kg）"
+        min-width="40"
       >
         <template v-slot="scope">
-          <span>
-            {{ scope.row.projectName }}
-          </span>
+          <span>{{ scope.row.plateWeight ? scope.row.plateWeight : 0 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column key="finishNum" align="center" prop="finishNum" :show-overflow-tooltip="true" label="完成数（张）" min-width="40">
+        <template v-slot="scope">
+          <span>{{ scope.row.finishNum ? scope.row.finishNum : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('plateNo')"
-        key="plateNo"
-        prop="plateNo"
-        :show-overflow-tooltip="true"
-        label="钢板编号"
-        min-width="70"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.plateNo }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('plateType')"
-        key="plateType"
-        prop="plateType"
-        :show-overflow-tooltip="true"
-        label="物料种类"
-        min-width="70"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.plateType }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('material')"
-        key="material"
-        prop="material"
-        :show-overflow-tooltip="true"
-        label="材质"
-        min-width="70"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.material }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('thick')" key="thick" prop="thick" :show-overflow-tooltip="true" label="厚(mm)" min-width="60">
-        <template v-slot="scope">
-          <span>{{ scope.row.thick }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('width')" key="width" prop="width" :show-overflow-tooltip="true" label="宽(mm)" min-width="60">
-        <template v-slot="scope">
-          <span>{{ scope.row.width }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('length')"
-        key="length"
-        prop="length"
-        :show-overflow-tooltip="true"
-        label="长(mm)"
-        min-width="60"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.length }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('brand')" key="brand" prop="brand" :show-overflow-tooltip="true" label="品牌" min-width="60">
-        <template v-slot="scope">
-          <span>{{ scope.row.brand }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('furnaceNo')"
-        key="furnaceNo"
-        prop="furnaceNo"
-        :show-overflow-tooltip="true"
-        label="炉批号"
-        min-width="60"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.furnaceNo }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('state')"
-        key="state"
-        prop="state"
+        key="finishWeight"
         align="center"
+        prop="finishWeight"
         :show-overflow-tooltip="true"
-        label="状态"
-        min-width="60"
+        label="完成量（kg）"
+        min-width="40"
       >
         <template v-slot="scope">
-          <span>{{ steelPlateEnum.VL[scope.row.plateState] }}</span>
+          <span>{{ scope.row.finishWeight ? scope.row.finishWeight : 0 }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        v-if="columns.visible('allocateTime')"
-        key="allocateTime"
-        prop="allocateTime"
-        :show-overflow-tooltip="true"
-        label="分配时间"
-        min-width="100"
-      >
+      <el-table-column v-if="transformTab === 0" label="操作" align="center" min-width="90">
         <template v-slot="scope">
-          <span>{{ parseTime(scope.row.allocateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('machineName')"
-        key="machineName"
-        prop="machineName"
-        :show-overflow-tooltip="true"
-        label="关联机器"
-        min-width="60"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.machineName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" label="操作" align="center">
-        <template v-slot="scope">
-          <common-button size="mini" type="primary" icon="el-icon-view" @click="viewDetails(scope.row)">查看</common-button>
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <detail :detail-data="detailObj" v-model:visible="specsVisible" />
+
+    <!-- 钢板清单 -->
+    <detail :detail-data="detailObj" v-model:visible="innerVisible" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import crudApi from '@/api/cutting/project-data'
+import crudApi from '@/api/cutting/scheduling'
+import crudApi2 from '@/api/cutting/nestingList'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import { parseTime } from '@/utils/date'
-import { steelPlateEnum } from '@enum-ms/cutting'
+import detail from './module/detail/index.vue'
 import pagination from '@crud/Pagination'
 import useMaxHeight from '@compos/use-max-height'
-import detail from '../template/detail.vue'
 
 const tableRef = ref()
-const detailObj = ref([])
-const specsVisible = ref(false)
-
+const transformTab = ref(0)
+const innerVisible = ref(false)
+const detailObj = ref({})
 // crud交由presenter持有
 const permission = {
   get: ['contractRecord:get']
@@ -189,9 +107,9 @@ const optShow = {
   download: false
 }
 
-const { crud, columns } = useCRUD(
+const { crud } = useCRUD(
   {
-    title: '项目清单',
+    title: '切割排产',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -207,10 +125,19 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-// 查看详情
-function viewDetails(row) {
-  specsVisible.value = true
+async function showDetail(row) {
   detailObj.value = row
+  innerVisible.value = true
 }
 
+function headerChange(val) {
+  transformTab.value = val
+  if (transformTab.value === 1) {
+    crud.crudApi = { ...crudApi2 }
+  } else {
+    crud.crudApi = { ...crudApi }
+  }
+  crud.data = []
+  crud.toQuery()
+}
 </script>

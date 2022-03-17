@@ -20,36 +20,12 @@
         prop="projectName"
         :show-overflow-tooltip="true"
         label="项目名称"
-        min-width="60"
+        min-width="100"
       >
         <template v-slot="scope">
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        v-if="columns.visible('monomerName')"
-        key="monomerName"
-        prop="monomerName"
-        :show-overflow-tooltip="true"
-        label="单体"
-        min-width="60"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.monomerName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('areaName')"
-        key="areaName"
-        prop="areaName"
-        :show-overflow-tooltip="true"
-        label="单元"
-        min-width="60"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.areaName }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('sum')"
         key="sum"
@@ -92,6 +68,7 @@
       <el-table-column
         v-if="columns.visible('importTime')"
         key="importTime"
+        align="center"
         prop="importTime"
         :show-overflow-tooltip="true"
         label="导入时间"

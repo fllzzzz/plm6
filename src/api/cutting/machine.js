@@ -1,4 +1,3 @@
-/* eslint-disable no-irregular-whitespace */
 import request from '@/utils/request'
 
 export function get(params) {
@@ -70,8 +69,9 @@ export function cleanTask(params, data) {
 // 转产任务
 export function changeTask(params, data) {
   return request({
-    url: `/api/cut/changeTask/${params}`,
+    url: `/api/cut/changeTask`,
     method: 'post',
+    params,
     data
   })
 }
@@ -88,5 +88,4 @@ export default {
   get,
   add,
   del
-  // eslint-disable-next-line eol-last
 }

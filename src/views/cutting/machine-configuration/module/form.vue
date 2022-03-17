@@ -41,13 +41,12 @@
         <el-form-item label="工控机地址" prop="opcUrl">
           <el-input ref="saveTagInput" v-model="form.opcUrl" class="input-underline" placeholder="输入工控机地址" />
         </el-form-item>
-        <el-form-item label="代号：" prop="code">
-          <el-input ref="saveTagInput" v-model="form.code" class="input-underline" placeholder="输入代号" />
-        </el-form-item>
         <el-form-item label="MAC地址：" prop="mac">
           <el-input ref="saveTagInput" v-model="form.mac" class="input-underline" placeholder="输入MAC地址" />
         </el-form-item>
-
+        <el-form-item label="代号：" prop="code">
+          <el-input ref="saveTagInput" v-model="form.code" class="input-underline" placeholder="输入代号" />
+        </el-form-item>
         <el-form-item label="设备品牌：" prop="brand">
           <el-input ref="saveTagInput" v-model="form.brand" class="input-underline" placeholder="输入设备品牌" />
         </el-form-item>

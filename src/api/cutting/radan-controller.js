@@ -36,10 +36,17 @@ export function getTaskPack(params) {
   })
 }
 
+export function feedingOperation(data, params) {
+  return request({
+    url: `/api/order/feedingOperation`,
+    method: 'post',
+    data,
+    params
+  })
+}
+
 // 上传任务包
-export function uploadTask({
-  cutTaskId
-}) {
+export function uploadTask({ cutTaskId }) {
   return request({
     url: `/api/radan/uploadTask/${cutTaskId}`,
     method: 'get'
@@ -51,6 +58,14 @@ export function ByCutTaskId(params) {
     url: `/api/radan/getPartByCutTaskId`,
     method: 'post',
     params
+  })
+}
+
+// 区域id 查零件清单
+export function ByAreaId(params) {
+  return request({
+    url: `/api/order/getPartByAreaId/${params}`,
+    method: 'get'
   })
 }
 
@@ -72,12 +87,24 @@ export function area(params) {
   })
 }
 
+// 创建套料工单
+export function createOrder(data, params) {
+  return request({
+    url: `/api/order/createOrder`,
+    method: 'post',
+    data,
+    params
+  })
+}
+
 export default {
   get,
   area,
-  getTaskByProjectId,
-  creatTaskPack,
-  getTaskPack,
+  ByAreaId,
   uploadTask,
-  ByCutTaskId
+  ByCutTaskId,
+  getTaskPack,
+  creatTaskPack,
+  feedingOperation,
+  getTaskByProjectId
 }

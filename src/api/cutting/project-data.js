@@ -7,6 +7,16 @@ export function get(params) {
     params
   })
 }
+
+// 机器列表
+export function getMachine(params) {
+  return request({
+    url: '/api/cut/getMachine',
+    method: 'get',
+    params
+  })
+}
+
 // 零件
 export function getCutPart(params) {
   return request({
@@ -47,6 +57,6 @@ export default {
   getCutPart,
   continueTask,
   getCutSurplus,
-  suspendTask
-  // eslint-disable-next-line eol-last
+  suspendTask,
+  getMachine
 }

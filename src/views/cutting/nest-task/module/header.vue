@@ -12,24 +12,6 @@
             clearable
             @keyup.enter="crud.toQuery"
           />
-          <!-- <el-input
-            v-model="query.monomerValue"
-            placeholder="请选择单体"
-            class="filter-item"
-            style="width: 200px"
-            size="small"
-            clearable
-            @keyup.enter="crud.toQuery"
-          />
-          <el-input
-            v-model="query.areaValue"
-            placeholder="请选择单元"
-            class="filter-item"
-            style="width: 200px"
-            size="small"
-            clearable
-            @keyup.enter="crud.toQuery"
-          /> -->
           <rrOperation />
         </template>
       </crudOperation>
