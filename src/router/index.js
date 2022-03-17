@@ -44,6 +44,12 @@ const constantRoutes = [
     meta: { title: '围护信息' },
     hidden: true
   },
+  {
+    path: specialPath.QR_SCAN_AUXILIARY_MATERIAL,
+    component: () => import('@/views/qr-scan-info/mes/auxiliary-material'),
+    meta: { title: '配套件信息' },
+    hidden: true
+  },
   // {
   //   path: '/personal',
   //   component: () => import('@/views/user-center/index'),

@@ -53,7 +53,7 @@
     </common-table>
       <!--分页组件-->
       <pagination />
-      <uploadForm v-model="uploadVisible" :currentMonomer="currentMonomer" :globalProject="currentProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow"/>
+      <uploadForm v-model="uploadVisible" :currentMonomer="currentMonomer" :currentProject="currentProject" :dataType="crud.query.dataType" @success="crud.toQuery" :currentRow="currentRow"/>
     </template>
   </div>
 </template>

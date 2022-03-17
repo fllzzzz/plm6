@@ -21,14 +21,14 @@ const pageHeight = 120
 /**
  * 物料仓 - 标签打印
  */
-export async function printMaterialLabel({ material, number = 1, printMode = PrintMode.QUEUE.V } = {}) {
+export async function printMaterialLabel({ material, copies = 1, printMode = PrintMode.QUEUE.V } = {}) {
   switch (material.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
-      return await printSteelPlateLabel({ material, number, printMode })
+      return await printSteelPlateLabel({ material, copies, printMode })
     case rawMatClsEnum.SECTION_STEEL.V:
-      return await printSectionSteelLabel({ material, number, printMode })
+      return await printSectionSteelLabel({ material, copies, printMode })
     case rawMatClsEnum.STEEL_COIL.V:
-      return await printSteelCoilLabel({ material, number, printMode })
+      return await printSteelCoilLabel({ material, copies, printMode })
     default:
       return false
   }
@@ -37,7 +37,7 @@ export async function printMaterialLabel({ material, number = 1, printMode = Pri
 /**
  * 物料仓 - 钢板标签打印
  */
-export async function printSteelPlateLabel({ material, number = 1, printMode = PrintMode.QUEUE.V } = {}) {
+export async function printSteelPlateLabel({ material, copies = 1, printMode = PrintMode.QUEUE.V } = {}) {
   let result = false
 
   try {
@@ -65,7 +65,7 @@ export async function printSteelPlateLabel({ material, number = 1, printMode = P
     LODOP.SET_PRINT_PAGESIZE(intOrient, pageWidth, pageHeight, '1')
     LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', strHtml)
     LODOP.ADD_PRINT_BARCODE('1mm', '72mm', '28mm', '10mm', '128C', material.barcode)
-    LODOP.SET_PRINT_COPIES(number)
+    LODOP.SET_PRINT_COPIES(copies)
     // LODOP.PRINT_DESIGN() /* 打印设计*/
     // LODOP.PREVIEW() /* 打印预览*/
     result = await printByMode(printMode)
@@ -78,7 +78,7 @@ export async function printSteelPlateLabel({ material, number = 1, printMode = P
 /**
  * 物料仓 - 型材标签打印
  */
-export async function printSectionSteelLabel({ material, number = 1, printMode = PrintMode.QUEUE.V } = {}) {
+export async function printSectionSteelLabel({ material, copies = 1, printMode = PrintMode.QUEUE.V } = {}) {
   let result = false
 
   try {
@@ -106,7 +106,7 @@ export async function printSectionSteelLabel({ material, number = 1, printMode =
     LODOP.SET_PRINT_PAGESIZE(intOrient, pageWidth, pageHeight, '1')
     LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', strHtml)
     LODOP.ADD_PRINT_BARCODE('1mm', '72mm', '28mm', '10mm', '128C', material.barcode)
-    LODOP.SET_PRINT_COPIES(number)
+    LODOP.SET_PRINT_COPIES(copies)
     // LODOP.PRINT_DESIGN() /* 打印设计*/
     // LODOP.PREVIEW() /* 打印预览*/
     result = await printByMode(printMode)
@@ -119,7 +119,7 @@ export async function printSectionSteelLabel({ material, number = 1, printMode =
 /**
  * 物料仓 - 钢卷标签打印
  */
-export async function printSteelCoilLabel({ material, number = 1, printMode = PrintMode.QUEUE.V } = {}) {
+export async function printSteelCoilLabel({ material, copies = 1, printMode = PrintMode.QUEUE.V } = {}) {
   let result = false
 
   try {
@@ -146,7 +146,7 @@ export async function printSteelCoilLabel({ material, number = 1, printMode = Pr
     LODOP.SET_PRINT_PAGESIZE(intOrient, pageWidth, pageHeight, '1')
     LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', strHtml)
     LODOP.ADD_PRINT_BARCODE('1mm', '72mm', '28mm', '10mm', '128C', material.barcode)
-    LODOP.SET_PRINT_COPIES(number)
+    LODOP.SET_PRINT_COPIES(copies)
     // LODOP.PRINT_DESIGN() /* 打印设计*/
     // LODOP.PREVIEW() /* 打印预览*/
     result = await printByMode(printMode)

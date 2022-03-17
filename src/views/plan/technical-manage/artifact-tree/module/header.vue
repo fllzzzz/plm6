@@ -84,6 +84,7 @@
         </el-popconfirm>
       </template>
       <template #viewLeft>
+        <common-button type="primary" size="mini" @click="techVisible=true" v-if="checkPermission(crud.permission.techDetail)">技术交底</common-button>
         <el-tooltip
           effect="light"
           :content="`${mismatchList.join(',')}`"
@@ -95,6 +96,21 @@
         </el-tooltip>
       </template>
     </crudOperation>
+    <common-drawer
+      append-to-body
+      :before-close="()=>{techVisible=false}"
+      :visible="techVisible"
+      title="技术交底(结构)"
+      size="80%"
+    >
+      <template #content>
+       <structureTable
+        :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]"
+        :is-show="true"
+        style="margin-top:20px;"
+      />
+      </template>
+    </common-drawer>
   </div>
 </template>
 
@@ -110,8 +126,10 @@ import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact, delArtifactTreeByArea } from '@/api/plan/technical-manage/artifact-tree'
+import { getContractTechInfo } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
+import structureTable from '@/views/contract/project-manage/module/enclosure-table/structure-table'
 
 const defaultQuery = {
   artifactName: '',
@@ -126,7 +144,9 @@ const monomerSelectRef = ref()
 const currentArea = ref({})
 const areaInfo = ref([])
 const defaultTab = ref({})
+const tableData = ref({})
 const deleteLoading = ref(false)
+const techVisible = ref(false)
 const { crud, query, CRUD } = regHeader(defaultQuery)
 const emit = defineEmits(['getAreaData'])
 const mismatchList = ref([])
@@ -143,6 +163,7 @@ watch(
     if (val) {
       crud.query.projectId = props.projectId
       crud.toQuery()
+      getTechInfo()
     }
   },
   { immediate: true, deep: true }
@@ -225,6 +246,19 @@ async function deleteArtifact() {
   } catch (e) {
     console.log('清空组立', e)
     deleteLoading.value = false
+  }
+}
+
+async function getTechInfo() {
+  try {
+    const data = await getContractTechInfo(props.projectId)
+    if (isNotBlank(data)) {
+      tableData.value = {
+        [TechnologyTypeAllEnum.STRUCTURE.V]: data.structureList || []
+      }
+    }
+  } catch (error) {
+    console.log('获取技术交底', error)
   }
 }
 </script>

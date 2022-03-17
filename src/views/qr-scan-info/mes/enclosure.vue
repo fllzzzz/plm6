@@ -8,7 +8,6 @@
     <div class="info">
       <span>名称：{{ component.name }}</span>
       <span>编号：{{ component.serialNumber }}</span>
-      <span>图号：{{ component.drawingNumber }}</span>
       <span>板型：{{ component.plateType }}</span>
       <span>颜色：{{ component.color }}</span>
       <span>厚度：{{ component.thickness }}{{ component.thickness ? ' mm' : '' }}</span>
@@ -17,16 +16,16 @@
     </div>
     <span class="subtitle"> 使用部位 </span>
     <div class="info">
-      <span>项目：{{ component.projectShortName }}</span>
-      <span v-if="showMonomer">单体：{{ component.monomerName }}</span>
-      <span v-if="showArea">区域：{{ component.areaName }}</span>
+      <span>项目：{{ component.project?.shortName }}</span>
+      <span v-if="showMonomer">单体：{{ component.monomer?.name }}</span>
+      <span v-if="showArea">区域：{{ component.area?.name }}</span>
     </div>
     <template v-if="showProductionLine">
       <span class="subtitle"> 生产信息 </span>
       <div class="info">
         <template v-if="showProductionLine">
-          <span>工厂：{{ component.factoryName }}</span>
-          <span>生产线：{{ component.productionLineName }}</span>
+          <span>工厂：{{ component.factory?.name }}</span>
+          <span>生产线：{{ component.productionLine?.name }}</span>
         </template>
         <!-- <span v-if="manufacturerName">制造商：{{ manufacturerName  }}</span> -->
         <!-- <span>任务数量：{{ component.taskQuantity  }}</span> -->
@@ -48,34 +47,26 @@ const route = useRoute()
 const component = ref({
   name: '',
   serialNumber: '',
-  drawingNumber: '',
   plateType: '',
   color: '',
   thickness: '',
   area: '',
   length: '',
-  effectiveWidth: '',
-  projectShortName: '',
-  monomerName: '',
-  areaName: '',
-  factoryName: '',
-  productionLineName: ''
+  effectiveWidth: ''
 })
 
 const id = route.query.id
 const factoryId = route.query.factoryId
 const taskId = route.query.taskId
-const type = route.query.type
 const showProductionLine = ref(Boolean(+route.query.sl))
 const showArea = ref(Boolean(+route.query.sa))
 const showMonomer = ref(Boolean(+route.query.sm))
 const params = {
   id,
   factoryId,
-  taskId,
-  type
+  taskId
 }
-const url = window.location.href.split(specialPath.QR_SCAN_ARTIFACT_TASK)[0].split('/#')[0]
+const url = window.location.href.split(specialPath.QR_SCAN_ENCLOSURE_TASK)[0].split('/#')[0]
 console.log(url)
 fetch(url, params)
 

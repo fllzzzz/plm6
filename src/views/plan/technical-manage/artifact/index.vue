@@ -183,9 +183,9 @@
           min-width="120"
         />
         <el-table-column
-          v-if="columns.visible('createUser')"
-          key="createUser"
-          prop="createUser"
+          v-if="columns.visible('userName')"
+          key="userName"
+          prop="userName"
           :show-overflow-tooltip="true"
           label="上传人"
           min-width="110"

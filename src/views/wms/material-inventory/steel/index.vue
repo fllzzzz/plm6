@@ -55,6 +55,7 @@
             <svg-icon icon-class="wms-transfer" />
           </common-button>
           <!--打印-->
+          <material-print-button :material="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -96,7 +97,7 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import { printMaterialLabel } from '@/utils/print/wms-material-label'
+import materialPrintButton from '@/components-system/wms/material-print-button.vue'
 
 const optShow = {
   add: false,
@@ -134,9 +135,4 @@ const {
   handleTransferSuccess,
   handleRefresh
 } = useIndexInfo({ CRUD, crud, defaultBasicClass: rawMatClsEnum.STEEL_PLATE.V })
-
-// 打印标签
-function toPrintLabel(row) {
-  printMaterialLabel({ material: row })
-}
 </script>

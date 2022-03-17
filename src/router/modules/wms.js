@@ -169,6 +169,13 @@ export default {
       meta: { title: '物料仓', icon: 'contract', noCache: true },
       children: [
         {
+          name: 'WMSMaterialLabelPrint',
+          path: 'material-label-print',
+          hidden: false,
+          component: '/wms/material-label-print/index',
+          meta: { title: '标签打印', icon: 'project', noCache: true }
+        },
+        {
           name: 'WMSSteelMaterialInventory',
           path: 'steel',
           hidden: false,
