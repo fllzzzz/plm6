@@ -69,7 +69,7 @@ function handleYearChange(val) {
         padding-bottom: 20px;
     }
     .chart-container {
-        width: 319px;
+        width: 320px;
         padding-right: 20px;
         overflow-y: auto;
     }
