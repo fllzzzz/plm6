@@ -1,5 +1,10 @@
+import common from './common'
 import mes from './mes'
 import contract from './contract'
+
+const invoiceLedger = common.handleTaxRate
+const invoiceRecord = common.handleTaxRate
+const projectHappenedDetail = common.handleTaxRate
 
 const myProject = contract.durationCalculation
 const projectList = contract.durationCalculation
@@ -27,6 +32,9 @@ const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
 export default {
+  invoiceLedger,
+  invoiceRecord,
+  projectHappenedDetail,
   myProject,
   projectList,
   contractLedger,

@@ -20,6 +20,7 @@ function meteWithUnit({ header, table = [], footer, qrCode }) {
     footer
   }
 }
+
 function filter({ header, table = [], footer, qrCode }) {
   const _table = table.filter(row => {
     return !(row.storageMete === 0 && row.beginInventory === 0 && row.currentInventory === 0 && row.outboundMete === 0)
@@ -32,4 +33,18 @@ function filter({ header, table = [], footer, qrCode }) {
   }
 }
 
-export default { meteWithUnit, filter }
+// 处理税率为null
+function handleTaxRate({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.taxRate = row.taxRate || 0
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
+export default { meteWithUnit, filter, handleTaxRate }

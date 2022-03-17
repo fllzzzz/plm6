@@ -190,7 +190,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     // 开票比例
     v.invoiceRate = v.collectionAmount ? (v.invoiceAmount || 0) / (v.collectionAmount || 0) * 100 : 0
     // 发运比例
-    v.happenedRate = v.happenedAmount ? (v.collectionAmount || 0) / (v.happenedAmount || 0) * 100 : 0
+    v.happenedRate = v.collectionAmount ? (v.happenedAmount || 0) / (v.collectionAmount || 0) * 100 : 0
   })
 }
 
