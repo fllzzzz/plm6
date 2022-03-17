@@ -24,7 +24,8 @@ const whiteList = [
   '/login',
   '/auth-redirect',
   specialPath.QR_SCAN_ARTIFACT_TASK,
-  specialPath.QR_SCAN_ENCLOSURE_TASK
+  specialPath.QR_SCAN_ENCLOSURE_TASK,
+  specialPath.QR_SCAN_AUXILIARY_MATERIAL
 ]
 
 // 全局路由守卫
