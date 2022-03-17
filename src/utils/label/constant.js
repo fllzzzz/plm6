@@ -90,7 +90,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
   <div class="artifact-label">
   <div class="row">
     <div class="col" style="justify-content:center;">
-      <img src="${logo}" alt="logo" style="height:70%;vertical-align: middle;">
+      <img src="${logo}" alt="logo" style="height:70%;max-width: 96%;vertical-align: middle;">
     </div>
     <div class="col" style="font-size:10pt;">${manufacturerName}</div>
   </div>

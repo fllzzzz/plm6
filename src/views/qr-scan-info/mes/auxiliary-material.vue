@@ -8,17 +8,15 @@
     <div class="info">
       <span>名称：{{ component.name }}</span>
       <span>编号：{{ component.serialNumber }}</span>
-      <span>板型：{{ component.plateType }}</span>
+      <span>规格：{{ component.specification }}</span>
       <span>颜色：{{ component.color }}</span>
-      <span>厚度：{{ component.thickness }}{{ component.thickness ? ' mm' : '' }}</span>
-      <span>长度：{{ component.length }}{{ component.length ? ' mm' : '' }}</span>
-      <span>有效宽度：{{ component.effectiveWidth }}{{ component.effectiveWidth ? ' mm' : '' }}</span>
+      <span>品牌：{{ component.brand }}</span>
     </div>
     <span class="subtitle"> 使用部位 </span>
     <div class="info">
       <span>项目：{{ component.project?.shortName }}</span>
       <span v-if="showMonomer">单体：{{ component.monomer?.name }}</span>
-      <span v-if="showArea">区域：{{ component.area?.name }}</span>
+      <!-- <span v-if="showArea">区域：{{ component.area?.name }}</span> -->
     </div>
     <template v-if="showProductionLine">
       <span class="subtitle"> 生产信息 </span>
@@ -35,7 +33,7 @@
 </template>
 
 <script setup>
-import { fetchEnclosure as fetchInfo } from '@/api/qr-scan-info'
+import { fetchAuxiliaryMaterial as fetchInfo } from '@/api/qr-scan-info'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElLoading } from 'element-plus'
@@ -46,34 +44,30 @@ const route = useRoute()
 
 const component = ref({
   name: '',
+  specification: '',
   serialNumber: '',
-  plateType: '',
   color: '',
-  thickness: '',
-  area: '',
-  length: '',
-  effectiveWidth: ''
+  brand: ''
 })
 
 const id = route.query.id
 const factoryId = route.query.factoryId
 const taskId = route.query.taskId
 const showProductionLine = ref(Boolean(+route.query.sl))
-const showArea = ref(Boolean(+route.query.sa))
 const showMonomer = ref(Boolean(+route.query.sm))
 const params = {
   id,
   factoryId,
   taskId
 }
-const url = window.location.href.split(specialPath.QR_SCAN_ENCLOSURE_TASK)[0].split('/#')[0]
+const url = window.location.href.split(specialPath.QR_SCAN_AUXILIARY_MATERIAL)[0].split('/#')[0]
 console.log(url)
 fetch(url, params)
 
 async function fetch(url, params) {
   const loading = ElLoading.service({
     lock: true,
-    text: '正在加载围护信息',
+    text: '正在加载配套件信息',
     background: 'rgba(0, 0, 0, 0.7)',
     fullscreen: true
   })
@@ -82,7 +76,7 @@ async function fetch(url, params) {
     component.value = res
     console.log(component)
   } catch (error) {
-    console.log('获取围护信息失败', error)
+    console.log('获取配套件信息失败', error)
   } finally {
     loading.close()
   }
