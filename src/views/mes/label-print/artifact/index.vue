@@ -305,7 +305,7 @@ function getLabelInfo(row) {
     quantity: row.quantity,
     specification: row.specification,
     drawingNumber: row.drawingNumber,
-    weight: printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
+    weight: printConfig.weight === printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
     length: row.length
   }
   // 生产线信息
