@@ -72,4 +72,13 @@ export function detail(params) {
   })
 }
 
+export function productInfo(params) {
+  return request({
+    module: 'mes',
+    url: 'abnormal/product/info',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }
