@@ -51,6 +51,7 @@ const props = defineProps({
   }
 })
 const machineData = ref([]) // 获取所有机器。。。
+const macValve = ref()
 const emit = defineEmits(['change'], ['endEvent'])
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
 function showHook() {
@@ -63,19 +64,20 @@ async function getReport() {
 }
 
 function handleChange(item) {
+  macValve.value = item
   emit('change', item)
 }
 
 async function complete() {
   console.log('detailData', props.detailData)
   try {
-    await ElMessageBox.confirm('是否由' + " '" + props.detailData.machineName + "' " + '协同？', '提示', {
+    await ElMessageBox.confirm('是否由' + " '" + macValve.value.machineName + "' " + '协同？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
     const list = [props.detailData.id]
-    const message = await changeTask(props.detailData.mac, list)
+    const message = await changeTask({ mac: macValve.value.mac }, list)
     ElNotification({ title: '更改状态成功', message: message, type: 'success' })
     emit('endEvent')
   } catch (err) {

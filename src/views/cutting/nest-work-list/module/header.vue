@@ -45,8 +45,6 @@ const date = ref('')
 
 function dateChange() {
   const y = new Date(date.value.getTime()).getFullYear()
-  // const m = new Date(date.value.getTime()).getMonth() + 1
-  // const d = new Date(date.value.getTime()).getDate()
   query.importTime = y
   console.log(' query.importTime.', query.importTime)
 

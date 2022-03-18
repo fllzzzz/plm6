@@ -97,7 +97,7 @@
     </div>
     <el-divider></el-divider>
     <div class="TaskPackage">
-      <div class="taskTabHed head-container">
+      <div v-if="createNum !== 1" class="taskTabHed head-container">
         <group
           style="margin-right: 8px"
           :value="'厚度'"
@@ -361,8 +361,11 @@ function showHook() {
 
 function closeHook() {
   disableTask.value = true
-  taskPackage.value = []
   monomerValue.value = undefined
+  createNum.value = 1
+  material.value = []
+  taskPackage.value = []
+  radioButtonData.value = []
 }
 
 async function getMonomer() {
@@ -399,6 +402,7 @@ async function createTask(Str) {
         materialData.push(item.material)
         material.value = deDuPe(materialData).sort(sortArray)
         radioButtonData.value = deDuPe(tickData).sort(sortArray)
+        console.log(' material.value', material.value, ' radioButtonData.value', radioButtonData.value)
       })
       createNum.value++
     }

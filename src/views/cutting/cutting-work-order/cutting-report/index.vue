@@ -26,7 +26,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column key="finishNum" align="center" prop="finishNum" :show-overflow-tooltip="true" label="完成数（张）" min-width="40">
+      <el-table-column key="finishNum" align="center" prop="finishNum" :show-overflow-tooltip="true" label="完成数（件）" min-width="40">
         <template v-slot="scope">
           <span>{{ scope.row.finishNum ? scope.row.finishNum : 0 }}</span>
         </template>

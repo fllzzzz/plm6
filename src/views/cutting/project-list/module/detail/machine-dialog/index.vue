@@ -75,7 +75,7 @@ async function complete() {
       type: 'warning'
     })
     const list = [props.detailData.id]
-    const message = await changeTask(props.detailData.mac, list)
+    const message = await changeTask({ mac: props.detailData.mac }, list)
     ElNotification({ title: '更改状态成功', message: message, type: 'success' })
     emit('endEvent')
   } catch (err) {

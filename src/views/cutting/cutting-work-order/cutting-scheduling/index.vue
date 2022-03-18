@@ -69,7 +69,7 @@
       </el-table-column>
       <el-table-column v-if="transformTab === 0" label="操作" align="center" min-width="90">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
+          <common-button type="primary" size="mini" @click="showDetail(scope.row)">查 看</common-button>
         </template>
       </el-table-column>
       <el-table-column v-else label="操作" align="center" min-width="90">
@@ -140,6 +140,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 async function showDetail(row) {
+  console.log('row', row)
   detailObj.value = row
   innerVisible.value = true
 }

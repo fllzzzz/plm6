@@ -217,7 +217,7 @@ async function changeTaskClick() {
   } else {
     const list = changeData.value.map(item => { return item.id })
     try {
-      const message = await changeTask(areaValue.value, list)
+      const message = await changeTask({ mac: areaValue.value }, list)
       ElMessage({ message: message, type: 'success' })
       getIssueMac()
       emit('updateChange')

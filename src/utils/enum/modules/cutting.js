@@ -24,8 +24,8 @@ const MessageTypeEnum = {
 constantize(MessageTypeEnum)
 
 const PlateTypeEnum = {
-  WING_PLATE: { L: '翼腹板', K: 'VERIFICATION_CODE', V: 2 },
-  PART_BOARD: { L: '零件板', K: 'VERIFICATION_CODE', V: 16 }
+  WING_PLATE: { L: '翼腹板', K: 'VERIFICATION_CODE', V: 16 },
+  PART_BOARD: { L: '零件板', K: 'VERIFICATION_CODE', V: 2 }
 }
 constantize(PlateTypeEnum)
 
@@ -34,6 +34,7 @@ const TypeEnum = {
   PART_BOARD: { L: '按项目查看', K: 'VERIFICATION_CODE', V: 1 }
 }
 constantize(TypeEnum)
+
 export {
   TypeEnum,
   steelPlateEnum,

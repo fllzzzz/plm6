@@ -153,6 +153,7 @@ async function plateDataGet() {
 
 function nestResults(row) {
   machieData.value = row
+  console.log('machieData.value', machieData.value)
   selectLineId.value = row.mac
   machineVisible.value = true
 }
@@ -184,7 +185,6 @@ async function StateChange(row) {
 
 function handleChange(row) {
   selectLineId.value = row.mac
-  machieData.value = row
 }
 
 function endEvent() {

@@ -12,11 +12,19 @@
     </template>
 
     <div class="flex-rss">
-      <common-table row-key="id" ref="tableRef" :max-height="500" style="width: 100%" :data="plateData">
+      <common-table
+        :summary-method="getSummaries"
+        show-summary
+        row-key="id"
+        ref="tableRef"
+        :max-height="500"
+        style="width: 100%"
+        :data="plateData"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="所属项目" min-width="55">
+        <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="所属项目" min-width="55">
           <template v-slot="scope">
-            <span>{{ scope.row.weight }}</span>
+            <span>{{ scope.row.projectName }}</span>
           </template>
         </el-table-column>
         <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="55">
@@ -44,19 +52,19 @@
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="数量" min-width="55">
+        <el-table-column key="producedQuantity" prop="producedQuantity" :show-overflow-tooltip="true" label="产量" min-width="55">
           <template v-slot="scope">
-            <span>{{ scope.row.weight }}</span>
+            <span>{{ scope.row.producedQuantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="单重(kg)" min-width="55">
+        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重(kg)" min-width="55">
           <template v-slot="scope">
-            <span>{{ scope.row.weight }}</span>
+            <span>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="总重(kg)" min-width="55">
+        <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重(kg)" min-width="55">
           <template v-slot="scope">
-            <span>{{ scope.row.weight }}</span>
+            <span>{{ scope.row.totalNetWeight }}</span>
           </template>
         </el-table-column>
         <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="完成日期" min-width="80">
@@ -74,6 +82,7 @@ import useVisible from '@compos/use-visible'
 
 import { defineProps, defineEmits, ref } from 'vue'
 import { getPartListByMac } from '@/api/cutting/machine-part'
+import { tableSummary } from '@/utils/el-extra'
 
 const props = defineProps({
   visible: {
@@ -101,7 +110,6 @@ function closeHook() {
 
 async function plateDataGet() {
   try {
-    console.log('props.detailData', props.detailData)
     const content = await getPartListByMac(props.detailData)
     plateData.value = content
     console.log(' plateData.value', plateData.value)
@@ -110,6 +118,9 @@ async function plateDataGet() {
   }
 }
 
+function getSummaries(param) {
+  return tableSummary(param, { props: ['producedQuantity', 'totalNetWeight'] })
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
