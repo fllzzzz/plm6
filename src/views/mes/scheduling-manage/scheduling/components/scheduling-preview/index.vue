@@ -203,6 +203,7 @@ import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { obj2arr } from '@/utils/convert/type'
 import { convertUnits } from '@/utils/convert/unit'
+import { debounce } from '@/utils'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -278,15 +279,20 @@ function handleClickSave() {
   }
 }
 
-function handleClickConfirm() {
-  if (chooseForm.value.booleanSaveTask && !chooseForm.value.askCompleteTime) {
-    ElMessage.warning('请选择要求完成日期')
-    return
-  }
-  submit()
-}
+const handleClickConfirm = debounce(
+  function () {
+    if (chooseForm.value.booleanSaveTask && !chooseForm.value.askCompleteTime) {
+      ElMessage.warning('请选择要求完成日期')
+      return
+    }
+    submit()
+  },
+  200,
+  false
+)
 
 async function submit() {
+  if (!chooseVisible.value) return
   try {
     loading.value = true
     // 数据格式处理
@@ -322,8 +328,8 @@ async function submit() {
   } catch (error) {
     console.log('任务分配提交', error)
   } finally {
-    loading.value = false
     chooseVisible.value = false
+    loading.value = false
   }
 }
 
