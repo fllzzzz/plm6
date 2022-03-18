@@ -332,7 +332,7 @@ CRUD.HOOK.beforeRefresh = () => {
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v, i) => {
     v.rowId = i + '' + Math.random()
-    v.operable = !v.issueStatus
+    v.operable = !v.issueStatus && !v.boolAbnormalEnum
     v.sourceSchedulingQuantity = v.schedulingQuantity
     v.modifySchedulingQuantity = v.schedulingQuantity
     v.unInProductionQuantity = v.sourceSchedulingQuantity - v.inProductionQuantity

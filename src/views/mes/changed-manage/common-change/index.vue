@@ -14,34 +14,45 @@
       style="width: 100%"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <belonging-info-columns :columns="columns" showProject />
-      <!-- <el-table-column
+      <el-table-column
         v-if="columns.visible('createTime')"
-        key="createTime"
         prop="createTime"
         :show-overflow-tooltip="true"
         label="变更时间"
         width="170"
         align="center"
       >
-        <template v-slot="scope">
-          <span v-parse-time="'{y}-{m}-{d} {h}:{i}'">{{ scope.row.createTime }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
-        <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.userName }}</span>
+        <template #default="{ row }">
+          <span v-parse-time="{ val: row.createTime }" />
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.userName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('changTypeText')"
+        prop="changTypeText"
+        :show-overflow-tooltip="true"
+        label="变更原因"
+        align="center"
+      >
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.changTypeText }}</span>
+        </template>
+      </el-table-column>
+      <belonging-info-columns :columns="columns" showProject showMonomer showArea />
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
         prop="serialNumber"
         :show-overflow-tooltip="true"
         label="编号"
+        min-width="120"
       >
-        <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.serialNumber }}</span>
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -49,35 +60,12 @@
         key="oldQuantity"
         prop="oldQuantity"
         :show-overflow-tooltip="true"
-        label="数量"
+        label="原清单数量"
+        width="100"
         align="center"
       >
-        <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.oldQuantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalInProductionQuantity')"
-        key="totalInProductionQuantity"
-        prop="totalInProductionQuantity"
-        :show-overflow-tooltip="true"
-        label="已进入生产"
-        align="center"
-      >
-        <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.totalInProductionQuantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('changTypeText')"
-        key="changTypeText"
-        prop="changTypeText"
-        :show-overflow-tooltip="true"
-        label="变更类型"
-        align="center"
-      >
-        <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.changTypeText }}</span>
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.oldQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -85,11 +73,25 @@
         key="newQuantity"
         prop="newQuantity"
         :show-overflow-tooltip="true"
-        label="变更后数量"
+        label="变更后清单数量"
+        width="110"
         align="center"
       >
-        <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.newQuantity }}</span>
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.newQuantity }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('totalInProductionQuantity')"
+        key="totalInProductionQuantity"
+        prop="totalInProductionQuantity"
+        :show-overflow-tooltip="true"
+        label="进入生产数量"
+        width="100"
+        align="center"
+      >
+        <template #default="{ row }">
+          <span v-empty-text>{{ row.totalInProductionQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" :show-overflow-tooltip="true" prop="status" label="状态" align="center" width="100">
@@ -98,43 +100,51 @@
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.save, ...permission.detail]" label="操作" width="160px" align="center" fixed="right">
-        <template v-slot="scope">
+        <template #default="{ row }">
           <common-button
             size="mini"
-            v-if="!(scope.row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V))"
+            v-if="!(row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V))"
             type="primary"
             v-permission="[...permission.save]"
-            @click="toHandle(scope.row)"
+            @click="toHandle(row)"
             >处理</common-button
           >
-          <common-button v-permission="[...permission.detail]" size="mini" type="info" @click="toDetail(scope.row)">查看</common-button>
+          <common-button v-permission="[...permission.detail]" size="mini" type="info" @click="toDetail(row)">查看</common-button>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
-    <handle-drawer v-model:visible="handleVisible" :info="detailInfo" @success="crud.toQuery" />
-    <detail-drawer v-model:visible="detailVisible" :info="detailInfo" />
+    <schedule-handle-drawer v-model:visible="scheduleHandleVisible" :info="detailInfo" @success="crud.toQuery" />
+    <schedule-detail-drawer v-model:visible="scheduleDetailVisible" :info="detailInfo" />
+    <schedule-detail-preview-drawer v-model:visible="scheduleDetailPreviewVisible" :info="detailInfo" />
+    <production-handle-drawer v-model:visible="productionHandleVisible" :info="detailInfo" @success="crud.toQuery" />
+    <production-detail-drawer v-model:visible="productionDetailVisible" :info="detailInfo" />
+    <production-detail-preview-drawer v-model:visible="productionDetailPreviewVisible" :info="detailInfo" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/mes/changed-manage/common'
 import { changeStatus } from '@/api/mes/changed-manage/artifact'
-import { reactive, ref, provide } from 'vue'
 import { ElMessageBox } from 'element-plus'
-
-import { abnormalHandleStatusEnum, abnormalChangeTypeEnum } from '@enum-ms/mes'
-import EO from '@/utils/enum'
 import { changeListPM as permission } from '@/page-permission/mes'
+
+import { ref } from 'vue'
+import { abnormalHandleStatusEnum, abnormalHandleTypeEnum } from '@enum-ms/mes'
+import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import handleDrawer from './module/handle-drawer'
-import detailDrawer from './module/detail-drawer'
+import productionHandleDrawer from './module/production-handle-drawer.vue'
+import scheduleHandleDrawer from './module/schedule-handle-drawer.vue'
+import scheduleDetailPreviewDrawer from './module/schedule-detail-preview-drawer.vue'
+import scheduleDetailDrawer from './module/schedule-detail-drawer.vue'
+import productionDetailPreviewDrawer from './module/production-detail-preview-drawer'
+import productionDetailDrawer from './module/production-detail-drawer'
 
 const optShow = {
   add: false,
@@ -148,6 +158,8 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '变更管理',
     permission: { ...permission },
+    sort: [],
+    invisibleColumns: [],
     optShow: { ...optShow },
     crudApi: { ...crudApi }
   },
@@ -156,53 +168,18 @@ const { crud, columns, CRUD } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true })
 
-const handleVisible = ref(false)
-const detailVisible = ref(false)
-let detailInfo = reactive({})
-
-// 构件变更处理方式
-const handleMethodEnum = {
-  DECREASE_TASK: {
-    K: 'DECREASE_TASK',
-    L: '多余任务处理',
-    V: 0,
-    COLUMNS: [
-      // { label: '类型', field: 'type', width: '', preview: true },
-      { label: '任务数', field: 'taskQuantity', width: '150px', align: 'center', preview: false }
-    ]
-  },
-  EXCEPTION_HANDLE: {
-    K: 'EXCEPTION_HANDLE',
-    L: '异常处理',
-    V: 1,
-    COLUMNS: [
-      { label: '工序', field: 'processName', width: '', preview: true },
-      { label: '类型', field: 'reportTypeText', width: '', preview: true },
-      { label: '生产数量', field: 'quantity', width: '150px', align: 'center', preview: false }
-    ]
-  }
-}
-provide('handleMethodEnum', handleMethodEnum)
-provide('handleMethodEnumV', EO.key2val(handleMethodEnum))
+const productionHandleVisible = ref(false)
+const scheduleHandleVisible = ref(false)
+const scheduleDetailVisible = ref(false)
+const scheduleDetailPreviewVisible = ref(false)
+const productionDetailVisible = ref(false)
+const productionDetailPreviewVisible = ref(false)
+const detailInfo = ref({})
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
-    v.changTypeText = abnormalChangeTypeEnum.VL[v.changeType]
-    // 未生产数总和 = 任务数量 - 已生产数量
-    v.unproducedMete = v.totalTaskQuantity - v.totalInProductionQuantity || 0
-    // 需要减少的任务数 = 任务数量 - 变更后的数量
-    v.needDecreaseTaskMete = v.totalTaskQuantity - v.newQuantity || 0
-    // 条件一: 未生产数总和 >= 需要减少的任务数 => 进行减少任务操作(处理总数=需要减少的任务数)
-    if (v.unproducedMete >= v.needDecreaseTaskMete) {
-      v.handleType = handleMethodEnum.DECREASE_TASK.V
-      v.canHandleTotalMete = v.needDecreaseTaskMete
-    }
-    // 条件二: 未生产数总和 < 需要减少的任务数 => 进行异常处理（可报废或二次利用）操作
-    if (v.unproducedMete < v.needDecreaseTaskMete) {
-      v.handleType = handleMethodEnum.EXCEPTION_HANDLE.V
-      // 异常处理总数 = 已生产数量 - 变更后的数量
-      v.canHandleTotalMete = v.totalInProductionQuantity - v.newQuantity
-    }
+    v.changTypeText = v.changeTypeLabel
+    v.handleType = v.type
     return v
   })
 }
@@ -218,22 +195,32 @@ function toHandle(row) {
         const _handleType = await changeStatus(row.id)
         row.handleType = _handleType
         row.status = abnormalHandleStatusEnum.PROCESSING.V
+        const handleVisible = _handleType & abnormalHandleTypeEnum.SCHEDULE_CHANGE.V ? scheduleHandleVisible : productionHandleVisible
         openDrawer(handleVisible, row)
       } catch (error) {
         console.log('仍要处理', error)
       }
     })
   } else {
+    const handleVisible = row.handleType & abnormalHandleTypeEnum.SCHEDULE_CHANGE.V ? scheduleHandleVisible : productionHandleVisible
     openDrawer(handleVisible, row)
   }
 }
 
 function toDetail(row) {
+  const detailVisible =
+    row.handleType & abnormalHandleTypeEnum.SCHEDULE_CHANGE.V
+      ? (row.status & abnormalHandleStatusEnum.PROCESSING_COMPLETE.V
+        ? scheduleDetailVisible
+        : scheduleDetailPreviewVisible)
+      : (row.status & abnormalHandleStatusEnum.PROCESSING_COMPLETE.V
+        ? productionDetailVisible
+        : productionDetailPreviewVisible)
   openDrawer(detailVisible, row)
 }
 
 function openDrawer(visible, row) {
+  detailInfo.value = deepClone(row)
   visible.value = true
-  detailInfo = Object.assign(detailInfo, row)
 }
 </script>

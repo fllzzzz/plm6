@@ -45,4 +45,31 @@ export function taskChange(data) {
   })
 }
 
+export function changePreview(data) {
+  return request({
+    module: 'mes',
+    url: 'abnormal/handle/preview',
+    method: 'put',
+    data
+  })
+}
+
+export function detailPreview(params) {
+  return request({
+    module: 'mes',
+    url: 'abnormal/preview',
+    method: 'get',
+    params
+  })
+}
+
+export function detail(params) {
+  return request({
+    module: 'mes',
+    url: 'abnormal/change/report',
+    method: 'get',
+    params
+  })
+}
+
 export default { get }

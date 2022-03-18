@@ -151,6 +151,13 @@ const shipAuditStatusEnum = {
 }
 constantize(shipAuditStatusEnum)
 
+// 变更异常方式状态
+const abnormalHandleTypeEnum = {
+  PRODUCTION_CHANGE: { K: 'PRODUCTION_CHANGE', L: '生产变更', V: 2 },
+  SCHEDULE_CHANGE: { K: 'SCHEDULE_CHANGE', L: '排产变更', V: 1 }
+}
+constantize(abnormalHandleTypeEnum)
+
 // 变更异常处理状态
 const abnormalHandleStatusEnum = {
   PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
@@ -174,6 +181,13 @@ const abnormalReportTypeEnum = {
   ABNORMAL: { L: '异常上报', K: 'ABNORMAL', V: 1 }
 }
 constantize(abnormalReportTypeEnum)
+
+// 异常状态
+const abnormalStatusEnum = {
+  NORMAL: { L: '正常', K: 'NORMAL', V: false },
+  ABNORMAL: { L: '暂停', K: 'ABNORMAL', V: true }
+}
+constantize(abnormalStatusEnum)
 
 // 变更变更类型状态
 const abnormalChangeTypeEnum = {
@@ -253,9 +267,11 @@ export {
   receiptStatusEnum,
   logisticsPriceTypeEnum,
   shipAuditStatusEnum,
+  abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
+  abnormalStatusEnum,
   improveStatusEnum,
   projectComponentTypeEnum,
   artifactProcessEnum,
@@ -284,9 +300,11 @@ export default {
   receiptStatusEnum,
   logisticsPriceTypeEnum,
   shipAuditStatusEnum,
+  abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
+  abnormalStatusEnum,
   improveStatusEnum,
   projectComponentTypeEnum,
   artifactProcessEnum,
