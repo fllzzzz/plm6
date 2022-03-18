@@ -1,38 +1,24 @@
-import router, {
-  addRoutes
-} from './router'
+import router, { addRoutes } from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css' // Progress 进度条样式
-import {
-  ElMessage
-} from 'element-plus'
-import {
-  getToken,
-  getRequestUrl
-} from '@/utils/storage'
-import {
-  fetchMenus
-} from '@/api/user' // 获取菜单
-import {
-  specialPath
-} from '@/settings/config'
-// import configRouter from '@/router/modules/config'
-// import mesRouter from '@/router/modules/mes'
-// import projectRouter from '@/router/modules/project'
-// import wmsRouter from '@/router/modules/wms'
-// import planRouter from '@/router/modules/plan'
-// import contractRouter from '@/router/modules/contract'
-// import supplyChainRouter from '@/router/modules/supply-chain'
-// import userRouter from '@/router/modules/user'
+import { ElMessage } from 'element-plus'
+import { getToken, getRequestUrl } from '@/utils/storage'
+// import { fetchMenus } from '@/api/user' // 获取菜单
+import { specialPath } from '@/settings/config'
+import configRouter from '@/router/modules/config'
+import mesRouter from '@/router/modules/mes'
+import projectRouter from '@/router/modules/project'
+import wmsRouter from '@/router/modules/wms'
+import planRouter from '@/router/modules/plan'
+import contractRouter from '@/router/modules/contract'
+import supplyChainRouter from '@/router/modules/supply-chain'
+import userRouter from '@/router/modules/user'
+import cuttingRouter from '@/router/modules/cutting'
 
-import {
-  validRequestUrl
-} from '@/utils/validate' // 请求路径验证规则
+import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
-NProgress.configure({
-  showSpinner: false
-}) // 进度条配置：不显示Loading图标
+NProgress.configure({ showSpinner: false }) // 进度条配置：不显示Loading图标
 
 // 页面白名单
 const whiteList = [
@@ -116,10 +102,7 @@ router.beforeEach(async (to, from, next) => {
     if (!store.getters.loadedMenus) {
       const res = await loadMenus(next, to)
       if (res) {
-        next({
-          ...to,
-          replace: true
-        })
+        next({ ...to, replace: true })
       } else {
         next()
       }
@@ -143,8 +126,8 @@ const loadMenus = async (next, to) => {
   let success = false
   try {
     // 菜单：content
-    const menus = await fetchMenus()
-    // const menus = [configRouter, projectRouter, wmsRouter, mesRouter, planRouter, contractRouter, supplyChainRouter, userRouter]
+    // const menus = await fetchMenus()
+    const menus = [configRouter, projectRouter, wmsRouter, mesRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter]
     await store.dispatch('permission/generateRoutes', menus)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

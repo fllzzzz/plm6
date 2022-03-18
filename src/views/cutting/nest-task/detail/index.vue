@@ -41,7 +41,7 @@
       </common-button>
     </template>
     <template #titleRight>
-      <common-button :disabled="handleSelection.length < 0" type="primary" size="mini" @click="createTask(1)">投料操作</common-button>
+      <common-button :disabled="!(handleSelection.length !== 0)" type="primary" size="mini" @click="createTask(1)">投料操作</common-button>
       <common-button size="mini" @click="handleClose">关 闭</common-button>
     </template>
     <div class="flex-rss">
@@ -289,7 +289,6 @@ const taskPackage = ref([]) // 任务包数据
 const PartByCutTaskIdData = ref([]) // 零件清单
 const material = ref([])
 const innerVisible = ref(false)
-const disableTask = ref(true)// 投料操作禁用
 const workListTask = ref(true)// 创建工单操作禁用
 const titleName = ref('')
 const loadingPart = ref(false)
@@ -329,13 +328,8 @@ async function getByCutTaskId(params) {
 }
 
 function handleSelectionChange(val) {
-  if (val.length > 0) {
-    disableTask.value = false
-    handleSelection.value = val
-  } else {
-    handleSelection.value = []
-    disableTask.value = true
-  }
+  handleSelection.value = val
+  console.log('handleSelection.value', handleSelection.value)
 }
 
 async function radioButtonChange(val) {
@@ -360,7 +354,8 @@ function showHook() {
 }
 
 function closeHook() {
-  disableTask.value = true
+  partData.value = []
+  handleSelection.value = [] // 12312321
   monomerValue.value = undefined
   createNum.value = 1
   material.value = []

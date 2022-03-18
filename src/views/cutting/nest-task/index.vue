@@ -60,7 +60,7 @@
         min-width="60"
       >
         <template v-slot="scope">
-          <el-tag style="width: 100%" v-if="scope.row.nestingState === 0" type="primary">未排套</el-tag>
+          <el-tag style="width: 100%" v-if="scope.row.nestingState === 0">未排套</el-tag>
           <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">部分排套</el-tag>
           <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 2" type="danger">排套结束</el-tag>
         </template>
