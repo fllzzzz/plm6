@@ -84,7 +84,6 @@
         </el-popconfirm>
       </template>
       <template #viewLeft>
-        <common-button type="primary" size="mini" @click="techVisible=true" v-if="checkPermission(crud.permission.techDetail)">技术交底</common-button>
         <el-tooltip
           effect="light"
           :content="`${mismatchList.join(',')}`"
@@ -94,6 +93,7 @@
             <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">本区域下存在{{ mismatchList.length }}条错误数据,鼠标悬停查看</el-tag>
           </div>
         </el-tooltip>
+        <common-button type="primary" size="mini" @click="techVisible=true" v-if="checkPermission(crud.permission.techDetail)">技术交底</common-button>
       </template>
     </crudOperation>
     <common-drawer
