@@ -171,20 +171,6 @@
           min-width="100px"
         />
         <el-table-column
-          v-if="columns.visible('shearType')"
-          key="shearType"
-          prop="shearType"
-          sortable="custom"
-          :show-overflow-tooltip="true"
-          label="类型"
-          align="center"
-          width="100px"
-        >
-          <template v-slot="scope">
-            {{ isNotBlank(scope.row.type) ? shearTypeEnum.VL[scope.row.type] : '-' }}
-          </template>
-        </el-table-column>
-        <el-table-column
           v-if="columns.visible('remark')"
           key="remark"
           prop="remark"
@@ -219,8 +205,6 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
-import { isNotBlank } from '@data-type/index'
-import { shearTypeEnum } from '@enum-ms/plan'
 import { machinePartPM as permission } from '@/page-permission/plan'
 import drawingPdf from '@comp-base/drawing-pdf.vue'
 
