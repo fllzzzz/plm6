@@ -40,7 +40,6 @@ const defaultQuery = {}
 
 const tipText = computed(() => {
   const { name, steelSpec, material, category } = props.fInfo || {}
-  console.log(name, steelSpec, material, category)
   if (category) {
     return mesEnclosureTypeEnum.VL[category]
   } else if (name) {

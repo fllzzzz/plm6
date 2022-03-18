@@ -13,12 +13,12 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('monomer.name')" key="monomer.name" prop="monomer.name" label="单体" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text>{{ row.monomer.name }}</span>
+          <span v-empty-text>{{ row.monomer?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('area.name')" prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text>{{ row.area.name }}</span>
+          <span v-empty-text>{{ row.area?.name }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('name')" prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip>
@@ -41,9 +41,9 @@
           <span v-empty-text>{{ row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('measureUnit')" prop="measureUnit" key="measureUnit" label="计量单位" align="center" min-width="70" show-overflow-tooltip>
+      <el-table-column v-if="columns.visible('measure')" prop="measure" key="measure" label="计量单位" align="center" min-width="70" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text>{{ row.measureUnit }}</span>
+          <span v-empty-text>{{ row.measure }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('quantity')" prop="quantity" key="quantity" label="数量" align="center" min-width="70" show-overflow-tooltip>
@@ -51,9 +51,9 @@
           <span v-empty-text>{{ row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('accountingUnit')" prop="accountingUnit" key="accountingUnit" label="核算单位" align="center" min-width="70" show-overflow-tooltip>
+      <el-table-column v-if="columns.visible('nuclear')" prop="nuclear" key="nuclear" label="核算单位" align="center" min-width="70" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text>{{ row.accountingUnit }}</span>
+          <span v-empty-text>{{ row.nuclear }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('totalMete')" prop="totalMete" key="totalMete" label="总量" align="center" min-width="110" show-overflow-tooltip>
@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('price')" prop="price" key="price" label="单价" align="right" min-width="110" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-thousand="row.price" v-empty-text />
+          <span v-thousand="row.unitPrice" v-empty-text />
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" key="totalPrice" label="总价" align="right" min-width="110" show-overflow-tooltip>
@@ -71,9 +71,9 @@
           <span v-thousand="row.totalPrice" v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('happenedTime')" prop="happenedTime" key="happenedTime" label="发运时间"  align="center"  width="130" show-overflow-tooltip >
+      <el-table-column v-if="columns.visible('auditTime')" prop="auditTime" key="auditTime" label="发运时间"  align="center"  width="130" show-overflow-tooltip >
         <template #default="{ row }">
-          <span v-parse-time="row.happenedTime" />
+          <span v-parse-time="row.auditTime" />
         </template>
       </el-table-column>
     </common-table>

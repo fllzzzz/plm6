@@ -1,6 +1,13 @@
 <template>
   <div v-show="crud.searchToggle">
-    <project-cascader v-model="query.projectId" placeholder="请选择项目" class="filter-item" style="width: 300px" clearable @change="crud.toQuery" />
+    <project-cascader
+      v-model="query.projectId"
+      placeholder="请选择项目"
+      class="filter-item"
+      style="width: 300px"
+      clearable
+      @change="crud.toQuery"
+    />
     <monomer-select-area-select
       v-model:monomerId="query.monomerId"
       v-model:areaId="query.areaId"
@@ -35,14 +42,6 @@
   </div>
   <crudOperation>
     <template v-slot:optLeft>
-      <print-table
-        v-permission="crud.permission.print"
-        api-key="mesSchedulingDetail"
-        :params="{ ...query }"
-        size="mini"
-        type="warning"
-        class="filter-item"
-      />
       <template v-if="query.issueStatus !== taskIssueTypeEnum.HAS_ISSUED.V">
         <template v-if="modifying">
           <el-tag type="info" style="margin-right: 5px" size="medium">当前操作：{{ operateButtonEnumV[buttonValue].L }}</el-tag>
@@ -78,6 +77,14 @@
           <common-button type="success" size="mini" @click.stop="applyAll">全部应用</common-button>
         </template>
       </template>
+      <print-table
+        v-permission="crud.permission.print"
+        api-key="mesSchedulingDetail"
+        :params="{ ...query }"
+        size="mini"
+        type="warning"
+        class="filter-item"
+      />
     </template>
   </crudOperation>
 </template>

@@ -68,13 +68,13 @@
           <Panel name="期初总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.beginPeriod || 0" :precision="2" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="2" />
+          <Panel name="入库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="2" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.inbound || 0" :precision="2" />
+          <Panel name="出库总额（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="2" />
         </el-col>
         <el-col :span="6" class="card-panel-col">
-          <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.outbound || 0" :precision="2" />
+          <Panel name="期末结存（当月）" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.endPeriod || 0" :precision="2" />
         </el-col>
       </el-row>
     </template>
@@ -198,18 +198,20 @@ async function handleBasicClassChange(val) {
 
 <style lang="scss" scoped>
 .panel-group {
-  ::v-deep(.card-panel-description) {
-    margin: 10px 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    .card-panel-text {
-      margin-top: 2px;
-    }
-    .card-panel-num {
-      font-size: 20px;
+  ::v-deep(.card-panel) {
+    .card-panel-description {
+      margin: 10px 20px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      .card-panel-text {
+        margin-top: 2px;
+      }
+      .card-panel-num {
+        font-size: 20px;
+      }
     }
   }
 }

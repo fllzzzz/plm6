@@ -43,7 +43,7 @@ const get = {
               name: '杭州天天向上有限公司'
             },
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)' // 创建时间
@@ -76,7 +76,7 @@ const get = {
             },
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
             reviewTime: '@datetime(T)' // 审核时间
@@ -109,7 +109,7 @@ const get = {
             },
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -136,7 +136,7 @@ const get = {
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
             editable: false, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写退货的人）
+            applicantName: '@cname', // 创建人（填写退货的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -367,7 +367,7 @@ const detail_id1 = {
                 name: '666号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           },
           {
@@ -414,7 +414,7 @@ const detail_id1 = {
                 name: '667号仓库'
               }
             },
-            founderName: '@cname', // 操作人
+            applicantName: '@cname', // 操作人
             createTime: '@datetime(T)' // 创建日期
           }
         ]

@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.edit" label="操作" width="130px" align="center">
+      <el-table-column v-permission="permission.del" label="操作" width="130px" align="center">
         <template v-slot="scope">
             <udOperation :show-del="!scope.row.boolSystem" :show-edit="false" :data="scope.row" />
         </template>
@@ -55,26 +55,20 @@
 <script setup>
 // 系统字段添加标识
 import crudApi, { editEnabled } from '@/api/config/main/unit-config'
+import { configUnitPM as permission } from '@/page-permission/config'
+
 import { ref } from 'vue'
 import { enabledEnum, unitTypeEnum } from '@enum-ms/common'
 import { parseTime } from '@/utils/date'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
-import checkPermission from '@/utils/system/check-permission'
 import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mBatchForm from './module/batch-form'
-
-// // crud交由presenter持有
-const permission = {
-  get: ['config_unitConfig:get'],
-  edit: ['config_unitConfig:edit'],
-  del: ['config_unitConfig:del'],
-  add: ['config_unitConfig:add']
-}
 
 const optShow = {
   batchAdd: true,

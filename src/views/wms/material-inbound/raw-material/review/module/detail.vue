@@ -13,7 +13,7 @@
       <title-after-info :order="order" :detail="detail" />
     </template>
     <template #titleRight>
-      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+      <purchase-detail-button :purchase-id="order.id" size="mini" />
     </template>
     <template #content>
       <common-table

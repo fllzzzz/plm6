@@ -3,19 +3,14 @@
     ref="drawerRef"
     :visible="drawerVisible"
     :before-close="crud.cancelCU"
-    :title="crud.status.title"
+    :title="title"
     :show-close="true"
     size="100%"
     :close-on-click-modal="false"
     custom-class="project-preparation-form"
   >
     <template #titleAfter>
-      <el-tag class="info-tag" effect="dark" type="info">
-        清单汇总量：
-        <span v-to-fixed="{ val: crud.props.listTotalMete, k: 'COM_WT__KG' }" /> kg
-      </el-tag>
-      <el-tag class="info-tag" effect="dark" type="success">库存利用量：12345 kg</el-tag>
-      <el-tag class="info-tag" effect="dark" type="warning">需要采购量：12345 kg</el-tag>
+      <el-tag class="info-tag filter-item" effect="dark" type="warning"> 清单上传人：<span v-split="listUploaderNames" v-empty /> </el-tag>
     </template>
     <template #titleRight>
       <common-button :loading="crud.status.cu === CRUD.STATUS.PROCESSING" size="mini" type="primary" @click="crud.submitCU">
@@ -25,7 +20,7 @@
     <template #content>
       <div class="main-content">
         <div class="head">
-          <list-and-match @add="handleAdd" />
+          <list-and-match @add="handleAddInventoryMaterial" @selected-change="handleSelectedChange" />
         </div>
         <!-- <el-divider> -->
         <!-- <span class="title"><span>库存利用清单</span> | 采购清单</span> -->
@@ -40,14 +35,43 @@
                 type="enum"
                 size="mini"
               />
+              <el-tag class="info-tag filter-item" effect="plain" type="info">
+                清单汇总量：
+                <span v-to-fixed="{ val: crud.props.listTotalMete || 0, k: 'COM_WT__KG' }" /> kg
+              </el-tag>
+              <el-tag class="info-tag filter-item" effect="plain" type="success">
+                库存利用量：
+                <span v-to-fixed="{ val: crud.props.inventoryTotalMete || 0, k: 'COM_WT__KG' }" /> kg
+              </el-tag>
+              <el-tag class="info-tag filter-item" effect="plain" type="warning">
+                需要采购量：
+                <span v-to-fixed="{ val: crud.props.purchaseTotalMete || 0, k: 'COM_WT__KG' }" /> kg
+              </el-tag>
+            </div>
+            <div class="filter-right-box">
+              <common-button
+                v-if="preparationListType === preparationListTypeEnum.PURCHASE_LIST.V"
+                class="filter-item"
+                type="success"
+                size="mini"
+                :disabled="!selectTechnologyRow"
+                @click="handleAddPurchaseMaterial"
+              >
+                新增材料
+              </common-button>
             </div>
           </div>
-          <div class="preparation-info flex-rss child-mr-20">
+          <div class="preparation-info flex-rss">
             <div class="preparation-table-list">
               <el-form ref="formRef" :model="form" size="small" label-position="top" inline label-width="200px">
                 <inventory-table
                   ref="inventoryTableRef"
                   :show="preparationListType === preparationListTypeEnum.INVENTORY_LIST.V"
+                  :height="maxHeight"
+                />
+                <purchase-table
+                  ref="purchaseTableRef"
+                  :show="preparationListType === preparationListTypeEnum.PURCHASE_LIST.V"
                   :height="maxHeight"
                 />
               </el-form>
@@ -86,6 +110,7 @@ import { computed, ref } from 'vue'
 import { regForm } from '@compos/use-crud'
 import ListAndMatch from './list-and-match'
 import inventoryTable from './inventory-table.vue'
+import purchaseTable from './purchase-table.vue'
 import useMaxHeight from '@/composables/use-max-height'
 import { createUniqueString } from '@/utils/data-type/string'
 
@@ -97,25 +122,49 @@ const preparationListTypeEnum = {
 // 当前选择的备料列表类型
 const preparationListType = ref(preparationListTypeEnum.INVENTORY_LIST.V)
 
+// drawer标题
+const title = ref('备料')
+// 清单上传人
+const listUploaderNames = ref('')
+// 选中的“技术清单汇总”记录
+const selectTechnologyRow = ref()
 // 表单ref
 const formRef = ref()
 // 库存利用清单ref
 const inventoryTableRef = ref()
+// 需要采购清单ref
+const purchaseTableRef = ref()
 // crud
 const { CRUD, crud, form } = regForm(void 0, formRef)
+// drawer 显示
 const drawerVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
+
 // 初始化表单
 CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
-  init()
   form.technologyList = form.technologyList || []
   form.technologyList.forEach((tRow) => {
-    tRow.id = createUniqueString()
-    tRow.boundInvIds = []
+    tRow.id = createUniqueString() // 唯一编号
+    tRow.boundInvIds = [] // 绑定库存利用清单
+    tRow.boundPurIds = [] // 绑定需要采购清单
     crud.props.listTotalMete += tRow.listMete
   })
 }
 
-CRUD.HOOK.beforeToEdit = (crud, form) => {}
+CRUD.HOOK.beforeToEdit = (crud, form) => {
+  init()
+  let range = '' // 备料范围
+  if (form.project && form.project.shortName) {
+    range += form.project.shortName
+  }
+  if (form.monomer && form.monomer.name) {
+    range = `${range} / ${form.monomer.name}`
+  }
+  if (form.area && form.area.name) {
+    range = `${range} / ${form.area.name}`
+  }
+  title.value = `备料：${form.serialNumber}（${range}）`
+  listUploaderNames.value = form.listUploaderNames
+}
 
 // 表单提交数据清理
 crud.submitFormFormat = (form) => {
@@ -124,15 +173,28 @@ crud.submitFormFormat = (form) => {
 
 // 初始化
 function init() {
+  title.value = '备料'
+  selectTechnologyRow.value = undefined
+  listUploaderNames.value = ''
   crud.props.techPrepMeteKV = {}
   crud.props.listTotalMete = 0
   crud.props.inventoryTotalMete = 0
   crud.props.purchaseTotalMete = 0
 }
 
-// 处理添加
-function handleAdd(row, technologyRow) {
+// 处理“添加”库存利用材料
+function handleAddInventoryMaterial(row, technologyRow) {
   inventoryTableRef.value && inventoryTableRef.value.add(row, technologyRow)
+}
+
+// 处理“添加”采购材料
+function handleAddPurchaseMaterial(row) {
+  purchaseTableRef.value && purchaseTableRef.value.add(row)
+}
+
+// 处理“选中”清单汇总记录
+function handleSelectedChange(row) {
+  selectTechnologyRow.value = row
 }
 
 // 高度
@@ -154,16 +216,21 @@ const { maxHeight, heightStyle } = useMaxHeight(
     margin-bottom: 10px;
   }
   .middle {
+    .middle-head {
+      width: calc(100% - 320px);
+    }
     .preparation-info {
+      width: 100%;
       // width: 300px;
-      flex: none;
+      // flex: none;
       // margin-right: 20px;
     }
     .preparation-table-list {
       flex: auto;
     }
     .preparation-remark-info {
-      width: 300px;
+      padding-left: 20px;
+      width: 320px;
       flex: none;
       display: flex;
       flex-direction: column;

@@ -98,10 +98,10 @@
         min-width="200"
       />
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -199,6 +199,8 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-inbound/raw-material/record'
+import { rawMaterialInboundRecordPM as permission } from '@/page-permission/wms'
+
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -211,13 +213,6 @@ import udOperation from '@crud/UD.operation.vue'
 import pagination from '@crud/Pagination'
 import mDetail from './module/detail.vue'
 import mForm from './module/form.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_inboundApplication_record:get'],
-  edit: ['wms_inboundApplication_record:edit'],
-  del: ['wms_inboundApplication_record:del']
-}
 
 const optShow = {
   add: false,

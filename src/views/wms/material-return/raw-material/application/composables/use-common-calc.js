@@ -9,7 +9,8 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
   function calcMaxMete(row) {
     if (basicClass !== rawMatClsEnum.STEEL_COIL.V) {
       if (row.quantity) {
-        row.maxMete = row.source.singleReturnableMete * row.quantity
+        // 直接使用可退库量，若使用row.source.singleReturnableMete * row.quantity 会有小数精度问题
+        row.maxMete = row.source.sourceReturnableMete
       } else {
         row.maxMete = row.source.singleReturnableMete
       }
@@ -49,11 +50,11 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
         if (isNotBlank(mete[sourceId])) {
           quantity[sourceId] += v.quantity || 0
           mete[sourceId] += v.mete || 0
-          length[sourceId] += v.length || 0
+          length[sourceId] += v.length * Number(v.quantity) || 0
         } else {
           quantity[sourceId] = v.quantity || 0
           mete[sourceId] = v.mete || 0
-          length[sourceId] = v.length || 0
+          length[sourceId] = v.length * Number(v.quantity) || 0
         }
       }
     })

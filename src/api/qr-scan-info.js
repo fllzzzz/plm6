@@ -16,11 +16,11 @@ export function fetchEnclosure(url, { id, factoryId, taskId }) {
   })
 }
 
-export function fetchAuxiliaryMaterial(url, { id, factoryId, taskId }) {
+export function fetchAuxiliaryMaterial(url, { id, taskId }) {
   return request({
     url: `${url}/api/qr/info/mes/auxiliaryMaterial`,
     method: 'get',
-    params: { id, factoryId, taskId }
+    params: { id, taskId }
   })
 }
 

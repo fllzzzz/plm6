@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea @refreshSummary="handleRefreshSummary"/>
+    <mHeader v-model:modifying="modifying" v-model:lines="lines" hiddenArea @refreshSummary="handleRefreshSummary" />
     <!--表格渲染-->
     <common-table
       ref="tableRef"
@@ -13,9 +13,8 @@
       style="width: 100%"
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
-      @sort-change="crud.handleSortChange"
     >
-      <el-table-column type="selection" width="55" align="center" fixed />
+      <el-table-column type="selection" width="55" align="center" fixed :selectable="selectable" />
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column
         v-if="columns.visible('areaName')"
@@ -27,7 +26,14 @@
         label="区域"
         width="120px"
       />
-      <productType-full-info-columns :productType="productType" :columns="columns" :fixed="'left'" fixedWidth />
+      <productType-full-info-columns
+        :productType="productType"
+        snClickable
+        @drawingPreview="drawingPreview"
+        :columns="columns"
+        :fixed="'left'"
+        fixedWidth
+      />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column
@@ -44,7 +50,7 @@
             </template>
             <template v-slot="scope">
               <el-input-number
-                v-if="modifying"
+                v-if="modifying && !scope.row.boolAbnormalEnum"
                 v-model="scope.row.schedulingMap[line.id].quantity"
                 :step="1"
                 :min="scope.row.schedulingMap[line.id].sourceQuantity || 0"
@@ -114,6 +120,13 @@
     </common-table>
     <!--分页组件-->
     <pagination />
+    <!-- pdf预览 -->
+    <drawing-pdf
+      v-model="showDrawing"
+      :serial-number="drawingRow?.serialNumber"
+      :productId="drawingRow?.productId"
+      :productType="drawingRow?.productType"
+    />
   </div>
 </template>
 
@@ -130,6 +143,10 @@ import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
+import useDrawing from '@compos/use-drawing'
+import drawingPdf from '@comp-base/drawing-pdf.vue'
+
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
 
 const emit = defineEmits(['refresh'])
 
@@ -179,7 +196,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
+const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange, selectable } = useSchedulingIndex()
 
 watch(
   () => props.visible,
@@ -207,9 +224,9 @@ CRUD.HOOK.beforeRefresh = () => {
     line-height: 30px;
   }
 }
-// /deep/.abnormal-row {
-//   background: linear-gradient(to right, #ffecec 0%, #ffffff 100%);
-// }
+::v-deep(.abnormal-row) {
+  background: #ffecec;
+}
 ::v-deep(.el-input__inner) {
   font-size: 14px;
 }

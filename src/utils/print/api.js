@@ -2,8 +2,14 @@ import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
 
 // 合同
-const contractLedger = contract.contractLedger
 const myProject = contract.myProject
+const projectList = contract.projectList
+const contractLedger = contract.contractLedger
+const collectionRecord = contract.collectionLedger
+const collectionLedger = contract.collectionLedger
+const invoiceRecord = contract.invoiceLedger
+const invoiceLedger = contract.invoiceLedger
+const arrearsList = contract.arrearsList
 const contractStructurePrice = contract.structurePrice
 const contractEnclosurePrice = contract.enclosurePrice
 const contractAuxiliaryMaterialPrice = contract.auxiliaryMaterialPrice
@@ -15,12 +21,18 @@ const transactionRecord = contract.transactionRecord
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
 
-const mesStructureProductionReport = mes.structureProductionReport
-const mesAssemblePartProductionReport = mes.structureProductionReport
-const mesMachinePartProductionReport = mes.structureProductionReport
-const mesEnclosureProductionReport = mes.enclosureProductionReport
+const mesStructureProductionReport = mes.productionReport
+const mesAssemblePartProductionReport = mes.productionReport
+const mesMachinePartProductionReport = mes.productionReport
+const mesEnclosureProductionReport = mes.productionReport
 const mesStructureProductionStatistics = mes.productionStatistics
+const mesStructureProductionStatisticsIn = mes.productionStatisticsIn
+const mesStructureProductionStatisticsUn = mes.productionStatisticsUn
+const mesStructureProductionStatisticsComplete = mes.productionStatisticsComplete
 const mesEnclosureProductionStatistics = mes.productionStatistics
+const mesEnclosureProductionStatisticsIn = mes.productionStatisticsIn
+const mesEnclosureProductionStatisticsUn = mes.productionStatisticsUn
+const mesEnclosureProductionStatisticsComplete = mes.productionStatisticsComplete
 const mesUnfinishedList = mes.unfinishedList
 const mesEnclosureProductionLine = mes.enclosureProductionLine
 const mesStructureProductionLine = mes.structureProductionLine
@@ -47,8 +59,14 @@ const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
 const mesWarehouseStateReport = mes.warehouseStateReport
 
 export default {
-  contractLedger, // 合同台账
   myProject, // 我的项目
+  projectList, // 项目列表
+  contractLedger, // 合同台账
+  collectionLedger, // 收款台账
+  collectionRecord, // 项目收款记录
+  invoiceLedger, // 开票台账
+  invoiceRecord, // 项目开票记录
+  arrearsList, // 欠款清单
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
@@ -65,7 +83,13 @@ export default {
   mesMachinePartProductionReport, // 零件生产报表
   mesEnclosureProductionReport, // 围护生产报表
   mesStructureProductionStatistics, // 结构在制品统计
+  mesStructureProductionStatisticsIn, // 结构在制品统计明细
+  mesStructureProductionStatisticsUn, // 结构未生产统计明细
+  mesStructureProductionStatisticsComplete, // 结构完成品统计明细
   mesEnclosureProductionStatistics, // 围护在制品统计
+  mesEnclosureProductionStatisticsIn, // 围护在制品统计明细
+  mesEnclosureProductionStatisticsUn, // 围护未生产统计明细
+  mesEnclosureProductionStatisticsComplete, // 围护完成品统计明细
   mesUnfinishedList, // 未完成清单
   mesEnclosureProductionLine, // 围护生产线报表
   mesStructureProductionLine, // 结构生产线报表

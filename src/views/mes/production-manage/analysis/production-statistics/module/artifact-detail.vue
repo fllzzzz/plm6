@@ -1,5 +1,24 @@
 <template>
-  <common-drawer ref="drawerRef" title="在制品统计明细-构件" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="80%">
+  <common-drawer
+    ref="drawerRef"
+    :title="`${reportEnum.VL[reportType]}统计明细-构件`"
+    v-model="drawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    size="80%"
+  >
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="permission.printDetail"
+          :api-key="apiKey"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+      </div>
+    </template>
     <template #content>
       <common-table
         v-loading="tableLoading"
@@ -8,6 +27,7 @@
         v-if="drawerVisible"
         :data="list"
         :max-height="maxHeight"
+        row-key="rowId"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -53,7 +73,86 @@
             <span>{{ scope.row.totalMete }}</span>
           </template>
         </el-table-column>
+        <template v-if="reportType & reportEnum.COMPLETE.V">
+          <el-table-column
+            key="completeQuantity"
+            prop="completeQuantity"
+            :show-overflow-tooltip="true"
+            :label="`完成总数`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.completeQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="completeMete"
+            prop="completeMete"
+            :show-overflow-tooltip="true"
+            :label="`完成总量`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.completeMete }}</span>
+            </template>
+          </el-table-column>
+        </template>
+        <template v-if="reportType & reportEnum.IN_PRODUCTION.V">
+          <el-table-column
+            key="inProductionQuantity"
+            prop="inProductionQuantity"
+            :show-overflow-tooltip="true"
+            :label="`在制品总数`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.inProductionQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="inProductionMete"
+            prop="inProductionMete"
+            :show-overflow-tooltip="true"
+            :label="`在制品总量`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.inProductionMete }}</span>
+            </template>
+          </el-table-column>
+        </template>
+        <template v-if="reportType & reportEnum.UN_PRODUCTION.V">
+          <el-table-column
+            key="unProductionQuantity"
+            prop="unProductionQuantity"
+            :show-overflow-tooltip="true"
+            :label="`未生产总数`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.unProductionQuantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            key="unProductionMete"
+            prop="unProductionMete"
+            :show-overflow-tooltip="true"
+            :label="`未生产总量`"
+            align="center"
+            width="90"
+          >
+            <template v-slot="scope">
+              <span>{{ scope.row.unProductionMete }}</span>
+            </template>
+          </el-table-column>
+        </template>
         <el-table-column
+          v-if="reportType & reportEnum.IN_PRODUCTION.V"
           key="processSequence"
           prop="processSequence"
           :show-overflow-tooltip="true"
@@ -70,14 +169,15 @@
 </template>
 
 <script setup>
-import { getDetail as detail } from '@/api/mes/production-manage/analysis/production-statistics'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { getCompleteDetail, getInProductionDetail, getUnProductionDetail } from '@/api/mes/production-manage/analysis/production-statistics'
+import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 // import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import { tableSummary } from '@/utils/el-extra'
+import { inProductionDetailReportEnum as reportEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -88,6 +188,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  reportType: {
+    type: Number,
+    default: undefined
   }
 })
 
@@ -104,9 +208,23 @@ const { maxHeight } = useMaxHeight(
   drawerRef
 )
 
+const permission = inject('permission')
 const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
+
+const apiKey = computed(() => {
+  switch (props.reportType) {
+    case reportEnum.IN_PRODUCTION.V:
+      return 'mesStructureProductionStatisticsIn'
+    case reportEnum.UN_PRODUCTION.V:
+      return 'mesStructureProductionStatisticsUn'
+    case reportEnum.COMPLETE.V:
+      return 'mesStructureProductionStatisticsComplete'
+    default:
+      return ''
+  }
+})
 
 watch(
   () => props.visible,
@@ -125,15 +243,36 @@ function getSummaries(param) {
 async function fetchList() {
   try {
     tableLoading.value = true
+    let detail
+    switch (props.reportType) {
+      case reportEnum.COMPLETE.V:
+        detail = getCompleteDetail
+        break
+      case reportEnum.IN_PRODUCTION.V:
+        detail = getInProductionDetail
+        break
+      case reportEnum.UN_PRODUCTION.V:
+        detail = getUnProductionDetail
+        break
+      default:
+        break
+    }
+    if (!detail) return
     const { artifactDetailsAnalysisDTOList } = await detail(query)
-    list.value = artifactDetailsAnalysisDTOList.map((v) => {
+    list.value = artifactDetailsAnalysisDTOList.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.totalQuantity = v.taskQuantity
       v.totalMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
-      v.processSequence = v.processSummaryList
-        .map((v) => {
-          return `<span>【${v.name} │ <span style="color: #67C23A;">${v.completeQuantity}</span>】</span>`
-        })
-        .join('<span>→</span>')
+      v.completeMete = v.completeNetWeight && toFixed(v.completeNetWeight, DP.COM_WT__KG)
+      v.inProductionMete = v.inProductionNetWeight && toFixed(v.inProductionNetWeight, DP.COM_WT__KG)
+      v.unProductionMete = v.unProductionNetWeight && toFixed(v.unProductionNetWeight, DP.COM_WT__KG)
+      v.processSequence =
+        v.processSummaryList &&
+        v.processSummaryList
+          .map((v) => {
+            return `<span>【${v.name} │ <span style="color: #67C23A;">${v.inspectionQuantity}</span>】</span>`
+          })
+          .join('<span> </span>')
       return v
     })
   } catch (error) {

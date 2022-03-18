@@ -69,6 +69,8 @@
 <script setup>
 import { steelInboundApplication } from '@/api/wms/material-inbound/raw-material/application'
 import { edit as editInboundApplication } from '@/api/wms/material-inbound/raw-material/record'
+import { steelInboundApplicationPM as permission } from '@/page-permission/wms'
+
 import { defineProps, defineEmits, ref, computed, watch, provide, nextTick, reactive } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -96,9 +98,6 @@ const props = defineProps({
     type: Object
   }
 })
-
-// 权限
-const permission = ['wms_steelInboundApplication:submit']
 
 // 基础分类
 const steelBasicClassKV = {

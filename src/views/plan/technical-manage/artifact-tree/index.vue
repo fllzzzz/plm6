@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" @getAreaData="getAreaData"/>
+        <mHeader :project-id="globalProjectId" @getAreaData="getAreaData" />
       </div>
       <!--表格渲染-->
       <common-table
@@ -39,7 +39,11 @@
           min-width="100px"
         >
           <template v-slot="scope">
-            <span>{{ scope.row.assembleSerialNumberList && scope.row.assembleSerialNumberList.length>0?scope.row.assembleSerialNumberList.join(','):'' }}</span>
+            <span>{{
+              scope.row.assembleSerialNumberList && scope.row.assembleSerialNumberList.length > 0
+                ? scope.row.assembleSerialNumberList.join(',')
+                : ''
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -60,22 +64,17 @@
           label="编号"
           min-width="140px"
         >
-          <!-- <template slot="header">
-          <el-tooltip
-            class="item"
-            effect="light"
-            :content="`双击编号可预览图纸`"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>编号</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template> -->
+          <template #header>
+            <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
+              <div style="display: inline-block">
+                <span>编号</span>
+                <i class="el-icon-info" />
+              </div>
+            </el-tooltip>
+          </template>
           <template v-slot="scope">
-            <span>{{ scope.row.serialNumber }}</span>
-            <!-- <span style="cursor: pointer;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span> -->
+            <!-- <span>{{ scope.row.serialNumber }}</span> -->
+            <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -205,16 +204,16 @@
           min-width="120"
         />
         <el-table-column
-          v-if="columns.visible('createUser')"
-          key="createUser"
-          prop="createUser"
+          v-if="columns.visible('userName')"
+          key="userName"
+          prop="userName"
           :show-overflow-tooltip="true"
           label="上传人"
           min-width="110"
         />
         <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" min-width="160px">
           <template v-slot="scope">
-            <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
+            <div>{{ scope.row.createTime ? parseTime(scope.row.createTime, '{y}-{m}-{d}') : '-' }}</div>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="80px" fixed="right">
@@ -246,22 +245,21 @@
         </el-table-column>
         <!--编辑与删除-->
         <el-table-column
-          v-if="checkPermission([...permission.edit, ...permission.del])"
           label="操作"
           width="220px"
           align="center"
           fixed="right"
         >
           <template v-slot="scope">
-            <template v-if="scope.row.dataType===2">
+            <template v-if="scope.row.dataType === 2">
               <el-tooltip class="item" effect="dark" content="数量更改" placement="top">
-                <common-button size="mini" @click="handleNum(scope.row)"><svg-icon icon-class="document" /></common-button>
+                <common-button size="mini" @click="handleNum(scope.row)" v-permission="permission.editNum"><svg-icon icon-class="document" /></common-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="信息修改" placement="top">
-                <common-button size="mini" @click="handleList(scope.row)" icon="el-icon-edit" type="primary"/>
+                <common-button size="mini" @click="handleList(scope.row)" icon="el-icon-edit" type="primary" v-permission="permission.editInfo"/>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="编号更改" placement="top">
-                <common-button size="mini" @click="handleSerial(scope.row)" type="success"><svg-icon icon-class="expand" /></common-button>
+                <common-button size="mini" @click="handleSerial(scope.row)" type="success"><svg-icon icon-class="expand" v-permission="permission.editSerialNum"/></common-button>
               </el-tooltip>
             </template>
           </template>
@@ -270,9 +268,16 @@
       <!--分页组件-->
       <pagination />
       <mForm />
-      <numForm v-model="numVisible" :detailInfo="currentRow" @success="crud.toQuery"/>
-      <listForm v-model="listVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea"/>
-      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea"/>
+      <numForm v-model="numVisible" :detailInfo="currentRow" @success="crud.toQuery" />
+      <listForm v-model="listVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea" />
+      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea" />
+      <!-- pdf预览 -->
+      <drawing-pdf
+        v-model="showDrawing"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
     </template>
   </div>
 </template>
@@ -280,9 +285,12 @@
 <script setup>
 import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
 import { ref, nextTick } from 'vue'
+import { artifactTreePM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import useDrawing from '@compos/use-drawing'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
@@ -290,12 +298,14 @@ import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
-import { artifactTreePM as permission } from '@/page-permission/plan'
 import numForm from './module/num-form'
 import listForm from './module/list-form'
 import serialNumForm from './module/serialNum-form'
+import drawingPdf from '@comp-base/drawing-pdf.vue'
+import { componentTypeEnum } from '@enum-ms/mes'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
 const optShow = {
   add: false,
   edit: false,
@@ -370,6 +380,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     v.machinePartDTOList = []
     v.children = []
     v.hasChildren = !!v.hasMachinePart
+    v.productType = componentTypeEnum.ARTIFACT.V
     return v
   })
 }
@@ -403,11 +414,12 @@ async function load(row, treeNode, resolve) {
     const { content } = await artifactPart({ artifactId: row.id })
     let childIndex = 1
     if (content.length > 0) {
-      content.map(v => {
+      content.map((v) => {
         v.dataType = 1
         v.rowKey = `${row.id}__${v.id}`
         v.childIndex = childIndex
         childIndex++
+        v.productType = componentTypeEnum.MACHINE_PART.V
         return v
       })
     }
@@ -450,12 +462,7 @@ $font-size: 1.5em;
   border-radius: 50%;
   line-height: $font-size;
 }
-::v-deep(.el-drawer__body){
-  padding-top:0 !important;
-}
-</style>
-<style>
-.el-popper {
-  max-width: calc(100% - 60px) !important;
+::v-deep(.el-drawer__body) {
+  padding-top: 0 !important;
 }
 </style>

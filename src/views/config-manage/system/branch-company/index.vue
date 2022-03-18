@@ -77,6 +77,7 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/config/system-config/branch-company'
 import { ref } from 'vue'
+import { branchCompanyPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -87,14 +88,6 @@ import mForm from './module/form'
 import { systemEnabledEnum } from '@enum-ms/system'
 import { ElMessageBox } from 'element-plus'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['branchCompanyConfig:get'],
-  add: ['branchCompanyConfig:add'],
-  edit: ['branchCompanyConfig:edit'],
-  del: ['branchCompanyConfig:del']
-}
 
 const optShow = {
   add: true,

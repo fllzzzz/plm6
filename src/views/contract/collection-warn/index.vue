@@ -15,7 +15,7 @@
     :stripe="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="项目">
+    <el-table-column v-if="columns.visible('project')" key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" align="center">
       <template v-slot="scope">
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
@@ -30,12 +30,12 @@
         <div>{{ scope.row.projectManagerName? scope.row.projectManagerName: '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型">
+    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)">
+    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="合同金额(元)" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '' }}</span>
       </template>

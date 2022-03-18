@@ -2,12 +2,7 @@
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
       <div v-if="row.overTipColor" class="left-triangle-tip" :style="{ 'border-left-color': row.overTipColor }" />
-      <table-cell-tag
-        v-if="showPartyA && partyAPosition === 'index'"
-        :show="!!getInfo(row, 'boolPartyA')"
-        name="甲供"
-        type="partyA"
-      />
+      <table-cell-tag v-if="showPartyA && partyAPosition === 'index'" :show="!!getInfo(row, 'boolPartyA')" name="甲供" type="partyA" />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -143,6 +138,8 @@
 </template>
 
 <script setup>
+import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
+
 import { defineEmits, defineProps, computed, provide, ref } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
@@ -234,10 +231,6 @@ const props = defineProps({
     default: 'material'
   }
 })
-
-const permission = {
-  frozenDetail: ['wms_raw_mat_freeze:detail']
-}
 
 // 当前物料
 const currentMaterial = ref({})

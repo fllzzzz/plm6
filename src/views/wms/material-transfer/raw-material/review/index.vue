@@ -22,11 +22,7 @@
       <el-table-column label="序号" type="index" align="center" width="60">
         <template #default="{ row, $index }">
           <!-- 是否甲供材料 -->
-          <table-cell-tag
-            v-if="row.transferCreateType === transferCreateTypeEnum.OUTBOUND.V"
-            name="出库"
-            type="transferOutbound"
-          />
+          <table-cell-tag v-if="row.transferCreateType === transferCreateTypeEnum.OUTBOUND.V" name="出库" type="transferOutbound" />
           <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
@@ -90,10 +86,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         width="110"
@@ -191,8 +187,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import crudApi from '@/api/wms/material-transfer/raw-material/review'
+import { rawMaterialTransferReviewPM as permission } from '@/page-permission/wms'
+
+import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { transferCreateTypeEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -210,12 +208,6 @@ import review from './module/review.vue'
 import sourceTextInfo from '@/views/wms/material-transfer/raw-material/review/module/source-text-info.vue'
 import directionTextInfo from '@/views/wms/material-transfer/raw-material/review/module/direction-text-info.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_transferApplication_review:get'],
-  review: ['wms_transferApplication_review:review']
-}
 
 const optShow = {
   add: false,

@@ -82,8 +82,8 @@
                 <span v-if="detail.branchCompany">{{ detail.branchCompany.name }}</span>
               </el-form-item>
 
-              <el-form-item label="创建人" prop="founderName">
-                <span v-empty-text>{{ detail.founderName }}</span>
+              <el-form-item label="创建人" prop="applicantName">
+                <span v-empty-text>{{ detail.applicantName }}</span>
                 （创建时间：<span v-parse-time="detail.createTime" />）
               </el-form-item>
               <el-form-item label="最后操作人" prop="lastOperatorName">
@@ -207,7 +207,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
 
 // 标题
 const detailTitle = computed(() => {
-  if (isNotBlank(detail)) {
+  if (isNotBlank(detail) && detail.serialNumber) {
     return `订单：${detail.serialNumber}`
   } else {
     return `订单`

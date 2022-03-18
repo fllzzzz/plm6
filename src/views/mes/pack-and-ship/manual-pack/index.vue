@@ -51,6 +51,7 @@ import { mapGetters } from '@/store/lib'
 
 import { isBlank, isNotBlank } from '@data-type/index'
 import { packTypeEnum, mesEnclosureTypeEnum } from '@enum-ms/mes'
+import { manualPackPM as permission } from '@/page-permission/mes'
 
 import factorySelect from '@comp-base/factory-select'
 import structureTable from './structure'
@@ -60,9 +61,6 @@ import packListDrawer from './pack-list-drawer'
 import monomerSelect from '@/components-system/plan/monomer-select'
 
 const route = useRoute()
-const permission = {
-  pack: ['manualPack:pack']
-}
 const mainRef = ref()
 const { globalProjectId } = mapGetters(['globalProjectId'])
 const packType = ref(packTypeEnum.STRUCTURE.V)

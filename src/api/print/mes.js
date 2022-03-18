@@ -185,22 +185,11 @@ export function teamWageDetail(params) {
 }
 
 /**
- * 结构生产报表
+ * 生产报表
  */
-export function structureProductionReport(params) {
+export function productionReport(params) {
   return request({
-    url: `/api/mes/building/production_statements/artifact/print`,
-    method: 'get',
-    params
-  })
-}
-
-/**
- * 围护生产报表
- */
-export function enclosureProductionReport(params) {
-  return request({
-    url: `/api/mes/building/production_statements/enclosure/print`,
+    url: `/api/mes/building/production_statements/print`,
     method: 'get',
     params
   })
@@ -218,6 +207,57 @@ export function enclosureProductionReport(params) {
 export function productionStatistics(params) {
   return request({
     url: `/api/mes/building/analysis/production_summary/group/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 在制品统计明细
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatisticsIn(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/in_production/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 在制品统计明细
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatisticsUn(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/un_production/details/print`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 在制品统计明细
+ * @export
+ * @param {*} productType|required 产品类型
+ * @param {*} dateTime|required 统计日期
+ * @param {*} monomerId 单体id
+ * @param {*} projectId 项目id
+ * @returns
+ */
+export function productionStatisticsComplete(params) {
+  return request({
+    url: `/api/mes/building/analysis/production_summary/complete/details/print`,
     method: 'get',
     params
   })
@@ -322,9 +362,11 @@ export default {
   schedulingDetail, // 工单详情
 
   // 生产报表
-  structureProductionReport, // 结构生产报表
-  enclosureProductionReport, // 围护生产报表
+  productionReport, // 生产报表
   productionStatistics, // 在制品统计
+  productionStatisticsIn, // 在制品统计明细-在制品
+  productionStatisticsUn, // 在制品统计明细-未生产
+  productionStatisticsComplete, // 在制品统计明细-完成品
   unfinishedList, // 未完成清单
 
   // 班组报表

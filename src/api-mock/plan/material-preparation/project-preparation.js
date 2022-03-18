@@ -175,8 +175,16 @@ const detail_1 = {
             steelClassifyConfName: '钢板', // 钢材配置名称
             basicClass: rawMatClsEnum.STEEL_PLATE.V, // 主科目分类（列如：钢板\型材\钢卷）
             material: 'Q325B', // 材质
-            specification: '10', // 规格/厚度
-            listMete: 1000 // 清单量
+            specification: '10', // 规格（型材）/厚度（钢板）
+            listMete: 10000 // 清单量
+          },
+          {
+            steelClassifyConfId: 4, // 钢材分类配置id
+            steelClassifyConfName: '工字钢', // 钢材配置名称
+            basicClass: rawMatClsEnum.SECTION_STEEL.V, // 主科目分类（列如：钢板\型材\钢卷）
+            material: 'Q325B', // 材质
+            specification: '10*10*200*500', // 规格（型材）/厚度（钢板）
+            listMete: 6666.66 // 清单量
           }
         ],
         inventoryList: [
@@ -219,6 +227,23 @@ const detail_1 = {
             projectUsedMete: 500000, // 项目利用数量
             projectOutboundUsedQuantity: 3, // 项目利用且已经出库的数量
             projectOutboundUsedMete: 300000 // 项目利用且已经出库的数量
+          }
+        ],
+        purchaseList: [
+          {
+            recordId: 1, // 记录id
+            classifyId: 103,
+            basicClass: rawMatClsEnum.STEEL_PLATE.V,
+            specification: 'Q325B',
+            thickness: 10, // 厚度
+            theoryThickness: 10, // 理论厚度
+            length: 11000, // 长度
+            width: 990, // 宽度
+            brand: '嘻嘻', // 品牌
+            mete: 1000000, // 需要采购核算量
+            sortingMete: 100000, // 分拣量
+            quantity: 10, // 需要采购数量
+            sortingQuantity: 1 // 分拣数量
           }
         ]
       }
@@ -284,7 +309,7 @@ const getProjectListForRangeInfo = {
             boolAuxPrepared: false, // 辅材备料状态
             strucPreparationRangeType: preparationRangeEnum.AREA.V, // 结构备料范围
             enclPreparationRangeType: preparationRangeEnum.AREA.V, // 围护备料范围
-            auxPreparationRangeType: preparationRangeEnum.MONOMER.V// 辅材备料范围
+            auxPreparationRangeType: preparationRangeEnum.MONOMER.V // 辅材备料范围
           },
           {
             id: 4,
@@ -296,7 +321,7 @@ const getProjectListForRangeInfo = {
             boolAuxPrepared: false, // 辅材备料状态
             strucPreparationRangeType: preparationRangeEnum.PROJECT.V, // 结构备料范围
             enclPreparationRangeType: undefined, // 围护备料范围
-            auxPreparationRangeType: undefined// 辅材备料范围
+            auxPreparationRangeType: undefined // 辅材备料范围
           }
         ]
       }

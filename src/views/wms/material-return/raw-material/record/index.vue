@@ -198,6 +198,7 @@
 <script setup>
 import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 import crudApi from '@/api/wms/material-return/raw-material/record'
+import { rawMaterialReturnRecordPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
@@ -216,14 +217,6 @@ import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import MDetail from './module/detail.vue'
 import MForm from './module/form.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_returnApplication_record:get'],
-  edit: ['wms_returnApplication_record:edit'],
-  del: ['wms_returnApplication_record:del'],
-  outboundReceiptDetail: ['wms_outboundApplication_review:detail']
-}
 
 const optShow = {
   add: false,

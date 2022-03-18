@@ -24,6 +24,7 @@ const get = {
             purchaseSN: 'CG-211125-123213', // 采购单号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
+            // 项目id
             'projects|2': [
               {
                 'id|+1': 1,
@@ -31,7 +32,7 @@ const get = {
                 'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
-            ], // 项目id
+            ],
             supplier: {
               // 供应商
               id: 1,
@@ -39,7 +40,7 @@ const get = {
             },
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
             editable: true, // 可修改的
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -69,7 +70,7 @@ const get = {
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             editable: true, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -100,7 +101,7 @@ const get = {
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             editable: true, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -123,7 +124,7 @@ const get = {
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
             editable: false, // 可修改的
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间

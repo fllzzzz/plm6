@@ -41,7 +41,8 @@ export function monomerAll(projectId) {
   return request({
     module: 'plan',
     url: `monomer/listByProjectId/${projectId}`,
-    method: 'get'
+    method: 'get',
+    cancelKey: false
   })
 }
 

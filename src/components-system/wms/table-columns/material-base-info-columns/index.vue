@@ -139,6 +139,8 @@
 </template>
 
 <script setup>
+import { materialBaseInfoCPM as permission } from '@/page-permission/wms'
+
 import { defineEmits, defineProps, computed, ref } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
@@ -230,10 +232,6 @@ const props = defineProps({
     default: false
   }
 })
-
-const permission = {
-  frozenDetail: ['wms_raw_mat_freeze:detail']
-}
 
 // 当前物料
 const currentMaterial = ref({})

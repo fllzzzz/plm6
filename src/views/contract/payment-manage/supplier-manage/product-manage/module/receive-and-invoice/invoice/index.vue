@@ -148,29 +148,29 @@
       >
         <template v-slot="scope">
           <template v-if="!scope.row.isModify">
-            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V"/>
-            <template v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V">
-              <el-popconfirm
-                confirm-button-text="确定"
-                cancel-button-text="取消"
-                title="确定删除吗?"
-                @confirm="rowDelete(scope.row)"
-              >
-                <template #reference>
-                  <common-button icon="el-icon-delete" type="danger" size="mini"/>
-                </template>
-              </el-popconfirm>
-              <el-popconfirm
-                confirm-button-text="确定"
-                cancel-button-text="取消"
-                title="确定通过吗?"
-                @confirm="passConfirm(scope.row)"
-              >
-                <template #reference>
-                  <common-button type="success" size="mini" v-permission="permission.audit" >通过</common-button>
-                </template>
-              </el-popconfirm>
-            </template>
+            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.edit)"/>
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              title="确定删除吗?"
+              @confirm="rowDelete(scope.row)"
+              v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.del)"
+            >
+              <template #reference>
+                <common-button icon="el-icon-delete" type="danger" size="mini" />
+              </template>
+            </el-popconfirm>
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              title="确定通过吗?"
+              @confirm="passConfirm(scope.row)"
+              v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)"
+            >
+              <template #reference>
+                <common-button type="success" size="mini">通过</common-button>
+              </template>
+            </el-popconfirm>
             <el-tag type="success" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" class="pass-tag">已复核</el-tag>
           </template>
           <template v-else>
@@ -198,6 +198,7 @@
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
 import { ref, defineProps, watch, nextTick } from 'vue'
+import { contractSupplierProductPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -211,13 +212,7 @@ import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
 
-// crud交由presenter持有
-const permission = {
-  get: ['invoice:get'],
-  add: ['invoice:add'],
-  edit: ['invoice:edit'],
-  audit: ['invoice:audit']
-}
+const permission = contractSupplierProductPM.invoice
 
 const optShow = {
   add: true,

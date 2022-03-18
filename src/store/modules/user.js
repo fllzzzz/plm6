@@ -98,7 +98,7 @@ const actions = {
         if (m.redirect) {
           m.redirect = repairStartSymbol(m.redirect, '/')
         } else {
-          m.redirect = 'noRedirect'
+          m.redirect = null
         }
       })
     } else {

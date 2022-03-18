@@ -134,10 +134,10 @@
         </el-table-column>
       </template>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -249,7 +249,7 @@ import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 import MDetail from './module/detail.vue'
 
-import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import TableCellTag from '@comp-common/table-cell-tag/index.vue'

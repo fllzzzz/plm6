@@ -27,9 +27,17 @@
       row-key="id"
     >
       <!-- 基础信息 -->
-      <material-base-info-columns show-frozen-tip frozen-viewable spec-merge fixed="left" @refresh="fetchList" />
+      <material-base-info-columns
+        :show-is-whole="true"
+        :basic-class="props.matchInfo.basicClass"
+        show-frozen-tip
+        frozen-viewable
+        spec-merge
+        fixed="left"
+        @refresh="fetchList"
+      />
       <!-- 次要信息 -->
-      <material-secondary-info-columns fixed="left" />
+      <material-secondary-info-columns :basic-class="props.matchInfo.basicClass" :show-batch-no="false" fixed="left" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns outbound-type-mode equal-disabled />
       <!-- 工厂/仓库 -->
@@ -46,7 +54,7 @@
 </template>
 
 <script setup>
-import { getMatchSteelPlateList } from '@/api/plan/material-preparation/material-match'
+import { getMatchSteelPlateList, getMatchSectionSteelList } from '@/api/plan/material-preparation/material-match'
 
 import { ref, computed, defineProps, defineEmits, watch, inject } from 'vue'
 import { isBlank } from '@/utils/data-type'
@@ -70,12 +78,14 @@ const props = defineProps({
     default: 250
   },
   matchInfo: {
-    type: Object
+    type: Object,
+    default: () => ({})
   }
 })
 
 const crud = inject('crud')
 const inventoryExitIdMap = ref()
+const interfaceKey = ref(0) // 接口请求key，避免接口异步回调覆盖
 watch(
   () => crud.props.inventoryExitIdMap,
   (map) => {
@@ -131,6 +141,7 @@ function init() {
 
 // 加载列表
 async function fetchList() {
+  const key = ++interfaceKey.value
   init()
   const info = props.matchInfo
   if (isBlank(info)) return
@@ -141,9 +152,13 @@ async function fetchList() {
       case rawMatClsEnum.STEEL_PLATE.V:
         matchList = await matchListForSteelPlate(info)
         break
+      case rawMatClsEnum.SECTION_STEEL.V:
+        matchList = await matchListForSectionSteel(info)
+        break
       default:
         throw Error('物料主分类错误')
     }
+    if (key !== interfaceKey.value) throw Error('repeated calls')
     // 格式装换
     await setSpecInfoToList(matchList)
     await numFmtByBasicClass(matchList, {
@@ -171,11 +186,12 @@ async function fetchList() {
 
     // 拼音转换
     list.value = pinyinForField(matchList, pinyinFields)
-    console.log('list.value', list.value)
+    loading.value = false
   } catch (error) {
     console.error('匹配物料', error)
-  } finally {
-    loading.value = false
+    if (String(error).indexOf('repeated calls') === -1) {
+      loading.value = false
+    }
   }
 }
 
@@ -194,12 +210,22 @@ async function matchListForSteelPlate(info) {
   const { content = [] } = await getMatchSteelPlateList(query)
   return content
 }
+
+async function matchListForSectionSteel(info) {
+  const query = {
+    steelClassifyConfId: info.steelClassifyConfId, // 钢材分类配置id
+    material: info.material, // 材质
+    specification: info.specification // 规格
+  }
+  const { content = [] } = await getMatchSectionSteelList(query)
+  return content
+}
 </script>
 
 <style lang="scss" scoped>
 .match-table {
+  width: inherit;
   // position: relative;
-  height: 288px; // TODO:先写死，不设置高度会导致form的maxHeight计算错误，可能是一开始element中的表格高度并不是传入的值
 }
 
 .table-title {

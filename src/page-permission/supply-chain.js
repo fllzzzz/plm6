@@ -5,6 +5,12 @@ export const commonPM = {
   purchaseOrderDetail: ['scm_purchaseOrder:detail']
 }
 
+// wms
+export const wmsCommonPM = {
+  // 原材料-入库单详情
+  rawMatInboundReceiptDetail: ['wms_rawMat_inbound_review:detail']
+}
+
 // --------------------------- 公共权限 end --------------------------------
 
 // ########################################################################
@@ -32,7 +38,9 @@ export const logisticsOrderPM = {
   get: ['scm_logisticsOrder:get'], // 列表
   add: ['scm_logisticsOrder:add'], // 添加
   edit: ['scm_logisticsOrder:edit'], // 编辑
-  del: ['scm_logisticsOrder:del'] // 删除
+  del: ['scm_logisticsOrder:del'], // 删除
+  inboundReceiptDetail: wmsCommonPM.rawMatInboundReceiptDetail, // 入库详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail // 采购订单
 }
 
 // --------------------------- 物流订单 end --------------------------------
@@ -51,5 +59,13 @@ export const supplierPM = {
   downloadAttachments: ['scm_supplier:downloadAttachments'] // 下载供应商附件
 }
 
-// --------------------------- 供应商 end ----------------------------------
+// --------------------------- 供应商 end ---------------------------------
 
+// ########################################################################
+
+// --------------------------- 其他模块/组件 start -------------------------
+
+// 组件·采购单选择， purchase-sn-select，purchase-detail-button
+export const purchaseOrderDetailCPM = commonPM.purchaseOrderDetail
+
+// --------------------------- 其他模块/组件 end ---------------------------

@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineExpose } from 'vue'
+import { ref, defineProps, watch, defineExpose, nextTick } from 'vue'
 import regionCascader from '@comp-base/region-cascader'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { validatorTel, validatorEnOrNum, validatorNatural } from '@/utils/validate/pattern'
@@ -101,7 +101,7 @@ const defaultForm = {
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const rules = {
-  customerUnit: [{ max: 30, message: '长度不超过 30 个字符', trigger: 'blur' }],
+  customerUnit: [{ required: true, max: 30, message: '必填,长度不超过 30 个字符', trigger: 'blur' }],
   socialCode: [
     { max: 18, message: '长度不超过 18 个字符', trigger: 'blur' },
     { pattern: validatorEnOrNum.pattern, message: validatorEnOrNum.message }
@@ -181,6 +181,11 @@ function resetForm(data) {
     formVal = JSON.parse(JSON.stringify(defaultForm))
   }
   form.value = JSON.parse(JSON.stringify(formVal))
+  if (formRef.value) {
+    nextTick(() => {
+      formRef.value.clearValidate()
+    })
+  }
   useWatchFormValidate(formRef, form)
 }
 

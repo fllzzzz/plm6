@@ -25,7 +25,7 @@
         v-loading="loading"
         ref="tableRef"
         :data="tableData"
-        :empty-text="'暂无数据'"
+        :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
         :max-height="maxHeight"
         style="width: 100%"
       >
@@ -62,11 +62,11 @@
         fixed="right"
       >
         <template v-slot="scope">
-          <common-button size="mini" type="primary" @click="openDetail(scope.row)">查看区域详情</common-button>
+          <common-button size="mini" type="primary" @click="openDetail(scope.row)" v-permission="permission.get">查看区域详情</common-button>
         </template>
       </el-table-column>
     </common-table>
-    <enclosureTable v-else :enclosureData="enclosureData" :category="enclosureCategory"/>
+    <enclosureTable v-else :enclosureData="enclosureData" :category="enclosureCategory" :blankText="checkPermission(permission.get)?'暂无数据':'暂无权限'"/>
     <mDetail :current-info="currentInfo" v-model="detailVisible" :globalProject="globalProject" :enclosureCategory="enclosureCategory"/>
     </template>
   </div>
@@ -75,6 +75,8 @@
 <script setup>
 import { getStructure, getPart, getEnclosure, structureMonomer, partMonomer } from '@/api/plan/technical-manage/summary-list'
 import { ref, watch } from 'vue'
+import { summaryListPM as permission } from '@/page-permission/plan'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import mDetail from './module/detail'
@@ -192,6 +194,9 @@ function typeChange(val) {
   tableData.value = []
   enclosureCategory.value = undefined
   if (val) {
+    if (!checkPermission(permission.get)) {
+      return
+    }
     switch (val) {
       case 7:
         getStructureData()
@@ -247,6 +252,9 @@ async function getPartData() {
 }
 
 async function getEnclosureData() {
+  if (!checkPermission(permission.get)) {
+    return
+  }
   loading.value = true
   tableData.value = []
   enclosureData.value = []

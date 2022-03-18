@@ -4,6 +4,8 @@
     :category="category"
     :columns="columns"
     :fixed="fixed"
+    @drawingPreview="drawingPreview"
+    :snClickable="snClickable"
     :unShowField="unShowField"
     :fixedWidth="fixedWidth"
   />
@@ -31,10 +33,12 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import productTypeBaseInfoColumns from '../productType-base-info-columns'
 import productTypeSpecInfoColumns from '../productType-spec-info-columns'
 import productTypeOtherInfoColumns from '../productType-other-info-columns'
+
+const emit = defineEmits(['drawingPreview'])
 
 defineProps({
   productType: {
@@ -58,9 +62,18 @@ defineProps({
   fixedWidth: {
     type: Boolean
   },
+  // 编号可点击预览
+  snClickable: {
+    type: Boolean,
+    default: false
+  },
   unShowField: {
     type: Array,
     default: () => []
   }
 })
+
+function drawingPreview(row) {
+  emit('drawingPreview', row)
+}
 </script>

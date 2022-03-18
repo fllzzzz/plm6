@@ -9,6 +9,10 @@ import { arr2obj } from '@/utils/convert/type'
 import { deepClone } from '@data-type/index'
 import { resolvePath } from '@/utils/resolve-path'
 import { projectTypeEnum } from '@/utils/enum/modules/contract'
+import storage from '@/utils/storage'
+
+const globalProject = storage.get('curProject')
+const globalProContentBit = storage.get('curProContentBit')
 
 const state = {
   routes: [], // 当前菜单
@@ -123,9 +127,9 @@ export const filterAsyncRoutes = (commit, routes, moduleId, basePath, hasLayout 
         } else {
           route.component = BlankLayout
         }
-        // 未设置redirect，则将其设置为noRedirect
+        // 未设置redirect，则将其设置为null
         if (!route.redirect) {
-          route.redirect = 'noRedirect'
+          route.redirect = null
         } else {
           route.redirect = repairStartSymbol(route.redirect, '/')
         }
@@ -199,13 +203,19 @@ const setMenusRedirect = (menus, treeRoutes) => {
   })
 }
 
+// 判断页面是否会显示（根据项目的模式和产品类型）
+const judgeComponentShow = (meta) => {
+  return (!meta.productType || (meta.productType && meta.productType & globalProContentBit)) &&
+  (!meta.projectMode || (meta.projectMode && meta.projectMode & globalProject?.mode))
+}
+
 const getFirstRoutePath = (treeRoute) => {
   let _path
   if (!treeRoute) {
     return _path
   }
   for (const route of treeRoute) {
-    if (!route.redirect) {
+    if (!route.redirect && judgeComponentShow(route.meta)) {
       return route.routePath
     }
     if (route.redirect && route.children && route.children.length > 0) {

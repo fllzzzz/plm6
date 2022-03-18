@@ -8,16 +8,31 @@
         :project-id="projectId"
         @change="fetchMonomerAndArea"
       />
+      <common-radio-button
+        v-model="query.boolAbnormalEnum"
+        :options="abnormalStatusEnum.ENUM"
+        type="enum"
+        showOptionAll
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
     <crudOperation>
       <template v-slot:optRight>
         <!-- 任务录入按钮 -->
-        <template v-if="(query.areaId || hiddenArea) && checkPermission(permission.save)">
+        <template v-if="query.areaId || hiddenArea">
           <common-button v-show="modifying" type="warning" size="mini" @click.stop="handelModifying(false, true)">取消录入</common-button>
           <common-button v-show="modifying" type="success" size="mini" @click.stop="previewVisible = true">预览并保存</common-button>
-          <common-button v-show="!modifying" type="primary" style="margin-left: 0px" size="mini" @click.stop="handelModifying(true)">
+          <common-button
+            v-if="checkPermission(permission.save)"
+            v-show="!modifying"
+            type="primary"
+            style="margin-left: 0px"
+            size="mini"
+            @click.stop="handelModifying(true)"
+          >
             任务录入
           </common-button>
           <el-popover
@@ -67,6 +82,7 @@
 import { ref, defineProps, defineEmits, inject } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
+import { abnormalStatusEnum } from '@enum-ms/mes'
 import { deepClone } from '@data-type/index'
 
 import useGetLines from '@compos/mes/scheduling/use-get-lines'

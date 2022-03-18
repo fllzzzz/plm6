@@ -7,7 +7,7 @@
           保存
         </common-tip-button>
         <common-button
-          v-permission="permission.driverFillConfigEdit"
+          v-permission="permission.carModelConfigEdit"
           size="mini"
           type="primary"
           style="float: right"

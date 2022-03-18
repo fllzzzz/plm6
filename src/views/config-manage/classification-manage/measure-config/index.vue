@@ -133,20 +133,15 @@
 
 <script setup>
 import crudApi from '@/api/config/classification-manage/measure-config'
-import { nextTick, onUnmounted, ref } from 'vue'
+import { measureConfigPM as permission } from '@/page-permission/config'
+
+import { nextTick, onUnmounted, ref, computed } from 'vue'
 import { isNotBlank, emptyTextFormatter } from '@data-type'
 import { measureTypeEnum } from '@enum-ms/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import { computed } from '@vue/reactivity'
 import mHeader from './module/header'
-
-// crud交由presenter持有
-const permission = {
-  get: ['config_class_unitConfig:get'],
-  edit: ['config_class_unitConfig:edit']
-}
 
 const optShow = {
   add: false,

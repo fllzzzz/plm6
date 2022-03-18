@@ -13,9 +13,8 @@
       row-key="id"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
-      @sort-change="crud.handleSortChange"
     >
-      <el-table-column type="selection" width="55" align="center" fixed />
+      <el-table-column type="selection" width="55" align="center" fixed :selectable="selectable" />
       <el-table-column label="序号" type="index" align="center" width="60" fixed />
       <el-table-column
         v-if="columns.visible('areaName')"
@@ -50,7 +49,7 @@
             </template>
             <template v-slot="scope">
               <el-input-number
-                v-if="modifying"
+                v-if="modifying && !scope.row.boolAbnormalEnum"
                 v-model="scope.row.schedulingMap[line.id].quantity"
                 :step="1"
                 :min="scope.row.schedulingMap[line.id].sourceQuantity || 0"
@@ -167,7 +166,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange } = useSchedulingIndex()
+const { lines, modifying, handleRowClassName, handelCellClassName, handleQuantityChange, selectable } = useSchedulingIndex()
 
 CRUD.HOOK.beforeToQuery = () => {
   crud.query.category = category
@@ -180,9 +179,9 @@ CRUD.HOOK.beforeToQuery = () => {
     line-height: 30px;
   }
 }
-// /deep/.abnormal-row {
-//   background: linear-gradient(to right, #ffecec 0%, #ffffff 100%);
-// }
+::v-deep(.abnormal-row) {
+  background: #ffecec;
+}
 ::v-deep(.el-input__inner) {
   font-size: 14px;
 }

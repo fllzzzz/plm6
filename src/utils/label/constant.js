@@ -90,7 +90,7 @@ const ARTIFACT_CUSTOM_L_HTML = function ({ component = defComponent, printConfig
   <div class="artifact-label">
   <div class="row">
     <div class="col" style="justify-content:center;">
-      <img src="${logo}" alt="logo" style="height:70%;vertical-align: middle;">
+      <img src="${logo}" alt="logo" style="height:70%;max-width: 96%;vertical-align: middle;">
     </div>
     <div class="col" style="font-size:10pt;">${manufacturerName}</div>
   </div>
@@ -259,11 +259,13 @@ const ENCLOSURE_COMMON_L_HTML = function ({ component = defComponent, printConfi
 }
 
 // 围护-定制标签
-const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX' }) {
+const ENCLOSURE_CUSTOM_L_HTML = function ({ component = defComponent, printConfig, manufacturerName = 'XX', logo = 'https://mes.dev.hzchum.com/files/logo/1642044373620_logo_cmib_black_512.png' }) {
   return `
   <div class="enclosure-label">
     <div class="company">
-      <div>LOGO</div>
+      <div style="width:35%;">
+        <img src="${logo}" alt="logo" style="height:70%;width:100%;vertical-align: middle;">
+      </div>
       <div style="flex:1;text-align:center;">${manufacturerName}</div>
     </div>
     <div class="content">

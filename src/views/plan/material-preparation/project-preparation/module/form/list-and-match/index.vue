@@ -29,19 +29,23 @@
       />
     </div>
     <div class="match-container">
-      <match-table v-bind="$attrs" :height="props.height" :matchInfo="selectTechnologyRow" />
+      <div class="match-table-wrapper">
+        <match-table v-bind="$attrs" :height="props.height" :matchInfo="selectTechnologyRow" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, defineProps } from 'vue'
+import { ref, computed, defineEmits, defineProps } from 'vue'
 import { componentTypeEnum } from '@enum-ms/building-steel'
 
 import { regExtra } from '@compos/use-crud'
 import StructureList from './structure'
 import matchTable from './match-table.vue'
 import { isBlank } from '@/utils/data-type'
+
+const emit = defineEmits(['selected-change'])
 
 const props = defineProps({
   height: {
@@ -52,7 +56,6 @@ const props = defineProps({
 
 // 当前物料
 const selectTechnologyRow = ref()
-const selectTechnologyRowId = ref()
 // 查询过滤
 const queryFilter = ref({
   boolPreparationLessThanList: false
@@ -92,15 +95,24 @@ const listComp = computed(() => {
   }
 })
 
+CRUD.HOOK.beforeToEdit = (crud, form) => {
+  init()
+}
+
 CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
   // 设置技术清单汇总
   // list.value = form.technologyList || []
 }
 
+// 初始化
+function init() {
+  selectTechnologyRow.value = undefined
+}
+
 // 行选中
 function handleRowClick(row, column, event) {
-  selectTechnologyRowId.value = row.id
   selectTechnologyRow.value = row
+  emit('selected-change', row, column, event)
 }
 </script>
 
@@ -120,8 +132,18 @@ function handleRowClick(row, column, event) {
   }
 
   .match-container {
+    height: 288px; // TODO:先写死，不设置高度会导致form的maxHeight计算错误，可能是一开始element中的表格高度并不是传入的值
+    position: relative;
     flex: auto;
     margin-left: 20px;
+    widows: 100%;
+
+    .match-table-wrapper {
+      width: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 }
 

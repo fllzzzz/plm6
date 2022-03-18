@@ -118,10 +118,10 @@
         min-width="200"
       />
       <el-table-column
-        v-if="columns.visible('inboundReceipt.founderName')"
-        key="inboundReceipt.founderName"
+        v-if="columns.visible('inboundReceipt.applicantName')"
+        key="inboundReceipt.applicantName"
         :show-overflow-tooltip="true"
-        prop="inboundReceipt.founderName"
+        prop="inboundReceipt.applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -198,13 +198,12 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import useOtherCrudDetail from '@/composables/use-other-crud-detail'
-
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
-
 import InboundReceiptDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
-import PurchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
+
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -229,7 +228,7 @@ const { CRUD, crud, columns } = useCRUD(
     title: '入库明细',
     sort: ['id.desc'],
     invisibleColumns: [
-      'inboundReceipt.founderName',
+      'inboundReceipt.applicantName',
       'inboundReceipt.editorName',
       'inboundReceipt.reviewerName',
       'inboundReceipt.createTime',

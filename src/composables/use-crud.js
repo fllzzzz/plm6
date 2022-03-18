@@ -531,6 +531,7 @@ function addCrudBusinessMethod(crud) {
   // 刷新
   const refresh = async () => {
     if (!checkPermission(crud.permission.get)) {
+      crud.emptyText = '暂无权限'
       return
     }
     crud.emptyText = '加载中'
@@ -1186,6 +1187,29 @@ function addCrudFeatureMethod(crud, data) {
     }
   }
 
+  // 详情重新加载
+  const reloadDetail = (id) => {
+    const detailId = id || (crud.rowDetail ? crud.rowDetail.id : void 0)
+    if (detailId && crud.detailFormApi && typeof crud.crudApi.detail === 'function') {
+      // crud.resetRowDetail(data)
+      crud.detailLoading = true
+      // 后期如果出现查询项不为id，则改造当前方法，例：在crud中传入自定义参数字段
+      crud.crudApi
+        .detail(detailId)
+        .then((val) => {
+          crud.resetRowDetail(val)
+          callVmHook(crud, CRUD.HOOK.beforeDetailLoaded, crud.rowDetail).then(() => {
+            crud.detailLoading = false
+          })
+        })
+        .catch((error) => {
+          console.log('详情加载失败', error)
+          ElMessage.error('详情加载失败')
+          crud.detailLoading = false
+        })
+    }
+  }
+
   // 表单验证
   const validateField = (field) => {
     crud.ref.form.validateField(field)
@@ -1338,6 +1362,7 @@ function addCrudFeatureMethod(crud, data) {
     resetRowDetail, // 重置详情
     resetForm, // 重置表单
     resetBatchForm, // 重置表单
+    reloadDetail, // 重新加载详情
     validateField, // 表单字段校验
     validateFieldForBatch, // 批量表单字段校验
     submitFormFormat, // 提交表单数据格式化

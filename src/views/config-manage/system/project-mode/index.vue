@@ -5,7 +5,7 @@
       <mHeader />
     </div>
     <!--表格渲染-->
-    <common-button size="small" type="primary" @click="changeVisible=true" style="margin-bottom:10px;">修改项目模式</common-button>
+    <common-button size="small" type="primary" @click="changeVisible=true" style="margin-bottom:10px;" v-permission="permission.edit" >修改项目模式</common-button>
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
@@ -35,6 +35,7 @@
 <script setup>
 import crudApi from '@/api/config/system-config/project-mode'
 import { ref } from 'vue'
+import { projectModePM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -42,12 +43,6 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import modeChange from './module/mode-change'
 import { projectModeEnum } from '@enum-ms/contract'
-
-// crud交由presenter持有
-const permission = {
-  get: ['projectMode:get'],
-  edit: ['projectMode:edit']
-}
 
 const optShow = {
   add: false,

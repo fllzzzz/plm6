@@ -43,7 +43,7 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.del, ...permission.edit])"
+        v-if="checkPermission([...permission.detail, ...permission.del, ...permission.edit])"
         label="操作"
         width="170px"
         align="center"
@@ -103,6 +103,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 const { handleEnabledChange } = useCrudEnabledChange({ CRUD, crud, editEnabled })
 
 async function changeDefault(row) {
+  if (!checkPermission(permission.edit)) return
   try {
     const isDefault = !row.isDefault
     const tip = isDefault ? `此操作将“${row.name}”设置为该表格的默认模板` : `此操作取消“${row.name}”的默认状态`

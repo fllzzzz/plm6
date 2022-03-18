@@ -68,10 +68,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('outboundReceipt.founderName')"
-        key="outboundReceipt.founderName"
+        v-if="columns.visible('outboundReceipt.applicantName')"
+        key="outboundReceipt.applicantName"
         :show-overflow-tooltip="true"
-        prop="outboundReceipt.founderName"
+        prop="outboundReceipt.applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -163,7 +163,7 @@ const { CRUD, crud, columns } = useCRUD(
     title: '出库明细',
     sort: ['id.desc'],
     invisibleColumns: [
-      'outboundReceipt.founderName',
+      'outboundReceipt.applicantName',
       'outboundReceipt.reviewerName',
       'outboundReceipt.createTime',
       'outboundReceipt.reviewTime',

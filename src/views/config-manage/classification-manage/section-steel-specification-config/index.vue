@@ -43,16 +43,19 @@
       >
         <template v-slot="scope">
           <template v-if="scope.row.isLeaf">
-            <el-check-tag
-              class="check-tag"
-              v-for="sd in standard"
-              :key="sd.id"
-              type="success"
-              :checked="scope.row.standardId === sd.id"
-              @click="changeStandard(scope.row, sd.id)"
-            >
-              {{ sd.name }}
-            </el-check-tag>
+            <template v-if="checkPermission(permission.edit)">
+              <el-check-tag
+                class="check-tag"
+                v-for="sd in standard"
+                :key="sd.id"
+                type="success"
+                :checked="scope.row.standardId === sd.id"
+                @click="changeStandard(scope.row, sd.id)"
+              >
+                {{ sd.name }}
+              </el-check-tag>
+            </template>
+            <el-tag v-else type="primary" size="medium">{{ standardMap.get(scope.row.standardId) }}</el-tag>
           </template>
         </template>
       </el-table-column>
@@ -66,7 +69,7 @@
       >
         <template v-slot="scope">
           <div v-if="scope.row.isLeaf" style="display: flex; justify-content: flex-start">
-            <common-button v-permission="permission.detail" size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)">
+            <common-button size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)">
               查看
             </common-button>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
@@ -81,7 +84,7 @@
                 @success="crud.refresh"
               />
               <template #reference>
-                <common-button size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
+                <common-button v-permission="permission.add" size="mini" icon="el-icon-upload2" type="warning">上传</common-button>
               </template>
             </el-popover>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
@@ -111,10 +114,13 @@
 
 <script setup>
 import crudApi, { addStandard, getStandard, setStandard } from '@/api/config/classification-manage/section-steel-spec-config'
+import { sectionSteelLibraryPM as permission } from '@/page-permission/config'
+
 import { provide, ref, computed } from 'vue'
 import { isNotBlank, isBlank } from '@data-type/index'
 import sectionSteelSpecITmpl from '@/utils/excel/import-template/config/section-steel-spec-template'
 import sectionSteelSpecETmpl from '@/utils/excel/export-template/config/section-steel-spec-template'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -124,13 +130,6 @@ import { ElMessage, ElCheckTag } from 'element-plus'
 import mHeader from './module/header'
 import mForm from './module/form'
 import specDetail from './detail/index.vue'
-
-const permission = {
-  get: ['config_class_sectionSteelLibrary:get'],
-  add: ['config_class_sectionSteelLibrary:add'],
-  edit: ['config_class_sectionSteelLibrary:edit'],
-  del: ['config_class_sectionSteelLibrary:del']
-}
 
 const optShow = {
   add: false,

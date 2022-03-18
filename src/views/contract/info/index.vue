@@ -15,28 +15,25 @@
         <div v-show="showName=='contract'" style="margin-bottom:10px;position:relative;">
           <div style="position:absolute;right:0;z-index:2;">
             <div style="display:flex;border:1px solid #ffe399;border-radius:4px;" class="contractbtns" v-if="!isModify">
-              <template v-if="!isModify">
+              <template v-if="!isModify && btnShow">
                 <template v-if="projectStatus===projectStatusEnum.PROCESS.V">
                   <el-tooltip class="item" effect="dark" content="修改" placement="top">
-                    <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" />
+                    <common-button size="mini" icon="el-icon-edit" plain class="next_btn" @click="isModify=true;" v-permission="permission.edit"/>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="合同金额变更" placement="top">
-                    <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" />
+                    <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" v-permission="permission.changeAmount"/>
                   </el-tooltip>
                 </template>
-                <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V || projectStatus!==projectStatusEnum.SETTLED.V">
+                <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V && projectStatus!==projectStatusEnum.SETTLED.V">
                   <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
-                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" />
+                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" v-permission="permission.settle"/>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="变更签证" placement="top">
-                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" />
+                    <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" v-permission="permission.variationChange"/>
                   </el-tooltip>
                 </template>
-                <el-tooltip class="item" effect="dark" content="打印" placement="top">
-                  <common-button size="mini" icon="el-icon-printer" plain class="next_btn" />
-                </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="下载" placement="top">
-                  <common-button size="mini" icon="el-icon-download" plain class="next_btn" />
+                  <export-button :fn="downloadProjectInfo" class="next_btn" :params="{ projectId: projectId }" v-permission="permission.download"/>
                 </el-tooltip>
               </template>
             </div>
@@ -61,15 +58,12 @@
           </el-tabs>
         </div>
       </transition>
-      <transition name="el-fade-in">
-        <change-audit-log v-if="showName=='changeLog'" style="margin-top:10px;" :project-id="projectId" />
-      </transition>
       <!-- 金额变更 -->
-      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <money-form ref="moneyRef" :audit-status="auditStatus" :project-id="projectId" v-model="moneyVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
       <!-- 结算填报 -->
-      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <settle-form ref="settleRef" :audit-status="auditStatus" :project-id="projectId" v-model="settleVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
       <!-- 变更签证 -->
-      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose"/>
+      <variation-order ref="variationRef" :audit-status="auditStatus" :project-id="projectId" v-model="variationVisible" :detail-info="baseInfoValue" @success="handleClose" :member-list="memberList"/>
     </div>
     </template>
   </common-drawer>
@@ -86,11 +80,12 @@ import members from './members'
 import moneyForm from './money-form'
 import settleForm from './settle-form'
 import variationOrder from './variation-order'
-import changeAuditLog from './change-audit-log'
-import { editContract } from '@/api/contract/project'
+import { editContract, downloadProjectInfo } from '@/api/contract/project'
 import { projectStatusEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import { judgeSameValue } from './judgeSameValue'
+import { projectListPM as permission } from '@/page-permission/contract'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const props = defineProps({
   projectId: {
@@ -108,6 +103,10 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  btnShow: {
+    type: Boolean,
+    default: true
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])
@@ -125,6 +124,7 @@ const businessRef = ref()
 const customerRef = ref()
 const memberRef = ref()
 const baseInfoValue = ref()
+const memberList = ref([])
 const moneyRef = ref()
 const settleRef = ref()
 const variationRef = ref()
@@ -142,6 +142,7 @@ watch(
 
 function confirmSettle() {
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
   if (props.projectStatus === projectStatusEnum.PROCESS.V) {
     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
       confirmButtonText: '确定',
@@ -159,11 +160,13 @@ function confirmSettle() {
 function moneyChange() {
   moneyVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
 }
 
 function variationChange() {
   variationVisible.value = true
   baseInfoValue.value = baseRef.value.detail
+  memberList.value = memberRef.value.checkedList || []
 }
 
 function ModifyCancel() {
@@ -199,9 +202,15 @@ async function submit() {
   memberRef.value.getUser()
   const baseChange = judgeSameValue(baseRef.value.form, baseRef.value.detail)
   const businessChange = judgeSameValue(businessRef.value.form, businessRef.value.detail)
+  const contentChange = judgeSameValue(businessRef.value.form.projectContent, businessRef.value.detail.projectContent)
+  const structureChange = judgeSameValue(businessRef.value.form.structureList, businessRef.value.detail.structureList)
+  const profiledPlateChange = judgeSameValue(businessRef.value.form.profiledPlateList, businessRef.value.detail.profiledPlateList)
+  const pressureBearingPlateChange = judgeSameValue(businessRef.value.form.pressureBearingPlateList, businessRef.value.detail.pressureBearingPlateList)
+  const trussFloorPlateChange = judgeSameValue(businessRef.value.form.trussFloorPlateList, businessRef.value.detail.trussFloorPlateList)
+  const sandwichBoardChange = judgeSameValue(businessRef.value.form.sandwichBoardList, businessRef.value.detail.sandwichBoardList)
   const customerChange = judgeSameValue(customerRef.value.form, customerRef.value.detail)
   const userChange = judgeSameValue(memberRef.value.checkedList, memberRef.value.originUserList)
-  if (baseChange && businessChange && customerChange && userChange) {
+  if (baseChange && businessChange && customerChange && userChange && contentChange && structureChange && profiledPlateChange && pressureBearingPlateChange && trussFloorPlateChange && sandwichBoardChange) {
     ElMessage.error('项目未改动，请修改后提交')
     return
   }

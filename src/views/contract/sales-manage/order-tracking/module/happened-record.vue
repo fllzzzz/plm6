@@ -11,12 +11,16 @@
     size="90%"
   >
     <template #titleAfter>
-      <el-tag effect="plain" size="medium">
+      <el-tag type="success" effect="plain" size="medium">
         <span v-parse-project="{ project: detailInfo.project, onlyShortName: true }" v-empty-text />
       </el-tag>
-      <el-tag type="success" effect="plain" size="medium">
+      <el-tag effect="plain" size="medium">
         <span>累计发运额：</span>
         <span v-thousand="detailInfo.happenedAmount" v-empty-text />
+      </el-tag>
+      <el-tag effect="plain" size="medium">
+        <span>运输车次：</span>
+        <span>{{ detailInfo.transportQuantity || 0 }}</span>
       </el-tag>
     </template>
     <template #content>

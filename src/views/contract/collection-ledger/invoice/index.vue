@@ -20,7 +20,7 @@
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="所属项目">
+    <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目">
       <template v-slot="scope">
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
@@ -73,11 +73,9 @@ import { invoiceTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'
+import { collectionLedgerPM } from '@/page-permission/contract'
 
-// crud交由presenter持有
-const permission = {
-  get: ['invoice:get']
-}
+const permission = collectionLedgerPM.invoice
 
 const optShow = {
   add: false,

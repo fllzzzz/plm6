@@ -78,7 +78,7 @@ const get = {
               name: '杭州天天向上有限公司'
             },
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             // reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -107,7 +107,7 @@ const get = {
             },
             reviewStatus: reviewStatusEnum.UNREVIEWED.V, // 审核状态
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -137,7 +137,7 @@ const get = {
             },
             reviewStatus: reviewStatusEnum.REFUSE.V, // 审核状态
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间
@@ -159,7 +159,7 @@ const get = {
             },
             reviewStatus: reviewStatusEnum.PASS.V, // 审核状态
             approvalComments: '@csentence',
-            founderName: '@cname', // 创建人（填写入库的人）
+            applicantName: '@cname', // 创建人（填写入库的人）
             editorName: '@cname', // 编辑人（最后编辑的用户）
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)', // 创建时间

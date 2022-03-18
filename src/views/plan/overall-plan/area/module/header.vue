@@ -17,11 +17,13 @@
         @change="crud.toQuery"
       />
     </div>
-    <crudOperation :disabled="!query.productType">
-      <template #viewLeft>
-        <common-button type="primary" size="mini" @click.stop="goPlanView">办理计划</common-button>
-      </template>
-    </crudOperation>
+    <template v-if="query.productType">
+      <crudOperation>
+        <template #viewLeft>
+          <common-button type="primary" size="mini" @click.stop="goPlanView" v-permission="crud.permission.planList">办理计划</common-button>
+        </template>
+      </crudOperation>
+    </template>
   </div>
 </template>
 
@@ -69,9 +71,9 @@ async function monomerChange() {
 }
 
 async function getTypeInfo() {
+  typeOption.value = []
   try {
     const { productTypeList } = await monomerDetail(crud.query.monomerId)
-    typeOption.value = []
     const option = []
     if (productTypeList && productTypeList.length > 0) {
       productTypeList.forEach(v => {

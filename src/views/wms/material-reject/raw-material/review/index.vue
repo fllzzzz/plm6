@@ -107,10 +107,10 @@
         min-width="200"
       />
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -216,7 +216,7 @@ import MDetail from './module/detail.vue'
 import Review from './module/review.vue'
 
 import InboundDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
-import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 

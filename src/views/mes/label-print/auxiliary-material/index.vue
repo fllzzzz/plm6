@@ -108,7 +108,7 @@ import { componentTypeEnum, labelTypeEnum } from '@enum-ms/mes'
 import { QR_SCAN_F_TYPE } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { printAuxiliaryMaterial as printComponent } from '@/utils/print/index'
-import { enclosureLabelPM as permission } from '@/page-permission/mes'
+import { auxiliaryMaterialLabelPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -189,7 +189,7 @@ function getLabelInfo(row) {
     component,
     printConfig,
     manufacturerName: printConfig.manufacturerName || companyName,
-    qrCode: spliceQrCodeUrl(`${baseUrl}/#${QR_SCAN_PATH.AUXILIARY_MATERIAL}`, {
+    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.AUXILIARY_MATERIAL}`, {
       id: row.id, // id
       ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
       // factoryId: row.factoryId, // 工厂id

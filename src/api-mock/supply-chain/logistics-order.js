@@ -18,8 +18,16 @@ const getList = {
             'basicClass|1-16': 1, // 采购物料基础类型
             purchaseType: baseMaterialTypeEnum.RAW_MATERIAL.V, // 采购类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 系统物流编号
-            inboundSN: '21/11/25/R-001', // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            // 入库单号
+            inboundReceipt: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            // 采购单号
+            purchaseOrder: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             licensePlate: patternLicensePlate, // 车牌号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             logisticsTransportType: logisticsTransportTypeEnum.FREIGHT.V,
@@ -39,7 +47,7 @@ const getList = {
             inputVAT: 34.95, // 进项税
             remark: '@cparagraph', // 备注
             supplierId: 1, // 供应商id
-            founderName: '@cname', // 创建人（填写物流信息的人）
+            applicantName: '@cname', // 创建人（填写物流信息的人）
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间
@@ -51,8 +59,16 @@ const getList = {
             licensePlate: patternLicensePlate, // 车牌号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 订单编号
-            inboundSN: '21/11/25/R-002', // 入库单号
-            purchaseSN: 'CG-211125-123213', // 采购单号
+            // 入库单号
+            inboundReceipt: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            // 采购单号
+            purchaseOrder: {
+              id: 1,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
             logisticsTransportType: logisticsTransportTypeEnum.POST.V,
             'projects|2': [
               {
@@ -70,7 +86,7 @@ const getList = {
             inputVAT: 75.63, // 进项税
             remark: '@cparagraph', // 备注
             supplierId: 2, // 供应商id
-            founderName: '@cname', // 创建人
+            applicantName: '@cname', // 创建人
             createTime: '@datetime(T)', // 创建时间
             updateTime: '@datetime(T)', // 修改时间
             userUpdateTime: '@datetime(T)' // 用户修改时间

@@ -143,10 +143,10 @@
         </el-table-column>
       </template>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -227,7 +227,7 @@ import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
 
 import InboundDetail from '@/views/wms/report/raw-material/material-inbound-receipt/module/detail.vue'
-import purchaseOrderDetail from '@/views/wms/purchase-order/module/detail.vue'
+import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import checkPermission from '@/utils/system/check-permission'
@@ -245,7 +245,7 @@ const { crud, columns } = useCRUD(
   {
     title: '退货记录',
     sort: ['id.desc'],
-    invisibleColumns: ['founderName', 'reviewerName', 'createTime', 'reviewTime'],
+    invisibleColumns: ['applicantName', 'reviewerName', 'createTime', 'reviewTime'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { get, detail }

@@ -103,6 +103,8 @@
 
 <script setup>
 import crudApi, { editEnabled } from '@/api/config/wms/warehouse'
+import { configWmsFactoryWarehousePM as permission } from '@/page-permission/config'
+
 import { ref } from 'vue'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
@@ -110,21 +112,13 @@ import { warehouseTypeEnum } from '@enum-ms/wms'
 import { parseTime } from '@/utils/date'
 import checkPermission from '@/utils/system/check-permission'
 
+import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useCrudEnabledChange from '@compos/use-crud-enabled-change'
-import useMaxHeight from '@compos/use-max-height'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
 import mBatchForm from './module/batch-form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['config_wms_warehouse:get'],
-  add: ['config_wms_warehouse:add'],
-  edit: ['config_wms_warehouse:edit'],
-  del: ['config_wms_warehouse:del']
-}
 
 const optShow = {
   batchAdd: true,

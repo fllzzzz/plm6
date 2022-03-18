@@ -34,22 +34,17 @@
           label="编号"
           min-width="140px"
         >
-          <!-- <template slot="header">
-          <el-tooltip
-            class="item"
-            effect="light"
-            :content="`双击编号可预览图纸`"
-            placement="top"
-          >
-            <div style="display:inline-block;">
-              <span>编号</span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template> -->
+          <template #header>
+            <el-tooltip class="item" effect="light" :content="`双击编号可预览图纸`" placement="top">
+              <div style="display: inline-block">
+                <span>编号</span>
+                <i class="el-icon-info" />
+              </div>
+            </el-tooltip>
+          </template>
           <template v-slot="scope">
-            <span>{{ scope.row.serialNumber }}</span>
-            <!-- <span style="cursor: pointer;" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span> -->
+            <!-- <span>{{ scope.row.serialNumber }}</span> -->
+            <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -188,9 +183,9 @@
           min-width="120"
         />
         <el-table-column
-          v-if="columns.visible('createUser')"
-          key="createUser"
-          prop="createUser"
+          v-if="columns.visible('userName')"
+          key="userName"
+          prop="userName"
           :show-overflow-tooltip="true"
           label="上传人"
           min-width="110"
@@ -203,6 +198,13 @@
       </common-table>
       <!--分页组件-->
       <pagination />
+       <!-- pdf预览 -->
+      <drawing-pdf
+        v-model="showDrawing"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
     </template>
   </div>
 </template>
@@ -212,14 +214,17 @@ import crudApi from '@/api/plan/technical-manage/artifact'
 import { ref, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import useDrawing from '@compos/use-drawing'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { artifactPM as permission } from '@/page-permission/plan'
+import drawingPdf from '@comp-base/drawing-pdf.vue'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ARTIFACT' })
 
 const optShow = {
   add: false,

@@ -1,7 +1,14 @@
+import common from './common'
 import mes from './mes'
 import contract from './contract'
 
+const invoiceLedger = common.handleTaxRate
+const invoiceRecord = common.handleTaxRate
+const projectHappenedDetail = common.handleTaxRate
+
 const myProject = contract.durationCalculation
+const projectList = contract.durationCalculation
+const contractLedger = contract.handleRate
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -12,7 +19,9 @@ const mesStructureTeamWageDetail = mes.meteUnit
 const mesEnclosureTeamWageDetail = mes.meteUnit
 
 const mesStructureProductionStatistics = mes.unProducedMete
+const mesStructureProductionStatisticsIn = mes.productionStatisticsMete
 const mesEnclosureProductionStatistics = mes.unProducedMete
+const mesEnclosureProductionStatisticsIn = mes.productionStatisticsMete
 
 const mesUnfinishedList = mes.unCompleteMete
 const mesStructureProjectSummary = mes.projectSummary
@@ -23,7 +32,12 @@ const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
 export default {
+  invoiceLedger,
+  invoiceRecord,
+  projectHappenedDetail,
   myProject,
+  projectList,
+  contractLedger,
   mesStructureProcess,
   mesStructureProductionLine,
   mesStructureTeamWage,
@@ -37,5 +51,7 @@ export default {
   mesStructureProjectSummary,
   mesEnclosureProjectSummary,
   mesStructureProductionStatistics,
-  mesEnclosureProductionStatistics
+  mesStructureProductionStatisticsIn,
+  mesEnclosureProductionStatistics,
+  mesEnclosureProductionStatisticsIn
 }

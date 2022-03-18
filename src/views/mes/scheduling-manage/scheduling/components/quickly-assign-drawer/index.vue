@@ -22,9 +22,10 @@
             empty-text="暂无数据"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column fixed type="selection" width="55" align="center" />
-            <el-table-column fixed label="序号" type="index" align="center" width="60" />
-            <productType-full-info-columns
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column label="序号" type="index" align="center" width="60" />
+            <productType-base-info-columns :productType="productType" :category="category"></productType-base-info-columns>
+            <productType-spec-info-columns
               :productType="productType"
               :category="category"
               :unShowField="[
@@ -36,21 +37,19 @@
                 'weight',
                 'totalArea',
                 'totalLength',
-                'drawingNumber',
-                'remark',
               ]"
             />
-            <el-table-column key="unassignQuantity" fixed="right" prop="unassignQuantity" label="未分配" align="center" min-width="70px">
+            <el-table-column prop="unassignQuantity" label="未分配" align="center" min-width="70px">
               <template v-slot="scope">
                 <span style="color: #13ce66">{{ scope.row.unassignQuantity }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="assignQuantity" fixed="right" prop="assignQuantity" label="已分配" align="center" min-width="70px">
+            <el-table-column prop="assignQuantity" label="已分配" align="center" min-width="70px">
               <template v-slot="scope">
                 <span style="color: #e6a700">{{ scope.row.assignQuantity }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="quantity" fixed="right" prop="quantity" label="数量" align="center" min-width="70px" />
+            <el-table-column prop="quantity" label="数量" align="center" min-width="70px" />
           </common-table>
         </div>
         <div class="line-content" :style="{ 'max-height': `${maxHeight}px` }">
@@ -70,7 +69,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { computed, defineProps, defineEmits, ref, inject } from 'vue'
 
 import { deepClone } from '@data-type/index'
 
@@ -78,7 +77,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import productionLineBox from '../production-line-box'
 import mPreview from '../scheduling-preview'
-import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeSpecInfoColumns from '@comp-mes/table-columns/productType-spec-info-columns'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible', 'success'])
@@ -99,7 +99,7 @@ const props = defineProps({
 
 const productType = inject('productType')
 const category = inject('category', undefined)
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: handleDataChange, closeHook: init })
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -124,19 +124,6 @@ const submitData = ref([])
 
 const saveAble = computed(() => multipleSelection.value && multipleSelection.value.length > 0 && selectLineId.value)
 
-watch(
-  [() => props.visible, () => props.lines],
-  ([visible]) => {
-    if (visible) {
-      handleDataChange()
-    } else {
-      tableRef.value?.clearSelection()
-      multipleSelection.value = []
-    }
-  },
-  { immediate: true }
-)
-
 function submit() {
   handleSubmitData()
   previewVisible.value = true
@@ -146,11 +133,16 @@ function handleChange({ line }) {
   selectLineId.value = line.id
 }
 
+function init() {
+  tableRef.value?.clearSelection()
+  multipleSelection.value = []
+}
+
 function handleDataChange() {
   // 处理在录入的情况下打开快速分配
   let _data = deepClone(props.data) || []
   _data = _data.filter((v) => {
-    return v.unassignQuantity
+    return v.unassignQuantity && !v.boolAbnormalEnum
   })
   assignAbleList.value = _data.map((v) => {
     v.schedulingMap = v.sourceSchedulingMap && deepClone(v.sourceSchedulingMap)
@@ -158,7 +150,6 @@ function handleDataChange() {
     v.unassignQuantity = v.sourceUnassignQuantity // 未分配数量还原
     return v
   })
-  console.log(assignAbleList, 'assignAbleList')
 }
 
 function handleSubmitData() {

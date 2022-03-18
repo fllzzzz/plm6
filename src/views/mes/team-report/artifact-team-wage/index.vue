@@ -8,8 +8,10 @@
 
 <script setup>
 import { provide } from 'vue'
+import { artifactTeamWagePM as permission } from '@/page-permission/mes'
 import teamWage from '../components/team-wage/index.vue'
 import mHeader from './module/header.vue'
 
 provide('name', '结构')
+provide('permission', permission)
 </script>

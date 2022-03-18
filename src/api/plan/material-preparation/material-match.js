@@ -1,4 +1,3 @@
-
 import request from '@/utils/request'
 
 /**
@@ -11,6 +10,21 @@ export function getMatchSteelPlateList(params) {
     module: 'wms',
     url: 'material-preparation/match/steel-plate',
     method: 'get',
+    cancelKey: false,
+    params
+  })
+}
+
+/**
+ * 加载型材匹配列表
+ * @param {*} params
+ */
+export function getMatchSectionSteelList(params) {
+  return request({
+    module: 'wms',
+    url: 'material-preparation/match/section-steel',
+    method: 'get',
+    cancelKey: false,
     params
   })
 }

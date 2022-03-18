@@ -72,7 +72,7 @@ const defaultForm = {
   id: undefined,
   label: undefined,
   sort: undefined,
-  name: '',
+  name: undefined,
   type: undefined,
   dictionaryDetail: {
     id: undefined,

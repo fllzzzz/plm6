@@ -5,7 +5,7 @@
         <print-table
           v-permission="permission.print"
           api-key="mesStructureProductionStatistics"
-          :params="{ ...query  }"
+          :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
@@ -19,6 +19,7 @@
         :summary-method="getSummaries"
         :data="list"
         :max-height="maxHeight"
+        row-key="rowId"
         id="groupArtifactTable"
         style="width: 100%"
       >
@@ -71,7 +72,7 @@
         </el-table-column>
         <el-table-column :label="`已完成(${showUnit})`" align="center">
           <template #header>
-            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick(reportEnum.COMPLETE.V)">
               已完成({{ showUnit }})
             </common-button>
           </template>
@@ -102,7 +103,7 @@
         </el-table-column>
         <el-table-column :label="`在制品(${showUnit})`" align="center">
           <template #header>
-            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick(reportEnum.IN_PRODUCTION.V)">
               在制品({{ showUnit }})
             </common-button>
           </template>
@@ -133,7 +134,7 @@
         </el-table-column>
         <el-table-column :label="`未生产(${showUnit})`" align="center">
           <template #header>
-            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick">
+            <common-button size="mini" type="text" style="margin-left: 5px" @click="handleHeaderClick(reportEnum.UN_PRODUCTION.V)">
               未生产({{ showUnit }})
             </common-button>
           </template>
@@ -163,7 +164,7 @@
           </el-table-column>
         </el-table-column>
       </common-table>
-      <m-detail v-model:visible="detailVisible"></m-detail>
+      <m-detail v-model:visible="detailVisible" :reportType="reportType"></m-detail>
     </template>
   </common-drawer>
 </template>
@@ -174,8 +175,10 @@ import { defineProps, defineEmits, ref, watch, inject, nextTick } from 'vue'
 
 import { DP } from '@/settings/config'
 import { toFixed } from '@data-type/index'
+import { tableSummary } from '@/utils/el-extra'
 // import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
+import { inProductionDetailReportEnum as reportEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -208,6 +211,7 @@ const query = inject('query')
 const permission = inject('permission')
 const tableLoading = ref(false)
 const list = ref([])
+const reportType = ref()
 
 // 设置表头合并
 function setColSpan() {
@@ -226,33 +230,15 @@ function setColSpan() {
 }
 
 function getSummaries(param) {
-  const { columns, data } = param
-  const sums = []
-  columns.forEach((column, index) => {
-    if (index === 0) {
-      sums[index] = '合计'
-      return
-    }
-    if (index > 4) {
-      const values = data.map((item) => Number(item[column.property]))
-      if (!values.every((value) => isNaN(value))) {
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            return prev + curr
-          } else {
-            return prev
-          }
-        }, 0)
-      }
-    }
+  return tableSummary(param, {
+    props: ['taskQuantity', ['taskMete', DP.COM_WT__KG], 'completeQuantity', ['completeMete', DP.COM_WT__KG], 'inProductionQuantity', ['inProductionMete', DP.COM_WT__KG], 'unProducedQuantity', ['unProducedMete', DP.COM_WT__KG]]
   })
-  return sums
 }
 
 const detailVisible = ref(false)
 
-function handleHeaderClick() {
+function handleHeaderClick(type) {
+  reportType.value = type
   detailVisible.value = true
 }
 
@@ -277,7 +263,8 @@ async function fetchList() {
   try {
     tableLoading.value = true
     const { artifactAnalysisList } = await detail(query)
-    list.value = artifactAnalysisList.map((v) => {
+    list.value = artifactAnalysisList.map((v, i) => {
+      v.rowId = i + '' + Math.random()
       v.taskMete = toFixed(v.taskNetWeight, DP.COM_WT__KG)
       v.completeMete = toFixed(v.completeNetWeight, DP.COM_WT__KG)
       v.inProductionMete = toFixed(v.inProductionNetWeight, DP.COM_WT__KG)

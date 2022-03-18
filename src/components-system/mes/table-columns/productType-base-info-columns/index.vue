@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentView" :columns="columns" :category="category" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField">
+  <component :is="currentView" :columns="columns" :category="category" :fixed="fixed" :fixedWidth="fixedWidth" :unShowField="unShowField" :snClickable="snClickable" @drawingPreview="drawingPreview">
     <template #snPrefix="{ row }">
       <slot name="snPrefix" :row="row"></slot>
     </template>
@@ -10,13 +10,15 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, defineEmits } from 'vue'
 import { componentTypeEnum } from '@enum-ms/mes'
 import artifact from './module/artifact'
 import machinePart from './module/machine-part'
 import enclosure from './module/enclosure'
 import assemble from './module/assemble'
 import auxiliaryMaterial from './module/auxiliary-material'
+
+const emit = defineEmits(['drawingPreview'])
 
 const props = defineProps({
   productType: {
@@ -39,6 +41,11 @@ const props = defineProps({
   },
   fixedWidth: {
     type: Boolean
+  },
+  // 编号可点击预览
+  snClickable: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -58,4 +65,8 @@ const currentView = computed(() => {
       return ''
   }
 })
+
+function drawingPreview(row) {
+  emit('drawingPreview', row)
+}
 </script>

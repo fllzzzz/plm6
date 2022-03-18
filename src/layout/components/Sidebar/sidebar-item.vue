@@ -161,7 +161,7 @@ const lastChild = computed(() => {
 
 // 判断是否只有一个需要显示的节点
 const isOnlyOne = computed(() => {
-  return isNotBlank(lastChild.value) && !props.item.alwaysShow
+  return isNotBlank(lastChild.value) && !props.item.alwaysShow && !lastChild.value?.children?.length
 })
 
 // 子节点需要项目

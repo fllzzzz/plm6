@@ -60,6 +60,10 @@ defineProps({
     type: Boolean,
     default: false
   },
+  snClickable: {
+    type: Boolean,
+    default: false
+  },
   // 围护子类型
   category: {
     type: Number

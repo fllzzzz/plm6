@@ -217,19 +217,25 @@ function rowWatch(row) {
 // 总重计算与单位重量计算分开，避免修改数量时需要重新计算单件重量
 // 计算单件重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSectionSteelWeight({
-    length: row.length, // 长度
-    unitWeight: row.unitWeight // 单位重量
-  })
+  row.theoryWeight = await calcSectionSteelWeight(
+    {
+      length: row.length, // 长度
+      unitWeight: row.unitWeight // 单位重量
+    },
+    false
+  )
 }
 
 // 计算总长
 function calcTotalLength(row) {
   if (isNotBlank(row.length) && row.quantity) {
-    row.totalLength = calcSectionSteelTotalLength({
-      length: row.length, // 长度
-      quantity: row.quantity // 数量
-    })
+    row.totalLength = calcSectionSteelTotalLength(
+      {
+        length: row.length, // 长度
+        quantity: row.quantity // 数量
+      },
+      false
+    )
   } else {
     row.totalLength = undefined
   }

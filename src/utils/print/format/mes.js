@@ -36,6 +36,23 @@ function productionLineMete({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 在制品统计详情的量和工序完成数
+function productionStatisticsMete({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.processSequence = row.processSummaryList.map((o) => {
+      return `【${o.name}│${o.inspectionQuantity || 0}】`
+    }).join(' ')
+
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 // 结构工序的量和未完成数
 function processMete({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
@@ -301,6 +318,7 @@ function steelDosageFormat({ header, table = [], footer, qrCode }) {
 
 export default {
   productionLineMete,
+  productionStatisticsMete,
   processMete,
   meteUnit,
   surfaceArea,

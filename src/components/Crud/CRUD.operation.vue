@@ -5,7 +5,7 @@
       <slot name="optLeft" />
       <common-button
         v-if="crud.optShow.batchAdd"
-        v-permission="permission.batchAdd"
+        v-permission="permission.add"
         class="filter-item"
         size="mini"
         type="primary"
@@ -191,6 +191,7 @@ function handleCheckAllChange(val) {
 function handleCheckedTableColumnsChange(item) {
   let totalCount = 0
   let selectedCount = 0
+  // TODO: object.key
   for (const key in crud.tableColumns) {
     if (key !== 'visible') {
       ++totalCount

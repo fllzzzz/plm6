@@ -309,6 +309,16 @@ function toggleRowExpansion(row, expanded) {
   tableRef.value.toggleRowExpansion(row, expanded)
 }
 
+// 解决树形结构打开子节点所有父节点expanded:false收回
+function expandParent(row, expanded) {
+  if (row.parentArray && row.parentArray.length > 0) {
+    row.parentArray.forEach(v => {
+      tableRef.value.store.states.treeData.value[v].expanded = true
+    })
+  }
+  tableRef.value.toggleRowExpansion(row, expanded)
+}
+
 function setCurrentRow(row) {
   tableRef.value.setCurrentRow(row)
 }
@@ -433,6 +443,7 @@ defineExpose({
   toggleRowSelection,
   toggleAllSelection,
   toggleRowExpansion,
+  expandParent,
   setCurrentRow,
   clearSort,
   clearFilter,

@@ -182,7 +182,6 @@ function menuSelected(value) {
   choseMenu.value = value
   form.pid = value.id
   form.pName = value.label
-  form.category = value.category
   menuVisible.value = false
 }
 
@@ -225,7 +224,6 @@ CRUD.HOOK.afterToEdit = (crud, form) => {
     arrFn(menuTreeData.value)
     const value = allMenu.find(v => v.id === form.pid)
     form.pName = value.label
-    form.category = value.category
   }
 }
 </script>

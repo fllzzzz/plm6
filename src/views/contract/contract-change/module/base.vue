@@ -106,7 +106,7 @@
         <upload-list
           :show-download="true"
           :file-classify="fileClassifyEnum.CONTRACT_ATT.V"
-          v-model:files="detail.attachmentFiles"
+          v-model:files="detail.attachments"
           :download-fn="downloadBaseAttachments"
           :uploadable="false"
           empty-text="暂未上传合同附件"

@@ -16,7 +16,7 @@
     <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
     <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" :show-overflow-tooltip="true" label="订单号" width="80" align="center" fixed="left">
       <template v-slot="scope">
-        <span>{{ scope.row.projectType? projectTypeEnumN.VL[scope.row.projectType]: '-' }}</span>
+        <span>{{ scope.row.projectType? projectTypeEnum.VL[scope.row.projectType]: '-' }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('signingDate')" key="signingDate" prop="signingDate" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
@@ -88,21 +88,22 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/contract-ledger'
+import crudApi from '@/api/contract/supplier-manage/material-manage'
 import { ref } from 'vue'
+import { contractSupplierMaterialPM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { projectTypeEnumN, projectStatusEnum } from '@enum-ms/contract'
+import { projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import stockAmount from './module/stock-amount'
 import contractMoney from './module/contract-money'
 import receiveAndInvoice from './module/receive-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
-import { contractLedgerPM as permission } from '@/page-permission/contract'
 
 const { currentProjectType } = mapGetters(['currentProjectType'])
 
@@ -137,12 +138,10 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-// function openContractMoney(row) {
-//   currentProjectId.value = row
-//   moneyVisible.value = true
-// }
-
 function openStockAmount(row) {
+  if (!checkPermission(permission.inbound.get)) {
+    return
+  }
   currentProjectId.value = row
   stockVisible.value = true
 }

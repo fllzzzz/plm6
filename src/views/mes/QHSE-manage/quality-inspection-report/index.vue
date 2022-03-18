@@ -52,7 +52,7 @@
           <span class="tc-danger">{{ row.qhseQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100px" align="center" fixed="right">
+      <el-table-column label="操作" v-permission="permission.detail" width="100px" align="center" fixed="right">
         <template #default="{ row }">
           <common-button size="mini" type="primary" @click="showDetail(row)">查看</common-button>
         </template>
@@ -68,19 +68,13 @@
 import crudApi from '@/api/mes/QHSE-manage/quality-inspection-report'
 import { provide, ref } from 'vue'
 
+import { qualityInspectionReportPM as permission } from '@/page-permission/mes'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mDetail from './module/detail'
-
-// crud交由presenter持有
-const permission = {
-  get: [''],
-  edit: [''],
-  add: [''],
-  del: ['']
-}
 
 const optShow = {
   add: false,

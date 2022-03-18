@@ -9,9 +9,11 @@
     :before-close="handleClose"
   >
     <template #titleRight>
-      <common-button v-show="isEditMode" size="mini" type="primary" @click="preview">保存预览</common-button>
-      <common-button v-show="isEditMode" size="mini" type="danger" @click="handleCancelEdit">退出编辑</common-button>
-      <common-button v-show="!isEditMode" size="mini" type="primary" @click="isEditMode = true">编辑</common-button>
+      <span v-permission="permission.edit">
+        <common-button v-show="isEditMode" size="mini" type="primary" @click="preview">保存预览</common-button>
+        <common-button v-show="isEditMode" size="mini" type="danger" @click="handleCancelEdit">退出编辑</common-button>
+        <common-button v-show="!isEditMode" size="mini" type="primary" @click="isEditMode = true">编辑</common-button>
+      </span>
     </template>
     <template #content>
       <div class="class-unit-config">
@@ -220,10 +222,15 @@ const props = defineProps({
   visible: {
     type: Boolean,
     default: false
+  },
+  permission: {
+    type: Object,
+    default: () => {}
   }
 })
 
 const sourceMap = inject('sourceMap')
+const permission = inject('permission')
 
 const drawerRef = ref()
 const list = ref([])

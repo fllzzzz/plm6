@@ -171,7 +171,7 @@
       <el-table-column label="操作" width="130px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" v-permission="permission.detail" @click="openDetail(scope.row, 'detail')"/>
-          <common-button icon="el-icon-s-check" type="primary" size="mini" v-permission="permission.audit" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V"/>
+          <common-button icon="el-icon-s-check" type="primary" size="mini" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V && checkPermission(permission.audit)"/>
         </template>
       </el-table-column>
     </common-table>
@@ -191,6 +191,8 @@
 <script setup>
 import crudApi from '@/api/contract/change-audit-log'
 import { ref } from 'vue'
+import { contractChangePM as permission } from '@/page-permission/contract'
+import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -203,7 +205,6 @@ import variationOrder from '../info/variation-order'
 import settleForm from '../info/settle-form'
 import contractInfo from './module/contractInfo'
 import { projectNameFormatter } from '@/utils/project'
-import { contractChangePM as permission } from '@/page-permission/contract'
 
 const optShow = {
   add: false,

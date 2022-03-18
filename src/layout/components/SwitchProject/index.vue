@@ -7,7 +7,7 @@
       :all-val="allPT"
       :disabled-val="disabledTypeArr"
       show-option-all
-      type="enum"
+      type="enumSL"
       size="medium"
       placeholder="项目类型"
       class="project-type-select"

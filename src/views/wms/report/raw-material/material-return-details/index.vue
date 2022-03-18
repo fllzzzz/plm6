@@ -17,7 +17,6 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
         <template #default="{ row }">
           <expand-secondary-info v-if="!basicClass" :basic-class="row.basicClass" :row="row" />
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
         </template>
       </el-expand-table-column>
       <!-- 基础信息 -->
@@ -86,10 +85,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('returnReceipt.founderName')"
-        key="returnReceipt.founderName"
+        v-if="columns.visible('returnReceipt.applicantName')"
+        key="returnReceipt.applicantName"
         :show-overflow-tooltip="true"
-        prop="returnReceipt.founderName"
+        prop="returnReceipt.applicantName"
         label="申请人"
         align="center"
         min-width="100"
@@ -187,7 +186,7 @@ const { CRUD, crud, columns } = useCRUD(
     title: '退库明细',
     sort: ['id.desc'],
     invisibleColumns: [
-      'returnReceipt.founderName',
+      'returnReceipt.applicantName',
       'returnReceipt.reviewerName',
       'returnReceipt.createTime',
       'returnReceipt.reviewTime',

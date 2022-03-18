@@ -43,10 +43,10 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('founderName')"
-        key="founderName"
+        v-if="columns.visible('applicantName')"
+        key="applicantName"
         :show-overflow-tooltip="true"
-        prop="founderName"
+        prop="applicantName"
         label="操作人"
         align="center"
         width="90"
@@ -79,11 +79,11 @@
 <script setup>
 import crudApi from '@/api/wms/material-transfer/raw-material/party-a-buy-in'
 import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
+import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -117,7 +117,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供买入',
     sort: ['id.desc'],
-    invisibleColumns: ['heatNoAndBatchNo', 'project', 'warehouse', 'invoiceType', 'taxRate', 'transferSN', 'founderName'],
+    invisibleColumns: ['heatNoAndBatchNo', 'project', 'warehouse', 'invoiceType', 'taxRate', 'transferSN', 'applicantName'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi }

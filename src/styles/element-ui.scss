@@ -65,7 +65,7 @@
   transform: none;
   left: 0;
   position: relative;
-  margin: 0 auto;
+  // margin: 0 auto;
 }
 
 // refine element ui upload
@@ -157,6 +157,7 @@
 
 .el-popper {
   white-space: pre-line;
+  max-width: calc(100% - 80px) !important;
 }
 
 // .el-form-item__label {
@@ -348,6 +349,13 @@ body .el-table th.gutter {
 .el-select {
   .el-input.is-disabled .el-select__caret {
     cursor: not-allowed;
+  }
+}
+
+.select-mini {
+  .el-input--mini .el-input__inner {
+    height: 30px;
+    line-height: 30px;
   }
 }
 

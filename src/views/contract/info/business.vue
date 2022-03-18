@@ -71,7 +71,7 @@
                 <common-select
                   v-if="isModify"
                   v-model="form.projectType"
-                  :options="projectTypeEnumN.ENUM"
+                  :options="projectTypeEnum.ENUM"
                   type="enum"
                   size="small"
                   clearable
@@ -79,7 +79,7 @@
                   style="width: 200px"
                   class="input-underline"
                 />
-                <span v-else>{{ detail.projectType? projectTypeEnumN.VL[detail.projectType]: '-' }}</span>
+                <span v-else>{{ detail.projectType? projectTypeEnum.VL[detail.projectType]: '-' }}</span>
               </div>
             </el-form-item>
             <el-form-item label="签约人" prop="signerId">
@@ -264,7 +264,7 @@ import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElRadioGroup } from 'element-plus'
 import {
-  projectTypeEnumN,
+  projectTypeEnum,
   businessTypeEnum,
   paymentModeEnum,
   invoiceTypeEnum,
@@ -315,7 +315,7 @@ const defaultForm = {
 }
 const techForm = {
   enclosureInfo: {},
-  structureSaveRequestVOS: [],
+  structureList: [],
   profiledPlateList: [],
   pressureBearingPlateList: [],
   trussFloorPlateList: [],

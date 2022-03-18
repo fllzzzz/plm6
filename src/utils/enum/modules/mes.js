@@ -151,6 +151,13 @@ const shipAuditStatusEnum = {
 }
 constantize(shipAuditStatusEnum)
 
+// 变更异常方式状态
+const abnormalHandleTypeEnum = {
+  PRODUCTION_CHANGE: { K: 'PRODUCTION_CHANGE', L: '生产变更', V: 2 },
+  SCHEDULE_CHANGE: { K: 'SCHEDULE_CHANGE', L: '排产变更', V: 1 }
+}
+constantize(abnormalHandleTypeEnum)
+
 // 变更异常处理状态
 const abnormalHandleStatusEnum = {
   PENDING: { L: '待处理', K: 'PENDING', V: 1 << 0, TAG: '' },
@@ -174,6 +181,13 @@ const abnormalReportTypeEnum = {
   ABNORMAL: { L: '异常上报', K: 'ABNORMAL', V: 1 }
 }
 constantize(abnormalReportTypeEnum)
+
+// 异常状态
+const abnormalStatusEnum = {
+  NORMAL: { L: '正常', K: 'NORMAL', V: false },
+  ABNORMAL: { L: '暂停', K: 'ABNORMAL', V: true }
+}
+constantize(abnormalStatusEnum)
 
 // 变更变更类型状态
 const abnormalChangeTypeEnum = {
@@ -228,6 +242,14 @@ const printProductTypeEnum = {
 }
 constantize(printProductTypeEnum)
 
+// 在制品详情报表类型
+const inProductionDetailReportEnum = {
+  COMPLETE: { L: '完成品', K: 'COMPLETE', V: 1 << 0 },
+  IN_PRODUCTION: { L: '在制品', K: 'IN_PRODUCTION', V: 1 << 1 },
+  UN_PRODUCTION: { L: '未生产', K: 'UN_PRODUCTION', V: 1 << 2 }
+}
+constantize(inProductionDetailReportEnum)
+
 export {
   teamTypeEnum,
   teamAttributeEnum,
@@ -245,9 +267,11 @@ export {
   receiptStatusEnum,
   logisticsPriceTypeEnum,
   shipAuditStatusEnum,
+  abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
+  abnormalStatusEnum,
   improveStatusEnum,
   projectComponentTypeEnum,
   artifactProcessEnum,
@@ -255,7 +279,8 @@ export {
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
-  surplusHandleStatusEnum
+  surplusHandleStatusEnum,
+  inProductionDetailReportEnum
 }
 
 export default {
@@ -275,9 +300,11 @@ export default {
   receiptStatusEnum,
   logisticsPriceTypeEnum,
   shipAuditStatusEnum,
+  abnormalHandleTypeEnum,
   abnormalHandleStatusEnum,
   abnormalReportTypeEnum,
   abnormalChangeTypeEnum,
+  abnormalStatusEnum,
   improveStatusEnum,
   projectComponentTypeEnum,
   artifactProcessEnum,
@@ -285,5 +312,6 @@ export default {
   reportComponentTypeEnum,
   labelTypeEnum,
   printProductTypeEnum,
-  surplusHandleStatusEnum
+  surplusHandleStatusEnum,
+  inProductionDetailReportEnum
 }

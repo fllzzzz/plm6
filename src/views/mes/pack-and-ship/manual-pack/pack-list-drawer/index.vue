@@ -341,7 +341,7 @@ function getSummaries(param) {
 </script>
 
 <style>
-.manual-pack-list.el-table .el-table__cell.is-hidden > *{
+.manual-pack-list.el-table .el-table__cell.is-hidden > * {
   visibility: visible;
 }
 </style>

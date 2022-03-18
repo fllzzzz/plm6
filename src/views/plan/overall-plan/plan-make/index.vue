@@ -83,7 +83,7 @@
             <common-button type="warning" size="mini" @click="handelModifying(scope.row,false)">取消</common-button>
             <common-button type="success" size="mini" @click="submit(scope.row)">保存</common-button>
           </template>
-          <common-button v-else type="primary" size="mini" @click="handelModifying(scope.row, true)" v-permission="[...permission.edit]">编辑</common-button>
+          <common-button v-else type="primary" size="mini" @click="handelModifying(scope.row, true)" v-permission="permission.edit">编辑</common-button>
         </template>
       </el-table-column>
     </common-table>

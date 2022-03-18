@@ -43,22 +43,22 @@
       />
     </template>
     <template v-slot:viewLeft>
-      <!-- <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
+      <el-tag v-permission="permission.get" effect="plain" class="filter-item" size="medium">
         累计生产量：
         <slot v-if="!summaryLoading" name="summaryText" :summary="summaryData"></slot>
         <i v-else class="el-icon-loading" />
-      </el-tag> -->
+      </el-tag>
     </template>
   </crudOperation>
 </template>
 
 <script setup>
-import { inject, defineProps } from 'vue'
+import { inject, ref, defineProps } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
-// import checkPermission from '@/utils/system/check-permission'
-// import { convertUnits } from '@/utils/convert/unit'
-// import { DP } from '@/settings/config'
+import checkPermission from '@/utils/system/check-permission'
+import { convertUnits } from '@/utils/convert/unit'
+import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -101,27 +101,27 @@ function handleDateChange() {
 }
 
 CRUD.HOOK.afterToQuery = () => {
-  // fetchSummary()
+  fetchSummary()
 }
 
-// const summaryData = ref({})
-// const summaryLoading = ref(false)
-// const getSummaryApi = inject('getSummaryApi')
+const summaryData = ref({})
+const summaryLoading = ref(false)
+const getSummaryApi = inject('getSummaryApi')
 
-// async function fetchSummary() {
-//   if (!checkPermission(permission.get)) {
-//     return
-//   }
-//   try {
-//     summaryLoading.value = true
-//     const _data = await getSummaryApi(query)
-//     _data.totalArea = convertUnits(_data.totalArea, 'mm²', '㎡', DP.COM_AREA__M2)
-//     _data.totalLength = convertUnits(_data.totalLength, 'mm', 'm', DP.COM_L__M)
-//     summaryData.value = _data
-//   } catch (error) {
-//     console.log('获取汇总信息', error)
-//   } finally {
-//     summaryLoading.value = false
-//   }
-// }
+async function fetchSummary() {
+  if (!checkPermission(permission.get)) {
+    return
+  }
+  try {
+    summaryLoading.value = true
+    const _data = await getSummaryApi(query)
+    _data.totalArea = convertUnits(_data.totalArea, 'mm²', '㎡', DP.COM_AREA__M2)
+    _data.totalLength = convertUnits(_data.totalLength, 'mm', 'm', DP.COM_L__M)
+    summaryData.value = _data
+  } catch (error) {
+    console.log('获取汇总信息', error)
+  } finally {
+    summaryLoading.value = false
+  }
+}
 </script>

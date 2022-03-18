@@ -72,12 +72,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useTableChange from '@compos/form/use-table-change'
 import checkPermission from '@/utils/system/check-permission'
-
-// // crud交由presenter持有
-const permission = {
-  get: ['config_numberConfig:get'],
-  edit: ['config_numberConfig:edit']
-}
+import { numberConfigPM as permission } from '@/page-permission/config'
 
 const sourceMap = new Map([
   ['code', 'sourceCode'],
@@ -169,7 +164,7 @@ const saveAll = debounce(
   async function (row) {
     const params = getParams()
     if (!params.length) {
-      this.closeEditAll()
+      closeEditAll()
       return
     }
     if (!crud.data.every(v => !!v.code)) {

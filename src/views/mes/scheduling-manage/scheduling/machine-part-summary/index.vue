@@ -13,7 +13,6 @@
       style="width: 100%"
       row-key="rowId"
       @selection-change="crud.selectionChangeHandler"
-      @sort-change="crud.handleSortChange"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column

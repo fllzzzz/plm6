@@ -50,7 +50,7 @@
         <span>{{ scope.row.quantity }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="!isShow" label="操作" align="center" fixed="right">
+    <el-table-column v-if="!isShow" label="操作" align="center">
       <template v-slot="scope">
         <common-button size="small" class="el-icon-edit" type="primary" @click="editRow(scope.$index,scope.row)" />
         <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />

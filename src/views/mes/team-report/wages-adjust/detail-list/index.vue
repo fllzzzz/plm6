@@ -40,7 +40,7 @@
           />
         </template>
       </productType-spec-info-columns>
-      <el-table-column align="center" prop="prop" label="操作" width="110">
+      <el-table-column v-permission="permission.edit" align="center" prop="prop" label="操作" width="110">
         <template #default="{ row }">
           <common-button type="primary" size="mini" @click="handleSingleEdit(row)">工价调整</common-button>
         </template>
@@ -53,10 +53,9 @@
 
 <script setup>
 import crudApi from '@/api/mes/team-report/wages-adjust/detail'
-import { ref, defineProps, defineExpose, defineEmits, computed, watch } from 'vue'
+import { ref, defineProps, defineExpose, defineEmits, inject, computed, watch } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { wagesAdjustPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -66,6 +65,8 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 
 const emit = defineEmits(['setInfo', 'clearInfo'])
+
+const permission = inject('permission')
 
 const props = defineProps({
   fQuery: {
@@ -79,7 +80,7 @@ const props = defineProps({
 })
 
 const productType = computed(() => {
-  return props.fQuery?.productType || componentTypeEnum.ASSEMBLE.V
+  return props.fQuery?.productType || componentTypeEnum.MACHINE_PART.V
 })
 
 watch(

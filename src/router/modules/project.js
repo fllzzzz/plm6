@@ -1,6 +1,6 @@
 // 路由：项目管理
 export default {
-  id: 7,
+  id: 10,
   name: '项目管理',
   children: [
     {

@@ -32,6 +32,69 @@ export default {
           hidden: false,
           component: '/config-manage/project-config/number-config/index',
           meta: { title: '编号配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'CommonTaxRate',
+          path: 'common-tax-rate',
+          hidden: false,
+          component: '/config-manage/main/common-tax-rate/index',
+          meta: { title: '常用税率', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ExpenseManagement',
+          path: 'expense-management',
+          hidden: false,
+          component: '/config-manage/system/expense-management/index',
+          meta: { title: '费用归类', icon: 'project', noCache: true }
+        },
+        {
+          name: 'BranchCompany',
+          path: 'branch-company',
+          hidden: false,
+          component: '/config-manage/system/branch-company/index',
+          meta: { title: '分支机构', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ProjectMode',
+          path: 'project-mode',
+          hidden: false,
+          component: '/config-manage/system/project-mode/index',
+          meta: { title: '项目模式', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ArtifactConfig',
+          path: 'artifact-config',
+          hidden: false,
+          component: '/config-manage/system/artifact-config/index',
+          meta: { title: '组立配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MachinePartConfig',
+          path: 'machine-part-config',
+          hidden: false,
+          component: '/config-manage/system/machine-part/index',
+          meta: { title: '零件配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SteelClassic',
+          path: 'steel-classic',
+          hidden: false,
+          component: '/config-manage/system/steel-classic/index',
+          meta: { title: '钢材配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ChangeReason',
+          path: 'change-reason',
+          hidden: false,
+          component: '/config-manage/system/change-reason-config/index',
+          meta: { title: '变更原因配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'TablePrinting',
+          path: 'table-printing',
+          hidden: false,
+          component: '/config-manage/system/table-print-template/index',
+          meta: { title: '表格模板', icon: 'project', noCache: true }
         }
       ]
     },
@@ -88,7 +151,7 @@ export default {
           path: 'section-steel-specification-config',
           hidden: false,
           component: '/config-manage/classification-manage/section-steel-specification-config/index',
-          meta: { title: '型材库', icon: 'warehouse', noCache: true }
+          meta: { title: '型材库', icon: 'project', noCache: true }
         }
         // {
         //   name: 'OutboundMethod',
@@ -113,7 +176,7 @@ export default {
       name: 'WMSConfig',
       alwaysShow: false,
       redirect: '/config-manage/wms/base',
-      meta: { title: 'WMS配置管理', icon: 'config-2', noCache: true },
+      meta: { title: 'WMS-配置管理', icon: 'config-2', noCache: true },
       children: [
         {
           name: 'WmsBaseConfig',
@@ -127,21 +190,14 @@ export default {
           path: 'warehouse',
           hidden: false,
           component: '/config-manage/wms/warehouse/index',
-          meta: { title: '仓库设置', icon: 'Steve-Jobs', noCache: true }
+          meta: { title: '仓库设置', icon: 'project', noCache: true }
         },
         {
           name: 'ScrapDefinition',
           path: 'scrap-definition',
           hidden: false,
           component: '/config-manage/wms/scrap-definition/index',
-          meta: { title: '废料定义', icon: 'Steve-Jobs', noCache: true }
-        },
-        {
-          name: 'CommonTaxRate',
-          path: 'common-tax-rate',
-          hidden: false,
-          component: '/config-manage/wms/common-tax-rate/index',
-          meta: { title: '常用税率', icon: 'Steve-Jobs', noCache: true }
+          meta: { title: '废料定义', icon: 'project', noCache: true }
         }
       ]
     },
@@ -225,73 +281,6 @@ export default {
           hidden: false,
           component: '/config-manage/contract/setting-config/info-manage/index',
           meta: { title: '项目成员配置', icon: 'project', noCache: true }
-        }
-      ]
-    },
-    {
-      path: '/system/base-config',
-      component: 'Layout',
-      hidden: false,
-      name: 'SystemConfig',
-      alwaysShow: true,
-      redirect: '/system/base-config/expense-management',
-      meta: { title: '系统配置', icon: 'config-2', noCache: true },
-      children: [
-        {
-          name: 'ExpenseManagement',
-          path: 'expense-management',
-          hidden: false,
-          component: '/config-manage/system/expense-management/index',
-          meta: { title: '费用归类', icon: 'tax', noCache: true }
-        },
-        {
-          name: 'BranchCompany',
-          path: 'branch-company',
-          hidden: false,
-          component: '/config-manage/system/branch-company/index',
-          meta: { title: '分支机构', icon: 'project', noCache: true }
-        },
-        {
-          name: 'ProjectMode',
-          path: 'project-mode',
-          hidden: false,
-          component: '/config-manage/system/project-mode/index',
-          meta: { title: '项目模式', icon: 'project', noCache: true }
-        },
-        {
-          name: 'artifactConfig',
-          path: 'artifact-config',
-          hidden: false,
-          component: '/config-manage/system/artifact-config/index',
-          meta: { title: '组立配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'MachinePartConfig',
-          path: 'machine-part-config',
-          hidden: false,
-          component: '/config-manage/system/machine-part/index',
-          meta: { title: '零件配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'SteelClassic',
-          path: 'steel-classic',
-          hidden: false,
-          component: '/config-manage/system/steel-classic/index',
-          meta: { title: '钢材配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'ChangeReason',
-          path: 'change-reason',
-          hidden: false,
-          component: '/config-manage/system/change-reason-config/index',
-          meta: { title: '变更原因配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'TablePrinting',
-          path: 'table-printing',
-          hidden: false,
-          component: '/config-manage/system/table-print-template/index',
-          meta: { title: '表格模板', icon: 'project', noCache: true }
         }
       ]
     }

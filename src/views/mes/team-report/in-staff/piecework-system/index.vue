@@ -40,7 +40,7 @@ import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
 import { ref, provide, defineProps } from 'vue'
 
 import { teamAttributeEnum } from '@enum-ms/mes'
-import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
+// import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 import { arr2obj } from '@/utils/convert/type'
 import { deepClone } from '@data-type/index'
 
@@ -63,6 +63,10 @@ const optShow = {
   edit: false,
   del: false,
   download: false
+}
+
+const permission = {
+  get: []
 }
 
 const tableRef = ref()

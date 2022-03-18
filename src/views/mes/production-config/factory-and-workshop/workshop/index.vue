@@ -5,7 +5,7 @@
       <el-tag v-if="factory && factory.name" type="success">{{ factory.name }}</el-tag>
       <!-- 新增 -->
       <common-button
-        v-permission="permission.add"
+        v-if="checkPermission(permission.add)"
         :disabled="!factoryId"
         class="filter-item"
         style="float: right; padding: 6px 10px"
@@ -187,11 +187,11 @@ async function changeStatus(data, val) {
 }
 
 CRUD.HOOK.beforeToQuery = () => {
-  crud.query.factoryId = factoryId
+  crud.query.factoryId = factoryId.value
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.factoryId = factoryId
+  crud.form.factoryId = factoryId.value
 }
 
 // 编辑之后 取消缓存的已加载设置

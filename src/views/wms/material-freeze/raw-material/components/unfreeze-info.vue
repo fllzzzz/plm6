@@ -34,7 +34,7 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
       <warehouse-info-columns show-project />
-      <el-table-column key="founderName" prop="founderName" label="解冻人" align="center" width="90" show-overflow-tooltip />
+      <el-table-column key="applicantName" prop="applicantName" label="解冻人" align="center" width="90" show-overflow-tooltip />
       <el-table-column key="createTime" prop="createTime" label="解冻时间" align="center" width="140" show-overflow-tooltip>
         <template #default="{ row: record }">
           <span v-parse-time="record.createTime" />

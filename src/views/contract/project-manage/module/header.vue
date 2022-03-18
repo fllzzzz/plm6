@@ -34,15 +34,6 @@
         value-format="YYYY"
         @change="crud.toQuery"
       />
-      <el-input
-        v-model="query.noOrProjectName"
-        size="small"
-        placeholder="输入合同编号或项目简称"
-        style="width: 200px;"
-        class="filter-item"
-        clearable
-        @blur="crud.toQuery"
-      />
       <common-select
         v-model="query.businessType"
         :options="businessTypeEnum.ENUM"
@@ -55,7 +46,7 @@
       />
       <common-select
         v-model="query.projectType"
-        :options="projectTypeEnumN.ENUM"
+        :options="projectTypeEnum.ENUM"
         type="enum"
         size="small"
         clearable
@@ -79,6 +70,15 @@
       />
       <div>
         <el-input
+          v-model="query.noOrProjectName"
+          size="small"
+          placeholder="输入合同编号或项目简称"
+          style="width: 200px;"
+          class="filter-item"
+          clearable
+          @blur="crud.toQuery"
+        />
+        <el-input
           v-model="query.signerName"
           size="small"
           placeholder="输入签约人"
@@ -90,44 +90,71 @@
         <rrOperation/>
       </div>
       <crudOperation add-text="合同立项">
-        <!-- <template slot="optRight">
-          <el-button type="info" size="mini" icon="el-icon-time" @click="changeLogVisible = true">项目变更记录</el-button>
+        <template #optRight>
+          <template v-if="checkPermission(crud.permission.completeList.get)">
+            <el-badge :value="outFinishCount" :max="99" :hidden="outFinishCount < 1">
+              <common-button size="mini" type="primary" @click="completeVisible=true" class="filter-item">可完工项目</common-button>
+            </el-badge>
+          </template>
         </template>
-        <template slot="viewLeft">
+        <template #viewLeft>
           <print-table
-            v-permission="permission.print"
-            api-key="CONTRACT_LEDGER"
-            :params="{year:query.year}"
+            v-permission="crud.permission.print"
+            api-key="projectList"
+            :params="{year: crud.query.year}"
             size="mini"
             type="warning"
             class="filter-item"
           />
-        </template> -->
+        </template>
       </crudOperation>
     </div>
+    <common-drawer
+      title="可完工项目"
+      v-model="completeVisible"
+      :append-to-body="true"
+      :show-close="true"
+      :close-on-click-modal="false"
+      direction="rtl"
+      size="80%"
+      :before-close="
+        () => {
+          completeVisible = false
+        }
+      "
+    >
+      <template #content>
+        <completeList @success="handleSuccess"/>
+      </template>
+    </common-drawer>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
+import { defineProps, ref, watch, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import checkPermission from '@/utils/system/check-permission'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { projectStatusEnum, settlementStatusEnum, projectTypeEnumN, businessTypeEnum } from '@enum-ms/contract'
+import { projectStatusEnum, settlementStatusEnum, projectTypeEnum, businessTypeEnum } from '@enum-ms/contract'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
+import completeList from './complete-list'
+import { completeData } from '@/api/contract/project'
 
 const projectContentOption = ref([])
 let projectContent1 = []
 let projectContent2 = []
 const typeProp = { key: 'id', label: 'name', value: 'id' }
+const completeVisible = ref(false)
 const defaultQuery = {
   projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContentId: undefined,
   signerName: '',
   status: projectStatusEnum.PROCESS.V,
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
 }
-
+const outFinishCount = ref()
+const emit = defineEmits(['projectChange'])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
   currentProjectType: {
@@ -135,7 +162,6 @@ const props = defineProps({
     default: undefined
   }
 })
-
 watch(
   () => props.currentProjectType,
   (val) => {
@@ -179,5 +205,22 @@ function businessChange() {
     projectContentOption.value = []
   }
   crud.toQuery()
+}
+
+function handleSuccess() {
+  completeVisible.value = false
+  crud.toQuery()
+  emit('projectChange')
+}
+
+getCompleteData()
+
+async function getCompleteData() {
+  try {
+    const data = await completeData()
+    outFinishCount.value = data.outFinishCount || 0
+  } catch (error) {
+    console.log('获取完工列表', error)
+  }
 }
 </script>

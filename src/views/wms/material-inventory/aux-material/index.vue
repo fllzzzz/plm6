@@ -57,28 +57,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { getAuxMatInventory } from '@/api/wms/material-inventory'
+import { auxMatMaterialWarehousePM as permission } from '@/page-permission/wms'
+
+import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
 import useIndexInfo from '../compos/use-index-info'
 import useCRUD from '@compos/use-crud'
+import MHeader from './module/header'
+import Pagination from '@crud/Pagination'
+import OutboundHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/index.vue'
+import TransferHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-handling-form/index.vue'
+
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import OutboundHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-handling-form/index.vue'
-import TransferHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-handling-form/index.vue'
-import MHeader from './module/header'
-import Pagination from '@crud/Pagination'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_matWarehouse_auxMaterial:get'],
-  outbound: ['wms_matWarehouse_auxMaterial:outbound'],
-  transfer: ['wms_matWarehouse_auxMaterial:transfer'],
-  freezeList: ['wms_raw_mat_freeze_list:get']
-}
 
 const optShow = {
   add: false,

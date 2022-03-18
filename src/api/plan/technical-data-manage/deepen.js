@@ -5,7 +5,8 @@ export function get(params) {
     module: 'plan',
     url: 'drawing/struct',
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 
@@ -91,14 +92,14 @@ export function uploadCompile(data) {
  * @param {*}  areaId|required 区域id
  * @returns
  */
-export function previewPDF({ serialNumber, monomerId, type, enclosureCategory }) {
+export function previewPDF({ productId, productType }) {
   return request({
     module: 'plan',
-    url: 'drawing/pdf/preview',
+    url: 'drawing/product',
     method: 'get',
     responseType: 'blob',
     timeout: 6000000,
-    params: { serialNumber, monomerId, type, enclosureCategory }
+    params: { productId, productType }
   })
 }
 /**

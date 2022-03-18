@@ -13,10 +13,9 @@
     <template #optRight>
       <el-popconfirm title="确定删除吗？" @confirm="deleteCode">
         <template #reference>
-          <common-button type="danger" size="mini" :disabled="props.selectArr.length<=0">删除</common-button>
+          <common-button type="danger" size="mini" :disabled="props.selectArr.length<=0" v-permission="crud.permission.del">删除</common-button>
         </template>
       </el-popconfirm>
-
     </template>
   </crudOperation>
 </template>

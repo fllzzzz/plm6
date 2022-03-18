@@ -71,7 +71,7 @@ import crudApi from '@/api/mes/team-report/in-staff/piecework-system'
 import { ref, provide, computed } from 'vue'
 
 // import { wageQuotaTypeEnum } from '@enum-ms/mes'
-import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
+// import { inStaffPieceworkSystemPM as permission } from '@/page-permission/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -86,6 +86,10 @@ const optShow = {
   edit: false,
   del: false,
   download: false
+}
+
+const permission = {
+  get: []
 }
 
 const tableRef = ref()

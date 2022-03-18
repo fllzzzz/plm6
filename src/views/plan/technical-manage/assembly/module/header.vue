@@ -78,9 +78,10 @@
           btn-text="下载组立清单"
           class="filter-item"
           :disabled="crud.data.length===0 || deleteLoading"
+          v-permission="crud.permission.download"
         />
-        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading"/>
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id">
+        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading" v-permission="crud.permission.templateDownLoad"/>
+        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
           <template #reference>
             <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
           </template>
@@ -104,6 +105,7 @@
 <script setup>
 import { defineProps, ref, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
+import checkPermission from '@/utils/system/check-permission'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'

@@ -39,20 +39,13 @@
 <script setup>
 import crudApi from '@/api/config/system-config/change-reason'
 import { ref } from 'vue'
+import { changeReasonPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
-
-// crud交由presenter持有
-const permission = {
-  get: ['changeReason:get'],
-  add: ['changeReason:add'],
-  edit: ['changeReason:edit'],
-  del: ['changeReason:del']
-}
 
 const optShow = {
   add: true,

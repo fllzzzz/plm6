@@ -88,7 +88,7 @@ export default {
           path: 'supplier-material',
           hidden: false,
           component: '/contract/payment-manage/supplier-manage/material-manage/index',
-          meta: { title: '原材料', icon: 'contract2', noCache: true }
+          meta: { title: '采购订单', icon: 'contract2', noCache: true }
         },
         {
           name: 'supplierProduct',

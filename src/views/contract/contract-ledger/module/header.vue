@@ -1,6 +1,17 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
+      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+      <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
+        <el-radio-button :label="undefined">全部</el-radio-button>
+        <el-radio-button
+          v-for="item in settlementStatusEnum.ENUM"
+          :key="item.V"
+          :label="item.V"
+        >
+          {{ item.L }}
+        </el-radio-button>
+      </el-radio-group>
       <el-date-picker
         v-model="query.year"
         type="year"
@@ -12,17 +23,6 @@
         value-format="YYYY"
         @change="crud.toQuery"
       />
-      <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
-        <el-radio-button :label="undefined">全部</el-radio-button>
-        <el-radio-button
-          v-for="item in settlementStatusEnum.ENUM"
-          :key="item.V"
-          :label="item.V"
-        >
-          {{ item.L }}
-        </el-radio-button>
-      </el-radio-group>
-      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-input
         v-model="query.serialNumber"
         placeholder="编号搜索"
@@ -48,6 +48,16 @@
           <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计结算额:${totalSum.settlementAmountSum?toThousand(totalSum.settlementAmountSum):'-'}元` }}</el-tag>
           <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计收款额:${totalSum.collectionAmountSum?toThousand(totalSum.collectionAmountSum):'-'}元` }}</el-tag>
           <el-tag type="success" v-if="totalSum" size="medium" class="filter-item">{{ `累计开票额:${totalSum.invoiceAmountSum?toThousand(totalSum.invoiceAmountSum):'-'}元` }}</el-tag>
+        </template>
+        <template #viewLeft>
+          <print-table
+            v-permission="crud.permission.print"
+            api-key="contractLedger"
+            :params="{ ...query }"
+            size="mini"
+            type="warning"
+            class="filter-item"
+          />
         </template>
       </crudOperation>
     </div>

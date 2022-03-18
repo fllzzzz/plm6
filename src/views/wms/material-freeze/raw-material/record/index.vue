@@ -49,28 +49,25 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-freeze/raw-material/record'
+import { rawMaterialFreezeListPM as permission } from '@/page-permission/wms'
+
 import { computed, ref } from 'vue'
 import { matClsEnum } from '@enum-ms/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 
+import useCRUD from '@compos/use-crud'
+import useMaxHeight from '@compos/use-max-height'
 import MHeader from './module/header'
 import Pagination from '@crud/Pagination'
 
-import useCRUD from '@compos/use-crud'
-import useMaxHeight from '@compos/use-max-height'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import materialFreezeRecord from '@/views/wms/material-freeze/raw-material/components/material-freeze-record.vue'
-
-// crud交由presenter持有
-const permission = {
-  get: ['wms_raw_mat_freeze_list:get']
-}
 
 const optShow = {
   add: false,

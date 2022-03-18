@@ -382,7 +382,7 @@ watch(
         let measureType
         switch (unitType) {
           case unitTypeEnum.MEASURE.V:
-            if (data.measureUnit) {
+            if (row.measureUnit) {
               measureType = measureTypeEnum.MEASURE.V
             } else {
               measureType = measureTypeEnum.ACCOUNTING.V

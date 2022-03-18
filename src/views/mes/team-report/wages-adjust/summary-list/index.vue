@@ -16,7 +16,16 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <productType-summary-columns :productType="crud.query.productType" :columns="columns" :unitNewLine="false" />
-      <el-table-column align="center" prop="prop" label="操作" width="100">
+      <el-table-column
+        v-if="
+          (checkPermission(permission.get) && !(crud.query.productType & componentTypeEnum.ASSEMBLE.V)) ||
+          (checkPermission(permission.edit) && crud.query.productType & componentTypeEnum.ASSEMBLE.V)
+        "
+        align="center"
+        prop="prop"
+        label="操作"
+        width="100"
+      >
         <template #default="{ row }">
           <!-- <common-button type="primary" size="mini">全部修改</common-button> -->
           <common-button type="warning" size="mini" @click="handleSeveralEdit(row)">修改</common-button>
@@ -31,10 +40,10 @@
 <script setup>
 import crudApi from '@/api/mes/team-report/wages-adjust/summary'
 import detailApi from '@/api/mes/team-report/wages-adjust/detail'
-import { ref, provide, defineExpose, defineEmits } from 'vue'
+import { ref, provide, defineExpose, defineEmits, inject } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
-import { wagesAdjustPM as permission } from '@/page-permission/mes'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -51,6 +60,7 @@ const optShow = {
 
 const emit = defineEmits(['setInfo', 'setDetailInfo', 'refreshAuditNumber'])
 
+const permission = inject('permission')
 const headRef = ref()
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

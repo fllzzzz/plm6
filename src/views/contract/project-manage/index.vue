@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :currentProjectType="currentProjectType" />
+      <mHeader :currentProjectType="currentProjectType" @projectChange="handleChange"/>
     </div>
     <!--表格渲染-->
     <common-table
@@ -52,7 +52,7 @@
         width="100"
       >
         <template v-slot="scope">
-          <div>{{ scope.row.projectType ? projectTypeEnumN.VL[scope.row.projectType] : '-' }}</div>
+          <div>{{ scope.row.projectType ? projectTypeEnum.VL[scope.row.projectType] : '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column
@@ -81,7 +81,7 @@
           <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="100px">
+      <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="总工期(天)" align="center" width="80">
         <template v-slot="scope">
           <div>{{ scope.row.allDays }}</div>
         </template>
@@ -92,7 +92,7 @@
         prop="alreadyDays"
         label="已用时(天)"
         align="center"
-        width="100px"
+        width="80"
       >
         <template v-slot="scope">
           <div>{{ scope.row.alreadyDays }}</div>
@@ -129,24 +129,35 @@
           <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="110px" align="center" fixed="right">
+      <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="120" align="center" fixed="right">
         <template v-slot="scope">
-          <span>{{ isNotBlank(scope.row.status) ? projectStatusEnum.VL[scope.row.status] : '-' }}</span>
+          <el-select v-if="checkPermission(permission.editStatus) && scope.row.status!==projectStatusEnum.SETTLED.V" v-model="scope.row.status" size="small" @change="changeStatus(scope.row, scope.row.status)">
+            <template v-for="item in projectStatusEnum.ENUM">
+              <el-option
+                :key="item.V"
+                :label="item.L"
+                :value="item.V"
+                v-if="item.V!= projectStatusEnum.SETTLED.V"
+              />
+            </template>
+          </el-select>
+          <el-tag v-else :type="scope.row.statusColor">{{ projectStatusEnum.VL[scope.row.status] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(permission.editMembers)" label="成员管理" width="90px" align="center" fixed="right">
+      <el-table-column label="成员管理" width="80" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
-            v-permission="permission.editMember"
+            v-if="checkPermission(permission.editMembers)"
             type="info"
             icon="el-icon-user"
             size="mini"
             @click="showMemberList(scope.row.id)"
+            :disabled="scope.row.status !== projectStatusEnum.ENUM.PROCESS.V"
           />
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-if="checkPermission([...permission.download])" label="操作" width="260px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.detail, ...permission.del,, ...permission.download])" label="操作" width="180px" align="center" fixed="right">
         <template v-slot="scope">
           <common-button
             v-if="checkPermission(permission.detail)"
@@ -155,21 +166,9 @@
             type="primary"
             @click="openContractInfo(scope.row)"
           />
-          <template v-if="checkPermission(permission.editStatus)">
-            <common-button
-              v-if="scope.row.status === projectStatusEnum.ENUM.PROCESS.V"
-              size="mini"
-              @click="changeStatus(scope.row, projectStatusEnum.ENUM.SUSPEND.V)"
-              >暂停</common-button>
-            <common-button
-              v-else-if="scope.row.status === projectStatusEnum.ENUM.SUSPEND.V"
-              size="mini"
-              @click="changeStatus(scope.row, projectStatusEnum.PROCESS.V)"
-              >继续</common-button>
-          </template>
-          <udOperation :data="scope.row" :show-edit="false" />
+          <udOperation :data="scope.row" :show-edit="false" :permission="permission"/>
           <!-- 下载 -->
-          <!-- <e-operation :data="scope.row" :permission="permission.download" /> -->
+           <export-button :fn="downloadProjectInfo" :params="{ projectId: scope.row.id }" v-permission="permission.download"/>
         </template>
       </el-table-column>
     </common-table>
@@ -207,7 +206,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/contract/project'
+import crudApi, { editStatus, downloadProjectInfo } from '@/api/contract/project'
 import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -217,8 +216,7 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import mForm from './module/form'
-import { projectTypeEnumN, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
-import { isNotBlank } from '@data-type/index'
+import { projectTypeEnum, businessTypeEnum, projectStatusEnum } from '@enum-ms/contract'
 import { ElMessageBox } from 'element-plus'
 import contractInfo from '@/views/contract/info/index'
 import members from './members'
@@ -226,7 +224,8 @@ import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { useStore } from 'vuex'
 import { projectListPM as permission } from '@/page-permission/contract'
-// import eOperation from '@crud/E.operation'
+import { ElSelect } from 'element-plus'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const store = useStore()
 const { currentProjectType } = mapGetters(['globalProjectId', 'currentProjectType'])
@@ -277,17 +276,18 @@ function memberChangeSuccess() {
 
 async function changeStatus(data, val) {
   try {
-    const msg = val === projectStatusEnum.ENUM.SUSPEND.V ? '暂停' : '继续'
-    await ElMessageBox.confirm(`确定${msg}“${data.name}” 项目吗 ？`, '提示', {
+    await ElMessageBox.confirm(`此操作将把 “${data.name}” 状态更改为 “${projectStatusEnum.VL[val]}”, 是否继续？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await editStatus(data.id, val)
+    await editStatus(data.id, val, false)
     crud.notify(`“${data.name}” 变更为 “${projectStatusEnum.VL[val]}” 成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.refresh()
+    handleChange()
   } catch (error) {
     console.log(error)
+    data.status = data.orginStauts
   }
 }
 
@@ -297,8 +297,20 @@ function openContractInfo(row) {
   projectName.value = row.name
   contractInfoVisible.value = true
 }
-CRUD.HOOK.afterDelete = () => {
+
+CRUD.HOOK.handleRefresh = (crud, data) => {
+  data.data.content = data.data.content.map(v => {
+    v.statusColor = v.status === projectStatusEnum.COMPLETE.V ? 'success' : v.status === projectStatusEnum.SUSPEND.V ? 'warning' : null
+    v.orginStauts = v.status
+    return v
+  })
+}
+
+function handleChange() {
   store.dispatch('project/fetchUserProjects')
+}
+CRUD.HOOK.afterDelete = () => {
+  handleChange()
 }
 </script>
 
