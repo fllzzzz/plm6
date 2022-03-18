@@ -7,7 +7,7 @@ export default function useSchedulingIndex() {
 
   // 任务异常标红
   function handleRowClassName({ row, rowIndex }) {
-    if (row.abnormalStatus > 0) {
+    if (row.boolAbnormalEnum) {
       return 'abnormal-row'
     }
   }
@@ -73,11 +73,16 @@ export default function useSchedulingIndex() {
     }
   }
 
+  function selectable(row, rowIndex) {
+    return !row.boolAbnormalEnum
+  }
+
   return {
     lines,
     modifying,
     handleRowClassName,
     handelCellClassName,
-    handleQuantityChange
+    handleQuantityChange,
+    selectable
   }
 }

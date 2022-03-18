@@ -142,7 +142,7 @@ function handleDataChange() {
   // 处理在录入的情况下打开快速分配
   let _data = deepClone(props.data) || []
   _data = _data.filter((v) => {
-    return v.unassignQuantity
+    return v.unassignQuantity && !v.boolAbnormalEnum
   })
   assignAbleList.value = _data.map((v) => {
     v.schedulingMap = v.sourceSchedulingMap && deepClone(v.sourceSchedulingMap)
