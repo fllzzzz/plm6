@@ -578,7 +578,7 @@ function getSpecList(classify, specConfig) {
   }
   arr.forEach((v) => {
     // 唯一编号
-    v.serialNumber = classify.serialNumber + '-' + v.code.join('')
+    v.serialNumber = (classify.serialNumber + '-' + v.code.join('')) || void 0
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {} // 例：key: 材质id ， val: 'Q235B'
