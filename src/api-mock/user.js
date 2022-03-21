@@ -90,7 +90,7 @@ const userInfo = {
           redirect: 'supply-chain'
         },
         {
-          id: 171,
+          id: 819,
           name: '套料切割',
           icon: 'cutting',
           redirect: 'cutting'
