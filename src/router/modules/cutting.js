@@ -1,7 +1,6 @@
 // 路由：套料切割
 export default {
-  id: 821,
-  // id: 171,
+  id: 886,
   name: '套料切割',
   children: [{
     path: '/cutting',
@@ -11,7 +10,7 @@ export default {
     alwaysShow: false,
     redirect: '/cutting/nest-task',
     meta: {
-      title: '套料任务',
+      title: '套料任务管理',
       icon: 'config-2',
       noCache: true
     },
