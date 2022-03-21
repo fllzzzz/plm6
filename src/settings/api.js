@@ -7,5 +7,6 @@ export const apiVersion = {
   config: 1, // 配置管理
   project: 1, // 项目管理
   scm: 1, // 供应链
-  common: 1 // 公共
+  common: 1, // 公共
+  cutting: 1
 }

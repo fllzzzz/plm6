@@ -18,7 +18,7 @@
     <template #titleRight>
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
         <span class="batch-set-info child-mr-7">
-          <el-date-picker v-model="batchOutboundTime"  type="datetime" value-format="x" placeholder="批量设置出库时间" />
+          <el-date-picker v-model="batchOutboundTime" type="datetime" value-format="x" placeholder="批量设置出库时间" />
           <common-button type="success" size="mini" @click="setOutboundTime">设置</common-button>
         </span>
       </template>
