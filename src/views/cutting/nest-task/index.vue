@@ -26,6 +26,35 @@
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
+
+      <el-table-column
+        v-if="columns.visible('monomerName')"
+        key="monomerName"
+        prop="monomerName"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="单体"
+        min-width="40"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.monomerName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        v-if="columns.visible('areaName')"
+        key="areaName"
+        prop="areaName"
+        :show-overflow-tooltip="true"
+        align="center"
+        label="单元"
+        min-width="40"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.areaName }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column
         v-if="columns.visible('sum')"
         key="sum"
