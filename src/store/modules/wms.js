@@ -1,4 +1,5 @@
 import { getWmsConfig } from '@/api/config/wms/base'
+import { getNotPrintedMaterialNumber } from '@/api/wms/material-label-print/index'
 
 import { MAT_BASE_UNIT } from '@/settings/config'
 
@@ -10,6 +11,7 @@ const state = {
   outboundCfg: {}, // 出库基础配置
   rejectCfg: {}, // 退货基础配置
   partyABorrowReturnCfg: {}, // 甲供借用归还配置
+  notPrintedMaterialNumber: { totalMaterial: 0, inboundMaterial: 0, outboundMaterial: 0, transferMaterial: 0, returnMaterial: 0 }, // 未打印物料数量
   loaded: {
     // 接口是否加载
     config: false
@@ -37,6 +39,9 @@ const mutations = {
   },
   SET_PARTY_A_BORROW_RETURN_CFG(state, config) {
     state.partyABorrowReturnCfg = config
+  },
+  SET_NOT_PRINTED_MATERIAL_NUMBER(state, number) {
+    state.notPrintedMaterialNumber = number
   }
 }
 
@@ -54,6 +59,23 @@ const actions = {
     commit('SET_REJECT_CFG', reject)
     commit('SET_PARTY_A_BORROW_RETURN_CFG', partyABorrowReturn)
     commit('SET_LOADED', { key: 'config' })
+  },
+  async fetchNotPrintedMaterialNumber({ commit }) {
+    const {
+      totalMaterial = 0,
+      inboundMaterial = 0,
+      outboundMaterial = 0,
+      transferMaterial = 0,
+      returnMaterial = 0
+    } = await getNotPrintedMaterialNumber()
+    const number = {
+      totalMaterial,
+      inboundMaterial,
+      outboundMaterial,
+      transferMaterial,
+      returnMaterial
+    }
+    commit('SET_NOT_PRINTED_MATERIAL_NUMBER', number)
   }
 }
 
