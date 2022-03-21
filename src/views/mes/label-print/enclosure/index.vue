@@ -208,8 +208,7 @@ import crudApi from '@/api/mes/label-print/enclosure'
 import { ref, provide, computed } from 'vue'
 
 import { componentTypeEnum, mesEnclosureTypeEnum, printProductTypeEnum } from '@enum-ms/mes'
-import { DP } from '@/settings/config'
-// import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
+import { DP, QR_SCAN_F_TYPE } from '@/settings/config'
 import { toFixed } from '@data-type/index'
 import { parseTime } from '@/utils/date'
 import { printEnclosure as printComponent } from '@/utils/print/index'
@@ -311,10 +310,10 @@ function getLabelInfo(row) {
     manufacturerName: printConfig.manufacturerName || companyName,
     qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ENCLOSURE_TASK}`, {
       id: row.id, // id
-      // ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
+      ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
       factoryId: row.factoryId, // 工厂id
       taskId: row.taskId, // 任务id
-      // type: productType, // 类型
+      type: productType, // 类型
       // wt: printConfig.weight, // 重量类型
       // mn: printConfig.manufacturerName, // 制造商名称
       // sl: Number(printConfig.showProductionLine), // 显示生产线
