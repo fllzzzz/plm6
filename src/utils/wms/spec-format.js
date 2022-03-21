@@ -116,7 +116,7 @@ function steelPlateSpecTip(row) {
     twl.push('长(mm)')
   }
   tip.push(twl.join('*'))
-  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
+  if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   return tip.join(' * ')
 }
 
@@ -126,7 +126,7 @@ function sectionSteelSpecTip(row) {
   if (isNotBlank(row.length)) {
     tip.push('长(mm)')
   }
-  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
+  if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   return tip.join(' * ')
 }
 
@@ -141,7 +141,7 @@ function steelCoilSpecTip(row) {
     twl.push('宽(mm)')
   }
   tip.push(twl.join('*'))
-  if (isNotBlank(row.specificationLabels)) tip.push(row.specificationLabels)
+  if (isNotBlank(row.specificationLabels) && row.specificationLabels !== '无规格') tip.push(row.specificationLabels)
   if (isNotBlank(row.color)) tip.push('颜色')
   return tip.join(' * ')
 }

@@ -1,6 +1,7 @@
 // 路由：套料切割
 export default {
-  id: 819,
+  id: 821,
+  // id: 171,
   name: '套料切割',
   children: [{
     path: '/cutting',
@@ -64,12 +65,12 @@ export default {
   //   ]
   // },
   {
-    path: '/cutting',
+    path: '/cutting/nest-work-list',
     component: 'Layout',
     hidden: false,
-    name: 'nestWorkList',
+    name: 'cuttingWorkList',
     alwaysShow: false,
-    redirect: '/cutting',
+    redirect: '/cutting/nest-work-list',
     meta: {
       title: '套料工单管理',
       icon: 'config-2',
@@ -162,7 +163,7 @@ export default {
   //   ]
   // },
   {
-    path: '/cutting',
+    path: '/cutting/machine',
     component: 'Layout',
     hidden: false,
     name: 'machine',
