@@ -214,15 +214,15 @@ function formatDataByType(row, data, field) {
     case 'to-fixed':
       return toFixed(data, field1)
     case 'to-fixed-ck':
-      return toFixed(data, DP[field1])
+      return toFixed(data, isBlank(field1) ? DP[field1] : void 0)
     case 'to-fixed-field':
-      return toFixed(data, row[field1])
+      return toFixed(data, isBlank(field1) ? row[field1] : void 0)
     case 'to-precision':
       return toPrecision(data, field1)
     case 'to-precision-ck':
-      return toPrecision(data, DP[field1])
+      return toPrecision(data, isBlank(field1) ? DP[field1] : void 0)
     case 'to-precision-field':
-      return toPrecision(data, row[field1])
+      return toPrecision(data, isBlank(field1) ? row[field1] : void 0)
     case 'to-thousand':
       return toThousand(data, field1)
     case 'to-thousand-ck':
