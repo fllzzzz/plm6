@@ -1,6 +1,15 @@
 <template>
   <!-- :class="`${props.showEmptySymbol ? 'empty-show-symbol-table' : ''}`"-->
-  <el-table v-bind="$attrs" ref="tableRef" :data="filterData" :stripe="tStripe" :border="tBorder">
+  <el-table
+    v-bind="$attrs"
+    ref="tableRef"
+    :data="filterData"
+    :stripe="tStripe"
+    :border="tBorder"
+    @select="select"
+    @select-all="selectAll"
+    @selection-change="selectionChange"
+  >
     <template #default>
       <slot />
     </template>
@@ -14,7 +23,7 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, watch, computed, ref, nextTick } from 'vue'
+import { defineExpose, defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
 import EO from '@enum'
 import { DP } from '@/settings/config'
@@ -28,12 +37,14 @@ import { ElTable } from 'element-plus'
 import { addPrefix, addSuffix, emptyTextFormatter, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import cloneDeep from 'lodash/cloneDeep'
 
+const emit = defineEmits(['select', 'selectAll', 'selectionChange'])
+
 // default不填写，默认值为null。需要传入undefined
 const props = defineProps({
   // 显示的数据
   data: {
     type: Array,
-    default: undefined
+    default: undefined,
   },
   /**
    * 数据格式转换
@@ -49,7 +60,7 @@ const props = defineProps({
    */
   dataFormat: {
     type: Array,
-    default: undefined
+    default: undefined,
   },
   /**
    * 返回数据源对象（即，在数据源上进行数据转换）
@@ -57,38 +68,38 @@ const props = defineProps({
    */
   returnSourceData: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // 空值 显示 符号
   showEmptySymbol: {
     type: Boolean,
-    default: true
+    default: true,
   },
   emptySymbol: {
     type: String,
-    default: '-'
+    default: '-',
   },
   // Table 的高度， 默认为自动高度。 如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。
   // 是否为斑马纹 table
   stripe: {
     type: Boolean,
-    default: undefined
+    default: undefined,
   },
   // 	是否带有纵向边框
   border: {
     type: Boolean,
-    default: undefined
+    default: undefined,
   },
   // 空数据时显示的文本内容， 也可以通过 #empty 设置
   emptyText: {
     type: String,
-    default: '暂无数据'
+    default: '暂无数据',
   },
   // 合计行第一列的文本
   sumText: {
     type: String,
-    default: '合计'
-  }
+    default: '合计',
+  },
 })
 
 const tableRef = ref()
@@ -403,16 +414,20 @@ function clearSelection() {
   tableRef.value.clearSelection()
 }
 
+// 选中
 function toggleRowSelection(row, selected) {
-  tableRef.value.toggleRowSelection(row, selected)
+  const sourceRow = getCurrent(row)
+  tableRef.value.toggleRowSelection(sourceRow, selected)
 }
 
 function toggleAllSelection() {
   tableRef.value.toggleAllSelection()
 }
 
+// 展开
 function toggleRowExpansion(row, expanded) {
-  tableRef.value.toggleRowExpansion(row, expanded)
+  const sourceRow = getCurrent(row)
+  tableRef.value.toggleRowExpansion(sourceRow, expanded)
 }
 
 // 解决树形结构打开子节点所有父节点expanded:false收回
@@ -452,8 +467,60 @@ function sort(prop, order) {
   tableRef.value.sort(prop, order)
 }
 
+// 获取属于row的数据源
+function getSource(data) {
+  if (props.returnSourceData) return data
+  let sourceData
+  if (Array.isArray(data)) {
+    sourceData = data.map((row) => {
+      return row.sourceRow
+    })
+  } else {
+    sourceData = data.sourceRow
+  }
+
+  return sourceData
+}
+
+// 获取当前filterData中的row
+function getCurrent(data) {
+  if (props.returnSourceData) return data
+  let curData
+  if (Array.isArray(data)) {
+    curData = []
+    data.forEach((row) => {
+      const curRow = filterData.value.find((fmRow) => fmRow.sourceRow === row)
+      curData.push(curRow)
+    })
+  } else {
+    curData = filterData.value.find((fmRow) => fmRow.sourceRow === data)
+  }
+  return curData
+}
+
+// 当用户手动勾选数据行的 Checkbox 时触发的事件
+function select(selection, row) {
+  let sourceSelection = getSource(selection)
+  let sourceRow = getSource(row)
+  emit('select', sourceSelection, sourceRow, selection, row)
+}
+
+// 当用户手动勾选全选 Checkbox 时触发的事件
+function selectAll(selection) {
+  let sourceSelection = getSource(selection)
+  emit('selectAll', sourceSelection, selection)
+}
+
+// 当选择项发生变化时会触发该事件
+function selectionChange(selection) {
+  let sourceSelection = getSource(selection)
+  emit('selectionChange', sourceSelection, selection)
+}
+
 defineExpose({
   getColumns,
+  getSource,
+  getCurrent,
   clearSelection,
   toggleRowSelection,
   toggleAllSelection,
@@ -464,7 +531,7 @@ defineExpose({
   clearFilter,
   doLayout,
   sort,
-  refreshParent
+  refreshParent,
 })
 </script>
 
