@@ -14,6 +14,7 @@
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
+      :showEmptySymbol="false"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
        <el-table-column

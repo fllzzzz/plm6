@@ -13,6 +13,7 @@
       :max-height="maxHeight"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
+      :showEmptySymbol="false"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="index" align="center" width="60" />

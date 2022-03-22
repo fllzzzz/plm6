@@ -14,6 +14,7 @@
         :max-height="maxHeight"
         :stripe="false"
         :span-method="objectSpanMethod"
+        :showEmptySymbol="false"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />

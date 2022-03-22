@@ -12,6 +12,7 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
+        :showEmptySymbol="false"
         style="width: 100%"
         @sort-change="crud.handleSortChange"
       >

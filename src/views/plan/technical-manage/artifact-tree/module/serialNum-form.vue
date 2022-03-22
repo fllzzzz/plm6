@@ -87,6 +87,7 @@
                 style="width: 100%"
                 class="table-form"
                 :stripe="false"
+                :showEmptySymbol="false"
               >
                 <el-table-column label="序号" type="index" align="center" width="60" />
                 <el-table-column key="serialNumber" prop="serialNumber" label="零件编号" min-width="100">
@@ -271,6 +272,7 @@
                 :stripe="false"
                 :cell-class-name="wrongCellMask"
                 @selection-change="handleSelectionChange"
+                :showEmptySymbol="false"
               >
                 <el-table-column type="selection" width="55" :disabled="form.changeAbleStatus != 3" />
                 <el-table-column label="序号" type="index" align="center" width="60" />

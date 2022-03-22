@@ -21,6 +21,7 @@
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
         :cell-class-name="wrongCellMask"
+        :showEmptySymbol="false"
         style="width: 100%;margin-top:10px;"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />

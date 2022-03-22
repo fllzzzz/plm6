@@ -24,6 +24,7 @@
       class="collection-table"
       :cell-class-name="wrongCellMask"
       :stripe="false"
+      :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="collectionDate" prop="collectionDate" label="*收款日期" align="center" width="160">
