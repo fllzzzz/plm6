@@ -44,7 +44,7 @@ const props = defineProps({
   // 显示的数据
   data: {
     type: Array,
-    default: undefined,
+    default: undefined
   },
   /**
    * 数据格式转换
@@ -60,46 +60,45 @@ const props = defineProps({
    */
   dataFormat: {
     type: Array,
-    default: undefined,
+    default: undefined
   },
   /**
-   * 返回数据源对象（即，在数据源上进行数据转换）
-   * 若不进行数据处理（即：dataFormat为空以及showEmptySymbol为false），则该字段无效，直接返回源数据
+   * 返回数据源对象（即，在数据源上进行数据格式转换）
    */
   returnSourceData: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 空值 显示 符号
   showEmptySymbol: {
     type: Boolean,
-    default: true,
+    default: true
   },
   emptySymbol: {
     type: String,
-    default: '-',
+    default: '-'
   },
   // Table 的高度， 默认为自动高度。 如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。
   // 是否为斑马纹 table
   stripe: {
     type: Boolean,
-    default: undefined,
+    default: undefined
   },
   // 	是否带有纵向边框
   border: {
     type: Boolean,
-    default: undefined,
+    default: undefined
   },
   // 空数据时显示的文本内容， 也可以通过 #empty 设置
   emptyText: {
     type: String,
-    default: '暂无数据',
+    default: '暂无数据'
   },
   // 合计行第一列的文本
   sumText: {
     type: String,
-    default: '合计',
-  },
+    default: '合计'
+  }
 })
 
 const tableRef = ref()
@@ -183,13 +182,39 @@ watch(
 function handleData(data, columns) {
   // 获取格式转化的列字段
   const dfColumns = props.dataFormat ? props.dataFormat.map((df) => df[0]) : []
-
-  if (props.showEmptySymbol || dfColumns.length > 0) {
-    // 优化数据列表
-    filterData.value = optimizeList(data, columns, dfColumns)
+  // 优化数据列表
+  // filterData.value = optimizeList(data, columns, dfColumns)
+  const fmList = optimizeList(data, columns, dfColumns)
+  if (props.returnSourceData) {
+    filterData.value = fmList
   } else {
-    // 不处理则直接返回
-    filterData.value = data
+    /**
+     * 不选择重新为filterData.value赋值
+     * 是为了避免当表格中有表单内容时，修改了表单内容，导致重新拷贝地址发生变化，从而造成，展开的行收缩等情况。
+     */
+    let sourceChange = false
+    // 数组长度大于0 ，格式化后的数组长度与原filter数组长度相同，并且第一个元素的sourceRow相同
+    if (
+      isNotBlank(filterData.value) &&
+      fmList.length === filterData.value.length &&
+      fmList[0].sourceRow === filterData.value[0].sourceRow
+    ) {
+      // 下标为0的源数据已经比较过，无需再比较
+      for (let i = 1; i < fmList.length; i++) {
+        if (fmList[i].sourceRow !== filterData.value[i].sourceRow) {
+          sourceChange = true
+          break
+        } else {
+          Object.assign(filterData.value[i], fmList[i])
+        }
+      }
+    } else {
+      // 长度为0时，也视为变化
+      sourceChange = true
+    }
+    if (sourceChange) {
+      filterData.value = fmList
+    }
   }
 }
 
@@ -207,39 +232,41 @@ function optimizeList(list, columns, dfColumns = []) {
     if (row) {
       // 赋予row 数据源
       if (!props.returnSourceData) row.sourceRow = list[rowIndex]
-      // 遍历columns
-      iterateColumns.forEach((field) => {
-        let dfCfg = dataFormatKV.value[field]
+      if (props.showEmptySymbol || dfColumns.length > 0) {
+        // 遍历columns
+        iterateColumns.forEach((field) => {
+          let dfCfg = dataFormatKV.value[field]
 
-        let preData = getInfo(list[rowIndex], field)
-        // 获取未转换的值
-        if (dfCfg) {
-          // 如果数组最后一个值为对象，且不为数组的情况
-          const otherInfo = dfCfg[dfCfg.length - 1]
-          // 别名，没有则使用field
-          if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
-            // 实际配置信息范围
-            dfCfg = dfCfg.slice(0, dfCfg.length - 1)
-            // 获取数据源字段
-            const sourceField = otherInfo ? otherInfo.source : void 0
-            // 获取实际转换前的值
-            if (sourceField) preData = getInfo(list[rowIndex], sourceField)
-          }
-          if (field) {
-            for (let i = 0; i < dfCfg.length; i++) {
-              // 获取转换后的值
-              const fmD = formatDataByType(row, preData, dfCfg[i])
-              preData = fmD
-              // 设置转换后的值
-              setInfo(row, field, fmD)
+          let preData = getInfo(list[rowIndex], field)
+          // 获取未转换的值
+          if (dfCfg) {
+            // 如果数组最后一个值为对象，且不为数组的情况
+            const otherInfo = dfCfg[dfCfg.length - 1]
+            // 别名，没有则使用field
+            if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
+              // 实际配置信息范围
+              dfCfg = dfCfg.slice(0, dfCfg.length - 1)
+              // 获取数据源字段
+              const sourceField = otherInfo ? otherInfo.source : void 0
+              // 获取实际转换前的值
+              if (sourceField) preData = getInfo(list[rowIndex], sourceField)
+            }
+            if (field) {
+              for (let i = 0; i < dfCfg.length; i++) {
+                // 获取转换后的值
+                const fmD = formatDataByType(row, preData, dfCfg[i])
+                preData = fmD
+                // 设置转换后的值
+                setInfo(row, field, fmD)
+              }
             }
           }
-        }
-        // 若未显示列中的对象，且值不存在，则设置空
-        if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
-          setInfo(row, field, props.emptySymbol)
-        }
-      })
+          // 若未显示列中的对象，且值不存在，则设置空
+          if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
+            setInfo(row, field, props.emptySymbol)
+          }
+        })
+      }
     }
   })
   return cloneList
@@ -500,20 +527,20 @@ function getCurrent(data) {
 
 // 当用户手动勾选数据行的 Checkbox 时触发的事件
 function select(selection, row) {
-  let sourceSelection = getSource(selection)
-  let sourceRow = getSource(row)
+  const sourceSelection = getSource(selection)
+  const sourceRow = getSource(row)
   emit('select', sourceSelection, sourceRow, selection, row)
 }
 
 // 当用户手动勾选全选 Checkbox 时触发的事件
 function selectAll(selection) {
-  let sourceSelection = getSource(selection)
+  const sourceSelection = getSource(selection)
   emit('selectAll', sourceSelection, selection)
 }
 
 // 当选择项发生变化时会触发该事件
 function selectionChange(selection) {
-  let sourceSelection = getSource(selection)
+  const sourceSelection = getSource(selection)
   emit('selectionChange', sourceSelection, selection)
 }
 
@@ -531,7 +558,7 @@ defineExpose({
   clearFilter,
   doLayout,
   sort,
-  refreshParent,
+  refreshParent
 })
 </script>
 
