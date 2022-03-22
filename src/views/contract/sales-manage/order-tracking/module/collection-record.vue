@@ -22,53 +22,21 @@
         />
       </div>
     </template>
-    <common-table :data="list" :max-height="maxHeight">
+    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="collectionDate" label="收款日期" align="center" width="100" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.collectionDate, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="collectionAmount" label="收款额" align="center" min-width="120" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-thousand="row.collectionAmount" v-empty-text />
-        </template>
-      </el-table-column>
+      <el-table-column prop="collectionDate" label="收款日期" align="center" width="100" show-overflow-tooltip />
+      <el-table-column prop="collectionAmount" label="收款额" align="center" min-width="120" show-overflow-tooltip />
       <el-table-column prop="collectionReason" label="收款事由" align="center" width="100" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-empty-text="dict.label?.['payment_reason']?.[row.collectionReason]" />
+          <span>{{ dict.label?.['payment_reason']?.[row.collectionReason] }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="collectionMode" label="收款方式" align="center" width="100" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text="paymentFineModeEnum.VL[row.collectionMode]" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="collectionUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text="row.collectionUnit" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="collectionDepositBank" label="收款开户行" align="center" min-width="140" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text="row.collectionDepositBank" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text="row.paymentUnit" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="writtenByName" label="办理人" align="center" min-width="100" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text="row.writtenByName" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="auditorName" label="审核人" align="center" min-width="100" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text="row.auditorName" />
-        </template>
-      </el-table-column>
+      <el-table-column prop="collectionMode" label="收款方式" align="center" width="100" show-overflow-tooltip />
+      <el-table-column prop="collectionUnit" label="收款单位" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column prop="collectionDepositBank" label="收款开户行" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column prop="paymentUnit" label="付款单位" align="center" min-width="140" show-overflow-tooltip />
+      <el-table-column prop="writtenByName" label="办理人" align="center" min-width="100" show-overflow-tooltip />
+      <el-table-column prop="auditorName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
     </common-table>
     <!--分页组件-->
     <el-pagination
@@ -134,6 +102,12 @@ watch(
 const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
+const dataFormat = ref([
+  ['collectionDate', ['parse-time', '{y}-{m}-{d}']],
+  ['collectionMode', ['parse-enum', paymentFineModeEnum]],
+  ['collectionAmount', 'to-thousand'],
+  ['taxRate', ['to-fixed', 2]]
+])
 
 const { maxHeight } = useMaxHeight(
   {

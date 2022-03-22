@@ -6,32 +6,17 @@
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
+      :data-format="dataFormat"
       :data="crud.data"
       style="width: 100%"
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" align="left" label="客户名称" min-width="160" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="订单类型" align="center" min-width="100" :show-overflow-tooltip="true">
-      <template #default="{ row }">
-        <span v-empty-text>{{ businessTypeEnum.VL[row.businessType]}}</span>
-      </template>
-    </el-table-column>
-      <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" label="订单数量" align="center" min-width="100" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.quantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('totalContractAmount')" prop="totalContractAmount" key="totalContractAmount" label="累计合同额" align="center" min-width="120" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-thousand="row.totalContractAmount" v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('totalSettlementAmount')" prop="totalSettlementAmount" key="totalSettlementAmount" label="累计结算额" align="center" min-width="120" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-thousand="row.totalSettlementAmount" v-empty-text />
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="订单类型" align="center" min-width="100" :show-overflow-tooltip="true" />
+      <el-table-column v-if="columns.visible('quantity')" key="quantity" prop="quantity" label="订单数量" align="center" min-width="100" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('totalContractAmount')" prop="totalContractAmount" key="totalContractAmount" label="累计合同额" align="center" min-width="120" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('totalSettlementAmount')" prop="totalSettlementAmount" key="totalSettlementAmount" label="累计结算额" align="center" min-width="120" show-overflow-tooltip />
       <!--详情-->
       <el-table-column
         v-if="checkPermission(permission.detail)"
@@ -73,6 +58,11 @@ const optShow = {
 }
 
 const tableRef = ref()
+const dataFormat = ref([
+  ['businessType', ['parse-enum', businessTypeEnum]],
+  ['totalContractAmount', 'to-thousand'],
+  ['totalSettlementAmount', 'to-thousand']
+])
 const { crud, columns } = useCRUD(
   {
     title: '客户交易记录',
@@ -90,7 +80,7 @@ const detailVisible = ref(false)
 const itemInfo = ref({})
 
 function showDetail(row) {
-  itemInfo.value = Object.assign({ ...crud.query }, row)
+  itemInfo.value = Object.assign({ ...crud.query }, row.sourceRow)
   detailVisible.value = true
 }
 </script>

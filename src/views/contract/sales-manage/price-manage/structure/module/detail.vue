@@ -9,41 +9,17 @@
     size="70%"
   >
     <template #titleAfter>
-      <el-tag type="warning" size="medium" effect="plain">综合单价：<span v-thousand="props.detailInfo.unitPrice" v-empty-text /></el-tag>
+      <el-tag type="warning" size="medium" effect="plain">综合单价：<span>{{ props.detailInfo.originUnitPrice }}</span></el-tag>
     </template>
     <template #content>
       <common-table :data="list" row-key="rowId" v-loading="crud.detailLoading" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="name" label="名称" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="serialNumber" label="编号" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.serialNumber }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="specification" label="规格" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.specification }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="material" label="材质" min-width="100px" align="center">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.material }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="quantity" label="数量" min-width="80px" align="center">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.quantity }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="grossWeight" label="单重(kg)" min-width="100px" align="center">
-          <template v-slot="scope">
-            <span>{{ scope.row.grossWeight }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="name" label="名称" min-width="100px" align="center" />
+        <el-table-column prop="serialNumber" label="编号" min-width="100px" align="center" />
+        <el-table-column prop="specification" label="规格" min-width="100px" align="center" />
+        <el-table-column prop="material" label="材质" min-width="100px" align="center" />
+        <el-table-column prop="quantity" label="数量" min-width="80px" align="center" />
+        <el-table-column prop="grossWeight" label="单重(kg)" min-width="100px" align="center" />
         <!--编辑-->
         <el-table-column v-if="checkPermission(crud.permission.edit) && list.length > 1" label="操作" width="70" align="center" fixed="right">
           <template #default="{ row }">

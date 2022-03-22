@@ -6,40 +6,29 @@
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
+      :data-format="dataFormat"
       :data="crud.data"
       style="width: 100%"
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column v-if="columns.visible('project.shortName')" key="project.shortName" prop="project.shortName" :show-overflow-tooltip="true" label="项目"  min-width="250" >
-        <template #default="{ row }">
-          <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="项目" min-width="250" />
       <el-table-column v-if="columns.visible('reasonName')" key="reasonName" prop="reasonName" :show-overflow-tooltip="true" align="center" label="属性" min-width="110" />
-      <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="签证(结算)额" align="center" min-width="120" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-thousand="row.amount" v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="申请日期" align="center" min-width="120">
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="签证(结算)额" align="center" min-width="120" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="申请日期" align="center" min-width="120" />
       <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" align="center" label="申请人" min-width="110" />
       <el-table-column v-if="columns.visible('checkUserName')" key="checkUserName" prop="checkUserName" :show-overflow-tooltip="true" align="center" label="审核人" min-width="110" />
       <el-table-column v-if="columns.visible('status')" key="status" prop="status" :show-overflow-tooltip="true" align="center" label="状态" min-width="110">
         <template #default="{ row }">
-          <el-tag :type="reviewStatusEnum.V[row.status].TAG" size="medium" effect="plain">{{ reviewStatusEnum.V[row.status]?.SL }}</el-tag>
+          <el-tag :type="reviewStatusEnum.V[row?.sourceRow?.status].TAG" size="medium" effect="plain">{{ row.status }}</el-tag>
         </template>
       </el-table-column>
       <!--详情与审核-->
       <el-table-column v-permission="[...permission.detail, ...permission.edit, ...permission.audit]" label="操作" width="150px" align="center" fixed="right">
         <template #default="{ row }">
-          <common-button v-if="row.status === reviewStatusEnum.PASS.V" v-permission="permission.detail" type="primary" size="mini" @click.stop="toDetail(row)">查看</common-button>
+          <common-button v-if="row?.sourceRow?.status === reviewStatusEnum.PASS.V" v-permission="permission.detail" type="primary" size="mini" @click.stop="toDetail(row)">查看</common-button>
           <common-button v-else v-permission="permission.edit" type="primary" size="mini" @click.stop="toEdit(row)">编辑</common-button>
-          <common-button v-if="row.status === reviewStatusEnum.UNREVIEWED.V" v-permission="permission.audit" type="success" size="mini" @click.stop="toDetail(row)">确签</common-button>
+          <common-button v-if="row?.sourceRow?.status === reviewStatusEnum.UNREVIEWED.V" v-permission="permission.audit" type="success" size="mini" @click.stop="toDetail(row)">确签</common-button>
         </template>
       </el-table-column>
     </common-table>
@@ -55,7 +44,6 @@ import crudApi, { addVisa, addSettlement, editVisa, editSettlement } from '@/api
 import { ref, computed } from 'vue'
 
 import { visaChangePM as permission } from '@/page-permission/contract'
-import { projectNameFormatter } from '@/utils/project'
 import { reviewStatusEnum, visaTypeEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -88,6 +76,12 @@ const mDetail = computed(() => {
   return visaType.value === visaTypeEnum.VISA.V ? visaDetail : settlementDetail
 })
 
+const dataFormat = ref([
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
+  ['amount', 'to-thousand'],
+  ['createTime', 'parse-time']
+])
 const { crud, columns } = useCRUD(
   {
     title: '签证变更',
@@ -105,7 +99,7 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 // 打开详情
 function toDetail(row) {
   visaType.value = row.type
-  visaStatus.value = row.status
+  visaStatus.value = row?.sourceRow?.status
   crud.crudApi.add = visaType.value === visaTypeEnum.VISA.V ? addVisa : addSettlement
   crud.toDetail(row)
 }
