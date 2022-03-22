@@ -50,13 +50,37 @@ export function tableSummary(param, { props = [], precision = 2, toThousandField
 }
 
 // 获取字段信息
-function getInfo(row, field) {
+export function getInfo(row, field) {
   if (isBlank(row)) return
   if (field) {
     const keys = field.split('.')
     return keys.reduce((cur, key) => {
       return typeof cur === 'object' ? cur[key] : undefined
     }, row)
+  } else {
+    return row
+  }
+}
+
+// 设置字段信息
+export function setInfo(row, field, data) {
+  if (isBlank(row)) return
+  if (field) {
+    const keys = field.split('.')
+    if (keys.length === 1) {
+      row[keys[0]] = data
+    } else {
+      const preInfo = keys.reduce((cur, key, index) => {
+        if (index === keys.length - 1) {
+          return cur
+        } else {
+          return typeof cur === 'object' ? cur[key] : undefined
+        }
+      }, row)
+      if (typeof preInfo === 'object') {
+        preInfo[keys[keys.length - 1]] = data
+      }
+    }
   } else {
     return row
   }

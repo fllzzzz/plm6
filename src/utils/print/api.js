@@ -21,10 +21,10 @@ const transactionRecord = contract.transactionRecord
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
 
-const mesStructureProductionReport = mes.structureProductionReport
-const mesAssemblePartProductionReport = mes.structureProductionReport
-const mesMachinePartProductionReport = mes.structureProductionReport
-const mesEnclosureProductionReport = mes.enclosureProductionReport
+const mesStructureProductionReport = mes.productionReport
+const mesAssemblePartProductionReport = mes.productionReport
+const mesMachinePartProductionReport = mes.productionReport
+const mesEnclosureProductionReport = mes.productionReport
 const mesStructureProductionStatistics = mes.productionStatistics
 const mesStructureProductionStatisticsIn = mes.productionStatisticsIn
 const mesStructureProductionStatisticsUn = mes.productionStatisticsUn

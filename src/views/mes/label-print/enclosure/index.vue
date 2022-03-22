@@ -308,15 +308,15 @@ function getLabelInfo(row) {
     printConfig,
     // productionLineName: printConfig.showProductionLine ? `${productionLine.factoryName}-${productionLine.name}` : '',
     manufacturerName: printConfig.manufacturerName || companyName,
-    qrCode: spliceQrCodeUrl(`${baseUrl}/#${QR_SCAN_PATH.ARTIFACT_TASK}`, {
+    qrCode: spliceQrCodeUrl(`${baseUrl}${QR_SCAN_PATH.ENCLOSURE_TASK}`, {
       id: row.id, // id
       ftype: QR_SCAN_F_TYPE.MEW_PRODUCTION,
       factoryId: row.factoryId, // 工厂id
       taskId: row.taskId, // 任务id
       type: productType, // 类型
-      wt: printConfig.weight, // 重量类型
-      mn: printConfig.manufacturerName, // 制造商名称
-      sl: Number(printConfig.showProductionLine), // 显示生产线
+      // wt: printConfig.weight, // 重量类型
+      // mn: printConfig.manufacturerName, // 制造商名称
+      // sl: Number(printConfig.showProductionLine), // 显示生产线
       sa: Number(printConfig.showArea), // 显示区域
       sm: Number(printConfig.showMonomer) // 显示单体
     })

@@ -27,6 +27,7 @@ export function getLODOP() {
     try {
       LODOP = getLodop(document.getElementById('LODOP_OB'), document.getElementById('LODOP_EM'))
       LODOP.PRINT_INIT('') /* 初始化*/
+      LODOP.SET_PRINT_MODE('RESELECT_COPIES', true)
       parmaInit()
       resolve(LODOP)
     } catch (e) {

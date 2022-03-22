@@ -215,7 +215,7 @@ function openDetailPermission(freezeType) {
     case materialFreezeTypeEnum.TRANSFER.V:
       return permission.transferReceiptDetail
     case materialFreezeTypeEnum.REJECTED.V:
-      return permission.rejectUnFreeze
+      return permission.rejectReceiptDetail
   }
 }
 

@@ -1,23 +1,36 @@
 <template>
+  <div v-show="crud.searchToggle">
+    <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
+    <common-radio-button
+      v-model="query.productType"
+      :options="componentTypeEnum.ENUM"
+      type="enum"
+      :unshowVal="[componentTypeEnum.ENCLOSURE.V, componentTypeEnum.AUXILIARY_MATERIAL.V]"
+      default
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+    <common-radio-button
+      v-model="query.status"
+      :options="abnormalHandleStatusEnum.ENUM"
+      type="enum"
+      showOptionAll
+      class="filter-item"
+      @change="crud.toQuery"
+    />
+  </div>
   <crudOperation>
     <template #optLeft>
       <div v-show="crud.searchToggle">
-        <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-        <common-radio-button
-          v-model="query.productType"
-          :options="componentTypeEnum.ENUM"
-          type="enum"
-          :unshowVal="[componentTypeEnum.ENCLOSURE.V, componentTypeEnum.AUXILIARY_MATERIAL.V]"
-          default
-          class="filter-item"
-          @change="crud.toQuery"
-        />
-        <common-radio-button
-          v-model="query.status"
-          :options="abnormalHandleStatusEnum.ENUM"
-          type="enum"
-          showOptionAll
-          class="filter-item"
+        <monomer-select-area-select
+          v-model:monomerId="query.monomerId"
+          v-model:areaId="query.areaId"
+          :productType="query.productType"
+          needConvert
+          clearable
+          :project-id="query.projectId"
+          :monomerDisabled="!query.projectId"
+          :areaDisabled="!query.projectId"
           @change="crud.toQuery"
         />
         <el-input
@@ -41,10 +54,10 @@ import { componentTypeEnum, abnormalHandleStatusEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'
 
 const defaultQuery = {
-  name: undefined,
-  projectId: undefined
+  name: undefined
 }
 
 const { crud, query } = regHeader(defaultQuery)

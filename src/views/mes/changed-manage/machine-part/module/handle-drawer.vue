@@ -1,5 +1,12 @@
 <template>
-  <common-drawer ref="drawerRef" :title="`${info.serialNumber}零件处理列表`" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="40%">
+  <common-drawer
+    ref="drawerRef"
+    :title="`${info.serialNumber}零件处理列表`"
+    v-model="drawerVisible"
+    direction="rtl"
+    :before-close="handleClose"
+    size="40%"
+  >
     <template #content>
       <div class="tip">
         <span>* 注意：</span>
@@ -84,7 +91,7 @@ const props = defineProps({
   },
   info: {
     type: Object,
-    default: () => {}
+    default: () => { }
   }
 })
 

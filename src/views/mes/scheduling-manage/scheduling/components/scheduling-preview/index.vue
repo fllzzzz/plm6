@@ -1,5 +1,13 @@
 <template>
-  <common-dialog title="分配预览" v-model="dialogVisible" fullscreen :before-close="handleClose" top="5vh" :center="false">
+  <common-dialog
+    title="分配预览"
+    v-model="dialogVisible"
+    fullscreen
+    custom-class="scheduling-preview"
+    :before-close="handleClose"
+    top="5vh"
+    :center="false"
+  >
     <template #titleAfter>
       <el-tooltip
         effect="light"
@@ -75,21 +83,13 @@
       </common-button>
     </template>
     <common-table :data="modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
-      <el-table-column fixed label="序号" type="index" align="center" width="60" />
-      <productType-full-info-columns
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <productType-base-info-columns :productType="productType" :category="category" fixedWidth></productType-base-info-columns>
+      <productType-spec-info-columns
         :productType="productType"
         :category="category"
-        :unShowField="[
-          'grossWeight',
-          'totalNetWeight',
-          'totalGrossWeight',
-          'surfaceArea',
-          'weight',
-          'totalArea',
-          'totalLength',
-          'drawingNumber',
-          'remark',
-        ]"
+        fixedWidth
+        :unShowField="['grossWeight', 'totalNetWeight', 'totalGrossWeight', 'surfaceArea', 'weight', 'totalArea', 'totalLength']"
       />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
@@ -134,7 +134,7 @@ style="color: #11b95c"
         </template>
       </template>
       <el-table-column min-width="1px" />
-      <el-table-column fixed="right" prop="unassignQuantity" label="未分配" align="center" width="120px">
+      <el-table-column prop="unassignQuantity" label="未分配" align="center" width="120px">
         <template v-slot:header>
           <span>未分配</span>
           <span v-if="changeQuantity > 0" style="color: red">▲{{ changeQuantity }}</span>
@@ -149,7 +149,7 @@ style="color: #11b95c"
           >
         </template>
       </el-table-column>
-      <el-table-column fixed="right" prop="assignQuantity" label="已分配" align="center" width="120px">
+      <el-table-column prop="assignQuantity" label="已分配" align="center" width="120px">
         <template v-slot="scope">
           <span>{{ scope.row.sourceAssignQuantity }}</span>
           <span
@@ -159,7 +159,7 @@ style="color: #11b95c"
           >
         </template>
       </el-table-column>
-      <el-table-column fixed="right" prop="quantity" label="数量" align="center" width="70px" />
+      <el-table-column prop="quantity" label="数量" align="center" width="70px" />
     </common-table>
     <template #footer>
       <div class="dialog-footer"></div>
@@ -182,7 +182,7 @@ style="color: #11b95c"
           type="date"
           size="mini"
           :disabled="!chooseForm.booleanSaveTask"
-          style="width: 200px;"
+          style="width: 200px"
           value-format="x"
           :disabledDate="(v) => moment(v).valueOf() < moment().subtract(1, 'days').valueOf()"
           placeholder="要求完成日期"
@@ -194,7 +194,7 @@ style="color: #11b95c"
 
 <script setup>
 import { save } from '@/api/mes/scheduling-manage/scheduling/common'
-import { defineProps, defineEmits, ref, watch, inject } from 'vue'
+import { defineProps, defineEmits, ref, inject } from 'vue'
 import { ElNotification, ElMessage, ElRadioGroup } from 'element-plus'
 import moment from 'moment'
 
@@ -203,10 +203,12 @@ import { DP } from '@/settings/config'
 import { toFixed } from '@data-type'
 import { obj2arr } from '@/utils/convert/type'
 import { convertUnits } from '@/utils/convert/unit'
+import { debounce } from '@/utils'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
-import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
+import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import productTypeSpecInfoColumns from '@comp-mes/table-columns/productType-spec-info-columns'
 
 const emit = defineEmits(['update:visible', 'success'])
 
@@ -228,13 +230,15 @@ const props = defineProps({
 const productType = inject('productType')
 const category = inject('category', undefined)
 const processType = inject('processType')
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: handleDataChange })
 
 const { maxHeight } = useMaxHeight(
   {
+    mainBox: '.scheduling-preview',
     extraBox: ['.el-dialog__header'],
     wrapperBox: ['.el-dialog__body'],
     clientHRepMainH: true,
+    extraHeight: 140,
     navbar: false
   },
   dialogVisible
@@ -250,20 +254,6 @@ const chooseForm = ref({
   booleanSaveTask: true,
   askCompleteTime: undefined
 })
-
-watch(
-  () => props.visible,
-  (visible) => {
-    if (visible) {
-      handleDataChange()
-      chooseForm.value = {
-        booleanSaveTask: true,
-        askCompleteTime: undefined
-      }
-    }
-  },
-  { immediate: true }
-)
 
 function ellipsisTextTip(workshop, line) {
   const _data = changedLineData.value[line.id]
@@ -289,15 +279,20 @@ function handleClickSave() {
   }
 }
 
-function handleClickConfirm() {
-  if (chooseForm.value.booleanSaveTask && !chooseForm.value.askCompleteTime) {
-    ElMessage.warning('请选择要求完成日期')
-    return
-  }
-  submit()
-}
+const handleClickConfirm = debounce(
+  function () {
+    if (chooseForm.value.booleanSaveTask && !chooseForm.value.askCompleteTime) {
+      ElMessage.warning('请选择要求完成日期')
+      return
+    }
+    submit()
+  },
+  200,
+  false
+)
 
 async function submit() {
+  if (!chooseVisible.value) return
   try {
     loading.value = true
     // 数据格式处理
@@ -333,12 +328,16 @@ async function submit() {
   } catch (error) {
     console.log('任务分配提交', error)
   } finally {
-    loading.value = false
     chooseVisible.value = false
+    loading.value = false
   }
 }
 
 function handleDataChange() {
+  chooseForm.value = {
+    booleanSaveTask: true,
+    askCompleteTime: undefined
+  }
   const _data = JSON.parse(JSON.stringify(props.data))
   const hasChangedLine = {}
   const hasChangedWorkshop = {}

@@ -1,59 +1,6 @@
 <template>
-  <el-table
-    v-bind="$attrs"
-    ref="tableRef"
-    :data="props.data"
-    :height="props.height"
-    :max-height="props.maxHeight"
-    :stripe="tStripe"
-    :border="tBorder"
-    :size="props.size"
-    :fit="props.fit"
-    :show-header="props.showHeader"
-    :highlight-current-row="props.highlightCurrentRow"
-    :current-row-key="props.currentRowKey"
-    :row-class-name="props.rowClassName"
-    :row-style="props.rowStyle"
-    :cell-class-name="props.cellClassName"
-    :cell-style="props.cellStyle"
-    :header-row-class-name="props.headerRowClassName"
-    :header-row-style="props.headerRowStyle"
-    :header-cell-class-name="props.headerCellClassName"
-    :header-cell-style="props.headerCellStyle"
-    :row-key="props.rowKey"
-    :empty-text="props.emptyText"
-    :default-expand-all="props.defaultExpandAll"
-    :expand-row-keys="props.expandRowKeys"
-    :default-sort="props.defaultSort"
-    :tooltip-effect="props.tooltipEffect"
-    :show-summary="props.showSummary"
-    :sum-text="props.sumText"
-    :summary-method="props.summaryMethod"
-    :span-method="props.spanMethod"
-    :select-on-indeterminate="props.selectOnIndeterminate"
-    :indent="props.indent"
-    :lazy="props.lazy"
-    :load="props.load"
-    :tree-props="props.treeProps"
-    @select="select"
-    @select-all="selectAll"
-    @selection-change="selectionChange"
-    @cell-mouse-enter="cellMouseEnter"
-    @cell-mouse-leave="cellMouseLeave"
-    @cell-click="cellClick"
-    @cell-dblclick="cellDblclick"
-    @cell-contextmenu="cellContext"
-    @row-click="rowClick"
-    @row-contextmenu="rowContextmenu"
-    @row-dblclick="rowDblclick"
-    @header-click="headerClick"
-    @header-contextmenu="headerContextmenu"
-    @sort-change="sortChange"
-    @filter-change="filterChange"
-    @current-change="currentChange"
-    @header-dragend="headerDragend"
-    @expand-change="expandChange"
-  >
+  <!-- :class="`${props.showEmptySymbol ? 'empty-show-symbol-table' : ''}`"-->
+  <el-table v-bind="$attrs" ref="tableRef" :data="filterData" :stripe="tStripe" :border="tBorder">
     <template #default>
       <slot />
     </template>
@@ -67,32 +14,19 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, defineEmits, watch, computed, ref } from 'vue'
+import { defineExpose, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
+import EO from '@enum'
+import { DP } from '@/settings/config'
+import { toThousand } from '@/utils/data-type/number'
+import { parseTime } from '@/utils/date'
+import { projectNameFormatter } from '@/utils/project'
+import { cleanArray } from '@/utils/data-type/array'
+import { getInfo, setInfo } from '@/utils/el-extra'
 
 import { ElTable } from 'element-plus'
-import { isNotBlank } from '@/utils/data-type'
-
-const emit = defineEmits([
-  'select',
-  'selectAll',
-  'selectionChange',
-  'cellMouseEnter',
-  'cellMouseLeave',
-  'cellClick',
-  'cellDblclick',
-  'cellContext',
-  'rowClick',
-  'rowContextmenu',
-  'rowDblclick',
-  'headerClick',
-  'headerContextmenu',
-  'sortChange',
-  'filterChange',
-  'currentChange',
-  'dragend',
-  'expandChange'
-])
+import { addPrefix, addSuffix, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
+import cloneDeep from 'lodash/cloneDeep'
 
 // default不填写，默认值为null。需要传入undefined
 const props = defineProps({
@@ -101,16 +35,29 @@ const props = defineProps({
     type: Array,
     default: undefined
   },
+  // 数据格式转换
+  dataFormat: {
+    type: Array,
+    default: undefined
+  },
+  /**
+   * 返回数据源对象（即，在数据源上进行数据转换）
+   * 若不进行数据处理（即：dataFormat为空以及showEmptySymbol为false），则该字段无效，直接返回源数据
+   */
+  returnSourceData: {
+    type: Boolean,
+    default: false
+  },
+  // 空值 显示 符号
+  showEmptySymbol: {
+    type: Boolean,
+    default: true
+  },
+  emptySymbol: {
+    type: String,
+    default: '-'
+  },
   // Table 的高度， 默认为自动高度。 如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。
-  height: {
-    type: [String, Number],
-    default: undefined
-  },
-  // Table 的最大高度。 合法的值为数字或者单位为 px 的高度。
-  maxHeight: {
-    type: [String, Number],
-    default: undefined
-  },
   // 是否为斑马纹 table
   stripe: {
     type: Boolean,
@@ -121,145 +68,15 @@ const props = defineProps({
     type: Boolean,
     default: undefined
   },
-  // 	Table 的尺寸 medium / small / mini
-  size: {
-    type: String,
-    default: undefined
-  },
-  // 列的宽度是否自撑开
-  fit: {
-    type: Boolean,
-    default: undefined
-  },
-  // 是否显示表头
-  showHeader: {
-    type: Boolean,
-    default: undefined
-  },
-  // 是否要高亮当前行
-  heightCurrentRow: {
-    type: Boolean,
-    default: undefined
-  },
-  // 当前行的 key，只写属性
-  currentRowKey: {
-    type: [String, Number],
-    default: undefined
-  },
-  // 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className
-  rowClassName: {
-    type: [Function, String],
-    default: undefined
-  },
-  // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style
-  rowStyle: {
-    type: [Function, String],
-    default: undefined
-  },
-  // 	单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className
-  cellClassName: {
-    type: [Function, String],
-    default: undefined
-  },
-  // 单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有单元格设置一样的 Style
-  cellStyle: {
-    type: [Function, Object],
-    default: undefined
-  },
-  // 表头行的 className 的回调方法，也可以使用字符串为所有表头行设置一个固定的 className
-  headerRowClassName: {
-    type: [Function, String],
-    default: undefined
-  },
-  // 表头行的 style 的回调方法，也可以使用一个固定的 Object 为所有表头行设置一样的 Style
-  headerRowStyle: {
-    type: [Function, Object],
-    default: undefined
-  },
-  // 表头单元格的 className 的回调方法，也可以使用字符串为所有表头单元格设置一个固定的 classNam
-  headerCellClassName: {
-    type: [Function, String],
-    default: undefined
-  },
-  // 表头单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有表头单元格设置一样的 Style
-  headerCellStyle: {
-    type: [Function, Object],
-    default: undefined
-  },
-  // 行数据的 Key，用来优化 Table 的渲染； 在使用reserve-selection功能与显示树形数据时，该属性是必填的。 类型为 String 时，支持多层访问：user.info.id，但不支持 user.info[0].id，此种情况请使用 Function
-  rowKey: {
-    type: [Function, String],
-    default: undefined
-  },
   // 空数据时显示的文本内容， 也可以通过 #empty 设置
   emptyText: {
     type: String,
     default: '暂无数据'
   },
-  // 是否默认展开所有行，当 Table 包含展开行存在或者为树形表格时有效
-  defaultExpandAll: {
-    type: Boolean,
-    default: undefined
-  },
-  // 可以通过该属性设置 Table 目前的展开行，需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组
-  expandRowKeys: {
-    type: Array,
-    default: undefined
-  },
-  // 默认的排序列的 prop 和顺序。 它的 prop 属性指定默认的排序的列，order 指定默认排序的顺序
-  defaultSort: {
-    type: Object,
-    default: undefined
-  },
-  // tooltip effect 属性
-  tooltipEffect: {
-    type: String,
-    default: undefined
-  },
-  // 是否在表尾显示合计行
-  showSummary: {
-    type: Boolean,
-    default: undefined
-  },
   // 合计行第一列的文本
   sumText: {
     type: String,
     default: '合计'
-  },
-  // 自定义的合计计算方法
-  summaryMethod: {
-    type: Function,
-    default: undefined
-  },
-  // 合并行或列的计算方法
-  spanMethod: {
-    type: Function,
-    default: undefined
-  },
-  // 	在多选表格中，当仅有部分行被选中时，点击表头的多选框时的行为。 若为 true，则选中所有行；若为 false，则取消选择所有行
-  selectOnIndeterminate: {
-    type: Boolean,
-    default: undefined
-  },
-  // 展示树形数据时，树节点的缩进
-  indent: {
-    type: Number,
-    default: undefined
-  },
-  // 是否懒加载子节点数据
-  lazy: {
-    type: Boolean,
-    default: undefined
-  },
-  // 加载子节点数据的函数，lazy 为 true 时生效，函数第二个参数包含了节点的层级信息
-  load: {
-    type: Function,
-    default: undefined
-  },
-  // 渲染嵌套数据的配置选项
-  treeProps: {
-    type: Object,
-    default: undefined
   }
 })
 
@@ -269,6 +86,56 @@ const { tableBorder, tableStripe } = mapGetters(['tableBorder', 'tableStripe'])
 
 const tBorder = computed(() => (isNotBlank(props.border) ? props.border : tableBorder.value))
 const tStripe = computed(() => (isNotBlank(props.stripe) ? props.stripe : tableStripe.value))
+const tableColumns = computed(() => {
+  const columns = []
+  if (tableRef.value && tableRef.value.$refs && tableRef.value.$refs.tableHeader.columns) {
+    tableRef.value.$refs.tableHeader.columns.forEach((column) => {
+      if (column.type === 'default') {
+        columns.push(column.property)
+      }
+    })
+  }
+  return columns
+})
+
+const columnsKV = computed(() => {
+  const kv = {}
+  tableColumns.value.forEach((c) => {
+    kv[c] = true
+  })
+  return kv
+})
+
+const dataFormatKV = computed(() => {
+  const kv = {}
+  if (props.dataFormat && props.dataFormat.length > 0) {
+    props.dataFormat.forEach((df) => {
+      kv[df[0]] = df.slice(1)
+    })
+  }
+  return kv
+})
+
+const filterData = ref()
+
+const tableLoaded = watch(
+  tableRef,
+  (val) => {
+    if (val) {
+      watch(
+        [() => props.data, tableColumns],
+        ([listData, columns]) => {
+          handleData(listData, columns)
+        },
+        { immediate: true, deep: true }
+      )
+      nextTick(() => {
+        tableLoaded()
+      })
+    }
+  },
+  { immediate: true }
+)
 
 // 监听表格初始化时，是否展开所有行
 watch(
@@ -287,8 +154,152 @@ watch(
   { immediate: true }
 )
 
+/**
+ * @param {array} data 待处理数据
+ * @param {array} columns 显示的列
+ */
+function handleData(data, columns) {
+  // 获取格式转化的列字段
+  const dfColumns = props.dataFormat ? props.dataFormat.map((df) => df[0]) : []
+
+  if (props.showEmptySymbol || dfColumns.length > 0) {
+    // 优化数据列表
+    filterData.value = optimizeList(data, columns, dfColumns)
+  } else {
+    // 不处理则直接返回
+    filterData.value = data
+  }
+}
+
+// 优化列表数据（通常用于表格显示）
+function optimizeList(list, columns, dfColumns = []) {
+  // 为空返回“空数组”
+  if (isBlank(list) || isBlank(columns)) return []
+  // 拷贝对象
+  const cloneList = props.returnSourceData ? list : cloneDeep(list)
+  // 合并列
+  const iterateColumns = Array.from(new Set([...columns, ...dfColumns]))
+  // 递归优化
+  // optimizeListDeep(list)
+  cloneList.forEach((row, rowIndex) => {
+    if (row) {
+      // 赋予row 数据源
+      if (!props.returnSourceData) row.sourceRow = list[rowIndex]
+      // 遍历columns
+      iterateColumns.forEach((field) => {
+        const dfCfg = dataFormatKV.value[field]
+        let preData = getInfo(row, field)
+        if (dfCfg) {
+          for (let i = 0; i < dfCfg.length; i++) {
+            const fmD = formatDataByType(row, preData, dfCfg[0])
+            preData = fmD
+            setInfo(row, field, fmD)
+          }
+        }
+        // 若未显示列中的对象，且值不存在，则设置空
+        if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
+          setInfo(row, field, props.emptySymbol)
+        }
+      })
+    }
+  })
+  return cloneList
+}
+
+//
+function formatDataByType(row, data, field) {
+  const type = Array.isArray(field) ? field[0] : field
+  const field1 = Array.isArray(field) && field.length > 1 ? field[1] : void 0
+  switch (type) {
+    case 'to-fixed':
+      return toFixed(data, field1)
+    case 'to-fixed-ck':
+      return toFixed(data, isBlank(field1) ? DP[field1] : void 0)
+    case 'to-fixed-field':
+      return toFixed(data, isBlank(field1) ? row[field1] : void 0)
+    case 'to-precision':
+      return toPrecision(data, field1)
+    case 'to-precision-ck':
+      return toPrecision(data, isBlank(field1) ? DP[field1] : void 0)
+    case 'to-precision-field':
+      return toPrecision(data, isBlank(field1) ? row[field1] : void 0)
+    case 'to-thousand':
+      return toThousand(data, field1)
+    case 'to-thousand-ck':
+      return toThousand(data, field1)
+    case 'to-thousand-field':
+      return toThousand(data, field1)
+    case 'suffix':
+      return addSuffix(data, field1)
+    case 'prefix':
+      return addPrefix(data, field1)
+    case 'split':
+      return Array.isArray(data) ? data.join(field1 || '、') : data
+    case 'parse-time':
+      return parseTime(data, field1 || '{y}-{m}-{d} {h}:{i}')
+    case 'parse-project':
+      return parseProject(row, data, field)
+    case 'parse-enum':
+      return parseEnum(row, data, field)
+  }
+}
+
+function parseProject(row, data, field) {
+  if (isBlank(data)) return
+  let p = []
+  let split = '、'
+  if (Array.isArray(data)) {
+    p = data
+  } else {
+    p = [data]
+  }
+  if (field.length > 1) {
+    const cfg = field[1]
+    split = cfg.split || split
+    if (cfg && cfg.onlyShortName) {
+      return p.map((v) => v.shortName).join(split)
+    } else {
+      return p.map((v) => projectNameFormatter(v, null, false)).join(split)
+    }
+  } else {
+    return p.map((v) => projectNameFormatter(v, null, false)).join(split)
+  }
+}
+
+function parseEnum(row, data, field) {
+  let text = ''
+  const defaultKey = { f: 'L', bit: false, split: '、', extra: '' }
+  const cfg = field.length > 2 ? Object.assign(defaultKey, field[2]) : defaultKey
+  const fEnum = field[1]
+  if (isBlank(data) || isBlank(fEnum)) return
+
+  let enumV = fEnum.V
+  if (isBlank(enumV)) {
+    // 处理某些页面自定义而没有经过处理的枚举
+    enumV = {}
+    const KEYS = Object.keys(fEnum)
+    KEYS.forEach((key) => {
+      const value = fEnum[key].V
+      enumV[value] = fEnum[key]
+    })
+  }
+  if (Array.isArray(data)) {
+    text = data.map((v) => enumV[v][cfg.f]).join(cfg.split)
+  } else if (cfg.bit) {
+    text = cleanArray(EO.getBits(fEnum, data, cfg.f)).join(cfg.split)
+  } else {
+    text = enumV[data][cfg.f] || ''
+  }
+
+  if (!text) {
+    return
+  }
+  text += cfg.extra
+  return text
+}
+
 // 获取表格中的列
-// 不能直接 const colums = tableRef.value.$refs.tableHeader.columns.setup时，ref里面还是空的
+// 不能直接 const columns = tableRef.value.$refs.tableHeader.columns.setup时，ref里面还是空的
 function getColumns() {
   return tableRef.value.$refs.tableHeader.columns
 }
@@ -312,7 +323,7 @@ function toggleRowExpansion(row, expanded) {
 // 解决树形结构打开子节点所有父节点expanded:false收回
 function expandParent(row, expanded) {
   if (row.parentArray && row.parentArray.length > 0) {
-    row.parentArray.forEach(v => {
+    row.parentArray.forEach((v) => {
       tableRef.value.store.states.treeData.value[v].expanded = true
     })
   }
@@ -346,104 +357,6 @@ function sort(prop, order) {
   tableRef.value.sort(prop, order)
 }
 
-// 当用户手动勾选数据行的 Checkbox 时触发的事件
-function select(selection, row) {
-  emit('select', selection, row)
-}
-
-// 当用户手动勾选全选 Checkbox 时触发的事件
-function selectAll(selection) {
-  emit('selectAll', selection)
-}
-
-// 当选择项发生变化时会触发该事件
-function selectionChange(selection) {
-  emit('selectionChange', selection)
-}
-
-// 当单元格 hover 进入时会触发该事件
-function cellMouseEnter(row, column, cell, event) {
-  emit('cellMouseEnter', row, column, cell, event)
-}
-
-// 	当单元格 hover 退出时会触发该事件
-function cellMouseLeave(row, column, cell, event) {
-  emit('cellMouseLeave', row, column, cell, event)
-}
-
-// 当某个单元格被点击时会触发该事件
-function cellClick(row, column, cell, event) {
-  emit('cellClick', row, column, cell, event)
-}
-
-// 当某个单元格被双击击时会触发该事件
-function cellDblclick(row, column, cell, event) {
-  emit('cellDblclick', row, column, cell, event)
-}
-
-// 当某个单元格被鼠标右键点击时会触发该事件
-function cellContext(row, column, cell, event) {
-  emit('cellContex', row, column, cell, event)
-}
-
-// 当某一行被点击时会触发该事件
-function rowClick(row, column, event) {
-  emit('rowClick', row, column, event)
-}
-
-// 当某一行被鼠标右键点击时会触发该事件
-function rowContextmenu(row, column, event) {
-  emit('rowContextmenu', row, column, event)
-}
-
-// 当某一行被双击时会触发该事件
-function rowDblclick(row, column, event) {
-  emit('rowDblclick', row, column, event)
-}
-
-// 当某一列的表头被点击时会触发该事件
-function headerClick(column, event) {
-  emit('headerClick', column, event)
-}
-
-// 当某一列的表头被鼠标右键点击时触发该事件
-function headerContextmenu(column, event) {
-  emit('headerContextmenu', column, event)
-}
-
-// 当表格的排序条件发生变化的时候会触发该事件
-function sortChange({ column, prop, order }) {
-  emit('sortChange', { column, prop, order })
-}
-
-// 参数的值是一个对象， 当表格的筛选条件发生变化的时候会触发该事件，对象的 key 是 column 的 columnKey，对应的 value 为用户选择的筛选条件的数组。
-function filterChange(filters) {
-  emit('filterChange', filters)
-}
-
-// 当表格的当前行发生变化的时候会触发该事件，如果要高亮当前行，请打开表格的 highlight-current-row 属性
-function currentChange(currentRow, oldCurrentRow) {
-  emit('currentChange', currentRow, oldCurrentRow)
-}
-
-// 	当拖动表头改变了列的宽度的时候会触发该事件
-function headerDragend(newWidth, oldWidth, column, event) {
-  emit('dragend', newWidth, oldWidth, column, event)
-}
-
-// 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
-function expandChange(row, expandedRowsOrExpanded) {
-  // 配合组件el-expand-table-column 使用
-  const keys = props.expandRowKeys || []
-  const index = keys.indexOf(row[props.rowKey])
-  if (index > -1) {
-    keys.splice(index, 1)
-  } else {
-    keys.push(row[props.rowKey])
-  }
-  emit('expandChange', row, expandedRowsOrExpanded)
-}
-
 defineExpose({
   getColumns,
   clearSelection,
@@ -459,3 +372,19 @@ defineExpose({
   refreshParent
 })
 </script>
+
+<style lang="scss">
+// 表格空数据显示“-”
+// .empty-show-symbol-table td {
+//   .cell:empty::before {
+//     content: '-';
+//     color: gray;
+//   }
+//   .is-leaf {
+//     .cell:empty::before {
+//       content: '-';
+//       color: gray;
+//     }
+//   }
+// }
+</style>

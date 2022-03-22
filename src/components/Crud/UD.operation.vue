@@ -7,7 +7,7 @@
       size="mini"
       :type="props.detailType"
       :icon="props.detailIcon"
-      @click.stop="toDetail(props.data)"
+      @click.stop="toDetail(currentData)"
     />
     <common-button
       v-if="props.showEdit"
@@ -16,7 +16,7 @@
       size="mini"
       :type="props.editType"
       icon="el-icon-edit"
-      @click.stop="toEdit(props.data)"
+      @click.stop="toEdit(currentData)"
     />
     <el-popover
       v-if="props.showDel && checkPermission(permission.del)"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, inject } from 'vue'
+import { computed, defineProps, ref, inject } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { regExtra } from '@compos/use-crud'
 
@@ -112,10 +112,23 @@ const pop = ref(false)
 
 const { crud } = regExtra()
 
+// 获取数据源
+const currentData = computed(() => {
+  const data = props.data
+  if (data) {
+    if (data.sourceRow) {
+      return data.sourceRow
+    } else {
+      return data
+    }
+  }
+  return data
+})
+
 // 取消删除
 function cancelDelete() {
   pop.value = false
-  crud.cancelDelete(props.data)
+  crud.cancelDelete(currentData.value)
 }
 
 // 点击删除按钮
@@ -126,7 +139,7 @@ function toDelete() {
 // 确认删除
 function handleDelete() {
   pop.value = false
-  crud.doDelete(props.data)
+  crud.doDelete(currentData.value)
 }
 
 // 打开删除提示窗

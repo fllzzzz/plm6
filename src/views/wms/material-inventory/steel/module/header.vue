@@ -41,7 +41,7 @@
         </common-button>
       </template>
       <template #viewLeft>
-        <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button>
+        <!-- <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button> -->
         <el-badge :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0">
           <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">
             新入库标签打印
@@ -125,12 +125,14 @@ async function handleBasicClassChange(val) {
 
 // TODO:
 // 批量打印
-function toBatchPrint() {
+// function toBatchPrint() {
 
-}
+// }
 
 // 打印 未打印标签的物料
-function toPrintNotPrintedLabel() {}
+function toPrintNotPrintedLabel() {
+
+}
 
 defineExpose({
   updateListNumber

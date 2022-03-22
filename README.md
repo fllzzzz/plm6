@@ -66,5 +66,11 @@ PS:
 2.在上面情景的基础上，在“分配重量”所在的盒子中用v-if插入（兄弟节点插入），插入的顺序也会有问题）
 
 如果想探知该问题，请切换到git的 cc60af13518a4a2bb58d426b56b24c62657c54f7 版本， 时间： 2021/12/29, author：DH
-      
+
+## PDF预览
+1. 使用pdfjs-dist@2.5.207（vue-3.0中使用过高或者过低的版本，会报错）
+2. `/public/assets/pdf` 内文件从 `/node_modules/pdfjs-dist/es5` 内拷贝过来
+3. `/public/assets/pdf/build/pdf.js`做过如下修改：
+   1. 24698行 `xhr.open("GET", this.url);` => `xhr.open("GET", this.url,true);`
+4. PDF预览封装在`/src/components/PDF`      
 

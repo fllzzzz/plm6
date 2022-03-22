@@ -63,6 +63,11 @@ export const rawMaterialInboundReviewPM = {
 
 // --------------------------- 物料仓 start ------------------------------
 
+// 物料仓/标签打印
+export const materialLabelPrintPM = {
+  get: ['wms_mat_labelPrint:get'] // 查看 标签打印
+}
+
 // 物料仓/钢材仓库
 export const steelMaterialWarehousePM = {
   get: ['wms_matWarehouse_steel:get'], // 查看 钢材仓库
@@ -122,6 +127,7 @@ export const rawMaterialUnFreezeListPM = {
   get: ['wms_rawMat_unfreeze_list:get'],
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
+  rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail, // 出库详情
   preparationReceiptDetail: commonPM.rawMatPreparationReceiptDetail // 备料详情
 }
 
@@ -326,6 +332,17 @@ export const materialFreezeRecordCPM = {
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
   outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
   preparationReceiptDetail: commonPM.rawMatPreparationReceiptDetail, // 备料详情
+  rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
+}
+
+// 组件·单据详情
+export const receiptDetailCPM = {
+  preparationReceiptDetail: commonPM.rawMatPreparationReceiptDetail, // 备料详情
+  purchaseOrderDetail: commonPM.purchaseOrderDetail, // 订单详情
+  inboundReceiptDetail: commonPM.rawMatInboundReceiptDetail, // 入库详情
+  outboundReceiptDetail: commonPM.rawMatOutboundReceiptDetail, // 出库详情
+  transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
+  returnReceiptDetail: commonPM.rawMatReturnReceiptDetail, // 退库详情
   rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
 }
 

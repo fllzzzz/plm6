@@ -24,6 +24,7 @@ const get = {
             purchaseSN: 'CG-211125-123213', // 采购单号
             shipmentNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 邮递-物流单号
             licensePlate: patternLicensePlate, // 车牌号
+            // 项目id
             'projects|2': [
               {
                 'id|+1': 1,
@@ -31,7 +32,7 @@ const get = {
                 'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
-            ], // 项目id
+            ],
             supplier: {
               // 供应商
               id: 1,

@@ -304,7 +304,7 @@ function getLabelInfo(row) {
     quantity: row.quantity,
     specification: row.specification,
     drawingNumber: row.drawingNumber,
-    weight: printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
+    weight: printConfig.weight === printWeightTypeEnum.NET.V ? row.netWeight.toFixed(DP.COM_WT__KG) : row.grossWeight.toFixed(DP.COM_WT__KG),
     length: row.length
   }
   // 生产线信息
@@ -323,7 +323,7 @@ function getLabelInfo(row) {
       taskId: row.taskId, // 任务id
       type: productType, // 类型
       wt: printConfig.weight, // 重量类型
-      sl: Number(printConfig.showProductionLine), // 显示生产线
+      // sl: Number(printConfig.showProductionLine), // 显示生产线
       sa: Number(printConfig.showArea), // 显示区域
       sm: Number(printConfig.showMonomer) // 显示单体
     })

@@ -79,6 +79,8 @@ watch(
 function submitIt() {
   formRef.value.validate(async (valid) => {
     if (valid) {
+      if (!dialogVisible.value) return
+      submitLoading.value = true
       const data = {
         id: props.details.id,
         quantity: props.details.sourceSchedulingQuantity - form?.quantity
@@ -87,6 +89,7 @@ function submitIt() {
       ElNotification({ title: '任务删除成功', type: 'success', duration: 2500 })
       emit('delSuccess')
       handleClose()
+      submitLoading.value = false
     } else {
       return false
     }

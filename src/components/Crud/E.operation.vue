@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import { regExtra } from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
 import { fileDownload } from '@/utils/file'
@@ -48,14 +48,27 @@ const props = defineProps({
 const downloadLoading = ref(false)
 const { crud } = regExtra()
 
+// 获取数据源
+const currentData = computed(() => {
+  const data = props.data
+  if (data) {
+    if (data.sourceRow) {
+      return data.sourceRow
+    } else {
+      return data
+    }
+  }
+  return data
+})
+
 async function doExport() {
   try {
     downloadLoading.value = true
     if (props.customFn) {
-      await fileDownload(props.customFn, props.data)
+      await fileDownload(props.customFn, currentData.value)
     } else {
       crud.downloadLoading = true
-      await crud.doExport(props.data)
+      await crud.doExport(currentData.value)
     }
   } catch (error) {
     console.log('通用导出', error)

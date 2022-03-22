@@ -185,22 +185,11 @@ export function teamWageDetail(params) {
 }
 
 /**
- * 结构生产报表
+ * 生产报表
  */
-export function structureProductionReport(params) {
+export function productionReport(params) {
   return request({
-    url: `/api/mes/building/production_statements/artifact/print`,
-    method: 'get',
-    params
-  })
-}
-
-/**
- * 围护生产报表
- */
-export function enclosureProductionReport(params) {
-  return request({
-    url: `/api/mes/building/production_statements/enclosure/print`,
+    url: `/api/mes/building/production_statements/print`,
     method: 'get',
     params
   })
@@ -373,8 +362,7 @@ export default {
   schedulingDetail, // 工单详情
 
   // 生产报表
-  structureProductionReport, // 结构生产报表
-  enclosureProductionReport, // 围护生产报表
+  productionReport, // 生产报表
   productionStatistics, // 在制品统计
   productionStatisticsIn, // 在制品统计明细-在制品
   productionStatisticsUn, // 在制品统计明细-未生产
