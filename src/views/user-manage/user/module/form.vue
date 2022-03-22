@@ -169,6 +169,8 @@ async function getRoleAll() {
 getJobAll()
 
 async function getJobAll(id) {
+  jobs.value = []
+  form.jobId = undefined
   try {
     const submitData = { deptId: id }
     const { content } = await jobAll(submitData)
