@@ -6,6 +6,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      returnSourceData
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"
@@ -26,13 +27,7 @@
         label="区域"
         width="120px"
       />
-      <productType-full-info-columns
-        :productType="productType"
-        :category="category"
-        :columns="columns"
-        :fixed="'left'"
-        fixedWidth
-      />
+      <productType-full-info-columns :productType="productType" :category="category" :columns="columns" :fixed="'left'" fixedWidth />
       <template v-for="workshop in lines">
         <template v-for="line in workshop.productionLineList">
           <el-table-column

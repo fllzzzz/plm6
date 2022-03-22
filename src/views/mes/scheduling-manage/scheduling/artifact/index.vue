@@ -6,6 +6,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      returnSourceData
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :stripe="false"
