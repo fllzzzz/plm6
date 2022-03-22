@@ -13,6 +13,7 @@
     :max-height="maxHeight"
     style="width: 100%"
     :stripe="false"
+    :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="业务类型">

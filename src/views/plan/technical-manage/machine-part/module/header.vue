@@ -24,15 +24,6 @@
           {{ item.L }}
         </el-radio-button>
       </el-radio-group>
-      <common-radio-button
-        v-model="query.shearType"
-        :options="shearTypeEnum.ENUM"
-        show-option-all
-        type="enum"
-        style="margin-left: 0; margin-right: 6px"
-        class="filter-item"
-        @change="crud.toQuery"
-      />
       <el-input
         v-model="query.serialNumber"
         size="small"
@@ -70,7 +61,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
-import { processingEnum, shearTypeEnum } from '@enum-ms/plan'
+import { processingEnum } from '@enum-ms/plan'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { ElRadioGroup } from 'element-plus'
 
@@ -78,7 +69,6 @@ const defaultQuery = {
   serialNumber: '',
   specification: '',
   material: '',
-  shearType: { value: undefined, resetAble: false },
   monomerId: { value: undefined, resetAble: false },
   areaId: { value: undefined, resetAble: false },
   status: { value: undefined, resetAble: false }

@@ -25,8 +25,7 @@ async function getUnit(pollingNumber = 1) {
     await store.dispatch('config/fetchUnit')
     return store.state.config.unit.MAP
   } catch (error) {
-    console.log('获取单位', error)
-    if (pollingNumber && pollingNumber <= 5) {
+    if (pollingNumber && pollingNumber <= 10) {
       await codeWait(1000)
       return await getUnit(++pollingNumber)
     }

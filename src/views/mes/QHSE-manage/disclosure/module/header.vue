@@ -80,6 +80,7 @@ const defaultQuery = {
   startDate: void 0,
   endDate: void 0,
   type: void 0,
+  boolApp: false,
   status: { value: improveStatusEnum.WAIT_RECTIFIED.V, resetAble: false },
   projectId: { value: void 0, resetAble: false }
 }

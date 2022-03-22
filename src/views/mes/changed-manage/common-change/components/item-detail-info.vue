@@ -10,7 +10,7 @@
       <span v-empty-text>{{ data.areaDetail?.name }}</span>
     </el-form-item>
   </el-form>
-  <common-table :data="[data]">
+  <common-table :data="[productData]">
     <productType-full-info-columns
       :productType="productType"
       :unitNewLine="false"
@@ -64,11 +64,13 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { productInfo } from '@/api/mes/changed-manage/common'
+import { computed, defineProps, watch, ref } from 'vue'
+import { convertUnits } from '@/utils/convert/unit'
 
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object
   },
@@ -92,4 +94,37 @@ defineProps({
     default: false
   }
 })
+
+const productId = computed(() => {
+  return props.data?.productId
+})
+
+const productData = ref({})
+const loading = ref(false)
+
+watch(
+  () => productId.value,
+  () => {
+    fetch()
+  },
+  { immediate: true }
+)
+
+async function fetch() {
+  try {
+    loading.value = true
+    const info = await productInfo({
+      id: props.data.productId,
+      productType: props.productType
+    })
+    info.surfaceArea = info.surfaceArea && convertUnits(info.surfaceArea, 'mm2', 'm2')
+    productData.value = Object.assign({}, info, props.data)
+  } catch (error) {
+    productData.value = Object.assign({}, props.data)
+    console.log('获取产品信息', error)
+  } finally {
+    loading.value = false
+  }
+}
+
 </script>

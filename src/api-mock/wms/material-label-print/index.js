@@ -20,7 +20,13 @@ const getNotPrintedMaterialNumber = {
     return {
       code: 20000,
       message: '成功',
-      data: { 'inboundMaterial|1-10': 10, 'outboundMaterial|1-3': 0, 'transferMaterial|1-5': 5, 'returnMaterial|1-2': 2 }
+      data: {
+        'totalMaterial|10-20': 20,
+        'inboundMaterial|1-10': 10,
+        'outboundMaterial|1-3': 0,
+        'transferMaterial|1-5': 5,
+        'returnMaterial|1-2': 2
+      }
     }
   }
 }

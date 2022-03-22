@@ -18,6 +18,7 @@
         class="assembly-table"
         style="width: 100%"
         :stripe="false"
+        :showEmptySymbol="false"
         @selection-change="crud.selectionChangeHandler"
       >
         <el-table-column key="selection" type="selection" width="55" />
@@ -32,6 +33,7 @@
                 row-key="rowKey"
                 :stripe="false"
                 style="width: 100%; border-color: transparent"
+                :showEmptySymbol="false"
               >
                 <el-table-column key="serialNumber" prop="serialNumber" label="构件编号" align="center">
                   <template v-slot="scope">
@@ -123,6 +125,11 @@
                     <span v-else>{{ scope.row.quantity }}</span>
                   </template>
                 </el-table-column>
+                <el-table-column v-if="columns.visible('assembleQuantity')" prop="assembleQuantity" :show-overflow-tooltip="true" align="center" label="对应组立数量">
+                  <template v-slot="scope">
+                    <span v-if="!scope.row.add">{{ scope.row.assembleQuantity }}</span>
+                  </template>
+                </el-table-column>
                 <el-table-column key="add" prop="add" label="已生产" align="center">
                   <template v-slot="scope">
                     <span v-if="!scope.row.add">{{ scope.row.productQuantity }}</span>
@@ -203,7 +210,6 @@
           label="操作"
           width="150px"
           align="center"
-          fixed="right"
         >
           <template v-slot="scope">
             <udOperation :data="scope.row" :show-edit="false" />

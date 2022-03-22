@@ -14,6 +14,7 @@
         :max-height="maxHeight"
         :stripe="false"
         :span-method="objectSpanMethod"
+        :showEmptySymbol="false"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
@@ -101,7 +102,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 const unitInfo = computed(() => {
   const data = {}
-  if (crud.query.productType === TechnologyTypeAllEnum.STRUCTURE.V) {
+  if (crud.query.areaProductType === TechnologyTypeAllEnum.STRUCTURE.V) {
     // 显示t，这块只保留两位小数
     data.decimal = DP.COM_WT__KG
     data.unit = 't'

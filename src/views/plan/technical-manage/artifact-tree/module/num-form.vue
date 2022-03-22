@@ -180,10 +180,10 @@ function resetForm() {
   }
 }
 
-async function getInfo(data) {
+async function getInfo(detailInfo) {
   transportedNum.value = 0
   try {
-    const data = await artifactInfo({ serialNumber: data.serialNumber, areaId: data.areaId })
+    const data = await artifactInfo({ serialNumber: detailInfo.serialNumber, areaId: detailInfo.areaId })
     transportedNum.value = data.shipQuantity ? data.shipQuantity : 0
   } catch (error) {
     console.log('获取构件信息', error)

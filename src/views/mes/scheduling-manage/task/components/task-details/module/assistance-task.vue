@@ -129,6 +129,8 @@ async function fetchTeamList() {
 function submitIt() {
   formRef.value.validate(async (valid) => {
     if (valid) {
+      if (!dialogVisible.value) return
+      submitLoading.value = true
       const assistList = [{
         taskId: taskId.value,
         teamId: form.teamId
@@ -139,6 +141,7 @@ function submitIt() {
       ElNotification({ title: '添加协同任务成功', type: 'success', duration: 2500 })
       emit('success')
       handleClose()
+      submitLoading.value = false
     } else {
       return false
     }

@@ -14,6 +14,7 @@
         :stripe="false"
         :summary-method="getSummaries"
         :max-height="maxHeight"
+        :showEmptySymbol="false"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
