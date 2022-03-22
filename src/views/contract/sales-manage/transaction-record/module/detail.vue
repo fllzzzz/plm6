@@ -39,36 +39,17 @@
       <common-table
         ref="tableRef"
         v-loading="tableLoading"
+        :data-format="dataFormat"
         :data="list"
         :max-height="maxHeight"
         style="width: 100%"
       >
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="project.shortName" prop="project.shortName" :show-overflow-tooltip="true" label="项目"  min-width="250" >
-          <template #default="{ row }">
-            <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column key="contractAmount" prop="contractAmount" align="center" min-width="120" label="合同额">
-          <template #default="{ row }">
-            <span v-thousand="row.contractAmount" v-empty-text />
-          </template>
-        </el-table-column>
-        <el-table-column key="settlementAmount" prop="settlementAmount" align="center" min-width="120" label="结算额">
-          <template #default="{ row }">
-            <span v-thousand="row.settlementAmount" v-empty-text />
-          </template>
-        </el-table-column>
-        <el-table-column key="signingDate" prop="signingDate" label="签订日期" align="center" width="100">
-          <template #default="{ row }">
-            <span v-parse-time="{ val: row.signingDate, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
-        <el-table-column key="signerName" prop="signerName" align="center" width="120" label="业务负责人">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.signerName }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column key="project" prop="project" :show-overflow-tooltip="true" label="项目"  min-width="250" />
+        <el-table-column key="contractAmount" prop="contractAmount" align="center" min-width="120" label="合同额" />
+        <el-table-column key="settlementAmount" prop="settlementAmount" align="center" min-width="120" label="结算额" />
+        <el-table-column key="signingDate" prop="signingDate" label="签订日期" align="center" width="100" />
+        <el-table-column key="signerName" prop="signerName" align="center" width="120" label="业务负责人" />
       </common-table>
     </template>
   </common-drawer>
@@ -77,8 +58,6 @@
 <script setup>
 import { detail } from '@/api/contract/sales-manage/transaction-record'
 import { defineProps, defineEmits, ref, watch, inject } from 'vue'
-
-import { projectNameFormatter } from '@/utils/project'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -121,6 +100,12 @@ watch(
 
 const tableLoading = ref(false)
 const list = ref([])
+const dataFormat = ref([
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['signingDate', ['parse-time', '{y}-{m}-{d}']],
+  ['contractAmount', 'to-thousand'],
+  ['settlementAmount', 'to-thousand']
+])
 const permission = inject('permission')
 
 async function fetchList() {

@@ -86,6 +86,8 @@ import { convertUnits } from '@/utils/convert/unit'
 import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
 import { enclosureSettlementTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@/utils/data-type/number'
+import { emptyTextFormatter } from '@/utils/data-type'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -143,7 +145,7 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
-    v.originUnitPrice = v.unitPrice
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
     v.totalArea = convertUnits(v.totalArea, 'm2', 'm2', DP.COM_AREA__M2)
     v.totalPrice = (enclosureMeasureMode.value === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
