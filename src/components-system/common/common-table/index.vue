@@ -35,7 +35,18 @@ const props = defineProps({
     type: Array,
     default: undefined
   },
-  // 数据格式转换
+  /**
+   * 数据格式转换
+   * 格式：
+   * [
+   *  ['project', ['parse-project', {lineBreak:true}], ..., { source: 'projects' }],
+   *  ...
+   * ]
+   * 参数1：字段名，string, 必填
+   * 参数2: 转换类型 ,string | array。 子参数查看对应类型。PS：参数2可填写多个，按填写顺序转换
+   * 参数(末尾)：其他信息, object。
+   * source: 源数据字段：以上方为例 row.project = format(row.projects)
+   */
   dataFormat: {
     type: Array,
     default: undefined
@@ -187,13 +198,30 @@ function optimizeList(list, columns, dfColumns = []) {
       if (!props.returnSourceData) row.sourceRow = list[rowIndex]
       // 遍历columns
       iterateColumns.forEach((field) => {
-        const dfCfg = dataFormatKV.value[field]
-        let preData = getInfo(row, field)
+        let dfCfg = dataFormatKV.value[field]
+
+        let preData = getInfo(list[rowIndex], field)
+        // 获取未转换的值
         if (dfCfg) {
-          for (let i = 0; i < dfCfg.length; i++) {
-            const fmD = formatDataByType(row, preData, dfCfg[0])
-            preData = fmD
-            setInfo(row, field, fmD)
+          // 如果数组最后一个值为对象，且不为数组的情况
+          const otherInfo = dfCfg[dfCfg.length - 1]
+          // 别名，没有则使用field
+          if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
+            // 实际配置信息范围
+            dfCfg = dfCfg.slice(0, dfCfg.length - 1)
+            // 获取数据源字段
+            const sourceField = otherInfo ? otherInfo.source : void 0
+            // 获取实际转换前的值
+            if (sourceField) preData = getInfo(list[rowIndex], sourceField)
+          }
+          if (field) {
+            for (let i = 0; i < dfCfg.length; i++) {
+              // 获取转换后的值
+              const fmD = formatDataByType(row, preData, dfCfg[i])
+              preData = fmD
+              // 设置转换后的值
+              setInfo(row, field, fmD)
+            }
           }
         }
         // 若未显示列中的对象，且值不存在，则设置空
@@ -257,6 +285,7 @@ function formatDataByType(row, data, field) {
      * 1.'empty-text'
      * 2.['empty-text', '-']
      * 参数2: 空值显示。默认：'-'
+     *
      * 通常不需要使用该类型
      * 1.需要显示的字段不在el-table-columns中，例如在expand-columns中
      * 2.该列需要自定义空值
@@ -286,13 +315,14 @@ function formatDataByType(row, data, field) {
      * 项目格式转换
      * 例:
      * 1.'parse-project'
-     * 2.['parse-project', {onlyShortName: false, split: '、'}]
-     * 参数2：配置信息,默认：{onlyShortName: false, split: '、'}
+     * 2.['parse-project', {onlyShortName: false, split: '、', lineBreak: false}]
+     * 参数2：配置信息,默认：{onlyShortName: false, split: '、', lineBreak: false}
      * onlyShortName:只显示简称
      * split：多个项目时的分割字符
+     * lineBreak：合同编号与项目名称之间换行，否则以空格隔开
      */
     case 'parse-project':
-      return parseProject(row, data, field)
+      return parseProject(data, Array.isArray(field) ? field.slice(1) : void 0)
     /**
      * 枚举格式转换
      * 例：['parse-enum', matClsEnum, { f: 'L', bit: false, split: '、', extra: '' }]
@@ -304,39 +334,38 @@ function formatDataByType(row, data, field) {
      * extra: 额外的值（放在转换信息的末尾）
      */
     case 'parse-enum':
-      return parseEnum(row, data, field)
+      return parseEnum(data, Array.isArray(field) ? field.slice(1) : void 0)
   }
 }
 
 // 项目格式装换
-function parseProject(row, data, field) {
+function parseProject(data, cfg) {
   if (isBlank(data)) return
   let p = []
-  let split = '、'
+  const config = { onlyShortName: false, split: '、', lineBreak: false }
   if (Array.isArray(data)) {
     p = data
   } else {
     p = [data]
   }
-  if (field.length > 1) {
-    const cfg = field[1]
-    split = cfg.split || split
-    if (cfg && cfg.onlyShortName) {
-      return p.map((v) => v.shortName).join(split)
-    } else {
-      return p.map((v) => projectNameFormatter(v, null, false)).join(split)
-    }
+  // 覆盖配置信息
+  if (cfg && cfg.length > 0) {
+    Object.assign(config, cfg[0] || {}) // 配置信息
+  }
+  // 格式转化
+  if (config.onlyShortName) {
+    return p.map((v) => v.shortName).join(config.split)
   } else {
-    return p.map((v) => projectNameFormatter(v, null, false)).join(split)
+    return p.map((v) => projectNameFormatter(v, null, false)).join(config.split)
   }
 }
 
 // 枚举格式装换
-function parseEnum(row, data, field) {
+function parseEnum(data, field) {
   let text = ''
   const defaultKey = { f: 'L', bit: false, split: '、', extra: '' }
-  const cfg = field.length > 2 ? Object.assign(defaultKey, field[2]) : defaultKey
-  const fEnum = field[1]
+  const cfg = field.length > 1 ? Object.assign(defaultKey, field[1]) : defaultKey
+  const fEnum = field[0]
   if (isBlank(data) || isBlank(fEnum)) return
 
   let enumV = fEnum.V
