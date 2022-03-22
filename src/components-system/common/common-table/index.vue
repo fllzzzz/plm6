@@ -25,7 +25,7 @@ import { cleanArray } from '@/utils/data-type/array'
 import { getInfo, setInfo } from '@/utils/el-extra'
 
 import { ElTable } from 'element-plus'
-import { addPrefix, addSuffix, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
+import { addPrefix, addSuffix, emptyTextFormatter, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import cloneDeep from 'lodash/cloneDeep'
 
 // default不填写，默认值为null。需要传入undefined
@@ -211,39 +211,104 @@ function formatDataByType(row, data, field) {
   const type = Array.isArray(field) ? field[0] : field
   const field1 = Array.isArray(field) && field.length > 1 ? field[1] : void 0
   switch (type) {
+    /**
+     * to-fixed, to-precision, to-thousand，第二个参数皆为小数精度
+     * 共有三种填写方式
+     * 普通模式：直接传入小数精度，如：['to-fixed',2]
+     * commonKey(ck)模式：传入公共精度的key值，如：['to-fixed','COM_WT__KG']
+     * field模式：传入当前对象的字段，如['to-fixed','accountingPrecision'], 单位精度 取值为 row.accountingPrecision
+     */
+    // 处理小数精度，转换后为string
     case 'to-fixed':
       return toFixed(data, field1)
     case 'to-fixed-ck':
-      return toFixed(data, isBlank(field1) ? DP[field1] : void 0)
+      return toFixed(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-fixed-field':
-      return toFixed(data, isBlank(field1) ? row[field1] : void 0)
+      return toFixed(data, isNotBlank(field1) ? row[field1] : void 0)
+    // 处理小数精度，转换后为number
     case 'to-precision':
       return toPrecision(data, field1)
     case 'to-precision-ck':
-      return toPrecision(data, isBlank(field1) ? DP[field1] : void 0)
+      return toPrecision(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-precision-field':
-      return toPrecision(data, isBlank(field1) ? row[field1] : void 0)
+      return toPrecision(data, isNotBlank(field1) ? row[field1] : void 0)
+    // 10000 => 10,000
     case 'to-thousand':
       return toThousand(data, field1)
     case 'to-thousand-ck':
-      return toThousand(data, field1)
+      return toThousand(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-thousand-field':
-      return toThousand(data, field1)
-    case 'suffix':
-      return addSuffix(data, field1)
+      return toThousand(data, isNotBlank(field1) ? row[field1] : void 0)
+    /**
+     * 前置文字
+     * 例：['prefix', '快乐的']： '小明'  =>  '快乐的小明
+     */
     case 'prefix':
       return addPrefix(data, field1)
+    /**
+     * 前置文字
+     * 例：['prefix', '——author：小明']： '嘻嘻'  =>  '嘻嘻——author：小明
+     */
+    case 'suffix':
+      return addSuffix(data, field1)
+    /**
+     * 空字符串显示
+     * 例：
+     * 1.'empty-text'
+     * 2.['empty-text', '-']
+     * 参数2: 空值显示。默认：'-'
+     * 通常不需要使用该类型
+     * 1.需要显示的字段不在el-table-columns中，例如在expand-columns中
+     * 2.该列需要自定义空值
+     * 3.未使用showEmptySymbol
+     */
+    case 'empty-text':
+      return emptyTextFormatter(data, field1 || '-')
+    /**
+     * 分解数组
+     * 例：
+     * 1.'split': ['小王', '小明']  =>  '小王、小明'
+     * 2.['split', '，']：['小王', '小明']  =>  '小王，小明'
+     * 参数2：分割字符。默认: '、'
+     */
     case 'split':
       return Array.isArray(data) ? data.join(field1 || '、') : data
+    /**
+     * 时间格式转换
+     * 例：
+     * 1.'parse-time'： 1647917251993  =>  2022-03-22 10:47:31
+     * 2.['parse-time', '{y}-{m}-{d}'] 1647917251993  =>  2022-03-22
+     * 参数2：日期格式。默认: '{y}-{m}-{d} {h}:{i}'
+     */
     case 'parse-time':
       return parseTime(data, field1 || '{y}-{m}-{d} {h}:{i}')
+    /**
+     * 项目格式转换
+     * 例:
+     * 1.'parse-project'
+     * 2.['parse-project', {onlyShortName: false, split: '、'}]
+     * 参数2：配置信息,默认：{onlyShortName: false, split: '、'}
+     * onlyShortName:只显示简称
+     * split：多个项目时的分割字符
+     */
     case 'parse-project':
       return parseProject(row, data, field)
+    /**
+     * 枚举格式转换
+     * 例：['parse-enum', matClsEnum, { f: 'L', bit: false, split: '、', extra: '' }]
+     * 参数2：枚举对象
+     * 参数3：信息配置，默认值为：{ f: 'L', bit: false, split: '、', extra: '' }
+     * f: “显示的值”对应的是枚举对象中哪个key值
+     * bit：是否为位运算的值
+     * split：传入数组或位运算值的情况下，分割字符
+     * extra: 额外的值（放在转换信息的末尾）
+     */
     case 'parse-enum':
       return parseEnum(row, data, field)
   }
 }
 
+// 项目格式装换
 function parseProject(row, data, field) {
   if (isBlank(data)) return
   let p = []
@@ -266,6 +331,7 @@ function parseProject(row, data, field) {
   }
 }
 
+// 枚举格式装换
 function parseEnum(row, data, field) {
   let text = ''
   const defaultKey = { f: 'L', bit: false, split: '、', extra: '' }
