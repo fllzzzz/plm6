@@ -6,6 +6,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="productFormat[productType]"
       returnSourceData
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
@@ -144,6 +145,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import useSchedulingIndex from '@compos/mes/scheduling/use-scheduling-index'
 import pagination from '@crud/Pagination'
+import { productFormat } from '@/utils/columns-format/mes'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 import useDrawing from '@compos/use-drawing'

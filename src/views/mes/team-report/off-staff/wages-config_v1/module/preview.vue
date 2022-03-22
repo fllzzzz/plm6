@@ -10,7 +10,7 @@ size="mini"
         >保存</common-button
       >
     </template>
-    <common-table ref="tableRef" :data="editList" :max-height="maxHeight" style="width: 100%">
+    <common-table ref="tableRef" :data="editList" :dataFormat="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <belonging-info-columns showTeam />
       <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="140px">
@@ -36,17 +36,17 @@ size="mini"
       </el-table-column>
       <el-table-column prop="originUnitPrice" align="center" width="115px" label="原单价(元)">
         <template #default="{ row }">
-          <span v-to-fixed="{ k: 'YUAN', val: row.originUnitPrice }"></span>
+          <span>{{ row.originUnitPrice }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="unitPrice" align="center" width="115px" label="当前单价(元)">
         <template #default="{ row }">
-          <span v-to-fixed="{ k: 'YUAN', val: row.unitPrice }"></span>
+          <span>{{ row.unitPrice }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="totalAmount" label="总价(元)" align="center" width="100px">
         <template #default="{ row }">
-          <span v-to-fixed="{ k: 'YUAN', val: row.totalAmount }"></span>
+          <span>{{ row.totalAmount }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -87,6 +87,12 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
+
+const dataFormat = ref([
+  ['originUnitPrice', ['to-fixed-ck', 'YUAN']],
+  ['unitPrice', ['to-fixed-ck', 'YUAN']],
+  ['totalAmount', ['to-fixed-ck', 'YUAN']]
+])
 
 const unitObj = inject('unitObj')
 const checkUnitObj = inject('checkUnitObj')

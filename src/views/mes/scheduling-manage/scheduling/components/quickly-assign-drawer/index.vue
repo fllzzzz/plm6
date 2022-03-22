@@ -16,6 +16,7 @@
         <div class="table-content">
           <common-table
             ref="tableRef"
+            :dataFormat="productFormat[productType]"
             :max-height="maxHeight"
             :data="assignAbleList"
             row-key="id"
@@ -78,6 +79,7 @@ import useVisible from '@compos/use-visible'
 import productionLineBox from '../production-line-box'
 import mPreview from '../scheduling-preview'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import { productFormat } from '@/utils/columns-format/mes'
 import productTypeSpecInfoColumns from '@comp-mes/table-columns/productType-spec-info-columns'
 
 const drawerRef = ref()
@@ -154,7 +156,6 @@ function handleDataChange() {
 
 function handleSubmitData() {
   const _lines = deepClone(props.lines)
-  console.log(_lines)
   selectLine.value = _lines.filter((f) => {
     // 过滤一遍生产线，以便加快预览界面数据处理
     f.productionLineList = f.productionLineList.filter((l) => l.id === selectLineId.value)

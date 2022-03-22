@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       row-key="id"
@@ -23,12 +24,12 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime }" />
+          <span>{{ row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
         <template #default="{ row }">
-          <span v-empty-text>{{ row.userName }}</span>
+          <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -39,7 +40,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.changTypeText }}</span>
+          <span>{{ row.changTypeText }}</span>
         </template>
       </el-table-column>
       <belonging-info-columns :columns="columns" showProject showMonomer showArea />
@@ -52,7 +53,7 @@
         min-width="120"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.serialNumber }}</span>
+          <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -65,7 +66,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.oldQuantity }}</span>
+          <span>{{ row.oldQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -78,7 +79,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.newQuantity }}</span>
+          <span>{{ row.newQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -91,7 +92,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.totalInProductionQuantity }}</span>
+          <span>{{ row.totalInProductionQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('status')" :show-overflow-tooltip="true" prop="status" label="状态" align="center" width="100">
@@ -153,6 +154,8 @@ const optShow = {
   download: false
 }
 
+const dataFormat = ref([['createTime', 'parse-time']])
+
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
@@ -210,12 +213,12 @@ function toHandle(row) {
 function toDetail(row) {
   const detailVisible =
     row.handleType & abnormalHandleTypeEnum.SCHEDULE_CHANGE.V
-      ? (row.status & abnormalHandleStatusEnum.PROCESSING_COMPLETE.V
+      ? row.status & abnormalHandleStatusEnum.PROCESSING_COMPLETE.V
         ? scheduleDetailVisible
-        : scheduleDetailPreviewVisible)
-      : (row.status & abnormalHandleStatusEnum.PROCESSING_COMPLETE.V
+        : scheduleDetailPreviewVisible
+      : row.status & abnormalHandleStatusEnum.PROCESSING_COMPLETE.V
         ? productionDetailVisible
-        : productionDetailPreviewVisible)
+        : productionDetailPreviewVisible
   openDrawer(detailVisible, row)
 }
 

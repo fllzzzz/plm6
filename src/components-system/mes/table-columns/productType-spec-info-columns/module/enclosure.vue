@@ -10,7 +10,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
+      <span>{{ row.width }}</span>
     </template>
   </el-table-column>
   <!-- <el-table-column
@@ -24,7 +24,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
+      <span>{{row.width}}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -38,7 +38,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_W__MM', val: row.width }" v-empty-text></span>
+      <span>{{row.width}}</span>
     </template>
   </el-table-column> -->
   <el-table-column
@@ -52,7 +52,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_T__MM', val: row.thickness }" v-empty-text></span>
+      <span>{{ row.thickness }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -66,7 +66,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_L__MM', val: row.length }" v-empty-text></span>
+      <span>{{ row.length }}</span>
     </template>
   </el-table-column>
   <slot name="quantity" />
@@ -81,7 +81,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_AREA__M2', val: row.totalArea }" v-empty-text></span>
+      <span>{{ row.totalArea }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -95,7 +95,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ENCLOSURE_L__M', val: row.totalLength }" v-empty-text></span>
+      <span>{{ row.totalLength }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -109,7 +109,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.weight }" v-empty-text></span>
+      <span>{{ row.weight }}</span>
     </template>
   </el-table-column>
 </template>

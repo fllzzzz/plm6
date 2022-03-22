@@ -35,7 +35,7 @@
       min-width="180px"
     >
       <template #default="{ row }">
-        <span v-parse-project="{ project: row.project }" v-empty-text />
+        <span v-parse-project="{ project: row.project }" />
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('area.name')" prop="area.name" :show-overflow-tooltip="true" label="单体区域" min-width="140px">

@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
@@ -24,7 +25,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-empty-text="{ val: row.name, blank: '未分类' }"></span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -37,30 +38,9 @@
         align="center"
       >
         <template #default="{ row }">
-          <span v-empty-text="{ val: row.steelSpec, blank: '未分类' }"></span>
+          <span>{{ row.steelSpec }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column v-if="columns.visible('quantity')" prop="quantity" :show-overflow-tooltip="true" label="清单数量" align="center">
-        <template #default="{ row }"> <span v-empty-text="row.quantity"></span> 件 </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalNetWeight')"
-        prop="totalNetWeight"
-        :show-overflow-tooltip="true"
-        label="总净量"
-        align="center"
-      >
-        <template #default="{ row }"> <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span> kg </template>
-      </el-table-column>
-      <el-table-column
-        v-if="columns.visible('totalGrossWeight')"
-        prop="totalGrossWeight"
-        :show-overflow-tooltip="true"
-        label="总毛量"
-        align="center"
-      >
-        <template #default="{ row }"> <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalGrossWeight }" v-empty-text></span> kg </template>
-      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('quantity')"
         :show-overflow-tooltip="true"
@@ -73,7 +53,9 @@
           <span class="quantity-mete-show">
             <span class="left">{{ row.quantity }} 件</span>
             <span class="line">|</span>
-            <span class="right"><span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }"></span> kg</span>
+            <span class="right">
+              <span>{{ row.totalNetWeight }}</span> kg
+            </span>
           </span>
         </template>
       </el-table-column>
@@ -89,7 +71,9 @@
           <span class="quantity-mete-show tc-success">
             <span class="left">{{ row.totalSchedulingQuantity }} 件</span>
             <span class="line">|</span>
-            <span class="right"><span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalSchedulingMete }"></span> kg</span>
+            <span class="right">
+              <span>{{ row.totalSchedulingMete }}</span> kg
+            </span>
           </span>
         </template>
       </el-table-column>
@@ -105,7 +89,9 @@
           <span class="quantity-mete-show tc-danger">
             <span class="left">{{ row.unSchedulingQuantity }} 件</span>
             <span class="line">|</span>
-            <span class="right"><span v-to-fixed="{ k: 'COM_WT__KG', val: row.unSchedulingMete }"></span> kg</span>
+            <span class="right">
+              <span>{{ row.unSchedulingMete }}</span> kg
+            </span>
           </span>
         </template>
       </el-table-column>
@@ -159,6 +145,14 @@ const optShow = {
 
 const productType = componentTypeEnum.MACHINE_PART.V
 provide('productType', productType)
+
+const dataFormat = ref([
+  ['name', ['empty-text', '未分类']],
+  ['steelSpec', ['empty-text', '未分类']],
+  ['totalNetWeight', ['to-fixed-ck', 'COM_WT__KG']],
+  ['totalSchedulingMete', ['to-fixed-ck', 'COM_WT__KG']],
+  ['unSchedulingMete', ['to-fixed-ck', 'COM_WT__KG']]
+])
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

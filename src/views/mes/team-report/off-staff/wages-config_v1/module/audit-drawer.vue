@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column prop="auditName" show-overflow-tooltip label="审核人">
           <template v-slot="scope">
-            <span v-empty-text>{{ scope.row.auditName }}</span>
+            <span>{{ scope.row.auditName }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">

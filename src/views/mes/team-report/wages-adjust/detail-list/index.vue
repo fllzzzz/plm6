@@ -13,6 +13,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="productFormat[productType]"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       row-key="rowId"
@@ -60,6 +61,7 @@ import { componentTypeEnum } from '@enum-ms/mes'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import { productFormat } from '@/utils/columns-format/mes'
 import productTypeSpecInfoColumns from '@comp-mes/table-columns/productType-spec-info-columns'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'

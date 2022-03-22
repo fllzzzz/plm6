@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column prop="auditUserName" show-overflow-tooltip label="审核人">
           <template #default="{ row }">
-            <span v-empty-text>{{ row.auditUserName }}</span>
+            <span>{{ row.auditUserName }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="auditTime" show-overflow-tooltip label="审核日期" align="center">

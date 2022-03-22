@@ -10,7 +10,7 @@
     align="center"
   >
     <template #default="{ row }">
-      <span v-parse-enum="{ e: mesEnclosureTypeEnum, v: row.category}"></span>
+      <span>{{ row.category }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -24,7 +24,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.quantity }}</span>
+      <span>{{ row.quantity }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -64,7 +64,6 @@
 <script setup>
 import { defineProps } from 'vue'
 
-import { mesEnclosureTypeEnum } from '@enum-ms/mes'
 import { DP } from '@/settings/config'
 import { convertUnits } from '@/utils/convert/unit'
 import { isBlank } from '@/utils/data-type'

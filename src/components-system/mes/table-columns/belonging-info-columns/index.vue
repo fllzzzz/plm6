@@ -9,7 +9,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-parse-project="{ project: row.project }" v-empty-text />
+      <span v-parse-project="{ project: row.project }" />
     </template>
   </el-table-column>
   <el-table-column
@@ -22,7 +22,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.monomer?.name }}</span>
+      <span>{{ row.monomer?.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -35,7 +35,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.areaDetail?.name }}</span>
+      <span>{{ row.areaDetail?.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -48,7 +48,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.factory?.name }}</span>
+      <span>{{ row.factory?.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -61,7 +61,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.workshop?.name }}</span>
+      <span>{{ row.workshop?.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -74,7 +74,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.productionLine?.name }}</span>
+      <span>{{ row.productionLine?.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -87,7 +87,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.processName }}</span>
+      <span>{{ row.processName }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -101,7 +101,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.leaderName }}</span>
+      <span>{{ row.leaderName }}</span>
     </template>
   </el-table-column>
 </template>

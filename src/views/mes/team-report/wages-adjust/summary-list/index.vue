@@ -9,6 +9,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="enclosureTypeFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       row-key="rowId"
@@ -47,6 +48,7 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import { enclosureTypeFormat } from '@/utils/columns-format/mes'
 import productTypeSummaryColumns from '@comp-mes/table-columns/productType-summary-columns'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'

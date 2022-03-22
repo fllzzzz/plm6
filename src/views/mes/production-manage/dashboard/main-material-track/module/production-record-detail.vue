@@ -10,7 +10,13 @@
     </template>
     <template #titleRight> </template>
     <template #content>
-      <common-table v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
+      <common-table
+        v-loading="tableLoading"
+        :data="list"
+        :dataFormat="productFormat[componentTypeEnum.ARTIFACT.V]"
+        :max-height="maxHeight"
+        style="width: 100%"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject showMonomer />
         <productType-full-info-columns :productType="componentTypeEnum.ARTIFACT.V" :unShowField="['remark', 'surfaceArea']">
@@ -48,6 +54,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import usePagination from '@compos/use-pagination'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import { productFormat } from '@/utils/columns-format/mes'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 
 const drawerRef = ref()
