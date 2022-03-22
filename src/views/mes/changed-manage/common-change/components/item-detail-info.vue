@@ -120,6 +120,7 @@ async function fetch() {
     info.surfaceArea = info.surfaceArea && convertUnits(info.surfaceArea, 'mm2', 'm2')
     productData.value = Object.assign({}, info, props.data)
   } catch (error) {
+    productData.value = Object.assign({}, props.data)
     console.log('获取产品信息', error)
   } finally {
     loading.value = false
