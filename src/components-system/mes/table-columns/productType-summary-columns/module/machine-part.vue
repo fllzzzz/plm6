@@ -11,7 +11,7 @@
   >
     <template #default="{ row }">
       <slot name="namePrefix" :row="row"></slot>
-      <span v-empty-text>{{ row.name }}</span>
+      <span>{{ row.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -25,7 +25,7 @@
     align="center"
   >
     <template #default="{ row }">
-      <span v-empty-text="row.steelSpec" />
+      <span>{{ row.steelSpec }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -39,7 +39,7 @@
     align="center"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.material }}</span>
+      <span>{{ row.material }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -53,7 +53,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.quantity }}</span>
+      <span>{{ row.quantity }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -67,7 +67,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span>
+      <span>{{row.totalNetWeight}}</span>
     </template>
   </el-table-column>
 </template>

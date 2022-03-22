@@ -25,7 +25,7 @@
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="project.shortName" prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="200">
           <template #default="{ row }">
-            <span v-parse-project="{ project: row.project }" v-empty-text />
+            <span v-parse-project="{ project: row.project }" />
           </template>
         </el-table-column>
         <el-table-column key="monomer.name" prop="monomer.name" :show-overflow-tooltip="true" label="单体">

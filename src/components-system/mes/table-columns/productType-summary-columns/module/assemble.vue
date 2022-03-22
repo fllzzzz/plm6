@@ -10,10 +10,10 @@
     align="center"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.serialNumber }}</span>
+      <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
-    <el-table-column
+  <el-table-column
     v-if="!unShowField.includes('quantity') && (isBlank(columns) || columns.visible('quantity'))"
     :show-overflow-tooltip="true"
     prop="quantity"
@@ -24,7 +24,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.quantity }}</span>
+      <span>{{ row.quantity }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -38,7 +38,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.netWeight }" v-empty-text></span>
+      <span>{{ row.netWeight }}</span>
     </template>
   </el-table-column>
 </template>

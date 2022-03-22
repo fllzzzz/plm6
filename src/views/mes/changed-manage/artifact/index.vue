@@ -30,7 +30,7 @@
       </el-table-column> -->
       <el-table-column v-if="columns.visible('userName')" key="userName" prop="userName" :show-overflow-tooltip="true" label="变更人">
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.userName }}</span>
+          <span>{{ scope.row.userName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -41,7 +41,7 @@
         label="构件编号"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.serialNumber }}</span>
+          <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -53,7 +53,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.oldQuantity }}</span>
+          <span>{{ scope.row.oldQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -65,7 +65,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.totalInProductionQuantity }}</span>
+          <span>{{ scope.row.totalInProductionQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -77,7 +77,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.changTypeText }}</span>
+          <span>{{ scope.row.changTypeText }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -89,7 +89,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.newQuantity }}</span>
+          <span>{{ scope.row.newQuantity }}</span>
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="160px" align="center" fixed="right">

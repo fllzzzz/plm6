@@ -27,7 +27,7 @@
         min-width="120px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.name }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -40,7 +40,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.material }}</span>
+          <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -61,7 +61,7 @@
           </el-tooltip>
         </template>
         <template v-slot="scope">
-          <span v-empty-text style="cursor: pointer" @dblclick="toEditArea(scope.row)">{{
+          <span style="cursor: pointer" @dblclick="toEditArea(scope.row)">{{
             toFixed(scope.row.changeArea, DP.COM_AREA__M2)
           }}</span>
         </template>
@@ -76,7 +76,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.paintCategory }}</span>
+          <span>{{ scope.row.paintCategory }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -89,7 +89,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ toFixed(scope.row.thickness, DP.COM_T__MM) }}</span>
+          <span>{{ toFixed(scope.row.thickness, DP.COM_T__MM) }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -102,7 +102,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.volumeSolids }}</span>
+          <span>{{ scope.row.volumeSolids }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -115,7 +115,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.loss }}</span>
+          <span>{{ scope.row.loss }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -128,7 +128,7 @@
         min-width="80px"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ toFixed(scope.row.measure, DP.COM_VOLUME__L) }}</span>
+          <span>{{ toFixed(scope.row.measure, DP.COM_VOLUME__L) }}</span>
         </template>
       </el-table-column>
       <el-table-column v-permission="permission.edit" label="操作" width="100px" align="center" fixed="right">

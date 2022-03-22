@@ -32,7 +32,7 @@
         min-width="70px"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.measureUnit }}</span>
+          <span>{{ row.measureUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -44,7 +44,7 @@
         min-width="120px"
       >
         <template #default="{ row }">
-          <span v-empty-text="row.quantity" />
+          <span>{{ row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -56,7 +56,7 @@
         min-width="70px"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.accountingUnit }}</span>
+          <span>{{ row.accountingUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -68,7 +68,7 @@
         min-width="120px"
       >
         <template #default="{ row }">
-          <span v-empty-text>{{ row.mete }}</span>
+          <span>{{ row.mete }}</span>
         </template>
       </el-table-column>
       <el-table-column

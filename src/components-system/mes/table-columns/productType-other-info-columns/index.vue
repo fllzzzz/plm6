@@ -14,7 +14,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.brand }}</span>
+      <span>{{ row.brand }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -32,7 +32,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.color }}</span>
+      <span>{{ row.color }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -45,7 +45,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.drawingNumber }}</span>
+      <span>{{ row.drawingNumber }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -58,7 +58,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.remark }}</span>
+      <span>{{ row.remark }}</span>
     </template>
   </el-table-column>
 </template>

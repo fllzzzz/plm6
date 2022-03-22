@@ -40,8 +40,8 @@
       >
         <template #default="{ row }">
           <el-tag type="info" effect="plain" style="width: 95%">
-            <span v-empty-text style="color: #409eff">{{ row.schedulingQuantity }}</span> /
-            <span v-empty-text>{{ row.totalSchedulingMete }}</span>
+            <span style="color: #409eff">{{ row.schedulingQuantity }}</span> /
+            <span>{{ row.totalSchedulingMete }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -54,8 +54,8 @@
       >
         <template #default="{ row }">
           <el-tag type="info" effect="plain" style="width: 95%">
-            <span v-empty-text style="color: #67c23a">{{ row.taskQuantity }}</span> /
-            <span v-empty-text>{{ row.totalTaskMete }}</span>
+            <span style="color: #67c23a">{{ row.taskQuantity }}</span> /
+            <span>{{ row.totalTaskMete }}</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -68,8 +68,8 @@
       >
         <template #default="{ row }">
           <el-tag type="info" effect="plain" style="width: 95%">
-            <span v-empty-text style="color: #f56c6c">{{ row.unschedulingQuantity }}</span> /
-            <span v-empty-text>{{ row.unschedulingMete }}</span>
+            <span style="color: #f56c6c">{{ row.unschedulingQuantity }}</span> /
+            <span>{{ row.unschedulingMete }}</span>
           </el-tag>
         </template>
       </el-table-column>
