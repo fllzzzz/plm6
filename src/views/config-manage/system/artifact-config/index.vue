@@ -7,6 +7,7 @@
     :data="tableData"
     empty-text="暂无数据"
     :max-height="maxHeight"
+    :showEmptySymbol="false"
     style="width: 100%;margin-top:10px;"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />

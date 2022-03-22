@@ -21,6 +21,7 @@
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
+          :showEmptySymbol="false"
         >
           <!-- 基础信息 -->
           <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />

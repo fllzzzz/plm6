@@ -396,6 +396,13 @@ function expandParent(row, expanded) {
   tableRef.value.toggleRowExpansion(row, expanded)
 }
 
+// lazy加载情况下已加载过节点刷新
+
+function refreshParent(row) {
+  tableRef.value.store.states.treeData.value[row.id].loaded = false
+  tableRef.value.store.loadOrToggle(row)
+}
+
 function setCurrentRow(row) {
   tableRef.value.setCurrentRow(row)
 }
@@ -427,7 +434,8 @@ defineExpose({
   clearSort,
   clearFilter,
   doLayout,
-  sort
+  sort,
+  refreshParent
 })
 </script>
 

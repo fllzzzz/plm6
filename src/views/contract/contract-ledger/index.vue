@@ -12,6 +12,7 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
+    :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
     <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" :show-overflow-tooltip="true" label="项目类型" width="80" align="center" fixed="left">

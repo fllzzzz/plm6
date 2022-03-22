@@ -191,6 +191,7 @@
             class="table-form"
             :cell-class-name="wrongCellMask"
             @selection-change="handleSelectionChange"
+            :showEmptySymbol="false"
           >
             <el-table-column type="selection" width="55" :disabled="form.changeAbleStatus != 3" />
             <el-table-column label="序号" type="index" align="center" width="60" />

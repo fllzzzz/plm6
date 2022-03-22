@@ -18,6 +18,7 @@
           border
           :data="form.list"
           :max-height="maxHeight"
+          :showEmptySymbol="false"
           style="width: 100%"
           class="table-form"
           :cell-class-name="wrongCellMask"

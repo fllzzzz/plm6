@@ -2,6 +2,7 @@
   <!-- 压型楼层板表格 -->
   <common-table
     :data="tableData"
+    :showEmptySymbol="false"
     border
   >
     <el-table-column label="序号" type="index" align="center" width="60" />
