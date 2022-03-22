@@ -31,12 +31,12 @@
         </el-table-column>
         <el-table-column prop="oldPrice" show-overflow-tooltip label="内部定额">
           <template #default="{ row }">
-            <span v-empty-text>{{ row.oldPrice }}{{ row.showUnit }}</span>
+            <span>{{ row.oldPrice }}{{ row.showUnit }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="newPrice" show-overflow-tooltip label="变更后">
           <template #default="{ row }">
-            <span v-empty-text>{{ row.newPrice }}{{ row.showUnit }}</span>
+            <span>{{ row.newPrice }}{{ row.showUnit }}</span>
           </template>
         </el-table-column>
       </common-table>

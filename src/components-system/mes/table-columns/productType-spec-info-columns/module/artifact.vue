@@ -10,7 +10,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'MES_ARTIFACT_L__MM', val: row.length }" v-empty-text></span>
+      <span>{{ row.length }}</span>
     </template>
   </el-table-column>
   <slot name="quantity" />
@@ -25,7 +25,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.netWeight }" v-empty-text></span>
+      <span>{{ row.netWeight }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -39,7 +39,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.grossWeight }" v-empty-text></span>
+      <span>{{ row.grossWeight }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -53,7 +53,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalNetWeight }" v-empty-text></span>
+      <span>{{ row.totalNetWeight }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -67,7 +67,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_WT__KG', val: row.totalGrossWeight }" v-empty-text></span>
+      <span>{{ row.totalGrossWeight }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -81,7 +81,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-to-fixed="{ k: 'COM_AREA__M2', val: row.surfaceArea }" v-empty-text></span>
+      <span>{{ row.surfaceArea }}</span>
     </template>
   </el-table-column>
 </template>

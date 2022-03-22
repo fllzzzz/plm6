@@ -31,12 +31,12 @@
         <belonging-info-columns showProject />
         <el-table-column :show-overflow-tooltip="true" prop="name" label="名称" width="120px">
           <template #default="{ row }">
-            <span v-empty-text>{{ row.name }}</span>
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="serialNumber" label="编号" width="120px">
           <template #default="{ row }">
-            <span v-empty-text>{{ row.serialNumber }}</span>
+            <span>{{ row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="processName" label="检验工序" width="120px" align="center">
@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" align="center" prop="inspectionQuantity" label="检验数">
           <template #default="{ row }">
-            <span v-empty-text>{{ row.inspectionQuantity }}</span>
+            <span>{{ row.inspectionQuantity }}</span>
           </template>
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true" align="center" prop="qhseQuantity" label="不合格数">

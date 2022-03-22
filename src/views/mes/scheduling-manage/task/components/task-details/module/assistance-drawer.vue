@@ -26,7 +26,7 @@
     <template #content>
       <el-form size="small" label-position="left" label-width="70px">
         <el-form-item label="所属项目">
-          <span v-empty-text>{{ details.project?.name }}</span>
+          <span>{{ details.project?.name }}</span>
         </el-form-item>
         <el-form-item label="任务数">
           <span>{{ details.sourceSchedulingQuantity }}</span>

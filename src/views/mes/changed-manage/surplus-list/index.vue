@@ -24,7 +24,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.quantity }}</span>
+          <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('handleStatus')" :show-overflow-tooltip="true" prop="handleStatus" label="状态" align="center" width="100">

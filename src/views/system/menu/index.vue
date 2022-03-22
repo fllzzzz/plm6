@@ -131,7 +131,8 @@ const { crud, columns, CRUD } = useCRUD(
     title: '菜单',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    hasPagination: false
   },
   tableRef
 )

@@ -24,6 +24,7 @@
         ref="tableRef"
         v-loading="tableLoading"
         :data="list"
+        :dataFormat="dataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -55,12 +56,12 @@
         </el-table-column>
         <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="{ k: 'YUAN', val: scope.row.wage }"></span>
+            <span>{{ scope.row.wage }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
+            <span>{{ scope.row.price }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -112,6 +113,10 @@ watch(
   },
   { immediate: true }
 )
+const dataFormat = ref([
+  ['wage', ['to-fixed-ck', 'YUAN']],
+  ['price', ['to-fixed-ck', 'YUAN']]
+])
 
 const tableLoading = ref(false)
 const list = ref([])

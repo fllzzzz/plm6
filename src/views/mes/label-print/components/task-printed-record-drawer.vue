@@ -2,15 +2,15 @@
   <common-drawer ref="drawerRef" title="打印详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="50%">
     <template #titleRight> </template>
     <template #content>
-      <common-table v-loading="loading" :data="recordList" :max-height="maxHeight" style="width: 100%">
+      <common-table v-loading="loading" :data="recordList" :dataFormat="dataFormat" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column :show-overflow-tooltip="true" prop="userName" label="操作人" min-width="110px" />
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="80px" />
         <el-table-column :show-overflow-tooltip="true" prop="time" label="打印时间" min-width="300px">
           <template v-slot="scope">
-            <span v-parse-time="scope.row.startTime" />
+            <span>{{ scope.row.startTime }}</span>
             ~
-            <span v-parse-time="scope.row.endTime" />
+            <span>{{ scope.row.startTime }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -53,6 +53,11 @@ const { maxHeight } = useMaxHeight(
   },
   drawerRef
 )
+
+const dataFormat = ref([
+  ['startTime', 'parse-time'],
+  ['endTime', 'parse-time']
+])
 
 const loading = ref(false)
 const recordList = ref([])

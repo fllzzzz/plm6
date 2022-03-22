@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="dataFormat"
       style="width: 100%"
       :max-height="maxHeight"
       @sort-change="crud.handleSortChange"
@@ -141,9 +142,17 @@
         align="center"
         min-width="100"
       />
-      <el-table-column v-if="columns.visible('auditTime')" key="auditTime" prop="auditTime" sortable="custom" label="发运日期" width="120">
+      <el-table-column
+        v-if="columns.visible('auditTime')"
+        key="auditTime"
+        prop="auditTime"
+        align="center"
+        sortable="custom"
+        label="发运日期"
+        width="120"
+      >
         <template v-slot="scope">
-          <span v-parse-time="{ val: scope.row.auditTime, fmt: '{y}-{m}-{d}' }" />
+          <span>{{ scope.row.auditTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -152,10 +161,11 @@
         prop="auditReceiptTime"
         sortable="custom"
         label="收货日期"
+        align="center"
         width="120"
       >
         <template v-slot="scope">
-          <span v-parse-time="{ val: scope.row.auditReceiptTime, fmt: '{y}-{m}-{d}' }" />
+          <span>{{ scope.row.auditReceiptTime }}</span>
         </template>
       </el-table-column>
       <!--详情与下载-->
@@ -203,6 +213,11 @@ const optShow = {
   del: false,
   download: false
 }
+
+const dataFormat = [
+  ['auditTime', ['parse-time', '{y}-{m}-{d}']],
+  ['auditReceiptName', ['parse-time', '{y}-{m}-{d}']]
+]
 
 const tableRef = ref()
 const { crud, columns } = useCRUD(

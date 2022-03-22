@@ -10,7 +10,7 @@
   >
     <template #default="{ row }">
       <slot name="namePrefix" :row="row"></slot>
-      <span v-empty-text>{{ row.name }}</span>
+      <span>{{ row.name }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -31,8 +31,8 @@
       </el-tooltip>
     </template>
     <template #default="{ row }">
-      <span v-if="!snClickable" v-empty-text>{{ row.serialNumber }}</span>
-      <span v-else v-empty-text style="cursor: pointer" @dblclick="drawingPreview(row)">{{ row.serialNumber }}</span>
+      <span v-if="!snClickable">{{ row.serialNumber }}</span>
+      <span v-else style="cursor: pointer" @dblclick="drawingPreview(row)">{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -45,7 +45,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text>{{ row.plate }}</span>
+      <span>{{ row.plate }}</span>
     </template>
   </el-table-column>
 </template>
