@@ -21,6 +21,7 @@
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
+          return-source-data
           :showEmptySymbol="false"
         >
           <!-- 基础信息 -->

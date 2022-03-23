@@ -6,6 +6,7 @@
         :data="enclosureData"
         :empty-text="blankText"
         :max-height="maxHeight"
+        return-source-data
         :showEmptySymbol="false"
         style="width: 100%"
       >

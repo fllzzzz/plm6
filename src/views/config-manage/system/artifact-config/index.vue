@@ -7,6 +7,7 @@
     :data="tableData"
     empty-text="暂无数据"
     :max-height="maxHeight"
+    return-source-data
     :showEmptySymbol="false"
     style="width: 100%;margin-top:10px;"
   >

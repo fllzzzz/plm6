@@ -13,6 +13,7 @@
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       class="collection-table"
+      return-source-data
       :showEmptySymbol="false"
       :cell-class-name="wrongCellMask"
       :stripe="false"

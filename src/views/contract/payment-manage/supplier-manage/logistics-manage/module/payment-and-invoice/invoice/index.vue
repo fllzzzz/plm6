@@ -14,6 +14,7 @@
       style="width: 100%;margin-top:10px;"
       class="collection-table"
       :cell-class-name="wrongCellMask"
+      return-source-data
       :showEmptySymbol="false"
       :stripe="false"
     >

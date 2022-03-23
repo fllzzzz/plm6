@@ -14,6 +14,7 @@
         ref="tableRef"
         :data="[{id:1}]"
         :max-height="maxHeight"
+        return-source-data
         :showEmptySymbol="false"
         style="width: 100%"
       >

@@ -90,7 +90,7 @@ import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
 import { auditTypeEnum } from '@enum-ms/contract'
 import useVisible from '@compos/use-visible'
 import { confirmContract } from '@/api/contract/project'
-import { bankData } from '@/api/contract/collection-and-invoice/collection'
+// import { bankData } from '@/api/contract/collection-and-invoice/collection'
 import { DP } from '@/settings/config'
 // import { isNotBlank } from '@data-type/index'
 import { ElNotification, ElMessageBox } from 'element-plus'
@@ -180,14 +180,14 @@ const inputValid = (val) => {
   return true
 }
 
-async function getBankData(companyId) {
-  try {
-    const { content } = await bankData(companyId)
-    bankList.value = content
-  } catch (e) {
-    console.log('获取银行账号', e)
-  }
-}
+// async function getBankData(companyId) {
+//   try {
+//     const { content } = await bankData(companyId)
+//     bankList.value = content
+//   } catch (e) {
+//     console.log('获取银行账号', e)
+//   }
+// }
 
 function moneyChange(val) {
 

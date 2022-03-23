@@ -21,6 +21,7 @@
           :max-height="maxHeight"
           style="width: 100%;margin-top:10px;"
           class="table-form"
+          return-source-data
           :showEmptySymbol="false"
           :cell-class-name="wrongCellMask"
         >

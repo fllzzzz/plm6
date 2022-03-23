@@ -12,6 +12,7 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
+    return-source-data
     :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>

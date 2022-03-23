@@ -15,6 +15,7 @@
         :loading="loading"
         class="upload-table"
         :stripe="false"
+        return-source-data
         :showEmptySymbol="false"
         :span-method="objectSpanMethod"
       >
