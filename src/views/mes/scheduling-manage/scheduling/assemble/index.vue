@@ -8,7 +8,7 @@
       :data="crud.data"
       :dataFormat="productFormat[productType]"
       :stripe="false"
-      returnSourceData
+      return-source-data
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"
