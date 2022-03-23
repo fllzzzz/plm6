@@ -280,8 +280,8 @@ function recursionFormat(row, field, data, sliceFields) {
       item = item[k]
       if (item) {
         // 若是数组字段且有值，则遍历数组
-        item.forEach((i) => {
-          recursionFormat(row, field, i, keys.slice(1).join('.'))
+        item.forEach((itemInfo) => {
+          recursionFormat(row, field, itemInfo, keys.slice(i + 1).join('.'))
         })
       }
       break
