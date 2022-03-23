@@ -1,21 +1,24 @@
 <template>
   <div class="app-container">
     <!--表格渲染-->
-    <common-button type="primary" @click="addRow" style="margin-right:10px;">添加</common-button>
-    <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+    <div>
+      <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{'合同额:'+toThousand(currentRow.amount)}}</el-tag>
+    </div>
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
-      :data="[{}]"
+      :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       class="collection-table"
       :cell-class-name="wrongCellMask"
+      :showEmptySymbol="false"
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="invoiceDate" prop="invoiceDate" label="*收票日期" align="center" width="160">
+      <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*开票日期" align="center" width="160">
         <template v-slot="scope">
           <template v-if="scope.row.type===2">
             <span>合计</span>
@@ -23,21 +26,21 @@
           <template v-else>
             <el-date-picker
               v-if="scope.row.isModify"
-              v-model="scope.row.invoiceDate"
+              v-model="scope.row.receiveInvoiceDate"
               type="date"
               size="small"
               value-format="x"
               placeholder="选择日期"
               style="width:100%"
-              :disabledDate="(date) => {if (scope.row.invoiceDate) { return date.getTime() > scope.row.invoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
+              :disabledDate="(date) => {if (scope.row.receiveInvoiceDate) { return date.getTime() > scope.row.receiveInvoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
             />
             <template v-else>
-              <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
+              <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
             </template>
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*票面金额" align="center" min-width="170" class="money-column">
+      <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*开票额" align="center" min-width="170" class="money-column">
         <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
           <template v-if="scope.row.type===2">
@@ -46,12 +49,13 @@
           <template v-else>
             <el-input-number
               v-if="scope.row.isModify"
+              v-show-thousand
               v-model.number="scope.row.invoiceAmount"
               :min="0"
-              :max="contractInfo.contractAmount"
+              :max="props.currentRow.amount"
               :step="100"
               :precision="DP.YUAN"
-              placeholder="金额(元)"
+              placeholder="开票额(元)"
               controls-position="right"
               @change="moneyChange(scope.row)"
             />
@@ -82,6 +86,7 @@
             class="filter-item"
             placeholder="发票类型"
             style="width: 100%"
+            @change="invoiceTypeChange(scope.row)"
           />
           <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
@@ -106,27 +111,20 @@
           <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceUnit" prop="invoiceUnit" label="*购方单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="branchCompanyId" prop="branchCompanyId" label="*购方单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div>{{ scope.row.invoiceUnit }}</div>
+          <div>{{ scope.row.branchCompanyName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionUnit" prop="collectionUnit" label="*销售单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="supplierId" prop="supplierId" label="*销售单位" align="center" min-width="120" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <el-input
-            v-if="scope.row.isModify"
-            v-model="scope.row.collectionUnit"
-            placeholder="销售单位"
-            style="width:100%;"
-            maxlength="50"
-          />
-          <div v-else>{{ scope.row.collectionUnit  }}</div>
+          <div>{{ scope.row.supplierName }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="150">
+      <el-table-column prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
-          <span v-else>{{ scope.row.invoiceNo  }}</span>
+          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+          <span v-else>{{ scope.row.invoiceSerialNumber  }}</span>
         </template>
       </el-table-column>
       <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
@@ -134,9 +132,9 @@
           <div>{{ scope.row.writtenByName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="100px">
+      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.auditorName }}</div>
+          <div>{{ scope.row.auditUserName }}</div>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -168,7 +166,7 @@
               v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)"
             >
               <template #reference>
-                <common-button type="success" size="mini">通过</common-button>
+                <common-button type="success" size="mini" >通过</common-button>
               </template>
             </el-popconfirm>
             <el-tag type="success" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" class="pass-tag">已复核</el-tag>
@@ -191,14 +189,13 @@
     </common-table>
   <!--分页组件-->
   <pagination />
+  <mForm :existInvoiceNo="invoiceNoArr" :currentRow="currentRow" :propertyType="propertyType"/>
   </div>
 </template>
 
 <script setup>
-import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
-import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
-import { ref, defineProps, watch, nextTick } from 'vue'
-import { contractSupplierProductPM } from '@/page-permission/contract'
+import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/logistics'
+import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -211,9 +208,11 @@ import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
+import mForm from './form'
+import { contractSupplierLogisticsPM } from '@/page-permission/contract'
 
-const permission = contractSupplierProductPM.invoice
-
+const permission = contractSupplierLogisticsPM.invoice
+const emit = defineEmits(['success'])
 const optShow = {
   add: true,
   edit: false,
@@ -222,22 +221,24 @@ const optShow = {
 }
 
 const props = defineProps({
-  projectId: {
-    type: [String, Number],
-    default: undefined
+  currentRow: {
+    type: Object,
+    default: () => {}
   },
   visibleValue: {
     type: Boolean,
     default: false
+  },
+  propertyType: {
+    type: [Number, String],
+    default: undefined
   }
 })
-
 const tableRef = ref()
-const contractInfo = ref({})
 const originRow = ref({})
-const bankList = ref([])
 const totalAmount = ref(0)
 const invoiceNoArr = ref([])
+provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
     title: '收票填报',
@@ -251,31 +252,28 @@ const { crud, CRUD } = useCRUD(
   tableRef
 )
 
-const tableRules = {
-  invoiceDate: [{ required: true, message: '请选择收票日期', trigger: 'change' }],
-  invoiceAmount: [{ required: true, message: '请选择收票额', trigger: 'change', type: 'number' }],
-  taxRate: [{ required: true, message: '请输入税率', trigger: 'blur' }],
-  invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
-  invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
-  collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
+const validateTaxRate = (value, row) => {
+  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) return !!value
+  return true
 }
 
-const otherRules = {
-  invoiceDate: [{ required: true, message: '请选择收票日期', trigger: 'change' }],
-  invoiceAmount: [{ required: true, message: '请选择收票额', trigger: 'change', type: 'number' }],
+// 金额校验
+const validateAmount = (value, row) => {
+  if (!value) return false
+  return true
+}
+
+const tableRules = {
+  receiveInvoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
+  invoiceAmount: [{ validator: validateAmount, message: '请选择开票额', trigger: 'change', type: 'number' }],
+  taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
-  invoiceNo: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
-  collectionUnit: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
+  invoiceSerialNumber: [{ required: true, message: '请输入发票号', trigger: 'blur' }]
 }
 
 function wrongCellMask({ row, column }) {
   if (!row) return
-  let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
-    rules = tableRules
-  } else {
-    rules = otherRules
-  }
+  const rules = tableRules
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
@@ -289,23 +287,10 @@ function wrongCellMask({ row, column }) {
 }
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.collection',
+  wrapperBox: '.pay-invoice',
   paginate: true,
   extraHeight: 40
 })
-
-watch(
-  () => props.projectId,
-  (val) => {
-    bankList.value = []
-    contractInfo.value = {}
-    if (val) {
-      getContractInfo(val)
-    }
-    crud.toQuery()
-  },
-  { deep: true, immediate: true }
-)
 
 watch(
   () => props.visibleValue,
@@ -317,17 +302,9 @@ watch(
   { deep: true, immediate: true }
 )
 
-async function getContractInfo(id) {
-  let data = {}
-  try {
-    data = await contractCollectionInfo({ projectId: id })
-  } catch (e) {
-    console.log('获取合同信息', e)
-  } finally {
-    contractInfo.value = data
-  }
+function invoiceTypeChange(row) {
+  row.taxRate = undefined
 }
-
 function moneyChange(row) {
   totalAmount.value = 0
   crud.data.map(v => {
@@ -335,8 +312,8 @@ function moneyChange(row) {
       totalAmount.value += v.invoiceAmount
     }
   })
-  if (totalAmount.value > contractInfo.value.contractAmount) {
-    const num = row.invoiceAmount - (totalAmount.value - contractInfo.value.contractAmount)
+  if (totalAmount.value > props.currentRow.amount) {
+    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
     // 解决修改失效
     nextTick(() => {
       row.invoiceAmount = num || 0
@@ -359,20 +336,20 @@ function taxMoney(row) {
   }
 }
 function checkInvoiceNo(row) {
-  if (row.invoiceNo) {
+  if (row.invoiceSerialNumber) {
     const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-    if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+    if (invoiceNoArr.value.findIndex(v => v.invoiceSerialNumber === row.invoiceSerialNumber) > -1) {
       ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
-      row.invoiceNo = undefined
+      row.invoiceSerialNumber = undefined
       if (val) {
-        val.invoiceNo = undefined
+        val.invoiceSerialNumber = undefined
       }
     } else {
       if (val) {
-        val.invoiceNo = row.invoiceNo
+        val.invoiceSerialNumber = row.invoiceSerialNumber
       } else {
         invoiceNoArr.value.push({
-          invoiceNo: row.invoiceNo,
+          invoiceSerialNumber: row.invoiceSerialNumber,
           dataIndex: row.dataIndex
         })
       }
@@ -382,42 +359,19 @@ function checkInvoiceNo(row) {
 
 async function passConfirm(row) {
   try {
-    await editStatus(row.id, auditTypeEnum.PASS.V)
+    await editStatus({ id: row.id, auditStatus: auditTypeEnum.PASS.V })
     crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
+    emit('success')
   } catch (e) {
     console.log('审核失败', e)
   }
 }
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.projectId = v.project.id
-    return v
-  })
-}
-
-function addRow() {
-  crud.data.unshift({
-    invoiceAmount: undefined,
-    invoiceDate: undefined,
-    invoiceType: undefined,
-    invoiceNo: undefined,
-    taxRate: undefined,
-    tax: undefined,
-    invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
-    invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
-    collectionUnit: contractInfo.value.customerUnit || undefined,
-    projectId: props.projectId,
-    dataIndex: crud.data.length,
-    isModify: true
-  })
-}
-
 function modifyRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   row.isModify = true
-  row.invoiceDate = String(row.invoiceDate)
+  row.receiveInvoiceDate = String(row.receiveInvoiceDate)
 }
 
 async function rowDelete(row) {
@@ -425,6 +379,7 @@ async function rowDelete(row) {
     await crudApi.del(row.id)
     crud.notify(`删除成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
+    emit('success')
   } catch (e) {
     console.log(`删除失败`, e)
   }
@@ -441,15 +396,10 @@ function rowCancel(row) {
 
 async function rowSubmit(row) {
   if (row.invoiceAmount === 0) {
-    ElMessage.error('收票额必须大于0')
+    ElMessage.error('开票额必须大于0')
     return
   }
-  let rules = {}
-  if (row.invoiceType !== invoiceTypeEnum.RECEIPT.V) {
-    rules = tableRules
-  } else {
-    rules = otherRules
-  }
+  const rules = tableRules
   let flag = true
   row.verify = {}
   for (const rule in rules) {
@@ -477,7 +427,8 @@ async function rowSubmit(row) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.projectId = props.projectId
+  crud.query.orderId = props.currentRow.id
+  crud.query.type = 1
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
@@ -488,9 +439,9 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
     if (v.invoiceAmount) {
       totalAmount.value += v.invoiceAmount
     }
-    if (v.invoiceNo) {
+    if (v.invoiceSerialNumber) {
       invoiceNoArr.value.push({
-        invoiceNo: v.invoiceNo,
+        invoiceSerialNumber: String(v.invoiceSerialNumber),
         dataIndex: v.dataIndex
       })
     }
@@ -500,6 +451,10 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       type: 2
     })
   }
+}
+
+CRUD.HOOK.afterAddSuccess = () => {
+  emit('success')
 }
 </script>
 

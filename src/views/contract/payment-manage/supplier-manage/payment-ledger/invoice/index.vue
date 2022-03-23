@@ -8,19 +8,21 @@
     <common-table
     ref="tableRef"
     v-loading="crud.loading"
-    :data="[{}]"
+    :data="crud.data"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
+    :showEmptySymbol="false"
     :stripe="false"
+    :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="订单类型">
+    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" align="center" label="订单类型">
       <template v-slot="scope">
         <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="所属项目">
+    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="所属项目">
       <template v-slot="scope">
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
@@ -58,7 +60,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/collection-and-invoice/invoice'
+import crudApi from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
 import { ref } from 'vue'
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
@@ -95,7 +97,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.collection-invoice',
+  wrapperBox: '.pay-invoice',
   paginate: true,
   extraHeight: 40
 })
@@ -108,6 +110,32 @@ CRUD.HOOK.beforeRefresh = () => {
     crud.query.startDate = undefined
     crud.query.endDate = undefined
   }
+}
+
+function getSummaries(param) {
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'invoiceAmount') {
+      const values = data.map((item) => Number(item[column.property]))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] = sums[index].toFixed(2)
+      }
+    }
+  })
+  return sums
 }
 </script>
 

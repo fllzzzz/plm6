@@ -8,11 +8,13 @@
     <common-table
     ref="tableRef"
     v-loading="crud.loading"
-    :data="[{}]"
+    :data="crud.data"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
+    :showEmptySymbol="false"
     :stripe="false"
+    :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="付款单位">
@@ -47,7 +49,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/collection-and-invoice/collection'
+import crudApi from '@/api/contract/supplier-manage/payment-ledger/payment'
 import { ref } from 'vue'
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
@@ -95,6 +97,32 @@ CRUD.HOOK.beforeRefresh = () => {
     crud.query.startDate = undefined
     crud.query.endDate = undefined
   }
+}
+
+function getSummaries(param) {
+  const { columns, data } = param
+  const sums = []
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+    if (column.property === 'haveCollectionAmount') {
+      const values = data.map((item) => Number(item[column.property]))
+      if (!values.every((value) => isNaN(value))) {
+        sums[index] = values.reduce((prev, curr) => {
+          const value = Number(curr)
+          if (!isNaN(value)) {
+            return prev + curr
+          } else {
+            return prev
+          }
+        }, 0)
+        sums[index] = sums[index].toFixed(2)
+      }
+    }
+  })
+  return sums
 }
 </script>
 

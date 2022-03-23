@@ -2,86 +2,104 @@
   <div class="app-container">
     <!--工具栏-->
     <div class="head-container">
-      <mHeader :currentProjectType="currentProjectType"/>
+      <mHeader/>
     </div>
     <!--表格渲染-->
     <common-table
     ref="tableRef"
     v-loading="crud.loading"
-    :data="[{}]"
+    :data="crud.data"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
+    :showEmptySymbol="false"
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
-    <el-table-column v-if="columns.visible('projectType')" key="projectType" prop="projectType" :show-overflow-tooltip="true" label="订单号" width="80" align="center" fixed="left">
+    <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.projectType? projectTypeEnum.VL[scope.row.projectType]: '-' }}</span>
+        <span>{{ scope.row.serialNumber }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('signingDate')" key="signingDate" prop="signingDate" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
+    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
       <template v-slot="scope">
-        <div>{{ scope.row.signingDate? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>
+        <div>{{ scope.row.createTime? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="供应商" align="center" width="80">
+    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" label="供应商" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.businessType? scope.row.businessTypeEnum: '-' }}</div>
+        <div>{{ scope.row.supplierName? scope.row.supplierName: '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('projectManagerName')" key="projectManagerName" prop="projectManagerName" :show-overflow-tooltip="true" label="种类" align="center" width="90">
+    <el-table-column v-if="columns.visible('basicClass')" key="basicClass" prop="basicClass" :show-overflow-tooltip="true" label="种类" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.projectManagerName }}</div>
+        <div>{{ scope.row.basicClass?EO.getBits(matClsEnum.ENUM, scope.row.basicClass, 'L').join('|'):'' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" label="合同额" align="center" min-width="130px">
+    <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" label="合同额" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</span>
-         <!-- <el-tag @click="openContractMoney(scope.row.id)" effect="plain">{{ scope.row.contractAmount? toThousand(scope.row.contractAmount): '-' }}</el-tag> -->
+        <span>{{ isNotBlank(scope.row.amount)? toThousand(scope.row.amount): 0 }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="结算额" align="center" min-width="130px">
+    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
       <template v-slot="scope">
-        <el-tag effect="plain">{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</el-tag>
+        <span>{{ isNotBlank(scope.row.settlementAmount)? toThousand(scope.row.settlementAmount): 0 }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount" label="入库额" align="center" min-width="130px">
+    <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
       <template v-slot="scope">
-        <el-tag effect="plain" @click="openStockAmount(scope.row.id)">{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</el-tag>
+        <span @click="openStockAmount(scope.row)">{{ isNotBlank(scope.row.inboundAmount)? toThousand(scope.row.inboundAmount): 0 }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="付款额" align="center" min-width="130px">
+    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
       <template v-slot="scope">
-        <el-tag @click="openTab(scope.row.id,'receive')" effect="plain">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</el-tag>
+        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
+        <template v-if="checkPermission(crud.permission.get)">
+          <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
+            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;" @click="openPaymentAudit(scope.row)"/>
+          </el-badge>
+        </template>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionRate')" key="collectionRate" prop="collectionRate" label="付款比例" align="center" min-width="100px">
+    <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionRate? scope.row.collectionRate*100+'%': '-' }}</div>
+        <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.amount)*100).toFixed(2)+'%': 0 }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center" min-width="130px">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
       <template v-slot="scope">
-        <el-tag @click="openTab(scope.row.id,'invoice')" effect="plain">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</el-tag>
+        <div @click="openTab(scope.row,'invoice')">
+          <span style="cursor:pointer;margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
+          <template v-if="checkPermission(crud.permission.get)">
+            <el-badge :value="scope.row.unCheckInvoiceAmount" :max="99" :hidden="scope.row.unCheckInvoiceAmount < 1">
+              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+            </el-badge>
+          </template>
+        </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" min-width="100px">
+    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.invoiceRate? scope.row.invoiceRate*100+'%': '-' }}</div>
+        <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.amount)*100).toFixed(2)+'%': 0  }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" align="center" width="90px">
+    <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" prop="purchaseStatus" label="订单状态" align="center" width="80px">
       <template v-slot="scope">
-        <el-tag :type="scope.row.status===projectStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ scope.row.status? projectStatusEnum.VL[scope.row.status]:'-' }}</el-tag>
+        <el-tag :type="scope.row.purchaseStatus===purchaseOrderStatusEnum.COMPLETE.V?'success':'warning'" effect="plain">{{ isNotBlank(scope.row.purchaseStatus)? purchaseOrderStatusEnum.VL[scope.row.purchaseStatus]:'-' }}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('settlementStatus')" key="settlementStatus" prop="settlementStatus" label="结算状态" align="center" width="80px">
+      <template v-slot="scope">
+        <template v-if="isNotBlank(scope.row.settlementStatus)">
+          <el-tag :type="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ settlementStatusEnum.VL[scope.row.settlementStatus] }}</el-tag>
+        </template>
       </template>
     </el-table-column>
   </common-table>
-  <!-- 合同额 -->
-  <contract-money v-model="moneyVisible" :projectId="currentProjectId"/>
   <!-- 发生额 -->
   <stock-amount v-model="stockVisible"/>
+  <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
   <!-- 收付款 -->
-  <receiveAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName"/>
+  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -95,17 +113,16 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import { projectTypeEnum, projectStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum, purchaseOrderStatusEnum } from '@enum-ms/contract'
 import stockAmount from './module/stock-amount'
-import contractMoney from './module/contract-money'
-import receiveAndInvoice from './module/receive-and-invoice'
+import paymentAndInvoice from './module/payment-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
-
-const { currentProjectType } = mapGetters(['currentProjectType'])
+import { matClsEnum } from '@/utils/enum/modules/classification'
+import EO from '@enum'
+import paymentAudit from './module/payment-audit/index'
 
 const optShow = {
   add: false,
@@ -115,12 +132,12 @@ const optShow = {
 }
 
 const tableRef = ref()
-const moneyVisible = ref(false)
 const stockVisible = ref(false)
 const tabVisible = ref(false)
-const currentProjectId = ref()
-const activeName = ref('receive')
-const { crud, columns } = useCRUD(
+const auditVisible = ref(false)
+const currentRow = ref({})
+const activeName = ref('payment')
+const { CRUD, crud, columns } = useCRUD(
   {
     title: '原材料',
     sort: [],
@@ -142,14 +159,34 @@ function openStockAmount(row) {
   if (!checkPermission(permission.inbound.get)) {
     return
   }
-  currentProjectId.value = row
+  currentRow.value = row
+  // currentProjectId.value = row
   stockVisible.value = true
 }
 
 function openTab(row, name) {
   activeName.value = name
-  currentProjectId.value = row
+  currentRow.value = row
+  // currentProjectId.value = row
   tabVisible.value = true
+}
+
+function openPaymentAudit(row) {
+  if (!checkPermission(permission.payment.get)) {
+    return
+  }
+  currentRow.value = row
+  auditVisible.value = true
+}
+
+CRUD.HOOK.beforeRefresh = () => {
+  if (crud.query.createTime.length > 0) {
+    crud.query.startDate = crud.query.createTime[0]
+    crud.query.endDate = crud.query.createTime[1]
+  } else {
+    crud.query.startDate = undefined
+    crud.query.endDate = undefined
+  }
 }
 </script>
 
@@ -179,5 +216,11 @@ $font-size: 1.5em;
 }
 ::v-deep(.el-tag--small){
   padding:0 3px;
+}
+::v-deep(.el-badge__content.is-fixed){
+  top:5px;
+  padding:0 3px;
+  line-height:12px;
+  height:14px;
 }
 </style>

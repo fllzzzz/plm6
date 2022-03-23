@@ -8,9 +8,10 @@
     <common-table
     ref="tableRef"
     v-loading="crud.loading"
-    :data="[{}]"
+    :data="crud.data"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
+    :showEmptySymbol="false"
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -61,7 +62,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/contract/contract-warn'
+import crudApi from '@/api/contract/supplier-manage/payable'
 import { ref } from 'vue'
 import { contractSupplierPayablePM as permission } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'

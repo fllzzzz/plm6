@@ -254,6 +254,7 @@ function addRow() {
     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
     collectionUnit: contractInfo.value.customerUnit || undefined,
     projectId: props.projectId,
+    dataIndex: form.list.length + 1,
     isModify: true
   })
 }
@@ -293,23 +294,30 @@ function taxMoney(row) {
   }
 }
 function checkInvoiceNo(row) {
-  if (row.invoiceNo) {
-    const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+  const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+  if (val) {
+    if (row.invoiceNo) {
+      if (val.invoiceNo === row.invoiceNo) {
+        return
+      }
+      if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
+        ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
+        row.invoiceNo = undefined
+      } else {
+        val.invoiceNo = row.invoiceNo
+      }
+    } else {
+      val.invoiceNo = undefined
+    }
+  } else {
     if (invoiceNoArr.value.findIndex(v => v.invoiceNo === row.invoiceNo) > -1) {
       ElMessage({ message: '发票号已存在，请重新填写', type: 'error' })
       row.invoiceNo = undefined
-      if (val) {
-        val.invoiceNo = undefined
-      }
     } else {
-      if (val) {
-        val.invoiceNo = row.invoiceNo
-      } else {
-        invoiceNoArr.value.push({
-          invoiceNo: row.invoiceNo,
-          dataIndex: row.dataIndex
-        })
-      }
+      invoiceNoArr.value.push({
+        invoiceNo: row.invoiceNo,
+        dataIndex: row.dataIndex
+      })
     }
   }
 }
@@ -326,7 +334,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   }
   let moneyFlag = true
   crud.form.list.map(row => {
-    if (row.collectionAmount === 0) {
+    if (row.invoiceAmount === 0) {
       moneyFlag = false
     }
   })

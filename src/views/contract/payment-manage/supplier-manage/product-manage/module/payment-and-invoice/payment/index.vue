@@ -1,17 +1,19 @@
 <template>
   <div class="app-container">
     <!--表格渲染-->
-    <common-button type="primary" @click="addRow" style="margin-right:10px;">添加</common-button>
-    <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+    <div>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{'合同额:'+toThousand(currentRow.amount)}}</el-tag>
+    </div>
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
-      :data="[{}]"
+      :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       class="collection-table"
       :cell-class-name="wrongCellMask"
+      :showEmptySymbol="false"
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
@@ -46,6 +48,7 @@
           <template v-else>
             <el-input-number
               v-if="scope.row.isModify"
+              v-show-thousand
               v-model.number="scope.row.collectionAmount"
               :min="0"
               :max="contractInfo.contractAmount"
@@ -100,11 +103,6 @@
           <div v-else>{{ scope.row.collectionMode? paymentFineModeEnum.VL[scope.row.collectionMode]: '' }}</div>
         </template>
       </el-table-column>
-      <!-- <el-table-column key="collectionUnit" prop="collectionUnit" label="*付款单位" align="center" min-width="120" :show-overflow-tooltip="true">
-        <template v-slot="scope">
-          <div>{{ scope.row.collectionUnit }}</div>
-        </template>
-      </el-table-column> -->
       <el-table-column key="collectionBankAccountId" prop="collectionBankAccountId" :show-overflow-tooltip="true" label="*付款银行" align="center" min-width="120">
         <template v-slot="scope">
           <common-select
@@ -133,9 +131,9 @@
           <div v-else>{{ scope.row.paymentUnit  }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="attachmentIds" prop="attachmentIds" label="附件" align="center" width="100px">
+      <el-table-column key="attachment" prop="attachment" label="附件" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.writtenByName }}</div>
+          <div>{{ scope.row.attachment }}</div>
         </template>
       </el-table-column>
       <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
@@ -148,14 +146,32 @@
           <div>{{ scope.row.auditorName }}</div>
         </template>
       </el-table-column>
+      <el-table-column key="auditorName" prop="auditorName" label="审核日期" align="center" width="100px">
+        <template v-slot="scope">
+          <div>{{ scope.row.auditorName }}</div>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
-      <el-table-column
+      <!-- <el-table-column
+        v-if="checkPermission([ ...permission.edit,...permission.audit])"
         label="操作"
         width="190px"
         align="center"
       >
         <template v-slot="scope">
           <template v-if="!scope.row.isModify">
+            <common-button icon="el-icon-edit" type="primary" size="mini" @click="modifyRow(scope.row)" v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.edit)"/>
+            <el-popconfirm
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              title="确定删除吗?"
+              @confirm="rowDelete(scope.row)"
+              v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.del)"
+            >
+              <template #reference>
+                <common-button icon="el-icon-delete" type="danger" size="mini" />
+              </template>
+            </el-popconfirm>
             <el-popconfirm
               confirm-button-text="确定"
               cancel-button-text="取消"
@@ -164,7 +180,7 @@
               v-if="scope.row.auditStatus===auditTypeEnum.AUDITING.V && checkPermission(permission.audit)"
             >
               <template #reference>
-                <common-button type="success" size="mini" >通过</common-button>
+                <common-button type="success" size="mini">通过</common-button>
               </template>
             </el-popconfirm>
             <el-tag type="success" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V" class="pass-tag">已复核</el-tag>
@@ -183,7 +199,7 @@
             <common-button type="info" plain size="mini" @click="rowSubmit(scope.row)">保存</common-button>
           </template>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </common-table>
   <!--分页组件-->
   <pagination />
@@ -191,14 +207,14 @@
 </template>
 
 <script setup>
-import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
-import { ref, defineProps, watch, nextTick } from 'vue'
-import { contractSupplierLogisticsPM } from '@/page-permission/contract'
-import checkPermission from '@/utils/system/check-permission'
+import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
+// import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
+import { ref, defineProps, watch, nextTick, provide } from 'vue'
+// import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { auditTypeEnum } from '@enum-ms/contract'
+// import { auditTypeEnum } from '@enum-ms/contract'
 import useDict from '@compos/store/use-dict'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
@@ -206,21 +222,22 @@ import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
 import { validate } from '@compos/form/use-table-validate'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
+import { contractSupplierProductPM } from '@/page-permission/contract'
 
-const permission = contractSupplierLogisticsPM.payment
+const permission = contractSupplierProductPM.payment
 
 const optShow = {
-  add: true,
+  add: false,
   edit: false,
   del: false,
   download: false
 }
 
 const props = defineProps({
-  projectId: {
-    type: [String, Number],
-    default: undefined
+  currentRow: {
+    type: Object,
+    default: () => {}
   },
   visibleValue: {
     type: Boolean,
@@ -231,10 +248,13 @@ const props = defineProps({
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
 const contractInfo = ref({})
-const originRow = ref({})
+// const originRow = ref({})
 const bankList = ref([])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const totalAmount = ref(0)
+provide('bankList', bankList)
+provide('contractInfo', contractInfo)
+provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
     title: '付款填报',
@@ -254,7 +274,7 @@ const tableRules = {
   collectionBankAccountId: [{ required: true, message: '请选择付款银行', trigger: 'change' }],
   collectionMode: [{ required: true, message: '请选择付款方式', trigger: 'change' }],
   collectionReason: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
-  paymentUnit: [{ required: true, message: '请输入收款单位', trigger: 'blur' }]
+  paymentUnit: [{ required: true, message: '请输入付款单位', trigger: 'blur' }]
 }
 function wrongCellMask({ row, column }) {
   if (!row) return
@@ -277,18 +297,18 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-watch(
-  () => props.projectId,
-  (val) => {
-    bankList.value = []
-    contractInfo.value = {}
-    if (val) {
-      getContractInfo(val)
-    }
-    crud.toQuery()
-  },
-  { deep: true, immediate: true }
-)
+// watch(
+//   () => props.projectId,
+//   (val) => {
+//     bankList.value = []
+//     contractInfo.value = {}
+//     if (val) {
+//       getContractInfo(val)
+//     }
+//     crud.toQuery()
+//   },
+//   { deep: true, immediate: true }
+// )
 
 watch(
   () => props.visibleValue,
@@ -320,26 +340,26 @@ function moneyChange(row) {
     })
   }
 }
-async function getContractInfo(id) {
-  let data = {}
-  try {
-    data = await contractCollectionInfo({ projectId: id })
-    getBankData(data.companyBankAccountList[0].companyId)
-  } catch (e) {
-    console.log('获取合同信息', e)
-  } finally {
-    contractInfo.value = data
-  }
-}
+// async function getContractInfo(id) {
+//   let data = {}
+//   try {
+//     data = await contractCollectionInfo({ projectId: id })
+//     getBankData(data.companyBankAccountList[0].companyId)
+//   } catch (e) {
+//     console.log('获取合同信息', e)
+//   } finally {
+//     contractInfo.value = data
+//   }
+// }
 
-async function getBankData(companyId) {
-  try {
-    const { content } = await bankData(companyId)
-    bankList.value = content
-  } catch (e) {
-    console.log('获取银行账号', e)
-  }
-}
+// async function getBankData(companyId) {
+//   try {
+//     const { content } = await bankData(companyId)
+//     bankList.value = content
+//   } catch (e) {
+//     console.log('获取银行账号', e)
+//   }
+// }
 
 function bankChange(row) {
   if (row.collectionBankAccountId) {
@@ -352,15 +372,15 @@ function bankChange(row) {
   }
 }
 
-async function passConfirm(row) {
-  try {
-    await editStatus(row.id, auditTypeEnum.PASS.V)
-    crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
-  } catch (e) {
-    console.log('审核失败', e)
-  }
-}
+// async function passConfirm(row) {
+//   try {
+//     await editStatus(row.id, auditTypeEnum.PASS.V)
+//     crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     crud.toQuery()
+//   } catch (e) {
+//     console.log('审核失败', e)
+//   }
+// }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map(v => {
@@ -369,25 +389,25 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   })
 }
 
-function addRow() {
-  crud.data.unshift({
-    collectionAmount: undefined,
-    collectionBankAccount: undefined,
-    collectionBankAccountId: undefined,
-    collectionDate: undefined,
-    collectionDepositBank: undefined,
-    collectionMode: undefined,
-    collectionReason: undefined,
-    collectionUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
-    collectionUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
-    paymentBankAccount: contractInfo.value.customerBankCode || undefined,
-    paymentDepositBank: contractInfo.value.customerBankName || undefined,
-    paymentUnit: contractInfo.value.customerUnit || undefined,
-    projectId: props.projectId,
-    dataIndex: crud.data.length,
-    isModify: true
-  })
-}
+// function addRow() {
+//   crud.data.unshift({
+//     collectionAmount: undefined,
+//     collectionBankAccount: undefined,
+//     collectionBankAccountId: undefined,
+//     collectionDate: undefined,
+//     collectionDepositBank: undefined,
+//     collectionMode: undefined,
+//     collectionReason: undefined,
+//     collectionUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
+//     collectionUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
+//     paymentBankAccount: contractInfo.value.customerBankCode || undefined,
+//     paymentDepositBank: contractInfo.value.customerBankName || undefined,
+//     paymentUnit: contractInfo.value.customerUnit || undefined,
+//     projectId: props.projectId,
+//     dataIndex: crud.data.length,
+//     isModify: true
+//   })
+// }
 
 // function modifyRow(row) {
 //   originRow.value = JSON.parse(JSON.stringify(row))
@@ -404,50 +424,51 @@ function addRow() {
 //     console.log(`删除失败`, e)
 //   }
 // }
-function rowCancel(row) {
-  row.isModify = false
-  if (row.id) {
-    row = Object.assign(row, JSON.parse(JSON.stringify(originRow.value)))
-  } else {
-    const index = crud.data.findIndex(v => v.dataIndex === row.dataIndex)
-    crud.data.splice(index, 1)
-  }
-}
+// function rowCancel(row) {
+//   row.isModify = false
+//   if (row.id) {
+//     row = Object.assign(row, JSON.parse(JSON.stringify(originRow.value)))
+//   } else {
+//     const index = crud.data.findIndex(v => v.dataIndex === row.dataIndex)
+//     crud.data.splice(index, 1)
+//   }
+// }
 
-async function rowSubmit(row) {
-  if (row.collectionAmount === 0) {
-    ElMessage.error('付款金额必须大于0')
-    return
-  }
-  const rules = tableRules
-  let flag = true
-  row.verify = {}
-  for (const rule in rules) {
-    row.verify[rule] = validate(rule, rules[rule], row[rule], row)
-    if (!row.verify[rule]) {
-      flag = false
-    }
-  }
-  if (!flag) {
-    ElMessage.error('请填写表格中标红数据')
-    return
-  }
-  const messageName = row.id ? '修改' : '新增'
-  try {
-    if (row.id) {
-      await crudApi.edit(row)
-    } else {
-      await crudApi.add(row)
-    }
-    crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-    crud.toQuery()
-  } catch (e) {
-    console.log(messageName, e)
-  }
-}
+// async function rowSubmit(row) {
+//   if (row.collectionAmount === 0) {
+//     ElMessage.error('付款金额必须大于0')
+//     return
+//   }
+//   const rules = tableRules
+//   let flag = true
+//   row.verify = {}
+//   for (const rule in rules) {
+//     row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+//     if (!row.verify[rule]) {
+//       flag = false
+//     }
+//   }
+//   if (!flag) {
+//     ElMessage.error('请填写表格中标红数据')
+//     return
+//   }
+//   const messageName = row.id ? '修改' : '新增'
+//   try {
+//     if (row.id) {
+//       await crudApi.edit(row)
+//     } else {
+//       await crudApi.add(row)
+//     }
+//     crud.notify(`${messageName}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+//     crud.toQuery()
+//   } catch (e) {
+//     console.log(messageName, e)
+//   }
+// }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.projectId = props.projectId
+  crud.query.orderId = props.currentRow.id
+  crud.query.propertyType = 1
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

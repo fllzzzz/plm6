@@ -11,11 +11,11 @@
   >
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
-        <el-tab-pane label="付款列表" name="receive">
-          <receive class="tab-content" :projectId="props.projectId" :visibleValue="modelValue"/>
+        <el-tab-pane label="付款列表" name="payment">
+          <payment class="tab-content" :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue"/>
         </el-tab-pane>
         <el-tab-pane label="收票列表" name="invoice">
-          <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue"/>
+          <invoice class="tab-content" :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue" @success="emit('success')"/>
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -26,22 +26,26 @@
 import { defineProps, defineEmits, watch, ref } from 'vue'
 import { ElTabs, ElTabPane } from 'element-plus'
 import useVisible from '@compos/use-visible'
-import Receive from './receive'
+import Payment from './payment'
 import Invoice from './invoice'
 
-const activeName = ref('receive')
+const activeName = ref('payment')
 const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
   },
-  projectId: {
-    type: [String, Number],
-    default: undefined
+  currentRow: {
+    type: Object,
+    default: () => {}
   },
   tabName: {
     type: [String],
-    default: 'receive'
+    default: 'payment'
+  },
+  propertyType: {
+    type: [Number, String],
+    default: undefined
   }
 })
 const emit = defineEmits(['success', 'update:modelValue'])

@@ -165,6 +165,24 @@ export default {
           meta: { title: '客户交易记录', icon: 'contract2', noCache: true }
         }
       ]
+    },
+    {
+      path: '/contract/cost-center',
+      component: 'Layout',
+      hidden: false,
+      name: 'CostCenter',
+      alwaysShow: false,
+      redirect: '/contract/cost-center/index',
+      meta: { title: '成本中心', icon: 'contract2', noCache: true },
+      children: [
+        {
+          name: 'CostCenterManage',
+          path: 'cost-manage',
+          hidden: false,
+          component: '/contract/cost-center/index',
+          meta: { title: '成本中心', icon: 'contract2', noCache: true }
+        }
+      ]
     }
   ]
 }
