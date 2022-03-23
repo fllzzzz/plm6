@@ -279,18 +279,19 @@ function recursionFormat(row, field, data, sliceFields) {
       const k = curKey.slice(1, curKey.length - 1)
       item = item[k]
       if (item) {
+        // 若是数组字段且有值，则遍历数组
         item.forEach((i) => {
           recursionFormat(row, field, i, keys.slice(1).join('.'))
         })
       }
       break
     } else {
+      // 对象按照常规流程赋值
       item = item[curKey]
+      // 对象为空值，结束循环
       if (isBlank(item)) break
     }
-    // const newKeys =
   }
-  console.log(i, keys.length - 1)
   // 如果是最后的字段
   if (i === keys.length - 1) {
     let dfCfg = dataFormatKV.value[field]
@@ -310,13 +311,9 @@ function recursionFormat(row, field, data, sliceFields) {
       if (sliceFields) {
         for (let j = 0; j < dfCfg.length; j++) {
           // 获取转换后的值
-          console.log('item', JSON.stringify(item), dfCfg[j])
           const fmD = formatDataByType(row, preData, dfCfg[j])
-          console.log('fmD', fmD)
-          // preData = fmD
           // 设置转换后的值
           item[sliceFields] = fmD
-          console.log('item', item)
         }
       }
     }
