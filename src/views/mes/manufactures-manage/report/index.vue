@@ -23,7 +23,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.serialNumber }}</span>
+          <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -35,7 +35,7 @@
         min-width="120"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.shortName }}</span>
+          <span>{{ scope.row.shortName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -48,7 +48,7 @@
         width="100"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ reportComponentTypeEnum.VL[scope.row.productType] }}</span>
+          <span>{{ reportComponentTypeEnum.VL[scope.row.productType] }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -61,7 +61,7 @@
         width="100"
       >
         <template v-slot="scope">
-          <span v-empty-text>{{ scope.row.unit }}</span>
+          <span>{{ scope.row.unit }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -74,7 +74,7 @@
       >
         <template v-slot="scope">
           <div style="cursor: pointer" @click="showDetail(scope.row, reportTypeEnum.BEGIN.V)">
-            <span v-empty-text>{{ scope.row.beginMete }}</span>
+            <span>{{ scope.row.beginMete }}</span>
           </div>
         </template>
       </el-table-column>
@@ -88,7 +88,7 @@
       >
         <template v-slot="scope">
           <div style="cursor: pointer" @click="showDetail(scope.row, reportTypeEnum.INBOUND.V)">
-            <span v-empty-text>{{ scope.row.inboundMete }}</span>
+            <span>{{ scope.row.inboundMete }}</span>
           </div>
         </template>
       </el-table-column>
@@ -102,7 +102,7 @@
       >
         <template v-slot="scope">
           <div style="cursor: pointer" @click="showDetail(scope.row, reportTypeEnum.OUTBOUND.V)">
-            <span v-empty-text>{{ scope.row.outboundMete }}</span>
+            <span>{{ scope.row.outboundMete }}</span>
           </div>
         </template>
       </el-table-column>
@@ -116,7 +116,7 @@
       >
         <template v-slot="scope">
           <div style="cursor: pointer" @click="showDetail(scope.row, reportTypeEnum.END.V)">
-            <span v-empty-text> {{ scope.row.endMete }}</span>
+            <span> {{ scope.row.endMete }}</span>
           </div>
         </template>
       </el-table-column>

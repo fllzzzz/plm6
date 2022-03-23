@@ -6,6 +6,7 @@
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
+      :data-format="dataFormat"
       :data="crud.data"
       style="width: 100%"
       :max-height="maxHeight"
@@ -16,66 +17,18 @@
           <span v-empty-text>{{ row.monomer?.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('area.name')" prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.area?.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('name')" prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" key="serialNumber" label="编号" align="center" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.serialNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('specification')" prop="specification" key="specification" label="规格" align="center" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.specification }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('material')" prop="material" key="material" label="材质" align="center" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.material }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('measure')" prop="measure" key="measure" label="计量单位" align="center" min-width="70" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.measure }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('quantity')" prop="quantity" key="quantity" label="数量" align="center" min-width="70" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.quantity }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('nuclear')" prop="nuclear" key="nuclear" label="核算单位" align="center" min-width="70" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.nuclear }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('totalMete')" prop="totalMete" key="totalMete" label="总量" align="center" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.totalMete }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('price')" prop="price" key="price" label="单价" align="right" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-thousand="row.unitPrice" v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" key="totalPrice" label="总价" align="right" min-width="110" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-thousand="row.totalPrice" v-empty-text />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('auditTime')" prop="auditTime" key="auditTime" label="发运时间"  align="center"  width="130" show-overflow-tooltip >
-        <template #default="{ row }">
-          <span v-parse-time="row.auditTime" />
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('area.name')" prop="area.name" key="area.name" label="区域" min-width="140" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('name')" prop="name" key="name" label="名称" align="center" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('serialNumber')" prop="serialNumber" key="serialNumber" label="编号" align="center" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('specification')" prop="specification" key="specification" label="规格" align="center" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('material')" prop="material" key="material" label="材质" align="center" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('measure')" prop="measure" key="measure" label="计量单位" align="center" min-width="70" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('quantity')" prop="quantity" key="quantity" label="数量" align="center" min-width="70" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('nuclear')" prop="nuclear" key="nuclear" label="核算单位" align="center" min-width="70" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('totalMete')" prop="totalMete" key="totalMete" label="总量" align="center" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('unitPrice')" prop="unitPrice" key="unitPrice" label="单价" align="right" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" key="totalPrice" label="总价" align="right" min-width="110" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('auditTime')" prop="auditTime" key="auditTime" label="发运时间"  align="center"  width="130" show-overflow-tooltip />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -114,6 +67,11 @@ const optShow = {
 }
 
 const tableRef = ref()
+const dataFormat = ref([
+  ['auditTime', 'parse-time'],
+  ['unitPrice', 'to-thousand'],
+  ['totalPrice', 'to-thousand']
+])
 const { crud, columns } = useCRUD(
   {
     title: '发运记录',

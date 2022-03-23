@@ -59,12 +59,12 @@
           min-width="100"
         >
           <template v-slot="scope">
-            <span v-empty-text>{{ scope.row.businessType && businessTypeEnum.VL[scope.row.businessType] }}</span>
+            <span>{{ scope.row.businessType && businessTypeEnum.VL[scope.row.businessType] }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('status')" key="status" prop="status" label="状态" width="90" align="center">
           <template v-slot="scope">
-            <span v-empty-text>{{ projectStatusEnum.VL[scope.row.status] }}</span>
+            <span>{{ projectStatusEnum.VL[scope.row.status] }}</span>
           </template>
         </el-table-column>
         <el-table-column

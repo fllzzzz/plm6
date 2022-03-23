@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       row-key="rowId"
@@ -54,7 +55,7 @@
       </el-table-column>
       <el-table-column prop="price" :show-overflow-tooltip="true" label="工资总额(元)" align="center">
         <template #default="{ row }">
-          <span v-to-fixed="{ k: 'YUAN', val: row.price }"></span>
+          <span>{{ row.price }}</span>
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.detail]" label="操作" width="100px" align="center" fixed="right">
@@ -90,6 +91,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const dataFormat = ref([['price', ['to-fixed-ck', 'YUAN']]])
 
 const tableRef = ref()
 const permission = inject('permission')

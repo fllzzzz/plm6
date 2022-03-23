@@ -1,12 +1,5 @@
 <template>
-  <common-drawer
-    ref="drawerRef"
-    title="计价制详情"
-    v-model="drawerVisible"
-    direction="rtl"
-    :before-close="handleClose"
-    size="100%"
-  >
+  <common-drawer ref="drawerRef" title="计价制详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="100%">
     <template #titleAfter>
       <el-tag type="success" effect="plain" size="medium">
         <span>统计日期：</span>
@@ -31,6 +24,7 @@
         ref="tableRef"
         v-loading="tableLoading"
         :data="list"
+        :dataFormat="dataFormat"
         :max-height="maxHeight"
         row-key="rowId"
         show-summary
@@ -62,12 +56,12 @@
         </el-table-column>
         <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
           <template #default="{ row }">
-            <span v-to-fixed="{ k: 'YUAN', val: row.wage }"></span>
+            <span>{{ row.wage }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
           <template #default="{ row }">
-            <span v-to-fixed="{ k: 'YUAN', val: row.price }"></span>
+            <span>{{ row.price }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -123,6 +117,11 @@ watch(
   },
   { immediate: true }
 )
+
+const dataFormat = ref([
+  ['wage', ['to-fixed-ck', 'YUAN']],
+  ['price', ['to-fixed-ck', 'YUAN']]
+])
 
 const tableLoading = ref(false)
 const list = ref([])

@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :dataFormat="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%"
@@ -36,7 +37,7 @@
         <template #default="{ row }">
           <span style="white-space: pre-line">
             <span>{{ row.userName + '\n' }}</span>
-            <span v-parse-time="row.createTime" />
+            <span>{{ row.createTime }}</span>
           </span>
         </template>
       </el-table-column>
@@ -141,15 +142,15 @@
       >
         <template #default="{ row }">
           <span style="white-space: pre-line">
-            <span v-empty-text>{{ row.rectifyName }}</span
+            <span>{{ row.rectifyName }}</span
             >{{ '\n' }}
-            <span v-parse-time="row.rectifyTime" />
+            <span>{{ row.rectifyTime }}</span>
           </span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('forfeit')" :show-overflow-tooltip="true" prop="forfeit" label="罚金(元)" align="center">
         <template #default="{ row }">
-          <span v-to-fixed="{ k: 'YUAN', val: row.forfeit }"></span>
+          <span>{{ row.forfeit }}</span>
         </template>
       </el-table-column>
     </common-table>
@@ -177,6 +178,12 @@ const optShow = {
   del: false,
   download: false
 }
+
+const dataFormat = ref([
+  ['createTime', 'parse-time'],
+  ['rectifyTime', 'parse-time'],
+  ['forfeit', ['to-fixed-ck', 'YUAN']]
+])
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

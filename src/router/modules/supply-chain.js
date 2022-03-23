@@ -40,6 +40,24 @@ export default {
     //   ]
     // },
     {
+      path: '/supply-chain/purchase-reconciliation-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'PurchaseReconciliationManage',
+      alwaysShow: false,
+      redirect: '/supply-chain/payment-ledger',
+      meta: { title: '采购对账管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'PurchasePaymentLedger',
+          path: 'payment-ledger',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/payment-ledger/index',
+          meta: { title: '付款台账', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/supply-chain/logistics-manage',
       component: 'Layout',
       hidden: false,

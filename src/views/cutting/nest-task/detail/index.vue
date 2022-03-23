@@ -289,7 +289,7 @@ const taskPackage = ref([]) // 任务包数据
 const PartByCutTaskIdData = ref([]) // 零件清单
 const material = ref([])
 const innerVisible = ref(false)
-const workListTask = ref(true)// 创建工单操作禁用
+const workListTask = ref(false)// 创建工单操作禁用
 const titleName = ref('')
 const loadingPart = ref(false)
 const loadingPackage = ref(false)
@@ -400,6 +400,7 @@ async function createTask(Str) {
         console.log(' material.value', material.value, ' radioButtonData.value', radioButtonData.value)
       })
       createNum.value++
+      workListTask.value = true
     }
     taskPackage.value = content
     ElMessage({ message: '投料成功！！！', type: 'success' })
@@ -439,6 +440,7 @@ async function nestWorkListClick() {
     workSelectList.value = unique(workSelectList.value.map((item) => { return item.id }))
     const message = await createOrder(workSelectList.value, { projectId: props.detailData.projectId })
     ElMessage({ message: message, type: 'success' })
+    createTask(1)
   } catch (err) {
     console.log(err)
   }

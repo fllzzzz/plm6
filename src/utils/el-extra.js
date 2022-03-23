@@ -25,7 +25,13 @@ export function tableSummary(param, { props = [], precision = 2, toThousandField
       }
     })
     if (fieldIndex > -1) {
-      const values = data.map((item) => Number(getInfo(item, column.property)))
+      const values = data.map((item) => {
+        let d = item
+        if (item && item.sourceRow) {
+          d = item.sourceRow
+        }
+        return Number(getInfo(d, column.property))
+      })
       let dp = precision
       const curField = props[fieldIndex]
       if (Array.isArray(curField) && curField.length === 2) {
@@ -33,15 +39,23 @@ export function tableSummary(param, { props = [], precision = 2, toThousandField
       }
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
-          const value = +toFixed(curr, dp)
-          if (!isNaN(value)) {
-            return +toFixed(prev + curr, dp)
+          // const value = toPrecision(curr, dp)
+          // if (!isNaN(value)) {
+          //   return toPrecision(prev + curr, dp)
+          // } else {
+          //   return prev
+          // }
+
+          if (!isNaN(curr)) {
+            return prev + curr
           } else {
             return prev
           }
         }, 0)
         if (toThousandFields.includes(column.property)) {
           sums[index] = toThousand(sums[index], dp)
+        } else {
+          sums[index] = toFixed(sums[index], dp)
         }
       }
     }

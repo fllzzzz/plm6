@@ -63,9 +63,9 @@ function processMete({ header, table = [], footer, qrCode }) {
       weight: { num: row.completeNetWeight },
       length: { num: row.completeLength, to: unitObj.unit, dp: unitObj.dp }
     })
-    if (row.mete) {
-      row.mete += unitObj.unit
-    }
+    // if (row.mete) {
+    //   row.mete += unitObj.unit
+    // }
     return row
   })
   return {

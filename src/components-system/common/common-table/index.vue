@@ -1,6 +1,15 @@
 <template>
   <!-- :class="`${props.showEmptySymbol ? 'empty-show-symbol-table' : ''}`"-->
-  <el-table v-bind="$attrs" ref="tableRef" :data="filterData" :stripe="tStripe" :border="tBorder">
+  <el-table
+    v-bind="$attrs"
+    ref="tableRef"
+    :data="filterData"
+    :stripe="tStripe"
+    :border="tBorder"
+    @select="select"
+    @select-all="selectAll"
+    @selection-change="selectionChange"
+  >
     <template #default>
       <slot />
     </template>
@@ -14,7 +23,7 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, watch, computed, ref, nextTick } from 'vue'
+import { defineExpose, defineEmits, defineProps, watch, computed, ref, nextTick } from 'vue'
 import { mapGetters } from '@/store/lib'
 import EO from '@enum'
 import { DP } from '@/settings/config'
@@ -25,8 +34,10 @@ import { cleanArray } from '@/utils/data-type/array'
 import { getInfo, setInfo } from '@/utils/el-extra'
 
 import { ElTable } from 'element-plus'
-import { addPrefix, addSuffix, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
+import { addPrefix, addSuffix, emptyTextFormatter, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import cloneDeep from 'lodash/cloneDeep'
+
+const emit = defineEmits(['select', 'selectAll', 'selectionChange'])
 
 // default不填写，默认值为null。需要传入undefined
 const props = defineProps({
@@ -35,14 +46,24 @@ const props = defineProps({
     type: Array,
     default: undefined
   },
-  // 数据格式转换
+  /**
+   * 数据格式转换
+   * 格式：
+   * [
+   *  ['project', ['parse-project', {lineBreak:true}], ..., { source: 'projects' }],
+   *  ...
+   * ]
+   * 参数1：字段名，string, 必填
+   * 参数2: 转换类型 ,string | array。 子参数查看对应类型。PS：参数2可填写多个，按填写顺序转换
+   * 参数(末尾)：其他信息, object。
+   * source: 源数据字段：以上方为例 row.project = format(row.projects)
+   */
   dataFormat: {
     type: Array,
     default: undefined
   },
   /**
-   * 返回数据源对象（即，在数据源上进行数据转换）
-   * 若不进行数据处理（即：dataFormat为空以及showEmptySymbol为false），则该字段无效，直接返回源数据
+   * 返回数据源对象（即，在数据源上进行数据格式转换）
    */
   returnSourceData: {
     type: Boolean,
@@ -161,13 +182,39 @@ watch(
 function handleData(data, columns) {
   // 获取格式转化的列字段
   const dfColumns = props.dataFormat ? props.dataFormat.map((df) => df[0]) : []
-
-  if (props.showEmptySymbol || dfColumns.length > 0) {
-    // 优化数据列表
-    filterData.value = optimizeList(data, columns, dfColumns)
+  // 优化数据列表
+  // filterData.value = optimizeList(data, columns, dfColumns)
+  const fmList = optimizeList(data, columns, dfColumns)
+  if (props.returnSourceData) {
+    filterData.value = fmList
   } else {
-    // 不处理则直接返回
-    filterData.value = data
+    /**
+     * 不选择重新为filterData.value赋值
+     * 是为了避免当表格中有表单内容时，修改了表单内容，导致重新拷贝地址发生变化，从而造成，展开的行收缩等情况。
+     */
+    let sourceChange = false
+    // 数组长度大于0 ，格式化后的数组长度与原filter数组长度相同，并且第一个元素的sourceRow相同
+    if (
+      isNotBlank(filterData.value) &&
+      fmList.length === filterData.value.length &&
+      fmList[0].sourceRow === filterData.value[0].sourceRow
+    ) {
+      // 下标为0的源数据已经比较过，无需再比较
+      for (let i = 1; i < fmList.length; i++) {
+        if (fmList[i].sourceRow !== filterData.value[i].sourceRow) {
+          sourceChange = true
+          break
+        } else {
+          Object.assign(filterData.value[i], fmList[i])
+        }
+      }
+    } else {
+      // 长度为0时，也视为变化
+      sourceChange = true
+    }
+    if (sourceChange) {
+      filterData.value = fmList
+    }
   }
 }
 
@@ -185,22 +232,41 @@ function optimizeList(list, columns, dfColumns = []) {
     if (row) {
       // 赋予row 数据源
       if (!props.returnSourceData) row.sourceRow = list[rowIndex]
-      // 遍历columns
-      iterateColumns.forEach((field) => {
-        const dfCfg = dataFormatKV.value[field]
-        let preData = getInfo(row, field)
-        if (dfCfg) {
-          for (let i = 0; i < dfCfg.length; i++) {
-            const fmD = formatDataByType(row, preData, dfCfg[0])
-            preData = fmD
-            setInfo(row, field, fmD)
+      if (props.showEmptySymbol || dfColumns.length > 0) {
+        // 遍历columns
+        iterateColumns.forEach((field) => {
+          let dfCfg = dataFormatKV.value[field]
+
+          let preData = getInfo(list[rowIndex], field)
+          // 获取未转换的值
+          if (dfCfg) {
+            // 如果数组最后一个值为对象，且不为数组的情况
+            const otherInfo = dfCfg[dfCfg.length - 1]
+            // 别名，没有则使用field
+            if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
+              // 实际配置信息范围
+              dfCfg = dfCfg.slice(0, dfCfg.length - 1)
+              // 获取数据源字段
+              const sourceField = otherInfo ? otherInfo.source : void 0
+              // 获取实际转换前的值
+              if (sourceField) preData = getInfo(list[rowIndex], sourceField)
+            }
+            if (field) {
+              for (let i = 0; i < dfCfg.length; i++) {
+                // 获取转换后的值
+                const fmD = formatDataByType(row, preData, dfCfg[i])
+                preData = fmD
+                // 设置转换后的值
+                setInfo(row, field, fmD)
+              }
+            }
           }
-        }
-        // 若未显示列中的对象，且值不存在，则设置空
-        if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
-          setInfo(row, field, props.emptySymbol)
-        }
-      })
+          // 若未显示列中的对象，且值不存在，则设置空
+          if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
+            setInfo(row, field, props.emptySymbol)
+          }
+        })
+      }
     }
   })
   return cloneList
@@ -211,66 +277,133 @@ function formatDataByType(row, data, field) {
   const type = Array.isArray(field) ? field[0] : field
   const field1 = Array.isArray(field) && field.length > 1 ? field[1] : void 0
   switch (type) {
+    /**
+     * to-fixed, to-precision, to-thousand，第二个参数皆为小数精度
+     * 共有三种填写方式
+     * 普通模式：直接传入小数精度，如：['to-fixed',2]
+     * commonKey(ck)模式：传入公共精度的key值，如：['to-fixed','COM_WT__KG']
+     * field模式：传入当前对象的字段，如['to-fixed','accountingPrecision'], 单位精度 取值为 row.accountingPrecision
+     */
+    // 处理小数精度，转换后为string
     case 'to-fixed':
       return toFixed(data, field1)
     case 'to-fixed-ck':
-      return toFixed(data, isBlank(field1) ? DP[field1] : void 0)
+      return toFixed(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-fixed-field':
-      return toFixed(data, isBlank(field1) ? row[field1] : void 0)
+      return toFixed(data, isNotBlank(field1) ? row[field1] : void 0)
+    // 处理小数精度，转换后为number
     case 'to-precision':
       return toPrecision(data, field1)
     case 'to-precision-ck':
-      return toPrecision(data, isBlank(field1) ? DP[field1] : void 0)
+      return toPrecision(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-precision-field':
-      return toPrecision(data, isBlank(field1) ? row[field1] : void 0)
+      return toPrecision(data, isNotBlank(field1) ? row[field1] : void 0)
+    // 10000 => 10,000
     case 'to-thousand':
       return toThousand(data, field1)
     case 'to-thousand-ck':
-      return toThousand(data, field1)
+      return toThousand(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-thousand-field':
-      return toThousand(data, field1)
-    case 'suffix':
-      return addSuffix(data, field1)
+      return toThousand(data, isNotBlank(field1) ? row[field1] : void 0)
+    /**
+     * 前置文字
+     * 例：['prefix', '快乐的']： '小明'  =>  '快乐的小明
+     */
     case 'prefix':
       return addPrefix(data, field1)
+    /**
+     * 前置文字
+     * 例：['prefix', '——author：小明']： '嘻嘻'  =>  '嘻嘻——author：小明
+     */
+    case 'suffix':
+      return addSuffix(data, field1)
+    /**
+     * 空字符串显示
+     * 例：
+     * 1.'empty-text'
+     * 2.['empty-text', '-']
+     * 参数2: 空值显示。默认：'-'
+     *
+     * 通常不需要使用该类型
+     * 1.需要显示的字段不在el-table-columns中，例如在expand-columns中
+     * 2.该列需要自定义空值
+     * 3.未使用showEmptySymbol
+     */
+    case 'empty-text':
+      return emptyTextFormatter(data, field1 || '-')
+    /**
+     * 分解数组
+     * 例：
+     * 1.'split': ['小王', '小明']  =>  '小王、小明'
+     * 2.['split', '，']：['小王', '小明']  =>  '小王，小明'
+     * 参数2：分割字符。默认: '、'
+     */
     case 'split':
       return Array.isArray(data) ? data.join(field1 || '、') : data
+    /**
+     * 时间格式转换
+     * 例：
+     * 1.'parse-time'： 1647917251993  =>  2022-03-22 10:47:31
+     * 2.['parse-time', '{y}-{m}-{d}'] 1647917251993  =>  2022-03-22
+     * 参数2：日期格式。默认: '{y}-{m}-{d} {h}:{i}'
+     */
     case 'parse-time':
       return parseTime(data, field1 || '{y}-{m}-{d} {h}:{i}')
+    /**
+     * 项目格式转换
+     * 例:
+     * 1.'parse-project'
+     * 2.['parse-project', {onlyShortName: false, split: '、', lineBreak: false}]
+     * 参数2：配置信息,默认：{onlyShortName: false, split: '、', lineBreak: false}
+     * onlyShortName:只显示简称
+     * split：多个项目时的分割字符
+     * lineBreak：合同编号与项目名称之间换行，否则以空格隔开
+     */
     case 'parse-project':
-      return parseProject(row, data, field)
+      return parseProject(data, Array.isArray(field) ? field.slice(1) : void 0)
+    /**
+     * 枚举格式转换
+     * 例：['parse-enum', matClsEnum, { f: 'L', bit: false, split: '、', extra: '' }]
+     * 参数2：枚举对象
+     * 参数3：信息配置，默认值为：{ f: 'L', bit: false, split: '、', extra: '' }
+     * f: “显示的值”对应的是枚举对象中哪个key值
+     * bit：是否为位运算的值
+     * split：传入数组或位运算值的情况下，分割字符
+     * extra: 额外的值（放在转换信息的末尾）
+     */
     case 'parse-enum':
-      return parseEnum(row, data, field)
+      return parseEnum(data, Array.isArray(field) ? field.slice(1) : void 0)
   }
 }
 
-function parseProject(row, data, field) {
+// 项目格式装换
+function parseProject(data, cfg) {
   if (isBlank(data)) return
   let p = []
-  let split = '、'
+  const config = { onlyShortName: false, split: '、', lineBreak: false }
   if (Array.isArray(data)) {
     p = data
   } else {
     p = [data]
   }
-  if (field.length > 1) {
-    const cfg = field[1]
-    split = cfg.split || split
-    if (cfg && cfg.onlyShortName) {
-      return p.map((v) => v.shortName).join(split)
-    } else {
-      return p.map((v) => projectNameFormatter(v, null, false)).join(split)
-    }
+  // 覆盖配置信息
+  if (cfg && cfg.length > 0) {
+    Object.assign(config, cfg[0] || {}) // 配置信息
+  }
+  // 格式转化
+  if (config.onlyShortName) {
+    return p.map((v) => v.shortName).join(config.split)
   } else {
-    return p.map((v) => projectNameFormatter(v, null, false)).join(split)
+    return p.map((v) => projectNameFormatter(v, null, false)).join(config.split)
   }
 }
 
-function parseEnum(row, data, field) {
+// 枚举格式装换
+function parseEnum(data, field) {
   let text = ''
   const defaultKey = { f: 'L', bit: false, split: '、', extra: '' }
-  const cfg = field.length > 2 ? Object.assign(defaultKey, field[2]) : defaultKey
-  const fEnum = field[1]
+  const cfg = field.length > 1 ? Object.assign(defaultKey, field[1]) : defaultKey
+  const fEnum = field[0]
   if (isBlank(data) || isBlank(fEnum)) return
 
   let enumV = fEnum.V
@@ -308,16 +441,20 @@ function clearSelection() {
   tableRef.value.clearSelection()
 }
 
+// 选中
 function toggleRowSelection(row, selected) {
-  tableRef.value.toggleRowSelection(row, selected)
+  const sourceRow = getCurrent(row)
+  tableRef.value.toggleRowSelection(sourceRow, selected)
 }
 
 function toggleAllSelection() {
   tableRef.value.toggleAllSelection()
 }
 
+// 展开
 function toggleRowExpansion(row, expanded) {
-  tableRef.value.toggleRowExpansion(row, expanded)
+  const sourceRow = getCurrent(row)
+  tableRef.value.toggleRowExpansion(sourceRow, expanded)
 }
 
 // 解决树形结构打开子节点所有父节点expanded:false收回
@@ -357,8 +494,60 @@ function sort(prop, order) {
   tableRef.value.sort(prop, order)
 }
 
+// 获取属于row的数据源
+function getSource(data) {
+  if (props.returnSourceData) return data
+  let sourceData
+  if (Array.isArray(data)) {
+    sourceData = data.map((row) => {
+      return row.sourceRow
+    })
+  } else {
+    sourceData = data.sourceRow
+  }
+
+  return sourceData
+}
+
+// 获取当前filterData中的row
+function getCurrent(data) {
+  if (props.returnSourceData) return data
+  let curData
+  if (Array.isArray(data)) {
+    curData = []
+    data.forEach((row) => {
+      const curRow = filterData.value.find((fmRow) => fmRow.sourceRow === row)
+      curData.push(curRow)
+    })
+  } else {
+    curData = filterData.value.find((fmRow) => fmRow.sourceRow === data)
+  }
+  return curData
+}
+
+// 当用户手动勾选数据行的 Checkbox 时触发的事件
+function select(selection, row) {
+  const sourceSelection = getSource(selection)
+  const sourceRow = getSource(row)
+  emit('select', sourceSelection, sourceRow, selection, row)
+}
+
+// 当用户手动勾选全选 Checkbox 时触发的事件
+function selectAll(selection) {
+  const sourceSelection = getSource(selection)
+  emit('selectAll', sourceSelection, selection)
+}
+
+// 当选择项发生变化时会触发该事件
+function selectionChange(selection) {
+  const sourceSelection = getSource(selection)
+  emit('selectionChange', sourceSelection, selection)
+}
+
 defineExpose({
   getColumns,
+  getSource,
+  getCurrent,
   clearSelection,
   toggleRowSelection,
   toggleAllSelection,

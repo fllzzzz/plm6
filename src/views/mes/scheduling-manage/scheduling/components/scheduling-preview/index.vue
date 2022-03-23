@@ -82,7 +82,7 @@
         保 存
       </common-button>
     </template>
-    <common-table :data="modifiedData" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
+    <common-table :data="modifiedData" :dataFormat="productFormat[productType]" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <productType-base-info-columns :productType="productType" :category="category" fixedWidth></productType-base-info-columns>
       <productType-spec-info-columns
@@ -208,6 +208,7 @@ import { debounce } from '@/utils'
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
 import productTypeBaseInfoColumns from '@comp-mes/table-columns/productType-base-info-columns'
+import { productFormat } from '@/utils/columns-format/mes'
 import productTypeSpecInfoColumns from '@comp-mes/table-columns/productType-spec-info-columns'
 
 const emit = defineEmits(['update:visible', 'success'])
@@ -339,6 +340,7 @@ function handleDataChange() {
     askCompleteTime: undefined
   }
   const _data = JSON.parse(JSON.stringify(props.data))
+  console.log(_data, '_data')
   const hasChangedLine = {}
   const hasChangedWorkshop = {}
   changeQuantity.value = 0

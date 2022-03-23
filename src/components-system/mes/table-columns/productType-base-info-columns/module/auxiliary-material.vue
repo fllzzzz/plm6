@@ -10,7 +10,7 @@
   >
     <template #default="{ row }">
       <slot name="snPrefix" :row="row"></slot>
-      <span v-empty-text>{{ row.serialNumber }}</span>
+      <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -25,7 +25,7 @@
     <template #default="{ row }">
       <slot name="namePrefix" :row="row"></slot>
       <el-tooltip :content="row.classifyFullName" :disabled="!row.classifyFullName" :show-after="500" placement="top">
-        <span v-empty-text="row.classifyName" />
+        <span>{{ row.classifyName }}</span>
       </el-tooltip>
     </template>
   </el-table-column>
@@ -39,7 +39,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-empty-text="row.specification" />
+      <span>{{ row.specification }}</span>
     </template>
   </el-table-column>
 </template>

@@ -70,6 +70,8 @@ import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { packTypeEnum } from '@enum-ms/mes'
 import { convertUnits } from '@/utils/convert/unit'
+import { toThousand } from '@/utils/data-type/number'
+import { emptyTextFormatter } from '@/utils/data-type'
 import { DP } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
@@ -125,7 +127,7 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
-    v.originUnitPrice = v.unitPrice
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalPrice = v.totalWeight * (v.unitPrice || 0)
   })
   fetchCost()
@@ -159,8 +161,11 @@ function handelModifying(status, reset = false) {
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      v.totalPrice = v.totalWeight * (v.unitPrice || 0)
-      return v
+      if (typeof v.unitPrice === 'string') {
+        v.totalPrice = 0
+      } else {
+        v.totalPrice = v.totalWeight * (v.unitPrice || 0)
+      }
     })
   }
   modifying.value = status

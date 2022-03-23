@@ -31,6 +31,7 @@
         ref="tableRef"
         v-loading="tableLoading"
         :data="list"
+        :dataFormat="dataFormat"
         :max-height="maxHeight"
         row-key="rowId"
         show-summary
@@ -62,12 +63,12 @@
         </el-table-column>
         <el-table-column prop="wage" :show-overflow-tooltip="true" label="工序单价(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="{ k: 'YUAN', val: scope.row.wage }"></span>
+            <span>{{ scope.row.wage }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="price" :show-overflow-tooltip="true" label="工资(元)" align="center">
           <template v-slot="scope">
-            <span v-to-fixed="{ k: 'YUAN', val: scope.row.price }"></span>
+            <span>{{ scope.row.price }}</span>
           </template>
         </el-table-column>
       </common-table>
@@ -126,6 +127,11 @@ watch(
   { immediate: true }
 )
 
+const dataFormat = ref([
+  ['wage', ['to-fixed-ck', 'YUAN']],
+  ['price', ['to-fixed-ck', 'YUAN']]
+])
+
 const tableLoading = ref(false)
 const list = ref([])
 const query = inject('query')
@@ -138,12 +144,15 @@ const unitObj = computed(() => {
 })
 
 const printParams = computed(() => {
-  return Object.assign({
-    factoryId: props.info?.factory?.id,
-    productionLineId: props.info?.productionLine?.id,
-    workshopId: props.info?.workshop?.id,
-    teamId: props.info.teamId
-  }, query)
+  return Object.assign(
+    {
+      factoryId: props.info?.factory?.id,
+      productionLineId: props.info?.productionLine?.id,
+      workshopId: props.info?.workshop?.id,
+      teamId: props.info.teamId
+    },
+    query
+  )
 })
 
 async function fetchList() {
