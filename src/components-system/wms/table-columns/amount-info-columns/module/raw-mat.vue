@@ -7,16 +7,8 @@
     align="center"
     min-width="70px"
     show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType, f: 'SL' }" v-empty-text />
-    </template>
-  </el-table-column>
-  <el-table-column v-if="showTaxRate" key="taxRate" prop="taxRate" label="税率" align="center" min-width="70" show-overflow-tooltip>
-    <template #default="{ row }">
-      <span v-empty-text="{ val: row.taxRate ? `${row.taxRate}%` : undefined }" />
-    </template>
-  </el-table-column>
+  />
+  <el-table-column v-if="showTaxRate" key="taxRate" prop="taxRate" label="税率" align="center" min-width="70" show-overflow-tooltip />
   <el-table-column
     v-if="showUnitPrice"
     key="unitPrice"
@@ -25,16 +17,8 @@
     align="right"
     min-width="90px"
     show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-thousand="row.unitPrice" v-empty-text />
-    </template>
-  </el-table-column>
-  <el-table-column v-if="showAmount" key="amount" prop="amount" label="金额" align="right" min-width="105px" show-overflow-tooltip>
-    <template #default="{ row }">
-      <span v-thousand="row.amount" v-empty-text />
-    </template>
-  </el-table-column>
+  />
+  <el-table-column v-if="showAmount" key="amount" prop="amount" label="金额" align="right" min-width="105px" show-overflow-tooltip />
   <el-table-column
     v-if="showAmountExcludingVAT"
     key="amountExcludingVAT"
@@ -43,22 +27,13 @@
     align="right"
     min-width="105px"
     show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-thousand="row.amountExcludingVAT" v-empty-text />
-    </template>
-  </el-table-column>
-  <el-table-column v-if="showInputVAT" key="inputVAT" prop="inputVAT" label="进项税" align="right" min-width="90px" show-overflow-tooltip>
-    <template #default="{ row }">
-      <span v-thousand="row.inputVAT" v-empty-text />
-    </template>
-  </el-table-column>
+  />
+  <el-table-column v-if="showInputVAT" key="inputVAT" prop="inputVAT" label="进项税" align="right" min-width="90px" show-overflow-tooltip />
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
 import { isBlank } from '@/utils/data-type'
-import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 const props = defineProps({
   // 用于crud组件的列显隐

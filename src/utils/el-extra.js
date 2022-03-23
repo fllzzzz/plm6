@@ -1,5 +1,5 @@
 import { isBlank, toFixed } from './data-type'
-import { toThousand } from './data-type/number'
+import { getDP, toThousand } from '@/utils/data-type/number'
 
 /**
  * 合计通用
@@ -9,7 +9,7 @@ import { toThousand } from './data-type/number'
  * @param {array} toThousandFields 金额数字字段 10000 => 10,000
  * @returns
  */
-export function tableSummary(param, { props = [], precision = 2, toThousandFields = [] } = {}) {
+export function tableSummary(param, { props = [], precision, toThousandFields = [] } = {}) {
   const { columns, data } = param
   const sums = []
   columns.forEach((column, index) => {
@@ -33,25 +33,22 @@ export function tableSummary(param, { props = [], precision = 2, toThousandField
         return Number(getInfo(d, column.property))
       })
       let dp = precision
+      const dpArr = []
       const curField = props[fieldIndex]
       if (Array.isArray(curField) && curField.length === 2) {
         dp = curField[1]
       }
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {
-          // const value = toPrecision(curr, dp)
-          // if (!isNaN(value)) {
-          //   return toPrecision(prev + curr, dp)
-          // } else {
-          //   return prev
-          // }
-
           if (!isNaN(curr)) {
+            dpArr.push(getDP(curr))
             return prev + curr
           } else {
             return prev
           }
         }, 0)
+        // 获取最大的小数精度位数
+        if (isBlank(dp)) dp = dpArr.getMax()
         if (toThousandFields.includes(column.property)) {
           sums[index] = toThousand(sums[index], dp)
         } else {

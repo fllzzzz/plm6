@@ -8,11 +8,7 @@
     min-width="100px"
     :fixed="fixed"
     show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ getInfo(row, 'brand') }}</span>
-    </template>
-  </el-table-column>
+  />
   <el-table-column
     v-if="showHeatNoAndBatchNo"
     :key="`${field}.heatNoAndBatchNo`"
@@ -22,15 +18,11 @@
     min-width="150px"
     :fixed="fixed"
     show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ getInfo(row, 'heatNoAndBatchNo') }}</span>
-    </template>
-  </el-table-column>
+  />
 </template>
 
 <script setup>
-import { defineProps, computed, inject } from 'vue'
+import { defineProps, computed } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isBlank } from '@/utils/data-type'
 
@@ -56,8 +48,6 @@ const props = defineProps({
     type: String
   }
 })
-
-const getInfo = inject('getInfo')
 
 // 炉批号label
 const heatNoAndBatchNoLabel = computed(() => {

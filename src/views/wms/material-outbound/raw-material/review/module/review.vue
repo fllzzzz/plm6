@@ -10,15 +10,15 @@
     custom-class="raw-mat-application-review-form"
   >
     <template #titleAfter>
-      <el-tag v-if="form.applicant" type="success" effect="dark">{{
-        `申请人：${form.applicant.name} | ${form.applicant.deptName}`
-      }}</el-tag>
+      <el-tag v-if="form.applicant" type="success" effect="dark">
+        {{ `申请人：${form.applicant.name} | ${form.applicant.deptName}` }}
+      </el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(form.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V">
         <span class="batch-set-info child-mr-7">
-          <el-date-picker v-model="batchOutboundTime" type="datetime" value-format="x" placeholder="批量设置出库时间" />
+          <el-date-picker v-model="batchOutboundTime" type="datetime" value-format="x" placeholder="批量设置出库时间" size="mini" />
           <common-button type="success" size="mini" @click="setOutboundTime">设置</common-button>
         </span>
       </template>
@@ -51,6 +51,7 @@
       <el-form class="form" :disabled="formDisabled">
         <common-table
           :data="form.list"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
@@ -63,10 +64,10 @@
                 <p v-if="row.boolTransfer">
                   调拨：
                   <span>（来源）</span>
-                  <span style="color: brown" v-parse-project="{ project: row.sourceProject }" v-empty-text />
+                  <span style="color: brown">{{ row.sourceProject }}</span>
                   <span> ▶ </span>
                   <span>（目的）</span>
-                  <span style="color: #3a8ee6" v-parse-project="{ project: row.project }" v-empty-text />
+                  <span style="color: #3a8ee6">{{ row.project }}</span>
                 </p>
               </expand-secondary-info>
             </template>
@@ -90,12 +91,12 @@
             <template #default="{ row }">
               <el-date-picker
                 v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
-                v-model="row.outboundTime"
+                v-model="row.sourceRow.outboundTime"
                 type="datetime"
                 value-format="x"
                 placeholder="出库时间"
               />
-              <span v-else v-parse-time="row.outboundTime" />
+              <span v-else>{{ row.outboundTime }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -134,6 +135,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { parseTime } from '@/utils/date'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -176,6 +178,14 @@ const reviewNext = ref(false) // 当前记录审核完成后，直接审核下�
 const pendingReviewIdList = ref([]) // 待审核列表
 const currentInboundId = ref() // 当前id
 const batchOutboundTime = ref() // 批量设置时间
+// 表格列格式化
+const columnsDataFormat = ref([
+  ...materialColumns,
+  ['remark', 'empty-text'],
+  ['project', 'parse-project'],
+  ['sourceProject', 'parse-project'],
+  ['outboundTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']]
+])
 
 // 表单禁止操作
 const formDisabled = computed(() => submitOptLoading.value)
@@ -372,6 +382,8 @@ function getSummaries(param) {
     }
   }
   .batch-set-info {
+    display: inline-flex;
+    align-items: center;
     padding-right: 10px;
     margin-right: 10px;
     border-right: 1px solid#dcdfe6;

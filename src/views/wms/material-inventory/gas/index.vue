@@ -8,6 +8,7 @@
       :key="`material_inventory_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -62,6 +63,7 @@ import { gasMaterialWarehousePM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import useIndexInfo from '../compos/use-index-info'
 import useCRUD from '@compos/use-crud'
@@ -84,6 +86,8 @@ const optShow = {
 
 // 表格ref
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialOperateColumns])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '气体物料仓',

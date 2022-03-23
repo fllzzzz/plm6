@@ -12,7 +12,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="specTip(getInfo(row))" placement="left">
-          <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>
+          {{ specFormat(getInfo(row)) }}
         </el-tooltip>
       </template>
     </el-table-column>
@@ -30,7 +30,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="left">
-          <span v-empty-text>{{ getInfo(row, 'specification') }}</span>
+          {{ getInfo(row, 'specification') }}
         </el-tooltip>
       </template>
     </el-table-column>
@@ -43,11 +43,7 @@
       :label="`厚 (${baseUnit.thickness.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-to-fixed="baseUnit.thickness.precision">{{ getInfo(row, 'thickness') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showWidth"
       :key="`${field}.width`"
@@ -57,11 +53,7 @@
       :label="`宽 (${baseUnit.width.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-to-fixed="baseUnit.width.precision">{{ getInfo(row, 'width') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showColor"
       :key="`${field}.color`"
@@ -71,11 +63,7 @@
       :label="`颜色`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'color') }}</span>
-      </template>
-    </el-table-column>
+    />
   </template>
 </template>
 

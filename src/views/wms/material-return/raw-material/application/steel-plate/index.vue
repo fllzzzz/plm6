@@ -13,6 +13,7 @@
       <common-table
         ref="tableRef"
         :data="form.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :stripe="false"
@@ -26,7 +27,7 @@
           <template #default="{ row }">
             <div class="mtb-10">
               <el-input
-                v-model="row.remark"
+                v-model="row.sourceRow.remark"
                 :rows="1"
                 :autosize="{ minRows: 1, maxRows: 1 }"
                 type="textarea"
@@ -51,17 +52,13 @@
         />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
-        <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left">
-          <template #default="{ row }">
-            <span v-to-fixed="{ val: row.source.thickness, dp: baseUnit.thickness.precision }" />
-          </template>
-        </el-table-column>
+        <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left" />
         <el-table-column prop="width" align="center" width="110px" :label="`宽 (${baseUnit.width.unit})`">
           <template #default="{ row }">
             <common-input-number
-              v-model="row.width"
+              v-model="row.sourceRow.width"
               :min="0"
-              :max="+row.source.width"
+              :max="+row.sourceRow.source.width"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.width.precision"
@@ -73,8 +70,8 @@
         <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
           <template #default="{ row }">
             <common-input-number
-              v-model="row.length"
-              :max="+row.source.length"
+              v-model="row.sourceRow.length"
+              :max="+row.sourceRow.source.length"
               :controls="false"
               :min="0"
               :precision="baseUnit.length.precision"
@@ -86,9 +83,9 @@
         <el-table-column prop="quantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
           <template #default="{ row }">
             <common-input-number
-              v-model="row.quantity"
+              v-model="row.sourceRow.quantity"
               :min="1"
-              :max="+row.source.quantity"
+              :max="+row.sourceRow.source.quantity"
               controls-position="right"
               :controls="false"
               :step="1"
@@ -101,9 +98,9 @@
         <el-table-column key="mete" prop="mete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
           <template #default="{ row }">
             <common-input-number
-              v-model="row.mete"
+              v-model="row.sourceRow.mete"
               :min="0"
-              :max="+row.maxMete"
+              :max="+row.sourceRow.maxMete"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -116,7 +113,7 @@
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
           <template #default="{ row, $index }">
-            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
+            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sourceRow, $index)" />
           </template>
         </el-table-column>
       </common-table>
@@ -168,6 +165,8 @@ const expandRowKeys = ref([]) // 展开行key
 const headerRef = ref()
 const tableRef = ref()
 const formRef = ref()
+// 表格列格式化
+const columnsDataFormat = ref([['source.project', ['parse-project', { onlyShortName: true }]]])
 // 最大高度
 const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 // 钢板类型
@@ -245,7 +244,7 @@ function init() {
   // 当前高亮uid
   currentUid.value = undefined
   // 异常列表
-  cu.props.abnormalList = undefined
+  // cu.props.abnormalList = undefined
 }
 
 // 添加材质
@@ -275,15 +274,12 @@ function rowWatch(row) {
 
 // 计算单件理论重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSteelPlateWeight(
-    {
-      name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-      length: row.length,
-      width: row.width,
-      thickness: row.source.thickness
-    },
-    false
-  )
+  row.theoryWeight = await calcSteelPlateWeight({
+    name: row.source.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+    length: row.length,
+    width: row.width,
+    thickness: row.source.thickness
+  })
   if (row.theoryWeight) {
     row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 10)
   } else {

@@ -36,6 +36,7 @@
       <el-form class="form" :model="form" :disabled="formDisabled">
         <common-table
           :data="detail.list"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
@@ -81,6 +82,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import checkPermission from '@/utils/system/check-permission'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -123,6 +125,8 @@ const formDisabled = computed(() => passedLoading.value || returnedLoading.value
 const form = ref({})
 const detail = ref({})
 
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 const { crud } = regExtra()
 
 // 采购订单信息

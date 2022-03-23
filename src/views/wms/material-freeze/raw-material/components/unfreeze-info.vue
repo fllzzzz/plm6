@@ -13,6 +13,7 @@
     <common-table
       ref="tableRef"
       :data="list"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -22,7 +23,7 @@
         <template #default="{ row }">
           <expand-secondary-info v-if="row.material" :basic-class="row.material.basicClass" :row="row.material">
             <p>
-              备注：<span v-empty-text>{{ row.remark }}</span>
+              备注：<span>{{ row.remark }}</span>
             </p>
           </expand-secondary-info>
         </template>
@@ -35,17 +36,16 @@
       <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
       <warehouse-info-columns show-project />
       <el-table-column key="applicantName" prop="applicantName" label="解冻人" align="center" width="90" show-overflow-tooltip />
-      <el-table-column key="createTime" prop="createTime" label="解冻时间" align="center" width="140" show-overflow-tooltip>
-        <template #default="{ row: record }">
-          <span v-parse-time="record.createTime" />
-        </template>
-      </el-table-column>
+      <el-table-column key="createTime" prop="createTime" label="解冻时间" align="center" width="140" show-overflow-tooltip />
     </common-table>
   </common-dialog>
 </template>
 
 <script setup>
 import { ref, defineProps, watch } from 'vue'
+import { deepClone, isBlank } from '@/utils/data-type'
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 import useMaxHeight from '@compos/use-max-height'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
@@ -54,9 +54,6 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-custom-field-
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-custom-field-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-custom-field-columns/warehouse-info-columns/index.vue'
-import { deepClone, isBlank } from '@/utils/data-type'
-import { setSpecInfoToList } from '@/utils/wms/spec'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 
 const props = defineProps({
   basicClass: {
@@ -70,6 +67,15 @@ const props = defineProps({
 
 const dialogVisible = ref()
 const expandRowKeys = ref()
+// 表格列数据格式转换
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ['remark', 'empty-text'],
+  ['createTime', 'parse-time'],
+  ['material.project', ['parse-project', { onlyShortName: true }]],
+  ['material.quantity', ['to-fixed-field', 'measurePrecision']],
+  ['material.mete', ['to-fixed-field', 'accountingPrecision']]
+])
 // 解冻记录列表
 const list = ref([])
 

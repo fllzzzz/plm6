@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="tableLoading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -15,13 +16,17 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="serialNumber">
         <template #default="{ row }">
-          <p v-if="isNotBlank(row.auxMaterialIds)">辅材明细：<span v-split="row.auxMaterialNames" /></p>
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
-          <p>
-            关联申购单：<span v-empty-text>{{ row.requisitionsSNStr }}</span>
+          <p v-if="isNotBlank(row.auxMaterialIds)">
+            辅材明细：<span>{{ row.auxMaterialNames }}</span>
           </p>
           <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
+            关联项目：<span>{{ row.projectsFullName }}</span>
+          </p>
+          <p>
+            关联申购单：<span>{{ row.requisitionsSNStr }}</span>
+          </p>
+          <p>
+            备注：<span>{{ row.remark }}</span>
           </p>
         </template>
       </el-expand-table-column>
@@ -55,7 +60,7 @@
             :name="settlementStatusEnum.SETTLED.L"
             :color="settlementStatusEnum.SETTLED.COLOR"
           />
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
+          {{ row.createTime }}
         </template>
       </el-table-column>
       <el-table-column
@@ -81,11 +86,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"
@@ -124,11 +125,7 @@
         label="票据类型"
         align="center"
         min-width="130"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('purchaseStatus')"
         key="purchaseStatus"
@@ -192,11 +189,7 @@
         label="编辑时间"
         align="center"
         width="100"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.userUpdateTime" />
-        </template>
-      </el-table-column>
+      />
       <!--编辑与删除-->
       <el-table-column label="操作" width="230px" align="center" fixed="right">
         <template #default="{ row }">
@@ -215,7 +208,7 @@
     <pagination />
     <!-- 表单 -->
     <m-raw-material-form v-if="crud.props.formType === 'rawMaterial'" />
-    <m-raw-material-detail v-if="crud.props.detailType === 'rawMaterial'"/>
+    <m-raw-material-detail v-if="crud.props.detailType === 'rawMaterial'" />
   </div>
 </template>
 
@@ -228,8 +221,9 @@ import EO from '@enum'
 import { invoiceTypeEnum, settlementStatusEnum } from '@enum-ms/finance'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import checkPermission from '@/utils/system/check-permission'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import { isNotBlank } from '@/utils/data-type'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -253,7 +247,15 @@ const optShow = {
 
 const tableRef = ref()
 const expandRowKeys = ref([])
-
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...wmsReceiptColumns,
+  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+  ['amount', 'to-thousand'],
+  ['requisitionsSNStr', 'empty-text'],
+  ['remark', 'empty-text'],
+  ['auxMaterialNames', 'split']
+])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '采购订单',

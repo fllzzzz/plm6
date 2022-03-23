@@ -18,6 +18,7 @@
     <template #content>
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -55,6 +56,7 @@ import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -68,6 +70,9 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
 
 const drawerRef = ref()
 const expandRowKeys = ref([])

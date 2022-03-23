@@ -2,8 +2,8 @@
   <template v-if="props.specMerge">
     <el-table-column
       v-if="showSpecification"
-      key="specification"
-      prop="specification"
+      key="specificationMerge"
+      prop="specificationMerge"
       label="规格"
       align="center"
       min-width="180px"
@@ -12,7 +12,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="specTip(row)" placement="left">
-          <span v-empty-text="specFormat(row)" />
+          {{ specFormat(row) }}
         </el-tooltip>
       </template>
     </el-table-column>
@@ -30,15 +30,11 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="row.specificationLabels" :disabled="!row.specificationLabels" placement="left">
-          <span v-empty-text="row.specification" />
+          {{ row.specification }}
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column v-if="showColor" prop="color" align="center" width="120px" :label="`颜色`" show-overflow-tooltip :fixed="fixed">
-      <template #default="{ row }">
-        <span v-empty-text="row.color" />
-      </template>
-    </el-table-column>
+    <el-table-column v-if="showColor" prop="color" align="center" width="120px" :label="`颜色`" show-overflow-tooltip :fixed="fixed" />
   </template>
 </template>
 

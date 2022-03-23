@@ -18,6 +18,7 @@
     <template #content>
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -26,11 +27,11 @@
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <div v-if="isNotBlank(row.rejectList)" class="flex-rcc mtb-20">
+            <div v-if="isNotBlank(row.sourceRow.rejectList)" class="flex-rcc mtb-20">
               <reject-info-table
                 :stripe="false"
-                :material="row"
-                :basic-class="row.basicClass"
+                :material="row.sourceRow"
+                :basic-class="row.sourceRow.basicClass"
                 :list="row.rejectList"
                 operate
                 style="width: 1500px"
@@ -61,6 +62,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
@@ -76,6 +78,8 @@ import purchaseDetailButton from '@/components-system/wms/purchase-detail-button
 import RejectInfoTable from '@/views/wms/material-reject/raw-material/components/reject-info-table.vue'
 
 const permission = inject('permission')
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()

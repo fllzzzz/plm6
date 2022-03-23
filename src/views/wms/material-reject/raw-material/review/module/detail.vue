@@ -19,6 +19,7 @@
       <unfreeze-info class="unfreeze-info" v-if="detail.boolHasUnfreeze" :basic-class="detail.basicClass" :list="detail.unfreezeList" />
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -51,6 +52,7 @@ import { orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
@@ -67,6 +69,8 @@ import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/un
 const permission = inject('permission')
 const drawerRef = ref()
 const expandRowKeys = ref([])
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 const { CRUD, crud, detail } = regDetail()
 
 // 表格高度处理

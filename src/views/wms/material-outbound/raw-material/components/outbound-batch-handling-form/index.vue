@@ -43,6 +43,7 @@
       <common-table
         ref="tableRef"
         :data="form.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :expand-row-keys="expandRowKeys"
@@ -51,7 +52,9 @@
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
             <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics>
-              <p>项目：<span v-if="row.project" v-parse-project="{ project: row.project }" v-empty-text /></p>
+              <p>
+                项目：<span>{{ row.projectFullName }}</span>
+              </p>
               <el-input
                 v-model="row.remark"
                 :autosize="remarkTextSize"
@@ -68,8 +71,8 @@
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-operate-quantity-columns
-          :operable-quantity-field="boolPublicWare ? 'projectOperableQuantity' : undefined"
-          :operable-mete-field="boolPublicWare ? 'projectOperableMete' : undefined"
+          :operable-quantity-field="boolPublicWare ? 'projectOperableQuantity' : 'operateQuantity'"
+          :operable-mete-field="boolPublicWare ? 'projectOperableMete' : 'operateMete'"
           :basic-class="basicClass"
         />
         <!-- 次要信息 -->
@@ -115,6 +118,7 @@ import { measureTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
 import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
+import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -175,6 +179,12 @@ const form = ref({
 })
 // 提交loading
 const submitLoading = ref(false)
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialOperateColumns,
+  ['projectOperableQuantity', ['to-fixed-field', 'measurePrecision']],
+  ['projectOperableMete', ['to-fixed-field', 'accountingPrecision']]
+])
 // 显示
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: clearValidate })
 // 表格最大高度

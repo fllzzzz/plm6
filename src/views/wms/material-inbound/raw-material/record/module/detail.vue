@@ -18,6 +18,7 @@
     <template #content>
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -28,7 +29,7 @@
           <template #default="{ row }">
             <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="detail.basicClass" :row="row" show-brand />
             <p>
-              备注：<span v-empty-text>{{ row.remark }}</span>
+              备注：<span>{{ row.remark }}</span>
             </p>
           </template>
         </el-expand-table-column>
@@ -38,15 +39,11 @@
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
-        <!-- 价格信息 -->
+        <!-- 价格信息 TODO:showAmount 是否要改成通过权限控制-->
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
           <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
-          <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
-            <template #default="{ row }">
-              <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-            </template>
-          </el-table-column>
+          <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
         </template>
         <warehouse-info-columns v-if="showWarehouse" />
       </common-table>
@@ -60,6 +57,7 @@ import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -73,6 +71,9 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
 
 const drawerRef = ref()
 const expandRowKeys = ref([])

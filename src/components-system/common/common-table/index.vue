@@ -10,6 +10,21 @@
     @select="select"
     @select-all="selectAll"
     @selection-change="selectionChange"
+    @cell-mouse-enter="cellMouseEnter"
+    @cell-mouse-leave="cellMouseLeave"
+    @cell-click="cellClick"
+    @cell-dblclick="cellDblclick"
+    @cell-contextmenu="cellContext"
+    @row-click="rowClick"
+    @row-contextmenu="rowContextmenu"
+    @row-dblclick="rowDblclick"
+    @header-click="headerClick"
+    @header-contextmenu="headerContextmenu"
+    @sort-change="sortChange"
+    @filter-change="filterChange"
+    @current-change="currentChange"
+    @header-dragend="headerDragend"
+    @expand-change="expandChange"
   >
     <template #default>
       <slot />
@@ -38,7 +53,26 @@ import { ElTable } from 'element-plus'
 import { addPrefix, addSuffix, emptyTextFormatter, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import cloneDeep from 'lodash/cloneDeep'
 
-const emit = defineEmits(['select', 'selectAll', 'selectionChange'])
+const emit = defineEmits([
+  'select',
+  'selectAll',
+  'selectionChange',
+  'cellMouseEnter',
+  'cellMouseLeave',
+  'cellClick',
+  'cellDblclick',
+  'cellContext',
+  'rowClick',
+  'rowContextmenu',
+  'rowDblclick',
+  'headerClick',
+  'headerContextmenu',
+  'sortChange',
+  'filterChange',
+  'currentChange',
+  'dragend',
+  'expandChange'
+])
 
 // default不填写，默认值为null。需要传入undefined
 const props = defineProps({
@@ -585,7 +619,7 @@ function getSource(data) {
       return row.sourceRow
     })
   } else {
-    sourceData = data.sourceRow
+    sourceData = data ? data.sourceRow : undefined
   }
 
   return sourceData
@@ -624,6 +658,100 @@ function selectAll(selection) {
 function selectionChange(selection) {
   const sourceSelection = getSource(selection)
   emit('selectionChange', sourceSelection, selection)
+}
+
+// 当单元格 hover 进入时会触发该事件
+function cellMouseEnter(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellMouseEnter', sourceRow, column, cell, event)
+}
+
+// 	当单元格 hover 退出时会触发该事件
+function cellMouseLeave(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellMouseLeave', sourceRow, column, cell, event)
+}
+
+// 当某个单元格被点击时会触发该事件
+function cellClick(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellClick', sourceRow, column, cell, event)
+}
+
+// 当某个单元格被双击击时会触发该事件
+function cellDblclick(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellDblclick', sourceRow, column, cell, event)
+}
+
+// 当某个单元格被鼠标右键点击时会触发该事件
+function cellContext(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellContext', sourceRow, column, cell, event)
+}
+
+// 当某一行被点击时会触发该事件
+function rowClick(row, column, event) {
+  const sourceRow = getSource(row)
+  emit('rowClick', sourceRow, column, event)
+}
+
+// 当某一行被鼠标右键点击时会触发该事件
+function rowContextmenu(row, column, event) {
+  const sourceRow = getSource(row)
+  emit('rowContextmenu', sourceRow, column, event)
+}
+
+// 当某一行被双击时会触发该事件
+function rowDblclick(row, column, event) {
+  const sourceRow = getSource(row)
+  emit('rowDblclick', sourceRow, column, event)
+}
+
+// 当某一列的表头被点击时会触发该事件
+function headerClick(column, event) {
+  emit('headerClick', column, event)
+}
+
+// 当某一列的表头被鼠标右键点击时触发该事件
+function headerContextmenu(column, event) {
+  emit('headerContextmenu', column, event)
+}
+
+// 当表格的排序条件发生变化的时候会触发该事件
+function sortChange({ column, prop, order }) {
+  emit('sortChange', { column, prop, order })
+}
+
+// 参数的值是一个对象， 当表格的筛选条件发生变化的时候会触发该事件，对象的 key 是 column 的 columnKey，对应的 value 为用户选择的筛选条件的数组。
+function filterChange(filters) {
+  emit('filterChange', filters)
+}
+
+// 当表格的当前行发生变化的时候会触发该事件，如果要高亮当前行，请打开表格的 highlight-current-row 属性
+function currentChange(currentRow, oldCurrentRow) {
+  const sourceCurrentRow = getSource(currentRow)
+  const sourceOldCurrentRow = getSource(oldCurrentRow)
+  emit('currentChange', sourceCurrentRow, sourceOldCurrentRow, currentRow, oldCurrentRow)
+}
+
+// 	当拖动表头改变了列的宽度的时候会触发该事件
+function headerDragend(newWidth, oldWidth, column, event) {
+  emit('dragend', newWidth, oldWidth, column, event)
+}
+
+// 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
+function expandChange(row, expandedRowsOrExpanded) {
+  const sourceRow = getSource(row)
+  // 配合组件el-expand-table-column 使用
+  const keys = props.expandRowKeys || []
+  const index = keys.indexOf(sourceRow[props.rowKey])
+  if (index > -1) {
+    keys.splice(index, 1)
+  } else {
+    keys.push(sourceRow[props.rowKey])
+  }
+  emit('expandChange', sourceRow, expandedRowsOrExpanded)
 }
 
 defineExpose({

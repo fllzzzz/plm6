@@ -12,7 +12,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="specTip(getInfo(row))" placement="left">
-          <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>
+          {{ specFormat(getInfo(row)) }}
         </el-tooltip>
       </template>
     </el-table-column>
@@ -30,7 +30,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="getInfo(row, 'specificationLabels')" :disabled="!getInfo(row, 'specificationLabels')" placement="left">
-          <span v-empty-text>{{ getInfo(row, 'specification') }}</span>
+          {{ getInfo(row, 'specification') }}
         </el-tooltip>
       </template>
     </el-table-column>
@@ -43,11 +43,7 @@
       :label="`长 (${baseUnit.length.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-to-fixed="baseUnit.length.precision">{{ getInfo(row, 'length') }}</span>
-      </template>
-    </el-table-column>
+    />
   </template>
 </template>
 

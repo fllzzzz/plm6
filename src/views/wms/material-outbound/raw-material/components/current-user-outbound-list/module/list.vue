@@ -51,6 +51,7 @@
       <el-form class="form" :disabled="formDisabled">
         <common-table
           :data="form.list"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
@@ -63,10 +64,10 @@
                 <p v-if="row.boolTransfer">
                   调拨：
                   <span>（来源）</span>
-                  <span style="color: brown" v-parse-project="{ project: row.sourceProject }" v-empty-text />
+                  <span style="color: brown">{{ row.sourceProject }}</span>
                   <span> ▶ </span>
                   <span>（目的）</span>
-                  <span style="color: #3a8ee6" v-parse-project="{ project: row.project }" v-empty-text />
+                  <span style="color: #3a8ee6">{{ row.project }}</span>
                 </p>
               </expand-secondary-info>
             </template>
@@ -90,12 +91,12 @@
             <template #default="{ row }">
               <el-date-picker
                 v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
-                v-model="row.outboundTime"
+                v-model="row.sourceRow.outboundTime"
                 type="datetime"
                 value-format="x"
                 placeholder="出库时间"
               />
-              <span v-else v-parse-time="row.outboundTime" />
+              <span v-else>{{ row.outboundTime }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -134,6 +135,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -168,6 +170,14 @@ const batchOutboundTime = ref() // 批量设置出库时间
 // 表单禁止操作
 const formDisabled = computed(() => submitOptLoading.value)
 
+// 表格列格式化
+const columnsDataFormat = ref([
+  ...materialColumns,
+  ['remark', 'empty-text'],
+  ['project', 'parse-project'],
+  ['sourceProject', 'parse-project'],
+  ['outboundTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']]
+])
 // 表格高度处理
 const { maxHeight } = useMaxHeight(
   {

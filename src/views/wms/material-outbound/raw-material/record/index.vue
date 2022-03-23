@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :default-expand-all="false"
@@ -17,7 +18,9 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <p>
+            关联项目：<span>{{ row.projectsFullName }}</span>
+          </p>
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="70">
@@ -41,11 +44,7 @@
         prop="basicClass"
         label="物料种类"
         width="200"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: matClsEnum.ENUM, v: row.basicClass, bit: true }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('projects')"
         show-overflow-tooltip
@@ -53,11 +52,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('applicantName')"
         key="applicantName"
@@ -86,9 +81,9 @@
         width="200"
       >
         <template #default="{ row }">
-          <span v-parse-time="{ val: row.outboundEarliestTime, fmt: '{y}-{m}-{d}' }" />
+          <span>{{ row.outboundEarliestTime }}</span>
           &nbsp;~&nbsp;
-          <span v-parse-time="{ val: row.outboundLatestTime, fmt: '{y}-{m}-{d}' }" />
+          <span>{{ row.outboundLatestTime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -100,11 +95,7 @@
         align="center"
         width="160"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewTime')"
         key="reviewTime"
@@ -113,11 +104,7 @@
         label="审核日期"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.reviewTime" />
-        </template>
-      </el-table-column>
+      />
       <!--编辑与删除-->
       <el-table-column label="操作" width="65px" align="center" fixed="right">
         <template #default="{ row }">
@@ -137,7 +124,7 @@ import crudApi from '@/api/wms/material-outbound/raw-material/record'
 import { rawMaterialOutboundRecordPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
-import { matClsEnum } from '@/utils/enum/modules/classification'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -158,6 +145,13 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
+
+const columnsDataFormat = ref([
+  ...wmsReceiptColumns,
+  ['outboundEarliestTime', ['parse-time', '{y}-{m}-{d}']],
+  ['outboundLatestTime', ['parse-time', '{y}-{m}-{d}']]
+])
+
 const { crud, columns } = useCRUD(
   {
     title: '出库记录',

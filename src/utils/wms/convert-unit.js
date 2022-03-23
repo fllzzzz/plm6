@@ -82,10 +82,10 @@ export async function numFmtByBasicClass(
       unitCfg,
       {
         basicClass: _basicClass,
-        measureUnit: measureUnit || _d.measureUnit,
-        accountingUnit: accountingUnit || _d.accountingUnit,
-        accountingPrecision: accountingPrecision || _d.accountingPrecision,
-        measurePrecision: measurePrecision || _d.measurePrecision,
+        measureUnit: isNotBlank(measureUnit) ? measureUnit : _d.measureUnit,
+        accountingUnit: isNotBlank(accountingUnit) ? accountingUnit : _d.accountingUnit,
+        accountingPrecision: isNotBlank(accountingPrecision) ? accountingPrecision : _d.accountingPrecision,
+        measurePrecision: isNotBlank(measurePrecision) ? measurePrecision : _d.measurePrecision,
         toNum,
         showUnit,
         toSmallest

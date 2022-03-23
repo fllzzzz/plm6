@@ -30,11 +30,14 @@ export function getBits(options, val, type, { label = 'label', key = 'key', valu
   for (const i in options) {
     if (options[i][value] & val) {
       switch (type) {
-        case 'key':bitArr.push(options[i][key])
+        case 'key':
+          bitArr.push(options[i][key])
           break
-        case 'value':bitArr.push(options[i][value])
+        case 'value':
+          bitArr.push(options[i][value])
           break
-        case 'label':bitArr.push(options[i][label])
+        case 'label':
+          bitArr.push(options[i][label])
           break
         default:
           bitArr.push(options[i].value)
@@ -193,5 +196,17 @@ export function toThousand(num, precision = 2) {
     return num
   } else {
     return (+num || 0).toFixed(precision).replace(/^-?\d+/g, (m) => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','))
+  }
+}
+
+/**
+ * 获取精度
+ */
+export function getDP(num) {
+  const arr = num.toString().split('.')
+  if (arr.length === 2) {
+    return arr[1].length
+  } else {
+    return 0
   }
 }

@@ -8,6 +8,7 @@
       :key="`material_freeze_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -17,7 +18,7 @@
         <template #default="{ row }">
           <expand-secondary-info v-if="row.material" :basic-class="row.material.basicClass" :row="row.material">
             <p>
-              备注：<span v-empty-text>{{ row.remark }}</span>
+              备注：<span>{{ row.remark }}</span>
             </p>
           </expand-secondary-info>
         </template>
@@ -30,18 +31,14 @@
       <material-secondary-info-columns :columns="columns" :basic-class="basicClass" :show-batch-no="false" />
       <warehouse-info-columns :columns="columns" :show-project="crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V" />
       <el-table-column
-        v-if="columns.visible('type')"
-        key="type"
+        v-if="columns.visible('freezeTypeName')"
+        key="freezeTypeName"
         :show-overflow-tooltip="true"
-        prop="type"
+        prop="freezeTypeName"
         label="类型"
         align="center"
         width="100"
-      >
-        <template #default="{ row: record }">
-          <span v-parse-enum="{ e: materialFreezeTypeEnum, v: record.freezeType }" v-suffix="'冻结'" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('documentType')"
         key="documentType"
@@ -86,11 +83,7 @@
         prop="project"
         label="单据项目"
         min-width="150"
-      >
-        <template #default="{ row: record }">
-          <span v-parse-project="{ project: record.project, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('applicantName')"
         key="applicantName"
@@ -108,11 +101,7 @@
         label="解冻时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row: record }">
-          <span v-parse-time="record.createTime" />
-        </template>
-      </el-table-column>
+      />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -137,6 +126,7 @@ import { detail as getRejectDetail } from '@/api/wms/material-reject/raw-materia
 import { materialFreezeTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialNestedColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -171,7 +161,15 @@ const expandRowKeys = ref([])
 const transferDetailRef = ref()
 // 退货详情组件
 const rejectDetailRef = ref()
-
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ['remark', 'empty-text'],
+  ['createTime', 'parse-time'],
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['projectFullName', 'parse-project', { source: 'project' }],
+  ['freezeTypeName', ['parse-enum', materialFreezeTypeEnum], ['suffix', '冻结'], { source: 'freezeType' }],
+  ...materialNestedColumns
+])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '解冻记录',
