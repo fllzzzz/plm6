@@ -32,7 +32,7 @@
         ref="tableRef"
         v-loading="tableLoading"
         :data="list"
-        :dataFormat="dataFormat"
+        :data-format="dataFormat"
         :max-height="maxHeight"
         row-key="rowId"
         style="width: 100%"

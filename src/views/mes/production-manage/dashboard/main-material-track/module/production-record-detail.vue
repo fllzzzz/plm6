@@ -13,7 +13,7 @@
       <common-table
         v-loading="tableLoading"
         :data="list"
-        :dataFormat="productFormat[componentTypeEnum.ARTIFACT.V]"
+        :data-format="productFormat[componentTypeEnum.ARTIFACT.V]"
         :max-height="maxHeight"
         style="width: 100%"
       >

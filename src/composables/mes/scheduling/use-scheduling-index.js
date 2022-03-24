@@ -16,7 +16,7 @@ export default function useSchedulingIndex() {
  * 数量变化，cell颜色变化（->绿色）
  */
   function handelCellClassName({ row, column, rowIndex, columnIndex }) {
-    if (!column.property) {
+    if (!column?.property) {
       return
     }
     const markColumn = ['productionLine']
