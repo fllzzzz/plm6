@@ -1,25 +1,16 @@
 <template>
   <common-drawer ref="drawerRef" title="打包列表" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="75%">
     <template #titleRight>
-      <common-button
-v-permission="permission.pack"
-type="primary"
-:loading="packLoading"
-size="mini"
-@click="packClick"
-        >{{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})</common-button
-      >
+      <common-button v-permission="permission.pack" type="primary" :loading="packLoading" size="mini" @click="packClick">
+        {{ packTypeEnum.VL[packType] }}打包({{ listObj['source' + packTypeEnum.VK[packType]].length }})
+      </common-button>
     </template>
     <template #content>
       <div class="head-container">
         <el-radio-group v-model="packType" size="small" class="filter-item">
-          <el-radio-button
-v-for="item in packTypeEnum.ENUM"
-:key="item.K"
-:label="item.V"
-:disabled="!listObj['source' + item.K].length"
-            >{{ item.L }}({{ listObj['source' + item.K].length }})</el-radio-button
-          >
+          <el-radio-button v-for="item in packTypeEnum.ENUM" :key="item.K" :label="item.V" :disabled="!listObj['source' + item.K].length">
+            {{ item.L }}({{ listObj['source' + item.K].length }})
+          </el-radio-button>
         </el-radio-group>
         <factory-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
@@ -31,6 +22,8 @@ v-for="item in packTypeEnum.ENUM"
       </div>
       <common-table
         :data="listObj[packTypeEnum.VK[packType]]"
+        return-source-data
+        :show-empty-symbol="false"
         show-summary
         :summary-method="getSummaries"
         empty-text="暂无数据"
