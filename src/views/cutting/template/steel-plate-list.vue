@@ -19,17 +19,18 @@
             <span>{{ scope.row.cutInstructionId }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="num" prop="num" :show-overflow-tooltip="true" label="数量" min-width="40">
-          <template v-slot="scope">
+        <el-table-column align="center" key="num" prop="num" :show-overflow-tooltip="true" label="数量" min-width="35">
+          <!-- <template v-slot="scope">
             <span>{{ scope.row.num }}</span>
-          </template>
+          </template> -->
+          <span>1</span>
         </el-table-column>
         <el-table-column key="material" align="center" prop="material" :show-overflow-tooltip="true" label="材质" min-width="40">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度（mm）" min-width="55">
+        <el-table-column align="center" key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度（mm）" min-width="50">
           <template v-slot="scope">
             <span>{{ scope.row.thick }}</span>
           </template>
@@ -55,12 +56,12 @@
             <span>{{ scope.row.weight }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" :show-overflow-tooltip="true" label="套料成果" min-width="40">
+        <el-table-column align="center" :show-overflow-tooltip="true" label="套料成果" min-width="70">
           <template v-slot="scope">
             <common-button type="success" size="mini" @click="nestResults(scope.row)">查看</common-button>
           </template>
         </el-table-column>
-        <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="40">
+        <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="70">
           <template v-slot="scope">
             <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
           </template>

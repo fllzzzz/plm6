@@ -44,7 +44,7 @@
         <!-- <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button> -->
         <el-badge :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0">
           <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">
-            新入库标签打印
+            标签打印
           </common-button>
         </el-badge>
       </template>

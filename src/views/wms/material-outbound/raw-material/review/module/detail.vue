@@ -10,9 +10,9 @@
     custom-class="raw-mat-inbound-application-record-detail"
   >
     <template #titleAfter>
-      <el-tag v-if="detail.applicant" type="success" effect="dark">{{
-        `申请人：${detail.applicant.name} | ${detail.applicant.deptName}`
-      }}</el-tag>
+      <el-tag v-if="detail.applicant" type="success" effect="dark">
+        {{ `申请人：${detail.applicant.name} | ${detail.applicant.deptName}` }}
+      </el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.createTime)}` }}</el-tag>
     </template>
     <template #titleRight>
@@ -21,6 +21,7 @@
     <template #content>
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -33,10 +34,10 @@
               <p v-if="row.boolTransfer">
                 调拨：
                 <span>（来源）</span>
-                <span style="color: brown" v-parse-project="{ project: row.sourceProject }" v-empty-text />
+                <span style="color: brown">{{ row.sourceProject }}</span>
                 <span> ▶ </span>
                 <span>（目的）</span>
-                <span style="color: #3a8ee6" v-parse-project="{ project: row.project }" v-empty-text />
+                <span style="color: #3a8ee6">{{ row.project }}</span>
               </p>
             </expand-secondary-info>
           </template>
@@ -56,11 +57,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column key="outboundTime" label="出库时间" width="125px" align="center">
-          <template #default="{ row }">
-            <span v-parse-time="row.outboundTime" />
-          </template>
-        </el-table-column>
+        <el-table-column key="outboundTime" label="出库时间" width="125px" align="center" />
       </common-table>
     </template>
   </common-drawer>
@@ -72,6 +69,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { parseTime } from '@/utils/date'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -84,6 +82,14 @@ import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-se
 
 const drawerRef = ref()
 const expandRowKeys = ref([])
+// 表格列格式化
+const columnsDataFormat = ref([
+  ...materialColumns,
+  ['remark', 'empty-text'],
+  ['project', 'parse-project'],
+  ['sourceProject', 'parse-project'],
+  ['outboundTime', ['parse-time', '{y}-{m}-{d} {h}:{i}:{s}']]
+])
 const { CRUD, crud, detail } = regDetail()
 
 // 表格高度处理

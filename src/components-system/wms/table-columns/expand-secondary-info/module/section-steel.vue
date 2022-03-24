@@ -1,14 +1,14 @@
 <template>
-  <p v-if="showBrand">
-    品牌：<span v-empty-text>{{ props.row.brand }}</span>
+  <p v-if="showBrand" v-bind="$attrs">
+    品牌：<span>{{ props.row.brand }}</span>
   </p>
-  <p v-if="showBatchNo">
-    炉批号：<span v-empty-text>{{ props.row.heatNoAndBatchNo }}</span>
+  <p v-if="showBatchNo" v-bind="$attrs">
+    炉批号：<span>{{ props.row.heatNoAndBatchNo }}</span>
   </p>
-  <p v-if="showRemark">
-    备注：<span v-empty-text>{{ props.row.remark }}</span>
+  <p v-if="showRemark" v-bind="$attrs">
+    备注：<span>{{ props.row.remark }}</span>
   </p>
-  <slot />
+  <slot v-bind="$attrs" />
 </template>
 
 <script setup>

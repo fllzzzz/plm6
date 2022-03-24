@@ -12,7 +12,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="specTip(getInfo(row))" placement="left">
-          <span v-empty-text>{{ specFormat(getInfo(row)) }}</span>
+          <span>{{ specFormat(getInfo(row)) || '-' }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
@@ -43,11 +43,7 @@
       :label="`厚 (${baseUnit.thickness.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-to-fixed="baseUnit.thickness.precision">{{ getInfo(row, 'thickness') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showWidth"
       :key="`${field}.width`"
@@ -57,11 +53,7 @@
       :label="`宽 (${baseUnit.width.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-to-fixed="baseUnit.width.precision">{{ getInfo(row, 'width') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showLength"
       :key="`${field}.length`"
@@ -71,11 +63,7 @@
       :label="`长 (${baseUnit.length.unit})`"
       show-overflow-tooltip
       :fixed="fixed"
-    >
-      <template #default="{ row }">
-        <span v-to-fixed="baseUnit.length.precision">{{ getInfo(row, 'length') }}</span>
-      </template>
-    </el-table-column>
+    />
   </template>
 </template>
 

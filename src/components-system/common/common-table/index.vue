@@ -6,9 +6,35 @@
     :data="filterData"
     :stripe="tStripe"
     :border="tBorder"
+    :row-key="rowKey"
+    :row-class-name="rowClassName"
+    :row-style="rowStyle"
+    :cell-class-name="cellClassName"
+    :cell-style="cellStyle"
+    :header-row-class-name="headerRowClassName"
+    :header-row-style="headerRowStyle"
+    :header-cell-class-name="headerCellClassName"
+    :header-cell-style="headerCellStyle"
+    :span-method="spanMethod"
+    :load="load"
     @select="select"
     @select-all="selectAll"
     @selection-change="selectionChange"
+    @cell-mouse-enter="cellMouseEnter"
+    @cell-mouse-leave="cellMouseLeave"
+    @cell-click="cellClick"
+    @cell-dblclick="cellDblclick"
+    @cell-contextmenu="cellContext"
+    @row-click="rowClick"
+    @row-contextmenu="rowContextmenu"
+    @row-dblclick="rowDblclick"
+    @header-click="headerClick"
+    @header-contextmenu="headerContextmenu"
+    @sort-change="sortChange"
+    @filter-change="filterChange"
+    @current-change="currentChange"
+    @header-dragend="headerDragend"
+    @expand-change="expandChange"
   >
     <template #default>
       <slot />
@@ -37,7 +63,26 @@ import { ElTable } from 'element-plus'
 import { addPrefix, addSuffix, emptyTextFormatter, isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
 import cloneDeep from 'lodash/cloneDeep'
 
-const emit = defineEmits(['select', 'selectAll', 'selectionChange'])
+const emit = defineEmits([
+  'select',
+  'selectAll',
+  'selectionChange',
+  'cellMouseEnter',
+  'cellMouseLeave',
+  'cellClick',
+  'cellDblclick',
+  'cellContext',
+  'rowClick',
+  'rowContextmenu',
+  'rowDblclick',
+  'headerClick',
+  'headerContextmenu',
+  'sortChange',
+  'filterChange',
+  'currentChange',
+  'dragend',
+  'expandChange'
+])
 
 // default不填写，默认值为null。需要传入undefined
 const props = defineProps({
@@ -51,9 +96,10 @@ const props = defineProps({
    * 格式：
    * [
    *  ['project', ['parse-project', {lineBreak:true}], ..., { source: 'projects' }],
+   *  ['[source].project', 'parse-project']
    *  ...
    * ]
-   * 参数1：字段名，string, 必填
+   * 参数1：字段名，string, 必填 数组字段使用“[]”包裹
    * 参数2: 转换类型 ,string | array。 子参数查看对应类型。PS：参数2可填写多个，按填写顺序转换
    * 参数(末尾)：其他信息, object。
    * source: 源数据字段：以上方为例 row.project = format(row.projects)
@@ -98,6 +144,50 @@ const props = defineProps({
   sumText: {
     type: String,
     default: '合计'
+  },
+  // 行数据的 Key
+  rowKey: {
+    type: [String, Function]
+  },
+  // 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className
+  rowClassName: {
+    type: [Function, String]
+  },
+  // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style
+  rowStyle: {
+    type: [Function, Object]
+  },
+  // 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className
+  cellClassName: {
+    type: [Function, String]
+  },
+  // 单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有单元格设置一样的 Style。
+  cellStyle: {
+    type: [Function, Object]
+  },
+  // 表头行的 className 的回调方法，也可以使用字符串为所有表头行设置一个固定的 className。
+  headerRowClassName: {
+    type: [Function, String]
+  },
+  // 表头行的 style 的回调方法，也可以使用一个固定的 Object 为所有表头行设置一样的 Style。
+  headerRowStyle: {
+    type: [Function, Object]
+  },
+  // 表头单元格的 className 的回调方法，也可以使用字符串为所有表头单元格设置一个固定的 className。
+  headerCellClassName: {
+    type: [Function, String]
+  },
+  // 表头单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有表头单元格设置一样的 Style。
+  headerCellStyle: {
+    type: [Function, Object]
+  },
+  // 合并行或列的计算方法
+  spanMethod: {
+    type: Function
+  },
+  // 加载子节点数据的函数，lazy 为 true 时生效，函数第二个参数包含了节点的层级信息
+  load: {
+    type: Function
   }
 })
 
@@ -167,7 +257,7 @@ watch(
       keys.length = 0
       if (all && Array.isArray(data)) {
         data.forEach((row) => {
-          keys.push(row[props.rowKey])
+          keys.push(row[rowKey()])
         })
       }
     }
@@ -191,20 +281,33 @@ function handleData(data, columns) {
     /**
      * 不选择重新为filterData.value赋值
      * 是为了避免当表格中有表单内容时，修改了表单内容，导致重新拷贝地址发生变化，从而造成，展开的行收缩等情况。
+     * 不触发的条件：不改变rowKey的值以及row的地址
      */
     let sourceChange = false
     // 数组长度大于0 ，格式化后的数组长度与原filter数组长度相同，并且第一个元素的sourceRow相同
     if (
       isNotBlank(filterData.value) &&
       fmList.length === filterData.value.length &&
-      fmList[0].sourceRow === filterData.value[0].sourceRow
+      fmList[0].sourceRow === filterData.value[0].sourceRow // 判断第一个元素是避免换页
     ) {
-      // 下标为0的源数据已经比较过，无需再比较
-      for (let i = 1; i < fmList.length; i++) {
+      for (let i = 0; i < fmList.length; i++) {
         if (fmList[i].sourceRow !== filterData.value[i].sourceRow) {
           sourceChange = true
           break
         } else {
+          if (rowKey()) {
+            // 不改变rowKey,否则监听到rowKey发生变化，会认为当前对象发生改变
+            Object.keys(filterData.value[i]).forEach((key) => {
+              if (key !== rowKey()) {
+                filterData.value[i][key] = undefined
+              }
+            })
+          } else {
+            // TODO:未测试
+            Object.keys(filterData.value[i]).forEach((key) => {
+              filterData.value[i][key] = undefined
+            })
+          }
           Object.assign(filterData.value[i], fmList[i])
         }
       }
@@ -235,41 +338,104 @@ function optimizeList(list, columns, dfColumns = []) {
       if (props.showEmptySymbol || dfColumns.length > 0) {
         // 遍历columns
         iterateColumns.forEach((field) => {
-          let dfCfg = dataFormatKV.value[field]
-
-          let preData = getInfo(list[rowIndex], field)
-          // 获取未转换的值
-          if (dfCfg) {
-            // 如果数组最后一个值为对象，且不为数组的情况
-            const otherInfo = dfCfg[dfCfg.length - 1]
-            // 别名，没有则使用field
-            if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
-              // 实际配置信息范围
-              dfCfg = dfCfg.slice(0, dfCfg.length - 1)
-              // 获取数据源字段
-              const sourceField = otherInfo ? otherInfo.source : void 0
-              // 获取实际转换前的值
-              if (sourceField) preData = getInfo(list[rowIndex], sourceField)
-            }
-            if (field) {
-              for (let i = 0; i < dfCfg.length; i++) {
-                // 获取转换后的值
-                const fmD = formatDataByType(row, preData, dfCfg[i])
-                preData = fmD
-                // 设置转换后的值
-                setInfo(row, field, fmD)
-              }
-            }
-          }
-          // 若未显示列中的对象，且值不存在，则设置空
-          if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
-            setInfo(row, field, props.emptySymbol)
+          if (field && field.indexOf('[') > -1) {
+            recursionFormat(row, field, list[rowIndex], field)
+          } else {
+            normalFm(row, field, list[rowIndex])
           }
         })
       }
     }
   })
   return cloneList
+}
+
+// 递归格式化（当数据中含数组字段时）
+function recursionFormat(row, field, data, sliceFields) {
+  const keys = sliceFields.split('.')
+  let item = data
+  let i
+  for (i = 0; i < keys.length - 1; i++) {
+    const curKey = keys[i]
+    // 判断是否符合 '[field]' 数组格式
+    const isArray = /^\[[0-9a-zA-Z_]+\]$/.test(curKey)
+    if (isArray) {
+      const k = curKey.slice(1, curKey.length - 1)
+      item = item[k]
+      if (item) {
+        // 若是数组字段且有值，则遍历数组
+        item.forEach((itemInfo) => {
+          recursionFormat(row, field, itemInfo, keys.slice(i + 1).join('.'))
+        })
+      }
+      break
+    } else {
+      // 对象按照常规流程赋值
+      item = item[curKey]
+      // 对象为空值，结束循环
+      if (isBlank(item)) break
+    }
+  }
+  // 如果是最后的字段
+  if (i === keys.length - 1) {
+    let dfCfg = dataFormatKV.value[field]
+    let preData = item[sliceFields]
+    if (dfCfg) {
+      // 如果数组最后一个值为对象，且不为数组的情况
+      const otherInfo = dfCfg[dfCfg.length - 1]
+      // 别名，没有则使用field
+      if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
+        // 实际配置信息范围
+        dfCfg = dfCfg.slice(0, dfCfg.length - 1)
+        // 获取数据源字段
+        const sourceField = otherInfo ? otherInfo.source : void 0
+        // 获取实际转换前的值
+        if (sourceField) preData = item[sourceField]
+      }
+      if (sliceFields) {
+        for (let j = 0; j < dfCfg.length; j++) {
+          // 获取转换后的值
+          const fmD = formatDataByType(row, preData, dfCfg[j])
+          // 设置转换后的值
+          item[sliceFields] = fmD
+        }
+      }
+    }
+    // 数组中的值不会属于表格列值，因此不做空值处理
+  }
+}
+
+// 普通数据格式转换
+function normalFm(row, field, data) {
+  let dfCfg = dataFormatKV.value[field]
+  let preData = getInfo(data, field)
+  // 获取未转换的值
+  if (dfCfg) {
+    // 如果数组最后一个值为对象，且不为数组的情况
+    const otherInfo = dfCfg[dfCfg.length - 1]
+    // 别名，没有则使用field
+    if (otherInfo && typeof otherInfo === 'object' && !Array.isArray(otherInfo)) {
+      // 实际配置信息范围
+      dfCfg = dfCfg.slice(0, dfCfg.length - 1)
+      // 获取数据源字段
+      const sourceField = otherInfo ? otherInfo.source : void 0
+      // 获取实际转换前的值
+      if (sourceField) preData = getInfo(data, sourceField)
+    }
+    if (field) {
+      for (let i = 0; i < dfCfg.length; i++) {
+        // 获取转换后的值
+        const fmD = formatDataByType(row, preData, dfCfg[i])
+        preData = fmD
+        // 设置转换后的值
+        setInfo(row, field, fmD)
+      }
+    }
+  }
+  // 若未显示列中的对象，且值不存在，则设置空
+  if (props.showEmptySymbol && columnsKV.value[field] && isBlank(preData)) {
+    setInfo(row, field, props.emptySymbol)
+  }
 }
 
 //
@@ -290,21 +456,21 @@ function formatDataByType(row, data, field) {
     case 'to-fixed-ck':
       return toFixed(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-fixed-field':
-      return toFixed(data, isNotBlank(field1) ? row[field1] : void 0)
+      return toFixed(data, isNotBlank(field1) ? getInfo(row, field1) : void 0)
     // 处理小数精度，转换后为number
     case 'to-precision':
       return toPrecision(data, field1)
     case 'to-precision-ck':
       return toPrecision(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-precision-field':
-      return toPrecision(data, isNotBlank(field1) ? row[field1] : void 0)
+      return toPrecision(data, isNotBlank(field1) ? getInfo(row, field1) : void 0)
     // 10000 => 10,000
     case 'to-thousand':
       return toThousand(data, field1)
     case 'to-thousand-ck':
       return toThousand(data, isNotBlank(field1) ? DP[field1] : void 0)
     case 'to-thousand-field':
-      return toThousand(data, isNotBlank(field1) ? row[field1] : void 0)
+      return toThousand(data, isNotBlank(field1) ? getInfo(row, field1) : void 0)
     /**
      * 前置文字
      * 例：['prefix', '快乐的']： '小明'  =>  '快乐的小明
@@ -503,7 +669,7 @@ function getSource(data) {
       return row.sourceRow
     })
   } else {
-    sourceData = data.sourceRow
+    sourceData = data ? data.sourceRow : undefined
   }
 
   return sourceData
@@ -525,6 +691,142 @@ function getCurrent(data) {
   return curData
 }
 
+// --------------------------- 回调 ------------------------------------------
+
+// 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className
+function rowClassName({ row, rowIndex }) {
+  if (typeof props.rowClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.cellClassName({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.rowClassName === 'string') {
+    return props.rowClassName
+  }
+}
+
+// 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style
+function rowStyle({ row, rowIndex }) {
+  if (isBlank(props.rowStyle)) return
+
+  if (typeof props.rowStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.rowStyle({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.rowStyle === 'object') {
+    return props.rowStyle
+  }
+}
+
+// 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className
+function cellClassName({ row, column, rowIndex, columnIndex }) {
+  if (typeof props.cellClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.cellClassName({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.cellClassName === 'string') {
+    return props.cellClassName
+  }
+}
+
+// 单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有单元格设置一样的 Style。
+function cellStyle({ row, column, rowIndex, columnIndex }) {
+  if (isBlank(props.cellStyle)) return
+
+  if (typeof props.cellStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.cellStyle({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.cellStyle === 'object') {
+    return props.cellStyle
+  }
+}
+
+// 表头行的 className 的回调方法，也可以使用字符串为所有表头行设置一个固定的 className。
+function headerRowClassName({ row, rowIndex }) {
+  if (typeof props.headerRowClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerRowClassName({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.headerRowClassName === 'string') {
+    return props.headerRowClassName
+  }
+}
+
+// 表头行的 style 的回调方法，也可以使用一个固定的 Object 为所有表头行设置一样的 Style。
+function headerRowStyle({ row, rowIndex }) {
+  if (isBlank(props.headerRowStyle)) return
+
+  if (typeof props.headerRowStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerRowStyle({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.headerRowStyle === 'object') {
+    return props.headerRowStyle
+  }
+}
+
+// 表头单元格的 className 的回调方法，也可以使用字符串为所有表头单元格设置一个固定的 className。
+function headerCellClassName({ row, column, rowIndex, columnIndex }) {
+  if (typeof props.headerCellClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerCellClassName({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.headerCellClassName === 'string') {
+    return props.headerCellClassName
+  }
+}
+
+// 表头单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有表头单元格设置一样的 Style
+function headerCellStyle({ row, column, rowIndex, columnIndex }) {
+  if (isBlank(props.headerCellStyle)) return
+
+  if (typeof props.headerCellStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerCellStyle({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.headerCellStyle === 'object') {
+    return props.headerCellStyle
+  }
+}
+
+// 行数据的 Key，用来优化 Table 的渲染； 在使用reserve-selection功能与显示树形数据时，该属性是必填的。
+// 类型为 String 时，支持多层访问：user.info.id，但不支持 user.info[0].id，此种情况请使用 Function。
+function rowKey(row) {
+  if (typeof props.rowKey === 'function') {
+    const sourceRow = getSource(row)
+    return props.rowKey(sourceRow, row)
+  }
+
+  if (typeof props.rowKey === 'string') {
+    return props.rowKey
+  }
+}
+
+// 合并行或列的计算方法
+function spanMethod({ row, column, rowIndex, columnIndex }) {
+  if (typeof props.spanMethod === 'function') {
+    const sourceRow = getSource(row)
+    return props.spanMethod({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+}
+
+// 加载子节点数据的函数，lazy 为 true 时生效，函数第二个参数包含了节点的层级信息
+function load(row, treeNode, resolve) {
+  if (typeof props.load === 'function') {
+    const sourceRow = getSource(row)
+    return props.load({ row: sourceRow, treeNode, resolve })
+  }
+}
+
+// --------------------------- 事件 ------------------------------------------
 // 当用户手动勾选数据行的 Checkbox 时触发的事件
 function select(selection, row) {
   const sourceSelection = getSource(selection)
@@ -542,6 +844,100 @@ function selectAll(selection) {
 function selectionChange(selection) {
   const sourceSelection = getSource(selection)
   emit('selectionChange', sourceSelection, selection)
+}
+
+// 当单元格 hover 进入时会触发该事件
+function cellMouseEnter(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellMouseEnter', sourceRow, column, cell, event)
+}
+
+// 	当单元格 hover 退出时会触发该事件
+function cellMouseLeave(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellMouseLeave', sourceRow, column, cell, event)
+}
+
+// 当某个单元格被点击时会触发该事件
+function cellClick(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellClick', sourceRow, column, cell, event)
+}
+
+// 当某个单元格被双击击时会触发该事件
+function cellDblclick(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellDblclick', sourceRow, column, cell, event)
+}
+
+// 当某个单元格被鼠标右键点击时会触发该事件
+function cellContext(row, column, cell, event) {
+  const sourceRow = getSource(row)
+  emit('cellContext', sourceRow, column, cell, event)
+}
+
+// 当某一行被点击时会触发该事件
+function rowClick(row, column, event) {
+  const sourceRow = getSource(row)
+  emit('rowClick', sourceRow, column, event)
+}
+
+// 当某一行被鼠标右键点击时会触发该事件
+function rowContextmenu(row, column, event) {
+  const sourceRow = getSource(row)
+  emit('rowContextmenu', sourceRow, column, event)
+}
+
+// 当某一行被双击时会触发该事件
+function rowDblclick(row, column, event) {
+  const sourceRow = getSource(row)
+  emit('rowDblclick', sourceRow, column, event)
+}
+
+// 当某一列的表头被点击时会触发该事件
+function headerClick(column, event) {
+  emit('headerClick', column, event)
+}
+
+// 当某一列的表头被鼠标右键点击时触发该事件
+function headerContextmenu(column, event) {
+  emit('headerContextmenu', column, event)
+}
+
+// 当表格的排序条件发生变化的时候会触发该事件
+function sortChange({ column, prop, order }) {
+  emit('sortChange', { column, prop, order })
+}
+
+// 参数的值是一个对象， 当表格的筛选条件发生变化的时候会触发该事件，对象的 key 是 column 的 columnKey，对应的 value 为用户选择的筛选条件的数组。
+function filterChange(filters) {
+  emit('filterChange', filters)
+}
+
+// 当表格的当前行发生变化的时候会触发该事件，如果要高亮当前行，请打开表格的 highlight-current-row 属性
+function currentChange(currentRow, oldCurrentRow) {
+  const sourceCurrentRow = getSource(currentRow)
+  const sourceOldCurrentRow = getSource(oldCurrentRow)
+  emit('currentChange', sourceCurrentRow, sourceOldCurrentRow, currentRow, oldCurrentRow)
+}
+
+// 	当拖动表头改变了列的宽度的时候会触发该事件
+function headerDragend(newWidth, oldWidth, column, event) {
+  emit('dragend', newWidth, oldWidth, column, event)
+}
+
+// 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
+function expandChange(row, expandedRowsOrExpanded) {
+  const sourceRow = getSource(row)
+  // 配合组件el-expand-table-column 使用
+  const keys = props.expandRowKeys || []
+  const index = keys.indexOf(sourceRow[rowKey()])
+  if (index > -1) {
+    keys.splice(index, 1)
+  } else {
+    keys.push(sourceRow[rowKey()])
+  }
+  emit('expandChange', sourceRow, expandedRowsOrExpanded)
 }
 
 defineExpose({

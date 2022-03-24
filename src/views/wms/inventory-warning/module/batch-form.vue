@@ -52,6 +52,8 @@
             ref="tableRef"
             border
             :data="form.list"
+            return-source-data
+            :show-empty-symbol="false"
             :max-height="maxHeight"
             :cell-class-name="wrongCellMask"
             @selection-change="crud.selectionChangeHandler"

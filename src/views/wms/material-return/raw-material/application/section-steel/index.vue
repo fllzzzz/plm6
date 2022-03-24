@@ -13,6 +13,7 @@
       <common-table
         ref="tableRef"
         :data="form.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :stripe="false"
@@ -23,7 +24,7 @@
         @row-click="handleRowClick"
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <div class="mtb-10">
               <el-input
                 v-model="row.remark"
@@ -50,7 +51,7 @@
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
         <el-table-column prop="length" align="center" width="135px" :label="`定尺长度 (${baseUnit.length.unit})`">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
               v-model="row.length"
               :controls="false"
@@ -63,7 +64,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="quantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
               v-model="row.quantity"
               :min="1"
@@ -78,7 +79,7 @@
           </template>
         </el-table-column>
         <el-table-column key="mete" prop="mete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
               v-model="row.mete"
               :min="0"
@@ -94,7 +95,7 @@
         <!-- 仓库设置 -->
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
-          <template #default="{ row, $index }">
+          <template #default="{ row: { sourceRow: row }, $index }">
             <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
           </template>
         </el-table-column>
@@ -153,7 +154,9 @@ const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 const basicClass = rawMatClsEnum.SECTION_STEEL.V
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(basicClass)
-
+// 表格列格式化
+const columnsDataFormat = ref([['source.project', ['parse-project', { onlyShortName: true }]]])
+// 校验规则
 const tableRules = {
   length: [
     { required: true, message: '请填写长度', trigger: 'blur' },
@@ -221,7 +224,7 @@ function init() {
   // 当前高亮uid
   currentUid.value = undefined
   // 异常列表
-  cu.props.abnormalList = undefined
+  // cu.props.abnormalList = undefined
 }
 
 // 添加材质
@@ -260,8 +263,7 @@ async function calcTheoryWeight(row) {
     {
       length: row.length, // 长度
       unitWeight: row.source.unitWeight // 单位重量
-    },
-    false
+    }
   )
   if (row.theoryWeight) {
     row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 10)
@@ -286,8 +288,7 @@ function calcTotalLength(row) {
       {
         length: row.length, // 长度
         quantity: row.quantity // 数量
-      },
-      false
+      }
     )
   } else {
     row.totalLength = undefined

@@ -157,7 +157,7 @@ defineExpose({
   display: inline-flex;
   align-items: center;
   // margin-right: 10px;
-  font-size: 13px;
+  font-size: 14px;
   > :nth-child(n) {
     margin-right: 7px;
   }
@@ -165,6 +165,7 @@ defineExpose({
     margin-right: 0;
   }
 }
+
 .prev-text,
 .next-text {
   cursor: pointer;

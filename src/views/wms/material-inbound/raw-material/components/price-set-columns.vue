@@ -1,13 +1,13 @@
 <template>
-  <el-table-column v-if="!boolPartyA" prop="unitPrice" align="center" width="115px" label="含税单价">
-    <template #default="{ row }">
+  <el-table-column v-if="!boolPartyA" prop="unitPrice" align="center" width="135px" label="含税单价">
+    <template #default="{ row: { sourceRow: row } }">
       <common-input-number
+        v-if="row"
         v-model="row.unitPrice"
         :min="0"
         :max="9999999999"
         :controls="false"
-        :step="5"
-        :precision="2"
+        :step="1"
         size="mini"
         placeholder="含税单价"
         @change="handleUnitPriceChange($event, row)"
@@ -15,23 +15,25 @@
     </template>
   </el-table-column>
   <el-table-column v-if="!boolPartyA" prop="amount" align="center" width="135px" label="金额">
-    <template #default="{ row }">
+    <template #default="{ row: { sourceRow: row } }">
       <common-input-number
+        v-if="row"
         v-model="row.amount"
         :min="0"
         :max="9999999999"
         :controls="false"
-        :step="5"
-        :precision="2"
+        :step="1"
         size="mini"
+        :precision="2"
         placeholder="金额"
         @change="handleAmountChange($event, row)"
       />
     </template>
   </el-table-column>
   <el-table-column v-if="requisitionsSNOptions" prop="requisitionsSN" label="申购单" min-width="130" align="center">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <common-select
+        v-if="row"
         v-model="row.requisitionsSN"
         :options="getRequisitionsSNOptions($index, row)"
         :dataStructure="{ key: 'serialNumber', label: 'serialNumber', value: 'serialNumber' }"
@@ -44,8 +46,9 @@
     </template>
   </el-table-column>
   <el-table-column v-if="projectOptions" prop="projectId" align="center" min-width="170px" label="所属项目">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <common-select
+        v-if="row"
         :key="Math.random()"
         v-model="row.projectId"
         :options="projectOptions"
@@ -64,9 +67,10 @@
 import { defineEmits, defineProps, computed, watch, onMounted, watchEffect, ref } from 'vue'
 
 import { projectNameFormatter } from '@/utils/project'
-import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import useDittoRealVal from '@/composables/form/use-ditto-real-val'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { getDP } from '@/utils/data-type/number'
 
 const props = defineProps({
   order: {
@@ -190,13 +194,18 @@ onMounted(() => {
 
 // 处理含税单价变化
 function handleUnitPriceChange(val, row) {
-  row.amount = isNotBlank(val) ? toFixed(val * row.mete, 2, { toNum: true }) : undefined
+  const dp = getDP(val)
+  if (dp > 10) {
+    row.unitPrice = toPrecision(val, 10)
+    val = row.unitPrice
+  }
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
   emit('amount-change')
 }
 
 // 处理金额变化
 function handleAmountChange(val, row) {
-  row.unitPrice = isNotBlank(val) ? toFixed(val / row.mete, 2, { toNum: true }) : undefined
+  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
   emit('amount-change')
 }
 </script>

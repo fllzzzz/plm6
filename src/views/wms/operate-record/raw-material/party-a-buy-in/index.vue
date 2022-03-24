@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -58,13 +59,9 @@
         prop="createTime"
         label="买入日期"
         align="center"
-        width="100"
+        width="140"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -84,6 +81,7 @@ import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { baseTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -106,6 +104,9 @@ const optShow = {
   del: false,
   download: false
 }
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns, ...baseTimeColumns])
 
 // 展开行
 const expandRowKeys = ref([])

@@ -12,7 +12,7 @@
       <common-button :loading="loading" :disabled="isBlank(rejectList)" type="primary" size="mini" @click="submit">提 交</common-button>
     </template>
     <el-form :model="form" :disabled="loading">
-      <common-table :data="rejectList" :max-height="maxHeight" empty-text="未做改动" row-key="id">
+      <common-table :data="rejectList" :data-format="columnsDataFormat" :max-height="maxHeight" empty-text="未做改动" row-key="id">
         <!-- 基础信息 -->
         <material-base-info-columns :basic-class="basicClass" />
         <!-- 次要信息 -->
@@ -44,6 +44,7 @@ import { obj2arr } from '@/utils/convert/type'
 import { deepClone, toFixed } from '@/utils/data-type'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
@@ -77,6 +78,8 @@ const props = defineProps({
   }
 })
 
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns])
 const loading = ref(false)
 const rejectList = ref([])
 const form = ref({

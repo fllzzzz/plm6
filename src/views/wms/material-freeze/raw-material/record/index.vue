@@ -8,13 +8,14 @@
       :key="`material_freeze_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="true"
       :expand-row-keys="expandRowKeys"
       row-key="id"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <div class="flex-rcc mtb-20">
             <!-- TODO: 理论每次刷新unfreezePermission调用5次，实际调用几十次 -->
             <material-freeze-record
@@ -56,6 +57,7 @@ import { matClsEnum } from '@enum-ms/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -82,6 +84,8 @@ const tableRef = ref()
 const headerRef = ref()
 // 展开keys
 const expandRowKeys = ref([])
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns])
 
 const { CRUD, crud, columns } = useCRUD(
   {

@@ -22,7 +22,7 @@
       </div>
       <div class="filter-right-box child-mr-7">
         <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
-        <common-button v-if="cu.props.abnormalList" type="danger" @click="abnormalVisible = true" size="mini">异常列表</common-button>
+        <!-- <common-button v-if="cu.props.abnormalList" type="danger" @click="abnormalVisible = true" size="mini">异常列表</common-button> -->
         <common-button :loading="cu.status.edit === FORM.STATUS.PROCESSING" size="mini" type="primary" @click="cu.submit">
           提 交
         </common-button>
@@ -40,9 +40,9 @@
     @add="handleAdd"
     :edit="props.edit"
   />
-  <common-dialog ref="drawerRef" v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
+  <!-- <common-dialog v-model="abnormalVisible" title="异常" :show-close="true" width="90%">
     <abnormal-list :basicClass="basicClass" :list="cu.props.abnormalList" :maxHeight="700" />
-  </common-dialog>
+  </common-dialog> -->
 </template>
 
 <script setup>
@@ -59,7 +59,7 @@ import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import MaterialInfo from '@/views/wms/material-return/raw-material/application/components/material-info/index.vue'
 import ReturnableListDrawer from '@/views/wms/material-return/raw-material/application/components/returnable-list-drawer/index.vue'
 import StoreOperation from '@crud/STORE.operation.vue'
-import AbnormalList from '../components/abnormal-list'
+// import AbnormalList from '../components/abnormal-list'
 
 const emit = defineEmits(['add'])
 const { cu, form, FORM } = regExtra() // 表单
@@ -101,7 +101,7 @@ const allLength = ref()
 // 显示可归还列表
 const returnableVisible = ref(false)
 // 显示异常列表
-const abnormalVisible = ref(false)
+// const abnormalVisible = ref(false)
 // 当前分类基础单位
 const { baseUnit } = useMatBaseUnit(props.basicClass)
 

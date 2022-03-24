@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -39,9 +40,9 @@
           width="150"
         >
           <template #default="{ row }">
-            <span class="color-green" v-empty-text v-to-fixed="{ val: row.singleReturnableLength, dp: curMatBaseUnit.length.precision }" />
+            <span class="color-green">{{ toFixed(row.singleReturnableLength, curMatBaseUnit.length.precision) }}</span>
             /
-            <span v-empty-text v-to-fixed="{ val: row.length, dp: curMatBaseUnit.length.precision }" />
+            {{ toFixed(row.length, curMatBaseUnit.length.precision) }}
           </template>
         </el-table-column>
       </template>
@@ -83,13 +84,9 @@
         align="center"
         width="100"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
             <!-- 编辑状态下， -->
             <common-button :disabled="row.showReviewPending" type="warning" size="mini" @click="handleAddReturn(row)"> 退库 </common-button>
@@ -119,6 +116,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { createUniqueString } from '@/utils/data-type/string'
 import { specFormat } from '@/utils/wms/spec-format'
+import { toFixed } from '@/utils/data-type'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -135,7 +133,6 @@ import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import { ElMessage } from 'element-plus'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
-
 const emit = defineEmits(['add'])
 
 const props = defineProps({
@@ -182,6 +179,14 @@ const outboundDetailRef = ref()
 const returnNumber = ref({})
 // 表格ref
 const tableRef = ref()
+// 表格列格式化
+const columnsDataFormat = ref([
+  ['quantity', ['to-fixed-field', 'measurePrecision']],
+  ['singleMete', ['to-fixed-field', 'accountingPrecision']],
+  ['singleReturnableMete', ['to-fixed-field', 'accountingPrecision']],
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['createTime', ['parse-time', '{y}-{m}-{d}']]
+])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '可退库列表',

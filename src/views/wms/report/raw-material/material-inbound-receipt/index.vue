@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       highlight-current-row
@@ -15,7 +16,9 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <p>
+            关联项目：<span>{{ row.projectsFullName }}</span>
+          </p>
         </template>
       </el-expand-table-column>
       <el-table-column label="序号" type="index" align="center" width="60">
@@ -74,17 +77,13 @@
         show-overflow-tooltip
       />
       <el-table-column
-        v-if="columns.visible('materialTypeText')"
-        key="materialTypeText"
+        v-if="columns.visible('basicClass')"
+        key="basicClass"
         :show-overflow-tooltip="true"
-        prop="materialTypeText"
+        prop="basicClass"
         label="物料种类"
         width="120"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('projects')"
         show-overflow-tooltip
@@ -92,11 +91,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"
@@ -114,11 +109,7 @@
           label="入库金额(不含税)"
           min-width="120"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           v-if="columns.visible('rejectAmountExcludingVAT')"
           key="rejectAmountExcludingVAT"
@@ -127,11 +118,7 @@
           label="退货金额(不含税)"
           min-width="120"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
-          </template>
-        </el-table-column>
+        />
       </template>
       <el-table-column
         v-if="columns.visible('applicantName')"
@@ -168,11 +155,7 @@
         label="入库时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.inboundTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -181,11 +164,7 @@
         label="申请时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('userUpdateTime')"
         key="userUpdateTime"
@@ -194,11 +173,7 @@
         label="编辑时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.userUpdateTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewTime')"
         key="reviewTime"
@@ -207,11 +182,7 @@
         label="审核时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.reviewTime" />
-        </template>
-      </el-table-column>
+      />
       <!--编辑与删除-->
       <el-table-column label="操作" width="70px" align="center" fixed="right">
         <template #default="{ row }">
@@ -231,13 +202,15 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
 import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
+
+import { computed, ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { receiptRejectStatusEnum } from '@enum-ms/wms'
 import { isNotBlank } from '@/utils/data-type'
+import { reviewTimeColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -261,6 +234,17 @@ const optShow = {
   del: false,
   download: false
 }
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...reviewTimeColumns,
+  ['inboundTime', 'parse-time'],
+  ['rejectAmountExcludingVAT', 'to-thousand'],
+  ['inboundAmountExcludingVAT', 'to-thousand'],
+  ['projects', ['parse-project', { onlyShortName: true }]],
+  ['projectsFullName', 'parse-project', { source: 'projects' }],
+  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
+])
 
 const expandRowKeys = ref([])
 const tableRef = ref()

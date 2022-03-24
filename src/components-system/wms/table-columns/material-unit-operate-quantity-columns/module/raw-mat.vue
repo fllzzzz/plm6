@@ -10,11 +10,7 @@
       width="70px"
       :fixed="fixed"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ row.outboundUnit }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showNumber"
       :key="numberPropField"
@@ -29,24 +25,18 @@
         <!-- 计量 -->
         <template v-if="row.outboundUnitType === measureTypeEnum.MEASURE.V">
           <template v-if="!equalDisabled || row[operableQuantityField] != row[quantityField]">
-            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            <span class="color-green">{{ row[operableQuantityField] }}</span>
             /
           </template>
         </template>
         <!-- 计量 -->
         <template v-if="row.outboundUnitType === measureTypeEnum.ACCOUNTING.V">
           <template v-if="!equalDisabled || row[operableMeteField] != row[meteField]">
-            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+            <span class="color-green">{{ row[operableMeteField] }}</span>
             /
           </template>
         </template>
-        <span
-          v-empty-text
-          v-to-fixed="{
-            val: row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
-            dp: row.rejectUnitPrecision,
-          }"
-        />
+        <span>{{ row.outboundUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField] }}</span>
       </template>
     </el-table-column>
   </template>
@@ -60,11 +50,7 @@
       width="70px"
       :fixed="fixed"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ row.rejectUnit }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showNumber"
       :key="numberPropField"
@@ -79,24 +65,18 @@
         <!-- 计量 -->
         <template v-if="row.rejectUnitType === measureTypeEnum.MEASURE.V">
           <template v-if="!equalDisabled || row[operableQuantityField] != row[quantityField]">
-            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            <span class="color-green">{{ row[operableQuantityField] }}</span>
             /
           </template>
         </template>
         <!-- 计量 -->
         <template v-if="row.rejectUnitType === measureTypeEnum.ACCOUNTING.V">
           <template v-if="!equalDisabled || row[operableMeteField] != row[meteField]">
-            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+            <span class="color-green">{{ row[operableMeteField] }}</span>
             /
           </template>
         </template>
-        <span
-          v-empty-text
-          v-to-fixed="{
-            val: row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField],
-            dp: row.rejectUnitPrecision,
-          }"
-        />
+        <span>{{ row.rejectUnitType === measureTypeEnum.MEASURE.V ? row[quantityField] : row[meteField] }}</span>
       </template>
     </el-table-column>
   </template>
@@ -111,7 +91,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span v-empty-text>{{ row.measureUnit }}</span>
+        <span>{{ row.measureUnit }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -125,13 +105,14 @@
     >
       <template #default="{ row }">
         <template v-if="row.measureUnit">
+          <!-- 显示操作数量，并且可操作数量 != 实际数量-->
           <template v-if="showOperableQuantity && (!equalDisabled || row[operableQuantityField] != row[quantityField])">
-            <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableQuantityField], dp: row.measurePrecision }" />
+            <span class="color-green">{{ row[operableQuantityField] }}</span>
             /
           </template>
-          <span v-empty-text v-to-fixed="{ val: row[quantityField], dp: row.measurePrecision }" />
+          {{ row[quantityField] }}
         </template>
-        <span v-else v-empty-text />
+        <span v-else />
       </template>
     </el-table-column>
     <el-table-column
@@ -144,16 +125,16 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span v-empty-text>{{ row.accountingUnit }}</span>
+        <span>{{ row.accountingUnit }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="showMete" key="mete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
       <template #default="{ row }">
         <template v-if="showOperableMete && (!equalDisabled || row[operableMeteField] != row[meteField])">
-          <span class="color-green" v-empty-text v-to-fixed="{ val: row[operableMeteField], dp: row.accountingPrecision }" />
+          <span class="color-green">{{ row[operableMeteField] }}</span>
           /
         </template>
-        <span v-empty-text v-to-fixed="{ val: row[meteField], dp: row.accountingPrecision }" />
+        {{ row[meteField] }}
       </template>
     </el-table-column>
   </template>

@@ -1,12 +1,13 @@
 <template>
   <div class="report-material-inbound-details app-container">
     <!--工具栏-->
-    <mHeader />
+    <m-header />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -40,11 +41,7 @@
             width="125"
             fixed="left"
             sortable="custom"
-          >
-            <template #default="{ row }">
-              <span v-parse-time="row.inboundReceipt.inboundTime" />
-            </template>
-          </el-table-column>
+          />
         </template>
       </material-base-info-columns>
       <!-- 次要信息 -->
@@ -154,7 +151,7 @@
         width="125"
       >
         <template #default="{ row }">
-          <span v-parse-time="row.inboundReceipt.createTime" />
+          {{ row.inboundReceipt.createTime }}
         </template>
       </el-table-column>
       <el-table-column
@@ -168,7 +165,7 @@
         fixed="left"
       >
         <template #default="{ row }">
-          <span v-parse-time="row.inboundReceipt.reviewTime" />
+          {{ row.inboundReceipt.reviewTime }}
         </template>
       </el-table-column>
     </common-table>
@@ -194,6 +191,7 @@ import { reportRawMaterialInboundDetailsPM as permission } from '@/page-permissi
 import checkPermission from '@/utils/system/check-permission'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -222,6 +220,14 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialHasAmountColumns,
+  ['inboundReceipt.inboundTime', 'parse-time'],
+  ['inboundReceipt.reviewTime', 'parse-time'],
+  ['inboundReceipt.createTime', 'parse-time']
+])
 
 const { CRUD, crud, columns } = useCRUD(
   {

@@ -10,7 +10,7 @@
   <el-table-column v-if="showProject" :prop="`project`" label="项目" align="left" min-width="120px" :fixed="fixed" show-overflow-tooltip>
     <template #default="{ row }">
       <table-cell-tag v-if="showPartyA && partyAPosition === 'project'" :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="15" />
-      <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
+      <span>{{ row.project }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -31,22 +31,6 @@
         :color="partyAMatTransferEnum.V[row.partyATransferType].COLOR"
         :offset="15"
       />
-      <!-- 物料类型 与 出库方式同时存在-->
-      <!-- <template v-if="showIsWhole && showOutboundMode">
-        <table-cell-tag
-          v-if="row.materialIsWhole === materialIsWholeEnum.ODDMENT.V || row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
-          :name="`${materialIsWholeEnum.VL[row.materialIsWhole]}${
-            row.materialOutboundMode === materialOutboundModeEnum.HALF.V ? materialOutboundModeEnum.VL[row.materialOutboundMode] : ''
-          }`"
-          :color="
-            row.materialIsWhole === materialIsWholeEnum.ODDMENT.V && row.materialOutboundMode === materialOutboundModeEnum.HALF.V
-              ? '#e66f3c'
-              : materialIsWholeEnum.V[row.materialIsWhole].COLOR
-          "
-          :offset="15"
-        />
-      </template>
-      <template v-else> -->
       <!-- 物料类型 整料/余料 -->
       <table-cell-tag
         v-if="showIsWhole && row.materialIsWhole === materialIsWholeEnum.ODDMENT.V"
@@ -54,6 +38,9 @@
         :color="materialIsWholeEnum.V[row.materialIsWhole].COLOR"
         :offset="15"
       />
+      <!-- 半出余料/在收发存报表中使用 -->
+      <table-cell-tag v-if="showOddmentByHalfOut" :show="!!row.boolOddmentByHalfOut" name="半出余料" color="#e6a23c" />
+
       <!-- 出库方式 -->
       <table-cell-tag
         v-if="showOutboundMode && row.materialOutboundMode === materialOutboundModeEnum.HALF.V"
@@ -61,7 +48,6 @@
         :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
         :offset="15"
       />
-      <!-- </template> -->
 
       <!-- 显示退货状态 -->
       <template v-if="showRejectStatus">
@@ -73,7 +59,7 @@
           @click="openMatRejectDetail(row)"
         />
       </template>
-      <span v-empty-text>{{ row.serialNumber }}</span>
+      <span>{{ row.serialNumber }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -92,14 +78,13 @@
       <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
         <span>
           <!-- 是否可以查看材料冻结 -->
-          <span
-            v-if="frozenViewable && row.boolHasFrozen"
-            class="freeze-text"
-            v-empty-text="row.classifyName"
-            @click="openMatFrozenDetail(row)"
-          />
+          <span v-if="frozenViewable && row.boolHasFrozen" class="freeze-text" @click="openMatFrozenDetail(row)">
+            {{ row.classifyName }}
+          </span>
           <!-- 正常显示 -->
-          <span v-else v-empty-text="row.classifyName" />
+          <span v-else>
+            {{ row.classifyName }}
+          </span>
         </span>
       </el-tooltip>
     </template>
@@ -208,6 +193,11 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  showOddmentByHalfOut: {
+    // 显示半出余料
+    type: Boolean,
+    default: false
+  },
   showFrozenTip: {
     // 显示冻结角标
     type: Boolean,
@@ -269,15 +259,17 @@ const { maxHeight } = useMaxHeight(
 
 // 打开冻结详情
 function openMatFrozenDetail(row) {
+  const sourceRow = row.sourceRow ? row.sourceRow : row
   operateNumber.value = 0
-  currentMaterial.value = row
+  currentMaterial.value = sourceRow
   freezeDialogVisible.value = true
 }
 
 // 打开退货详情
 function openMatRejectDetail(row) {
   if (!props.rejectDetailViewable) return
-  currentMaterial.value = row
+  const sourceRow = row.sourceRow ? row.sourceRow : row
+  currentMaterial.value = sourceRow
   rejectMaterialDialogVisible.value = true
 }
 

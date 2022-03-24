@@ -5,14 +5,15 @@
         <template #optLeft>
           <el-date-picker
             style="margin-right: 5px; width: 150px"
-            v-model="date"
+            v-model="query.importTime"
             type="date"
             size="small"
             class="filter-item"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
             placeholder="请选择日期"
-            @change="changeDate"
+            @change="crud.toQuery"
           />
-
           <rrOperation />
         </template>
       </crudOperation>
@@ -21,23 +22,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 
-const date = ref('')
-
 const defaultQuery = {
   importTime: undefined
-}
-
-function changeDate() {
-  const a = new Date(date.value.getTime()).getFullYear()
-  const b = new Date(date.value.getTime()).getMonth() + 1
-  const c = new Date(date.value.getTime()).getDate()
-  query.importTime = a + '-' + b + '-' + c
-  crud.toQuery()
 }
 
 const { crud, query } = regHeader(defaultQuery)

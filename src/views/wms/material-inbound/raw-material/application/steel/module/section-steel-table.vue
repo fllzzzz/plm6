@@ -4,6 +4,8 @@
     :data="form.sectionSteelList"
     :cell-class-name="wrongCellMask"
     :expand-row-keys="expandRowKeys"
+    :show-empty-symbol="false"
+    return-source-data
     row-key="uid"
   >
     <el-expand-table-column :data="form.sectionSteelList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
@@ -221,8 +223,7 @@ async function calcTheoryWeight(row) {
     {
       length: row.length, // 长度
       unitWeight: row.unitWeight // 单位重量
-    },
-    false
+    }
   )
 }
 
@@ -233,8 +234,7 @@ function calcTotalLength(row) {
       {
         length: row.length, // 长度
         quantity: row.quantity // 数量
-      },
-      false
+      }
     )
   } else {
     row.totalLength = undefined

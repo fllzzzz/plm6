@@ -13,6 +13,7 @@
       <common-table
         ref="tableRef"
         :data="form.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :stripe="false"
@@ -23,7 +24,7 @@
         @row-click="handleRowClick"
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <div class="mtb-10">
               <el-input
                 v-model="row.remark"
@@ -56,7 +57,7 @@
           </template>
         </el-table-column> -->
         <el-table-column key="mete" prop="mete" align="center" :label="`重量 (${baseUnit.weight.unit})`" width="120px">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
               v-model="row.mete"
               :min="0"
@@ -72,7 +73,7 @@
         <!-- 仓库设置 -->
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
-          <template #default="{ row, $index }">
+          <template #default="{ row: { sourceRow: row }, $index }">
             <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
           </template>
         </el-table-column>
@@ -125,6 +126,8 @@ const expandRowKeys = ref([]) // 展开行key
 const headerRef = ref()
 const tableRef = ref()
 const formRef = ref()
+// 表格列格式化
+const columnsDataFormat = ref([['source.project', ['parse-project', { onlyShortName: true }]]])
 // 最大高度
 const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 // 钢板类型
@@ -190,7 +193,7 @@ function init() {
   // 当前高亮uid
   currentUid.value = undefined
   // 异常列表
-  cu.props.abnormalList = undefined
+  // cu.props.abnormalList = undefined
 }
 
 // 添加材质

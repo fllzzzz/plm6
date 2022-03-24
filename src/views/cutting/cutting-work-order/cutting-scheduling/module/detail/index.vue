@@ -77,7 +77,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="110">
+        <el-table-column align="center" label="操作" width="180px">
           <template v-slot="scope">
             <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
             <common-button v-if="scope.row.plateState === '1'" type="warning" size="mini" @click="nestResults(scope.row)">
@@ -128,6 +128,7 @@ const tabLoading = ref(false)
 const switchLoading = ref(false)
 const selectLineId = ref('')
 const machieData = ref()
+
 function showHook() {
   if (props.detailData) {
     machineName.value = props.detailData.cutMachine.machineName
@@ -155,7 +156,6 @@ async function plateDataGet() {
 
 function nestResults(row) {
   machieData.value = row
-  console.log('machieData.value', machieData.value)
   selectLineId.value = row.mac
   machineVisible.value = true
 }
@@ -166,23 +166,23 @@ function del(row) {
 
 async function StateChange(row) {
   switchLoading.value = true
+
   try {
     const data = [row.id]
     let message = ''
     if (row.plateState === '5') {
       // 继续
       message = await continueTask(data)
-      ElNotification({ title: '更改状态成功', message: message, type: 'success' })
     } else {
       // 暂停
       message = await suspendTask(data)
-      ElNotification({ title: '更改状态成功', message: message, type: 'success' })
     }
+    ElNotification({ title: '更改状态成功', message: message, type: 'success' })
+    plateDataGet()
   } catch (err) {
     console.log(err)
   }
   switchLoading.value = false
-  plateDataGet()
 }
 
 function handleChange(row) {

@@ -1,5 +1,13 @@
 <template>
-  <common-table v-bind="$attrs" :data="form.steelCoilList" :cell-class-name="wrongCellMask" :expand-row-keys="expandRowKeys" row-key="uid">
+  <common-table
+    v-bind="$attrs"
+    :data="form.steelCoilList"
+    :cell-class-name="wrongCellMask"
+    :expand-row-keys="expandRowKeys"
+    :show-empty-symbol="false"
+    return-source-data
+    row-key="uid"
+  >
     <el-expand-table-column :data="form.steelCoilList" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
       <template #default="{ row }">
         <div class="mtb-10">

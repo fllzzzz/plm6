@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -32,11 +33,7 @@
             width="125"
             fixed="left"
             sortable="custom"
-          >
-            <template #default="{ row }">
-              <span v-parse-time="row.returnReceipt.returnTime" />
-            </template>
-          </el-table-column>
+          />
         </template>
       </material-base-info-columns>
       <!-- 次要信息 -->
@@ -110,11 +107,7 @@
         label="申请时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.returnReceipt.reviewTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('returnReceipt.reviewTime')"
         key="returnReceipt.reviewTime"
@@ -123,11 +116,7 @@
         label="审核时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.returnReceipt.reviewTime" />
-        </template>
-      </el-table-column>
+      />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -151,6 +140,7 @@ import { reportRawMaterialReturnDetailsPM as permission } from '@/page-permissio
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import checkPermission from '@/utils/system/check-permission'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -180,6 +170,14 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialHasAmountColumns,
+  ['returnReceipt.returnTime', 'parse-time'],
+  ['returnReceipt.reviewTime', 'parse-time'],
+  ['returnReceipt.createTime', 'parse-time']
+])
 
 const { CRUD, crud, columns } = useCRUD(
   {

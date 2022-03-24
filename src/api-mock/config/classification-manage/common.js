@@ -18,7 +18,7 @@ const getFinalMatClsByIdForSteelPlate = {
         fullPathId: [103], // 全路径id
         measureUnit: '张', // 计量单位
         accountingUnit: '千克', // 核算单位
-        accountingPrecision: 2, // 核算单位小数精度
+        accountingPrecision: 1, // 核算单位小数精度
         measurePrecision: 0, // 计量单位小数精度
         outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
         basicClass: matClsEnum.STEEL_PLATE.V,
@@ -56,7 +56,7 @@ const getFinalMatClsByIdForSectionSteel = {
         fullName: '工字钢',
         measureUnit: '根', // 计量单位
         accountingUnit: '千克', // 核算单位
-        accountingPrecision: 2, // 核算单位小数精度
+        accountingPrecision: 1, // 核算单位小数精度
         measurePrecision: 0, // 计量单位小数精度
         outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
         basicClass: matClsEnum.SECTION_STEEL.V,
@@ -121,7 +121,7 @@ const getFinalMatClsByIdForSteelCoil = {
         serialNumber: /[0-9]{3}/,
         measureUnit: '毫米', // 计量单位
         accountingUnit: '千克', // 核算单位
-        accountingPrecision: 2, // 核算单位小数精度
+        accountingPrecision: 1, // 核算单位小数精度
         measurePrecision: 0, // 计量单位小数精度
         outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
         basicClass: matClsEnum.STEEL_COIL.V,

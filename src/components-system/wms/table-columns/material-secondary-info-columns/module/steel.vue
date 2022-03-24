@@ -1,9 +1,14 @@
 <template>
-  <el-table-column v-if="showBrand" key="brand" prop="brand" label="品牌" align="left" min-width="100px" :fixed="fixed" show-overflow-tooltip>
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.brand }}</span>
-    </template>
-  </el-table-column>
+  <el-table-column
+    v-if="showBrand"
+    key="brand"
+    prop="brand"
+    label="品牌"
+    align="left"
+    min-width="100px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  />
   <el-table-column
     v-if="showHeatNoAndBatchNo"
     key="heatNoAndBatchNo"
@@ -13,11 +18,7 @@
     min-width="150px"
     :fixed="fixed"
     show-overflow-tooltip
-  >
-    <template #default="{ row }">
-      <span v-empty-text>{{ row.heatNoAndBatchNo }}</span>
-    </template>
-  </el-table-column>
+  />
 </template>
 
 <script setup>

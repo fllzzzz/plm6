@@ -70,6 +70,17 @@ Array.prototype.maxIndex = function () {
 }
 Object.defineProperty(Array.prototype, 'maxIndex', { enumerable: false })
 
+Array.prototype.getMax = function () {
+  let max = this[0]
+  for (let i = 0; i < this.length; i++) {
+    if (max < this[i]) {
+      max = this[i]
+    }
+  }
+  return max
+}
+Object.defineProperty(Array.prototype, 'getMax', { enumerable: false })
+
 // 查找最后一个符合条件的index
 Array.prototype.findLastIndex = function (callback) {
   for (var i = this.length - 1; i >= 0; i--) {

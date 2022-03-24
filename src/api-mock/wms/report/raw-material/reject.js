@@ -86,7 +86,7 @@ const get = {
           },
           {
             id: 3, // 退货单id
-            basicClass: matClsEnum.STEEL_PLATE.V6, // 采购物料基础类型
+            basicClass: matClsEnum.STEEL_PLATE.V, // 采购物料基础类型
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
             purchaseOrder: {
               id: 1,

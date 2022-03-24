@@ -10,7 +10,7 @@
           size="mini"
         />
       </template>
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <common-radio-button
           v-if="row.boolPartyA"
           type="enum"
@@ -18,12 +18,12 @@
           :options="partyAMatTransferEnum.ENUM"
           size="mini"
         />
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
 
-    <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="115px" label="含税单价">
-      <template #default="{ row }">
+    <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="135px" label="含税单价">
+      <template #default="{ row: { sourceRow: row } }">
         <common-input-number
           v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
           v-model="row.unitPrice"
@@ -31,16 +31,15 @@
           :max="9999999"
           :controls="false"
           :step="1"
-          :precision="2"
           size="mini"
           placeholder="含税单价"
           @change="handleUnitPriceChange($event, row)"
         />
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <common-input-number
           v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
           v-model="row.amount"
@@ -53,7 +52,7 @@
           placeholder="金额"
           @change="handleAmountChange($event, row)"
         />
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
   </template>
@@ -61,8 +60,9 @@
 
 <script setup>
 import { ref, defineProps, watchEffect, computed } from 'vue'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
+import { getDP } from '@/utils/data-type/number'
 const props = defineProps({
   form: {
     type: Object,
@@ -107,11 +107,16 @@ function setAllPartyATransfer(val) {
 }
 // 处理含税单价变化
 function handleUnitPriceChange(val, row) {
-  row.amount = isNotBlank(val) ? toFixed(val * row.mete, 2, { toNum: true }) : undefined
+  const dp = getDP(val)
+  if (dp > 10) {
+    row.unitPrice = toPrecision(val, 10)
+    val = row.unitPrice
+  }
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
 }
 
 // 处理金额变化
 function handleAmountChange(val, row) {
-  row.unitPrice = isNotBlank(val) ? toFixed(val / row.mete, 2, { toNum: true }) : undefined
+  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
 }
 </script>

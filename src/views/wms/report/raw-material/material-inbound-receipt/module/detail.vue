@@ -18,6 +18,7 @@
     <template #content>
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -61,6 +62,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import { regDetail } from '@compos/use-crud'
@@ -79,6 +81,9 @@ const permission = inject('permission')
 const drawerRef = ref()
 const expandRowKeys = ref([])
 const { CRUD, crud, detail } = regDetail()
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 
 // 表格高度处理
 const { maxHeight } = useMaxHeight(

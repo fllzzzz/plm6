@@ -1,8 +1,8 @@
 <template>
   <el-table-column
     v-if="showSpecification"
-    key="specification"
-    prop="specification"
+    key="specificationMerge"
+    prop="specificationMerge"
     label="规格"
     min-width="200"
     align="center"
@@ -11,7 +11,7 @@
   >
     <template #default="{ row }">
       <el-tooltip :content="specTip(row)" placement="left">
-        <span v-empty-text="specFormat(row)" />
+        {{ specFormat(row) }}
       </el-tooltip>
     </template>
   </el-table-column>

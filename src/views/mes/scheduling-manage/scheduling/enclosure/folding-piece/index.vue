@@ -7,7 +7,7 @@
       v-loading="crud.loading"
       :data="crud.data"
       :dataFormat="productFormat[productType]"
-      returnSourceData
+      return-source-data
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"

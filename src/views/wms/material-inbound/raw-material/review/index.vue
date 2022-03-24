@@ -1,12 +1,13 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader />
+    <m-header />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -14,13 +15,15 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
+          <p>
+            关联项目：<span>{{ row.projectsFullName }}</span>
+          </p>
           <!-- TODO:入库单增加备注？ -->
           <!-- <p>
             备注：<span v-empty-text>{{ row.remark }}</span>
           </p> -->
           <p>
-            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
+            审批意见：<span>{{ row.approvalComments }}</span>
           </p>
         </template>
       </el-expand-table-column>
@@ -66,17 +69,13 @@
         show-overflow-tooltip
       />
       <el-table-column
-        v-if="columns.visible('materialTypeText')"
-        key="materialTypeText"
+        v-if="columns.visible('basicClass')"
+        key="basicClass"
         :show-overflow-tooltip="true"
-        prop="materialTypeText"
+        prop="basicClass"
         label="物料种类"
         width="120"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('projects')"
         show-overflow-tooltip
@@ -84,11 +83,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"
@@ -132,11 +127,7 @@
         label="申请时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('userUpdateTime')"
         key="userUpdateTime"
@@ -145,11 +136,7 @@
         label="编辑时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.userUpdateTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewTime')"
         key="reviewTime"
@@ -158,11 +145,7 @@
         label="审核时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.reviewTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewStatus')"
         key="reviewStatus"
@@ -185,7 +168,7 @@
       <!--详情-->
       <el-table-column label="操作" width="80" align="center" fixed="right">
         <template #default="{ row }">
-          <udOperation :data="row" :show-edit="false" :show-del="false" show-detail />
+          <ud-operation :data="row" :show-edit="false" :show-del="false" show-detail />
         </template>
       </el-table-column>
     </common-table>
@@ -203,8 +186,8 @@ import crudApi from '@/api/wms/material-inbound/raw-material/review'
 import { rawMaterialInboundReviewPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
-import { rawMatClsEnum } from '@enum-ms/classification'
 import { reviewStatusEnum } from '@enum-ms/common'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -224,6 +207,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...wmsReceiptColumns, ['approvalComments', 'empty-text']])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '入库记录',

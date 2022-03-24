@@ -30,7 +30,7 @@
     <template #content>
       <div class="current-material flex-rss">
         <vertical-label name="当前物料" left="5px" />
-        <common-table :data="[material]" row-key="id">
+        <common-table :data="[material]" :data-format="columnsDataFormat" row-key="id">
           <!-- 基础信息 -->
           <material-base-info-columns :basic-class="material.basicClass" :show-index="false" />
           <!-- 次要信息 -->
@@ -43,7 +43,13 @@
       </div>
       <el-divider class="divider"><span class="title">匹配物料</span></el-divider>
       <div class="match-list-table">
-        <common-table v-loading="matchListLoading" :data="filterMatchList" row-key="id" :max-height="maxHeight">
+        <common-table
+          v-loading="matchListLoading"
+          :data="filterMatchList"
+          :data-format="columnsDataFormat"
+          row-key="id"
+          :max-height="maxHeight"
+        >
           <!-- 基础信息 -->
           <material-base-info-columns
             :basic-class="material.basicClass"
@@ -59,7 +65,7 @@
           <!-- 仓库位置信息 -->
           <warehouse-info-columns show-project />
           <el-table-column label="退货数量" width="170px" align="center" fixed="right">
-            <template #default="{ row }">
+            <template #default="{ row: { sourceRow: row } }">
               <span class="flex-rbc">
                 <common-input-number
                   v-model="row.rejectNumber"
@@ -86,6 +92,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank } from '@/utils/data-type'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@/composables/use-max-height'
@@ -126,6 +133,8 @@ const filterParams = ref({
   hasRejectNumber: false
 })
 
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns])
 const rejectTotalNumber = ref(0)
 const matchList = ref()
 const matchListLoading = ref(false)

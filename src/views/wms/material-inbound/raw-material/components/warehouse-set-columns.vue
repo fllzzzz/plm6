@@ -2,6 +2,7 @@
   <el-table-column prop="factoryId" align="center" min-width="120px" label="工厂">
     <template #default="{ row, $index }">
       <factory-select
+        v-if="row"
         v-model="row.factoryId"
         placeholder="请选择工厂"
         only-one-default
@@ -11,8 +12,9 @@
     </template>
   </el-table-column>
   <el-table-column prop="warehouseId" label="存储位置" min-width="140px" align="center">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <warehouse-select
+        v-if="row"
         v-model="row.warehouseId"
         :factory-id="getFactoryVal($index)"
         :basic-class="row.basicClass"

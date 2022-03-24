@@ -8,6 +8,7 @@
       :key="`material_inventory_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -17,7 +18,15 @@
     >
       <el-table-column type="selection" width="55" align="center" fixed="left" />
       <!-- 基础信息 -->
-      <material-base-info-columns :columns="columns" :basic-class="basicClass" show-frozen-tip frozen-viewable sortable fixed="left" @refresh="handleRefresh" />
+      <material-base-info-columns
+        :columns="columns"
+        :basic-class="basicClass"
+        show-frozen-tip
+        frozen-viewable
+        sortable
+        fixed="left"
+        @refresh="handleRefresh"
+      />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns :columns="columns" :basic-class="basicClass" equal-disabled />
       <!-- 次要信息 -->
@@ -26,7 +35,7 @@
       <warehouse-info-columns :columns="columns" />
       <!--编辑与删除-->
       <el-table-column label="操作" width="120px" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <!--出库-->
           <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
             <svg-icon icon-class="wms-outbound" />
@@ -62,6 +71,7 @@ import { auxMatMaterialWarehousePM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import useIndexInfo from '../compos/use-index-info'
 import useCRUD from '@compos/use-crud'
@@ -84,6 +94,8 @@ const optShow = {
 
 // 表格ref
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialOperateColumns])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '辅材物料仓',

@@ -8,11 +8,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showQuantity"
       :key="`${field}.quantity`"
@@ -24,15 +20,11 @@
     >
       <template #default="{ row }">
         <template v-if="getInfo(row, 'measureUnit')">
-          <span
-            class="color-green"
-            v-empty-text
-            v-to-fixed="{ val: getInfo(row, 'operableQuantity'), dp: getInfo(row, 'measurePrecision') }"
-          />
+          <span class="color-green">{{ getInfo(row, 'operableQuantity') }}</span>
           /
-          <span v-empty-text v-to-fixed="{ val: getInfo(row, 'quantity'), dp: getInfo(row, 'measurePrecision') }" />
+          {{ getInfo(row, 'quantity') }}
         </template>
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -43,11 +35,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showMete"
       :key="`${field}.mete`"
@@ -58,13 +46,9 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span
-          class="color-green"
-          v-empty-text
-          v-to-fixed="{ val: getInfo(row, 'operableMete'), dp: getInfo(row, 'accountingPrecision') }"
-        />
+        <span class="color-green">{{ getInfo(row, 'operableMete') }}</span>
         /
-        <span v-empty-text v-to-fixed="{ val: getInfo(row, 'mete'), dp: getInfo(row, 'accountingPrecision') }" />
+        {{ getInfo(row, 'mete') }}
       </template>
     </el-table-column>
   </template>

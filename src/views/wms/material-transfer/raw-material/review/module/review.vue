@@ -36,6 +36,7 @@
         <unfreeze-info class="unfreeze-info" v-if="form.boolHasUnfreeze" :basic-class="form.basicClass" :list="form.unfreezeList" />
         <common-table
           :data="form.list"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
           :cell-class-name="wrongCellMask"
@@ -101,6 +102,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/use-crud'
 import useTableValidate from '../composables/use-table-validate'
@@ -150,6 +152,8 @@ const pendingReviewIdList = ref([]) // 待审核列表
 const currentInboundId = ref() // 当前id
 const showAmount = ref(false) // 显示金额，只有“买入甲供材料才需要填写金额”
 
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 // 表单禁止操作
 const formDisabled = computed(() => passedLoading.value || returnedLoading.value)
 // 标题

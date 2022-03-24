@@ -13,6 +13,7 @@
       <common-table
         ref="tableRef"
         :data="form.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :stripe="false"
@@ -23,7 +24,7 @@
         @row-click="handleRowClick"
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <div class="mtb-10">
               <el-input
                 v-model="row.remark"
@@ -42,14 +43,9 @@
         <material-base-info-columns :basic-class="basicClass" field="source" fixed="left" show-project party-a-position="project" />
         <!-- 次要信息 -->
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
-
-        <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.measureUnit }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="source.measureUnit" label="计量单位" align="center" min-width="70px" />
         <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <template v-if="row.measureUnit">
               <common-input-number
                 v-if="row.outboundUnitType === measureTypeEnum.MEASURE.V"
@@ -63,18 +59,14 @@
                 placeholder="数量"
                 @change="handleQuantityChange(row, $event)"
               />
-              <span v-else v-to-fixed="{ val: row.quantity || 0, dp: row.measurePrecision }" />
+              <span v-else>{{ row.quantity || 0 }}</span>
             </template>
-            <span v-else v-empty-text />
+            <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px">
-          <template #default="{ row }">
-            <span v-empty-text>{{ row.accountingUnit }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="source.accountingUnit" label="核算单位" align="center" min-width="70px" />
         <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
               v-if="row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
               v-model="row.mete"
@@ -87,13 +79,13 @@
               placeholder="核算量"
               @change="handleMeteChange(row, $event)"
             />
-            <span v-else v-to-fixed="{ val: row.mete || 0, dp: row.accountingPrecision }" />
+            <span v-else>{{ row.mete || 0 }}</span>
           </template>
         </el-table-column>
         <!-- 仓库设置 -->
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
-          <template #default="{ row, $index }">
+          <template #default="{ row: { sourceRow: row }, $index }">
             <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
           </template>
         </el-table-column>
@@ -110,7 +102,7 @@ import { gasReturnApplicationPM as permission } from '@/page-permission/wms'
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useForm from '@/composables/form/use-form'
@@ -145,6 +137,8 @@ const expandRowKeys = ref([]) // 展开行key
 const headerRef = ref()
 const tableRef = ref()
 const formRef = ref()
+// 表格列格式化
+const columnsDataFormat = ref([['source.project', ['parse-project', { onlyShortName: true }]]])
 // 最大高度
 const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 // 气体
@@ -206,7 +200,7 @@ function init() {
   // 当前高亮uid
   currentUid.value = undefined
   // 异常列表
-  cu.props.abnormalList = undefined
+  // cu.props.abnormalList = undefined
 }
 
 // 添加材质
@@ -228,7 +222,7 @@ function rowWatch(row) {
 function handleQuantityChange(row, nVal) {
   // 单位净量
   if (isNotBlank(nVal) && row.source.unitNet) {
-    row.mete = +toFixed(nVal * row.source.unitNet, row.accountingPrecision)
+    row.mete = toPrecision(nVal * row.source.unitNet, row.accountingPrecision)
   } else {
     row.mete = undefined
   }
@@ -237,7 +231,7 @@ function handleQuantityChange(row, nVal) {
 // 核算量变更
 function handleMeteChange(row, nVal) {
   if (row.measureUnit && isNotBlank(nVal) && isNotBlank(row.source.accountingUnitNet)) {
-    row.quantity = +toFixed(nVal * row.source.accountingUnitNet, row.measurePrecision)
+    row.quantity = toPrecision(nVal * row.source.accountingUnitNet, row.measurePrecision)
   } else {
     row.quantity = undefined
   }

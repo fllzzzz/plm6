@@ -21,6 +21,7 @@
     <template #content>
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -28,7 +29,7 @@
         row-key="id"
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <div v-if="isNotBlank(row.allRejectList)" class="flex-rcc mtb-20">
               <reject-info-table
                 :stripe="false"
@@ -54,7 +55,7 @@
         </template>
         <warehouse-info-columns show-project />
         <el-table-column label="操作" width="100" align="center" fixed="right">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-button
               v-if="row.rejectStatus !== materialRejectStatusEnum.ALL.V"
               type="warning"
@@ -95,6 +96,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isNotBlank, toFixed } from '@/utils/data-type'
 import { obj2arr } from '@/utils/convert/type'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -123,6 +125,8 @@ const props = defineProps({
 })
 
 const permission = inject('permission')
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 const drawerRef = ref()
 // 展开行
 const expandRowKeys = ref([])
