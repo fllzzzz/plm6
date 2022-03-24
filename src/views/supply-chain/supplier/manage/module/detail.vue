@@ -32,7 +32,7 @@
             <div>{{ detail.socialCode }}</div>
           </el-form-item>
           <el-form-item label="成立日期" prop="registrationDate">
-            <div>{{ detail.registrationDate }}</div>
+            <div v-parse-time="{ val: detail.registrationDate, fmt: '{y}-{m}-{d}' }" />
           </el-form-item>
           <el-form-item label="营业期限" prop="businessTerm">
             <div>{{ detail.businessTerm }}</div>
