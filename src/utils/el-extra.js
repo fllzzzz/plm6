@@ -48,7 +48,10 @@ export function tableSummary(param, { props = [], precision, toThousandFields = 
           }
         }, 0)
         // 获取最大的小数精度位数
-        if (isBlank(dp)) dp = dpArr.getMax()
+        if (isBlank(dp)) {
+          dp = dpArr.getMax()
+          dp = dp > 2 ? 2 : dp
+        }
         if (toThousandFields.includes(column.property)) {
           sums[index] = toThousand(sums[index], dp)
         } else {

@@ -19,7 +19,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <template v-if="getInfo(row, 'measureUnit')">
+        <template v-if="getInfo(row.sourceRow, 'measureUnit')">
           <span class="color-green">{{ getInfo(row, 'operableQuantity') }}</span>
           /
           {{ getInfo(row, 'quantity') }}

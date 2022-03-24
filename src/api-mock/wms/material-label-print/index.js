@@ -1,4 +1,4 @@
-// 添加采购订单
+// 添加打印记录
 const addPrintRecord = {
   url: '/api/wms/material/label-print/print-record',
   method: 'post',
@@ -11,7 +11,7 @@ const addPrintRecord = {
   }
 }
 
-// 添加采购订单
+// 获取未打印的数量
 const getNotPrintedMaterialNumber = {
   url: '/api/wms/material/label-print/not-printed-number',
   method: 'get',

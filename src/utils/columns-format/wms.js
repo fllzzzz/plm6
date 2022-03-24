@@ -15,16 +15,16 @@ export const materialColumns = [
 export const materialNestedColumns = [
   ['material.project', ['parse-project', { onlyShortName: true }]],
   ['material.projectFullName', 'parse-project', { source: 'material.project' }],
-  ['material.quantity', ['to-fixed-field', 'measurePrecision']],
-  ['material.mete', ['to-fixed-field', 'accountingPrecision']]
+  ['material.quantity', ['to-fixed-field', 'material.measurePrecision']],
+  ['material.mete', ['to-fixed-field', 'material.accountingPrecision']]
 
 ]
 
 // 物料信息-带可操作数量
 export const materialOperateColumns = [
   ...materialColumns,
-  ['operableQuantity', ['to-fixed-field', 'measurePrecision']],
-  ['operableMete', ['to-fixed-field', 'accountingPrecision']]
+  ['operableQuantity', ['to-fixed-field', 'material.measurePrecision']],
+  ['operableMete', ['to-fixed-field', 'material.accountingPrecision']]
 ]
 
 // 物料信息-带金额

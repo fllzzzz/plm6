@@ -92,7 +92,7 @@ import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import { isNotBlank } from '@/utils/data-type'
-import { materialColumns } from '@/utils/columns-format/wms'
+import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@/composables/use-max-height'
@@ -134,7 +134,7 @@ const filterParams = ref({
 })
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialColumns])
+const columnsDataFormat = ref([...materialOperateColumns])
 const rejectTotalNumber = ref(0)
 const matchList = ref()
 const matchListLoading = ref(false)

@@ -1,6 +1,6 @@
 <!-- 采购订单:下拉选择框 -->
 <template>
-  <span class="purchase-sn-select-container" :class="{ 'show-detail-icon': props.detailable }">
+  <span class="purchase-sn-select-container" :class="{ 'show-detail-icon': props.detailable && checkPermission(permission) }">
     <common-select
       v-model="selectValue"
       :size="size"
@@ -68,8 +68,9 @@ import { purchaseOrderDetailCPM as permission } from '@/page-permission/supply-c
 import { defineProps, defineEmits, ref, watch, computed } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { isNotBlank, isBlank, judgeSameValue, deepClone } from '@data-type/index'
-import useUnclosedPurchaseOrder from '@compos/store/use-unclosed-purchase-order'
+import checkPermission from '@/utils/system/check-permission'
 
+import useUnclosedPurchaseOrder from '@compos/store/use-unclosed-purchase-order'
 import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
@@ -243,7 +244,7 @@ function setDefault() {
   .detail-icon {
     position: absolute;
     right: 5px;
-    top: 50%;
+    top: 55%;
     transform: translate(0, -50%);
     border: none;
     user-select: none;
