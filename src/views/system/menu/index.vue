@@ -17,6 +17,7 @@
       :tree-props="{children: 'newChildren', hasChildren: 'hasChildren'}"
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
+      return-source-data
       :showEmptySymbol="false"
     >
       <el-table-column type="selection" width="55" align="center" />

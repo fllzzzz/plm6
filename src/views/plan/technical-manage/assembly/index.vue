@@ -18,6 +18,7 @@
         class="assembly-table"
         style="width: 100%"
         :stripe="false"
+        return-source-data
         :showEmptySymbol="false"
         @selection-change="crud.selectionChangeHandler"
       >
@@ -33,6 +34,7 @@
                 row-key="rowKey"
                 :stripe="false"
                 style="width: 100%; border-color: transparent"
+                return-source-data
                 :showEmptySymbol="false"
               >
                 <el-table-column key="serialNumber" prop="serialNumber" label="构件编号" align="center">

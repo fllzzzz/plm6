@@ -61,6 +61,7 @@
           :max-height="300"
           style="width: 100%"
           class="table-form"
+          return-source-data
           :showEmptySymbol="false"
           :cell-class-name="wrongCellMask"
         >

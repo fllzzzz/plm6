@@ -31,6 +31,7 @@
           empty-text="暂无数据"
           :max-height="500"
           :cell-class-name="wrongCellMask"
+          return-source-data
           :showEmptySymbol="false"
           style="width: 100%"
         >

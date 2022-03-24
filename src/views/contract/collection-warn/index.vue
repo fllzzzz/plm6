@@ -13,6 +13,7 @@
     :max-height="maxHeight"
     style="width: 100%"
     :stripe="false"
+    return-source-data
     :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />

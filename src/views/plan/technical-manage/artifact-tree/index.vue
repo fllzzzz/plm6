@@ -21,6 +21,7 @@
         :load="load"
         @sort-change="crud.handleSortChange"
         @selection-change="crud.selectionChangeHandler"
+        return-source-data
         :showEmptySymbol="false"
       >
         <el-table-column key="selection" type="selection" width="55" />

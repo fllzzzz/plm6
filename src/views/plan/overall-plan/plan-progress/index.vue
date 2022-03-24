@@ -14,6 +14,7 @@
         :max-height="maxHeight"
         :stripe="false"
         :span-method="objectSpanMethod"
+        return-source-data
         :showEmptySymbol="false"
         style="width: 100%"
       >
