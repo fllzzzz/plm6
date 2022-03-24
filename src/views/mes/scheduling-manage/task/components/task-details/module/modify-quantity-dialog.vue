@@ -28,7 +28,7 @@
         <span>{{ emptyTextFormatter(details.monomer?.name) }}>{{ emptyTextFormatter(details.area?.name) }}</span>
       </el-form-item>
       <el-form-item label="编号">
-        <span>{{ emptyTextFormatter(details.productSerialNumber) }}</span>
+        <span>{{ emptyTextFormatter(details.serialNumber) }}</span>
       </el-form-item>
       <el-form-item label="工单数" prop="modifySchedulingQuantity">
         <el-input-number

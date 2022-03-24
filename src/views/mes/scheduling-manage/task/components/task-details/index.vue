@@ -10,6 +10,7 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     :cell-class-name="wrongCellMask"
+    :show-empty-symbol="false"
     row-key="rowId"
     style="width: 100%"
     @selection-change="handleSelectChange"

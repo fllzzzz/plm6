@@ -28,6 +28,10 @@ const props = defineProps({
   // 围护子类型
   category: {
     type: Number
+  },
+  showMaterial: {
+    type: Boolean,
+    default: true
   }
 })
 
