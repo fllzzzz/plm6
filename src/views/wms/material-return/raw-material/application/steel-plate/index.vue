@@ -24,10 +24,10 @@
         @row-click="handleRowClick"
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <div class="mtb-10">
               <el-input
-                v-model="row.sourceRow.remark"
+                v-model="row.remark"
                 :rows="1"
                 :autosize="{ minRows: 1, maxRows: 1 }"
                 type="textarea"
@@ -54,11 +54,11 @@
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
         <el-table-column prop="source.thickness" align="center" width="70px" :label="`厚 (${baseUnit.thickness.unit})`" fixed="left" />
         <el-table-column prop="width" align="center" width="110px" :label="`宽 (${baseUnit.width.unit})`">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
-              v-model="row.sourceRow.width"
+              v-model="row.width"
               :min="0"
-              :max="+row.sourceRow.source.width"
+              :max="+row.source.width"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.width.precision"
@@ -68,10 +68,10 @@
           </template>
         </el-table-column>
         <el-table-column prop="length" align="center" width="110px" :label="`长 (${baseUnit.length.unit})`">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
-              v-model="row.sourceRow.length"
-              :max="+row.sourceRow.source.length"
+              v-model="row.length"
+              :max="+row.source.length"
               :controls="false"
               :min="0"
               :precision="baseUnit.length.precision"
@@ -81,11 +81,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="quantity" align="center" width="110px" :label="`数量 (${baseUnit.measure.unit})`">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
-              v-model="row.sourceRow.quantity"
+              v-model="row.quantity"
               :min="1"
-              :max="+row.sourceRow.source.quantity"
+              :max="+row.source.quantity"
               controls-position="right"
               :controls="false"
               :step="1"
@@ -96,11 +96,11 @@
           </template>
         </el-table-column>
         <el-table-column key="mete" prop="mete" align="center" :label="`总重 (${baseUnit.weight.unit})`" width="120px">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
-              v-model="row.sourceRow.mete"
+              v-model="row.mete"
               :min="0"
-              :max="+row.sourceRow.maxMete"
+              :max="+row.maxMete"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -112,8 +112,8 @@
         <!-- 仓库设置 -->
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
-          <template #default="{ row, $index }">
-            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sourceRow, $index)" />
+          <template #default="{ row: { sourceRow: row }, $index }">
+            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
           </template>
         </el-table-column>
       </common-table>

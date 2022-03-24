@@ -69,7 +69,7 @@ export default function useIndexInfo({ CRUD, crud, defaultBasicClass }) {
 
   // 进行出库办理
   function toOutHandle(row) {
-    currentRow.value = row.sourceRow
+    currentRow.value = row
     outboundHandlingVisible.value = true
   }
 

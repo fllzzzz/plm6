@@ -1,19 +1,19 @@
 <template>
   <el-table-column prop="factoryId" align="center" min-width="120px" label="工厂">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <factory-select
-        v-model="row.sourceRow.factoryId"
+        v-model="row.factoryId"
         placeholder="选择工厂"
         only-one-default
         :show-extra="$index !== 0"
-        @change="handleFactoryChange($event, $index, row.sourceRow)"
+        @change="handleFactoryChange($event, $index, row)"
       />
     </template>
   </el-table-column>
   <el-table-column prop="warehouseId" label="存储位置" min-width="140px" align="center">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <warehouse-select
-        v-model="row.sourceRow.warehouseId"
+        v-model="row.warehouseId"
         :factory-id="getFactoryVal($index)"
         :basic-class="row.basicClass"
         :show-extra="!warehouseDittoableIndex.includes($index)"

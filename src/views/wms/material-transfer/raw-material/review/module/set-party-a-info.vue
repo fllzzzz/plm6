@@ -10,11 +10,11 @@
           size="mini"
         />
       </template>
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <common-radio-button
-          v-if="row.sourceRow.boolPartyA"
+          v-if="row.boolPartyA"
           type="enum"
-          v-model="row.sourceRow.partyATransferType"
+          v-model="row.partyATransferType"
           :options="partyAMatTransferEnum.ENUM"
           size="mini"
         />
@@ -23,26 +23,26 @@
     </el-table-column>
 
     <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="135px" label="含税单价">
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <common-input-number
-          v-if="row.sourceRow.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
-          v-model="row.sourceRow.unitPrice"
+          v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+          v-model="row.unitPrice"
           :min="0"
           :max="9999999"
           :controls="false"
           :step="1"
           size="mini"
           placeholder="含税单价"
-          @change="handleUnitPriceChange($event, row.sourceRow)"
+          @change="handleUnitPriceChange($event, row)"
         />
         <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <common-input-number
-          v-if="row.sourceRow.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
-          v-model="row.sourceRow.amount"
+          v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+          v-model="row.amount"
           :min="0"
           :max="999999999"
           :controls="false"
@@ -50,7 +50,7 @@
           :precision="2"
           size="mini"
           placeholder="金额"
-          @change="handleAmountChange($event, row.sourceRow)"
+          @change="handleAmountChange($event, row)"
         />
         <span v-else>-</span>
       </template>
