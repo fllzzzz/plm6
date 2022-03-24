@@ -22,6 +22,8 @@
         v-if="refreshTable"
         ref="table"
         :data="form.list"
+        :show-empty-symbol="false"
+        return-source-data
         empty-text="暂无数据"
         :max-height="maxHeight"
         default-expand-all

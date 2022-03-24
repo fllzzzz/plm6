@@ -6,8 +6,8 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :dataFormat="productFormat[productType]"
-      returnSourceData
+      :data-format="productFormat[productType]"
+      return-source-data
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :row-class-name="handleRowClassName"

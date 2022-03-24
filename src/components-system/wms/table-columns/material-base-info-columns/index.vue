@@ -48,7 +48,6 @@
         :color="materialOutboundModeEnum.V[row.materialOutboundMode].COLOR"
         :offset="15"
       />
-      <!-- </template> -->
 
       <!-- 显示退货状态 -->
       <template v-if="showRejectStatus">
@@ -260,15 +259,17 @@ const { maxHeight } = useMaxHeight(
 
 // 打开冻结详情
 function openMatFrozenDetail(row) {
+  const sourceRow = row.sourceRow ? row.sourceRow : row
   operateNumber.value = 0
-  currentMaterial.value = row
+  currentMaterial.value = sourceRow
   freezeDialogVisible.value = true
 }
 
 // 打开退货详情
 function openMatRejectDetail(row) {
   if (!props.rejectDetailViewable) return
-  currentMaterial.value = row
+  const sourceRow = row.sourceRow ? row.sourceRow : row
+  currentMaterial.value = sourceRow
   rejectMaterialDialogVisible.value = true
 }
 

@@ -9,7 +9,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :dataFormat="enclosureTypeFormat"
+      :data-format="enclosureTypeFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       row-key="rowId"

@@ -17,6 +17,7 @@
       :tree-props="{children: 'newChildren', hasChildren: 'hasChildren'}"
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
+      return-source-data
       :showEmptySymbol="false"
     >
       <el-table-column type="selection" width="55" align="center" />
@@ -163,8 +164,8 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   })
 }
 
-function load(tree, treeNode, resolve) {
-  const newChildren = tree.children.map(v => {
+function load({ row, treeNode, resolve }) {
+  const newChildren = row.children.map(v => {
     v.hasChildren = !!v.children
     if (v.hasChildren) {
       v.newChildren = JSON.parse(JSON.stringify(v.children))
@@ -174,7 +175,7 @@ function load(tree, treeNode, resolve) {
   })
   resolve([...newChildren])
   nextTick(() => {
-    tableRef.value.expandParent(tree, true)
+    tableRef.value.expandParent(row, true)
   })
 }
 </script>

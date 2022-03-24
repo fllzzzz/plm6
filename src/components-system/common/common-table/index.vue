@@ -6,7 +6,18 @@
     :data="filterData"
     :stripe="tStripe"
     :border="tBorder"
+    :expand-row-keys="props.expandRowKeys"
     :row-key="props.rowKey"
+    :row-class-name="rowClassName"
+    :row-style="rowStyle"
+    :cell-class-name="cellClassName"
+    :cell-style="cellStyle"
+    :header-row-class-name="headerRowClassName"
+    :header-row-style="headerRowStyle"
+    :header-cell-class-name="headerCellClassName"
+    :header-cell-style="headerCellStyle"
+    :span-method="spanMethod"
+    :load="load"
     @select="select"
     @select-all="selectAll"
     @selection-change="selectionChange"
@@ -135,9 +146,60 @@ const props = defineProps({
     type: String,
     default: '合计'
   },
+
+  // 是否默认展开所有行，当 Table 包含展开行存在或者为树形表格时有效
+  defaultExpandAll: {
+    type: Boolean,
+    default: undefined
+  },
+  // 可以通过该属性设置 Table 目前的展开行，需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组
+  expandRowKeys: {
+    type: Array,
+    default: undefined
+  },
   // 行数据的 Key
   rowKey: {
     type: [String, Function]
+  },
+  // 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className
+  rowClassName: {
+    type: [Function, String]
+  },
+  // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style
+  rowStyle: {
+    type: [Function, Object]
+  },
+  // 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className
+  cellClassName: {
+    type: [Function, String]
+  },
+  // 单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有单元格设置一样的 Style。
+  cellStyle: {
+    type: [Function, Object]
+  },
+  // 表头行的 className 的回调方法，也可以使用字符串为所有表头行设置一个固定的 className。
+  headerRowClassName: {
+    type: [Function, String]
+  },
+  // 表头行的 style 的回调方法，也可以使用一个固定的 Object 为所有表头行设置一样的 Style。
+  headerRowStyle: {
+    type: [Function, Object]
+  },
+  // 表头单元格的 className 的回调方法，也可以使用字符串为所有表头单元格设置一个固定的 className。
+  headerCellClassName: {
+    type: [Function, String]
+  },
+  // 表头单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有表头单元格设置一样的 Style。
+  headerCellStyle: {
+    type: [Function, Object]
+  },
+  // 合并行或列的计算方法
+  spanMethod: {
+    type: Function
+  },
+  // 加载子节点数据的函数，lazy 为 true 时生效，函数第二个参数包含了节点的层级信息
+  load: {
+    type: Function
   }
 })
 
@@ -207,7 +269,7 @@ watch(
       keys.length = 0
       if (all && Array.isArray(data)) {
         data.forEach((row) => {
-          keys.push(row[props.rowKey])
+          keys.push(row[getRowKey(row, true)])
         })
       }
     }
@@ -248,7 +310,7 @@ function handleData(data, columns) {
           if (props.rowKey) {
             // 不改变rowKey,否则监听到rowKey发生变化，会认为当前对象发生改变
             Object.keys(filterData.value[i]).forEach((key) => {
-              if (key !== props.rowKey) {
+              if (key !== getRowKey(filterData.value[i])) {
                 filterData.value[i][key] = undefined
               }
             })
@@ -616,10 +678,10 @@ function getSource(data) {
   let sourceData
   if (Array.isArray(data)) {
     sourceData = data.map((row) => {
-      return row.sourceRow
+      return row && row.sourceRow ? row.sourceRow : row
     })
   } else {
-    sourceData = data ? data.sourceRow : undefined
+    sourceData = data && data.sourceRow ? data.sourceRow : data
   }
 
   return sourceData
@@ -641,6 +703,140 @@ function getCurrent(data) {
   return curData
 }
 
+function getRowKey(row, boolSource = false) {
+  if (typeof props.rowKey === 'function') {
+    const sourceRow = boolSource ? row : getSource(row)
+    return props.rowKey(sourceRow, row)
+  }
+
+  if (typeof props.rowKey === 'string') {
+    return props.rowKey
+  }
+}
+
+// --------------------------- 回调 ------------------------------------------
+
+// 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className
+function rowClassName({ row, rowIndex }) {
+  if (typeof props.rowClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.cellClassName({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.rowClassName === 'string') {
+    return props.rowClassName
+  }
+}
+
+// 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style
+function rowStyle({ row, rowIndex }) {
+  if (isBlank(props.rowStyle)) return
+
+  if (typeof props.rowStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.rowStyle({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.rowStyle === 'object') {
+    return props.rowStyle
+  }
+}
+
+// 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className
+function cellClassName({ row, column, rowIndex, columnIndex }) {
+  if (typeof props.cellClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.cellClassName({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.cellClassName === 'string') {
+    return props.cellClassName
+  }
+}
+
+// 单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有单元格设置一样的 Style。
+function cellStyle({ row, column, rowIndex, columnIndex }) {
+  if (isBlank(props.cellStyle)) return
+
+  if (typeof props.cellStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.cellStyle({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.cellStyle === 'object') {
+    return props.cellStyle
+  }
+}
+
+// 表头行的 className 的回调方法，也可以使用字符串为所有表头行设置一个固定的 className。
+function headerRowClassName({ row, rowIndex }) {
+  if (typeof props.headerRowClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerRowClassName({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.headerRowClassName === 'string') {
+    return props.headerRowClassName
+  }
+}
+
+// 表头行的 style 的回调方法，也可以使用一个固定的 Object 为所有表头行设置一样的 Style。
+function headerRowStyle({ row, rowIndex }) {
+  if (isBlank(props.headerRowStyle)) return
+
+  if (typeof props.headerRowStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerRowStyle({ row: sourceRow, rowIndex })
+  }
+
+  if (typeof props.headerRowStyle === 'object') {
+    return props.headerRowStyle
+  }
+}
+
+// 表头单元格的 className 的回调方法，也可以使用字符串为所有表头单元格设置一个固定的 className。
+function headerCellClassName({ row, column, rowIndex, columnIndex }) {
+  if (typeof props.headerCellClassName === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerCellClassName({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.headerCellClassName === 'string') {
+    return props.headerCellClassName
+  }
+}
+
+// 表头单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有表头单元格设置一样的 Style
+function headerCellStyle({ row, column, rowIndex, columnIndex }) {
+  if (isBlank(props.headerCellStyle)) return
+
+  if (typeof props.headerCellStyle === 'function') {
+    const sourceRow = getSource(row)
+    return props.headerCellStyle({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+
+  if (typeof props.headerCellStyle === 'object') {
+    return props.headerCellStyle
+  }
+}
+
+// 合并行或列的计算方法
+function spanMethod({ row, column, rowIndex, columnIndex }) {
+  if (typeof props.spanMethod === 'function') {
+    const sourceRow = getSource(row)
+    return props.spanMethod({ row: sourceRow, column, rowIndex, columnIndex })
+  }
+}
+
+// 加载子节点数据的函数，lazy 为 true 时生效，函数第二个参数包含了节点的层级信息
+function load(row, treeNode, resolve) {
+  if (typeof props.load === 'function') {
+    const sourceRow = getSource(row)
+    return props.load({ row: sourceRow, treeNode, resolve })
+  }
+}
+
+// --------------------------- 事件 ------------------------------------------
 // 当用户手动勾选数据行的 Checkbox 时触发的事件
 function select(selection, row) {
   const sourceSelection = getSource(selection)
@@ -745,11 +941,11 @@ function expandChange(row, expandedRowsOrExpanded) {
   const sourceRow = getSource(row)
   // 配合组件el-expand-table-column 使用
   const keys = props.expandRowKeys || []
-  const index = keys.indexOf(sourceRow[props.rowKey])
+  const index = keys.indexOf(sourceRow[getRowKey()])
   if (index > -1) {
     keys.splice(index, 1)
   } else {
-    keys.push(sourceRow[props.rowKey])
+    keys.push(sourceRow[getRowKey()])
   }
   emit('expandChange', sourceRow, expandedRowsOrExpanded)
 }

@@ -26,8 +26,8 @@
         />
         <!--编辑与删除-->
         <el-table-column v-permission="permission.edit" label="操作" width="100px" align="center" fixed="right">
-          <template v-slot="scope">
-            <udOperation :data="scope.row" :show-del="false" />
+          <template #default="{ row }">
+            <udOperation :data="row" :show-del="false" />
           </template>
         </el-table-column>
       </common-table>

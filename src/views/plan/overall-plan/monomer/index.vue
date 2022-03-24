@@ -16,6 +16,7 @@
         row-key="id"
         @selection-change="crud.selectionChangeHandler"
         class="upload-table"
+        return-source-data
         :showEmptySymbol="false"
       >
         <el-table-column

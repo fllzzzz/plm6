@@ -24,7 +24,7 @@
         ref="tableRef"
         v-loading="tableLoading"
         :data="list"
-        :dataFormat="dataFormat"
+        :data-format="dataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"

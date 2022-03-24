@@ -39,6 +39,10 @@ const props = defineProps({
     default: () => {
       return {}
     }
+  },
+  showMaterial: {
+    type: Boolean,
+    default: true
   }
 })
 

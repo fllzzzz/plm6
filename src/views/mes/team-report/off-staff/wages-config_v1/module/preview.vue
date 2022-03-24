@@ -10,7 +10,7 @@ size="mini"
         >保存</common-button
       >
     </template>
-    <common-table ref="tableRef" :data="editList" :dataFormat="dataFormat" :max-height="maxHeight" style="width: 100%">
+    <common-table ref="tableRef" :data="editList" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <belonging-info-columns showTeam />
       <el-table-column prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="140px">

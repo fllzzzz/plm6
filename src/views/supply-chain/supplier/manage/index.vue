@@ -140,7 +140,7 @@ async function changeEnabled(data, val) {
     crud.notify(supplierIsHideEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
     console.log('操作构件工序状态', error)
-    data.boolHide = data.boolHide === supplierIsHideEnum.FALSE.V ? supplierIsHideEnum.TRUE.V : supplierIsHideEnum.FALSE.V
+    data.enabled = !data.enabled
   }
 }
 

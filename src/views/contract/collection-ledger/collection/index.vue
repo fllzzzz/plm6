@@ -12,6 +12,7 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
+    return-source-data
     :showEmptySymbol="false"
     :stripe="false"
   >

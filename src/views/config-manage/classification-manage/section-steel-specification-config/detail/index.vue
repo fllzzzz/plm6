@@ -15,6 +15,8 @@
         ref="tableRef"
         v-loading="crud.loading"
         :data="crud.data"
+        :show-empty-symbol="false"
+        return-source-data
         :max-height="maxHeight"
         @selection-change="crud.selectionChangeHandler"
       >
@@ -127,9 +129,9 @@ const { maxHeight } = useMaxHeight(
 // 数据处理
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   if (Array.isArray(data.content)) {
-    data.content.forEach(item => {
+    data.content.forEach((item) => {
       if (Array.isArray(item.standard)) {
-        item.standard.forEach(sd => {
+        item.standard.forEach((sd) => {
           item[`${prefix}${sd.id}`] = sd.unitNet
         })
       }

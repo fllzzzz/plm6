@@ -165,6 +165,7 @@
             :stripe="false"
             :cell-class-name="wrongCellMask"
             @selection-change="handleSelectionChange"
+            return-source-data
             :showEmptySymbol="false"
           >
             <el-table-column type="selection" width="55" :disabled="form.changeAbleStatus != 3" />

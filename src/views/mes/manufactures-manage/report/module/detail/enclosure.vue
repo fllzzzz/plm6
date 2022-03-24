@@ -1,9 +1,9 @@
 <template>
   <common-table :data="tableData" :max-height="maxHeight" row-key="rowId" style="width: 100%">
     <el-table-column label="序号" type="index" align="center" width="60" />
-     <el-table-column v-if="isSummary" prop="project" label="项目" min-width="120px" show-overflow-tooltip>
+    <el-table-column v-if="isSummary" prop="project" label="项目" min-width="120px" show-overflow-tooltip>
       <template #default="{ row }">
-        <span v-parse-project="{ project: row.project, onlyShortName: true }" />
+        <span>{{ row.project?.shortName }}</span>
       </template>
     </el-table-column>
     <el-table-column key="monomer.name" prop="monomer.name" show-overflow-tooltip label="单体">
@@ -58,7 +58,7 @@
     </el-table-column>
     <el-table-column key="totalArea" prop="totalArea" show-overflow-tooltip label="总面积(㎡)" align="center">
       <template v-slot="scope">
-        <span>{{ convertUnits(scope.row.totalArea, 'mm2','m2', DP.COM_AREA__M2) }}</span>
+        <span>{{ convertUnits(scope.row.totalArea, 'mm2', 'm2', DP.COM_AREA__M2) }}</span>
       </template>
     </el-table-column>
   </common-table>

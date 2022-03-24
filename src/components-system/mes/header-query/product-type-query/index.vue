@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentView" :query="query" :product-type="productType" :category="category" @to-query="toQuery" />
+  <component :is="currentView" :query="query" :product-type="productType" :category="category" @to-query="toQuery" :showMaterial="showMaterial" />
 </template>
 
 <script setup>
@@ -28,6 +28,10 @@ const props = defineProps({
   },
   toQuery: {
     type: Function
+  },
+  showMaterial: {
+    type: Boolean,
+    default: true
   }
 })
 

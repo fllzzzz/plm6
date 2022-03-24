@@ -12,6 +12,7 @@
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       @row-dblclick="dbclick"
+      return-source-data
       :showEmptySymbol="false"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"

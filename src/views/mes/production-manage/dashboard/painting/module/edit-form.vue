@@ -14,7 +14,7 @@
         <el-input v-model="form.paintCategory" size="small" placeholder="请输入油漆类别" />
       </el-form-item>
       <el-form-item label="干膜厚度(μm)" prop="thickness">
-        <el-input-number
+        <common-input-number
           v-model="form.thickness"
           :step="1"
           :min="0"
@@ -26,7 +26,7 @@
         />
       </el-form-item>
       <el-form-item label="体积固体份(%)" prop="volumeSolids">
-        <el-input-number
+        <common-input-number
           v-model="form.volumeSolids"
           :step="1"
           :min="0"
@@ -38,7 +38,7 @@
         />
       </el-form-item>
       <el-form-item label="损耗(%)" prop="loss">
-        <el-input-number
+        <common-input-number
           v-model="form.loss"
           :step="1"
           :min="0"
@@ -98,7 +98,7 @@ watch(
   () => props.visible,
   (visible) => {
     if (visible) {
-      form = Object.assign(form, props.info)
+      form = Object.assign(form, props.info?.sourceRow)
     }
   },
   { immediate: true }

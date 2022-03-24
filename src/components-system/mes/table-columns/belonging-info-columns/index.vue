@@ -9,7 +9,7 @@
     :fixed="fixed"
   >
     <template #default="{ row }">
-      <span v-parse-project="{ project: row.project }" />
+      <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -109,6 +109,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { isBlank } from '@/utils/data-type'
+import { projectNameFormatter } from '@/utils/project'
 
 defineProps({
   // 显示项目

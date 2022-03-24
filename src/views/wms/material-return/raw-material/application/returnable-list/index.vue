@@ -86,10 +86,10 @@
         sortable="custom"
       />
       <el-table-column class="return-btn-column" v-if="props.isComponent" label="退库" align="center" width="100" sortable="custom">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <el-badge :value="returnNumber[row.id]" :hidden="returnNumber[row.id] === 0" class="badge-item">
             <!-- 编辑状态下， -->
-            <common-button :disabled="row.showReviewPending" type="warning" size="mini" @click="handleAddReturn(row.sourceRow)"> 退库 </common-button>
+            <common-button :disabled="row.showReviewPending" type="warning" size="mini" @click="handleAddReturn(row)"> 退库 </common-button>
           </el-badge>
           <table-cell-tag v-if="row.showReviewPending" name="退库中" color="#909399" />
         </template>

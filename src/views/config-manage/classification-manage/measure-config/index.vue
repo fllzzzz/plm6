@@ -7,6 +7,7 @@
       v-loading="crud.loading"
       border
       :data="list"
+      :data-format="columnsDataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       :span-method="spanMethod"
@@ -71,11 +72,7 @@
         label="计量单位"
         min-width="100px"
         align="center"
-      >
-        <template v-slot="scope">
-          <div>{{ emptyTextFormatter(scope.row.measureUnit) }}</div>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('measurePrecision')"
         key="measurePrecision"
@@ -84,11 +81,7 @@
         label="小数精度(计量)"
         min-width="100px"
         align="center"
-      >
-        <template v-slot="scope">
-          <div>{{ emptyTextFormatter(scope.row.measurePrecision) }}</div>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('accountingUnit')"
         key="accountingUnit"
@@ -97,11 +90,7 @@
         label="核算单位"
         min-width="100px"
         align="center"
-      >
-        <template v-slot="scope">
-          <div>{{ emptyTextFormatter(scope.row.accountingUnit) }}</div>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('accountingPrecision')"
         key="accountingPrecision"
@@ -110,11 +99,7 @@
         label="小数精度(核算)"
         min-width="100px"
         align="center"
-      >
-        <template v-slot="scope">
-          <div>{{ emptyTextFormatter(scope.row.accountingPrecision) }}</div>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         key="outboundUnitType"
         prop="outboundUnitType"
@@ -122,11 +107,7 @@
         label="出库单位"
         min-width="100px"
         align="center"
-      >
-        <template v-slot="scope">
-          <div>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnitType]) }}</div>
-        </template>
-      </el-table-column>
+      />
     </common-table>
   </div>
 </template>
@@ -136,7 +117,7 @@ import crudApi from '@/api/config/classification-manage/measure-config'
 import { measureConfigPM as permission } from '@/page-permission/config'
 
 import { nextTick, onUnmounted, ref, computed } from 'vue'
-import { isNotBlank, emptyTextFormatter } from '@data-type'
+import { isNotBlank } from '@data-type'
 import { measureTypeEnum } from '@enum-ms/wms'
 
 import useCRUD from '@compos/use-crud'
@@ -152,6 +133,7 @@ const optShow = {
 
 const tableRef = ref()
 const tableRefresh = ref(true)
+const columnsDataFormat = [['outboundUnitType', ['parse-enum', measureTypeEnum]]]
 const { maxHeight } = useMaxHeight()
 
 const { crud, columns } = useCRUD(

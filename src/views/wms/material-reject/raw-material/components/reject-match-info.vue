@@ -65,15 +65,15 @@
           <!-- 仓库位置信息 -->
           <warehouse-info-columns show-project />
           <el-table-column label="退货数量" width="170px" align="center" fixed="right">
-            <template #default="{ row }">
+            <template #default="{ row: { sourceRow: row } }">
               <span class="flex-rbc">
                 <common-input-number
-                  v-model="row.sourceRow.rejectNumber"
+                  v-model="row.rejectNumber"
                   :min="0"
                   :precision="row.rejectUnitPrecision"
                   :max="material.rejectMaxNumber > row.maxNumber ? row.maxNumber : material.rejectMaxNumber"
                   controls-position="right"
-                  @change="(newVal, oldVal) => rejectNumberChange(row.sourceRow, newVal, oldVal)"
+                  @change="(newVal, oldVal) => rejectNumberChange(row, newVal, oldVal)"
                 />
                 <span style="flex: none; margin-left: 10px">{{ row.rejectUnit }}</span>
               </span>

@@ -42,7 +42,9 @@
           <common-table
             border
             :data="form.list"
-            :cell-class-name="data => wrongCellMask(data, tableRules)"
+            :show-empty-symbol="false"
+            return-source-data
+            :cell-class-name="(data) => wrongCellMask(data, tableRules)"
             :max-height="maxHeight"
             row-key="uid"
           >
@@ -57,7 +59,7 @@
                   size="mini"
                   maxlength="3"
                   class="input-underline"
-                  style="width: 100%;"
+                  style="width: 100%"
                 />
               </template>
             </el-table-column>
@@ -78,7 +80,7 @@
             <el-table-column label="操作" align="center" width="80">
               <template v-slot="scope">
                 <common-button
-                v-if="!scope.row.boolUsed"
+                  v-if="!scope.row.boolUsed"
                   icon="el-icon-minus"
                   type="danger"
                   style="padding: 5px"
@@ -136,13 +138,16 @@ const tableRules = {
 const drawerRef = ref()
 const formRef = ref()
 
-const { maxHeight } = useMaxHeight({
-  extraBox: '.el-drawer__header',
-  wrapperBox: ['.el-drawer__body', '.spec-main-content'],
-  navbar: false,
-  extraHeight: 120,
-  minHeight: 300
-}, () => drawerRef.value.loaded)
+const { maxHeight } = useMaxHeight(
+  {
+    extraBox: '.el-drawer__header',
+    wrapperBox: ['.el-drawer__body', '.spec-main-content'],
+    navbar: false,
+    extraHeight: 120,
+    minHeight: 300
+  },
+  () => drawerRef.value.loaded
+)
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const { init, addRow, removeRow } = useTableOperate(defaultRow, 10)
@@ -177,7 +182,7 @@ crud.submitFormFormat = (form) => {
     text-align: left;
   }
   ::v-deep(.el-button--mini) {
-    min-height:20px;
+    min-height: 20px;
   }
 }
 </style>

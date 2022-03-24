@@ -14,6 +14,7 @@
         :stripe="false"
         :summary-method="getSummaries"
         :max-height="maxHeight"
+        return-source-data
         :showEmptySymbol="false"
         style="width: 100%"
       >

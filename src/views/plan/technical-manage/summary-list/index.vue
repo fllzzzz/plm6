@@ -27,6 +27,7 @@
         :data="tableData"
         :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
         :max-height="maxHeight"
+        return-source-data
         :showEmptySymbol="false"
         style="width: 100%"
       >

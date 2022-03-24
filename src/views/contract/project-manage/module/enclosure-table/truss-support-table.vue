@@ -2,6 +2,7 @@
   <!-- 桁架楼层板表格 -->
   <common-table
     :data="tableData"
+    return-source-data
     :showEmptySymbol="false"
     border
   >

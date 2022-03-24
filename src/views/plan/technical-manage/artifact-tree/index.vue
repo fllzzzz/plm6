@@ -14,6 +14,7 @@
         :max-height="maxHeight"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :row-class-name="handleRowClassName"
+        :cell-class-name="cellClassName"
         row-key="id"
         style="width: 100%"
         :stripe="false"
@@ -21,6 +22,7 @@
         :load="load"
         @sort-change="crud.handleSortChange"
         @selection-change="crud.selectionChangeHandler"
+        return-source-data
         :showEmptySymbol="false"
       >
         <el-table-column key="selection" type="selection" width="55" />
@@ -370,6 +372,10 @@ function handleRowClassName({ row, rowIndex }) {
   }
 }
 
+function cellClassName() {
+  return ''
+}
+
 CRUD.HOOK.handleRefresh = (crud, data) => {
   let index = 1
   data.data.content = data.data.content.map((v) => {
@@ -410,7 +416,7 @@ CRUD.HOOK.beforeSubmit = () => {
   return !!crud.form.projectId
 }
 
-async function load(row, treeNode, resolve) {
+async function load({ row, treeNode, resolve }) {
   try {
     const { content } = await artifactPart({ artifactId: row.id })
     let childIndex = 1

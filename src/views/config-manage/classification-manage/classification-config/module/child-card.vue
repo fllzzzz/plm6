@@ -36,6 +36,8 @@
         <common-table
           ref="tableRef"
           :data="tableList"
+          :show-empty-symbol="false"
+          return-source-data
           :max-height="maxHeight - 170"
           empty-text="暂无数据"
           highlight-current-row

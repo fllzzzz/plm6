@@ -61,7 +61,7 @@
               v-model="form.registrationDate"
               type="date"
               style="width:100%;"
-              value-format="timestamp"
+              value-format="x"
               placeholder="选择日期"
             />
           </el-form-item>

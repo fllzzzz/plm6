@@ -82,7 +82,7 @@
         保 存
       </common-button>
     </template>
-    <common-table :data="modifiedData" :dataFormat="productFormat[productType]" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
+    <common-table :data="modifiedData" :data-format="productFormat[productType]" :max-height="maxHeight" empty-text="未做改动" style="width: 100%">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <productType-base-info-columns :productType="productType" :category="category" fixedWidth></productType-base-info-columns>
       <productType-spec-info-columns

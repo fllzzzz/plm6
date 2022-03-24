@@ -15,6 +15,7 @@
         style="width: 100%"
         show-summary
         :summary-method="getSummaries"
+        return-source-data
         :showEmptySymbol="false"
         @selection-change="crud.selectionChangeHandler"
       >

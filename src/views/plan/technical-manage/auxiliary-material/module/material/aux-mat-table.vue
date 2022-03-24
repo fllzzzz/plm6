@@ -1,5 +1,5 @@
 <template>
-  <common-table v-bind="$attrs" :data="form.list" :cell-class-name="wrongCellMask" :showEmptySymbol="false">
+  <common-table v-bind="$attrs" :data="form.list" :cell-class-name="wrongCellMask" return-source-data :showEmptySymbol="false">
     <el-table-column label="序号" type="index" align="center" width="60" fixed="left" />
     <el-table-column prop="serialNumber" label="编号" align="center" width="110px" fixed="left" show-overflow-tooltip />
     <el-table-column

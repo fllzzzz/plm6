@@ -87,6 +87,7 @@
                 style="width: 100%"
                 class="table-form"
                 :stripe="false"
+                return-source-data
                 :showEmptySymbol="false"
               >
                 <el-table-column label="序号" type="index" align="center" width="60" />
@@ -272,6 +273,7 @@
                 :stripe="false"
                 :cell-class-name="wrongCellMask"
                 @selection-change="handleSelectionChange"
+                return-source-data
                 :showEmptySymbol="false"
               >
                 <el-table-column type="selection" width="55" :disabled="form.changeAbleStatus != 3" />

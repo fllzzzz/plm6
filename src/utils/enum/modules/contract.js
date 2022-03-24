@@ -272,6 +272,13 @@ const hasTaxEnum = {
 }
 constantize(hasTaxEnum)
 
+// 采购订单状态
+const purchaseOrderStatusEnum = {
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 },
+  COMPLETE: { L: '已完成', K: 'COMPLETE', V: 2 }
+}
+constantize(purchaseOrderStatusEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -303,7 +310,8 @@ export {
   reimbursementTypeEnum,
   projectModeEnum,
   hasTaxEnum,
-  hasPayEnum
+  hasPayEnum,
+  purchaseOrderStatusEnum
 }
 
 export default {
@@ -337,5 +345,6 @@ export default {
   reimbursementTypeEnum,
   projectModeEnum,
   hasTaxEnum,
-  hasPayEnum
+  hasPayEnum,
+  purchaseOrderStatusEnum
 }

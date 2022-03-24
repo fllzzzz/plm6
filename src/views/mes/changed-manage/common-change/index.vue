@@ -8,7 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :dataFormat="dataFormat"
+      :data-format="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       row-key="id"

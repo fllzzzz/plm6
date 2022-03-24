@@ -13,16 +13,15 @@
           </el-radio-button>
         </template>
       </el-radio-group>
-      <el-radio-group v-model="query.settlementStatus" size="small" class="filter-item"  @change="crud.toQuery">
-        <el-radio-button :label="undefined">全部</el-radio-button>
-        <el-radio-button
-          v-for="item in settlementStatusEnum.ENUM"
-          :key="item.V"
-          :label="item.V"
-        >
-          {{ item.L }}
-        </el-radio-button>
-      </el-radio-group>
+      <common-radio-button
+        v-model="query.settlementStatus"
+        :options="settlementStatusEnum.ENUM"
+        showOptionAll
+        :optionAllValue="undefined"
+        type="enum"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.year"
         type="year"
