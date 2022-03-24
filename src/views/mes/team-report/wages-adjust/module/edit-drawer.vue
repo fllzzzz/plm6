@@ -8,7 +8,14 @@
     size="60%"
   >
     <template #titleRight>
-      <common-button v-permission="permission.edit" type="primary" size="mini" :disabled="!modifiedData.length" @click="previewVisible = true">预览并保存</common-button>
+      <common-button
+        v-permission="permission.edit"
+        type="primary"
+        size="mini"
+        :disabled="!modifiedData.length"
+        @click="previewVisible = true"
+        >预览并保存</common-button
+      >
     </template>
     <template #content>
       <div class="tag-content">
@@ -24,19 +31,29 @@
         </template>
         <span v-if="!processList || !processList.length" style="font-size: 12px; color: red; margin-left: 10px">*暂未获取到工序</span>
       </div>
-      <common-table ref="tableRef" v-loading="loading" :data="list" :max-height="maxHeight" row-key="rowId" style="width: 100%">
+      <common-table
+        ref="tableRef"
+        v-loading="loading"
+        return-source-data
+        :show-empty-symbol="false"
+        :data-format="dataFormat"
+        :data="list"
+        :max-height="maxHeight"
+        row-key="rowId"
+        style="width: 100%"
+      >
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showFactory showWorkshop showProductionLine showTeam />
         <el-table-column align="center" prop="prop" label="结算方式">
           <template #default="{ row }">
-            <span v-parse-enum="{ e: wageQuotaTypeEnum, v: row.wageQuotaType }" />
+            <span>{{ row.wageQuotaTypeStr }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" prop="wages" label="定额单价"> </el-table-column>
         <el-table-column align="center" prop="price" label="修改后单价" width="200">
           <template #default="{ row }">
-            <el-input-number v-model="row.price" placeholder="请输入单价" :precision="2" :controls="false" style="width: 100%">
-            </el-input-number>
+            <common-input-number v-model="row.price" placeholder="请输入单价" :precision="2" :controls="false" style="width: 100%">
+            </common-input-number>
           </template>
         </el-table-column>
       </common-table>
@@ -88,6 +105,8 @@ const props = defineProps({
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook: beforeClose })
 
 const permission = inject('permission')
+
+const dataFormat = [['wageQuotaTypeStr', ['parse-enum', wageQuotaTypeEnum], { source: 'wageQuotaType' }]]
 
 // 高度
 const { maxHeight } = useMaxHeight(

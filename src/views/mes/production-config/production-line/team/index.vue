@@ -13,6 +13,7 @@
         ref="tableRef"
         v-loading="crud.loading"
         :data="crud.data"
+        :data-format="dataFormat"
         :empty-text="crud.emptyText"
         :max-height="maxHeight + 42"
         style="width: 100%"
@@ -39,7 +40,7 @@
           width="75px"
         >
           <template #default="{ row }">
-            <span v-parse-enum="{ e: wageQuotaTypeEnum, v: row.wageQuotaType, f: 'SL' }" v-suffix="'计价'"></span>
+            <span>{{ row.wageQuotaType }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -108,6 +109,10 @@ import udOperation from '@crud/UD.operation'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
+
+const dataFormat = [
+  ['wageQuotaType', ['parse-enum', wageQuotaTypeEnum, { f: 'SL', extra: '计价' }]]
+]
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(

@@ -33,7 +33,7 @@ export function processDetail({ startDate, endDate, factoryId, processId, produc
 export function detail(params) {
   return request({
     module: 'mes',
-    url: 'team_form/artifact_assemble/process',
+    url: 'team_form/artifact_assemble/process/page',
     method: 'get',
     params
   })

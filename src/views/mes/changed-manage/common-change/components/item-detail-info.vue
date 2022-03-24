@@ -10,7 +10,7 @@
       <span>{{ data.areaDetail?.name }}</span>
     </el-form-item>
   </el-form>
-  <common-table :dataFormat="productFormat[productType]" :data="[productData]">
+  <common-table :data-format="productFormat[productType]" :data="[productData]">
     <productType-full-info-columns
       :productType="productType"
       :unitNewLine="false"
