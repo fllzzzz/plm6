@@ -3,7 +3,7 @@
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column v-if="isSummary" prop="project" label="项目" min-width="120px" show-overflow-tooltip>
       <template #default="{ row }">
-        <span v-parse-project="{ project: row.project, onlyShortName: true }" />
+        <span>{{ row.project?.shortName }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="monomer.name" show-overflow-tooltip label="单体">

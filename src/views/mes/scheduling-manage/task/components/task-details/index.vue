@@ -35,7 +35,7 @@
       min-width="180px"
     >
       <template #default="{ row }">
-        <span v-parse-project="{ project: row.project }" />
+        <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('area.name')" prop="area.name" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
@@ -145,6 +145,7 @@ import moment from 'moment'
 
 import { taskIssueTypeEnum } from '@enum-ms/mes'
 import { parseTime } from '@/utils/date'
+import { projectNameFormatter } from '@/utils/project'
 import { emptyTextFormatter } from '@data-type'
 
 import checkPermission from '@/utils/system/check-permission'

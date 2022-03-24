@@ -23,16 +23,7 @@
     <template #content>
       <common-table ref="tableRef" v-loading="tableLoading" :data="list" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="project.shortName" prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="200">
-          <template #default="{ row }">
-            <span v-parse-project="{ project: row.project }" />
-          </template>
-        </el-table-column>
-        <el-table-column key="monomer.name" prop="monomer.name" :show-overflow-tooltip="true" label="单体">
-          <template v-slot="scope">
-            <span>{{ scope.row.monomer.name }}</span>
-          </template>
-        </el-table-column>
+        <belonging-info-columns showProject showMonomer />
         <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="名称">
           <template v-slot="scope">
             <span>{{ scope.row.name }}</span>
@@ -59,6 +50,7 @@ import { defineProps, defineEmits, ref, watch, inject } from 'vue'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
 
 const drawerRef = ref()
 const emit = defineEmits(['update:visible'])
