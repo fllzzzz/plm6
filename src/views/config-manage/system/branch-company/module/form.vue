@@ -61,6 +61,8 @@
           :max-height="300"
           style="width: 100%"
           class="table-form"
+          return-source-data
+          :showEmptySymbol="false"
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />

@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -18,7 +19,7 @@
         <template #default="{ row }">
           <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics>
             <p>
-              借用调拨备注：<span v-empty-text>{{ row.remark }}</span>
+              借用调拨备注：<span>{{ row.remark }}</span>
             </p>
             <p>
               归还调拨单号：
@@ -32,7 +33,7 @@
                   <span v-if="ri !== row.returnTransfers.length - 1">、</span>
                 </template>
               </template>
-              <template v-else><span v-empty-text /></template>
+              <template v-else>-</template>
             </p>
           </expand-secondary-info>
         </template>
@@ -42,22 +43,22 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" />
       <!-- 单位及其数量 -->
-      <el-table-column v-if="columns.visible('outboundUnit')" prop="outboundUnit" label="单位" align="center" width="70px">
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.outboundUnit }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('outboundUnit')" prop="outboundUnit" label="单位" align="center" width="70px" />
       <el-table-column v-if="columns.visible('quantity')" prop="quantity" label="已还/总数" align="right" width="110px">
         <template #default="{ row }">
-          <span class="returned-number" v-empty-text v-to-fixed="{ val: row.corReturnedQuantity || 0, dp: row.outboundUnitPrecision }" /> /
-          <span v-empty-text v-to-fixed="{ val: row.corQuantity, dp: row.outboundUnitPrecision }" />
+          <span class="returned-number">{{ row.corReturnedQuantity }}</span>
+          &nbsp;/&nbsp;
+          {{ row.corQuantity }}
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="原项目" min-width="170">
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('project')"
+        show-overflow-tooltip
+        key="project"
+        prop="project"
+        label="原项目"
+        min-width="170"
+      />
       <el-table-column
         v-if="columns.visible('borrowProject')"
         show-overflow-tooltip
@@ -65,11 +66,7 @@
         prop="borrowProject"
         label="借用项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.borrowProject, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('borrowTransferSN')"
         key="borrowTransferSN"
@@ -128,11 +125,7 @@
         align="center"
         width="100"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.transferTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('returnTime')"
         key="returnTime"
@@ -142,16 +135,12 @@
         align="center"
         width="100"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.returnTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      />
       <!-- 归还 -->
       <el-table-column label="操作" width="80px" align="center" fixed="right">
         <template #default="{ row }">
           <template v-if="checkPermission(permission.return) && row.returnStatus === borrowReturnStatusEnum.NOT_RETURNED.V">
-            <common-button type="primary" size="mini" @click="toReturn(row)">归还</common-button>
+            <common-button type="primary" size="mini" @click="toReturn(row.sourceRow)">归还</common-button>
           </template>
           <template v-else>
             <el-tag :type="borrowReturnStatusEnum.V[row.returnStatus].TAG">{{ borrowReturnStatusEnum.VL[row.returnStatus] }}</el-tag>
@@ -179,6 +168,7 @@ import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { borrowReturnStatusEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
+import { materialColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -213,6 +203,18 @@ const currentRow = ref()
 const transferDetailRef = ref()
 // 表格ref
 const tableRef = ref()
+// 表格列格式化
+const columnsDataFormat = ref([
+  ...materialColumns,
+  ['corReturnedQuantity', ['to-fixed', 'outboundUnitPrecision']],
+  ['corQuantity', ['to-fixed', 'outboundUnitPrecision']],
+  ['remark', 'empty-text'],
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['borrowProject', ['parse-project', { onlyShortName: true }]],
+  ['transferTime', ['parse-time', '{y}-{m}-{d}']],
+  ['returnTime', ['parse-time', '{y}-{m}-{d}']]
+])
+
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供物料借出管理',

@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="!loaded || crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -14,9 +15,11 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
+            关联项目：<span>{{ row.projectsFullName }}</span>
+          </p>
+          <p>
+            备注：<span>{{ row.remark }}</span>
           </p>
         </template>
       </el-expand-table-column>
@@ -29,11 +32,7 @@
         label="日期"
         align="center"
         width="100"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="crud.query && crud.query.logisticsTransportType !== logisticsTransportTypeEnum.FREIGHT.V && columns.visible('shipmentNumber')"
         key="shipmentNumber"
@@ -59,11 +58,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('materialTypeText')"
         key="materialTypeText"
@@ -80,12 +75,7 @@
         label="装载重量(kg)"
         min-width="120"
         align="right"
-      >
-        <template #default="{ row }">
-          <span v-empty-text v-convert-weight>{{ row.loadingWeight }}</span>
-        </template>
-      </el-table-column>
-
+      />
       <el-table-column
         v-if="columns.visible('invoiceType')"
         key="invoiceType"
@@ -94,11 +84,7 @@
         label="票据类型"
         align="center"
         min-width="130"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: invoiceTypeEnum, v: row.invoiceType }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('taxRate')"
         key="taxRate"
@@ -107,11 +93,7 @@
         label="税率"
         align="right"
         width="70"
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.taxRate ? `${row.taxRate}%` : undefined }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('freight')"
         key="freight"
@@ -120,11 +102,7 @@
         label="运费(含税)"
         align="right"
         min-width="90"
-      >
-        <template #default="{ row }">
-          <span v-to-fixed>{{ row.freight }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('amountExcludingVAT')"
         key="amountExcludingVAT"
@@ -133,11 +111,7 @@
         label="不含税金额"
         min-width="90"
         align="right"
-      >
-        <template #default="{ row }">
-          <span v-to-fixed>{{ row.amountExcludingVAT }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('inputVAT')"
         key="inputVAT"
@@ -146,11 +120,7 @@
         label="进项税额"
         align="right"
         min-width="80"
-      >
-        <template #default="{ row }">
-          <span v-to-fixed>{{ row.inputVAT }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -230,6 +200,7 @@ import { invoiceTypeEnum } from '@enum-ms/finance'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 import { matClsEnum } from '@enum-ms/classification'
 import { logisticsTransportTypeEnum } from '@enum-ms/logistics'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -253,6 +224,20 @@ const optShow = {
 }
 
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...wmsReceiptColumns,
+  ['loadingWeight', ['to-fixed-ck', 'COM_WT__KG']],
+  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+  ['taxRate', ['suffix', '%']],
+  ['inputVAT', 'to-thousand'],
+  ['amountExcludingVAT', 'to-thousand'],
+  ['freight', 'to-thousand'],
+  ['amount', 'to-thousand'],
+  ['requisitionsSNStr', 'empty-text'],
+  ['remark', 'empty-text'],
+  ['auxMaterialNames', 'split']
+])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '物料物流订单',

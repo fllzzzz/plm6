@@ -29,18 +29,16 @@ const getDetails = {
             transferReceipt: {
               id: 1, // 调拨单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
-              source: [
-                {
-                  factory: {
-                    id: 1,
-                    name: '彩虹3号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '62号仓库'
-                  }
+              source: {
+                factory: {
+                  id: 1,
+                  name: '彩虹3号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '62号仓库'
                 }
-              ],
+              },
               direction: {
                 project: {
                   // 项目
@@ -96,42 +94,23 @@ const getDetails = {
             transferReceipt: {
               id: 1, // 调拨单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
-              source: [
-                {
-                  project: {
-                    // 项目
-                    id: 2,
-                    name: '长安街666666号辅路',
-                    shortName: '长安街',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '长江1号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '666号仓库'
-                  }
+              source: {
+                project: {
+                  // 项目
+                  id: 2,
+                  name: '长安街666666号辅路',
+                  shortName: '长安街',
+                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                {
-                  project: {
-                    // 项目
-                    id: 3,
-                    name: '长沙五一广场',
-                    shortName: '五一广场',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '彩虹3号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '62号仓库'
-                  }
+                factory: {
+                  id: 1,
+                  name: '长江1号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '666号仓库'
                 }
-              ],
+              },
               direction: {
                 factory: {
                   id: 1,
@@ -171,42 +150,23 @@ const getDetails = {
             transferReceipt: {
               id: 1, // 调拨单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
-              source: [
-                {
-                  project: {
-                    // 项目
-                    id: 2,
-                    name: '长安街666666号辅路',
-                    shortName: '长安街',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '长江1号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '666号仓库'
-                  }
+              source: {
+                project: {
+                  // 项目
+                  id: 3,
+                  name: '长沙五一广场',
+                  shortName: '五一广场',
+                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
-                {
-                  project: {
-                    // 项目
-                    id: 3,
-                    name: '长沙五一广场',
-                    shortName: '五一广场',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '彩虹3号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '62号仓库'
-                  }
+                factory: {
+                  id: 1,
+                  name: '彩虹3号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '62号仓库'
                 }
-              ],
+              },
               direction: {
                 factory: {
                   id: 1,
@@ -315,25 +275,23 @@ const getDetails = {
             transferReceipt: {
               id: 1, // 调拨单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
-              source: [
-                {
-                  project: {
-                    // 项目
-                    id: 2,
-                    name: '长安街666666号辅路',
-                    shortName: '长安街',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '长江1号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '666号仓库'
-                  }
+              source: {
+                project: {
+                  // 项目
+                  id: 2,
+                  name: '长安街666666号辅路',
+                  shortName: '长安街',
+                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                },
+                factory: {
+                  id: 1,
+                  name: '长江1号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '666号仓库'
                 }
-              ],
+              },
               direction: {
                 project: {
                   // 项目
@@ -376,25 +334,23 @@ const getDetails = {
             transferReceipt: {
               id: 1, // 调拨单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
-              source: [
-                {
-                  project: {
-                    // 项目
-                    id: 2,
-                    name: '长安街666666号辅路',
-                    shortName: '长安街',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '长江1号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '666号仓库'
-                  }
+              source: {
+                project: {
+                  // 项目
+                  id: 2,
+                  name: '长安街666666号辅路',
+                  shortName: '长安街',
+                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                },
+                factory: {
+                  id: 1,
+                  name: '长江1号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '666号仓库'
                 }
-              ],
+              },
               direction: {
                 project: {
                   // 项目
@@ -436,25 +392,23 @@ const getDetails = {
             transferReceipt: {
               id: 1, // 调拨单id
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
-              source: [
-                {
-                  project: {
-                    // 项目
-                    id: 2,
-                    name: '长安街666666号辅路',
-                    shortName: '长安街',
-                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                  },
-                  factory: {
-                    id: 1,
-                    name: '长江1号工厂'
-                  },
-                  warehouse: {
-                    id: 1,
-                    name: '666号仓库'
-                  }
+              source: {
+                project: {
+                  // 项目
+                  id: 2,
+                  name: '长安街666666号辅路',
+                  shortName: '长安街',
+                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                },
+                factory: {
+                  id: 1,
+                  name: '长江1号工厂'
+                },
+                warehouse: {
+                  id: 1,
+                  name: '666号仓库'
                 }
-              ],
+              },
               direction: {
                 project: {
                   // 项目

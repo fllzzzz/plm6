@@ -20,6 +20,7 @@
       <el-form ref="formRef" :model="form" :disabled="cu.status.edit === FORM.STATUS.PROCESSING">
         <common-table
           :data="form.list"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
           :cell-class-name="wrongCellMask"
@@ -32,7 +33,7 @@
             <template #default="{ row }">
               <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
-                备注：<span v-empty-text>{{ row.remark }}</span>
+                备注：<span>{{ row.remark }}</span>
               </p>
             </template>
           </el-expand-table-column>
@@ -75,7 +76,8 @@ import { matClsEnum } from '@/utils/enum/modules/classification'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
-import { isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { isBlank, isNotBlank, toFixed, toPrecision } from '@/utils/data-type'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/form/use-form'
 import useTableValidate from '@/composables/form/use-table-validate'
@@ -108,6 +110,14 @@ const props = defineProps({
     type: Number
   }
 })
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialHasAmountColumns,
+  ['brand', 'empty-text'],
+  ['heatNoAndBatchNo', 'empty-text'],
+  ['remark', 'empty-text']
+])
 
 // 仓管填写的信息（工厂及仓库）
 const warehouseRules = {
@@ -163,7 +173,7 @@ const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
   const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
   // 甲供订单，显示项目和申购单以及仓库时
-  const unshow2 = showAmount.value && boolPartyA.value && (order.value.projects && order.value.requisitionsSN) && showWarehouse.value
+  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && showWarehouse.value
   return !(unshow1 || unshow2)
 })
 
@@ -199,7 +209,7 @@ watch(
       form.list.forEach((v) => {
         if (isNotBlank(v.amount) && isNotBlank(v.mete)) {
           // 量发生变化，清空金额
-          const unitPrice = toFixed(v.amount / v.mete, 2, { toNum: true })
+          const unitPrice = toPrecision(v.amount / v.mete, 10)
           if (v.unitPrice !== unitPrice) {
             v.unitPrice = undefined
             v.amount = undefined

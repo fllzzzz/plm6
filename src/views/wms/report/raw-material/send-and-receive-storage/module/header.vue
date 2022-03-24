@@ -150,15 +150,17 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   // 设置规格等信息，多规格模式
   await setSpecInfoToList(data.content, { multipleSpec: true })
   const fmtFields = ['beginPeriod', 'endPeriod', 'inbound', 'outbound']
+  const allPs = []
   for (const row of data.content) {
     fmtFields.forEach((k) => {
-      numFmtByBasicClass(row[k], {
+      const ps = numFmtByBasicClass(row[k], {
         basicClass: row.basicClass, // 基础分类
         measureUnit: row.measureUnit,
         accountingUnit: row.accountingUnit,
         accountingPrecision: row.accountingPrecision,
         measurePrecision: row.measurePrecision
       })
+      allPs.push(ps)
     })
     // --------------------- 处理规格 -------------------------
     row.multipleSpec = Array.isArray(row.specifications) && row.specifications.length > 1
@@ -183,9 +185,11 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     }
 
     row.formatSpecArr = formatSpecArr
+    row.sourceFormatSpecArr = [...formatSpecArr]
     // 规格提示信息
     row.specTip = specTip({ ...fmtObj, specificationLabels: row.specificationLabels })
   }
+  await Promise.all(allPs)
 }
 
 // 基础类型发生变化

@@ -114,6 +114,7 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
   }
 
   // 初始校验超出最大量
+  // eslint-disable-next-line no-unused-vars
   function initCheckOverMaxWeight(list) {
     const overList = []
     list.forEach((row) => {
@@ -190,6 +191,7 @@ export default function useCommonCalc({ cu, form, basicClass, baseUnit }) {
     extractSource,
     calcReturnInfo,
     checkOverSource,
-    initCheckOverMaxWeight
+    // TODO: 目前不校验，因为不会出现超出的情况
+    initCheckOverMaxWeight: () => {}
   }
 }

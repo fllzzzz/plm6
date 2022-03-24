@@ -12,6 +12,8 @@
         :data="crud.data"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
+        return-source-data
+        :showEmptySymbol="false"
         style="width: 100%"
         @sort-change="crud.handleSortChange"
         class="enclosure-table"

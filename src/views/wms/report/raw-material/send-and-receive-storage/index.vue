@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="dataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -33,11 +34,7 @@
         width="110px"
         fixed="left"
         show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.serialNumber }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('classifyName')"
         prop="classifyName"
@@ -52,7 +49,7 @@
           <!-- 半出余料标签 -->
           <table-cell-tag :show="!!row.boolOddmentByHalfOut" name="半出余料" color="#e6a23c" />
           <el-tooltip :content="row.classifyParentFullName" :disabled="!row.classifyParentFullName" :show-after="500" placement="top">
-            <span v-empty-text="row.classifyName" />
+            {{ row.classifyName }}
           </el-tooltip>
         </template>
       </el-table-column>
@@ -68,17 +65,14 @@
         <template #default="{ row }">
           <div class="spec-box">
             <el-tooltip :content="row.specTip" placement="top">
-              <span
-                class="spec-info ellipsis-text"
-                v-split="row.formatSpecArr"
-                v-empty-text
-                :style="{ 'padding-right': row.multipleSpec ? '20px' : 0 }"
-              />
+              <span class="spec-info ellipsis-text" :style="{ 'padding-right': row.multipleSpec ? '20px' : 0 }">
+                {{ row.formatSpecArr }}
+              </span>
             </el-tooltip>
             <el-popover
               v-if="row.multipleSpec"
               placement="top"
-              :title="`${row.classifyName}（${row.specTip}）【${row.formatSpecArr.length}种】`"
+              :title="`${row.classifyName}（${row.specTip}）【${row.sourceFormatSpecArr.length}种】`"
               :width="500"
               trigger="click"
             >
@@ -89,9 +83,9 @@
               </template>
               <template #default>
                 <div style="margin-top: 20px">
-                  <template v-for="(spec, index) in row.formatSpecArr" :key="spec">
+                  <template v-for="(spec, index) in row.sourceFormatSpecArr" :key="spec">
                     <span style="font-weight: bold">{{ spec }}</span>
-                    <span v-if="index < row.formatSpecArr.length - 1">&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
+                    <span v-if="index < row.sourceFormatSpecArr.length - 1">&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
                   </template>
                 </div>
               </template>
@@ -106,22 +100,18 @@
         v-if="columns.visible('currentUnit')"
         key="currentUnit"
         prop="currentUnit"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="单位"
         width="70px"
         align="center"
         fixed="left"
       />
-      <el-table-column v-if="showProject" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      <el-table-column v-if="showProject" prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
       <el-table-column
         v-if="!crud.query.factoryId && columns.visible('factory.name')"
         key="factory.name"
         prop="factory.name"
-        :show-overflow-tooltip="true"
+        show-overflow-tooltip
         label="工厂"
         min-width="100px"
       />
@@ -131,42 +121,30 @@
           v-if="columns.visible('beginPeriod.number')"
           key="beginPeriod.number"
           prop="beginPeriod.number"
-          :show-overflow-tooltip="true"
+          show-overflow-tooltip
           label="数量"
           width="100px"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-empty-text="row.beginPeriod.number" />
-          </template>
-        </el-table-column>
+        />
         <template v-if="showAmount">
           <el-table-column
             v-if="showUnitPrice && columns.visible('beginPeriod.unitPriceExcludingVAT')"
             key="beginPeriod.unitPriceExcludingVAT"
             prop="beginPeriod.unitPriceExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="单价(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.beginPeriod.unitPriceExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             v-if="columns.visible('beginPeriod.amountExcludingVAT')"
             key="beginPeriod.amountExcludingVAT"
             prop="beginPeriod.amountExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="金额(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.beginPeriod.amountExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
         </template>
       </el-table-column>
       <!-- ############################ 入库数据 ############################ -->
@@ -175,42 +153,30 @@
           v-if="columns.visible('inbound.number')"
           key="inbound.number"
           prop="inbound.number"
-          :show-overflow-tooltip="true"
+          show-overflow-tooltip
           label="数量"
           width="100px"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-empty-text="row.inbound.number" />
-          </template>
-        </el-table-column>
+        />
         <template v-if="showAmount">
           <el-table-column
             v-if="showUnitPrice && columns.visible('inbound.unitPriceExcludingVAT')"
             key="inbound.unitPriceExcludingVAT"
             prop="inbound.unitPriceExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="单价(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.inbound.unitPriceExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             v-if="columns.visible('inbound.amountExcludingVAT')"
             key="inbound.amountExcludingVAT"
             prop="inbound.amountExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="金额(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.inbound.amountExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
         </template>
       </el-table-column>
       <!-- ############################ 出库数据 ############################ -->
@@ -219,42 +185,30 @@
           v-if="columns.visible('outbound.number')"
           key="outbound.number"
           prop="outbound.number"
-          :show-overflow-tooltip="true"
+          show-overflow-tooltip
           label="数量"
           width="100px"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-empty-text="row.outbound.number" />
-          </template>
-        </el-table-column>
+        />
         <template v-if="showAmount">
           <el-table-column
             v-if="showUnitPrice && columns.visible('outbound.unitPriceExcludingVAT')"
             key="outbound.unitPriceExcludingVAT"
             prop="outbound.unitPriceExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="单价(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.outbound.unitPriceExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             v-if="columns.visible('outbound.amountExcludingVAT')"
             key="outbound.amountExcludingVAT"
             prop="outbound.amountExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="金额(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.outbound.amountExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
         </template>
       </el-table-column>
       <!-- ######################## 期末数据 ############################ -->
@@ -263,42 +217,30 @@
           v-if="columns.visible('endPeriod.number')"
           key="endPeriod.number"
           prop="endPeriod.number"
-          :show-overflow-tooltip="true"
+          show-overflow-tooltip
           label="数量"
           width="100px"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-empty-text="row.endPeriod.number" />
-          </template>
-        </el-table-column>
+        />
         <template v-if="showAmount">
           <el-table-column
             v-if="showUnitPrice && columns.visible('endPeriod.unitPriceExcludingVAT')"
             key="endPeriod.unitPriceExcludingVAT"
             prop="endPeriod.unitPriceExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="单价(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.endPeriod.unitPriceExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             v-if="columns.visible('endPeriod.amountExcludingVAT')"
             key="endPeriod.amountExcludingVAT"
             prop="endPeriod.amountExcludingVAT"
-            :show-overflow-tooltip="true"
+            show-overflow-tooltip
             label="金额(不含税)"
             width="100px"
             align="right"
-          >
-            <template #default="{ row }">
-              <span v-thousand="row.endPeriod.amountExcludingVAT" v-empty-text />
-            </template>
-          </el-table-column>
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -333,6 +275,19 @@ const optShow = {
   del: false,
   download: false
 }
+
+const dataFormat = ref([
+  ['project', ['parse-project', { onlyShortName: true }]],
+  ['beginPeriod.unitPriceExcludingVAT', 'to-thousand'],
+  ['beginPeriod.amountExcludingVAT', 'to-thousand'],
+  ['inbound.unitPriceExcludingVAT', 'to-thousand'],
+  ['inbound.amountExcludingVAT', 'to-thousand'],
+  ['outbound.unitPriceExcludingVAT', 'to-thousand'],
+  ['outbound.amountExcludingVAT', 'to-thousand'],
+  ['endPeriod.unitPriceExcludingVAT"', 'to-thousand'],
+  ['endPeriod.amountExcludingVAT', 'to-thousand'],
+  ['formatSpecArr', 'split']
+])
 
 // 展开行
 const expandRowKeys = ref([])
@@ -415,7 +370,7 @@ watch(
       })
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 // 表格行点击

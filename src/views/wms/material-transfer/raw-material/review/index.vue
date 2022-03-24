@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -15,7 +16,7 @@
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
           <p>
-            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
+            审批意见：<span>{{ row.approvalComments }}</span>
           </p>
         </template>
       </el-expand-table-column>
@@ -42,19 +43,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('materialTypeText')"
-        key="materialTypeText"
+        v-if="columns.visible('basicClass')"
+        key="basicClass"
         :show-overflow-tooltip="true"
-        prop="materialTypeText"
+        prop="basicClass"
         label="物料种类"
         width="100"
         align="center"
-      >
-        <template #default="{ row }">
-          <!-- 目前调拨只支持单种物料的调拨 -->
-          <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('transferType')"
         show-overflow-tooltip
@@ -63,11 +59,7 @@
         label="调拨类型"
         width="90"
         align="center"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: transferTypeEnum, v: row.transferType }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column v-if="columns.visible('source')" show-overflow-tooltip key="source" prop="source" label="来源" min-width="170">
         <template #default="{ row }">
           <source-text-info :transfer-receipt="row" class="ellipsis-text" />
@@ -133,11 +125,7 @@
         label="编辑时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.userUpdateTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewTime')"
         key="reviewTime"
@@ -146,11 +134,7 @@
         label="审核时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.reviewTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewStatus')"
         key="reviewStatus"
@@ -191,9 +175,9 @@ import crudApi from '@/api/wms/material-transfer/raw-material/review'
 import { rawMaterialTransferReviewPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
-import { rawMatClsEnum } from '@enum-ms/classification'
 import { transferCreateTypeEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { reviewStatusEnum } from '@enum-ms/common'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -217,6 +201,15 @@ const optShow = {
 }
 
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...wmsReceiptColumns,
+  ['approvalComments', 'empty-text'],
+  ['transferType', ['parse-enum', transferTypeEnum]],
+  ['borrowProject', ['parse-project', { onlyShortName: true }]],
+  ['[source].project', ['parse-project', { onlyShortName: true }]],
+  ['direction.project', ['parse-project', { onlyShortName: true }]]
+])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '调拨审核',

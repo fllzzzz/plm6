@@ -12,7 +12,8 @@
     </template>
     <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="80px" :inline="true">
       <el-form-item label="员工编号" prop="username">
-        <el-input v-model="form.username" :readonly="form.id?true:false" />
+        <!-- <el-input v-model="form.username" :readonly="form.id?true:false" /> -->
+        <el-input v-model="form.username" />
       </el-form-item>
       <el-form-item label="电话" prop="phone">
         <el-input v-model.number="form.phone" />
@@ -168,6 +169,8 @@ async function getRoleAll() {
 getJobAll()
 
 async function getJobAll(id) {
+  jobs.value = []
+  form.jobId = undefined
   try {
     const submitData = { deptId: id }
     const { content } = await jobAll(submitData)

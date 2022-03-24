@@ -36,6 +36,7 @@
         <common-table
           ref="tableRef"
           :data="form.list"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           show-summary
           :summary-method="getSummaries"
@@ -79,6 +80,7 @@ import { computed, ref, defineEmits, defineProps, watch } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@/composables/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -122,6 +124,8 @@ const formDisabled = computed(() => passedLoading.value || returnedLoading.value
 // 当前源数据
 const currentSource = ref()
 const form = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns, ['remark', 'empty-text']])
 
 const { crud } = regExtra()
 

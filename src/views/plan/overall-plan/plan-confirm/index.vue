@@ -9,6 +9,8 @@
         :data="[{id:1}]"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
+        :showEmptySymbol="false"
+        return-source-data
         style="width: 100%;margin-top:20px;"
       >
       <el-table-column label="序号" type="index" align="center" width="60" />

@@ -1,13 +1,14 @@
 <template>
   <div class="app-container">
     <!--工具栏-->
-    <mHeader ref="headerRef" />
+    <m-header ref="headerRef" />
     <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
       :key="`material_inventory_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -83,6 +84,7 @@ import { steelMaterialWarehousePM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { matClsEnum, rawMatClsEnum } from '@enum-ms/classification'
+import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useIndexInfo from '../compos/use-index-info'
@@ -108,6 +110,8 @@ const optShow = {
 
 // 表格ref
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialOperateColumns])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '钢材物料仓',

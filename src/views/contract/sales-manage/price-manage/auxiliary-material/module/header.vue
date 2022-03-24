@@ -73,6 +73,8 @@ import { ref, watch, nextTick, inject, computed, defineExpose } from 'vue'
 
 import checkPermission from '@/utils/system/check-permission'
 import { packTypeEnum } from '@enum-ms/mes'
+import { toThousand } from '@/utils/data-type/number'
+import { emptyTextFormatter } from '@/utils/data-type'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -125,7 +127,7 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
-    v.originUnitPrice = v.unitPrice
+    v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalPrice = v.mete * (v.unitPrice || 0)
   })
   fetchCost()
@@ -159,8 +161,11 @@ function handelModifying(status, reset = false) {
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      v.totalPrice = v.mete * (v.unitPrice || 0)
-      return v
+      if (typeof v.unitPrice === 'string') {
+        v.totalPrice = 0
+      } else {
+        v.totalPrice = v.mete * (v.unitPrice || 0)
+      }
     })
   }
   modifying.value = status

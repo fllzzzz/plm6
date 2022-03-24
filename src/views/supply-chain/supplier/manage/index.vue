@@ -7,6 +7,8 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      return-source-data
+      :show-empty-symbol="false"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       @selection-change="crud.selectionChangeHandler"

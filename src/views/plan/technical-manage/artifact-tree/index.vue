@@ -21,6 +21,8 @@
         :load="load"
         @sort-change="crud.handleSortChange"
         @selection-change="crud.selectionChangeHandler"
+        return-source-data
+        :showEmptySymbol="false"
       >
         <el-table-column key="selection" type="selection" width="55" />
         <el-table-column prop="index" label="序号" align="center" width="60">
@@ -268,9 +270,9 @@
       <!--分页组件-->
       <pagination />
       <mForm />
-      <numForm v-model="numVisible" :detailInfo="currentRow" @success="crud.toQuery" />
-      <listForm v-model="listVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea" />
-      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="crud.toQuery" :allArea="allArea" />
+      <numForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
+      <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
+      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <!-- pdf预览 -->
       <drawing-pdf
         v-model="showDrawing"
@@ -436,6 +438,11 @@ async function load(row, treeNode, resolve) {
 
 function getAreaData(val) {
   allArea.value = val
+}
+
+function handleSuccess() {
+  tableRef.value.refreshParent(currentRow.value)
+  crud.toQuery()
 }
 </script>
 

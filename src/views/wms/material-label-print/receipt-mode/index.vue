@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -31,11 +32,7 @@
         width="120"
         label="单据类型"
         align="center"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: receiptTypeEnum, v: row.receiptType, f: 'DOC' }"></span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -50,17 +47,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('materialTypeText')"
-        key="materialTypeText"
+        v-if="columns.visible('basicClass')"
+        key="basicClass"
         :show-overflow-tooltip="true"
-        prop="materialTypeText"
+        prop="basicClass"
         label="物料种类"
         min-width="120"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: matClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('projects')"
         show-overflow-tooltip
@@ -68,11 +61,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('pendingPrintedMaterialNumber')"
         key="pendingPrintedMaterialNumber"
@@ -100,11 +89,7 @@
         align="center"
         width="130"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column label="操作" width="130" align="center" fixed="right">
         <template #default="{ row }">
           <ud-operation show-detail :show-edit="false" :show-del="false" :data="row" />
@@ -125,8 +110,8 @@ import crudApi from '@/api/wms/material-label-print/receipt-mode'
 import { ref, inject, defineEmits } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { matClsEnum } from '@/utils/enum/modules/classification'
 import { receiptTypeEnum } from '@/utils/enum/modules/wms'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -155,6 +140,8 @@ const permission = inject('permission')
 const expandRowKeys = ref([])
 // 表格ref
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...wmsReceiptColumns, ['receiptType', ['parse-enum', receiptTypeEnum, { f: 'DOC' }]]])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '打印标签-单据模式',

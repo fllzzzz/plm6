@@ -11,6 +11,8 @@
         v-loading="crud.loading"
         :data="crud.data"
         :empty-text="crud.emptyText"
+        return-source-data
+        :showEmptySymbol="false"
         :max-height="maxHeight"
         style="width: 100%"
         @sort-change="crud.handleSortChange"

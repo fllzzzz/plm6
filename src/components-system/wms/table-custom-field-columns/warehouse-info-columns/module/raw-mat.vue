@@ -10,7 +10,7 @@
   >
     <template #default="{ row }">
       <table-cell-tag v-if="showTransfer && getInfo(row, 'boolTransfer')" name="调拨" type="transfer" :offset="15" />
-      <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
+      {{ getInfo(row, 'project') }}
     </template>
   </el-table-column>
   <el-table-column
@@ -27,7 +27,7 @@
         v-if="props.showFactory"
         :id="getInfo(row, 'factory') ? getInfo(row, 'factory.id') : getInfo(row, 'factoryId')"
       />
-      <span v-empty-text>{{ getInfo(row, 'warehouse') ? getInfo(row, 'warehouse.name') : getInfo(row, 'warehouse') }}</span>
+      <span>{{ getInfo(row, 'warehouse') ? getInfo(row, 'warehouse.name') : getInfo(row, 'warehouse') }}</span>
     </template>
   </el-table-column>
 </template>

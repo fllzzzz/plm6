@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -93,11 +94,7 @@
         label="申请时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.outboundReceipt.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('outboundReceipt.reviewTime')"
         key="outboundReceipt.reviewTime"
@@ -106,11 +103,7 @@
         label="审核时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.outboundReceipt.reviewTime" />
-        </template>
-      </el-table-column>
+      />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -128,6 +121,7 @@ import { detail as getOutboundReceiptDetail } from '@/api/wms/material-outbound/
 import { reportRawMaterialOutboundDetailsPM as permission } from '@/page-permission/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -157,6 +151,14 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialHasAmountColumns,
+  ['outboundReceipt.outboundTime', 'parse-time'],
+  ['outboundReceipt.reviewTime', 'parse-time'],
+  ['outboundReceipt.createTime', 'parse-time']
+])
 
 const { CRUD, crud, columns } = useCRUD(
   {

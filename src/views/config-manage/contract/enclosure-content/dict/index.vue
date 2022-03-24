@@ -15,6 +15,8 @@
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
       v-if="crud.query.type!=TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V"
+      return-source-data
+      :showEmptySymbol="false"
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
@@ -36,6 +38,8 @@
       style="width: 100%;margin-top:10px;"
       @current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"
+      return-source-data
+      :showEmptySymbol="false"
       v-else
     >
       <el-table-column key="selection" type="selection" width="55" />

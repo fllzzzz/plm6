@@ -31,6 +31,8 @@
           empty-text="暂无数据"
           :max-height="500"
           :cell-class-name="wrongCellMask"
+          return-source-data
+          :showEmptySymbol="false"
           style="width: 100%"
         >
           <el-table-column label="序号" type="index" align="center" width="60" />

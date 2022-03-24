@@ -12,38 +12,37 @@
       </template>
       <template #default="{ row }">
         <common-radio-button
-          v-if="row.boolPartyA"
+          v-if="row.sourceRow.boolPartyA"
           type="enum"
-          v-model="row.partyATransferType"
+          v-model="row.sourceRow.partyATransferType"
           :options="partyAMatTransferEnum.ENUM"
           size="mini"
         />
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
 
-    <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="115px" label="含税单价">
+    <el-table-column v-if="showPriceSet" prop="unitPrice" align="center" width="135px" label="含税单价">
       <template #default="{ row }">
         <common-input-number
-          v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
-          v-model="row.unitPrice"
+          v-if="row.sourceRow.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+          v-model="row.sourceRow.unitPrice"
           :min="0"
           :max="9999999"
           :controls="false"
           :step="1"
-          :precision="2"
           size="mini"
           placeholder="含税单价"
-          @change="handleUnitPriceChange($event, row)"
+          @change="handleUnitPriceChange($event, row.sourceRow)"
         />
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column v-if="showPriceSet" prop="amount" align="center" width="135px" label="金额">
       <template #default="{ row }">
         <common-input-number
-          v-if="row.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
-          v-model="row.amount"
+          v-if="row.sourceRow.partyATransferType === partyAMatTransferEnum.BUY_IN.V"
+          v-model="row.sourceRow.amount"
           :min="0"
           :max="999999999"
           :controls="false"
@@ -51,9 +50,9 @@
           :precision="2"
           size="mini"
           placeholder="金额"
-          @change="handleAmountChange($event, row)"
+          @change="handleAmountChange($event, row.sourceRow)"
         />
-        <span v-else v-empty-text />
+        <span v-else>-</span>
       </template>
     </el-table-column>
   </template>
@@ -61,8 +60,9 @@
 
 <script setup>
 import { ref, defineProps, watchEffect, computed } from 'vue'
-import { isNotBlank, toFixed } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 import { partyAMatTransferEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
+import { getDP } from '@/utils/data-type/number'
 const props = defineProps({
   form: {
     type: Object,
@@ -107,11 +107,16 @@ function setAllPartyATransfer(val) {
 }
 // 处理含税单价变化
 function handleUnitPriceChange(val, row) {
-  row.amount = isNotBlank(val) ? toFixed(val * row.mete, 2, { toNum: true }) : undefined
+  const dp = getDP(val)
+  if (dp > 10) {
+    row.unitPrice = toPrecision(val, 10)
+    val = row.unitPrice
+  }
+  row.amount = isNotBlank(val) ? toPrecision(val * row.mete, 2) : undefined
 }
 
 // 处理金额变化
 function handleAmountChange(val, row) {
-  row.unitPrice = isNotBlank(val) ? toFixed(val / row.mete, 2, { toNum: true }) : undefined
+  row.unitPrice = isNotBlank(val) ? toPrecision(val / row.mete, 10) : undefined
 }
 </script>

@@ -15,6 +15,8 @@
         :data="tableData"
         :max-height="maxHeight"
         style="width: 100%"
+        return-source-data
+        :showEmptySymbol="false"
       >
       <el-table-column key="status" prop="status" :show-overflow-tooltip="true" label="项目" width="140px">
         <template v-slot="scope">

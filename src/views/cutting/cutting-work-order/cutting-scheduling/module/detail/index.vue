@@ -77,10 +77,12 @@
             />
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" min-width="80">
+        <el-table-column align="center" label="操作" min-width="110">
           <template v-slot="scope">
             <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
-            <common-button type="warning" size="mini" @click="nestResults(scope.row)">协同</common-button>
+            <common-button v-if="scope.row.plateState === '1'" type="warning" size="mini" @click="nestResults(scope.row)">
+              协同
+            </common-button>
           </template>
         </el-table-column>
       </common-table>

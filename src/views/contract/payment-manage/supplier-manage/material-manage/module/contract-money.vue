@@ -14,6 +14,8 @@
         ref="tableRef"
         :data="tableData"
         :max-height="maxHeight"
+        return-source-data
+        :showEmptySymbol="false"
         style="width: 100%"
       >
       <el-table-column key="status" prop="status" :show-overflow-tooltip="true" label="项目" width="140px">

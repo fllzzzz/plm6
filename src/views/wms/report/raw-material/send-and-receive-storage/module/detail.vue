@@ -17,14 +17,7 @@
         class="filter-item"
         @change="fetchDetail"
       />
-      <el-input
-        v-model.trim="filter.specification"
-        clearable
-        size="small"
-        placeholder="规格"
-        class="filter-item"
-        style="width: 250px"
-      />
+      <el-input v-model.trim="filter.specification" clearable size="small" placeholder="规格" class="filter-item" style="width: 250px" />
       <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="fetchDetail">搜索</common-button>
       <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery()">
         重置
@@ -34,6 +27,7 @@
       ref="tableRef"
       v-loading="detailLoading"
       :data="filterList"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       show-summary
       :summary-method="getSummaries"
@@ -42,7 +36,7 @@
       highlight-current-row
     >
       <!-- 基础信息 -->
-      <material-base-info-columns :basic-class="materialInfo.basicClass" spec-merge fixed="left" />
+      <material-base-info-columns :basic-class="materialInfo.basicClass" spec-merge fixed="left" show-oddment-by-half-out />
       <!-- 次要信息 -->
       <material-secondary-info-columns :basic-class="materialInfo.basicClass" />
       <!-- 单位及其数量 -->
@@ -64,6 +58,7 @@ import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import { formTypeEnum } from '../enum'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -88,6 +83,9 @@ const props = defineProps({
     type: Object
   }
 })
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns])
 
 const permission = inject('permission')
 const detailLoading = ref(false)
@@ -192,7 +190,10 @@ function getSummaries(param) {
     materialInfo.value.basicClass && baseUnit.value && baseUnit.value[materialInfo.value.basicClass]
       ? baseUnit.value[materialInfo.value.basicClass].measure.precision
       : 0
-  return tableSummary(param, { props: [['quantity', dp], 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'] })
+  return tableSummary(param, {
+    props: [['quantity', dp], 'mete', 'amount', 'amountExcludingVAT', 'inputVAT'],
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT']
+  })
 }
 </script>
 

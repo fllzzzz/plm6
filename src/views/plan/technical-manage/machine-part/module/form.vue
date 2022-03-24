@@ -157,6 +157,8 @@
             style="width: 100%"
             class="table-form"
             :cell-class-name="wrongCellMask"
+            return-source-data
+            :showEmptySymbol="false"
             @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" width="55" />

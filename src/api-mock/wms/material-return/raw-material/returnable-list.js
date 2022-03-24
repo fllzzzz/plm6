@@ -27,7 +27,7 @@ const getSteelPlateList = {
             thickness: 10,
             length: 1000,
             width: 1000,
-            brand: '嘻嘻',
+            // brand: '嘻嘻',
             heatNoAndBatchNo: 'aaff',
             project: {
               id: 1,

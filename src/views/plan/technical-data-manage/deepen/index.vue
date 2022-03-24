@@ -15,6 +15,8 @@
         :loading="loading"
         class="upload-table"
         :stripe="false"
+        return-source-data
+        :showEmptySymbol="false"
         :span-method="objectSpanMethod"
       >
         <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目" align="center">

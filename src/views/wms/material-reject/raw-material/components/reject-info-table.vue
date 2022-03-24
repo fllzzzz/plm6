@@ -1,6 +1,7 @@
 <template>
   <common-table
     :data="list"
+    :data-format="columnsDataFormat"
     show-summary
     :summary-method="getSummaries"
     row-key="id"
@@ -16,19 +17,19 @@
     <warehouse-info-columns show-project />
     <el-table-column key="status" prop="status" label="状态" align="center" width="80" show-overflow-tooltip>
       <template #default="{ row }">
-        <el-tag v-parse-enum="{ e: materialStatusEnum, v: row.reviewStatus }" :type="materialStatusEnum.V[row.reviewStatus].TAG" />
+        <el-tag :type="materialStatusEnum.V[row.sourceRow.reviewStatus].TAG">{{ row.reviewStatus }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column key="createTime" prop="createTime" label="退货日期" align="center" width="120" show-overflow-tooltip>
       <template #default="{ row, $index }">
-        <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
         <common-button
-          v-if="row.reviewStatus === materialStatusEnum.UNSUBMITTED.V && operable"
+          v-if="row.sourceRow.reviewStatus === materialStatusEnum.UNSUBMITTED.V && operable"
           type="danger"
           size="mini"
           icon="el-icon-delete"
-          @click="delRow(row, $index)"
+          @click="delRow(row.sourceRow, $index)"
         />
+        <span v-else>{{ row.createTime }}</span>
       </template>
     </el-table-column>
   </common-table>
@@ -36,10 +37,11 @@
 
 <script setup>
 import { tableSummary } from '@/utils/el-extra'
-import { defineProps, defineEmits, computed } from 'vue'
+import { defineProps, defineEmits, computed, ref } from 'vue'
 import { materialStatusEnum } from '@/views/wms/material-reject/enum'
 import { isBlank } from '@/utils/data-type'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { materialNestedColumns } from '@/utils/columns-format/wms'
 
 import materialBaseInfoColumns from '@/components-system/wms/table-custom-field-columns/material-base-info-columns/index.vue'
 import materialUnitQuantityColumns from '@/components-system/wms/table-custom-field-columns/material-unit-quantity-columns/index.vue'
@@ -70,6 +72,13 @@ const props = defineProps({
     default: () => []
   }
 })
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialNestedColumns,
+  ['reviewStatus', ['parse-enum', materialStatusEnum]],
+  ['createTime', ['parse-time', '{y}-{m}-{d}']]
+])
 
 // 退库单位对应的字段
 const numberPropField = computed(() => {

@@ -8,6 +8,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -54,11 +55,7 @@
         align="center"
         width="130"
         sortable="custom"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('printNumber')"
         key="printNumber"
@@ -99,6 +96,7 @@ import { ref, inject } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -117,7 +115,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false
+  download: false,
 }
 
 // 权限
@@ -127,6 +125,8 @@ const expandRowKeys = ref([])
 
 // 表格ref
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns, ['createTime', 'parse-time']])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '打印标签-物料模式',
@@ -134,7 +134,7 @@ const { CRUD, crud, columns } = useCRUD(
     invisibleColumns: [],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
   },
   tableRef
 )
@@ -145,7 +145,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content, {
     toSmallest: false,
-    toNum: false
+    toNum: false,
   })
   data.content.forEach((row) => {
     if (row.basicClass === matClsEnum.STEEL_COIL.V) {

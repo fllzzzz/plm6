@@ -8,6 +8,7 @@
       :key="`material_freeze_${crud.query.basicClass}`"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="true"
       :expand-row-keys="expandRowKeys"
@@ -20,9 +21,9 @@
             <material-freeze-record
               :stripe="false"
               class="table-border-none"
-              :material="row"
+              :material="row.sourceRow"
               mode="incoming"
-              :records="row.recordList"
+              :records="row.sourceRow.recordList"
               @unfreeze-success="crud.toQuery"
             />
           </div>
@@ -56,6 +57,7 @@ import { matClsEnum } from '@enum-ms/classification'
 import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -82,6 +84,8 @@ const tableRef = ref()
 const headerRef = ref()
 // 展开keys
 const expandRowKeys = ref([])
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns])
 
 const { CRUD, crud, columns } = useCRUD(
   {

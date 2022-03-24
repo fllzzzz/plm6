@@ -22,6 +22,8 @@
           style="width: 100%;margin-top:10px;"
           class="table-form"
           :cell-class-name="wrongCellMask"
+          return-source-data
+          :showEmptySymbol="false"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="collectionDate" prop="collectionDate" label="*收款日期" align="center" width="160">

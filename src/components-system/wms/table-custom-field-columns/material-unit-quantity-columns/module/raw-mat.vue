@@ -8,11 +8,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'outboundUnit') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showNumber"
       :key="`${field}.${numberPropField}`"
@@ -23,13 +19,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span
-          v-empty-text
-          v-to-fixed="{
-            val: getInfo(row, 'outboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField),
-            dp: getInfo(row, 'outboundUnitPrecision'),
-          }"
-        />
+        {{ getInfo(row, 'outboundUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
       </template>
     </el-table-column>
   </template>
@@ -42,11 +32,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'rejectUnit') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showNumber"
       :key="`${field}.${numberPropField}`"
@@ -57,13 +43,7 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span
-          v-empty-text
-          v-to-fixed="{
-            val: getInfo(row, 'rejectUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField),
-            dp: getInfo(row, 'rejectUnitPrecision'),
-          }"
-        />
+        {{ getInfo(row, 'rejectUnitType') === measureTypeEnum.MEASURE.V ? getInfo(row, quantityField) : getInfo(row, meteField) }}
       </template>
     </el-table-column>
   </template>
@@ -76,11 +56,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'measureUnit') }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showQuantity"
       :key="`${field}.${quantityField}`"
@@ -91,12 +67,8 @@
       show-overflow-tooltip
     >
       <template #default="{ row }">
-        <span
-          v-if="getInfo(row, 'measureUnit')"
-          v-empty-text
-          v-to-fixed="{ val: getInfo(row, quantityField), dp: getInfo(row, 'measurePrecision') }"
-        />
-        <span v-else v-empty-text />
+        <span v-if="getInfo(row, 'measureUnit')">{{ getInfo(row, quantityField) }}</span>
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -107,16 +79,8 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span v-empty-text>{{ getInfo(row, 'accountingUnit') }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text v-to-fixed="{ val: getInfo(row, meteField), dp: getInfo(row, 'accountingPrecision') }" />
-      </template>
-    </el-table-column>
+    />
+    <el-table-column v-if="showMete" :prop="`${field}.${meteField}`" :label="mateLabel" align="right" width="100px" show-overflow-tooltip />
   </template>
 </template>
 

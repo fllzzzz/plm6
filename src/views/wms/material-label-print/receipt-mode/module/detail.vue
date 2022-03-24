@@ -22,6 +22,7 @@
       <common-table
         ref="tableRef"
         :data="detail.materialList"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :expand-row-keys="expandRowKeys"
@@ -87,6 +88,7 @@ import { receiptTypeEnum } from '@/utils/enum/modules/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -106,7 +108,8 @@ const drawerRef = ref()
 const tableRef = ref()
 const expandRowKeys = ref([])
 const selections = ref([])
-
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialColumns])
 const { print } = usePrint({ emit })
 const { CRUD, crud, detail } = regDetail()
 
@@ -118,7 +121,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    extraHeight: 10
+    extraHeight: 10,
   },
   () => computed(() => !crud.detailLoading)
 )
@@ -142,7 +145,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.materialList)
   detail.materialList = await numFmtByBasicClass(detail.materialList, {
     toSmallest: false,
-    toNum: false
+    toNum: false,
   })
   detail.materialList.forEach((row) => {
     if (row.basicClass === matClsEnum.STEEL_COIL.V) {
@@ -184,6 +187,7 @@ async function toBatchPrint() {
 
 // 选择框change
 function handleSelectionChange(val) {
+  console.log('val', val)
   selections.value = val
 }
 </script>

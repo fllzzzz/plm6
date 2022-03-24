@@ -13,6 +13,8 @@
     :max-height="maxHeight"
     style="width: 100%"
     :stripe="false"
+    return-source-data
+    :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('project')" key="project.shortName" prop="project" :show-overflow-tooltip="true" label="项目" align="center">

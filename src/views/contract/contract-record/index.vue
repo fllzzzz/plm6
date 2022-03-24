@@ -12,6 +12,8 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
+    return-source-data
+    :showEmptySymbol="false"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column v-if="columns.visible('serialNumber')" align="center" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="合同编号">

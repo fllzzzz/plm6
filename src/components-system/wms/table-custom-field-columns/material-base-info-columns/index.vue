@@ -24,7 +24,7 @@
         type="partyA"
         :offset="15"
       />
-      <span v-parse-project="{ project: getInfo(row, 'project'), onlyShortName: true }" v-empty-text />
+      {{ getInfo(row, 'project') }}
     </template>
   </el-table-column>
   <el-table-column
@@ -59,7 +59,7 @@
           @click="openMatRejectDetail(row)"
         />
       </template>
-      <span v-empty-text>{{ getInfo(row, 'serialNumber') }}</span>
+      <span>{{ getInfo(row, 'serialNumber') }}</span>
     </template>
   </el-table-column>
   <el-table-column
@@ -83,14 +83,11 @@
       >
         <span>
           <!-- 是否可以查看材料冻结 -->
-          <span
-            v-if="frozenViewable && getInfo(row, 'boolHasFrozen')"
-            class="freeze-text"
-            v-empty-text="getInfo(row, 'classifyName')"
-            @click="openMatFrozenDetail(row)"
-          />
+          <span v-if="frozenViewable && getInfo(row, 'boolHasFrozen')" class="freeze-text" @click="openMatFrozenDetail(row)">
+            {{ getInfo(row, 'classifyName') }}
+          </span>
           <!-- 正常显示 -->
-          <span v-else v-empty-text="getInfo(row, 'classifyName')" />
+          <span v-else>{{ getInfo(row, 'classifyName') }}</span>
         </span>
       </el-tooltip>
     </template>

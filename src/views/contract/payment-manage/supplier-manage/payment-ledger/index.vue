@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-tabs v-model="activeName" class="tab-container">
-      <el-tab-pane label="付款列表" name="collection">
-        <collection class="tab-content" />
+      <el-tab-pane label="付款列表" name="payment">
+        <payment class="tab-content" />
       </el-tab-pane>
       <el-tab-pane label="收票列表" name="invoice">
         <invoice class="tab-content" />
@@ -14,10 +14,10 @@
 <script setup>
 import { ref } from 'vue'
 import { ElTabs, ElTabPane } from 'element-plus'
-import Collection from './collection'
+import Payment from './payment'
 import Invoice from './invoice'
 
-const activeName = ref('collection')
+const activeName = ref('payment')
 </script>
 
 <style lang="scss" scoped>

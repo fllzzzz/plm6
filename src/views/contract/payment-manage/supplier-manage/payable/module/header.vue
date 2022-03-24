@@ -21,7 +21,7 @@
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-model="query.type"
+        v-model="query.hasPay"
         :options="hasPayEnum.ENUM"
         class="filter-item"
         :showOptionAll="true"
@@ -29,7 +29,7 @@
         @change="crud.toQuery"
       />
       <common-radio-button
-        v-model="query.type"
+        v-model="query.hasTax"
         :options="hasTaxEnum.ENUM"
         class="filter-item"
         :showOptionAll="true"

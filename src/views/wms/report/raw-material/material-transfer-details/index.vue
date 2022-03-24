@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
@@ -34,11 +35,7 @@
             width="125"
             fixed="left"
             sortable="custom"
-          >
-            <template #default="{ row }">
-              <span v-parse-time="row.transferReceipt.transferTime" />
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             v-if="columns.visible('transferReceipt.transferType')"
             show-overflow-tooltip
@@ -48,11 +45,7 @@
             width="90"
             align="center"
             fixed="left"
-          >
-            <template #default="{ row }">
-              <span v-parse-enum="{ e: transferTypeEnum, v: row.transferReceipt.transferType }" />
-            </template>
-          </el-table-column>
+          />
           <el-table-column
             v-if="columns.visible('transferReceipt.source')"
             show-overflow-tooltip
@@ -133,11 +126,7 @@
         label="申请时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.transferReceipt.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('transferReceipt.reviewTime')"
         key="transferReceipt.reviewTime"
@@ -146,11 +135,7 @@
         label="审核时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.transferReceipt.reviewTime" />
-        </template>
-      </el-table-column>
+      />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -169,6 +154,7 @@ import { reportRawMaterialTransferDetailsPM as permission } from '@/page-permiss
 import { transferTypeEnum } from '@/utils/enum/modules/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -200,6 +186,18 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialHasAmountColumns,
+  ['transferReceipt.transferType', ['parse-enum', transferTypeEnum]],
+  ['transferReceipt.transferTime', 'parse-time'],
+  ['transferReceipt.reviewTime', 'parse-time'],
+  ['transferReceipt.createTime', 'parse-time'],
+  ['transferReceipt.borrowProject', ['parse-project', { onlyShortName: true }]],
+  ['transferReceipt.[source].project', ['parse-project', { onlyShortName: true }]],
+  ['transferReceipt.direction.project', ['parse-project', { onlyShortName: true }]]
+])
 
 const { CRUD, crud, columns } = useCRUD(
   {
@@ -247,6 +245,9 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
         row.transferReceipt.source.forEach((source) => {
           if (source.project) row.projects.push(source.project)
         })
+      } else if (typeof row.transferReceipt.source === 'object') {
+        if (row.transferReceipt.source.project) row.projects.push(row.transferReceipt.source.project)
+        row.transferReceipt.source = [row.transferReceipt.source]
       }
       if (isNotBlank(row.transferReceipt.borrowProject)) {
         row.projects.push(row.transferReceipt.borrowProject)

@@ -27,6 +27,8 @@
         :data="tableData"
         :empty-text="checkPermission(permission.get)?'暂无数据':'暂无权限'"
         :max-height="maxHeight"
+        return-source-data
+        :showEmptySymbol="false"
         style="width: 100%"
       >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />

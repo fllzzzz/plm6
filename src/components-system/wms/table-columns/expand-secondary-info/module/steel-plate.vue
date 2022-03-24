@@ -2,13 +2,13 @@
   <div class="flex-rbs">
     <div class="info">
       <p v-if="showBrand">
-        品牌：<span v-empty-text>{{ props.row.brand }}</span>
+        品牌：<span>{{ props.row.brand }}</span>
       </p>
       <p v-if="showBatchNo">
-        炉批号：<span v-empty-text>{{ props.row.heatNoAndBatchNo }}</span>
+        炉批号：<span>{{ props.row.heatNoAndBatchNo }}</span>
       </p>
       <p v-if="showRemark">
-        备注：<span v-empty-text>{{ props.row.remark }}</span>
+        备注：<span>{{ props.row.remark }}</span>
       </p>
       <slot />
     </div>

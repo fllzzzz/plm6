@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       style="width: 100%"
       @selection-change="crud.selectionChangeHandler"
@@ -47,7 +48,7 @@
         min-width="150"
       />
       <el-table-column v-if="columns.visible('unit')" :show-overflow-tooltip="true" prop="unit" label="单位" align="left" width="120">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <el-tag :type="row.unitType === measureTypeEnum.MEASURE.V ? '' : 'warning'" style="margin-right: 8px" effect="plain">
             {{ measureTypeEnum.VL[row.unitType] }}
           </el-tag>
@@ -62,7 +63,7 @@
         align="center"
         min-width="180"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <template v-if="row.editMode">
             <div class="edit-item">
               <common-input-number
@@ -89,7 +90,7 @@
         align="center"
         width="100"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <template v-if="checkPermission(permission.edit)">
             <el-switch
               :disabled="row.enabledLoading"
@@ -103,19 +104,11 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
-        <template #default="{ row }">
-          <span>{{ parseTime(row.updateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
-        <template #default="{ row }">
-          <span>{{ parseTime(row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px" />
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" />
       <!--编辑与删除-->
       <el-table-column v-permission="permission.edit" label="操作" width="130px" align="center">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <common-button
             v-if="row.editMode"
             :loading="row.editLoading"
@@ -142,7 +135,7 @@ import { rawMaterialInventoryWarningPM as permission } from '@/page-permission/w
 import { ref } from 'vue'
 import { enabledEnum } from '@enum-ms/common'
 import { measureTypeEnum } from '@enum-ms/wms'
-import { parseTime } from '@/utils/date'
+import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
@@ -168,6 +161,8 @@ const optShow = {
 const editField = ['minimumInventory']
 
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...wmsReceiptColumns])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '库存预警',

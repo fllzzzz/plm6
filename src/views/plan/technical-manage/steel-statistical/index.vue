@@ -15,6 +15,8 @@
         style="width: 100%"
         show-summary
         :summary-method="getSummaries"
+        return-source-data
+        :showEmptySymbol="false"
         @selection-change="crud.selectionChangeHandler"
       >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />

@@ -1,11 +1,7 @@
 <template>
-  <common-table v-bind="$attrs" v-loading="detailLoading" :data="list" row-key="id">
+  <common-table v-bind="$attrs" v-loading="detailLoading" :data="list" :data-format="columnsDataFormat" row-key="id">
     <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column key="type" :show-overflow-tooltip="true" prop="type" label="类型" align="center" width="100">
-      <template #default="{ row }">
-        <span v-parse-enum="{ e: materialFreezeTypeEnum, v: row.freezeType }" v-suffix="'冻结'" />
-      </template>
-    </el-table-column>
+    <el-table-column key="freezeTypeName" :show-overflow-tooltip="true" prop="freezeTypeName" label="类型" align="center" width="100" />
     <el-table-column key="documentType" :show-overflow-tooltip="true" prop="documentType" label="对应单据" align="center" width="120">
       <template #default="{ row }">
         <span v-if="materialFreezeTypeEnum.V[row.freezeType]">{{ materialFreezeTypeEnum.V[row.freezeType].DOC }}</span>
@@ -21,34 +17,20 @@
         />
       </template>
     </el-table-column>
-    <el-table-column show-overflow-tooltip key="project" prop="project" label="单据项目" min-width="170">
-      <template #default="{ row }">
-        <span v-parse-project="{ project: row.project }" v-empty-text />
-      </template>
-    </el-table-column>
+    <el-table-column show-overflow-tooltip key="project" prop="project" label="单据项目" min-width="170" />
     <el-table-column prop="outboundUnit" label="单位" align="center" width="70px">
-      <span v-empty-text>{{ material.outboundUnit }}</span>
+      {{ material.outboundUnit }}
     </el-table-column>
     <el-table-column prop="curQuantity" label="数量" align="right" width="100px">
       <template #default="{ row }">
-        <span
-          v-empty-text
-          v-to-fixed="{
-            val: material.outboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete,
-            dp: material.outboundUnitPrecision,
-          }"
-        />
+        {{ material.outboundUnitType === measureTypeEnum.MEASURE.V ? row.quantity : row.mete }}
       </template>
     </el-table-column>
     <el-table-column key="operatorName" :show-overflow-tooltip="true" prop="operatorName" label="冻结人" align="center" width="90" />
-    <el-table-column key="frozenTime" :show-overflow-tooltip="true" prop="frozenTime" label="冻结日期" align="center" width="100">
-      <template #default="{ row }">
-        <span v-parse-time="{ val: row.frozenTime, fmt: '{y}-{m}-{d}' }" />
-      </template>
-    </el-table-column>
+    <el-table-column key="frozenTime" :show-overflow-tooltip="true" prop="frozenTime" label="冻结日期" align="center" width="100" />
     <el-table-column label="操作" width="85px" align="center">
       <template #default="{ row }">
-        <common-button v-if="checkUnFreezePermission(row.freezeType)" type="primary" size="mini" @click="toUnfreeze(row)">
+        <common-button v-if="checkUnFreezePermission(row.sourceRow.freezeType)" type="primary" size="mini" @click="toUnfreeze(row.sourceRow)">
           解 冻
         </common-button>
         <span v-else>无权限</span>
@@ -79,6 +61,7 @@ import { defineEmits, defineProps, ref, watch } from 'vue'
 import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
 import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
@@ -121,7 +104,12 @@ const rejectDetailRef = ref()
 const unfreezeFormVisible = ref(false)
 // 当前解冻记录
 const currentRecord = ref()
-
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...materialColumns,
+  ['frozenTime', ['parse-time', '{y}-{m}-{d}']],
+  ['freezeTypeName', ['parse-enum', materialFreezeTypeEnum], ['suffix', '冻结'], { source: 'freezeType' }]
+])
 if (props.mode === 'fetch') {
   watch(
     () => props.material,

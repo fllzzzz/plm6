@@ -7,6 +7,8 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      return-source-data
+      :data-format="dataFormat"
       style="width: 100%"
       class="businessTable"
       :max-height="maxHeight"
@@ -16,35 +18,15 @@
       <el-table-column v-if="columns.visible('name')" key="name" prop="name" show-overflow-tooltip label="名称" align="center" min-width="120">
         <template #default="{ row }">
           <el-tooltip :content="row.classifyFullName" :disabled="!row.classifyFullName" :show-after="200" placement="top">
-            <span v-empty-text="row.classifyName" />
+            <span>{{ row.classifyName }}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="编号" align="center" min-width="120">
-        <template #default="{ row }">
-          <span v-empty-text="row.serialNumber" />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" min-width="120">
-        <template #default="{ row }">
-          <span v-empty-text="row.specification" />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('color')" key="color" prop="color" show-overflow-tooltip label="颜色" align="center" width="100">
-        <template #default="{ row }">
-          <span v-empty-text="row.color" />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('accountingUnit')" key="accountingUnit" prop="accountingUnit" show-overflow-tooltip label="核算单位" align="center" width="100">
-        <template #default="{ row }">
-          <span v-empty-text="row.accountingUnit" />
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('mete')" key="mete" prop="mete" show-overflow-tooltip label="核算量" align="center" min-width="100">
-        <template #default="{ row }">
-          <span v-empty-text>{{ row.mete }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="编号" align="center" min-width="120" />
+      <el-table-column v-if="columns.visible('specification')" key="specification" prop="specification" show-overflow-tooltip label="规格" align="center" min-width="120" />
+      <el-table-column v-if="columns.visible('color')" key="color" prop="color" show-overflow-tooltip label="颜色" align="center" width="100" />
+      <el-table-column v-if="columns.visible('accountingUnit')" key="accountingUnit" prop="accountingUnit" show-overflow-tooltip label="核算单位" align="center" width="100" />
+      <el-table-column v-if="columns.visible('mete')" key="mete" prop="mete" show-overflow-tooltip label="核算量" align="center" min-width="100" />
       <el-table-column v-if="columns.visible('unitPrice')" key="unitPrice" prop="unitPrice" :show-overflow-tooltip="true" label="综合单价" align="center" min-width="120">
         <template #default="{ row }">
           <common-input-number
@@ -59,15 +41,11 @@
             @change="handlePrice(row)"
           />
           <template v-else>
-          <span v-thousand="row.unitPrice" v-empty-text />
+            <span>{{ row.unitPrice }}</span>
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" align="center" min-width="120" label="金额">
-        <template #default="{ row }">
-          <span v-thousand="row.totalPrice" v-empty-text />
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('totalPrice')" prop="totalPrice" align="center" min-width="120" label="金额" />
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -100,6 +78,10 @@ const sourceMap = new Map([
 
 const tableRef = ref()
 const headerRef = ref()
+const dataFormat = ref([
+  ['unitPrice', 'to-thousand'],
+  ['totalPrice', 'to-thousand']
+])
 const { crud, columns } = useCRUD(
   {
     title: '配套件价格',

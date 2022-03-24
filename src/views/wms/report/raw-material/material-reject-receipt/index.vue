@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       :default-expand-all="false"
       highlight-current-row
@@ -15,12 +16,11 @@
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
-          <p>关联项目：<span v-parse-project="{ project: row.projects }" v-empty-text /></p>
           <p>
-            备注：<span v-empty-text>{{ row.remark }}</span>
+            关联项目：<span>{{ row.projectsFullName }}</span>
           </p>
           <p>
-            审批意见：<span v-empty-text>{{ row.approvalComments }}</span>
+            备注：<span v-empty-text>{{ row.remark }}</span>
           </p>
         </template>
       </el-expand-table-column>
@@ -33,11 +33,7 @@
         label="退货时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.rejectTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('serialNumber')"
         key="serialNumber"
@@ -83,17 +79,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('materialTypeText')"
-        key="materialTypeText"
+        v-if="columns.visible('basicClass')"
+        key="basicClass"
         :show-overflow-tooltip="true"
-        prop="materialTypeText"
+        prop="basicClass"
         label="物料种类"
         width="120"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: rawMatClsEnum, v: row.basicClass, bit: true, split: ' | ' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('projects')"
         show-overflow-tooltip
@@ -101,11 +93,7 @@
         prop="projects"
         label="关联项目"
         min-width="170"
-      >
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.projects, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('supplier.name')"
         key="supplier.name"
@@ -123,11 +111,7 @@
           label="入库金额(不含税)"
           min-width="120"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-thousand="row.inboundAmountExcludingVAT" v-empty-text />
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           v-if="columns.visible('rejectAmountExcludingVAT')"
           key="rejectAmountExcludingVAT"
@@ -136,11 +120,7 @@
           label="本次退货金额(不含税)"
           width="140"
           align="right"
-        >
-          <template #default="{ row }">
-            <span v-thousand="row.rejectAmountExcludingVAT" v-empty-text />
-          </template>
-        </el-table-column>
+        />
       </template>
       <el-table-column
         v-if="columns.visible('applicantName')"
@@ -168,11 +148,7 @@
         label="申请时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.createTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('reviewTime')"
         key="reviewTime"
@@ -181,11 +157,7 @@
         label="审核时间"
         align="center"
         width="140"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.reviewTime" />
-        </template>
-      </el-table-column>
+      />
       <!--编辑与删除-->
       <el-table-column label="操作" width="75px" align="center" fixed="right">
         <template #default="{ row }">
@@ -213,8 +185,11 @@ import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/rep
 import { getReceiptDetail as getInboundDetail } from '@/api/wms/report/raw-material/inbound'
 import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialRejectReceiptPM as permission } from '@/page-permission/wms'
+
 import { computed, ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { reviewTimeColumns } from '@/utils/columns-format/wms'
+import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -230,7 +205,6 @@ import InboundDetail from '@/views/wms/report/raw-material/material-inbound-rece
 import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-import checkPermission from '@/utils/system/check-permission'
 
 const optShow = {
   add: false,
@@ -241,6 +215,18 @@ const optShow = {
 
 const expandRowKeys = ref([])
 const tableRef = ref()
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ...reviewTimeColumns,
+  ['rejectTime', 'parse-time'],
+  ['rejectAmountExcludingVAT', 'to-thousand'],
+  ['inboundAmountExcludingVAT', 'to-thousand'],
+  ['projects', ['parse-project', { onlyShortName: true }]],
+  ['projectsFullName', 'parse-project', { source: 'projects' }],
+  ['basicClass', ['parse-enum', rawMatClsEnum, { bit: true, split: ' | ' }]]
+])
+
 const { crud, columns } = useCRUD(
   {
     title: '退货记录',

@@ -2,6 +2,8 @@
   <!-- 夹芯板表格 -->
   <common-table
     :data="tableData"
+    return-source-data
+    :showEmptySymbol="false"
     :cell-style="handleSandwichCellStyle"
   >
     <el-table-column :label="'序号'" type="index" align="center" width="50" />

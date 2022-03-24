@@ -61,6 +61,7 @@
         ref="tableRef"
         v-loading="matListLoading"
         :data="filterMatList"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :expand-row-keys="expandRowKeys"
@@ -69,9 +70,11 @@
         <el-expand-table-column :data="filterMatList" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
             <expand-secondary-info :basic-class="row.basicClass" :row="row">
-              <p>项目：<span v-if="row.project" v-parse-project="{ project: row.project }" v-empty-text /></p>
+              <p>
+                项目：<span>{{ row.projectFullName }}</span>
+              </p>
               <el-input
-                v-model="row.remark"
+                v-model="row.sourceRow.remark"
                 :autosize="remarkTextSize"
                 type="textarea"
                 placeholder="备注"
@@ -93,12 +96,12 @@
           <template #default="{ row }">
             <span class="flex-rbc">
               <common-input-number
-                v-model="row.returnedQuantity"
+                v-model="row.sourceRow.returnedQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
                 :max="row.corOperableQuantity"
                 controls-position="right"
-                @change="handleQuantityChange($event, row)"
+                @change="handleQuantityChange($event, row.sourceRow)"
               />
               <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
             </span>
@@ -115,6 +118,7 @@ import { defineEmits, defineProps, ref, watch, computed } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
+import { materialColumns } from '@/utils/columns-format/wms'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -162,6 +166,14 @@ const rules = {
   factoryId: [{ required: true, message: '请选择归还工厂', trigger: 'change' }],
   warehouseId: [{ required: true, message: '请选择归还仓库', trigger: 'change' }]
 }
+
+// 表格列格式化
+const columnsDataFormat = ref([
+  ...materialColumns,
+  ['corReturnedQuantity', ['to-fixed', 'outboundUnitPrecision']],
+  ['corQuantity', ['to-fixed', 'outboundUnitPrecision']],
+  ['project', ['parse-project', { onlyShortName: true }]]
+])
 
 // 表单ref
 const formRef = ref()
@@ -347,7 +359,8 @@ async function submit() {
           id: row.id,
           quantity: row.returnedQuantity,
           outboundUnit: row.outboundUnit,
-          outboundUnitType: row.outboundUnitType
+          outboundUnitType: row.outboundUnitType,
+          remark: row.remark
         }
       })
     }

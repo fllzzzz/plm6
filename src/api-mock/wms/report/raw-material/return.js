@@ -1,4 +1,5 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 
 // 出库明细
 const getDetails = {
@@ -76,6 +77,8 @@ const getDetails = {
             amount: 47100,
             amountExcludingVAT: 41681.42,
             inputVAT: 5418.58,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             project: {
               'id|+1': 1,
               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -127,6 +130,8 @@ const getDetails = {
             amount: 9174,
             amountExcludingVAT: 8188.58,
             inputVAT: 1055.42,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             project: {
               'id|+1': 1,
               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -180,6 +185,8 @@ const getDetails = {
             amount: 500,
             amountExcludingVAT: 450,
             inputVAT: 50,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             project: {
               'id|+1': 1,
               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -226,6 +233,8 @@ const getDetails = {
             amount: 8000,
             amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             project: {
               'id|+1': 1,
               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -273,6 +282,8 @@ const getDetails = {
             amount: 8000,
             amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             project: {
               'id|+1': 1,
               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
@@ -319,6 +330,8 @@ const getDetails = {
             amount: 8000,
             amountExcludingVAT: 7079.64,
             inputVAT: 920.36,
+            invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+            taxRate: 3, // 税率（百分比）
             project: {
               'id|+1': 1,
               'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],

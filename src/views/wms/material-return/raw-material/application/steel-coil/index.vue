@@ -13,6 +13,7 @@
       <common-table
         ref="tableRef"
         :data="form.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         :default-expand-all="false"
         :stripe="false"
@@ -26,7 +27,7 @@
           <template #default="{ row }">
             <div class="mtb-10">
               <el-input
-                v-model="row.remark"
+                v-model="row.sourceRow.remark"
                 :rows="1"
                 :autosize="{ minRows: 1, maxRows: 1 }"
                 type="textarea"
@@ -58,9 +59,9 @@
         <el-table-column key="mete" prop="mete" align="center" :label="`重量 (${baseUnit.weight.unit})`" width="120px">
           <template #default="{ row }">
             <common-input-number
-              v-model="row.mete"
+              v-model="row.sourceRow.mete"
               :min="0"
-              :max="+row.source.singleReturnableMete"
+              :max="+row.sourceRow.source.singleReturnableMete"
               controls-position="right"
               :controls="false"
               :precision="baseUnit.weight.precision"
@@ -73,7 +74,7 @@
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
           <template #default="{ row, $index }">
-            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
+            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sourceRow, $index)" />
           </template>
         </el-table-column>
       </common-table>
@@ -125,6 +126,8 @@ const expandRowKeys = ref([]) // 展开行key
 const headerRef = ref()
 const tableRef = ref()
 const formRef = ref()
+// 表格列格式化
+const columnsDataFormat = ref([['source.project', ['parse-project', { onlyShortName: true }]]])
 // 最大高度
 const { fixMaxHeight, maxHeight } = useMaxHeight({ paginate: false })
 // 钢板类型
@@ -190,7 +193,7 @@ function init() {
   // 当前高亮uid
   currentUid.value = undefined
   // 异常列表
-  cu.props.abnormalList = undefined
+  // cu.props.abnormalList = undefined
 }
 
 // 添加材质

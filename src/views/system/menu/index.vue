@@ -17,6 +17,8 @@
       :tree-props="{children: 'newChildren', hasChildren: 'hasChildren'}"
       row-key="id"
       @selection-change="crud.selectionChangeHandler"
+      return-source-data
+      :showEmptySymbol="false"
     >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column
@@ -130,7 +132,8 @@ const { crud, columns, CRUD } = useCRUD(
     title: '菜单',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi }
+    crudApi: { ...crudApi },
+    hasPagination: false
   },
   tableRef
 )

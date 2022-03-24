@@ -2,6 +2,8 @@
   <!-- 压型彩板表格 -->
   <common-table
     :data="tableData"
+    return-source-data
+    :showEmptySymbol="false"
     border
   >
     <el-table-column :label=" '序号'" type="index" align="center" width="60" />
