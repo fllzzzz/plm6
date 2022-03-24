@@ -1,6 +1,6 @@
 <template>
   <el-table-column prop="factoryId" align="center" min-width="120px" label="工厂">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <factory-select
         v-if="row"
         v-model="row.factoryId"
@@ -43,7 +43,9 @@ const props = defineProps({
 })
 const currentForm = ref({ list: [] })
 
-watchEffect(() => { currentForm.value = props.form })
+watchEffect(() => {
+  currentForm.value = props.form
+})
 
 const {
   getNotDittoArr: getFactoryNotDittoArr,

@@ -24,6 +24,8 @@
       <el-form ref="formRef" :model="form" :disabled="crud.bStatus.cu === CRUD.STATUS.PROCESSING">
         <common-table
           :data="form.list"
+          :show-empty-symbol="false"
+          return-source-data
           empty-text="暂无数据"
           :max-height="maxHeight"
           default-expand-all

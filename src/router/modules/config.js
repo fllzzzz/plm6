@@ -30,7 +30,7 @@ export default {
           name: 'NumberConfig',
           path: 'number-config',
           hidden: false,
-          component: '/config-manage/project-config/number-config/index',
+          component: '/config-manage/main/number-config/index',
           meta: { title: '编号配置', icon: 'project', noCache: true }
         },
         {

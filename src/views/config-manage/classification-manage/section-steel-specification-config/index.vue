@@ -7,6 +7,8 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="tableList"
+      :show-empty-symbol="false"
+      return-source-data
       :max-height="maxHeight"
       default-expand-all
       row-key="id"
@@ -69,9 +71,7 @@
       >
         <template v-slot="scope">
           <div v-if="scope.row.isLeaf" style="display: flex; justify-content: flex-start">
-            <common-button size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)">
-              查看
-            </common-button>
+            <common-button size="mini" type="primary" icon="el-icon-view" @click="showSpec(scope.row)"> 查看 </common-button>
             <el-popover placement="right" :title="``" trigger="click" :width="150">
               <excel-resolve-preview-button
                 v-for="sd in standard"

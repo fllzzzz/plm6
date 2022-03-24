@@ -13,6 +13,8 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :show-empty-symbol="false"
+      return-source-data
       :max-height="maxHeight"
       style="width: 100%"
       :cell-class-name="changedCellMask"
@@ -21,37 +23,37 @@
     >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column key="type" prop="type" label="名称" align="center">
-        <template v-slot="scope">
-          {{ numberTypeEnum.VL[scope.row.type] }}
+        <template #default="{ row }">
+          {{ numberTypeEnum.VL[row.type] }}
         </template>
       </el-table-column>
       <el-table-column key="code" prop="code" :show-overflow-tooltip="true" label="代号" align="center">
-        <template v-slot="scope">
-          <div v-if="!scope.row.isEdit">{{ scope.row.code  }}</div>
+        <template #default="{ row }">
+          <div v-if="!row.isEdit">{{ row.code }}</div>
           <el-input
             v-else
-            v-model.trim="scope.row.code"
+            v-model.trim="row.code"
             clearable
             type="text"
             size="small"
             maxlength="10"
             placeholder="请填写代号"
-            style="width: 100%;"
+            style="width: 100%"
             @keydown.enter="save"
           />
         </template>
       </el-table-column>
       <el-table-column key="number" prop="number" :show-overflow-tooltip="true" label="流水号" align="center">
-        <template v-slot="scope">
-          <div v-if="!scope.row.isEdit">{{ scope.row.number }}</div>
+        <template #default="{ row }">
+          <div v-if="!row.isEdit">{{ row.number }}</div>
           <el-input-number
             v-else
-            v-model="scope.row.number"
+            v-model="row.number"
             :step="1"
             :min="1"
             :max="10"
             size="small"
-            style="width: 100%;"
+            style="width: 100%"
             @keydown.enter="save"
           />
         </template>
@@ -147,7 +149,7 @@ const save = debounce(
 // 获取参数
 function getParams() {
   const data = []
-  crud.data.forEach(v => {
+  crud.data.forEach((v) => {
     if (v.code !== v.sourceCode || v.number !== v.sourceNumber) {
       data.push({
         type: v.type,
@@ -167,7 +169,7 @@ const saveAll = debounce(
       closeEditAll()
       return
     }
-    if (!crud.data.every(v => !!v.code)) {
+    if (!crud.data.every((v) => !!v.code)) {
       crud.notify('请填写代号', CRUD.NOTIFICATION_TYPE.WARNING)
       return
     }
@@ -190,7 +192,7 @@ const saveAll = debounce(
 // 编辑
 function openEditAll() {
   editAll.value = true
-  crud.data.forEach(v => {
+  crud.data.forEach((v) => {
     v.isEdit = true
   })
 }
@@ -199,7 +201,7 @@ function openEditAll() {
 function closeEditAll() {
   editAll.value = false
   editRow.value = {}
-  crud.data.forEach(v => {
+  crud.data.forEach((v) => {
     v.code = v.sourceCode
     v.number = v.sourceNumber
     v.isEdit = false
@@ -223,7 +225,7 @@ $default-cell-mask-color: #52f09840;
   }
   .cell {
     line-height: 36px;
-    padding:0;
+    padding: 0;
   }
   th .cell {
     padding: 0 10px;
