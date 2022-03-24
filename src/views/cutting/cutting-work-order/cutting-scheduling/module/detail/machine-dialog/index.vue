@@ -20,8 +20,8 @@
         hit
         @click="handleChange(item)"
         :key="item.id"
-        >{{ item.machineName }}</el-tag
-      >
+        >{{ item.machineName }}
+        </el-tag>
     </div>
   </common-dialog>
 </template>
@@ -69,7 +69,6 @@ function handleChange(item) {
 }
 
 async function complete() {
-  console.log('detailData', props.detailData)
   try {
     await ElMessageBox.confirm('是否由' + " '" + macValve.value.machineName + "' " + '协同？', '提示', {
       confirmButtonText: '确定',

@@ -12,12 +12,19 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('machineNumber')" key="machineNumber" prop="machineNumber" label="编号" min-width="40px">
+      <el-table-column
+        v-if="columns.visible('machineNumber')"
+        align="center"
+        key="machineNumber"
+        prop="machineNumber"
+        label="编号"
+        min-width="40px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.machineNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('machineName')" key="machineName" prop="machineName" label="机器名称" min-width="40px">
+      <el-table-column v-if="columns.visible('machineName')" key="machineName" prop="machineName" label="机器名称" min-width="50px">
         <template v-slot="scope">
           <span>{{ scope.row.machineName }}</span>
         </template>
@@ -28,28 +35,28 @@
         prop="online"
         align="center"
         label="代理连接状态"
-        min-width="40px"
+        min-width="45px"
       >
         <template v-slot="scope">
           <span>{{ MessageTypeEnum.VL[scope.row.online] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('mac')" key="mac" prop="mac" label="MAC地址" min-width="40px">
+      <el-table-column v-if="columns.visible('mac')" key="mac" prop="mac" label="MAC地址" min-width="60px">
         <template v-slot="scope">
           <span>{{ scope.row.mac }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('machineType')" key="machineType" prop="machineType" label="机器类型" min-width="40px">
+      <el-table-column v-if="columns.visible('machineType')" key="machineType" prop="machineType" label="机器类型" min-width="45px">
         <template v-slot="scope">
           <span>{{ scope.row.machineType }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('workshopInf')" key="workshopInf" prop="workshopInf" label="车间信息" min-width="40px">
+      <el-table-column v-if="columns.visible('workshopInf')" key="workshopInf" prop="workshopInf" label="车间信息" min-width="45px">
         <template v-slot="scope">
           <span>{{ scope.row.workshopInf }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('position')" key="position" prop="position" label="位置" min-width="40px">
+      <el-table-column v-if="columns.visible('position')" key="position" prop="position" label="位置" min-width="45px">
         <template v-slot="scope">
           <span>{{ scope.row.position }}</span>
         </template>

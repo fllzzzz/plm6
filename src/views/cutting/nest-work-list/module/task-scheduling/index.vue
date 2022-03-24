@@ -65,19 +65,14 @@
                 <span>{{ scope.row.weight }}</span>
               </template>
             </el-table-column>
-            <el-table-column key="machineName" prop="machineName" :show-overflow-tooltip="true" label="设备" min-width="45">
-              <template v-slot="scope">
-                <span>{{ scope.row.machineName }}</span>
-              </template>
-            </el-table-column>
           </common-table>
         </div>
         <div class="line-content" :style="{ 'max-height': `${maxHeight}px` }">
           <div class="tip">
             <span>* 注意：</span>
             <div>
-              <span style="display: block">1. 可以快速分配的构件：构件未被禁止操作，构件任务未暂停，构件未处于报废或二次利用状态。</span>
-              <span style="display: block">2. 快速分配只能选择一条生产线，所勾选构件的未分配数量会全部分配给该生产线。</span>
+              <span style="display: block">1. 构件未被禁止操作，构件任务未暂停，构件未处于报废或二次利用状态。</span>
+              <span style="display: block">2. 只能选择一条生产线，所勾选构件的未分配数量会全部分配给该生产线。</span>
             </div>
           </div>
           <machine :machineData="machineData" :selectLineId="selectLineId" @change="handleChange" isSingle />
@@ -158,7 +153,7 @@ function showHook() {
 async function plateDataGet() {
   try {
     const { content } = await get({ projectId: props.detailData.projectId })
-    plateData.value = content
+    plateData.value = content.filter(item => !(item.mac))
   } catch (err) {
     console.log('钢板清单页面接口报错', err)
   }
@@ -168,7 +163,6 @@ async function getReport() {
   machineData.value = content
 }
 function submit() {
-  handleSubmitData()
   specsVisible.value = true
 }
 
@@ -176,8 +170,6 @@ function handleChange(row) {
   selectLine.value = row
   selectLineId.value = row.id
 }
-
-function handleSubmitData() { }
 
 function handleSelectionChange(val) {
   multipleSelection.value = val
@@ -189,6 +181,8 @@ async function taskIssue() {
     const message = await assign({ mac: selectLine.value.mac }, idList.value)
     ElMessage({ message: message, type: 'success' })
     specsVisible.value = false
+
+    plateDataGet()
   } catch (err) {
     console.log(err)
   }

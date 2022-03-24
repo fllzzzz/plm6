@@ -74,7 +74,6 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <!-- 0 所有 1 修改 撤销 2 null -->
       <el-table-column
         width="250px"
         v-if="checkPermission([...permission.edit, ...permission.del])"
@@ -83,7 +82,7 @@
         align="center"
       >
         <template v-slot="scope">
-          <!-- <common-button v-if="scope.row.state === '0' || scope.row.state === '1'" type="warning" size="mini">修改</common-button> -->
+          <!-- <common-button v-if="scope.row.state === '0' || scope.row.state  === '1'" type="warning" size="mini">修改</common-button> -->
           <del-btn @query="crud.toQuery()" :data="scope.row" />
         </template>
       </el-table-column>
@@ -122,7 +121,7 @@ const optShow = {
 
 const { crud, columns } = useCRUD(
   {
-    title: '项目数据',
+    title: '套料工单',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },

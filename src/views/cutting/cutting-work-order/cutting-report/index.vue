@@ -83,7 +83,7 @@ const optShow = {
 
 const { crud } = useCRUD(
   {
-    title: '项目清单',
+    title: '项目报表',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
