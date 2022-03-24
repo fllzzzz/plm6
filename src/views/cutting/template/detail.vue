@@ -53,6 +53,7 @@
         <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
         <el-table-column prop="specification" label="规格" align="center" min-width="100"></el-table-column>
         <el-table-column prop="material" label="材质" align="center" min-width="100"></el-table-column>
+        <el-table-column prop="weight" label="重量（kg）" align="center" min-width="100"></el-table-column>
         <el-table-column prop="num" label="数量" align="center" min-width="100"></el-table-column>
         <el-table-column prop="area" label="面积" align="center" min-width="100"></el-table-column>
         <el-table-column label="图形" align="center" min-width="100">
