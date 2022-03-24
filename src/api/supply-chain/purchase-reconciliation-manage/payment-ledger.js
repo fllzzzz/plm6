@@ -32,7 +32,8 @@ export function paymentRecord(params) {
     module: 'contract',
     url: `supply/chain/order/payment/${params.orderId}`,
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 
