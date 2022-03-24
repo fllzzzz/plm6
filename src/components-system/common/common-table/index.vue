@@ -6,7 +6,8 @@
     :data="filterData"
     :stripe="tStripe"
     :border="tBorder"
-    :row-key="rowKey"
+    :expand-row-keys="props.expandRowKeys"
+    :row-key="props.rowKey"
     :row-class-name="rowClassName"
     :row-style="rowStyle"
     :cell-class-name="cellClassName"
@@ -145,6 +146,17 @@ const props = defineProps({
     type: String,
     default: '合计'
   },
+
+  // 是否默认展开所有行，当 Table 包含展开行存在或者为树形表格时有效
+  defaultExpandAll: {
+    type: Boolean,
+    default: undefined
+  },
+  // 可以通过该属性设置 Table 目前的展开行，需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组
+  expandRowKeys: {
+    type: Array,
+    default: undefined
+  },
   // 行数据的 Key
   rowKey: {
     type: [String, Function]
@@ -257,7 +269,7 @@ watch(
       keys.length = 0
       if (all && Array.isArray(data)) {
         data.forEach((row) => {
-          keys.push(row[rowKey()])
+          keys.push(row[getRowKey(row, true)])
         })
       }
     }
@@ -295,10 +307,10 @@ function handleData(data, columns) {
           sourceChange = true
           break
         } else {
-          if (rowKey()) {
+          if (props.rowKey) {
             // 不改变rowKey,否则监听到rowKey发生变化，会认为当前对象发生改变
             Object.keys(filterData.value[i]).forEach((key) => {
-              if (key !== rowKey()) {
+              if (key !== getRowKey(filterData.value[i])) {
                 filterData.value[i][key] = undefined
               }
             })
@@ -666,10 +678,10 @@ function getSource(data) {
   let sourceData
   if (Array.isArray(data)) {
     sourceData = data.map((row) => {
-      return row.sourceRow
+      return row && row.sourceRow ? row.sourceRow : row
     })
   } else {
-    sourceData = data ? data.sourceRow : undefined
+    sourceData = data && data.sourceRow ? data.sourceRow : data
   }
 
   return sourceData
@@ -689,6 +701,17 @@ function getCurrent(data) {
     curData = filterData.value.find((fmRow) => fmRow.sourceRow === data)
   }
   return curData
+}
+
+function getRowKey(row, boolSource = false) {
+  if (typeof props.rowKey === 'function') {
+    const sourceRow = boolSource ? row : getSource(row)
+    return props.rowKey(sourceRow, row)
+  }
+
+  if (typeof props.rowKey === 'string') {
+    return props.rowKey
+  }
 }
 
 // --------------------------- 回调 ------------------------------------------
@@ -794,19 +817,6 @@ function headerCellStyle({ row, column, rowIndex, columnIndex }) {
 
   if (typeof props.headerCellStyle === 'object') {
     return props.headerCellStyle
-  }
-}
-
-// 行数据的 Key，用来优化 Table 的渲染； 在使用reserve-selection功能与显示树形数据时，该属性是必填的。
-// 类型为 String 时，支持多层访问：user.info.id，但不支持 user.info[0].id，此种情况请使用 Function。
-function rowKey(row) {
-  if (typeof props.rowKey === 'function') {
-    const sourceRow = getSource(row)
-    return props.rowKey(sourceRow, row)
-  }
-
-  if (typeof props.rowKey === 'string') {
-    return props.rowKey
   }
 }
 
@@ -931,11 +941,11 @@ function expandChange(row, expandedRowsOrExpanded) {
   const sourceRow = getSource(row)
   // 配合组件el-expand-table-column 使用
   const keys = props.expandRowKeys || []
-  const index = keys.indexOf(sourceRow[rowKey()])
+  const index = keys.indexOf(sourceRow[getRowKey()])
   if (index > -1) {
     keys.splice(index, 1)
   } else {
-    keys.push(sourceRow[rowKey()])
+    keys.push(sourceRow[getRowKey()])
   }
   emit('expandChange', sourceRow, expandedRowsOrExpanded)
 }
