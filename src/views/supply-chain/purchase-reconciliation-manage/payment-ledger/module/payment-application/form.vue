@@ -45,7 +45,6 @@
               :min="0"
               :max="detailInfo.amount?detailInfo.amount-detailInfo.paymentAmount:999999999999"
               :precision="DP.YUAN"
-              :controls="false"
               controls-position="right"
               style="width: 220px"
               placeholder="金额(元)"
@@ -60,7 +59,7 @@
         </el-form-item>
         <el-form-item label="付款事由">
           <common-select
-            v-model="scope.row.paymentReasonId"
+            v-model="form.paymentReasonId"
             :options="dict.payment_reason"
             type="dict"
             size="small"
@@ -70,7 +69,7 @@
           />
         </el-form-item>
         <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accpect="'.zip,.jpg,.png,.pdf,.jpeg'"/>
+          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
         <!-- <el-form-item label="单体名称" prop="name">
           <el-input v-model="form.name" type="text" placeholder="请填写单体名称" style="width: 270px" @blur="form.name=form.name.replace(/[ ]/g,'')"/>
@@ -110,6 +109,7 @@ import { regForm } from '@compos/use-crud'
 import { digitUppercase, toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import useDict from '@compos/store/use-dict'
+import { fileClassifyEnum } from '@enum-ms/file'
 import { DP } from '@/settings/config'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 
