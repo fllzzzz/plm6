@@ -48,8 +48,8 @@
                 </div>
               </el-tooltip>
             </template>
-            <template v-slot="scope">
-              <span class="classify-name">{{ `${scope.row.fullName[0]}-${scope.row.fullCode[0]}` }}</span>
+            <template #default="{ row }">
+              <span class="classify-name">{{ `${row.fullName[0]}-${row.fullCode[0]}` }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="level > 1" key="second" prop="second" label="二级" align="left" min-width="160px">
@@ -61,8 +61,8 @@
                 </div>
               </el-tooltip>
             </template>
-            <template v-slot="scope">
-              <span class="classify-name">{{ `${scope.row.fullName[1]}-${scope.row.fullCode[1]}` }}</span>
+            <template #default="{ row }">
+              <span class="classify-name">{{ `${row.fullName[1]}-${row.fullCode[1]}` }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="level > 2" key="third" prop="third" label="三级" align="left" min-width="160px">
@@ -74,95 +74,103 @@
                 </div>
               </el-tooltip>
             </template>
-            <template v-slot="scope">
-              <span class="classify-name">{{ `${scope.row.fullName[2]}-${scope.row.fullCode[2]}` }}</span>
+            <template #default="{ row }">
+              <span class="classify-name">{{ `${row.fullName[2]}-${row.fullCode[2]}` }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            key="measureUnit"
-            prop="measureUnit"
+            key="sourceMeasureUnit"
+            prop="sourceMeasureUnit"
             :show-overflow-tooltip="true"
             label="计量单位"
             min-width="100px"
             align="center"
           >
-            <template v-slot="scope">
-              <unit-select
-                v-if="isEditMode"
-                v-model="scope.row.measureUnit"
-                size="mini"
-                style="width: 100%"
-                :disabled="scope.row.disabled"
-                clearable
-                filterable
-              />
-              <div v-else>{{ emptyTextFormatter(scope.row.sourceMeasureUnit) }}</div>
+            <template #default="{ row }">
+              <template v-if="isEditMode">
+                <unit-select
+                  v-if="row.sourceRow"
+                  v-model="row.sourceRow.measureUnit"
+                  size="mini"
+                  style="width: 100%"
+                  :disabled="row.disabled"
+                  clearable
+                  filterable
+                />
+              </template>
+              <div v-else>{{ row.sourceMeasureUnit }}</div>
             </template>
           </el-table-column>
           <el-table-column
-            key="measurePrecision"
-            prop="measurePrecision"
+            key="sourceMeasurePrecision"
+            prop="sourceMeasurePrecision"
             :show-overflow-tooltip="true"
             label="小数精度(计量)"
             min-width="100px"
             align="center"
           >
-            <template v-slot="scope">
-              <common-input-number
-                v-if="isEditMode"
-                v-model="scope.row.measurePrecision"
-                :step="1"
-                :min="0"
-                :max="10"
-                :disabled="scope.row.disabled"
-                size="mini"
-                style="width: 100%"
-              />
-              <div v-else>{{ emptyTextFormatter(scope.row.sourceMeasurePrecision) }}</div>
+            <template #default="{ row }">
+              <template v-if="isEditMode">
+                <common-input-number
+                  v-if="row.sourceRow"
+                  v-model="row.sourceRow.measurePrecision"
+                  :step="1"
+                  :min="0"
+                  :max="10"
+                  :disabled="row.disabled"
+                  size="mini"
+                  style="width: 100%"
+                />
+              </template>
+              <div v-else>{{ row.sourceMeasurePrecision }}</div>
             </template>
           </el-table-column>
           <el-table-column
-            key="accountingUnit"
-            prop="accountingUnit"
+            key="sourceAccountingUnit"
+            prop="sourceAccountingUnit"
             :show-overflow-tooltip="true"
             label="核算单位"
             min-width="100px"
             align="center"
           >
-            <template v-slot="scope">
-              <unit-select
-                v-if="isEditMode"
-                v-model="scope.row.accountingUnit"
-                :unit-type="scope.row.basicClass & (STEEL_ENUM > 0) ? unitTypeEnum.WEIGHT.K : undefined"
-                :disabled="scope.row.disabled"
-                size="mini"
-                style="width: 100%"
-                clearable
-                filterable
-              />
-              <div v-else>{{ emptyTextFormatter(scope.row.sourceAccountingUnit) }}</div>
+            <template #default="{ row }">
+              <template v-if="isEditMode">
+                <unit-select
+                  v-if="row.sourceRow"
+                  v-model="row.sourceRow.accountingUnit"
+                  :unit-type="row.basicClass & (STEEL_ENUM > 0) ? unitTypeEnum.WEIGHT.K : undefined"
+                  :disabled="row.disabled"
+                  size="mini"
+                  style="width: 100%"
+                  clearable
+                  filterable
+                />
+              </template>
+              <div v-else>{{ row.sourceAccountingUnit }}</div>
             </template>
           </el-table-column>
           <el-table-column
-            key="accountingPrecision"
-            prop="accountingPrecision"
+            key="sourceAccountingPrecision"
+            prop="sourceAccountingPrecision"
             :show-overflow-tooltip="true"
             label="小数精度(核算)"
             min-width="100px"
             align="center"
           >
-            <template v-slot="scope">
-              <common-input-number
-                v-if="isEditMode"
-                v-model="scope.row.accountingPrecision"
-                :step="1"
-                :min="0"
-                :max="10"
-                :disabled="scope.row.disabled"
-                size="mini"
-                style="width: 100%"
-              />
-              <div v-else>{{ emptyTextFormatter(scope.row.sourceAccountingPrecision) }}</div>
+            <template #default="{ row }">
+              <template v-if="isEditMode">
+                <common-input-number
+                  v-if="row.sourceRow"
+                  v-model="row.sourceRow.accountingPrecision"
+                  :step="1"
+                  :min="0"
+                  :max="10"
+                  :disabled="row.disabled"
+                  size="mini"
+                  style="width: 100%"
+                />
+              </template>
+              <div v-else>{{ row.sourceAccountingPrecision }}</div>
             </template>
           </el-table-column>
           <!-- <el-table-column
@@ -173,19 +181,19 @@
             min-width="100px"
             align="center"
           >
-            <template v-slot="scope">
+            <template #default="{ row }">
               <common-select
                 v-if="isEditMode"
-                v-model="scope.row.outboundUnitType"
+                v-model="row.outboundUnitType"
                 :options="measureTypeEnum.ENUM"
-                :disabled="scope.row.disabled"
+                :disabled="row.disabled"
                 text-align="center"
                 type="enum"
                 size="mini"
                 style="width: 100%"
                 clearable
               />
-              <div v-else>{{ emptyTextFormatter(measureTypeEnum.VL[scope.row.outboundUnitType]) }}</div>
+              <div v-else>{{ measureTypeEnum.VL[row.outboundUnitType] }}</div>
             </template>
           </el-table-column> -->
         </common-table>
@@ -197,7 +205,6 @@
 
 <script setup>
 import { defineProps, defineEmits, inject, reactive, ref, watch, computed } from 'vue'
-import { emptyTextFormatter } from '@data-type'
 import { STEEL_ENUM } from '@/settings/config'
 // import { measureTypeEnum } from '@enum-ms/wms'
 import { unitTypeEnum } from '@enum-ms/common'

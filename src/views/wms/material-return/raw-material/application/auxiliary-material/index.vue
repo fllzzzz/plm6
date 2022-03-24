@@ -24,10 +24,10 @@
         @row-click="handleRowClick"
       >
         <el-expand-table-column :data="form.list" v-model:expand-row-keys="expandRowKeys" row-key="uid" fixed="left">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <div class="mtb-10">
               <el-input
-                v-model="row.sourceRow.remark"
+                v-model="row.remark"
                 :rows="1"
                 :autosize="{ minRows: 1, maxRows: 1 }"
                 type="textarea"
@@ -45,48 +45,48 @@
         <material-secondary-info-columns :basic-class="basicClass" field="source" fixed="left" />
         <el-table-column prop="measureUnit" label="计量单位" align="center" min-width="70px" />
         <el-table-column prop="quantity" label="数量" align="center" min-width="120px">
-          <template #default="{ row }">
-            <template v-if="row.sourceRow.measureUnit">
+          <template #default="{ row: { sourceRow: row } }">
+            <template v-if="row.measureUnit">
               <common-input-number
-                v-if="row.sourceRow.outboundUnitType === measureTypeEnum.MEASURE.V"
-                v-model="row.sourceRow.quantity"
+                v-if="row.outboundUnitType === measureTypeEnum.MEASURE.V"
+                v-model="row.quantity"
                 :min="0"
-                :max="+row.sourceRow.source.quantity"
+                :max="+row.source.quantity"
                 :controls="false"
                 :step="1"
-                :precision="+row.sourceRow.measurePrecision"
+                :precision="+row.measurePrecision"
                 size="mini"
                 placeholder="数量"
-                @change="handleQuantityChange(row.sourceRow, $event)"
+                @change="handleQuantityChange(row, $event)"
               />
-              <span v-else>{{ row.sourceRow.quantity || 0 }}</span>
+              <span v-else>{{ row.quantity || 0 }}</span>
             </template>
             <span v-else>-</span>
           </template>
         </el-table-column>
         <el-table-column prop="accountingUnit" label="核算单位" align="center" min-width="70px" />
         <el-table-column prop="mete" label="核算量" align="center" min-width="120px">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <common-input-number
-              v-if="row.sourceRow.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
-              v-model="row.sourceRow.mete"
+              v-if="row.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
+              v-model="row.mete"
               :min="0"
-              :max="+row.sourceRow.source.sourceReturnableMete"
+              :max="+row.source.sourceReturnableMete"
               :controls="false"
               :step="1"
-              :precision="row.sourceRow.accountingPrecision"
+              :precision="row.accountingPrecision"
               size="mini"
               placeholder="核算量"
-              @change="handleMeteChange(row.sourceRow, $event)"
+              @change="handleMeteChange(row, $event)"
             />
-            <span v-else>{{ row.sourceRow.mete || 0 }}</span>
+            <span v-else>{{ row.mete || 0 }}</span>
           </template>
         </el-table-column>
         <!-- 仓库设置 -->
         <warehouse-set-columns :list="form.list" />
         <el-table-column label="操作" width="70" align="center" fixed="right">
-          <template #default="{ row, $index }">
-            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row.sourceRow, $index)" />
+          <template #default="{ row: { sourceRow: row }, $index }">
+            <common-button icon="el-icon-delete" type="danger" size="mini" @click="delRow(row, $index)" />
           </template>
         </el-table-column>
       </common-table>

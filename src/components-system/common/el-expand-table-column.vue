@@ -37,10 +37,20 @@ function handleExpandAll() {
   if (!expandAll.value) {
     emit(
       'update:expandRowKeys',
-      props.data.map((v) => v[props.rowKey])
+      props.data.map((v) => v[rowKey()])
     )
   } else {
     emit('update:expandRowKeys', [])
+  }
+}
+
+function rowKey(row) {
+  if (typeof props.rowKey === 'function') {
+    return props.rowKey(row)
+  }
+
+  if (typeof props.rowKey === 'string') {
+    return props.rowKey
   }
 }
 </script>

@@ -1,24 +1,24 @@
 <template>
   <el-table-column v-if="!boolPartyA" prop="unitPrice" align="center" width="135px" label="含税单价">
-    <template #default="{ row }">
+    <template #default="{ row: { sourceRow: row } }">
       <common-input-number
-        v-if="row.sourceRow"
-        v-model="row.sourceRow.unitPrice"
+        v-if="row"
+        v-model="row.unitPrice"
         :min="0"
         :max="9999999999"
         :controls="false"
         :step="1"
         size="mini"
         placeholder="含税单价"
-        @change="handleUnitPriceChange($event, row.sourceRow)"
+        @change="handleUnitPriceChange($event, row)"
       />
     </template>
   </el-table-column>
   <el-table-column v-if="!boolPartyA" prop="amount" align="center" width="135px" label="金额">
-    <template #default="{ row }">
+    <template #default="{ row: { sourceRow: row } }">
       <common-input-number
-        v-if="row.sourceRow"
-        v-model="row.sourceRow.amount"
+        v-if="row"
+        v-model="row.amount"
         :min="0"
         :max="9999999999"
         :controls="false"
@@ -26,35 +26,35 @@
         size="mini"
         :precision="2"
         placeholder="金额"
-        @change="handleAmountChange($event, row.sourceRow)"
+        @change="handleAmountChange($event, row)"
       />
     </template>
   </el-table-column>
   <el-table-column v-if="requisitionsSNOptions" prop="requisitionsSN" label="申购单" min-width="130" align="center">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <common-select
-        v-if="row.sourceRow"
-        v-model="row.sourceRow.requisitionsSN"
-        :options="getRequisitionsSNOptions($index, row.sourceRow)"
+        v-if="row"
+        v-model="row.requisitionsSN"
+        :options="getRequisitionsSNOptions($index, row)"
         :dataStructure="{ key: 'serialNumber', label: 'serialNumber', value: 'serialNumber' }"
-        :show-extra="$index !== 0 && row.sourceRow.requisitionsDittoable"
+        :show-extra="$index !== 0 && row.requisitionsDittoable"
         type="other"
         placeholder="申购单"
         clearable
-        @change="handleRequisitionsSNChange($event, row.sourceRow, $index)"
+        @change="handleRequisitionsSNChange($event, row, $index)"
       />
     </template>
   </el-table-column>
   <el-table-column v-if="projectOptions" prop="projectId" align="center" min-width="170px" label="所属项目">
-    <template #default="{ row, $index }">
+    <template #default="{ row: { sourceRow: row }, $index }">
       <common-select
-        v-if="row.sourceRow"
+        v-if="row"
         :key="Math.random()"
-        v-model="row.sourceRow.projectId"
+        v-model="row.projectId"
         :options="projectOptions"
         :dataStructure="{ key: 'id', label: 'name', value: 'id' }"
         :show-extra="$index !== 0"
-        :disabled-val="row.sourceRow.disabledProjectId"
+        :disabled-val="row.disabledProjectId"
         type="other"
         placeholder="所属项目"
         @change="handleProjectChange($event, $index)"

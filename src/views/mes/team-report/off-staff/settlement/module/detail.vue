@@ -31,7 +31,7 @@
         ref="tableRef"
         v-loading="tableLoading"
         :data="list"
-        :dataFormat="dataFormat"
+        :data-format="dataFormat"
         :max-height="maxHeight"
         row-key="rowId"
         show-summary

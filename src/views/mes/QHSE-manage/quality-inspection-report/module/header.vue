@@ -52,8 +52,8 @@ const typeEnum = {
 }
 
 const defaultQuery = {
-  date: [moment().startOf('year').valueOf(), moment().valueOf()],
-  startDate: moment().startOf('year').valueOf(),
+  date: [moment().startOf('month').valueOf(), moment().valueOf()],
+  startDate: moment().startOf('month').valueOf(),
   endDate: moment().valueOf()
 }
 

@@ -56,7 +56,7 @@
                 项目：<span>{{ row.projectFullName }}</span>
               </p>
               <el-input
-                v-model="row.remark"
+                v-model="row.sourceRow.remark"
                 :autosize="remarkTextSize"
                 type="textarea"
                 placeholder="备注"
@@ -84,7 +84,7 @@
             <span class="text-clickable" style="margin-left: 10px" @click="setMaxQuantity">全部出库</span>
             <span class="text-clickable" style="margin-left: 10px" @click="clearQuantity">清空</span>
           </template>
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <span class="flex-rbc">
               <common-input-number
                 v-model="row.batchOutboundQuantity"

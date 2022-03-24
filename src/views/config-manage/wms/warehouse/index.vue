@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       @selection-change="crud.selectionChangeHandler"
       row-key="id"
@@ -31,8 +32,8 @@
         align="left"
         min-width="300"
       >
-        <template v-slot="scope">
-          <template v-for="(item, index) in scope.row.materialTypeName" :key="index">
+        <template #default="{ row }">
+          <template v-for="(item, index) in row.materialTypeName" :key="index">
             <el-tag effect="plain" style="margin-right: 5px">{{ item }}</el-tag>
           </template>
         </template>
@@ -46,9 +47,9 @@
         align="center"
         width="100px"
       >
-        <template v-slot="scope">
-          <el-tag :type="scope.row.type === warehouseTypeEnum.NORMAL.V ? 'info' : 'warning'">
-            {{ warehouseTypeEnum.VL[scope.row.type] }}
+        <template #default="{ row }">
+          <el-tag :type="row.sourceRow.type === warehouseTypeEnum.NORMAL.V ? 'info' : 'warning'">
+            {{ row.type }}
           </el-tag>
         </template>
       </el-table-column>
@@ -69,29 +70,20 @@
         align="center"
         width="100px"
       >
-        <template v-slot="scope">
+        <template #default="{ row }">
           <template v-if="checkPermission(permission.edit)">
-            <el-switch
-              :disabled="scope.row.enabledLoading"
-              v-model="scope.row.enabled"
-              class="drawer-switch"
-              @change="handleEnabledChange(scope.row)"
-            />
+            <el-switch :disabled="row.enabledLoading" v-model="row.enabled" class="drawer-switch" @change="handleEnabledChange(row)" />
           </template>
           <template v-else>
-            {{ enabledEnum.VL[scope.row.enabled] }}
+            {{ enabledEnum.VL[row.enabled] }}
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" />
       <!--编辑与删除-->
       <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="130px" align="center" fixed="right">
-        <template v-slot="scope">
-          <udOperation :data="scope.row" :permission="permission" />
+        <template #default="{ row }">
+          <udOperation :data="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -109,7 +101,7 @@ import { ref } from 'vue'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
 import { warehouseTypeEnum } from '@enum-ms/wms'
-import { parseTime } from '@/utils/date'
+import { baseTimeColumns } from '@/utils/columns-format/common'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -129,7 +121,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-
+const columnsDataFormat = [...baseTimeColumns, ['type', ['parse-enum', warehouseTypeEnum]]]
 const { maxHeight } = useMaxHeight()
 
 const { CRUD, crud, columns } = useCRUD(

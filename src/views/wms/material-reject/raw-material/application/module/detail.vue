@@ -26,12 +26,12 @@
         row-key="id"
       >
         <el-expand-table-column :data="detail.list" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
-          <template #default="{ row }">
-            <div v-if="isNotBlank(row.sourceRow.rejectList)" class="flex-rcc mtb-20">
+          <template #default="{ row: { sourceRow: row } }">
+            <div v-if="isNotBlank(row.rejectList)" class="flex-rcc mtb-20">
               <reject-info-table
                 :stripe="false"
-                :material="row.sourceRow"
-                :basic-class="row.sourceRow.basicClass"
+                :material="row"
+                :basic-class="row.basicClass"
                 :list="row.rejectList"
                 operate
                 style="width: 1500px"

@@ -93,15 +93,15 @@
         <material-secondary-info-columns :basic-class="basicClass" :show-batch-no="false" />
         <warehouse-info-columns show-project />
         <el-table-column label="归还数量" width="170px" align="center" fixed="right">
-          <template #default="{ row }">
+          <template #default="{ row: { sourceRow: row } }">
             <span class="flex-rbc">
               <common-input-number
-                v-model="row.sourceRow.returnedQuantity"
+                v-model="row.returnedQuantity"
                 :min="0"
                 :precision="row.outboundUnitPrecision"
                 :max="row.corOperableQuantity"
                 controls-position="right"
-                @change="handleQuantityChange($event, row.sourceRow)"
+                @change="handleQuantityChange($event, row)"
               />
               <span style="flex: none; margin-left: 10px">{{ row.outboundUnit }}</span>
             </span>

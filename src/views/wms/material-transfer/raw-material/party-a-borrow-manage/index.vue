@@ -138,9 +138,9 @@
       />
       <!-- 归还 -->
       <el-table-column label="操作" width="80px" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <template v-if="checkPermission(permission.return) && row.returnStatus === borrowReturnStatusEnum.NOT_RETURNED.V">
-            <common-button type="primary" size="mini" @click="toReturn(row.sourceRow)">归还</common-button>
+            <common-button type="primary" size="mini" @click="toReturn(row)">归还</common-button>
           </template>
           <template v-else>
             <el-tag :type="borrowReturnStatusEnum.V[row.returnStatus].TAG">{{ borrowReturnStatusEnum.VL[row.returnStatus] }}</el-tag>

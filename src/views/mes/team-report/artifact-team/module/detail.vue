@@ -35,6 +35,16 @@
           </template>
         </el-table-column>
       </common-table>
+        <!--分页组件-->
+    <el-pagination
+      :total="total"
+      :current-page="queryPage.pageNumber"
+      :page-size="queryPage.pageSize"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
     </template>
   </common-drawer>
 </template>
@@ -48,6 +58,7 @@ import { deepClone } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
@@ -67,6 +78,7 @@ const props = defineProps({
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -105,9 +117,11 @@ async function fetchList() {
     const _query = Object.assign(deepClone(query), {
       factoryId: props.info.factory?.id,
       productType: productType.value,
-      productionLineId: props.info.productionLine?.id
+      productionLineId: props.info.productionLine?.id,
+      ...queryPage
     })
-    const content = await detail(_query)
+    const { content, totalElements } = await detail(_query)
+    setTotalPage(totalElements)
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       v.processSequence = v.processSummaryDetailsDOList

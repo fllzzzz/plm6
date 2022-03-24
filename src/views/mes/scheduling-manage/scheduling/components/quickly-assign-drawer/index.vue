@@ -16,7 +16,7 @@
         <div class="table-content">
           <common-table
             ref="tableRef"
-            :dataFormat="productFormat[productType]"
+            :data-format="productFormat[productType]"
             :max-height="maxHeight"
             :data="assignAbleList"
             row-key="id"

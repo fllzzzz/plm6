@@ -27,7 +27,27 @@
         </common-button>
       </template>
     </el-popover>
-    <common-button @click="NestingClick(data)" v-if="data.state === '0'" type="success" size="mini">去套料</common-button>
+
+    <el-popover
+      v-if="data.state === '0'"
+      v-model:visible="nesting"
+      placement="top"
+      width="180"
+      trigger="manual"
+      @show="onPopoverNestingShow"
+      @hide="onPopoverNestingHide"
+    >
+      <p>选择套料操作，确认套料？</p>
+      <div style="text-align: right; margin: 0">
+        <common-button size="mini" type="text" @click="cancelNesting">取消</common-button>
+        <common-button type="primary" size="mini" @click="NestingClick">确定</common-button>
+      </div>
+      <template #reference>
+        <common-button type="success" size="mini" @click.stop="toNesting"> 去套料 </common-button>
+      </template>
+    </el-popover>
+
+    <!-- <common-button @click="NestingClick(data)" v-if="data.state === '0'" type="success" size="mini">去套料</common-button> -->
   </span>
 
   <!-- 零件工单 -->
@@ -81,10 +101,49 @@
       </el-table-column>
       <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="60">
         <template v-slot="scope">
-          <common-button v-if="scope.row.nestingState === 1" @click="delClick(scope.row)" type="danger" icon="el-icon-delete" size="mini" />
+          <!-- <common-button v-if="scope.row.nestingState === 1" @click="delClick(scope.row)" type="danger" icon="el-icon-delete" size="mini" /> -->
+
+          <el-popover
+            v-if="scope.row.nestingState === 1"
+            v-model:visible="deleteBtn"
+            placement="top"
+            width="180"
+            trigger="manual"
+            @show="onPopoverDelClickShow"
+            @hide="onPopoverDelClickHide"
+          >
+            <p>选择删除操作，让数据删除？</p>
+            <div style="text-align: right; margin: 0">
+              <common-button size="mini" type="text" @click="cancelDeleteBtn">取消</common-button>
+              <common-button type="primary" size="mini" @click="delClick(scope.row)">确定</common-button>
+            </div>
+            <template #reference>
+              <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDeleteBtn" />
+            </template>
+          </el-popover>
+
+          <el-popover
+            v-else-if="scope.row.nestingState === 2"
+            v-model:visible="addBTn"
+            placement="top"
+            width="180"
+            trigger="manual"
+            @show="onPopoverAddClickShow"
+            @hide="onPopoverAddClickHide"
+          >
+            <p>选择新增操作，让数据添加？</p>
+            <div style="text-align: right; margin: 0">
+              <common-button size="mini" type="text" @click="cancelAddBtn">取消</common-button>
+              <common-button type="primary" size="mini" @click="addClick(scope.row)">确定</common-button>
+            </div>
+            <template #reference>
+              <common-button type="primary" size="mini" @click.stop="toAddBtn"> 新增 </common-button>
+            </template>
+          </el-popover>
+          <!--
           <common-button v-else-if="scope.row.nestingState === 2" @click="addClick(scope.row)" type="primary" size="mini">
             新增
-          </common-button>
+          </common-button> -->
         </template>
       </el-table-column>
     </common-table>
@@ -105,7 +164,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-
   disabledDel: {
     type: Boolean,
     default: false
@@ -118,7 +176,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-
   delPrompt: {
     type: String,
     default: '选择撤销操作，让数据复原？'
@@ -140,15 +197,44 @@ const innerVisible = ref(false) // 弹出层
 const updateData = ref([]) // 弹出层数据
 const { crud } = regExtra()
 
+const nesting = ref(false)
+const deleteBtn = ref(false)
+const addBTn = ref(false)
+
 // 取消删除
 function cancelDelete() {
   pop.value = false
   crud.cancelDelete(props.data)
 }
 
+// 取消套料
+function cancelNesting() {
+  nesting.value = false
+}
+
+// 点击套料按钮
+function toNesting() {
+  nesting.value = true
+}
+
 // 点击删除按钮
 function toDelete() {
   pop.value = true
+}
+
+function toDeleteBtn() {
+  deleteBtn.value = true
+}
+
+function toAddBtn() {
+  addBTn.value = true
+}
+
+function cancelDeleteBtn() {
+  deleteBtn.value = false
+}
+function cancelAddBtn() {
+  addBTn.value = false
 }
 
 // 确认删除
@@ -168,6 +254,7 @@ async function NestingClick(row) {
   try {
     const message = await uploadOrder(props.data.cutTaskId)
     ElMessage({ type: 'success', message: message })
+    nesting.value = false
     emit('query')
   } catch (err) {
     console.log(err)
@@ -231,6 +318,50 @@ function onPopoverHide() {
 
 function handleDocumentClick(event) {
   pop.value = false
+}
+
+function handleDocumentNestingClick(event) {
+  nesting.value = false
+}
+
+// 打开套料提示窗
+function onPopoverNestingShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentNestingClick, { passive: false })
+  }, 0)
+}
+
+// 隐藏套料提示窗
+function onPopoverNestingHide() {
+  document.removeEventListener('click', handleDocumentNestingClick)
+}
+
+function handleDocumentDelClick(event) {
+  deleteBtn.value = false
+}
+
+function onPopoverDelClickShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentDelClick, { passive: false })
+  }, 0)
+}
+
+function onPopoverDelClickHide() {
+  document.removeEventListener('click', handleDocumentDelClick)
+}
+
+function handleDocumentAddClick(event) {
+  addBTn.value = false
+}
+
+function onPopoverAddClickShow() {
+  setTimeout(() => {
+    document.addEventListener('click', handleDocumentAddClick, { passive: false })
+  }, 0)
+}
+
+function onPopoverAddClickHide() {
+  document.removeEventListener('click', handleDocumentAddClick)
 }
 
 </script>

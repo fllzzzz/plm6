@@ -27,6 +27,7 @@
     @keyup.enter="toQuery"
   />
   <el-input
+    v-if="showMaterial"
     v-model.trim="queryVO.material"
     size="small"
     placeholder="输入材质搜索"
@@ -55,6 +56,10 @@ const props = defineProps({
   // 围护子类型
   category: {
     type: Number
+  },
+  showMaterial: {
+    type: Boolean,
+    default: true
   }
 })
 

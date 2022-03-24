@@ -59,17 +59,17 @@
           <span>{{ scope.row.distributionPartWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="钢板清单" min-width="80px">
+      <el-table-column fixed="right" align="center" label="钢板清单" min-width="75px">
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="操作" min-width="110px">
+      <el-table-column fixed="right" align="center" label="操作" min-width="80px">
         <template v-slot="scope">
           <common-button @click="taskScheduling(scope.row)" type="success" size="mini">任务排产</common-button>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="套料成果" min-width="80px">
+      <el-table-column fixed="right" align="center" label="套料成果" min-width="75px">
         <template v-slot="scope">
           <common-button icon="el-icon-download" @click="download(scope.row)" type="warning" size="mini" />
         </template>
@@ -149,7 +149,7 @@ const optShow = {
 
 const { crud } = useCRUD(
   {
-    title: '项目清单',
+    title: '套料工单',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },

@@ -29,8 +29,8 @@
     <el-table-column key="operatorName" :show-overflow-tooltip="true" prop="operatorName" label="冻结人" align="center" width="90" />
     <el-table-column key="frozenTime" :show-overflow-tooltip="true" prop="frozenTime" label="冻结日期" align="center" width="100" />
     <el-table-column label="操作" width="85px" align="center">
-      <template #default="{ row }">
-        <common-button v-if="checkUnFreezePermission(row.sourceRow.freezeType)" type="primary" size="mini" @click="toUnfreeze(row.sourceRow)">
+      <template #default="{ row: { sourceRow: row } }">
+        <common-button v-if="checkUnFreezePermission(row.freezeType)" type="primary" size="mini" @click="toUnfreeze(row)">
           解 冻
         </common-button>
         <span v-else>无权限</span>

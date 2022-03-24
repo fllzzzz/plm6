@@ -3,7 +3,15 @@
     <!--工具栏-->
     <mHeader ref="header" :permission="permission" />
     <!--表格渲染-->
-    <common-table ref="tableRef" v-loading="crud.loading" :data="crud.data" :max-height="maxHeight" style="width: 100%">
+    <common-table
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :data-format="columnsDataFormat"
+      :show-empty-symbol="false"
+      :max-height="maxHeight"
+      style="width: 100%"
+    >
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('name')" key="name" :show-overflow-tooltip="true" prop="name" label="名称" align="center" />
       <el-table-column
@@ -15,34 +23,26 @@
         align="center"
       />
       <el-table-column v-if="columns.visible('type')" :show-overflow-tooltip="true" prop="type" label="类型" align="center">
-        <template v-slot="scope">
-          {{ unitTypeEnum.VL[scope.row.type] }}
+        <template #default="{ row }">
+          {{ unitTypeEnum.VL[row.type] }}
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('enabled')" :show-overflow-tooltip="true" prop="enabled" label="启用状态" align="center">
-        <template v-slot="scope">
+        <template #default="{ row }">
           <template v-if="checkPermission(permission.edit)">
-            <el-switch :disabled="scope.row.enabledLoading" v-model="scope.row.enabled" class="drawer-switch" @change="handleEnabledChange(scope.row)" />
+            <el-switch :disabled="row.enabledLoading" v-model="row.enabled" class="drawer-switch" @change="handleEnabledChange(row)" />
           </template>
           <template v-else>
-            {{ enabledEnum.VL[scope.row.enabled] }}
+            {{ enabledEnum.VL[row.enabled] }}
           </template>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px" />
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" />
       <!--编辑与删除-->
       <el-table-column v-permission="permission.del" label="操作" width="130px" align="center">
-        <template v-slot="scope">
-            <udOperation :show-del="!scope.row.boolSystem" :show-edit="false" :data="scope.row" />
+        <template #default="{ row }">
+          <udOperation :show-del="!row.boolSystem" :show-edit="false" :data="row" />
         </template>
       </el-table-column>
     </common-table>
@@ -59,7 +59,7 @@ import { configUnitPM as permission } from '@/page-permission/config'
 
 import { ref } from 'vue'
 import { enabledEnum, unitTypeEnum } from '@enum-ms/common'
-import { parseTime } from '@/utils/date'
+import { baseTimeColumns } from '@/utils/columns-format/common'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -79,6 +79,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+// 表格列数据格式转换
+const columnsDataFormat = ref([...baseTimeColumns])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '基础单位配置',
