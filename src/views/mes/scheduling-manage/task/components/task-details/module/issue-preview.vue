@@ -26,7 +26,7 @@
       </el-table-column>
       <el-table-column prop="project.shortName" :show-overflow-tooltip="true" label="所属项目" min-width="180px">
         <template #default="{ row }">
-          <span v-parse-project="{ project: row.project }" />
+          <span class="project-name">{{ projectNameFormatter(row.project) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="area.name" :show-overflow-tooltip="true" label="单体区域" min-width="140px">
@@ -73,6 +73,7 @@ import { ElNotification } from 'element-plus'
 import moment from 'moment'
 
 import { parseTime } from '@/utils/date'
+import { projectNameFormatter } from '@/utils/project'
 import { emptyTextFormatter } from '@data-type'
 
 import useMaxHeight from '@compos/use-max-height'
