@@ -79,11 +79,42 @@
           <span>{{ row.invoiceRate }}%</span>
         </template>
       </el-table-column>
+      <!--编辑与删除-->
+      <el-table-column
+        label="操作"
+        width="190px"
+        align="center"
+      >
+      <!-- <el-table-column
+        v-if="checkPermission([ ...permission.edit,...permission.audit])"
+        label="操作"
+        width="190px"
+        align="center"
+      > -->
+        <template #default="{ row }">
+          <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" />
+          <common-button type="success" icon="el-icon-money" size="mini" @click="rowSubmit(row)" />
+        </template>
+      </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
     <!-- 记录 -->
     <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" />
+    <!-- 付款申请记录 -->
+    <common-drawer
+      ref="drawerRef"
+      :show-close="true"
+      size="80%"
+      title="付款申请记录"
+      append-to-body
+      v-model="applicationVisible"
+      :close-on-click-modal="false"
+    >
+      <template #content>
+        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
+      </template>
+    </common-drawer>
   </div>
 </template>
 
@@ -103,6 +134,7 @@ import mHeader from './module/header'
 import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
+import paymentApplication from './module/payment-application'
 
 const optShow = {
   add: false,
@@ -122,6 +154,7 @@ const currentView = computed(() => {
 
 const tableRef = ref()
 const headerRef = ref()
+const applicationVisible = ref(false)
 const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
@@ -172,6 +205,14 @@ function openRecord(row, type) {
   orderId.value = row.id
   nextTick(() => {
     recordVisible.value = true
+  })
+}
+
+function openApplication(row) {
+  detailInfo.value = row.sourceRow
+  orderId.value = row.id
+  nextTick(() => {
+    applicationVisible.value = true
   })
 }
 

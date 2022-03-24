@@ -14,6 +14,7 @@
         :max-height="maxHeight"
         row-key="id"
         :row-class-name="handleAssemblyRowClassName"
+        :cell-class-name="cellClassName"
         :expand-row-keys="expandArr"
         class="assembly-table"
         style="width: 100%"
@@ -330,6 +331,10 @@ function handleAssemblyRowClassName({ row, rowIndex }) {
 
 function handleRowClassName({ row, rowIndex }) {
   return row.existStatus === 1 ? '' : 'abnormal-row'
+}
+
+function cellClassName() {
+  return ''
 }
 
 function addRow(val, index) {
