@@ -6,7 +6,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :dataFormat="productFormat[productType]"
+      :data-format="productFormat[productType]"
       :stripe="false"
       return-source-data
       :empty-text="crud.emptyText"

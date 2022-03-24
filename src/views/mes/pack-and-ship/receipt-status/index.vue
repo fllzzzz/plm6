@@ -7,7 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
-      :dataFormat="dataFormat"
+      :data-format="dataFormat"
       style="width: 100%"
       :max-height="maxHeight"
       @sort-change="crud.handleSortChange"

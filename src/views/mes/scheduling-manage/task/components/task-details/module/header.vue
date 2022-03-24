@@ -37,7 +37,7 @@
       type="enum"
       @change="crud.toQuery"
     />
-    <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
+    <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" :showMaterial="false" />
     <rrOperation />
   </div>
   <crudOperation>

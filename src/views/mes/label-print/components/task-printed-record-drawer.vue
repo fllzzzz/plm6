@@ -2,7 +2,7 @@
   <common-drawer ref="drawerRef" title="打印详情" v-model="drawerVisible" direction="rtl" :before-close="handleClose" size="50%">
     <template #titleRight> </template>
     <template #content>
-      <common-table v-loading="loading" :data="recordList" :dataFormat="dataFormat" :max-height="maxHeight" style="width: 100%">
+      <common-table v-loading="loading" :data="recordList" :data-format="dataFormat" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column :show-overflow-tooltip="true" prop="userName" label="操作人" min-width="110px" />
         <el-table-column :show-overflow-tooltip="true" prop="quantity" label="数量" align="center" min-width="80px" />

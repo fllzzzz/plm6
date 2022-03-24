@@ -18,6 +18,8 @@
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
+      return-source-data
+      :data-format="dataFormat"
       :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
@@ -34,9 +36,9 @@
         min-width="140px"
         align="center"
       />
-      <el-table-column v-if="columns.visible('wageQuotaType')" key="wageQuotaType" prop="wageQuotaType" label="计价方式" min-width="170px">
+      <el-table-column v-if="columns.visible('wageQuotaTypeStr')" key="wageQuotaTypeStr" prop="wageQuotaTypeStr" label="计价方式" min-width="170px">
         <template v-slot="scope">
-          <span v-parse-enum="{ e: wageQuotaTypeEnum, v: scope.row.wageQuotaType, bit: true }" />
+          <span>{{ scope.row.wageQuotaTypeStr }}</span>
         </template>
       </el-table-column>
       <template v-for="item in wageQuotaTypeEnum.ENUM" :key="item.V">
@@ -111,6 +113,8 @@ const optShow = {
   del: false,
   download: false
 }
+
+const dataFormat = [['wageQuotaTypeStr', ['parse-enum', wageQuotaTypeEnum, { bit: true }], { source: 'wageQuotaType' }]]
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
