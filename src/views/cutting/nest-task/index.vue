@@ -157,7 +157,7 @@ const optShow = {
 
 const { crud, columns } = useCRUD(
   {
-    title: '项目数据',
+    title: '套料任务',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
