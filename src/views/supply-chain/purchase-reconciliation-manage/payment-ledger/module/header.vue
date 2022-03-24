@@ -23,7 +23,7 @@
           />
           <el-input
             v-model="query.serialNumber"
-            placeholder="可输入采购单号搜索"
+            placeholder="采购单号"
             class="filter-item"
             style="width: 200px;"
             size="small"
@@ -32,7 +32,7 @@
           />
           <el-input
             v-model="query.supplierName"
-            placeholder="可输入供应商搜索"
+            placeholder="供应商"
             class="filter-item"
             style="width: 200px;"
             size="small"
