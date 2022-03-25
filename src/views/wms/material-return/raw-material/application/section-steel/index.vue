@@ -259,14 +259,14 @@ function rowWatch(row) {
 
 // 计算单件理论重量
 async function calcTheoryWeight(row) {
-  row.theoryWeight = await calcSectionSteelWeight(
-    {
-      length: row.length, // 长度
-      unitWeight: row.source.unitWeight // 单位重量
-    }
-  )
+  row.theoryWeight = await calcSectionSteelWeight({
+    length: row.length, // 长度
+    unitWeight: row.source.unitWeight // 单位重量
+  })
   if (row.theoryWeight) {
-    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 10)
+    // 将小数精度提高一位计算，计算总重与实际总重出现误差
+    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision + 1)
+    console.log('row.singleMete', row.singleMete)
   } else {
     row.singleMete = undefined
   }
@@ -284,12 +284,10 @@ function calcTotalWeight(row) {
 // 计算总长
 function calcTotalLength(row) {
   if (isNotBlank(row.length) && row.quantity) {
-    row.totalLength = calcSectionSteelTotalLength(
-      {
-        length: row.length, // 长度
-        quantity: row.quantity // 数量
-      }
-    )
+    row.totalLength = calcSectionSteelTotalLength({
+      length: row.length, // 长度
+      quantity: row.quantity // 数量
+    })
   } else {
     row.totalLength = undefined
   }

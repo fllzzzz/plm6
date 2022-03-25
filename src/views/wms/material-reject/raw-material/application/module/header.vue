@@ -37,6 +37,12 @@
         style="width: 250px"
       />
       <br />
+      <warehouse-project-cascader
+        v-model:projectId="query.projectId"
+        v-model:projectWarehouseType="query.projectWarehouseType"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-input
         v-model.trim="query.purchaseSN"
         clearable
@@ -81,10 +87,10 @@ import { supplierTypeEnum } from '@enum-ms/supplier'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -92,7 +98,8 @@ const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   basicClass: undefined, // 采购类型
   reviewStatus: undefined, // 审核状态
-  projectId: { value: undefined, resetAble: false }, // 项目id
+  projectId: undefined, // 项目id
+  projectWarehouseType: undefined, // 仓库类型
   purchaseSN: undefined, // 采购单号
   serialNumber: undefined, // 入库单号
   supplierId: undefined, // 供应商id
@@ -101,7 +108,6 @@ const defaultQuery = {
 
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
     query.basicClass = rawMatClsEnum.STEEL_PLATE.V

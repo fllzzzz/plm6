@@ -71,8 +71,8 @@
         <material-base-info-columns :basic-class="basicClass" fixed="left" />
         <!-- 单位及其数量 -->
         <material-unit-operate-quantity-columns
-          :operable-quantity-field="boolPublicWare ? 'projectOperableQuantity' : 'operateQuantity'"
-          :operable-mete-field="boolPublicWare ? 'projectOperableMete' : 'operateMete'"
+          :operable-quantity-field="boolPublicWare ? 'projectOperableQuantity' : 'operableQuantity'"
+          :operable-mete-field="boolPublicWare ? 'projectOperableMete' : 'operableMete'"
           :basic-class="basicClass"
         />
         <!-- 次要信息 -->

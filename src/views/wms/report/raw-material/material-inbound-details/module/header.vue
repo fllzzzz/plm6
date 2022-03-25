@@ -44,6 +44,12 @@
           />
         </template>
         <template #secondLineFirstItem>
+          <warehouse-project-cascader
+            v-model:projectId="query.projectId"
+            v-model:projectWarehouseType="query.projectWarehouseType"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
           <el-date-picker
             v-model="query.inboundTime"
             :default-time="defaultTime"
@@ -62,7 +68,7 @@
           <el-input
             v-model.trim="query.purchaseSN"
             clearable
-            style="width: 200px"
+            style="width: 160px"
             size="small"
             placeholder="采购订单号"
             class="filter-item"
@@ -71,7 +77,7 @@
           <el-input
             v-model.trim="query.inboundSN"
             clearable
-            style="width: 200px"
+            style="width: 160px"
             size="small"
             placeholder="入库单号"
             class="filter-item"
@@ -80,7 +86,7 @@
           <el-input
             v-model.trim="query.licensePlate"
             clearable
-            style="width: 200px"
+            style="width: 160px"
             size="small"
             placeholder="车牌号"
             class="filter-item"
@@ -89,7 +95,7 @@
           <el-input
             v-model.trim="query.shipmentNumber"
             clearable
-            style="width: 200px"
+            style="width: 160px"
             size="small"
             placeholder="物流单号"
             class="filter-item"
@@ -98,7 +104,7 @@
           <el-input
             v-model.trim="query.operatorName"
             clearable
-            style="width: 200px"
+            style="width: 160px"
             size="small"
             placeholder="申请人/编辑人/审核人"
             class="filter-item"
@@ -131,6 +137,7 @@ import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -139,7 +146,8 @@ const defaultQuery = {
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
   rejectStatus: undefined, // 退货状态
-  projectId: { value: undefined, resetAble: false }, // 项目id
+  projectId: undefined, // 项目id
+  projectWarehouseType: undefined, // 仓库类型
   shipmentNumber: undefined, // 物流单号
   licensePlate: undefined, // 车牌号
   purchaseSN: undefined, // 采购单号

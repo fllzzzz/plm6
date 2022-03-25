@@ -2,16 +2,26 @@
   <div class="first-line flex-rbc">
     <span class="child-mr-6">
       <slot name="firstItem" />
-      <common-radio-button
-        v-if="showProjectWarehouseType"
-        v-model="queryVO.projectWarehouseType"
-        :options="projectWarehouseTypeEnum.ENUM"
-        default
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="toQuery"
-      />
+      <template v-if="showProjectWarehouseType">
+        <common-radio-button
+          v-model="queryVO.projectWarehouseType"
+          :options="projectWarehouseTypeEnum.ENUM"
+          default
+          type="enum"
+          size="small"
+          class="filter-item"
+          @change="handleProjectWarehouseTypeChange"
+        />
+        <project-cascader
+          v-if="queryVO.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V"
+          v-model="queryVO.projectId"
+          placeholder="所属项目"
+          clearable
+          @change="toQuery"
+          class="filter-item"
+          style="width: 300px"
+        />
+      </template>
       <slot name="afterProjectWarehouseType" />
       <common-radio-button
         v-if="showMaterialIsWhole && [rawMatClsEnum.STEEL_PLATE.V, rawMatClsEnum.SECTION_STEEL.V].includes(basicClass)"
@@ -136,5 +146,12 @@ function toQuery() {
     props.toQuery()
   }
   emit('to-query')
+}
+
+function handleProjectWarehouseTypeChange(val) {
+  if (val === projectWarehouseTypeEnum.PUBLIC.V) {
+    queryVO.value.projectId = undefined
+  }
+  toQuery()
 }
 </script>

@@ -191,27 +191,21 @@ export async function calcTheoryWeight(list) {
         row.theoryWeight = toPrecision(row.mete / row.quantity)
         continue
       }
-      ps = calcSteelPlateWeight(
-        {
-          name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
-          length: row.length,
-          width: row.width,
-          thickness: row.thickness
-        },
-        false
-      ).then((data) => {
+      ps = calcSteelPlateWeight({
+        name: row.classifyFullName, // 名称，用于判断是否为不锈钢，不锈钢与普通钢板密度不同
+        length: row.length,
+        width: row.width,
+        thickness: row.thickness
+      }).then((data) => {
         row.theoryWeight = data
       })
     }
 
     if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
-      ps = calcSectionSteelWeight(
-        {
-          length: row.length, // 长度
-          unitWeight: row.unitWeight // 单位重量
-        },
-        false
-      ).then((data) => {
+      ps = calcSectionSteelWeight({
+        length: row.length, // 长度
+        unitWeight: row.unitWeight // 单位重量
+      }).then((data) => {
         row.theoryWeight = data
       })
     }
