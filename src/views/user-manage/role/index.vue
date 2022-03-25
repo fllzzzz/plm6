@@ -53,9 +53,10 @@
           </div>
           <div style="margin:10px 10px;">
             <el-input
-              v-model="menuQuery"
+              v-model.trim="menuQuery"
               placeholder="可搜索菜单"
               size="small"
+              clearable
               style="width:300px;margin-right:10px;"
               @keyup.enter="searchMenu"
             />
@@ -104,7 +105,7 @@ import pagination from '@crud/Pagination'
 
 const tableRef = ref()
 const menuVisible = ref(false)
-const menuQuery = ref()
+const menuQuery = ref('')
 const searchLoading = ref(false)
 const resetLoading = ref(false)
 const menuLoading = ref(false)
@@ -132,6 +133,7 @@ const { maxHeight } = useMaxHeight({
 })
 
 getMenus()
+// 获取权限菜单
 async function getMenus() {
   try {
     const res = await menuTree()
@@ -148,9 +150,9 @@ function closeMenuAssignation() {
   menuVisible.value = false
 }
 // 搜索菜单
-function searchMenu() {
+async function searchMenu() {
   searchLoading.value = true
-  const _menus = searchTreeNode(originalMenus.value, 'children', 'label', menuQuery.value)
+  const _menus = await searchTreeNode(originalMenus.value, 'children', 'label', menuQuery.value)
   menus.value = JSON.parse(JSON.stringify(_menus))
   searchLoading.value = false
 }
@@ -189,8 +191,18 @@ function resetMenu() {
 function updateSelect(menus) {
   selectMenus.value = menus
 }
+// 获取最新菜单数据
+async function updateMenu() {
+  menuQuery.value = ''
+  await searchMenu()
+}
+// 保存权限
 async function saveMenu() {
   menuLoading.value = true
+
+  // 防止页面不是最新的权限菜单（比如使用过关键字搜索）,导致权限缺失
+  await updateMenu()
+
   const role = { id: currentId.value, menus: selectMenus.value }
   try {
     await bindMenu(role)

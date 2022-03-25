@@ -50,6 +50,11 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  isDeleteNonexistent: {
+    // 是否删除options中不存在的选项（权限配置搜索关键字后，options发生改变，但是想保留之前的权限）
+    type: Boolean,
+    default: true
+  },
   disabled: {
     // 是否禁用
     type: Boolean,
@@ -81,6 +86,7 @@ provide('onlyShowChecked', props.onlyShowChecked)
 
 const copyOptions = ref([])
 const key = ref(1)
+const semiCheckedKeys = ref([])
 
 watch(
   () => props.options,
@@ -115,15 +121,22 @@ watch(
 function format(tree) {
   // options中不存在的选项
   const surplusSet = lodash.cloneDeep(checkedSet.value)
-  const opt = treeFormat(tree, null, surplusSet)
-  // 删除options中不存在的选项
-  surplusSet && surplusSet.forEach((val) => {
+  semiCheckedKeys.value = []
+  const opt = treeFormat(tree, null, surplusSet, semiCheckedKeys.value)
+  // 是否删除options中不存在的选项
+  props.isDeleteNonexistent && surplusSet && surplusSet.forEach((val) => {
     checkedSet.value.delete(val)
   })
+  // 返回半选状态值
+  if (props.returnIndeterminate) {
+    const keys = [...props.modelValue, ...semiCheckedKeys.value]
+    emit('change', keys)
+    emit('update:modelValue', keys)
+  }
   return opt
 }
 
-function treeFormat(tree = [], parent, surplusSet) {
+function treeFormat(tree = [], parent, surplusSet, semiCheckedKeys) {
   return tree.map((n) => {
     const checked = checkedSet.value?.has(n[props.dataStructure.key])
     if (checked) { // surplusSet删除存在的key
@@ -138,10 +151,14 @@ function treeFormat(tree = [], parent, surplusSet) {
       children: undefined
     }
     if (isNotBlank(n[props.dataStructure.children])) {
-      node.children = treeFormat(n.children, node, surplusSet)
+      node.children = treeFormat(n.children, node, surplusSet, semiCheckedKeys)
       // 此处会通过子节点更新父节点的值。在node的key可能重复时，避免勾选状态错误
       node.semiChecked = node.children.some((v) => v.semiChecked || v.checked)
       node.checked = node.children.every((v) => v.checked)
+    }
+    // 记录半选状态值
+    if (node.semiChecked && !node.checked) {
+      semiCheckedKeys && semiCheckedKeys.push(node.key)
     }
     return node
   })
