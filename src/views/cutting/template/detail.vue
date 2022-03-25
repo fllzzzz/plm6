@@ -98,12 +98,12 @@ async function CutPart() {
     partData.value = []
   }
 }
+
 async function CutSurplus() {
   CutSurplusData.value = await getCutSurplus(props.detailData.taskId)
   CutSurplusData.value.forEach(item => {
     item.platePictureUrlList = []
     item.platePictureUrlList.push(item.platePictureUrl)
-    console.log('item.platePictureUrl', item.platePictureUrl)
   })
 }
 

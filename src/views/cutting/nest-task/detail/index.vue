@@ -18,6 +18,7 @@
         v-model="monomerValue"
         :options="monomerList"
         type="other"
+        clearable
         :dataStructure="typeProp"
         size="small"
         placeholder="请选择单体"
@@ -29,6 +30,7 @@
         v-if="monomerValue !== undefined"
         v-model="areaValue"
         :options="areaList"
+        clearable
         type="other"
         :dataStructure="typeProp"
         size="small"
