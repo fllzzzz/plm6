@@ -100,6 +100,7 @@ import { configWmsFactoryWarehousePM as permission } from '@/page-permission/con
 import { ref } from 'vue'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
+import { enabledEnum } from '@/utils/enum/modules/common'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { baseTimeColumns } from '@/utils/columns-format/common'
 import checkPermission from '@/utils/system/check-permission'

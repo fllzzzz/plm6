@@ -69,7 +69,7 @@ export function getInfo(row, field) {
   if (field) {
     const keys = field.split('.')
     return keys.reduce((cur, key) => {
-      return typeof cur === 'object' ? cur[key] : undefined
+      return typeof cur === 'object' && cur ? cur[key] : undefined
     }, row)
   } else {
     return row
@@ -88,10 +88,10 @@ export function setInfo(row, field, data) {
         if (index === keys.length - 1) {
           return cur
         } else {
-          return typeof cur === 'object' ? cur[key] : undefined
+          return typeof cur === 'object' && cur ? cur[key] : undefined
         }
       }, row)
-      if (typeof preInfo === 'object') {
+      if (typeof preInfo === 'object' && preInfo) {
         preInfo[keys[keys.length - 1]] = data
       }
     }
