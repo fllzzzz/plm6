@@ -2,7 +2,7 @@
   <div class="head-container">
     <factory-tabs v-model="query.factoryId" @tab-click="handleTabClick" />
     <template v-if="query.factoryId">
-      <crud-operation>
+      <crud-operation :disabled="!query.factoryId">
         <template #viewLeft>
           <common-radio-button
             v-model="query.enabled"

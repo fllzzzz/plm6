@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" />
       <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" label="操作" width="130px" align="center" fixed="right">
         <template #default="{ row }">
           <udOperation :data="row" />
         </template>
