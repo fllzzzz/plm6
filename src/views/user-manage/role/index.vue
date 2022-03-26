@@ -49,7 +49,7 @@
             <span>菜单分配</span>
           </div>
           <div class="tip">
-            <el-tag v-if="currentRow.name">{{ currentRow.name }}</el-tag>
+            <el-tag size="large" effect="plain">{{ currentRow.name }}</el-tag>
           </div>
           <div style="margin:10px 10px;">
             <el-input
@@ -92,7 +92,7 @@ import crudApi, { bindMenu } from '@/api/user-manage/role'
 import { menuTree } from '@/api/system/menu'
 import { roleConfigPM as permission } from '@/page-permission/user'
 
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -114,7 +114,7 @@ const originalMenus = ref([])
 const selectMenus = ref([])
 const currentId = ref()
 const menuIds = ref()
-let currentRow = reactive({})
+const currentRow = ref({})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '角色',
@@ -127,9 +127,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.job',
-  paginate: true,
-  extraHeight: 157
+  paginate: true
 })
 
 getMenus()
@@ -220,7 +218,7 @@ function showMenuAssignation(row) {
   if (row) {
     menuVisible.value = true
     currentId.value = row.id
-    currentRow = row
+    currentRow.value = row
     menuIds.value = row.menus ? JSON.parse(JSON.stringify(row.menus)) : []
     selectMenus.value = row.menus ? JSON.parse(JSON.stringify(row.menus)) : []
     menuVisible.value = true
