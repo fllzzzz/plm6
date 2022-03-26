@@ -151,6 +151,7 @@
                   size="mini"
                   style="width: 190px"
                   maxlength="20"
+                  :disabled="isdisable"
                 />
               </el-form-item>
               <el-form-item label="清单数量" prop="quantity">
@@ -162,7 +163,7 @@
                   placeholder="清单数量"
                   controls-position="right"
                   style="width: 190px"
-                  :disabled="serialNumChangeArea===serialNumChangeTypeEnum.MONOMER.V"
+                  :disabled="serialNumChangeArea===serialNumChangeTypeEnum.MONOMER.V || isdisable"
                   @change="quantityChange"
                   @blur="quantityChange"
                 />
@@ -201,6 +202,7 @@
                   placeholder="请填写构件规格"
                   style="width: 190px"
                   maxlength="20"
+                  :disabled="isdisable"
                 />
               </el-form-item>
               <el-form-item label="面积(㎡)" prop="newSurfaceArea">
@@ -209,6 +211,7 @@
                   :max="maxNumber"
                   :step="1"
                   :precision="DP.COM_AREA__M2"
+                  :disabled="isdisable"
                   placeholder="请填写构件面积"
                   controls-position="right"
                   style="width: 190px"
@@ -221,6 +224,7 @@
                   :max="maxNumber"
                   :step="1"
                   :precision="DP.MES_ARTIFACT_L__MM"
+                  :disabled="isdisable"
                   placeholder="请填写构件长度"
                   controls-position="right"
                   style="width: 190px"
@@ -232,6 +236,7 @@
                 <el-input
                   v-model="form.drawingNumber"
                   type="text"
+                  :disabled="isdisable"
                   placeholder="请填写构件图号"
                   style="width: 190px"
                   maxlength="20"
@@ -243,6 +248,7 @@
                   type="textarea"
                   :autosize="{ minRows: 1, maxRows: 6 }"
                   :maxlength="200"
+                  :disabled="isdisable"
                   placeholder="请填写备注"
                   style="width: 420px"
                 />
@@ -393,7 +399,7 @@
             <div>
               <div style="float:left;">
                 <el-form-item label="原因类型" prop="reasonId">
-                  <changeRemarkSelect v-model="form.reasonId" clearable/>
+                  <changeRemarkSelect v-model="form.reasonId" clearable :disabled="isdisable"/>
                 </el-form-item>
                 <el-form-item label="原因描述" prop="changeRemark">
                   <el-input
@@ -401,6 +407,7 @@
                     type="textarea"
                     :autosize="{ minRows: 3, maxRows: 6 }"
                     :maxlength="200"
+                    :disabled="isdisable"
                     placeholder="请填写原因描述"
                     style="width: 320px"/>
                 </el-form-item>
@@ -412,6 +419,7 @@
                     :show-download="false"
                     :file-classify="fileClassifyEnum.CHANGE_LIST_ATT.V"
                     v-model:files="form.attachmentFiles"
+                    :uploadable="!isdisable"
                     empty-text="暂未附件"
                   />
                 </el-form-item>

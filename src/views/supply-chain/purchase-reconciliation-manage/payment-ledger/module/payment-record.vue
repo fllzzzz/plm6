@@ -16,7 +16,7 @@
       </el-tag> -->
     </template>
     <template #content>
-      <paymentRecord :project-id="detailInfo.project?.id" />
+      <paymentRecord :project-id="detailInfo.project?.id" :detailInfo="detailInfo"/>
     </template>
   </common-drawer>
 </template>

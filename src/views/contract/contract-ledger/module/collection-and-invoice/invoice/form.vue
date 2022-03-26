@@ -28,58 +28,43 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="invoiceDate" prop="invoiceDate" label="*开票日期" align="center" width="160">
             <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>合计</span>
-              </template>
+              <el-date-picker
+                v-if="scope.row.isModify"
+                v-model="scope.row.invoiceDate"
+                type="date"
+                size="small"
+                value-format="x"
+                placeholder="选择日期"
+                style="width:100%"
+                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+              />
               <template v-else>
-                <el-date-picker
-                  v-if="scope.row.isModify"
-                  v-model="scope.row.invoiceDate"
-                  type="date"
-                  size="small"
-                  value-format="x"
-                  placeholder="选择日期"
-                  style="width:100%"
-                  :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
-                />
-                <template v-else>
-                  <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
-                </template>
+                <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
               </template>
             </template>
           </el-table-column>
           <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
             <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
               <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-              </template>
-              <template v-else>
                 <el-input-number
-                  v-if="scope.row.isModify"
-                  v-show-thousand
-                  v-model.number="scope.row.invoiceAmount"
-                  :min="0"
-                  :max="contractInfo.contractAmount-totalAmount"
-                  :step="100"
-                  :precision="DP.YUAN"
-                  placeholder="开票额(元)"
-                  controls-position="right"
-                  @change="moneyChange(scope.row)"
-                />
-                <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+                    v-if="scope.row.isModify"
+                    v-show-thousand
+                    v-model.number="scope.row.invoiceAmount"
+                    :min="0"
+                    :max="contractInfo.contractAmount-totalAmount"
+                    :step="100"
+                    :precision="DP.YUAN"
+                    placeholder="开票额(元)"
+                    controls-position="right"
+                    @change="moneyChange(scope.row)"
+                  />
+                  <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
               </template>
-            </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
               <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-              </template>
-              <template v-else>
                 <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
               </template>
-            </template>
             </el-table-column>
           </el-table-column>
           <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
