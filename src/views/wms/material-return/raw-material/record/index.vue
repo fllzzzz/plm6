@@ -154,7 +154,7 @@
         </template>
       </el-table-column>
       <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="170px" align="center" fixed="right">
+      <el-table-column label="操作" width="170px" align="center" fixed="right">
         <template #default="{ row }">
           <udOperation
             :disabled-edit="!row.editable"

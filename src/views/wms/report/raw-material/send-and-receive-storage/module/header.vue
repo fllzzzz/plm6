@@ -98,7 +98,7 @@ const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 
 const defaultQuery = {
-  createTime: { value: `${new Date().getTime()}`, resetAble: false }, // [借用开始日期，借用结束日期]
+  createTime: { value: `${new Date().getTime()}`, resetAble: false }, // 时间
   projectId: { value: undefined, resetAble: false }, // 原项目id
   factoryId: { value: undefined, resetAble: false }, // 工厂id
   projectWarehouseType: undefined, // 仓库类型

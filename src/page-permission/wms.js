@@ -299,6 +299,12 @@ export const reportRawMaterialSendAndReceiveStoragePM = {
   showAmount: ['wms_report_rawMat_sendAndReceiveStorage:showAmount'] // 显示金额
 }
 
+// 报表中心/原材料/高新研发费
+export const reportRawMaterialHighTechRDFeePM = {
+  get: ['wms_report_rawMat_highTechRDFee:get'], // 查看
+  setRdRate: ['wms_report_rawMat_highTechRDFee:setRdRate'] // 设置研发费占比
+}
+
 // ---------------------------- 报表中心 end -------------------------------
 
 // ########################################################################
@@ -344,6 +350,12 @@ export const receiptDetailCPM = {
   transferReceiptDetail: commonPM.rawMatTransferReceiptDetail, // 调拨详情
   returnReceiptDetail: commonPM.rawMatReturnReceiptDetail, // 退库详情
   rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
+}
+
+// 组件·高新研发费设置
+export const highTechRDFeeConfCPM = {
+  get: ['wms_highTechRDFeeConf:get', ...reportRawMaterialHighTechRDFeePM.get],
+  set: ['wms_highTechRDFeeConf:set', ...reportRawMaterialHighTechRDFeePM.setRdRate]
 }
 
 // --------------------------- 其他模块/组件 end ---------------------------

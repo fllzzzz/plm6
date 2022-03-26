@@ -20,6 +20,15 @@
   />
   <el-table-column v-if="showAmount" key="amount" prop="amount" label="金额" align="right" min-width="105px" show-overflow-tooltip />
   <el-table-column
+    v-if="showUnitPriceExcludingVAT"
+    key="unitPriceExcludingVAT"
+    prop="unitPriceExcludingVAT"
+    label="不含税单价"
+    align="right"
+    min-width="90px"
+    show-overflow-tooltip
+  />
+  <el-table-column
     v-if="showAmountExcludingVAT"
     key="amountExcludingVAT"
     prop="amountExcludingVAT"
@@ -40,6 +49,10 @@ const props = defineProps({
   columns: {
     type: Object
   },
+  showUnitPriceE: {
+    type: Boolean,
+    default: false
+  },
   // 显示票据类型
   showInvoiceType: {
     type: Boolean,
@@ -49,6 +62,11 @@ const props = defineProps({
   showTaxRate: {
     type: Boolean,
     default: false
+  },
+  // 显示进项税
+  showInputVAT: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -56,7 +74,10 @@ const showInvoiceType = computed(() => props.showInvoiceType && (isBlank(props.c
 const showTaxRate = computed(() => props.showTaxRate && (isBlank(props.columns) || props.columns.visible('taxRate')))
 
 const showUnitPrice = computed(() => isBlank(props.columns) || props.columns.visible('unitPrice'))
+const showUnitPriceExcludingVAT = computed(
+  () => props.showUnitPriceE && (isBlank(props.columns) || props.columns.visible('unitPriceExcludingVAT'))
+)
 const showAmount = computed(() => isBlank(props.columns) || props.columns.visible('amount'))
 const showAmountExcludingVAT = computed(() => isBlank(props.columns) || props.columns.visible('amountExcludingVAT'))
-const showInputVAT = computed(() => isBlank(props.columns) || props.columns.visible('inputVAT'))
+const showInputVAT = computed(() => props.showInputVAT && (isBlank(props.columns) || props.columns.visible('inputVAT')))
 </script>

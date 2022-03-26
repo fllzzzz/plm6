@@ -34,6 +34,7 @@ export const materialHasAmountColumns = [
   ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
   ['taxRate', ['suffix', '%']],
   ['unitPrice', 'to-thousand'],
+  ['unitPriceExcludingVAT', 'to-thousand'],
   ['amount', 'to-thousand'],
   ['amountExcludingVAT', 'to-thousand'],
   ['inputVAT', 'to-thousand']

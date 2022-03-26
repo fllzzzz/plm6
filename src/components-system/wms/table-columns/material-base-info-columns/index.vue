@@ -2,7 +2,7 @@
   <el-table-column v-if="showIndex" label="序号" type="index" align="center" width="55" :fixed="fixed">
     <template #default="{ row, $index }">
       <!-- 是否甲供材料 -->
-      <table-cell-tag v-if="showPartyA" :show="!!row.boolPartyA" name="甲供" type="partyA" />
+      <table-cell-tag v-if="showPartyA && partyAPosition === 'index'" :show="!!row.boolPartyA" name="甲供" type="partyA" />
       <span>{{ $index + 1 }}</span>
     </template>
   </el-table-column>
@@ -182,6 +182,10 @@ const props = defineProps({
     // 显示 甲供调拨类型
     type: Boolean,
     default: false
+  },
+  partyAPosition: {
+    type: String,
+    default: 'index' // index / project
   },
   showIsWhole: {
     // 显示 材料类型 （整料|余料）

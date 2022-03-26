@@ -32,11 +32,7 @@
         :show-overflow-tooltip="true"
         prop="supplierClassification"
         label="供应商分类"
-      >
-        <template #default="{ row }">
-          <span>{{ row.supplierClassification }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column align="center">
         <template #header>
           <el-tooltip class="item" effect="light" content="被隐藏后，无法在订单编辑中搜索到该供应商" placement="top">
@@ -58,14 +54,13 @@
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间" width="140px" />
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([...permission.del, ...permission.edit])"
         label="操作"
         width="180px"
         align="center"
         fixed="right"
       >
         <template #default="{ row }">
-          <udOperation :show-detail="true" :data="{ id: row.id }" />
+          <udOperation show-detail :data="{ id: row.id }" />
         </template>
       </el-table-column>
     </common-table>

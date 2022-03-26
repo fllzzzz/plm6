@@ -3,7 +3,7 @@
   <el-cascader
     ref="cascaderRef"
     class="classification-cascader"
-    v-model="copyValue"
+    v-model="currentValue"
     :placeholder="placeholder"
     :options="classification.tree"
     :props="cascaderProps"
@@ -129,7 +129,7 @@ const props = defineProps({
 
 const store = useStore()
 const cascaderRef = ref()
-const copyValue = ref()
+const currentValue = ref()
 
 const classification = reactive({
   tree: [],
@@ -157,6 +157,8 @@ watch(
   [() => matClsTree.value, () => props.basicClass],
   ([list]) => {
     setCascader(list)
+    // TODO:待优化，若当前值仍在树中，则不需要设置为undefined（PS:注意返回值类型不同的情况，例如返回节点id与返回全路径，单选以及多选）
+    handleChange(undefined)
   },
   { deep: true, immediate: true }
 )
@@ -165,9 +167,9 @@ watch(
   () => props.modelValue,
   (value) => {
     if (value instanceof Array) {
-      copyValue.value = [...value]
+      currentValue.value = [...value]
     } else {
-      copyValue.value = value
+      currentValue.value = value
     }
     handleChange(value)
   },
