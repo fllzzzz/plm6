@@ -31,6 +31,29 @@ export const purchaseOrderPM = {
 
 // ########################################################################
 
+// --------------------------- 采购对账 start --------------------------------
+
+// 采购订单/付款台账
+export const supplierMaterialPaymentPM = {
+  get: ['supplier_material_payment:get'], // 付款台账列表
+  settle: ['supplier_material_payment:settle'], // 订单结算申请
+  detail: ['supplier_material_payment:detail'], // 入库/付款/收票记录
+  print: ['supplier_material_payment:print'], // 打印下载付款台账
+  application: {
+    get: ['supplier_material_payment_application:get'], // 付款申请列表
+    add: ['supplier_material_payment_application:add'], // 添加付款申请
+    edit: ['supplier_material_payment_application:edit'], // 编辑付款申请
+    del: ['supplier_material_payment_application:del'] // 删除付款申请
+  },
+  paymentLog: {
+    get: ['supplier_payment_application:get'] // 付款记录
+  }
+}
+
+// --------------------------- 供应商 end ---------------------------------
+
+// ########################################################################
+
 // --------------------------- 物流订单 start ------------------------------
 
 // 物流订单

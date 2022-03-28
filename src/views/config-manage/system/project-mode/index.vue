@@ -70,7 +70,7 @@ const { crud, columns } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.projectMode',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 60
 })
 
 </script>

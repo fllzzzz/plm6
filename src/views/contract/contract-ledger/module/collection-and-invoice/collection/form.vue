@@ -28,33 +28,24 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="collectionDate" prop="collectionDate" label="*收款日期" align="center" width="160">
             <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>合计</span>
-              </template>
+              <el-date-picker
+                v-if="scope.row.isModify"
+                v-model="scope.row.collectionDate"
+                type="date"
+                size="small"
+                value-format="x"
+                placeholder="选择日期"
+                style="width:100%"
+                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+              />
               <template v-else>
-                <el-date-picker
-                  v-if="scope.row.isModify"
-                  v-model="scope.row.collectionDate"
-                  type="date"
-                  size="small"
-                  value-format="x"
-                  placeholder="选择日期"
-                  style="width:100%"
-                  :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
-                />
-                <template v-else>
-                  <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
-                </template>
+                <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
               </template>
             </template>
           </el-table-column>
           <el-table-column key="collectionAmount2" prop="collectionAmount2" label="*收款金额" align="center" min-width="170" class="money-column">
             <el-table-column key="collectionAmount" prop="collectionAmount" label="金额" align="center" min-width="85">
               <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-              </template>
-              <template v-else>
                 <el-input-number
                   v-if="scope.row.isModify"
                   v-show-thousand
@@ -70,17 +61,11 @@
                 />
                 <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
               </template>
-            </template>
             </el-table-column>
             <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
               <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-              </template>
-              <template v-else>
                 <div>{{scope.row.collectionAmount?'('+digitUppercase(scope.row.collectionAmount)+')':''}}</div>
               </template>
-            </template>
             </el-table-column>
           </el-table-column>
           <el-table-column key="collectionReason" prop="collectionReason" label="*收款事由" align="center" width="120">

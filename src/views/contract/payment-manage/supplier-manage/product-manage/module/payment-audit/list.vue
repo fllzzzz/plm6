@@ -88,7 +88,7 @@
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { ref, defineProps, watch } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import { contractSupplierMaterialPM } from '@/page-permission/contract'
+import { contractSupplierProductPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -102,7 +102,7 @@ import { isNotBlank } from '@data-type/index'
 import detail from './detail'
 // import { ElMessage } from 'element-plus'
 
-const permission = contractSupplierMaterialPM.payment
+const permission = contractSupplierProductPM.payment
 
 const optShow = {
   add: false,

@@ -16,34 +16,19 @@
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="collectionDate" prop="collectionDate" label="*付款日期" align="center" width="160">
         <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>合计</span>
-          </template>
-          <template v-else>
-            <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
-          </template>
+          <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="collectionAmount" prop="collectionAmount" label="*付款金额" align="center" min-width="170" class="money-column">
         <el-table-column key="collectionAmount" prop="collectionAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-          </template>
-          <template v-else>
             <div>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
           </template>
-        </template>
         </el-table-column>
         <el-table-column key="collectionAmount1" prop="collectionAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-          </template>
-          <template v-else>
             <div>{{scope.row.collectionAmount?'('+digitUppercase(scope.row.collectionAmount)+')':''}}</div>
           </template>
-        </template>
         </el-table-column>
       </el-table-column>
       <el-table-column key="collectionReason" prop="collectionReason" label="*付款事由" align="center" width="120">
@@ -103,9 +88,9 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
-import { contractLedgerPM } from '@/page-permission/contract'
+import { supplierMaterialPaymentPM } from '@/page-permission/contract'
 
-const permission = contractLedgerPM.collection
+const permission = supplierMaterialPaymentPM.paymentLog
 
 const optShow = {
   add: true,
@@ -118,16 +103,19 @@ const props = defineProps({
   visibleValue: {
     type: Boolean,
     default: false
+  },
+  detailInfo: {
+    type: Object,
+    default: () => {}
   }
 })
 
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
-const totalAmount = ref(0)
 const orderId = inject('orderId')
-const { crud, CRUD } = useCRUD(
+const { crud } = useCRUD(
   {
-    title: '付款填报',
+    title: '付款记录',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -149,37 +137,13 @@ watch(
   (id) => {
     nextTick(() => {
       crud.query.orderId = id
-      crud.query.propertyType = 1
+      crud.query.propertyType = props.detailInfo.propertyType
       crud.refresh()
     })
   },
   { immediate: true }
 )
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.projectId = v.project.id
-    return v
-  })
-}
-
-CRUD.HOOK.beforeRefresh = () => {
-  crud.query.projectId = props.projectId
-}
-
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  totalAmount.value = 0
-  data.data.content.map(v => {
-    if (v.collectionAmount) {
-      totalAmount.value += v.collectionAmount
-    }
-  })
-  if (totalAmount.value > 0) {
-    data.data.content.push({
-      type: 2
-    })
-  }
-}
 </script>
 
 <style lang="scss" scoped>

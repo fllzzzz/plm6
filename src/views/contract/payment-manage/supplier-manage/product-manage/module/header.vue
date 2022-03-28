@@ -24,7 +24,7 @@
       />
       <el-input
         v-model="query.supplierName"
-        placeholder="分包单位搜索"
+        placeholder="供应商搜索"
         style="width:200px"
         class="filter-item"
       />

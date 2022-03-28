@@ -49,7 +49,7 @@
 <script setup>
 import { ref, computed, defineExpose } from 'vue'
 import moment from 'moment'
-import { supplierPayMentTypeEnum } from '@enum-ms/contract'
+// import { supplierPayMentTypeEnum } from '@enum-ms/contract'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -57,8 +57,7 @@ import rrOperation from '@crud/RR.operation'
 
 const defaultQuery = {
   date: undefined, startDate: undefined, endDate: undefined,
-  serialNumber: undefined, supplierName: undefined,
-  propertyType: supplierPayMentTypeEnum.MATERIAL.V
+  serialNumber: undefined, supplierName: undefined
 }
 const { crud, query } = regHeader(defaultQuery)
 

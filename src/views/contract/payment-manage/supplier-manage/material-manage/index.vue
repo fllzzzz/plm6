@@ -54,11 +54,11 @@
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
-        <template v-if="checkPermission(crud.permission.get)">
+        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
-            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;" @click="openPaymentAudit(scope.row)"/>
+            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
-        </template>
+        </span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
@@ -68,10 +68,10 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
       <template v-slot="scope">
-        <div @click="openTab(scope.row,'invoice')">
+        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span style="cursor:pointer;margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
-          <template v-if="checkPermission(crud.permission.get)">
-            <el-badge :value="scope.row.unCheckInvoiceAmount" :max="99" :hidden="scope.row.unCheckInvoiceAmount < 1">
+          <template v-if="checkPermission(crud.permission.invoice.get) && scope.row.unCheckInvoiceCount>0">
+            <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
           </template>
@@ -161,14 +161,15 @@ function openStockAmount(row) {
     return
   }
   currentRow.value = row
-  // currentProjectId.value = row
   stockVisible.value = true
 }
 
 function openTab(row, name) {
+  if (!checkPermission(permission[name].get)) {
+    return
+  }
   activeName.value = name
   currentRow.value = row
-  // currentProjectId.value = row
   tabVisible.value = true
 }
 
