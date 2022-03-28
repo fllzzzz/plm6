@@ -403,9 +403,9 @@ async function createTask(Str) {
       })
       createNum.value++
       workListTask.value = true
+      ElMessage({ message: '投料成功！！！', type: 'success' })
     }
     taskPackage.value = content
-    ElMessage({ message: '投料成功！！！', type: 'success' })
   } catch (err) {
     console.log(err)
   }

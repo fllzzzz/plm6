@@ -74,13 +74,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        width="250px"
-        v-if="checkPermission([...permission.edit, ...permission.del])"
-        :show-overflow-tooltip="true"
-        label="操作"
-        align="center"
-      >
+      <el-table-column width="250px" :show-overflow-tooltip="true" label="操作" align="center">
         <template v-slot="scope">
           <!-- <common-button v-if="scope.row.state === '0' || scope.row.state  === '1'" type="warning" size="mini">修改</common-button> -->
           <del-btn @query="crud.toQuery()" :data="scope.row" />
@@ -100,7 +94,7 @@ import { parseTime } from '@/utils/date'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import useMaxHeight from '@compos/use-max-height'
-import checkPermission from '@/utils/system/check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import delBtn from './module/del'
 
 const tableRef = ref()

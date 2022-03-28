@@ -1,8 +1,14 @@
 <template>
   <span class="ud-operation" style="display: inline-block">
-    <common-button @click="editClick(data)" v-if="data.state === '0' || data.state === '1'" type="warning" size="mini">修改</common-button>
+    <common-button
+      @click="editClick(data)"
+      v-if="data.state === '0' || (data.state === '1' && checkPermission(permission.edit))"
+      type="warning"
+      size="mini"
+      >修改</common-button
+    >
     <el-popover
-      v-if="data.state !== '2' && props.showDel && checkPermission(permission.del)"
+      v-if="data.state !== '2' && props.showDel && checkPermission(permission.revoke)"
       v-model:visible="pop"
       placement="top"
       width="180"
@@ -29,7 +35,7 @@
     </el-popover>
 
     <el-popover
-      v-if="data.state === '0'"
+      v-if="data.state === '0' && props.showDel && checkPermission(permission.Nesting)"
       v-model:visible="nesting"
       placement="top"
       width="180"

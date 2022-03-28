@@ -59,19 +59,25 @@
           <span>{{ scope.row.distributionPartWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="钢板清单" min-width="75px">
+      <el-table-column v-if="checkPermission(permission.detail)" fixed="right" align="center" label="钢板清单" min-width="75px">
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="操作" min-width="80px">
+      <el-table-column v-if="checkPermission(permission.Production)" fixed="right" align="center" label="操作" min-width="85px">
         <template v-slot="scope">
           <common-button @click="taskScheduling(scope.row)" type="success" size="mini">任务排产</common-button>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="套料成果" min-width="75px">
+      <el-table-column v-if="checkPermission(permission.download)" fixed="right" align="center" label="套料成果" min-width="75px">
         <template v-slot="scope">
-          <common-button icon="el-icon-download" @click="download(scope.row)" type="warning" size="mini" />
+          <common-button
+            :disabled="scope.row.reportUrl === null"
+            icon="el-icon-download"
+            @click="download(scope.row)"
+            type="warning"
+            size="mini"
+          />
         </template>
       </el-table-column>
       <!-- <el-table-column align="center" :show-overflow-tooltip="true" label="钢板量（张 | kg）" min-width="80">
@@ -129,16 +135,13 @@ import mHeader from './module/header'
 import detail from '@/views/cutting/template/steel-plate-list.vue'
 import taskSchedul from './module/task-scheduling'
 import useMaxHeight from '@compos/use-max-height'
+import checkPermission from '@/utils/system/check-permission'
 import { ElNotification } from 'element-plus'
+import { nestWorkListPM as permission } from '@/page-permission/cutting'
 
 const tableRef = ref()
 const innerVisible = ref(false)
 const detailObj = ref()
-
-// crud交由presenter持有
-const permission = {
-  get: ['contractRecord:get']
-}
 
 const optShow = {
   add: false,
@@ -176,7 +179,7 @@ function download(row) {
   if (row.reportUrl !== null) {
     window.location.href = row.reportUrl
   } else {
-    ElNotification({ title: '下载失败', message: '下载路径错误 ', type: 'error' })
+    ElNotification({ title: '下载失败', message: '暂无套料成果 ', type: 'error' })
   }
 }
 

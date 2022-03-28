@@ -119,8 +119,8 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:visible'])
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
+const emit = defineEmits(['update:visible', 'colesHook'])
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook, showHook })
 const plateData = ref([]) // 页面数据
 const machineVisible = ref(false)
 const machineName = ref('')
@@ -134,6 +134,10 @@ function showHook() {
     machineName.value = props.detailData.cutMachine.machineName
     plateDataGet()
   }
+}
+
+function closeHook() {
+  emit('colesHook')
 }
 
 async function plateDataGet() {

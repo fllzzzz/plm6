@@ -15,8 +15,9 @@
       <div class="el-drawer-container">
         <div class="table-content">
           <common-table
+            v-loading="tabLoading"
+            :max-height="730"
             ref="tableRef"
-            :max-height="maxHeight"
             :data="plateData"
             row-key="id"
             empty-text="暂无数据"
@@ -66,6 +67,15 @@
               </template>
             </el-table-column>
           </common-table>
+          <el-pagination
+            v-model:page-size="page.size"
+            v-model:current-page="page.page"
+            :total="page.total"
+            style="margin-top: 8px"
+            layout="total, prev, pager, next, sizes"
+            @size-change="sizeChangeHandler($event)"
+            @current-change="pageChangeHandler"
+          />
         </div>
         <div class="line-content" :style="{ 'max-height': `${maxHeight}px` }">
           <div class="tip">
@@ -126,7 +136,7 @@ const specsVisible = ref(false)
 
 const idList = ref([])
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook, showHook })
 
 // 高度
 const { maxHeight } = useMaxHeight(
@@ -135,12 +145,19 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body', '.el-drawer-container'],
     navbar: false,
-    extraHeight: 130,
+    extraHeight: 20,
     clientHRepMainH: true
   },
   drawerRef
 )
 
+const page = {
+  size: 20,
+  page: 1,
+  total: null
+}
+
+const tabLoading = ref(false)
 const saveAble = computed(() => multipleSelection.value && multipleSelection.value.length > 0 && selectLineId.value)
 
 function showHook() {
@@ -149,14 +166,21 @@ function showHook() {
     getReport()
   }
 }
+function closeHook() {
+  page.size = 20
+  page.page = 1
+}
 
 async function plateDataGet() {
+  tabLoading.value = true
   try {
-    const { content } = await get({ projectId: props.detailData.projectId })
-    plateData.value = content.filter(item => !(item.mac))
+    const data = await get({ projectId: props.detailData.projectId, pageSize: page.size, pageNumber: page.page })
+    page.total = data.totalElements
+    plateData.value = data.content.filter(item => !(item.mac))
   } catch (err) {
     console.log('钢板清单页面接口报错', err)
   }
+  tabLoading.value = false
 }
 async function getReport() {
   const { content } = await getMachine()
@@ -188,6 +212,15 @@ async function taskIssue() {
   }
 }
 
+function sizeChangeHandler(e) {
+  page.size = e
+  plateDataGet()
+}
+
+function pageChangeHandler(a) {
+  page.page = a
+  plateDataGet()
+}
 </script>
 
 <style lang="scss" scoped>
