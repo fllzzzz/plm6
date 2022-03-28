@@ -566,6 +566,7 @@ async function onSubmit(val) {
     form.value.monomerId = Number(props.detailInfo.monomerId)
     form.value.attachments = form.value.attachmentFiles && form.value.attachmentFiles.length > 0 ? form.value.attachmentFiles.map((v) => v.id) : []
     form.value.surfaceArea = form.value.newSurfaceArea * 1000000 !== form.value.surfaceArea ? form.value.newSurfaceArea * 1000000 : form.value.surfaceArea
+    form.value.productId = props.detailInfo.id
     await listChange(form.value)
     handleSuccess()
   } catch (e) {
