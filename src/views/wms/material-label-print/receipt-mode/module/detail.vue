@@ -31,7 +31,7 @@
       >
         <el-expand-table-column :data="detail.materialList" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info :basic-class="detail.basicClass" :row="row" />
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics :show-batch-no="false" />
           </template>
         </el-expand-table-column>
         <el-table-column type="selection" width="55" align="center" fixed="left" />
@@ -121,7 +121,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    extraHeight: 10,
+    extraHeight: 10
   },
   () => computed(() => !crud.detailLoading)
 )
@@ -145,7 +145,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.materialList)
   detail.materialList = await numFmtByBasicClass(detail.materialList, {
     toSmallest: false,
-    toNum: false,
+    toNum: false
   })
   detail.materialList.forEach((row) => {
     if (row.basicClass === matClsEnum.STEEL_COIL.V) {

@@ -45,13 +45,7 @@ const defaultQuery = { nameOrCode: undefined }
 const { CRUD, query } = regHeader(defaultQuery)
 
 // 源数据保留
-const sourceMap = new Map([
-  ['measureUnit', 'sourceMeasureUnit'],
-  ['measurePrecision', 'sourceMeasurePrecision'],
-  ['accountingUnit', 'sourceAccountingUnit'],
-  ['accountingPrecision', 'sourceAccountingPrecision'],
-  ['outboundUnitType', 'sourceOutboundUnitType']
-])
+const sourceMap = new Map([['rdRate', 'sourceRdRate']])
 provide('sourceMap', sourceMap)
 
 // 科目数据
@@ -112,17 +106,14 @@ function classificationTreeFormat(tree, deep = 1, extendsData = { fullId: [], fu
         fullName: leafNode.fullName, // 名称-全路径
         fullCode: leafNode.fullCode, // 编码-路径
         fullSerialNumber: leafNode.fullSerialNumber, // 编码-路径
-        attribute: leafNode.attribute, // 类型
-        measureUnit: leafNode.measureUnit, // 计量
-        accountingUnit: leafNode.accountingUnit, // 核算单位
-        measurePrecision: leafNode.measurePrecision, // 计量精度
-        accountingPrecision: leafNode.accountingPrecision // 核算精度
+        rdRate: leafNode.rdRate // 研发占比
       }
       const leafNodes = classificationTreeFormat(nodeChildren, deep + 1, e)
       tableData.push.apply(tableData, leafNodes)
     } else {
       tableData.push(leafNode)
     }
+
     // 删除 children
     delete node.children
   })
