@@ -22,7 +22,13 @@
             @change="crud.toQuery"
           />
         </template>
-        <template #afterWarehouse>
+        <template #secondLineFirstItem>
+          <warehouse-project-cascader
+            v-model:projectId="query.projectId"
+            v-model:projectWarehouseType="query.projectWarehouseType"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
           <el-date-picker
             v-model="query.returnTime"
             :default-time="defaultTime"
@@ -56,6 +62,7 @@
             class="filter-item"
             @keyup.enter="crud.toQuery"
           />
+          <br/>
         </template>
       </mat-header-query>
 
@@ -75,24 +82,25 @@ import { rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
   returnTime: [], // [开始时间，结束时间]
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
-  projectId: { value: undefined, resetAble: false }, // 项目id
+  projectId: undefined, // 项目id
+  projectWarehouseType: undefined, // 仓库类型
   outboundSN: undefined, // 退库单号
   operatorName: undefined // 申请人/编辑人/审核人
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

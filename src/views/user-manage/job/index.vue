@@ -89,9 +89,7 @@ const { crud, columns, CRUD } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.job',
-  paginate: true,
-  extraHeight: 157
+  paginate: true
 })
 
 async function changeStatus(data, val) {

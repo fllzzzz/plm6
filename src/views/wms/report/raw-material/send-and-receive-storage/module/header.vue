@@ -34,12 +34,9 @@
             class="filter-item"
             @change="crud.toQuery"
           />
-          <common-radio-button
-            v-model="query.projectWarehouseType"
-            :options="projectWarehouseTypeEnum.ENUM"
-            show-option-all
-            type="enum"
-            size="small"
+          <warehouse-project-cascader
+            v-model:projectId="query.projectId"
+            v-model:projectWarehouseType="query.projectWarehouseType"
             class="filter-item"
             @change="crud.toQuery"
           />
@@ -82,29 +79,29 @@
 </template>
 
 <script setup>
-import { computed, inject, ref, watch } from 'vue'
-import { mapGetters } from '@/store/lib'
+import { computed, inject, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { unitTypeEnum, projectWarehouseTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
-import { isBlank } from '@/utils/data-type'
+import { unitTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { specFormat, specTip } from '@/utils/wms/spec-format'
+import checkPermission from '@/utils/system/check-permission'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import Panel from '@/components/Panel'
-import checkPermission from '@/utils/system/check-permission'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 
 const defaultQuery = {
-  createTime: { value: `${new Date().getTime()}`, resetAble: false }, // [借用开始日期，借用结束日期]
+  createTime: { value: `${new Date().getTime()}`, resetAble: false }, // 时间
   projectId: { value: undefined, resetAble: false }, // 原项目id
   factoryId: { value: undefined, resetAble: false }, // 工厂id
+  projectWarehouseType: undefined, // 仓库类型
   basicClass: { value: undefined, resetAble: false }, // 基础类型
   orderSupplyType: { value: undefined, resetAble: false }, // 订单供应类型
   unitType: { value: unitTypeEnum.ACCOUNTING.V, resetAble: false } // 单位类型
@@ -112,31 +109,10 @@ const defaultQuery = {
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
 
-// 全局项目id
-const { globalProjectId } = mapGetters('globalProjectId')
 const totalAmount = ref({})
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
-
-// 选中项目库时， 根据项目id的变化刷新列表
-watch(
-  globalProjectId,
-  () => {
-    if (isBlank(crud.query.projectWarehouseType) || crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
-
-CRUD.HOOK.beforeToQuery = () => {
-  if (isBlank(crud.query.projectWarehouseType) || crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-    crud.query.projectId = globalProjectId.value || undefined
-  } else {
-    crud.query.projectId = undefined
-  }
-}
 
 // 加载后数据处理
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

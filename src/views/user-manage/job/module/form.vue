@@ -16,7 +16,7 @@
         prop="name"
       >
         <el-input
-          v-model="form.name"
+          v-model.trim="form.name"
           style="width: 450px;"
         />
       </el-form-item>
@@ -42,7 +42,7 @@
           type="enum"
         />
       </el-form-item>
-      <el-form-item label="所属部门" prop="pid">
+      <el-form-item label="所属部门" prop="deptId">
         <el-popover
           placement="top-start"
           width="450"

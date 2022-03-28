@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" />
       <!--编辑与删除-->
-      <el-table-column v-permission="[...permission.edit, ...permission.del]" label="操作" width="130px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission([...permission.edit, ...permission.del])" label="操作" width="130px" align="center" fixed="right">
         <template #default="{ row }">
           <udOperation :data="row" />
         </template>
@@ -100,6 +100,7 @@ import { configWmsFactoryWarehousePM as permission } from '@/page-permission/con
 import { ref } from 'vue'
 import EO from '@enum'
 import { matClsEnum } from '@enum-ms/classification'
+import { enabledEnum } from '@/utils/enum/modules/common'
 import { warehouseTypeEnum } from '@enum-ms/wms'
 import { baseTimeColumns } from '@/utils/columns-format/common'
 import checkPermission from '@/utils/system/check-permission'

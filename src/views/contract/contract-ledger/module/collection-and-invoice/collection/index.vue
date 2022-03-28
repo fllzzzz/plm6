@@ -22,6 +22,8 @@
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
       class="collection-table"
+      show-summary
+      :summary-method="getSummaries"
       :cell-class-name="wrongCellMask"
       :stripe="false"
       return-source-data
@@ -30,33 +32,24 @@
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="collectionDate" prop="collectionDate" label="*收款日期" align="center" width="160">
         <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>合计</span>
-          </template>
+          <el-date-picker
+            v-if="scope.row.isModify"
+            v-model="scope.row.collectionDate"
+            type="date"
+            size="small"
+            value-format="x"
+            placeholder="选择日期"
+            style="width:100%"
+            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+          />
           <template v-else>
-            <el-date-picker
-              v-if="scope.row.isModify"
-              v-model="scope.row.collectionDate"
-              type="date"
-              size="small"
-              value-format="x"
-              placeholder="选择日期"
-              style="width:100%"
-              :disabledDate="(date) => {if (scope.row.collectionDate) { return date.getTime() > scope.row.collectionDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
-            />
-            <template v-else>
-              <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
-            </template>
+            <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="collectionAmount" prop="collectionAmount" label="*收款金额" align="center" min-width="170" class="money-column">
+      <el-table-column key="collectionAmount2" prop="collectionAmount2" label="*收款金额" align="center" min-width="170" class="money-column">
         <el-table-column key="collectionAmount" prop="collectionAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-          </template>
-          <template v-else>
             <el-input-number
               v-if="scope.row.isModify"
               v-show-thousand
@@ -72,17 +65,11 @@
             />
             <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
           </template>
-        </template>
         </el-table-column>
-        <el-table-column key="collectionAmount1" prop="collectionAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="collectionAmount1" prop="collectionAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-          </template>
-          <template v-else>
             <div>{{scope.row.collectionAmount?'('+digitUppercase(scope.row.collectionAmount)+')':''}}</div>
           </template>
-        </template>
         </el-table-column>
       </el-table-column>
       <el-table-column key="collectionReason" prop="collectionReason" label="*收款事由" align="center" width="120">
@@ -217,6 +204,7 @@
 import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
 import { ref, defineProps, watch, nextTick, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
+import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -389,33 +377,6 @@ async function passConfirm(row) {
   }
 }
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.projectId = v.project.id
-    return v
-  })
-}
-
-// function addRow() {
-//   crud.data.unshift({
-//     collectionAmount: undefined,
-//     collectionBankAccount: undefined,
-//     collectionBankAccountId: undefined,
-//     collectionDate: undefined,
-//     collectionDepositBank: undefined,
-//     collectionMode: undefined,
-//     collectionReason: undefined,
-//     collectionUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
-//     collectionUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
-//     paymentBankAccount: contractInfo.value.customerBankCode || undefined,
-//     paymentDepositBank: contractInfo.value.customerBankName || undefined,
-//     paymentUnit: contractInfo.value.customerUnit || undefined,
-//     projectId: props.projectId,
-//     dataIndex: crud.data.length,
-//     isModify: true
-//   })
-// }
-
 function modifyRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   row.isModify = true
@@ -473,6 +434,14 @@ async function rowSubmit(row) {
   }
 }
 
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['collectionAmount'],
+    toThousandFields: ['collectionAmount']
+  })
+}
+
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
 }
@@ -480,15 +449,11 @@ CRUD.HOOK.beforeRefresh = () => {
 CRUD.HOOK.handleRefresh = (crud, data) => {
   totalAmount.value = 0
   data.data.content.map(v => {
+    v.projectId = v.project.id
     if (v.collectionAmount) {
       totalAmount.value += v.collectionAmount
     }
   })
-  if (totalAmount.value > 0) {
-    data.data.content.push({
-      type: 2
-    })
-  }
 }
 </script>
 

@@ -30,6 +30,16 @@
             @change="crud.toQuery"
           />
         </template>
+        <template #secondLineFirstItem>
+          <project-cascader
+            v-model="query.projectId"
+            placeholder="所属项目"
+            clearable
+            @change="crud.toQuery"
+            class="filter-item"
+            style="width: 300px"
+          />
+        </template>
       </mat-header-query>
 
       <rrOperation />
@@ -49,7 +59,6 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import useGlobalProjectIdChangeToQuery from '@/composables/use-global-project-id-change-to-query'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
@@ -61,7 +70,6 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

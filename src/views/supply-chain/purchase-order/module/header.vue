@@ -44,7 +44,22 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <el-input
+        v-model.trim="query.operatorName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="按操作人搜索"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
       <br />
+      <warehouse-project-cascader
+        v-model:projectId="query.projectId"
+        v-model:projectWarehouseType="query.projectWarehouseType"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <branch-company-select
         v-model="query.branchCompanyId"
         placeholder="合同签订主体"
@@ -68,15 +83,6 @@
         style="width: 200px"
         size="small"
         placeholder="按订单号搜索"
-        class="filter-item"
-        @keyup.enter="crud.toQuery"
-      />
-      <el-input
-        v-model.trim="query.operatorName"
-        clearable
-        style="width: 200px"
-        size="small"
-        placeholder="按操作人搜索"
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
@@ -115,11 +121,11 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
 import BranchCompanySelect from '@comp-base/branch-company-select.vue'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
@@ -128,7 +134,8 @@ const defaultQuery = {
   orderSupplyType: undefined, // 订单供货类型
   purchaseType: undefined, // 采购材料类型
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
-  projectId: { value: undefined, resetAble: false }, // 项目id
+  projectWarehouseType: undefined, // 仓库类型
+  projectId: undefined, // 项目id
   serialNumber: undefined, // 采购单号搜索
   branchCompanyId: undefined, // 签订主体
   supplierId: undefined, // 供应商id
@@ -137,7 +144,6 @@ const defaultQuery = {
 
 const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 
 // 处理原材料添加
 function toAddRawMaterial() {

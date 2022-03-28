@@ -15,8 +15,8 @@ export const materialColumns = [
 export const materialNestedColumns = [
   ['material.project', ['parse-project', { onlyShortName: true }]],
   ['material.projectFullName', 'parse-project', { source: 'material.project' }],
-  ['material.quantity', ['to-fixed-field', 'measurePrecision']],
-  ['material.mete', ['to-fixed-field', 'accountingPrecision']]
+  ['material.quantity', ['to-fixed-field', 'material.measurePrecision']],
+  ['material.mete', ['to-fixed-field', 'material.accountingPrecision']]
 
 ]
 
@@ -34,6 +34,7 @@ export const materialHasAmountColumns = [
   ['invoiceType', ['parse-enum', invoiceTypeEnum, { f: 'SL' }]],
   ['taxRate', ['suffix', '%']],
   ['unitPrice', 'to-thousand'],
+  ['unitPriceExcludingVAT', 'to-thousand'],
   ['amount', 'to-thousand'],
   ['amountExcludingVAT', 'to-thousand'],
   ['inputVAT', 'to-thousand']

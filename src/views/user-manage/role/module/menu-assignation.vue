@@ -3,7 +3,8 @@
     <table-tree
       v-model="copyValue"
       checkable
-      :returnLeaf="false"
+      :return-leaf="false"
+      :is-delete-nonexistent="false"
       return-indeterminate
       :options="props.menus"
       @change="handleChange"
@@ -45,12 +46,12 @@ const emit = defineEmits(['updateSelect'])
 watch(
   props.menuIds,
   (val) => {
-    console.log('val: ', val)
     copyValue.value = val
   },
   { immediate: true, deep: true }
 )
 
+// 更新
 function handleChange(value) {
   const selectMenus = Array.from(value)
   emit('updateSelect', selectMenus)

@@ -85,15 +85,9 @@
         width="190px"
         align="center"
       >
-      <!-- <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.audit])"
-        label="操作"
-        width="190px"
-        align="center"
-      > -->
         <template #default="{ row }">
-          <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" />
-          <common-button type="success" icon="el-icon-money" size="mini" @click="rowSubmit(row)" />
+          <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.application.get)"/>
+          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="row.settlementStatus!==settlementStatusEnum.SETTLED.V && checkPermission(permission.application.settle)"/>
         </template>
       </el-table-column>
     </common-table>
@@ -115,6 +109,7 @@
         <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
       </template>
     </common-drawer>
+    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
   </div>
 </template>
 
@@ -122,9 +117,10 @@
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, provide, computed, nextTick } from 'vue'
 
-import { orderTrackingPM as permission } from '@/page-permission/contract'
+import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 import { matClsEnum } from '@/utils/enum/modules/classification'
+import { settlementStatusEnum } from '@enum-ms/contract'
 import EO from '@enum'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -135,6 +131,7 @@ import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application'
+import settleForm from './module/settle-form'
 
 const optShow = {
   add: false,
@@ -155,6 +152,7 @@ const currentView = computed(() => {
 const tableRef = ref()
 const headerRef = ref()
 const applicationVisible = ref(false)
+const settleVisible = ref(false)
 const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
@@ -216,6 +214,13 @@ function openApplication(row) {
   })
 }
 
+function openSettle(row) {
+  detailInfo.value = row.sourceRow
+  orderId.value = row.id
+  nextTick(() => {
+    settleVisible.value = true
+  })
+}
 </script>
 <style lang="scss" scoped>
 .clickable {

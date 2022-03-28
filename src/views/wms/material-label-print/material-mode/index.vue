@@ -32,7 +32,7 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" />
+      <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
         v-if="columns.visible('receipt')"
         key="receipt"
@@ -115,7 +115,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 // 权限
@@ -131,10 +131,10 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '打印标签-物料模式',
     sort: ['id.desc'],
-    invisibleColumns: [],
+    invisibleColumns: ['serialNumber'],
     permission: { ...permission },
     optShow: { ...optShow },
-    crudApi: { ...crudApi },
+    crudApi: { ...crudApi }
   },
   tableRef
 )
@@ -145,7 +145,7 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content, {
     toSmallest: false,
-    toNum: false,
+    toNum: false
   })
   data.content.forEach((row) => {
     if (row.basicClass === matClsEnum.STEEL_COIL.V) {

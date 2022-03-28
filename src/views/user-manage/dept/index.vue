@@ -59,11 +59,7 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.dept',
-  paginate: true,
-  extraHeight: 157
-})
+const { maxHeight } = useMaxHeight()
 
 function checkboxT(row, rowIndex) {
   return row.id !== 1

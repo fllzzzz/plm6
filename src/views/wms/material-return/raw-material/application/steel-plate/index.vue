@@ -130,6 +130,7 @@ import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { calcSteelPlateWeight } from '@/utils/wms/measurement-calc'
 import { isNotBlank, toPrecision } from '@/utils/data-type'
+import { positiveNumPattern } from '@/utils/validate/pattern'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -142,7 +143,6 @@ import CommonHeader from '../components/common-header.vue'
 import useCurrentRow from '../composables/use-current-row'
 import useFormSet from '../composables/use-form-set'
 import useCommonCalc from '../composables/use-common-calc'
-import { positiveNumPattern } from '@/utils/validate/pattern'
 
 const emit = defineEmits(['success'])
 
@@ -281,7 +281,8 @@ async function calcTheoryWeight(row) {
     thickness: row.source.thickness
   })
   if (row.theoryWeight) {
-    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, 10)
+    // 将小数精度提高一位计算，计算总重与实际总重出现误差
+    row.singleMete = toPrecision((row.theoryWeight / row.source.theoryWeight) * row.source.singleMete, baseUnit.value.weight.precision + 1)
   } else {
     row.singleMete = undefined
   }

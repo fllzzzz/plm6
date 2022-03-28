@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="currentRow.amount">{{'可收款余额:'+toThousand(currentRow.amount-totalAmount)}}</el-tag>
+      <el-tag type="success" v-if="currentRow.amount">{{'可收票余额:'+toThousand(currentRow.amount-totalAmount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -28,33 +28,24 @@
           <el-table-column label="序号" type="index" align="center" width="50" />
           <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*开票日期" align="center" width="160">
             <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>合计</span>
-              </template>
+              <el-date-picker
+                v-if="scope.row.isModify"
+                v-model="scope.row.receiveInvoiceDate"
+                type="date"
+                size="small"
+                value-format="x"
+                placeholder="选择日期"
+                style="width:100%"
+                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+              />
               <template v-else>
-                <el-date-picker
-                  v-if="scope.row.isModify"
-                  v-model="scope.row.receiveInvoiceDate"
-                  type="date"
-                  size="small"
-                  value-format="x"
-                  placeholder="选择日期"
-                  style="width:100%"
-                  :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
-                />
-                <template v-else>
-                  <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
-                </template>
+                <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
               </template>
             </template>
           </el-table-column>
           <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
             <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
               <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-              </template>
-              <template v-else>
                 <el-input-number
                   v-if="scope.row.isModify"
                   v-show-thousand
@@ -69,17 +60,11 @@
                 />
                 <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
               </template>
-            </template>
             </el-table-column>
             <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
               <template v-slot="scope">
-              <template v-if="scope.row.type===2">
-                <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-              </template>
-              <template v-else>
                 <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
               </template>
-            </template>
             </el-table-column>
           </el-table-column>
           <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
@@ -295,6 +280,8 @@ function taxMoney(row) {
 }
 function checkInvoiceNo(row) {
   const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
+  console.log(invoiceNoArr)
+  console.log(val)
   if (val) {
     if (row.invoiceSerialNumber) {
       if (val.invoiceSerialNumber === row.invoiceSerialNumber) {

@@ -55,7 +55,22 @@
         show-hide
         style="width: 250px"
       />
+      <el-input
+        v-model.trim="query.operatorName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="申请人/编辑人/审核人"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
       <br />
+      <warehouse-project-cascader
+        v-model:projectId="query.projectId"
+        v-model:projectWarehouseType="query.projectWarehouseType"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-input
         v-model.trim="query.purchaseSN"
         clearable
@@ -92,15 +107,6 @@
         class="filter-item"
         @keyup.enter="crud.toQuery"
       />
-      <el-input
-        v-model.trim="query.operatorName"
-        clearable
-        style="width: 200px"
-        size="small"
-        placeholder="申请人/编辑人/审核人"
-        class="filter-item"
-        @keyup.enter="crud.toQuery"
-      />
       <rrOperation />
     </div>
     <crudOperation>
@@ -120,18 +126,20 @@ import { rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import supplierSelect from '@comp-base/supplier-select/index.vue'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   orderSupplyType: undefined, // 订单供货类型
   basicClass: undefined, // 采购类型
+  projectId: undefined, // 项目id
+  projectWarehouseType: undefined, // 仓库类型
   reviewStatus: undefined, // 审核状态
-  projectId: { value: undefined, resetAble: false }, // 项目id
   shipmentNumber: undefined, // 物流单号
   licensePlate: undefined, // 车牌号
   purchaseSN: undefined, // 采购单号
@@ -142,7 +150,6 @@ const defaultQuery = {
 
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
     query.basicClass = rawMatClsEnum.STEEL_PLATE.V

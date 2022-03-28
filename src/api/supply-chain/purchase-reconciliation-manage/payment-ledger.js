@@ -20,6 +20,15 @@ export function get(params) {
   })
 }
 
+// 按订单汇总
+export function getBySupplier(params) {
+  return request({
+    module: 'contract',
+    url: 'supply/chain/order/payment/supplier',
+    method: 'get',
+    params
+  })
+}
 /**
  * 付款记录
  * @param {number} orderId|required 订单id

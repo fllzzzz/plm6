@@ -25,63 +25,50 @@
       :cell-class-name="wrongCellMask"
       :stripe="false"
       return-source-data
+      show-summary
+      :summary-method="getSummaries"
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="invoiceDate" prop="invoiceDate" label="*开票日期" align="center" width="160">
         <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>合计</span>
-          </template>
+          <el-date-picker
+            v-if="scope.row.isModify"
+            v-model="scope.row.invoiceDate"
+            type="date"
+            size="small"
+            value-format="x"
+            placeholder="选择日期"
+            style="width:100%"
+            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+          />
           <template v-else>
-            <el-date-picker
-              v-if="scope.row.isModify"
-              v-model="scope.row.invoiceDate"
-              type="date"
-              size="small"
-              value-format="x"
-              placeholder="选择日期"
-              style="width:100%"
-              :disabledDate="(date) => {if (scope.row.invoiceDate) { return date.getTime() > scope.row.invoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
-            />
-            <template v-else>
-              <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
-            </template>
+            <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*开票额" align="center" min-width="170" class="money-column">
+      <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
         <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-          </template>
-          <template v-else>
             <el-input-number
-              v-if="scope.row.isModify"
-              v-show-thousand
-              v-model.number="scope.row.invoiceAmount"
-              :min="0"
-              :max="contractInfo.contractAmount"
-              :step="100"
-              :precision="DP.YUAN"
-              placeholder="开票额(元)"
-              controls-position="right"
-              @change="moneyChange(scope.row)"
-            />
-            <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+                v-if="scope.row.isModify"
+                v-show-thousand
+                v-model.number="scope.row.invoiceAmount"
+                :min="0"
+                :max="contractInfo.contractAmount-totalAmount"
+                :step="100"
+                :precision="DP.YUAN"
+                placeholder="开票额(元)"
+                controls-position="right"
+                @change="moneyChange(scope.row)"
+              />
+              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
-        </template>
         </el-table-column>
-        <el-table-column key="invoiceAmount1" prop="invoiceAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-          </template>
-          <template v-else>
             <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
           </template>
-        </template>
         </el-table-column>
       </el-table-column>
       <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
@@ -215,6 +202,7 @@ import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/co
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
 import { ref, defineProps, watch, nextTick, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
+import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
@@ -411,13 +399,6 @@ async function passConfirm(row) {
   }
 }
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.projectId = v.project.id
-    return v
-  })
-}
-
 function modifyRow(row) {
   originRow.value = JSON.parse(JSON.stringify(row))
   row.isModify = true
@@ -480,6 +461,14 @@ async function rowSubmit(row) {
   }
 }
 
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['invoiceAmount'],
+    toThousandFields: ['invoiceAmount']
+  })
+}
+
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.projectId = props.projectId
 }
@@ -488,6 +477,7 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
   totalAmount.value = 0
   invoiceNoArr.value = []
   data.data.content.map(v => {
+    v.projectId = v.project.id
     v.dataIndex = v.id + 'id'
     if (v.invoiceAmount) {
       totalAmount.value += v.invoiceAmount
@@ -499,11 +489,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       })
     }
   })
-  if (totalAmount.value > 0) {
-    data.data.content.push({
-      type: 2
-    })
-  }
 }
 </script>
 

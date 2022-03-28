@@ -5,16 +5,9 @@
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
         <template #firstLineRight>
           <span class="child-mr-6">
-          <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
-          <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
-          <common-button
-            type="info"
-            size="mini"
-            icon="el-icon-lock"
-            @click="openFreezeRecords"
-          >
-            冻结记录
-          </common-button>
+            <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
+            <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
+            <common-button type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
           </span>
         </template>
         <template #afterProjectWarehouseType>
@@ -42,7 +35,7 @@
       </template>
       <template #viewLeft>
         <!-- <common-button class="filter-item" type="success" size="mini" icon="el-icon-printer" @click="toBatchPrint">批量打印</common-button> -->
-        <el-badge :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0">
+        <el-badge :value="notPrintedMaterialQuantity" :hidden="notPrintedMaterialQuantity <= 0" style="z-index: 1">
           <common-button class="filter-item" type="primary" size="mini" icon="el-icon-printer" @click="toPrintNotPrintedLabel">
             标签打印
           </common-button>
@@ -62,21 +55,28 @@
       :material-list="crud.selections"
       @success="handleTransferOutbound"
     />
+    <common-drawer title="标签打印" v-model="materialPrintViewVisible" size="90%">
+      <template #content>
+        <material-label-print-view @printed-success="notPrintedMaterialRefresh" />
+      </template>
+    </common-drawer>
   </div>
 </template>
 
 <script setup>
 import { getSteelPlateInventory, getSectionSteelInventory, getSteelCoilInventory } from '@/api/wms/material-inventory'
-import { defineExpose, onMounted, ref } from 'vue'
+import { computed, defineExpose, onMounted, ref } from 'vue'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 
 import useHeaderInfo from '../../compos/use-header-info'
+import useGetNotPrintedMaterial from '@/composables/store/use-get-not-printed-material'
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import CurrentUserOutboundList from '@/views/wms/material-outbound/raw-material/components/current-user-outbound-list/index.vue'
 import OutboundBatchHandlingForm from '@/views/wms/material-outbound/raw-material/components/outbound-batch-handling-form/index.vue'
 import TransferBatchHandlingForm from '@/views/wms/material-transfer/raw-material/components/transfer-batch-handling-form/index.vue'
+import materialLabelPrintView from '@/views/wms/material-label-print/index.vue'
 
 const {
   crud,
@@ -94,8 +94,17 @@ const {
   openFreezeRecords
 } = useHeaderInfo({ defaultBasicClass: steelClsEnum.STEEL_PLATE.V })
 
+const materialPrintViewVisible = ref(false)
+const { notPrintedMaterialNumber, refresh: notPrintedMaterialRefresh } = useGetNotPrintedMaterial()
+
 // 未打印的标签数量
-const notPrintedMaterialQuantity = ref(0)
+const notPrintedMaterialQuantity = computed(() => {
+  if (notPrintedMaterialNumber.value) {
+    return notPrintedMaterialNumber.value.totalMaterial
+  } else {
+    return 0
+  }
+})
 
 onMounted(async () => {
   // notPrintedMaterialQuantity.value = await getDetailNumberByCurrentUser()
@@ -131,7 +140,7 @@ async function handleBasicClassChange(val) {
 
 // 打印 未打印标签的物料
 function toPrintNotPrintedLabel() {
-
+  materialPrintViewVisible.value = true
 }
 
 defineExpose({

@@ -333,6 +333,13 @@ export default {
           hidden: false,
           component: '/wms/report/raw-material/send-and-receive-storage/index',
           meta: { title: '收发存报表', icon: 'project', noCache: true }
+        },
+        {
+          name: 'WMSReportRawMaterialHighTechResearchAndDevelopmentFee',
+          path: 'report/raw-material/high-tech-rd-fee',
+          hidden: false,
+          component: '/wms/report/raw-material/high-tech-rd-fee/index',
+          meta: { title: '高新研发费', icon: 'project', noCache: true }
         }
       ]
     },

@@ -180,13 +180,13 @@ const returnNumber = ref({})
 // 表格ref
 const tableRef = ref()
 // 表格列格式化
-const columnsDataFormat = ref([
+const columnsDataFormat = [
   ['quantity', ['to-fixed-field', 'measurePrecision']],
   ['singleMete', ['to-fixed-field', 'accountingPrecision']],
   ['singleReturnableMete', ['to-fixed-field', 'accountingPrecision']],
   ['project', ['parse-project', { onlyShortName: true }]],
   ['createTime', ['parse-time', '{y}-{m}-{d}']]
-])
+]
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '可退库列表',

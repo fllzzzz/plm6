@@ -3,7 +3,7 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{'合同额:'+toThousand(currentRow.amount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -16,63 +16,50 @@
       :cell-class-name="wrongCellMask"
       return-source-data
       :showEmptySymbol="false"
+      show-summary
+      :summary-method="getSummaries"
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*开票日期" align="center" width="160">
         <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>合计</span>
-          </template>
+          <el-date-picker
+            v-if="scope.row.isModify"
+            v-model="scope.row.receiveInvoiceDate"
+            type="date"
+            size="small"
+            value-format="x"
+            placeholder="选择日期"
+            style="width:100%"
+            :disabledDate="(date) => {if (scope.row.receiveInvoiceDate) { return date.getTime() > scope.row.receiveInvoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
+          />
           <template v-else>
-            <el-date-picker
-              v-if="scope.row.isModify"
-              v-model="scope.row.receiveInvoiceDate"
-              type="date"
-              size="small"
-              value-format="x"
-              placeholder="选择日期"
-              style="width:100%"
-              :disabledDate="(date) => {if (scope.row.receiveInvoiceDate) { return date.getTime() > scope.row.receiveInvoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
-            />
-            <template v-else>
-              <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
-            </template>
+            <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*开票额" align="center" min-width="170" class="money-column">
+      <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="*开票额" align="center" min-width="170" class="money-column">
         <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?toThousand(totalAmount): totalAmount}}</span>
-          </template>
-          <template v-else>
             <el-input-number
-              v-if="scope.row.isModify"
-              v-show-thousand
-              v-model.number="scope.row.invoiceAmount"
-              :min="0"
-              :max="props.currentRow.amount"
-              :step="100"
-              :precision="DP.YUAN"
-              placeholder="开票额(元)"
-              controls-position="right"
-              @change="moneyChange(scope.row)"
-            />
-            <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+                v-if="scope.row.isModify"
+                v-show-thousand
+                v-model.number="scope.row.invoiceAmount"
+                :min="0"
+                :max="props.currentRow.amount"
+                :step="100"
+                :precision="DP.YUAN"
+                placeholder="开票额(元)"
+                controls-position="right"
+                @change="moneyChange(scope.row)"
+              />
+              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
-        </template>
         </el-table-column>
-        <el-table-column key="invoiceAmount1" prop="invoiceAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
-          <template v-if="scope.row.type===2">
-            <span>{{totalAmount?'('+digitUppercase(totalAmount)+')':''}}</span>
-          </template>
-          <template v-else>
             <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
           </template>
-        </template>
         </el-table-column>
       </el-table-column>
       <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
@@ -195,9 +182,9 @@
 </template>
 
 <script setup>
-// import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
 import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
+import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -428,9 +415,17 @@ async function rowSubmit(row) {
   }
 }
 
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['invoiceAmount'],
+    toThousandFields: ['invoiceAmount']
+  })
+}
+
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.orderId = props.currentRow.id
-  crud.query.type = 1
+  crud.query.type = props.propertyType
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
@@ -448,11 +443,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
       })
     }
   })
-  if (totalAmount.value > 0) {
-    data.data.content.push({
-      type: 2
-    })
-  }
 }
 
 CRUD.HOOK.afterAddSuccess = () => {

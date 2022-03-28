@@ -100,8 +100,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-permission="permission.edit"
-            v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
+            v-if="checkPermission(permission.outbound) && form.reviewStatus === reviewStatusEnum.UNREVIEWED.V"
             label="操作"
             width="70px"
             align="left"
@@ -136,6 +135,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
 import { materialColumns } from '@/utils/columns-format/wms'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'

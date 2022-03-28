@@ -28,6 +28,12 @@
       @keyup.enter="crud.toQuery"
     />
     <br />
+    <warehouse-project-cascader
+      v-model:projectId="query.projectId"
+      v-model:projectWarehouseType="query.projectWarehouseType"
+      class="filter-item"
+      @change="crud.toQuery"
+    />
     <el-date-picker
       v-model="query.createTime"
       :default-time="defaultTime"
@@ -69,14 +75,15 @@ import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
-  projectId: { value: undefined, resetAble: false }, // 项目id
+  projectId: undefined, // 项目id
+  projectWarehouseType: undefined, // 仓库类型
   createTime: [], // 申请日期
   outboundTime: [], // 出库日期
   serialNumber: undefined, // 出库单号
@@ -85,5 +92,4 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 </script>

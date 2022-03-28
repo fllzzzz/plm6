@@ -2,12 +2,12 @@
   <div class="app-container">
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{'合同额:'+toThousand(currentRow.amount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
       v-loading="crud.loading"
-      :data="[{id:1}]"
+      :data="crud.data"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
@@ -15,6 +15,8 @@
       :cell-class-name="wrongCellMask"
       return-source-data
       :showEmptySymbol="false"
+      show-summary
+      :summary-method="getSummaries"
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
@@ -72,20 +74,20 @@
       >
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" v-permission="permission.detail" @click="openDetail(scope.row, 'detail')"/>
-          <common-button icon="el-icon-s-check" type="primary" size="mini" @click="openDetail(scope.row, 'audit')"/>
-          <!-- <common-button icon="el-icon-s-check" type="primary" size="mini" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V && checkPermission(permission.audit)"/> -->
+          <common-button icon="el-icon-s-check" type="primary" size="mini" @click="openDetail(scope.row, 'audit')" v-if="scope.row.auditStatus==auditTypeEnum.ENUM.AUDITING.V && checkPermission(permission.audit)"/>
         </template>
       </el-table-column>
     </common-table>
   <!--分页组件-->
   <pagination />
-  <detail v-model="detailVisible" :showType="showType"/>
+  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo"/>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
-import { ref, defineProps, watch, provide } from 'vue'
+import { ref, defineProps, watch } from 'vue'
+import { tableSummary } from '@/utils/el-extra'
 import { contractSupplierMaterialPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -117,18 +119,16 @@ const props = defineProps({
   visibleValue: {
     type: Boolean,
     default: false
+  },
+  propertyType: {
+    type: [Number, String],
+    default: undefined
   }
 })
 
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
-const contractInfo = ref({})
-// const originRow = ref({})
-const bankList = ref([])
-const totalAmount = ref(0)
-provide('bankList', bankList)
-provide('contractInfo', contractInfo)
-provide('totalAmount', totalAmount)
+const detailInfo = ref({})
 const showType = ref('detail')
 const detailVisible = ref(false)
 const { crud, CRUD } = useCRUD(
@@ -183,52 +183,22 @@ watch(
 )
 
 function openDetail(row, type) {
+  detailInfo.value = row
   showType.value = type
   detailVisible.value = true
-}
-// async function getBankData(companyId) {
-//   try {
-//     const { content } = await bankData(companyId)
-//     bankList.value = content
-//   } catch (e) {
-//     console.log('获取银行账号', e)
-//   }
-// }
-
-// async function passConfirm(row) {
-//   try {
-//     await editStatus(row.id, auditTypeEnum.PASS.V)
-//     crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
-//     crud.toQuery()
-//   } catch (e) {
-//     console.log('审核失败', e)
-//   }
-// }
-
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.projectId = v.project.id
-    return v
-  })
 }
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.orderId = props.currentRow.id
-  crud.query.propertyType = 1
+  crud.query.propertyType = props.propertyType
 }
 
-CRUD.HOOK.handleRefresh = (crud, data) => {
-  totalAmount.value = 0
-  data.data.content.map(v => {
-    if (v.collectionAmount) {
-      totalAmount.value += v.collectionAmount
-    }
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['applyAmount'],
+    toThousandFields: ['applyAmount']
   })
-  if (totalAmount.value > 0) {
-    data.data.content.push({
-      type: 2
-    })
-  }
 }
 </script>
 

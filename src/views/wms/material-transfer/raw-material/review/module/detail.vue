@@ -30,6 +30,7 @@
       <unfreeze-info class="unfreeze-info" v-if="detail.boolHasUnfreeze" :basic-class="detail.basicClass" :list="detail.unfreezeList" />
       <common-table
         :data="detail.list"
+        :data-format="columnsDataFormat"
         :max-height="maxHeight"
         show-summary
         :summary-method="getSummaries"
@@ -40,11 +41,11 @@
           <template #default="{ row }">
             <expand-secondary-info v-if="showAmount" :basic-class="detail.basicClass" :row="row" show-brand>
               <p>
-                备注：<span v-empty-text>{{ row.remark }}</span>
+                备注：<span>{{ row.remark }}</span>
               </p>
             </expand-secondary-info>
             <p v-else>
-              备注：<span v-empty-text>{{ row.remark }}</span>
+              备注：<span>{{ row.remark }}</span>
             </p>
           </template>
         </el-expand-table-column>
@@ -73,6 +74,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { isNotBlank } from '@/utils/data-type'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regDetail } from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -89,6 +91,9 @@ import unfreezeInfo from '@/views/wms/material-freeze/raw-material/components/un
 const drawerRef = ref()
 const expandRowKeys = ref([]) // 展开key
 const showAmount = ref(false) // 显示金额，只有“买入甲供材料才需要填写金额”
+
+// 表格列数据格式转换
+const columnsDataFormat = [...materialHasAmountColumns, ['remark', 'empty-text']]
 const { CRUD, crud, detail } = regDetail()
 
 // 表格高度处理

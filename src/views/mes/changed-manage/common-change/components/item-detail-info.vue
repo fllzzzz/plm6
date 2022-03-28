@@ -1,7 +1,7 @@
 <template>
   <el-form ref="form" :model="data" label-width="40px" style="display: flex" label-position="left">
     <el-form-item label="项目" style="margin-right: 20px">
-      <span>{{ row.project?.shortName }}</span>
+      <span>{{ data.project?.shortName }}</span>
     </el-form-item>
     <el-form-item label="单体" style="margin-right: 20px">
       <span>{{ data.monomer?.name }}</span>

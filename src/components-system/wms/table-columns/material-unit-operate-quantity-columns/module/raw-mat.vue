@@ -89,11 +89,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span>{{ row.measureUnit }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       v-if="showQuantity"
       key="quantity"
@@ -104,7 +100,7 @@
       :min-width="showOperableQuantity ? '150px' : '70px'"
     >
       <template #default="{ row }">
-        <template v-if="row.measureUnit">
+        <template v-if="row.sourceRow.measureUnit">
           <!-- 显示操作数量，并且可操作数量 != 实际数量-->
           <template v-if="showOperableQuantity && (!equalDisabled || row[operableQuantityField] != row[quantityField])">
             <span class="color-green">{{ row[operableQuantityField] }}</span>
@@ -112,7 +108,7 @@
           </template>
           {{ row[quantityField] }}
         </template>
-        <span v-else />
+        <span v-else>-</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -123,11 +119,7 @@
       align="center"
       width="70px"
       show-overflow-tooltip
-    >
-      <template #default="{ row }">
-        <span>{{ row.accountingUnit }}</span>
-      </template>
-    </el-table-column>
+    />
     <el-table-column v-if="showMete" key="mete" prop="mete" :label="meteLabel" align="right" min-width="150px" show-overflow-tooltip>
       <template #default="{ row }">
         <template v-if="showOperableMete && (!equalDisabled || row[operableMeteField] != row[meteField])">

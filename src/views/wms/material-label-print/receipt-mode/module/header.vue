@@ -43,6 +43,13 @@
         value-format="x"
         @change="crud.toQuery"
       />
+      <br/>
+      <warehouse-project-cascader
+        v-model:projectId="query.projectId"
+        v-model:projectWarehouseType="query.projectWarehouseType"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
     </div>
     <crudOperation>
       <!-- TODO:打印 -->
@@ -61,14 +68,15 @@ import { defineEmits } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 import { boolPrintedEnum } from '@/utils/enum/modules/common'
+import { materialLabelPrintTypeEnum } from '@/utils/enum/modules/wms'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
-import { materialLabelPrintTypeEnum } from '@/utils/enum/modules/wms'
 
 import usePrint from '../../composables/use-print'
 import useGetPrintInfo from '../../composables/use-get-print-info'
+import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['printed-success'])
@@ -76,6 +84,8 @@ const emit = defineEmits(['printed-success'])
 const defaultQuery = {
   boolPrinted: false, // 打印状态
   materialLabelPrintType: undefined, // 物料标签打印类型
+  projectWarehouseType: undefined, // 仓库类型
+  projectId: undefined, // 项目id
   basicClass: STEEL_ENUM, // 基础类型
   createDate: [] // 创建日期
 }

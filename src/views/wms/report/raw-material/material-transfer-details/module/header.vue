@@ -4,6 +4,15 @@
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" :show-warehouse="false">
         <template #afterProjectWarehouseType>
           <common-radio-button
+            type="enum"
+            v-model="query.transferType"
+            :options="transferTypeEnum.ENUM"
+            show-option-all
+            clearable
+            class="filter-item"
+            @change="crud.toQuery"
+          />
+          <common-radio-button
             v-model="query.basicClass"
             :options="rawMatClsEnum.ENUM"
             show-option-all
@@ -22,7 +31,23 @@
             @change="crud.toQuery"
           />
         </template>
-        <template #afterWarehouse>
+        <template #secondLineFirstItem>
+          <project-cascader
+            v-model="query.sourceProjectId"
+            placeholder="原项目"
+            clearable
+            @change="crud.toQuery"
+            class="filter-item"
+            style="width: 300px"
+          />
+          <project-cascader
+            v-model="query.directionProjectId"
+            placeholder="目的项目"
+            clearable
+            @change="crud.toQuery"
+            class="filter-item"
+            style="width: 300px"
+          />
           <el-date-picker
             v-model="query.outboundTime"
             :default-time="defaultTime"
@@ -56,6 +81,7 @@
             class="filter-item"
             @keyup.enter="crud.toQuery"
           />
+          <br />
         </template>
       </mat-header-query>
 
@@ -73,9 +99,9 @@ import { ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
+import { transferTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
@@ -86,13 +112,14 @@ const defaultQuery = {
   outboundTime: [], // [开始时间，结束时间]
   basicClass: undefined, // 物料类型
   orderSupplyType: undefined, // 供货类型
-  projectId: { value: undefined, resetAble: false }, // 项目id
+  transferType: undefined, // 调拨类型
+  sourceProjectId: undefined, // 原项目id
+  directionProjectId: undefined, // 目的项目id
   transferSN: undefined, // 调拨单号
   operatorName: undefined // 申请人/编辑人/审核人
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

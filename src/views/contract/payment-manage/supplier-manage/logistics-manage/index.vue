@@ -34,11 +34,11 @@
     <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
-        <template v-if="checkPermission(crud.permission.get)">
+        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.get) && scope.row.unCheckPaymentCount>0">
           <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
-        </template>
+        </span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
@@ -50,7 +50,7 @@
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')">
           <span style="cursor:pointer;margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
-          <template v-if="checkPermission(crud.permission.get)">
+          <template v-if="checkPermission(crud.permission.get) && scope.row.unCheckInvoiceAmount>0">
             <el-badge :value="scope.row.unCheckInvoiceAmount" :max="99" :hidden="scope.row.unCheckInvoiceAmount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>

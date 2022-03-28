@@ -14,7 +14,9 @@ const state = {
   notPrintedMaterialNumber: { totalMaterial: 0, inboundMaterial: 0, outboundMaterial: 0, transferMaterial: 0, returnMaterial: 0 }, // 未打印物料数量
   loaded: {
     // 接口是否加载
-    config: false
+    config: false,
+    // 未打印的数量
+    notPrintedMaterialNumber: false
   }
 }
 
@@ -76,6 +78,7 @@ const actions = {
       returnMaterial
     }
     commit('SET_NOT_PRINTED_MATERIAL_NUMBER', number)
+    commit('SET_LOADED', { key: 'notPrintedMaterialNumber' })
   }
 }
 
