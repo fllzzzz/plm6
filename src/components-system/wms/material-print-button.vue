@@ -56,16 +56,17 @@ async function toPrintLabel() {
   } else {
     await printMaterialLabel({ material: props.material, copies: props.number * props.copies })
   }
-  emit('printed-success')
   if (props.submitPrintRecord) {
     const endTime = new Date().getTime()
-    addRecord({
+    await addRecord({
       material: props.material,
       number: props.number || currentNumber.value,
       copies: props.copies,
       startTime,
       endTime
     })
+  } else {
+    emit('printed-success')
   }
 }
 
@@ -75,7 +76,10 @@ async function addRecord({ material, number, copies, startTime, endTime }) {
   if (!receiptMaterialId || !number) return
   try {
     await addPrintRecord({ receiptMaterialId, number, copies, startTime, endTime })
-    if (material.printedNumber) material.printedNumber += number
+    emit('printed-success')
+    setTimeout(() => {
+      if (material.printedNumber) material.printedNumber += number
+    }, 0)
   } catch (error) {
     console.log('添加打印记录失败', error)
   }
