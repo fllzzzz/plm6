@@ -84,7 +84,7 @@ import { parseTime } from '@/utils/date'
 // import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'
 import mForm from './form'
-import { supplierMaterialPaymentPM } from '@/page-permission/contract'
+import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
 
 const permission = supplierMaterialPaymentPM.application
 
