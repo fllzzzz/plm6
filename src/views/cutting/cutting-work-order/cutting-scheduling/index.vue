@@ -67,12 +67,17 @@
           <span>{{ scope.row.finishWeight ? scope.row.finishWeight : 0 }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="transformTab === 0" label="操作" align="center" min-width="90">
+      <el-table-column v-if="transformTab === 0 && checkPermission(permission.detailMachine)" label="操作" align="center" min-width="90">
         <template v-slot="scope">
           <common-button type="primary" size="mini" @click="showDetail(scope.row)">查 看</common-button>
         </template>
       </el-table-column>
-      <el-table-column v-else label="操作" align="center" min-width="90">
+      <el-table-column
+        v-else-if="transformTab === 1 && checkPermission(permission.detailProject)"
+        label="操作"
+        align="center"
+        min-width="90"
+      >
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" @click="Detail(scope.row)" />
         </template>
@@ -81,7 +86,7 @@
     <!--分页组件-->
     <pagination />
 
-    <detail :detail-data="detailObj" v-model:visible="innerVisible" />
+    <detail @colesHook="colesHook" :detail-data="detailObj" v-model:visible="innerVisible" />
     <detail-load :detail-data="loadObj" v-model:visible="loadObjVisible" />
   </div>
 </template>
@@ -89,17 +94,15 @@
 <script setup>
 import { ref } from 'vue'
 import crudApi from '@/api/cutting/scheduling'
-import crudApi2 from '@/api/cutting/nestingList'
+import nestingList from '@/api/cutting/nestingList'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import detail from './module/detail/index.vue'
-
-// import detailLoad from './module/detail/detail-lod'
 import detailLoad from '@/views/cutting/template/steel-plate-list.vue'
-// import { parseTime } from '@/utils/date'
-// import { steelPlateEnum } from '@enum-ms/cutting'
 import pagination from '@crud/Pagination'
 import useMaxHeight from '@compos/use-max-height'
+import checkPermission from '@/utils/system/check-permission'
+import { cuttingSchedulingPM as permission } from '@/page-permission/cutting'
 
 const tableRef = ref()
 const transformTab = ref(0)
@@ -108,11 +111,6 @@ const detailObj = ref({})
 
 const loadObj = ref({})
 const loadObjVisible = ref(false)
-
-// crud交由presenter持有
-const permission = {
-  get: ['contractRecord:get']
-}
 
 const optShow = {
   add: false,
@@ -140,7 +138,6 @@ const { maxHeight } = useMaxHeight({
 })
 
 async function showDetail(row) {
-  console.log('row', row)
   detailObj.value = row
   innerVisible.value = true
 }
@@ -153,11 +150,16 @@ function Detail(row) {
 function headerChange(val) {
   transformTab.value = val
   if (transformTab.value === 1) {
-    crud.crudApi = { ...crudApi2 }
+    crud.crudApi = { ...nestingList }
   } else {
     crud.crudApi = { ...crudApi }
   }
   crud.data = []
   crud.toQuery()
 }
+
+function colesHook() {
+  crud.toQuery()
+}
+
 </script>

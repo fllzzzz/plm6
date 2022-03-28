@@ -45,7 +45,13 @@
       </el-table-column>
       <el-table-column fixed="right" align="center" label="查看" min-width="80px">
         <template v-slot="scope">
-          <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
+          <common-button
+            v-if="checkPermission(permission.detail)"
+            icon="el-icon-view"
+            type="primary"
+            size="mini"
+            @click="showDetail(scope.row)"
+          />
         </template>
       </el-table-column>
     </common-table>
@@ -64,15 +70,12 @@ import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import useMaxHeight from '@compos/use-max-height'
 import detail from './module/detail/index.vue'
+import checkPermission from '@/utils/system/check-permission'
+import { cuttingReportPM as permission } from '@/page-permission/cutting'
 
 const tableRef = ref()
 const innerVisible = ref(false)
 const detailObj = ref()
-
-// crud交由presenter持有
-const permission = {
-  get: ['contractRecord:get']
-}
 
 const optShow = {
   add: false,

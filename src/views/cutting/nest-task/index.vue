@@ -26,35 +26,6 @@
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column
-        v-if="columns.visible('monomerName')"
-        key="monomerName"
-        prop="monomerName"
-        :show-overflow-tooltip="true"
-        align="center"
-        label="单体"
-        min-width="40"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.monomerName }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        v-if="columns.visible('areaName')"
-        key="areaName"
-        prop="areaName"
-        :show-overflow-tooltip="true"
-        align="center"
-        label="单元"
-        min-width="40"
-      >
-        <template v-slot="scope">
-          <span>{{ scope.row.areaName }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column
         v-if="columns.visible('sum')"
         key="sum"
@@ -117,7 +88,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" label="操作" align="center">
+      <el-table-column v-if="checkPermission(permission.detail)" :show-overflow-tooltip="true" label="操作" align="center">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-view" @click="viewDetails(scope.row)">查看</common-button>
         </template>
@@ -138,15 +109,12 @@ import { parseTime } from '@/utils/date'
 import pagination from '@crud/Pagination'
 import detail from './detail/index.vue'
 import useMaxHeight from '@compos/use-max-height'
+import checkPermission from '@/utils/system/check-permission'
+import { nestingTaskPM as permission } from '@/page-permission/cutting'
 
 const specsVisible = ref(false)
 const tableRef = ref()
 const detailObj = ref([])
-
-// crud交由presenter持有
-const permission = {
-  get: ['contractRecord:get']
-}
 
 const optShow = {
   add: false,

@@ -112,14 +112,9 @@ import udOperation from '@crud/UD.operation'
 import useMaxHeight from '@compos/use-max-height'
 import checkPermission from '@/utils/system/check-permission'
 import { MessageTypeEnum } from '@enum-ms/cutting'
+import { machineConfigurationPM as permission } from '@/page-permission/cutting'
 
 const tableRef = ref()
-
-// crud交由presenter持有
-const permission = {
-  get: ['contractRecord:get'],
-  del: ['contractRecord:del']
-}
 
 const optShow = {
   add: true,

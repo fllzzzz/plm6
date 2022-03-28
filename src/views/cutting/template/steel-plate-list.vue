@@ -10,9 +10,8 @@
     <template #titleRight>
       <common-button size="mini" @click="handleClose">关 闭</common-button>
     </template>
-
     <div class="flex-rss">
-      <common-table row-key="id" ref="tableRef" :max-height="500" style="width: 100%" :data="plateData">
+      <common-table v-loading="tabLoading" row-key="id" ref="tableRef" :max-height="500" style="width: 100%" :data="plateData">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column key="cutInstructionId" prop="cutInstructionId" :show-overflow-tooltip="true" label="指令号" min-width="100">
           <template v-slot="scope">
@@ -68,6 +67,15 @@
         </el-table-column>
       </common-table>
     </div>
+    <el-pagination
+      v-model:page-size="page.size"
+      v-model:current-page="page.page"
+      :total="page.total"
+      style="margin-top: 8px"
+      layout="total, prev, pager, next, sizes"
+      @size-change="sizeChangeHandler($event)"
+      @current-change="pageChangeHandler"
+    />
   </common-dialog>
 
   <detail @change="handleChange" :detail-data="detailObj" v-model:visible="specsVisible" />
@@ -90,6 +98,12 @@ const props = defineProps({
   }
 })
 
+const page = {
+  size: 20,
+  page: 1,
+  total: null
+}
+const tabLoading = ref(false)
 const emit = defineEmits(['update:visible'])
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', closeHook, showHook })
 
@@ -105,16 +119,20 @@ function showHook() {
 }
 
 function closeHook() {
+  page.size = 20
+  page.page = 1
 }
 
 async function plateDataGet() {
+  tabLoading.value = true
   try {
-    const { content } = await get({ projectId: props.detailData.projectId })
-    plateData.value = content
-    console.log(' plateData.value', plateData.value)
+    const data = await get({ projectId: props.detailData.projectId, pageSize: page.size, pageNumber: page.page })
+    page.total = data.totalElements
+    plateData.value = data.content
   } catch (err) {
     console.log('钢板清单页面接口报错', err)
   }
+  tabLoading.value = false
 }
 
 function nestResults(row) {
@@ -130,6 +148,15 @@ function handleChange(row) {
   selectLineId.value = row.id
 }
 
+function sizeChangeHandler(e) {
+  page.size = e
+  plateDataGet()
+}
+
+function pageChangeHandler(a) {
+  page.page = a
+  plateDataGet()
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

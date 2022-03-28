@@ -1,5 +1,5 @@
 <template>
-  <common-dialog width="60%" :title="'设备:' + machieName" append-to-body v-model="drawerVisible" :before-close="handleClose">
+  <common-dialog width="60%" :title="'所选设备: ' + machieName" append-to-body v-model="drawerVisible" :before-close="handleClose">
     <template #titleRight>
       <common-button size="mini" @click="taskIssue" type="success">任务下发</common-button>
     </template>
