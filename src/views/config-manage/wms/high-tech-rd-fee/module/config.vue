@@ -103,7 +103,7 @@
             </template>
           </el-table-column>
         </common-table>
-        <config-preview v-model:visible="previewVisible" :data="list" :level="level" @save-success="handleSaveSuccess" />
+        <config-preview v-bind="$attrs" v-model:visible="previewVisible" :data="list" :level="level" @save-success="handleSaveSuccess" />
       </div>
     </template>
   </common-drawer>

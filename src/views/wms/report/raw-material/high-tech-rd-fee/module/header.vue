@@ -60,7 +60,7 @@
     </crudOperation>
     <common-drawer v-model="rdFeeConfVisible" title="高新研发费用占比列表" size="90%">
       <template #content>
-        <high-tech-rd-fee-conf-view class="high-tech-rd-fee-conf-view" />
+        <high-tech-rd-fee-conf-view class="high-tech-rd-fee-conf-view" @save-success="crud.refresh"/>
       </template>
     </common-drawer>
   </div>
