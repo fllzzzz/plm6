@@ -117,7 +117,7 @@
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, provide, computed, nextTick } from 'vue'
 
-import { supplierMaterialPaymentPM as permission } from '@/page-permission/contract'
+import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { settlementStatusEnum } from '@enum-ms/contract'

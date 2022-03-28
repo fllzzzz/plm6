@@ -88,7 +88,7 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
-import { supplierMaterialPaymentPM } from '@/page-permission/contract'
+import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
 
 const permission = supplierMaterialPaymentPM.paymentLog
 
