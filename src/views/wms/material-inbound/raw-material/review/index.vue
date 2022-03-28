@@ -156,7 +156,7 @@
         width="80"
         fixed="right"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <template v-if="row.reviewable">
             <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
           </template>

@@ -107,7 +107,7 @@
       <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px" />
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" />
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.edit" label="操作" width="130px" align="center">
+      <el-table-column v-if="checkPermission(permission.edit)" label="操作" width="130px" align="center">
         <template #default="{ row: { sourceRow: row } }">
           <common-button
             v-if="row.editMode"

@@ -1,5 +1,5 @@
 <template>
-  <span v-permission="permission" class="purchase-detail-button">
+  <span v-if="checkPermission(permission)" class="purchase-detail-button">
     <common-button v-bind="$attrs" @click="openDetail(props.purchaseId)" type="info">{{ props.btnName }}</common-button>
     <!-- 采购订单详情 -->
     <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
@@ -16,6 +16,7 @@ import { defineProps } from 'vue'
 import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import DetailWrapper from '@crud/detail-wrapper.vue'
 import PurchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
+import checkPermission from '@/utils/system/check-permission'
 
 const props = defineProps({
   purchaseId: {

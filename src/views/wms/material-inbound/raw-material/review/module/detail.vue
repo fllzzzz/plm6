@@ -29,7 +29,7 @@
           <template #default="{ row }">
             <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="detail.basicClass" :row="row" show-brand />
             <p>
-              备注：<span v-empty-text>{{ row.remark }}</span>
+              备注：<span>{{ row.remark }}</span>
             </p>
           </template>
         </el-expand-table-column>

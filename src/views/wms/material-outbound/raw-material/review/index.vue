@@ -82,7 +82,7 @@
         sortable="custom"
       />
       <!--编辑与删除-->
-      <el-table-column v-permission="permission.review" label="操作" width="120px" align="center" fixed="right">
+      <el-table-column v-if="checkPermission(permission.review)" label="操作" width="120px" align="center" fixed="right">
         <template #default="{ row }">
           <udOperation :data="row" show-detail :show-edit="false" :show-del="false" />
           <common-button type="warning" icon="el-icon-s-check" size="mini" @click="toReview(row)" />
@@ -103,6 +103,7 @@ import { rawMaterialOutboundReviewPM as permission } from '@/page-permission/wms
 
 import { ref } from 'vue'
 import { wmsReceiptColumns } from '@/utils/columns-format/wms'
+import checkPermission from '@/utils/system/check-permission'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

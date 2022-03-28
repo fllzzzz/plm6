@@ -36,6 +36,7 @@
         <common-table
           :data="form.list"
           :max-height="maxHeight"
+          :dataFormat="columnsDataFormat"
           show-summary
           :cell-class-name="wrongCellMask"
           :summary-method="getSummaries"
@@ -46,7 +47,7 @@
             <template #default="{ row }">
               <expand-secondary-info v-if="!showTableColumnSecondary" :basic-class="row.basicClass" :row="row" show-brand />
               <p>
-                备注：<span v-empty-text>{{ row.remark }}</span>
+                备注：<span>{{ row.remark }}</span>
               </p>
             </template>
           </el-expand-table-column>
@@ -65,11 +66,7 @@
             @amount-change="handleAmountChange"
           />
           <template v-else>
-            <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip>
-              <template #default="{ row }">
-                <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-              </template>
-            </el-table-column>
+            <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
           </template>
           <!-- 仓库设置 -->
           <warehouse-set-columns v-if="showWarehouse" :form="form" />
@@ -107,6 +104,7 @@ import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { deepClone, isBlank, isNotBlank, toFixed } from '@/utils/data-type'
+import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import { regExtra } from '@compos/use-crud'
 import useTableValidate from '@/composables/form/use-table-validate'
@@ -143,6 +141,9 @@ const props = defineProps({
     }
   }
 })
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
 
 const reviewConvenientRef = ref() // 连续审核
 const drawerRef = ref() // 当前drawer

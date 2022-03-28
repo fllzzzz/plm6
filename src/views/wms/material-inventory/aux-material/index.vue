@@ -34,7 +34,13 @@
       <!-- 仓库信息 -->
       <warehouse-info-columns :columns="columns" />
       <!--编辑与删除-->
-      <el-table-column label="操作" width="120px" align="center" fixed="right">
+      <el-table-column
+        v-if="checkPermission([...permission.outbound, ...permission.transfer])"
+        label="操作"
+        width="120px"
+        align="center"
+        fixed="right"
+      >
         <template #default="{ row: { sourceRow: row } }">
           <!--出库-->
           <common-button v-permission="permission.outbound" type="primary" size="mini" @click="toOutHandle(row)">
@@ -72,6 +78,7 @@ import { auxMatMaterialWarehousePM as permission } from '@/page-permission/wms'
 import { ref } from 'vue'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
+import checkPermission from '@/utils/system/check-permission'
 
 import useIndexInfo from '../compos/use-index-info'
 import useCRUD from '@compos/use-crud'
@@ -84,7 +91,6 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-
 const optShow = {
   add: false,
   edit: false,
