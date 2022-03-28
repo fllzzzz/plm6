@@ -40,7 +40,6 @@
 <script setup>
 import { save } from '@/api/config/classification-manage/measure-config'
 import { computed, defineEmits, defineProps, inject, ref } from 'vue'
-// import { measureTypeEnum } from '@enum-ms/wms'
 import { isBlank } from '@data-type'
 import { judgeItemFieldChange } from '@/utils'
 

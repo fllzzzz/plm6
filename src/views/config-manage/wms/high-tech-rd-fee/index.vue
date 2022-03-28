@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <mHeader ref="header" />
+    <mHeader v-bind="$attrs" ref="header" />
     <common-table
       ref="tableRef"
       v-if="tableRefresh"
@@ -89,9 +89,7 @@ const optShow = {
 
 const tableRef = ref()
 const tableRefresh = ref(true)
-const columnsDataFormat = [
-  ['rdRate', ['suffix', ' %']]
-]
+const columnsDataFormat = [['rdRate', ['suffix', ' %']]]
 const { maxHeight } = useMaxHeight()
 
 const { crud, columns } = useCRUD(

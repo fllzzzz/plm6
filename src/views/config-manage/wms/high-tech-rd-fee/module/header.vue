@@ -22,6 +22,7 @@
 
     <!-- 计量配置 -->
     <config-view
+      v-bind="$attrs"
       v-model:visible="config.visible"
       :level="config.level"
       :permission="permission"
