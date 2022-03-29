@@ -349,9 +349,9 @@ function optimizeList(list, columns, dfColumns = []) {
       if (!props.returnSourceData) row.sourceRow = list[rowIndex]
       if (props.showEmptySymbol || dfColumns.length > 0) {
         // 遍历columns
-        iterateColumns.forEach((field) => {
+        iterateColumns.forEach((field, index) => {
           if (field && field.indexOf('[') > -1) {
-            recursionFormat(row, field, list[rowIndex], field)
+            recursionFormat(row, field, list[rowIndex], row, field)
           } else {
             normalFm(row, field, list[rowIndex])
           }
@@ -363,9 +363,10 @@ function optimizeList(list, columns, dfColumns = []) {
 }
 
 // 递归格式化（当数据中含数组字段时）
-function recursionFormat(row, field, data, sliceFields) {
+function recursionFormat(row, field, sourceData, cloneData, sliceFields) {
   const keys = sliceFields.split('.')
-  let item = data
+  let sourceItem = sourceData
+  let cloneItem = cloneData
   let i
   for (i = 0; i < keys.length - 1; i++) {
     const curKey = keys[i]
@@ -373,25 +374,28 @@ function recursionFormat(row, field, data, sliceFields) {
     const isArray = /^\[[0-9a-zA-Z_]+\]$/.test(curKey)
     if (isArray) {
       const k = curKey.slice(1, curKey.length - 1)
-      item = item[k]
-      if (item) {
+      sourceItem = sourceItem[k]
+      cloneItem = cloneItem[k]
+      if (sourceItem) {
         // 若是数组字段且有值，则遍历数组
-        item.forEach((itemInfo) => {
-          recursionFormat(row, field, itemInfo, keys.slice(i + 1).join('.'))
+        sourceItem.forEach((sourceItemInfo, index) => {
+          const cloneItemInfo = cloneItem[index]
+          recursionFormat(row, field, sourceItemInfo, cloneItemInfo, keys.slice(i + 1).join('.'))
         })
       }
       break
     } else {
       // 对象按照常规流程赋值
-      item = item[curKey]
+      sourceItem = sourceItem[curKey]
+      cloneItem = cloneItem[curKey]
       // 对象为空值，结束循环
-      if (isBlank(item)) break
+      if (isBlank(sourceItem)) break
     }
   }
   // 如果是最后的字段
   if (i === keys.length - 1) {
     let dfCfg = dataFormatKV.value[field]
-    let preData = item[sliceFields]
+    let preData = sourceItem[sliceFields]
     if (dfCfg) {
       // 如果数组最后一个值为对象，且不为数组的情况
       const otherInfo = dfCfg[dfCfg.length - 1]
@@ -402,14 +406,14 @@ function recursionFormat(row, field, data, sliceFields) {
         // 获取数据源字段
         const sourceField = otherInfo ? otherInfo.source : void 0
         // 获取实际转换前的值
-        if (sourceField) preData = item[sourceField]
+        if (sourceField) preData = sourceItem[sourceField]
       }
       if (sliceFields) {
         for (let j = 0; j < dfCfg.length; j++) {
           // 获取转换后的值
           const fmD = formatDataByType(row, preData, dfCfg[j])
           // 设置转换后的值
-          item[sliceFields] = fmD
+          cloneItem[sliceFields] = fmD
         }
       }
     }
