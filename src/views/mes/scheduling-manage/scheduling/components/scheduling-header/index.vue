@@ -16,6 +16,14 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <common-radio-button
+        v-model="query.statusType"
+        :options="schedulingStatusEnum.ENUM"
+        type="enum"
+        showOptionAll
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <product-type-query :productType="productType" :category="category" :toQuery="crud.toQuery" :query="query" />
       <rrOperation />
     </div>
@@ -82,7 +90,7 @@
 import { ref, defineProps, defineEmits, inject } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 
-import { abnormalStatusEnum } from '@enum-ms/mes'
+import { abnormalStatusEnum, schedulingStatusEnum } from '@enum-ms/mes'
 import { deepClone } from '@data-type/index'
 
 import useGetLines from '@compos/mes/scheduling/use-get-lines'

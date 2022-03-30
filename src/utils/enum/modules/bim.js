@@ -11,8 +11,20 @@ const modelTranslateStatusEnum = {
 }
 constantize(modelTranslateStatusEnum)
 
-export { modelTranslateStatusEnum }
+// tekla常见版本
+const bimTeklaEditionEnum = {
+  SIXTEEN: { L: '16版本', K: 'SIXTEEN', V: 16 },
+  SEVENTEEN: { L: '17版本', K: 'SEVENTEEN', V: 17 },
+  EIGHTEEN: { L: '18版本', K: 'EIGHTEEN', V: 18 },
+  NINETEEN: { L: '19版本', K: 'NINETEEN', V: 19 },
+  TWENTY: { L: '20版本', K: 'TWENTY', V: 20 },
+  TWENTY_ONE: { L: '21版本', K: 'TWENTY_ONE', V: 21 },
+  TWENTY_TWO: { L: '22版本', K: 'TWENTY_TWO', V: 22 }
+}
+constantize(bimTeklaEditionEnum)
+
+export { modelTranslateStatusEnum, bimTeklaEditionEnum }
 
 export default {
-  modelTranslateStatusEnum // 模型转换状态
+  modelTranslateStatusEnum, bimTeklaEditionEnum // 模型转换状态
 }

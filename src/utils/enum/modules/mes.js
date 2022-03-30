@@ -189,6 +189,14 @@ const abnormalStatusEnum = {
 }
 constantize(abnormalStatusEnum)
 
+// 排产状态
+const schedulingStatusEnum = {
+  UN_START: { L: '未分配', K: 'UN_START', V: 1 },
+  UNFINISHED: { L: '未分配完', K: 'UNFINISHED', V: 2 },
+  FINISHED: { L: '已分配完', K: 'FINISHED', V: 4 }
+}
+constantize(schedulingStatusEnum)
+
 // 变更变更类型状态
 const abnormalChangeTypeEnum = {
   ARTIFACT_REDUCE: { L: '构件减少', K: 'ARTIFACT_REDUCE', V: 1 << 0 },
@@ -280,7 +288,8 @@ export {
   labelTypeEnum,
   printProductTypeEnum,
   surplusHandleStatusEnum,
-  inProductionDetailReportEnum
+  inProductionDetailReportEnum,
+  schedulingStatusEnum
 }
 
 export default {
@@ -313,5 +322,6 @@ export default {
   labelTypeEnum,
   printProductTypeEnum,
   surplusHandleStatusEnum,
-  inProductionDetailReportEnum
+  inProductionDetailReportEnum,
+  schedulingStatusEnum
 }
