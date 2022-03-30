@@ -58,6 +58,31 @@ export default {
       ]
     },
     {
+      path: '/supply-chain/logistics-payment-manage',
+      component: 'Layout',
+      hidden: false,
+      name: 'SupplyChainLogisticsPayment',
+      alwaysShow: false,
+      redirect: '/supply-chain/logistics-record',
+      meta: { title: '物流对账管理', icon: 'contract', noCache: true },
+      children: [
+        {
+          name: 'logisticsRecord',
+          path: 'logistics-record',
+          hidden: false,
+          component: '/supply-chain/logistics-payment-manage/logistics-record/index',
+          meta: { title: '物流记录', icon: 'project', noCache: true }
+        },
+        {
+          name: 'logisticsPayment',
+          path: 'logistics-payment',
+          hidden: false,
+          component: '/supply-chain/logistics-payment-manage/logistics-payment/index',
+          meta: { title: '付款明细', icon: 'project', noCache: true }
+        }
+      ]
+    },
+    {
       path: '/supply-chain/logistics-manage',
       component: 'Layout',
       hidden: false,

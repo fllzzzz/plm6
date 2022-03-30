@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="dialogRef"
-    title="开票记录"
+    title="物流记录"
     :close-on-click-modal="false"
     v-model="visible"
     direction="rtl"
@@ -9,33 +9,18 @@
     custom-class="invoice-record"
     size="80%"
   >
-    <template #titleRight>
-      <div class="print-wrap">
-        <!-- <print-table
-          v-permission="props.permission?.print"
-          api-key="projectInvoiceDetail"
-          :params="{ ...params }"
-          size="mini"
-          type="warning"
-        /> -->
-      </div>
-    </template>
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="invoiceDate" label="开票日期" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="invoiceAmount" label="开票额" align="center" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="invoiceType" label="开票类型" align="center" width="110" show-overflow-tooltip />
-        <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
-          <template #default="{ row }">
-            <span>{{ row.taxRate }}%</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="invoiceUnit" label="购方单位" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="collectionUnit" label="销售单位" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="invoiceNo" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="writtenByName" label="办理人" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="auditorName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="shipDate" label="运输日期" align="center" show-overflow-tooltip />
+        <el-table-column prop="name" label="所属项目或采购单" align="center" show-overflow-tooltip v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" />
+        <el-table-column prop="supplierName" label="物流公司" align="center" show-overflow-tooltip v-if="props.type!==logisticsSearchTypeEnum.COMPANY.V" />
+        <el-table-column prop="licensePlate" label="车牌号" align="center" show-overflow-tooltip />
+        <el-table-column prop="loadingWeight" label="装载重量(kg)" align="center" show-overflow-tooltip />
+        <el-table-column prop="carModel" label="车型" align="center" show-overflow-tooltip />
+        <el-table-column prop="driverName" label="司机姓名" align="center" show-overflow-tooltip />
+        <el-table-column prop="driverPhone" label="电话" align="center" show-overflow-tooltip />
+        <el-table-column prop="freight" label="运费额" align="center" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -52,11 +37,9 @@
 </template>
 
 <script setup>
-import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
+import { logisticsRecordDetail } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
-
-import { invoiceTypeEnum } from '@enum-ms/contract'
-
+import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -72,6 +55,10 @@ const props = defineProps({
     type: Object,
     default: () => {}
   },
+  type: {
+    type: [String, Number],
+    default: undefined
+  },
   permission: {
     type: Object,
     default: () => {}
@@ -84,8 +71,8 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 // 请求参数
 const params = computed(() => {
   return {
-    orderId: props.detailInfo.id,
-    propertyType: props.detailInfo.propertyType
+    id: props.detailInfo.id,
+    type: props.type
   }
 })
 
@@ -102,15 +89,14 @@ const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
-  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['invoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', 'to-thousand'],
-  ['taxRate', ['to-fixed', 2]]
+  ['shipDate', ['parse-time', '{y}-{m}-{d}']],
+  ['loadingWeight', ['to-fixed', 2]],
+  ['freight', 'to-thousand']
 ])
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.invoice-record',
+    mainBox: '.logistics-record-detail',
     extraBox: '.el-drawer__header',
     wrapperBox: '.el-drawer__body',
     extraHeight: '5vh',
@@ -121,16 +107,16 @@ const { maxHeight } = useMaxHeight(
   dialogRef
 )
 
-// 获取开票记录
+// 获取物流记录
 async function fetchList() {
   let _list = []
   tableLoading.value = true
   try {
-    const { content = [], totalElements } = await invoiceRecord({ ...params.value, ...queryPage })
+    const { content = [], totalElements } = await logisticsRecordDetail({ ...params.value, ...queryPage })
     _list = content
     setTotalPage(totalElements)
   } catch (error) {
-    console.log('获取开票记录失败', error)
+    console.log('获取物流记录失败', error)
   } finally {
     list.value = _list
     tableLoading.value = false

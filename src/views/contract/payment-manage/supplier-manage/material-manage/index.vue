@@ -15,7 +15,12 @@
     :showEmptySymbol="false"
     style="width: 100%"
   >
-    <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
+    <el-table-column label="序号" type="index" align="center" width="60">
+      <template #default="{ row, $index }">
+        <table-cell-tag :show="row.settlementStatus===settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
+        <span>{{ $index + 1 }}</span>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.serialNumber }}</span>
@@ -43,7 +48,12 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
       <template v-slot="scope">
-        <span>{{ isNotBlank(scope.row.settlementAmount)? toThousand(scope.row.settlementAmount): 0 }}</span>
+        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ isNotBlank(scope.row.settlementAmount)? toThousand(scope.row.settlementAmount): 0 }}</span>
+        <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckSettlementCount>0">
+          <el-badge :value="scope.row.unCheckSettlementCount" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
+            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+          </el-badge>
+        </span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
@@ -101,6 +111,8 @@
   <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
   <!-- 收付款 -->
   <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
+  <!-- 结算审核 -->
+  <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -124,6 +136,8 @@ import { isNotBlank } from '@data-type/index'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import EO from '@enum'
 import paymentAudit from './module/payment-audit/index'
+import settleForm from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/settle-form'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,
@@ -136,8 +150,11 @@ const tableRef = ref()
 const stockVisible = ref(false)
 const tabVisible = ref(false)
 const auditVisible = ref(false)
+const settleVisible = ref(false)
 const currentRow = ref({})
 const activeName = ref('payment')
+const showType = ref('audit')
+
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '原材料',
@@ -149,7 +166,6 @@ const { CRUD, crud, columns } = useCRUD(
   },
   tableRef
 )
-
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.materialManage',
   paginate: true,
@@ -179,6 +195,21 @@ function openPaymentAudit(row) {
   }
   currentRow.value = row
   auditVisible.value = true
+}
+
+function openSettleAudit(row, type) {
+  if (type === 'detail') {
+    if (!row.settlementAmount || !checkPermission(permission.settleDetail)) {
+      return
+    }
+  } else {
+    if (!checkPermission(permission.settleAudit)) {
+      return
+    }
+  }
+  showType.value = type
+  currentRow.value = row
+  settleVisible.value = true
 }
 
 CRUD.HOOK.beforeRefresh = () => {

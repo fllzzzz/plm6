@@ -14,7 +14,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: 'supply/chain/order/payment',
+    url: 'supply-chain/order-payment',
     method: 'get',
     params
   })
@@ -24,7 +24,7 @@ export function get(params) {
 export function getBySupplier(params) {
   return request({
     module: 'contract',
-    url: 'supply/chain/order/payment/supplier',
+    url: 'supply-chain/order-payment/sumBySupplier',
     method: 'get',
     params
   })
@@ -39,7 +39,7 @@ export function getBySupplier(params) {
 export function paymentRecord(params) {
   return request({
     module: 'contract',
-    url: `supply/chain/order/payment/${params.orderId}`,
+    url: `supply-chain/order-payment/listPayment/${params.orderId}`,
     method: 'get',
     params,
     cancelKey: false
@@ -54,7 +54,7 @@ export function paymentRecord(params) {
 export function invoiceRecord(params) {
   return request({
     module: 'contract',
-    url: `supply/chain/order/payment/invoice/${params.orderId}`,
+    url: `supply-chain/order-payment/listInvoice/${params.orderId}`,
     method: 'get',
     params
   })
@@ -68,7 +68,7 @@ export function invoiceRecord(params) {
 export function inboundRecord(params) {
   return request({
     module: 'contract',
-    url: `supply/chain/order/payment/inbound/${params.orderId}`,
+    url: `supply-chain/order-payment/listInbound/${params.orderId}`,
     method: 'get',
     params
   })

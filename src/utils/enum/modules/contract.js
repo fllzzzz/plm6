@@ -279,6 +279,14 @@ const purchaseOrderStatusEnum = {
 }
 constantize(purchaseOrderStatusEnum)
 
+// 物流搜索类型
+const logisticsSearchTypeEnum = {
+  PRODUCT: { L: '制成品物流', K: 'PRODUCT', V: 1 << 0 },
+  MATERIAL: { L: '原材料物流', K: 'MATERIAL', V: 1 << 1 },
+  COMPANY: { L: '物流公司', K: 'COMPANY', V: 1 << 2 }
+}
+constantize(logisticsSearchTypeEnum)
+
 export {
   projectStatusEnum, // 项目状态
   projectTypeEnum, // 项目类型
@@ -311,7 +319,8 @@ export {
   projectModeEnum,
   hasTaxEnum,
   hasPayEnum,
-  purchaseOrderStatusEnum
+  purchaseOrderStatusEnum,
+  logisticsSearchTypeEnum
 }
 
 export default {
@@ -346,5 +355,6 @@ export default {
   projectModeEnum,
   hasTaxEnum,
   hasPayEnum,
-  purchaseOrderStatusEnum
+  purchaseOrderStatusEnum,
+  logisticsSearchTypeEnum
 }

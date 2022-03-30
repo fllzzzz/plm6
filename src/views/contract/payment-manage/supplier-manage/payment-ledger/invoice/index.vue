@@ -18,24 +18,19 @@
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" align="center" label="订单类型">
+    <el-table-column v-if="columns.visible('propertyType')" key="propertyType" prop="propertyType" :show-overflow-tooltip="true" align="center" label="订单类型">
       <template v-slot="scope">
-        <span>{{ scope.row.businessType?businessTypeEnum.VL[scope.row.businessType]:'-'}}</span>
+        <span>{{ scope.row.propertyType?supplierPayTypeEnum.VL[scope.row.propertyType]:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="所属项目">
+    <!-- <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="所属项目">
       <template v-slot="scope">
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('contractAmount')" key="contractAmount" prop="contractAmount" :show-overflow-tooltip="true" label="签约主体">
+    </el-table-column> -->
+    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="开票日期" align="center" min-width="120">
       <template v-slot="scope">
-        <span>{{ scope.row.contractAmount? scope.row.contractAmount: '-' }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceDate')" key="invoiceDate" prop="invoiceDate" label="开票日期" align="center" min-width="120">
-      <template v-slot="scope">
-        <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
+        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="开票额(元)" align="center" min-width="120">
@@ -43,9 +38,9 @@
         <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceNo')" key="invoiceNo" prop="invoiceNo" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('invoiceSerialNumber')" key="invoiceSerialNumber" prop="invoiceSerialNumber" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
       <template v-slot="scope">
-        <div>{{ scope.row.invoiceNo }}</div>
+        <div>{{ scope.row.invoiceSerialNumber }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="120">
@@ -68,10 +63,10 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { invoiceTypeEnum, businessTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
-import { projectNameFormatter } from '@/utils/project'
+// import { projectNameFormatter } from '@/utils/project'
 
 // crud交由presenter持有
 const permission = contractSupplierPaymentLedgerPM.invoice
@@ -91,7 +86,6 @@ const { crud, columns, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    invisibleColumns: ['contractAmount'],
     hasPagination: true
   },
   tableRef
