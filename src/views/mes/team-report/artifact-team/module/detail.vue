@@ -35,16 +35,16 @@
           </template>
         </el-table-column>
       </common-table>
-        <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="queryPage.pageNumber"
-      :page-size="queryPage.pageSize"
-      style="margin-top: 8px"
-      layout="total, prev, pager, next, sizes"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+      <!--分页组件-->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
 </template>

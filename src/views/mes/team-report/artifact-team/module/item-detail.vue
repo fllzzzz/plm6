@@ -20,15 +20,7 @@
       </div>
     </template>
     <template #content>
-      <common-table
-        v-loading="tableLoading"
-        show-summary
-        :summary-method="getSummaries"
-        :data="list"
-        row-key="rowId"
-        :max-height="maxHeight"
-        style="width: 100%"
-      >
+      <common-table v-loading="tableLoading" :data="list" row-key="rowId" :max-height="maxHeight" style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <belonging-info-columns showProject showMonomer showArea />
         <productType-base-info-columns :productType="info?.productType" :unShowField="['material']" />
@@ -85,6 +77,16 @@
           </template>
         </el-table-column>
       </common-table>
+      <!--分页组件-->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </template>
   </common-drawer>
 </template>
@@ -95,10 +97,11 @@ import { defineProps, defineEmits, ref, watch, inject, computed } from 'vue'
 
 import { componentTypeEnum } from '@enum-ms/mes'
 import { deepClone } from '@data-type/index'
-import { tableSummary } from '@/utils/el-extra'
+// import { tableSummary } from '@/utils/el-extra'
 
 import useMaxHeight from '@compos/use-max-height'
 import useVisible from '@compos/use-visible'
+import usePagination from '@compos/use-pagination'
 import useProductSummaryMeteUnit from '@compos/mes/use-product-summary-mete-unit'
 import useProductMeteConvert from '@compos/mes/use-product-mete-convert'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
@@ -122,6 +125,7 @@ const props = defineProps({
 })
 
 const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } = usePagination({ fetchHook: fetchList })
 
 const permission = inject('permission')
 
@@ -131,6 +135,7 @@ const { maxHeight } = useMaxHeight(
     extraBox: ['.el-drawer__header'],
     wrapperBox: ['.el-drawer__body'],
     navbar: false,
+    paginate: true,
     clientHRepMainH: true,
     extraHeight: 60
   },
@@ -147,9 +152,9 @@ watch(
   { immediate: true, deep: true }
 )
 
-function getSummaries(param) {
-  return tableSummary(param, { props: ['taskQuantity', 'completeQuantity', ['taskMete', unitObj.value.DP], ['completeMete', unitObj.value.DP]] })
-}
+// function getSummaries(param) {
+//   return tableSummary(param, { props: ['taskQuantity', 'completeQuantity', ['taskMete', unitObj.value.DP], ['completeMete', unitObj.value.DP]] })
+// }
 const query = inject('query')
 const tableLoading = ref(false)
 const list = ref([])
@@ -169,7 +174,8 @@ const printParams = computed(() => {
 async function fetchList() {
   try {
     tableLoading.value = true
-    const { content } = await detail(printParams.value)
+    const { content, totalElements } = await detail({ ...printParams.value, ...queryPage })
+    setTotalPage(totalElements)
     list.value = content.map((v, i) => {
       v.rowId = i + '' + Math.random()
       // v.unCompleteQuantity = v.taskQuantity - v.completeQuantity
