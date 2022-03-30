@@ -32,6 +32,7 @@ import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
 import { isNotBlank, isBlank } from '@data-type/index'
+import { judgeNodeExistByIds } from '@/utils/data-type/tree'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
@@ -157,8 +158,6 @@ watch(
   [() => matClsTree.value, () => props.basicClass],
   ([list]) => {
     setCascader(list)
-    // TODO:待优化，若当前值仍在树中，则不需要设置为undefined（PS:注意返回值类型不同的情况，例如返回节点id与返回全路径，单选以及多选）
-    handleChange(undefined)
   },
   { deep: true, immediate: true }
 )
@@ -238,6 +237,12 @@ function setCascader(tree) {
     } else {
       classification.treeOrigin = []
       classification.tree = []
+    }
+    if (currentValue.value) {
+      const valExist = judgeNodeExistByIds(classification.tree, currentValue.value)
+      if (!valExist) {
+        handleChange(undefined)
+      }
     }
   } catch (error) {
     console.log('获取科目级联列表失败', error)

@@ -66,7 +66,7 @@ function steelPlateSpec(row) {
 function sectionSteelSpec(row) {
   const spec = []
   if (isNotBlank(row.length)) spec.push(row.length)
-  if (isNotBlank(row.specification)) spec.push(row.specification)
+  if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
   return spec.join(' * ')
 }
 
@@ -81,7 +81,7 @@ function steelCoilSpec(row) {
     twl.push(row.width)
   }
   spec.push(twl.join('*'))
-  if (isNotBlank(row.specification)) spec.push(row.specification)
+  if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
   return spec.join(' * ')
 }
@@ -89,7 +89,7 @@ function steelCoilSpec(row) {
 // 辅材规格
 function auxMatSpec(row) {
   const spec = []
-  if (isNotBlank(row.specification)) spec.push(row.specification)
+  if (isNotBlank(row.specification) && row.specificationLabels !== '无规格') spec.push(row.specification)
   if (isNotBlank(row.color)) spec.push(row.color)
   return spec.join(' * ')
 }
