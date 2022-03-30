@@ -14,24 +14,49 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column key="workshopInf" align="center" prop="workshopInf" :show-overflow-tooltip="true" label="车间" min-width="40">
+      <el-table-column
+        v-if="columns.visible('workshopInf')"
+        key="workshopInf"
+        align="center"
+        prop="workshopInf"
+        :show-overflow-tooltip="true"
+        label="车间"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.cutMachine.workshopInf }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="machineName" align="center" prop="machineName" :show-overflow-tooltip="true" label="设备名称" min-width="40">
+      <el-table-column
+        v-if="columns.visible('machineName')"
+        key="machineName"
+        align="center"
+        prop="machineName"
+        :show-overflow-tooltip="true"
+        label="设备名称"
+        min-width="40"
+      >
         <template v-slot="scope">
           <el-tag style="width: 100%" effect="plain">
             <span>{{ scope.row.cutMachine.machineName }}</span>
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column key="finishNum" align="center" prop="finishNum" :show-overflow-tooltip="true" label="完成数（件）" min-width="40">
+      <el-table-column
+        v-if="columns.visible('finishNum')"
+        key="finishNum"
+        align="center"
+        prop="finishNum"
+        :show-overflow-tooltip="true"
+        label="完成数（件）"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.finishNum ? scope.row.finishNum : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('finishWeight')"
         key="finishWeight"
         align="center"
         prop="finishWeight"
@@ -84,7 +109,7 @@ const optShow = {
   download: false
 }
 
-const { crud } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '项目报表',
     sort: [],

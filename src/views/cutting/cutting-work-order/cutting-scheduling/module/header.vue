@@ -2,31 +2,33 @@
   <div class="head-container">
     <crudOperation>
       <template #optLeft>
-        <el-date-picker
-          v-model="query.createTime"
-          :default-time="defaultTime"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          value-format="x"
-          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-          unlink-panels
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          style="width: 240px"
-          class="filter-item"
-          @change="crud.toQuery"
-        />
-        <common-radio-button
-          v-model="TypeEnumV"
-          :options="TypeEnum.ENUM"
-          size="small"
-          default
-          class="filter-item"
-          type="enum"
-          @change="TypeEnumChange"
-        />
-        <rrOperation />
+        <div v-show="crud.searchToggle">
+          <el-date-picker
+            v-model="query.createTime"
+            :default-time="defaultTime"
+            type="daterange"
+            range-separator=":"
+            size="small"
+            value-format="x"
+            :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+            unlink-panels
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 240px"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
+          <common-radio-button
+            v-model="TypeEnumV"
+            :options="TypeEnum.ENUM"
+            size="small"
+            default
+            class="filter-item"
+            type="enum"
+            @change="TypeEnumChange"
+          />
+          <rrOperation />
+        </div>
       </template>
     </crudOperation>
   </div>

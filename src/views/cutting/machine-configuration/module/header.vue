@@ -29,8 +29,8 @@
         @keyup.enter="crud.toQuery"
       />
       <rrOperation />
-      <crudOperation />
     </div>
+    <crudOperation />
   </div>
 </template>
 
