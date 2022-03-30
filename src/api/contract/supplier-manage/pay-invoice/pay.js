@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: `contract/payment/order/${params.orderId}`,
+    url: `contract/payment/list`,
     method: 'get',
     params
   })
@@ -27,12 +27,12 @@ export function orderInfo(orderProperty) {
 }
 
 // 审核
-export function editStatus(params) {
+export function editStatus(data) {
   return request({
     module: 'contract',
     url: `contract/payment/audit`,
     method: 'put',
-    params
+    data
   })
 }
 
@@ -41,6 +41,16 @@ export function paySum() {
     module: 'contract',
     url: 'contract/payment/sum',
     method: 'get'
+  })
+}
+
+// 付款详情
+export function payDetail(paymentId) {
+  return request({
+    module: 'contract',
+    url: `contract/payment/${paymentId}`,
+    method: 'get',
+    cancelKey: false
   })
 }
 

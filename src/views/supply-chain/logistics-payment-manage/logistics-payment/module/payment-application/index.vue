@@ -18,6 +18,11 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
+       <el-table-column key="applyUserName" prop="applyUserName" label="申请人" align="center">
+        <template v-slot="scope">
+          <div>{{ scope.row.applyUserName? scope.row.applyUserName:'-' }}</div>
+        </template>
+      </el-table-column>
       <el-table-column key="paymentDate" prop="paymentDate" label="*付款日期" align="center" >
         <template v-slot="scope">
           <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -28,7 +33,7 @@
           <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditStatus" prop="auditStatus" label="审核状态" align="center">
+      <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center">
         <template v-slot="scope">
           <el-tag type="warning" v-if="scope.row.auditStatus===auditTypeEnum.REJECT.V">{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
           <el-tag :type="scope.row.auditStatus===auditTypeEnum.PASS.V?'success':''" v-else>{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
@@ -56,15 +61,15 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm :detail-info="detailInfo"/>
+    <mForm :detail-info="detailInfo" />
   <!--分页组件-->
   <pagination />
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-application'
-import { ref, defineProps, watch, nextTick, inject } from 'vue'
+import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
+import { ref, defineProps, watch, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -75,9 +80,9 @@ import { parseTime } from '@/utils/date'
 // import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'
 import mForm from './form'
-import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
+import { supplierLogisticsPaymentPM } from '@/page-permission/supply-chain'
 
-const permission = supplierMaterialPaymentPM.application
+const permission = supplierLogisticsPaymentPM.application
 
 const optShow = {
   add: true,
@@ -98,16 +103,15 @@ const props = defineProps({
 })
 
 const tableRef = ref()
-const orderId = inject('orderId')
 
 const { CRUD, crud } = useCRUD(
   {
-    title: '付款申请记录',
+    title: '付款申请',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['propertyType', 'orderId'],
+    requiredQuery: ['supplierId'],
     hasPagination: true
   },
   tableRef
@@ -130,12 +134,11 @@ watch(
 )
 
 watch(
-  orderId,
+  props.detailInfo,
   (id) => {
     nextTick(() => {
-      crud.query.orderId = id
-      crud.query.propertyType = props.detailInfo.propertyType
-      crud.refresh()
+      crud.query.supplierId = props.detailInfo.supplierId
+      crud.toQuery()
     })
   },
   { immediate: true }

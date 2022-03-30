@@ -104,7 +104,7 @@
   <!-- 发生额 -->
   <occur-amount v-model="occurVisible" :projectId="currentProjectId"/>
   <!-- 收付款 -->
-  <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName"/>
+  <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName" @success="crud.toQuery"/>
   <!--分页组件-->
   <pagination />
   </div>

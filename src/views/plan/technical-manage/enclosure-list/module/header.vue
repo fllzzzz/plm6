@@ -307,6 +307,7 @@ function choseInfo() {
     defaultTab.value = {
     }
   }
+  currentArea.value = { ...defaultTab.value }
 }
 function tabClick(val) {
   const { name, label } = val

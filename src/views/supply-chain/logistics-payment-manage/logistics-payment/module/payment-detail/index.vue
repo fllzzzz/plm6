@@ -31,11 +31,6 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
-        <template v-slot="scope">
-         <div>{{ scope.row.paymentReasonId && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.paymentReasonId]: '' }}</div>
-        </template>
-      </el-table-column>
       <el-table-column key="paymentMethod" prop="paymentMethod" label="*付款方式" align="center" width="110">
         <template v-slot="scope">
           <div>{{ scope.row.paymentMethod? paymentFineModeEnum.VL[scope.row.paymentMethod]: '' }}</div>
@@ -79,15 +74,14 @@ import { ref, defineProps, watch, inject, nextTick } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import useDict from '@compos/store/use-dict'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { digitUppercase } from '@/utils/data-type/number'
-import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
+import { supplierLogisticsPaymentPM } from '@/page-permission/supply-chain'
 
-const permission = supplierMaterialPaymentPM.paymentLog
+const permission = supplierLogisticsPaymentPM.paymentLog
 
 const optShow = {
   add: true,
@@ -108,7 +102,6 @@ const props = defineProps({
 })
 
 const tableRef = ref()
-const dict = useDict(['payment_reason'])
 const orderId = inject('orderId')
 const { crud } = useCRUD(
   {

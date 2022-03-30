@@ -4,46 +4,20 @@
     <mHeader ref="headerRef" />
     <!--表格渲染-->
     <common-table
-      v-show="headerRef?.isOrderType"
       ref="tableRef"
       v-loading="crud.loading"
       :data-format="dataFormat"
-      :data="crud.data"
+      :data="[{supplierId:1}]"
       style="width: 100%"
       :max-height="maxHeight"
     >
-      <el-table-column label="序号" type="index" align="center" width="60">
-        <template #default="{ row, $index }">
-           <table-cell-tag :show="row.settlementStatus===settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
-          <span>{{ $index + 1 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip key="createTime" prop="createTime" label="日期" align="center" width="130" />
-      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
+      <el-table-column label="序号" type="index" align="center" width="60"/>
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="物流公司" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('supplierName')" show-overflow-tooltip key="supplierName" prop="supplierName" label="供应商" min-width="150" />
-      <el-table-column v-if="columns.visible('typeText')" show-overflow-tooltip key="typeText" prop="typeText" label="物料种类" min-width="150" />
-      <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" min-width="120" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('inboundAmount')" prop="inboundAmount" key="inboundAmount" label="入库额" align="right" min-width="120" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.detail)" #header>
-          <el-tooltip
-            effect="light"
-            placement="top"
-            content="点击行可以查看详情"
-          >
-            <div style="display: inline-block">
-              <span>入库额 </span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template>
-        <template #default="{ row }">
-          <el-tag effect="plain" type="success" class="clickable" @click.stop="openRecord(row, 'inbound')">{{ row.inboundAmount }}</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="物流费" align="right" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
@@ -96,16 +70,11 @@
       >
         <template #default="{ row }">
           <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.application.get)"/>
-          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="row.settlementStatus!==settlementStatusEnum.SETTLED.V && checkPermission(permission.application.settle)"/>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
-    <pagination v-show="headerRef?.isOrderType" />
-    <!-- 订单汇总 -->
-    <template v-if="headerRef">
-      <supplierOrder v-if="headerRef.isOrderType?false:true" :query="crud.query"/>
-    </template>
+    <pagination />
     <!-- 记录 -->
     <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" />
     <!-- 付款申请记录 -->
@@ -119,34 +88,25 @@
       :close-on-click-modal="false"
     >
       <template #content>
-        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
+        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" />
       </template>
     </common-drawer>
-    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
   </div>
 </template>
 
 <script setup>
-import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
-import { ref, provide, computed, nextTick } from 'vue'
-
-import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
+import { logisticsPaymentList as get } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
+import { ref, computed, nextTick } from 'vue'
+import { supplierLogisticsPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
-import { matClsEnum } from '@/utils/enum/modules/classification'
-import { settlementStatusEnum } from '@enum-ms/contract'
-import EO from '@enum'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import inboundRecord from './module/inbound-record'
 import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application'
-import settleForm from './module/settle-form'
-import supplierOrder from './module/supplier-order'
-import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,
@@ -156,9 +116,7 @@ const optShow = {
 }
 
 const currentView = computed(() => {
-  if (recordType.value === 'inbound') {
-    return inboundRecord
-  } else if (recordType.value === 'invoice') {
+  if (recordType.value === 'invoice') {
     return invoiceRecord
   }
   return paymentRecord
@@ -167,22 +125,19 @@ const currentView = computed(() => {
 const tableRef = ref()
 const headerRef = ref()
 const applicationVisible = ref(false)
-const settleVisible = ref(false)
 const dataFormat = ref([
-  ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
   ['invoiceRate', ['to-fixed', 2]],
-  ['amount', 'to-thousand'],
-  ['inboundAmount', 'to-thousand'],
+  ['freight', 'to-thousand'],
   ['paymentAmount', 'to-thousand'],
   ['invoiceAmount', 'to-thousand']
 ])
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '付款台账',
+    title: '物流付款台账',
     sort: [],
     permission: { ...permission },
-    crudApi: { ...crudApi },
+    crudApi: { get },
     invisibleColumns: [],
     optShow: { ...optShow }
   },
@@ -192,21 +147,16 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({ paginate: true })
 
 const detailInfo = ref({})
-const orderId = ref(undefined)
 const recordType = ref('')
 const recordVisible = ref(false)
-
-provide('orderId', orderId)
 
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
-    const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
-    v.typeText = basicClassArr.join(' | ')
     // 付款比例
-    v.paymentRate = v.amount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
+    v.paymentRate = v.freight ? (v.paymentAmount || 0) / (v.freight || 0) * 100 : 0
     // 开票比例
-    v.invoiceRate = v.amount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+    v.invoiceRate = v.freight ? (v.invoiceAmount || 0) / (v.freight || 0) * 100 : 0
   })
 }
 
@@ -215,7 +165,6 @@ function openRecord(row, type) {
   if (!checkPermission(permission.detail)) return
   detailInfo.value = row.sourceRow
   recordType.value = type
-  orderId.value = row.id
   nextTick(() => {
     recordVisible.value = true
   })
@@ -223,17 +172,8 @@ function openRecord(row, type) {
 
 function openApplication(row) {
   detailInfo.value = row.sourceRow
-  orderId.value = row.id
   nextTick(() => {
     applicationVisible.value = true
-  })
-}
-
-function openSettle(row) {
-  detailInfo.value = row.sourceRow
-  orderId.value = row.id
-  nextTick(() => {
-    settleVisible.value = true
   })
 }
 </script>

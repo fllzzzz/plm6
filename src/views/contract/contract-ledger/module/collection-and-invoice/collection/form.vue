@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="contractInfo.contractAmount">{{'可收款余额:'+toThousand(contractInfo.contractAmount-totalAmount)}}</el-tag>
+      <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -51,13 +51,12 @@
                   v-show-thousand
                   v-model.number="scope.row.collectionAmount"
                   :min="0"
-                  :max="contractInfo.contractAmount"
+                  :max="999999999999"
                   :step="100"
                   :precision="DP.YUAN"
                   placeholder="收款金额(元)"
                   controls-position="right"
                   :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
-                  @change="moneyChange(scope.row)"
                 />
                 <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
               </template>
@@ -151,7 +150,7 @@
 </template>
 
 <script setup>
-import { ref, inject, nextTick, defineProps } from 'vue'
+import { ref, inject, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -181,8 +180,8 @@ const props = defineProps({
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const contractInfo = inject('contractInfo')
 const bankList = inject('bankList')
-const totalAmount = inject('totalAmount')
-const extraAmount = ref(0)
+// const totalAmount = inject('totalAmount')
+// const extraAmount = ref(0)
 const dict = useDict(['payment_reason'])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const { maxHeight } = useMaxHeight({
@@ -244,26 +243,26 @@ function addRow() {
   })
 }
 
-function moneyChange(row) {
-  extraAmount.value = 0
-  form.list.map(v => {
-    if (v.collectionAmount) {
-      extraAmount.value += v.collectionAmount
-    }
-  })
-  if (extraAmount.value > (contractInfo.value.contractAmount - totalAmount.value)) {
-    const num = row.collectionAmount - (extraAmount.value - (contractInfo.value.contractAmount - totalAmount.value))
-    nextTick(() => {
-      row.collectionAmount = num || 0
-      extraAmount.value = 0
-      form.list.map(v => {
-        if (v.collectionAmount) {
-          extraAmount.value += v.collectionAmount
-        }
-      })
-    })
-  }
-}
+// function moneyChange(row) {
+//   extraAmount.value = 0
+//   form.list.map(v => {
+//     if (v.collectionAmount) {
+//       extraAmount.value += v.collectionAmount
+//     }
+//   })
+//   if (extraAmount.value > (contractInfo.value.contractAmount - totalAmount.value)) {
+//     const num = row.collectionAmount - (extraAmount.value - (contractInfo.value.contractAmount - totalAmount.value))
+//     nextTick(() => {
+//       row.collectionAmount = num || 0
+//       extraAmount.value = 0
+//       form.list.map(v => {
+//         if (v.collectionAmount) {
+//           extraAmount.value += v.collectionAmount
+//         }
+//       })
+//     })
+//   }
+// }
 
 function bankChange(row) {
   if (row.collectionBankAccountId) {

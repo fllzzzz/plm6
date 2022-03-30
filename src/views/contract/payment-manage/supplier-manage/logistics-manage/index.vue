@@ -21,11 +21,6 @@
         <span  @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ scope.row.serialNumber }}</span>
       </template>
     </el-table-column>
-    <!-- <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" label="供应商" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.supplierName? scope.row.supplierName: '-' }}</div>
-      </template>
-    </el-table-column> -->
     <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="运输额" align="center">
       <template v-slot="scope">
         <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ isNotBlank(scope.row.inboundAmount)? toThousand(scope.row.inboundAmount): 0 }}</span>

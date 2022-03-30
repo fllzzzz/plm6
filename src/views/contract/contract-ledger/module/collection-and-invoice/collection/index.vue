@@ -55,13 +55,12 @@
               v-show-thousand
               v-model.number="scope.row.collectionAmount"
               :min="0"
-              :max="contractInfo.contractAmount"
+              :max="999999999999"
               :step="100"
               :precision="DP.YUAN"
               placeholder="收款金额(元)"
               controls-position="right"
               :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
-              @change="moneyChange(scope.row)"
             />
             <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
           </template>
@@ -202,7 +201,7 @@
 
 <script setup>
 import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
-import { ref, defineProps, watch, nextTick, provide } from 'vue'
+import { ref, defineEmits, defineProps, watch, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -247,6 +246,7 @@ const originRow = ref({})
 const bankList = ref([])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const totalAmount = ref(0)
+const emit = defineEmits(['success'])
 provide('bankList', bankList)
 provide('contractInfo', contractInfo)
 provide('totalAmount', totalAmount)
@@ -315,26 +315,26 @@ watch(
   { deep: true, immediate: true }
 )
 
-function moneyChange(row) {
-  totalAmount.value = 0
-  crud.data.map(v => {
-    if (v.collectionAmount) {
-      totalAmount.value += v.collectionAmount
-    }
-  })
-  if (totalAmount.value > contractInfo.value.contractAmount) {
-    const num = row.collectionAmount - (totalAmount.value - contractInfo.value.contractAmount)
-    nextTick(() => {
-      row.collectionAmount = num || 0
-      totalAmount.value = 0
-      crud.data.map(v => {
-        if (v.collectionAmount) {
-          totalAmount.value += v.collectionAmount
-        }
-      })
-    })
-  }
-}
+// function moneyChange(row) {
+//   totalAmount.value = 0
+//   crud.data.map(v => {
+//     if (v.collectionAmount) {
+//       totalAmount.value += v.collectionAmount
+//     }
+//   })
+//   if (totalAmount.value > contractInfo.value.contractAmount) {
+//     const num = row.collectionAmount - (totalAmount.value - contractInfo.value.contractAmount)
+//     nextTick(() => {
+//       row.collectionAmount = num || 0
+//       totalAmount.value = 0
+//       crud.data.map(v => {
+//         if (v.collectionAmount) {
+//           totalAmount.value += v.collectionAmount
+//         }
+//       })
+//     })
+//   }
+// }
 async function getContractInfo(id) {
   let data = {}
   try {
@@ -372,6 +372,7 @@ async function passConfirm(row) {
     await editStatus(row.id, auditTypeEnum.PASS.V)
     crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
+    emit('success')
   } catch (e) {
     console.log('审核失败', e)
   }

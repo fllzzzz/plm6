@@ -32,6 +32,11 @@
         class="filter-item"
       />
       <rrOperation/>
+      <crudOperation>
+        <template #optLeft>
+          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计开票:${totalSum?toThousand(totalSum):'-'}元` }}</el-tag>
+        </template>
+      </crudOperation>
     </div>
   </div>
 </template>
@@ -42,6 +47,8 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { invoiceSum } from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
+import { toThousand } from '@data-type/number'
+import crudOperation from '@crud/CRUD.operation'
 
 const defaultQuery = {
   createTime: [],

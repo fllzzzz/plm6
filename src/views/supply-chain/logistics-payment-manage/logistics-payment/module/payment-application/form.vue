@@ -6,14 +6,84 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="600px"
+    size="50%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
-        <el-form-item label="采购单号">
+        <el-row :gutter="40">
+          <el-col :span="11">
+            <el-form-item label="申请部门">
+              <span>{{ detailInfo.serialNumber }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="付款日期" prop="paymentDate">
+              <el-date-picker
+                v-model="form.paymentDate"
+                type="date"
+                value-format="x"
+                placeholder="选择付款日期"
+                style="width: 160px"
+                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="40">
+          <el-col :span="11">
+            <el-form-item label="累计已付">
+              <span>{{ detailInfo.serialNumber }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="本次付款">
+              <span>{{ detailInfo.serialNumber }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <span style="color:red;font-size:12px;">*请勾选本次付款明细</span>
+        <common-table
+          ref="detailRef"
+          border
+          :data="detailInfo.list"
+          :max-height="maxHeight"
+          style="width: 100%;"
+          class="table-form"
+          return-source-data
+          @selection-change="tableChange"
+          :showEmptySymbol="false"
+        >
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column key="branchCompanyId" prop="branchCompanyId" label="承运属性" align="center" min-width="120" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div>{{ scope.row.branchCompanyName }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column key="supplierId" prop="supplierId" label="项目/采购单号" align="center" min-width="120" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div>{{ scope.row.supplierName }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column key="supplierId" prop="supplierId" label="运费总额" align="center" min-width="120" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div>{{ scope.row.supplierName }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column key="supplierId" prop="supplierId" label="已付款" align="center" min-width="120" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div>{{ scope.row.supplierName }}</div>
+            </template>
+          </el-table-column>
+           <el-table-column key="supplierId" prop="supplierId" label="未付款" align="center" min-width="120" :show-overflow-tooltip="true">
+            <template v-slot="scope">
+              <div>{{ scope.row.supplierName }}</div>
+            </template>
+          </el-table-column>
+        </common-table>
+        <!-- <el-form-item label="采购单号">
           <span>{{ detailInfo.serialNumber }}</span>
         </el-form-item>
         <el-form-item label="所属项目">
@@ -53,7 +123,7 @@
               v-model="form.applyAmount"
               :step="1"
               :min="0"
-              :max="999999999999"
+              :max="detailInfo.amount?detailInfo.amount-detailInfo.paymentAmount:999999999999"
               :precision="DP.YUAN"
               controls-position="right"
               style="width: 220px"
@@ -79,7 +149,7 @@
         </el-form-item>
         <el-form-item label="附件">
           <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </template>
   </common-drawer>
@@ -88,15 +158,15 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
-import { digitUppercase, toThousand } from '@data-type/number'
-import { parseTime } from '@/utils/date'
-import useDict from '@compos/store/use-dict'
-import { fileClassifyEnum } from '@enum-ms/file'
-import { DP } from '@/settings/config'
-import UploadBtn from '@comp/file-upload/UploadBtn'
+import useMaxHeight from '@compos/use-max-height'
+// import { digitUppercase, toThousand } from '@data-type/number'
+// import { parseTime } from '@/utils/date'
+// import useDict from '@compos/store/use-dict'
+// import { fileClassifyEnum } from '@enum-ms/file'
+// import { DP } from '@/settings/config'
+// import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
-const dict = useDict(['payment_reason'])
 const props = defineProps({
   detailInfo: {
     type: Object,
@@ -114,6 +184,13 @@ const defaultForm = {
   receiveBank: undefined,
   receiveBankAccount: undefined
 }
+
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.paymentAddForm',
+  paginate: true,
+  extraHeight: 40
+})
+
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
 const validateMoney = (rule, value, callback) => {
@@ -129,12 +206,15 @@ const rules = {
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }]
 }
 
+function tableChange() {
+
+}
+
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
   crud.form.orderId = props.detailInfo.id
-  crud.form.propertyType = props.detailInfo.propertyType
-  crud.form.receiveBank = props.detailInfo.supplierBankName || undefined
-  crud.form.receiveBankAccount = props.detailInfo.supplierBankAccount || undefined
+  // crud.form.propertyType = props.detailInfo.propertyType
+  // crud.form.receiveBank = props.detailInfo.supplierBankName || undefined
+  // crud.form.receiveBankAccount = props.detailInfo.supplierBankAccount || undefined
 }
 </script>
 <style lang="scss" scoped>

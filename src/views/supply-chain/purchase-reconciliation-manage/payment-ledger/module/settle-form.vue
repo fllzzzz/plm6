@@ -8,8 +8,17 @@
     :wrapper-closable="false"
     size="600px"
   >
+    <template #titleAfter>
+      <el-tag v-if="showType==='detail'">
+        已结算
+      </el-tag>
+    </template>
     <template #titleRight>
-      <common-button v-loading="submitLoading" type="primary" size="mini" @click="onSubmit">提交审核</common-button>
+      <common-button v-loading="submitLoading" type="primary" size="mini" @click="onSubmit" v-if="!showType">提交审核</common-button>
+      <template v-else>
+        <common-button v-if="showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
+        <common-button v-if="showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
+      </template>
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
@@ -31,7 +40,12 @@
           <el-tag style="margin-left:5px;" v-if="detailInfo.amount">{{ (detailInfo.paymentAmount/detailInfo.amount)*100+'%' }}</el-tag>
         </el-form-item>
         <el-form-item label="最终结算额(元)"  prop="amount">
-          <el-input-number
+          <template v-if="showType">
+            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount):'-' }}</span>
+            <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount):'-' }}</span>
+          </template>
+          <template v-else>
+            <el-input-number
               v-show-thousand
               v-model="form.amount"
               :step="1"
@@ -42,15 +56,35 @@
               style="width: 220px"
             />
             <span style="color:#82848a">{{form.amount?digitUppercase(form.amount):''}}</span>
+          </template>
         </el-form-item>
         <el-form-item label="应付(元)">
-          <span v-if="form.amount">{{ toThousand(form.amount-detailInfo.paymentAmount) }}</span>
+          <template v-if="showType">
+            <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
+            <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.paymentAmount) }}</span>
+          </template>
+          <template v-else>
+            <span v-if="form.amount" >{{ toThousand(form.amount-detailInfo.paymentAmount) }}</span>
+          </template>
         </el-form-item>
         <el-form-item label="应补发票(元)">
-          <span v-if="form.amount">{{ toThousand(form.amount-detailInfo.invoiceAmount) }}</span>
+          <template v-if="showType">
+            <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount) }}</span>
+            <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.invoiceAmount) }}</span>
+          </template>
+          <template v-else>
+            <span v-if="form.amount" >{{ toThousand(form.amount-detailInfo.invoiceAmount) }}</span>
+          </template>
         </el-form-item>
         <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
+          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'" v-if="!showType"/>
+          <template v-else>
+            <div v-if="detailInfo.attachmentDTOS && detailInfo.attachmentDTOS.length>0">
+              <div v-for="item in detailInfo.attachmentDTOS" :key="item.id">{{item.name}}
+                <export-button :params="{id: item.id}"/>
+              </div>
+            </div>
+          </template>
         </el-form-item>
       </el-form>
     </template>
@@ -58,12 +92,14 @@
 </template>
 
 <script setup>
-import { settleSave } from '@/api/supply-chain/purchase-reconciliation-manage/payment-application'
+import { settleSave, settleConfirm } from '@/api/supply-chain/purchase-reconciliation-manage/payment-application'
 import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
 import UploadBtn from '@comp/file-upload/UploadBtn'
+import ExportButton from '@comp-common/export-button/index.vue'
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, toThousand } from '@data-type/number'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElNotification } from 'element-plus'
@@ -79,6 +115,10 @@ const props = defineProps({
   detailInfo: {
     type: Object,
     default: () => {}
+  },
+  showType: {
+    type: String,
+    default: undefined
   }
 })
 
@@ -108,7 +148,9 @@ watch(
   () => visible.value,
   (val) => {
     if (val) {
-      resetForm()
+      if (!props.showType) {
+        resetForm()
+      }
     }
   },
   { deep: true, immediate: true }
@@ -146,6 +188,22 @@ async function onSubmit() {
     handleClose()
   } catch (error) {
     console.log('项目结算失败', error)
+  }
+}
+
+async function passConfirm(val) {
+  const msg = val === auditTypeEnum.PASS.V ? '通过' : '驳回'
+  try {
+    const submitForm = {
+      auditStatus: val,
+      orderId: props.detailInfo.id
+    }
+    await settleConfirm(submitForm)
+    ElNotification({ title: '审核' + msg, type: 'success' })
+    emit('success')
+    handleClose()
+  } catch (error) {
+    console.log('项目结算审核失败', error)
   }
 }
 

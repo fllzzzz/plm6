@@ -94,6 +94,8 @@ export const collectionWarnPM = {
 export const contractSupplierMaterialPM = {
   get: ['contract_supplier_material:get'], // 采购订单列表
   print: ['contract_supplier_material:print'], // 打印下载
+  settleDetail: ['contract_supplier_material:settleDetail'], // 结算详情
+  settleAudit: ['contract_supplier_material:settleAudit'], // 结算审核
   inbound: {
     get: ['contract_supplier_material_inbound:get'], // 入库记录列表
     print: ['contract_supplier_material_inbound:print'] // 入库记录打印下载
@@ -119,6 +121,8 @@ export const contractSupplierMaterialPM = {
 export const contractSupplierProductPM = {
   get: ['contract_supplier_product:get'], // 制成品订单列表
   print: ['contract_supplier_product:print'], // 打印下载
+  settleDetail: ['contract_supplier_product:settleDetail'], // 结算详情
+  settleAudit: ['contract_supplier_product:settleAudit'], // 结算审核
   inbound: {
     get: ['contract_supplier_product_inbound:get'], // 入库记录列表
     print: ['contract_supplier_product_inbound:print'] // 入库记录打印下载

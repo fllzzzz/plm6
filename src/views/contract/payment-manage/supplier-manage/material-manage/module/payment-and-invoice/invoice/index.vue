@@ -46,7 +46,7 @@
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
                 :min="0"
-                :max="props.currentRow.amount"
+                :max="999999999999"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
@@ -183,7 +183,7 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
-import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
+import { ref, defineProps, watch, provide, defineEmits } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -295,28 +295,29 @@ function invoiceTypeChange(row) {
   row.taxRate = undefined
 }
 function moneyChange(row) {
-  totalAmount.value = 0
-  crud.data.map(v => {
-    if (v.invoiceAmount) {
-      totalAmount.value += v.invoiceAmount
-    }
-  })
-  if (totalAmount.value > props.currentRow.amount) {
-    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
-    // 解决修改失效
-    nextTick(() => {
-      row.invoiceAmount = num || 0
-      taxMoney(row)
-      totalAmount.value = 0
-      crud.data.map(v => {
-        if (v.invoiceAmount) {
-          totalAmount.value += v.invoiceAmount
-        }
-      })
-    })
-  } else {
-    taxMoney(row)
-  }
+  // totalAmount.value = 0
+  // crud.data.map(v => {
+  //   if (v.invoiceAmount) {
+  //     totalAmount.value += v.invoiceAmount
+  //   }
+  // })
+  // if (totalAmount.value > props.currentRow.amount) {
+  //   const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
+  //   // 解决修改失效
+  //   nextTick(() => {
+  //     row.invoiceAmount = num || 0
+  //     taxMoney(row)
+  //     totalAmount.value = 0
+  //     crud.data.map(v => {
+  //       if (v.invoiceAmount) {
+  //         totalAmount.value += v.invoiceAmount
+  //       }
+  //     })
+  //   })
+  // } else {
+  //   taxMoney(row)
+  // }
+  taxMoney(row)
 }
 
 function taxMoney(row) {

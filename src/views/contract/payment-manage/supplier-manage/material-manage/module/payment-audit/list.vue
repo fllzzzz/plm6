@@ -25,44 +25,45 @@
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="申请人" align="center" width="100px">
+      <el-table-column key="applyUserName" prop="applyUserName" label="申请人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.writtenByName }}</div>
+          <div>{{ scope.row.applyUserName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionDate" prop="collectionDate" label="申请日期" align="center" width="160">
+      <el-table-column key="createTime" prop="createTime" label="申请日期" align="center" width="160">
         <template v-slot="scope">
-          <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
+          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionAmount" prop="collectionAmount" label="申请金额" align="center" min-width="85">
+      <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
+          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionReason" prop="collectionReason" label="*付款事由" align="center" width="120">
+      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
         <template v-slot="scope">
-          <div>{{ scope.row.collectionReason && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.collectionReason]: '' }}</div>
+          <div>{{ scope.row.paymentReasonId && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.paymentReasonId]: '' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center" width="80px">
         <template v-slot="scope">
-          <el-tag :type="scope.row.auditStatus===auditTypeEnum.PASS.V?'success':'warning'" effect="plain">{{ isNotBlank(scope.row.auditStatus)? auditTypeEnum.VL[scope.row.auditStatus]:'-' }}</el-tag>
+          <el-tag type="success" effect="plain" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V">{{ isNotBlank(scope.row.auditStatus)? auditTypeEnum.VL[scope.row.auditStatus]:'-' }}</el-tag>
+          <el-tag :type="scope.row.auditStatus===auditTypeEnum.REJECT.V?'warning':''" effect="plain" v-else>{{ isNotBlank(scope.row.auditStatus)? auditTypeEnum.VL[scope.row.auditStatus]:'-' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column key="actualAmount" prop="actualAmount" label="实付金额" align="center" min-width="85">
+      <el-table-column key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额" align="center" min-width="85">
         <template v-slot="scope">
-          <div>{{ scope.row.actualAmount && scope.row.actualAmount>0? toThousand(scope.row.actualAmount): scope.row.actualAmount }}</div>
+          <div>{{ scope.row.actuallyPaymentAmount && scope.row.actuallyPaymentAmount>0? toThousand(scope.row.actuallyPaymentAmount): scope.row.actuallyPaymentAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="100px">
+      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.auditorName }}</div>
+          <div>{{ scope.row.auditUserName }}</div>
         </template>
       </el-table-column>
-     <el-table-column key="auditorDate" prop="auditorDate" label="审核日期" align="center" width="160">
+     <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center" width="160">
         <template v-slot="scope">
-          <div>{{ scope.row.auditorDate? parseTime(scope.row.auditorDate,'{y}-{m}-{d}'): '-' }}</div>
+          <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -80,7 +81,7 @@
     </common-table>
   <!--分页组件-->
   <pagination />
-  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo"/>
+  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" :branchCompanyId="currentRow.branchCompanyId" @success="crud.toQuery" :currentRow="currentRow"/>
   </div>
 </template>
 
