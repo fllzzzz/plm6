@@ -284,7 +284,7 @@ const dataFormat = ref([
   ['inbound.amountExcludingVAT', 'to-thousand'],
   ['outbound.unitPriceExcludingVAT', 'to-thousand'],
   ['outbound.amountExcludingVAT', 'to-thousand'],
-  ['endPeriod.unitPriceExcludingVAT"', 'to-thousand'],
+  ['endPeriod.unitPriceExcludingVAT', 'to-thousand'],
   ['endPeriod.amountExcludingVAT', 'to-thousand'],
   ['formatSpecArr', 'split']
 ])
