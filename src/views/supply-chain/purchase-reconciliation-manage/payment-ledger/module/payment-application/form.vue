@@ -53,7 +53,7 @@
               v-model="form.applyAmount"
               :step="1"
               :min="0"
-              :max="detailInfo.amount?detailInfo.amount-detailInfo.paymentAmount:999999999999"
+              :max="999999999999"
               :precision="DP.YUAN"
               controls-position="right"
               style="width: 220px"

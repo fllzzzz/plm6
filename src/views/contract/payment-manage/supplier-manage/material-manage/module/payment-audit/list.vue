@@ -81,7 +81,7 @@
     </common-table>
   <!--分页组件-->
   <pagination />
-  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" :branchCompanyId="currentRow.branchCompanyId" @success="crud.toQuery"/>
+  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" :branchCompanyId="currentRow.branchCompanyId" @success="crud.toQuery" :currentRow="currentRow"/>
   </div>
 </template>
 

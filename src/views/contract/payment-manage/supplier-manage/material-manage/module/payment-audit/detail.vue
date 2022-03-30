@@ -27,25 +27,25 @@
       <el-descriptions-item label-class-name="contractLabel" label="申请日期">{{currentInfo.createTime? parseTime(currentInfo.createTime,'{y}-{m}-{d}'): '-'}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="采购单号">{{currentInfo.serialNumber}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="所属项目">
-        <template v-if="currentInfo.projects && currentInfo.projects.length>0">
-          <span v-for="item in currentInfo.projects" :key="item.id">
+        <template v-if="currentRow.projects && currentRow.projects.length>0">
+          <div v-for="item in currentRow.projects" :key="item.id">
             {{item.serialNumber+' '+item.shortName}}
-          </span>
+          </div>
         </template>
       </el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="供应商">{{currentInfo.supplierName}}</el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="合同额">{{currentInfo.amount}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="供应商">{{currentRow.supplierName}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="合同额">{{currentRow.amount}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="已付款">
-        <span>{{ currentInfo.paymentAmount?toThousand(currentInfo.paymentAmount):'-' }}</span>
-        <span style="margin-left:5px;" v-if="currentInfo.amount">{{ (currentInfo.paymentAmount/currentInfo.amount)*100+'%' }}</span>
+        <span>{{ currentRow.paymentAmount?toThousand(currentRow.paymentAmount):'-' }}</span>
+        <span style="margin-left:5px;" v-if="currentRow.paymentAmount && currentRow.amount">{{ (currentRow.paymentAmount/currentRow.amount)*100+'%' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="最近一次付款">
-        <span>{{ currentInfo.lastPaymentAmount?toThousand(currentInfo.lastPaymentAmount):'-' }}</span>
-        <span v-if="currentInfo.lastPaymentTime" style="margin-left:5px;">{{ parseTime(currentInfo.lastPaymentTime,'{y}-{m}-{d}')}}</span>
+        <span>{{ currentRow.lastPaymentAmount?toThousand(currentRow.lastPaymentAmount):'-' }}</span>
+        <span v-if="currentRow.lastPaymentTime" style="margin-left:5px;">{{ parseTime(currentRow.lastPaymentTime,'{y}-{m}-{d}')}}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="本次申请">
         <el-tag effect="plain">{{currentInfo.applyAmount?toThousand(currentInfo.applyAmount):'-'}}</el-tag>
-        <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentInfo.amount">{{ (currentInfo.applyAmount/currentInfo.amount)*100+'%' }}</el-tag>
+        <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentRow.amount">{{ (currentInfo.applyAmount/currentRow.amount)*100+'%' }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="大写">
         <div>{{currentInfo.applyAmount?'('+digitUppercase(currentInfo.applyAmount)+')':'-'}}</div>
@@ -68,7 +68,7 @@
           controls-position="right"
           style="width:220px;"
         />
-        <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentInfo.amount">{{ (actuallyPaymentAmount/currentInfo.amount)*100+'%' }}</el-tag>
+        <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.amount">{{ (actuallyPaymentAmount/currentRow.amount)*100+'%' }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款方式">
         <common-select
@@ -132,6 +132,10 @@ const props = defineProps({
   branchCompanyId: {
     type: [String, Number],
     default: undefined
+  },
+  currentRow: {
+    type: Object,
+    default: () => {}
   }
 })
 
