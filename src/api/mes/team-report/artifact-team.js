@@ -17,12 +17,13 @@ export function get(params) {
  *
  * 获取班组报表-结构-工序详情
  */
-export function processDetail({ startDate, endDate, factoryId, processId, productType, productionLineId, projectId }) {
+export function processDetail(params) {
   return request({
     module: 'mes',
-    url: 'team_form/artifact_assemble/details',
+    url: 'team_form/artifact_assemble/details/page',
     method: 'get',
-    params: { startDate, endDate, factoryId, processId, productType, productionLineId, projectId }
+    params
+    // params: { startDate, endDate, factoryId, processId, productType, productionLineId, projectId }
   })
 }
 

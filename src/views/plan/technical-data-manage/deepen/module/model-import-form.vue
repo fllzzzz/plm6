@@ -8,19 +8,28 @@
         <span>{{ info?.name }}</span>
       </el-form-item>
       <el-form-item label="上传">
-        <upload-btn
-          :upload-fun="upload"
-          :disabled="!uploadAble"
-          :data="{ monomerId: info?.id }"
-          :fileClassify="undefined"
-          :accept="'.ifc'"
-          success-msg="模型导入成功"
-          :btn-name="`${info?.hasModelImport ? '替换模型' : '导入模型'}`"
-          btn-type="warning"
-          btn-size="small"
-          class="filter-item"
-          @success="handleSuccess"
-        />
+        <div style="display:flex;">
+          <upload-btn
+            :upload-fun="upload"
+            :disabled="!uploadAble"
+            :data="{ monomerId: info?.id, edition: edition }"
+            :fileClassify="undefined"
+            :accept="'.ifc'"
+            success-msg="模型导入成功"
+            :btn-name="`${info?.hasModelImport ? '替换模型' : '导入模型'}`"
+            btn-type="warning"
+            btn-size="small"
+            @success="handleSuccess"
+          />
+          <common-select
+            v-model="edition"
+            :options="bimTeklaEditionEnum.ENUM"
+            type="enum"
+            size="small"
+            style="width: 120px; margin-left: 5px"
+            placeholder="Tekla版本"
+          />
+        </div>
       </el-form-item>
     </el-form>
   </common-dialog>
@@ -29,7 +38,9 @@
 <script setup>
 import { upload } from '@/api/bim/model'
 import { ElNotification } from 'element-plus'
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
+
+import { bimTeklaEditionEnum } from '@enum-ms/bim'
 
 import useVisible from '@compos/use-visible'
 import uploadBtn from '@comp/file-upload/SingleFileUploadBtn'
@@ -49,8 +60,10 @@ const props = defineProps({
 const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
 
 const uploadAble = computed(() => {
-  return props.info?.id
+  return props.info?.id && edition.value
 })
+
+const edition = ref()
 
 function handleSuccess() {
   ElNotification({
@@ -60,6 +73,7 @@ function handleSuccess() {
     duration: 2500
   })
   emit('success')
+  edition.value = null
   handleClose()
 }
 </script>
