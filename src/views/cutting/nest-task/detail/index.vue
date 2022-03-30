@@ -97,7 +97,7 @@
         </el-table-column>
       </common-table>
     </div>
-    <el-divider></el-divider>
+    <el-divider />
     <div class="TaskPackage">
       <div v-if="createNum !== 1" class="taskTabHed head-container">
         <group
@@ -128,7 +128,7 @@
           size="small"
           @change="radioButtonChange"
         />
-        <common-button size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="Query()"> 重置 </common-button>
+        <common-button size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="Query()">重 置</common-button>
         <common-button style="float: right" :disabled="workListTask" type="success" size="mini" @click="nestWorkListClick">
           创建套料工单
         </common-button>
@@ -209,15 +209,15 @@
   </common-dialog>
 
   <!-- 零件工单 -->
-  <common-dialog width="60%" title="零件清单" append-to-body v-model="innerVisible">
+  <common-dialog v-loading="CutLoading" width="60%" title="零件清单" append-to-body v-model="innerVisible">
     <common-table ref="tableRef" :data="PartByCutTaskIdData" :max-height="400" style="width: 100%" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60">
+      <el-table-column align="center" key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60">
         <template v-slot="scope">
           <span>{{ scope.row.monomerName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60">
+      <el-table-column align="center" key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60">
         <template v-slot="scope">
           <span>{{ scope.row.areaName }}</span>
         </template>
@@ -237,7 +237,7 @@
           <span>{{ scope.row.length }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60">
+      <el-table-column align="center" key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60">
         <template v-slot="scope">
           <span>{{ scope.row.material }}</span>
         </template>
@@ -290,8 +290,8 @@ const areaIdList = ref([])
 const taskPackage = ref([]) // 任务包数据
 const PartByCutTaskIdData = ref([]) // 零件清单
 const material = ref([])
-const innerVisible = ref(false)
-const workListTask = ref(false)// 创建工单操作禁用
+const innerVisible = ref(false) // 零件清单弹窗
+const workListTask = ref(false) // 创建工单操作禁用
 const titleName = ref('')
 const loadingPart = ref(false)
 const loadingPackage = ref(false)
@@ -307,6 +307,7 @@ const materialButton = ref() // 材质筛选
 
 const PlateType = ref() // 零件板 翼腹板
 const createNum = ref(1)
+const CutLoading = ref(false)
 
 const typeProp = { key: 'id', label: 'name', value: 'id' }
 
@@ -325,13 +326,18 @@ async function CutPart(projectId, monomerId, areaId) {
 }
 
 async function getByCutTaskId(params) {
-  const { content } = await ByAreaId(params)
-  PartByCutTaskIdData.value = content
+  CutLoading.value = true
+  try {
+    const { content } = await ByAreaId(params)
+    PartByCutTaskIdData.value = content
+  } catch (err) {
+    console.log(err)
+  }
+  CutLoading.value = false
 }
 
 function handleSelectionChange(val) {
   handleSelection.value = val
-  console.log('handleSelection.value', handleSelection.value)
 }
 
 async function radioButtonChange(val) {
@@ -399,7 +405,6 @@ async function createTask(Str) {
         materialData.push(item.material)
         material.value = deDuPe(materialData).sort(sortArray)
         radioButtonData.value = deDuPe(tickData).sort(sortArray)
-        console.log(' material.value', material.value, ' radioButtonData.value', radioButtonData.value)
       })
       createNum.value++
       workListTask.value = true
@@ -413,7 +418,6 @@ async function createTask(Str) {
 }
 
 function details(row) {
-  console.log(row)
   innerVisible.value = true
   getByCutTaskId(row.areaId)
 }

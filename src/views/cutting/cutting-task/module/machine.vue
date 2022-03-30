@@ -72,7 +72,7 @@
       :monitorMachine="monitorMachine"
       @closeMonitor="closeMonitor"
       v-model:visible="monitorVisible"
-    ></monitor-view>
+    />
   </div>
 </template>
 

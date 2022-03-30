@@ -1,8 +1,8 @@
 <template>
   <div class="head-container">
-    <div v-show="crud.searchToggle">
-      <crudOperation>
-        <template #optLeft>
+    <crudOperation>
+      <template #optLeft>
+        <div v-show="crud.searchToggle">
           <el-input
             v-model="query.projectName"
             placeholder="请输入项目名称"
@@ -12,10 +12,11 @@
             clearable
             @keyup.enter="crud.toQuery"
           />
+
           <rrOperation />
-        </template>
-      </crudOperation>
-    </div>
+        </div>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
