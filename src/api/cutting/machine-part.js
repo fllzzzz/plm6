@@ -9,9 +9,8 @@ export function get(params) {
   })
 }
 
-export function getPartListByMac({
-  mac
-}) {
+// 设备查看生产零件详情
+export function getPartListByMac({ mac }) {
   return request({
     url: `/api/cut/getPartListByMac/${mac}`,
     method: 'get'
