@@ -3,13 +3,14 @@
     <div v-show="crud.searchToggle">
       <monomer-select-area-tabs :productType="query.productType" needConvert :project-id="globalProjectId" @change="fetchMonomerAndArea" />
       <common-radio-button
+       v-if="showComponent"
         v-model="query.productType"
         :options="componentTypeEnum.ENUM"
         size="small"
         class="filter-item"
         type="enumSL"
         default
-        :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V]"
+        :unshowVal="[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]"
         @change="crud.toQuery"
       />
       <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 200px" @change="crud.toQuery" />
@@ -33,6 +34,7 @@ import { ref, defineExpose, defineEmits } from 'vue'
 import { componentTypeEnum } from '@enum-ms/mes'
 import { mapGetters } from '@/store/lib'
 
+import useUnshowProductTypeByMode from '@compos/use-unshow-productType-by-mode.js'
 import useDashboardHeader from '@compos/mes/dashboard/use-dashboard-header'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
@@ -54,6 +56,9 @@ const defaultQuery = {
   factoryId: { value: undefined, resetAble: false }
 }
 const { crud, query, CRUD } = regHeader(defaultQuery)
+const { unshowVal, showComponent } = useUnshowProductTypeByMode({ resetQuery: function () {
+  query.productType = undefined
+} })
 
 const { globalProjectId } = mapGetters(['globalProjectId'])
 
