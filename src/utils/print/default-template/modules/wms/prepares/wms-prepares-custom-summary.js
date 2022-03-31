@@ -193,7 +193,7 @@ const WMS_PREPARES_CUSTOM_SUMMARY = {
      */
     summary: { show: true, title: '合计' },
     extraFields: [
-      { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'materialBasicClassSetEnum' }}
+      { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }}
     ],
     /**
      * 表格列

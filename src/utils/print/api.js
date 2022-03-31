@@ -1,5 +1,6 @@
 import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
+import wms from '@/api/print/wms'
 
 // 合同
 const myProject = contract.myProject
@@ -58,6 +59,9 @@ const mesWarehouseStateStructure = mes.warehouseStateStructure
 const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
 const mesWarehouseStateReport = mes.warehouseStateReport
 
+// wms
+const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt
+
 export default {
   myProject, // 我的项目
   projectList, // 项目列表
@@ -113,5 +117,8 @@ export default {
 
   mesWarehouseStateStructure, // 结构出入库状态
   mesWarehouseStateEnclosure, // 围护出入库状态
-  mesWarehouseStateReport // 入发存报表
+  mesWarehouseStateReport, // 入发存报表
+
+  // wms
+  wmsRmOutboundReceipt // 出库（领料单）单
 }

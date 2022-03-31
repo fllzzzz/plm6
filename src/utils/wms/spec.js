@@ -3,6 +3,7 @@ import { isBlank, isNotBlank } from '../data-type'
 import { uniqueArr } from '../data-type/array'
 import { measureTypeEnum } from '../enum/modules/wms'
 import { rawMatClsEnum } from '@enum-ms/classification'
+import { specFormat } from './spec-format'
 
 /**
  * 为列表设置规格
@@ -38,6 +39,7 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
               row.sn = info.sn // 该规格唯一编号
               row.serialNumber = info.serialNumber // 科目编号 - 规格
             }
+            row.specMerge = specFormat(row) // 合并科目
             row.specificationLabels = info.specificationLabels // 规格中文
             row.classifySerialNumber = info.classify.serialNumber // 科目编号
             row.basicClass = info.classify.basicClass // 基础类型

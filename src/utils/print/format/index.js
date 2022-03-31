@@ -1,5 +1,6 @@
 import common from './common'
 import mes from './mes'
+import wms from './wms'
 import contract from './contract'
 
 const invoiceLedger = common.handleTaxRate
@@ -31,6 +32,8 @@ const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
+const wmsRmOutboundReceipt = wms.dataFormat
+
 export default {
   invoiceLedger,
   invoiceRecord,
@@ -53,5 +56,7 @@ export default {
   mesStructureProductionStatistics,
   mesStructureProductionStatisticsIn,
   mesEnclosureProductionStatistics,
-  mesEnclosureProductionStatisticsIn
+  mesEnclosureProductionStatisticsIn,
+
+  wmsRmOutboundReceipt
 }

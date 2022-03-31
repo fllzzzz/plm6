@@ -125,7 +125,6 @@ const fieldTypeEnum = {
   BANK: { L: '银行', K: 'BANK' },
   BANK_ACCOUNT: { L: '银行账号', K: 'BANK_ACCOUNT' } // 非银行卡号
 }
-constantize(fieldTypeEnum)
 
 // 数据来源
 const dataSourceEnum = {

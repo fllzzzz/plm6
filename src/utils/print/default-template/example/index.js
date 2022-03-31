@@ -181,7 +181,7 @@ function getDataByType(field) {
       break
     case fieldTypeEnum.RATE.K: _md = Random.float(1, 100, 0, 2)
       break
-    case fieldTypeEnum.SPECIFICATION.K: _md = Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1)
+    case fieldTypeEnum.SPECIFICATION.K: _md = Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + 'Q235B'
       break
     case fieldTypeEnum.ENUM.K: _md = mockEnum(field.format.enum, field.format.bit)
       break

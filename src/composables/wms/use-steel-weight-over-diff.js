@@ -14,7 +14,7 @@ export default function useWeightOverDiff(baseUnit) {
     if (inboundSteelCfg.value.steelDiffType === numOrPctEnum.PERCENTAGE.V) {
       return `实际重量与理论重量的误差不可超过理论重量的${inboundSteelCfg.value.steelDiff || 0}%`
     }
-    return `实际重量与理论重量的误差不可超过${inboundSteelCfg.value.steelDiff || 0}g`
+    return `实际重量与理论重量的误差不可超过${inboundSteelCfg.value.steelDiff || 0} ${STEEL_DIFF_UNIT}`
   })
 
   return {
@@ -41,7 +41,9 @@ function weightOverDiff(row, { inboundSteelCfg, baseUnit }) {
   const steelDiff = inboundSteelCfg.value.steelDiff
   const steelDiffType = inboundSteelCfg.value.steelDiffType
   if (steelDiffType === numOrPctEnum.PERCENTAGE.V) {
-    hasOver = Math.abs((row.weighingTotalWeight / row.theoryTotalWeight) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5) * 100 > steelDiff
+    hasOver =
+      (Math.abs((row.weighingTotalWeight / row.theoryTotalWeight) * Math.pow(10, 5) - 1 * Math.pow(10, 5)) / Math.pow(10, 5)) * 100 >
+      steelDiff
   }
   if (steelDiffType === numOrPctEnum.NUMBER.V) {
     hasOver =
