@@ -13,12 +13,28 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <template v-if="crud.data && transformTab === 0">
-        <el-table-column key="workshopInf" align="center" prop="workshopInf" :show-overflow-tooltip="true" label="车间" min-width="40">
+        <el-table-column
+          v-if="columns.visible('workshopInf')"
+          key="workshopInf"
+          align="center"
+          prop="workshopInf"
+          :show-overflow-tooltip="true"
+          label="车间"
+          min-width="40"
+        >
           <template v-slot="scope">
             <span>{{ scope.row.cutMachine.workshopInf }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="machineName" align="center" prop="machineName" :show-overflow-tooltip="true" label="设备名称" min-width="40">
+        <el-table-column
+          v-if="columns.visible('machineName')"
+          key="machineName"
+          align="center"
+          prop="machineName"
+          :show-overflow-tooltip="true"
+          label="设备名称"
+          min-width="40"
+        >
           <template v-slot="scope">
             <el-tag style="width: 100%" effect="plain">
               <span>{{ scope.row.cutMachine.machineName }}</span>
@@ -27,19 +43,35 @@
         </el-table-column>
       </template>
       <template v-else>
-        <el-table-column key="projectName" :show-overflow-tooltip="true" label="项目名称" align="center" min-width="90">
+        <el-table-column
+          v-if="columns.visible('projectName')"
+          key="projectName"
+          :show-overflow-tooltip="true"
+          label="项目名称"
+          align="center"
+          min-width="90"
+        >
           <template v-slot="scope">
             <span>{{ scope.row.projectName }}</span>
           </template>
         </el-table-column>
       </template>
-      <el-table-column key="plateNum" align="center" prop="plateNum" :show-overflow-tooltip="true" label="任务数（张）" min-width="40">
+      <el-table-column
+        v-if="columns.visible('plateNum')"
+        key="plateNum"
+        align="center"
+        prop="plateNum"
+        :show-overflow-tooltip="true"
+        label="任务数（张）"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.plateNum ? scope.row.plateNum : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column
         key="plateWeight"
+        v-if="columns.visible('plateWeight')"
         align="center"
         prop="plateWeight"
         :show-overflow-tooltip="true"
@@ -50,7 +82,15 @@
           <span>{{ scope.row.plateWeight ? scope.row.plateWeight : 0 }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="finishNum" align="center" prop="finishNum" :show-overflow-tooltip="true" label="完成数（张）" min-width="40">
+      <el-table-column
+        v-if="columns.visible('finishNum')"
+        key="finishNum"
+        align="center"
+        prop="finishNum"
+        :show-overflow-tooltip="true"
+        label="完成数（张）"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.finishNum ? scope.row.finishNum : 0 }}</span>
         </template>
@@ -59,6 +99,7 @@
         key="finishWeight"
         align="center"
         prop="finishWeight"
+        v-if="columns.visible('finishWeight')"
         :show-overflow-tooltip="true"
         label="完成量（kg）"
         min-width="40"
@@ -119,7 +160,7 @@ const optShow = {
   download: false
 }
 
-const { crud } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '切割排产',
     sort: [],
