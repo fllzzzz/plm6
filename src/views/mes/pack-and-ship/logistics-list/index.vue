@@ -188,7 +188,7 @@ const tableRef = ref()
 const { crud, columns } = useCRUD(
   {
     title: '物流记录',
-    sort: ['deliveryTime.desc'],
+    sort: ['auditTime.desc'],
     permission: { ...permission },
     crudApi: { ...crudApi },
     optShow: { ...optShow },
