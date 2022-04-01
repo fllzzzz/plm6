@@ -10,7 +10,7 @@
     size="95%"
   >
     <template #titleAfter>
-      <div>{{ detailInfo.serialNumber }}</div>
+      <div>采购订单:{{ detailInfo.serialNumber }}</div>
     </template>
     <template #titleRight>
       <div class="print-wrap">
@@ -35,10 +35,10 @@
         <!-- 价格信息 -->
         <amount-info-columns :columns="{}" :show-tax-rate="true"/>
         <el-table-column prop="inputVat" label="税额" align="center" show-overflow-tooltip />
-        <el-table-column prop="inboundTime" label="入库时间" align="center" show-overflow-tooltip />
+        <el-table-column prop="inboundTime" label="入库时间" align="center" width="90px" show-overflow-tooltip />
         <el-table-column prop="inboundId" label="入库单号" align="center" show-overflow-tooltip />
-        <el-table-column prop="invoiceAmount" label="入库人" align="center" show-overflow-tooltip />
-        <el-table-column prop="invoiceUnit" label="审核人" align="center" show-overflow-tooltip />
+        <!-- <el-table-column prop="invoiceAmount" label="入库人" align="center" show-overflow-tooltip />
+        <el-table-column prop="invoiceUnit" label="审核人" align="center" show-overflow-tooltip /> -->
       </common-table>
       <!--分页组件-->
       <el-pagination

@@ -33,6 +33,13 @@ export const purchaseOrderPM = {
 
 // --------------------------- 采购对账 start --------------------------------
 
+// 采购对账管理/入库记录
+export const supplierMaterialInboundPM = {
+  get: ['supplier_material_inbound:get'], // 入库记录列表
+  detail: ['supplier_material_inbound:detail'], // 入库记录详情
+  print: ['supplier_material_inbound:print'] // 打印入库记录详情
+}
+
 // 采购对账管理/付款台账
 export const supplierMaterialPaymentPM = {
   get: ['supplier_material_payment:get'], // 付款台账列表

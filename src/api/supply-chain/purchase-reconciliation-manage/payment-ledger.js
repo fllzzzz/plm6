@@ -70,7 +70,8 @@ export function inboundRecord(params) {
     module: 'contract',
     url: `supply-chain/order-payment/listInbound/${params.orderId}`,
     method: 'get',
-    params
+    params,
+    cancelKey: false
   })
 }
 

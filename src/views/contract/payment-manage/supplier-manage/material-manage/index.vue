@@ -50,7 +50,7 @@
       <template v-slot="scope">
         <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ isNotBlank(scope.row.settlementAmount)? toThousand(scope.row.settlementAmount): 0 }}</span>
         <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckSettlementCount>0">
-          <el-badge :value="scope.row.unCheckSettlementCount" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
+          <el-badge :value="1" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
             <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
           </el-badge>
         </span>
@@ -106,8 +106,8 @@
       </template>
     </el-table-column>
   </common-table>
-  <!-- 发生额 -->
-  <stock-amount v-model="stockVisible"/>
+  <!-- 入库记录 -->
+  <inboundRecord v-model="stockVisible" :detail-info="currentRow" />
   <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
   <!-- 收付款 -->
   <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
@@ -128,7 +128,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import { settlementStatusEnum, purchaseOrderStatusEnum } from '@enum-ms/contract'
-import stockAmount from './module/stock-amount'
+import inboundRecord from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/inbound-record'
 import paymentAndInvoice from './module/payment-and-invoice'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'

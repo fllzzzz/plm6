@@ -36,7 +36,6 @@
                 value-format="x"
                 placeholder="选择日期"
                 style="width:100%"
-                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
               />
               <template v-else>
                 <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>

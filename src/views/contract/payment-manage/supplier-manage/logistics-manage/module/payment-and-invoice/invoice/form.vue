@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="currentRow.amount">{{'可收票余额:'+toThousand(currentRow.amount-totalAmount)}}</el-tag>
+      <el-tag type="success" v-if="currentRow.amount">{{'物流费:'+toThousand(currentRow.amount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"

@@ -23,7 +23,12 @@
           <div>{{ scope.row.applyUserName? scope.row.applyUserName:'-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentDate" prop="paymentDate" label="*付款日期" align="center" >
+      <el-table-column key="propertyType" prop="propertyType" label="承运属性" align="center" >
+        <template v-slot="scope">
+          <div>{{ scope.row.propertyType? supplierPayTypeEnum.VL[scope.row.propertyType]: '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" >
         <template v-slot="scope">
           <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
@@ -75,7 +80,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 // import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'

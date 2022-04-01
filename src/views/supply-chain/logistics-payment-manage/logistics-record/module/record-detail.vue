@@ -9,6 +9,11 @@
     custom-class="invoice-record"
     size="80%"
   >
+    <template #titleAfter>
+      <div v-if="props.type===logisticsSearchTypeEnum.PRODUCT.V">{{ detailInfo.projectName }}</div>
+      <div v-if="props.type===logisticsSearchTypeEnum.MATERIAL.V">{{ detailInfo.serialNumber }}</div>
+      <div v-if="props.type===logisticsSearchTypeEnum.COMPANY.V">{{ detailInfo.supplierName }}</div>
+    </template>
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />

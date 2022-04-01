@@ -81,13 +81,13 @@
     </common-table>
   <!--分页组件-->
   <pagination />
-  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" :branchCompanyId="currentRow.branchCompanyId" @success="crud.toQuery" :currentRow="currentRow"/>
+  <detail v-model="detailVisible" :showType="showType" :detailInfo="detailInfo" :branchCompanyId="currentRow.branchCompanyId" @success="handleSuccess" :currentRow="currentRow"/>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, watch, defineEmits } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import { contractSupplierMaterialPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
@@ -132,6 +132,7 @@ const dict = useDict(['payment_reason'])
 const detailInfo = ref({})
 const showType = ref('detail')
 const detailVisible = ref(false)
+const emit = defineEmits(['success'])
 const { crud, CRUD } = useCRUD(
   {
     title: '付款审核',
@@ -194,6 +195,10 @@ CRUD.HOOK.beforeRefresh = () => {
   crud.query.propertyType = props.propertyType
 }
 
+function handleSuccess() {
+  emit('success')
+  crud.toQuery()
+}
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {

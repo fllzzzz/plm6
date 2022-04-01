@@ -12,9 +12,9 @@
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60"/>
-      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="物流公司" align="center">
+      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.serialNumber }}</span>
+          <span>{{ scope.row.supplierName }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="物流费" align="right" min-width="120" show-overflow-tooltip />
