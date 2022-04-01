@@ -9,6 +9,9 @@
     :wrapper-closable="false"
     size="95%"
   >
+     <template #titleAfter>
+      <span>采购订单:{{currentRow.serialNumber}}</span>
+    </template>
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
         <el-tab-pane label="付款列表" name="payment">

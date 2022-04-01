@@ -141,7 +141,7 @@ const props = defineProps({
 
 const dict = useDict(['payment_reason'])
 const bankList = ref([])
-const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
+const typeProp = { key: 'account', label: 'depositBank', value: 'account' }
 const actuallyPaymentAmount = ref()
 const paymentBankAccount = ref()
 const paymentBank = ref()
@@ -198,6 +198,10 @@ async function passConfirm(val) {
   if (val === auditTypeEnum.PASS.V) {
     if (!actuallyPaymentAmount.value) {
       ElMessage.error('本次实付必填且大于0')
+      return
+    }
+    if (!paymentMethod.value) {
+      ElMessage.error('付款方式必填')
       return
     }
     if (!paymentBankAccount.value) {
