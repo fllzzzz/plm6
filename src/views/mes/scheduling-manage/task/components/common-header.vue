@@ -4,6 +4,7 @@
     <el-date-picker
       v-model="query.date"
       type="month"
+      :clearable="false"
       size="small"
       class="filter-item"
       placeholder="选择月"
