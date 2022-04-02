@@ -7,6 +7,7 @@
     ref="tableRef"
     v-loading="crud.loading"
     :data="crud.data"
+    return-source-data
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     :cell-class-name="wrongCellMask"
