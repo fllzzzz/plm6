@@ -25,6 +25,7 @@ function preparesCustomSummary({ header, table = [], footer, qrCode }) {
 async function dataFormat({ header, table = [], footer, qrCode }) {
   await setSpecInfoToList(table)
   await numFmtByBasicClass(table)
+  console.log('table', table)
   return {
     header,
     table,

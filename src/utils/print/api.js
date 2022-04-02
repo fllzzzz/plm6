@@ -61,6 +61,7 @@ const mesWarehouseStateReport = mes.warehouseStateReport
 
 // wms
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt
+const wmsRmInboundReceipt = wms.wmsRmInboundReceipt
 
 export default {
   myProject, // 我的项目
@@ -120,5 +121,6 @@ export default {
   mesWarehouseStateReport, // 入发存报表
 
   // wms
-  wmsRmOutboundReceipt // 出库（领料单）单
+  wmsRmOutboundReceipt, // 出库（领料单）单
+  wmsRmInboundReceipt
 }

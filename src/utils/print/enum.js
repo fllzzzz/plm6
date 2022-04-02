@@ -62,6 +62,7 @@ constantize(weightUnitEnum)
 
 // 打印配置-字段类型
 const fieldTypeEnum = {
+  BLANK: { L: '空值', K: 'BLANK' },
   OTHER: { L: '其他', K: 'OTHER' },
   DICT: { L: '字典', K: 'DICT' },
   ENUM: { L: '枚举', K: 'ENUM' },
@@ -228,4 +229,3 @@ export default {
   getBits,
   setEnumValue
 }
-

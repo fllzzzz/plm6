@@ -268,7 +268,7 @@ async function download() {
         }
       }
     } catch (error) {
-      ElMessage.error(error)
+      ElMessage.error(`${error}`)
       console.log('导出', error)
     } finally {
       printLoading.text = `导出结束`
@@ -320,7 +320,7 @@ async function print(printMode) {
         }
       }
     } catch (error) {
-      ElMessage.error(error)
+      ElMessage.error(`${error}`)
       console.log('打印', error)
     } finally {
       printLoading.text = `打印结束`

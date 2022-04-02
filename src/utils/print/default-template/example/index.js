@@ -20,13 +20,13 @@ function getList({ fields, extraFields = [], number = 1 }) {
   }
   for (let i = 0; i < number; i++) {
     const _data = {}
-    fields.forEach(field => {
+    fields.forEach((field) => {
       const key = field.key
       if (isNotBlank(key) && typeof key === 'string' && field.source === dataSourceEnum.SYSTEM.V) {
         setFieldData(_data, field)
       }
     })
-    extraFields.forEach(field => {
+    extraFields.forEach((field) => {
       const key = field.key
       if (isNotBlank(key) && typeof key === 'string') {
         setFieldData(_data, field)
@@ -48,13 +48,13 @@ function getOne({ fields, extraFields = [] }) {
   if (!isNotBlank(fields)) {
     return data
   }
-  fields.forEach(field => {
+  fields.forEach((field) => {
     const key = field.key
     if (isNotBlank(key) && typeof key === 'string' && field.source === dataSourceEnum.SYSTEM.V) {
       setFieldData(data, field)
     }
   })
-  extraFields.forEach(field => {
+  extraFields.forEach((field) => {
     const key = field.key
     if (isNotBlank(key) && typeof key === 'string') {
       setFieldData(data, field)
@@ -84,31 +84,45 @@ function setFieldData(data, field) {
 function getDataByType(field) {
   let _md
   switch (field.type) {
-    case fieldTypeEnum.GUID.K: _md = Random.guid()
+    case fieldTypeEnum.BLANK.K:
+      _md = ''
       break
-    case fieldTypeEnum.STRUCTURE_NAME.K: _md = Random.structureName()
+    case fieldTypeEnum.GUID.K:
+      _md = Random.guid()
       break
-    case fieldTypeEnum.ENCLOSURE_NAME.K: _md = Random.enclosureName()
+    case fieldTypeEnum.STRUCTURE_NAME.K:
+      _md = Random.structureName()
+      break
+    case fieldTypeEnum.ENCLOSURE_NAME.K:
+      _md = Random.enclosureName()
       break
     // case fieldTypeEnum.SEGMENTS_NAME.K: _md = Random.segmentsName()
     //   break
     // case fieldTypeEnum.SINGLE_ELEMENT_NAME.K: _md = Random.singleElementName()
     //   break
-    case fieldTypeEnum.MONOMER_NAME.K: _md = Random.monomerName()
+    case fieldTypeEnum.MONOMER_NAME.K:
+      _md = Random.monomerName()
       break
-    case fieldTypeEnum.AREA_NAME.K: _md = Random.areaName()
+    case fieldTypeEnum.AREA_NAME.K:
+      _md = Random.areaName()
       break
-    case fieldTypeEnum.FACTORY_NAME.K: _md = Random.factoryName()
+    case fieldTypeEnum.FACTORY_NAME.K:
+      _md = Random.factoryName()
       break
-    case fieldTypeEnum.WAREHOUSE_NAME.K: _md = Random.warehouseName()
+    case fieldTypeEnum.WAREHOUSE_NAME.K:
+      _md = Random.warehouseName()
       break
-    case fieldTypeEnum.WORKSHOP.K: _md = Random.workshop()
+    case fieldTypeEnum.WORKSHOP.K:
+      _md = Random.workshop()
       break
-    case fieldTypeEnum.PRODUCTION_LINE.K: _md = Random.productionLine()
+    case fieldTypeEnum.PRODUCTION_LINE.K:
+      _md = Random.productionLine()
       break
-    case fieldTypeEnum.TEAM_NAME.K: _md = Random.componentProcess() + '/' + Random.cname()
+    case fieldTypeEnum.TEAM_NAME.K:
+      _md = Random.componentProcess() + '/' + Random.cname()
       break
-    case fieldTypeEnum.COMPONENT_PROCESS.K: _md = Random.componentProcess()
+    case fieldTypeEnum.COMPONENT_PROCESS.K:
+      _md = Random.componentProcess()
       break
     // case fieldTypeEnum.STRUCTURE_PROCESS.K: _md = Random.structureProcess()
     //   break
@@ -120,115 +134,154 @@ function getDataByType(field) {
     //   break
     // case fieldTypeEnum.SINGLE_ELEMENT_PROCESS.K: _md = Random.singleElementProcess()
     //   break
-    case fieldTypeEnum.USER_NAME.K: _md = Random.cname()
+    case fieldTypeEnum.USER_NAME.K:
+      _md = Random.cname()
       break
-    case fieldTypeEnum.COMPANY_NAME.K: _md = Random.cpname()
+    case fieldTypeEnum.COMPANY_NAME.K:
+      _md = Random.cpname()
       break
-    case fieldTypeEnum.DEPT.K: _md = Random.dept()
+    case fieldTypeEnum.DEPT.K:
+      _md = Random.dept()
       break
-    case fieldTypeEnum.ORDER_TYPE.K: _md = Random.orderType()
+    case fieldTypeEnum.ORDER_TYPE.K:
+      _md = Random.orderType()
       break
-    case fieldTypeEnum.STRUCTURE_TYPE.K: _md = Random.structureType()
+    case fieldTypeEnum.STRUCTURE_TYPE.K:
+      _md = Random.structureType()
       break
-    case fieldTypeEnum.REIMBURSEMENT_TYPE.K: _md = Random.reimbursementType()
+    case fieldTypeEnum.REIMBURSEMENT_TYPE.K:
+      _md = Random.reimbursementType()
       break
-    case fieldTypeEnum.SUPPLIER_FEE_TYPE.K: _md = Random.supplierFeeType()
+    case fieldTypeEnum.SUPPLIER_FEE_TYPE.K:
+      _md = Random.supplierFeeType()
       break
-    case fieldTypeEnum.PAYMENT_REASON.K: _md = Random.paymentReason()
+    case fieldTypeEnum.PAYMENT_REASON.K:
+      _md = Random.paymentReason()
       break
-    case fieldTypeEnum.MATERIAL.K: _md = Random.materialName()
+    case fieldTypeEnum.MATERIAL.K:
+      _md = Random.materialName()
       break
-    case fieldTypeEnum.PLATE_TYPE.K: _md = Random.plateType()
+    case fieldTypeEnum.PLATE_TYPE.K:
+      _md = Random.plateType()
       break
-    case fieldTypeEnum.COLOR.K: _md = Random.color()
+    case fieldTypeEnum.COLOR.K:
+      _md = Random.color()
       break
-    case fieldTypeEnum.MATERIAL_CLASS_FULL_NAME.K: _md = Random.typeName() + '/' + Random.className() + '/' + Random.materialName()
+    case fieldTypeEnum.MATERIAL_CLASS_FULL_NAME.K:
+      _md = Random.typeName() + '/' + Random.className() + '/' + Random.materialName()
       break
-    case fieldTypeEnum.MATERIAL_CLASS_NAME.K: _md = Random.typeName()
+    case fieldTypeEnum.MATERIAL_CLASS_NAME.K:
+      _md = Random.typeName()
       break
-    case fieldTypeEnum.UNIT.K: _md = Random.unit()
+    case fieldTypeEnum.UNIT.K:
+      _md = Random.unit()
       break
-    case fieldTypeEnum.MEASUREMENT_UNIT.K: _md = Random.measurementUnit()
+    case fieldTypeEnum.MEASUREMENT_UNIT.K:
+      _md = Random.measurementUnit()
       break
-    case fieldTypeEnum.ACCOUNTING_UNIT.K: _md = Random.accountingUnit()
+    case fieldTypeEnum.ACCOUNTING_UNIT.K:
+      _md = Random.accountingUnit()
       break
-    case fieldTypeEnum.BRAND.K: _md = Random.brand()
+    case fieldTypeEnum.BRAND.K:
+      _md = Random.brand()
       break
-    case fieldTypeEnum.ADDRESS.K: _md = Random.address()
+    case fieldTypeEnum.ADDRESS.K:
+      _md = Random.address()
       break
-    case fieldTypeEnum.INVOICE_NO.K: _md = Random.natural(1000000, 100000000000)
+    case fieldTypeEnum.INVOICE_NO.K:
+      _md = Random.natural(1000000, 100000000000)
       break
-    case fieldTypeEnum.BANK.K: _md = Random.bankName()
+    case fieldTypeEnum.BANK.K:
+      _md = Random.bankName()
       break
-    case fieldTypeEnum.BANK_ACCOUNT.K: _md = Random.natural()
+    case fieldTypeEnum.BANK_ACCOUNT.K:
+      _md = Random.natural()
       break
-    case fieldTypeEnum.DATE.K: _md = Number(Random.datetime('T'))
+    case fieldTypeEnum.DATE.K:
+      _md = Number(Random.datetime('T'))
       break
     // case fieldTypeEnum.DATES.K: _md = `${Random.datetime('T')},${Random.datetime('T')},${Random.datetime('T')}`
-    case fieldTypeEnum.DATES.K: _md = [Number(Random.datetime('T')), Number(Random.datetime('T'))]
+    case fieldTypeEnum.DATES.K:
+      _md = [Number(Random.datetime('T')), Number(Random.datetime('T'))]
       break
-    case fieldTypeEnum.AMOUNT.K: _md = Random.float(6666, 666666, 0, 2)
+    case fieldTypeEnum.AMOUNT.K:
+      _md = Random.float(6666, 666666, 0, 2)
       break
-    case fieldTypeEnum.QUANTITY.K: _md = Random.natural(6, 666)
+    case fieldTypeEnum.QUANTITY.K:
+      _md = Random.natural(6, 666)
       break
-    case fieldTypeEnum.METE.K: _md = Random.float(6666, 666666, 0, 2)
+    case fieldTypeEnum.METE.K:
+      _md = Random.float(6666, 666666, 0, 2)
       break
-    case fieldTypeEnum.LENGTH.K: _md = Random.float(6666, 666666, 0, 2)
+    case fieldTypeEnum.LENGTH.K:
+      _md = Random.float(6666, 666666, 0, 2)
       break
-    case fieldTypeEnum.WEIGHT.K: _md = Random.float(6666, 666666, 0, 2)
+    case fieldTypeEnum.WEIGHT.K:
+      _md = Random.float(6666, 666666, 0, 2)
       break
-    case fieldTypeEnum.THICKNESS.K: _md = Random.float(0, 1, 3, 3)
+    case fieldTypeEnum.THICKNESS.K:
+      _md = Random.float(0, 1, 3, 3)
       break
-    case fieldTypeEnum.RATE.K: _md = Random.float(1, 100, 0, 2)
+    case fieldTypeEnum.RATE.K:
+      _md = Random.float(1, 100, 0, 2)
       break
-    case fieldTypeEnum.SPECIFICATION.K: _md = Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + 'Q235B'
+    case fieldTypeEnum.SPECIFICATION.K:
+      _md = Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + Random.natural(1, 666, 0, 1) + '*' + 'Q235B'
       break
-    case fieldTypeEnum.ENUM.K: _md = mockEnum(field.format.enum, field.format.bit)
+    case fieldTypeEnum.ENUM.K:
+      _md = mockEnum(field.format.enum, field.format.bit)
       break
     case fieldTypeEnum.CONTRACT_NO.K:
-      var contractNo = Mock.mock({ // 合同编号
-        'data': /^([A-Z]{2}-[A-Z0-9]{3}-[A-Z0-9]{5})$/
+      var contractNo = Mock.mock({
+        // 合同编号
+        data: /^([A-Z]{2}-[A-Z0-9]{3}-[A-Z0-9]{5})$/
       })
       _md = contractNo.data
       break
     case fieldTypeEnum.PROJECT.K:
       _md = Mock.mock({
-        'contractNo': /^([A-Z]{2}-[A-Z0-9]{3}-[A-Z0-9]{5})$/,
-        'name': Random.psname() + '项目',
-        'shortName': Random.psname()
+        contractNo: /^([A-Z]{2}-[A-Z0-9]{3}-[A-Z0-9]{5})$/,
+        name: Random.psname() + '项目',
+        shortName: Random.psname()
       })
       break
     case fieldTypeEnum.AREA_AXIS.K:
-      var areaAxis = Mock.mock({ // 轴线
-        'data': /^[0-9]{1,2}-[0-9]{2,3}轴线\/[a-z]-[a-z]$/
+      var areaAxis = Mock.mock({
+        // 轴线
+        data: /^[0-9]{1,2}-[0-9]{2,3}轴线\/[a-z]-[a-z]$/
       })
       _md = areaAxis.data
       break
     case fieldTypeEnum.PHONE.K:
-      var phone = Mock.mock({ // 移动电话
-        'data': validatorPhone
+      var phone = Mock.mock({
+        // 移动电话
+        data: validatorPhone
       })
       _md = phone.data
       break
     case fieldTypeEnum.TEL.K:
-      var tel = Mock.mock({ // 移动电话
-        'data': validatorTel
+      var tel = Mock.mock({
+        // 移动电话
+        data: validatorTel
       })
       _md = tel.data
       break
     case fieldTypeEnum.SERIAL_NUMBER.K:
-      var serialNumber = Mock.mock({ // 短编号
-        'data': /^([A-Z0-9]{1,4}-[A-Z0-9]{1,4}-[A-Z0-9]{1,4})$/
+      var serialNumber = Mock.mock({
+        // 短编号
+        data: /^([A-Z0-9]{1,4}-[A-Z0-9]{1,4}-[A-Z0-9]{1,4})$/
       })
       _md = serialNumber.data
       break
     case fieldTypeEnum.LICENSE_PLATE.K:
-      var licensePlate = Mock.mock({ // 车牌
-        'data': patternLicensePlate
+      var licensePlate = Mock.mock({
+        // 车牌
+        data: patternLicensePlate
       })
       _md = licensePlate.data
       break
-    default: _md = Random.cword(3, 10)
+    default:
+      _md = Random.cword(3, 10)
   }
   return _md
 }
@@ -241,7 +294,8 @@ function getDataByType(field) {
 function mockEnum(enumName, bit) {
   const e = enumAll[enumName]
   const arr = enumOperate.toArr(e)
-  if (bit) { // 随机获取位运算值
+  if (bit) {
+    // 随机获取位运算值
     const _arr = JSON.parse(JSON.stringify(arr))
     const num = Math.ceil(Math.random() * _arr.length) // 设置位运算需要的个数
     const bitArr = []
@@ -254,7 +308,7 @@ function mockEnum(enumName, bit) {
       return res | cur
     }, undefined)
   } else {
-    return arr[Math.floor((Math.random() * arr.length))].V
+    return arr[Math.floor(Math.random() * arr.length)].V
   }
 }
 

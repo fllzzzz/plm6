@@ -18,7 +18,7 @@ const getFinalMatClsByIdForSteelPlate = {
         fullPathId: [103], // 全路径id
         measureUnit: '张', // 计量单位
         accountingUnit: '千克', // 核算单位
-        accountingPrecision: 0, // 核算单位小数精度
+        accountingPrecision: 1, // 核算单位小数精度
         measurePrecision: 0, // 计量单位小数精度
         outboundUnitType: measureTypeEnum.MEASURE.V, // 出库方式
         basicClass: matClsEnum.STEEL_PLATE.V,

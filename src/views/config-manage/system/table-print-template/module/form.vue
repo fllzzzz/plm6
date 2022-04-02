@@ -1373,11 +1373,11 @@ const pageHeight = computed(() => {
 })
 
 const maxWidth = computed(() => {
-  return pageWidth.value && config.paddingLR * 2
+  return pageWidth.value - config.paddingLR * 2
 })
 
 const maxHeight = computed(() => {
-  return pageHeight.value && config.paddingTB * 2
+  return pageHeight.value - config.paddingTB * 2
 })
 
 const contentStyle = computed(() => {

@@ -1,6 +1,6 @@
 import { MIN_UNIT } from '@/settings/config'
-import { emptyTextFormatter, isNotBlank } from '@data-type/index'
-import { toThousand } from '@data-type/number'
+import { emptyTextFormatter, isBlank, isNotBlank } from '@data-type/index'
+import { getDP, toThousand } from '@data-type/number'
 import { createUniqueString } from '@data-type/string'
 import { projectNameFormatter } from '@/utils/project'
 // import { getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
@@ -351,7 +351,6 @@ function setImage(ws, baseCfg, { name, data, type, width, height, top, left }) {
       to: posTo
     }
   })
-  console.log('drawing', ws['!drawing'])
 }
 
 /**
@@ -909,6 +908,9 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
     })
     const needSummary = config.summary && config.summary.show
     const summary = {}
+    // dpArr,dp 用于计算小数精度
+    const dpArr = {}
+    const dp = {}
     const summaryKeys = columns
       .filter((f) => {
         summary[f.key] = ''
@@ -916,6 +918,8 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
       })
       .map((f) => {
         summary[f.key] = 0
+        dp[f.key] = 0
+        dpArr[f.key] = []
         return f.key
       })
     summary['__index'] = config.summary.title || '合计'
@@ -925,7 +929,9 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
       const _v = {}
       columns.forEach((f) => {
         if (needSummary && summaryKeys.includes(f.key)) {
-          summary[f.key] += keyParse(v, f.key)
+          const curr = keyParse(v, f.key)
+          dpArr[f.key].push(getDP(curr))
+          summary[f.key] += Number(curr)
         }
         _v[f.key] = dataFormat({ row: v, field: f, emptyVal: config.emptyVal })
       })
@@ -934,12 +940,22 @@ function setTable({ data, config, baseCfg, ws, sr, rn }) {
       }
       return _v
     })
-
     // Summary Data to rewrite
     columns.forEach((f) => {
       if (f.sum) {
+        const data = summary[f.key] || 0
+
+        dp[f.key] = dpArr[f.key].getMax()
+        dp[f.key] = dp[f.key] > 5 ? 5 : dp[f.key]
+        const cloneField = JSON.parse(JSON.stringify(f))
+        if (!cloneField.format) {
+          cloneField.format = {}
+        }
+        if (isBlank(cloneField.format.precision)) {
+          cloneField.format.precision = dp[f.key]
+        }
         // 下载时汇总数据默认显示0
-        summary[f.key] = dataFormat({ val: summary[f.key] || 0, field: f, emptyVal: '', kParse: false })
+        summary[f.key] = dataFormat({ val: data, field: cloneField, emptyVal: '', kParse: false })
       }
     })
 

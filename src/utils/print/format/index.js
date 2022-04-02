@@ -32,6 +32,7 @@ const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
+const wmsRmInboundReceipt = wms.dataFormat
 const wmsRmOutboundReceipt = wms.dataFormat
 
 export default {
@@ -58,5 +59,6 @@ export default {
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
 
+  wmsRmInboundReceipt,
   wmsRmOutboundReceipt
 }
