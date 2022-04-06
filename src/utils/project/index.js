@@ -8,7 +8,17 @@ import store from '@/store'
  * 获取项目信息
  * @param {number} id 项目id
  */
-export function getProjectInfo() {}
+export function getProjectInfo(id) {
+  if (!id) return
+  // 后期改KV模式
+  const projects = store.getters.userProjects
+  for (const project of projects) {
+    if (project.id === id) {
+      return project
+    }
+  }
+  return
+}
 
 /**
  * 项目名称格式转化

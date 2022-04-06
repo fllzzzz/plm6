@@ -1,28 +1,36 @@
 <template>
-  <!-- 当前页面出库申请单无法查看详情（出库申请单会被清空） -->
-  <span v-bind="$attrs" v-if="props.receipt.receiptType === receiptTypeEnum.OUTBOUND_APPLY.V">
-    {{ props.receipt.serialNumber }}
-  </span>
-  <clickable-permission-span
-    v-bind="$attrs"
-    v-else
-    :permission="openDetailPermission(props.receipt.receiptType)"
-    @click="openReceiptDetail(props.receipt.id, props.receipt.receiptType)"
-    :text="props.receipt.serialNumber"
-  />
+  <template v-if="receipts.length > 0">
+    <template v-for="(receipt, rIndex) in receipts" :key="`${receipt.serialNumber}_${rIndex}`">
+      <!-- 当前页面出库申请单无法查看详情（出库申请单会被清空） -->
+      <span v-bind="$attrs" v-if="receipt.receiptType === receiptTypeEnum.OUTBOUND_APPLY.V">
+        {{ receipt.serialNumber }}
+      </span>
+      <clickable-permission-span
+        v-bind="$attrs"
+        v-else
+        :permission="openDetailPermission(receipt.receiptType)"
+        @click="openReceiptDetail(receipt.id, receipt.receiptType)"
+        :text="receipt.serialNumber"
+      />
+
+      <span v-if="rIndex !== receipts.length - 1"> 、</span>
+    </template>
+  </template>
+  <span v-else v-bind="$attrs">-</span>
   <receipt-detail ref="receiptDetailRef" :receipt-types="props.receiptTypes" />
 </template>
 
 <script setup>
 import { receiptDetailCPM as permission } from '@/page-permission/wms'
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import { receiptTypeEnum } from '@/utils/enum/modules/wms'
 import ReceiptDetail from '@/components-system/wms/receipt-detail'
 import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import { isBlank } from '@/utils/data-type'
 
 const props = defineProps({
   receipt: {
-    type: Object,
+    type: [Array, Object],
     default: () => ({})
   },
   receiptTypes: {
@@ -33,6 +41,14 @@ const props = defineProps({
 
 // 单据详情
 const receiptDetailRef = ref()
+
+const receipts = computed(() => {
+  if (isBlank(props.receipt) && typeof props.receipt === 'object') return []
+  if (Array.isArray(props.receipt)) {
+    return props.receipt
+  }
+  return [props.receipt]
+})
 
 // 打开详情
 function openReceiptDetail(detailId, type) {

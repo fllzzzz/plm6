@@ -62,14 +62,25 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <!-- 打印 -->
+      <template #optLeft>
+        <print-table
+          v-permission="permission.get"
+          api-key="wmsRmReturnReceipt"
+          :params="selectionIds"
+          :disabled="selectionIds.length === 0"
+          size="mini"
+          type="warning"
+          class="filter-item"
+          @success="crud.selectAllChange"
+        />
+      </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, inject, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -92,9 +103,15 @@ const defaultQuery = {
   operatorName: undefined // 创建人
 }
 
+const permission = inject('permission')
+
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
 onMounted(() => {
   query.basicClass = route.params.basicClass
+})
+
+const selectionIds = computed(() => {
+  return crud.selections.map((row) => row.id)
 })
 </script>

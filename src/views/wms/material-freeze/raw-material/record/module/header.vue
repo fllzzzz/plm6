@@ -32,8 +32,6 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
-import { mapGetters } from '@/store/lib'
 import { rawMatClsEnum, steelClsEnum } from '@/utils/enum/modules/classification'
 import { projectWarehouseTypeEnum, materialFreezeTypeEnum } from '@/utils/enum/modules/wms'
 
@@ -49,28 +47,7 @@ const defaultQuery = {
   basicClass: { value: steelClsEnum.STEEL_PLATE.V, resetAble: false } // 基础分类
 }
 
-const { CRUD, crud, query } = regHeader(defaultQuery)
-
-// 全局项目id
-const { globalProjectId } = mapGetters('globalProjectId')
-// 选中项目库时， 根据项目id的变化刷新列表
-watch(
-  globalProjectId,
-  () => {
-    if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
-
-CRUD.HOOK.beforeToQuery = () => {
-  if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-    crud.query.projectId = globalProjectId.value || undefined
-  } else {
-    crud.query.projectId = undefined
-  }
-}
+const { crud, query } = regHeader(defaultQuery)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

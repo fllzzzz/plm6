@@ -67,14 +67,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation.vue'
-import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
-import { mapGetters } from '@/store/lib'
 
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
@@ -95,28 +93,6 @@ const rdFeeForYear = ref()
 const rdFeeConfVisible = ref(false)
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
-
-// 全局项目id
-const { globalProjectId } = mapGetters('globalProjectId')
-
-// 选中项目库时， 根据项目id的变化刷新列表
-watch(
-  globalProjectId,
-  () => {
-    if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
-
-CRUD.HOOK.beforeToQuery = () => {
-  if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-    crud.query.projectId = globalProjectId.value || undefined
-  } else {
-    crud.query.projectId = undefined
-  }
-}
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   rdFeeForMonth.value = data.rdFeeForMonth

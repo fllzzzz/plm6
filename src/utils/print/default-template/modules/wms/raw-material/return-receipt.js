@@ -10,13 +10,13 @@ import {
 } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 出库（领料）单
-const wmsRmOutboundReceipt = {
+// 退库单
+const wmsRmReturnReceipt = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'wmsRmOutboundReceipt', // 表格类型 KEY
-  name: '出库（领料）单（平台）', // 表格名称
+  type: 'wmsRmReturnReceipt', // 表格类型 KEY
+  name: '退库单（平台）', // 表格名称
   orient: orientEnum.LONGITUDINAL.V, // 打印方向
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
@@ -71,7 +71,7 @@ const wmsRmOutboundReceipt = {
   title: {
     show: true,
     allPage: true,
-    title: '出库（领料）单',
+    title: '退库单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -114,17 +114,16 @@ const wmsRmOutboundReceipt = {
      */
     fields: [
       // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: 'NO：', width: 170, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'returnSN', title: 'NO：', width: 170, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
-        key: 'outboundTime',
-        title: '出库日期：',
+        key: 'returnTime',
+        title: '退库日期：',
         width: 55,
         type: typeEnum.DATE.K,
         format: 'YYYY年MM月DD日'
       },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewerName', title: '出库审核人：', width: 55, type: typeEnum.USER_NAME.K },
       {
         show: false,
         source: dataSourceEnum.SYSTEM.V,
@@ -187,7 +186,7 @@ const wmsRmOutboundReceipt = {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
         key: 'applicantName',
-        title: '领料人（签字）：',
+        title: '退库人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K
       },
@@ -195,7 +194,7 @@ const wmsRmOutboundReceipt = {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
         key: 'reviewerName',
-        title: ' 审核人（签字）：',
+        title: '审核人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K
       }
@@ -285,7 +284,7 @@ const wmsRmOutboundReceipt = {
       {
         show: false,
         key: 'quantity',
-        title: '出库数',
+        title: '退库数',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.RIGHT.V,
         minWidth: 18,
@@ -305,7 +304,7 @@ const wmsRmOutboundReceipt = {
       {
         show: true,
         key: 'mete',
-        title: '出库量',
+        title: '退库量',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.RIGHT.V,
         minWidth: 18,
@@ -335,20 +334,11 @@ const wmsRmOutboundReceipt = {
         align: alignEnum.LEFT.V,
         minWidth: 18,
         type: typeEnum.WAREHOUSE_NAME.K
-      },
-      {
-        show: true,
-        key: 'recipient.name',
-        title: '领用人',
-        source: dataSourceEnum.SYSTEM.V,
-        align: alignEnum.CENTER.V,
-        minWidth: 18,
-        type: typeEnum.USER_NAME.K
       }
     ]
   }
 }
 
 export default {
-  wmsRmOutboundReceipt // 出库（领料）单
+  wmsRmReturnReceipt // 退库单
 }

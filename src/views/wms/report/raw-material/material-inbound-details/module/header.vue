@@ -131,7 +131,6 @@ import { rawMatClsEnum } from '@enum-ms/classification'
 import { materialRejectStatusEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
@@ -157,7 +156,6 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

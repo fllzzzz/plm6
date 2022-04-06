@@ -13,7 +13,7 @@
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
-        <el-form-item v-if="!showProjectSelect && isBlank(globalProject)" label="包含项目" label-width="80px">
+        <el-form-item v-if="!showProjectSelect && isBlank(props.projectId)" label="包含项目" label-width="80px">
           <span v-parse-project="{ project: listProjects }" />
         </el-form-item>
         <el-form-item v-else label="项目" prop="projectId" label-width="55px">
@@ -25,7 +25,7 @@
             style="width: 300px"
             @change="handleProjectChange"
           />
-          <span v-else v-parse-project="{ project: globalProject }" v-empty-text style="display: inline-block; min-width: 150px" />
+          <span v-else v-parse-project="{ project: currentProject }" v-empty-text style="display: inline-block; min-width: 150px" />
         </el-form-item>
         <el-form-item label="领用人" prop="recipientId">
           <user-dept-cascader
@@ -119,6 +119,7 @@ import { obj2arr } from '@/utils/convert/type'
 import { isBlank } from '@/utils/data-type'
 import { numFmtByUnitForList } from '@/utils/wms/convert-unit'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
+import { getProjectInfo } from '@/utils/project'
 
 import useVisible from '@compos/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -140,6 +141,9 @@ const props = defineProps({
     require: true
   },
   projectWarehouseType: {
+    type: Number
+  },
+  projectId: {
     type: Number
   },
   basicClass: {
@@ -172,6 +176,8 @@ const formRef = ref()
 const expandRowKeys = ref([])
 // 过滤后的材料列表
 const materialList = ref([])
+// 当前项目
+const currentProject = ref()
 // 提交表单
 const form = ref({
   list: [],
@@ -205,9 +211,6 @@ const { outboundCfg } = useWmsConfig()
 // 当前用户
 const { user } = mapGetters('user')
 
-// 全局项目
-const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
-
 const boolPublicWare = computed(() => props.projectWarehouseType === projectWarehouseTypeEnum.PUBLIC.V)
 
 // 显示项目选择组件(false:显示项目名称)： 公共库 或者 配置=>项目库可以出库给其他项目
@@ -235,12 +238,15 @@ const remarkTextSize = computed(() => {
 
 // 监听项目及仓库类型变化
 watch(
-  [globalProjectId, () => props.projectWarehouseType],
-  ([pId, type]) => {
+  [() => props.projectId, () => props.projectWarehouseType],
+  ([pId, type], [oldPId]) => {
     if (type === projectWarehouseTypeEnum.PUBLIC.V) {
       form.value.projectId = undefined
     } else {
       form.value.projectId = pId
+    }
+    if (oldPId !== pId) {
+      currentProject.value = getProjectInfo(pId)
     }
   },
   { immediate: true }

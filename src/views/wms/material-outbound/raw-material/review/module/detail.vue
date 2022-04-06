@@ -57,7 +57,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column key="outboundTime" label="出库时间" width="125px" align="center" />
+        <el-table-column key="outboundTime" prop="outboundTime" label="出库时间" width="125px" align="center" />
       </common-table>
     </template>
   </common-drawer>

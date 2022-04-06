@@ -1,6 +1,15 @@
 import request from '@/utils/request'
 
-// 打包与发运
+/**
+ * 入库单
+ */
+export function wmsRmInboundReceipt(id) {
+  return request({
+    url: `api/wms/inbound/receipt/${id}/print`,
+    method: 'get'
+  })
+}
+
 /**
  * 出库单
  */
@@ -12,16 +21,17 @@ export function wmsRmOutboundReceipt(id) {
 }
 
 /**
- * 入库单
+ * 退库单
  */
-export function wmsRmInboundReceipt(id) {
+export function wmsRmReturnReceipt(id) {
   return request({
-    url: `api/wms/inbound/receipt/${id}/print`,
+    url: `api/wms/return/receipt/${id}/print`,
     method: 'get'
   })
 }
 
 export default {
   wmsRmInboundReceipt, // 入库单
-  wmsRmOutboundReceipt // 出库（领料）单
+  wmsRmOutboundReceipt, // 出库（领料）单
+  wmsRmReturnReceipt // 退库单
 }

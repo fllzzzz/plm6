@@ -110,9 +110,9 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
       <template #optLeft>
         <print-table
+          v-permission="permission.get"
           api-key="wmsRmInboundReceipt"
           :params="selectionIds"
           :disabled="selectionIds.length === 0"
@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { reviewStatusEnum } from '@enum-ms/common'
@@ -156,6 +156,8 @@ const defaultQuery = {
   supplierId: undefined, // 供应商id
   operatorName: undefined // 申请人/编辑人/审核人
 }
+
+const permission = inject('permission')
 
 const { crud, query } = regHeader(defaultQuery)
 

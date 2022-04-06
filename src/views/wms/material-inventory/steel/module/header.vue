@@ -45,6 +45,7 @@
     <outbound-batch-handling-form
       v-model:visible="batchOutboundHandlingVisible"
       :project-warehouse-type="query.projectWarehouseType"
+      :project-id="query.projectId"
       :basic-class="query.basicClass"
       :material-list="crud.selections"
       @success="handleBatchOutbound"

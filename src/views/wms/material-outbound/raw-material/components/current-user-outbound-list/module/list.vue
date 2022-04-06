@@ -9,7 +9,7 @@
     size="100%"
     custom-class="raw-mat-application-review-form"
   >
-    <template #titleRight>
+    <template v-if="checkPermission(permission.outbound)" #titleRight>
       <template v-if="form.reviewStatus === reviewStatusEnum.UNREVIEWED.V && isNotBlank(form.list)">
         <span class="batch-set-info child-mr-7">
           <el-date-picker v-model="batchOutboundTime" type="datetime" value-format="x" placeholder="批量设置出库时间" />

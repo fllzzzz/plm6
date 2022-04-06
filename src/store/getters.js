@@ -68,6 +68,8 @@ const getters = {
   // 路由
   routes: state => state.permission.routes,
 
+  // 用户项目
+  userProjects: state => state.project.userProjects,
   // 系统当前项目id（Navbar）
   globalProjectId: state => state.project.id,
   // 系统当前项目

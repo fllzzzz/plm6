@@ -32,8 +32,11 @@ const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
-const wmsRmInboundReceipt = wms.dataFormat
-const wmsRmOutboundReceipt = wms.dataFormat
+const wmsRmInboundReceipt = wms.dataFormat // 入库单
+const wmsRmOutboundReceipt = wms.dataFormat // 出库单
+const wmsRmReturnReceipt = wms.dataFormat // 退库单
+const wmsRmRejectReceipt = wms.dataFormat // 退货单
+const wmsRmTransferReceipt = wms.dataFormat // 调拨单
 
 export default {
   invoiceLedger,
@@ -59,6 +62,9 @@ export default {
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
 
-  wmsRmInboundReceipt,
-  wmsRmOutboundReceipt
+  wmsRmInboundReceipt, // 入库单
+  wmsRmOutboundReceipt, // 出库单
+  wmsRmReturnReceipt, // 退库单
+  wmsRmRejectReceipt, // 退货单
+  wmsRmTransferReceipt // 调拨单
 }

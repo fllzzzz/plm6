@@ -66,7 +66,6 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-// import useGlobalProjectIdChangeToQuery from '@/composables/use-global-project-id-change-to-query'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import projectCascader from '@comp-base/project-cascader.vue'
 
@@ -81,7 +80,6 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
-// useGlobalProjectIdChangeToQuery(crud)
 
 // 基础类型发生变化
 async function handleBasicClassChange(val) {

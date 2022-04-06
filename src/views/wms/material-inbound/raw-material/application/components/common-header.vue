@@ -67,7 +67,7 @@
     <div class="child-mr-7">
       <store-operation v-if="!props.edit" type="cu" @clear="handleClear" />
       <common-button type="primary" size="mini" @click="openRequisitionsView">查看申购单</common-button>
-      <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
+      <!-- <el-tooltip content="请先选择采购订单" :disabled="!!form.purchaseId" placement="bottom" effect="light">
         <excel-resolve-button
           icon="el-icon-upload2"
           btn-name="批量导入"
@@ -76,7 +76,7 @@
           :disabled="!form.purchaseId"
           @success="handleExcelSuccess"
         />
-      </el-tooltip>
+      </el-tooltip> -->
       <common-button v-if="!props.edit" icon="el-icon-time" type="info" size="mini" @click="toInboundRecord" />
     </div>
   </div>
@@ -93,7 +93,7 @@ import { patternLicensePlate } from '@/utils/validate/pattern'
 
 import { regExtra } from '@/composables/form/use-form'
 import useWeightOverDiff from '@/composables/wms/use-trains-weight-over-diff'
-import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
+// import excelResolveButton from '@/components-system/common/excel-resolve-button/index.vue'
 import purchaseSnSelect from '@/components-system/wms/purchase-sn-select/index.vue'
 import { isNotBlank, isBlank } from '@/utils/data-type'
 import StoreOperation from '@crud/STORE.operation.vue'
@@ -261,9 +261,9 @@ async function fetchRequisitionsDetail(snArr) {
 }
 
 // 解析导入表格
-function handleExcelSuccess(val) {
-  console.log(val)
-}
+// function handleExcelSuccess(val) {
+//   console.log(val)
+// }
 
 // TODO:跳转到入库记录
 function toInboundRecord() {
