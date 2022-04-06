@@ -25,16 +25,16 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('receiptType')"
-        key="receiptType"
+        v-if="columns.visible('receipt.receiptType')"
+        key="receipt.receiptType"
         :show-overflow-tooltip="true"
-        prop="receiptType"
+        prop="receipt.receiptType"
         width="120"
         label="单据类型"
         align="center"
       />
       <el-table-column
-        v-if="columns.visible('serialNumber')"
+        v-if="columns.visible('receipt.serialNumber')"
         key="serialNumber"
         :show-overflow-tooltip="true"
         prop="serialNumber"
@@ -42,8 +42,8 @@
         label="单据编号"
         align="left"
       >
-        <template #default="{ row }">
-          <receipt-sn-clickable :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN']" :receipt="row" />
+        <template #default="{ row: { sourceRow: row } }">
+          <receipt-sn-clickable :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN']" :receipt="row.receipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -141,7 +141,7 @@ const expandRowKeys = ref([])
 // 表格ref
 const tableRef = ref()
 // 表格列数据格式转换
-const columnsDataFormat = ref([...wmsReceiptColumns, ['receiptType', ['parse-enum', receiptTypeEnum, { f: 'DOC' }]]])
+const columnsDataFormat = ref([...wmsReceiptColumns, ['receipt.receiptType', ['parse-enum', receiptTypeEnum, { f: 'DOC' }]]])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '打印标签-单据模式',

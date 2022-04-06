@@ -14,9 +14,11 @@ const get = {
           {
             id: 1,
             basicClass: matClsEnum.STEEL_PLATE.V,
-            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 单据编号
-            receiptId: 1,
-            receiptType: receiptTypeEnum.INBOUND.V,
+            receipt: {
+              id: 1,
+              receiptType: receiptTypeEnum.INBOUND.V,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
+            },
             // 项目id
             'projects|2': [
               {
@@ -33,9 +35,11 @@ const get = {
           {
             id: 2,
             basicClass: matClsEnum.STEEL_PLATE.V,
-            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 单据编号
-            receiptId: 1,
-            receiptType: receiptTypeEnum.OUTBOUND.V,
+            receipt: {
+              id: 1,
+              receiptType: receiptTypeEnum.OUTBOUND.V,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
+            },
             // 项目id
             'projects|2': [
               {
@@ -52,9 +56,11 @@ const get = {
           {
             id: 3,
             basicClass: matClsEnum.STEEL_PLATE.V,
-            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 单据编号
-            receiptId: 1,
-            receiptType: receiptTypeEnum.TRANSFER.V,
+            receipt: {
+              id: 1,
+              receiptType: receiptTypeEnum.TRANSFER.V,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
+            },
             // 项目id
             'projects|2': [
               {
@@ -71,9 +77,11 @@ const get = {
           {
             id: 4,
             basicClass: matClsEnum.STEEL_PLATE.V,
-            serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 单据编号
-            receiptId: 1,
-            receiptType: receiptTypeEnum.RETURN.V,
+            receipt: {
+              id: 1,
+              receiptType: receiptTypeEnum.RETURN.V,
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
+            },
             // 项目id
             'projects|2': [
               {
