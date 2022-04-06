@@ -30,6 +30,8 @@ export const projectNameShowConfig = {
  * @param {boolean} required 该页面是否必须选择项目才能正常使用
  */
 export const showProjectSearch = [
+  // bim
+  { component: '/bim/model-show/index', type: pt.STEEL.V, required: true },
   // MES
   { component: '/mes/projects/index' },
   { component: '/mes/overall-plan/monomer/index', type: pt.STEEL.V, required: true },
