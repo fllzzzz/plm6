@@ -27,6 +27,8 @@
         ref="tableRef"
         v-loading="tableLoading"
         :summary-method="getSummaries"
+        return-source-data
+        :show-empty-symbol="false"
         show-summary
         :data="showList"
         :max-height="maxHeight"
