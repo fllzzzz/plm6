@@ -63,6 +63,8 @@ const mesWarehouseStateReport = mes.warehouseStateReport
 const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
 const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
 const wmsRmReturnReceipt = wms.wmsRmReturnReceipt // 退库
+const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
+const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
 
 export default {
   myProject, // 我的项目
@@ -124,5 +126,7 @@ export default {
   // wms
   wmsRmOutboundReceipt, // 出库（领料单）单
   wmsRmInboundReceipt, // 入库单
-  wmsRmReturnReceipt // 退库单
+  wmsRmReturnReceipt, // 退库单
+  wmsRmRejectReceipt, // 退货单
+  wmsRmTransferReceipt // 调拨单
 }

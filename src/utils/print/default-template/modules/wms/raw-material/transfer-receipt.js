@@ -1,23 +1,22 @@
+import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import {
-  orientEnum,
   dataSourceEnum,
   alignEnum,
   verticleAlignEnum,
   fieldTypeEnum as typeEnum,
   cssUnitEnum,
   cssUnitPrecisionEnum,
-  pageFormatEnum
+  pageFormatEnum,
+  amountUnitEnum
 } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
-// 退库单
-const wmsRmReturnReceipt = {
+// 调拨单
+const wmsRmTransferReceipt = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'wmsRmReturnReceipt', // 表格类型 KEY
-  name: '退库单（平台）', // 表格名称
-  orient: orientEnum.LONGITUDINAL.V, // 打印方向
+  type: 'wmsRmTransferReceipt', // 表格类型 KEY
+  name: '调拨单（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -70,8 +69,8 @@ const wmsRmReturnReceipt = {
    */
   title: {
     show: true,
-    allPage: true,
-    title: '退库单',
+    allPage: false,
+    title: '调拨单',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -93,12 +92,12 @@ const wmsRmReturnReceipt = {
    */
   header: {
     show: true,
-    allPage: true,
+    allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 15,
+    height: 25,
     width: 190,
     emptyVal: '',
     /**
@@ -114,15 +113,40 @@ const wmsRmReturnReceipt = {
      */
     fields: [
       // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'returnSN', title: '退库单号：', width: 170, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'transferSN', title: '调拨单号：', width: 135, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
-        key: 'returnTime',
-        title: '退库日期：',
+        key: 'transferType',
+        title: '调拨类型：',
+        width: 55,
+        type: typeEnum.ENUM.K,
+        format: { enum: 'transferTypeEnum' }
+      },
+      {
+        show: true,
+        source: dataSourceEnum.SYSTEM.V,
+        key: 'source',
+        title: '调拨来源：',
+        width: 135,
+        type: typeEnum.OTHER.K
+      },
+      {
+        show: true,
+        source: dataSourceEnum.SYSTEM.V,
+        key: 'transferTime',
+        title: '调拨时间：',
         width: 55,
         type: typeEnum.DATE.K,
-        format: 'YYYY年MM月DD日'
+        format: 'YY/MM/DD kk:mm'
+      }, // 创建时间
+      {
+        show: true,
+        source: dataSourceEnum.SYSTEM.V,
+        key: 'direction',
+        title: '调拨目的：',
+        width: 135,
+        type: typeEnum.OTHER.K
       },
       {
         show: false,
@@ -152,7 +176,7 @@ const wmsRmReturnReceipt = {
    */
   footer: {
     show: true,
-    allPage: true,
+    allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
@@ -182,22 +206,8 @@ const wmsRmReturnReceipt = {
      * @param {*} format 格式转换
      */
     fields: [
-      {
-        show: true,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'applicantName',
-        title: '申请人（签字）：',
-        width: 85,
-        type: typeEnum.BLANK.K
-      },
-      {
-        show: true,
-        source: dataSourceEnum.SYSTEM.V,
-        key: 'reviewerName',
-        title: '审核人（签字）：',
-        width: 85,
-        type: typeEnum.BLANK.K
-      }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '申请人（签字）：', width: 85, type: typeEnum.BLANK.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewerName', title: '审核人（签字）：', width: 85, type: typeEnum.BLANK.K }
     ]
   },
   table: {
@@ -229,7 +239,7 @@ const wmsRmReturnReceipt = {
      * @param {boolean} show 是否显示
      * @param {string} title 合计名称
      */
-    summary: { show: false, title: '合计' },
+    summary: { show: true, title: '合计' },
     extraFields: [{ key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }}],
     /**
      * 表格列
@@ -269,11 +279,11 @@ const wmsRmReturnReceipt = {
         title: '规格',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.LEFT.V,
-        minWidth: 40,
+        minWidth: 18,
         type: typeEnum.SPECIFICATION.K
       },
       {
-        show: true,
+        show: false,
         key: 'brand',
         title: '品牌',
         source: dataSourceEnum.SYSTEM.V,
@@ -283,8 +293,8 @@ const wmsRmReturnReceipt = {
       },
       {
         show: false,
-        key: 'measurementUnit',
-        title: '计算单位',
+        key: 'measureUnit',
+        title: '计量单位',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.CENTER.V,
         minWidth: 18,
@@ -293,13 +303,12 @@ const wmsRmReturnReceipt = {
       {
         show: false,
         key: 'quantity',
-        title: '退库数',
+        title: '调拨数',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.RIGHT.V,
         minWidth: 18,
-        type: typeEnum.METE.K,
-        format: { toThousand: false, precision: 0 },
-        sum: true
+        type: typeEnum.QUANTITY.K,
+        format: { toThousand: false, precision: 0 }
       },
       {
         show: true,
@@ -307,20 +316,61 @@ const wmsRmReturnReceipt = {
         title: '核算单位',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.CENTER.V,
-        minWidth: 18,
+        width: 10,
         type: typeEnum.ACCOUNTING_UNIT.K
       },
       {
         show: true,
         key: 'mete',
-        title: '退库量',
+        title: '调拨量',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.RIGHT.V,
         minWidth: 18,
         type: typeEnum.METE.K,
-        format: { toThousand: false, precision: 0 },
+        format: { toThousand: false },
         sum: true
       },
+      {
+        show: true,
+        key: 'unitPrice',
+        title: '含税单价',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.AMOUNT.K,
+        format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V },
+        sum: false
+      },
+      {
+        show: true,
+        key: 'amount',
+        title: '含税金额',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.AMOUNT.K,
+        format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V },
+        sum: true
+      },
+      {
+        show: false,
+        key: 'factory.name',
+        title: '工厂',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.FACTORY_NAME.K
+      },
+      {
+        show: false,
+        key: 'warehouse.name',
+        title: '存储位置',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.WAREHOUSE_NAME.K
+      },
+      { show: false, key: 'remark', title: '备注', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20 },
       {
         show: true,
         key: 'project',
@@ -334,20 +384,11 @@ const wmsRmReturnReceipt = {
           showSerialNumber: true,
           projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V
         }
-      },
-      {
-        show: false,
-        key: 'warehouse.name',
-        title: '存储位置',
-        source: dataSourceEnum.SYSTEM.V,
-        align: alignEnum.LEFT.V,
-        minWidth: 18,
-        type: typeEnum.WAREHOUSE_NAME.K
       }
     ]
   }
 }
 
 export default {
-  wmsRmReturnReceipt // 退库单
+  wmsRmTransferReceipt // 调拨单
 }

@@ -36,7 +36,7 @@ const wmsRmInboundReceipt = wms.dataFormat // 入库单
 const wmsRmOutboundReceipt = wms.dataFormat // 出库单
 const wmsRmReturnReceipt = wms.dataFormat // 退库单
 const wmsRmRejectReceipt = wms.dataFormat // 退货单
-const wmsRmTransferReceipt = wms.dataFormat // 调拨单
+const wmsRmTransferReceipt = wms.transferDataFormat // 调拨单
 
 export default {
   invoiceLedger,

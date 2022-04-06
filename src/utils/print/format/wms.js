@@ -22,12 +22,71 @@ function preparesCustomSummary({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 普通数据格式化转换
 async function dataFormat({ header, table = [], footer, qrCode }) {
   await setSpecInfoToList(table)
   await numFmtByBasicClass(table)
-  console.log('table', table)
   return {
     header,
+    table,
+    footer,
+    qrCode
+  }
+}
+
+// 调拨数据格式转化
+async function transferDataFormat({ header = {}, table = [], footer, qrCode }) {
+  const cloneHeader = JSON.parse(JSON.stringify(header))
+
+  // 调拨来源数据转换
+  const source = cloneHeader.source
+  let sourceStr = ''
+  if (source && source.length > 0) {
+    source.forEach((sInfo, sIndex) => {
+      if (sInfo && sInfo.project) {
+        sourceStr += sInfo.project.shortName
+      } else {
+        sourceStr += '公共库'
+      }
+      if (sInfo.factory) {
+        sourceStr += `（${sInfo.factory.name}）`
+      }
+      if (sIndex !== source.length - 1) {
+        sourceStr += '　/　'
+      }
+    })
+  }
+  if (cloneHeader.boolBorrowReturnNotSelf && cloneHeader.borrowProject) {
+    sourceStr += '　▶　'
+    sourceStr += cloneHeader.borrowProject.shortName
+  }
+  cloneHeader.source = sourceStr
+
+  // 调拨目的数据转换
+  const direction = cloneHeader.direction
+  let directionStr = ''
+  if (direction) {
+    if (direction.project) {
+      directionStr += direction.project.shortName
+    } else {
+      directionStr += '公共库'
+    }
+    // 工厂-仓库位置
+    let fwStr = ''
+    if (direction.factory) {
+      fwStr += `${direction.factory.name} - `
+    }
+    if (direction.warehouse) {
+      fwStr += `${direction.warehouse.name}`
+    }
+    directionStr += `（${fwStr}）`
+  }
+  cloneHeader.direction = directionStr
+
+  await setSpecInfoToList(table)
+  await numFmtByBasicClass(table)
+  return {
+    header: cloneHeader,
     table,
     footer,
     qrCode
@@ -57,5 +116,6 @@ function checkUnitFormat({ header, table = [], footer, qrCode }) {
 export default {
   preparesCustomSummary,
   checkUnitFormat,
-  dataFormat
+  dataFormat,
+  transferDataFormat
 }

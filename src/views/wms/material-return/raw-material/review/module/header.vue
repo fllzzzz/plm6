@@ -104,14 +104,15 @@ const defaultQuery = {
 }
 
 const permission = inject('permission')
-
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
-onMounted(() => {
-  query.basicClass = route.params.basicClass
-})
 
 const selectionIds = computed(() => {
   return crud.selections.map((row) => row.id)
 })
+
+onMounted(() => {
+  query.basicClass = route.params.basicClass
+})
+
 </script>

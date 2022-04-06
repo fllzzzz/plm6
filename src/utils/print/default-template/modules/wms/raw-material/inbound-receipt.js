@@ -151,7 +151,7 @@ const wmsRmInboundReceipt = {
         title: '入库时间：',
         width: 55,
         type: typeEnum.DATE.K,
-        format: 'YY/MM/DD kk:mm:ss'
+        format: 'YY/MM/DD kk:mm'
       },
       {
         show: false,
@@ -160,7 +160,7 @@ const wmsRmInboundReceipt = {
         title: '打印时间：',
         width: 55,
         type: typeEnum.DATE.K,
-        format: 'YY/MM/DD kk:mm:ss'
+        format: 'YY/MM/DD kk:mm'
       },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printerName', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
@@ -211,8 +211,8 @@ const wmsRmInboundReceipt = {
      * @param {*} format 格式转换
      */
     fields: [
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '入库（签字）：', width: 85, type: typeEnum.BLANK.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewerName', title: '审核（签字）：', width: 85, type: typeEnum.BLANK.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '申请人（签字）：', width: 85, type: typeEnum.BLANK.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewerName', title: '审核人（签字）：', width: 85, type: typeEnum.BLANK.K }
     ]
   },
   table: {
@@ -309,6 +309,16 @@ const wmsRmInboundReceipt = {
         show: false,
         key: 'quantity',
         title: '入库数',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.RIGHT.V,
+        minWidth: 18,
+        type: typeEnum.QUANTITY.K,
+        format: { toThousand: false, precision: 0 }
+      },
+      {
+        show: false,
+        key: 'rejectQuantity',
+        title: '退货数',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.RIGHT.V,
         minWidth: 18,

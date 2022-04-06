@@ -1,8 +1,111 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { weightMeasurementModeEnum } from '@/utils/enum/modules/finance'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
-import { materialOutboundModeEnum, measureTypeEnum } from '@/utils/enum/modules/wms'
+import { materialOutboundModeEnum, measureTypeEnum, transferTypeEnum } from '@/utils/enum/modules/wms'
 import { patternLicensePlate } from '@/utils/validate/pattern'
+
+// 入库单
+const wmsRmInboundReceipt = {
+  url: RegExp('/api/wms/inbound/receipt/' + '[1-9][0-9]?' + '/print'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        header: {
+          inboundSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 人库单号
+          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购单号
+          weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
+          logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
+          supplierName: '@cname', // 供应商名称
+          reviewerName: '@cname', // 入库审核人
+          printerName: '@cname', // 打印人
+          printDate: '@datetime(T)', // 打印时间
+          inboundTime: '@datetime(T)', // 入库时间
+          licensePlate: patternLicensePlate // 车牌号
+          // project: {
+          //   id: 1,
+          //   name: '长安街666666号辅路',
+          //   shortName: '长安街',
+          //   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          // }
+        },
+        table: [
+          {
+            id: 1,
+            classifyId: 103,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            specification: 'Q325B',
+            thickness: 10,
+            length: 1000,
+            width: 1000,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: 'aaff',
+            remark: '66666',
+            quantity: 10,
+            mete: 822222,
+            rejectQuantity: 10,
+            rejectMete: 822222,
+            unitPrice: 0.01,
+            amount: 8000,
+            amountExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '萧山工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          },
+          {
+            id: 2,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            classifyId: 103,
+            specification: 'Q235B',
+            quantity: 5,
+            thickness: 20,
+            length: 1500,
+            width: 2000,
+            brand: '哈哈',
+            heatNoAndBatchNo: 'fddfd',
+            mete: 2355000,
+            weight: 2355000,
+            unitPrice: 0.02,
+            amount: 47100,
+            amountExcludingVAT: 41681.42,
+            inputVAT: 5418.58,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '萧山工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          }
+        ]
+      }
+    }
+  }
+}
 
 // 出库单
 const wmsRmOutboundReceipt = {
@@ -161,109 +264,6 @@ const wmsRmOutboundReceipt = {
   }
 }
 
-// 入库单
-const wmsRmInboundReceipt = {
-  url: RegExp('/api/wms/inbound/receipt/' + '[1-9][0-9]?' + '/print'),
-  method: 'get',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功',
-      data: {
-        header: {
-          inboundSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 人库单号
-          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购单号
-          weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
-          logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
-          supplierName: '@cname', // 供应商名称
-          reviewerName: '@cname', // 出库办理人
-          printerName: '@cname', // 打印人
-          printDate: '@datetime(T)',
-          inboundTime: '@datetime(T)',
-          licensePlate: patternLicensePlate // 车牌号
-          // project: {
-          //   id: 1,
-          //   name: '长安街666666号辅路',
-          //   shortName: '长安街',
-          //   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-          // }
-        },
-        table: [
-          {
-            id: 1,
-            serialNumber: '3192520223',
-            classifyId: 103,
-            basicClass: matClsEnum.STEEL_PLATE.V,
-            specification: 'Q325B',
-            quantity: 10,
-            thickness: 10,
-            length: 1000,
-            width: 1000,
-            brand: '嘻嘻',
-            heatNoAndBatchNo: 'aaff',
-            remark: '66666',
-            mete: 822222,
-            rejectMete: 222222,
-            unitPrice: 0.01,
-            amount: 8000,
-            amountExcludingVAT: 7079.64,
-            inputVAT: 920.36,
-            requisitionsSN: 'SG-AFTER-123456',
-            project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factory: {
-              id: 1,
-              name: '萧山工厂'
-            },
-            warehouse: {
-              id: 1,
-              name: '666号仓库'
-            }
-          },
-          {
-            id: 2,
-            basicClass: matClsEnum.STEEL_PLATE.V,
-            classifyId: 103,
-            specification: 'Q235B',
-            quantity: 5,
-            thickness: 20,
-            length: 1500,
-            width: 2000,
-            brand: '哈哈',
-            heatNoAndBatchNo: 'fddfd',
-            mete: 2355000,
-            weight: 2355000,
-            unitPrice: 0.02,
-            amount: 47100,
-            amountExcludingVAT: 41681.42,
-            inputVAT: 5418.58,
-            requisitionsSN: 'SG-AFTER-123456',
-            project: {
-              'id|+1': 1,
-              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
-              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factory: {
-              id: 1,
-              name: '萧山工厂'
-            },
-            warehouse: {
-              id: 1,
-              name: '666号仓库'
-            }
-          }
-        ]
-      }
-    }
-  }
-}
-
 // 退库单
 const wmsRmReturnReceipt = {
   url: RegExp('/api/wms/return/receipt/' + '[1-9][0-9]?' + '/print'),
@@ -405,4 +405,283 @@ const wmsRmReturnReceipt = {
   }
 }
 
-export default [wmsRmInboundReceipt, wmsRmOutboundReceipt, wmsRmReturnReceipt]
+// 退货单
+const wmsRmRejectReceipt = {
+  url: RegExp('/api/wms/reject/receipt/' + '[1-9][0-9]?' + '/print'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        header: {
+          inboundSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 人库单号
+          rejectSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 退货单号
+          purchaseSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 采购单号
+          weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
+          logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
+          supplierName: '@cname', // 供应商名称
+          reviewerName: '@cname', // 退货审核人
+          applicantName: '@cname', // 退货申请人
+          printerName: '@cname', // 打印人
+          printDate: '@datetime(T)', // 打印时间
+          inboundTime: '@datetime(T)', // 入库时间
+          rejectTime: '@datetime(T)' // 退货时间
+        },
+        table: [
+          {
+            id: 1,
+            classifyId: 103,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            specification: 'Q325B',
+            thickness: 10,
+            length: 1000,
+            width: 1000,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: 'aaff',
+            remark: '66666',
+            quantity: 10,
+            mete: 822222,
+            rejectQuantity: 10,
+            rejectMete: 822222,
+            unitPrice: 0.01,
+            amount: 8000,
+            amountExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '萧山工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          },
+          {
+            id: 2,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            classifyId: 103,
+            specification: 'Q235B',
+            thickness: 20,
+            length: 1500,
+            width: 2000,
+            brand: '哈哈',
+            heatNoAndBatchNo: 'fddfd',
+            rejectQuantity: 5,
+            rejectMete: 2355000,
+            quantity: 4,
+            mete: 2000000,
+            weight: 2355000,
+            unitPrice: 0.02,
+            amount: 47100,
+            amountExcludingVAT: 41681.42,
+            inputVAT: 5418.58,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '萧山工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+// 调拨单
+const wmsRmTransferReceipt = {
+  url: RegExp('/api/wms/transfer/receipt/' + '[1-9][0-9]?' + '/print'),
+  method: 'get',
+  timeout: 1000,
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功',
+      data: {
+        header: {
+          transferSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
+          transferTime: '@datetime(T)', // 调拨时间
+          reviewerName: '@cname', // 调拨审核人
+          applicantName: '@cname', // 调拨申请人
+          printerName: '@cname', // 打印人
+          printDate: '@datetime(T)', // 打印时间
+          // // 调拨来源
+          // source: [
+          //   {
+          //     factory: {
+          //       id: 1,
+          //       name: '彩虹3号工厂'
+          //     },
+          //     warehouse: {
+          //       id: 1,
+          //       name: '62号仓库'
+          //     }
+          //   }
+          // ],
+          // // 调拨目的
+          // direction: {
+          //   project: {
+          //     // 项目
+          //     id: 3,
+          //     name: '长沙五一广场',
+          //     shortName: '五一广场',
+          //     serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          //   },
+          //   factory: {
+          //     id: 1,
+          //     name: '长江2号工厂'
+          //   },
+          //   warehouse: {
+          //     id: 1,
+          //     name: '662号仓库'
+          //   }
+          // },
+          // // 借用项目
+          // borrowProject: {
+          //   id: 2,
+          //   name: '长安街666666号辅路',
+          //   shortName: '长安街',
+          //   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+          // },
+          // boolBorrowReturnNotSelf: true, // 是否其他项目借用归还
+          // transferType: transferTypeEnum.BORROW_RETURN.V // 调拨类型
+          source: [
+            {
+              project: {
+                // 项目
+                id: 2,
+                name: '长安街666666号辅路',
+                shortName: '长安街',
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              factory: {
+                id: 1,
+                name: '长江1号工厂'
+              },
+              warehouse: {
+                id: 1,
+                name: '666号仓库'
+              }
+            },
+            {
+              project: {
+                // 项目
+                id: 3,
+                name: '长沙五一广场',
+                shortName: '五一广场',
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              factory: {
+                id: 1,
+                name: '彩虹3号工厂'
+              },
+              warehouse: {
+                id: 1,
+                name: '62号仓库'
+              }
+            }
+          ],
+          direction: {
+            factory: {
+              id: 1,
+              name: '长江2号工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '662号仓库'
+            }
+          },
+          transferType: transferTypeEnum.PUBLIC_WARE.V // 调拨类型
+        },
+        table: [
+          {
+            id: 1,
+            classifyId: 103,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            specification: 'Q325B',
+            thickness: 10,
+            length: 1000,
+            width: 1000,
+            brand: '嘻嘻',
+            heatNoAndBatchNo: 'aaff',
+            remark: '66666',
+            quantity: 10,
+            mete: 822222,
+            unitPrice: 0.01,
+            amount: 8000,
+            amountExcludingVAT: 7079.64,
+            inputVAT: 920.36,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '萧山工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          },
+          {
+            id: 2,
+            basicClass: matClsEnum.STEEL_PLATE.V,
+            classifyId: 103,
+            specification: 'Q235B',
+            thickness: 20,
+            length: 1500,
+            width: 2000,
+            brand: '哈哈',
+            heatNoAndBatchNo: 'fddfd',
+            quantity: 4,
+            mete: 2000000,
+            weight: 2355000,
+            unitPrice: 0.02,
+            amount: 47100,
+            amountExcludingVAT: 41681.42,
+            inputVAT: 5418.58,
+            requisitionsSN: 'SG-AFTER-123456',
+            project: {
+              'id|+1': 1,
+              'name|+1': ['长安街666666号辅路', '你脸红个泡泡茶壶666号主路'],
+              'shortName|+1': ['长安街', '你脸红个泡泡茶壶'],
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+            },
+            factory: {
+              id: 1,
+              name: '萧山工厂'
+            },
+            warehouse: {
+              id: 1,
+              name: '666号仓库'
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+
+export default [wmsRmInboundReceipt, wmsRmOutboundReceipt, wmsRmReturnReceipt, wmsRmRejectReceipt, wmsRmTransferReceipt]

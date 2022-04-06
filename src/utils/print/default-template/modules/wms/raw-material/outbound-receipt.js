@@ -114,7 +114,7 @@ const wmsRmOutboundReceipt = {
      */
     fields: [
       // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: 'NO：', width: 170, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: '出库单号：', width: 170, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
@@ -132,7 +132,7 @@ const wmsRmOutboundReceipt = {
         title: '打印时间：',
         width: 55,
         type: typeEnum.DATE.K,
-        format: 'YY/MM/DD kk:mm:ss'
+        format: 'YY/MM/DD kk:mm'
       },
       { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printerName', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
@@ -187,7 +187,7 @@ const wmsRmOutboundReceipt = {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
         key: 'applicantName',
-        title: '领料人（签字）：',
+        title: '申请人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K
       },
@@ -246,6 +246,15 @@ const wmsRmOutboundReceipt = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
+      {
+        show: false,
+        key: 'serialNumber',
+        title: '编号',
+        source: dataSourceEnum.SYSTEM.V,
+        align: alignEnum.LEFT.V,
+        minWidth: 18,
+        type: typeEnum.SERIAL_NUMBER.K
+      },
       {
         show: true,
         key: 'classifyName',
