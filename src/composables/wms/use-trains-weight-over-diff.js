@@ -15,7 +15,7 @@ export default function useWeightOverDiff() {
     if (inboundSteelCfg.value.trainsDiffType === numOrPctEnum.PERCENTAGE.V) {
       return `车次重量与入库钢材重量的误差不可超过入库钢材重量的${inboundSteelCfg.value.trainsDiff || 0}%（${overableNumber.value}kg）`
     }
-    return `车次重量与入库钢材重量的误差不可超过${inboundSteelCfg.value.trainsDiff || 0}g`
+    return `车次重量与入库钢材重量的误差不可超过${inboundSteelCfg.value.trainsDiff || 0} ${STEEL_DIFF_UNIT}`
   })
 
   // 提交校验
@@ -31,13 +31,13 @@ export default function useWeightOverDiff() {
     let hasOver = false
     const trainsDiff = inboundSteelCfg.value.trainsDiff
     const trainsDiffType = inboundSteelCfg.value.trainsDiffType
-    const overNum = +toFixed(trainsWeight - listWeight, 3)
-    overableNumber.value = +toFixed(listWeight * (trainsDiff / 100), 3)
+    const overNum = +toFixed(trainsWeight - listWeight, 0)
+    overableNumber.value = +toFixed(listWeight * (trainsDiff / 100), 0)
     if (trainsDiffType === numOrPctEnum.PERCENTAGE.V) {
-      hasOver = +toFixed(Math.abs(listWeight - trainsWeight), 3) > overableNumber.value
+      hasOver = +toFixed(Math.abs(listWeight - trainsWeight), 0) > overableNumber.value
     }
     if (trainsDiffType === numOrPctEnum.NUMBER.V) {
-      hasOver = convertUnits(Math.abs(listWeight - trainsWeight), 'kg', STEEL_DIFF_UNIT, 2) > trainsDiff
+      hasOver = convertUnits(Math.abs(listWeight - trainsWeight), 'kg', STEEL_DIFF_UNIT, 0) > trainsDiff
     }
     return {
       hasOver,

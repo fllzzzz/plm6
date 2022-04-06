@@ -14,47 +14,89 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column align="center" key="projectName" prop="projectName" :show-overflow-tooltip="true" label="项目名称" min-width="120px">
+      <el-table-column
+        v-if="columns.visible('projectName')"
+        key="projectName"
+        prop="projectName"
+        :show-overflow-tooltip="true"
+        label="项目名称"
+        min-width="130px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="plateNum" prop="plateNum" label="钢板总数" width="100px">
+      <el-table-column v-if="columns.visible('plateNum')" align="center" key="plateNum" prop="plateNum" label="钢板总数" width="100px">
         <template v-slot="scope">
           <span>{{ scope.row.plateNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="distributionNum" prop="distributionNum" label="排产数" width="100px">
+      <el-table-column
+        v-if="columns.visible('distributionNum')"
+        align="center"
+        key="distributionNum"
+        prop="distributionNum"
+        label="排产数"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.distributionNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="plateWeight" prop="plateWeight" label="钢板总重" width="100px">
+      <el-table-column
+        v-if="columns.visible('plateWeight')"
+        align="center"
+        key="plateWeight"
+        prop="plateWeight"
+        label="钢板总重"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.plateWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="distributionWeight" prop="distributionWeight" label="排产量" width="100px">
+      <el-table-column
+        v-if="columns.visible('distributionWeight')"
+        align="center"
+        key="distributionWeight"
+        prop="distributionWeight"
+        label="排产量"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.distributionWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="partNum" prop="partNum" label="零件数" width="100px">
+      <el-table-column v-if="columns.visible('partNum')" align="center" key="partNum" prop="partNum" label="零件数" width="100px">
         <template v-slot="scope">
           <span>{{ scope.row.partNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="distributionPartNum" prop="distributionPartNum" label="已排零件数" width="100px">
+      <el-table-column
+        v-if="columns.visible('distributionPartNum')"
+        align="center"
+        key="distributionPartNum"
+        prop="distributionPartNum"
+        label="已排零件数"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.distributionPartNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="partWeight" prop="partWeight" label="零件重" width="100px">
+      <el-table-column v-if="columns.visible('partWeight')" align="center" key="partWeight" prop="partWeight" label="零件重" width="100px">
         <template v-slot="scope">
           <span>{{ scope.row.partWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="distributionPartWeight" prop="distributionPartWeight" label="已排零件重" width="100px">
+      <el-table-column
+        v-if="columns.visible('distributionPartWeight')"
+        align="center"
+        key="distributionPartWeight"
+        prop="distributionPartWeight"
+        label="已排零件重"
+        width="100px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.distributionPartWeight }}</span>
         </template>
@@ -150,7 +192,7 @@ const optShow = {
   download: false
 }
 
-const { crud } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '套料工单',
     sort: [],

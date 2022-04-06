@@ -72,14 +72,14 @@
       </el-table-column>
       <!--打印-->
       <el-table-column label="操作" width="70px" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <material-print-button
             v-bind="$attrs"
             :material="row"
             :number="row.printNumber"
             :copies="crud ? crud.props.copies : 1"
             submit-print-record
-            @printed-success="crud.refresh"
+            @printed-success="handleRefresh(row)"
           />
         </template>
       </el-table-column>
@@ -92,7 +92,7 @@
 <script setup>
 import crudApi from '@/api/wms/material-label-print/material-mode'
 
-import { ref, inject } from 'vue'
+import { defineEmits, ref, inject } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { matClsEnum } from '@/utils/enum/modules/classification'
@@ -109,6 +109,8 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialPrintButton from '@/components-system/wms/material-print-button.vue'
+
+const emit = defineEmits(['printed-success'])
 
 const optShow = {
   batchAdd: false,
@@ -141,6 +143,10 @@ const { CRUD, crud, columns } = useCRUD(
 
 const { maxHeight } = useMaxHeight({ paginate: true, extraHeight: 60 })
 
+CRUD.HOOK.beforeRefresh = () => {
+  emit('printed-success')
+}
+
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
   data.content = await numFmtByBasicClass(data.content, {
@@ -153,10 +159,18 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     } else {
       row.number = row.quantity
     }
+    // 已打印数量
+    row.printedNumber = row.printedNumber || 0
     // 需打印数量 = 数量 - 已打印数量
-    row.printNumber = row.number - (row.printedNumber || 0)
+    row.printNumber = row.number - row.printedNumber
     // 需要打印数量至少为1
     row.printNumber = row.printNumber > 0 ? row.printNumber : 1
   })
+}
+
+function handleRefresh(row) {
+  if (row.printedNumber < row.number) {
+    crud.refresh()
+  }
 }
 </script>

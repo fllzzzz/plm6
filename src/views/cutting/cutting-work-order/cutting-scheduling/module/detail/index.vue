@@ -64,6 +64,8 @@
           <template v-slot="scope">
             <el-switch
               v-loading="switchLoading"
+              active-color="#409EFF"
+              inactive-color="#F56C6C"
               v-model="scope.row.State"
               @change="StateChange(scope.row)"
               :disabled="
@@ -146,9 +148,9 @@ async function plateDataGet() {
     const { content } = await get({ mac: props.detailData.cutMachine.mac })
     content.forEach(item => {
       if (item.plateState === '5') {
-        item.State = true
-      } else {
         item.State = false
+      } else {
+        item.State = true
       }
     })
     plateData.value = content
@@ -170,7 +172,6 @@ function del(row) {
 
 async function StateChange(row) {
   switchLoading.value = true
-
   try {
     const data = [row.id]
     let message = ''

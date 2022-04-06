@@ -41,10 +41,7 @@
         </el-popconfirm>
       </template>
       <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
-        <!-- TODO:打印按钮 -->
-        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="printOrDownload">
-          打印/下载完毕
-        </common-button>
+        <print-table api-key="wmsRmOutboundReceipt" :params="form.id" size="mini" type="warning" class="filter-item"/>
       </template>
     </template>
     <template #content>
@@ -296,11 +293,6 @@ function setOutboundTime() {
   form.value.list.forEach((v) => {
     v.outboundTime = batchOutboundTime.value
   })
-}
-
-// 打印/下载出库单
-function printOrDownload() {
-  // TODO:
 }
 </script>
 

@@ -40,7 +40,6 @@
             value-format="x"
             placeholder="选择日期"
             style="width:100%"
-            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
           />
           <template v-else>
             <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -55,12 +54,11 @@
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
                 :min="0"
-                :max="contractInfo.contractAmount-totalAmount"
+                :max="999999999999"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
                 controls-position="right"
-                @change="moneyChange(scope.row)"
               />
               <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
@@ -200,7 +198,7 @@
 <script setup>
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
-import { ref, defineProps, watch, nextTick, provide } from 'vue'
+import { ref, defineEmits, defineProps, watch, provide } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -242,6 +240,7 @@ const originRow = ref({})
 const bankList = ref([])
 const totalAmount = ref(0)
 const invoiceNoArr = ref([])
+const emit = defineEmits(['success'])
 provide('contractInfo', contractInfo)
 provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
@@ -337,30 +336,30 @@ async function getContractInfo(id) {
 function invoiceTypeChange(row) {
   row.taxRate = undefined
 }
-function moneyChange(row) {
-  totalAmount.value = 0
-  crud.data.map(v => {
-    if (v.invoiceAmount) {
-      totalAmount.value += v.invoiceAmount
-    }
-  })
-  if (totalAmount.value > contractInfo.value.contractAmount) {
-    const num = row.invoiceAmount - (totalAmount.value - contractInfo.value.contractAmount)
-    // 解决修改失效
-    nextTick(() => {
-      row.invoiceAmount = num || 0
-      taxMoney(row)
-      totalAmount.value = 0
-      crud.data.map(v => {
-        if (v.invoiceAmount) {
-          totalAmount.value += v.invoiceAmount
-        }
-      })
-    })
-  } else {
-    taxMoney(row)
-  }
-}
+// function moneyChange(row) {
+//   totalAmount.value = 0
+//   crud.data.map(v => {
+//     if (v.invoiceAmount) {
+//       totalAmount.value += v.invoiceAmount
+//     }
+//   })
+//   if (totalAmount.value > contractInfo.value.contractAmount) {
+//     const num = row.invoiceAmount - (totalAmount.value - contractInfo.value.contractAmount)
+//     // 解决修改失效
+//     nextTick(() => {
+//       row.invoiceAmount = num || 0
+//       taxMoney(row)
+//       totalAmount.value = 0
+//       crud.data.map(v => {
+//         if (v.invoiceAmount) {
+//           totalAmount.value += v.invoiceAmount
+//         }
+//       })
+//     })
+//   } else {
+//     taxMoney(row)
+//   }
+// }
 
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {
@@ -394,6 +393,7 @@ async function passConfirm(row) {
     await editStatus(row.id, auditTypeEnum.PASS.V)
     crud.notify(`审核成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
+    emit('success')
   } catch (e) {
     console.log('审核失败', e)
   }

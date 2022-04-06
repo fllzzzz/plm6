@@ -48,7 +48,9 @@
     </div>
     <crudOperation>
       <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <template #optLeft>
+        <common-button type="primary" size="mini" @click="rdFeeConfVisible = true">查看/设置高新研发费占比</common-button>
+      </template>
       <template #viewLeft>
         <div class="flex-rcc child-mr-7">
           <el-tag type="success" effect="plain">高新研发费 - 当月： <span v-thousand="rdFeeForMonth" v-empty /></el-tag>
@@ -56,6 +58,11 @@
         </div>
       </template>
     </crudOperation>
+    <common-drawer v-model="rdFeeConfVisible" title="高新研发费用占比列表" size="90%">
+      <template #content>
+        <high-tech-rd-fee-conf-view class="high-tech-rd-fee-conf-view" @save-success="crud.refresh"/>
+      </template>
+    </common-drawer>
   </div>
 </template>
 
@@ -71,6 +78,7 @@ import { mapGetters } from '@/store/lib'
 
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+import highTechRdFeeConfView from '@/views/config-manage/wms/high-tech-rd-fee/index.vue'
 
 const defaultQuery = {
   outboundTime: { value: `${new Date().getTime()}`, resetAble: false }, // 月份
@@ -84,6 +92,7 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 // 高新研发费总额
 const rdFeeForMonth = ref()
 const rdFeeForYear = ref()
+const rdFeeConfVisible = ref(false)
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
 
@@ -114,3 +123,9 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   rdFeeForYear.value = data.rdFeeForYear
 }
 </script>
+
+<style lang="scss" scoped>
+.high-tech-rd-fee-conf-view {
+  padding: 0;
+}
+</style>

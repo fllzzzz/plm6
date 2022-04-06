@@ -25,8 +25,8 @@
       <purchase-detail-button :purchase-id="order.id" size="mini" />
       <!-- 审核按钮 -->
       <review-confirm-button
-        :passed-loading="passedLoading"
-        :returned-loading="returnedLoading"
+        v-model:passed-loading="passedLoading"
+        v-model:returned-loading="returnedLoading"
         :passed-fn="passed"
         :returned-fn="returned"
       />

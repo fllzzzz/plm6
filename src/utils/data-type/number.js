@@ -203,7 +203,7 @@ export function toThousand(num, precision = 2) {
  * 获取精度
  */
 export function getDP(num) {
-  const arr = num.toString().split('.')
+  const arr = Number(num).toString().split('.')
   if (arr.length === 2) {
     return arr[1].length
   } else {

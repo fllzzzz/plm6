@@ -352,7 +352,7 @@ export const receiptDetailCPM = {
   rejectReceiptDetail: commonPM.rawMatRejectReceiptDetail // 退货单详情
 }
 
-// 组件·高新研发费设置
+// 组件·高新研发费设置（目前以组件形式展示，后期可能为页面）
 export const highTechRDFeeConfCPM = {
   get: ['wms_highTechRDFeeConf:get', ...reportRawMaterialHighTechRDFeePM.get],
   set: ['wms_highTechRDFeeConf:set', ...reportRawMaterialHighTechRDFeePM.setRdRate]

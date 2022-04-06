@@ -1,16 +1,17 @@
 <template>
-  <common-dialog
+  <common-drawer
     ref="dialogRef"
     title="入库记录"
-    append-to-body
-    :visible="visible"
-    width="1300px"
     :close-on-click-modal="false"
+    v-model="visible"
+    direction="rtl"
     :before-close="handleClose"
     custom-class="collection-record"
-    show-close
-    top="10vh"
+    size="95%"
   >
+    <template #titleAfter>
+      <div>采购订单:{{ detailInfo.serialNumber }}</div>
+    </template>
     <template #titleRight>
       <div class="print-wrap">
         <!-- <print-table
@@ -22,38 +23,45 @@
         /> -->
       </div>
     </template>
-    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
-      <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column prop="invoiceDate" label="开票日期" align="center" width="100" show-overflow-tooltip />
-      <el-table-column prop="invoiceAmount" label="开票额" align="center" min-width="120" show-overflow-tooltip />
-      <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
-        <template #default="{ row }">
-          <span>{{ row.taxRate }}%</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="invoiceUnit" label="购方单位" align="center" min-width="140" show-overflow-tooltip />
-      <el-table-column prop="collectionUnit" label="销售单位" align="center" min-width="140" show-overflow-tooltip />
-      <el-table-column prop="invoiceNo" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
-      <el-table-column prop="writtenByName" label="办理人" align="center" min-width="100" show-overflow-tooltip />
-      <el-table-column prop="auditorName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
-    </common-table>
-    <!--分页组件-->
-    <el-pagination
-      :total="total"
-      :current-page="queryPage.pageNumber"
-      :page-size="queryPage.pageSize"
-      style="margin-top: 8px"
-      layout="total, prev, pager, next, sizes"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </common-dialog>
+    <template #content>
+      <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
+        <!-- 基础信息 -->
+        <material-base-info-columns
+          :columns="{}"
+          spec-merge
+        />
+        <!-- 单位及其数量 -->
+        <material-unit-quantity-columns :columns="{}" />
+        <!-- 价格信息 -->
+        <amount-info-columns :columns="{}" :show-tax-rate="true"/>
+        <el-table-column prop="inputVat" label="税额" align="center" show-overflow-tooltip />
+        <el-table-column prop="inboundTime" label="入库时间" align="center" width="90px" show-overflow-tooltip />
+        <el-table-column prop="inboundId" label="入库单号" align="center" show-overflow-tooltip />
+        <!-- <el-table-column prop="invoiceAmount" label="入库人" align="center" show-overflow-tooltip />
+        <el-table-column prop="invoiceUnit" label="审核人" align="center" show-overflow-tooltip /> -->
+      </common-table>
+      <!--分页组件-->
+      <el-pagination
+        :total="total"
+        :current-page="queryPage.pageNumber"
+        :page-size="queryPage.pageSize"
+        style="margin-top: 8px"
+        layout="total, prev, pager, next, sizes"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </template>
+  </common-drawer>
 </template>
 
 <script setup>
 import { inboundRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
-
+import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
+import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -81,8 +89,7 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 // 请求参数
 const params = computed(() => {
   return {
-    orderId: props.detailInfo.id,
-    propertyType: props.detailInfo.propertyType
+    orderId: props.detailInfo.id
   }
 })
 
@@ -99,16 +106,15 @@ const list = ref([])
 const dialogRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
-  ['invoiceDate', ['parse-time', '{y}-{m}-{d}']],
-  ['invoiceAmount', 'to-thousand'],
-  ['taxRate', ['to-fixed', 2]]
+  ['inputVat', 'to-thousand'],
+  ['inboundTime', ['parse-time', '{y}-{m}-{d}']]
 ])
 
 const { maxHeight } = useMaxHeight(
   {
-    mainBox: '.collection-record',
-    extraBox: '.el-dialog__header',
-    wrapperBox: '.el-dialog__body',
+    mainBox: '.inbound-record',
+    extraBox: '.el-drawer__header',
+    wrapperBox: '.el-drawer__body',
     extraHeight: '5vh',
     minHeight: 300,
     navbar: false,
@@ -123,7 +129,12 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [], totalElements } = await inboundRecord({ ...params.value, ...queryPage })
-    _list = content
+    let hasContent = content
+    if (hasContent.length > 0) {
+      await setSpecInfoToList(hasContent)
+      hasContent = await numFmtByBasicClass(hasContent)
+    }
+    _list = hasContent
     setTotalPage(totalElements)
   } catch (error) {
     console.log('获取入库记录失败', error)

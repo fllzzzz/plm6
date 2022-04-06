@@ -14,7 +14,7 @@ import { deepClone, isNotBlank } from '@/utils/data-type'
 export function removeTreeEmptyFiled(tree, emptyFiled = 'children') {
   const treeCopy = JSON.parse(JSON.stringify(tree))
 
-  treeCopy.forEach(node => {
+  treeCopy.forEach((node) => {
     if (node[emptyFiled] && node[emptyFiled].length) {
       removeTreeEmptyFiled(node[emptyFiled], emptyFiled)
     } else {
@@ -31,7 +31,7 @@ export function removeTreeEmptyFiled(tree, emptyFiled = 'children') {
  */
 export function tree2listForLeaf(tree = []) {
   const resArr = []
-  tree.forEach(node => {
+  tree.forEach((node) => {
     if (isNotBlank(node.children)) {
       const child = tree2listForLeaf(node.children)
       if (isNotBlank(child)) {
@@ -50,7 +50,7 @@ export function tree2listForLeaf(tree = []) {
  */
 export function tree2list(tree = []) {
   const resArr = []
-  tree.forEach(node => {
+  tree.forEach((node) => {
     resArr.push(node)
     if (isNotBlank(node.children)) {
       const child = tree2list(node.children)
@@ -76,7 +76,7 @@ export function tree2list(tree = []) {
 export function setInfoOfTree(pendingArr, childFieldName, needChangeField, infoField, pollingLimit, currentIndex = 1) {
   if (pendingArr) {
     if (currentIndex === pollingLimit && !!pendingArr) {
-      pendingArr.forEach(c => {
+      pendingArr.forEach((c) => {
         const infoFieldArr = infoField && infoField.split('.')
         let info = ''
         if (infoFieldArr && c[infoFieldArr[0]]) {
@@ -88,7 +88,7 @@ export function setInfoOfTree(pendingArr, childFieldName, needChangeField, infoF
       })
     }
     if (currentIndex < pollingLimit && !!pendingArr) {
-      pendingArr.forEach(c => {
+      pendingArr.forEach((c) => {
         setInfoOfTree(c[childFieldName], childFieldName, needChangeField, infoField, pollingLimit, currentIndex + 1)
       })
     }
@@ -107,14 +107,14 @@ export function setInfoOfTree(pendingArr, childFieldName, needChangeField, infoF
 export function delNextTree(pendingArr, childFieldName, pollingLimit, currentIndex = 1) {
   if (pendingArr) {
     if (currentIndex === pollingLimit && !!pendingArr) {
-      pendingArr.forEach(c => {
+      pendingArr.forEach((c) => {
         if (c && c[childFieldName]) {
           c[childFieldName] = null
         }
       })
     }
     if (currentIndex < pollingLimit && !!pendingArr) {
-      pendingArr.forEach(c => {
+      pendingArr.forEach((c) => {
         delNextTree(c[childFieldName], childFieldName, pollingLimit, currentIndex + 1)
       })
     }
@@ -253,7 +253,13 @@ export function getFirstNodeIds(arr, idField = 'id', childField = 'children') {
  * @param {*} childField children字段名称
  */
 export function judgeNodeExistByIds(arr, ids, idField = 'id', childField = 'children') {
-  const tempFlag = arr instanceof Array && ids instanceof Array && arr.length > 0 && ids.length > 0 && idField && childField
+  let cloneIds
+  if (typeof ids === 'string' || typeof ids === 'number') {
+    cloneIds = [ids]
+  } else if (Array.isArray(ids)) {
+    cloneIds = [...ids]
+  }
+  const tempFlag = arr instanceof Array && arr.length > 0 && cloneIds && cloneIds.length > 0 && idField && childField
   if (!tempFlag) return false
   let _arr = JSON.parse(JSON.stringify(arr))
   let exist = false
@@ -262,14 +268,14 @@ export function judgeNodeExistByIds(arr, ids, idField = 'id', childField = 'chil
     exist = false
     if (_arr instanceof Array && _arr.length > 0) {
       for (let i = 0; i < _arr.length; i++) {
-        if (_arr[i][idField] === ids[current]) {
+        if (_arr[i][idField] === cloneIds[current]) {
           exist = true
           _arr = _arr[0][childField]
           ++current
         }
       }
     }
-  } while (_arr && exist && current < ids.length)
+  } while (_arr && exist && current < cloneIds.length)
   return exist
 }
 
@@ -337,7 +343,7 @@ export function getNodeIdsById(pendingTree, id, idField = 'id', childField = 'ch
  */
 export function setEmptyArr2Undefined(tree, childField = 'children') {
   if (tree && tree.length > 0) {
-    tree.forEach(node => {
+    tree.forEach((node) => {
       if (node[childField]) {
         if (node[childField].length < 1) {
           node[childField] = undefined
@@ -356,7 +362,7 @@ export function filterTreeNode(tree, childField, field, value, pollingFloor = 1)
   } else {
     treeCopy = tree
   }
-  return treeCopy.filter(n => {
+  return treeCopy.filter((n) => {
     if (n[field] === value) {
       return false
     } else if (n[childField] && n[childField].length) {

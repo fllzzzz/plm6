@@ -2,7 +2,14 @@
   <div class="head-container">
     <crudOperation>
       <template #optLeft>
-        <el-input v-model.trim="query.nameOrCode" placeholder="输入科目名称、编号搜索" class="filter-item" style="width: 250px" size="small" clearable />
+        <el-input
+          v-model.trim="query.nameOrCode"
+          placeholder="输入科目名称、编号搜索"
+          class="filter-item"
+          style="width: 250px"
+          size="small"
+          clearable
+        />
       </template>
       <template #viewLeft>
         <span v-permission="permission.get">
@@ -116,6 +123,8 @@ function classificationTreeFormat(tree, deep = 1, extendsData = { fullId: [], fu
     } else {
       tableData.push(leafNode)
     }
+    // 删除 children
+    delete node.children
   })
 
   // 将当前层的数据塞入对应的科目等级的数组中

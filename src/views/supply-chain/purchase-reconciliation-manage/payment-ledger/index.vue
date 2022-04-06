@@ -12,9 +12,18 @@
       style="width: 100%"
       :max-height="maxHeight"
     >
-      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column label="序号" type="index" align="center" width="60">
+        <template #default="{ row, $index }">
+           <table-cell-tag :show="row.settlementStatus===settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
+          <span>{{ $index + 1 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip key="createTime" prop="createTime" label="日期" align="center" width="130" />
-      <el-table-column v-if="columns.visible('serialNumber')" show-overflow-tooltip key="serialNumber" prop="serialNumber" label="采购单号" min-width="150" />
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('supplierName')" show-overflow-tooltip key="supplierName" prop="supplierName" label="供应商" min-width="150" />
       <el-table-column v-if="columns.visible('typeText')" show-overflow-tooltip key="typeText" prop="typeText" label="物料种类" min-width="150" />
       <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" min-width="120" show-overflow-tooltip />
@@ -92,7 +101,11 @@
       </el-table-column>
     </common-table>
     <!--分页组件-->
-    <pagination />
+    <pagination v-show="headerRef?.isOrderType" />
+    <!-- 订单汇总 -->
+    <template v-if="headerRef">
+      <supplierOrder v-if="headerRef.isOrderType?false:true" :query="crud.query"/>
+    </template>
     <!-- 记录 -->
     <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" />
     <!-- 付款申请记录 -->
@@ -132,6 +145,8 @@ import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application'
 import settleForm from './module/settle-form'
+import supplierOrder from './module/supplier-order'
+import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
   add: false,
@@ -191,7 +206,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     // 付款比例
     v.paymentRate = v.amount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
     // 开票比例
-    v.invoiceRate = v.paymentAmount ? (v.invoiceAmount || 0) / (v.paymentAmount || 0) * 100 : 0
+    v.invoiceRate = v.amount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
   })
 }
 

@@ -20,7 +20,7 @@
         <span class="customize-option-item">
           <span class="flex-rsc label">
             <el-tooltip content="点击可查看详情" placement="left" :show-after="1000">
-              <el-icon v-if="props.detailable" v-permission="permission" @click.stop="openDetail(data.id)" class="pointer" color="#1881ef">
+              <el-icon v-if="props.detailable" v-permission="permission" @click.stop="handleOpenDetail(data.id)" class="pointer" color="#1881ef">
                 <el-icon-view />
               </el-icon>
             </el-tooltip>
@@ -48,7 +48,7 @@
       v-if="props.detailable"
       class="detail-icon pointer"
       :class="{ 'not-allowed': !selectValue }"
-      @click.stop="openDetail(selectValue)"
+      @click.stop="handleOpenDetail(selectValue)"
     >
       <el-icon :color="selectValue ? '#1881ef' : '#c1c2c5'">
         <el-icon-view />
@@ -168,6 +168,12 @@ watch(
   },
   { immediate: true }
 )
+
+function handleOpenDetail(id) {
+  if (id) {
+    openDetail(id)
+  }
+}
 
 function handleChange(val) {
   let data = val

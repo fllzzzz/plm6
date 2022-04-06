@@ -91,16 +91,16 @@
         sortable="custom"
       />
       <el-table-column label="操作" width="130" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <ud-operation show-detail :show-edit="false" :show-del="false" :data="row" />
-          <common-button icon="el-icon-printer" type="success" size="mini" @click="toPrintLabel(row.id)" />
+          <common-button icon="el-icon-printer" type="success" size="mini" @click="toPrintLabel(row)" />
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
     <!-- 查看详情 -->
-    <m-detail v-bind="$attrs" />
+    <m-detail />
   </div>
 </template>
 
@@ -155,9 +155,13 @@ const { CRUD, crud, columns } = useCRUD(
 )
 
 crud.props.copies = 1
-const { print } = usePrint({ emit })
+const { print } = usePrint()
 const { getDetailMaterialList } = useGetPrintInfo()
 const { maxHeight } = useMaxHeight({ paginate: true })
+
+CRUD.HOOK.beforeRefresh = () => {
+  emit('printed-success')
+}
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   await setSpecInfoToList(data.content)
@@ -167,8 +171,10 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   })
 }
 
-async function toPrintLabel(id) {
-  await print(() => getDetailMaterialList(id), crud.props.copies)
-  crud.refresh()
+async function toPrintLabel(row) {
+  await print(() => getDetailMaterialList(row.id), crud.props.copies)
+  if (row.pendingPrintedMaterialNumber > 0) {
+    crud.refresh()
+  }
 }
 </script>

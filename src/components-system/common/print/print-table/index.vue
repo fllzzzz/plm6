@@ -30,7 +30,7 @@
           />
         </template>
       </el-button>
-      <el-button
+      <common-button
         :size="props.size"
         :disabled="!templateOnload || props.disabled"
         icon="el-icon-view"
@@ -38,7 +38,7 @@
         plain
         @click="print(printModeEnum.PREVIEW.V)"
       />
-      <el-button
+      <common-button
         :size="props.size"
         :disabled="!templateOnload || props.disabled"
         icon="el-icon-printer"
@@ -46,7 +46,7 @@
         plain
         @click="print(printModeEnum.QUEUE.V)"
       />
-      <el-button
+      <common-button
         :size="props.size"
         :disabled="!templateOnload || props.disabled"
         icon="el-icon-download"
@@ -76,7 +76,7 @@ import downloadXLSX from '@/utils/print/download'
 import TableTemplateSelect from '@comp-common/print/table-template-select'
 import TableTemplateCascader from '@comp-common/print/table-template-cascader'
 
-const emit = defineEmits(['update:currentKey', 'change'])
+const emit = defineEmits(['update:currentKey', 'change', 'success', 'download-success', 'print-success'])
 
 const props = defineProps({
   /**
@@ -185,7 +185,8 @@ watch(
       key = value instanceof Array ? value[0] : value
     }
     cacheTemplateId.value = getCacheTemplateId(key)
-    templateOnload.value = true
+    // TODO:
+    // templateOnload.value = true
   },
   { immediate: true }
 )
@@ -261,10 +262,13 @@ async function download() {
         })
         if (!result) {
           throw new Error('导出失败')
+        } else {
+          emit('success')
+          emit('download-success')
         }
       }
     } catch (error) {
-      ElMessage.error(error)
+      ElMessage.error(`${error}`)
       console.log('导出', error)
     } finally {
       printLoading.text = `导出结束`
@@ -308,10 +312,15 @@ async function print(printMode) {
         })
         if (!result) {
           throw new Error('打印失败')
+        } else {
+          if (printMode !== printModeEnum.PREVIEW.V) {
+            emit('success')
+            emit('print-success')
+          }
         }
       }
     } catch (error) {
-      ElMessage.error(error)
+      ElMessage.error(`${error}`)
       console.log('打印', error)
     } finally {
       printLoading.text = `打印结束`
@@ -330,7 +339,7 @@ async function fetch(params) {
     const data = (await fetchFn[key](params)) || {}
     if (formatFn[tableKey]) {
       // 数据装换
-      return formatFn[tableKey](data)
+      return await formatFn[tableKey](data)
     } else {
       return data
     }
@@ -385,5 +394,8 @@ async function fetch(params) {
       outline: none;
     }
   }
+}
+.el-button + .el-button {
+  margin-left: 0 !important;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="head-container">
-    <div v-show="crud.searchToggle">
-      <crudOperation>
-        <template #optLeft>
+    <crudOperation>
+      <template #optLeft>
+        <div v-show="crud.searchToggle">
           <el-date-picker
             style="margin-right: 5px; width: 150px"
             v-model="query.importTime"
@@ -15,9 +15,9 @@
             @change="crud.toQuery"
           />
           <rrOperation />
-        </template>
-      </crudOperation>
-    </div>
+        </div>
+      </template>
+    </crudOperation>
   </div>
 </template>
 

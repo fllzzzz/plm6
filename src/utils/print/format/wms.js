@@ -1,9 +1,8 @@
-
-// import { getBasicClassUnit } from '@/utils/other'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { setSpecInfoToList } from '@/utils/wms/spec'
 
 function preparesCustomSummary({ header, table = [], footer, qrCode }) {
-  const _table = table.map(row => {
+  const _table = table.map((row) => {
     row = numFmtByBasicClass({
       data: row,
       basicClass: row.basicClass,
@@ -23,28 +22,20 @@ function preparesCustomSummary({ header, table = [], footer, qrCode }) {
   }
 }
 
-function valueFormat({ header, table = [], footer, qrCode }) {
-  const _table = table.map(row => {
-    row.returnValue = row.returnTotalWeight || row.returnTotalLength || row.returnTotal || 0
-    row = numFmtByBasicClass({
-      data: row,
-      basicClass: row.basicClass,
-      field: ['value', 'returnValue'],
-      returnNewObj: true,
-      toNum: true
-    })
-    return row
-  })
+async function dataFormat({ header, table = [], footer, qrCode }) {
+  await setSpecInfoToList(table)
+  await numFmtByBasicClass(table)
+  console.log('table', table)
   return {
     header,
-    table: _table,
+    table,
     footer,
     qrCode
   }
 }
 
 function checkUnitFormat({ header, table = [], footer, qrCode }) {
-  const _table = table.map(row => {
+  const _table = table.map((row) => {
     row = numFmtByBasicClass({
       data: row,
       basicClass: row.basicClass,
@@ -66,5 +57,5 @@ function checkUnitFormat({ header, table = [], footer, qrCode }) {
 export default {
   preparesCustomSummary,
   checkUnitFormat,
-  valueFormat
+  dataFormat
 }

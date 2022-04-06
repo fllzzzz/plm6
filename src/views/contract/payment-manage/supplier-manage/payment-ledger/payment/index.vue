@@ -18,29 +18,29 @@
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="付款单位">
+    <el-table-column v-if="columns.visible('paymentUnit')" key="paymentUnit" prop="paymentUnit" :show-overflow-tooltip="true" label="付款单位" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.businessType?scope.row.businessType:'-'}}</span>
+        <span>{{ scope.row.paymentUnit?scope.row.paymentUnit:'-'}}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" :show-overflow-tooltip="true" label="收款单位">
+    <el-table-column v-if="columns.visible('receivingUnit')" key="receivingUnit" prop="receivingUnit" :show-overflow-tooltip="true" label="收款单位" align="center">
       <template v-slot="scope">
-        <span>{{ scope.row.businessType?scope.row.businessType:'-'}}</span>
+        <span>{{ scope.row.receivingUnit?scope.row.receivingUnit:'-'}}</span>
       </template>
     </el-table-column>
-     <el-table-column v-if="columns.visible('collectionDate')" key="collectionDate" prop="collectionDate" label="付款日期" align="center">
+     <el-table-column v-if="columns.visible('paymentDate')" key="paymentDate" prop="paymentDate" label="付款日期" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
+        <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('haveCollectionAmount')" key="haveCollectionAmount" prop="haveCollectionAmount" label="付款额(元)" align="center">
+    <el-table-column v-if="columns.visible('actuallyPaymentAmount')" key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额(元)" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.haveCollectionAmount && scope.row.haveCollectionAmount>0? toThousand(scope.row.haveCollectionAmount): scope.row.haveCollectionAmount }}</div>
+        <div>{{ scope.row.actuallyPaymentAmount && scope.row.actuallyPaymentAmount>0? toThousand(scope.row.actuallyPaymentAmount): scope.row.actuallyPaymentAmount }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="所属项目或订单" align="center">
+    <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="所属项目或订单" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.collectionUnit }}</div>
+        <div>{{ scope.row.serialNumber }}</div>
       </template>
     </el-table-column>
   </common-table>
@@ -108,7 +108,7 @@ function getSummaries(param) {
       sums[index] = '合计'
       return
     }
-    if (column.property === 'haveCollectionAmount') {
+    if (column.property === 'actuallyPaymentAmount') {
       const values = data.map((item) => Number(item[column.property]))
       if (!values.every((value) => isNaN(value))) {
         sums[index] = values.reduce((prev, curr) => {

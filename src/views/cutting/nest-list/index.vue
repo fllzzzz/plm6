@@ -14,12 +14,28 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column align="center" key="cutTaskName" prop="cutTaskName" :show-overflow-tooltip="true" label="工单名称" min-width="80">
+      <el-table-column
+        v-if="columns.visible('cutTaskName')"
+        align="center"
+        key="cutTaskName"
+        prop="cutTaskName"
+        :show-overflow-tooltip="true"
+        label="工单名称"
+        min-width="80"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.cutTaskName }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度（mm）" min-width="50">
+      <el-table-column
+        v-if="columns.visible('thick')"
+        align="left"
+        key="thick"
+        prop="thick"
+        :show-overflow-tooltip="true"
+        label="厚度（mm）"
+        min-width="50"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.thick }}</span>
           <el-tag style="float: right; margin-right: 10px" v-if="scope.row.relationType && scope.row.relationType === 2" type="success">
@@ -34,22 +50,54 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="40">
+      <el-table-column
+        v-if="columns.visible('material')"
+        align="center"
+        key="material"
+        prop="material"
+        :show-overflow-tooltip="true"
+        label="材质"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="right" key="sum" prop="sum" :show-overflow-tooltip="true" label="零件数（件）" min-width="40">
+      <el-table-column
+        v-if="columns.visible('sum')"
+        align="right"
+        key="sum"
+        prop="sum"
+        :show-overflow-tooltip="true"
+        label="零件数（件）"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.sum }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="right" key="reduce" prop="reduce" :show-overflow-tooltip="true" label="零件量（kg）" min-width="40">
+      <el-table-column
+        v-if="columns.visible('reduce')"
+        align="right"
+        key="reduce"
+        prop="reduce"
+        :show-overflow-tooltip="true"
+        label="零件量（kg）"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.reduce }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="state" prop="state" :show-overflow-tooltip="true" label="状态" min-width="40">
+      <el-table-column
+        v-if="columns.visible('state')"
+        align="center"
+        key="state"
+        prop="state"
+        :show-overflow-tooltip="true"
+        label="状态"
+        min-width="40"
+      >
         <template v-slot="scope">
           <span>
             <el-tag style="width: 100%" effect="plain" v-if="scope.row.state && scope.row.state === '1'" type="warning">

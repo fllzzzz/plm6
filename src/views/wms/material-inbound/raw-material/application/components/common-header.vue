@@ -55,7 +55,7 @@
                 :min="0"
                 :max="999999999"
                 :controls="false"
-                :precision="2"
+                :precision="0"
                 :placeholder="`输入该车次重量`"
                 :class="{ 'over-weight-tip': trainsDiff.hasOver }"
               />

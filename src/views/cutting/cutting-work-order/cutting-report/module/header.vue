@@ -2,32 +2,34 @@
   <div class="head-container">
     <crudOperation>
       <template #optLeft>
-        <!-- <el-date-picker v-model="date" type="date" size="small" class="filter-item" placeholder="请选择日期" @change="changeDate" /> -->
-        <el-date-picker
-          v-model="query.createTime"
-          :default-time="defaultTime"
-          type="daterange"
-          range-separator=":"
-          size="small"
-          value-format="x"
-          :shortcuts="PICKER_OPTIONS_SHORTCUTS"
-          unlink-panels
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          style="width: 240px"
-          class="filter-item"
-          @change="crud.toQuery"
-        />
-        <el-input
-          v-model="query.workshopInf"
-          placeholder="请输入车间"
-          class="filter-item"
-          style="width: 200px"
-          size="small"
-          clearable
-          @keyup.enter="crud.toQuery"
-        />
-        <rrOperation />
+        <div v-show="crud.searchToggle">
+          <!-- <el-date-picker v-model="date" type="date" size="small" class="filter-item" placeholder="请选择日期" @change="changeDate" /> -->
+          <el-date-picker
+            v-model="query.createTime"
+            :default-time="defaultTime"
+            type="daterange"
+            range-separator=":"
+            size="small"
+            value-format="x"
+            :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+            unlink-panels
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            style="width: 240px"
+            class="filter-item"
+            @change="crud.toQuery"
+          />
+          <el-input
+            v-model="query.workshopInf"
+            placeholder="请输入车间"
+            class="filter-item"
+            style="width: 200px"
+            size="small"
+            clearable
+            @keyup.enter="crud.toQuery"
+          />
+          <rrOperation />
+        </div>
       </template>
     </crudOperation>
   </div>

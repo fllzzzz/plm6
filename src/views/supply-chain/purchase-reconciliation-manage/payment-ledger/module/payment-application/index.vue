@@ -18,11 +18,6 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <!-- <el-table-column key="createTime" prop="createTime" label="*申请日期" align="center" >
-        <template v-slot="scope">
-          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
-        </template>
-      </el-table-column> -->
       <el-table-column key="paymentDate" prop="paymentDate" label="*付款日期" align="center" >
         <template v-slot="scope">
           <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -35,12 +30,8 @@
       </el-table-column>
       <el-table-column key="auditStatus" prop="auditStatus" label="审核状态" align="center">
         <template v-slot="scope">
-          <template v-if="scope.row.auditStatus===auditTypeEnum.REJECT.V">
-            <el-tag type="danger">{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
-          </template>
-          <template v-else>
-            <el-tag :type="scope.row.auditStatus===auditTypeEnum.PASS.V?'success':''">{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
-          </template>
+          <el-tag type="warning" v-if="scope.row.auditStatus===auditTypeEnum.REJECT.V">{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
+          <el-tag :type="scope.row.auditStatus===auditTypeEnum.PASS.V?'success':''" v-else>{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center">

@@ -30,7 +30,7 @@
           <span>{{ detailInfo.amount?toThousand(detailInfo.amount):'-' }}</span>
         </el-form-item>
         <el-form-item label="已付款(元)">
-          <span>{{ detailInfo.paymentAmount }}</span>
+          <span>{{ detailInfo.paymentAmount?toThousand(detailInfo.paymentAmount):'-' }}</span>
           <el-tag style="margin-left:5px;" v-if="detailInfo.amount">{{ (detailInfo.paymentAmount/detailInfo.amount)*100+'%' }}</el-tag>
         </el-form-item>
         <el-form-item label="最后一次付款(元)">
@@ -53,7 +53,7 @@
               v-model="form.applyAmount"
               :step="1"
               :min="0"
-              :max="detailInfo.amount?detailInfo.amount-detailInfo.paymentAmount:999999999999"
+              :max="999999999999"
               :precision="DP.YUAN"
               controls-position="right"
               style="width: 220px"
@@ -132,7 +132,7 @@ const rules = {
 CRUD.HOOK.beforeSubmit = () => {
   crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
   crud.form.orderId = props.detailInfo.id
-  crud.form.propertyType = 1
+  crud.form.propertyType = props.detailInfo.propertyType
   crud.form.receiveBank = props.detailInfo.supplierBankName || undefined
   crud.form.receiveBankAccount = props.detailInfo.supplierBankAccount || undefined
 }

@@ -9,6 +9,7 @@ const contract = {
 
 const wms = {
   wms_warehouse: '出入库报表',
+  wms_rm_receipt: '原材料单据',
   wms_purchaseApply: '申购报表'
 }
 const mes = {
@@ -27,7 +28,8 @@ const moduleType = {
 const mt = moduleType
 
 // 表格类型
-const tableType = { // 如果一个表格属于两个模块，T: []
+const tableType = {
+  // 如果一个表格属于两个模块，T: []
   // 合同
   myProject: { L: '我的项目', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
   projectList: { L: '项目列表', M: 'contract_report', T: mt.contract.L + ' / ' + contract.contract_report },
@@ -48,6 +50,8 @@ const tableType = { // 如果一个表格属于两个模块，T: []
 
   // wms
   wmsInventorySummary: { L: '物料库存汇总表', M: 'wms_warehouse', T: mt.wms.L + ' / ' + wms.wms_warehouse },
+  wmsRmInboundReceipt: { L: '入库单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },
+  wmsRmOutboundReceipt: { L: '出库（领料）单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },
 
   // mes
   mesSchedulingDetail: { L: '工单详情', M: 'mes_task', T: mt.mes.L + ' / ' + mes.mes_task },
@@ -92,8 +96,7 @@ const tableType = { // 如果一个表格属于两个模块，T: []
 
 // 一个模板对应多个接口，尽量一一对应，在特殊情况下需要做特殊处理
 // 接口：tableType-key
-const apikey = {
-}
+const apikey = {}
 constantize(apikey)
 
 export {

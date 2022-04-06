@@ -5,7 +5,7 @@
  * @author duhh
  */
 // 备注：增加了每项内容的margin
-import { toThousand } from '@/utils/data-type/number'
+import { getDP, toThousand } from '@/utils/data-type/number'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { emptyTextFormatter } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
@@ -13,7 +13,16 @@ import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import { matClsEnum } from '@enum-ms/classification'
 
-import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from '../enum'
+import {
+  orientEnum,
+  amountUnitEnum,
+  dataSourceEnum,
+  pageFormatEnum,
+  alignEnum,
+  verticleAlignEnum,
+  fieldTypeEnum,
+  printModeEnum as PrintMode
+} from '../enum'
 import { convertColumns, delNotDisplayed, getLastColumns } from '../page-handle'
 
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
@@ -86,12 +95,18 @@ async function printTable({ header, table, footer, qrCode, config, printMode = P
         }
       }
       /**
-         * LODOP——bug，BottomMargin， table有bug
-         * 例如：BM为10mm，剩余高度为12mm（实际可用高度2mm）。单元格高度为11mm，这样的话不会换页
-         */
+       * LODOP——bug，BottomMargin， table有bug
+       * 例如：BM为10mm，剩余高度为12mm（实际可用高度2mm）。单元格高度为11mm，这样的话不会换页
+       */
       const extraBottom = convertUnits(8, 'mm', config.unit)
       // 表格 8mm
-      LODOP.ADD_PRINT_TABLE(`${prevHeight}${config.unit}`, 0, '100%', `BottomMargin:${config.paddingTB + extraBottom}${config.unit}`, tableHtml)
+      LODOP.ADD_PRINT_TABLE(
+        `${prevHeight}${config.unit}`,
+        0,
+        '100%',
+        `BottomMargin:${config.paddingTB + extraBottom}${config.unit}`,
+        tableHtml
+      )
       LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1) // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
       LODOP.SET_PRINT_STYLEA(0, 'TableRowThickNess', '30px') // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
       if (tbOffset2Top) {
@@ -278,11 +293,15 @@ function getTHeadHtml(config, needBlankColumn) {
     html += '<tr>'
     if (i === 0 && config.index && config.index.show) {
       const _style = config.index.style
-      html += `<td class="th" rowspan="${columnRows.length}" style="${_style}"><div style="${_style}">${config.index.title || '序号'}</div></td>`
+      html += `<td class="th" rowspan="${columnRows.length}" style="${_style}"><div style="${_style}">${
+        config.index.title || '序号'
+      }</div></td>`
     }
-    cr.forEach(c => {
+    cr.forEach((c) => {
       if (c.show) {
-        html += `<td class="th" colspan="${c.colSpan}" rowspan="${c.rowSpan}" style="${c.style}"><div style="${c.style}">${c.title || ''}</div></td>`
+        html += `<td class="th" colspan="${c.colSpan}" rowspan="${c.rowSpan}" style="${c.style}"><div style="${c.style}">${
+          c.title || ''
+        }</div></td>`
       }
     })
     if (i === 0 && needBlankColumn) {
@@ -306,7 +325,7 @@ function getTableHtml({ header, footer, table, globalConfig }) {
   const config = globalConfig.table
   const headAbstractHtml = getHeadAbstractHtml(header, globalConfig.header)
   const footerHtml = getFooterHtml(footer, globalConfig)
-  let thColspan = config.fields.filter(f => f.show).length // th需要跨行的值
+  let thColspan = config.fields.filter((f) => f.show).length // th需要跨行的值
   if (config.index && config.index.show) {
     ++thColspan
   }
@@ -322,7 +341,8 @@ function getTableHtml({ header, footer, table, globalConfig }) {
     html += `<tr><th colspan="${thColspan}">${headAbstractHtml}</th></tr>`
   }
   // 是否需要最后空列（虚假的）
-  const needBlankColumn = config.index && config.index.show && isNotBlank(config.index.width) && config.lastColumns.every(f => isNotBlank(f.width)) // 字段都是固定宽度
+  const needBlankColumn =
+    config.index && config.index.show && isNotBlank(config.index.width) && config.lastColumns.every((f) => isNotBlank(f.width)) // 字段都是固定宽度
   html += `${getTHeadHtml(config, needBlankColumn)}`
   html += `</thead>
         <tbody>
@@ -388,18 +408,33 @@ function spliceSummary(data, config, needBlankColumn) {
       if (column && column.sum) {
         // 判断字段是否需要合计
         sum = 0 // 打印时汇总数据默认显示0
-        const columns = data.map(d => keyParse(d, column.key)) // 列数据 字段解析
-        if (!columns.every(value => isNaN(+value))) {
+        const columns = data.map((d) => keyParse(d, column.key)) // 列数据 字段解析
+        let dp = 0
+        const dpArr = []
+        if (!columns.every((value) => isNaN(+value))) {
           // 判断是否为数字类型,此处允许空格或空字符串，因此可用isNaN，否则使用正则表达式
           sum = columns.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
-              return prev + curr
+              dpArr.push(getDP(curr))
+              return prev + Number(curr)
             } else {
               return prev
             }
           }, 0)
-          sum = dataFormat({ val: sum, field: column })
+
+          // 获取最大的小数精度位数
+          dp = dpArr.getMax()
+          dp = dp > 5 ? 5 : dp
+          const cloneField = JSON.parse(JSON.stringify(column))
+          if (!cloneField.format) {
+            cloneField.format = {}
+          }
+          if (isBlank(cloneField.format.precision)) {
+            cloneField.format.precision = dp
+          }
+
+          sum = dataFormat({ val: sum, field: cloneField })
         }
       }
       html += `<td class="td" style="${column.style}"><div style="${column.style}">${sum}</div></td>`
@@ -680,8 +715,8 @@ function setTableColumnsStyle(globalConfig) {
     //   field.style = _style
     // })
     const columnRows = config.columnRows
-    columnRows.forEach(row => {
-      row.forEach(column => {
+    columnRows.forEach((row) => {
+      row.forEach((column) => {
         let _style = ''
         if (isNotBlank(column.align)) {
           _style += `text-align:${textAlign(column.align)};`
@@ -718,7 +753,7 @@ function setHeaderFieldStyle(globalConfig) {
   const config = globalConfig.header
   const fields = config.fields
   isNotBlank(fields) &&
-    fields.forEach(field => {
+    fields.forEach((field) => {
       let _style = ''
       if (isNotBlank(field.width)) {
         _style += `width:${field.width}${globalConfig.unit};`
@@ -737,7 +772,7 @@ function setFooterFieldStyle(globalConfig) {
   const config = globalConfig.footer
   const fields = config.fields
   isNotBlank(fields) &&
-    fields.forEach(field => {
+    fields.forEach((field) => {
       let _style = ''
       if (isNotBlank(field.width)) {
         _style += `width:${field.width}${globalConfig.unit};`
@@ -818,7 +853,7 @@ function enumFormat(val, format) {
       // 位运算的值
       const enums = EO.toArr(enumK)
       const res = []
-      enums.forEach(e => {
+      enums.forEach((e) => {
         if (e.V & val) {
           res.push(e[key] || e['L'])
         }
@@ -841,7 +876,11 @@ function enumFormat(val, format) {
 function projectNameFormat(val, format = {}) {
   if (isBlank(format)) {
     // 默认只显示项目简称
-    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }
+    format = {
+      showProjectFullName: false,
+      showSerialNumber: false,
+      projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V
+    }
   }
   return projectNameFormatter(val, format, format.lineBreak)
 }
@@ -853,7 +892,7 @@ function projectNameFormat(val, format = {}) {
  * @return {string} 日期
  */
 function dateFormat(val, format = 'YY/MM/DD') {
-  const filterDate = val => {
+  const filterDate = (val) => {
     if (isNotBlank(val)) {
       return moment(+val).format(format)
     }
@@ -867,7 +906,7 @@ function dateFormat(val, format = 'YY/MM/DD') {
       }
       if (val.length > 1) {
         return val
-          .map(t => {
+          .map((t) => {
             return filterDate(t)
           })
           .join('，')

@@ -4,13 +4,12 @@ import { printMaterialLabel } from '@/utils/print/wms-material-label'
 import { addPrintRecord } from '@/api/wms/material-label-print/index'
 import { spliceMaterialSpec, spliceSteelSize } from '@/utils/wms/spec-format'
 
-export default function usePrint({ emit }) {
+export default function usePrint() {
   // 打印loading
   let printLoading
 
   async function print(list = [], copies) {
     let matList
-    let needRefresh = false
     openLoading()
     if (typeof list === 'function') {
       matList = await list()
@@ -19,10 +18,7 @@ export default function usePrint({ emit }) {
     }
     try {
       for (const row of matList) {
-        const success = await printLabel(row, copies)
-        if (!needRefresh && success) {
-          needRefresh = true
-        }
+        await printLabel(row, copies)
       }
       printLoading.setText(`已全部加入打印队列`)
       await codeWait(500)
@@ -31,9 +27,6 @@ export default function usePrint({ emit }) {
       throw new Error(error)
     } finally {
       printLoading && printLoading.close()
-      if (needRefresh) {
-        emit('printed-success')
-      }
     }
   }
 
@@ -45,20 +38,19 @@ export default function usePrint({ emit }) {
       // eslint-disable-next-line no-irregular-whitespace
       printLoading.setText(`正在加入打印队列：${material.classifyFullName} ${spliceSteelSize(material)}　${spliceMaterialSpec(material)}`)
       await printMaterialLabel({ material: material, copies: pollingTimes })
-      return true
-    } catch (error) {
-      console.log('打印标签时发生错误', error)
-      throw new Error(error)
-    } finally {
       const endTime = new Date().getTime()
       // 添加打印记录
-      addRecord({
+      await addRecord({
         material: material,
         number: material.printNumber,
         copies: copies,
         startTime,
         endTime
       })
+      return true
+    } catch (error) {
+      console.log('打印标签时发生错误', error)
+      throw new Error(error)
     }
   }
 

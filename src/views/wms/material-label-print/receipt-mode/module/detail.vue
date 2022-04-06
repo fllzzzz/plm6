@@ -31,7 +31,7 @@
       >
         <el-expand-table-column :data="detail.materialList" v-model:expand-row-keys="expandRowKeys" row-key="id" fixed="left">
           <template #default="{ row }">
-            <expand-secondary-info :basic-class="detail.basicClass" :row="row" />
+            <expand-secondary-info :basic-class="row.basicClass" :row="row" show-graphics :show-batch-no="false" />
           </template>
         </el-expand-table-column>
         <el-table-column type="selection" width="55" align="center" fixed="left" />
@@ -68,12 +68,11 @@
         <el-table-column label="操作" width="70px" align="center" fixed="right">
           <template #default="{ row }">
             <material-print-button
-              v-bind="$attrs"
               :material="row"
               :number="row.printNumber"
               :copies="crud ? crud.props.copies : 1"
               submit-print-record
-              @printed-success="reloadDetail"
+              @printed-success="reloadDetail(row)"
             />
           </template>
         </el-table-column>
@@ -83,7 +82,7 @@
 </template>
 
 <script setup>
-import { computed, watch, ref, defineEmits } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { receiptTypeEnum } from '@/utils/enum/modules/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -102,15 +101,13 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialPrintButton from '@/components-system/wms/material-print-button.vue'
 
-const emit = defineEmits(['printed-success'])
-
 const drawerRef = ref()
 const tableRef = ref()
 const expandRowKeys = ref([])
 const selections = ref([])
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialColumns])
-const { print } = usePrint({ emit })
+const { print } = usePrint()
 const { CRUD, crud, detail } = regDetail()
 
 // 表格高度处理
@@ -121,7 +118,7 @@ const { maxHeight } = useMaxHeight(
     wrapperBox: ['.el-drawer__body'],
     clientHRepMainH: true,
     minHeight: 300,
-    extraHeight: 10,
+    extraHeight: 10
   },
   () => computed(() => !crud.detailLoading)
 )
@@ -145,7 +142,7 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
   await setSpecInfoToList(detail.materialList)
   detail.materialList = await numFmtByBasicClass(detail.materialList, {
     toSmallest: false,
-    toNum: false,
+    toNum: false
   })
   detail.materialList.forEach((row) => {
     if (row.basicClass === matClsEnum.STEEL_COIL.V) {
@@ -154,7 +151,8 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
       row.number = row.quantity
     }
     // 需打印数量 = 数量 - 已打印数量
-    row.printNumber = row.number - (row.printedNumber || 0)
+    row.printedNumber = row.printedNumber || 0
+    row.printNumber = row.number - row.printedNumber
     // 需要打印数量至少为1
     // row.printNumber = row.printNumber > 0 ? row.printNumber : 1
     if (row.printNumber > 0) {
@@ -173,21 +171,25 @@ CRUD.HOOK.beforeDetailLoaded = async (crud, detail) => {
 }
 
 // 重载详情
-function reloadDetail() {
-  selections.value = []
-  crud.reloadDetail()
+function reloadDetail(row) {
+  if (row.printedNumber < row.number) {
+    selections.value = []
+    crud.reloadDetail()
+    crud.refresh()
+  }
 }
 
 // 批量打印
 async function toBatchPrint() {
   await print(selections.value, crud.props.copies)
+  if (detail.pendingPrintedMaterialNumber > 0) {
+    crud.refresh()
+  }
   crud.cancelDetail()
-  crud.refresh()
 }
 
 // 选择框change
 function handleSelectionChange(val) {
-  console.log('val', val)
   selections.value = val
 }
 </script>

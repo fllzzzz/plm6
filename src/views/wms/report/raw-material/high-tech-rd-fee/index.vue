@@ -94,7 +94,7 @@ const optShow = {
 const columnsDataFormat = ref([
   ...materialHasAmountColumns,
   ['outboundReceipt.outboundTime', ['parse-time', '{y}-{m}-{d}']],
-  ['rdRate', ['suffix', '%']],
+  ['rdRate', ['suffix', ' %']],
   ['rdFee', 'to-thousand']
 ])
 

@@ -26,7 +26,7 @@ const get = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ],
-            'pendingPrintedMaterialNumber|1-10': 1,
+            pendingPrintedMaterialNumber: 0,
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)'
           },
@@ -83,7 +83,7 @@ const get = {
                 serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
               }
             ],
-            pendingPrintedMaterialNumber: 0,
+            'pendingPrintedMaterialNumber|1-10': 1,
             reviewerName: '@cname', // 审核人（审核的人）
             createTime: '@datetime(T)'
           }
@@ -105,6 +105,7 @@ const detail_1 = {
       code: 20000,
       data: {
         id: 1,
+        pendingPrintedMaterialNumber: 0,
         basicClass: matClsEnum.STEEL_PLATE.V,
         serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 单据编号
         receiptId: 1,
