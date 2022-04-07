@@ -41,7 +41,8 @@ const props = defineProps({
     type: String,
     default: 'el-icon-download'
   },
-  returnStatus: {
+  // responseHeader 中 result 为 code,message的情景下使用
+  responseHeaderResult: {
     type: Boolean,
     default: false
   }
@@ -52,7 +53,7 @@ const downloadLoading = ref(false)
 async function doExport(params) {
   try {
     downloadLoading.value = true
-    if (props.returnStatus) {
+    if (props.responseHeaderResult) {
       await fileDownloadByReturnStatus(props.fn, props.params)
     } else {
       await fileDownload(props.fn, props.params)

@@ -119,7 +119,7 @@
     <crudOperation>
       <!-- 打印 -->
       <template #optLeft>
-        <export-button v-permission="permission.get" :params="query" :fn="exportDetailsExcel" return-status>导出入库明细（根据查询条件）</export-button>
+        <export-button v-permission="permission.get" :params="query" :fn="exportDetailsExcel" response-header-result>导出入库明细（根据查询条件）</export-button>
       </template>
     </crudOperation>
   </div>
