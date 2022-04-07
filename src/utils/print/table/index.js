@@ -35,6 +35,7 @@ import { getLODOP, printByMode } from '../base'
 import * as lodash from 'lodash'
 
 let LODOP
+const defaultPrecision = 2
 
 /**
  * 打印表格
@@ -947,7 +948,7 @@ function amountFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -972,7 +973,7 @@ function weightFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -996,7 +997,7 @@ function lengthFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -1020,7 +1021,7 @@ function thicknessFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -1042,7 +1043,7 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
     // 是否显示单位
     if (format.showUnit) {
@@ -1091,7 +1092,7 @@ function quantityFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val

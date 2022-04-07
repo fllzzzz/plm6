@@ -13,6 +13,7 @@ import _ from 'lodash'
 
 // TODO: 待修改
 const pageFormatEnumV = EO.key2val(pageFormatEnum)
+const defaultPrecision = 2
 
 // 获取所有列
 const getAllColumns = (columns) => {
@@ -709,7 +710,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -734,7 +735,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -758,7 +759,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -782,7 +783,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -806,7 +807,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
       // 是否显示单位
       if (format.showUnit) {
@@ -855,7 +856,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
