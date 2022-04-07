@@ -26,7 +26,7 @@
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('plateNum')" align="center" key="plateNum" prop="plateNum" label="钢板总数" width="100px">
+      <el-table-column v-if="columns.visible('plateNum')" align="center" key="plateNum" prop="plateNum" label="钢板总数" min-width="100px">
         <template v-slot="scope">
           <span>{{ scope.row.plateNum }}</span>
         </template>
@@ -37,7 +37,7 @@
         key="distributionNum"
         prop="distributionNum"
         label="排产数"
-        width="100px"
+        min-width="100px"
       >
         <template v-slot="scope">
           <span>{{ scope.row.distributionNum }}</span>
@@ -49,7 +49,7 @@
         key="plateWeight"
         prop="plateWeight"
         label="钢板总重"
-        width="100px"
+        min-width="100px"
       >
         <template v-slot="scope">
           <span>{{ scope.row.plateWeight }}</span>
@@ -61,13 +61,13 @@
         key="distributionWeight"
         prop="distributionWeight"
         label="排产量"
-        width="100px"
+        min-width="100px"
       >
         <template v-slot="scope">
           <span>{{ scope.row.distributionWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('partNum')" align="center" key="partNum" prop="partNum" label="零件数" width="100px">
+      <el-table-column v-if="columns.visible('partNum')" align="center" key="partNum" prop="partNum" label="零件数" min-width="100px">
         <template v-slot="scope">
           <span>{{ scope.row.partNum }}</span>
         </template>
@@ -78,13 +78,20 @@
         key="distributionPartNum"
         prop="distributionPartNum"
         label="已排零件数"
-        width="100px"
+        min-width="100px"
       >
         <template v-slot="scope">
           <span>{{ scope.row.distributionPartNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('partWeight')" align="center" key="partWeight" prop="partWeight" label="零件重" width="100px">
+      <el-table-column
+        v-if="columns.visible('partWeight')"
+        align="center"
+        key="partWeight"
+        prop="partWeight"
+        label="零件重"
+        min-width="100px"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.partWeight }}</span>
         </template>
@@ -95,23 +102,23 @@
         key="distributionPartWeight"
         prop="distributionPartWeight"
         label="已排零件重"
-        width="100px"
+        min-width="100px"
       >
         <template v-slot="scope">
           <span>{{ scope.row.distributionPartWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(permission.detail)" fixed="right" align="center" label="钢板清单" min-width="75px">
+      <el-table-column v-if="checkPermission(permission.detail)" fixed="right" align="center" label="钢板清单" min-width="80px">
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(permission.Production)" fixed="right" align="center" label="操作" min-width="85px">
+      <el-table-column v-if="checkPermission(permission.Production)" fixed="right" align="center" label="操作" min-width="90px">
         <template v-slot="scope">
           <common-button @click="taskScheduling(scope.row)" type="success" size="mini">任务排产</common-button>
         </template>
       </el-table-column>
-      <el-table-column v-if="checkPermission(permission.download)" fixed="right" align="center" label="套料成果" min-width="75px">
+      <el-table-column v-if="checkPermission(permission.download)" fixed="right" align="center" label="套料成果" min-width="80px">
         <template v-slot="scope">
           <common-button
             :disabled="scope.row.reportUrl === null"

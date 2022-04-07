@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 项目数据页面查询
 export function get(params) {
   return request({
     url: '/api/cut/getPlant',

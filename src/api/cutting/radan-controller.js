@@ -36,6 +36,7 @@ export function getTaskPack(params) {
   })
 }
 
+// 投料操作
 export function feedingOperation(data, params) {
   return request({
     url: `/api/order/feedingOperation`,
@@ -46,13 +47,16 @@ export function feedingOperation(data, params) {
 }
 
 // 上传任务包
-export function uploadTask({ cutTaskId }) {
+export function uploadTask({
+  cutTaskId
+}) {
   return request({
     url: `/api/radan/uploadTask/${cutTaskId}`,
     method: 'get'
   })
 }
 
+// 任务id查零件清单
 export function ByCutTaskId(params) {
   return request({
     url: `/api/radan/getPartByCutTaskId`,
