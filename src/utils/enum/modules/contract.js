@@ -279,8 +279,8 @@ constantize(purchaseOrderStatusEnum)
 
 // 物流搜索类型
 const logisticsSearchTypeEnum = {
-  PRODUCT: { L: '制成品运输', K: 'PRODUCT', V: 1 << 0 },
-  MATERIAL: { L: '原材料运输', K: 'MATERIAL', V: 1 << 1 },
+  PRODUCT: { L: '制成品运输', K: 'PRODUCT', V: 1 << 1 },
+  MATERIAL: { L: '原材料运输', K: 'MATERIAL', V: 1 << 0 },
   COMPANY: { L: '物流公司', K: 'COMPANY', V: 1 << 2 }
 }
 constantize(logisticsSearchTypeEnum)
