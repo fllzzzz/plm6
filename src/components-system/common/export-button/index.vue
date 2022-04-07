@@ -7,13 +7,13 @@
     :size="props.size"
     @click.stop="doExport"
   >
-    <span v-if="props.btnText">{{ props.btnText }}</span>
+    <slot />
   </common-button>
 </template>
 
 <script setup>
 import { defineProps, ref } from 'vue'
-import { fileDownload } from '@/utils/file'
+import { fileDownload, fileDownloadByReturnStatus } from '@/utils/file'
 import { downloadAttachment } from '@/api/common'
 
 const props = defineProps({
@@ -29,10 +29,6 @@ const props = defineProps({
     type: Function,
     default: downloadAttachment
   },
-  btnText: {
-    type: String,
-    default: ''
-  },
   size: {
     type: String,
     default: 'mini'
@@ -44,6 +40,10 @@ const props = defineProps({
   icon: {
     type: String,
     default: 'el-icon-download'
+  },
+  returnStatus: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -52,7 +52,11 @@ const downloadLoading = ref(false)
 async function doExport(params) {
   try {
     downloadLoading.value = true
-    await fileDownload(props.fn, props.params)
+    if (props.returnStatus) {
+      await fileDownloadByReturnStatus(props.fn, props.params)
+    } else {
+      await fileDownload(props.fn, props.params)
+    }
   } catch (error) {
     console.log('通用导出', error)
   } finally {

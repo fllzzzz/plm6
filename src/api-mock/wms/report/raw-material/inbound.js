@@ -1305,4 +1305,25 @@ const getDetails = {
   }
 }
 
-export default [getReceiptList, getReceiptDetail_id1, getReceiptDetail_id2, getReceiptDetail_id3, getDetails]
+// 入库明细excel导出
+const exportDetailsExcel = {
+  url: '/api/wms/report/raw-materials/inbound/details/excel',
+  method: 'get',
+  timeout: 500,
+  rawResponse: async (req, res) => {
+    let result = ''
+    res.setHeader('Content-Type', 'application/vnd.ms-excel;charset=UTF-8')
+    res.setHeader('Content-Disposition', 'attachment;filename=%E5%85%A5%E5%BA%93%E6%98%8E%E7%BB%86.xlsx')
+    if (Math.random() > 0.5) {
+      result = 'code=20000;message='
+    } else {
+      result =
+        'code=40000;message=%E5%85%A5%E5%BA%93%E6%98%8E%E7%BB%86excel%E8%A1%A8%E6%A0%BC%E5%AF%BC%E5%87%BA%E6%97%B6%E9%97%B4%E8%8C%83%E5%9B%B4%E4%B8%8D%E5%8F%AF%E8%B6%85%E8%BF%87%E4%B8%80%E5%B9%B4'
+    }
+    res.setHeader('Result', result)
+    res.statusCode = 200
+    res.end(`入库明细excel导出`)
+  }
+}
+
+export default [getReceiptList, getReceiptDetail_id1, getReceiptDetail_id2, getReceiptDetail_id3, getDetails, exportDetailsExcel]

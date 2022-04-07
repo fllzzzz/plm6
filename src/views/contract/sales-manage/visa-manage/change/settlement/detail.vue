@@ -9,12 +9,7 @@
     size="50%"
   >
     <template #titleRight>
-      <export-button
-        v-permission="crud.permission.download"
-        :params="detail.id"
-        :fn="downloadSettlement"
-        btnText="下载结算单"
-      />
+      <export-button v-permission="crud.permission.download" :params="detail.id" :fn="downloadSettlement"> 下载结算单 </export-button>
       <span v-if="props.status === reviewStatusEnum.UNREVIEWED.V">
         <common-button :loading="submitLoading" size="mini" type="success" @click="handleSubmit(true)">确 签</common-button>
         <el-popconfirm title="确定要拒绝此条结算单吗？" @confirm="handleSubmit(false)">
@@ -24,8 +19,8 @@
         </el-popconfirm>
       </span>
     </template>
-    <template  #content>
-      <el-form  v-loading="crud.detailLoading" ref="formRef" size="mini" label-width="100px" class="demo-form">
+    <template #content>
+      <el-form v-loading="crud.detailLoading" ref="formRef" size="mini" label-width="100px" class="demo-form">
         <div class="rule-row">
           <el-form-item label="项目" prop="project">
             <span class="project-name">{{ projectNameFormatter(detail.project) }}</span>
@@ -60,7 +55,12 @@
         </div>
         <div class="rule-row">
           <el-form-item label="保证金额" prop="marginAmount">
-            <div><span v-thousand="detail?.project?.marginAmount" /><span v-if="dict.label['margin_type'] && detail?.project?.marginType">（{{ dict.label['margin_type'][detail?.project?.marginType] }}）</span></div>
+            <div>
+              <span v-thousand="detail?.project?.marginAmount" /><span
+v-if="dict.label['margin_type'] && detail?.project?.marginType"
+                >（{{ dict.label['margin_type'][detail?.project?.marginType] }}）</span
+              >
+            </div>
           </el-form-item>
           <el-form-item label="发运额" prop="happenedAmount">
             <div><span v-thousand="detail?.project?.happenedAmount" />（{{ digitUppercase(detail?.project?.happenedAmount || 0) }}）</div>
@@ -84,7 +84,9 @@
         </div>
         <div class="rule-row">
           <el-form-item label="已付款" prop="collectionAmount">
-            <div><span v-thousand="detail?.project?.collectionAmount" />（{{ digitUppercase(detail?.project?.collectionAmount || 0) }}）</div>
+            <div>
+              <span v-thousand="detail?.project?.collectionAmount" />（{{ digitUppercase(detail?.project?.collectionAmount || 0) }}）
+            </div>
           </el-form-item>
           <el-form-item label="欠款额" prop="debitAmount">
             <div><span v-thousand="debitAmount" />（{{ digitUppercase(debitAmount || 0) }}）</div>
@@ -148,7 +150,8 @@ import ExportButton from '@comp-common/export-button/index.vue'
 const emit = defineEmits(['success'])
 
 const props = defineProps({
-  status: { // 签证单状态
+  status: {
+    // 签证单状态
     type: Number,
     default: undefined
   }
@@ -198,7 +201,7 @@ async function handleSubmit(status) {
       }
       params.status = reviewStatusEnum.PASS.V
       params.attachmentRemark = detail.attachmentRemark
-      params.attachmentIds = detail.files.map(f => f.id)
+      params.attachmentIds = detail.files.map((f) => f.id)
     } else {
       params.status = reviewStatusEnum.REFUSE.V
     }
@@ -215,7 +218,7 @@ async function handleSubmit(status) {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .form {
-  padding:  0px 10px 10px;
+  padding: 0px 10px 10px;
 }
 .demo-form .rule-row {
   display: flex;

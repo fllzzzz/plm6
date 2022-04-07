@@ -36,7 +36,7 @@ export function getDetails(params) {
 }
 
 /**
- * 入库明细
+ * 入库明细excel导出
  */
 export function exportDetailsExcel(params) {
   return request({

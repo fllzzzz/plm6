@@ -16,12 +16,12 @@
         v-model="query.monomerId"
         :project-id="props.projectId"
         class="filter-item"
-        :show-tips="areaInfo.length<=0"
+        :show-tips="areaInfo.length <= 0"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
         class="filter-item"
-        :style="areaInfo.length>0?'width:calc(100% - 230px)':'width:calc(100% - 380px)'"
+        :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
@@ -76,7 +76,7 @@
           size="small"
           class="filter-item"
         />
-        <template v-if="query.createType===enclosureCreateTypeEnum.UPLOAD.V">
+        <template v-if="query.createType === enclosureCreateTypeEnum.UPLOAD.V">
           <upload-btn
             v-if="currentArea && currentArea.id && checkPermission(crud.permission.import)"
             :data="addParam"
@@ -103,51 +103,67 @@
             v-permission="crud.permission.templateDownload"
             :fn="downloadEnclosureTemplate"
             :params="{ category: crud.query.category }"
-            show-btn-text
-            btn-text="模板下载"
             class="filter-item"
-          />
-       </template>
+          >
+            模板下载
+          </export-button>
+        </template>
         <template v-else>
-          <common-button type="success" size="mini" @click="crud.toAdd" class="filter-item" v-if="currentArea && currentArea.id && checkPermission(crud.permission.save)">添加</common-button>
+          <common-button
+            type="success"
+            size="mini"
+            @click="crud.toAdd"
+            class="filter-item"
+            v-if="currentArea && currentArea.id && checkPermission(crud.permission.save)"
+            >添加</common-button
+          >
         </template>
         <export-button
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadEnclosureData"
           :params="exportParam"
-          show-btn-text
-          btn-text="清单(按条件查询)"
-          :disabled="crud.data.length===0"
+          :disabled="crud.data.length === 0"
           class="filter-item"
-        />
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【围护清单】么?`" @confirm="deleteEnclosure" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
+        >
+          清单(按条件查询)
+        </export-button>
+        <el-popconfirm
+          :title="`确认清空【${currentArea.name}】下的【围护清单】么?`"
+          @confirm="deleteEnclosure"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
+        >
           <template #reference>
             <common-button type="danger" size="mini" class="filter-item">一键清空(按区域)</common-button>
           </template>
         </el-popconfirm>
-        <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength" style="margin-left:10px !important;">
-          <span>{{`总长度:${sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M)}m`}}</span>
-          <span>{{` | 总数量:${sumData.totalQuantity}张`}}</span>
+        <el-tag type="success" effect="plain" class="filter-item" v-if="sumData.totalLength" style="margin-left: 10px !important">
+          <span>{{ `总长度:${sumData.totalLength.toFixed(DP.MES_ENCLOSURE_L__M)}m` }}</span>
+          <span>{{ ` | 总数量:${sumData.totalQuantity}张` }}</span>
         </el-tag>
       </template>
       <template #viewLeft>
-        <common-button type="primary" size="mini" @click="techVisible=true" v-if="query.category!==TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.techDetail)">技术交底</common-button>
+        <common-button
+          type="primary"
+          size="mini"
+          @click="techVisible = true"
+          v-if="query.category !== TechnologyTypeAllEnum.BENDING.V && checkPermission(crud.permission.techDetail)"
+          >技术交底</common-button
+        >
       </template>
     </crudOperation>
     <common-drawer
       append-to-body
-      :before-close="()=>{techVisible=false}"
+      :before-close="
+        () => {
+          techVisible = false
+        }
+      "
       :visible="techVisible"
-      :title="`技术交底(${query.category?TechnologyTypeAllEnum.VL[query.category]:''})`"
+      :title="`技术交底(${query.category ? TechnologyTypeAllEnum.VL[query.category] : ''})`"
       size="80%"
     >
       <template #content>
-       <component
-        :is="currentView"
-        :table-data="tableData[query.category]"
-        :is-show="true"
-        style="margin-top:20px;"
-      />
+        <component :is="currentView" :table-data="tableData[query.category]" :is-show="true" style="margin-top: 20px" />
       </template>
     </common-drawer>
   </div>
@@ -237,11 +253,16 @@ const techOptions = [
 ]
 const currentView = computed(() => {
   switch (crud.query.category) {
-    case TechnologyTypeAllEnum.PROFILED_PLATE.V : return pressedColorTable
-    case TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V: return trussSupportTable
-    case TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V : return pressedSupportTable
-    case TechnologyTypeAllEnum.SANDWICH_BOARD.V: return sandwichTable
-    default: return ''
+    case TechnologyTypeAllEnum.PROFILED_PLATE.V:
+      return pressedColorTable
+    case TechnologyTypeAllEnum.TRUSS_FLOOR_PLATE.V:
+      return trussSupportTable
+    case TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V:
+      return pressedSupportTable
+    case TechnologyTypeAllEnum.SANDWICH_BOARD.V:
+      return sandwichTable
+    default:
+      return ''
   }
 })
 watch(
@@ -249,13 +270,13 @@ watch(
   (val) => {
     typeOption.value = []
     if (isNotBlank(val)) {
-      techOptions.forEach(v => {
+      techOptions.forEach((v) => {
         if (val.businessType === businessTypeEnum.MACHINING.V) {
           if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
             typeOption.value.push(v)
           }
         } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
-          val.projectContentList.forEach(k => {
+          val.projectContentList.forEach((k) => {
             if (k.childrenList && k.childrenList.length > 0 && k.childrenList.findIndex((value) => Number(value.no) === v.no) > -1) {
               typeOption.value.push(v)
             }
@@ -297,15 +318,17 @@ function categoryChange() {
 
 function choseInfo() {
   currentArea.value = {}
-  areaInfo.value = crud.query.category && AllAreaInfo.value.length > 0 ? AllAreaInfo.value.filter(v => v.productType === crud.query.category) : AllAreaInfo.value
+  areaInfo.value =
+    crud.query.category && AllAreaInfo.value.length > 0
+      ? AllAreaInfo.value.filter((v) => v.productType === crud.query.category)
+      : AllAreaInfo.value
   if (areaInfo.value.length > 0) {
     defaultTab.value = {
       id: areaInfo.value[0].id + '',
       name: areaInfo.value[0].name
     }
   } else {
-    defaultTab.value = {
-    }
+    defaultTab.value = {}
   }
   currentArea.value = { ...defaultTab.value }
 }

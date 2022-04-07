@@ -117,20 +117,24 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <!-- 打印 -->
+      <template #optLeft>
+        <export-button v-permission="permission.get" :params="query" :fn="exportDetailsExcel" return-status>导出入库明细（根据查询条件）</export-button>
+      </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { exportDetailsExcel } from '@/api/wms/report/raw-material/inbound'
+import { ref, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { materialRejectStatusEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
@@ -155,6 +159,7 @@ const defaultQuery = {
   operatorName: undefined // 申请人/编辑人/审核人
 }
 
+const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
 
 // 基础类型发生变化

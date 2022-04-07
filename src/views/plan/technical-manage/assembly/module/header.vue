@@ -7,41 +7,20 @@
         :project-id="props.projectId"
         class="filter-item"
         :productType="TechnologyTypeAllEnum.STRUCTURE.V"
-        :show-tips="areaInfo.length<=0"
+        :show-tips="areaInfo.length <= 0"
         @getAreaInfo="getAreaInfo"
       />
       <area-tabs
         class="filter-item"
-        :style="areaInfo.length>0?'width:calc(100% - 230px)':'width:calc(100% - 380px)'"
+        :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
         @tab-click="tabClick"
       />
-      <el-input
-        v-model="query.serialNumber"
-        size="small"
-        placeholder="输入编号搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-      />
-      <el-input
-        v-model="query.specification"
-        size="small"
-        placeholder="输入规格搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-      />
-      <el-input
-        v-model="query.material"
-        size="small"
-        placeholder="输入材质搜索"
-        style="width: 170px"
-        class="filter-item"
-        clearable
-      />
+      <el-input v-model="query.serialNumber" size="small" placeholder="输入编号搜索" style="width: 170px" class="filter-item" clearable />
+      <el-input v-model="query.specification" size="small" placeholder="输入规格搜索" style="width: 170px" class="filter-item" clearable />
+      <el-input v-model="query.material" size="small" placeholder="输入材质搜索" style="width: 170px" class="filter-item" clearable />
       <rrOperation />
     </div>
     <crudOperation>
@@ -74,27 +53,41 @@
           v-if="currentArea && currentArea.id"
           :fn="downloadAssemble"
           :params="exportParam"
-          show-btn-text
-          btn-text="下载组立清单"
           class="filter-item"
-          :disabled="crud.data.length===0 || deleteLoading"
+          :disabled="crud.data.length === 0 || deleteLoading"
           v-permission="crud.permission.download"
-        />
-        <export-button :fn="downloadAssembleTemplate" show-btn-text btn-text="组立清单模板" class="filter-item" :disabled="deleteLoading" v-permission="crud.permission.templateDownLoad"/>
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【组立清单】么?`" @confirm="deleteAssemle" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
+        >
+          下载组立清单
+        </export-button>
+        <export-button
+          :fn="downloadAssembleTemplate"
+          class="filter-item"
+          :disabled="deleteLoading"
+          v-permission="crud.permission.templateDownLoad"
+        >
+          组立清单模板
+        </export-button>
+        <el-popconfirm
+          :title="`确认清空【${currentArea.name}】下的【组立清单】么?`"
+          @confirm="deleteAssemle"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
+        >
           <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
+              一键清空(按区域)
+            </common-button>
           </template>
         </el-popconfirm>
       </template>
       <template #viewLeft>
-        <el-tooltip
-          effect="light"
-          placement="top"
-        >
-          <template #content> <div>{{errorList.join(',')}}</div> </template>
+        <el-tooltip effect="light" placement="top">
+          <template #content>
+            <div>{{ errorList.join(',') }}</div>
+          </template>
           <div class="filter-item">
-            <el-tag v-if="errorList.length>0" type="danger" class="filter-item" effect="plain">本区域存在{{ errorList.length }}条未绑定构件,鼠标悬停查看</el-tag>
+            <el-tag v-if="errorList.length > 0" type="danger" class="filter-item" effect="plain">
+              本区域存在{{ errorList.length }}条未绑定构件,鼠标悬停查看
+            </el-tag>
           </div>
         </el-tooltip>
       </template>
