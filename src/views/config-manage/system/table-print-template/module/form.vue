@@ -638,7 +638,7 @@ type="warning"
                     >
                       <vertical-label name="列" />
                     </el-tooltip>
-                    <common-table ref="tableFieldsTableRef" :data="tableCfg.fields" row-key="key" border style="width: 100%">
+                    <common-table ref="tableFieldsTableRef" return-source-data :data="tableCfg.fields" row-key="key" border style="width: 100%">
                       <el-table-column label="标题" min-width="100">
                         <template v-slot="scope">
                           <el-tooltip :content="scope.row.title" placement="top-start">
@@ -723,7 +723,7 @@ type="warning"
                               />
                               <span v-if="numberTypes.includes(scope.row.type)" class="delimiter">
                                 <span v-if="toThousandfoldTypes.includes(scope.row.type)">
-                                  <el-checkbox v-model="scope.row.format.toThousandFilter"> 分位符 </el-checkbox>
+                                  <el-checkbox v-model="scope.row.format.toThousand"> 分位符 </el-checkbox>
                                 </span>
                                 <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                   <common-select
@@ -855,7 +855,7 @@ style="margin-bottom: 15px"
                     >
                       <vertical-label name="字段" />
                     </el-tooltip>
-                    <common-table ref="headerFieldsTableRef" :data="headerCfg.fields" row-key="key" border style="width: 100%">
+                    <common-table ref="headerFieldsTableRef" return-source-data :data="headerCfg.fields" row-key="key" border style="width: 100%">
                       <el-table-column label="标题" min-width="100">
                         <template v-slot="scope">
                           <el-tooltip :content="scope.row.title" placement="top-start">
@@ -929,7 +929,7 @@ style="margin-bottom: 15px"
                             />
                             <span v-if="numberTypes.includes(scope.row.type)" class="delimiter">
                               <span v-if="toThousandfoldTypes.includes(scope.row.type)">
-                                <el-checkbox v-model="scope.row.format.toThousandFilter"> 分位符 </el-checkbox>
+                                <el-checkbox v-model="scope.row.format.toThousand"> 分位符 </el-checkbox>
                               </span>
                               <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                 <common-select
@@ -1084,7 +1084,7 @@ style="margin-bottom: 15px"
                     >
                       <vertical-label name="字段" />
                     </el-tooltip>
-                    <common-table ref="footerFieldsTableRef" :data="footerCfg.fields" row-key="key" border style="width: 100%">
+                    <common-table ref="footerFieldsTableRef" return-source-data :data="footerCfg.fields" row-key="key" border style="width: 100%">
                       <el-table-column label="标题" min-width="100">
                         <template v-slot="scope">
                           <el-tooltip :content="scope.row.title" placement="top-start">
@@ -1158,7 +1158,7 @@ style="margin-bottom: 15px"
                             />
                             <span v-if="numberTypes.includes(scope.row.type)" class="delimiter">
                               <span v-if="toThousandfoldTypes.includes(scope.row.type)">
-                                <el-checkbox v-model="scope.row.format.toThousandFilter"> 分位符 </el-checkbox>
+                                <el-checkbox v-model="scope.row.format.toThousand"> 分位符 </el-checkbox>
                               </span>
                               <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                 <common-select
@@ -1537,6 +1537,30 @@ const tableStyle = computed(() => {
   return _style
 })
 
+const footerStyle = computed(() => {
+  const _style = {}
+  if (footerCfg.value) {
+    const _config = config
+    const itemConfig = footerCfg.value
+    if (isNotBlank(itemConfig.width)) {
+      _style['width'] = `${itemConfig.width}${_config.unit}`
+    }
+    if (isNotBlank(itemConfig.height)) {
+      _style['height'] = `${itemConfig.height}${_config.unit}`
+    }
+    if (isNotBlank(itemConfig.size)) {
+      _style['font-size'] = `${itemConfig.size}${_config.fontUnit}`
+    }
+    if (isNotBlank(itemConfig.align)) {
+      _style['justify-content'] = setting.flexAlign(itemConfig.align)
+    }
+    if (isNotBlank(itemConfig.verticleAlign)) {
+      _style['align-items'] = setting.verticleAlign(itemConfig.verticleAlign)
+    }
+  }
+  return _style
+})
+
 const filterExampleTableData = computed(() => {
   let _tableData = []
   if (isNotBlank(tableData.value)) {
@@ -1576,7 +1600,7 @@ watch(
 )
 
 watch(
-  [() => footerCfg.value.bold, () => footerCfg.value.fields, () => footerCfg.value.tip],
+  () => footerCfg.value,
   () => {
     handleFooterHtmlChange()
   },
@@ -1741,8 +1765,8 @@ function rowDrop() {
     { el: footerFieldsTableRef.value, table: footerCfg.value?.fields }
   ]
   for (const dom of doms) {
-    if (dom.el) {
-      const tbody = dom.el.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+    if (dom.el.$refs['tableRef']) {
+      const tbody = dom.el.$refs['tableRef'].$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       Sortable.create(tbody, {
         onEnd: ({ newIndex, oldIndex }) => {
           const currRow = dom.table.splice(oldIndex, 1)[0]
