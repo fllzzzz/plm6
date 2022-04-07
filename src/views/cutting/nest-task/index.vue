@@ -14,22 +14,51 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+
       <el-table-column
         v-if="columns.visible('projectName')"
         key="projectName"
         prop="projectName"
         :show-overflow-tooltip="true"
-        label="项目名称"
+        label="项目"
         min-width="100"
+        header-align="center"
       >
         <template v-slot="scope">
           <span>{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        v-if="columns.visible('monomerNum')"
+        key="monomerNum"
+        prop="monomerNum"
+        :show-overflow-tooltip="true"
+        label="单体"
+        min-width="60"
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.monomerNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('areaNum')"
+        key="areaNum"
+        prop="areaNum"
+        :show-overflow-tooltip="true"
+        label="单元"
+        min-width="60"
+        align="center"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.areaNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="columns.visible('sum')"
         key="sum"
         prop="sum"
+        align="center"
         :show-overflow-tooltip="true"
         label="零件数量（件）"
         min-width="60"
@@ -42,6 +71,7 @@
         v-if="columns.visible('reduce')"
         key="reduce"
         prop="reduce"
+        align="center"
         :show-overflow-tooltip="true"
         label="零件重量（kg）"
         min-width="60"
@@ -71,23 +101,24 @@
         align="center"
         prop="importTime"
         :show-overflow-tooltip="true"
-        label="导入时间"
+        label="创建时间"
         min-width="60"
       >
         <template v-slot="scope">
-          <span> {{ parseTime(scope.row.importTime) }}</span>
+          <span> {{ scope.row.importTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
+      <!-- <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px" align="center">
         <template v-slot="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" align="center">
         <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
+      
       <el-table-column v-if="checkPermission(permission.detail)" :show-overflow-tooltip="true" label="操作" align="center">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-view" @click="viewDetails(scope.row)">查看</common-button>
@@ -126,7 +157,7 @@ const optShow = {
 const { crud, columns } = useCRUD(
   {
     title: '套料任务',
-    sort: [],
+    sort: ['createTime.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
