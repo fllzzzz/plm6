@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 获取切割设备列表
 export function get(params) {
   return request({
     url: '/api/cut/getMachine',
@@ -8,6 +9,7 @@ export function get(params) {
   })
 }
 
+// 增加切割设备
 export function add(data) {
   return request({
     url: '/api/cut/addMachine',
@@ -16,6 +18,7 @@ export function add(data) {
   })
 }
 
+// 删除切割设备
 export function del(ids) {
   return request({
     url: `api/cut/deleteMachine/${ids}`,
@@ -33,6 +36,7 @@ export function assign(params, data) {
   })
 }
 
+// 下发任务
 export function sentTask(data) {
   return request({
     url: `/api/cut/sentTask`,

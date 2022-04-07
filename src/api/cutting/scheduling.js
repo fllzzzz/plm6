@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-// import { continueTask } from './project-data'
 
 // 设备查排产
 export function get(params) {
@@ -10,6 +9,7 @@ export function get(params) {
   })
 }
 
+// 项目查排产
 export function ads(params) {
   return request({
     url: `/api/cut/getNestingList`,
@@ -18,7 +18,7 @@ export function ads(params) {
   })
 }
 
-// 暂停
+// 暂停任务
 export function suspendTask(data) {
   return request({
     url: `/api/cut/suspendTask`,
