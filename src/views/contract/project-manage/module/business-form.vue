@@ -77,7 +77,7 @@
             />
           </el-form-item>
           <el-form-item label="签约地址" prop="signingAddress">
-            <el-input v-model="form.signingAddress" class="input-underline" placeholder="签约地址" style="width: 400px" maxlength="200"/>
+            <el-input v-model.trim="form.signingAddress" class="input-underline" placeholder="签约地址" style="width: 400px" maxlength="200"/>
           </el-form-item>
         </div>
         <div class="form-row">
@@ -124,7 +124,7 @@
         <div class="form-row">
           <el-form-item label="支付方式描述" prop="payTypeDesc">
             <el-input
-              v-model="form.payTypeDesc"
+              v-model.trim="form.payTypeDesc"
               type="textarea"
               :autosize="{ minRows: 4, maxRows: 4 }"
               class="input-underline"

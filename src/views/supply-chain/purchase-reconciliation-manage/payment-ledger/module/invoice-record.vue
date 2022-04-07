@@ -1,7 +1,7 @@
 <template>
   <common-drawer
     ref="dialogRef"
-    title="开票记录"
+    title="收票记录"
     :close-on-click-modal="false"
     v-model="visible"
     direction="rtl"
@@ -23,19 +23,19 @@
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="invoiceDate" label="开票日期" align="center" width="100" show-overflow-tooltip />
-        <el-table-column prop="invoiceAmount" label="开票额" align="center" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="invoiceType" label="开票类型" align="center" width="110" show-overflow-tooltip />
+        <el-table-column prop="receiveInvoiceDate" label="收票日期" align="center" width="100" show-overflow-tooltip />
+        <el-table-column prop="invoiceAmount" label="发票额" align="center" min-width="120" show-overflow-tooltip />
+        <el-table-column prop="invoiceType" label="发票类型" align="center" width="110" show-overflow-tooltip />
         <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
           <template #default="{ row }">
             <span>{{ row.taxRate }}%</span>
           </template>
         </el-table-column>
-        <el-table-column prop="invoiceUnit" label="购方单位" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="collectionUnit" label="销售单位" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="invoiceNo" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="branchCompanyName" label="购方单位" align="center" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="supplierName" label="销售单位" align="center" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="invoiceSerialNumber" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="writtenByName" label="办理人" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="auditorName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="auditUserName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -103,7 +103,7 @@ const dialogRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['invoiceDate', ['parse-time', '{y}-{m}-{d}']],
+  ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
   ['invoiceAmount', 'to-thousand'],
   ['taxRate', ['to-fixed', 2]]
 ])
@@ -121,7 +121,7 @@ const { maxHeight } = useMaxHeight(
   dialogRef
 )
 
-// 获取开票记录
+// 获取收票记录
 async function fetchList() {
   let _list = []
   tableLoading.value = true
@@ -130,7 +130,7 @@ async function fetchList() {
     _list = content
     setTotalPage(totalElements)
   } catch (error) {
-    console.log('获取开票记录失败', error)
+    console.log('获取收票记录失败', error)
   } finally {
     list.value = _list
     tableLoading.value = false

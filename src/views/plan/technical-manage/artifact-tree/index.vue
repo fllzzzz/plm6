@@ -270,7 +270,6 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
       <numForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
       <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
@@ -297,7 +296,6 @@ import useDrawing from '@compos/use-drawing'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'

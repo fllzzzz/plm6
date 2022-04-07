@@ -103,7 +103,7 @@
         <div class="form-title" style="margin-bottom:10px;">技术要求描述</div>
         <el-form-item prop="techDesc">
           <el-input
-            v-model="form.techDesc"
+            v-model.trim="form.techDesc"
             type="textarea"
             maxlength="200"
             show-word-limit

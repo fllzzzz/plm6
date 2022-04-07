@@ -243,11 +243,8 @@ constantize(supplierPayModeEnum)
 
 // TODO: 付款属性1
 const supplierPayTypeEnum = {
-  MATERIAL: { L: '原材料采购', K: 'MATERIAL', V: 1 << 0 },
-  PRODUCT: { L: '制成品采购', K: 'PRODUCT', V: 1 << 1 },
-  MATERIAL_TRANSPORT: { L: '原材料运输', K: 'MATERIAL_TRANSPORT', V: 1 << 2 },
-  PRODUCT_TRANSPORT: { L: '制成品运输', K: 'PRODUCT_TRANSPORT', V: 1 << 3 },
-  SUBCONTRACT: { L: '专业分包', K: 'SUBCONTRACT', V: 1 << 4 }
+  PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 1 << 0 },
+  TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1 << 1 }
 }
 constantize(supplierPayTypeEnum)
 
@@ -282,8 +279,8 @@ constantize(purchaseOrderStatusEnum)
 
 // 物流搜索类型
 const logisticsSearchTypeEnum = {
-  PRODUCT: { L: '制成品物流', K: 'PRODUCT', V: 1 << 0 },
-  MATERIAL: { L: '原材料物流', K: 'MATERIAL', V: 1 << 1 },
+  PRODUCT: { L: '制成品运输', K: 'PRODUCT', V: 1 << 0 },
+  MATERIAL: { L: '原材料运输', K: 'MATERIAL', V: 1 << 1 },
   COMPANY: { L: '物流公司', K: 'COMPANY', V: 1 << 2 }
 }
 constantize(logisticsSearchTypeEnum)

@@ -14,7 +14,7 @@
       />
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-input
-        v-model="query.leader"
+        v-model.trim="query.leader"
         placeholder="项目搜索"
         style="width:200px"
         class="filter-item"

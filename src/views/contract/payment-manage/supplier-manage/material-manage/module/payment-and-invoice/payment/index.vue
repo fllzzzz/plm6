@@ -94,11 +94,10 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import useDict from '@compos/store/use-dict'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { contractSupplierMaterialPM } from '@/page-permission/contract'
 
 const permission = contractSupplierMaterialPM.payment
@@ -158,7 +157,7 @@ watch(
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.orderId = props.currentRow.id
-  crud.query.propertyType = props.propertyType
+  crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
   crud.query.auditStatus = auditTypeEnum.PASS.V
 }
 

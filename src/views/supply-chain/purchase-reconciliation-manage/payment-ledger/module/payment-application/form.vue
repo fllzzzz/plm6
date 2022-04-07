@@ -78,6 +78,9 @@
           <span>{{detailInfo.supplierBankAccount}}</span>
         </el-form-item>
         <el-form-item label="附件">
+          <template v-if="form.id && form.attachments.length>0">
+            <div v-for="item in form.attachments" :key="item.id">{{item.name}}</div>
+          </template>
           <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
       </el-form>

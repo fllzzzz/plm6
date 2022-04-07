@@ -69,7 +69,7 @@
       />
       <div>
         <el-input
-          v-model="query.noOrProjectName"
+          v-model.trim="query.noOrProjectName"
           size="small"
           placeholder="输入合同编号或项目简称"
           style="width: 200px;"
@@ -78,7 +78,7 @@
           @blur="crud.toQuery"
         />
         <el-input
-          v-model="query.signerName"
+          v-model.trim="query.signerName"
           size="small"
           placeholder="输入签约人"
           style="width: 120px;"

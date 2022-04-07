@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: `contract/receive-invoice/${params.orderId}/${params.type}`,
+    url: `contract/receive-invoice/${params.orderId}`,
     method: 'get'
   })
 }

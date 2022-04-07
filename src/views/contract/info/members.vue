@@ -4,7 +4,7 @@
       <div class="filter-container">
         <div class="filter-left-box">
           <el-input
-            v-model="filterText"
+            v-model.trim="filterText"
             class="filter-item"
             placeholder="输入关键字进行过滤"
             style="width:270px"

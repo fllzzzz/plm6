@@ -66,16 +66,13 @@ export const supplierLogisticsLogPM = {
 // 物流对账管理/付款明细
 export const supplierLogisticsPaymentPM = {
   get: ['supplier_logistics_payment:get'], // 付款明细列表
-  detail: ['supplier_logistics_payment:detail'], // 付款/收票记录
-  print: ['supplier_logistics_payment:print'], // 打印下载付款台账
+  add: ['supplier_logistics_payment:add'], // 新增申请
+  detail: ['supplier_logistics_payment:detail'], // 收票记录
+  print: ['supplier_logistics_payment:print'], // 打印下载
   application: {
-    get: ['supplier_logistics_payment_application:get'], // 付款申请列表
-    add: ['supplier_logistics_payment_application:add'], // 添加付款申请
+    get: ['supplier_logistics_payment_application:get'], // 申请记录列表
     edit: ['supplier_logistics_payment_application:edit'], // 编辑付款申请
     del: ['supplier_logistics_payment_application:del'] // 删除付款申请
-  },
-  paymentLog: {
-    get: ['supplier_logistics_paymentLog:get'] // 付款记录
   }
 }
 

@@ -22,7 +22,7 @@
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
       <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
         <template v-slot="scope">
-          <span>{{ scope.row.serialNumber }}</span>
+          <span>{{ scope.row.serialNumber || currentRow.serialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column key="applyUserName" prop="applyUserName" label="申请人" align="center" width="100px">
@@ -98,7 +98,7 @@ import useDict from '@compos/store/use-dict'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
 import detail from './detail'
 // import { ElMessage } from 'element-plus'
@@ -192,7 +192,7 @@ function openDetail(row, type) {
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.orderId = props.currentRow.id
-  crud.query.propertyType = props.propertyType
+  crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
 }
 
 function handleSuccess() {

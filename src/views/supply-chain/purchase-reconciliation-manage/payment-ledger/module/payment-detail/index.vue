@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column key="paymentMethod" prop="paymentMethod" label="*付款方式" align="center" width="110">
         <template v-slot="scope">
-          <div>{{ scope.row.paymentMethod? paymentFineModeEnum.VL[scope.row.paymentMethod]: '' }}</div>
+          <div>{{ scope.row.paymentMethod? paymentFineModeEnum.VL[scope.row.paymentMethod]: '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="paymentBankAccount" prop="paymentBankAccount" :show-overflow-tooltip="true" label="*付款银行" align="center" min-width="120">
@@ -75,12 +75,12 @@
 
 <script setup>
 import { paymentRecord as get } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
-import { ref, defineProps, watch, inject, nextTick } from 'vue'
+import { ref, watch, inject, nextTick } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import useDict from '@compos/store/use-dict'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
@@ -96,16 +96,16 @@ const optShow = {
   download: false
 }
 
-const props = defineProps({
-  visibleValue: {
-    type: Boolean,
-    default: false
-  },
-  detailInfo: {
-    type: Object,
-    default: () => {}
-  }
-})
+// const props = defineProps({
+//   visibleValue: {
+//     type: Boolean,
+//     default: false
+//   },
+//   detailInfo: {
+//     type: Object,
+//     default: () => {}
+//   }
+// })
 
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
@@ -134,7 +134,7 @@ watch(
   (id) => {
     nextTick(() => {
       crud.query.orderId = id
-      crud.query.propertyType = props.detailInfo.propertyType
+      crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
       crud.refresh()
     })
   },

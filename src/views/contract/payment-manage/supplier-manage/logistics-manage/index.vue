@@ -8,7 +8,7 @@
     <common-table
     ref="tableRef"
     v-loading="crud.loading"
-    :data="[{id:1}]"
+    :data="crud.data"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     return-source-data
@@ -19,6 +19,11 @@
     <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流单位" align="center">
       <template v-slot="scope">
         <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ scope.row.supplierName }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="签约主体" align="center">
+      <template v-slot="scope">
+        <span>{{ scope.row.branchCompanyName }}</span>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" label="运输额" align="center">
@@ -43,8 +48,8 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
       <template v-slot="scope">
-        <div @click="openTab(scope.row,'invoice')">
-          <span style="cursor:pointer;margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
+        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
+          <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
           <template v-if="checkPermission(crud.permission.get) && scope.row.unCheckInvoiceCount>0">
             <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
@@ -58,18 +63,15 @@
         <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.freight)*100).toFixed(2)+'%': 0  }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" prop="purchaseStatus" label="状态" align="center" width="80px">
-      <template v-slot="scope">
-        <el-tag :type="scope.row.purchaseStatus===purchaseOrderStatusEnum.COMPLETE.V?'success':'warning'" effect="plain">{{ isNotBlank(scope.row.purchaseStatus)? purchaseOrderStatusEnum.VL[scope.row.purchaseStatus]:'-' }}</el-tag>
-      </template>
-    </el-table-column>
   </common-table>
+  <!--分页组件-->
+  <pagination />
   <!-- 物流记录 -->
   <recordDetail v-model="stockVisible" :detailInfo="currentRow" :type="logisticsSearchTypeEnum.COMPANY.V"/>
   <!-- 收付款 -->
-  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
-  <!--分页组件-->
-  <pagination />
+  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery"/>
+  <!-- 审核 -->
+  <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="supplierPayTypeEnum.TRANSPORT.V" @success="crud.toQuery"/>
   </div>
 </template>
 
@@ -82,11 +84,12 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { logisticsSearchTypeEnum, purchaseOrderStatusEnum } from '@enum-ms/contract'
+import { logisticsSearchTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import paymentAndInvoice from './module/payment-and-invoice'
 import { toThousand } from '@data-type/number'
 import { isNotBlank } from '@data-type/index'
 import recordDetail from '@/views/supply-chain/logistics-payment-manage/logistics-record/module/record-detail'
+import paymentAudit from './module/payment-audit/index'
 
 const optShow = {
   add: false,
@@ -98,6 +101,7 @@ const optShow = {
 const tableRef = ref()
 const stockVisible = ref(false)
 const tabVisible = ref(false)
+const auditVisible = ref(false)
 const currentRow = ref({})
 const activeName = ref('payment')
 const { crud, columns } = useCRUD(
@@ -113,7 +117,7 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.logisticsManage',
+  wrapperBox: '.logisticsAuditManage',
   paginate: true,
   extraHeight: 40
 })
@@ -130,6 +134,14 @@ function openTab(row, name) {
   activeName.value = name
   currentRow.value = row
   tabVisible.value = true
+}
+
+function openPaymentAudit(row) {
+  if (!checkPermission(permission.payment.get)) {
+    return
+  }
+  currentRow.value = row
+  auditVisible.value = true
 }
 
 </script>

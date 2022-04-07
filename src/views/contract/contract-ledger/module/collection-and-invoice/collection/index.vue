@@ -124,7 +124,7 @@
         <template v-slot="scope">
           <el-input
             v-if="scope.row.isModify"
-            v-model="scope.row.paymentUnit"
+            v-model.trim="scope.row.paymentUnit"
             placeholder="付款单位"
             style="width:100%;"
             maxlength="50"

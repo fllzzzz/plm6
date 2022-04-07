@@ -7,7 +7,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data-format="dataFormat"
-      :data="[{supplierId:1}]"
+      :data="crud.data"
       style="width: 100%"
       :max-height="maxHeight"
     >
@@ -17,22 +17,15 @@
           <span>{{ scope.row.supplierName }}</span>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="签约主体" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.branchCompanyName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="物流费" align="right" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip>
-        <template v-if="checkPermission(permission.detail)" #header>
-          <el-tooltip
-            effect="light"
-            placement="top"
-            content="点击行可以查看详情"
-          >
-            <div style="display: inline-block">
-              <span>付款额 </span>
-              <i class="el-icon-info" />
-            </div>
-          </el-tooltip>
-        </template>
         <template #default="{ row }">
-          <el-tag effect="plain" type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</el-tag>
+          <el-tag effect="plain" type="warning">{{ row.paymentAmount }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('paymentRate')" key="paymentRate" prop="paymentRate" label="付款比例" align="center" width="90">
@@ -40,7 +33,7 @@
           <span>{{ row.paymentRate }}%</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('invoiceAmount')" prop="invoiceAmount" key="invoiceAmount" label="开票额" align="right" min-width="120" show-overflow-tooltip>
+      <el-table-column v-if="columns.visible('invoiceAmount')" prop="invoiceAmount" key="invoiceAmount" label="收票额" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
@@ -48,7 +41,7 @@
             content="点击行可以查看详情"
           >
             <div style="display: inline-block">
-              <span>开票额 </span>
+              <span>收票额 </span>
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
@@ -57,7 +50,7 @@
           <el-tag effect="plain" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="center" width="90">
+      <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" width="90">
         <template #default="{ row }">
           <span>{{ row.invoiceRate }}%</span>
         </template>
@@ -69,14 +62,16 @@
         align="center"
       >
         <template #default="{ row }">
+          <common-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd(row)" v-if="checkPermission(permission.add)"/>
           <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.application.get)"/>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
     <pagination />
+    <mForm :detail-info="detailInfo" />
     <!-- 记录 -->
-    <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" />
+    <invoiceRecord v-model="recordVisible" :permission="permission" :detail-info="detailInfo"/>
     <!-- 付款申请记录 -->
     <common-drawer
       ref="drawerRef"
@@ -96,7 +91,8 @@
 
 <script setup>
 import { logisticsPaymentList as get } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
-import { ref, computed, nextTick } from 'vue'
+import { add } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
+import { ref, nextTick } from 'vue'
 import { supplierLogisticsPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -105,8 +101,8 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import invoiceRecord from './module/invoice-record'
-import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application'
+import mForm from './module/form'
 
 const optShow = {
   add: false,
@@ -114,13 +110,6 @@ const optShow = {
   del: false,
   download: false
 }
-
-const currentView = computed(() => {
-  if (recordType.value === 'invoice') {
-    return invoiceRecord
-  }
-  return paymentRecord
-})
 
 const tableRef = ref()
 const headerRef = ref()
@@ -137,7 +126,7 @@ const { crud, columns, CRUD } = useCRUD(
     title: '物流付款台账',
     sort: [],
     permission: { ...permission },
-    crudApi: { get },
+    crudApi: { get, add },
     invisibleColumns: [],
     optShow: { ...optShow }
   },
@@ -168,6 +157,11 @@ function openRecord(row, type) {
   nextTick(() => {
     recordVisible.value = true
   })
+}
+
+function handleAdd(row) {
+  detailInfo.value = row.sourceRow
+  crud.toAdd()
 }
 
 function openApplication(row) {

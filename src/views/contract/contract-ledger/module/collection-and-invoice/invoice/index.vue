@@ -115,7 +115,7 @@
         <template v-slot="scope">
           <el-input
             v-if="scope.row.isModify"
-            v-model="scope.row.collectionUnit"
+            v-model.trim="scope.row.collectionUnit"
             placeholder="收票单位"
             style="width:100%;"
             maxlength="50"
@@ -125,7 +125,7 @@
       </el-table-column>
       <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="150">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
           <span v-else>{{ scope.row.invoiceNo  }}</span>
         </template>
       </el-table-column>

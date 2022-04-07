@@ -2,21 +2,27 @@
   <common-drawer
     append-to-body
     :close-on-click-modal="false"
-    :before-close="crud.cancelCU"
-    :visible="crud.status.cu > 0"
-    :title="crud.status.title"
+    :before-close="handleClose"
+    v-model="visible"
+    title="审核详情"
     :wrapper-closable="false"
     size="50%"
   >
+    <template #titleAfter>
+      <el-tag v-if="detailInfo.auditStatus" size="medium" :type="detailInfo.auditStatus===auditTypeEnum.REJECT.V?'info':(detailInfo.auditStatus===auditTypeEnum.PASS.V?'success':'warning')">
+        {{ detailInfo.auditStatus===auditTypeEnum.REJECT.V?'已驳回':(detailInfo.auditStatus===auditTypeEnum.PASS.V?'已通过':'审核中') }}
+      </el-tag>
+    </template>
     <template #titleRight>
-      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
+      <common-button v-if="showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
+      <common-button v-if="showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="40px" label-position="left">
+      <el-form ref="formRef" size="small" label-width="40px" label-position="left">
         <common-table
           ref="detailRef"
           border
-          :data="form.paymentDetails"
+          :data="detailInfo.paymentDetails"
           :max-height="maxHeight"
           style="width: 100%;margin-bottom:10px;"
           class="table-form"
@@ -48,21 +54,16 @@
           </el-table-column>
            <el-table-column key="applyAmount" prop="applyAmount" label="本次支付金额(元)" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <el-input-number
-                v-model.number="scope.row.applyAmount"
-                v-show-thousand
-                :min="0"
-                :max="scope.row.freight-scope.row.paymentAmount"
-                :step="100"
-                :precision="DP.YUAN"
-                placeholder="本次支付(元)"
-                controls-position="right"
-              />
+              <div>{{ toThousand(scope.row.applyAmount) }}</div>
             </template>
           </el-table-column>
         </common-table>
         <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
+          <template v-if="detailInfo.attachments && detailInfo.attachments.length>0">
+            <div v-for="item in detailInfo.attachments" :key="item.id">{{item.name}}
+              <export-button :params="{id: item.id}"/>
+            </div>
+          </template>
         </el-form-item>
       </el-form>
     </template>
@@ -70,33 +71,31 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
-import { regForm } from '@compos/use-crud'
+import { ref, defineProps, defineEmits } from 'vue'
+import useVisible from '@compos/use-visible'
+import { editStatus } from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
-import { logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { logisticsSearchTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
-import { DP } from '@/settings/config'
-import { fileClassifyEnum } from '@enum-ms/file'
-import UploadBtn from '@comp/file-upload/UploadBtn'
-import { ElMessage } from 'element-plus'
+import { ElNotification } from 'element-plus'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const formRef = ref()
 const props = defineProps({
   detailInfo: {
     type: Object,
     default: () => {}
+  },
+  modelValue: {
+    type: Boolean,
+    require: true
+  },
+  showType: {
+    type: String,
+    default: undefined
   }
 })
-const defaultForm = {
-  applyAmount: undefined,
-  attachmentIds: undefined,
-  files: undefined,
-  branchCompanyId: undefined,
-  paymentReasonId: 1,
-  supplierId: undefined,
-  detailSaveParams: []
-}
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.paymentAddForm',
@@ -104,20 +103,8 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-const { CRUD, crud, form } = regForm(defaultForm, formRef)
-
-const validateMoney = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error('请填写申请金额并大于0'))
-  }
-  callback()
-}
-
-const rules = {
-  paymentDate: [{ required: true, message: '请选择付款日期', trigger: 'change' }],
-  paymentReasonId: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
-  applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }]
-}
+const emit = defineEmits(['success', 'update:modelValue'])
+const { visible, handleClose } = useVisible({ emit, props })
 
 const tableLoading = ref(false)
 
@@ -129,24 +116,23 @@ function getSummaries(param) {
   })
 }
 
-CRUD.HOOK.beforeSubmit = () => {
-  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : crud.form.attachmentIds
-  crud.form.supplierId = props.detailInfo.supplierId
-  crud.form.branchCompanyId = props.detailInfo.branchCompanyId
-  crud.form.applyAmount = 0
-  const listData = JSON.parse(JSON.stringify(crud.form.paymentDetails))
-  const submitData = []
-  listData.map(v => {
-    if (v.applyAmount > 0) {
-      crud.form.applyAmount += v.applyAmount
-      submitData.push(v)
+async function passConfirm(val) {
+  try {
+    const submitData = {
+      auditStatus: val,
+      actuallyPaymentAmount: props.detailInfo.applyAmount,
+      id: props.detailInfo.id
+      // paymentBank: paymentBank.value,
+      // paymentBankAccount: paymentBankAccount.value,
+      // paymentMethod: paymentMethod.value
     }
-  })
-  if (submitData.length === 0) {
-    ElMessage.error('请填写本次申请明细且金额大于0')
-    return false
+    await editStatus(submitData)
+    ElNotification({ title: '提交成功', type: 'success' })
+    emit('success')
+    handleClose()
+  } catch (error) {
+    console.log('审核', error)
   }
-  crud.form.paymentDetails = submitData
 }
 </script>
 <style lang="scss" scoped>

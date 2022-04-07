@@ -88,7 +88,7 @@
       <el-form-item label="原因描述" prop="changeDesc">
         <el-input
           v-if="!auditStatus"
-          v-model="form.changeDesc"
+          v-model.trim="form.changeDesc"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 8}"
           placeholder="请填写原因描述"

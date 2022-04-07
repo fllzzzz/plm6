@@ -41,7 +41,7 @@
       <el-form-item label="变更内容" prop="changeContent">
         <el-input
           v-if="!auditStatus"
-          v-model="form.changeContent"
+          v-model.trim="form.changeContent"
           placeholder="变更内容"
           :maxlength="50"
           style="width: 320px;"
@@ -98,7 +98,7 @@
       <el-form-item label="描述" prop="changeDesc">
         <el-input
           v-if="!auditStatus"
-          v-model="form.changeDesc"
+          v-model.trim="form.changeDesc"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 8}"
           placeholder="请填写描述"

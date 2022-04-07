@@ -79,14 +79,14 @@ export default {
           hidden: false,
           component: '/supply-chain/logistics-payment-manage/logistics-record/index',
           meta: { title: '物流记录', icon: 'project', noCache: true }
+        },
+        {
+          name: 'logisticsPayment',
+          path: 'logistics-payment',
+          hidden: false,
+          component: '/supply-chain/logistics-payment-manage/logistics-payment/index',
+          meta: { title: '付款明细', icon: 'project', noCache: true }
         }
-        // {
-        //   name: 'logisticsPayment',
-        //   path: 'logistics-payment',
-        //   hidden: false,
-        //   component: '/supply-chain/logistics-payment-manage/logistics-payment/index',
-        //   meta: { title: '付款明细', icon: 'project', noCache: true }
-        // }
       ]
     },
     {

@@ -54,7 +54,7 @@
           />
         </el-form-item>
         <el-form-item label="详细地址" prop="address">
-          <el-input v-model="form.address" placeholder="项目详细地址" class="input-underline" style="width: 420px" maxlength="200"/>
+          <el-input v-model.trim="form.address" placeholder="项目详细地址" class="input-underline" style="width: 420px" maxlength="200"/>
         </el-form-item>
       </div>
       <el-divider><span class="title">负责人</span></el-divider>

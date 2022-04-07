@@ -25,7 +25,7 @@
     <el-descriptions class="margin-top" :column="2" border>
       <el-descriptions-item label-class-name="contractLabel" label="申请人">{{currentInfo.applyUserName}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="申请日期">{{currentInfo.createTime? parseTime(currentInfo.createTime,'{y}-{m}-{d}'): '-'}}</el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="采购单号">{{currentInfo.serialNumber}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="采购单号">{{currentRow.serialNumber}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="所属项目">
         <template v-if="currentRow.projects && currentRow.projects.length>0">
           <div v-for="item in currentRow.projects" :key="item.id">
@@ -58,6 +58,7 @@
       <el-descriptions-item label-class-name="contractLabel" label="账号">{{currentInfo.receiveBankAccount}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="本次实付">
         <el-input-number
+          v-if="showType==='audit'"
           v-model.number="actuallyPaymentAmount"
           v-show-thousand
           :min="0"
@@ -68,10 +69,17 @@
           controls-position="right"
           style="width:220px;"
         />
-        <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.amount">{{ (actuallyPaymentAmount/currentRow.amount)*100+'%' }}</el-tag>
+        <span v-else>{{currentInfo.actuallyPaymentAmount?toThousand(currentInfo.actuallyPaymentAmount):'-'}}</span>
+        <template v-if="showType==='audit'">
+          <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.amount">{{ (actuallyPaymentAmount/currentRow.amount)*100+'%' }}</el-tag>
+        </template>
+        <template v-else>
+          <el-tag type="success" style="margin-left:5px;" v-if="currentInfo.actuallyPaymentAmount && currentRow.amount">{{ (currentInfo.actuallyPaymentAmount/currentRow.amount)*100+'%' }}</el-tag>
+        </template>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款方式">
         <common-select
+          v-if="showType==='audit'"
           v-model="paymentMethod"
           :options="paymentFineModeEnum.ENUM"
           type="enum"
@@ -79,9 +87,11 @@
           placeholder="付款方式"
           style="width:100%;"
         />
+        <span v-else>{{ currentInfo.paymentMethod?paymentFineModeEnum.VL[currentInfo.paymentMethod]:'-' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款银行">
         <common-select
+          v-if="showType==='audit'"
           v-model="paymentBankAccount"
           :options="bankList"
           type="other"
@@ -91,6 +101,7 @@
           style="width:100%;"
           @change="bankChange"
         />
+        <span v-else>{{ currentInfo.paymentBank?currentInfo.paymentBank:'-' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="附件">
         <template v-if="currentInfo && currentInfo.attachments && currentInfo.attachments.length>0">
