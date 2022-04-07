@@ -112,7 +112,7 @@ import { sectionSteelReturnApplicationPM as permission } from '@/page-permission
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { calcSectionSteelTotalLength, calcSectionSteelWeight } from '@/utils/wms/measurement-calc'
-import { deepClone, isNotBlank, toPrecision } from '@/utils/data-type'
+import { isNotBlank, toPrecision } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
@@ -309,8 +309,8 @@ function setFormCallback(form) {
         form.list.forEach((row) => {
           rowWatch(row)
           checkOverSource(row)
+          calcTotalLength(row)
         })
-        console.log('form.list', deepClone(form.list))
         nextTick(() => {
           trigger() // 执行一次后取消当前监听
           headerRef.value.calcAllQuantity()

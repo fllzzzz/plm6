@@ -112,7 +112,7 @@ const wmsRmRejectReceipt = {
      */
     fields: [
       // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'purchaseSN', title: '订单号：', width: 135, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'purchaseSN', title: '采购单号：', width: 135, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
