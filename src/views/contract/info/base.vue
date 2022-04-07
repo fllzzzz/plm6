@@ -15,7 +15,7 @@
             <div class="input-underline">
               <el-input
                 v-if="isModify"
-                v-model="form.serialNumber"
+                v-model.trim="form.serialNumber"
                 placeholder="合同编号"
                 style="width:260px;"
               />
@@ -26,7 +26,7 @@
             <div class="input-underline">
               <el-input
                 v-if="isModify"
-                v-model="form.name"
+                v-model.trim="form.name"
                 placeholder="项目名称"
                 style="width:320px;"
               />
@@ -56,7 +56,7 @@
             <div class="input-underline">
               <el-input
                 v-if="isModify"
-                v-model="form.shortName"
+                v-model.trim="form.shortName"
                 placeholder="项目简称"
                 style="width:320px;"
               />
@@ -109,7 +109,7 @@
             <div class="input-underline" style="width:420px">
               <el-input
                 v-if="isModify"
-                v-model="form.address"
+                v-model.trim="form.address"
                 placeholder="项目详细地址"
               />
               <span v-else class="detail-break">{{ detail.address || '-' }}</span>

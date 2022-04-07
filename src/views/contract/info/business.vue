@@ -121,7 +121,7 @@
               <div style="width: 400px">
                 <el-input
                   v-if="isModify"
-                  v-model="form.signingAddress"
+                  v-model.trim="form.signingAddress"
                   class="input-underline"
                   placeholder="签约地址"
                   style="width: 400px"
@@ -202,7 +202,7 @@
               <div class="input-underline" style="width: 550px">
                 <el-input
                   v-if="isModify"
-                  v-model="form.payTypeDesc"
+                  v-model.trim="form.payTypeDesc"
                   type="textarea"
                   :autosize="{ minRows: 4, maxRows: 4 }"
                   maxlength="200"

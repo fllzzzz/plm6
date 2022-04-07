@@ -29,4 +29,13 @@ export function logisticsPaymentList(params) {
   })
 }
 
+// 获取开票明细
+export function invoiceRecord(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/receive-invoice/logistics',
+    method: 'get',
+    params
+  })
+}
 export default { get }

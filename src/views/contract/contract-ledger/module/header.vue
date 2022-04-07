@@ -23,19 +23,19 @@
         @change="crud.toQuery"
       />
       <el-input
-        v-model="query.serialNumber"
+        v-model.trim="query.serialNumber"
         placeholder="编号搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.name"
+        v-model.trim="query.name"
         placeholder="项目搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.projectManagerName"
+        v-model.trim="query.projectManagerName"
         placeholder="业务负责人搜索"
         style="width:200px"
         class="filter-item"

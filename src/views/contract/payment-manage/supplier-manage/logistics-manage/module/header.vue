@@ -15,7 +15,7 @@
             @change="crud.toQuery"
           />
           <el-input
-            v-model="query.supplierName"
+            v-model.trim="query.supplierName"
             placeholder="物流公司"
             class="filter-item"
             style="width: 200px;"

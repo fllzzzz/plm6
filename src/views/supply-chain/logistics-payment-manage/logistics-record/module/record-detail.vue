@@ -76,7 +76,7 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 // 请求参数
 const params = computed(() => {
   return {
-    id: props.detailInfo.id,
+    id: props.detailInfo.id || props.detailInfo.supplierId,
     type: props.type
   }
 })

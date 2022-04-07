@@ -64,10 +64,10 @@
         prop="projectContent"
         label="项目内容"
         align="center"
-        min-width="150"
+        width="150"
       >
         <template v-slot="scope">
-          <div>{{ scope.row.projectContent }}</div>
+          <div style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.projectContent }}</div>
         </template>
       </el-table-column>
       <el-table-column

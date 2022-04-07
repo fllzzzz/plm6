@@ -4,7 +4,7 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="crud.status.title"
+    title="新增付款申请"
     :wrapper-closable="false"
     size="50%"
   >
@@ -16,7 +16,7 @@
         <common-table
           ref="detailRef"
           border
-          :data="form.paymentDetails"
+          :data="freightDetails"
           :max-height="maxHeight"
           style="width: 100%;margin-bottom:10px;"
           class="table-form"
@@ -62,7 +62,7 @@
           </el-table-column>
         </common-table>
         <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
+          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
       </el-form>
     </template>
@@ -76,6 +76,7 @@ import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
+import { payableList } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
@@ -91,9 +92,8 @@ const props = defineProps({
 const defaultForm = {
   applyAmount: undefined,
   attachmentIds: undefined,
-  files: undefined,
+  attachments: undefined,
   branchCompanyId: undefined,
-  paymentReasonId: 1,
   supplierId: undefined,
   detailSaveParams: []
 }
@@ -120,6 +120,21 @@ const rules = {
 }
 
 const tableLoading = ref(false)
+const freightDetails = ref([])
+// 获取可付款列表
+async function fetchList() {
+  let _list = []
+  tableLoading.value = true
+  try {
+    const { content = [] } = await payableList({ supplierId: props.detailInfo.supplierId, branchCompanyId: props.detailInfo.branchCompanyId })
+    _list = content
+  } catch (error) {
+    console.log('获取可付款列表失败', error)
+  } finally {
+    freightDetails.value = _list
+    tableLoading.value = false
+  }
+}
 
 // 合计
 function getSummaries(param) {
@@ -129,24 +144,31 @@ function getSummaries(param) {
   })
 }
 
+CRUD.HOOK.afterToAdd = () => {
+  fetchList()
+}
+
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : crud.form.attachmentIds
-  crud.form.supplierId = props.detailInfo.supplierId
-  crud.form.branchCompanyId = props.detailInfo.branchCompanyId
+  crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
+  crud.form.supplierId = props.detailInfo.supplierId || 1
+  crud.form.branchCompanyId = props.detailInfo.branchCompanyId || 1
   crud.form.applyAmount = 0
-  const listData = JSON.parse(JSON.stringify(crud.form.paymentDetails))
-  const submitData = []
-  listData.map(v => {
+  crud.form.detailSaveParams = []
+  freightDetails.value.map(v => {
     if (v.applyAmount > 0) {
       crud.form.applyAmount += v.applyAmount
-      submitData.push(v)
+      crud.form.detailSaveParams.push({
+        projectId: v.projectId,
+        purchaseId: v.purchaseId,
+        type: v.type,
+        applyAmount: v.applyAmount
+      })
     }
   })
-  if (submitData.length === 0) {
+  if (crud.form.detailSaveParams.length === 0) {
     ElMessage.error('请填写本次申请明细且金额大于0')
     return false
   }
-  crud.form.paymentDetails = submitData
 }
 </script>
 <style lang="scss" scoped>

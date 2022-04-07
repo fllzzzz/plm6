@@ -574,7 +574,7 @@ async function getInfo(data) {
     let monomerPartNet = 0
     areaOriginDetail.value = await artifactInfo({ serialNumber: data.serialNumber, areaId: data.areaId })
     monomerOriginDetail.value = await artifactInfo({ serialNumber: data.serialNumber, monomerId: data.monomerId })
-    areaOriginDetail.value.newSurfaceArea = areaOriginDetail.value.surfaceArea ? areaOriginDetail.value.surfaceArea / 1000000 : ''
+    areaOriginDetail.value.newSurfaceArea = areaOriginDetail.value.surfaceArea ? areaOriginDetail.value.surfaceArea / 1000000 : 0
     if (areaOriginDetail.value.parts.length > 0) {
       areaOriginDetail.value.parts.map(v => {
         if (areaOriginDetail.value.quantity && v.quantity) {
@@ -584,7 +584,7 @@ async function getInfo(data) {
         }
       })
     }
-    monomerOriginDetail.value.newSurfaceArea = monomerOriginDetail.value.surfaceArea ? monomerOriginDetail.value.surfaceArea / 1000000 : ''
+    monomerOriginDetail.value.newSurfaceArea = monomerOriginDetail.value.surfaceArea ? monomerOriginDetail.value.surfaceArea / 1000000 : 0
     if (monomerOriginDetail.value.parts.length > 0) {
       monomerOriginDetail.value.parts.map(v => {
         if (monomerOriginDetail.value.quantity && v.quantity) {

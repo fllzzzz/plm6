@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: `supply-chain/order-payment/listPayment/${params.orderId}`,
+    url: `contract/payment/list`,
     method: 'get',
     params,
     cancelKey: false
@@ -13,7 +13,7 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'contract',
-    url: 'supply-chain/order-payment/save-payment',
+    url: 'contract/payment/save',
     method: 'post',
     data
   })
@@ -22,7 +22,7 @@ export function add(data) {
 export function edit(data) {
   return request({
     module: 'contract',
-    url: `supply-chain/order-payment/update-payment`,
+    url: `contract/payment/update`,
     method: 'put',
     data
   })
@@ -31,7 +31,7 @@ export function edit(data) {
 export function del(ids) {
   return request({
     module: 'contract',
-    url: 'supply-chain/order-payment/del-payment',
+    url: 'contract/payment/del-payment',
     method: 'delete',
     data: ids
   })
@@ -40,7 +40,7 @@ export function del(ids) {
 export function settleSave(data) {
   return request({
     module: 'contract',
-    url: 'supply-chain/order-payment/save-settlement',
+    url: 'contract/supplier-settlement/save',
     method: 'post',
     data
   })
@@ -49,7 +49,7 @@ export function settleSave(data) {
 export function settleConfirm(params) {
   return request({
     module: 'contract',
-    url: 'supply-chain/order-payment/check-settlement',
+    url: 'contract/supplier-settlement/check',
     method: 'put',
     params
   })

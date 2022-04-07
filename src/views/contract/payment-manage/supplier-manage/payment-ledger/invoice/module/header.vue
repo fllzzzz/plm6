@@ -14,19 +14,19 @@
         style="width:240px"
       />
       <el-input
-        v-model="query.paymentUnit"
+        v-model.trim="query.paymentUnit"
         placeholder="开票单位"
         style="width:120px"
         class="filter-item"
       />
       <el-input
-        v-model="query.receivingUnit"
+        v-model.trim="query.receivingUnit"
         placeholder="收票单位"
         style="width:120px"
         class="filter-item"
       />
       <el-input
-        v-model="query.serialNumber"
+        v-model.trim="query.serialNumber"
         placeholder="订单号"
         style="width:120px"
         class="filter-item"

@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="currentRow.amount">{{'物流费:'+toThousand(currentRow.amount)}}</el-tag>
+      <el-tag type="success" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -51,7 +51,7 @@
                   v-show-thousand
                   v-model.number="scope.row.invoiceAmount"
                   :min="0"
-                  :max="currentRow.amount-totalAmount"
+                  :max="currentRow.freight-totalAmount"
                   :step="100"
                   :precision="DP.YUAN"
                   placeholder="开票额(元)"
@@ -116,7 +116,7 @@
           </el-table-column>
           <el-table-column key="invoiceSerialNumber" prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
               <span v-else>{{ scope.row.invoiceSerialNumber }}</span>
             </template>
           </el-table-column>
@@ -255,8 +255,8 @@ function moneyChange(row) {
       extraAmount.value += v.invoiceAmount
     }
   })
-  if (extraAmount.value > (props.currentRow.amount - totalAmount.value)) {
-    const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.amount - totalAmount.value))
+  if (extraAmount.value > (props.currentRow.freight - totalAmount.value)) {
+    const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.freight - totalAmount.value))
     // 解决修改失效
     nextTick(() => {
       row.invoiceAmount = num || 0

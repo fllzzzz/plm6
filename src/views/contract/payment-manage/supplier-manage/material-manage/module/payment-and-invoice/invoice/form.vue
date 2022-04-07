@@ -115,7 +115,7 @@
           </el-table-column>
           <el-table-column key="invoiceSerialNumber" prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
               <span v-else>{{ scope.row.invoiceSerialNumber }}</span>
             </template>
           </el-table-column>
@@ -280,8 +280,6 @@ function taxMoney(row) {
 }
 function checkInvoiceNo(row) {
   const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-  console.log(invoiceNoArr)
-  console.log(val)
   if (val) {
     if (row.invoiceSerialNumber) {
       if (val.invoiceSerialNumber === row.invoiceSerialNumber) {

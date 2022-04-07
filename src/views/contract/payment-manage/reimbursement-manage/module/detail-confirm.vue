@@ -141,13 +141,13 @@
         <div class="form-row" style="display: flex">
           <el-form-item label="收款开户行" prop="collectionDepositBank">
             <div style="width: 360px">
-              <el-input v-if="isModify" v-model="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" maxlength="50"/>
+              <el-input v-if="isModify" v-model.trim="form.collectionDepositBank" type="text" placeholder="收款开户行" style="width: 320px" maxlength="50"/>
               <span v-else>{{ form.collectionDepositBank }}</span>
             </div>
           </el-form-item>
           <el-form-item label="收款账号" prop="collectionBankAccount">
             <div style="width: 360px">
-              <el-input v-if="isModify" v-model="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" maxlength="30"/>
+              <el-input v-if="isModify" v-model.trim="form.collectionBankAccount" type="text" placeholder="收款账号" style="width: 320px" maxlength="30"/>
               <span v-else>{{ form.collectionBankAccount }}</span>
             </div>
           </el-form-item>
@@ -156,7 +156,7 @@
           <el-form-item label="付款单位" prop="paymentUnitId">
             <div style="width: 360px">
               <common-select
-                v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type === 'audit'"
+                v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.AUDITING.V && type === 'audit'"
                 v-model="form.paymentUnitId"
                 :options="contractInfo.companyBankAccountList"
                 :type="'other'"
@@ -174,8 +174,8 @@
           <el-form-item label="付款开户行" prop="paymentDepositBank" v-if="!isModify">
             <div style="width: 360px">
               <el-input
-                v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type === 'audit'"
-                v-model="form.paymentDepositBank"
+                v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.AUDITING.V && type === 'audit'"
+                v-model.trim="form.paymentDepositBank"
                 type="text"
                 placeholder="付款开户行"
                 style="width: 320px"
@@ -189,8 +189,8 @@
           <el-form-item label="付款账号" prop="paymentBankAccount" v-if="!isModify">
             <div style="width: 360px">
               <el-input
-                v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.ENUM.AUDITING.V && type === 'audit'"
-                v-model="form.paymentBankAccount"
+                v-if="collectionInfo.confirmStatus == reimbursementTypeEnum.AUDITING.V && type === 'audit'"
+                v-model.trim="form.paymentBankAccount"
                 type="text"
                 placeholder="付款账号"
                 style="width: 320px"
@@ -210,7 +210,7 @@
           <div style="width: 360px">
             <el-input
               v-if="isModify"
-              v-model="form.remark"
+              v-model.trim="form.remark"
               type="textarea"
               :autosize="{ minRows: 6, maxRows: 8 }"
               :maxlength="200"

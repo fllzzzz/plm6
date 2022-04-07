@@ -3,7 +3,7 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -45,7 +45,7 @@
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
                 :min="0"
-                :max="props.currentRow.amount"
+                :max="props.currentRow.freight"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
@@ -110,7 +110,7 @@
       </el-table-column>
       <el-table-column prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
           <span v-else>{{ scope.row.invoiceSerialNumber  }}</span>
         </template>
       </el-table-column>
@@ -181,7 +181,7 @@
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
+import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/logistics'
 import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
@@ -300,8 +300,8 @@ function moneyChange(row) {
       totalAmount.value += v.invoiceAmount
     }
   })
-  if (totalAmount.value > props.currentRow.amount) {
-    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
+  if (totalAmount.value > props.currentRow.freight) {
+    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.freight)
     // 解决修改失效
     nextTick(() => {
       row.invoiceAmount = num || 0
@@ -423,8 +423,8 @@ function getSummaries(param) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.orderId = props.currentRow.id
-  crud.query.type = props.propertyType
+  crud.query.branchCompanyId = props.currentRow.branchCompanyId
+  crud.query.supplierId = props.currentRow.supplierId
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

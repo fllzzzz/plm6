@@ -2,7 +2,6 @@
   <div>
     <!--表格渲染-->
     <div>
-      <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-if="checkPermission(permission.add)">添加</common-button>
       <el-tag type="success" size="medium" v-if="detailInfo.amount">{{'合同金额:'+toThousand(detailInfo.amount)}}</el-tag>
     </div>
     <common-table
@@ -23,14 +22,14 @@
           <div>{{ scope.row.applyUserName? scope.row.applyUserName:'-' }}</div>
         </template>
       </el-table-column>
+       <el-table-column key="creatTime" prop="createTime" label="申请日期" align="center" >
+        <template v-slot="scope">
+          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
+        </template>
+      </el-table-column>
       <el-table-column key="propertyType" prop="propertyType" label="承运属性" align="center" >
         <template v-slot="scope">
           <div>{{ scope.row.propertyType? supplierPayTypeEnum.VL[scope.row.propertyType]: '-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" >
-        <template v-slot="scope">
-          <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
@@ -74,7 +73,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
-import { ref, defineProps, watch, nextTick } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -116,7 +115,7 @@ const { CRUD, crud } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['supplierId'],
+    requiredQuery: ['supplierId', 'branchCompanyId', 'propertyType'],
     hasPagination: true
   },
   tableRef
@@ -132,21 +131,13 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
+      crud.query.supplierId = props.detailInfo.supplierId
+      crud.query.branchCompanyId = props.detailInfo.branchCompanyId
+      crud.query.propertyType = supplierPayTypeEnum.TRANSPORT.V
       crud.toQuery()
     }
   },
   { deep: true, immediate: true }
-)
-
-watch(
-  props.detailInfo,
-  (id) => {
-    nextTick(() => {
-      crud.query.supplierId = props.detailInfo.supplierId
-      crud.toQuery()
-    })
-  },
-  { immediate: true }
 )
 
 CRUD.HOOK.handleRefresh = (crud, res) => {
