@@ -1,6 +1,6 @@
 // 路由：BIM
 export default {
-  id: 898,
+  id: 951,
   name: 'BIM',
   children: [
     {

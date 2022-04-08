@@ -274,9 +274,10 @@
       <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <!-- pdf预览 -->
-      <drawing-preview-fullscreen-dialog
-        v-model="showDrawing"
+      <bim-preview-drawer
+        v-model:visible="showDrawing"
         :bool-bim="drawingRow?.boolBim"
+        :monomer-id="drawingRow?.monomerId"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -303,7 +304,7 @@ import { parseTime } from '@/utils/date'
 import numForm from './module/num-form'
 import listForm from './module/list-form'
 import serialNumForm from './module/serialNum-form'
-import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
