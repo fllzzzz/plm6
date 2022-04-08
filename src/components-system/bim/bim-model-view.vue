@@ -1,14 +1,9 @@
 <template>
   <div class="model-container" :style="{ height: `${maxHeight}px` }">
-    <el-tag v-if="tip !== tipStatusEnum.SUCCESS.V" :type="tipStatusEnum.V[tip]?.T">
+    <el-tag v-if="tip !== tipStatusEnum.SUCCESS.V" :type="tipStatusEnum.V[tip]?.T" :style="isPreview?'margin-left: 10px;margin-top: 10px;':''">
       {{ tipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
     <div id="modelView"></div>
-          <!-- pdf预览 -->
-
-       <drawing-pdf
-      v-model="showDrawing"
-    />
   </div>
 </template>
 
@@ -31,10 +26,8 @@ import useArtifactInfo from '@compos/bim/use-artifact-info'
 import useStatusInfo from '@compos/bim/use-status-info'
 import useLogisticsInfo from '@compos/bim/use-logistics-info'
 import useDrawing from '@compos/bim/use-drawing'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import usePreview from '@compos/bim/use-preview'
 // import useRightClickEvent from '@compos/bim/use-right-click-event'
-import PDF from '@/components/PDF/pdf'
-console.log(PDF, 'PDF')
 
 const props = defineProps({
   monomerId: {
@@ -47,6 +40,17 @@ const props = defineProps({
   isPreview: {
     type: Boolean,
     default: false
+  },
+  serialNumber: {
+    type: String
+  },
+  productId: {
+    type: Number,
+    default: undefined
+  },
+  productType: {
+    type: Number,
+    default: undefined
   },
   monomerName: {
     type: String
@@ -125,7 +129,6 @@ const viewProAreaTree = ref({})
 const colors = ref([])
 const menuBar = ref()
 const objectIdGroup = ref({})
-const showDrawing = ref(false)
 
 const {
   initModelColor, fetchArtifactStatus,
@@ -136,7 +139,7 @@ const {
   clearSelectedComponents
 } = useArtifactColoring({ bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup })
 const { createDrawing, fetchDrawing } = useDrawing()
-const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ showDrawing, menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
+const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
 const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ menuBar, bimModel, viewerPanel, modelStatus })
 const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink })
 const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
@@ -197,10 +200,10 @@ async function loadModel(viewToken) {
     // viewToken = 'a40b9998ef634f8c9f638a19c66c5e9a'
     const metaData = await bimModel.initBimfaceApp({ viewToken })
     _3DConfig.value = bimModel.getConfig()
-      _3DConfig.value.Toolbars = ['MainToolbar']
-    // if (props.isPreview) {
-    //   _3DConfig.value.Buttons = ['home','']
-    // }
+    _3DConfig.value.Toolbars = ['MainToolbar']
+    if (props.isPreview) {
+      _3DConfig.value.Buttons = ['Home', 'FullScreen']
+    }
     const _el = document.getElementById('modelView')
     _el.innerHTML = '' // 清除旧数据
     _3DConfig.value.domElement = _el
@@ -226,6 +229,8 @@ async function loadModel(viewToken) {
           createStatusInfoPanel()
           createSearchHtml()
           createColorCardHtml()
+        } else {
+          usePreview({ props, initModelColor, overrideComponentsColorById, isolateComponentsById })
         }
         createDrawing()
 
