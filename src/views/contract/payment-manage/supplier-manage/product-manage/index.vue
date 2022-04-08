@@ -157,7 +157,7 @@ const showType = ref('audit')
 
 const { CRUD, crud, columns } = useCRUD(
   {
-    title: '原材料',
+    title: '制成品',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -167,7 +167,7 @@ const { CRUD, crud, columns } = useCRUD(
   tableRef
 )
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.materialManage',
+  wrapperBox: '.productManage',
   paginate: true,
   extraHeight: 40
 })
