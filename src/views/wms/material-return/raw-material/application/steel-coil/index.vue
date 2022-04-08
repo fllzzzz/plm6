@@ -89,7 +89,6 @@ import { steelCoilReturnApplicationPM as permission } from '@/page-permission/wm
 
 import { ref, watch, defineEmits, defineProps, reactive, nextTick } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
-import { calcSteelCoilLength } from '@/utils/wms/measurement-calc'
 import { toFixed } from '@/utils/data-type'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -204,7 +203,7 @@ function rowWatch(row) {
   })
   // 计算理论及单重
   watch([() => row.mete, baseUnit], () => {
-    calcTheoryLength(row)
+    calcQuantity(row)
     headerRef.value && headerRef.value.calcAllWeight()
   })
   watch(
@@ -217,14 +216,9 @@ function rowWatch(row) {
 }
 
 // 计算单件理论重量
-async function calcTheoryLength(row) {
-  row.theoryLength = await calcSteelCoilLength({
-    weight: row.mete,
-    width: row.source.width,
-    thickness: row.source.thickness
-  })
-  if (row.theoryLength) {
-    row.singleLength = +toFixed((row.theoryLength / row.source.theoryLength) * row.source.quantity, baseUnit.value.length.precision)
+async function calcQuantity(row) {
+  if (row.mete) {
+    row.singleLength = +toFixed((row.mete / row.source.singleReturnableMete) * row.source.quantity, baseUnit.value.length.precision)
   } else {
     row.singleLength = undefined
   }
