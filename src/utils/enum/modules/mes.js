@@ -153,8 +153,9 @@ constantize(shipAuditStatusEnum)
 
 // 变更异常方式状态
 const abnormalHandleTypeEnum = {
-  PRODUCTION_CHANGE: { K: 'PRODUCTION_CHANGE', L: '生产变更', V: 2 },
-  SCHEDULE_CHANGE: { K: 'SCHEDULE_CHANGE', L: '排产变更', V: 1 }
+  PRODUCTION_CHANGE: { K: 'PRODUCTION_CHANGE', L: '生产变更', V: 1 << 1 },
+  SCHEDULE_CHANGE: { K: 'SCHEDULE_CHANGE', L: '排产变更', V: 1 << 0 },
+  MACHINE_PART: { K: 'MACHINE_PART', L: '零件变更', V: 1 << 2 }
 }
 constantize(abnormalHandleTypeEnum)
 

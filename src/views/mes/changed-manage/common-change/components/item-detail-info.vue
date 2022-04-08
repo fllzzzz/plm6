@@ -11,6 +11,11 @@
     </el-form-item>
   </el-form>
   <common-table :data-format="productFormat[productType]" :data="[productData]">
+    <el-table-column v-if="productType & (componentTypeEnum.MACHINE_PART.V | componentTypeEnum.ASSEMBLE.V)" prop="artifactSerialNumber" :show-overflow-tooltip="true" label="构件编号" width="100">
+      <template #default="{ row }">
+        <span>{{ row.artifactSerialNumber }}</span>
+      </template>
+    </el-table-column>
     <productType-full-info-columns
       :productType="productType"
       :unitNewLine="false"
@@ -68,6 +73,7 @@ import { productInfo } from '@/api/mes/changed-manage/common'
 import { computed, defineProps, watch, ref } from 'vue'
 import { convertUnits } from '@/utils/convert/unit'
 
+import { componentTypeEnum } from '@enum-ms/mes'
 import { productFormat } from '@/utils/columns-format/mes'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 
