@@ -58,6 +58,11 @@
       <template #optLeft>
         <common-radio-button v-model="query.unitType" :options="unitTypeEnum.ENUM" default text-align="center" type="enum" size="mini" />
       </template>
+      <template #viewLeft>
+        <export-button v-permission="permission.get" :params="query" :fn="exportSendAndReceiveStorageExcel" response-header-result>
+          下载收发存报表（根据查询条件）
+        </export-button>
+      </template>
     </crudOperation>
     <template v-if="showAmount">
       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
@@ -79,6 +84,7 @@
 </template>
 
 <script setup>
+import { exportSendAndReceiveStorageExcel } from '@/api/wms/report/raw-material/statistics'
 import { computed, inject, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { unitTypeEnum, orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
@@ -93,6 +99,7 @@ import crudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
 import Panel from '@/components/Panel'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])

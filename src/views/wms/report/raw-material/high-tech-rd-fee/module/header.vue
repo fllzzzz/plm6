@@ -47,9 +47,12 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
+      <!-- 打印 -->
       <template #optLeft>
         <common-button type="primary" size="mini" @click="rdFeeConfVisible = true">查看/设置高新研发费占比</common-button>
+        <export-button v-permission="permission.get" :params="query" :fn="exportExcel" response-header-result>
+          下载高新研发费报表（根据查询条件）
+        </export-button>
       </template>
       <template #viewLeft>
         <div class="flex-rcc child-mr-7">
@@ -67,7 +70,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { exportExcel } from '@/api/wms/report/raw-material/high-tech-rd-fee'
+import { inject, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { regHeader } from '@compos/use-crud'
@@ -76,6 +80,7 @@ import crudOperation from '@crud/CRUD.operation.vue'
 
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+import ExportButton from '@comp-common/export-button/index.vue'
 import highTechRdFeeConfView from '@/views/config-manage/wms/high-tech-rd-fee/index.vue'
 
 const defaultQuery = {
@@ -85,6 +90,8 @@ const defaultQuery = {
   projectWarehouseType: undefined, // 仓库类型
   basicClass: undefined // 基础类型
 }
+
+const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 
 // 高新研发费总额

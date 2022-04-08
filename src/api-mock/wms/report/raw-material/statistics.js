@@ -741,4 +741,46 @@ const getSendAndReceiveStorageDetail = {
   }
 }
 
-export default [getSendAndReceiveStorage, getSendAndReceiveStorageDetail]
+// 收发存报表excel导出
+const exportSendAndReceiveStorageExcel = {
+  url: '/api/wms/report/raw-materials/send-and-receive-storage/excel',
+  method: 'get',
+  timeout: 500,
+  rawResponse: async (req, res) => {
+    let result = ''
+    res.setHeader('Content-Type', 'application/vnd.ms-excel;charset=UTF-8')
+    res.setHeader('Content-Disposition', 'attachment;filename=%E6%94%B6%E5%8F%91%E5%AD%98%E6%8A%A5%E8%A1%A8.xlsx')
+    if (Math.random() > 0.5) {
+      result = 'code=20000;message='
+    } else {
+      result =
+        'code=40000;message=%E6%94%B6%E5%8F%91%E5%AD%98%E6%8A%A5%E8%A1%A8excel%E8%A1%A8%E6%A0%BC%E5%AF%BC%E5%87%BA%E6%97%B6%E9%97%B4%E8%8C%83%E5%9B%B4%E4%B8%8D%E5%8F%AF%E8%B6%85%E8%BF%87%E4%B8%80%E5%B9%B4'
+    }
+    res.setHeader('Result', result)
+    res.statusCode = 200
+    res.end(`收发存报表excel导出`)
+  }
+}
+
+// 收发存报表材料详情excel导出
+const exportSendAndReceiveStorageDetailExcel = {
+  url: '/api/wms/report/raw-materials/send-and-receive-storage/detail/excel',
+  method: 'get',
+  timeout: 500,
+  rawResponse: async (req, res) => {
+    let result = ''
+    res.setHeader('Content-Type', 'application/vnd.ms-excel;charset=UTF-8')
+    res.setHeader('Content-Disposition', 'attachment;filename=%E4%B8%AD%E5%8E%9A%E6%9D%BF%E6%9C%9F%E5%88%9D%E8%AF%A6%E6%83%85.xlsx')
+    if (Math.random() > 0.5) {
+      result = 'code=20000;message='
+    } else {
+      result =
+        'code=40000;message=%E4%B8%AD%E5%8E%9A%E6%9D%BF%E6%9C%9F%E5%88%9D%E8%AF%A6%E6%83%85excel%E8%A1%A8%E6%A0%BC%E5%AF%BC%E5%87%BA%E6%97%B6%E9%97%B4%E8%8C%83%E5%9B%B4%E4%B8%8D%E5%8F%AF%E8%B6%85%E8%BF%87%E4%B8%80%E5%B9%B4'
+    }
+    res.setHeader('Result', result)
+    res.statusCode = 200
+    res.end(`收发存报表材料详情excel导出`)
+  }
+}
+
+export default [getSendAndReceiveStorage, getSendAndReceiveStorageDetail, exportSendAndReceiveStorageExcel, exportSendAndReceiveStorageDetailExcel]

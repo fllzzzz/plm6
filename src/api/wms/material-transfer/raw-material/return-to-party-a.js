@@ -16,4 +16,18 @@ export function get(params) {
   })
 }
 
+/**
+ * 归还甲方记录excel导出
+ */
+export function exportExcel(params) {
+  return request({
+    module: 'wms',
+    url: `transfer/return-to-party-a/excel`,
+    method: 'get',
+    responseType: 'blob',
+    timeout: 60000000,
+    params
+  })
+}
+
 export default { get }

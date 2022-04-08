@@ -8,20 +8,27 @@
     fullscreen
     custom-class="raw-mat-send-and-receive-storage-detail"
   >
-    <div class="head-container query-header">
-      <common-radio-button
-        v-model="filter.formType"
-        :options="formTypeEnum"
-        type="enum"
-        size="small"
-        class="filter-item"
-        @change="fetchDetail"
-      />
-      <el-input v-model.trim="filter.specification" clearable size="small" placeholder="规格" class="filter-item" style="width: 250px" />
-      <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="fetchDetail">搜索</common-button>
-      <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery()">
-        重置
-      </common-button>
+    <div class="head-container query-header filter-container">
+      <div class="filter-left-box">
+        <common-radio-button
+          v-model="filter.formType"
+          :options="formTypeEnum"
+          type="enum"
+          size="small"
+          class="filter-item"
+          @change="fetchDetail"
+        />
+        <el-input v-model.trim="filter.specification" clearable size="small" placeholder="规格" class="filter-item" style="width: 250px" />
+        <common-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click.stop="fetchDetail">搜索</common-button>
+        <common-button class="filter-item" size="mini" type="warning" icon="el-icon-refresh-left" @click.stop="resetQuery()">
+          重置
+        </common-button>
+      </div>
+      <div class="filter-right-box">
+        <export-button v-permission="permission.get" :params="query" :fn="exportSendAndReceiveStorageDetailExcel" response-header-result>
+          下载材料报表（根据查询条件）
+        </export-button>
+      </div>
     </div>
     <common-table
       ref="tableRef"
@@ -52,25 +59,26 @@
 </template>
 
 <script setup>
-import { getSendAndReceiveStorageDetail } from '@/api/wms/report/raw-material/statistics'
+import { getSendAndReceiveStorageDetail, exportSendAndReceiveStorageDetailExcel } from '@/api/wms/report/raw-material/statistics'
 import { computed, inject, ref, defineEmits, defineProps } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { specFormat } from '@/utils/wms/spec-format'
+import { isNotBlank } from '@/utils/data-type'
 import { formTypeEnum } from '../enum'
 
 import useMaxHeight from '@compos/use-max-height'
 import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+import useVisible from '@/composables/use-visible'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
-import useVisible from '@/composables/use-visible'
-import { specFormat } from '@/utils/wms/spec-format'
-import { isNotBlank } from '@/utils/data-type'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const emit = defineEmits(['update:visible'])
 

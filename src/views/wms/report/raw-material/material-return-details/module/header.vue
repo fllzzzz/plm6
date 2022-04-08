@@ -69,23 +69,28 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <!-- 打印 -->
+      <template #optLeft>
+        <export-button v-permission="permission.get" :params="query" :fn="exportDetailsExcel" response-header-result>
+          下载退库明细（根据查询条件）
+        </export-button>
+      </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { exportDetailsExcel } from '@/api/wms/report/raw-material/return'
+import { inject, ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@enum-ms/classification'
 import { orderSupplyTypeEnum } from '@/utils/enum/modules/wms'
 
 import { regHeader } from '@compos/use-crud'
-
 import RrOperation from '@crud/RR.operation'
 import CrudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
+import ExportButton from '@comp-common/export-button/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
@@ -100,6 +105,7 @@ const defaultQuery = {
   operatorName: undefined // 申请人/编辑人/审核人
 }
 
+const permission = inject('permission')
 const { crud, query } = regHeader(defaultQuery)
 
 // 基础类型发生变化

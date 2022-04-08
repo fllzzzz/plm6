@@ -45,14 +45,19 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <!-- 打印 -->
+      <template #optLeft>
+        <export-button v-permission="permission.get" :params="query" :fn="exportExcel" response-header-result>
+          下载归还甲方报表（根据查询条件）
+        </export-button>
+      </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { exportExcel } from '@/api/wms/material-transfer/raw-material/return-to-party-a'
+import { inject, ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
@@ -60,7 +65,9 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import MatHeaderQuery from '@/components-system/wms/header-query/raw-mat/index.vue'
+import ExportButton from '@comp-common/export-button/index.vue'
 
+const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
