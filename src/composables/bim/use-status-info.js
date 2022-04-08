@@ -28,7 +28,7 @@ export default function useStatusInfo({ menuBar, bimModel, viewerPanel, modelSta
     _panel && _panel.show()
 
     try {
-      const { content } = await getArtifactProduction({ fileId: modelStatus.value.fileId })
+      const { content } = await getArtifactProduction({ fileId: modelStatus.value.fileId, menuBar: menuBar.value })
       const _el = document.getElementsByClassName('bf-panel-status-info')[0].getElementsByClassName('bf-panel-container')[0]
       _el.innerHTML = ''
       _el.innerHTML = `
@@ -83,12 +83,11 @@ export default function useStatusInfo({ menuBar, bimModel, viewerPanel, modelSta
   }
 
   function clearStatusInfoPanel() {
+    const _panel2 = viewerPanel.artifactInfo.panel
+    if (_panel2.isShow) _panel2.hide()
+    if ([modelMenuBarEnum.PRODUCTION_STATE.V, modelMenuBarEnum.INSTALL_STATE.V, modelMenuBarEnum.SHIPMENT_STATUS.V].indexOf(menuBar.value) !== -1) return
     const _panel = viewerPanel.statusInfo.panel
     if (_panel.isShow)_panel.hide()
-    const _panel2 = viewerPanel.artifactInfo.panel
-    if (_panel2.isShow) {
-      _panel2.hide()
-    }
   }
 
   return {

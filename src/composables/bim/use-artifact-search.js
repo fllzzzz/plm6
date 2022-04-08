@@ -17,7 +17,7 @@ export default function useArtifactSearch({ props, addBlinkByIds, removeBlink })
           <span>搜索</span>
         </button>
         <button class="el-button el-button--warning el-button--small bf-artifact-search-btn-r" type="button">
-          <span>重置</span></span>
+          <span>重置</span>
         </button>
       </div>
     `

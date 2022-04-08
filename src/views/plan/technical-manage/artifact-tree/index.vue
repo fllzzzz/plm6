@@ -274,8 +274,9 @@
       <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <!-- pdf预览 -->
-      <drawing-pdf
+      <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -302,7 +303,7 @@ import { parseTime } from '@/utils/date'
 import numForm from './module/num-form'
 import listForm from './module/list-form'
 import serialNumForm from './module/serialNum-form'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])

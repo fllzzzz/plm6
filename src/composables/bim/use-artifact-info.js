@@ -2,7 +2,7 @@ import { getArtifactInfo } from '@/api/bim/model'
 import { ref } from 'vue'
 import { modelMenuBarEnum } from '@enum-ms/bim'
 
-export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelStatus, viewer }) {
+export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelStatus, viewer, fetchDrawing }) {
   const currentInfo = ref({})
 
   function createArtifactInfoPanel() {
@@ -17,8 +17,6 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
 
     // 创建零件列表弹窗
     createMachinePartListPanel()
-    // 创建图纸弹窗
-    createDrawingPanel()
 
     viewerPanel.artifactInfo = {
       config: _panelConfig,
@@ -36,21 +34,6 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
     _panel.isShow = false
 
     viewerPanel.machinePartList = {
-      config: _panelConfig,
-      panel: _panel
-    }
-  }
-
-  function createDrawingPanel() {
-    const _panelConfig = bimModel.getPanelConfig()
-    _panelConfig.className = 'bf-panel bf-panel-drawing'
-    _panelConfig.title = '图纸'
-    _panelConfig.css.width = '400px'
-    _panelConfig.element = document.getElementsByClassName('bf-container')[0]
-    const _panel = bimModel.createPanel(_panelConfig)
-    _panel.isShow = false
-
-    viewerPanel.drawing = {
       config: _panelConfig,
       panel: _panel
     }
@@ -115,6 +98,8 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
         </div>
       `
     _el.innerHTML = html
+
+    bindDBClick()
   }
 
   function machinePartListHtml(list) {
@@ -123,7 +108,12 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
       const item = list[i]
       str += `
         <div>
-          <span>${item.serialNumber}</span>
+          <span class="bf-panel-machine-sn" style="cursor:pointer;" 
+          data-bool-bim="${Number(item.boolBim || 0)}"
+          data-serial-number="${item.serialNumber}"
+          data-product-id="${item.id}"
+          data-product-type="${item.productType}"
+          >${item.serialNumber}</span>
           <span>${item.specification}</span>
           <span>${item.material}</span>
           <span>${item.quantity}</span>
@@ -132,6 +122,17 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
       `
     }
     return str
+  }
+
+  function bindDBClick() {
+    const _els = document.getElementsByClassName('bf-panel-machine-sn')
+    for (let i = 0; i < _els.length; i++) {
+      _els[i].onclick = () => {
+        console.log(_els[i].dataset,'dddd')
+        const {boolBim,serialNumber,productId,productType} = _els[i].dataset
+        fetchDrawing({boolBim:Number(boolBim),serialNumber,productId,productType})
+      }
+    }
   }
 
   async function refreshArtifactInfoPanel(elementId) {
@@ -184,6 +185,16 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
       bfMPBtnDom && bfMPBtnDom.addEventListener('click', () => {
         fetchMachinePart()
       })
+      const bfDrawBtn = document.getElementById('bfDrawBtn')
+      console.log(bfDrawBtn, 'bfDrawBtn')
+      bfDrawBtn && bfDrawBtn.addEventListener('click', () => {
+        fetchDrawing({
+          boolBim: currentInfo.value.boolBim,
+          serialNumber: currentInfo.value.serialNumber,
+          productId: currentInfo.value.id,
+          productType: currentInfo.value.productType
+        })
+      })
     } catch (error) {
       console.log('获取构件信息', error)
     }
@@ -199,7 +210,7 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
           </div>
           <div>
             <span>图纸</span>
-            <span>查看</span>
+            <span id="bfDrawBtn">查看</span>
           </div>
           <div>
             <span>构件树</span>

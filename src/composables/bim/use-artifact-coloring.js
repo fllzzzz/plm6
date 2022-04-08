@@ -56,9 +56,9 @@ export default function useArtifactColoring({ bimModel, modelStatus, viewer, col
   }
 
   // 根据id给构件着色
-  function overrideComponentsColorById(elementIds) {
-    const color = bimModel.getColor('#32d3a6', 0.8)
-    viewer.value.overrideComponentsColorById(elementIds, color)
+  function overrideComponentsColorById(elementIds, { color, opacity = 0.8 }) {
+    const _color = bimModel.getColor(color, opacity)
+    viewer.value.overrideComponentsColorById(elementIds, _color)
     viewer.value.render()
   }
 

@@ -188,12 +188,13 @@
       <div style="color:red;font-size:14px;">*请先前去合同管理模块添加项目内容</div>
     </template> -->
     <!-- pdf预览 -->
-    <drawing-pdf
-      v-model="showDrawing"
-      :serial-number="drawingRow?.serialNumber"
-      :productId="drawingRow?.productId"
-      :productType="drawingRow?.productType"
-    />
+    <drawing-preview-fullscreen-dialog
+        v-model="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
   </div>
 </template>
 
@@ -208,7 +209,7 @@ import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { machinePartPM as permission } from '@/page-permission/plan'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'MACHINE_PART' })

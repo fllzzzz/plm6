@@ -4,6 +4,7 @@ import { isNotBlank } from '@data-type/index'
 
 export default function useMyToolbar({
   menuBar, bimModel, viewerPanel, colors, publicPath,
+  createLogisticsBtn, hideLogisticsBtn,
   clearProTreePanel, fetchProTree,
   clearArtifactInfoPanel, fetchArtifactInfo,
   clearStatusInfoPanel, fetchStatusInfo,
@@ -44,20 +45,22 @@ export default function useMyToolbar({
     ...modelMenuBarEnum.SHIPMENT_STATUS,
     clickEvent: function (i) {
       menuBar.value = i
-      console.log('发运状态Click')
+      createLogisticsBtn()
+      fetchStatusInfo()
     },
     unActiveEvent: function () {
-      console.log('发运状态unActive')
+      hideLogisticsBtn()
+      clearStatusInfoPanel()
     }
   },
   {
     ...modelMenuBarEnum.INSTALL_STATE,
     clickEvent: function (i) {
       menuBar.value = i
-      console.log('安装状态Click')
+      fetchStatusInfo()
     },
     unActiveEvent: function () {
-      console.log('安装状态unActive')
+      clearStatusInfoPanel()
     }
   }
   ]
