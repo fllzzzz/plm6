@@ -15,21 +15,39 @@
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
       <el-table-column
-        v-if="columns.visible('cutTaskName')"
-        align="center"
-        key="cutTaskName"
-        prop="cutTaskName"
+        v-if="columns.visible('projectName')"
+        header-align="center"
+        key="projectName"
+        prop="projectName"
         :show-overflow-tooltip="true"
-        label="工单名称"
-        min-width="80"
+        label="项目名称"
+        min-width="60"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.cutTaskName }}</span>
+          <span>{{ scope.row.projectName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('currentName')"
+        align="center"
+        key="currentName"
+        prop="currentName"
+        :show-overflow-tooltip="true"
+        label="套料人"
+        min-width="40"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.currentName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" align="center" prop="createTime" label="创建日期" min-width="60">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="columns.visible('thick')"
-        align="left"
+        align="center"
         key="thick"
         prop="thick"
         :show-overflow-tooltip="true"
@@ -38,11 +56,11 @@
       >
         <template v-slot="scope">
           <span>{{ scope.row.thick }}</span>
-          <el-tag style="float: right; margin-right: 10px" v-if="scope.row.relationType && scope.row.relationType === 2" type="success">
+          <el-tag style="margin-left: 10px" v-if="scope.row.relationType && scope.row.relationType === 2" type="success">
             零件板
           </el-tag>
           <el-tag
-            style="float: right; margin-right: 10px"
+            style="margin-left: 10px"
             v-else-if="scope.row.relationType && scope.row.relationType === 16"
             type="danger"
           >
@@ -65,7 +83,7 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('sum')"
-        align="right"
+        align="center"
         key="sum"
         prop="sum"
         :show-overflow-tooltip="true"
@@ -78,11 +96,11 @@
       </el-table-column>
       <el-table-column
         v-if="columns.visible('reduce')"
-        align="right"
+        align="center"
         key="reduce"
         prop="reduce"
         :show-overflow-tooltip="true"
-        label="零件量（kg）"
+        label="零件重量（kg）"
         min-width="40"
       >
         <template v-slot="scope">
@@ -112,16 +130,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.updateTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column width="250px" :show-overflow-tooltip="true" label="操作" align="center">
         <template v-slot="scope">
           <!-- <common-button v-if="scope.row.state === '0' || scope.row.state  === '1'" type="warning" size="mini">修改</common-button> -->

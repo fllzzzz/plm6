@@ -35,17 +35,37 @@ const TypeEnum = {
 }
 constantize(TypeEnum)
 
+// 排套状态
+const NestingStateEnum = {
+  NOT_LINED_UP:{ L: '未排套',  K:'VERIFICATION_CODE', V: 0},
+  PARTIAL_ROW_SETS:{ L: '部分排套', K:'VERIFICATION_CODE', V: 1},
+  LINED_UP:{ L: '排套结束', K:'VERIFICATION_CODE', V: 2},
+}
+constantize(NestingStateEnum)
+
+// 套料状态
+const NestingEnum = {
+  NOT_LINED_UP:{ L: '未套料', K:'VERIFICATION_CODE', V: 0},
+  PARTIAL_ROW_SETS:{ L: '套料指令已发送', K:'VERIFICATION_CODE', V: 1},
+  LINED_UP:{ L: '套料结束', K:'VERIFICATION_CODE', V: 2},
+}
+constantize(NestingEnum)
+
 export {
   TypeEnum,
   steelPlateEnum,
   MessageTypeEnum,
-  PlateTypeEnum
+  PlateTypeEnum,
+  NestingStateEnum,
+  NestingEnum
 }
 
 export default {
   TypeEnum,
   steelPlateEnum,
   MessageTypeEnum,
-  PlateTypeEnum
+  PlateTypeEnum,
+  NestingStateEnum,
+  NestingEnum
 }
 
