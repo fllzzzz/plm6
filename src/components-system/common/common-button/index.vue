@@ -67,7 +67,7 @@ if (slotDefault.value) {
   // 避免slot为v-if=false的情况，出现span，从而导致图标未居中
   slotDefault.value = slot.some((v) => {
     // shapeFlag:某种类型,暂不知。 打包前v-if为false时， 对应的v.children值为：v-if， 打包后v.children值为 “空”
-    const blankFlag = v.shapeFlag === 8 && (isBlank(v.children) || v.children === 'v-if' || v.children === 'v-show')
+    const blankFlag = (v.shapeFlag === 8 || v.shapeFlag === 16) && (isBlank(v.children) || v.children === 'v-if' || v.children === 'v-show')
     return !blankFlag
   })
 }

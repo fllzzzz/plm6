@@ -8,7 +8,6 @@
             v-model:value="templateId"
             :table-types="tableType"
             :size="props.size"
-            :disabled="props.disabled"
             :cache-template-id="cacheTemplateId"
             initial
             filterable
@@ -21,7 +20,6 @@
             v-model:value="templateId"
             :table-type="tableType"
             :size="props.size"
-            :disabled="props.disabled"
             :cache-template-id="cacheTemplateId"
             default
             filterable
