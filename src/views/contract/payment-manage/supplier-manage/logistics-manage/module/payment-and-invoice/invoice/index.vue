@@ -37,7 +37,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*开票额" align="center" min-width="170" class="money-column">
+      <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="*开票额" align="center" min-width="170" class="money-column">
         <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
           <template v-slot="scope">
             <el-input-number
@@ -55,7 +55,7 @@
               <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="invoiceAmount1" prop="invoiceAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
           </template>
