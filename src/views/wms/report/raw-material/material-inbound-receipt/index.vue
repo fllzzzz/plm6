@@ -44,12 +44,7 @@
       >
         <template #default="{ row }">
           <table-cell-tag :show="!!row.boolPartyA" name="甲供" type="partyA" :offset="10" />
-          <clickable-permission-span
-            v-if="row.purchaseOrder"
-            :permission="permission.purchaseOrderDetail"
-            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
-            :text="row.purchaseOrder.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['PURCHASE']" :receipt="row.purchaseOrder" />
         </template>
       </el-table-column>
       <el-table-column
@@ -197,16 +192,11 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 采购订单详情 -->
-    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
-      <purchase-order-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialInboundReceiptPM as permission } from '@/page-permission/wms'
 
 import { computed, ref } from 'vue'
@@ -218,18 +208,14 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 import MDetail from './module/detail.vue'
 
-import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
-import useOtherCrudDetail from '@/composables/use-other-crud-detail'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import TableCellTag from '@comp-common/table-cell-tag/index.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -275,7 +261,4 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
-
-// 采购单详情
-const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
 </script>

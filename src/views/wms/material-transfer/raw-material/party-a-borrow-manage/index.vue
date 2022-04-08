@@ -23,17 +23,7 @@
             </p>
             <p>
               归还调拨单号：
-              <template v-if="row.returnTransfers && row.returnTransfers.length > 0">
-                <template v-for="(transfer, ri) in row.returnTransfers" :key="transfer.id">
-                  <clickable-permission-span
-                    :permission="permission.transferReceiptDetail"
-                    @click="openTransferDetailView(transfer.id)"
-                    :text="transfer.serialNumber"
-                  />
-                  <span v-if="ri !== row.returnTransfers.length - 1">、</span>
-                </template>
-              </template>
-              <template v-else>-</template>
+              <receipt-sn-clickable :receipt-types="['TRANSFER']" :receipt="row.returnTransfers" />
             </p>
           </expand-secondary-info>
         </template>
@@ -77,12 +67,7 @@
         min-width="120"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.borrowTransfer"
-            :permission="permission.transferReceiptDetail"
-            @click="openTransferDetailView(row.borrowTransfer.id)"
-            :text="row.borrowTransfer.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['TRANSFER']" :receipt="row.borrowTransfer" />
         </template>
       </el-table-column>
       <el-table-column
@@ -95,16 +80,7 @@
         min-width="120"
       >
         <template #default="{ row }">
-          <template v-if="row.returnTransfers && row.returnTransfers.length > 0">
-            <template v-for="(transfer, ri) in row.returnTransfers" :key="transfer.id">
-              <clickable-permission-span
-                :permission="permission.transferReceiptDetail"
-                @click="openTransferDetailView(transfer.id)"
-                :text="transfer.serialNumber"
-              />
-              <span v-if="ri !== row.returnTransfers.length - 1">、</span>
-            </template>
-          </template>
+          <receipt-sn-clickable :receipt-types="['TRANSFER']" :receipt="row.returnTransfers" />
         </template>
       </el-table-column>
       <el-table-column
@@ -150,18 +126,12 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 调拨详情 -->
-    <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
-      <transfer-detail />
-    </detail-wrapper>
-    <!-- -->
     <return-material v-model:visible="returnMaterialVisible" :detail="currentRow" @success="crud.toQuery" />
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/wms/material-transfer/raw-material/party-a-borrow-manage'
-import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
 import { rawMaterialPartyABorrowPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
@@ -174,16 +144,13 @@ import checkPermission from '@/utils/system/check-permission'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header'
-
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import returnMaterial from './module/return-material.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   batchAdd: false,
@@ -199,8 +166,6 @@ const expandRowKeys = ref([])
 const returnMaterialVisible = ref(false)
 // 当前行
 const currentRow = ref()
-// 调拨详情ref
-const transferDetailRef = ref()
 // 表格ref
 const tableRef = ref()
 // 表格列格式化
@@ -251,11 +216,6 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
       v.corUnderReviewQuantity = v.underReviewMete
     }
   })
-}
-
-// 打开调拨详情窗口
-function openTransferDetailView(transferId) {
-  transferDetailRef.value.toDetail(transferId)
 }
 
 // 归还

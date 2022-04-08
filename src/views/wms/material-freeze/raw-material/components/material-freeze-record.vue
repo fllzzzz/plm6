@@ -9,12 +9,7 @@
     </el-table-column>
     <el-table-column key="document" :show-overflow-tooltip="true" prop="document" label="单据编号" align="center" min-width="120">
       <template #default="{ row }">
-        <clickable-permission-span
-          v-if="row.document && row.document.serialNumber"
-          :permission="openDetailPermission(row.freezeType)"
-          @click="openDocumentDetail(row.freezeType, row.document.id)"
-          :text="row.document.serialNumber"
-        />
+        <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="row.document" />
       </template>
     </el-table-column>
     <el-table-column show-overflow-tooltip key="project" prop="project" label="单据项目" min-width="170" />
@@ -38,23 +33,10 @@
     </el-table-column>
   </common-table>
   <unfreeze-form v-model:visible="unfreezeFormVisible" :material="props.material" :record="currentRecord" @success="handleFreezeSuccess" />
-  <!-- 调拨详情 -->
-  <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
-    <transfer-detail />
-  </detail-wrapper>
-  <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
-    <outbound-detail />
-  </detail-wrapper>
-  <detail-wrapper ref="rejectDetailRef" :api="getRejectDetail">
-    <reject-detail />
-  </detail-wrapper>
 </template>
 
 <script setup>
 import { getMaterialFreezeRecordById } from '@/api/wms/material-freeze/raw-material/record'
-import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
-import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
-import { detail as getRejectDetail } from '@/api/wms/material-reject/raw-material/review'
 import { materialFreezeRecordCPM as permission } from '@/page-permission/wms'
 
 import { defineEmits, defineProps, ref, watch } from 'vue'
@@ -62,13 +44,8 @@ import { materialFreezeTypeEnum, measureTypeEnum } from '@/utils/enum/modules/wm
 import checkPermission from '@/utils/system/check-permission'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialColumns } from '@/utils/columns-format/wms'
-
-import DetailWrapper from '@crud/detail-wrapper.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
-import OutboundDetail from '@/views/wms/material-outbound/raw-material/review/module/detail.vue'
-import RejectDetail from '@/views/wms/material-reject/raw-material/review/module/detail.vue'
 import UnfreezeForm from '../components/unfreeze/index.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const emit = defineEmits(['unfreeze-success'])
 
@@ -94,12 +71,6 @@ const props = defineProps({
 const detailLoading = ref(false)
 // 列表
 const list = ref([])
-// 调拨详情组件
-const transferDetailRef = ref()
-// 出库详情组件
-const outboundDetailRef = ref()
-// 退货详情组件
-const rejectDetailRef = ref()
 // 解冻显示
 const unfreezeFormVisible = ref(false)
 // 当前解冻记录
@@ -175,26 +146,6 @@ function toUnfreeze(record) {
   currentRecord.value = record
 }
 
-// 打开详情
-function openDocumentDetail(freezeType, id) {
-  switch (freezeType) {
-    case materialFreezeTypeEnum.REQUISITIONS.V:
-      break
-    case materialFreezeTypeEnum.OUTBOUND.V:
-      // 出库详情
-      outboundDetailRef.value.toDetail(id)
-      break
-    case materialFreezeTypeEnum.TRANSFER.V:
-      // 打开调拨详情
-      transferDetailRef.value.toDetail(id)
-      break
-    case materialFreezeTypeEnum.REJECTED.V:
-      // 退货详情
-      rejectDetailRef.value.toDetail(id)
-      break
-  }
-}
-
 // 校验解冻权限
 function checkUnFreezePermission(freezeType) {
   const permission = unfreezePermission(freezeType)
@@ -204,28 +155,14 @@ function checkUnFreezePermission(freezeType) {
 // 解冻权限
 function unfreezePermission(freezeType) {
   switch (freezeType) {
-    case materialFreezeTypeEnum.REQUISITIONS.V:
+    case materialFreezeTypeEnum.PREPARATION.V:
       return permission.preparationUnFreeze
-    case materialFreezeTypeEnum.OUTBOUND.V:
+    case materialFreezeTypeEnum.OUTBOUND_APPLY.V:
       return permission.outboundUnFreeze
     case materialFreezeTypeEnum.TRANSFER.V:
       return permission.transferUnFreeze
     case materialFreezeTypeEnum.REJECTED.V:
       return permission.rejectUnFreeze
-  }
-}
-
-// 查看详情权限
-function openDetailPermission(freezeType) {
-  switch (freezeType) {
-    case materialFreezeTypeEnum.REQUISITIONS.V:
-      return permission.preparationReceiptDetail
-    case materialFreezeTypeEnum.OUTBOUND.V:
-      return permission.outboundReceiptDetail
-    case materialFreezeTypeEnum.TRANSFER.V:
-      return permission.transferReceiptDetail
-    case materialFreezeTypeEnum.REJECTED.V:
-      return permission.rejectReceiptDetail
   }
 }
 </script>

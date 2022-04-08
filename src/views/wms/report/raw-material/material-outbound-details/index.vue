@@ -60,12 +60,7 @@
         align="left"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.outboundReceipt"
-            :permission="permission.outboundReceiptDetail"
-            @click="openOutboundReceiptDetail(row.outboundReceipt.id)"
-            :text="row.outboundReceipt.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outboundReceipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -107,17 +102,12 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 出库单详情 -->
-    <detail-wrapper ref="outboundReceiptDetailRef" :api="getOutboundReceiptDetail">
-      <outbound-receipt-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/outbound'
-import { detail as getOutboundReceiptDetail } from '@/api/wms/material-outbound/raw-material/record'
 import { reportRawMaterialOutboundDetailsPM as permission } from '@/page-permission/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -126,13 +116,9 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useOtherCrudDetail from '@/composables/use-other-crud-detail'
-
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 
-import OutboundReceiptDetail from '@/views/wms/material-outbound/raw-material/record/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -140,7 +126,7 @@ import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -185,9 +171,6 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
-
-// 出库单详情
-const { detailRef: outboundReceiptDetailRef, openDetail: openOutboundReceiptDetail } = useOtherCrudDetail()
 
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

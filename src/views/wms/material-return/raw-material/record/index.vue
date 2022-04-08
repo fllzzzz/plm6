@@ -20,17 +20,7 @@
           </p>
           <p>
             关联出库单：
-            <template v-if="row.outboundList && row.outboundList.length > 0">
-              <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
-                <clickable-permission-span
-                  :permission="permission.outboundReceiptDetail"
-                  @click="openOutboundDetailView(outbound.id)"
-                  :text="outbound.serialNumber"
-                />
-                <span v-if="ri !== row.outboundList.length - 1">、</span>
-              </template>
-            </template>
-            <template v-else>-</template>
+            <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outboundList" />
           </p>
           <p>
             审批意见：<span>{{ row.approvalComments }}</span>
@@ -73,17 +63,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <template v-if="row.outboundList && row.outboundList.length > 0">
-            <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
-              <clickable-permission-span
-                :permission="permission.outboundReceiptDetail"
-                @click="openOutboundDetailView(outbound.id)"
-                :text="outbound.serialNumber"
-              />
-              <span v-if="ri !== row.outboundList.length - 1"> 、</span>
-            </template>
-          </template>
-          <template v-else>-</template>
+          <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outboundList" />
         </template>
       </el-table-column>
       <el-table-column
@@ -171,15 +151,10 @@
     <m-detail />
     <!-- 编辑 -->
     <m-form />
-    <!-- 出库详情 -->
-    <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
-      <outbound-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
-import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 import crudApi from '@/api/wms/material-return/raw-material/record'
 import { rawMaterialReturnRecordPM as permission } from '@/page-permission/wms'
 
@@ -189,17 +164,14 @@ import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-
-import OutboundDetail from '@/views/wms/material-outbound/raw-material/review/module/detail.vue'
-import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header'
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import MDetail from './module/detail.vue'
 import MForm from './module/form.vue'
+
+import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -209,8 +181,6 @@ const optShow = {
 }
 
 const expandRowKeys = ref([])
-// 出库详情ref
-const outboundDetailRef = ref()
 const tableRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([...wmsReceiptColumns, ['approvalComments', 'empty-text']])
@@ -227,9 +197,4 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-
-// 打开出库详情窗口
-function openOutboundDetailView(outboundId) {
-  outboundDetailRef.value.toDetail(outboundId)
-}
 </script>

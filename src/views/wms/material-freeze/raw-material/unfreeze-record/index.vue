@@ -63,17 +63,7 @@
       >
         <template #default="{ row: record }">
           <!-- 当前页面出库申请单无法查看详情（出库申请单会被清空） -->
-          <template v-if="record.document && record.document.serialNumber">
-            <span v-if="record.freezeType === materialFreezeTypeEnum.OUTBOUND.V">
-              {{ record.document.serialNumber }}
-            </span>
-            <clickable-permission-span
-              v-else
-              :permission="openDetailPermission(record.freezeType)"
-              @click="openDocumentDetail(record.freezeType, record.document.id)"
-              :text="record.document.serialNumber"
-            />
-          </template>
+          <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="record.document" />
         </template>
       </el-table-column>
       <el-table-column
@@ -105,14 +95,6 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 调拨详情 -->
-    <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
-      <transfer-detail />
-    </detail-wrapper>
-    <!-- 退货详情 -->
-    <detail-wrapper ref="rejectDetailRef" :api="getRejectDetail">
-      <reject-detail />
-    </detail-wrapper>
   </div>
 </template>
 
@@ -121,8 +103,6 @@ import crudApi from '@/api/wms/material-freeze/raw-material/unfreeze-record'
 import { rawMaterialUnFreezeListPM as permission } from '@/page-permission/wms'
 
 import { computed, ref } from 'vue'
-import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
-import { detail as getRejectDetail } from '@/api/wms/material-reject/raw-material/review'
 import { materialFreezeTypeEnum, projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -131,10 +111,7 @@ import { materialNestedColumns } from '@/utils/columns-format/wms'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import MHeader from './module/header'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
-import RejectDetail from '@/views/wms/material-reject/raw-material/review/module/detail.vue'
-import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
@@ -142,7 +119,7 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-custom-field-
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-custom-field-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-custom-field-columns/warehouse-info-columns/index.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -157,10 +134,6 @@ const tableRef = ref()
 const headerRef = ref()
 // 展开keys
 const expandRowKeys = ref([])
-// 调拨详情组件
-const transferDetailRef = ref()
-// 退货详情组件
-const rejectDetailRef = ref()
 // 表格列数据格式转换
 const columnsDataFormat = ref([
   ['remark', 'empty-text'],
@@ -201,37 +174,6 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   data.content.forEach((row, index) => {
     row.material = materialList[index]
   })
-}
-
-// 查看详情权限
-function openDetailPermission(freezeType) {
-  switch (freezeType) {
-    case materialFreezeTypeEnum.REQUISITIONS.V:
-      return permission.preparationReceiptDetail
-    case materialFreezeTypeEnum.OUTBOUND.V:
-      return permission.outboundReceiptDetail
-    case materialFreezeTypeEnum.TRANSFER.V:
-      return permission.transferReceiptDetail
-    case materialFreezeTypeEnum.REJECTED.V:
-      return permission.rejectReceiptDetail
-  }
-}
-
-function openDocumentDetail(freezeType, id) {
-  switch (freezeType) {
-    case materialFreezeTypeEnum.REQUISITIONS.V:
-      break
-    case materialFreezeTypeEnum.OUTBOUND.V:
-      break
-    case materialFreezeTypeEnum.TRANSFER.V:
-      // 打开调拨详情
-      transferDetailRef.value.toDetail(id)
-      break
-    case materialFreezeTypeEnum.REJECTED.V:
-      // 退货详情
-      rejectDetailRef.value.toDetail(id)
-      break
-  }
 }
 </script>
 
