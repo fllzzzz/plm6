@@ -55,7 +55,7 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.del])"
+        v-if="checkPermission([ ...permission.detail,...permission.audit])"
         label="操作"
         width="190px"
         align="center"
@@ -74,7 +74,7 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
-import { ref, defineProps, watch, nextTick, defineEmits } from 'vue'
+import { ref, defineProps, watch, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -134,23 +134,13 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
-      crud.toQuery()
-    }
-  },
-  { deep: true, immediate: true }
-)
-
-watch(
-  props.detailInfo,
-  (id) => {
-    nextTick(() => {
       crud.query.supplierId = props.detailInfo.supplierId
       crud.query.branchCompanyId = props.detailInfo.branchCompanyId
       crud.query.propertyType = supplierPayTypeEnum.TRANSPORT.V
       crud.toQuery()
-    })
+    }
   },
-  { immediate: true }
+  { deep: true, immediate: true }
 )
 
 function handleSuccess() {

@@ -52,7 +52,7 @@ const defaultQuery = {
   settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
   supplierName: undefined,
   serialNumber: undefined,
-  propertyType: { value: baseMaterialTypeEnum.MANUFACTURED.V, resetAble: false },
+  purchaseType: { value: baseMaterialTypeEnum.MANUFACTURED.V, resetAble: false },
   createTime: [],
   startDate: undefined,
   endDate: undefined

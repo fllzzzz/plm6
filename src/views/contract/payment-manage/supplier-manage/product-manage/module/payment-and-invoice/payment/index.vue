@@ -30,50 +30,54 @@
             <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="applyAmount2" prop="applyAmount2" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="applyAmount2" prop="applyAmount2" label="大写" align="center" min-width="85">
           <template v-slot="scope">
             <div>{{scope.row.applyAmount?'('+digitUppercase(scope.row.applyAmount)+')':''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
+      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.paymentReasonId && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.paymentReasonId]: '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionMode" prop="collectionMode" label="*付款方式" align="center" width="110">
+      <el-table-column key="paymentMethod" prop="paymentMethod" label="*付款方式" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div>{{ scope.row.collectionMode? paymentFineModeEnum.VL[scope.row.collectionMode]: '' }}</div>
+          <div>{{ scope.row.paymentMethod? paymentFineModeEnum.VL[scope.row.paymentMethod]: '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="collectionBankAccountId" prop="collectionBankAccountId" :show-overflow-tooltip="true" label="*付款银行" align="center" min-width="120">
+      <el-table-column key="paymentBank" prop="paymentBank" :show-overflow-tooltip="true" label="*付款银行" align="center">
         <template v-slot="scope">
-         <div>{{ scope.row.collectionDepositBank }}</div>
+         <div>{{ scope.row.paymentBank? scope.row.paymentBank: '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentUnit" prop="paymentUnit" label="*收款单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="paymentUnit" prop="paymentUnit" label="*收款单位" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div>{{ scope.row.paymentUnit  }}</div>
+          <div>{{ scope.row.paymentUnit? scope.row.paymentUnit: '-'  }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="attachment" prop="attachment" label="附件" align="center" width="100px">
+      <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
-          <div>{{ scope.row.attachment }}</div>
+          <template v-if="scope.row.attachments && scope.row.attachments.length>0">
+            <div v-for="item in scope.row.attachments" :key="item.id">
+              {{ item.name }}
+            </div>
+          </template>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
+      <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.writtenByName }}</div>
+          <div>{{ scope.row.applyUserName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditorName" prop="auditorName" label="审核人" align="center" width="100px">
+      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.auditorName }}</div>
+          <div>{{ scope.row.auditUserName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="auditorName" prop="auditorName" label="审核日期" align="center" width="100px">
+      <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.auditorName }}</div>
+          <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
     </common-table>
@@ -90,10 +94,10 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import useDict from '@compos/store/use-dict'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
-import { toThousand } from '@data-type/number'
-import { digitUppercase } from '@/utils/data-type/number'
+import { toThousand, digitUppercase } from '@data-type/number'
 import { contractSupplierProductPM } from '@/page-permission/contract'
 
 const permission = contractSupplierProductPM.payment
@@ -153,7 +157,8 @@ watch(
 
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.orderId = props.currentRow.id
-  crud.query.propertyType = props.propertyType
+  crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
+  crud.query.auditStatus = auditTypeEnum.PASS.V
 }
 
 // 合计

@@ -31,7 +31,6 @@
             value-format="x"
             placeholder="选择日期"
             style="width:100%"
-            :disabledDate="(date) => {if (scope.row.receiveInvoiceDate) { return date.getTime() > scope.row.receiveInvoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
           />
           <template v-else>
             <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -46,7 +45,7 @@
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
                 :min="0"
-                :max="props.currentRow.amount"
+                :max="999999999999"
                 :step="100"
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
@@ -182,9 +181,8 @@
 </template>
 
 <script setup>
-// import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
-import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
+import { ref, defineProps, watch, provide, defineEmits } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -296,28 +294,29 @@ function invoiceTypeChange(row) {
   row.taxRate = undefined
 }
 function moneyChange(row) {
-  totalAmount.value = 0
-  crud.data.map(v => {
-    if (v.invoiceAmount) {
-      totalAmount.value += v.invoiceAmount
-    }
-  })
-  if (totalAmount.value > props.currentRow.amount) {
-    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
-    // 解决修改失效
-    nextTick(() => {
-      row.invoiceAmount = num || 0
-      taxMoney(row)
-      totalAmount.value = 0
-      crud.data.map(v => {
-        if (v.invoiceAmount) {
-          totalAmount.value += v.invoiceAmount
-        }
-      })
-    })
-  } else {
-    taxMoney(row)
-  }
+  // totalAmount.value = 0
+  // crud.data.map(v => {
+  //   if (v.invoiceAmount) {
+  //     totalAmount.value += v.invoiceAmount
+  //   }
+  // })
+  // if (totalAmount.value > props.currentRow.amount) {
+  //   const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
+  //   // 解决修改失效
+  //   nextTick(() => {
+  //     row.invoiceAmount = num || 0
+  //     taxMoney(row)
+  //     totalAmount.value = 0
+  //     crud.data.map(v => {
+  //       if (v.invoiceAmount) {
+  //         totalAmount.value += v.invoiceAmount
+  //       }
+  //     })
+  //   })
+  // } else {
+  //   taxMoney(row)
+  // }
+  taxMoney(row)
 }
 
 function taxMoney(row) {
@@ -416,9 +415,16 @@ async function rowSubmit(row) {
   }
 }
 
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['invoiceAmount'],
+    toThousandFields: ['invoiceAmount']
+  })
+}
+
 CRUD.HOOK.beforeRefresh = () => {
   crud.query.orderId = props.currentRow.id
-  crud.query.type = props.propertyType
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
@@ -435,14 +441,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
-  })
-}
-
-// 合计
-function getSummaries(param) {
-  return tableSummary(param, {
-    props: ['invoiceAmount'],
-    toThousandFields: ['invoiceAmount']
   })
 }
 

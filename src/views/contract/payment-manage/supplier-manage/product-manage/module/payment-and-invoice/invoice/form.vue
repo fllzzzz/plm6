@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-tag type="success" v-if="currentRow.amount">{{'可收票余额:'+toThousand(currentRow.amount-totalAmount)}}</el-tag>
+      <el-tag type="success" v-if="currentRow.amount">{{'合同金额:'+toThousand(currentRow.amount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -36,7 +36,6 @@
                 value-format="x"
                 placeholder="选择日期"
                 style="width:100%"
-                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
               />
               <template v-else>
                 <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -51,7 +50,7 @@
                   v-show-thousand
                   v-model.number="scope.row.invoiceAmount"
                   :min="0"
-                  :max="currentRow.amount-totalAmount"
+                  :max="999999999999"
                   :step="100"
                   :precision="DP.YUAN"
                   placeholder="开票额(元)"
@@ -141,7 +140,7 @@
 </template>
 
 <script setup>
-import { ref, inject, nextTick, defineProps, watch } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -158,8 +157,8 @@ const defaultForm = {
 }
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
-const totalAmount = inject('totalAmount')
-const extraAmount = ref(0)
+// const totalAmount = inject('totalAmount')
+// const extraAmount = ref(0)
 const invoiceNoArr = ref([])
 
 const props = defineProps({
@@ -249,28 +248,29 @@ function invoiceTypeChange(row) {
 }
 
 function moneyChange(row) {
-  extraAmount.value = 0
-  form.list.map(v => {
-    if (v.invoiceAmount) {
-      extraAmount.value += v.invoiceAmount
-    }
-  })
-  if (extraAmount.value > (props.currentRow.amount - totalAmount.value)) {
-    const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.amount - totalAmount.value))
-    // 解决修改失效
-    nextTick(() => {
-      row.invoiceAmount = num || 0
-      taxMoney(row)
-      extraAmount.value = 0
-      form.list.map(v => {
-        if (v.invoiceAmount) {
-          extraAmount.value += v.invoiceAmount
-        }
-      })
-    })
-  } else {
-    taxMoney(row)
-  }
+  taxMoney(row)
+  // extraAmount.value = 0
+  // form.list.map(v => {
+  //   if (v.invoiceAmount) {
+  //     extraAmount.value += v.invoiceAmount
+  //   }
+  // })
+  // if (extraAmount.value > (props.currentRow.amount - totalAmount.value)) {
+  //   const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.amount - totalAmount.value))
+  //   // 解决修改失效
+  //   nextTick(() => {
+  //     row.invoiceAmount = num || 0
+  //     taxMoney(row)
+  //     extraAmount.value = 0
+  //     form.list.map(v => {
+  //       if (v.invoiceAmount) {
+  //         extraAmount.value += v.invoiceAmount
+  //       }
+  //     })
+  //   })
+  // } else {
+  //   taxMoney(row)
+  // }
 }
 
 function taxMoney(row) {
@@ -280,8 +280,6 @@ function taxMoney(row) {
 }
 function checkInvoiceNo(row) {
   const val = invoiceNoArr.value.find(v => v.dataIndex === row.dataIndex)
-  console.log(invoiceNoArr)
-  console.log(val)
   if (val) {
     if (row.invoiceSerialNumber) {
       if (val.invoiceSerialNumber === row.invoiceSerialNumber) {
