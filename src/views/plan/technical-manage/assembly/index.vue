@@ -237,8 +237,9 @@
       <!--分页组件-->
       <pagination />
       <!-- pdf预览 -->
-      <drawing-pdf
+      <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -261,7 +262,7 @@ import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })

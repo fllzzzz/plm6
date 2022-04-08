@@ -1,29 +1,35 @@
 import { getStatusDetail } from '@/api/bim/model'
 import bfColorCard from '@/components-system/bim/bf-color-card.vue'
-import { createApp, watch } from 'vue'
+import { createApp, watch, ref } from 'vue'
 
-export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById }) {
+export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
+  const curElementIds = ref([])
+
   const ccApp = createApp(bfColorCard, {
     statusChange: statusChange,
     colors: colors.value
   })
 
-  function statusChange(card) {
+  async function statusChange(card) {
     if (!card) {
+      curElementIds.value = []
       clearIsolation()
       showComponentsById(objectIdGroup.value[0])
+      clearColorCardPanel()
     } else {
       const status = card.value
-      const elementIds = objectIdGroup.value[status] || []
+      let elementIds = objectIdGroup.value[status] || []
+      console.log(elementIds, 'elementIds')
       if (!elementIds.length) {
         hideComponentsById(objectIdGroup.value[0])
         clearColorCardPanel()
       } else {
         showComponentsById(objectIdGroup.value[0])
-        isolateComponentsById(elementIds)
-        if ([2, 3, 4].indexOf(card.value) !== -1) {
-          fetchColorCardPanel(card)
+        if ([2, 3, 4, 5, 6, 7].indexOf(card.value) !== -1) {
+          await fetchColorCardPanel(card)
+          elementIds = curElementIds.value
         }
+        isolateComponentsById(elementIds)
       }
     }
   }
@@ -79,7 +85,8 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
     _panel && _panel.show()
 
     try {
-      const { proportion, quantity, totalGrossWeight, basicsVOS } = await getStatusDetail({ fileId: modelStatus.value.fileId, status: card.value })
+      const { proportion, quantity, totalGrossWeight, basicsVOS, elementIds } = await getStatusDetail({ fileId: modelStatus.value.fileId, status: card.value, menuBar: menuBar.value })
+      curElementIds.value = elementIds
       const _el = document.getElementsByClassName('bf-panel-color-card')[0].getElementsByClassName('bf-panel-container')[0]
       _el.innerHTML = ''
       _el.innerHTML = `

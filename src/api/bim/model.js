@@ -82,12 +82,12 @@ export function getArtifactSearch({ serialNumber, monomerId }) {
  * 获取生产信息
  * @param {number} fileId 文件id
  */
-export function getArtifactProduction({ fileId }) {
+export function getArtifactProduction({ fileId, menuBar }) {
   return request({
     url: '/api/model/3DModel/artifact/production',
     method: 'get',
     timeout: 600000,
-    params: { fileId }
+    params: { fileId, menuBar }
   })
 }
 
@@ -95,11 +95,38 @@ export function getArtifactProduction({ fileId }) {
  * 获取状态下的信息
  * @param {number} fileId 文件id
  */
-export function getStatusDetail({ fileId, status }) {
+export function getStatusDetail({ fileId, status, menuBar }) {
   return request({
     url: '/api/model/3DModel/status/details',
     method: 'get',
     timeout: 600000,
-    params: { fileId, status }
+    params: { fileId, status, menuBar }
+  })
+}
+
+/**
+ * 获取物流信息
+ * @param {number} monomerId 单体id
+ */
+export function getLogistics({ monomerId }) {
+  return request({
+    url: '/api/model/3DModel/logistics',
+    method: 'get',
+    timeout: 600000,
+    params: { monomerId: 5 }
+  })
+}
+
+/**
+ * 获取物流信息
+ * @param {number} productId 产品id
+ * @param {number} productType 产品类型
+ */
+export function getBimDrawing({ productId, productType }) {
+  return request({
+    url: '/api/plan/drawing/product/bim',
+    method: 'get',
+    timeout: 600000,
+    params: { productId, productType }
   })
 }

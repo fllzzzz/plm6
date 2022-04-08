@@ -45,14 +45,14 @@ const modelMenuBarEnum = {
     { title: '生产完毕', color: '#1682e6', opacity: 1, value: 4, qField: 'storageQuantity', wField: 'storageTotalGrossWeight' }
   ] },
   SHIPMENT_STATUS: { L: '发运状态', K: 'SHIPMENT_STATUS', ICON: 'shipment.png', V: 4, COLORS: [
-    { title: '未入库', color: '#f5f7fa', opacity: 1, value: 5, qField: '', wField: '' },
-    { title: '已入库', color: '#ffba00', opacity: 1, value: 6, qField: '', wField: '' },
-    { title: '已发运', color: '#1682e6', opacity: 1, value: 7, qField: '', wField: '' }
+    { title: '未入库', color: '#f5f7fa', opacity: 1, value: 5, qField: 'unProducedQuantity', wField: 'unProducedTotalGrossWeight' },
+    { title: '已入库', color: '#ffba00', opacity: 1, value: 6, qField: 'storageQuantity', wField: 'storageTotalGrossWeight' },
+    { title: '已发运', color: '#1682e6', opacity: 1, value: 7, qField: 'producedQuantity', wField: 'producedTotalGrossWeight' }
   ] },
   INSTALL_STATE: { L: '安装状态', K: 'INSTALL_STATE', V: 5, ICON: 'installation.png', COLORS: [
-    { title: '未收货', color: '#f5f7fa', opacity: 1, value: 2, qField: '', wField: '' },
-    { title: '已收货', color: '#ffba00', opacity: 1, value: 3, qField: '', wField: '' },
-    { title: '已安装', color: '#32d3a6', opacity: 1, value: 8, qField: '', wField: '' }
+    { title: '未收货', color: '#f5f7fa', opacity: 1, value: 5, qField: 'unProducedQuantity', wField: 'unProducedTotalGrossWeight' },
+    { title: '已收货', color: '#ffba00', opacity: 1, value: 6, qField: 'producedQuantity', wField: 'producedTotalGrossWeight' },
+    { title: '已安装', color: '#32d3a6', opacity: 1, value: 7, qField: 'storageQuantity', wField: 'storageTotalGrossWeight' }
   ] }
 }
 constantize(modelMenuBarEnum)

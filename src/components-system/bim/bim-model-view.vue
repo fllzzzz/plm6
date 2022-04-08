@@ -4,13 +4,18 @@
       {{ tipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
     <div id="modelView"></div>
+          <!-- pdf预览 -->
+
+       <drawing-pdf
+      v-model="showDrawing"
+    />
   </div>
 </template>
 
 <script setup>
 import * as bimModel from '../../../public/assets/bimface/bimfaceAPI.js'
 import { getTranslate } from '@/api/bim/model.js'
-import { defineProps, watch, ref, reactive } from 'vue'
+import { defineProps, watch, ref, reactive, computed } from 'vue'
 
 import { constantize } from '@/utils/enum/base'
 import { isBlank } from '@/utils/data-type'
@@ -24,6 +29,9 @@ import useArtifactColoring from '@compos/bim/use-artifact-coloring'
 import useArtifactSearch from '@compos/bim/use-artifact-search'
 import useArtifactInfo from '@compos/bim/use-artifact-info'
 import useStatusInfo from '@compos/bim/use-status-info'
+import useLogisticsInfo from '@compos/bim/use-logistics-info'
+import useDrawing from '@compos/bim/use-drawing'
+import drawingPdf from '@comp-base/drawing-pdf.vue'
 // import useRightClickEvent from '@compos/bim/use-right-click-event'
 import PDF from '@/components/PDF/pdf'
 console.log(PDF, 'PDF')
@@ -35,6 +43,10 @@ const props = defineProps({
   },
   maxHeight: {
     type: Number
+  },
+  isPreview: {
+    type: Boolean,
+    default: false
   },
   monomerName: {
     type: String
@@ -96,6 +108,14 @@ const viewerPanel = reactive({
     config: null,
     panel: null
   },
+  logistics: {
+    config: null,
+    panel: null
+  },
+  shipment: {
+    config: null,
+    panel: null
+  },
   colorCard: {
     config: null,
     panel: null
@@ -105,26 +125,31 @@ const viewProAreaTree = ref({})
 const colors = ref([])
 const menuBar = ref()
 const objectIdGroup = ref({})
+const showDrawing = ref(false)
 
 const {
   initModelColor, fetchArtifactStatus,
   addBlinkByIds, removeBlink,
   isolateComponentsById, clearIsolation,
   hideComponentsById, showComponentsById,
+  overrideComponentsColorById,
   clearSelectedComponents
 } = useArtifactColoring({ bimModel, modelStatus, viewer: _viewer, colors, objectIdGroup })
-const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus })
+const { createDrawing, fetchDrawing } = useDrawing()
+const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ showDrawing, menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
 const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ menuBar, bimModel, viewerPanel, modelStatus })
 const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink })
+const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
 const { createMyToolbar } = useMyToolbar({
   menuBar, publicPath, bimModel, viewerPanel, viewProAreaTree, colors,
+  createLogisticsBtn, hideLogisticsBtn,
   clearProTreePanel, fetchProTree,
   clearArtifactInfoPanel, fetchArtifactInfo,
   clearStatusInfoPanel, fetchStatusInfo,
   clearSelectedComponents
 })
 const { createSearchHtml, searchBySN } = useArtifactSearch({ props, addBlinkByIds, removeBlink })
-const { createColorCardHtml } = useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById })
+const { createColorCardHtml } = useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById })
 // const { addRightEventListener } = useRightClickEvent({ viewerPanel, fetchArtifactInfo })
 
 watch(
@@ -172,7 +197,10 @@ async function loadModel(viewToken) {
     // viewToken = 'a40b9998ef634f8c9f638a19c66c5e9a'
     const metaData = await bimModel.initBimfaceApp({ viewToken })
     _3DConfig.value = bimModel.getConfig()
-    _3DConfig.value.Toolbars = ['MainToolbar']
+      _3DConfig.value.Toolbars = ['MainToolbar']
+    // if (props.isPreview) {
+    //   _3DConfig.value.Buttons = ['home','']
+    // }
     const _el = document.getElementById('modelView')
     _el.innerHTML = '' // 清除旧数据
     _3DConfig.value.domElement = _el
@@ -189,14 +217,17 @@ async function loadModel(viewToken) {
     _viewer.value.addEventListener(
       _viewer3DEvent.value.ViewAdded,
       async () => {
-        viewerPanel.panelPositions = bimModel.getPanelPositions()
-        // 生成自定义的工具条
-        createMyToolbar()
-        createArtifactInfoPanel()
-        createProTreePanel()
-        createStatusInfoPanel()
-        createSearchHtml()
-        createColorCardHtml()
+        if (!props.isPreview) {
+          viewerPanel.panelPositions = bimModel.getPanelPositions()
+          // 生成自定义的工具条
+          createMyToolbar()
+          createArtifactInfoPanel()
+          createProTreePanel()
+          createStatusInfoPanel()
+          createSearchHtml()
+          createColorCardHtml()
+        }
+        createDrawing()
 
         // 调用viewer3D对象的Method，可以继续扩展功能
         // 自适应屏幕大小
@@ -204,6 +235,7 @@ async function loadModel(viewToken) {
           _viewer.value.resize(document.documentElement.clientWidth, document.documentElement.clientHeight - 40)
           _viewer.value.clearSelectedComponents()
         }
+
         initModelColor()
         modelLoaded.value = true
       },
@@ -254,6 +286,17 @@ async function loadModel(viewToken) {
     right: 160px;
   }
 
+  #bfLogisticsBtn{
+    position: absolute;
+    top:20px;
+    left: 807px;
+  }
+
+  #bfDrawingView{
+    width: 100%;
+    height: 100%;
+  }
+
   .bf-artifact-search {
     position: absolute;
     left: 480px;
@@ -272,7 +315,9 @@ async function loadModel(viewToken) {
     opacity: 1;
   }
 
-  .bf-area-artifact-container,.bf-artifact-info-container,.bf-machine-part-list-container,.bf-panel-color-card-container {
+  .bf-area-artifact-container,.bf-artifact-info-container,
+  .bf-machine-part-list-container,.bf-panel-color-card-container,
+  .bf-panel-logistics-info-container,.bf-panel-shipment-container {
     font-size: 12px;
     line-height: 25px;
 
@@ -294,8 +339,10 @@ async function loadModel(viewToken) {
     }
   }
 
-  .bf-artifact-info-container>div>span:first-child{
-    flex: 0.5;
+  .bf-artifact-info-container, .bf-panel-logistics-info-container,.bf-panel-shipment-container{
+    div>span:first-child{
+      flex: 0.5;
+    }
   }
 }
 </style>

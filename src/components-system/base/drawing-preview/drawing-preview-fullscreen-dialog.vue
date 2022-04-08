@@ -1,25 +1,20 @@
-<!-- 图纸pdf预览 -->
 <template>
   <el-dialog
     title="图纸预览"
     v-model="dialogVisible"
     width="80%"
-    :fullscreen="fullscreen"
+    :fullscreen="true"
     :custom-class="'drawing-pdf-dialog'"
     :before-close="handleClose"
   >
-    <div v-show="!loading" class="root-content">
-      <div class="pdf-content" @dblclick="showOperate = true" @click="showOperate = false">
-        <div id="pdfBox" ref="pdfBox" class="pdf-box" @mousedown="move">
-          <!-- <object :data="src" type="application/pdf" width="100%" height="900px" /> -->
-          <!-- <embed :src="src" type="application/pdf" width="100%" height="700px"> -->
-          <!-- <iframe :src="src" width="100%" height="500px" content-type="application/adobe-pdf" /> -->
-          <pdf :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
-        </div>
+    <div v-show="!fileLoading" class="root-content">
+      <div class="preview-content" @dblclick="changeOperate(true)" @click="changeOperate(false)">
+        <component ref="viewRef" :is="currentView" @changeFileLoading="changeFileLoading"> </component>
       </div>
       <div v-show="showOperate" class="operate-content">
         <div class="operate-left">{{ serialNumber }}</div>
-        <div class="operate-middle">{{ `${pageNum} / ${pageTotalNum}` }}</div>
+        <div v-if="!boolBim" class="operate-middle">{{ `${pageNum} / ${pageTotalNum}` }}</div>
+        <div v-else class="operate-middle"></div>
         <div class="operate-right" />
       </div>
       <div class="quick-operation">
@@ -29,10 +24,10 @@
         <div class="icon-box" @click="scaleZoomOut">
           <svg-icon class="icon" icon-class="comp-zoom-out" />
         </div>
-        <div class="icon-box" @click="clockwiseRotate">
+        <div v-if="!boolBim" class="icon-box" @click="clockwiseRotate">
           <svg-icon class="icon" icon-class="comp-clockwise-rotate" />
         </div>
-        <div class="icon-box" @click="counterclockwiseRotate">
+        <div v-if="!boolBim" class="icon-box" @click="counterclockwiseRotate">
           <svg-icon class="icon" icon-class="comp-counterclockwise-rotate" />
         </div>
         <div class="icon-box" @click="reset">
@@ -43,19 +38,20 @@
         </div>
       </div>
     </div>
-    <div v-if="fileLoading || loading" class="load-box">
+    <div v-if="fileLoading" class="load-box">
       <i class="el-icon-loading" />
     </div>
   </el-dialog>
 </template>
 
 <script setup>
-import pdf from '@/components/PDF/pdf'
-import { ElNotification } from 'element-plus'
-import { defineEmits, defineProps, ref } from 'vue'
-import { previewPDF } from '@/api/plan/technical-data-manage/deepen'
-
+import { defineEmits, defineProps, provide, ref, computed, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
+import bimDrawingView from '@/components-system/bim/bim-drawing-view.vue'
+import pdfView from './pdf-view'
+// bim内手动挂载组件需引入涉及组件
+import { ElDialog } from 'element-plus'
+import SvgIcon from '@comp/SvgIcon/index.vue'
 
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
@@ -63,9 +59,9 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  fullscreen: {
+  boolBim: {
     type: Boolean,
-    default: true
+    default: false
   },
   serialNumber: {
     // 编号
@@ -82,96 +78,62 @@ const props = defineProps({
   }
 })
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: fetch })
+provide(
+  'productId',
+  computed(() => props.productId)
+)
+provide(
+  'productType',
+  computed(() => props.productType)
+)
 
-const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
-console.log(pdfjsDistPath)
-const source = ref()
-const scale = ref(1)
-const viewRotate = ref(0)
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: initPreview })
+
+const viewRef = ref()
 const showOperate = ref(false)
 const pageNum = ref()
 const pageTotalNum = ref()
-const loading = ref(false)
 const fileLoading = ref(false)
 
-async function fetch() {
+const currentView = computed(() => {
+  console.log(props.boolBim, 'props.boolBim')
+  return props.boolBim ? bimDrawingView : pdfView
+})
+
+function initPreview() {
   if (!dialogVisible.value) {
     return
   }
-  init()
-  try {
-    fileLoading.value = true
-    const param = {
-      productId: props.productId,
-      productType: props.productType
-    }
-    const res = await previewPDF(param)
-    source.value = await getUrlByFileReader(res)
-    // 处理图纸
-  } catch (error) {
-    console.log('获取图纸', error)
-    handleClose()
-    ElNotification({ title: '获取图纸失败', type: 'error', duration: 2000 })
-  } finally {
-    fileLoading.value = false
-  }
-}
-
-function getUrlByFileReader(res) {
-  return new Promise((resolve, reject) => {
-    if (res && res.data && res.data.size) {
-      const dataInfo = res.data
-      const reader = new window.FileReader()
-      // 使用readAsArrayBuffer读取文件, result属性中将包含一个 ArrayBuffer 对象以表示所读取文件的数据
-      reader.readAsArrayBuffer(dataInfo)
-      reader.onload = function (e) {
-        const result = e.target.result
-        const contentType = dataInfo.type
-        // 生成blob图片,需要参数(字节数组, 文件类型)
-        const blob = new Blob([result], { type: contentType })
-        // 使用 Blob 创建一个指向类型化数组的URL, URL.createObjectURL是new Blob文件的方法,可以生成一个普通的url,可以直接使用,比如用在img.src上
-        const url = window.URL.createObjectURL(blob)
-        console.log(url) // 产生一个类似 blob:d3958f5c-0777-0845-9dcf-2cb28783acaf 这样的URL字符串
-        resolve(url)
-      }
-    } else {
-      reject()
-    }
+  pageNum.value = 1
+  pageTotalNum.value = 1
+  nextTick(() => {
+    viewRef.value.fetchDrawing()
+    viewRef.value.reset()
   })
 }
 
-function init() {
-  pageNum.value = 1
-  pageTotalNum.value = 1
-  // 设置滚动条高度为0
-  const el = document.getElementById('pdfBox')
-  if (el) {
-    el.scrollTop = 0
-  }
-  reset()
+function changeOperate(state) {
+  showOperate.value = state
 }
 
-function pdfError(error) {
-  ElNotification({ title: '加载图纸失败，请确认是否已上传该编号图纸', type: 'error', duration: 3000 })
-  console.error(error)
+function changeFileLoading(state) {
+  fileLoading.value = state
 }
 
 function scaleZoom() {
-  scale.value += 0.2
+  viewRef.value.scaleZoom()
 }
 function scaleZoomOut() {
-  scale.value -= 0.2
+  viewRef.value.scaleZoomOut()
 }
 function clockwiseRotate() {
-  viewRotate.value += 90
+  viewRef.value.clockwiseRotate()
 }
 function counterclockwiseRotate() {
-  viewRotate.value -= 90
+  viewRef.value.counterclockwiseRotate()
 }
 function reset() {
-  viewRotate.value = 0
-  scale.value = 1
+  viewRef.value.reset()
 }
 </script>
 
@@ -199,7 +161,7 @@ function reset() {
     font-size: 100px;
     color: white;
   }
-  .pdf-content {
+  .preview-content {
     box-sizing: border-box;
     padding: 0 50px;
     @extend .flex-rcc;
@@ -256,6 +218,7 @@ function reset() {
 .operate-content {
   position: absolute;
   top: 0;
+  z-index: 1;
   height: 50px;
   width: 100%;
   box-sizing: border-box;

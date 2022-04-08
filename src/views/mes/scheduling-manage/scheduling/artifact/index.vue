@@ -124,12 +124,13 @@
     <!--分页组件-->
     <pagination />
     <!-- pdf预览 -->
-    <drawing-pdf
-      v-model="showDrawing"
-      :serial-number="drawingRow?.serialNumber"
-      :productId="drawingRow?.productId"
-      :productType="drawingRow?.productType"
-    />
+    <drawing-preview-fullscreen-dialog
+        v-model="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
   </div>
 </template>
 
@@ -149,7 +150,7 @@ import { productFormat } from '@/utils/columns-format/mes'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 import useDrawing from '@compos/use-drawing'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ARTIFACT' })
 
