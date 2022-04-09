@@ -55,7 +55,7 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
   }
 
   function refresh() {
-    ccApp._instance.props.colors = colors.value
+    ccApp._container._vnode.component.props.colors = colors.value
     fetchArtifactStatus(menuBar.value)
   }
 
