@@ -54,6 +54,12 @@
       </template>
       <!-- 仓库信息 -->
       <warehouse-info-columns show-project />
+      <el-table-column key="receipt.receiptType" prop="receipt.receiptType" show-overflow-tooltip label="类型" align="center" width="70" />
+      <el-table-column key="receipt" prop="receipt" show-overflow-tooltip label="单据编号" align="center" min-width="120">
+        <template #default="{ row: { sourceRow: row } }">
+          <receipt-sn-clickable :receipt-types="['INBOUND', 'OUTBOUND', 'TRANSFER', 'RETURN', 'REJECTED']" :receipt="row.receipt" />
+        </template>
+      </el-table-column>
     </common-table>
   </common-dialog>
 </template>
@@ -79,6 +85,8 @@ import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import ExportButton from '@comp-common/export-button/index.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
+import { receiptTypeEnum } from '@/utils/enum/modules/wms'
 
 const emit = defineEmits(['update:visible'])
 
@@ -93,7 +101,7 @@ const props = defineProps({
 })
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns])
+const columnsDataFormat = ref([...materialHasAmountColumns, ['receipt.receiptType', ['parse-enum', receiptTypeEnum]]])
 
 const permission = inject('permission')
 const detailLoading = ref(false)

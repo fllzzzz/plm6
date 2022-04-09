@@ -1,6 +1,6 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
 import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
-import { measureTypeEnum } from '@/utils/enum/modules/wms'
+import { measureTypeEnum, receiptTypeEnum } from '@/utils/enum/modules/wms'
 
 // 收发存报表
 const getSendAndReceiveStorage = {
@@ -516,9 +516,10 @@ const getSendAndReceiveStorageDetail = {
               id: 1,
               name: '666号仓库'
             },
-            inboundReceipt: {
-              id: 1, // 入库单id
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.INBOUND.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           },
           {
@@ -555,9 +556,10 @@ const getSendAndReceiveStorageDetail = {
               id: 1,
               name: '666号仓库'
             },
-            inboundReceipt: {
-              id: 1, // 入库单id
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.RETURN.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           },
           {
@@ -593,9 +595,10 @@ const getSendAndReceiveStorageDetail = {
               id: 1,
               name: '666号仓库'
             },
-            inboundReceipt: {
-              id: 1, // 入库单id
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.REJECTED.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           },
           {
@@ -633,9 +636,10 @@ const getSendAndReceiveStorageDetail = {
               id: 4,
               name: '668号仓库'
             },
-            inboundReceipt: {
-              id: 1, // 入库单id
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.TRANSFER.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           },
           {
@@ -665,6 +669,11 @@ const getSendAndReceiveStorageDetail = {
             warehouse: {
               id: 1,
               name: '666号仓库'
+            },
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.OUTBOUND.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           },
           {
@@ -695,9 +704,10 @@ const getSendAndReceiveStorageDetail = {
               id: 1,
               name: '666号仓库'
             },
-            inboundReceipt: {
-              id: 1, // 入库单id
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.OUTBOUND.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           },
           {
@@ -729,9 +739,10 @@ const getSendAndReceiveStorageDetail = {
               id: 1,
               name: '666号仓库'
             },
-            inboundReceipt: {
-              id: 1, // 入库单id
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 入库单号
+            receipt: {
+              id: 1, // 单据id
+              receiptType: receiptTypeEnum.INBOUND.V, // 单据类型
+              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 单据编号
             }
           }
         ]
