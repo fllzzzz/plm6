@@ -1,7 +1,7 @@
 <template>
   <div class="drawing-container">
     <el-tag
-      v-if="tip !== tipStatusEnum.SUCCESS.V"
+      v-if="tip !== tipStatusEnum.SUCCESS.V && isPreview"
       :type="tipStatusEnum.V[tip]?.T"
       :style="isPreview ? 'margin-left: 10px;margin-top: 10px;' : ''"
     >
@@ -52,7 +52,7 @@ const isPreview = inject('isPreview', false)
 const boolBim = inject('boolBim', true)
 
 async function fetchTranslate() {
-  if (!boolBim.value) {
+  if (!boolBim) {
     tip.value = tipStatusEnum.IS_NOT.V
     return
   }

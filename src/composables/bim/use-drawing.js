@@ -16,18 +16,18 @@ export default function useDrawing() {
       productId: undefined,
       productType: undefined
     })
-    drawingApp._instance.emitsOptions = {
-      'update:modelValue': (val) => { drawingApp._instance.props.modelValue = val }
-    }
     console.log(drawingApp, 'drawingApp')
+    drawingApp._container._vnode.component.emitsOptions = {
+      'update:modelValue': (val) => { drawingApp._container._vnode.component.props.modelValue = val }
+    }
   }
 
   function fetchDrawing({ boolBim, serialNumber, productId, productType }) {
-    drawingApp._instance.props.modelValue = true
-    drawingApp._instance.props.boolBim = boolBim
-    drawingApp._instance.props.serialNumber = serialNumber
-    drawingApp._instance.props.productId = productId
-    drawingApp._instance.props.productType = productType
+    drawingApp._container._vnode.component.props.modelValue = true
+    drawingApp._container._vnode.component.props.boolBim = boolBim
+    drawingApp._container._vnode.component.props.serialNumber = serialNumber
+    drawingApp._container._vnode.component.props.productId = productId
+    drawingApp._container._vnode.component.props.productType = productType
   }
 
   return {
