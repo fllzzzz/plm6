@@ -23,6 +23,7 @@
           :max-height="maxHeight"
         ></bim-model-view>
         <drawing-preview-small-view
+          ref="drawingRef"
           :boolBim="boolBim"
           :serial-number="serialNumber"
           :productId="productId"
@@ -36,13 +37,14 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, computed } from 'vue'
+import { defineProps, defineEmits, ref, computed, nextTick } from 'vue'
 
 import useVisible from '@compos/use-visible'
 import bimModelView from '@/components-system/bim/bim-model-view'
 import drawingPreviewSmallView from '@comp-base/drawing-preview/drawing-preview-small-view'
 
 const drawerRef = ref()
+const drawingRef = ref()
 const emit = defineEmits(['update:visible'])
 const props = defineProps({
   visible: {
@@ -70,22 +72,16 @@ const props = defineProps({
   }
 })
 
-const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible' })
+const { visible: drawerVisible, handleClose } = useVisible({ emit, props, field: 'visible', showHook: show })
 
 // 高度
 const maxHeight = computed(() => document.documentElement.clientHeight * 0.5)
 
-watch(
-  () => props.visible,
-  (visible) => {
-    if (visible) {
-      init()
-    }
-  },
-  { immediate: true }
-)
-
-function init() {}
+function show() {
+  nextTick(() => {
+    drawingRef.value?.fetch()
+  })
+}
 </script>
 
 <style lang="scss" scoped>

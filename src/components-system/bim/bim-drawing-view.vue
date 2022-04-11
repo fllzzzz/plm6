@@ -7,7 +7,7 @@
     >
       {{ tipStatusEnum.VL[tip] }} {{ drawingStatus.reason }}
     </el-tag>
-    <div v-else id="drawingView"></div>
+    <div v-else-if="tip === tipStatusEnum.SUCCESS.V" :id="`drawingView${id}`" class="drawingView"></div>
   </div>
 </template>
 
@@ -49,6 +49,7 @@ const tip = ref(tipStatusEnum.QUERY.V)
 const productId = inject('productId')
 const productType = inject('productType')
 const isPreview = inject('isPreview', false)
+const id = inject('id', '')
 const boolBim = inject('boolBim', true)
 
 async function fetchTranslate() {
@@ -56,6 +57,9 @@ async function fetchTranslate() {
     tip.value = tipStatusEnum.IS_NOT.V
     return
   }
+  viewer2DEvent.value = undefined
+  viewer2D.value = undefined
+  _2DConfig.value = undefined
   // 获取加载model所需的访问令牌
   try {
     tip.value = tipStatusEnum.QUERY.V
@@ -88,7 +92,7 @@ async function loadDrawing(viewToken) {
     // viewToken = '80d8ebaa14b442db88c8300cfc52f95c'
     const metaData = await bimModel.initBimfaceApp({ viewToken })
     _2DConfig.value = bimModel.get2DConfig()
-    const _el = document.getElementById('drawingView')
+    const _el = document.getElementById(`drawingView${id}`)
     _el.innerHTML = '' // 清除旧数据
     _2DConfig.value.domElement = _el
     if (isPreview) {
@@ -104,7 +108,7 @@ async function loadDrawing(viewToken) {
 
     console.log(viewer2D, app, 'viewer2D')
     if (metaData.viewToken) {
-      viewer2D.value.loadDrawing({ viewToken: metaData.viewToken, modelId: metaData.modelId || '1832708127827872' })
+      viewer2D.value.loadDrawing({ viewToken: metaData.viewToken })
     }
     viewer2DEvent.value = bimModel.getViewer2DEvent()
     viewer2D.value.addEventListener(
@@ -162,7 +166,7 @@ defineExpose({
   overflow: hidden;
 }
 
-#drawingView {
+.drawingView {
   height: 100%;
   background-color: #fff;
   flex: 1;

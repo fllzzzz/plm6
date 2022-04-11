@@ -275,9 +275,17 @@
       <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
       <!-- pdf预览 -->
       <bim-preview-drawer
-        v-model:visible="showDrawing"
+        v-model:visible="showBimDialog"
         :bool-bim="drawingRow?.boolBim"
         :monomer-id="drawingRow?.monomerId"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
+      <!-- pdf预览 -->
+      <drawing-preview-fullscreen-dialog
+        v-model="showDrawingDialog"
+        :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -288,7 +296,7 @@
 
 <script setup>
 import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import { artifactTreePM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -305,10 +313,39 @@ import numForm from './module/num-form'
 import listForm from './module/list-form'
 import serialNumForm from './module/serialNum-form'
 import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
+
+const showBimDialog = ref(false)
+const showDrawingDialog = ref(false)
+
+watch(
+  [() => showBimDialog.value, () => showDrawingDialog.value],
+  ([b, d]) => {
+    if (!b && !d) {
+      showDrawing.value = false
+    }
+    console.log(b, d, showDrawing.value, 'show')
+  }
+)
+
+watch(
+  () => showDrawing.value,
+  (val) => {
+    if (val) {
+      if (drawingRow.value?.productType && drawingRow.value?.productType & componentTypeEnum.ARTIFACT.V) {
+        showBimDialog.value = true
+      }
+      if (drawingRow.value?.productType && !(drawingRow.value?.productType & componentTypeEnum.ARTIFACT.V)) {
+        showDrawingDialog.value = true
+      }
+    }
+  }
+)
+
 const optShow = {
   add: false,
   edit: false,

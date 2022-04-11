@@ -150,7 +150,7 @@ import mHeader from '@/views/mes/scheduling-manage/scheduling/components/schedul
 import useDrawing from '@compos/use-drawing'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
-const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })
+const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'MACHINE_PART' })
 
 const emit = defineEmits(['refresh'])
 
