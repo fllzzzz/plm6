@@ -63,16 +63,16 @@
         width="90"
         align="center"
       />
-      <el-table-column v-if="columns.visible('source')" show-overflow-tooltip key="source" prop="source" label="来源" min-width="170">
+      <el-table-column v-if="columns.visible('sourceInfo')" show-overflow-tooltip key="sourceInfo" prop="sourceInfo" label="来源" min-width="170">
         <template #default="{ row }">
           <source-text-info :transfer-receipt="row" class="ellipsis-text" />
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('direction')"
+        v-if="columns.visible('directionInfo')"
         show-overflow-tooltip
-        key="direction"
-        prop="direction"
+        key="directionInfo"
+        prop="directionInfo"
         label="目的"
         min-width="170"
       >

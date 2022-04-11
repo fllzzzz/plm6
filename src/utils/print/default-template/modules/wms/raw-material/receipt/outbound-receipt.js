@@ -114,17 +114,17 @@ const wmsRmOutboundReceipt = {
      */
     fields: [
       // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: '出库单号：', width: 170, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'outboundSN', title: '出库单号：', width: 110, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
         key: 'outboundTime',
         title: '出库日期：',
-        width: 55,
-        type: typeEnum.DATE.K,
+        width: 80,
+        type: typeEnum.DATES.K,
         format: 'YYYY年MM月DD日'
       },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewerName', title: '出库审核人：', width: 55, type: typeEnum.USER_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewer', title: '出库审核人：', width: 55, type: typeEnum.USER_NAME.K },
       {
         show: false,
         source: dataSourceEnum.SYSTEM.V,
@@ -134,7 +134,7 @@ const wmsRmOutboundReceipt = {
         type: typeEnum.DATE.K,
         format: 'YY/MM/DD kk:mm'
       },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printerName', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -186,7 +186,7 @@ const wmsRmOutboundReceipt = {
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
-        key: 'applicantName',
+        key: 'applicant',
         title: '申请人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K
@@ -194,7 +194,7 @@ const wmsRmOutboundReceipt = {
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
-        key: 'reviewerName',
+        key: 'reviewer',
         title: ' 审核人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K

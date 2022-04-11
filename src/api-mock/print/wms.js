@@ -20,8 +20,8 @@ const wmsRmInboundReceipt = {
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
           logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
           supplierName: '@cname', // 供应商名称
-          reviewerName: '@cname', // 入库审核人
-          printerName: '@cname', // 打印人
+          reviewer: '@cname', // 入库审核人
+          printer: '@cname', // 打印人
           printDate: '@datetime(T)', // 打印时间
           inboundTime: '@datetime(T)', // 入库时间
           licensePlate: patternLicensePlate // 车牌号
@@ -119,10 +119,10 @@ const wmsRmOutboundReceipt = {
       data: {
         header: {
           outboundSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-          reviewerName: '@cname', // 出库办理人
-          printerName: '@cname', // 打印人
+          reviewer: '@cname', // 出库办理人
+          printer: '@cname', // 打印人
           printDate: '@datetime(T)',
-          outboundTime: '@datetime(T)'
+          outboundTime: ['@datetime(T)', '@datetime(T)']
         },
         table: [
           {
@@ -276,9 +276,9 @@ const wmsRmReturnReceipt = {
       data: {
         header: {
           returnSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 出库单号
-          reviewerName: '@cname', // 退库审核人
-          applicantName: '@cname', // 退库申请人
-          printerName: '@cname', // 打印人
+          reviewer: '@cname', // 退库审核人
+          applicant: '@cname', // 退库申请人
+          printer: '@cname', // 打印人
           printDate: '@datetime(T)',
           returnTime: '@datetime(T)'
         },
@@ -422,9 +422,9 @@ const wmsRmRejectReceipt = {
           weightMeasurementMode: weightMeasurementModeEnum.OVERWEIGHT.V, // 计量方式
           logisticsPayerType: logisticsPayerEnum.SUPPLIER.V, // 物流费用承担
           supplierName: '@cname', // 供应商名称
-          reviewerName: '@cname', // 退货审核人
-          applicantName: '@cname', // 退货申请人
-          printerName: '@cname', // 打印人
+          reviewer: '@cname', // 退货审核人
+          applicant: '@cname', // 退货申请人
+          printer: '@cname', // 打印人
           printDate: '@datetime(T)', // 打印时间
           inboundTime: '@datetime(T)', // 入库时间
           rejectTime: '@datetime(T)' // 退货时间
@@ -519,9 +519,9 @@ const wmsRmTransferReceipt = {
         header: {
           transferSN: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 调拨单号
           transferTime: '@datetime(T)', // 调拨时间
-          reviewerName: '@cname', // 调拨审核人
-          applicantName: '@cname', // 调拨申请人
-          printerName: '@cname', // 打印人
+          reviewer: '@cname', // 调拨审核人
+          applicant: '@cname', // 调拨申请人
+          printer: '@cname', // 打印人
           printDate: '@datetime(T)', // 打印时间
           // // 调拨来源
           // source: [

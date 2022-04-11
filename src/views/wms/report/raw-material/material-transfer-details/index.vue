@@ -47,10 +47,10 @@
             fixed="left"
           />
           <el-table-column
-            v-if="columns.visible('transferReceipt.source')"
+            v-if="columns.visible('sourceInfo')"
             show-overflow-tooltip
-            key="transferReceipt.source"
-            prop="transferReceipt.source"
+            key="sourceInfo"
+            prop="sourceInfo"
             label="来源"
             min-width="170"
             fixed="left"
@@ -60,10 +60,10 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('transferReceipt.direction')"
+            v-if="columns.visible('directionInfo')"
             show-overflow-tooltip
-            key="transferReceipt.direction"
-            prop="transferReceipt.direction"
+            key="directionInfo"
+            prop="directionInfo"
             label="目的"
             min-width="170"
             fixed="left"

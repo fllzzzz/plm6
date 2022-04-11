@@ -133,7 +133,7 @@ const wmsRmReturnReceipt = {
         type: typeEnum.DATE.K,
         format: 'YY/MM/DD kk:mm'
       },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printerName', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -185,7 +185,7 @@ const wmsRmReturnReceipt = {
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
-        key: 'applicantName',
+        key: 'applicant',
         title: '申请人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K
@@ -193,7 +193,7 @@ const wmsRmReturnReceipt = {
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
-        key: 'reviewerName',
+        key: 'reviewer',
         title: '审核人（签字）：',
         width: 85,
         type: typeEnum.BLANK.K

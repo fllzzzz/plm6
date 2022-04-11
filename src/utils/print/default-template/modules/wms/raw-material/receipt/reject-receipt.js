@@ -152,7 +152,7 @@ const wmsRmRejectReceipt = {
         type: typeEnum.DATE.K,
         format: 'YY/MM/DD kk:mm'
       },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printerName', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -201,8 +201,8 @@ const wmsRmRejectReceipt = {
      * @param {*} format 格式转换
      */
     fields: [
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicantName', title: '申请人（签字）：', width: 85, type: typeEnum.BLANK.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewerName', title: '审核人（签字）：', width: 85, type: typeEnum.BLANK.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'applicant', title: '申请人（签字）：', width: 85, type: typeEnum.BLANK.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'reviewer', title: '审核人（签字）：', width: 85, type: typeEnum.BLANK.K }
     ]
   },
   table: {
