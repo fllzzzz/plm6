@@ -1,9 +1,9 @@
 <template>
-  <component v-loading="fileLoading" ref="viewRef" :is="currentView" @changeFileLoading="changeFileLoading"> </component>
+  <bimDrawingView v-loading="fileLoading" ref="viewRef" @changeFileLoading="changeFileLoading"> </bimDrawingView>
 </template>
 
 <script setup>
-import { defineProps, provide, ref, computed, watch, nextTick } from 'vue'
+import { defineProps, provide, ref, computed, defineExpose, nextTick } from 'vue'
 import bimDrawingView from '@/components-system/bim/bim-drawing-view.vue'
 // import pdfView from './pdf-view'
 
@@ -36,29 +36,29 @@ provide(
   computed(() => props.productType)
 )
 provide('isPreview', true)
-provide('boolBim', computed(() => props.boolBim))
+provide('id', 'small')
+provide(
+  'boolBim',
+  computed(() => props.boolBim)
+)
 
 const viewRef = ref()
 const fileLoading = ref(false)
 
-const currentView = computed(() => {
-  return bimDrawingView
-})
-
-watch(
-  [() => props.serialNumber, () => props.productId, () => props.productType],
-  () => {
-    nextTick(() => {
-      viewRef?.value?.fetchDrawing()
-      viewRef?.value?.reset()
-    })
-  },
-  { immediate: true }
-)
+function fetch() {
+  nextTick(() => {
+    viewRef.value?.fetchDrawing()
+    viewRef.value?.reset()
+  })
+}
 
 function changeFileLoading(state) {
   fileLoading.value = state
 }
+
+defineExpose({
+  fetch
+})
 </script>
 
 <style lang="scss" scoped></style>
