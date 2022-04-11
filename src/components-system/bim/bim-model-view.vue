@@ -3,7 +3,7 @@
     <el-tag v-if="tip !== tipStatusEnum.SUCCESS.V" :type="tipStatusEnum.V[tip]?.T" :style="isPreview?'margin-left: 10px;margin-top: 10px;':''">
       {{ tipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
-    <div id="modelView"></div>
+    <div v-if="tip === tipStatusEnum.SUCCESS.V" id="modelView"></div>
   </div>
 </template>
 
@@ -171,6 +171,8 @@ function init() {
     status: 'success',
     viewToken: ''
   }
+  menuBar.value = null
+  colors.value = []
 }
 
 async function fetchTranslate(monomerId) {
