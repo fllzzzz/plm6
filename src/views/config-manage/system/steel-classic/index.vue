@@ -41,7 +41,7 @@
       <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="关键字母【索引】" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
-            <span v-for="item in scope.row.links" :key="item.id">{{ `${item.keyword}【${item.specIndex}】` }}</span>
+            <span v-for="item in scope.row.links" :key="item.id">{{ `${item.keyword}【${item.specIndex?item.specIndex:'全部'}】` }}</span>
           </template>
         </template>
       </el-table-column>

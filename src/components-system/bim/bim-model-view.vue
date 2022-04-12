@@ -251,8 +251,8 @@ async function loadModel(viewToken) {
     // 添加右键
     // addRightEventListener({ viewer: _viewer, viewer3DEvent: _viewer3DEvent })
     console.log(_viewer3DEvent, '_viewer3DEvent')
-    _viewer.value.addEventListener(_viewer3DEvent.value.ComponentsSelectionChanged, (component, b, c) => {
-      console.log(component, b, c, 'ComponentsSelectionChanged')
+    _viewer.value.addEventListener(_viewer3DEvent.value.ComponentsSelectionChanged, (component) => {
+      console.log(component, 'ComponentsSelectionChanged')
       if (menuBar.value && menuBar.value !== modelMenuBarEnum.PROJECT_TREE.V) {
         const selectedIds = _viewer.value.getSelectedComponents()
         if (isBlank(selectedIds)) {
