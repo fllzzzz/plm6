@@ -406,7 +406,9 @@ function recursionFormat(row, field, sourceData, cloneData, sliceFields) {
         // 获取数据源字段
         const sourceField = otherInfo ? otherInfo.source : void 0
         // 获取实际转换前的值
-        if (sourceField) preData = sourceItem[sourceField]
+        if (sourceField) {
+          preData = sourceField === '*' ? sourceItem : sourceItem[sourceField]
+        }
       }
       if (sliceFields) {
         for (let j = 0; j < dfCfg.length; j++) {
@@ -436,7 +438,9 @@ function normalFm(row, field, data) {
       // 获取数据源字段
       const sourceField = otherInfo ? otherInfo.source : void 0
       // 获取实际转换前的值
-      if (sourceField) preData = getInfo(data, sourceField)
+      if (sourceField) {
+        preData = sourceField === '*' ? data : getInfo(data, sourceField)
+      }
     }
     if (field) {
       for (let i = 0; i < dfCfg.length; i++) {

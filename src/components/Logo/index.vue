@@ -37,7 +37,7 @@ $bg:transparent;
         margin-right: 5px;
     }
     .logo{
-      height: 60px;
+      height: 45px;
     }
     // .logo-simple {
     //     font-size:36px;

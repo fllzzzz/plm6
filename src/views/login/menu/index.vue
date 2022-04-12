@@ -1,7 +1,7 @@
 <template>
   <div class="menus-container">
     <el-row :gutter="20" class="el-row-content">
-      <el-col v-for="(item) in menus" :key="item.id" :xs="8" :sm="8" :md="8" :lg="6" :xl="6">
+      <el-col v-for="item in menus" :key="item.id" :xs="8" :sm="8" :md="8" :lg="6" :xl="6">
         <div class="menu-drawer" @click="goView(item)">
           <div class="menu-img">
             <svg-icon :icon-class="item.icon" class="icon" />
@@ -9,7 +9,7 @@
           <span class="menu-name" v-text="item.name" />
         </div>
       </el-col>
-      <el-col v-for="(item) in fixedMenus" :key="item.id" :xs="8" :sm="8" :md="8" :lg="6" :xl="6">
+      <el-col v-for="item in fixedMenus" :key="item.id" :xs="8" :sm="8" :md="8" :lg="6" :xl="6">
         <div class="menu-drawer" @click="goView(item)">
           <div class="menu-img">
             <svg-icon :icon-class="item.icon" class="icon" />
@@ -34,10 +34,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'menus',
-      'currentMenu'
-    ])
+    ...mapGetters(['menus', 'currentMenu'])
   },
   methods: {
     async goView(view) {
@@ -88,7 +85,7 @@ $menuTextColor: #f3f3f3;
     // transform: scale(1);
     transition: all 0.3s ease-in-out 0s;
 
-    &:hover{
+    &:hover {
       transform: scale(1.1);
       background: rgba(7, 18, 39, 0.7);
       // .menu-img {
@@ -97,9 +94,11 @@ $menuTextColor: #f3f3f3;
       //   }
       // }
     }
-
+    .menu-name {
+      color: #d3faff;
+    }
     .menu-img {
-      width:100%;
+      width: 100%;
       margin-bottom: 10px;
       display: flex;
       flex-direction: column;
@@ -110,6 +109,7 @@ $menuTextColor: #f3f3f3;
       .icon {
         width: 100%;
         height: 70px;
+        color: #d3faff;
         // position: relative;
         // left: 0;
         // margin-bottom: .1rem;

@@ -47,67 +47,75 @@ const userInfo = {
         dept: '管理部门',
         job: null,
         permissions: [],
-        menus: [{
-          id: 1,
-          name: '配置管理',
-          icon: 'config',
-          redirect: 'config-manage'
-        },
-        {
-          id: 2,
-          name: '建刚MES',
-          icon: 'mes-steel',
-          redirect: 'mes-project'
-        },
-        {
-          id: 3,
-          name: '合同管理',
-          icon: 'config',
-          redirect: 'contract'
-        },
-        {
-          id: 4,
-          name: '项目管理',
-          icon: 'config',
-          redirect: 'project-manage'
-        },
-        {
-          id: 5,
-          name: 'WMS',
-          icon: 'wms-wms',
-          redirect: 'wms'
-        },
-        {
-          id: 6,
-          name: '计划管理',
-          icon: 'config',
-          redirect: 'plan'
-        },
-        {
-          id: 7,
-          name: '供应链',
-          icon: 'supply-chain',
-          redirect: 'supply-chain'
-        },
-        {
-          id: 8,
-          name: 'BIM',
-          icon: 'supply-chain',
-          redirect: 'bim'
-        },
-        {
-          id: 821,
-          // id: 171,
-          name: '套料切割',
-          icon: 'cutting',
-          redirect: 'cutting'
-        },
-        {
-          id: 794,
-          name: '人员管理',
-          icon: 'user-setting',
-          redirect: 'user-manage'
-        }
+        menus: [
+          {
+            id: 3,
+            name: '合同管理',
+            icon: 'module-contract',
+            redirect: 'contract'
+          },
+          {
+            id: 6,
+            name: '计划管理',
+            icon: 'module-plan',
+            redirect: 'plan'
+          },
+          {
+            id: 2,
+            name: '建刚MES',
+            icon: 'module-steel',
+            redirect: 'mes-project'
+          },
+
+          {
+            id: 4,
+            name: '项目管理',
+            icon: 'module-project',
+            redirect: 'project-manage'
+          },
+          {
+            id: 5,
+            name: 'WMS',
+            icon: 'module-wms',
+            redirect: 'wms'
+          },
+          {
+            id: 7,
+            name: '供应链',
+            icon: 'module-scm',
+            redirect: 'supply-chain'
+          },
+          {
+            id: 8,
+            name: 'BIM',
+            icon: 'module-bim',
+            redirect: 'bim'
+          },
+          {
+            id: 821,
+            // id: 171,
+            name: '套料切割',
+            icon: 'module-cutting',
+            redirect: 'cutting'
+          }, {
+            id: 10000,
+            // id: 171,
+            name: '运营分析',
+            icon: 'module-analysis',
+            redirect: 'cutting'
+          },
+          {
+            id: 794,
+            name: '人员管理',
+            icon: 'module-user',
+            redirect: 'user-manage'
+          },
+          {
+            id: 1,
+            name: '配置管理',
+            icon: 'module-config',
+            redirect: 'config-manage'
+          }
         ]
       }
     }
@@ -134,7 +142,18 @@ const userMenu = {
     return {
       code: 20000,
       message: '成功',
-      data: [configRouter, projectRouter, wmsRouter, mesRouter, projectRouter, planRouter, contractRouter, supplyChainRouter, cuttingRouter, userRouter]
+      data: [
+        configRouter,
+        projectRouter,
+        wmsRouter,
+        mesRouter,
+        projectRouter,
+        planRouter,
+        contractRouter,
+        supplyChainRouter,
+        cuttingRouter,
+        userRouter
+      ]
     }
   }
 }
