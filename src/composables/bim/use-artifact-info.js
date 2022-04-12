@@ -128,9 +128,8 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
     const _els = document.getElementsByClassName('bf-panel-machine-sn')
     for (let i = 0; i < _els.length; i++) {
       _els[i].onclick = () => {
-        console.log(_els[i].dataset,'dddd')
-        const {boolBim,serialNumber,productId,productType} = _els[i].dataset
-        fetchDrawing({boolBim:Number(boolBim),serialNumber,productId,productType})
+        const { boolBim, serialNumber, productId, productType } = _els[i].dataset
+        fetchDrawing({ boolBim: Number(boolBim), serialNumber, productId, productType })
       }
     }
   }

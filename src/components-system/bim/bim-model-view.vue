@@ -3,7 +3,7 @@
     <el-tag v-if="tip !== tipStatusEnum.SUCCESS.V" :type="tipStatusEnum.V[tip]?.T" :style="isPreview?'margin-left: 10px;margin-top: 10px;':''">
       {{ tipStatusEnum.VL[tip] }} {{ modelStatus.reason }}
     </el-tag>
-    <div id="modelView"></div>
+    <div v-if="tip === tipStatusEnum.SUCCESS.V" id="modelView"></div>
   </div>
 </template>
 
@@ -171,6 +171,8 @@ function init() {
     status: 'success',
     viewToken: ''
   }
+  menuBar.value = null
+  colors.value = []
 }
 
 async function fetchTranslate(monomerId) {
@@ -249,8 +251,8 @@ async function loadModel(viewToken) {
     // 添加右键
     // addRightEventListener({ viewer: _viewer, viewer3DEvent: _viewer3DEvent })
     console.log(_viewer3DEvent, '_viewer3DEvent')
-    _viewer.value.addEventListener(_viewer3DEvent.value.ComponentsSelectionChanged, (component, b, c) => {
-      console.log(component, b, c, 'ComponentsSelectionChanged')
+    _viewer.value.addEventListener(_viewer3DEvent.value.ComponentsSelectionChanged, (component) => {
+      console.log(component, 'ComponentsSelectionChanged')
       if (menuBar.value && menuBar.value !== modelMenuBarEnum.PROJECT_TREE.V) {
         const selectedIds = _viewer.value.getSelectedComponents()
         if (isBlank(selectedIds)) {

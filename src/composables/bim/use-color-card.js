@@ -4,11 +4,7 @@ import { createApp, watch, ref } from 'vue'
 
 export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
   const curElementIds = ref([])
-
-  const ccApp = createApp(bfColorCard, {
-    statusChange: statusChange,
-    colors: colors.value
-  })
+  const ccApp = ref()
 
   async function statusChange(card) {
     if (!card) {
@@ -36,12 +32,18 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
 
   watch(
     () => menuBar.value,
-    () => {
-      refresh()
+    (val) => {
+      if (val) {
+        refresh()
+      }
     }
   )
 
   function createColorCardHtml() {
+    ccApp.value = createApp(bfColorCard, {
+      statusChange: statusChange,
+      colors: []
+    })
     const colorCardDom = document.getElementById('bfColorCard')
     if (!colorCardDom) {
       const bfContainerDom = document.getElementsByClassName('bf-container')[0]
@@ -49,13 +51,13 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
       _dom.id = 'bfColorCard'
       bfContainerDom.appendChild(_dom)
     }
-    ccApp.mount('#bfColorCard')
+    ccApp.value.mount('#bfColorCard')
 
     createColorCardPanel()
   }
 
   function refresh() {
-    ccApp._container._vnode.component.props.colors = colors.value
+    ccApp.value._container._vnode.component.props.colors = colors.value
     fetchArtifactStatus(menuBar.value)
   }
 
