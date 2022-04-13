@@ -13,6 +13,7 @@
         ref="tableRef"
         v-loading="crud.loading"
         :data="crud.data"
+        :data-format="dataFormat"
         :empty-text="crud.emptyText"
         :max-height="maxHeight"
         style="width: 100%"
@@ -27,11 +28,7 @@
           align="center"
           label="合同编号"
           fixed="left"
-        >
-          <template #default="{ row }">
-            <span>{{ row.serialNumber }}</span>
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           v-if="columns.visible('name')"
           key="name"
@@ -74,33 +71,17 @@
           label="计划开工日期"
           align="center"
           width="110"
-        >
-          <template v-slot="scope">
-            <span v-parse-time="{ val: scope.row.startDate, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="110">
-          <template v-slot="scope">
-            <span v-parse-time="{ val: scope.row.endDate, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
+        />
+        <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="计划完成日期" align="center" width="110" />
         <el-table-column
           v-if="columns.visible('completeDate')"
           key="completeDate"
           prop="completeDate"
-          label="完成日期"
+          label="完工日期"
           align="center"
           width="110"
-        >
-          <template v-slot="scope">
-            <span v-parse-time="{ val: scope.row.completeDate, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
-        <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="工期(天)" align="center" width="100">
-          <template v-slot="scope">
-            <div>{{ scope.row.allDays }}</div>
-          </template>
-        </el-table-column>
+        />
+        <el-table-column v-if="columns.visible('allDays')" key="allDays" prop="allDays" label="工期(天)" align="center" width="100" />
         <el-table-column
           v-if="columns.visible('alreadyDays')"
           key="alreadyDays"
@@ -108,23 +89,15 @@
           label="已用时(天)"
           align="center"
           width="100"
-        >
-          <template v-slot="scope">
-            <div>{{ scope.row.alreadyDays }}</div>
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           v-if="columns.visible('createTime')"
           key="createTime"
           prop="createTime"
           label="创建时间"
           align="center"
-          width="100"
-        >
-          <template v-slot="scope">
-            <span v-parse-time="{ val: scope.row.createTime, fmt: '{y}-{m}-{d}' }" />
-          </template>
-        </el-table-column>
+          width="130"
+        />
       </common-table>
       <!--分页组件-->
       <pagination />
@@ -154,6 +127,13 @@ const optShow = {
   del: false,
   download: false
 }
+
+const dataFormat = ref([
+  ['createTime', 'parse-time'],
+  ['startDate', ['parse-time', '{y}-{m}-{d}']],
+  ['endDate', ['parse-time', '{y}-{m}-{d}']],
+  ['completeDate', ['parse-time', '{y}-{m}-{d}']]
+])
 
 // 项目汇总数据（子页面使用）
 const projectInfo = reactive({
