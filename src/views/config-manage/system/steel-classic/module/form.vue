@@ -13,13 +13,22 @@
     </template>
     <template #content>
       <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
-        <el-form-item label="钢材分类名称" prop="name">
+        <el-form-item label="钢材名称" prop="name">
           <el-input v-model="form.name" type="text" placeholder="钢材分类名称" style="width: 270px" maxlength="30" />
         </el-form-item>
-        <el-form-item label="钢材科目" prop="classifyIds">
+        <el-form-item label="钢材科目匹配" prop="classifyIds">
+          <common-radio-button
+            v-model="form.basicClass"
+            :options="[matClsEnum.STEEL_PLATE, matClsEnum.SECTION_STEEL, matClsEnum.STEEL_COIL]"
+            type="enum"
+            size="small"
+            style="margin-bottom:5px;"
+          />
+          <br/>
           <material-cascader
             v-model="form.classifyIds"
-            :basic-class="(matClsEnum.STEEL_PLATE.V | matClsEnum.SECTION_STEEL.V |matClsEnum.STEEL_COIL.V)"
+            :basic-class="form.basicClass"
+            :disabled="!form.basicClass"
             multiple
             :collapse-tags="false"
             separator=" > "
@@ -33,7 +42,10 @@
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
         </el-form-item>
-        <el-form-item label="关键字母" prop="links">
+        <el-form-item label="是否参与套料" prop="boolNestEnum">
+          <common-radio v-model="form.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
+        </el-form-item>
+        <el-form-item label="零件前缀字母" prop="links">
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.links" :key="index" class="process-drawer">
@@ -41,7 +53,7 @@
                   v-model="item.keyword"
                   type="text"
                   placeholder="大写字母"
-                  style="width: 270px;margin-right:5px;"
+                  style="width: 270px; margin-right: 5px"
                   @blur="checkName(item, index)"
                 />
                 <common-select
@@ -76,11 +88,12 @@
 </template>
 
 <script setup>
-import { ref, defineProps, nextTick } from 'vue'
+import { ref, defineProps, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { isNotBlank, deepClone } from '@data-type/index'
+import { isNotBlank, deepClone, isBlank } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
+import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
@@ -129,18 +142,39 @@ const validateLinks = (rule, value, callback) => {
   }
 }
 
+const validateNestEnum = (rule, value, callback) => {
+  if (isBlank(form.boolNestEnum)) {
+    callback(new Error('请选择是否参与套料'))
+  } else {
+    callback()
+  }
+}
+
 const rules = {
   name: [
     { required: true, message: '请填写钢材分类名称', trigger: 'blur' },
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
+  boolNestEnum: [
+    { required: true, message: '请选择是否参与套料' },
+    { validator: validateNestEnum, trigger: 'change' }
+  ],
   classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }],
   links: [
     { required: true, message: '请选择关键字母' },
     { validator: validateLinks, trigger: 'change' }
   ]
 }
+
+watch(
+  () => form.basicClass,
+  (val, oldVal) => {
+    if (val && oldVal) {
+      form.classifyIds = []
+    }
+  }
+)
 
 function addProcess() {
   form.links.push({
@@ -213,10 +247,13 @@ CRUD.HOOK.afterToAdd = () => {
 CRUD.HOOK.beforeToCU = () => {
   nextTick(() => {
     disabledClassifyIds.value = deepClone(props.boundAllClassifyIds)
-    form.classifyIds && form.classifyIds.forEach((v) => {
-      const _index = disabledClassifyIds.value.indexOf(v)
-      if (_index !== -1) { disabledClassifyIds.value.splice(_index, 1) }
-    })
+    form.classifyIds &&
+      form.classifyIds.forEach((v) => {
+        const _index = disabledClassifyIds.value.indexOf(v)
+        if (_index !== -1) {
+          disabledClassifyIds.value.splice(_index, 1)
+        }
+      })
   })
 }
 </script>

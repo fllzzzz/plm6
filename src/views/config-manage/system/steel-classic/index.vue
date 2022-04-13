@@ -16,12 +16,20 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="钢材分类" min-width="150">
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="钢材名称" min-width="150">
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('sort')" key="sort" prop="sort" :show-overflow-tooltip="true" label="排序" width="80" align="center">
+      <el-table-column
+        v-if="columns.visible('sort')"
+        key="sort"
+        prop="sort"
+        :show-overflow-tooltip="true"
+        label="排序"
+        width="80"
+        align="center"
+      >
         <template v-slot="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
@@ -31,18 +39,25 @@
         key="classifyNames"
         prop="classifyNames"
         :show-overflow-tooltip="true"
-        label="绑定钢材科目"
+        label="钢材科目"
         min-width="260"
       >
         <template v-slot="scope">
           <span>{{ scope.row.classifyNames }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="关键字母【索引】" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="前缀字母索引" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
-            <span v-for="item in scope.row.links" :key="item.id">{{ `${item.keyword}【${item.specIndex?item.specIndex:'全部'}】` }}</span>
+            <span v-for="item in scope.row.links" :key="item.id">{{
+              `${item.keyword}【${item.specIndex ? item.specIndex : '全部'}】`
+            }}</span>
           </template>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('boolNestEnum')" align="center" prop="boolNestEnum" label="套料选择">
+        <template v-slot="scope">
+          <span>{{ scope.row.boolNestEnum ? '√' : '-' }}</span>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -58,7 +73,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm :boundAllClassifyIds="boundAllClassifyIds"/>
+    <mForm :boundAllClassifyIds="boundAllClassifyIds" />
   </div>
 </template>
 
@@ -83,7 +98,7 @@ const optShow = {
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
-    title: '钢材配置',
+    title: '零件类型配置',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -104,7 +119,7 @@ const boundAllClassifyIds = ref([])
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   boundAllClassifyIds.value = []
   data.content.forEach((v) => {
-    v.classifyNames = v.classifyLinks.map(v => v.classifyName).join('、')
+    v.classifyNames = v.classifyLinks.map((v) => v.classifyName).join('、')
     v.classifyIds = v.boundFinalClassifyIds
     boundAllClassifyIds.value = boundAllClassifyIds.value.concat(v.boundFinalClassifyIds)
   })
