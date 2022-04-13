@@ -42,16 +42,16 @@
         <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
-          <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
         </template>
-        <warehouse-info-columns v-if="showWarehouse" show-project />
+        <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+        <warehouse-info-columns show-project />
       </common-table>
     </template>
   </common-drawer>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, inject } from 'vue'
 import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { tableSummary } from '@/utils/el-extra'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -70,7 +70,9 @@ import warehouseInfoColumns from '@/components-system/wms/table-columns/warehous
 import expandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
 import purchaseDetailButton from '@/components-system/wms/purchase-detail-button/index.vue'
+import checkPermission from '@/utils/system/check-permission'
 
+const permission = inject('permission')
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
 
@@ -94,10 +96,14 @@ const { maxHeight } = useMaxHeight(
 
 // 采购订单信息
 const order = computed(() => detail.purchaseOrder || {})
+
+// 可填写金额
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+)
+
 // 显示金额
-const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
-// 显示仓库
-const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
+const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
 // 是否甲供订单
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 标题
@@ -108,9 +114,9 @@ const drawerTitle = computed(() =>
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
-  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
+  const unshow1 = showAmount.value && !boolPartyA.value && order.value.projects && order.value.requisitionsSN
   // 甲供订单，显示项目和申购单以及仓库时
-  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && showWarehouse.value
+  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN
   return !(unshow1 || unshow2)
 })
 
