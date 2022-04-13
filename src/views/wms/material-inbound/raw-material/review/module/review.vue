@@ -69,12 +69,12 @@
             <template v-else>
               <el-table-column prop="unitPrice" label="含税单价" align="left" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="amount" label="金额" align="left" min-width="120px" show-overflow-tooltip />
-              <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
               <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
             </template>
           </template>
           <template v-else>
-            <el-table-column prop="requisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+            <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
             <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
           </template>
           <!-- 仓库设置 -->
@@ -93,8 +93,8 @@
         />
         <!-- 物流信息设置 -->
         <logistics-form
+          v-if="fillableLogistics"
           ref="logisticsRef"
-          v-if="showLogistics"
           class="logistics-form-content"
           :disabled="formDisabled"
           :form="form.logistics"
@@ -187,7 +187,7 @@ const fillableWarehouse = computed(() =>
   inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V : false
 )
 // 显示物流信息
-const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
+const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 采购订单信息
@@ -229,7 +229,7 @@ const projectRules = {
 const tableRules = computed(() => {
   const rules = {}
   // 甲供不填写金额方面的信息
-  if (showAmount.value && !boolPartyA.value) {
+  if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
     if (isNotBlank(order.value.projects)) {
       Object.assign(rules, projectRules)
@@ -332,6 +332,7 @@ async function detailFormat(form) {
     toSmallest: false,
     toNum: true
   })
+  form.list.forEach((item) => (item.sourceRequisitionsSN = item.requisitionsSN))
   setDitto(form.list) // 在list变化时设置同上
   return form
 }
@@ -343,7 +344,7 @@ async function validate(form) {
     form.list = dealList
   }
   let logisticsValidResult = true
-  if (showLogistics.value && logisticsRef.value) {
+  if (fillableLogistics.value && logisticsRef.value) {
     logisticsValidResult = await logisticsRef.value.validate()
   }
   return validResult && logisticsValidResult

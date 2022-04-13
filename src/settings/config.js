@@ -61,6 +61,9 @@ MAT_BASE_UNIT[STEEL_ENUM] = {
   width: { unit: 'mm', precision: 0 }
 }
 
+// 钢材单位
+export const STEEL_BASE_UNIT = MAT_BASE_UNIT[STEEL_ENUM]
+
 // 系统最小单位（默认）
 export const MIN_UNIT = {
   LENGTH: 'mm',
