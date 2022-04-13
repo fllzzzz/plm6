@@ -41,20 +41,22 @@ async function transferDataFormat({ header = {}, table = [], footer, qrCode }) {
   // 调拨来源数据转换
   const source = cloneHeader.source
   let sourceStr = ''
+  let sourceStrArr = []
   if (source && source.length > 0) {
     source.forEach((sInfo, sIndex) => {
+      let str = ''
       if (sInfo && sInfo.project) {
-        sourceStr += sInfo.project.shortName
+        str += sInfo.project.shortName
       } else {
-        sourceStr += '公共库'
+        str += '公共库'
       }
       if (sInfo.factory) {
-        sourceStr += `（${sInfo.factory.name}）`
+        str += `（${sInfo.factory.name}）`
       }
-      if (sIndex !== source.length - 1) {
-        sourceStr += '　/　'
-      }
+      sourceStrArr.push(str)
     })
+    sourceStrArr = Array.from(new Set(sourceStrArr))
+    sourceStr = sourceStrArr.join('　/　')
   }
   if (cloneHeader.boolBorrowReturnNotSelf && cloneHeader.borrowProject) {
     sourceStr += '　▶　'
