@@ -15,9 +15,6 @@
       </el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.createTime)}` }}</el-tag>
     </template>
-    <template #titleRight>
-      <!-- TODO:打印按钮 -->
-    </template>
     <template #content>
       <common-table
         :data="detail.list"

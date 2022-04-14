@@ -65,12 +65,25 @@
       @change="crud.toQuery"
     />
     <rrOperation />
-    <crudOperation />
+    <crudOperation>
+      <template #optLeft>
+        <print-table
+          v-permission="permission.get"
+          api-key="wmsRmOutboundReceipt"
+          :params="selectionIds"
+          :disabled="selectionIds.length === 0"
+          size="mini"
+          type="warning"
+          class="filter-item"
+          @success="crud.selectAllChange"
+        />
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
@@ -79,6 +92,7 @@ import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 
+const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
@@ -92,4 +106,8 @@ const defaultQuery = {
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+const selectionIds = computed(() => {
+  return crud.selections.map((row) => row.id)
+})
 </script>

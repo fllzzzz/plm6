@@ -39,7 +39,7 @@
         <material-unit-quantity-columns :basic-class="detail.basicClass" />
         <!-- 次要信息 -->
         <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="detail.basicClass" />
-        <!-- 价格信息 TODO:showAmount 是否要改成通过权限控制-->
+        <!-- 价格信息 -->
         <template v-if="showAmount">
           <amount-info-columns v-if="!boolPartyA" />
         </template>
