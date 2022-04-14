@@ -15,7 +15,7 @@
     </template>
     <el-form ref="formRef" class="form" :model="form" :rules="rules" size="small" label-position="right" inline label-width="70px">
       <div class="form-header">
-        <el-form-item label="项目" prop="projectId">
+        <el-form-item label="归还项目" prop="projectId">
           <span v-parse-project="{ project: detail.project }" v-empty-text />
         </el-form-item>
         <el-form-item label="工厂" prop="factoryId">
@@ -157,7 +157,7 @@ const props = defineProps({
 // 仓库类型
 const projectWareTypeEnum = {
   PUBLIC: { L: '公共库', K: 'PUBLIC', V: 1 },
-  CUR_PROJECT: { L: '当前项目', K: 'CUR_PROJECT', V: 2 },
+  CUR_PROJECT: { L: '借用项目', K: 'CUR_PROJECT', V: 2 },
   OTHER_PROJECT: { L: '其他项目', K: 'OTHER_PROJECT', V: 3 }
 }
 
