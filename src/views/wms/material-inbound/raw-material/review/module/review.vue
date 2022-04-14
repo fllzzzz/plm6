@@ -58,18 +58,27 @@
           <!-- 次要信息 -->
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="form.basicClass" />
           <!-- 金额设置 -->
-          <price-set-columns
-            v-if="showAmount"
-            :form="form"
-            :order="order"
-            :requisitions="requisitions"
-            @amount-change="handleAmountChange"
-          />
+          <template v-if="showAmount">
+            <price-set-columns
+              v-if="fillableAmount"
+              :form="form"
+              :order="order"
+              :requisitions="requisitions"
+              @amount-change="handleAmountChange"
+            />
+            <template v-else>
+              <el-table-column prop="unitPrice" label="含税单价" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="amount" label="金额" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
+              <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
+            </template>
+          </template>
           <template v-else>
+            <el-table-column prop="sourceRequisitionsSN" label="申购单" align="left" min-width="120px" show-overflow-tooltip />
             <el-table-column prop="project" label="项目" align="left" min-width="120px" show-overflow-tooltip />
           </template>
           <!-- 仓库设置 -->
-          <warehouse-set-columns v-if="showWarehouse" :form="form" />
+          <warehouse-set-columns v-if="fillableWarehouse" :form="form" />
           <warehouse-info-columns v-else />
         </common-table>
         <el-input
@@ -84,8 +93,8 @@
         />
         <!-- 物流信息设置 -->
         <logistics-form
+          v-if="fillableLogistics"
           ref="logisticsRef"
-          v-if="showLogistics"
           class="logistics-form-content"
           :disabled="formDisabled"
           :form="form.logistics"
@@ -97,7 +106,7 @@
 
 <script setup>
 import { getPendingReviewIdList, detail, reviewPassed, reviewReturned } from '@/api/wms/material-inbound/raw-material/review'
-import { computed, ref, defineEmits, defineProps, watch } from 'vue'
+import { inject, computed, ref, defineEmits, defineProps, watch } from 'vue'
 import { inboundFillWayEnum, orderSupplyTypeEnum } from '@enum-ms/wms'
 import { logisticsPayerEnum } from '@/utils/enum/modules/logistics'
 import { tableSummary } from '@/utils/el-extra'
@@ -126,6 +135,7 @@ import logisticsForm from '@/views/wms/material-inbound/raw-material/components/
 import priceSetColumns from '@/views/wms/material-inbound/raw-material/components/price-set-columns.vue'
 import warehouseSetColumns from '@/views/wms/material-inbound/raw-material/components/warehouse-set-columns.vue'
 import titleAfterInfo from '@/views/wms/material-inbound/raw-material/components/title-after-info.vue'
+import checkPermission from '@/utils/system/check-permission'
 
 const emit = defineEmits(['refresh', 'update:modelValue'])
 
@@ -142,6 +152,7 @@ const props = defineProps({
   }
 })
 
+const permission = inject('permission')
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialHasAmountColumns, ['remark', 'empty-text']])
 
@@ -164,12 +175,19 @@ const currentInboundId = ref() // 当前id
 
 const { inboundFillWayCfg } = useWmsConfig()
 
+// 可填写金额
+const fillableAmount = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V : false
+)
 // 显示金额相关信息（由采购填写的信息）
-const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.REVIEWING.V)
-// 显示仓库（由仓库填写的信息）
-const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V)
+const showAmount = computed(() => checkPermission(permission.showAmount) || fillableAmount.value)
+
+// 可填写仓库信息（由仓库填写的信息）
+const fillableWarehouse = computed(() =>
+  inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.REVIEWING.V : false
+)
 // 显示物流信息
-const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
+const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 采购订单信息
@@ -185,9 +203,9 @@ const drawerTitle = computed(() =>
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
-  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
+  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
   // 甲供订单，显示项目和申购单以及仓库时
-  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && showWarehouse.value
+  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
   return !(unshow1 || unshow2)
 })
 
@@ -211,13 +229,13 @@ const projectRules = {
 const tableRules = computed(() => {
   const rules = {}
   // 甲供不填写金额方面的信息
-  if (showAmount.value && !boolPartyA.value) {
+  if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
     if (isNotBlank(order.value.projects)) {
       Object.assign(rules, projectRules)
     }
   }
-  if (showWarehouse.value) Object.assign(rules, warehouseRules)
+  if (fillableWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
 
@@ -314,6 +332,7 @@ async function detailFormat(form) {
     toSmallest: false,
     toNum: true
   })
+  form.list.forEach((item) => (item.sourceRequisitionsSN = item.requisitionsSN))
   setDitto(form.list) // 在list变化时设置同上
   return form
 }
@@ -325,7 +344,7 @@ async function validate(form) {
     form.list = dealList
   }
   let logisticsValidResult = true
-  if (showLogistics.value && logisticsRef.value) {
+  if (fillableLogistics.value && logisticsRef.value) {
     logisticsValidResult = await logisticsRef.value.validate()
   }
   return validResult && logisticsValidResult

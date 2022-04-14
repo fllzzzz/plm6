@@ -48,13 +48,15 @@ export const gasInboundApplicationPM = ['wms_gasInbound_application:submit']
 export const rawMaterialInboundRecordPM = {
   get: ['wms_rawMat_inbound_record:get'],
   edit: ['wms_rawMat_inbound_record:edit'],
-  del: ['wms_rawMat_inbound_record:del']
+  del: ['wms_rawMat_inbound_record:del'],
+  showAmount: ['wms_rawMat_inbound_record:showAmount'] // 显示金额
 }
 
 // 出入库审核/入库审核
 export const rawMaterialInboundReviewPM = {
   get: ['wms_rawMat_inbound_review:get'],
-  review: ['wms_rawMat_inbound_review:review']
+  review: ['wms_rawMat_inbound_review:review'],
+  showAmount: ['wms_rawMat_inbound_review:showAmount'] // 显示金额
 }
 
 // --------------------------- 入库模块 end --------------------------------

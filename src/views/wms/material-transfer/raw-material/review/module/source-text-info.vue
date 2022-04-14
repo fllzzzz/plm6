@@ -1,24 +1,9 @@
 <template>
-  <span>
-    <template v-for="(item, si) in props.transferReceipt.source" :key="si">
-      <span class="project-ware-text" v-if="item && item.project">
-        {{ item.project }}
-      </span>
-      <span class="public-ware-text" v-else>公共库</span>
-      <span v-if="item.factory">（{{ item.factory.name }}）</span>
-      <span v-if="si !== props.transferReceipt.source.length - 1">&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>
-    </template>
-    <template v-if="props.transferReceipt.boolBorrowReturnNotSelf">
-      <span class="borrow-direction-icon">▶</span>&nbsp;
-      <el-tooltip content="实际借用项目" placement="top">
-        <span class="project-ware-text">{{ props.transferReceipt.borrowProject }}</span>
-      </el-tooltip>
-    </template>
-  </span>
+  <span>{{ receiptInfo.source }}</span>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
 const props = defineProps({
   transferReceipt: {
     type: Object,
@@ -26,5 +11,36 @@ const props = defineProps({
       return {}
     }
   }
+})
+
+const receiptInfo = computed(() => {
+  const receipt = JSON.parse(JSON.stringify(props.transferReceipt))
+
+  // 调拨来源数据转换
+  const source = receipt.source
+  let sourceStr = ''
+  let sourceStrArr = []
+  if (source && source.length > 0) {
+    source.forEach((sInfo, sIndex) => {
+      let str = ''
+      if (sInfo && sInfo.project) {
+        str += sInfo.project
+      } else {
+        str += '公共库'
+      }
+      if (sInfo.factory) {
+        str += `（${sInfo.factory.name}）`
+      }
+      sourceStrArr.push(str)
+    })
+    sourceStrArr = Array.from(new Set(sourceStrArr))
+    sourceStr = sourceStrArr.join('　/　')
+  }
+  if (receipt.boolBorrowReturnNotSelf && receipt.borrowProject) {
+    sourceStr += '　▶　'
+    sourceStr += receipt.borrowProject.shortName
+  }
+  receipt.source = sourceStr
+  return receipt
 })
 </script>
