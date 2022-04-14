@@ -132,7 +132,7 @@ const wmsRmRejectReceipt = {
         type: typeEnum.DATE.K,
         format: 'YY/MM/DD kk:mm'
       },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'inboundSN', title: '退货单号：', width: 135, type: typeEnum.GUID.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'inboundSN', title: '入库单号：', width: 135, type: typeEnum.GUID.K },
       {
         show: true,
         source: dataSourceEnum.SYSTEM.V,
