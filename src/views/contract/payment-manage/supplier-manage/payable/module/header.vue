@@ -13,8 +13,8 @@
         style="width:240px"
       />
       <common-radio-button
-        v-model="query.type"
-        :options="supplierPayTypeEnum.ENUM"
+        v-model="query.supplierClassification"
+        :options="payableSearchTypeEnum.ENUM"
         class="filter-item"
         :showOptionAll="true"
         type="enum"
@@ -50,11 +50,16 @@
 <script setup>
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
-import { supplierPayTypeEnum, hasTaxEnum, hasPayEnum } from '@enum-ms/contract'
+import { payableSearchTypeEnum, hasTaxEnum, hasPayEnum } from '@enum-ms/contract'
 
 const defaultQuery = {
-  type: undefined,
-  supplierName: undefined
+  hasTax: undefined,
+  hasPay: undefined,
+  startDate: undefined,
+  endDate: undefined,
+  supplierClassification: undefined,
+  supplierName: undefined,
+  createTime: []
 }
 
 const { crud, query } = regHeader(defaultQuery)

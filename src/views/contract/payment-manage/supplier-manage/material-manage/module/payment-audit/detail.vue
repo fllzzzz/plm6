@@ -108,7 +108,11 @@
           <div v-for="item in currentInfo.attachments" :key="item.id">{{item.name}}
             <export-button :params="{id: item.id}"/>
           </div>
-        </template></el-descriptions-item>
+        </template>
+      </el-descriptions-item>
+      <el-descriptions-item label-class-name="remark" label="备注">
+        <span>{{currentInfo.remark}}</span>
+      </el-descriptions-item>
     </el-descriptions>
   </common-dialog>
 </template>

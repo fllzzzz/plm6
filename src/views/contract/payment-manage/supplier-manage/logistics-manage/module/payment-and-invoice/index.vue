@@ -7,7 +7,7 @@
     :before-close="handleClose"
     title="付款收票"
     :wrapper-closable="false"
-    size="95%"
+    size="100%"
   >
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
