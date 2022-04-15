@@ -1,6 +1,7 @@
 import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
 import wms from '@/api/print/wms'
+import supply from '@/api/print/supply-chain'
 
 // 合同
 const myProject = contract.myProject
@@ -18,6 +19,15 @@ const projectCollectionDetail = contract.collectionDetail
 const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
 const transactionRecord = contract.transactionRecord
+
+// 供应链
+const purchaseInvoiceRecord = supply.invoiceDetail
+const purchaseInboundRecord = supply.inboundRecord
+const purchasePaymentRecord = supply.paymentRecord
+const orderPaymentLedger = supply.orderPaymentLedger
+const supplierPaymentLedger = supply.supplierPaymentLedger
+
+const purchaseLogisticsRecord = supply.logisticsRecord
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
@@ -82,6 +92,15 @@ export default {
   projectInvoiceDetail, // 项目开票详情
   projectHappenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
+
+  // 供应链
+  purchaseInvoiceRecord, // 收票记录
+  purchaseInboundRecord, // 入库记录
+  purchasePaymentRecord, // 付款记录
+  orderPaymentLedger, // 采购订单付款台账
+  supplierPaymentLedger, // 供应商付款台账
+
+  purchaseLogisticsRecord, // 物流记录
 
   // mes
   mesSchedulingDetail, // 工单详情

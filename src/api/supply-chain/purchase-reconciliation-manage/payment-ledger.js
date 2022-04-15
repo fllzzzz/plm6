@@ -30,9 +30,10 @@ export function getBySupplier(params) {
   })
 }
 /**
- * 付款记录
+ * 付款记录（下面两个字段必传一个）
  * @param {number} orderId|required 订单id
- * @param {number} propertyType 属性 1采购订单 2物流费
+ * @param {number} supplierId|required 采购供应商id
+ * @param {number} propertyType|required 属性 1采购订单 2物流费
  * @param {number} page|required 页码
  * @param {number} size|required 页大小
  */
@@ -47,13 +48,14 @@ export function paymentRecord(params) {
 }
 
 /**
- * 开票记录
+ * 收票记录（下面两个字段必传一个）
  * @param {number} orderId|required 订单id
+ * @param {number} supplierId|required 采购供应商id
  */
 export function invoiceRecord(params) {
   return request({
     module: 'contract',
-    url: `contract/receive-invoice/${params.orderId}`,
+    url: `contract/receive-invoice/list`,
     method: 'get',
     params,
     cancelKey: false
@@ -61,13 +63,14 @@ export function invoiceRecord(params) {
 }
 
 /**
- * 入库记录
+ * 入库记录（下面两个字段必传一个）
  * @param {number} orderId|required 订单id
+ * @param {number} supplierId|required 采购供应商id
  */
 export function inboundRecord(params) {
   return request({
     module: 'contract',
-    url: `supply-chain/order-payment/listInbound/${params.orderId}`,
+    url: `supply-chain/order-payment/listInbound`,
     method: 'get',
     params,
     cancelKey: false

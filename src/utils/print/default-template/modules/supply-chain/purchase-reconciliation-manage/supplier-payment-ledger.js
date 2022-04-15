@@ -1,14 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
-import { amountUnitEnum } from '../../../enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 
-// 物料仓库存一览表
-const WMS_REPORT_INVENTORY_SUMMARY = {
+// 供应商付款台账
+const supplierPaymentLedger = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'WMS_REPORT_INVENTORY_SUMMARY', // 表格类型 KEY
-  name: '物料仓库存一览表（平台）', // 表格名称
+  type: 'supplierPaymentLedger', // 表格类型 KEY
+  name: '供应商付款台账（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -62,7 +60,7 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
   title: {
     show: true,
     allPage: false,
-    title: '物料仓库存一览表',
+    title: '项目开票明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -104,10 +102,8 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'factory', title: '工厂：', width: 150 },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YYYY/MM/DD' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 50, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 120, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 60, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -125,13 +121,13 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: true,
+    show: false,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 0,
+    height: 15,
     width: 190,
     emptyVal: '',
     /**
@@ -155,8 +151,7 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: [
-    ]
+    fields: []
   },
   table: {
     /**
@@ -172,7 +167,7 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 1 },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -188,9 +183,6 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
      * @param {string} title 合计名称
      */
     summary: { show: true, title: '合计' },
-    extraFields: [
-      { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }}
-    ],
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -205,21 +197,17 @@ const WMS_REPORT_INVENTORY_SUMMARY = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'type', title: '仓库位置', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.WAREHOUSE_NAME.K },
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'className', title: '物料类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: false, key: 'unit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MEASUREMENT_UNIT.K },
-      { show: false, key: 'quantity', title: '库存数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: true, key: 'checkUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, width: 10, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'value', title: '库存量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: false },
-      { show: false, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: false },
-      { show: true, key: 'totalAmount', title: '总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: true, key: 'project', title: '所属项目', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 25, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }}
+      { show: true, key: 'createTime', title: '日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, key: 'amount', title: '累计合同额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'inboundAmount', title: '累计入库额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'paymentAmount', title: '累计付款额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'paymentRate', title: '付款率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }},
+      { show: true, key: 'invoiceAmount', title: '累计收票额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'invoiceRate', title: '收票率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.RATE.K, format: { precision: 2 }}
     ]
   }
 }
 
 export default {
-  WMS_REPORT_INVENTORY_SUMMARY // 物料仓库存一览表
+  supplierPaymentLedger // 供应商付款台账
 }

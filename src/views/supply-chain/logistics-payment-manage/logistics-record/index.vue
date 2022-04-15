@@ -11,31 +11,20 @@
     :data="crud.data"
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
+    :data-format="dataFormat"
     return-source-data
     :showEmptySymbol="false"
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" :label="crud.query.type===logisticsSearchTypeEnum.PRODUCT.V?'所属项目':(crud.query.type===logisticsSearchTypeEnum.MATERIAL.V?'采购编号':'物流公司')" align="center" min-width="100">
-      <template v-slot="scope">
-        <div v-if="crud.query.type===logisticsSearchTypeEnum.PRODUCT.V">{{ scope.row.projectName }}</div>
-        <div v-if="crud.query.type===logisticsSearchTypeEnum.MATERIAL.V">{{ scope.row.serialNumber }}</div>
-        <div v-if="crud.query.type===logisticsSearchTypeEnum.COMPANY.V">{{ scope.row.supplierName }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" :show-overflow-tooltip="true" label="累计使用车次" align="center" min-width="100">
-      <template v-slot="scope">
-        <div>{{ scope.row.trainNumber }}</div>
-      </template>
-    </el-table-column>
-     <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" :show-overflow-tooltip="true" label="累计运费(元)" min-width="100">
-      <template v-slot="scope">
-        <span>{{ scope.row.freight? toThousand(scope.row.freight): '' }}</span>
-      </template>
-    </el-table-column>
+    <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.PRODUCT.V && columns.visible('projectName')" key="projectName" prop="projectName" show-overflow-tooltip label="所属项目" align="center" min-width="140" />
+    <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.MATERIAL.V && columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" show-overflow-tooltip label="采购编号" align="center" min-width="140" />
+    <el-table-column v-if="crud.query.type===logisticsSearchTypeEnum.COMPANY.V && columns.visible('supplierName')" key="supplierName" prop="supplierName" show-overflow-tooltip label="物流公司" align="center" min-width="140" />
+    <el-table-column v-if="columns.visible('trainNumber')" key="trainNumber" prop="trainNumber" show-overflow-tooltip label="累计使用车次" align="center" min-width="100" />
+     <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" show-overflow-tooltip label="累计运费" align="right" min-width="100" />
     <el-table-column
         label="操作"
-        width="190px"
+        width="180"
         align="center"
       >
         <template v-slot="scope">
@@ -45,22 +34,23 @@
   </common-table>
   <!--分页组件-->
   <pagination />
-  <recordDetail v-model="detailVisible" :detailInfo="detailInfo" :type="crud.query.type"/>
+  <recordDetail v-model="detailVisible" :detailInfo="detailInfo" :permission="permission" :type="crud.query.type"/>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref } from 'vue'
+
 import { supplierLogisticsLogPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
+import { logisticsSearchTypeEnum } from '@enum-ms/contract'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { toThousand } from '@data-type/number'
 import recordDetail from './module/record-detail'
-import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 
 const optShow = {
   add: false,
@@ -84,10 +74,12 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
+const dataFormat = ref([
+  ['freight', 'to-thousand']
+])
+
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.logisticsRecord',
-  paginate: true,
-  extraHeight: 40
+  paginate: true
 })
 
 function openDetail(row) {

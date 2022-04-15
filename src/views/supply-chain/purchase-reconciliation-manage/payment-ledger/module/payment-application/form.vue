@@ -4,61 +4,61 @@
     :close-on-click-modal="false"
     :before-close="crud.cancelCU"
     :visible="crud.status.cu > 0"
-    :title="crud.status.title"
+    title="付款申请"
     :wrapper-closable="false"
-    size="600px"
+    size="40%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
         <el-form-item label="采购单号">
           <span>{{ detailInfo.serialNumber }}</span>
-        </el-form-item>
-        <el-form-item label="所属项目">
-          <template v-if="detailInfo.projects && detailInfo.projects.length>0">
-            <div v-for="item in detailInfo.projects" :key="item.id">
-              {{item.serialNumber+' '+item.shortName}}
-            </div>
-          </template>
         </el-form-item>
         <el-form-item label="供应商">
           <span>{{ detailInfo.supplierName }}</span>
         </el-form-item>
-        <el-form-item label="合同额(元)">
-          <span>{{ detailInfo.amount?toThousand(detailInfo.amount):'-' }}</span>
+        <el-form-item label="合同额">
+          <span  v-thousand="detailInfo.amount" />
         </el-form-item>
-        <el-form-item label="已付款(元)">
-          <span>{{ detailInfo.paymentAmount?toThousand(detailInfo.paymentAmount):'-' }}</span>
-          <el-tag style="margin-left:5px;" v-if="detailInfo.amount">{{ (detailInfo.paymentAmount/detailInfo.amount)*100+'%' }}</el-tag>
+        <el-form-item label="入库额">
+          <span  v-thousand="detailInfo.inboundAmount" />
         </el-form-item>
-        <el-form-item label="最后一次付款(元)">
-          <span>{{ detailInfo.lastPaymentAmount?toThousand(detailInfo.lastPaymentAmount):'-' }}</span>
-          <span v-if="detailInfo.lastPaymentTime" style="margin-left:5px;">{{ parseTime(detailInfo.lastPaymentTime,'{y}-{m}-{d}')}}</span>
+        <el-form-item label="已付款">
+          <span v-thousand="detailInfo.paymentAmount"/><span>（{{ detailInfo.paymentRate }}%）</span>
         </el-form-item>
-        <el-form-item label="付款日期" prop="paymentDate">
+        <el-form-item label="已收票">
+          <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ detailInfo.invoiceRate }}%）</span>
+        </el-form-item>
+        <el-form-item label="最后一次付款">
+          <span  v-thousand="detailInfo.lastPaymentAmount" />
+          <el-tag v-if="detailInfo.lastPaymentTime" style="margin-left:5px;">{{ parseTime(detailInfo.lastPaymentTime,'{y}-{m}-{d}')}}</el-tag>
+        </el-form-item>
+        <el-form-item label="本次付款"  prop="applyAmount">
+          <el-input-number
+              v-model="form.applyAmount"
+              :step="10000"
+              :min="0"
+              :max="999999999999"
+              :precision="DP.YUAN"
+              placeholder="本次付款"
+              controls-position="right"
+              style="width: 220px"
+                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
+            />
+        </el-form-item>
+        <el-form-item label="大写">
+            <span style="color:#82848a">{{form.applyAmount?digitUppercase(form.applyAmount):''}}</span>
+        </el-form-item>
+        <el-form-item label="申请日期" prop="paymentDate">
           <el-date-picker
             v-model="form.paymentDate"
             type="date"
             value-format="x"
-            placeholder="选择付款日期"
+            placeholder="选择申请日期"
             style="width: 220px"
-            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
           />
-        </el-form-item>
-        <el-form-item label="本次付款(元)"  prop="applyAmount">
-          <el-input-number
-              v-show-thousand
-              v-model="form.applyAmount"
-              :step="1"
-              :min="0"
-              :max="999999999999"
-              :precision="DP.YUAN"
-              controls-position="right"
-              style="width: 220px"
-            />
-            <span style="color:#82848a">{{form.applyAmount?digitUppercase(form.applyAmount):''}}</span>
         </el-form-item>
         <el-form-item label="付款事由" prop="paymentReasonId">
           <common-select
@@ -71,14 +71,24 @@
             style="width: 220px"
           />
         </el-form-item>
-        <el-form-item label="收款银行">
+        <el-form-item label="收款单位">
           <span>{{detailInfo.supplierBankName}}</span>
         </el-form-item>
-        <el-form-item label="账号">
+        <el-form-item label="收款银行">
           <span>{{detailInfo.supplierBankAccount}}</span>
         </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            style="width: 100%"
+            maxlength="500"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入备注"
+          />
+        </el-form-item>
         <el-form-item label="附件">
-          <template v-if="form.id && form.attachments.length>0">
+          <template v-if="form.id && form.attachments?.length">
             <div v-for="item in form.attachments" :key="item.id">{{item.name}}</div>
           </template>
           <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
@@ -90,12 +100,15 @@
 
 <script setup>
 import { ref, defineProps } from 'vue'
-import { regForm } from '@compos/use-crud'
-import { digitUppercase, toThousand } from '@data-type/number'
-import { parseTime } from '@/utils/date'
-import useDict from '@compos/store/use-dict'
+
+import moment from 'moment'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { digitUppercase } from '@data-type/number'
+import { parseTime } from '@/utils/date'
 import { DP } from '@/settings/config'
+
+import { regForm } from '@compos/use-crud'
+import useDict from '@compos/store/use-dict'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
@@ -106,16 +119,18 @@ const props = defineProps({
     default: () => {}
   }
 })
+
 const defaultForm = {
-  paymentDate: undefined,
+  paymentDate: moment().startOf('day').format('x'), // 默认当天0点的时间戳
   applyAmount: undefined,
   attachmentIds: undefined,
-  attachments: undefined,
+  attachments: [],
   orderId: undefined,
   paymentReasonId: undefined,
   propertyType: undefined,
   receiveBank: undefined,
-  receiveBankAccount: undefined
+  receiveBankAccount: undefined,
+  remark: ''
 }
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 
@@ -127,7 +142,7 @@ const validateMoney = (rule, value, callback) => {
 }
 
 const rules = {
-  paymentDate: [{ required: true, message: '请选择付款日期', trigger: 'change' }],
+  paymentDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
   paymentReasonId: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }]
 }

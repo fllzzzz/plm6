@@ -60,7 +60,8 @@ export const supplierMaterialPaymentPM = {
 // 物流对账管理/物流记录
 export const supplierLogisticsLogPM = {
   get: ['supplier_logistics_Log:get'], // 物流记录列表
-  detail: ['supplier_logistics_Log:detail'] // 物流记录详情
+  detail: ['supplier_logistics_Log:detail'], // 物流记录详情
+  print: ['supplier_logistics_Log:print'] // 打印物流记录
 }
 
 // 物流对账管理/付款明细

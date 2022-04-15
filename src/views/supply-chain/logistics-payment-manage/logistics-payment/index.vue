@@ -12,22 +12,18 @@
       :max-height="maxHeight"
     >
       <el-table-column label="序号" type="index" align="center" width="60"/>
-      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center">
+      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流公司" align="center" min-width="180">
         <template v-slot="scope">
           <span>{{ scope.row.supplierName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="签约主体" align="center">
+      <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="付款单位" align="center" min-width="180">
         <template v-slot="scope">
           <span>{{ scope.row.branchCompanyName }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('freight')" prop="freight" key="freight" label="物流费" align="right" min-width="120" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip>
-        <template #default="{ row }">
-          <el-tag effect="plain" type="warning">{{ row.paymentAmount }}</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('paymentRate')" key="paymentRate" prop="paymentRate" label="付款比例" align="center" width="90">
         <template #default="{ row }">
           <span>{{ row.paymentRate }}%</span>
@@ -47,7 +43,7 @@
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <el-tag effect="plain" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</el-tag>
+          <div class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" width="90">
@@ -58,7 +54,7 @@
       <!--编辑与删除-->
       <el-table-column
         label="操作"
-        width="190px"
+        width="120px"
         align="center"
       >
         <template #default="{ row }">
@@ -160,7 +156,7 @@ function openRecord(row, type) {
 }
 
 function handleAdd(row) {
-  detailInfo.value = row.sourceRow
+  detailInfo.value = row
   crud.toAdd()
 }
 
@@ -173,7 +169,6 @@ function openApplication(row) {
 </script>
 <style lang="scss" scoped>
 .clickable {
-  width: 100%;
   cursor: pointer;
 }
 </style>
