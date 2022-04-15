@@ -53,6 +53,16 @@
         <div>{{ scope.row.invoiceSerialNumber }}</div>
       </template>
     </el-table-column>
+    <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true">
+      <template v-slot="scope">
+        <template v-if="scope.row.attachments && scope.row.attachments.length>0">
+          <div v-for="item in scope.row.attachments" :key="item.id">
+            <div>{{item.name}}</div>
+            <export-button :params="{id: item.id}" v-if="!scope.row.isModify"/>
+          </div>
+        </template>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="120">
       <template v-slot="scope">
         <span>{{ scope.row.invoiceType ? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</span>
@@ -76,6 +86,7 @@ import mHeader from './module/header'
 import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+import ExportButton from '@comp-common/export-button/index.vue'
 // import { projectNameFormatter } from '@/utils/project'
 
 // crud交由presenter持有
