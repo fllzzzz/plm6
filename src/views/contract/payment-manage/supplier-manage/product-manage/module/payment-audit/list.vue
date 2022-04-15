@@ -40,11 +40,16 @@
           <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
+      <el-table-column key="applyAmount1" prop="applyAmount1" label="大写" align="center" min-width="85">
+        <template v-slot="scope">
+          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? digitUppercase(scope.row.applyAmount): '-' }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column key="paymentReasonId" prop="paymentReasonId" label="*付款事由" align="center" width="120">
         <template v-slot="scope">
           <div>{{ scope.row.paymentReasonId && dict && dict.label && dict.label['payment_reason']? dict.label['payment_reason'][ scope.row.paymentReasonId]: '' }}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="auditStatus" prop="auditStatus" label="状态" align="center" width="80px">
         <template v-slot="scope">
           <el-tag type="success" effect="plain" v-if="scope.row.auditStatus===auditTypeEnum.PASS.V">{{ isNotBlank(scope.row.auditStatus)? auditTypeEnum.VL[scope.row.auditStatus]:'-' }}</el-tag>
@@ -89,21 +94,21 @@
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { ref, defineProps, watch, defineEmits } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import { contractSupplierProductPM } from '@/page-permission/contract'
+import { contractSupplierMaterialPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import useDict from '@compos/store/use-dict'
+// import useDict from '@compos/store/use-dict'
 import { parseTime } from '@/utils/date'
-import { toThousand } from '@data-type/number'
+import { digitUppercase, toThousand } from '@data-type/number'
 import { validate } from '@compos/form/use-table-validate'
 import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { isNotBlank } from '@data-type/index'
 import detail from './detail'
 // import { ElMessage } from 'element-plus'
 
-const permission = contractSupplierProductPM.payment
+const permission = contractSupplierMaterialPM.payment
 
 const optShow = {
   add: false,
@@ -128,17 +133,18 @@ const props = defineProps({
 })
 
 const tableRef = ref()
-const dict = useDict(['payment_reason'])
+// const dict = useDict(['payment_reason'])
 const detailInfo = ref({})
 const showType = ref('detail')
 const detailVisible = ref(false)
 const emit = defineEmits(['success'])
-const { crud, CRUD } = useCRUD(
+const { crud } = useCRUD(
   {
     title: '付款审核',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
+    requiredQuery: ['orderId', 'propertyType'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -178,6 +184,8 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
+      crud.query.orderId = props.currentRow.id
+      crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
       crud.toQuery()
     }
   },
@@ -188,11 +196,6 @@ function openDetail(row, type) {
   detailInfo.value = row
   showType.value = type
   detailVisible.value = true
-}
-
-CRUD.HOOK.beforeRefresh = () => {
-  crud.query.orderId = props.currentRow.id
-  crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
 }
 
 function handleSuccess() {

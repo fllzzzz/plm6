@@ -18,6 +18,11 @@
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+    <el-table-column v-if="columns.visible('paymentDate')" key="paymentDate" prop="paymentDate" label="付款日期" align="center">
+      <template v-slot="scope">
+        <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('paymentUnit')" key="paymentUnit" prop="paymentUnit" :show-overflow-tooltip="true" label="付款单位" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.paymentUnit?scope.row.paymentUnit:'-'}}</span>
@@ -28,14 +33,19 @@
         <span>{{ scope.row.receivingUnit?scope.row.receivingUnit:'-'}}</span>
       </template>
     </el-table-column>
-     <el-table-column v-if="columns.visible('paymentDate')" key="paymentDate" prop="paymentDate" label="付款日期" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
-      </template>
-    </el-table-column>
     <el-table-column v-if="columns.visible('actuallyPaymentAmount')" key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额(元)" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.actuallyPaymentAmount && scope.row.actuallyPaymentAmount>0? toThousand(scope.row.actuallyPaymentAmount): scope.row.actuallyPaymentAmount }}</div>
+      </template>
+    </el-table-column>
+    <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true">
+      <template v-slot="scope">
+        <template v-if="scope.row.attachments && scope.row.attachments.length>0">
+          <div v-for="item in scope.row.attachments" :key="item.id">
+            <div>{{item.name}}</div>
+            <export-button :params="{id: item.id}" v-if="!scope.row.isModify"/>
+          </div>
+        </template>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="所属项目或订单" align="center">
@@ -59,6 +69,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
+import ExportButton from '@comp-common/export-button/index.vue'
 // import { projectNameFormatter } from '@/utils/project'
 
 const permission = contractSupplierPaymentLedgerPM.collection

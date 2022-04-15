@@ -126,13 +126,14 @@ const props = defineProps({
 
 const tableRef = ref()
 const dict = useDict(['payment_reason'])
-const { crud, CRUD } = useCRUD(
+const { crud } = useCRUD(
   {
     title: '付款填报',
     sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['orderId', 'propertyType', 'auditStatus'],
     invisibleColumns: ['haveApplyAmount', 'collectionMode', 'collectionReason', 'collectionDepositBank', 'collectionBankAccount', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
     hasPagination: true
   },
@@ -149,17 +150,14 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
+      crud.query.orderId = props.currentRow.id
+      crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
+      crud.query.auditStatus = auditTypeEnum.PASS.V
       crud.toQuery()
     }
   },
   { deep: true, immediate: true }
 )
-
-CRUD.HOOK.beforeRefresh = () => {
-  crud.query.orderId = props.currentRow.id
-  crud.query.propertyType = supplierPayTypeEnum.PURCHASE.V
-  crud.query.auditStatus = auditTypeEnum.PASS.V
-}
 
 // 合计
 function getSummaries(param) {

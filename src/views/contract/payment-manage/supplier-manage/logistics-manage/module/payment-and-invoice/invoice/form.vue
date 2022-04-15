@@ -26,7 +26,7 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*开票日期" align="center" width="160">
+          <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*收票日期" align="center" width="160">
             <template v-slot="scope">
               <el-date-picker
                 v-if="scope.row.isModify"
@@ -43,8 +43,8 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*开票额" align="center" min-width="170" class="money-column">
-            <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
+          <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="*收票额" align="center" class="money-column">
+            <el-table-column key="invoiceAmount" prop="invoiceAmount" label="小写" align="center" min-width="85">
               <template v-slot="scope">
                 <el-input-number
                   v-if="scope.row.isModify"
@@ -54,14 +54,14 @@
                   :max="currentRow.freight-totalAmount"
                   :step="100"
                   :precision="DP.YUAN"
-                  placeholder="开票额(元)"
+                  placeholder="收票额(元)"
                   controls-position="right"
                   @change="moneyChange(scope.row)"
                 />
                 <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
               </template>
             </el-table-column>
-            <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+            <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="大写" align="center" width="330" :show-overflow-tooltip="true">
               <template v-slot="scope">
                 <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
               </template>
@@ -104,20 +104,25 @@
               <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="branchCompanyId" prop="branchCompanyId" label="*购方单位" align="center" min-width="120" :show-overflow-tooltip="true">
+          <el-table-column key="branchCompanyId" prop="branchCompanyId" label="*购方单位" align="center" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <div>{{ scope.row.branchCompanyName }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="supplierId" prop="supplierId" label="*销售单位" align="center" min-width="120" :show-overflow-tooltip="true">
+          <el-table-column key="supplierId" prop="supplierId" label="*销售单位" align="center" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <div>{{ scope.row.supplierName }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="invoiceSerialNumber" prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
+          <el-table-column key="invoiceSerialNumber" prop="invoiceSerialNumber" label="*发票号码" align="center" width="120">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" @blur="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
               <span v-else>{{ scope.row.invoiceSerialNumber }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column key="attachments" prop="attachments" label="发票附件" align="center" width="150">
+            <template v-slot="scope">
+              <upload-btn ref="uploadRef" v-model:files="scope.row.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.pdf,.jpg,.jpeg,.png'"/>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -150,6 +155,8 @@ import { digitUppercase } from '@/utils/data-type/number'
 import { toThousand } from '@data-type/number'
 import { invoiceTypeEnum } from '@enum-ms/finance'
 import useTableValidate from '@compos/form/use-table-validate'
+import { fileClassifyEnum } from '@enum-ms/file'
+import UploadBtn from '@comp/file-upload/UploadBtn'
 
 const formRef = ref()
 const detailRef = ref()
@@ -209,12 +216,12 @@ const validateAmount = (value, row) => {
 }
 
 const tableRules = {
-  receiveInvoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
-  invoiceAmount: [{ validator: validateAmount, message: '请选择开票额', trigger: 'change', type: 'number' }],
+  receiveInvoiceDate: [{ required: true, message: '请选择收票日期', trigger: 'change' }],
+  invoiceAmount: [{ validator: validateAmount, message: '请选择收票额', trigger: 'change', type: 'number' }],
   taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceSerialNumber: [{ required: true, message: '请输入发票号', trigger: 'blur' }],
-  supplierId: [{ required: true, message: '请输入开票单位', trigger: 'blur' }],
+  supplierId: [{ required: true, message: '请输入收票单位', trigger: 'blur' }],
   branchCompanyId: [{ required: true, message: '请输入收票单位', trigger: 'blur' }]
 }
 
@@ -310,7 +317,7 @@ function checkInvoiceNo(row) {
 }
 CRUD.HOOK.beforeValidateCU = (crud, form) => {
   if (crud.form.list.length <= 0) {
-    ElMessage({ message: '请添加开票明细', type: 'error' })
+    ElMessage({ message: '请添加收票明细', type: 'error' })
     return false
   }
   const { validResult, dealList } = tableValidate(crud.form.list)
@@ -324,9 +331,10 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
     if (row.invoiceAmount === 0) {
       moneyFlag = false
     }
+    row.attachmentIds = row.attachments ? row.attachments.map((v) => v.id) : undefined
   })
   if (!moneyFlag) {
-    ElMessage.error('开票金额必须大于0')
+    ElMessage.error('收票金额必须大于0')
     return false
   }
 }

@@ -28,12 +28,22 @@
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
     </el-table-column> -->
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="开票日期" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="销售单位" align="center">
+      <template v-slot="scope">
+        <span>{{ scope.row.supplierName?scope.row.supplierName:'-'}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="购方单位" align="center">
+      <template v-slot="scope">
+        <span>{{ scope.row.branchCompanyName?scope.row.branchCompanyName:'-'}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="收票日期" align="center" min-width="120">
       <template v-slot="scope">
         <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="开票额(元)" align="center" min-width="120">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票金额(元)" align="center" min-width="120">
       <template v-slot="scope">
         <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</span>
       </template>
@@ -41,6 +51,16 @@
     <el-table-column v-if="columns.visible('invoiceSerialNumber')" key="invoiceSerialNumber" prop="invoiceSerialNumber" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceSerialNumber }}</div>
+      </template>
+    </el-table-column>
+    <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true">
+      <template v-slot="scope">
+        <template v-if="scope.row.attachments && scope.row.attachments.length>0">
+          <div v-for="item in scope.row.attachments" :key="item.id">
+            <div>{{item.name}}</div>
+            <export-button :params="{id: item.id}" v-if="!scope.row.isModify"/>
+          </div>
+        </template>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="120">
@@ -66,6 +86,7 @@ import mHeader from './module/header'
 import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
+import ExportButton from '@comp-common/export-button/index.vue'
 // import { projectNameFormatter } from '@/utils/project'
 
 // crud交由presenter持有

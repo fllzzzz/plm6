@@ -6,115 +6,114 @@
     </div>
     <!--表格渲染-->
     <common-table
-    ref="tableRef"
-    v-loading="crud.loading"
-    :data="crud.data"
-    :empty-text="crud.emptyText"
-    :max-height="maxHeight"
-    return-source-data
-    :showEmptySymbol="false"
-    style="width: 100%"
-  >
-    <el-table-column label="序号" type="index" align="center" width="60">
-      <template #default="{ row, $index }">
-        <table-cell-tag :show="row.settlementStatus===settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
-        <span>{{ $index + 1 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
-      <template v-slot="scope">
-        <span>{{ scope.row.serialNumber }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
-      <template v-slot="scope">
-        <div>{{ scope.row.createTime? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" label="供应商" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.supplierName? scope.row.supplierName: '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('basicClass')" key="basicClass" prop="basicClass" :show-overflow-tooltip="true" label="种类" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.basicClass?EO.getBits(matClsEnum.ENUM, scope.row.basicClass, 'L').join('|'):'' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" label="合同额" align="center">
-      <template v-slot="scope">
-        <span>{{ isNotBlank(scope.row.amount)? toThousand(scope.row.amount): 0 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
-      <template v-slot="scope">
-        <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ isNotBlank(scope.row.settlementAmount)? toThousand(scope.row.settlementAmount): 0 }}</span>
-        <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckSettlementCount>0">
-          <el-badge :value="1" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
-            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
-          </el-badge>
-        </span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
-      <template v-slot="scope">
-        <span @click="openStockAmount(scope.row)">{{ isNotBlank(scope.row.inboundAmount)? toThousand(scope.row.inboundAmount): 0 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
-      <template v-slot="scope">
-        <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
-        <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckPaymentCount>0">
-          <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
-            <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
-          </el-badge>
-        </span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.amount)*100).toFixed(2)+'%': 0 }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
-      <template v-slot="scope">
-        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
-          <span style="cursor:pointer;margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
-          <template v-if="checkPermission(crud.permission.invoice.get) && scope.row.unCheckInvoiceCount>0">
-            <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data="crud.data"
+      :empty-text="crud.emptyText"
+      :max-height="maxHeight"
+      return-source-data
+      :showEmptySymbol="false"
+      style="width: 100%"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60">
+        <template v-slot="scope">
+          <table-cell-tag :show="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V" name="已结算" color="#f56c6c"/>
+          <span>{{ scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.serialNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
+        <template v-slot="scope">
+          <div>{{ scope.row.createTime? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" label="供应商" align="center">
+        <template v-slot="scope">
+          <div>{{ scope.row.supplierName? scope.row.supplierName: '-' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('basicClass')" key="basicClass" prop="basicClass" :show-overflow-tooltip="true" label="种类" align="center">
+        <template v-slot="scope">
+          <div>{{ scope.row.basicClass?EO.getBits(matClsEnum.ENUM, scope.row.basicClass, 'L').join('|'):'' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" label="合同额" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.amount? toThousand(scope.row.amount): '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('settlementAmount')" key="settlementAmount" prop="settlementAmount"  :show-overflow-tooltip="true" label="结算额" align="center">
+        <template v-slot="scope">
+          <span style="margin-right:10px;" @click="openSettleAudit(scope.row,'detail')">{{ scope.row.settlementAmount? toThousand(scope.row.settlementAmount): '-' }}</span>
+          <span @click="openSettleAudit(scope.row,'audit')" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckSettlementCount>0">
+            <el-badge :value="1" :max="99" :hidden="scope.row.unCheckSettlementCount < 1">
               <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
             </el-badge>
-          </template>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.amount)*100).toFixed(2)+'%': 0  }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" prop="purchaseStatus" label="订单状态" align="center" width="80px">
-      <template v-slot="scope">
-        <el-tag :type="scope.row.purchaseStatus===purchaseOrderStatusEnum.COMPLETE.V?'success':'warning'" effect="plain">{{ isNotBlank(scope.row.purchaseStatus)? purchaseOrderStatusEnum.VL[scope.row.purchaseStatus]:'-' }}</el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('settlementStatus')" key="settlementStatus" prop="settlementStatus" label="结算状态" align="center" width="80px">
-      <template v-slot="scope">
-        <template v-if="isNotBlank(scope.row.settlementStatus)">
-          <el-tag :type="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ settlementStatusEnum.VL[scope.row.settlementStatus] }}</el-tag>
+          </span>
         </template>
-      </template>
-    </el-table-column>
-  </common-table>
-  <!-- 入库记录 -->
-  <inboundRecord v-model="stockVisible" :detail-info="currentRow" />
-  <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
-  <!-- 收付款 -->
-  <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
-  <!-- 结算审核 -->
-  <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/>
-  <!--分页组件-->
-  <pagination />
+      </el-table-column>
+      <el-table-column v-if="columns.visible('inboundAmount')" key="inboundAmount" prop="inboundAmount" label="入库额" align="center">
+        <template v-slot="scope">
+          <span @click="openStockAmount(scope.row)">{{ scope.row.inboundAmount? toThousand(scope.row.inboundAmount): '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
+        <template v-slot="scope">
+          <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ scope.row.paymentAmount? toThousand(scope.row.paymentAmount): '-' }}</span>
+          <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.payment.get) && scope.row.unCheckPaymentCount>0">
+            <el-badge :value="scope.row.unCheckPaymentCount" :max="99" :hidden="scope.row.unCheckPaymentCount < 1">
+              <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+            </el-badge>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
+        <template v-slot="scope">
+          <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.amount)*100).toFixed(2)+'%': 0 }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
+        <template v-slot="scope">
+          <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
+            <span style="cursor:pointer;margin-right:10px;">{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '-' }}</span>
+            <template v-if="checkPermission(crud.permission.invoice.get) && scope.row.unCheckInvoiceCount>0">
+              <el-badge :value="scope.row.unCheckInvoiceCount" :max="99" :hidden="scope.row.unCheckInvoiceCount < 1">
+                <svg-icon icon-class="notify"  style="color:#e6a23c;font-size:15px;"/>
+              </el-badge>
+            </template>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center">
+        <template v-slot="scope">
+          <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.amount)*100).toFixed(2)+'%': 0  }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" prop="purchaseStatus" label="订单状态" align="center" width="80px">
+        <template v-slot="scope">
+          <el-tag :type="scope.row.purchaseStatus===purchaseOrderStatusEnum.COMPLETE.V?'success':'warning'" effect="plain">{{ isNotBlank(scope.row.purchaseStatus)? purchaseOrderStatusEnum.VL[scope.row.purchaseStatus]:'-' }}</el-tag>
+        </template>
+      </el-table-column> -->
+      <el-table-column v-if="columns.visible('settlementStatus')" key="settlementStatus" prop="settlementStatus" label="结算状态" align="center" width="80px">
+        <template v-slot="scope">
+            <el-tag v-if="isNotBlank(scope.row.settlementStatus)" :type="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ settlementStatusEnum.VL[scope.row.settlementStatus] }}</el-tag>
+            <span v-else>-</span>
+        </template>
+      </el-table-column>
+    </common-table>
+    <!-- 入库记录 -->
+    <inboundRecord v-model="stockVisible" :detail-info="currentRow" />
+    <paymentAudit v-model="auditVisible" :currentRow="currentRow" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
+    <!-- 收付款 -->
+    <paymentAndInvoice v-model="tabVisible" :currentRow="currentRow" :tabName="activeName" :propertyType="crud.query.propertyType" @success="crud.toQuery"/>
+    <!-- 结算审核 -->
+    <settleForm v-model="settleVisible" :detail-info="currentRow" :showType="showType" @success="crud.toQuery"/>
+    <!--分页组件-->
+    <pagination />
   </div>
 </template>
 
@@ -127,7 +126,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { settlementStatusEnum, purchaseOrderStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/contract'
 import inboundRecord from '@/views/supply-chain/purchase-reconciliation-manage/payment-ledger/module/inbound-record'
 import paymentAndInvoice from './module/payment-and-invoice'
 import { parseTime } from '@/utils/date'

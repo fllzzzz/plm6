@@ -256,17 +256,23 @@ const projectModeEnum = {
 }
 constantize(projectModeEnum)
 
+// TODO: 应付查询属性
+const payableSearchTypeEnum = {
+  PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 127 },
+  TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1024 }
+}
+constantize(payableSearchTypeEnum)
 // TODO: 有无应付
 const hasPayEnum = {
-  YES: { L: '有应付', K: 'YES', V: 1 },
-  NO: { L: '无应付', K: 'NO', V: 2 }
+  YES: { L: '有应付', K: 'YES', V: true },
+  NO: { L: '无应付', K: 'NO', V: false }
 }
 constantize(hasPayEnum)
 
 // TODO: 有无欠税
 const hasTaxEnum = {
-  YES: { L: '有欠税', K: 'YES', V: 1 },
-  NO: { L: '无欠税', K: 'NO', V: 2 }
+  YES: { L: '有欠税', K: 'YES', V: true },
+  NO: { L: '无欠税', K: 'NO', V: false }
 }
 constantize(hasTaxEnum)
 
@@ -318,7 +324,8 @@ export {
   hasTaxEnum,
   hasPayEnum,
   purchaseOrderStatusEnum,
-  logisticsSearchTypeEnum
+  logisticsSearchTypeEnum,
+  payableSearchTypeEnum
 }
 
 export default {
@@ -354,5 +361,6 @@ export default {
   hasTaxEnum,
   hasPayEnum,
   purchaseOrderStatusEnum,
-  logisticsSearchTypeEnum
+  logisticsSearchTypeEnum,
+  payableSearchTypeEnum
 }
