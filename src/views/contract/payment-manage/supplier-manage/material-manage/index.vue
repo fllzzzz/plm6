@@ -212,7 +212,7 @@ function openSettleAudit(row, type) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  if (crud.query.createTime.length > 0) {
+  if (crud.query.createTime?.length > 0) {
     crud.query.startDate = crud.query.createTime[0]
     crud.query.endDate = crud.query.createTime[1]
   } else {

@@ -10,9 +10,20 @@
     size="80%"
   >
     <template #titleAfter>
-      <div v-if="props.type===logisticsSearchTypeEnum.PRODUCT.V">{{ detailInfo.projectName }}</div>
-      <div v-if="props.type===logisticsSearchTypeEnum.MATERIAL.V">{{ detailInfo.serialNumber }}</div>
-      <div v-if="props.type===logisticsSearchTypeEnum.COMPANY.V">{{ detailInfo.supplierName }}</div>
+      <el-tag v-if="props.type===logisticsSearchTypeEnum.PRODUCT.V" effect="plain">{{ detailInfo.projectName }}</el-tag>
+      <el-tag v-if="props.type===logisticsSearchTypeEnum.MATERIAL.V" effect="plain">{{ detailInfo.serialNumber }}</el-tag>
+      <el-tag v-if="props.type===logisticsSearchTypeEnum.COMPANY.V" effect="plain">{{ detailInfo.supplierName }}</el-tag>
+    </template>
+    <template #titleRight>
+      <div class="print-wrap">
+        <print-table
+          v-permission="props.permission?.print"
+          api-key="purchaseLogisticsRecord"
+          :params="{ ...params }"
+          size="mini"
+          type="warning"
+        />
+      </div>
     </template>
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">

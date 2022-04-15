@@ -3,17 +3,34 @@
     <common-table :data="list" return-source-data :showEmptySymbol="false" :max-height="maxHeight">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="supplierName" label="供应商" align="center" show-overflow-tooltip />
-      <el-table-column prop="amount" label="累计合同额" align="center" show-overflow-tooltip>
+      <el-table-column prop="amount" label="累计合同额" align="right" show-overflow-tooltip>
         <template #default="{ row }">
           <span>{{ isNotBlank(row.amount)? toThousand(row.amount): 0 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="inboundAmount" label="累计入库额" align="center" show-overflow-tooltip>
+      <el-table-column prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(props.permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计入库额 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="inboundAmount" label="累计入库额" align="right" show-overflow-tooltip>
         <template #default="{ row }">
           <span>{{ isNotBlank(row.inboundAmount)? toThousand(row.inboundAmount): 0 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="paymentAmount" label="累计已付款" align="center" show-overflow-tooltip>
+      <el-table-column prop="paymentAmount" label="累计已付款" align="right" show-overflow-tooltip>
         <template #default="{ row }">
           <span>{{ isNotBlank(row.paymentAmount)? toThousand(row.paymentAmount): 0 }}</span>
         </template>
@@ -23,7 +40,7 @@
           <span v-if="row.amount">{{ ((row.paymentAmount/row.amount)*100).toFixed(2) }}%</span>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceAmount" label="累计已开票" align="center" show-overflow-tooltip>
+      <el-table-column prop="invoiceAmount" label="累计已开票" align="right" show-overflow-tooltip>
         <template #default="{ row }">
           <span>{{ isNotBlank(row.invoiceAmount)? toThousand(row.invoiceAmount): 0 }}</span>
         </template>
@@ -50,10 +67,13 @@
 <script setup>
 import { getBySupplier } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, defineProps, watch } from 'vue'
-import useMaxHeight from '@compos/use-max-height'
-import usePagination from '@compos/use-pagination'
+
+import checkPermission from '@/utils/system/check-permission'
 import { isNotBlank } from '@data-type/index'
 import { toThousand } from '@data-type/number'
+
+import useMaxHeight from '@compos/use-max-height'
+import usePagination from '@compos/use-pagination'
 
 const props = defineProps({
   modelValue: {
@@ -89,6 +109,12 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 60
 })
+
+// 打开记录
+function openRecord(row, type) {
+  if (!checkPermission(props.permission.detail)) return
+}
+
 fetchList()
 // 获取订单汇总
 async function fetchList() {
@@ -96,6 +122,7 @@ async function fetchList() {
   tableLoading.value = true
   try {
     const { content = [], totalElements } = await getBySupplier({ ...props.query, ...queryPage })
+    console.log('content: ', content, totalElements)
     _list = content
     setTotalPage(totalElements)
   } catch (error) {

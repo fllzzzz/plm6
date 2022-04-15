@@ -9,6 +9,7 @@
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
+      :data-format="dataFormat"
       :empty-text="crud.emptyText"
       :max-height="maxHeight"
       style="width: 100%;margin-top:10px;"
@@ -18,30 +19,14 @@
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="paymentDate" prop="paymentDate" label="*付款日期" align="center" >
-        <template v-slot="scope">
-          <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
-        <template v-slot="scope">
-          <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
-        </template>
-      </el-table-column>
+      <el-table-column key="paymentDate" prop="paymentDate" label="付款日期" align="center" />
+      <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="right" />
+      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" />
+      <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center" />
       <el-table-column key="auditStatus" prop="auditStatus" label="审核状态" align="center">
         <template v-slot="scope">
           <el-tag type="warning" v-if="scope.row.auditStatus===auditTypeEnum.REJECT.V">{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
           <el-tag :type="scope.row.auditStatus===auditTypeEnum.PASS.V?'success':''" v-else>{{ auditTypeEnum.VL[scope.row.auditStatus] }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center">
-        <template v-slot="scope">
-          <div>{{ scope.row.auditUserName? scope.row.auditUserName:'-' }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column key="auditTime" prop="auditTime" label="审核日期" align="center">
-        <template v-slot="scope">
-          <div>{{ scope.row.auditTime? parseTime(scope.row.auditTime,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -65,17 +50,17 @@
 <script setup>
 import crudApi from '@/api/supply-chain/purchase-reconciliation-manage/payment-application'
 import { ref, defineProps, watch, nextTick, inject } from 'vue'
+
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
+import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
-import { parseTime } from '@/utils/date'
-// import { DP } from '@/settings/config'
-import { toThousand } from '@data-type/number'
 import mForm from './form'
-import { supplierMaterialPaymentPM } from '@/page-permission/supply-chain'
 
 const permission = supplierMaterialPaymentPM.application
 
@@ -97,10 +82,16 @@ const props = defineProps({
   }
 })
 
+const dataFormat = ref([
+  ['paymentDate', ['parse-time', '{y}-{m}-{d}']],
+  ['auditTime', 'parse-time'],
+  ['applyAmount', 'to-thousand']
+])
+
 const tableRef = ref()
 const orderId = inject('orderId')
 
-const { CRUD, crud } = useCRUD(
+const { crud } = useCRUD(
   {
     title: '付款申请记录',
     sort: [],
@@ -114,7 +105,6 @@ const { CRUD, crud } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({
-  wrapperBox: '.collection',
   paginate: true,
   extraHeight: 40
 })
@@ -141,34 +131,9 @@ watch(
   { immediate: true }
 )
 
-CRUD.HOOK.handleRefresh = (crud, res) => {
-  res.data.content = res.data.content.map((v) => {
-    v.paymentDate = String(v.paymentDate)
-    return v
-  })
-}
 </script>
 
 <style lang="scss" scoped>
-::v-deep(.abnormal-row) {
-  background: #e8f4ff;
-}
-::v-deep(.hidden-select) {
-  td:nth-child(1){
-    .cell{
-      opacity:0;
-    }
-  }
-}
-$font-size: 1.5em;
-.child {
-  width: $font-size;
-  height: $font-size;
-  display: inline-block;
-  border: 1px solid;
-  border-radius: 50%;
-  line-height: $font-size;
-}
 .collection-table{
   ::v-deep(.el-select .el-input__inner){
     padding-left:2px;
@@ -182,9 +147,5 @@ $font-size: 1.5em;
     padding-left:2px;
     padding-right:2px;
   }
-}
-
-::v-deep(.pass-tag){
-  padding:0 50px;
 }
 </style>

@@ -4,9 +4,9 @@
     :close-on-click-modal="false"
     :before-close="handleClose"
     v-model="visible"
-    :title="`订单结算(${detailInfo.serialNumber})`"
+    title="订单结算"
     :wrapper-closable="false"
-    size="600px"
+    size="40%"
   >
     <template #titleAfter>
       <el-tag v-if="showType==='detail'">
@@ -21,44 +21,47 @@
       </template>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
-        <el-form-item label="项目">
-          <template v-if="detailInfo.projects && detailInfo.projects.length>0">
-            <div v-for="item in detailInfo.projects" :key="item.id">
-              {{item.serialNumber+' '+item.shortName}}
-            </div>
-          </template>
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
+        <el-form-item label="采购单号">
+          <span>{{ detailInfo.serialNumber }}</span>
         </el-form-item>
         <el-form-item label="供应商">
           <span>{{ detailInfo.supplierName }}</span>
         </el-form-item>
-        <el-form-item label="合同额(元)">
-          <span>{{ detailInfo.amount?toThousand(detailInfo.amount):'-' }}</span>
+        <el-form-item label="合同额">
+          <span  v-thousand="detailInfo.amount" />
         </el-form-item>
-        <el-form-item label="已付款(元)">
-          <span>{{ detailInfo.paymentAmount }}</span>
-          <el-tag style="margin-left:5px;" v-if="detailInfo.amount">{{ (detailInfo.paymentAmount/detailInfo.amount)*100+'%' }}</el-tag>
+        <el-form-item label="入库额">
+          <span  v-thousand="detailInfo.inboundAmount" />
         </el-form-item>
-        <el-form-item label="最终结算额(元)"  prop="amount">
+        <el-form-item label="已付款">
+          <span v-thousand="detailInfo.paymentAmount"/><span>（{{ detailInfo.paymentRate }}%）</span>
+        </el-form-item>
+        <el-form-item label="已收票">
+          <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ detailInfo.invoiceRate }}%）</span>
+        </el-form-item>
+        <el-form-item label="最终结算额"  prop="amount">
           <template v-if="showType">
             <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount):'-' }}</span>
             <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount):'-' }}</span>
           </template>
           <template v-else>
             <el-input-number
-              v-show-thousand
               v-model="form.amount"
               :step="1"
-              :min="detailInfo.paymentAmount?detailInfo.paymentAmount:0"
-              :max="detailInfo.amount?detailInfo.amount:999999999999"
+              :min="detailInfo?.sourceRow?.paymentAmount?detailInfo?.sourceRow?.paymentAmount:0"
+              :max="detailInfo?.sourceRow?.amount?detailInfo?.sourceRow?.amount:999999999999"
               :precision="DP.YUAN"
+              placeholder="最终结算额"
               controls-position="right"
               style="width: 220px"
             />
-            <span style="color:#82848a">{{form.amount?digitUppercase(form.amount):''}}</span>
           </template>
         </el-form-item>
-        <el-form-item label="应付(元)">
+        <el-form-item label="大写">
+            <span style="color:#82848a">{{form.amount?digitUppercase(form.amount):''}}</span>
+        </el-form-item>
+        <el-form-item label="应付金额">
           <template v-if="showType">
             <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
             <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.paymentAmount) }}</span>
@@ -67,7 +70,7 @@
             <span v-if="form.amount" >{{ toThousand(form.amount-detailInfo.paymentAmount) }}</span>
           </template>
         </el-form-item>
-        <el-form-item label="应补发票(元)">
+        <el-form-item label="应补发票">
           <template v-if="showType">
             <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount) }}</span>
             <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.invoiceAmount) }}</span>
@@ -75,6 +78,16 @@
           <template v-else>
             <span v-if="form.amount" >{{ toThousand(form.amount-detailInfo.invoiceAmount) }}</span>
           </template>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            style="width: 100%"
+            maxlength="500"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入备注"
+          />
         </el-form-item>
         <el-form-item label="附件">
           <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'" v-if="!showType"/>
@@ -125,9 +138,10 @@ const props = defineProps({
 const defaultForm = {
   amount: undefined,
   attachmentIds: undefined,
-  attachments: undefined,
+  attachments: [],
   orderId: undefined,
-  propertyType: undefined
+  propertyType: undefined,
+  remark: ''
 }
 
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
@@ -208,9 +222,3 @@ async function passConfirm(val) {
 }
 
 </script>
-<style lang="scss" scoped>
-.add-row-box {
-  text-align: center;
-  margin-top: 20px;
-}
-</style>

@@ -1,14 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
-import { amountUnitEnum } from '../../../enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 
-// 物料调拨单
-const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
+// 入库记录
+const purchaseInboundRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'WMS_MATERIAL_MOVE_HOUSE_VOUCHER', // 表格类型 KEY
-  name: '物料调拨单（平台）', // 表格名称
+  type: 'purchaseInboundRecord', // 表格类型 KEY
+  name: '入库记录（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -62,7 +60,7 @@ const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
   title: {
     show: true,
     allPage: false,
-    title: '物料调拨单',
+    title: '项目开票明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -104,12 +102,13 @@ const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'originPlace', title: '原属库：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'originType', title: '原物料类型：', width: 55, type: typeEnum.ENUM.K, format: { enum: 'materialUseTypeEnum', key: 'L' }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'targetProject', title: '调拨至：', width: 135, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }},
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'createTime', title: '调拨时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 35, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '采购单号：', width: 120, type: typeEnum.ORDER_TYPE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'signingTime', title: '签订日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '供应商：', width: 120, type: typeEnum.COMPANY_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'amount', title: '合同金额：', width: 60, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 60, type: typeEnum.OTHER.K },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 60, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -127,13 +126,13 @@ const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: true,
+    show: false,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 10,
+    height: 15,
     width: 190,
     emptyVal: '',
     /**
@@ -157,10 +156,7 @@ const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: [
-      { show: true, source: dataSourceEnum.CUSTOMIZE.V, key: 'createUserName', title: '制表：', width: 85 },
-      { show: true, source: dataSourceEnum.CUSTOMIZE.V, key: 'checkUserName', title: '审核：', width: 85 }
-    ]
+    fields: []
   },
   table: {
     /**
@@ -192,9 +188,6 @@ const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
      * @param {string} title 合计名称
      */
     summary: { show: true, title: '合计' },
-    extraFields: [
-      { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }}
-    ],
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -209,19 +202,20 @@ const WMS_MATERIAL_MOVE_HOUSE_VOUCHER = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: false, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'className', title: '物料类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
+      { show: true, key: 'inboundTime', title: '入库日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, key: 'serialNumber', title: '物料编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
+      { show: true, key: 'classifyName', title: '物料种类', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
       { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: false, key: 'unit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MEASUREMENT_UNIT.K },
-      { show: false, key: 'number', title: '调拨数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-      { show: true, key: 'checkUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'value', title: '调拨量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true },
-      { show: true, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: false },
-      { show: true, key: 'totalAmount', title: '金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
+      { show: true, key: 'measureUnit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.MEASUREMENT_UNIT.K },
+      { show: true, key: 'quantity', title: '入库数', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
+      { show: true, key: 'accountingUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ACCOUNTING_UNIT.K },
+      { show: true, key: 'mete', title: '入库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true },
+      { show: true, key: 'unitPrice', title: '含税单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: true, key: 'totalAmount', title: '含税总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
     ]
   }
 }
 
 export default {
-  WMS_MATERIAL_MOVE_HOUSE_VOUCHER // 物料调拨单
+  purchaseInboundRecord // 入库记录
 }

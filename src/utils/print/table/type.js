@@ -12,6 +12,7 @@ const wms = {
   wms_rm_receipt: '原材料单据',
   wms_purchaseApply: '申购报表'
 }
+
 const mes = {
   mes_task: '任务报表',
   mes_production: '生产报表',
@@ -19,8 +20,15 @@ const mes = {
   mes_logistics: '物流报表',
   mes_wage: '工资报表'
 }
+
+const supply = {
+  purchase_reconciliation: '采购对账报表',
+  logistics_reconciliation: '物流对账报表'
+}
+
 const moduleType = {
   contract: { L: '合同管理', V: contract },
+  supply: { L: '供应链', V: supply },
   wms: { L: 'WMS', V: wms },
   mes: { L: 'MES', V: mes }
 }
@@ -48,8 +56,16 @@ const tableType = {
   projectHappenedDetail: { L: '项目发运明细表', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
   transactionRecord: { L: '客户交易记录', M: 'sales_manage', T: mt.contract.L + ' / ' + contract.sales_manage },
 
+  // 供应链
+  purchaseInvoiceRecord: { L: '收票记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+  purchaseInboundRecord: { L: '入库记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+  purchasePaymentRecord: { L: '付款记录', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+  orderPaymentLedger: { L: '采购付款台账', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+  supplierPaymentLedger: { L: '供应商付款台账', M: 'purchase_reconciliation', T: mt.supply.L + ' / ' + supply.purchase_reconciliation },
+
+  purchaseLogisticsRecord: { L: '物流记录', M: 'logistics_reconciliation', T: mt.supply.L + ' / ' + supply.logistics_reconciliation },
+
   // wms
-  wmsInventorySummary: { L: '物料库存汇总表', M: 'wms_warehouse', T: mt.wms.L + ' / ' + wms.wms_warehouse },
   wmsRmInboundReceipt: { L: '入库单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },
   wmsRmOutboundReceipt: { L: '出库（领料）单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },
   wmsRmReturnReceipt: { L: '退库单', M: 'wms_rm_receipt', T: mt.wms.L + ' / ' + wms.wms_rm_receipt },

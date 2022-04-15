@@ -283,8 +283,8 @@ const wmsRmReturnReceipt = {
       },
       {
         show: false,
-        key: 'measurementUnit',
-        title: '计算单位',
+        key: 'measureUnit',
+        title: '计量单位',
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.CENTER.V,
         minWidth: 18,

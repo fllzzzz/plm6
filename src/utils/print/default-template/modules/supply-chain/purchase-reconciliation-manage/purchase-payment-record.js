@@ -1,14 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
-import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
-import { thicknessUnitEnum, weightUnitEnum } from '../../../../enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 
-// 钢板备料跟踪单
-const WMS_PREPARES_TRACK_STEEL_PLATE = {
+// 付款记录
+const purchasePaymentRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'WMS_PREPARES_TRACK_STEEL_PLATE', // 表格类型 KEY
-  name: '钢板备料跟踪单（平台）', // 表格名称
+  type: 'purchasePaymentRecord', // 表格类型 KEY
+  name: '付款记录（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -62,7 +60,7 @@ const WMS_PREPARES_TRACK_STEEL_PLATE = {
   title: {
     show: true,
     allPage: false,
-    title: '钢板备料跟踪单',
+    title: '付款记录',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -89,7 +87,7 @@ const WMS_PREPARES_TRACK_STEEL_PLATE = {
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 13,
+    height: 12,
     width: 190,
     emptyVal: '',
     /**
@@ -104,10 +102,13 @@ const WMS_PREPARES_TRACK_STEEL_PLATE = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'project.contractNo', title: '合同编号：', width: 70, type: typeEnum.CONTRACT_NO.K },
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'project', title: '项目：', width: 190, type: typeEnum.PROJECT.K, format: { showProjectFullName: false, showSerialNumber: true, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V, lineBreak: false }}, { show: true, source: dataSourceEnum.SYSTEM.V, key: 'purchaseNo', title: '申购单号：', width: 190, type: typeEnum.GUID.K },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 50, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'serialNumber', title: '采购单号：', width: 120, type: typeEnum.ORDER_TYPE.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'signingTime', title: '签订日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '供应商：', width: 120, type: typeEnum.COMPANY_NAME.K },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'amount', title: '合同金额：', width: 60, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }},
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 60, type: typeEnum.OTHER.K },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 60, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 60, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -125,13 +126,13 @@ const WMS_PREPARES_TRACK_STEEL_PLATE = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: true,
+    show: false,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 0,
+    height: 15,
     width: 190,
     emptyVal: '',
     /**
@@ -155,8 +156,7 @@ const WMS_PREPARES_TRACK_STEEL_PLATE = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: [
-    ]
+    fields: []
   },
   table: {
     /**
@@ -202,16 +202,21 @@ const WMS_PREPARES_TRACK_STEEL_PLATE = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'className', title: '物料类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
-      { show: true, key: 'thickness', title: '厚', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.THICKNESS.K, format: { toThousand: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
-      { show: true, key: 'customMete', title: '重量(备料计划)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
-      { show: true, key: 'inboundMete', title: '重量(实际采购)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.KG.V }, sum: true },
-      { show: true, key: 'completionRate', title: '完成率', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.RATE.K }
+      { show: true, key: 'paymentDate', title: '付款日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, key: 'applyAmount', title: '申请金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'actuallyPaymentAmount', title: '实付金额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
+      { show: true, key: 'paymentReasonName', title: '付款事由', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PAYMENT_REASON.K },
+      { show: true, key: 'paymentMethod', title: '付款方式', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'paymentFineModeEnum', key: 'L' }},
+      { show: true, key: 'paymentUnit', title: '付款单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.COMPANY_NAME.K },
+      { show: true, key: 'paymentBank', title: '付款银行', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.BANK_ACCOUNT.K },
+      { show: true, key: 'receivingUnit', title: '收款单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 20, type: typeEnum.COMPANY_NAME.K },
+      { show: false, key: 'applyUserName', title: '办理人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
+      { show: false, key: 'auditUserName', title: '审核人', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
+      { show: false, key: 'auditStatus', title: '审核状态', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'auditTypeEnum', key: 'L' }}
     ]
   }
 }
 
 export default {
-  WMS_PREPARES_TRACK_STEEL_PLATE // 钢板备料跟踪单
+  purchasePaymentRecord // 付款记录
 }

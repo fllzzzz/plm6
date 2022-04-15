@@ -10,7 +10,14 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <project-cascader v-model="query.projectId" class="filter-item" />
+      <project-cascader
+        v-model="query.projectId"
+        placeholder="所属项目"
+        clearable
+        class="filter-item"
+        style="width: 300px"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.createTime"
         type="daterange"
@@ -21,6 +28,7 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         style="width:240px"
+        @change="crud.toQuery"
       />
       <el-input
         v-model.trim="query.supplierName"

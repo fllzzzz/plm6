@@ -12,7 +12,8 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="40px" label-position="left">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="120px" label-position="right">
+      <el-divider><span class="title">金额汇总</span></el-divider>
         <common-table
           ref="detailRef"
           border
@@ -61,6 +62,51 @@
             </template>
           </el-table-column>
         </common-table>
+        <el-divider><span class="title">明细填报</span></el-divider>
+        <el-form-item label="物流公司">
+          <span>{{ detailInfo.supplierName }}</span>
+        </el-form-item>
+        <el-form-item label="已付款">
+          <span v-thousand="detailInfo.paymentAmount"/><span>（{{ detailInfo.paymentRate }}%）</span>
+        </el-form-item>
+        <el-form-item label="已收票">
+          <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ detailInfo.invoiceRate }}%）</span>
+        </el-form-item>
+        <el-form-item label="最后一次付款">
+          <span v-if="detailInfo.lastPaymentAmount" v-thousand="detailInfo.lastPaymentAmount" />
+          <el-tag v-if="detailInfo.lastPaymentTime" style="margin-left:5px;">{{ parseTime(detailInfo.lastPaymentTime,'{y}-{m}-{d}')}}</el-tag>
+        </el-form-item>
+        <el-form-item label="本次付款">
+          <span v-thousand="totalAmount" />
+        </el-form-item>
+        <el-form-item label="大写">
+            <span style="color:#82848a">{{totalAmount?digitUppercase(totalAmount):''}}</span>
+        </el-form-item>
+        <el-form-item label="申请日期" prop="paymentDate">
+          <el-date-picker
+            v-model="form.paymentDate"
+            type="date"
+            value-format="x"
+            placeholder="选择申请日期"
+            style="width: 220px"
+          />
+        </el-form-item>
+        <el-form-item label="收款单位">
+          <span>{{detailInfo.supplierBankName}}</span>
+        </el-form-item>
+        <el-form-item label="收款银行">
+          <span>{{detailInfo.supplierBankAccount}}</span>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            style="width: 100%"
+            maxlength="500"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            placeholder="请输入备注"
+          />
+        </el-form-item>
         <el-form-item label="附件">
           <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
@@ -70,17 +116,33 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
-import { regForm } from '@compos/use-crud'
-import { tableSummary } from '@/utils/el-extra'
-import useMaxHeight from '@compos/use-max-height'
-import { logisticsSearchTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@data-type/number'
 import { payableList } from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
+import { ref, computed, defineProps } from 'vue'
+
+import moment from 'moment'
+import { tableSummary } from '@/utils/el-extra'
+import { toThousand } from '@data-type/number'
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { digitUppercase } from '@/utils/data-type/number'
+
+import { regForm } from '@compos/use-crud'
+import useMaxHeight from '@compos/use-max-height'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
+
+// 获取数据源
+const totalAmount = computed(() => {
+  return freightDetails.value.reduce((prev, curr) => {
+    const value = Number(curr?.applyAmount)
+    if (!isNaN(value)) {
+      return prev + value
+    } else {
+      return prev
+    }
+  }, 0)
+})
 
 const formRef = ref()
 const props = defineProps({
@@ -90,12 +152,14 @@ const props = defineProps({
   }
 })
 const defaultForm = {
+  paymentDate: moment().startOf('day').format('x'), // 默认当天0点的时间戳
   applyAmount: undefined,
   attachmentIds: undefined,
-  attachments: undefined,
+  attachments: [],
   branchCompanyId: undefined,
   supplierId: undefined,
-  detailSaveParams: []
+  detailSaveParams: [],
+  remark: ''
 }
 
 const { maxHeight } = useMaxHeight({
@@ -114,8 +178,7 @@ const validateMoney = (rule, value, callback) => {
 }
 
 const rules = {
-  paymentDate: [{ required: true, message: '请选择付款日期', trigger: 'change' }],
-  paymentReasonId: [{ required: true, message: '请选择付款事由', trigger: 'change' }],
+  paymentDate: [{ required: true, message: '请选择申请日期', trigger: 'change' }],
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }]
 }
 

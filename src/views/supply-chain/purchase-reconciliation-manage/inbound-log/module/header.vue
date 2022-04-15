@@ -49,7 +49,6 @@
 </template>
 
 <script setup>
-import { ref, computed, defineExpose } from 'vue'
 import moment from 'moment'
 import { classificationEnum } from '@enum-ms/classification'
 
@@ -63,19 +62,6 @@ const defaultQuery = {
 }
 const { crud, query } = regHeader(defaultQuery)
 
-// 列表类型
-const listTypeEnum = {
-  ORDER: { L: '按订单查看', K: 'ORDER', V: 1 },
-  SUMMARY: { L: '按汇总查看', K: 'SUMMARY', V: 2 }
-}
-
-const listType = ref(listTypeEnum.ORDER.V)
-
-// 是否为订单列表
-const isOrderType = computed(() => {
-  return listType.value === listTypeEnum.ORDER.V
-})
-
 // 时间变动
 function handleDateChange() {
   if (query.date && query.date.length > 1) {
@@ -87,8 +73,4 @@ function handleDateChange() {
   }
   crud.toQuery()
 }
-
-defineExpose({
-  isOrderType
-})
 </script>

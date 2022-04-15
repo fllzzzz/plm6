@@ -1,13 +1,12 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
-import { amountUnitEnum } from '../../../enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
 
-// 期初库存汇总表-辅材
-const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
+// 物流记录
+const purchaseLogisticsRecord = {
   fontUnit: 'pt', // 字体单位
   unit: cssUnitEnum.MM.V, // 长度单位
   unitPrecision: cssUnitPrecisionEnum.ZERO.V, // 长度单位精度
-  type: 'WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY', // 表格类型 KEY
-  name: '期初库存汇总表-辅材（平台）', // 表格名称
+  type: 'purchaseLogisticsRecord', // 表格类型 KEY
+  name: '物流记录（平台）', // 表格名称
   width: 210, // 打印纸的宽度
   height: 297, // 打印纸的高度
   paddingLR: 10, // 左右内边距
@@ -61,7 +60,7 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
   title: {
     show: true,
     allPage: false,
-    title: '期初库存汇总表-辅材',
+    title: '项目开票明细',
     align: alignEnum.CENTER.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 17,
@@ -82,7 +81,7 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
     * @param {array} fields // 字段
     */
   header: {
-    show: true,
+    show: false,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
@@ -103,9 +102,8 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
      * @param {*} format 格式转换
      */
     fields: [ // 字段内容
-      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'date', title: '统计日期：', width: 40, type: typeEnum.DATE.K, format: 'YYYY/MM/DD' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印时间：', width: 55, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
-      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 40, type: typeEnum.USER_NAME.K }
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printDate', title: '打印日期：', width: 120, type: typeEnum.DATE.K, format: 'YY/MM/DD kk:mm:ss' },
+      { show: true, source: dataSourceEnum.SYSTEM.V, key: 'printer', title: '打印人：', width: 60, type: typeEnum.USER_NAME.K }
     ]
   },
   /**
@@ -123,13 +121,13 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
     * @param {array} fields // 字段
     */
   footer: {
-    show: true,
+    show: false,
     allPage: false,
     align: alignEnum.LEFT.V,
     verticleAlign: verticleAlignEnum.CENTER.V,
     size: 10,
     bold: 'bold',
-    height: 0,
+    height: 15,
     width: 190,
     emptyVal: '',
     /**
@@ -153,8 +151,7 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
      * @param {enum} type 数据类型
      * @param {*} format 格式转换
      */
-    fields: [
-    ]
+    fields: []
   },
   table: {
     /**
@@ -170,7 +167,7 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
      * @param {string} bold 是否加粗 'unset' || 'bold'
      * @param {number} lineHeight 行高
      */
-    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 1 },
+    td: { size: 9, bold: 'unset', lineHeight: 13, paddingTB: 2 },
     emptyVal: '/', // string 空值显示
     /**
      * 表格序号
@@ -186,9 +183,6 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
      * @param {string} title 合计名称
      */
     summary: { show: true, title: '合计' },
-    extraFields: [
-      { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }}
-    ],
     /**
      * 表格列
      * @param {boolean} show 是否显示
@@ -203,21 +197,20 @@ const WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY = {
      * @param {boolean} sum 列需要合计
      */
     fields: [
-      { show: true, key: 'serialNumber', title: '编号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SERIAL_NUMBER.K },
-      { show: true, key: 'materialType', title: '物料类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL_CLASS_FULL_NAME.K },
-      { show: true, key: 'specification', title: '规格', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.SPECIFICATION.K },
-      { show: true, key: 'unit', title: '计量单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: false },
-      { show: true, key: 'checkUnit', title: '核算单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 10, type: typeEnum.ACCOUNTING_UNIT.K },
-      { show: true, key: 'mete', title: '库存量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }, sum: true },
-      { show: true, key: 'unitPrice', title: '单价', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: false },
-      { show: true, key: 'totalAmount', title: '总额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true },
-      { show: false, key: 'brand', title: '品牌', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.BRAND.K },
-      { show: false, key: 'color', title: '颜色', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COLOR.K }
+      { show: true, key: 'shipDate', title: '运输日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.DATE.K, format: 'YY/MM/DD' },
+      { show: true, key: 'name', title: '项目/订单', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PROJECT.K },
+      { show: true, key: 'supplierName', title: '物流公司', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COMPANY_NAME.K },
+      { show: true, key: 'type', title: '运输属性', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'logisticsSearchTypeEnum', key: 'L' }},
+      { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
+      { show: true, key: 'loadingWeight', title: '装载重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: true, precision: 3 }},
+      { show: true, key: 'carModel', title: '车型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
+      { show: true, key: 'driverName', title: '司机姓名', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
+      { show: true, key: 'driverPhone', title: '电话', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PHONE.K },
+      { show: true, key: 'freight', title: '运费额', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.AMOUNT.K, format: { toThousand: true, precision: 2, unit: amountUnitEnum.YUAN.V }, sum: true }
     ]
   }
 }
 
 export default {
-  WMS_INVENTORY_MANAGE_BEGIN_GM_SUMMARY // 期初库存汇总表-辅材
+  purchaseLogisticsRecord // 物流记录
 }
