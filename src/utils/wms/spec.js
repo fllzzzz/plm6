@@ -33,39 +33,7 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
         // 型材key:分类id_国标；其他材料key:分类id
         const fullSpecMapKey = row.nationalStandard ? `${row.classifyId}_${row.nationalStandard}` : row.classifyId
         p = fetchSpecInfo(fullSpecMapKey, spec).then((info) => {
-          if (info) {
-            // 单规格模式下，设置规格唯一编号
-            if (!multipleSpec) {
-              row.sn = info.sn // 该规格唯一编号
-              row.serialNumber = info.serialNumber // 科目编号 - 规格
-            }
-            row.specMerge = specFormat(row) // 合并科目
-            row.specificationLabels = info.specificationLabels // 规格中文
-            row.classifySerialNumber = info.classify.serialNumber // 科目编号
-            row.basicClass = info.classify.basicClass // 基础类型
-            row.classifyId = info.classify.id // 科目id
-            row.classifyFullPathId = info.classify.fullPathId // 全路径id
-            row.classifyFullName = info.classify.fullName // 全路径名称
-            row.classifyName = info.classify.name // 当前科目名称
-            row.classifyParentFullName = info.classify.parentFullName // 父级路径名称
-            row.measureUnit = info.classify.measureUnit // 计量单位
-            row.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
-            row.accountingUnit = info.classify.accountingUnit // 核算单位
-            row.accountingPrecision = info.classify.accountingPrecision // 核算单位小数精度
-            row.outboundUnitType = info.classify.outboundUnitType // 出库方式
-            row.outboundUnit = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 出库单位
-            row.outboundUnitPrecision = row.outboundUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 出库单位精度
-
-            row.rejectUnitType = row.basicClass === rawMatClsEnum.STEEL_COIL.V ? measureTypeEnum.ACCOUNTING.V : row.outboundUnitType // 退库方式
-            row.rejectUnit = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measureUnit : row.accountingUnit // 退库单位
-            row.rejectUnitPrecision = row.rejectUnitType === measureTypeEnum.MEASURE.V ? row.measurePrecision : row.accountingPrecision // 退库单位精度
-            // row.specification = info.spec // 规格
-            row.specKV = info.specKV // 规格KV格式（例：key: 材质id ， val: 'Q235B'）
-            row.specNameKV = info.specNameKV // 规格KV格式 （例：key: 材质 ， val: 'Q235B'）
-            if (row.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
-              row.unitWeight = info.unitWeight // 单位重量 kg/m
-            }
-          }
+          setSpecInfoForData(row, info, multipleSpec)
         })
         allPromise.push(p)
       }
@@ -97,5 +65,42 @@ async function fetchSpecInfoByFullSpec(classifyId) {
       store.state.config.classifySpec[id] = {}
     })
     await store.dispatch('config/fetchMarClsSpec', unload)
+  }
+}
+
+// 将材料规格信息设置进data
+export function setSpecInfoForData(data, info, multipleSpec = false) {
+  if (info) {
+    // 单规格模式下，设置规格唯一编号
+    if (!multipleSpec) {
+      data.sn = info.sn // 该规格唯一编号
+      data.serialNumber = info.serialNumber // 科目编号 - 规格
+    }
+    data.specMerge = specFormat(data) // 合并科目
+    data.specificationLabels = info.specificationLabels // 规格中文
+    data.classifySerialNumber = info.classify.serialNumber // 科目编号
+    data.basicClass = info.classify.basicClass // 基础类型
+    data.classifyId = info.classify.id // 科目id
+    data.classifyFullPathId = info.classify.fullPathId // 全路径id
+    data.classifyFullName = info.classify.fullName // 全路径名称
+    data.classifyName = info.classify.name // 当前科目名称
+    data.classifyParentFullName = info.classify.parentFullName // 父级路径名称
+    data.measureUnit = info.classify.measureUnit // 计量单位
+    data.measurePrecision = info.classify.measurePrecision // 计量单位小数精度
+    data.accountingUnit = info.classify.accountingUnit // 核算单位
+    data.accountingPrecision = info.classify.accountingPrecision // 核算单位小数精度
+    data.outboundUnitType = info.classify.outboundUnitType // 出库方式
+    data.outboundUnit = data.outboundUnitType === measureTypeEnum.MEASURE.V ? data.measureUnit : data.accountingUnit // 出库单位
+    data.outboundUnitPrecision = data.outboundUnitType === measureTypeEnum.MEASURE.V ? data.measurePrecision : data.accountingPrecision // 出库单位精度
+
+    data.rejectUnitType = data.basicClass === rawMatClsEnum.STEEL_COIL.V ? measureTypeEnum.ACCOUNTING.V : data.outboundUnitType // 退库方式
+    data.rejectUnit = data.rejectUnitType === measureTypeEnum.MEASURE.V ? data.measureUnit : data.accountingUnit // 退库单位
+    data.rejectUnitPrecision = data.rejectUnitType === measureTypeEnum.MEASURE.V ? data.measurePrecision : data.accountingPrecision // 退库单位精度
+    // data.specification = info.spec // 规格
+    data.specKV = info.specKV // 规格KV格式（例：key: 材质id ， val: 'Q235B'）
+    data.specNameKV = info.specNameKV // 规格KV格式 （例：key: 材质 ， val: 'Q235B'）
+    if (data.basicClass === rawMatClsEnum.SECTION_STEEL.V) {
+      data.unitWeight = info.unitWeight // 单位重量 kg/m
+    }
   }
 }

@@ -11,7 +11,7 @@
     <template #titleRight>
       <common-button :loading="loading" :disabled="isBlank(modifiedList)" type="primary" size="mini" @click="submit">保 存</common-button>
     </template>
-    <common-table :data="modifiedList" :max-height="maxHeight" empty-text="未做改动" row-key="id">
+    <common-table :data="modifiedList" :max-height="maxHeight" return-source-data empty-text="未做改动" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column label="项目" align="left">
         <template #default="{ row }">

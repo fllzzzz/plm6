@@ -20,6 +20,7 @@
       ref="tableRef"
       v-loading="loading"
       :data="filterList"
+      :data-format="columnsDataFormat"
       :default-expand-all="false"
       :height="props.height"
       :empty-text="emptyText"
@@ -44,7 +45,7 @@
       <warehouse-info-columns />
       <!-- 操作 -->
       <el-table-column label="操作" width="100px" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <span v-if="inventoryExitIdMap.get(row.id)" style="color: #1890ff">已加入清单</span>
           <common-button v-else icon="el-icon-plus" type="success" size="mini" class="icon-button" @click="handleAdd(row)" />
         </template>
@@ -64,6 +65,7 @@ import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { pinyinForField, pinyinFuzzyMatching } from '@/utils/pinyin'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
+import { materialOperateColumns } from '@/utils/columns-format/wms'
 
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
@@ -83,6 +85,8 @@ const props = defineProps({
   }
 })
 
+// 表格列数据格式转换
+const columnsDataFormat = ref([...materialOperateColumns])
 const crud = inject('crud')
 const inventoryExitIdMap = ref()
 const interfaceKey = ref(0) // 接口请求key，避免接口异步回调覆盖

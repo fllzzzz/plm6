@@ -179,6 +179,14 @@ const detail_1 = {
             listMete: 10000 // 清单量
           },
           {
+            steelClassifyConfId: 1, // 钢材分类配置id
+            steelClassifyConfName: '钢板', // 钢材配置名称
+            basicClass: rawMatClsEnum.STEEL_PLATE.V, // 主科目分类（列如：钢板\型材\钢卷）
+            material: 'Q235B', // 材质
+            specification: '11', // 规格（型材）/厚度（钢板）
+            listMete: 20000 // 清单量
+          },
+          {
             steelClassifyConfId: 4, // 钢材分类配置id
             steelClassifyConfName: '工字钢', // 钢材配置名称
             basicClass: rawMatClsEnum.SECTION_STEEL.V, // 主科目分类（列如：钢板\型材\钢卷）
@@ -280,6 +288,7 @@ const getProjectListForRangeInfo = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 合同编号
             name: '一号项目工程',
             shortName: '一号项目',
+            withoutList: true, // 是否无清单备料
             boolStrucPrepared: false, // 结构备料状态（true:已备料，false:未备料,备料后，若备料数据被清空属于未备料）
             boolEnclPrepared: false, // 围护备料状态
             boolAuxPrepared: false, // 辅材备料状态
@@ -292,6 +301,7 @@ const getProjectListForRangeInfo = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 合同编号
             name: '二号项目工程',
             shortName: '二号项目',
+            withoutList: false, // 是否无清单备料
             boolStrucPrepared: true, // 结构备料状态（true:已备料，false:未备料）
             boolEnclPrepared: true, // 围护备料状态
             boolAuxPrepared: true, // 辅材备料状态
@@ -304,6 +314,7 @@ const getProjectListForRangeInfo = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 合同编号
             name: '三号项目工程',
             shortName: '三号项目',
+            withoutList: false, // 是否无清单备料
             boolStrucPrepared: false, // 结构备料状态（true:已备料，false:未备料）
             boolEnclPrepared: false, // 围护备料状态
             boolAuxPrepared: false, // 辅材备料状态
@@ -316,6 +327,7 @@ const getProjectListForRangeInfo = {
             serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/, // 合同编号
             name: '四号项目工程',
             shortName: '四号项目',
+            withoutList: false, // 是否无清单备料
             boolStrucPrepared: false, // 结构备料状态（true:已备料，false:未备料）
             boolEnclPrepared: false, // 围护备料状态
             boolAuxPrepared: false, // 辅材备料状态

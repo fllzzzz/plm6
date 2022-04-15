@@ -230,7 +230,13 @@ const wmsRmReturnReceipt = {
      * @param {string} title 合计名称
      */
     summary: { show: false, title: '合计' },
-    extraFields: [{ key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }}],
+    extraFields: [
+      { key: 'basicClass', title: '基础类型', type: typeEnum.ENUM.K, format: { enum: 'rawMatClsEnum' }},
+      { key: 'accountingUnit', title: '核算单位', type: typeEnum.ACCOUNTING_UNIT.K },
+      { key: 'accountingPrecision', title: '核算单位小数精度', type: typeEnum.DP.K },
+      { key: 'measureUnit', title: '计量单位', type: typeEnum.MEASUREMENT_UNIT.K },
+      { key: 'measurePrecision', title: '计量单位小数精度', type: typeEnum.DP.K }
+    ],
     /**
      * 表格列
      * @param {boolean} show 是否显示

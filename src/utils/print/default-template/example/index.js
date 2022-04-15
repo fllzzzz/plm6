@@ -210,6 +210,9 @@ function getDataByType(field) {
     case fieldTypeEnum.QUANTITY.K:
       _md = Random.natural(6, 666)
       break
+    case fieldTypeEnum.DP.K:
+      _md = 1
+      break
     case fieldTypeEnum.METE.K:
       _md = Random.float(6666, 666666, 0, 2)
       break

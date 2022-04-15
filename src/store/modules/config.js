@@ -496,6 +496,7 @@ const actions = {
           Object.assign(matCls.specKV, arr2obj(classifySpec[id].specList, 'sn'))
           Object.assign(classifySpec[id], matCls)
           Object.assign(classifySpec.specKV, matCls.specKV)
+          console.log('matCls', classifySpec)
         }
       })
       allInterFace.push(ps)
@@ -578,7 +579,7 @@ function getSpecList(classify, specConfig) {
   }
   arr.forEach((v) => {
     // 唯一编号
-    v.serialNumber = (classify.serialNumber + '-' + v.code.join('')) || void 0
+    v.serialNumber = classify.serialNumber + '-' + v.code.join('') || void 0
     v.spec = v.arr.join(' * ') // 规格
     // 使用object，以Kay-value的形式存储，不使用map，因为本地缓存无法转换Map
     v.specKV = {} // 例：key: 材质id ， val: 'Q235B'

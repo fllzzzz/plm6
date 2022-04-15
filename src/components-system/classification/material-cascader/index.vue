@@ -10,7 +10,7 @@
     :show-all-levels="showAllLevels"
     :separator="separator"
     :clearable="clearable"
-    :disabled="disabled"
+    :disabled="disabled || !clsLoad"
     :collapse-tags="collapseTags"
     filterable
     :size="size"
@@ -32,7 +32,8 @@ import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
 import { isNotBlank, isBlank } from '@data-type/index'
-import { judgeNodeExistByIds } from '@/utils/data-type/tree'
+import { getChildIds, getFirstNode, judgeNodeExistByIds, removeNodeByExistIds } from '@/utils/data-type/tree'
+import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const emit = defineEmits(['change', 'update:modelValue'])
 
@@ -50,6 +51,10 @@ const props = defineProps({
   basicClass: {
     type: Number,
     default: undefined
+  },
+  // 显示的科目
+  classifyId: {
+    type: Array
   },
   // 显示科目编码
   showSubjectCode: {
@@ -125,13 +130,17 @@ const props = defineProps({
   extraOptionValue: {
     type: [Number, String, Array, Boolean],
     default: -1
+  },
+  default: {
+    type: Boolean,
+    default: false
   }
 })
 
 const store = useStore()
 const cascaderRef = ref()
 const currentValue = ref()
-
+const includeIds = ref()
 const classification = reactive({
   tree: [],
   treeOrigin: []
@@ -140,6 +149,8 @@ const classification = reactive({
 const refreshLoading = ref(true)
 
 const { matClsTree } = mapGetters('matClsTree')
+
+const { loaded: clsLoad, rawMatClsKV } = useMatClsList()
 
 const cascaderProps = computed(() => {
   return {
@@ -155,9 +166,11 @@ const cascaderProps = computed(() => {
 
 // 监听全局科目选项
 watch(
-  [() => matClsTree.value, () => props.basicClass],
-  ([list]) => {
-    setCascader(list)
+  [() => matClsTree.value, () => props.basicClass, () => props.classifyId, clsLoad],
+  ([list, basicClass, classifyId, clsLoad]) => {
+    if (clsLoad) {
+      setCascader(list)
+    }
   },
   { deep: true, immediate: true }
 )
@@ -165,12 +178,11 @@ watch(
 watch(
   () => props.modelValue,
   (value) => {
-    if (value instanceof Array) {
-      currentValue.value = [...value]
-    } else {
-      currentValue.value = value
-    }
-    handleChange(value)
+    let curVal = Array.isArray(value) ? [...value] : value
+    const defaultVal = setDefault(false)
+    curVal = isBlank(value) ? defaultVal : curVal
+    currentValue.value = curVal
+    handleChange(curVal)
   },
   { immediate: true }
 )
@@ -228,8 +240,16 @@ function setCascader(tree) {
     if (tree) {
       classification.treeOrigin = tree
 
-      // 根据基础材料类型 筛选一级科目
-      classification.tree = dataFormat(tree.filter((v) => !props.basicClass || v.basicClass & props.basicClass))
+      includeIds.value = getIncludeIds()
+      // 待处理树，过滤分类
+      let pendingTree = tree.filter((v) => !props.basicClass || v.basicClass & props.basicClass)
+      // 格式转换
+      pendingTree = dataFormat(pendingTree)
+      if (includeIds.value) {
+        // 过滤不包含的
+        pendingTree = removeNodeByExistIds(pendingTree, includeIds.value)
+      }
+      classification.tree = pendingTree
       // 加入额外的选项
       if (props.showExtra) {
         classification.tree.unshift({ id: props.extraOptionValue, name: props.extraOptionLabel })
@@ -243,6 +263,8 @@ function setCascader(tree) {
       if (!valExist) {
         handleChange(undefined)
       }
+    } else {
+      setDefault()
     }
   } catch (error) {
     console.log('获取科目级联列表失败', error)
@@ -309,6 +331,45 @@ function getParentNode(node) {
     return getParentNode(node.parent)
   } else {
     return node
+  }
+}
+
+// 获取包含的节点
+function getIncludeIds() {
+  let classifyId = props.classifyId
+  if (classifyId === undefined || classifyId === null) return null
+  const includeIds = []
+
+  if (!Array.isArray(classifyId)) {
+    classifyId = [classifyId]
+  }
+  classifyId.forEach((id) => {
+    const classifyInfo = rawMatClsKV.value[id]
+    const fullPathId = classifyInfo.fullPathId
+    includeIds.push.apply(includeIds, fullPathId)
+    includeIds.push.apply(includeIds, getChildIds(classifyInfo.children))
+  })
+  return includeIds
+}
+
+// 设置默认值
+function setDefault(triggerChange = true) {
+  if (isBlank(props.modelValue)) {
+    if (props.default) {
+      const firstNode = getFirstNode(classification.tree)
+      if (isNotBlank(firstNode)) {
+        let defaultVal
+        if (props.emitPath) {
+          defaultVal = firstNode.map((node) => node.id)
+        } else {
+          defaultVal = firstNode[firstNode.length - 1].id
+        }
+        if (triggerChange) {
+          handleChange(defaultVal)
+        }
+        return defaultVal
+      }
+    }
   }
 }
 

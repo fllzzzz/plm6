@@ -3,8 +3,10 @@
     v-if="props.show"
     ref="tableRef"
     :data="inventoryList"
+    :data-format="columnsDataFormat"
     :height="props.height"
     :default-expand-all="false"
+    :cell-class-name="wrongCellMask"
     highlight-current-row
     row-key="recordId"
   >
@@ -15,13 +17,17 @@
     <warehouse-info-columns fixed="left" />
     <!-- 单位及其数量 -->
     <!-- <material-unit-quantity-columns :basic-class="basicClass" /> -->
-    <el-table-column key="outboundUnit" prop="outboundUnit" label="计量单位" align="center" width="70px" fixed="left" show-overflow-tooltip>
-      <template #default="{ row }">
-        <span v-empty-text>{{ row.outboundUnit }}</span>
-      </template>
-    </el-table-column>
+    <el-table-column
+      key="outboundUnit"
+      prop="outboundUnit"
+      label="计量单位"
+      align="center"
+      width="70px"
+      fixed="left"
+      show-overflow-tooltip
+    />
     <el-table-column key="usedNumber" prop="usedNumber" label="数量" align="center" width="120px" show-overflow-tooltip>
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <el-tooltip effect="dark" :content="`当前物料最大可利用数：${row.operableNumber}`" :show-after="1000" placement="top-start">
           <common-input-number
             v-model="row.usedNumber"
@@ -33,23 +39,19 @@
             :precision="row.outboundUnitPrecision"
             size="mini"
             placeholder="数量"
-            @change="handleNumberChange(row)"
+            @change="(nv, ov) => handleNumberChange(nv, ov, row)"
           />
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column key="usedTheoryTotalWeight" prop="usedTheoryTotalWeight" align="center" :label="`理论总重（kg）`" width="135px">
-      <template #default="{ row }">
-        <span v-to-fixed="{ val: row.usedTheoryTotalWeight, k: 'COM_WT__KG' }" v-empty />
-      </template>
-    </el-table-column>
+    <el-table-column key="usedTheoryTotalWeight" prop="usedTheoryTotalWeight" align="center" :label="`理论总重（kg）`" width="135px" />
     <el-table-column key="remark" prop="remark" align="center" label="备注" min-width="150px">
-      <template #default="{ row }">
+      <template #default="{ row: { sourceRow: row } }">
         <el-input v-model="row.remark" placeholder="备注" maxlength="200" size="mini" />
       </template>
     </el-table-column>
     <el-table-column label="操作" width="70" align="center" fixed="right">
-      <template #default="{ row, $index }">
+      <template #default="{ row: { sourceRow: row }, $index }">
         <common-button
           class="icon-button"
           icon="el-icon-delete"
@@ -64,21 +66,23 @@
 </template>
 
 <script setup>
-import { defineProps, defineExpose, reactive, ref, computed } from 'vue'
+import { defineProps, defineExpose, reactive, ref, computed, nextTick } from 'vue'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { deepClone, isNotBlank, toPrecision } from '@/utils/data-type'
+import { deepClone, isBlank, isNotBlank, toPrecision } from '@/utils/data-type'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
 import { createUniqueString } from '@/utils/data-type/string'
-import { DP, STEEL_ENUM } from '@/settings/config'
-import lodash from 'lodash'
+import { STEEL_BASE_UNIT, STEEL_ENUM } from '@/settings/config'
+import { positiveNumPattern } from '@/utils/validate/pattern'
+import cloneDeep from 'lodash/cloneDeep'
 
 import { regExtra } from '@compos/use-crud'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import useTableValidate from '@/composables/form/use-table-validate'
 
 const props = defineProps({
   show: {
@@ -90,9 +94,34 @@ const props = defineProps({
   }
 })
 
+const inventoryList = ref([])
+
+// 表格列数据格式转换
+const columnsDataFormat = [['usedTheoryTotalWeight', ['to-fixed-field', 'accountingUnit']]]
+
+// 表格规则
+const tableRules = {
+  usedNumber: [
+    { required: true, message: '请填写数量', trigger: 'blur' },
+    { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
+  ]
+}
+
+// 表格校验
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, errorMsg: '请修正【需要采购清单】中标红的信息' }) // 表格校验
+
+// 校验
+function validate() {
+  if (isBlank(inventoryList.value)) return true
+  const { validResult, dealList } = tableValidate(inventoryList.value)
+  inventoryList.value = dealList
+  // 为表单赋值
+  crud.form.inventoryList = dealList
+  return validResult
+}
+
 // 获取crud实例，并将实例注册进crud
 const { CRUD, crud } = regExtra()
-const inventoryList = ref([])
 // 是钢板或者型钢
 const isSPorSS = computed(
   () => crud.form.materialBasicClass & matClsEnum.STEEL_PLATE.V || crud.form.materialBasicClass & matClsEnum.SECTION_STEEL.V
@@ -162,7 +191,7 @@ async function listFM(list) {
 function addRow(row, technologyRow) {
   // 加入map
   crud.props.inventoryExitIdMap.set(row.id, true)
-  const invRow = reactive(lodash.cloneDeep(row))
+  const invRow = reactive(cloneDeep(row))
   invRow.recordId = createUniqueString() // 设置记录id（假，用于绑定）
   // 技术清单与库存利用清单互相绑定
   invRow.boundTech = technologyRow
@@ -186,12 +215,26 @@ function delRow(row, index) {
 }
 
 // 处理数量变化
-function handleNumberChange(row) {
-  if (row.basicClass & STEEL_ENUM) {
-    calcSteelTotalWeight(row)
+function handleNumberChange(newVal, oldVal, row) {
+  const triggerCalc = () => {
+    if (oldVal !== row.number) {
+      if (row.basicClass & STEEL_ENUM) {
+        calcSteelTotalWeight(row)
+      }
+      calcTechPrepMete(inventoryList.value, row.boundTech)
+      calcInventoryTotalMete(inventoryList.value)
+    }
   }
-  calcTechPrepMete(inventoryList.value, row.boundTech)
-  calcInventoryTotalMete(inventoryList.value)
+
+  if (!newVal || newVal < row.lowerLimitNumber) {
+    // 设置为空 或 小于最小数量，则设置为最小数量
+    nextTick(() => {
+      row.number = row.lowerLimitNumber
+      triggerCalc()
+    })
+  } else {
+    triggerCalc()
+  }
 }
 
 // 计算总库存利用量
@@ -293,9 +336,9 @@ function calcTechPrepMete(inventoryList, technologyRow) {
       return (sum += cur.usedTheoryTotalWeight || 0)
     }, 0)
 
-    info.inventory = toPrecision(summary, DP.COM_WT__KG) // 库存利用量
-    info.preparation = toPrecision((info.inventory || 0) + (info.purchase || 0), DP.COM_WT__KG) // 总备料量
-    info.diff = toPrecision(info.preparation - technologyRow.listMete, DP.COM_WT__KG) // 差值 = 总备料量 - 清单量
+    info.inventory = toPrecision(summary, STEEL_BASE_UNIT.weight.precision) // 库存利用量
+    info.preparation = toPrecision((info.inventory || 0) + (info.purchase || 0), STEEL_BASE_UNIT.weight.precision) // 总备料量
+    info.diff = toPrecision(info.preparation - technologyRow.listMete, STEEL_BASE_UNIT.weight.precision) // 差值 = 总备料量 - 清单量
     info.isEnough = info.diff >= 0 // 是否超出
   }
 }
@@ -305,11 +348,12 @@ function calcTechPrepMete(inventoryList, technologyRow) {
 //   return tableSummary(param, {
 //     props: [
 //       ['usedNumber', 0],
-//       ['usedTheoryTotalWeight', DP.COM_WT__KG]
+//       ['usedTheoryTotalWeight', STEEL_BASE_UNIT.weight.precision]
 //     ]
 //   })
 // }
 defineExpose({
-  add: addRow
+  add: addRow,
+  validate: validate
 })
 </script>

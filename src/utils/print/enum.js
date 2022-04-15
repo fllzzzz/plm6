@@ -75,6 +75,7 @@ const fieldTypeEnum = {
   THICKNESS: { L: '厚度', K: 'THICKNESS' },
   METE: { L: '量', K: 'METE' }, // 含面积等
   RATE: { L: '百分比', K: 'RATE' },
+  DP: { L: '小数精度', K: 'DP' },
   GUID: { L: '编号', K: 'GUID' },
 
   CONTRACT_NO: { L: '合同编号', K: 'CONTRACT_NO' },

@@ -4,6 +4,7 @@
     v-bind="$attrs"
     ref="inputRef"
     v-model="currentValue"
+    :class="textAlignClass"
     :min="min"
     :max="max"
     :step="step"
@@ -49,6 +50,10 @@ const props = defineProps({
   },
   mode: {
     // 模式，普通模式，input模式
+    type: String
+  },
+  textAlign: {
+    // left/right/center
     type: String
   },
   min: {
@@ -102,6 +107,19 @@ const props = defineProps({
 
 const inputRef = ref()
 const currentValue = ref()
+
+const textAlignClass = computed(() => {
+  switch (props.textAlign) {
+    case 'left':
+      return 'input-text-align-left'
+    case 'right':
+      return 'input-text-align-right'
+    case 'center':
+      return 'input-text-align-center'
+    default:
+      return void 0
+  }
+})
 
 const max = computed(() => {
   if (typeof props.max === 'string') return +props.max
@@ -177,3 +195,21 @@ defineExpose({
   blur
 })
 </script>
+
+<style lang="scss" scoped>
+.input-text-align-left {
+  ::v-deep(.el-input__inner) {
+    text-align: left;
+  }
+}
+.input-text-align-right {
+  ::v-deep(.el-input__inner) {
+    text-align: right;
+  }
+}
+.input-text-align-center {
+  ::v-deep(.el-input__inner) {
+    text-align: center;
+  }
+}
+</style>

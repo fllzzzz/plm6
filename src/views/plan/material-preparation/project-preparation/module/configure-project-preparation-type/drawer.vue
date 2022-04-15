@@ -49,51 +49,48 @@
           v-loading="loading"
           border
           :data="filterList"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           :cell-class-name="changedCellMask"
           :highlight-current-row="false"
           row-key="id"
         >
           <el-table-column type="index" label="序号" align="center" width="60" />
-          <el-table-column label="项目" align="left">
-            <template #default="{ row }">
-              <span v-parse-project="{ project: row }" v-empty-text />
-            </template>
-          </el-table-column>
+          <el-table-column label="项目" align="left" prop="project" />
           <el-table-column label="是否无清单备料" align="center" width="170" prop="withoutList">
             <template #default="{ row }">
               <common-radio
                 v-if="isEditMode"
-                v-model="row.withoutList"
+                v-model="row.sourceRow.withoutList"
                 :options="whetherEnum.ENUM"
                 type="enum"
-                :disabled="row.boolStrucPrepared"
+                :disabled="row.sourceRow.boolStrucPrepared"
               />
-              <span v-else v-parse-enum="{ e: whetherEnum, v: row.withoutList }" v-empty />
+              <span v-else>{{ row.withoutList }}</span>
             </template>
           </el-table-column>
           <el-table-column label="“结构”备料范围" align="center" width="250" prop="strucPreparationRangeType">
             <template #default="{ row }">
               <common-radio
                 v-if="isEditMode"
-                v-model="row.strucPreparationRangeType"
+                v-model="row.sourceRow.strucPreparationRangeType"
                 :options="preparationRangeEnum.ENUM"
                 type="enum"
-                :disabled="row.boolStrucPrepared"
+                :disabled="row.sourceRow.boolStrucPrepared"
               />
-              <span v-else v-parse-enum="{ e: preparationRangeEnum, v: row.strucPreparationRangeType }" v-empty />
+              <span v-else>{{ row.strucPreparationRangeType }}</span>
             </template>
           </el-table-column>
           <el-table-column label="“围护”备料范围" align="center" width="250" prop="enclPreparationRangeType">
             <template #default="{ row }">
               <common-radio
                 v-if="isEditMode"
-                v-model="row.enclPreparationRangeType"
+                v-model="row.sourceRow.enclPreparationRangeType"
                 :options="preparationRangeEnum.ENUM"
                 type="enum"
-                :disabled="row.boolEnclPrepared"
+                :disabled="row.sourceRow.boolEnclPrepared"
               />
-              <span v-else v-parse-enum="{ e: preparationRangeEnum, v: row.enclPreparationRangeType }" v-empty />
+              <span v-else>{{ row.enclPreparationRangeType }}</span>
             </template>
           </el-table-column>
           <el-table-column label="“辅材”备料范围" align="center" width="250" prop="auxPreparationRangeType">
@@ -101,13 +98,13 @@
               <!-- 辅材没有区域 -->
               <common-radio
                 v-if="isEditMode"
-                v-model="row.auxPreparationRangeType"
+                v-model="row.sourceRow.auxPreparationRangeType"
                 :options="preparationRangeEnum.ENUM"
                 :unshowVal="[preparationRangeEnum.AREA.V]"
                 type="enum"
-                :disabled="row.boolAuxPrepared"
+                :disabled="row.sourceRow.boolAuxPrepared"
               />
-              <span v-else v-parse-enum="{ e: preparationRangeEnum, v: row.auxPreparationRangeType }" v-empty />
+              <span v-else>{{ row.auxPreparationRangeType }}</span>
             </template>
           </el-table-column>
         </common-table>
@@ -164,6 +161,15 @@ const sourceMap = new Map([
 provide('sourceMap', sourceMap)
 
 const pinyinFields = ['name', 'shortName']
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ['withoutList', ['parse-enum', whetherEnum]],
+  ['strucPreparationRangeType', ['parse-enum', preparationRangeEnum]],
+  ['enclPreparationRangeType', ['parse-enum', preparationRangeEnum]],
+  ['auxPreparationRangeType', ['parse-enum', preparationRangeEnum]],
+  ['project', ['parse-project', { onlyShortName: true }], { source: '*' }]
+])
 
 const drawerRef = ref()
 // 项目列表

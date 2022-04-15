@@ -12,7 +12,7 @@
     >
       <template #default="{ row }">
         <el-tooltip :content="specTip(row)" placement="left">
-          {{ specFormat(row) }}
+          <span>{{ specFormat(row) }}</span>
         </el-tooltip>
       </template>
     </el-table-column>
