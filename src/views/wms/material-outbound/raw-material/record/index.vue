@@ -13,6 +13,7 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       @row-dblclick="(row) => crud.toDetail(row)"
+      @selection-change="crud.selectionChangeHandler"
       @sort-change="crud.handleSortChange"
       row-key="id"
     >
@@ -23,6 +24,7 @@
           </p>
         </template>
       </el-expand-table-column>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="70">
         <template #default="{ row, $index }">
           <table-cell-tag :show="row.boolPrinted" name="已打印" type="printed" />

@@ -1,5 +1,13 @@
 <template>
-  <span>{{ receiptInfo.source }}</span>
+  <span>
+    {{ receiptInfo.source }}
+    <template v-if="props.transferReceipt.boolBorrowReturnNotSelf">
+      <span class="borrow-direction-icon">▶</span>&nbsp;
+      <el-tooltip content="实际借用项目" placement="top">
+        <span class="project-ware-text">{{ props.transferReceipt.borrowProject }}</span>
+      </el-tooltip>
+    </template>
+  </span>
 </template>
 
 <script setup>
@@ -35,10 +43,6 @@ const receiptInfo = computed(() => {
     })
     sourceStrArr = Array.from(new Set(sourceStrArr))
     sourceStr = sourceStrArr.join('　/　')
-  }
-  if (receipt.boolBorrowReturnNotSelf && receipt.borrowProject) {
-    sourceStr += '　▶　'
-    sourceStr += receipt.borrowProject.shortName
   }
   receipt.source = sourceStr
   return receipt
