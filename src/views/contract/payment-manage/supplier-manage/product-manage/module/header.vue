@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-show="crud.searchToggle">
-      <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <common-radio-button
         v-model="query.settlementStatus"
         :options="settlementStatusEnum.ENUM"
@@ -11,6 +10,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
+      <project-cascader v-model="query.projectId" class="filter-item" />
       <el-date-picker
         v-model="query.createTime"
         type="daterange"
@@ -46,6 +46,7 @@ import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
 import { settlementStatusEnum } from '@enum-ms/contract'
+import projectCascader from '@comp-base/project-cascader'
 
 const defaultQuery = {
   projectId: undefined,

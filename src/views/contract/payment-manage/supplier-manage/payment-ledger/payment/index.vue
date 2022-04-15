@@ -18,6 +18,11 @@
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
+    <el-table-column v-if="columns.visible('paymentDate')" key="paymentDate" prop="paymentDate" label="付款日期" align="center">
+      <template v-slot="scope">
+        <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
+      </template>
+    </el-table-column>
     <el-table-column v-if="columns.visible('paymentUnit')" key="paymentUnit" prop="paymentUnit" :show-overflow-tooltip="true" label="付款单位" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.paymentUnit?scope.row.paymentUnit:'-'}}</span>
@@ -26,11 +31,6 @@
     <el-table-column v-if="columns.visible('receivingUnit')" key="receivingUnit" prop="receivingUnit" :show-overflow-tooltip="true" label="收款单位" align="center">
       <template v-slot="scope">
         <span>{{ scope.row.receivingUnit?scope.row.receivingUnit:'-'}}</span>
-      </template>
-    </el-table-column>
-     <el-table-column v-if="columns.visible('paymentDate')" key="paymentDate" prop="paymentDate" label="付款日期" align="center">
-      <template v-slot="scope">
-        <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('actuallyPaymentAmount')" key="actuallyPaymentAmount" prop="actuallyPaymentAmount" label="实付金额(元)" align="center">

@@ -7,7 +7,7 @@
     :before-close="handleClose"
     title="审核记录"
     :wrapper-closable="false"
-    size="80%"
+    size="90%"
   >
     <template #content>
       <list :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue" @success="emit('success')"/>

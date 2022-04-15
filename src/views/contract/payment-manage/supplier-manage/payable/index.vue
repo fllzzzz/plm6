@@ -41,17 +41,17 @@
         <span>{{ scope.row.payRate? scope.row.payRate+'%': '' }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" :show-overflow-tooltip="true" label="已开票(元)" min-width="100">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" :show-overflow-tooltip="true" label="已收票(元)" min-width="100">
       <template v-slot="scope">
         <span>{{ scope.row.invoiceAmount? toThousand(scope.row.invoiceAmount): '' }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('unInvoiceAmount')" key="unInvoiceAmount" prop="unInvoiceAmount" :show-overflow-tooltip="true" label="未开票(元)" min-width="100">
+    <el-table-column v-if="columns.visible('unInvoiceAmount')" key="unInvoiceAmount" prop="unInvoiceAmount" :show-overflow-tooltip="true" label="未收票(元)" min-width="100">
       <template v-slot="scope">
         <span>{{ scope.row.unInvoiceAmount? toThousand(scope.row.unInvoiceAmount): '' }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" :show-overflow-tooltip="true" label="开票率" min-width="100">
+    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" :show-overflow-tooltip="true" label="收票率" min-width="100">
       <template v-slot="scope">
         <span>{{ scope.row.invoiceRate? scope.row.invoiceRate+'%': '' }}</span>
       </template>
@@ -80,7 +80,7 @@ const optShow = {
 }
 
 const tableRef = ref()
-const { crud, columns } = useCRUD(
+const { crud, columns, CRUD } = useCRUD(
   {
     title: '应付汇总',
     sort: [],
@@ -98,6 +98,15 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+CRUD.HOOK.beforeRefresh = () => {
+  if (crud.query.createTime.length > 0) {
+    crud.query.startDate = crud.query.createTime[0]
+    crud.query.endDate = crud.query.createTime[1]
+  } else {
+    crud.query.startDate = undefined
+    crud.query.endDate = undefined
+  }
+}
 </script>
 
 <style lang="scss" scoped>
