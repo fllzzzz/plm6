@@ -14,7 +14,7 @@
         <common-button size="mini" type="danger" @click.stop="submit(reviewStatusEnum.REFUSE.V)">拒 绝</common-button>
       </span>
     </template>
-    <common-table :data="list" :max-height="maxHeight">
+    <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <template v-if="props.detailInfo.type === packTypeEnum.STRUCTURE.V">
         <el-table-column prop="name" label="结构名称" align="center" />
@@ -61,6 +61,10 @@ const props = defineProps({
 const { maxHeight } = useMaxHeight({ extraBox: '.el-drawer__header', wrapperBox: '', extraHeight: 4 })
 
 const list = ref([])
+const dataFormat = ref([
+  ['oldUnitPrice', 'to-thousand'],
+  ['newUnitPrice', 'to-thousand']
+])
 const { crud, detail, CRUD } = regDetail()
 
 // 详情加载后

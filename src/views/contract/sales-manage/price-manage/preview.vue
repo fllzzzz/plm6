@@ -102,7 +102,7 @@ async function submit() {
     const _list = props.modifiedData.map((v) => {
       return {
         id: v.id,
-        unitPrice: v.unitPrice
+        unitPrice: v.newUnitPrice
       }
     })
     await save({

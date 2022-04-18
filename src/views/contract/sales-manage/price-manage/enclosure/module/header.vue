@@ -145,6 +145,8 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 // 刷新数据后
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
+    v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
+    v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalLength = convertUnits(v.totalLength, 'mm', 'm', DP.MES_ENCLOSURE_L__M)
     v.totalArea = convertUnits(v.totalArea, 'm2', 'm2', DP.COM_AREA__M2)
@@ -181,7 +183,8 @@ function handelModifying(status, reset = false) {
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      v.totalPrice = (enclosureMeasureMode.value === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.unitPrice || 0)
+      v.newUnitPrice = v.originNewUnitPrice
+      v.totalPrice = (enclosureMeasureMode.value === enclosureSettlementTypeEnum.LENGTH.V ? v.totalLength : v.totalArea) * (v.newUnitPrice || 0)
       return v
     })
   }
