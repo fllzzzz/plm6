@@ -20,7 +20,7 @@
         prop="createTime"
         :show-overflow-tooltip="true"
         label="变更时间"
-        width="170"
+        width="130"
         align="center"
       >
         <template #default="{ row }">
@@ -53,10 +53,22 @@
         prop="artifactSerialNumber"
         :show-overflow-tooltip="true"
         label="构件编号"
-        min-width="120"
+        min-width="110"
       >
         <template #default="{ row }">
           <span>{{ row.artifactSerialNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="columns.visible('assembleSerialNumber') && crud.query.productType & componentTypeEnum.MACHINE_PART.V"
+        key="assembleSerialNumber"
+        prop="assembleSerialNumber"
+        :show-overflow-tooltip="true"
+        label="组立编号"
+        min-width="110"
+      >
+        <template #default="{ row }">
+          <span>{{ row.assembleSerialNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -65,7 +77,7 @@
         prop="serialNumber"
         :show-overflow-tooltip="true"
         label="编号"
-        min-width="120"
+        min-width="110"
       >
         <template #default="{ row }">
           <span>{{ row.serialNumber }}</span>
@@ -110,17 +122,30 @@
           <span>{{ row.totalInProductionQuantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('status')" :show-overflow-tooltip="true" prop="status" label="状态" align="center" width="100">
+      <el-table-column v-if="columns.visible('status')" :show-overflow-tooltip="true" prop="status" label="状态" align="center" width="90">
         <template #default="{ row }">
           <el-tag :type="abnormalHandleStatusEnum.V[row.status].TAG">{{ abnormalHandleStatusEnum.VL[row.status] }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column v-permission="[...permission.save, ...permission.detail]" label="操作" width="160px" align="center" fixed="right">
         <template #default="{ row }">
-          <span v-if="row.type & abnormalHandleTypeEnum.MACHINE_PART.V">
+          <span
+            v-if="
+              row.type & abnormalHandleTypeEnum.MACHINE_PART.V &&
+              !(row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V))
+            "
+          >
             <common-button size="mini" type="primary" v-permission="[...permission.save]" @click="partHandle(row)"> 处理 </common-button>
           </span>
-          <span v-else>
+          <span
+            v-if="
+              row.type & abnormalHandleTypeEnum.MACHINE_PART.V &&
+              row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V)
+            "
+          >
+            <span>-</span>
+          </span>
+          <span v-if="!(row.type & abnormalHandleTypeEnum.MACHINE_PART.V)">
             <common-button
               size="mini"
               v-if="!(row.status & (abnormalHandleStatusEnum.PROCESSING_COMPLETE.V | abnormalHandleStatusEnum.CANCEL.V))"
@@ -239,7 +264,7 @@ function partHandle(row) {
   }).then(async () => {
     try {
       await partChange(row.id)
-      row.status = abnormalHandleStatusEnum.PROCESSING.V
+      crud.refresh()
     } catch (error) {
       console.log('零件处理', error)
     }
