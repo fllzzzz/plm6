@@ -80,7 +80,7 @@ export default {
           path: 'steel-classic',
           hidden: false,
           component: '/config-manage/system/steel-classic/index',
-          meta: { title: '钢材配置', icon: 'project', noCache: true }
+          meta: { title: '零件类型配置', icon: 'project', noCache: true }
         },
         {
           name: 'ChangeReason',

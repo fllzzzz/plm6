@@ -25,14 +25,14 @@
   <crudOperation>
     <template #optLeft>
       <div v-show="crud.searchToggle">
-        <common-radio-button
+        <!-- <common-radio-button
           v-model="query.handleStatus"
           :options="surplusHandleStatusEnum.ENUM"
           type="enum"
           showOptionAll
           class="filter-item"
           @change="crud.toQuery"
-        />
+        /> -->
         <factory-select v-model="query.factoryId" clearable class="filter-item" style="width: 250px" @change="crud.toQuery" />
         <production-line-select
           v-model="query.productionLineId"
@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { componentTypeEnum, surplusHandleStatusEnum } from '@enum-ms/mes'
+import { componentTypeEnum } from '@enum-ms/mes'
 
 import { regHeader } from '@compos/use-crud'
 import monomerSelectAreaSelect from '@comp-base/monomer-select-area-select'

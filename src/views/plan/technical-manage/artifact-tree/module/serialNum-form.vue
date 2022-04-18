@@ -373,9 +373,9 @@
                     <el-input-number
                       v-if="scope.row.add || editing"
                       v-model.number="scope.row.quantity"
-                      :min="originDetail.quantity"
+                      :min="form.quantity"
                       :max="maxNumber"
-                      :step="originDetail.quantity"
+                      :step="form.quantity"
                       step-strictly
                       placeholder="请填写"
                       controls-position="right"
@@ -386,11 +386,11 @@
                     <span v-else >{{ scope.row.quantity }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column key="firstProcessName" prop="firstProcessName" :show-overflow-tooltip="true" :label="originDetail.firstProcessName?'已'+originDetail.firstProcessName:''" align="center" width="100">
+                <!-- <el-table-column key="firstProcessName" prop="firstProcessName" :show-overflow-tooltip="true" :label="originDetail.firstProcessName?'已'+originDetail.firstProcessName:''" align="center" width="100">
                   <template v-slot="scope">
                     <span>{{ scope.row.unitData && form.producedQuantity?form.producedQuantity*scope.row.unitData: 0 }}</span>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
               </common-table>
             </div>
           </div>
@@ -524,7 +524,11 @@ watch(
 )
 
 const emit = defineEmits(['success', 'update:modelValue'])
-const { visible, handleClose } = useVisible({ emit, props })
+const { visible, handleClose } = useVisible({ emit, props, closeHook })
+
+function closeHook() {
+  if (editing.value) closeEdit()
+}
 
 function resetForm() {
   if (formRef.value) {

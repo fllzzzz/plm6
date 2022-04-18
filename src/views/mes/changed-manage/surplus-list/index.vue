@@ -27,11 +27,11 @@
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('handleStatus')" :show-overflow-tooltip="true" prop="handleStatus" label="状态" align="center" width="100">
+      <!-- <el-table-column v-if="columns.visible('handleStatus')" :show-overflow-tooltip="true" prop="handleStatus" label="状态" align="center" width="100">
         <template #default="{ row }">
           <el-tag :type="surplusHandleStatusEnum.V[row.handleStatus].TAG">{{ surplusHandleStatusEnum.VL[row.handleStatus] }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </common-table>
     <!--分页组件-->
     <pagination />
@@ -43,7 +43,7 @@ import crudApi from '@/api/mes/changed-manage/surplus-list'
 import { ref, computed } from 'vue'
 
 import { surplusListPM as permission } from '@/page-permission/mes'
-import { surplusHandleStatusEnum } from '@enum-ms/mes'
+// import { surplusHandleStatusEnum } from '@enum-ms/mes'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -64,6 +64,7 @@ const { crud, columns, CRUD } = useCRUD(
   {
     title: '多余列表',
     permission: { ...permission },
+    sort: [],
     optShow: { ...optShow },
     crudApi: { ...crudApi }
   },
