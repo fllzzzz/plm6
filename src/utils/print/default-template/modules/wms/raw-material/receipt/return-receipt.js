@@ -303,7 +303,7 @@ const wmsRmReturnReceipt = {
         source: dataSourceEnum.SYSTEM.V,
         align: alignEnum.RIGHT.V,
         minWidth: 18,
-        type: typeEnum.METE.K,
+        type: typeEnum.QUANTITY.K,
         format: { toThousand: false, precision: 0 },
         sum: true
       },
