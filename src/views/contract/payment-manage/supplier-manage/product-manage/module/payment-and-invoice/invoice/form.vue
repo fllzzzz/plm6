@@ -35,6 +35,7 @@
                 size="small"
                 value-format="x"
                 placeholder="选择日期"
+                :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
                 style="width:100%"
               />
               <template v-else>

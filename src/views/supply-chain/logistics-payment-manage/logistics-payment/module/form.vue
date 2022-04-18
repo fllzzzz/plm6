@@ -50,6 +50,7 @@
            <el-table-column key="applyAmount" prop="applyAmount" label="本次支付金额(元)" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
               <el-input-number
+                v-if="scope.row.freight!==scope.row.paymentAmount"
                 v-model.number="scope.row.applyAmount"
                 v-show-thousand
                 :min="0"
@@ -88,14 +89,15 @@
             type="date"
             value-format="x"
             placeholder="选择申请日期"
+            :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
             style="width: 220px"
           />
         </el-form-item>
-        <el-form-item label="收款单位">
-          <span>{{detailInfo.supplierBankName}}</span>
+        <el-form-item label="开户行">
+          <span>{{detailInfo.receiveBank}}</span>
         </el-form-item>
-        <el-form-item label="收款银行">
-          <span>{{detailInfo.supplierBankAccount}}</span>
+        <el-form-item label="银行账号">
+          <span>{{detailInfo.receiveBankAccount}}</span>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input

@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column key="propertyType" prop="propertyType" label="承运属性" align="center" >
         <template v-slot="scope">
-          <div>{{ scope.row.propertyType? supplierPayTypeEnum.VL[scope.row.propertyType]: '-' }}</div>
+          <div>{{ scope.row.propertyType? logisticsSearchTypeEnum.VL[scope.row.propertyType]: '-' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
@@ -79,7 +79,7 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum, logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 // import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'

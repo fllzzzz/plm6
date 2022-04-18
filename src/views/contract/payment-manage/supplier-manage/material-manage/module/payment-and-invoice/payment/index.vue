@@ -60,7 +60,8 @@
         <template v-slot="scope">
           <template v-if="scope.row.attachments && scope.row.attachments.length>0">
             <div v-for="item in scope.row.attachments" :key="item.id">
-              {{ item.name }}
+              <div>{{item.name}}</div>
+              <export-button :params="{id: item.id}"/>
             </div>
           </template>
         </template>
@@ -99,6 +100,7 @@ import { paymentFineModeEnum } from '@enum-ms/finance'
 import { parseTime } from '@/utils/date'
 import { toThousand, digitUppercase } from '@data-type/number'
 import { contractSupplierMaterialPM } from '@/page-permission/contract'
+import ExportButton from '@comp-common/export-button/index.vue'
 
 const permission = contractSupplierMaterialPM.payment
 

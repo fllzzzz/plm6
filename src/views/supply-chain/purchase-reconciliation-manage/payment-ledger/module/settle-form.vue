@@ -50,7 +50,7 @@
               v-model="form.amount"
               :step="1"
               :min="detailInfo?.sourceRow?.paymentAmount?detailInfo?.sourceRow?.paymentAmount:0"
-              :max="detailInfo?.sourceRow?.amount?detailInfo?.sourceRow?.amount:999999999999"
+              :max="999999999999"
               :precision="DP.YUAN"
               placeholder="最终结算额"
               controls-position="right"

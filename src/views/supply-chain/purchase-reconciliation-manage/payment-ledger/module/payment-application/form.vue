@@ -45,7 +45,6 @@
               placeholder="本次付款"
               controls-position="right"
               style="width: 220px"
-                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
             />
         </el-form-item>
         <el-form-item label="大写">
@@ -57,6 +56,7 @@
             type="date"
             value-format="x"
             placeholder="选择申请日期"
+            :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
             style="width: 220px"
           />
         </el-form-item>
@@ -82,7 +82,7 @@
             v-model="form.remark"
             type="textarea"
             style="width: 100%"
-            maxlength="500"
+            maxlength="200"
             :autosize="{ minRows: 2, maxRows: 4 }"
             placeholder="请输入备注"
           />

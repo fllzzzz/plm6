@@ -36,7 +36,7 @@
         <!-- 价格信息 -->
         <amount-info-columns :columns="{}" :show-tax-rate="true"/>
         <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
-        <el-table-column prop="inboundId" label="入库单号" align="center" show-overflow-tooltip />
+        <el-table-column prop="serialNumber" label="入库单号" align="center" show-overflow-tooltip />
         <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
         <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
       </common-table>
