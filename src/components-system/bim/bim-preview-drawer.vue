@@ -29,7 +29,7 @@
           :productId="productId"
           :productType="productType"
           class="drawing"
-          :style="{ height: `${maxHeight}px`,overflow: 'auto' }"
+          :style="{ height: `${maxHeight}px`, overflow: 'auto' }"
         ></drawing-preview-small-view>
       </div>
     </template>
@@ -92,8 +92,20 @@ function show() {
     flex: 1;
   }
 
-  .drawing{
+  .drawing {
     width: 40%;
+    background: #525659;
+    position: relative;
+
+    .pdf-box {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      span {
+        width: 100%;
+        margin: 0 auto;
+      }
+    }
   }
 }
 </style>

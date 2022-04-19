@@ -12,7 +12,6 @@ import { defineEmits, defineExpose, inject, ref } from 'vue'
 import pdf from '@/components/PDF/pdf'
 
 const emit = defineEmits(['changeFileLoading'])
-
 const productId = inject('productId')
 const productType = inject('productType')
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
@@ -98,10 +97,14 @@ function reset() {
   viewRotate.value = 0
   scale.value = 1
 }
+function setScale(val) {
+  scale.value = val
+}
 
 defineExpose({
   fetchDrawing,
   reset,
+  setScale,
   scaleZoom,
   scaleZoomOut,
   clockwiseRotate,
