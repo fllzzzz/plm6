@@ -42,7 +42,6 @@ export default function useArtifactSearch({ props, addBlinkByIds, removeBlink })
         serialNumber: serialNumber,
         monomerId: props.monomerId
       })
-      removeBlink()
       addBlinkByIds(_elementIds)
       elementIds.value = _elementIds
     } catch (error) {

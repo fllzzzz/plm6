@@ -1,7 +1,7 @@
 import { getProjectTree } from '@/api/bim/model'
 import { ref, watch } from 'vue'
 
-export default function useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink }) {
+export default function useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink, getModelViewSize }) {
   const areaList = ref([])
 
   watch(
@@ -123,20 +123,22 @@ export default function useProjectTreePanel({ props, bimModel, viewerPanel, view
   function fetchArtifactList(node) {
     // 打开弹窗
     const _panel = viewerPanel.artifactListByArea.panel
-    const _proPanel = viewerPanel.proTree.panel
-    const { css: _proCss, className: _proClassName } = _proPanel._opt
+    const { css } = _panel._opt
+    const modelViewSize = getModelViewSize()
+    console.log(modelViewSize.width, modelViewSize, css, _panel, 'modelViewSize')
     viewerPanel.panelPositions[_panel._opt.className] = {
-      left: viewerPanel.panelPositions[_proClassName].left + Number(_proCss.width.slice(0, -2)) + 10,
-      top: viewerPanel.panelPositions[_proClassName].top
+      left: modelViewSize.width - Number(css.width.slice(0, -2)),
+      top: 0
     }
     _panel.initPosition()
+    _panel.setHeight(modelViewSize.height)
     _panel && _panel.show()
 
     // 渲染构件明细弹窗内容
     const { basicsVOS: artifactList, totalGrossWeight, quantity } = node.id
     const areaName = node.name
 
-    const _el = document.getElementsByClassName('bf-panel-artifact-list-by-area')[0].getElementsByClassName('bf-panel-container')[0]
+    const _el = document.querySelector('.bf-panel-artifact-list-by-area .bf-panel-container')
     _el.innerHTML = '' // 清空旧数据
     const html = `
       <div class="bf-area-artifact-container">

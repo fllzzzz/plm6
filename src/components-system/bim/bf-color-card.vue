@@ -1,5 +1,5 @@
 <template>
-  <color-card :colors="colors" v-model:value="selectStatus" color-border select-able @change="statusChange"></color-card>
+  <color-card :colors="colors" v-model:value="selectStatus" color-border :select-able="selectAble" @change="statusChange"></color-card>
 </template>
 
 <script setup>
@@ -11,6 +11,10 @@ const selectStatus = ref()
 defineProps({
   statusChange: {
     type: Function
+  },
+  selectAble: {
+    type: Boolean,
+    default: true
   },
   colors: {
     type: Array,
