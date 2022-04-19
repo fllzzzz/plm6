@@ -130,6 +130,15 @@ const colors = ref([])
 const menuBar = ref()
 const objectIdGroup = ref({})
 
+function getModelViewSize() {
+  const dom = document.getElementById('modelView')
+  console.log(dom.clientHeight, dom.clientWidth, 'getModelViewSize')
+  return {
+    width: dom.clientWidth,
+    height: dom.clientHeight
+  }
+}
+
 const {
   initModelColor, fetchArtifactStatus,
   addBlinkByIds, removeBlink,
@@ -141,7 +150,7 @@ const {
 const { createDrawing, fetchDrawing } = useDrawing()
 const { createArtifactInfoPanel, fetchArtifactInfo, clearArtifactInfoPanel } = useArtifactInfo({ menuBar, bimModel, viewer: _viewer, viewerPanel, modelStatus, fetchDrawing })
 const { createStatusInfoPanel, fetchStatusInfo, clearStatusInfoPanel } = useStatusInfo({ menuBar, bimModel, viewerPanel, modelStatus })
-const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink })
+const { createProTreePanel, clearProTreePanel, fetchProTree } = useProjectTreePanel({ props, bimModel, viewerPanel, viewProAreaTree, addBlinkByIds, removeBlink, getModelViewSize })
 const { createLogisticsBtn, hideLogisticsBtn } = useLogisticsInfo({ bimModel, viewerPanel, monomerId: computed(() => props.monomerId), addBlinkByIds, removeBlink })
 const { createMyToolbar } = useMyToolbar({
   menuBar, publicPath, bimModel, viewerPanel, viewProAreaTree, colors,
@@ -218,6 +227,7 @@ async function loadModel(viewToken) {
     console.log(app, 'app')
 
     _viewer.value = app.getViewer()
+    console.log(_viewer, '_viewer')
     _viewer3DEvent.value = bimModel.getViewer3DEvent()
     _viewer.value.addEventListener(
       _viewer3DEvent.value.ViewAdded,
@@ -322,6 +332,18 @@ async function loadModel(viewToken) {
     opacity: 1;
   }
 
+  .bf-button-active {
+    opacity: 1;
+  }
+
+  .bf-button.bf-button-disabled {
+    opacity: 0.3;
+    cursor: no-drop;
+  }
+  .bf-button.bf-button-disabled:hover{
+    opacity: 0.3;
+  }
+
   .bf-area-artifact-container,.bf-artifact-info-container,
   .bf-machine-part-list-container,.bf-panel-color-card-container,
   .bf-panel-logistics-info-container,.bf-panel-shipment-container {
@@ -344,6 +366,10 @@ async function loadModel(viewToken) {
         }
       }
     }
+  }
+
+  .bf-panel-artifact-list-by-area{
+    opacity: 0.8;
   }
 
   .bf-artifact-info-container, .bf-panel-logistics-info-container,.bf-panel-shipment-container{
