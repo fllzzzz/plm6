@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="head-container">
+    <div class="head-container" style="margin-bottom:0px;">
       <div class="filter-container">
         <div class="filter-left-box">
           <monomer-select
