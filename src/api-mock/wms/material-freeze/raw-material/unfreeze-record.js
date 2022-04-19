@@ -15,7 +15,7 @@ const get = {
             id: 1,
             freezeType: materialFreezeTypeEnum.PREPARATION.V,
             remark: 'fffff', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.PREPARATION.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -63,7 +63,7 @@ const get = {
             id: 2,
             freezeType: materialFreezeTypeEnum.OUTBOUND_APPLY.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.OUTBOUND_APPLY.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -111,7 +111,7 @@ const get = {
             id: 3,
             freezeType: materialFreezeTypeEnum.TRANSFER.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.TRANSFER.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -159,7 +159,7 @@ const get = {
             id: 3,
             freezeType: materialFreezeTypeEnum.REJECTED.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.REJECTED.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/

@@ -51,6 +51,7 @@ const receipts = computed(() => {
 })
 
 const receiptType = computed(() => {
+  if (props.receipt.receiptType) return props.receipt.receiptType
   if (!props.receipt.receiptType && props.receiptTypes && props.receiptTypes.length === 1) {
     return receiptTypeEnum[props.receiptTypes[0]].V
   }
@@ -66,7 +67,7 @@ function openReceiptDetail(detailId, type) {
 function openDetailPermission(type) {
   switch (type) {
     case receiptTypeEnum.PURCHASE.V:
-      return permission.preparationReceiptDetail
+      return permission.purchaseOrderDetail
     case receiptTypeEnum.INBOUND.V:
       return permission.inboundReceiptDetail
     case receiptTypeEnum.OUTBOUND.V:

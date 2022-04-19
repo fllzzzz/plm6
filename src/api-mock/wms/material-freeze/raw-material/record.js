@@ -46,7 +46,7 @@ const get = {
               {
                 id: 1,
                 freezeType: materialFreezeTypeEnum.PREPARATION.V,
-                document: {
+                receipt: {
                   id: 1,
                   receiptType: receiptTypeEnum.PREPARATION.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -64,7 +64,7 @@ const get = {
               {
                 id: 2,
                 freezeType: materialFreezeTypeEnum.OUTBOUND_APPLY.V,
-                document: {
+                receipt: {
                   id: 1,
                   receiptType: receiptTypeEnum.OUTBOUND_APPLY.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -83,7 +83,7 @@ const get = {
               {
                 id: 3,
                 freezeType: materialFreezeTypeEnum.TRANSFER.V,
-                document: {
+                receipt: {
                   id: 1,
                   receiptType: receiptTypeEnum.TRANSFER.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -102,7 +102,7 @@ const get = {
               {
                 id: 4,
                 freezeType: materialFreezeTypeEnum.REJECTED.V,
-                document: {
+                receipt: {
                   id: 1,
                   receiptType: receiptTypeEnum.REJECTED.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -155,7 +155,7 @@ const get = {
               {
                 id: 1,
                 freezeType: materialFreezeTypeEnum.PREPARATION.V,
-                document: {
+                receipt: {
                   id: 1,
                   receiptType: receiptTypeEnum.PREPARATION.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -208,7 +208,7 @@ const get = {
               {
                 id: 1,
                 freezeType: materialFreezeTypeEnum.PREPARATION.V,
-                document: {
+                receipt: {
                   id: 1,
                   receiptType: receiptTypeEnum.PREPARATION.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -259,7 +259,7 @@ const getMaterialFreezeRecordById = {
           {
             id: 1,
             freezeType: materialFreezeTypeEnum.PREPARATION.V,
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.PREPARATION.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -278,7 +278,7 @@ const getMaterialFreezeRecordById = {
           {
             id: 2,
             freezeType: materialFreezeTypeEnum.OUTBOUND_APPLY.V,
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.OUTBOUND_APPLY.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -297,7 +297,7 @@ const getMaterialFreezeRecordById = {
           {
             id: 3,
             freezeType: materialFreezeTypeEnum.TRANSFER.V,
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.TRANSFER.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
@@ -316,7 +316,7 @@ const getMaterialFreezeRecordById = {
           {
             id: 4,
             freezeType: materialFreezeTypeEnum.REJECTED.V,
-            document: {
+            receipt: {
               id: 1,
               receiptType: receiptTypeEnum.REJECTED.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/

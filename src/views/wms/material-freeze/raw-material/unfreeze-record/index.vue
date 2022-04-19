@@ -40,10 +40,10 @@
         width="100"
       />
       <el-table-column
-        v-if="columns.visible('documentType')"
-        key="documentType"
+        v-if="columns.visible('receiptType')"
+        key="receiptType"
         :show-overflow-tooltip="true"
-        prop="documentType"
+        prop="receiptType"
         label="对应单据"
         align="center"
         width="120"
@@ -53,17 +53,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="columns.visible('document')"
-        key="document"
+        v-if="columns.visible('receipt')"
+        key="receipt"
         :show-overflow-tooltip="true"
-        prop="document"
+        prop="receipt"
         label="单据编号"
         align="center"
         min-width="120"
       >
         <template #default="{ row: record }">
           <!-- 当前页面出库申请单无法查看详情（出库申请单会被清空） -->
-          <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="record.document" />
+          <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="record.receipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -147,7 +147,7 @@ const { CRUD, crud, columns } = useCRUD(
   {
     title: '解冻记录',
     sort: ['id.desc'],
-    invisibleColumns: ['documentType', 'project'],
+    invisibleColumns: ['receiptType', 'project'],
     requiredQuery: [],
     permission: { ...permission },
     optShow: { ...optShow },

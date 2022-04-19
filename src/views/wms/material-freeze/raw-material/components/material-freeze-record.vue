@@ -2,14 +2,14 @@
   <common-table v-bind="$attrs" v-loading="detailLoading" :data="list" :data-format="columnsDataFormat" row-key="id">
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column key="freezeTypeName" :show-overflow-tooltip="true" prop="freezeTypeName" label="类型" align="center" width="100" />
-    <el-table-column key="documentType" :show-overflow-tooltip="true" prop="documentType" label="对应单据" align="center" width="120">
+    <el-table-column key="receiptType" :show-overflow-tooltip="true" prop="receiptType" label="对应单据" align="center" width="120">
       <template #default="{ row }">
         <span v-if="materialFreezeTypeEnum.V[row.freezeType]">{{ materialFreezeTypeEnum.V[row.freezeType].DOC }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="document" :show-overflow-tooltip="true" prop="document" label="单据编号" align="center" min-width="120">
+    <el-table-column key="receipt" :show-overflow-tooltip="true" prop="receipt" label="单据编号" align="center" min-width="120">
       <template #default="{ row }">
-        <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="row.document" />
+        <receipt-sn-clickable :receipt-types="['PREPARATION', 'OUTBOUND_APPLY', 'TRANSFER', 'REJECTED']" :receipt="row.receipt" />
       </template>
     </el-table-column>
     <el-table-column show-overflow-tooltip key="project" prop="project" label="单据项目" min-width="170" />
