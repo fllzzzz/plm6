@@ -78,6 +78,15 @@ export const MIN_UNIT = {
   VOLUME_DP: 0
 }
 
+// 系统常用单位
+export const DEF_UNIT = {
+  WEIGHT: 'kg',
+  WEIGHT_DP: 2,
+  LENGTH: 'mm',
+  LENGTH_DP: 3
+}
+
+// 二维码拼接路径
 export const specialPath = {
   QR_SCAN_ARTIFACT_TASK: '/s/s/a',
   QR_SCAN_ENCLOSURE_TASK: '/s/s/e',
@@ -89,12 +98,12 @@ export const specialPath = {
 
 export const QR_SCAN_F_TYPE = {
   MEW_PRODUCTION: 1, // 建钢产品
-  MES_PACKAGE_SHIP: 2// 建钢打包发运
+  MES_PACKAGE_SHIP: 2 // 建钢打包发运
 }
 
 export const QR_SCAN_TYPE = {
   MES_PACKAGE: 1, // 建钢包
-  MES_SHIP_LIST: 2// 建钢发运清单
+  MES_SHIP_LIST: 2 // 建钢发运清单
 }
 
 // mes系统单位

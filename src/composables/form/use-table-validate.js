@@ -1,7 +1,8 @@
 import { obj2arr } from '@/utils/convert/type'
 import { isBlank, isNotBlank } from '@data-type/index'
-import * as lodash from 'lodash'
+import { getInfo } from '@/utils/el-extra'
 import { ElMessage } from 'element-plus'
+import cloneDeep from 'lodash/cloneDeep'
 
 /**
  * form-table-校验
@@ -62,7 +63,7 @@ function tableValidate(list, tableRules, ditto, errorMsg) {
 
       row.verify = {}
       for (const rule in rules) {
-        row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+        row.verify[rule] = validate(rule, rules[rule], row)
         if (!row.verify[rule]) {
           flag = false
         }
@@ -95,7 +96,7 @@ export function wrongCellMask({ row, column }, tableRules) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -105,7 +106,9 @@ export function wrongCellMask({ row, column }, tableRules) {
 }
 
 // 校验
-export function validate(property, rules, value, row = {}) {
+export function validate(property, rules, row = {}) {
+  // 获取值
+  const value = getInfo(row, property)
   let flag = true
   // 判断是否存在校验
   if (isBlank(rules)) {
@@ -153,7 +156,7 @@ export function validate(property, rules, value, row = {}) {
 
 // 清理数据
 export function cleanUpData(list, ditto = new Map()) {
-  const copyList = lodash.cloneDeep(list)
+  const copyList = cloneDeep(list)
   list.length = 0
   // 清空数组, 保留数组地址不变
   copyList.forEach((row, index) => {

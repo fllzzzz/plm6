@@ -41,6 +41,7 @@ async function getUnit(pollingNumber = 1) {
  * @param {array} width 宽度字段数组
  * @param {array} weight 重量字段数组
  * @param {array} thickness 厚度字段数组
+ * @param {string} prefix 对象前缀 如 list:[ {material:{}}] 实际要转换的是material,则prefix为material, 不支持多层嵌套
  * @param {boolean} newObj | default:false 是否返回新对象
  * @param {boolean} toNum | default:false 是否转为数字
  * @param {boolean} showUnit | default:false 是否显示单位
@@ -54,6 +55,7 @@ export async function numFmtByBasicClass(
     accountingUnit,
     accountingPrecision,
     measurePrecision,
+    prefix,
     newObj = false,
     toNum = false,
     showUnit = false,
@@ -96,10 +98,10 @@ export async function numFmtByBasicClass(
   }
   if (Array.isArray(data)) {
     return data.map((row) => {
-      return format(row)
+      return format(prefix ? row[prefix] : row)
     })
   } else {
-    return format(data)
+    return format(prefix ? data[prefix] : data)
   }
 }
 

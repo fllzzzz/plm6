@@ -9,16 +9,21 @@ import { specFormat } from './spec-format'
  * 为列表设置规格
  * @param {array} list 需要转换的列表
  * @param {boolean} multipleSpec 多规格模式
+ * @param {string} prefix 对象前缀 如 list:[ {material:{}}] 实际要转换的是material,则prefix为material, 不支持多层嵌套
  */
-export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
+export async function setSpecInfoToList(list, { multipleSpec = false, prefix } = {}) {
   if (isBlank(list)) return list
+  let _list = list
+  if (prefix) {
+    _list = _list.map(item => item[prefix])
+  }
   try {
     // 所有的promise
     const allPromise = []
     // 单个promise
     let p
     // 加载科目信息, 只处理有classifyId的数据
-    const _list = list.filter((v) => v && v.classifyId)
+    _list = _list.filter((v) => v && v.classifyId)
     const classifyIds = uniqueArr(_list.map((v) => v.classifyId))
     await fetchSpecInfoByFullSpec(classifyIds)
     _list.forEach((row) => {
@@ -42,7 +47,6 @@ export async function setSpecInfoToList(list, { multipleSpec = false } = {}) {
   } catch (error) {
     console.log('加载科目报错', error)
   }
-
   return list
 }
 
