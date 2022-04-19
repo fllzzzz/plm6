@@ -25,8 +25,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeMount, onUnmounted } from 'vue'
 import { mapGetters } from '@/store/lib'
+import store from '@/store'
 
 import useMaxHeight from '@compos/use-max-height'
 
@@ -39,6 +40,12 @@ const query = ref({})
 const { maxHeight } = useMaxHeight({})
 const monomerName = computed(() => {
   return monomerRef.value?.getOption(query.value.monomerId)?.name
+})
+onBeforeMount(() => {
+  store.dispatch('app/closeSideBar', { withoutAnimation: false })
+})
+onUnmounted(() => {
+  store.dispatch('app/toggleSideBar')
 })
 </script>
 
