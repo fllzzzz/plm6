@@ -1,6 +1,7 @@
 import { getArtifactStatus } from '@/api/bim/model.js'
 import { ElLoading } from 'element-plus'
 import { computed } from 'vue'
+import { modelMenuBarEnum } from '@enum-ms/bim'
 
 import { arr2obj } from '@/utils/convert/type'
 
@@ -31,6 +32,7 @@ export default function useArtifactColoring({ bimModel, modelStatus, viewer, col
 
   // 初始化根据构件状态着色
   async function fetchArtifactStatus(menuBar) {
+    if (menuBar === modelMenuBarEnum.PROJECT_TREE.V) return
     const loading = ElLoading.service({
       target: '#modelView',
       lock: true,

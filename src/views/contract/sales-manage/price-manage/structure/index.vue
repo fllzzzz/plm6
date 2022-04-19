@@ -23,7 +23,7 @@
         <template #default="{ row }">
           <common-input-number
             v-if="headerRef && headerRef.modifying"
-            v-model="row.unitPrice"
+            v-model="row.newUnitPrice"
             :step="1"
             :min="0"
             :max="99999999"
@@ -107,6 +107,7 @@ function openDetail(row) {
 
 // 价格变动
 function handlePrice(row) {
+  row.unitPrice = row.newUnitPrice
   row.totalPrice = row.totalWeight * (row.unitPrice || 0)
 }
 

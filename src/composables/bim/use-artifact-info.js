@@ -243,7 +243,7 @@ export default function useArtifactInfo({ menuBar, bimModel, viewerPanel, modelS
   }
 
   function getProductionListHtml(compareQuantity, list) {
-    if (!list?.length) return
+    if (!list?.length) return `<div style="justify-content: center;">暂无生产信息</div>`
     let str = ''
     for (let i = 0; i < list.length; i++) {
       const item = list[i]
