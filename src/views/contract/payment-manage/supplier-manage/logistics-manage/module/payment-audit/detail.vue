@@ -18,7 +18,7 @@
       <common-button v-if="showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" size="small" label-width="40px" label-position="left">
+      <el-form ref="formRef" size="small" label-width="60px" label-position="left">
         <common-table
           ref="detailRef"
           border
@@ -59,13 +59,24 @@
           </el-table-column>
         </common-table>
         <el-form-item label="附件">
+          <template #label>
+            附件
+            <el-tooltip
+              effect="light"
+              :content="`双击可预览附件`"
+              placement="top"
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+          </template>
           <template v-if="detailInfo.attachments && detailInfo.attachments.length>0">
-            <div v-for="item in detailInfo.attachments" :key="item.id">{{item.name}}
-              <export-button :params="{id: item.id}"/>
+            <div v-for="item in detailInfo.attachments" :key="item.id">
+              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
             </div>
           </template>
         </el-form-item>
       </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
   </common-drawer>
 </template>
@@ -79,7 +90,7 @@ import useMaxHeight from '@compos/use-max-height'
 import { logisticsSearchTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { ElNotification } from 'element-plus'
-import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const formRef = ref()
 const props = defineProps({
@@ -103,10 +114,18 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
+const pdfShow = ref(false)
+const currentId = ref()
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
 const tableLoading = ref(false)
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
 
 // 合计
 function getSummaries(param) {

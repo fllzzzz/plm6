@@ -15,7 +15,6 @@
       style="width: 100%;margin-top:10px;"
       class="collection-table"
       :stripe="false"
-      return-source-data
       :showEmptySymbol="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
@@ -91,7 +90,7 @@ const dataFormat = ref([
 const tableRef = ref()
 const orderId = inject('orderId')
 
-const { crud } = useCRUD(
+const { crud, CRUD } = useCRUD(
   {
     title: '付款申请记录',
     sort: [],
@@ -131,6 +130,11 @@ watch(
   { immediate: true }
 )
 
+CRUD.HOOK.handleRefresh = (crud, { data }) => {
+  data.content.forEach(v => {
+    v.paymentDate = String(v.paymentDate)
+  })
+}
 </script>
 
 <style lang="scss" scoped>
