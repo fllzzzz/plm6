@@ -34,7 +34,7 @@
             class="filter-item"
           /> -->
           <rrOperation/>
-          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计收票:${totalSum?toThousand(totalSum):'-'}元` }}</el-tag>
+          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计付款:${totalSum?toThousand(totalSum):'-'}元` }}</el-tag>
         </template>
       </crudOperation>
     </div>

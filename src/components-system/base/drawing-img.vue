@@ -14,7 +14,7 @@
           <img v-if="!fileLoading" ref="imgRef" class="img" :src="source" style="user-select: none" />
         </div>
       </div>
-      <div v-show="showOperate" class="operate-content">
+      <div v-show="showOperate && !showType" class="operate-content">
         <div class="operate-left">{{ serialNumber }}</div>
         <div class="operate-middle" />
         <div class="operate-right" />
@@ -49,6 +49,7 @@
 <script setup>
 import { ElNotification } from 'element-plus'
 import { defineEmits, defineProps, ref } from 'vue'
+import { downloadAttachment } from '@/api/common'
 import { previewImg } from '@/api/plan/technical-manage/enclosure'
 
 import useVisible from '@compos/use-visible'
@@ -79,6 +80,14 @@ const props = defineProps({
   attachmentId: {
     type: Number,
     default: undefined
+  },
+  showType: { // 展示类型，为图纸或附件
+    type: String,
+    default: undefined
+  },
+  id: {
+    type: Number,
+    default: undefined
   }
 })
 
@@ -95,19 +104,20 @@ async function fetch() {
   if (!dialogVisible.value) {
     return
   }
+  const msg = props.showType ? '附件' : '图纸'
   try {
     fileLoading.value = true
     // const param = {
     //   productId: props.productId,
     //   productType: props.productType
     // }
-    const res = await previewImg(props.attachmentId)
+    const res = props.showType ? await downloadAttachment({ id: props.id }) : await previewImg(props.attachmentId)
     source.value = await getUrlByFileReader(res)
     // 处理图纸
   } catch (error) {
-    console.log('获取图纸', error)
+    console.log(`获取${msg}`, error)
     handleClose()
-    ElNotification({ title: '获取图纸失败', type: 'error', duration: 2000 })
+    ElNotification({ title: `获取${msg}失败`, type: 'error', duration: 2000 })
   } finally {
     fileLoading.value = false
   }

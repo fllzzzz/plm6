@@ -88,12 +88,26 @@
           />
         </el-form-item>
         <el-form-item label="附件">
-          <template v-if="form.id && form.attachments?.length">
-            <div v-for="item in form.attachments" :key="item.id">{{item.name}}</div>
+          <template #label>
+            附件
+            <el-tooltip
+              effect="light"
+              :content="`双击可预览附件`"
+              placement="top"
+              v-if="form.id && form.attachments?.length && !form.files?.length"
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
           </template>
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
+          <template v-if="form.id && form.attachments?.length && !form.files?.length">
+            <div v-for="item in form.attachments" :key="item.id">
+               <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            </div>
+          </template>
+          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
       </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
   </common-drawer>
 </template>
@@ -110,6 +124,7 @@ import { DP } from '@/settings/config'
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import UploadBtn from '@comp/file-upload/UploadBtn'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const formRef = ref()
 const dict = useDict(['payment_reason'])
@@ -124,7 +139,7 @@ const defaultForm = {
   paymentDate: moment().startOf('day').format('x'), // 默认当天0点的时间戳
   applyAmount: undefined,
   attachmentIds: undefined,
-  attachments: [],
+  files: [],
   orderId: undefined,
   paymentReasonId: undefined,
   propertyType: undefined,
@@ -132,7 +147,10 @@ const defaultForm = {
   receiveBankAccount: undefined,
   remark: ''
 }
+
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+const pdfShow = ref(false)
+const currentId = ref()
 
 const validateMoney = (rule, value, callback) => {
   if (!value) {
@@ -147,8 +165,14 @@ const rules = {
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }]
 }
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.attachmentIds = crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined
+  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : (crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined)
   crud.form.orderId = props.detailInfo.id
   crud.form.propertyType = props.detailInfo.propertyType
   crud.form.receiveBank = props.detailInfo.supplierBankName || undefined

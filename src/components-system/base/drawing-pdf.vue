@@ -17,7 +17,7 @@
           <pdf :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
         </div>
       </div>
-      <div v-show="showOperate" class="operate-content">
+      <div v-show="showOperate && !showType" class="operate-content">
         <div class="operate-left">{{ serialNumber }}</div>
         <div class="operate-middle">{{ `${pageNum} / ${pageTotalNum}` }}</div>
         <div class="operate-right" />
@@ -52,7 +52,8 @@
 <script setup>
 import pdf from '@/components/PDF/pdf'
 import { ElNotification } from 'element-plus'
-import { defineEmits, defineProps, ref } from 'vue'
+import { defineEmits, defineProps, ref, watch } from 'vue'
+import { downloadAttachment } from '@/api/common'
 import { previewPDF } from '@/api/plan/technical-data-manage/deepen'
 
 import useVisible from '@compos/use-visible'
@@ -79,13 +80,20 @@ const props = defineProps({
   productType: {
     type: Number,
     default: undefined
+  },
+  showType: { // 展示类型，为图纸或附件
+    type: String,
+    default: undefined
+  },
+  id: {
+    type: Number,
+    default: undefined
   }
 })
 
-const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue', showHook: fetch })
+const { visible: dialogVisible, handleClose } = useVisible({ emit, props, field: 'modelValue' })
 
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
-console.log(pdfjsDistPath)
 const source = ref()
 const scale = ref(1)
 const viewRotate = ref(0)
@@ -95,24 +103,36 @@ const pageTotalNum = ref()
 const loading = ref(false)
 const fileLoading = ref(false)
 
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      dialogVisible.value = true
+      fetch()
+    }
+  },
+  { immediate: true }
+)
+
 async function fetch() {
-  if (!dialogVisible.value) {
-    return
-  }
+  // if (!dialogVisible.value) {
+  //   return
+  // }
   init()
+  const msg = props.showType ? '附件' : '图纸'
   try {
     fileLoading.value = true
     const param = {
       productId: props.productId,
       productType: props.productType
     }
-    const res = await previewPDF(param)
+    const res = props.showType ? await downloadAttachment({ id: props.id }) : await previewPDF(param)
     source.value = await getUrlByFileReader(res)
     // 处理图纸
   } catch (error) {
-    console.log('获取图纸', error)
+    console.log(`获取${msg}`, error)
     handleClose()
-    ElNotification({ title: '获取图纸失败', type: 'error', duration: 2000 })
+    ElNotification({ title: `获取${msg}失败`, type: 'error', duration: 2000 })
   } finally {
     fileLoading.value = false
   }
@@ -126,6 +146,7 @@ function getUrlByFileReader(res) {
       // 使用readAsArrayBuffer读取文件, result属性中将包含一个 ArrayBuffer 对象以表示所读取文件的数据
       reader.readAsArrayBuffer(dataInfo)
       reader.onload = function (e) {
+        console.log(e, dataInfo)
         const result = e.target.result
         const contentType = dataInfo.type
         // 生成blob图片,需要参数(字节数组, 文件类型)
@@ -153,7 +174,8 @@ function init() {
 }
 
 function pdfError(error) {
-  ElNotification({ title: '加载图纸失败，请确认是否已上传该编号图纸', type: 'error', duration: 3000 })
+  const msg = props.showType ? '附件' : '图纸'
+  ElNotification({ title: `加载${msg}失败，请确认是否已上传该${msg}`, type: 'error', duration: 3000 })
   console.error(error)
 }
 

@@ -105,8 +105,8 @@
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="附件">
         <template v-if="currentInfo && currentInfo.attachments && currentInfo.attachments.length>0">
-          <div v-for="item in currentInfo.attachments" :key="item.id">{{item.name}}
-            <export-button :params="{id: item.id}"/>
+          <div v-for="item in currentInfo.attachments" :key="item.id">
+            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
           </div>
         </template>
       </el-descriptions-item>
@@ -114,6 +114,7 @@
         <span>{{currentInfo.remark}}</span>
       </el-descriptions-item>
     </el-descriptions>
+    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </common-dialog>
 </template>
 
@@ -129,7 +130,7 @@ import { DP } from '@/settings/config'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import useDict from '@compos/store/use-dict'
 import { ElNotification, ElMessage } from 'element-plus'
-import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const props = defineProps({
   modelValue: {
@@ -162,6 +163,8 @@ const paymentBankAccount = ref()
 const paymentBank = ref()
 const paymentMethod = ref()
 const currentInfo = ref({})
+const pdfShow = ref(false)
+const currentId = ref()
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
@@ -198,6 +201,12 @@ async function getBankData(companyId) {
   } catch (e) {
     console.log('获取银行账号', e)
   }
+}
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
 }
 
 function bankChange(val) {

@@ -12,7 +12,7 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="40px" label-position="left">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="60px" label-position="left">
         <common-table
           ref="detailRef"
           border
@@ -62,9 +62,26 @@
           </el-table-column>
         </common-table>
         <el-form-item label="附件">
+          <template #label>
+            附件
+            <el-tooltip
+              effect="light"
+              :content="`双击可预览附件`"
+              placement="top"
+              v-if="form.id && form.attachments?.length && !form.files?.length"
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+          </template>
+          <template v-if="form.id && form.attachments?.length && !form.files?.length">
+            <div v-for="item in form.attachments" :key="item.id">
+               <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            </div>
+          </template>
           <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
       </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
   </common-drawer>
 </template>
@@ -80,6 +97,7 @@ import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const formRef = ref()
 const props = defineProps({
@@ -105,6 +123,8 @@ const { maxHeight } = useMaxHeight({
 })
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+const pdfShow = ref(false)
+const currentId = ref()
 
 const validateMoney = (rule, value, callback) => {
   if (!value) {
@@ -121,6 +141,12 @@ const rules = {
 
 const tableLoading = ref(false)
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
 // 合计
 function getSummaries(param) {
   return tableSummary(param, {
@@ -130,7 +156,7 @@ function getSummaries(param) {
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : crud.form.attachmentIds
+  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : (crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined)
   crud.form.supplierId = props.detailInfo.supplierId
   crud.form.branchCompanyId = props.detailInfo.branchCompanyId
   crud.form.applyAmount = 0

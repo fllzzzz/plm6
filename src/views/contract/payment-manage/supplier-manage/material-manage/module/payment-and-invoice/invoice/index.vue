@@ -63,12 +63,19 @@
         </el-table-column>
       </el-table-column>
       <el-table-column key="attachments" prop="attachments" label="附件" align="center" width="150" :show-overflow-tooltip="true">
+        <template #header>
+          <el-tooltip effect="light" :content="`双击可预览附件`" placement="top">
+            <div>
+              <span>附件</span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
         <template v-slot="scope">
           <upload-btn ref="uploadRef" v-if="scope.row.isModify" v-model:files="scope.row.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.pdf,.jpg,.jpeg,.png'"/>
           <template v-if="scope.row.attachments && scope.row.attachments.length>0 && !scope.row.files">
             <div v-for="item in scope.row.attachments" :key="item.id">
-              <div>{{item.name}}</div>
-              <export-button :params="{id: item.id}" v-if="!scope.row.isModify"/>
+              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
             </div>
           </template>
         </template>
@@ -162,6 +169,7 @@
   <!--分页组件-->
   <pagination />
   <mForm :existInvoiceNo="invoiceNoArr" :currentRow="currentRow" :propertyType="propertyType"/>
+  <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </div>
 </template>
 
@@ -185,7 +193,7 @@ import mForm from './form'
 import { contractSupplierMaterialPM } from '@/page-permission/contract'
 import { fileClassifyEnum } from '@enum-ms/file'
 import UploadBtn from '@comp/file-upload/UploadBtn'
-import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const permission = contractSupplierMaterialPM.invoice
 const emit = defineEmits(['success'])
@@ -214,6 +222,8 @@ const tableRef = ref()
 const originRow = ref({})
 const totalAmount = ref(0)
 const invoiceNoArr = ref([])
+const pdfShow = ref(false)
+const currentId = ref()
 provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
@@ -401,6 +411,12 @@ async function rowSubmit(row) {
   } catch (e) {
     console.log(messageName, e)
   }
+}
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
 }
 
 // 合计

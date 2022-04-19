@@ -219,8 +219,6 @@ function addRow() {
     supplierId: props.currentRow.supplierId,
     supplierName: props.currentRow.supplierName,
     dataIndex: form.list.length + 1,
-    attachments: [],
-    attachmentIds: [],
     isModify: true
   })
 }
