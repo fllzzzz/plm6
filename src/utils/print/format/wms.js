@@ -25,7 +25,7 @@ function preparesCustomSummary({ header, table = [], footer, qrCode }) {
 // 普通数据格式化转换
 async function dataFormat({ header, table = [], footer, qrCode }) {
   await setSpecInfoToList(table)
-  await numFmtByBasicClass(table, null, {
+  await numFmtByBasicClass(table, undefined, {
     mete: ['mete', 'rejectMete'],
     quantity: ['quantity', 'rejectQuantity']
   })
