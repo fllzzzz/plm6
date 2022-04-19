@@ -1,4 +1,4 @@
-import { MIN_UNIT } from '@/settings/config'
+import { MIN_UNIT, DEF_UNIT } from '@/settings/config'
 import { emptyTextFormatter, isBlank, isNotBlank } from '@data-type/index'
 import { getDP, toThousand } from '@data-type/number'
 import { createUniqueString } from '@data-type/string'
@@ -1332,12 +1332,8 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
       return emptyTextFormatter(
         meteFormat({
           val,
-          format: field.format,
-          basicClass: row.basicClass,
-          materialType: row.materialType,
-          materialListType: row.materialListType,
-          unit: row.unit,
-          checkUnit: row.checkUnit
+          row,
+          format: field.format
         }),
         emptyVal
       )
@@ -1476,7 +1472,7 @@ function weightFormat(val, format = {}) {
   if (isNotBlank(_val)) {
     // 单位转换
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
+      _val = convertUnits(_val, DEF_UNIT.WEIGHT, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1500,7 +1496,7 @@ function lengthFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
+      _val = convertUnits(_val, DEF_UNIT.LENGTH, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -1542,10 +1538,9 @@ function thicknessFormat(val, format = {}) {
  * “量”数据格式转换
  * @param {*} val 数据
  * @param {object} format
- * @param {number} basicClass 基础类型（enum）
  * @return {string|number} 量
  */
-function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialType, materialListType }) {
+function meteFormat({ val, row, format = {}}) {
   let _val = val
   if (isNotBlank(_val)) {
     // 小数精度
@@ -1558,30 +1553,11 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
     }
     // 是否显示单位
     if (format.showUnit) {
-      let _unit
-      // if (isNotBlank(basicClass)) {
-      //   if (checkUnit) {
-      //     _unit = checkUnit
-      //   } else {
-      //     _unit = getBasicClassUnit(basicClass)
-      //   }
-      // }
-      // if (isNotBlank(materialType)) {
-      //   if (unit) {
-      //     _unit = unit
-      //   } else {
-      //     _unit = getMaterialTypeUnit(materialType)
-      //   }
-      // }
-      // if (isNotBlank(materialListType)) {
-      //   if (unit) {
-      //     _unit = unit
-      //   } else {
-      //     _unit = getMaterialListTypeUnit(materialListType)
-      //   }
-      // }
-      if (_unit) {
-        _val += ` ${_unit}`
+      if (format.unit) {
+        _val += ` ${format.unit}`
+      }
+      if (row?.[format.rowUnit]) {
+        _val += ` ${row[format.rowUnit]}`
       }
     }
   }

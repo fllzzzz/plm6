@@ -1,5 +1,6 @@
 import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, lengthUnitEnum, thicknessUnitEnum } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
+import { DP } from '@/settings/config'
 
 // 围护生产报表
 const mesEnclosureProductionReport = {
@@ -210,7 +211,7 @@ const mesEnclosureProductionReport = {
       { show: true, key: 'thickness', title: '厚度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 14, type: typeEnum.THICKNESS.K, format: { toThousand: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
       { show: true, key: 'length', title: '长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 16, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 0, unit: lengthUnitEnum.MM.V }},
       { show: true, key: 'quantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 14, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }},
-      { show: false, key: 'totalArea', title: '总面积', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 3 }},
+      { show: false, key: 'totalArea', title: '总面积(㎡)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, rowUnit: '㎡', precision: DP.COM_AREA__M2 }},
       { show: true, key: 'totalLength', title: '总长度', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.LENGTH.K, format: { toThousand: false, precision: 3, unit: lengthUnitEnum.M.V }},
       { show: true, key: 'date', title: '生产日期', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 22, type: typeEnum.OTHER.K }
     ]

@@ -32,6 +32,8 @@ const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
+const mesEnclosureProductionLine = mes.areaConvert
+
 const wmsRmInboundReceipt = wms.dataFormat // 入库单
 const wmsRmOutboundReceipt = wms.dataFormat // 出库单
 const wmsRmReturnReceipt = wms.dataFormat // 退库单
@@ -61,6 +63,7 @@ export default {
   mesStructureProductionStatisticsIn,
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
+  mesEnclosureProductionLine,
 
   wmsRmInboundReceipt, // 入库单
   wmsRmOutboundReceipt, // 出库单

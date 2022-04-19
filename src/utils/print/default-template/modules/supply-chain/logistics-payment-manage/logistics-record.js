@@ -1,4 +1,4 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, amountUnitEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 
 // 物流记录
 const purchaseLogisticsRecord = {
@@ -202,7 +202,7 @@ const purchaseLogisticsRecord = {
       { show: true, key: 'supplierName', title: '物流公司', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.COMPANY_NAME.K },
       { show: true, key: 'type', title: '运输属性', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'logisticsSearchTypeEnum', key: 'L' }},
       { show: true, key: 'licensePlate', title: '车牌号', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.LICENSE_PLATE.K },
-      { show: true, key: 'loadingWeight', title: '装载重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: true, precision: 3 }},
+      { show: true, key: 'loadingWeight', title: '装载重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true },
       { show: true, key: 'carModel', title: '车型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.OTHER.K },
       { show: true, key: 'driverName', title: '司机姓名', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.USER_NAME.K },
       { show: true, key: 'driverPhone', title: '电话', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.PHONE.K },

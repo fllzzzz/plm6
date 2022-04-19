@@ -204,7 +204,7 @@ const mesPaintingList = {
     fields: [
       { show: true, key: 'name', title: '名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.STRUCTURE_NAME.K },
       { show: true, key: 'material', title: '材质', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 18, type: typeEnum.MATERIAL.K },
-      { show: true, key: 'surfaceArea', title: '涂装表面积(㎡)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: DP.COM_AREA__M2 }},
+      { show: true, key: 'surfaceArea', title: '涂装表面积(㎡)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, unit: '㎡', precision: DP.COM_AREA__M2 }},
       { show: true, key: 'paintCategory', title: '油漆类别', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.OTHER.K },
       { show: true, key: 'thickness', title: '干膜厚度(μm)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.THICKNESS.K, format: { toThousand: false, precision: 3, unit: thicknessUnitEnum.MM.V }},
       { show: true, key: 'volumeSolids', title: '体积固体份(%)', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.QUANTITY.K, format: { precision: 0 }},
