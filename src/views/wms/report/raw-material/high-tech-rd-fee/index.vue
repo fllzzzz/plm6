@@ -105,7 +105,7 @@ const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '高薪研发费',
-    sort: ['id.desc'],
+    sort: [],
     invisibleColumns: ['quantity', 'measureUnit', 'brand', 'warehouse', 'invoiceType', 'taxRate', 'unitPriceExcludingVAT'],
     permission: { ...permission },
     optShow: { ...optShow },

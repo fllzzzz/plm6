@@ -38,7 +38,7 @@ const get = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 借用调拨单号
             },
             applicantName: '@cname', // 调拨人
-            createTime: '@datetime(T)' // 调拨时间
+            reviewTime: '@datetime(T)' // 调拨时间
           },
           {
             id: 2,
@@ -67,7 +67,7 @@ const get = {
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/ // 借用调拨单号
             },
             applicantName: '@cname', // 调拨人
-            createTime: '@datetime(T)' // 调拨时间
+            reviewTime: '@datetime(T)' // 调拨时间
           }
         ],
         totalElements: 2
