@@ -57,7 +57,11 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="所属项目或订单" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.serialNumber }}</div>
+        <div v-if="scope.row.serialNumber">{{ scope.row.serialNumber }}</div>
+        <div v-else>
+          <div>{{scope.row.projectNameList.join(',')}}</div>
+          <div>{{scope.row.serialNumberList.join(',')}}</div>
+        </div>
       </template>
     </el-table-column>
   </common-table>
