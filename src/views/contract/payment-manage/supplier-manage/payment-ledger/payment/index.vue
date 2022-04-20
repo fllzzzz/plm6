@@ -59,8 +59,8 @@
       <template v-slot="scope">
         <div v-if="scope.row.serialNumber">{{ scope.row.serialNumber }}</div>
         <div v-else>
-          <div>{{scope.row.projectNameList.join(',')}}</div>
-          <div>{{scope.row.serialNumberList.join(',')}}</div>
+          <div>{{scope.row.projectNameList?scope.row.projectNameList.join(','):''}}</div>
+          <div>{{scope.row.serialNumberList?scope.row.serialNumberList.join(','):''}}</div>
         </div>
       </template>
     </el-table-column>
