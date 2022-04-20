@@ -98,7 +98,7 @@
               <upload-btn ref="uploadRef" v-model:files="scope.row.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.pdf,.jpg,.jpeg,.png'"/>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="60">
+          <el-table-column label="操作" align="center" width="70">
             <template v-slot="scope">
               <common-button size="small" class="el-icon-delete" type="danger" @click="deleteRow(scope.$index)" />
             </template>
