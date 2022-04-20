@@ -14,7 +14,7 @@
       </el-tag>
     </template>
     <template #titleRight>
-      <common-button v-loading="submitLoading" type="primary" size="mini" @click="onSubmit" v-if="!showType">提交审核</common-button>
+      <common-button v-loading="submitLoading" type="primary" size="mini" @click="onSubmit" v-if="showType==='add'">提交审核</common-button>
       <template v-else>
         <common-button v-if="showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
         <common-button v-if="showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
@@ -41,11 +41,7 @@
           <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ detailInfo.invoiceRate }}%）</span>
         </el-form-item>
         <el-form-item label="最终结算额"  prop="amount">
-          <template v-if="showType">
-            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount):'-' }}</span>
-            <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount):'-' }}</span>
-          </template>
-          <template v-else>
+          <template v-if="showType==='add'">
             <el-input-number
               v-model="form.amount"
               :step="1"
@@ -57,27 +53,23 @@
               style="width: 220px"
             />
           </template>
+          <template v-else>
+            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?toThousand(detailInfo.unCheckSettlementAmount):'-' }}</span>
+            <span v-else>{{ detailInfo.settlementAmount?toThousand(detailInfo.settlementAmount):'-' }}</span>
+          </template>
         </el-form-item>
         <el-form-item label="大写">
-            <span style="color:#82848a">{{form.amount?digitUppercase(form.amount):''}}</span>
+          <span style="color:#82848a">{{form.amount?digitUppercase(form.amount):''}}</span>
         </el-form-item>
         <el-form-item label="应付金额">
-          <template v-if="showType">
-            <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
-            <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.paymentAmount) }}</span>
-          </template>
-          <template v-else>
-            <span v-if="form.amount" >{{ toThousand(form.amount-detailInfo.paymentAmount) }}</span>
-          </template>
+          <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
+          <span v-else-if="showType==='add'">{{ form.amount?toThousand(form.amount-detailInfo?.sourceRow?.paymentAmount):'' }}</span>
+          <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.paymentAmount) }}</span>
         </el-form-item>
         <el-form-item label="应补发票">
-          <template v-if="showType">
-            <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount) }}</span>
-            <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.invoiceAmount) }}</span>
-          </template>
-          <template v-else>
-            <span v-if="form.amount" >{{ toThousand(form.amount-detailInfo.invoiceAmount) }}</span>
-          </template>
+          <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.invoiceAmount) }}</span>
+          <span v-else-if="showType==='add'">{{ form.amount?toThousand(form.amount-detailInfo?.sourceRow?.invoiceAmount):'' }}</span>
+          <span v-else>{{ toThousand(detailInfo.settlementAmount-detailInfo.invoiceAmount) }}</span>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input
@@ -90,16 +82,28 @@
           />
         </el-form-item>
         <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'" v-if="!showType"/>
+          <template #label>
+            附件
+            <el-tooltip
+              effect="light"
+              :content="`双击可预览附件`"
+              placement="top"
+              v-if="detailInfo.attachmentDTOS && detailInfo.attachmentDTOS.length>0"
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+          </template>
+          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'" v-if="showType==='add'"/>
           <template v-else>
             <div v-if="detailInfo.attachmentDTOS && detailInfo.attachmentDTOS.length>0">
-              <div v-for="item in detailInfo.attachmentDTOS" :key="item.id">{{item.name}}
-                <export-button :params="{id: item.id}"/>
+              <div v-for="item in detailInfo.attachmentDTOS" :key="item.id">
+                <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
               </div>
             </div>
           </template>
         </el-form-item>
       </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
   </common-drawer>
 </template>
@@ -109,13 +113,13 @@ import { settleSave, settleConfirm } from '@/api/supply-chain/purchase-reconcili
 import { ref, defineProps, watch, defineEmits, nextTick } from 'vue'
 import useVisible from '@compos/use-visible'
 import UploadBtn from '@comp/file-upload/UploadBtn'
-import ExportButton from '@comp-common/export-button/index.vue'
 import { DP } from '@/settings/config'
 import { fileClassifyEnum } from '@enum-ms/file'
 import { auditTypeEnum } from '@enum-ms/contract'
 import { digitUppercase, toThousand } from '@data-type/number'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
 import { ElNotification } from 'element-plus'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const submitLoading = ref(false)
 const emit = defineEmits(['success', 'update:modelValue'])
@@ -147,6 +151,8 @@ const defaultForm = {
 const form = ref(JSON.parse(JSON.stringify(defaultForm)))
 const formRef = ref()
 const uploadRef = ref()
+const pdfShow = ref(false)
+const currentId = ref()
 const validateMoney = (rule, value, callback) => {
   if (!value) {
     callback(new Error('请填写申请金额并大于0'))
@@ -169,6 +175,12 @@ watch(
   },
   { deep: true, immediate: true }
 )
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
 
 function resetForm(data) {
   if (formRef.value) {

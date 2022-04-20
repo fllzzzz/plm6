@@ -106,9 +106,9 @@
           <span v-else>{{ scope.row.invoiceSerialNumber  }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
+      <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.writtenByName }}</div>
+          <div>{{ scope.row.applyUserName }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
