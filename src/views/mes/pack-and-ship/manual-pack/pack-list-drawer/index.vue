@@ -7,11 +7,14 @@
     </template>
     <template #content>
       <div class="head-container">
-        <el-radio-group v-model="packType" size="small" class="filter-item">
-          <el-radio-button v-for="item in packTypeEnum.ENUM" :key="item.K" :label="item.V" :disabled="!listObj['source' + item.K].length">
+        <!-- <el-radio-group v-model="packType" size="small" class="filter-item">
+          <el-radio-button v-for="item in packTypeEnum.ENUM" :key="item.K" :label="item.V" >
             {{ item.L }}({{ listObj['source' + item.K].length }})
           </el-radio-button>
-        </el-radio-group>
+        </el-radio-group> -->
+        <component-radio-button v-model="packType" size="small" class="filter-item" :options="packTypeEnum.ENUM" type="enum" :disabledVal="disabledVal">
+          <template #suffix="{ item }"> ({{ listObj['source' + item.K].length }})</template>
+        </component-radio-button>
         <factory-select
           v-if="packType !== packTypeEnum.AUXILIARY_MATERIAL.V"
           v-model="factoryId"
@@ -169,8 +172,8 @@
 
 <script setup>
 import { pack, editPack, additionalPack } from '@/api/mes/pack-and-ship/manual-pack'
-import { defineProps, defineEmits, ref, watch, inject, reactive } from 'vue'
-import { ElMessage, ElRadioGroup } from 'element-plus'
+import { defineProps, defineEmits, ref, watch, inject, reactive, computed } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { DP } from '@/settings/config'
 import { packTypeEnum } from '@enum-ms/mes'
@@ -232,6 +235,16 @@ const listObj = reactive({
   // ['source' + packTypeEnum.STRUCTURE.K]: [],
   // ['source' + packTypeEnum.ENCLOSURE.K]: [],
   // ['source' + packTypeEnum.AUXILIARY_MATERIAL.K]: []
+})
+
+const disabledVal = computed(() => {
+  const _arr = []
+  for (const item in packTypeEnum.ENUM) {
+    if (!listObj['source' + item].length) {
+      _arr.push(packTypeEnum.KV[item])
+    }
+  }
+  return _arr
 })
 
 watch(factoryId, (val) => {

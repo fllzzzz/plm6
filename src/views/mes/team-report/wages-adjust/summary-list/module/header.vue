@@ -2,7 +2,7 @@
   <!-- <crudOperation>
     <template #optLeft> -->
   <div v-show="crud.searchToggle">
-    <common-radio-button
+    <component-radio-button
       v-if="showComponent"
       v-model="query.productType"
       :options="componentTypeEnum.ENUM"
