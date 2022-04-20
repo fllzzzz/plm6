@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: `contract/payment/list`,
+    url: `supply-chain/logistics-payment/list`,
     method: 'get',
     params,
     cancelKey: false
