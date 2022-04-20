@@ -190,7 +190,7 @@
         <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
       </template>
     </common-drawer>
-    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
+    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery" :showType="'add'"/>
   </div>
 </template>
 

@@ -54,11 +54,18 @@
       </template>
     </el-table-column>
     <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true">
+      <template #header>
+        <el-tooltip effect="light" :content="`双击可预览附件`" placement="top">
+          <div>
+            <span>附件</span>
+            <i class="el-icon-info" />
+          </div>
+        </el-tooltip>
+      </template>
       <template v-slot="scope">
         <template v-if="scope.row.attachments && scope.row.attachments.length>0">
           <div v-for="item in scope.row.attachments" :key="item.id">
-            <div>{{item.name}}</div>
-            <export-button :params="{id: item.id}" v-if="!scope.row.isModify"/>
+            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
           </div>
         </template>
       </template>
@@ -72,6 +79,7 @@
   </common-table>
   <!--分页组件-->
   <pagination />
+  <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </div>
 </template>
 
@@ -86,7 +94,7 @@ import mHeader from './module/header'
 import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
-import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 // import { projectNameFormatter } from '@/utils/project'
 
 // crud交由presenter持有
@@ -100,6 +108,8 @@ const optShow = {
 }
 
 const tableRef = ref()
+const pdfShow = ref(false)
+const currentId = ref()
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '收票台账',
@@ -117,6 +127,12 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
+
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
 
 CRUD.HOOK.beforeRefresh = () => {
   if (crud.query.createTime.length > 0) {

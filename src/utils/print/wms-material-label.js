@@ -127,7 +127,7 @@ export async function printSteelCoilLabel({ material, copies = 1, printMode = Pr
     // 首行：科目名 + 材质 等信息
     const firstLineStr = `名称: ${material.classifyName}　品牌：${isNotBlank(material.brand) ? material.brand : emptyText}`
     // 第二行：钢材尺寸
-    const secondLineStr = `规格: ${spliceSteelSize(material)}　颜色：${isNotBlank(material.color) ? material.brand : emptyText}`
+    const secondLineStr = `规格: ${spliceSteelSize(material)}　颜色：${isNotBlank(material.color) ? material.color : emptyText}`
     // 拼接主体信息
     const contentHtml = `
     <div class="material-info">

@@ -77,7 +77,7 @@ export default function useArtifactColoring({ bimModel, modelStatus, viewer, col
   function addBlinkByIds(elementIds) {
     viewer.value.clearAllBlinkComponents()
     viewer.value.addBlinkComponentsById(elementIds)
-    viewer.value.setBlinkColor(bimModel.getColor('#ffff00', 0.8))
+    viewer.value.setBlinkColor(bimModel.getColor('#ff1818', 1))
     viewer.value.enableBlinkComponents(true)
     viewer.value.setBlinkIntervalTime(500)
     viewer.value.render()

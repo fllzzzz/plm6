@@ -94,10 +94,10 @@
           />
         </el-form-item>
         <el-form-item label="开户行">
-          <span>{{detailInfo.receiveBank}}</span>
+          <span>{{detailInfo.supplierBankName}}</span>
         </el-form-item>
         <el-form-item label="银行账号">
-          <span>{{detailInfo.receiveBankAccount}}</span>
+          <span>{{detailInfo.supplierBankAccount}}</span>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input
@@ -110,7 +110,7 @@
           />
         </el-form-item>
         <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
+          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
       </el-form>
     </template>

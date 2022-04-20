@@ -113,7 +113,7 @@ export function getLogistics({ monomerId }) {
     url: '/api/model/3DModel/logistics',
     method: 'get',
     timeout: 600000,
-    params: { monomerId: 5 }
+    params: { monomerId }
   })
 }
 

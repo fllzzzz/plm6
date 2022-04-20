@@ -1,6 +1,6 @@
 <template>
   <div id="pdfBox" ref="pdfBox" class="pdf-box">
-    <pdf :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
+    <pdf v-if="source"  :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
   </div>
 </template>
 
@@ -52,6 +52,7 @@ async function fetchDrawing() {
   } catch (error) {
     console.log('获取图纸', error)
     ElNotification({ title: '获取图纸失败', type: 'error', duration: 2000 })
+    source.value = null
   } finally {
     changeFileLoading(false)
   }

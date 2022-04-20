@@ -11,6 +11,7 @@ import projectRadioButton from '@comp-common/project-radio-button'
 import printTable from '@comp-common/print/print-table'
 import TableCellTag from '@comp-common/table-cell-tag/index.vue'
 import ProjectCascader from '@/components-system/base/project-cascader'
+import componentRadioButton from '@comp-base/component-radio-button'
 
 const components = new Map([
   ['commonInputNumber', commonInputNumber],
@@ -25,7 +26,8 @@ const components = new Map([
   ['projectRadioButton', projectRadioButton],
   ['printTable', printTable],
   ['tableCellTag', TableCellTag],
-  ['projectCascader', ProjectCascader]
+  ['projectCascader', ProjectCascader],
+  ['componentRadioButton', componentRadioButton]
 ])
 
 const useComponents = (app) => {

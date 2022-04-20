@@ -1,6 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <common-radio-button
+    <component-radio-button
       v-model="query.sequenceType"
       :options="typeEnum.ENUM"
       class="filter-item"
