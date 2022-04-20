@@ -28,10 +28,7 @@ const modelMenuBarEnum = {
   PROJECT_TREE: { L: '项目树', K: 'PROJECT_TREE', V: 1, ICON: 'project-tree.png', COLORS: [] },
   COMPONENT_TREE: { L: '构件树', K: 'COMPONENT_TREE', V: 2, ICON: 'artifact-tree.png', COLORS: [
     { title: '无清单', color: '#999999', opacity: 1, value: 1 },
-    { title: '未生产', color: '#f5f7fa', opacity: 1, value: 2 },
-    { title: '生产中', color: '#ffba00', opacity: 1, value: 3 },
-    { title: '生产完毕', color: '#1682e6', opacity: 1, value: 4 },
-    { title: '安装完毕', color: '#32d3a6', opacity: 1, value: 8 }
+    { title: '有清单', color: '#f5f7fa', opacity: 1, value: 9 }
   ] },
   PRODUCTION_STATE: { L: '生产状态', K: 'PRODUCTION_STATE', ICON: 'production.png', V: 3, COLORS: [
     { title: '未生产', color: '#f5f7fa', opacity: 1, value: 2, qField: 'unProducedQuantity', wField: 'unProducedTotalGrossWeight' },
