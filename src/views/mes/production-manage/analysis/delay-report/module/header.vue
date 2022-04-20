@@ -13,7 +13,7 @@
           value-format="x"
           @change="crud.toQuery"
         />
-        <common-radio-button
+        <component-radio-button
           v-model="query.productType"
           :options="componentTypeEnum.ENUM"
           :unshowVal="[componentTypeEnum.AUXILIARY_MATERIAL.V]"
