@@ -58,6 +58,54 @@ export function arrearsList(params) {
 }
 
 /**
+ * 供应商付款/物流台账
+ */
+export function logisticsLedger(params) {
+  return request({
+    module: 'contract',
+    url: 'supply-chain/logistics-payment/detail/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 供应商付款/应付汇总
+ */
+export function payableSummary(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/payment/payable/summary/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 供应商付款/付款台账
+ */
+export function supplierPayableLedger(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/payment/payment/ledger/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 供应商付款/收票台账
+ */
+export function supplierInvoiceLedger(params) {
+  return request({
+    module: 'contract',
+    url: 'contract/payment/payment/ledger/invoice/print',
+    method: 'get',
+    params
+  })
+}
+
+/**
  * 我的项目
  * @param {number} year 年份
  */
@@ -177,6 +225,10 @@ export default {
   structurePrice, // 结构计价表
   enclosurePrice, // 围护计价表
   auxiliaryMaterialPrice, // 配套件计价表
+  logisticsLedger, // 物流台账
+  payableSummary, // 应付汇总
+  supplierPayableLedger, // 供应商付款台账
+  supplierInvoiceLedger, // 供应商收票台账
   collectionDetail, // 项目收款详情
   invoiceDetail, // 项目开票详情
   happenedDetail, // 项目发运详情

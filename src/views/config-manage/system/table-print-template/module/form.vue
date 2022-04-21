@@ -711,7 +711,7 @@ type="warning"
                                 <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px">
                                   项目全称
                                 </el-checkbox>
-                                <el-checkbox v-model="scope.row.format.showContractNo"> 合同编号 </el-checkbox>
+                                <el-checkbox v-model="scope.row.format.showSerialNumber"> 合同编号 </el-checkbox>
                               </template>
                               <el-input
                                 v-if="dateTypes.includes(scope.row.type)"
@@ -917,7 +917,7 @@ style="margin-bottom: 15px"
                               <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px">
                                 项目全称
                               </el-checkbox>
-                              <el-checkbox v-model="scope.row.format.showContractNo"> 合同编号 </el-checkbox>
+                              <el-checkbox v-model="scope.row.format.showSerialNumber"> 合同编号 </el-checkbox>
                             </template>
                             <el-input
                               v-if="dateTypes.includes(scope.row.type)"
@@ -1146,7 +1146,7 @@ style="margin-bottom: 15px"
                               <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px">
                                 项目全称
                               </el-checkbox>
-                              <el-checkbox v-model="scope.row.format.showContractNo"> 合同编号 </el-checkbox>
+                              <el-checkbox v-model="scope.row.format.showSerialNumber"> 合同编号 </el-checkbox>
                             </template>
                             <el-input
                               v-if="dateTypes.includes(scope.row.type)"

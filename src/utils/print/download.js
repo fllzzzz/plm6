@@ -136,7 +136,9 @@ async function download({ filename, title, header = {}, table = [], footer = {},
   // Image Settings are related to column width and row height, so they are set after merging cells
   setLogo({ baseCfg, config: logoCfg, ws })
 
-  setQRCode({ baseCfg, qrCode, config: qrCodeCfg, ws })
+  if (isNotBlank(qrCodeCfg)) {
+    setQRCode({ baseCfg, qrCode, config: qrCodeCfg, ws })
+  }
 
   // Add worksheet to workbook
   XLSX.utils.book_append_sheet(wb, ws, ws_name)

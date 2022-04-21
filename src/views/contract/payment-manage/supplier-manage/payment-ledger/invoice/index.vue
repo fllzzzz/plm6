@@ -12,48 +12,28 @@
     :empty-text="crud.emptyText"
     :max-height="maxHeight"
     style="width: 100%"
-    return-source-data
+    :data-format="dataFormat"
     :showEmptySymbol="false"
     :stripe="false"
     :summary-method="getSummaries"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('propertyType')" key="propertyType" prop="propertyType" :show-overflow-tooltip="true" align="center" label="订单类型">
-      <template v-slot="scope">
-        <span>{{ scope.row.propertyType?supplierPayTypeEnum.VL[scope.row.propertyType]:'-'}}</span>
-      </template>
-    </el-table-column>
+    <el-table-column v-if="columns.visible('propertyType')" key="propertyType" prop="propertyType" :show-overflow-tooltip="true" align="center" label="订单类型" width="100" />
     <!-- <el-table-column v-if="columns.visible('project.serialNumber')" key="project.serialNumber" prop="serialNumber" :show-overflow-tooltip="true" align="center" label="所属项目">
       <template v-slot="scope">
         <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
       </template>
     </el-table-column> -->
-    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="销售单位" align="center">
-      <template v-slot="scope">
-        <span>{{ scope.row.supplierName?scope.row.supplierName:'-'}}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="购方单位" align="center">
-      <template v-slot="scope">
-        <span>{{ scope.row.branchCompanyName?scope.row.branchCompanyName:'-'}}</span>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="收票日期" align="center" min-width="120">
-      <template v-slot="scope">
-        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
-      </template>
-    </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票金额(元)" align="center" min-width="120">
-      <template v-slot="scope">
-        <span>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</span>
-      </template>
-    </el-table-column>
+    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="销售单位" align="center" min-width="140" />
+    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="购方单位" align="center" min-width="140" />
+    <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="收票日期" align="center" width="100" />
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="发票金额" align="right" min-width="100" />
     <el-table-column v-if="columns.visible('invoiceSerialNumber')" key="invoiceSerialNumber" prop="invoiceSerialNumber" :show-overflow-tooltip="true" label="发票号码" align="center" min-width="120">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceSerialNumber }}</div>
       </template>
     </el-table-column>
-    <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true">
+    <el-table-column key="attachments" prop="attachments" label="附件" align="center" :show-overflow-tooltip="true" min-width="140">
       <template #header>
         <el-tooltip effect="light" :content="`双击可预览附件`" placement="top">
           <div>
@@ -70,12 +50,8 @@
         </template>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" min-width="120">
-      <template v-slot="scope">
-        <span>{{ scope.row.invoiceType ? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</span>
-        <span v-if="scope.row.taxRate">{{`【${scope.row.taxRate}%】`}}</span>
-      </template>
-    </el-table-column>
+    <el-table-column v-if="columns.visible('invoiceType')" key="invoiceType" prop="invoiceType" label="发票类型" align="center" width="106" />
+    <el-table-column v-if="columns.visible('taxRate')" key="taxRate" prop="taxRate" label="税率" align="center" width="60" />
   </common-table>
   <!--分页组件-->
   <pagination />
@@ -86,14 +62,14 @@
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
 import { ref } from 'vue'
+
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
+import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
-import { toThousand } from '@data-type/number'
-import { parseTime } from '@/utils/date'
 import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 // import { projectNameFormatter } from '@/utils/project'
 
@@ -115,6 +91,7 @@ const { crud, columns, CRUD } = useCRUD(
     title: '收票台账',
     sort: [],
     permission: { ...permission },
+    invisibleColumns: [],
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: true
@@ -128,6 +105,14 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 120
 })
 
+const dataFormat = ref([
+  ['invoiceAmount', 'to-thousand'],
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
+  ['propertyType', ['parse-enum', supplierPayTypeEnum]],
+  ['invoiceType', ['parse-enum', invoiceTypeEnum]],
+  ['taxRate', ['suffix', '%']]
+])
+
 // 预览附件
 function attachmentView(item) {
   currentId.value = item.id
@@ -135,7 +120,7 @@ function attachmentView(item) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  if (crud.query.createTime.length > 0) {
+  if (crud.query.createTime?.length > 0) {
     crud.query.startDate = crud.query.createTime[0]
     crud.query.endDate = crud.query.createTime[1]
   } else {

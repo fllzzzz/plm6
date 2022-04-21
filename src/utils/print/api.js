@@ -20,12 +20,17 @@ const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
 const transactionRecord = contract.transactionRecord
 
+const logisticsPaymentLedger = contract.logisticsLedger
+const supplierPayableSummary = contract.payableSummary
+const supplierPaymentLedger = contract.supplierPayableLedger
+const supplierInvoiceLedger = contract.supplierInvoiceLedger
+
 // 供应链
 const purchaseInvoiceRecord = supply.invoiceDetail
 const purchaseInboundRecord = supply.inboundRecord
 const purchasePaymentRecord = supply.paymentRecord
 const orderPaymentLedger = supply.orderPaymentLedger
-const supplierPaymentLedger = supply.supplierPaymentLedger
+const scmSupplierPaymentLedger = supply.supplierPaymentLedger
 
 const purchaseLogisticsRecord = supply.logisticsRecord
 
@@ -85,6 +90,12 @@ export default {
   invoiceLedger, // 开票台账
   invoiceRecord, // 项目开票记录
   arrearsList, // 欠款清单
+
+  logisticsPaymentLedger, // 物流台账
+  supplierPayableSummary, // 供应商应付汇总
+  supplierPaymentLedger, // 供应商付款台账
+  supplierInvoiceLedger, // 供应商收票台账
+
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
@@ -98,7 +109,7 @@ export default {
   purchaseInboundRecord, // 入库记录
   purchasePaymentRecord, // 付款记录
   orderPaymentLedger, // 采购订单付款台账
-  supplierPaymentLedger, // 供应商付款台账
+  scmSupplierPaymentLedger, // 供应商付款台账
 
   purchaseLogisticsRecord, // 物流记录
 
