@@ -42,11 +42,11 @@
               </el-tag>
               <el-tag class="info-tag filter-item" effect="plain" type="success">
                 库存利用量：
-                <span v-to-fixed="{ val: crud.props.inventoryTotalMete || 0, k: 'COM_WT__KG' }" /> kg
+                <span v-to-fixed="{ val: crud.props.inventoryTotalMete || 0, dp: STEEL_BASE_UNIT.weight.precision }" /> kg
               </el-tag>
               <el-tag class="info-tag filter-item" effect="plain" type="warning">
                 需要采购量：
-                <span v-to-fixed="{ val: crud.props.purchaseTotalMete || 0, k: 'COM_WT__KG' }" /> kg
+                <span v-to-fixed="{ val: crud.props.purchaseTotalMete || 0, dp: STEEL_BASE_UNIT.weight.precision }" /> kg
               </el-tag>
             </div>
             <div class="filter-right-box">
@@ -114,13 +114,15 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { STEEL_BASE_UNIT } from '@/settings/config'
+import { createUniqueString } from '@/utils/data-type/string'
+import { preparationSubmitDTO } from '@/views/plan/material-preparation/dto'
 
 import { regForm } from '@compos/use-crud'
+import useMaxHeight from '@/composables/use-max-height'
 import ListAndMatch from './list-and-match'
 import inventoryTable from './inventory-table.vue'
 import purchaseTable from './purchase-table.vue'
-import useMaxHeight from '@/composables/use-max-height'
-import { createUniqueString } from '@/utils/data-type/string'
 import purchaseMaterialAddDlg from './purchase-material-add/dialog.vue'
 
 // 备料清单选项
@@ -185,8 +187,8 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
 }
 
 // 表单提交数据清理
-crud.submitFormFormat = (form) => {
-  return form
+crud.submitFormFormat = async (form) => {
+  return await preparationSubmitDTO(form)
 }
 
 // 初始化
@@ -203,12 +205,12 @@ function init() {
 
 // 处理“添加”库存利用材料
 function handleAddInventoryMaterial(row, technologyRow) {
-  inventoryTableRef.value && inventoryTableRef.value.add(row, technologyRow)
+  inventoryTableRef.value && inventoryTableRef.value.add({ material: row }, technologyRow)
 }
 
 // 处理“添加”采购材料
 function handleAddPurchaseMaterial(row, technologyRow) {
-  purchaseTableRef.value && purchaseTableRef.value.add(row, technologyRow)
+  purchaseTableRef.value && purchaseTableRef.value.add({ material: row }, technologyRow)
 }
 
 // 打开添加采购物料窗口

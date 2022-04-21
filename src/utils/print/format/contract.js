@@ -41,7 +41,24 @@ function handleRate({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 处理供应商付款税率
+function handleSupplierPaymentRate({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    const amount = row.amount || row.freight || 0
+    row.paymentRate = amount ? (row.paymentAmount || 0) / amount * 100 : 0
+    row.invoiceRate = amount ? (row.invoiceRate || 0) / amount * 100 : 0
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 export default {
   handleRate,
+  handleSupplierPaymentRate,
   durationCalculation
 }

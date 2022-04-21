@@ -1,4 +1,4 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, weightUnitEnum, DEF_UNIT } from '@/utils/print/enum'
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 
 // 结构在制品统计
@@ -208,25 +208,25 @@ const mesStructureProductionStatistics = {
       { show: true, title: '任务量（件/KG）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, children:
         [
           { show: true, key: 'taskQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-          { show: true, key: 'taskNetWeight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.G.V }, sum: true }
+          { show: true, key: 'taskNetWeight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true }
         ]
       },
       { show: true, title: '已完成（件/KG）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, children:
         [
           { show: true, key: 'completeQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-          { show: true, key: 'completeNetWeight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.G.V }, sum: true }
+          { show: true, key: 'completeNetWeight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true }
         ]
       },
       { show: true, title: '在制品（件/KG）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, children:
         [
           { show: true, key: 'inProductionQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-          { show: true, key: 'inProductionNetWeight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.G.V }, sum: true }
+          { show: true, key: 'inProductionNetWeight', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true }
         ]
       },
       { show: true, title: '未生产（件/KG）', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, children:
         [
           { show: true, key: 'unProducedQuantity', title: '数量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 12, type: typeEnum.QUANTITY.K, format: { toThousand: false, precision: 0 }, sum: true },
-          { show: true, key: 'unProducedMete', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: 3, unit: weightUnitEnum.G.V }, sum: true }
+          { show: true, key: 'unProducedMete', title: '重量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.RIGHT.V, minWidth: 18, type: typeEnum.WEIGHT.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, unit: weightUnitEnum.KG.V }, sum: true }
         ]
       }
     ]

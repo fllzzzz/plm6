@@ -1,6 +1,7 @@
 import { getArtifactStatus } from '@/api/bim/model.js'
 import { ElLoading } from 'element-plus'
 import { computed } from 'vue'
+import { modelMenuBarEnum } from '@enum-ms/bim'
 
 import { arr2obj } from '@/utils/convert/type'
 
@@ -31,6 +32,10 @@ export default function useArtifactColoring({ bimModel, modelStatus, viewer, col
 
   // 初始化根据构件状态着色
   async function fetchArtifactStatus(menuBar) {
+    if (menuBar === modelMenuBarEnum.PROJECT_TREE.V || menuBar === modelMenuBarEnum.INSTALL_STATE.V) {
+      initModelColor()
+      return
+    }
     const loading = ElLoading.service({
       target: '#modelView',
       lock: true,
@@ -70,8 +75,9 @@ export default function useArtifactColoring({ bimModel, modelStatus, viewer, col
 
   // 增加强调效果
   function addBlinkByIds(elementIds) {
+    viewer.value.clearAllBlinkComponents()
     viewer.value.addBlinkComponentsById(elementIds)
-    viewer.value.setBlinkColor(bimModel.getColor('#ffff00', 0.8))
+    viewer.value.setBlinkColor(bimModel.getColor('#ff1818', 1))
     viewer.value.enableBlinkComponents(true)
     viewer.value.setBlinkIntervalTime(500)
     viewer.value.render()
@@ -100,6 +106,7 @@ export default function useArtifactColoring({ bimModel, modelStatus, viewer, col
 
   // 隐藏构件
   function hideComponentsById(elementIds) {
+    console.log(elementIds, 'hideComponentsById')
     viewer.value.hideComponentsById(elementIds)
     viewer.value.render()
   }

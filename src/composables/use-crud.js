@@ -829,7 +829,7 @@ function addCrudBusinessMethod(crud) {
     }
     try {
       crud.status.add = CRUD.STATUS.PROCESSING
-      const data = crud.submitFormFormat(lodash.cloneDeep(crud.form))
+      const data = await crud.submitFormFormat(lodash.cloneDeep(crud.form))
       crud.submitResult = await crud.crudApi.add(data)
       await callVmHook(crud, CRUD.HOOK.afterAddSuccess)
       crud.status.add = CRUD.STATUS.NORMAL

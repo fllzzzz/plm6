@@ -44,7 +44,7 @@
       <template #optRight>
         <print-table
           v-permission="crud.permission.print"
-          :api-key="isOrderType ? 'orderPaymentLedger' : 'supplierPaymentLedger'"
+          :api-key="isOrderType ? 'orderPaymentLedger' : 'scmSupplierPaymentLedger'"
           size="mini"
           type="warning"
           class="filter-item"

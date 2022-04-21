@@ -60,7 +60,6 @@ const selectTechnologyRow = ref()
 const queryFilter = ref({
   boolPreparationLessThanList: false
 })
-
 // 技术清单汇总列表 过滤后的列表
 const filterList = computed(() => {
   if (crud.form.technologyList) {
@@ -79,6 +78,7 @@ const filterList = computed(() => {
 
 // 获取crud实例，并将实例注册进crud
 const { CRUD, crud } = regExtra()
+
 // 详情
 const detail = crud.form
 
@@ -107,6 +107,7 @@ CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
 // 初始化
 function init() {
   selectTechnologyRow.value = undefined
+  queryFilter.value.boolPreparationLessThanList = false
 }
 
 // 行选中

@@ -8,7 +8,7 @@
     :default-expand-all="false"
     :cell-class-name="wrongCellMask"
     highlight-current-row
-    row-key="recordId"
+    row-key="id"
   >
     <material-base-info-columns spec-merge fixed="left" />
     <!-- 次要信息 -->
@@ -18,25 +18,30 @@
     <!-- 单位及其数量 -->
     <!-- <material-unit-quantity-columns :basic-class="basicClass" /> -->
     <el-table-column
-      key="outboundUnit"
-      prop="outboundUnit"
+      key="material.outboundUnit"
+      prop="material.outboundUnit"
       label="计量单位"
       align="center"
       width="70px"
       fixed="left"
       show-overflow-tooltip
     />
-    <el-table-column key="usedNumber" prop="usedNumber" label="数量" align="center" width="120px" show-overflow-tooltip>
+    <el-table-column key="material.usedNumber" prop="material.usedNumber" label="数量" align="center" width="120px" show-overflow-tooltip>
       <template #default="{ row: { sourceRow: row } }">
-        <el-tooltip effect="dark" :content="`当前物料最大可利用数：${row.operableNumber}`" :show-after="1000" placement="top-start">
+        <el-tooltip
+          effect="dark"
+          :content="`当前物料最大可利用数：${row.material.operableNumber}`"
+          :show-after="1000"
+          placement="top-start"
+        >
           <common-input-number
-            v-model="row.usedNumber"
-            :min="row.lowerLimitNumber"
-            :max="row.operableNumber"
+            v-model="row.material.usedNumber"
+            :min="row.material.lowerLimitNumber"
+            :max="row.material.operableNumber"
             controls-position="right"
             :controls="false"
             :step="1"
-            :precision="row.outboundUnitPrecision"
+            :precision="row.material.outboundUnitPrecision"
             size="mini"
             placeholder="数量"
             @change="(nv, ov) => handleNumberChange(nv, ov, row)"
@@ -44,7 +49,13 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column key="usedTheoryTotalWeight" prop="usedTheoryTotalWeight" align="center" :label="`理论总重（kg）`" width="135px" />
+    <el-table-column
+      key="material.usedTheoryTotalWeight"
+      prop="material.usedTheoryTotalWeight"
+      align="center"
+      :label="`理论总重（kg）`"
+      width="135px"
+    />
     <el-table-column key="remark" prop="remark" align="center" label="备注" min-width="150px">
       <template #default="{ row: { sourceRow: row } }">
         <el-input v-model="row.remark" placeholder="备注" maxlength="200" size="mini" />
@@ -57,7 +68,7 @@
           icon="el-icon-delete"
           type="danger"
           size="mini"
-          :disabled="row.lowerLimitNumber > 0"
+          :disabled="row.material.lowerLimitNumber > 0"
           @click="delRow(row, $index)"
         />
       </template>
@@ -79,9 +90,9 @@ import { positiveNumPattern } from '@/utils/validate/pattern'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { regExtra } from '@compos/use-crud'
-import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
-import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import MaterialBaseInfoColumns from '@/components-system/wms/table-custom-field-columns/material-base-info-columns/index.vue'
+import MaterialSecondaryInfoColumns from '@/components-system/wms/table-custom-field-columns/material-secondary-info-columns/index.vue'
+import WarehouseInfoColumns from '@/components-system/wms/table-custom-field-columns/warehouse-info-columns/index.vue'
 import useTableValidate from '@/composables/form/use-table-validate'
 
 const props = defineProps({
@@ -97,11 +108,11 @@ const props = defineProps({
 const inventoryList = ref([])
 
 // 表格列数据格式转换
-const columnsDataFormat = [['usedTheoryTotalWeight', ['to-fixed-field', 'accountingUnit']]]
+const columnsDataFormat = [['material.usedTheoryTotalWeight', ['to-fixed-field', 'accountingUnit']]]
 
 // 表格规则
 const tableRules = {
-  usedNumber: [
+  'material.usedNumber': [
     { required: true, message: '请填写数量', trigger: 'blur' },
     { pattern: positiveNumPattern, message: '数量必须大于0', trigger: 'blur' }
   ]
@@ -134,7 +145,7 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   // TODO: 目前仅适用于钢板型材 库存列表中存在的id map
   const inventoryExitIdMap = new Map()
   inventoryList.value.forEach((row) => {
-    inventoryExitIdMap.set(row.id, true)
+    inventoryExitIdMap.set(row.material.id, true)
   })
   crud.props.inventoryExitIdMap = inventoryExitIdMap
 
@@ -150,37 +161,43 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
 async function listFM(list) {
   if (!list) return []
   // 格式装换
-  await setSpecInfoToList(list)
+  await setSpecInfoToList(list, { prefix: 'material' })
   await numFmtByBasicClass(list, {
+    prefix: 'material',
     toNum: true
   })
   // 计算理论重量
-  await calcTheoryWeight(list)
+  await calcTheoryWeight(list, { prefix: 'material' })
 
   // 数量处理
   list.forEach((row) => {
-    if (row.outboundUnitType === measureTypeEnum.MEASURE.V) {
+    const { material } = row
+    if (material.outboundUnitType === measureTypeEnum.MEASURE.V) {
       // 实际在出库中使用的数量
-      row.number = row.quantity // 仓库数量
-      row.usedNumber = row.usedQuantity // 利用数量
-      row.frozenNumber = row.frozenQuantity // 冻结数量
-      row.projectOperableNumber = row.projectUsedQuantity - row.projectOutboundUsedQuantity // 项目可操作数量
+      material.number = material.quantity // 仓库数量
+      material.usedNumber = material.usedQuantity // 利用数量
+      material.frozenNumber = material.frozenQuantity // 冻结数量
+      // 项目可操作数量 = 项目利用数量 - 项目利用且已经出库的数量
+      material.projectOperableNumber = material.projectUsedQuantity - material.projectOutboundUsedQuantity
     } else {
       // 核算量
-      row.number = row.mete // 仓库量
-      row.usedNumber = row.usedMete // 核算量
-      row.frozenNumber = row.frozenMete // 冻结核算量
-      row.projectOperableNumber = row.projectUsedMete - row.projectOutboundUsedMete // 项目可操作核算量
+      material.number = material.mete // 仓库量
+      material.usedNumber = material.usedMete // 核算量
+      material.frozenNumber = material.frozenMete // 冻结核算量
+      material.projectOperableNumber = material.projectUsedMete - material.projectOutboundUsedMete // 项目可操作核算量
     }
-    // 最大数量
-    row.operableNumber =
-      row.number - (row.frozenNumber || 0) + (row.projectOperableNumber >= row.usedNumber ? row.usedNumber : row.projectOperableNumber)
-    // 最小数量
-    row.lowerLimitNumber = row.usedNumber - row.projectOperableNumber >= 0 ? row.usedNumber - row.projectOperableNumber : 0
+    // 最大数量 = 库存数量 - 冻结数量 + （项目当前可利用的数量 >= 备料单利用数量 ? 备料单利用数量 : 项目当前可利用的数量）
+    material.operableNumber =
+      material.number -
+      (material.frozenNumber || 0) +
+      (material.projectOperableNumber >= material.usedNumber ? material.usedNumber : material.projectOperableNumber)
+    // 最小数量 = 备料单利用的数量 - 项目当前可利用的数量 && 该数量不小于0
+    material.lowerLimitNumber =
+      material.usedNumber - material.projectOperableNumber >= 0 ? material.usedNumber - material.projectOperableNumber : 0
     row = reactive(row)
     // 计算理论重量
-    if (row.basicClass & STEEL_ENUM) {
-      calcSteelTotalWeight(row)
+    if (material.basicClass & STEEL_ENUM) {
+      calcSteelTotalWeight(material)
     }
     // rowWatch(row)
   })
@@ -190,12 +207,13 @@ async function listFM(list) {
 // 处理添加
 function addRow(row, technologyRow) {
   // 加入map
-  crud.props.inventoryExitIdMap.set(row.id, true)
+  crud.props.inventoryExitIdMap.set(row.material.id, true)
   const invRow = reactive(cloneDeep(row))
-  invRow.recordId = createUniqueString() // 设置记录id（假，用于绑定）
+  invRow.boolAdd = true // 是否添加
+  invRow.id = createUniqueString() // 设置记录id（假，用于绑定）
   // 技术清单与库存利用清单互相绑定
   invRow.boundTech = technologyRow
-  technologyRow.boundInvIds.push(invRow.recordId)
+  technologyRow.boundInvIds.push(invRow.id)
   // 监听
   // rowWatch(invRow)
   inventoryList.value.push(invRow)
@@ -203,11 +221,11 @@ function addRow(row, technologyRow) {
 
 // 删除行
 function delRow(row, index) {
-  crud.props.inventoryExitIdMap.set(row.id, false)
+  crud.props.inventoryExitIdMap.set(row.material.id, false)
   inventoryList.value.splice(index, 1)
   // 解除技术清单与库存利用清单之间的绑定
   const techRow = row.boundTech
-  techRow.boundInvIds.remove(row.recordId)
+  techRow.boundInvIds.remove(row.id)
   // 重新计算备料量
   calcTechPrepMete(inventoryList.value, techRow)
   // 重新计算库存利用总量
@@ -216,20 +234,21 @@ function delRow(row, index) {
 
 // 处理数量变化
 function handleNumberChange(newVal, oldVal, row) {
+  const { material } = row
   const triggerCalc = () => {
-    if (oldVal !== row.number) {
-      if (row.basicClass & STEEL_ENUM) {
-        calcSteelTotalWeight(row)
+    if (oldVal !== material.usedNumber) {
+      if (material.basicClass & STEEL_ENUM) {
+        calcSteelTotalWeight(material)
       }
       calcTechPrepMete(inventoryList.value, row.boundTech)
       calcInventoryTotalMete(inventoryList.value)
     }
   }
 
-  if (!newVal || newVal < row.lowerLimitNumber) {
+  if (!newVal || newVal < material.lowerLimitNumber) {
     // 设置为空 或 小于最小数量，则设置为最小数量
     nextTick(() => {
-      row.number = row.lowerLimitNumber
+      material.usedNumber = material.lowerLimitNumber
       triggerCalc()
     })
   } else {
@@ -243,7 +262,7 @@ function calcInventoryTotalMete(inventoryList) {
     // 钢板或型材
     if (isSPorSS.value) {
       crud.props.inventoryTotalMete = inventoryList.reduce((sum, cur) => {
-        return (sum += cur.usedTheoryTotalWeight || 0)
+        return (sum += cur.material.usedTheoryTotalWeight || 0)
       }, 0)
     }
   } else {
@@ -252,11 +271,11 @@ function calcInventoryTotalMete(inventoryList) {
 }
 
 // 计算钢板总重
-function calcSteelTotalWeight(row) {
-  if (isNotBlank(row.theoryWeight) && row.usedNumber) {
-    row.usedTheoryTotalWeight = row.theoryWeight * row.usedNumber
+function calcSteelTotalWeight(material) {
+  if (isNotBlank(material.theoryWeight) && material.usedNumber) {
+    material.usedTheoryTotalWeight = material.theoryWeight * material.usedNumber
   } else {
-    row.usedTheoryTotalWeight = undefined
+    material.usedTheoryTotalWeight = undefined
   }
 }
 
@@ -266,28 +285,29 @@ function initialBindingTechnologyList(inventoryList, technologyList) {
   if (isSPorSS.value) {
     const steelClassifyConfICKV = crud.props.steelClassifyConfICKV // 钢材配置
     inventoryList.forEach((invRow) => {
+      const { material } = invRow
       for (const techRow of technologyList) {
         const boundClassifyIds = steelClassifyConfICKV[techRow.steelClassifyConfId] || []
         // ------------- 钢板 ------------------
         if (
-          invRow.basicClass === matClsEnum.STEEL_PLATE.V && // 钢板
-          boundClassifyIds.includes(invRow.classifyId) && // 属于绑定分类
-          invRow.specNameKV['材质'] === techRow.material && // 材质相同
-          `${invRow.theoryThickness}` === techRow.specification // 厚度相同
+          material.basicClass === matClsEnum.STEEL_PLATE.V && // 钢板
+          boundClassifyIds.includes(material.classifyId) && // 属于绑定分类
+          material.specNameKV['材质'] === techRow.material && // 材质相同
+          `${material.theoryThickness}` === techRow.specification // 厚度相同
         ) {
           invRow.boundTech = techRow
-          techRow.boundInvIds.push(invRow.recordId)
+          techRow.boundInvIds.push(invRow.id)
           break
         }
         // ------------- 型材 ------------------
         if (
-          invRow.basicClass === matClsEnum.SECTION_STEEL.V && // 型材
-          boundClassifyIds.includes(invRow.classifyId) && // 属于绑定分类
-          invRow.specNameKV['材质'] === techRow.material && // 材质相同
-          invRow.specNameKV[invRow.nationalStandard] === techRow.specification // 规格相同
+          material.basicClass === matClsEnum.SECTION_STEEL.V && // 型材
+          boundClassifyIds.includes(material.classifyId) && // 属于绑定分类
+          material.specNameKV['材质'] === techRow.material && // 材质相同
+          material.specNameKV[material.nationalStandard] === techRow.specification // 规格相同
         ) {
           invRow.boundTech = techRow
-          techRow.boundInvIds.push(invRow.recordId)
+          techRow.boundInvIds.push(invRow.id)
           break
         }
       }
@@ -321,10 +341,10 @@ function calcTechPrepMete(inventoryList, technologyRow) {
   const boundMaterial = [] // 绑定物料的数组
   // 遍历“技术清单行”绑定的库存利用清单id
   technologyRow.boundInvIds.forEach((id) => {
-    // 遍历“库存利用清单”，将绑定物料推入“绑定物料的数组”
+    // 遍历“库存利用清单”，将绑定物料加入“绑定物料的数组”
     for (const invRow of inventoryList) {
-      if (invRow.recordId === id) {
-        boundMaterial.push(invRow)
+      if (invRow.id === id) {
+        boundMaterial.push(invRow.material)
         break
       }
     }

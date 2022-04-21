@@ -10,6 +10,8 @@ const projectHappenedDetail = common.handleTaxRate
 const myProject = contract.durationCalculation
 const projectList = contract.durationCalculation
 const contractLedger = contract.handleRate
+const supplierPayableSummary = contract.handleSupplierPaymentRate
+const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -32,6 +34,8 @@ const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
+const mesEnclosureProductionLine = mes.areaConvert
+
 const wmsRmInboundReceipt = wms.dataFormat // 入库单
 const wmsRmOutboundReceipt = wms.dataFormat // 出库单
 const wmsRmReturnReceipt = wms.dataFormat // 退库单
@@ -42,6 +46,8 @@ export default {
   invoiceLedger,
   invoiceRecord,
   projectHappenedDetail,
+  supplierPayableSummary,
+  logisticsPaymentLedger,
   myProject,
   projectList,
   contractLedger,
@@ -61,6 +67,7 @@ export default {
   mesStructureProductionStatisticsIn,
   mesEnclosureProductionStatistics,
   mesEnclosureProductionStatisticsIn,
+  mesEnclosureProductionLine,
 
   wmsRmInboundReceipt, // 入库单
   wmsRmOutboundReceipt, // 出库单

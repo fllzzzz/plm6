@@ -60,6 +60,8 @@ const getters = {
   roles: state => state.user.roles,
   // 用户菜单
   menus: state => state.user.menus,
+  // 产品菜单（如是否包含围护）
+  productMenu: state => state.user.productMenu,
   // 当前主模块
   currentMenu: state => state.user.currentMenu,
   // 是否已经加载菜单

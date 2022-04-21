@@ -2,14 +2,14 @@
   <template v-if="receipts.length > 0">
     <template v-for="(receipt, rIndex) in receipts" :key="`${receipt.serialNumber}_${rIndex}`">
       <!-- 当前页面出库申请单无法查看详情（出库申请单会被清空） -->
-      <span v-bind="$attrs" v-if="receipt.receiptType === receiptTypeEnum.OUTBOUND_APPLY.V">
+      <span v-bind="$attrs" v-if="receiptType === receiptTypeEnum.OUTBOUND_APPLY.V">
         {{ receipt.serialNumber }}
       </span>
       <clickable-permission-span
         v-bind="$attrs"
         v-else
-        :permission="openDetailPermission(receipt.receiptType)"
-        @click="openReceiptDetail(receipt.id, receipt.receiptType)"
+        :permission="openDetailPermission(receiptType)"
+        @click="openReceiptDetail(receipt.id, receiptType)"
         :text="receipt.serialNumber"
       />
 
@@ -50,6 +50,14 @@ const receipts = computed(() => {
   return [props.receipt]
 })
 
+const receiptType = computed(() => {
+  if (props.receipt.receiptType) return props.receipt.receiptType
+  if (!props.receipt.receiptType && props.receiptTypes && props.receiptTypes.length === 1) {
+    return receiptTypeEnum[props.receiptTypes[0]].V
+  }
+  return undefined
+})
+
 // 打开详情
 function openReceiptDetail(detailId, type) {
   receiptDetailRef.value && receiptDetailRef.value.openDetail(detailId, type)
@@ -59,7 +67,7 @@ function openReceiptDetail(detailId, type) {
 function openDetailPermission(type) {
   switch (type) {
     case receiptTypeEnum.PURCHASE.V:
-      return permission.preparationReceiptDetail
+      return permission.purchaseOrderDetail
     case receiptTypeEnum.INBOUND.V:
       return permission.inboundReceiptDetail
     case receiptTypeEnum.OUTBOUND.V:

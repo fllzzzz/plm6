@@ -1,6 +1,6 @@
 <template>
   <div v-show="crud.searchToggle">
-    <common-radio-button
+    <component-radio-button
       v-model="query.sequenceType"
       :options="typeEnum.ENUM"
       :unshow-val="[typeEnum.MACHINE_PART.V]"

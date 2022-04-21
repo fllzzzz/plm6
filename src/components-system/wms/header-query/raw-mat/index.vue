@@ -90,6 +90,10 @@ const props = defineProps({
   basicClass: {
     type: Number
   },
+  showBasicClassQuery: {
+    type: Boolean,
+    default: true
+  },
   query: {
     type: Object,
     default: () => {
@@ -117,6 +121,9 @@ const props = defineProps({
 })
 
 const comp = computed(() => {
+  if (!props.showBasicClassQuery) {
+    return RawMat
+  }
   switch (props.basicClass) {
     case rawMatClsEnum.STEEL_PLATE.V:
       return SteelPlate

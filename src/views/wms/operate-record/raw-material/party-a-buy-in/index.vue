@@ -48,10 +48,10 @@
         width="90"
       />
       <el-table-column
-        v-if="columns.visible('createTime')"
-        key="createTime"
+        v-if="columns.visible('reviewTime')"
+        key="reviewTime"
         :show-overflow-tooltip="true"
-        prop="createTime"
+        prop="reviewTime"
         label="买入日期"
         align="center"
         width="140"
@@ -70,7 +70,7 @@ import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { baseTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { reviewTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
@@ -93,7 +93,7 @@ const optShow = {
 }
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ...baseTimeColumns])
+const columnsDataFormat = ref([...materialHasAmountColumns, ...reviewTimeColumns])
 
 // 展开行
 const expandRowKeys = ref([])
@@ -102,7 +102,7 @@ const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供买入',
-    sort: ['id.desc'],
+    sort: ['reviewTime.desc'],
     invisibleColumns: ['heatNoAndBatchNo', 'project', 'warehouse', 'invoiceType', 'taxRate', 'transferSN', 'applicantName'],
     permission: { ...permission },
     optShow: { ...optShow },

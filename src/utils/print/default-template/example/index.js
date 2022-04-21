@@ -243,7 +243,7 @@ function getDataByType(field) {
       break
     case fieldTypeEnum.PROJECT.K:
       _md = Mock.mock({
-        contractNo: /^([A-Z]{2}-[A-Z0-9]{3}-[A-Z0-9]{5})$/,
+        serialNumber: /^([A-Z]{2}-[A-Z0-9]{3}-[A-Z0-9]{5})$/,
         name: Random.psname() + '项目',
         shortName: Random.psname()
       })

@@ -80,7 +80,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
+        <amount-info-columns :columns="columns" show-invoice-type/>
       </template>
       <el-table-column
         v-if="columns.visible('transferReceipt.serialNumber')"

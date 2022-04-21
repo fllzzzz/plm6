@@ -197,61 +197,67 @@ const detail_1 = {
         ],
         inventoryList: [
           {
-            recordId: 1, // 记录id
-            id: 1, // 材料id
-            boolPartyA: false, // 甲供材料
-            boolHasFrozen: true, // 有冻结
-            classifyId: 103,
-            basicClass: rawMatClsEnum.STEEL_PLATE.V,
-            specification: 'Q325B',
-            thickness: 9.6, // 厚度
-            theoryThickness: 10, // 理论厚度
-            length: 11000,
-            width: 990,
-            brand: '嘻嘻',
-            heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
-            project: {
-              id: 1,
-              name: '长安街666666号辅路',
-              shortName: '长安街',
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
-            factory: {
-              id: 1,
-              name: '一号工厂',
-              shortName: '一工'
-            },
-            warehouse: {
-              id: 1,
-              name: '666号仓库'
-            },
-            mete: 800000, // 仓库核算量
-            frozenMete: 400000, // 仓库冻结量
-            quantity: 10, // 仓库数量
-            frozenQuantity: 8, // 仓库冻结数量
-            usedQuantity: 3, // 当前备料单利用的数量
-            usedMete: 300000, // 当前备料单利用的核算量
-            projectUsedQuantity: 5, // 项目利用数量
-            projectUsedMete: 500000, // 项目利用数量
-            projectOutboundUsedQuantity: 3, // 项目利用且已经出库的数量
-            projectOutboundUsedMete: 300000 // 项目利用且已经出库的数量
+            id: 1, // 记录id
+            remark: undefined, // 备注
+            material: {
+              id: 1, // 材料id
+              boolPartyA: false, // 甲供材料
+              boolHasFrozen: true, // 有冻结
+              classifyId: 103,
+              basicClass: rawMatClsEnum.STEEL_PLATE.V,
+              specification: 'Q325B',
+              thickness: 9.6, // 厚度
+              theoryThickness: 10, // 理论厚度
+              length: 11000,
+              width: 990,
+              brand: '嘻嘻',
+              heatNoAndBatchNo: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,5}/,
+              project: {
+                id: 1,
+                name: '长安街666666号辅路',
+                shortName: '长安街',
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              factory: {
+                id: 1,
+                name: '一号工厂',
+                shortName: '一工'
+              },
+              warehouse: {
+                id: 1,
+                name: '666号仓库'
+              },
+              mete: 800000, // 仓库核算量
+              frozenMete: 400000, // 仓库冻结量
+              quantity: 10, // 仓库数量
+              frozenQuantity: 8, // 仓库冻结数量
+              usedQuantity: 3, // 当前备料单利用的数量
+              usedMete: 300000, // 当前备料单利用的核算量
+              projectUsedQuantity: 5, // 项目利用数量
+              projectUsedMete: 500000, // 项目利用数量
+              projectOutboundUsedQuantity: 3, // 项目利用且已经出库的数量
+              projectOutboundUsedMete: 300000 // 项目利用且已经出库的数量
+            }
           }
         ],
         purchaseList: [
           {
-            recordId: 1, // 记录id
-            classifyId: 103,
-            basicClass: rawMatClsEnum.STEEL_PLATE.V,
-            specification: 'Q325B',
-            thickness: 10, // 厚度
-            theoryThickness: 10, // 理论厚度
-            length: 11000, // 长度
-            width: 990, // 宽度
-            brand: '嘻嘻', // 品牌
-            mete: 1000000, // 需要采购核算量
-            sortingMete: 100000, // 分拣量
-            quantity: 10, // 需要采购数量
-            sortingQuantity: 1 // 分拣数量
+            id: 1, // 记录id
+            remark: '须购买鞍钢', // 备注
+            material: {
+              classifyId: 103,
+              basicClass: rawMatClsEnum.STEEL_PLATE.V,
+              specification: 'Q325B',
+              thickness: 10, // 厚度
+              theoryThickness: 10, // 理论厚度
+              length: 11000, // 长度
+              width: 990, // 宽度
+              brand: '嘻嘻', // 品牌
+              mete: 1000000, // 需要采购核算量
+              sortingMete: 100000, // 分拣量
+              quantity: 10, // 需要采购数量
+              sortingQuantity: 1 // 分拣数量
+            }
           }
         ]
       }

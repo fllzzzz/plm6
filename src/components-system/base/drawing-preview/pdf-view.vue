@@ -1,6 +1,6 @@
 <template>
   <div id="pdfBox" ref="pdfBox" class="pdf-box">
-    <pdf :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
+    <pdf v-if="source"  :url="source" :scale="scale" :rotation="viewRotate" @pdf-error="pdfError" :type="'canvas'" :pdfjsDistPath="pdfjsDistPath" />
   </div>
 </template>
 
@@ -12,7 +12,6 @@ import { defineEmits, defineExpose, inject, ref } from 'vue'
 import pdf from '@/components/PDF/pdf'
 
 const emit = defineEmits(['changeFileLoading'])
-
 const productId = inject('productId')
 const productType = inject('productType')
 const pdfjsDistPath = import.meta.env.BASE_URL + 'assets'
@@ -53,6 +52,7 @@ async function fetchDrawing() {
   } catch (error) {
     console.log('获取图纸', error)
     ElNotification({ title: '获取图纸失败', type: 'error', duration: 2000 })
+    source.value = null
   } finally {
     changeFileLoading(false)
   }
@@ -98,10 +98,14 @@ function reset() {
   viewRotate.value = 0
   scale.value = 1
 }
+function setScale(val) {
+  scale.value = val
+}
 
 defineExpose({
   fetchDrawing,
   reset,
+  setScale,
   scaleZoom,
   scaleZoomOut,
   clockwiseRotate,

@@ -1,6 +1,7 @@
 import { getStatusDetail } from '@/api/bim/model'
 import bfColorCard from '@/components-system/bim/bf-color-card.vue'
 import { createApp, watch, ref } from 'vue'
+import { modelMenuBarEnum } from '@enum-ms/bim'
 
 export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel, viewerPanel, modelStatus, searchBySN, fetchArtifactStatus, isolateComponentsById, clearIsolation, hideComponentsById, showComponentsById, overrideComponentsColorById }) {
   const curElementIds = ref([])
@@ -15,7 +16,7 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
     } else {
       const status = card.value
       let elementIds = objectIdGroup.value[status] || []
-      console.log(elementIds, 'elementIds')
+      console.log(elementIds, objectIdGroup.value, status, 'elementIds')
       if (!elementIds.length) {
         hideComponentsById(objectIdGroup.value[0])
         clearColorCardPanel()
@@ -57,6 +58,11 @@ export default function useColorCard({ menuBar, colors, objectIdGroup, bimModel,
   }
 
   function refresh() {
+    if (menuBar.value === modelMenuBarEnum.COMPONENT_TREE.V) {
+      ccApp.value._container._vnode.component.props.selectAble = false
+    } else {
+      ccApp.value._container._vnode.component.props.selectAble = true
+    }
     ccApp.value._container._vnode.component.props.colors = colors.value
     fetchArtifactStatus(menuBar.value)
   }

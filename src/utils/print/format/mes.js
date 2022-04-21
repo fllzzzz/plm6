@@ -250,6 +250,20 @@ function surfaceArea({ header, table = [], footer, qrCode }) {
   }
 }
 
+// 表面积 mm² 换成 ㎡
+function areaConvert({ header, table = [], footer, qrCode }) {
+  const _table = table.map(row => {
+    row.completeArea = convertUnits(row.completeArea, 'mm²', '㎡', DP.COM_AREA__M2)
+    return row
+  })
+  return {
+    header,
+    table: _table,
+    qrCode,
+    footer
+  }
+}
+
 function materialType({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
     const config = {
@@ -328,6 +342,7 @@ export default {
   wageProducedMete,
   wageCompleteMete,
   materialType,
+  areaConvert,
   materialListType,
   steelDosageFormat
 }

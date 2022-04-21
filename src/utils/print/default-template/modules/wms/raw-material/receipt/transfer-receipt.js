@@ -314,7 +314,7 @@ const wmsRmTransferReceipt = {
         align: alignEnum.RIGHT.V,
         minWidth: 18,
         type: typeEnum.QUANTITY.K,
-        format: { toThousand: false, precision: 0 }
+        format: { toThousand: false, rowUnit: 'measureUnit' }
       },
       {
         show: true,
@@ -333,7 +333,7 @@ const wmsRmTransferReceipt = {
         align: alignEnum.RIGHT.V,
         minWidth: 18,
         type: typeEnum.METE.K,
-        format: { toThousand: false },
+        format: { toThousand: false, rowUnit: 'accountingUnit' },
         sum: true
       },
       {

@@ -57,7 +57,7 @@
 <script setup>
 import { getMatchSteelPlateList, getMatchSectionSteelList } from '@/api/plan/material-preparation/material-match'
 
-import { ref, computed, defineProps, defineEmits, watch, inject } from 'vue'
+import { ref, computed, defineProps, defineEmits, watch } from 'vue'
 import { isBlank } from '@/utils/data-type'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { setSpecInfoToList } from '@/utils/wms/spec'
@@ -67,6 +67,7 @@ import { pinyinForField, pinyinFuzzyMatching } from '@/utils/pinyin'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 
+import { regExtra } from '@compos/use-crud'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
@@ -87,7 +88,8 @@ const props = defineProps({
 
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialOperateColumns])
-const crud = inject('crud')
+// 获取crud实例，并将实例注册进crud
+const { CRUD, crud } = regExtra()
 const inventoryExitIdMap = ref()
 const interfaceKey = ref(0) // 接口请求key，避免接口异步回调覆盖
 watch(
@@ -112,6 +114,14 @@ const queryFilter = ref({
   factoryName: undefined,
   boolNotInInventoryList: false
 })
+
+CRUD.HOOK.beforeToEdit = (crud, form) => {
+  queryFilter.value = {
+    factoryName: undefined,
+    boolNotInInventoryList: false
+  }
+}
+
 // 过滤后的列表
 const filterList = computed(() => {
   return list.value.filter((row) => {

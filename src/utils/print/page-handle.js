@@ -1,4 +1,4 @@
-import { MIN_UNIT } from '@/settings/config'
+import { MIN_UNIT, DEF_UNIT } from '@/settings/config'
 import { emptyTextFormatter, isBlank, isNotBlank } from '@data-type/index'
 import { getDP, toThousand } from '@data-type/number'
 import { convertUnits } from '@/utils/convert/unit'
@@ -6,7 +6,6 @@ import { projectNameFormatter } from '@/utils/project'
 import { amountUnitEnum, alignEnum, verticleAlignEnum, dataSourceEnum, fieldTypeEnum, pageFormatEnum } from '@/utils/print/enum'
 import EO from '@/utils/enum'
 import { projectNameArrangementModeEnum } from '@enum-ms/contract'
-// import { getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
 import enumAll from '@/utils/enum/all'
 import moment from 'moment'
 import _ from 'lodash'
@@ -566,12 +565,8 @@ const setting = {
         return emptyTextFormatter(
           this.meteFormat({
             val,
-            format: field.format,
-            basicClass: row.basicClass,
-            materialType: row.materialType,
-            materialListType: row.materialListType,
-            unit: row.unit,
-            checkUnit: row.checkUnit
+            row,
+            format: field.format
           }),
           emptyVal
         )
@@ -727,7 +722,7 @@ const setting = {
     if (isNotBlank(_val)) {
       // 单位转换
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
+        _val = convertUnits(_val, DEF_UNIT.WEIGHT, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -751,7 +746,7 @@ const setting = {
     let _val = val
     if (isNotBlank(_val)) {
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
+        _val = convertUnits(_val, DEF_UNIT.LENGTH, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -793,12 +788,9 @@ const setting = {
    * “量”数据格式转换
    * @param {*} val 数据
    * @param {object} format
-   * @param {number} basicClass 基础类型（enum）
-   * @param {number} materialType 材料类型（enum）
-   * @param {number} materialListType 材料清单类型（enum）
    * @return {string|number} 量
    */
-  meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialType, materialListType }) {
+  meteFormat({ val, row, format = {}}) {
     let _val = val
     if (isNotBlank(_val)) {
       // 小数精度
@@ -811,30 +803,11 @@ const setting = {
       }
       // 是否显示单位
       if (format.showUnit) {
-        let _unit
-        // if (isNotBlank(basicClass)) {
-        //   if (checkUnit) {
-        //     _unit = checkUnit
-        //   } else {
-        //     _unit = getBasicClassUnit(basicClass)
-        //   }
-        // }
-        // if (isNotBlank(materialType)) {
-        //   if (unit) {
-        //     _unit = unit
-        //   } else {
-        //     _unit = getMaterialTypeUnit(materialType)
-        //   }
-        // }
-        // if (isNotBlank(materialListType)) {
-        //   if (unit) {
-        //     _unit = unit
-        //   } else {
-        //     _unit = getMaterialListTypeUnit(materialListType)
-        //   }
-        // }
-        if (_unit) {
-          _val += ` ${_unit}`
+        if (format.unit) {
+          _val += ` ${format.unit}`
+        }
+        if (row?.[format.rowUnit]) {
+          _val += ` ${row[format.rowUnit]}`
         }
       }
     }

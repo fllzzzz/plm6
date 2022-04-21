@@ -1,30 +1,30 @@
 import { createApp, ref } from 'vue'
-import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
+import bfDraw from '@/components-system/bim/bf-draw.vue'
 
 export default function useDrawing() {
   const drawingApp = ref()
 
   function createDrawing() {
-    drawingApp.value = createApp(drawingPreviewFullscreenDialog)
+    drawingApp.value = createApp(bfDraw)
     const bfContainerDom = document.querySelector('.bf-container')
     const _dom = document.createElement('div')
     _dom.id = 'bfDrawingView'
     bfContainerDom.appendChild(_dom)
-
     drawingApp.value.mount('#bfDrawingView', {
-      modelValue: false,
       serialNumber: undefined,
       productId: undefined,
       productType: undefined
     })
     console.log(drawingApp, 'drawingApp')
-    drawingApp.value._container._vnode.component.emitsOptions = {
-      'update:modelValue': (val) => { drawingApp.value._container._vnode.component.props.modelValue = val }
-    }
+  }
+
+  function handleClose() {
+    drawingApp.value._container._vnode.component.props.showDraw = false
   }
 
   function fetchDrawing({ boolBim, serialNumber, productId, productType }) {
-    drawingApp.value._container._vnode.component.props.modelValue = true
+    drawingApp.value._container._vnode.component.props.handleClose = handleClose
+    drawingApp.value._container._vnode.component.props.showDraw = true
     drawingApp.value._container._vnode.component.props.boolBim = boolBim
     drawingApp.value._container._vnode.component.props.serialNumber = serialNumber
     drawingApp.value._container._vnode.component.props.productId = productId

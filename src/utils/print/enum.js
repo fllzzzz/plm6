@@ -1,4 +1,6 @@
 import { constantize, key2val, toArr, getBits, setEnumValue } from '../enum/base'
+import { DEF_UNIT } from '@/settings/config'
+
 /**
  * @author dhh
  * L:label 名称,
@@ -219,6 +221,7 @@ export {
   tableConfigItemEnum, // 表格配置项
   printModeEnum, // 打印模式
   amountUnitEnum, // 金额单位
+  DEF_UNIT, // 系统常用单位
   lengthUnitEnum, // 长度单位
   weightUnitEnum, // 重量单位
   thicknessUnitEnum // 厚度单位

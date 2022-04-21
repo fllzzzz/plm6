@@ -3,7 +3,7 @@
     <div>
       <div class="filter-container">
         <div class="filter-left-box">
-          <common-radio-button v-model="packType" :options="packTypeEnum.ENUM" :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]" type="enum" size="small" class="filter-item" />
+          <component-radio-button v-model="packType" :options="packTypeEnum.ENUM" :disabledVal="[packTypeEnum.AUXILIARY_MATERIAL.V]" type="enum" size="small" class="filter-item" />
           <common-radio-button
             v-if="packType === packTypeEnum.ENCLOSURE.V"
             type="enum"

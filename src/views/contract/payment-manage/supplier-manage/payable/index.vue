@@ -15,18 +15,18 @@
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="供应商" align="center" min-width="100"/>
-    <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" :show-overflow-tooltip="true" label="交易总额(元)" min-width="100"/>
-    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" :show-overflow-tooltip="true" label="已付金额(元)" min-width="100" />
-    <el-table-column v-if="columns.visible('unPaymentAmount')" key="unPaymentAmount" prop="unPaymentAmount" :show-overflow-tooltip="true" label="未付金额(元)" min-width="100"/>
-    <el-table-column v-if="columns.visible('paymentRate')" key="payRate" prop="payRate" :show-overflow-tooltip="true" label="付款率" min-width="100">
+    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="供应商" align="center" min-width="140"/>
+    <el-table-column v-if="columns.visible('amount')" key="amount" prop="amount" :show-overflow-tooltip="true" label="交易总额" min-width="100" align="right"/>
+    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" :show-overflow-tooltip="true" label="已付金额" min-width="100" align="right" />
+    <el-table-column v-if="columns.visible('unPaymentAmount')" key="unPaymentAmount" prop="unPaymentAmount" :show-overflow-tooltip="true" label="未付金额" min-width="100" align="right"/>
+    <el-table-column v-if="columns.visible('paymentRate')" key="payRate" prop="payRate" :show-overflow-tooltip="true" label="付款率" min-width="80" align="center">
       <template #default="{ row }">
         <span>{{ row.paymentRate }}%</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" :show-overflow-tooltip="true" label="已收票(元)" min-width="100"/>
-    <el-table-column v-if="columns.visible('unInvoiceAmount')" key="unInvoiceAmount" prop="unInvoiceAmount" :show-overflow-tooltip="true" label="未收票(元)" min-width="100"/>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" :show-overflow-tooltip="true" label="收票率" min-width="100">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" :show-overflow-tooltip="true" label="已收票" min-width="100" align="right"/>
+    <el-table-column v-if="columns.visible('unInvoiceAmount')" key="unInvoiceAmount" prop="unInvoiceAmount" :show-overflow-tooltip="true" label="未收票" min-width="100" align="right"/>
+    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" :show-overflow-tooltip="true" label="收票率" min-width="80" align="center">
       <template #default="{ row }">
         <span>{{ row.invoiceRate }}%</span>
       </template>
@@ -40,6 +40,7 @@
 <script setup>
 import crudApi from '@/api/contract/supplier-manage/payable'
 import { ref } from 'vue'
+
 import { contractSupplierPayablePM as permission } from '@/page-permission/contract'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -92,7 +93,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  if (crud.query.createTime.length > 0) {
+  if (crud.query.createTime?.length > 0) {
     crud.query.startDate = crud.query.createTime[0]
     crud.query.endDate = crud.query.createTime[1]
   } else {

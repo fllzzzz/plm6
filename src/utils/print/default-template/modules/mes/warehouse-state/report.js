@@ -1,4 +1,4 @@
-import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum } from '@/utils/print/enum'
+import { dataSourceEnum, alignEnum, verticleAlignEnum, fieldTypeEnum as typeEnum, cssUnitEnum, cssUnitPrecisionEnum, pageFormatEnum, DEF_UNIT } from '@/utils/print/enum'
 
 // 入发存报表
 const mesWarehouseStateReport = {
@@ -202,10 +202,10 @@ const mesWarehouseStateReport = {
       { show: true, key: 'shortName', title: '项目名称', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.GUID.K },
       { show: true, key: 'productType', title: '类型', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.ENUM.K, format: { enum: 'componentTypeEnum', key: 'L' }},
       { show: true, key: 'unit', title: '单位', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.UNIT.K },
-      { show: true, key: 'beginMete', title: '期初库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
-      { show: true, key: 'inboundMete', title: '入库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
-      { show: true, key: 'outboundMete', title: '出库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true },
-      { show: true, key: 'endMete', title: '期末库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: 2 }, sum: true }
+      { show: true, key: 'beginMete', title: '期初库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, rowUnit: 'unit' }, sum: true },
+      { show: true, key: 'inboundMete', title: '入库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, rowUnit: 'unit' }, sum: true },
+      { show: true, key: 'outboundMete', title: '出库量', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, rowUnit: 'unit' }, sum: true },
+      { show: true, key: 'endMete', title: '期末库存', source: dataSourceEnum.SYSTEM.V, align: alignEnum.CENTER.V, minWidth: 18, type: typeEnum.METE.K, format: { toThousand: false, precision: DEF_UNIT.WEIGHT_DP, rowUnit: 'unit' }, sum: true }
     ]
   }
 }

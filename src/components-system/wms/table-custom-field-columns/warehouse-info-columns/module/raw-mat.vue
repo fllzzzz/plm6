@@ -7,6 +7,7 @@
     align="left"
     min-width="120px"
     show-overflow-tooltip
+    :fixed="fixed"
   >
     <template #default="{ row }">
       <table-cell-tag v-if="showTransfer && getInfo(row, 'boolTransfer')" name="调拨" type="transfer" :offset="15" />
@@ -21,6 +22,7 @@
     align="left"
     min-width="110px"
     show-overflow-tooltip
+    :fixed="fixed"
   >
     <template #default="{ row }">
       <factory-table-cell-tag
@@ -61,6 +63,10 @@ const props = defineProps({
     // 字段
     type: String,
     default: 'material'
+  },
+  fixed: {
+    // 固定列
+    type: String
   }
 })
 

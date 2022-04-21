@@ -3,7 +3,7 @@
     <template #optLeft>
       <div v-show="crud.searchToggle">
         <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
-        <common-radio-button
+        <component-radio-button
           v-model="query.productType"
           :options="typeEnum"
           type="enum"

@@ -342,6 +342,7 @@ async function fetch(params) {
       return data
     }
   } catch (error) {
+    console.error(error)
     throw new Error('加载打印数据失败')
   }
 }

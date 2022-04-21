@@ -5,6 +5,7 @@
         :basic-class="query.basicClass"
         :query="query"
         :to-query="crud.toQuery"
+        :show-basic-class-query="false"
         :show-warehouse="false"
         :show-material-is-whole="false"
       >
