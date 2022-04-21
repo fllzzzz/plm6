@@ -10,6 +10,8 @@ const projectHappenedDetail = common.handleTaxRate
 const myProject = contract.durationCalculation
 const projectList = contract.durationCalculation
 const contractLedger = contract.handleRate
+const supplierPayableSummary = contract.handleSupplierPaymentRate
+const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -44,6 +46,8 @@ export default {
   invoiceLedger,
   invoiceRecord,
   projectHappenedDetail,
+  supplierPayableSummary,
+  logisticsPaymentLedger,
   myProject,
   projectList,
   contractLedger,

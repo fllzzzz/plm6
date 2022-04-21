@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-show="crud.searchToggle">
-      <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
-      <crudOperation>
-        <template #optLeft>
+    <!-- <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" /> -->
+    <crudOperation>
+      <template #optLeft>
+        <div v-show="crud.searchToggle">
           <el-date-picker
             v-model="query.createTime"
             type="daterange"
@@ -13,43 +13,46 @@
             value-format="x"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            style="width:240px"
+            style="width: 240px"
+            @change="crud.toQuery"
           />
-          <el-input
-            v-model.trim="query.paymentUnit"
-            placeholder="付款单位"
-            style="width:120px"
-            class="filter-item"
-          />
-          <el-input
-            v-model.trim="query.receivingUnit"
-            placeholder="收款单位"
-            style="width:120px"
-            class="filter-item"
-          />
+          <el-input v-model.trim="query.paymentUnit" placeholder="付款单位" style="width: 120px" class="filter-item" />
+          <el-input v-model.trim="query.receivingUnit" placeholder="收款单位" style="width: 120px" class="filter-item" />
           <!-- <el-input
             v-model.trim="query.serialNumber"
             placeholder="订单号"
             style="width:120px"
             class="filter-item"
           /> -->
-          <rrOperation/>
-          <el-tag v-if="totalSum" size="medium" class="filter-item">{{ `累计付款:${totalSum?toThousand(totalSum):'-'}元` }}</el-tag>
-        </template>
-      </crudOperation>
-    </div>
+          <rrOperation />
+        </div>
+      </template>
+      <template #viewLeft>
+        <print-table
+          v-permission="crud.permission?.print"
+          api-key="supplierPaymentLedger"
+          :params="{ ...query }"
+          size="mini"
+          type="warning"
+          class="filter-item"
+        />
+        <el-tag v-if="totalSum" type="warning" size="medium" effect="plain">{{`累计付款：${toThousand(totalSum)} 元`}}</el-tag>
+      </template>
+    </crudOperation>
   </div>
 </template>
 
 <script setup>
+import { paymentSum } from '@/api/contract/supplier-manage/payment-ledger/payment'
 import { ref } from 'vue'
+
+import moment from 'moment'
+import { toThousand } from '@data-type/number'
+import { auditTypeEnum } from '@enum-ms/contract'
+
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
-import { auditTypeEnum } from '@enum-ms/contract'
-import { paymentSum } from '@/api/contract/supplier-manage/payment-ledger/payment'
-import { toThousand } from '@data-type/number'
 import crudOperation from '@crud/CRUD.operation'
-import moment from 'moment'
 
 const defaultQuery = {
   createTime: [moment().startOf('month').valueOf(), moment().valueOf()],

@@ -16,22 +16,22 @@
     style="width: 100%"
   >
     <el-table-column prop="index" label="序号" align="center" width="50" type="index" fixed="left"/>
-    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流单位" align="center">
+    <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" :show-overflow-tooltip="true" label="物流单位" align="center" min-width="140">
       <template v-slot="scope">
         <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ scope.row.supplierName }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="签约主体" align="center">
+    <el-table-column v-if="columns.visible('branchCompanyName')" key="branchCompanyName" prop="branchCompanyName" :show-overflow-tooltip="true" label="签约主体" align="center" min-width="140">
       <template v-slot="scope">
         <span>{{ scope.row.branchCompanyName }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" label="运输额" align="center">
+    <el-table-column v-if="columns.visible('freight')" key="freight" prop="freight" label="运输额" align="center" min-width="100">
       <template v-slot="scope">
         <span @click="openStockAmount(scope.row)" style="cursor:pointer;">{{ isNotBlank(scope.row.freight)? toThousand(scope.row.freight): 0 }}</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center">
+    <el-table-column v-if="columns.visible('paymentAmount')" key="paymentAmount" prop="paymentAmount" label="付款额" align="center" min-width="100">
       <template v-slot="scope">
         <span style="cursor:pointer;margin-right:10px;" @click="openTab(scope.row,'payment')">{{ isNotBlank(scope.row.paymentAmount)? toThousand(scope.row.paymentAmount): 0 }}</span>
         <span @click="openPaymentAudit(scope.row)" style="cursor:pointer;" v-if="checkPermission(crud.permission.get) && scope.row.unCheckPaymentCount>0">
@@ -41,12 +41,12 @@
         </span>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
+    <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center" min-width="80">
       <template v-slot="scope">
         <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.freight)*100).toFixed(2)+'%': 0 }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
+    <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center" min-width="100">
       <template v-slot="scope">
         <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;">
           <span style="margin-right:10px;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): 0 }}</span>
@@ -58,7 +58,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center">
+    <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" min-width="80">
       <template v-slot="scope">
         <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.freight)*100).toFixed(2)+'%': 0  }}</div>
       </template>
@@ -78,16 +78,18 @@
 <script setup>
 import { logisticsPaymentList as get } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref } from 'vue'
+
 import { contractSupplierLogisticsPM as permission } from '@/page-permission/contract'
+import { logisticsSearchTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import checkPermission from '@/utils/system/check-permission'
+import { toThousand } from '@data-type/number'
+import { isNotBlank } from '@data-type/index'
+
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { logisticsSearchTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import paymentAndInvoice from './module/payment-and-invoice'
-import { toThousand } from '@data-type/number'
-import { isNotBlank } from '@data-type/index'
 import recordDetail from '@/views/supply-chain/logistics-payment-manage/logistics-record/module/record-detail'
 import paymentAudit from './module/payment-audit/index'
 
@@ -147,9 +149,6 @@ function openPaymentAudit(row) {
 </script>
 
 <style lang="scss" scoped>
-::v-deep(.abnormal-row) {
-  background: #e8f4ff;
-}
 ::v-deep(.hidden-select) {
   td:nth-child(1){
     .cell{
