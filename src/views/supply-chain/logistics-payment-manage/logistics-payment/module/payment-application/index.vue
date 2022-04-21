@@ -2,7 +2,7 @@
   <div>
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="detailInfo.amount">{{'合同金额:'+toThousand(detailInfo.amount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{'合同金额:'+toThousand(currentRow.amount)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -55,17 +55,18 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.del])"
         label="操作"
         width="190px"
         align="center"
       >
         <template v-slot="scope">
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
           <udOperation :data="scope.row" :show-edit="scope.row.auditStatus===auditTypeEnum.AUDITING.V?true:false" :show-del="scope.row.auditStatus===auditTypeEnum.AUDITING.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>
     <mForm :detail-info="detailInfo" />
+    <applicationDetail v-model="detailVisible" :showType="'detail'" :detailInfo="detailInfo" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -74,17 +75,17 @@
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
 import { ref, defineProps, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-import { auditTypeEnum, logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, logisticsSearchTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 // import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'
 import mForm from './form'
 import { supplierLogisticsPaymentPM } from '@/page-permission/supply-chain'
+import applicationDetail from '@/views/contract/payment-manage/supplier-manage/logistics-manage/module/payment-audit/detail'
 
 const permission = supplierLogisticsPaymentPM.application
 
@@ -96,7 +97,7 @@ const optShow = {
 }
 
 const props = defineProps({
-  detailInfo: {
+  currentRow: {
     type: Object,
     default: () => {}
   },
@@ -107,7 +108,8 @@ const props = defineProps({
 })
 
 const tableRef = ref()
-
+const detailVisible = ref(false)
+const detailInfo = ref({})
 const { CRUD, crud } = useCRUD(
   {
     title: '付款申请',
@@ -131,15 +133,19 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
-      crud.query.supplierId = props.detailInfo.supplierId
-      crud.query.branchCompanyId = props.detailInfo.branchCompanyId
-      // crud.query.propertyType = supplierPayTypeEnum.TRANSPORT.V
+      crud.query.supplierId = props.currentRow.supplierId
+      crud.query.branchCompanyId = props.currentRow.branchCompanyId
+      crud.query.propertyType = supplierPayTypeEnum.TRANSPORT.V
       crud.toQuery()
     }
   },
   { deep: true, immediate: true }
 )
 
+function openDetail(row) {
+  detailInfo.value = row
+  detailVisible.value = true
+}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.paymentDate = String(v.paymentDate)

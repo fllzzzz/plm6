@@ -18,7 +18,7 @@
           ref="detailRef"
           border
           :data="freightDetails"
-          :max-height="maxHeight"
+          max-height="230"
           style="width: 100%;margin-bottom:10px;"
           class="table-form"
           return-source-data
@@ -130,7 +130,6 @@ import { logisticsSearchTypeEnum } from '@enum-ms/contract'
 import { digitUppercase } from '@/utils/data-type/number'
 
 import { regForm } from '@compos/use-crud'
-import useMaxHeight from '@compos/use-max-height'
 import UploadBtn from '@comp/file-upload/UploadBtn'
 import { ElMessage } from 'element-plus'
 
@@ -163,12 +162,6 @@ const defaultForm = {
   detailSaveParams: [],
   remark: ''
 }
-
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.paymentAddForm',
-  paginate: true,
-  extraHeight: 40
-})
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 

@@ -24,16 +24,16 @@
           <div>{{ scope.row.applyUserName? scope.row.applyUserName:'-' }}</div>
         </template>
       </el-table-column>
-       <el-table-column key="createTime" prop="createTime" label="申请日期" align="center" >
+       <el-table-column key="paymentDate" prop="paymentDate" label="申请日期" align="center" >
         <template v-slot="scope">
-          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
+          <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="propertyType" prop="propertyType" label="承运属性" align="center" >
+      <!-- <el-table-column key="type" prop="type" label="承运属性" align="center" >
         <template v-slot="scope">
-          <div>{{ scope.row.propertyType? logisticsSearchTypeEnum.VL[scope.row.propertyType]: '-' }}</div>
+          <div>{{ scope.row.type? logisticsSearchTypeEnum.VL[scope.row.type]: '-' }}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
           <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
@@ -62,7 +62,7 @@ import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { supplierPayTypeEnum, auditTypeEnum, logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { supplierPayTypeEnum, auditTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'

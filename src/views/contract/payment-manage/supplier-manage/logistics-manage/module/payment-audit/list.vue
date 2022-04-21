@@ -2,7 +2,7 @@
   <div>
     <!--表格渲染-->
     <div>
-      <el-tag type="success" size="medium" v-if="detailInfo.freight">{{'运输额:'+toThousand(detailInfo.freight)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{'运输额:'+toThousand(currentRow.freight)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -22,16 +22,16 @@
           <div>{{ scope.row.applyUserName? scope.row.applyUserName:'-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="createTime" prop="createTime" label="申请日期" align="center" >
+      <el-table-column key="paymentDate" prop="paymentDate" label="申请日期" align="center" >
         <template v-slot="scope">
-          <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'): '-' }}</div>
+          <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="propertyType" prop="propertyType" label="承运属性" align="center" >
+      <!-- <el-table-column key="type" prop="type" label="承运属性" align="center" >
         <template v-slot="scope">
-          <div>{{ scope.row.propertyType? logisticsSearchTypeEnum.VL[scope.row.propertyType]: '-' }}</div>
+          <div>{{ scope.row.type? logisticsSearchTypeEnum.VL[scope.row.type]: '-' }}</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
           <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
@@ -79,7 +79,7 @@ import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
-import { auditTypeEnum, supplierPayTypeEnum, logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 import { toThousand } from '@data-type/number'
 import detail from './detail'
@@ -95,7 +95,7 @@ const optShow = {
 }
 
 const props = defineProps({
-  detailInfo: {
+  currentRow: {
     type: Object,
     default: () => {}
   },
@@ -134,8 +134,8 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
-      crud.query.supplierId = props.detailInfo.supplierId
-      crud.query.branchCompanyId = props.detailInfo.branchCompanyId
+      crud.query.supplierId = props.currentRow.supplierId
+      crud.query.branchCompanyId = props.currentRow.branchCompanyId
       crud.query.propertyType = supplierPayTypeEnum.TRANSPORT.V
       crud.toQuery()
     }
