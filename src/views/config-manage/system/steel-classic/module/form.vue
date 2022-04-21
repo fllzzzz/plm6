@@ -45,6 +45,9 @@
         <el-form-item label="是否参与套料" prop="boolNestEnum">
           <common-radio v-model="form.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
         </el-form-item>
+        <el-form-item label="是否排产" prop="boolSchedulingEnum">
+          <common-radio v-model="form.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
+        </el-form-item>
         <el-form-item label="零件前缀字母" prop="links">
           <div class="process-container">
             <div class="process-box">
@@ -143,8 +146,8 @@ const validateLinks = (rule, value, callback) => {
 }
 
 const validateNestEnum = (rule, value, callback) => {
-  if (isBlank(form.boolNestEnum)) {
-    callback(new Error('请选择是否参与套料'))
+  if (isBlank(value)) {
+    callback(new Error('必选'))
   } else {
     callback()
   }
@@ -158,6 +161,10 @@ const rules = {
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
   boolNestEnum: [
     { required: true, message: '请选择是否参与套料' },
+    { validator: validateNestEnum, trigger: 'change' }
+  ],
+  boolSchedulingEnum: [
+    { required: true, message: '请选择是否排产' },
     { validator: validateNestEnum, trigger: 'change' }
   ],
   classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }],

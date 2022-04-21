@@ -165,7 +165,7 @@ function wrongCellMask({ row, column }) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true

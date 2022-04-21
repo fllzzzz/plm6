@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function get(params) {
   return request({
     module: 'contract',
-    url: 'config/listMarkLetter',
+    url: 'system/structure-classification',
     method: 'get',
     params
   })
@@ -12,10 +12,28 @@ export function get(params) {
 export function add(data) {
   return request({
     module: 'contract',
-    url: 'config/setMarkLetter',
+    url: 'system/structure-classification',
     method: 'post',
     data
   })
 }
 
-export default { get, add }
+export function edit(data) {
+  return request({
+    module: 'contract',
+    url: 'system/structure-classification',
+    method: 'put',
+    data
+  })
+}
+
+export function del(data) {
+  return request({
+    module: 'contract',
+    url: 'system/structure-classification',
+    method: 'delete',
+    data
+  })
+}
+
+export default { get, add, edit, del }

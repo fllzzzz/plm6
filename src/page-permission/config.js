@@ -69,24 +69,28 @@ export const projectModePM = {
   edit: ['project_mode:edit'] // 修改项目模式
 }
 
-// 基础配置/组立配置
+// 基础配置/构件类型配置
 export const artifactConfigPM = {
-  get: ['artifact_config:get'], // 组立配置列表
-  add: ['artifact_config:add'] // 添加组立配置
+  get: ['artifact_config:get'], // 构件类型配置列表
+  add: ['artifact_config:add'], // 添加构件类型配置
+  edit: ['artifact_config:edit'], // 修改零件类型配置
+  del: ['artifact_config:del'] // 删除零件类型配置
 }
 
-// 基础配置/零件配置
+// 基础配置/母件类型配置
 export const machinePartConfigPM = {
-  get: ['machine_part_config:get'], // 零件配置列表
-  add: ['machine_part_config:add'] // 添加零件配置
+  get: ['machine_part_config:get'], // 母件类型配置列表
+  add: ['machine_part_config:add'], // 添加母件类型配置
+  edit: ['machine_part_config:edit'], // 修改零件类型配置
+  del: ['machine_part_config:del'] // 删除零件类型配置
 }
 
-// 基础配置/钢材配置
+// 基础配置/零件类型配置
 export const steelClassicPM = {
-  get: ['steel_classic:get'], // 钢材配置列表
-  add: ['steel_classic:add'], // 新增钢材配置
-  edit: ['steel_classic:edit'], // 修改钢材配置
-  del: ['steel_classic:del'] // 删除钢材配置
+  get: ['steel_classic:get'], // 零件类型配置列表
+  add: ['steel_classic:add'], // 新增零件类型配置
+  edit: ['steel_classic:edit'], // 修改零件类型配置
+  del: ['steel_classic:del'] // 删除零件类型配置
 }
 
 // 基础配置/变更原因
