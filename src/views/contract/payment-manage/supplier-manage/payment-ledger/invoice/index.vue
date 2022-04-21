@@ -125,7 +125,7 @@ const { crud, columns, CRUD } = useCRUD(
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.pay-invoice',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 120
 })
 
 // 预览附件

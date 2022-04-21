@@ -79,7 +79,7 @@
       :close-on-click-modal="false"
     >
       <template #content>
-        <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo" />
+        <paymentApplication :visibleValue="applicationVisible" :currentRow="detailInfo" />
       </template>
     </common-drawer>
   </div>

@@ -28,7 +28,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" :show-overflow-tooltip="true" label="签订日期" align="center" width="80">
       <template v-slot="scope">
-        <div>{{ scope.row.createTime? parseTime(scope.row.signingDate,'{y}-{m}-{d}'):'-' }}</div>
+        <div>{{ scope.row.createTime? parseTime(scope.row.createTime,'{y}-{m}-{d}'):'-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('supplierName')" key="supplierName" prop="supplierName" label="供应商" align="center">
@@ -73,7 +73,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('paymentAmountRate')" key="paymentAmountRate" prop="paymentAmountRate" label="付款比例" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.paymentAmount? ((scope.row.paymentAmount/scope.row.amount)*100).toFixed(2)+'%': 0 }}</div>
+        <div>{{ scope.row.inboundAmount? ((scope.row.paymentAmount/scope.row.inboundAmount)*100).toFixed(2)+'%': '0.00%' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="收票额" align="center">
@@ -90,7 +90,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.invoiceAmount? ((scope.row.invoiceAmount/scope.row.amount)*100).toFixed(2)+'%': 0  }}</div>
+        <div>{{ scope.row.inboundAmount? ((scope.row.invoiceAmount/scope.row.inboundAmount)*100).toFixed(2)+'%': '0.00%'  }}</div>
       </template>
     </el-table-column>
     <!-- <el-table-column v-if="columns.visible('purchaseStatus')" key="purchaseStatus" prop="purchaseStatus" label="订单状态" align="center" width="80px">
