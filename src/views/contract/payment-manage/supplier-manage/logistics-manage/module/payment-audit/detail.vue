@@ -4,11 +4,12 @@
     :close-on-click-modal="false"
     :before-close="handleClose"
     v-model="visible"
-    title="审核详情"
+    :title="`审核详情`"
     :wrapper-closable="false"
     size="50%"
   >
     <template #titleAfter>
+      <span v-if="detailInfo.receivingUnit">{{`物流公司:${detailInfo.receivingUnit}`}}</span>
       <el-tag v-if="detailInfo.auditStatus" size="medium" :type="detailInfo.auditStatus===auditTypeEnum.REJECT.V?'info':(detailInfo.auditStatus===auditTypeEnum.PASS.V?'success':'warning')">
         {{ detailInfo.auditStatus===auditTypeEnum.REJECT.V?'已驳回':(detailInfo.auditStatus===auditTypeEnum.PASS.V?'已通过':'审核中') }}
       </el-tag>

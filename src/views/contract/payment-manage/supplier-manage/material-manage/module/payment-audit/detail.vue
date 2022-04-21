@@ -34,10 +34,13 @@
         </template>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="供应商">{{currentRow.supplierName}}</el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="合同额">{{currentRow.amount}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="合同额">
+        {{currentRow.amount?toThousand(currentRow.amount):'-'}}
+        <span>（入库额:{{currentRow.inboundAmount?toThousand(currentRow.inboundAmount):'-'}}）</span>
+      </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="已付款">
         <span>{{ currentRow.paymentAmount?toThousand(currentRow.paymentAmount):'-' }}</span>
-        <span style="margin-left:5px;" v-if="currentRow.paymentAmount && currentRow.amount">{{ ((currentRow.paymentAmount/currentRow.amount)*100).toFixed(2)+'%' }}</span>
+        <span style="margin-left:5px;" v-if="currentRow.paymentAmount && currentRow.inboundAmount">{{ ((currentRow.paymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="最近一次付款">
         <span>{{ currentRow.lastPaymentAmount?toThousand(currentRow.lastPaymentAmount):'-' }}</span>
@@ -45,7 +48,7 @@
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="本次申请">
         <el-tag effect="plain">{{currentInfo.applyAmount?toThousand(currentInfo.applyAmount):'-'}}</el-tag>
-        <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentRow.amount">{{ ((currentInfo.applyAmount/currentRow.amount)*100).toFixed(2)+'%' }}</el-tag>
+        <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentRow.inboundAmount">{{ ((currentInfo.applyAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="大写">
         <div>{{currentInfo.applyAmount?'('+digitUppercase(currentInfo.applyAmount)+')':'-'}}</div>
@@ -71,10 +74,10 @@
         />
         <span v-else>{{currentInfo.actuallyPaymentAmount?toThousand(currentInfo.actuallyPaymentAmount):'-'}}</span>
         <template v-if="showType==='audit'">
-          <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.amount">{{ ((actuallyPaymentAmount/currentRow.amount)*100).toFixed(2)+'%' }}</el-tag>
+          <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.inboundAmount">{{ ((actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
         </template>
         <template v-else>
-          <el-tag type="success" style="margin-left:5px;" v-if="currentInfo.actuallyPaymentAmount && currentRow.amount">{{ (currentInfo.actuallyPaymentAmount/currentRow.amount)*100+'%' }}</el-tag>
+          <el-tag type="success" style="margin-left:5px;" v-if="currentInfo.actuallyPaymentAmount && currentRow.inboundAmount">{{ (currentInfo.actuallyPaymentAmount/currentRow.inboundAmount)*100+'%' }}</el-tag>
         </template>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款方式">

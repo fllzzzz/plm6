@@ -119,7 +119,7 @@ const defaultForm = {
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.paymentAddForm',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 120
 })
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)

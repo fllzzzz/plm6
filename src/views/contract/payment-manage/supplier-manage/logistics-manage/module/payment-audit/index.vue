@@ -9,8 +9,11 @@
     :wrapper-closable="false"
     size="80%"
   >
+     <template #titleAfter>
+      <span v-if="currentRow.supplierName">{{`物流公司:${currentRow.supplierName}`}}</span>
+    </template>
     <template #content>
-      <list :detail-info="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue" @success="emit('success')"/>
+      <list :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue" @success="emit('success')"/>
     </template>
   </common-drawer>
 </template>

@@ -9,6 +9,9 @@
     :wrapper-closable="false"
     size="90%"
   >
+    <template #titleAfter>
+      <span v-if="currentRow.serialNumber">{{`采购订单:${currentRow.serialNumber}`}}</span>
+    </template>
     <template #content>
       <list :currentRow="props.currentRow" :propertyType="props.propertyType" :visibleValue="modelValue" @success="emit('success')"/>
     </template>

@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip>
         <template #default="{ row }">
-          <span v-if="row.amount">{{ ((row.paymentAmount/row.amount)*100).toFixed(2) }}%</span>
+          <span v-if="row.inboundAmount">{{ ((row.paymentAmount/row.inboundAmount)*100).toFixed(2) }}%</span>
         </template>
       </el-table-column>
       <el-table-column prop="invoiceAmount" label="累计已开票" align="right" show-overflow-tooltip>
@@ -47,7 +47,7 @@
       </el-table-column>
       <el-table-column prop="invoiceRate" label="开票比例" align="center" show-overflow-tooltip>
         <template #default="{ row }">
-          <span>{{ ((row.invoiceAmount/row.amount)*100).toFixed(2) }}%</span>
+          <span v-if="row.inboundAmount">{{ ((row.invoiceAmount/row.inboundAmount)*100).toFixed(2) }}%</span>
         </template>
       </el-table-column>
     </common-table>

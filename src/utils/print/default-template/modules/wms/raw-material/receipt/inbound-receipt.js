@@ -319,7 +319,7 @@ const wmsRmInboundReceipt = {
         align: alignEnum.RIGHT.V,
         minWidth: 18,
         type: typeEnum.QUANTITY.K,
-        format: { toThousand: false, precision: 0 }
+        format: { toThousand: false, rowUnit: 'measureUnit' }
       },
       {
         show: false,
@@ -329,7 +329,7 @@ const wmsRmInboundReceipt = {
         align: alignEnum.RIGHT.V,
         minWidth: 18,
         type: typeEnum.QUANTITY.K,
-        format: { toThousand: false, precision: 0 }
+        format: { toThousand: false, rowUnit: 'measureUnit' }
       },
       {
         show: true,

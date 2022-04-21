@@ -35,10 +35,14 @@
           <span  v-thousand="detailInfo.inboundAmount" />
         </el-form-item>
         <el-form-item label="已付款">
-          <span v-thousand="detailInfo.paymentAmount"/><span>（{{ detailInfo.paymentRate }}%）</span>
+          <span v-thousand="detailInfo.paymentAmount"/>
+          <span v-if="showType==='add'">（{{ detailInfo.paymentRate }}%）</span>
+          <span v-else>（{{ detailInfo.inboundAmount? ((detailInfo.paymentAmount/detailInfo.inboundAmount)*100).toFixed(2)+'%': '0.00%'}}）</span>
         </el-form-item>
         <el-form-item label="已收票">
-          <span v-thousand="detailInfo.invoiceAmount"/><span>（{{ detailInfo.invoiceRate }}%）</span>
+          <span v-thousand="detailInfo.invoiceAmount"/>
+          <span v-if="showType==='add'">（{{ detailInfo.invoiceRate }}%）</span>
+          <span v-else>（{{ detailInfo.inboundAmount? ((detailInfo.invoiceAmount/detailInfo.inboundAmount)*100).toFixed(2)+'%': '0.00%'}}）</span>
         </el-form-item>
         <el-form-item label="最终结算额"  prop="amount">
           <template v-if="showType==='add'">
@@ -59,7 +63,11 @@
           </template>
         </el-form-item>
         <el-form-item label="大写">
-          <span style="color:#82848a">{{form.amount?digitUppercase(form.amount):''}}</span>
+          <span style="color:#82848a"  v-if="showType==='add'">{{ form.amount?digitUppercase(form.amount):'' }}</span>
+           <template v-else>
+            <span v-if="showType==='audit'">{{ detailInfo.unCheckSettlementAmount?digitUppercase(detailInfo.unCheckSettlementAmount):'-' }}</span>
+            <span style="color:#82848a"  v-else>{{ detailInfo.settlementAmount?digitUppercase( detailInfo.settlementAmount):'' }}</span>
+          </template>
         </el-form-item>
         <el-form-item label="应付金额">
           <span v-if="showType==='audit'">{{ toThousand(detailInfo.unCheckSettlementAmount-detailInfo.paymentAmount) }}</span>
