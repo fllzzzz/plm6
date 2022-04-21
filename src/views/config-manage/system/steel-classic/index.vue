@@ -60,6 +60,11 @@
           <span>{{ scope.row.boolNestEnum ? '√' : '-' }}</span>
         </template>
       </el-table-column>
+      <el-table-column v-if="columns.visible('boolSchedulingEnum')" align="center" prop="boolSchedulingEnum" label="参与排产">
+        <template v-slot="scope">
+          <span>{{ scope.row.boolSchedulingEnum ? '√' : '-' }}</span>
+        </template>
+      </el-table-column>
       <!--编辑与删除-->
       <el-table-column
         v-if="checkPermission([...permission.del, ...permission.edit])"
