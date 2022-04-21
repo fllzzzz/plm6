@@ -10,6 +10,7 @@
     return-source-data
     :showEmptySymbol="false"
     style="width: 100%;margin-top:10px;"
+    :cell-class-name="wrongCellMask"
   >
     <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
     <el-table-column key="name" prop="name" :show-overflow-tooltip="true" label="*代表杆件类型" align="center">
@@ -99,6 +100,21 @@ const tableRules = {
   sort: [{ validator: validateSort, message: '请输入序号', trigger: 'change' }]
 }
 
+function wrongCellMask({ row, column }) {
+  if (!row) return
+  const rules = tableRules
+  let flag = true
+  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
+    if (row.verify[column.property] === false) {
+      flag = validate(column.property, rules[column.property], row)
+    }
+    if (flag) {
+      row.verify[column.property] = true
+    }
+  }
+  return flag ? '' : 'mask-td'
+}
+
 fetchData()
 
 async function fetchData() {
@@ -140,7 +156,7 @@ async function rowSubmit(row) {
   let flag = true
   row.verify = {}
   for (const rule in rules) {
-    row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+    row.verify[rule] = validate(rule, rules[rule], row)
     if (!row.verify[rule]) {
       flag = false
     }
