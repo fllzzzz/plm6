@@ -11,6 +11,15 @@
         @change="crud.toQuery"
       />
       <common-radio-button
+        v-model="query.settlementStatus"
+        :options="settlementStatusEnum.ENUM"
+        show-option-all
+        type="enum"
+        size="small"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
+      <common-radio-button
         v-model="query.orderSupplyType"
         :options="orderSupplyTypeEnum.ENUM"
         show-option-all
@@ -120,6 +129,7 @@
 import { inject, ref } from 'vue'
 import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import { orderSupplyTypeEnum, purchaseStatusEnum, baseMaterialTypeEnum } from '@enum-ms/wms'
+import { settlementStatusEnum } from '@/utils/enum/modules/finance'
 
 import { regHeader } from '@compos/use-crud'
 import RrOperation from '@crud/RR.operation'
@@ -127,13 +137,13 @@ import CrudOperation from '@crud/CRUD.operation'
 import SupplierSelect from '@comp-base/supplier-select/index.vue'
 import BranchCompanySelect from '@comp-base/branch-company-select.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
-
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
   createTime: [], // [开始日期，结束日期]
   orderSupplyType: undefined, // 订单供货类型
   purchaseType: undefined, // 采购材料类型
+  settlementStatus: undefined, // 结算状态
   purchaseStatus: purchaseStatusEnum.UNFINISHED.V, // 采购状态
   projectWarehouseType: undefined, // 仓库类型
   projectId: undefined, // 项目id
