@@ -106,9 +106,10 @@
           size="mini"
           type="primary"
           icon="el-icon-plus"
+          disabled
           @click.stop="toAddManufactures"
         >
-          制成品订单
+          制成品订单(开发中)
         </common-button>
       </template>
     </crudOperation>

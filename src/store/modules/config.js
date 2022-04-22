@@ -182,7 +182,9 @@ const mutations = {
   SET_STEEL_CLASSIFY_CONF(state, list) {
     state.steelClassifyConf = list
     state.steelClassifyConfKV = {}
+    state.steelClassifyConfICKV = {}
     list.forEach((row) => {
+      state.steelClassifyConfKV[row.id] = row
       state.steelClassifyConfICKV[row.id] = row.boundFinalClassifyIds
     })
   }
