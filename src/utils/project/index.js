@@ -50,7 +50,7 @@ export function projectNameFormatter(project, config, lineBreak = true) {
   }
 
   // 默认全局配置
-  switch (config?.arrangement?.V) {
+  switch (config.arrangement) {
     case projectNameArrangementModeEnum.SERIAL_NUMBER_START.V:
       return `${project.serialNumber}${extra}${_projectName}`
     case projectNameArrangementModeEnum.SERIAL_NUMBER_END.V:
