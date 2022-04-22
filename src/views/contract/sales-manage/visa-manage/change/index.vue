@@ -14,7 +14,7 @@
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column v-if="columns.visible('project')" key="project" prop="project" :show-overflow-tooltip="true" label="项目" min-width="250" />
       <el-table-column v-if="columns.visible('reasonName')" key="reasonName" prop="reasonName" :show-overflow-tooltip="true" align="center" label="属性" min-width="110" />
-      <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="签证(结算)额" align="center" min-width="120" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="签证(结算)额" align="right" min-width="120" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="申请日期" align="center" min-width="120" />
       <el-table-column v-if="columns.visible('createUserName')" key="createUserName" prop="createUserName" :show-overflow-tooltip="true" align="center" label="申请人" min-width="110" />
       <el-table-column v-if="columns.visible('checkUserName')" key="checkUserName" prop="checkUserName" :show-overflow-tooltip="true" align="center" label="审核人" min-width="110" />
@@ -77,7 +77,7 @@ const mDetail = computed(() => {
 })
 
 const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
+  ['project', 'parse-project'],
   ['status', ['parse-enum', reviewStatusEnum, { f: 'SL' }]],
   ['amount', 'to-thousand'],
   ['createTime', 'parse-time']
