@@ -156,7 +156,7 @@ const drawerVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
 CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
   form.technologyList = form.technologyList || []
   form.technologyList.forEach((tRow) => {
-    tRow.id = createUniqueString() // 唯一编号
+    tRow.id = tRow.id || createUniqueString() // 唯一编号
     tRow.boundInvIds = [] // 绑定库存利用清单
     tRow.boundPurIds = [] // 绑定需要采购清单
     crud.props.listTotalMete += tRow.listMete
