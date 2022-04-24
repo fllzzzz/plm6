@@ -24,14 +24,14 @@
                     <common-button size="mini" icon="el-icon-tickets" plain class="next_btn" @click="moneyChange" v-permission="permission.changeAmount"/>
                   </el-tooltip>
                 </template>
-                <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V && projectStatus!==projectStatusEnum.SETTLED.V">
+                <!-- <template v-if="projectStatus!==projectStatusEnum.SUSPEND.V && projectStatus!==projectStatusEnum.SETTLED.V">
                   <el-tooltip class="item" effect="dark" content="项目结算" placement="top">
                     <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="confirmSettle" v-permission="permission.settle"/>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="变更签证" placement="top">
                     <common-button  size="mini" icon="el-icon-money" plain class="next_btn" @click="variationChange" v-permission="permission.variationChange"/>
                   </el-tooltip>
-                </template>
+                </template> -->
                 <el-tooltip class="item" effect="dark" content="下载" placement="top">
                   <export-button :fn="downloadProjectInfo" class="next_btn" :params="{ projectId: projectId }" v-permission="permission.download"/>
                 </el-tooltip>
@@ -71,7 +71,7 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
-import { ElMessage, ElTabs, ElTabPane, ElMessageBox, ElNotification } from 'element-plus'
+import { ElMessage, ElTabs, ElTabPane, ElNotification } from 'element-plus'
 import { contractChangeTypeEnum } from '@enum-ms/contract'
 import baseInfo from './base'
 import businessInfo from './business'
@@ -140,22 +140,22 @@ watch(
   { deep: true, immediate: true }
 )
 
-function confirmSettle() {
-  baseInfoValue.value = baseRef.value.detail
-  memberList.value = memberRef.value.checkedList || []
-  if (props.projectStatus === projectStatusEnum.PROCESS.V) {
-    ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).then(() => {
-      settleVisible.value = true
-    }).catch(() => {
-    })
-  } else {
-    settleVisible.value = true
-  }
-}
+// function confirmSettle() {
+//   baseInfoValue.value = baseRef.value.detail
+//   memberList.value = memberRef.value.checkedList || []
+//   if (props.projectStatus === projectStatusEnum.PROCESS.V) {
+//     ElMessageBox.confirm('"' + props.projectName + '"' + '项目正处于进行中状态，确定要办理结算?', '提示', {
+//       confirmButtonText: '确定',
+//       cancelButtonText: '取消',
+//       type: 'warning'
+//     }).then(() => {
+//       settleVisible.value = true
+//     }).catch(() => {
+//     })
+//   } else {
+//     settleVisible.value = true
+//   }
+// }
 
 function moneyChange() {
   moneyVisible.value = true
@@ -163,11 +163,11 @@ function moneyChange() {
   memberList.value = memberRef.value.checkedList || []
 }
 
-function variationChange() {
-  variationVisible.value = true
-  baseInfoValue.value = baseRef.value.detail
-  memberList.value = memberRef.value.checkedList || []
-}
+// function variationChange() {
+//   variationVisible.value = true
+//   baseInfoValue.value = baseRef.value.detail
+//   memberList.value = memberRef.value.checkedList || []
+// }
 
 function ModifyCancel() {
   if (isModify.value) {
