@@ -136,11 +136,6 @@ const props = defineProps({
     type: Boolean,
     default: undefined
   },
-  // 空数据时显示的文本内容， 也可以通过 #empty 设置
-  emptyText: {
-    type: String,
-    default: '暂无数据'
-  },
   // 合计行第一列的文本
   sumText: {
     type: String,

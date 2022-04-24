@@ -36,6 +36,9 @@
                 type="enum"
                 size="mini"
               />
+              <div class="filter-item">
+                <el-checkbox v-model="queryFilter.showOnlySelectTechInfo" label="只显示选中的清单的备料信息" size="mini" border />
+              </div>
               <el-tag class="info-tag filter-item" effect="plain" type="info">
                 清单汇总量：
                 <span v-to-fixed="{ val: crud.props.listTotalMete || 0, k: 'COM_WT__KG' }" /> kg
@@ -69,11 +72,15 @@
                   <inventory-table
                     ref="inventoryTableRef"
                     :show="preparationListType === preparationListTypeEnum.INVENTORY_LIST.V"
+                    :current-tech-row="selectTechnologyRow"
+                    :query-filter="queryFilter"
                     :height="maxHeight"
                   />
                   <purchase-table
                     ref="purchaseTableRef"
                     :show="preparationListType === preparationListTypeEnum.PURCHASE_LIST.V"
+                    :current-tech-row="selectTechnologyRow"
+                    :query-filter="queryFilter"
                     :height="maxHeight"
                   />
                 </el-form>
@@ -151,6 +158,10 @@ const addPurchaseMaterialDlgVisible = ref(false)
 const { CRUD, crud, form } = regForm(void 0, formRef)
 // drawer 显示
 const drawerVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
+// 查询条件
+const queryFilter = ref({
+  showOnlySelectTechInfo: false
+})
 
 // 初始化表单
 CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
@@ -197,6 +208,9 @@ function init() {
   selectTechnologyRow.value = undefined
   listUploaderNames.value = ''
   preparationListType.value = preparationListTypeEnum.INVENTORY_LIST.V
+  queryFilter.value = {
+    showOnlySelectTechInfo: false
+  }
   crud.props.techPrepMeteKV = {}
   crud.props.listTotalMete = 0
   crud.props.inventoryTotalMete = 0

@@ -3,15 +3,24 @@
     <div class="filter-container">
       <div class="filter-left-box">
         <span class="table-title">公共库 · 物料匹配列表</span>
+        <el-checkbox
+          class="filter-item"
+          v-model="queryFilter.boolNotMatch"
+          label="不进行物料仓匹配"
+          size="mini"
+          border
+          @change="handleNotMatch"
+        />
       </div>
       <div class="filter-right-box">
-        <el-input
-          v-model.trim="queryFilter.factoryName"
-          clearable
+        <factory-select
+          v-model="queryFilter.factoryId"
+          placeholder="工厂"
           size="mini"
-          placeholder="工厂名称"
           class="filter-item"
+          clearable
           style="width: 220px"
+          only-one-default
         />
         <el-checkbox class="filter-item" v-model="queryFilter.boolNotInInventoryList" label="只显示未加入库存利用清单" size="mini" border />
       </div>
@@ -63,7 +72,6 @@ import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { measureTypeEnum } from '@/utils/enum/modules/wms'
-import { pinyinForField, pinyinFuzzyMatching } from '@/utils/pinyin'
 import { calcTheoryWeight } from '@/utils/wms/measurement-calc'
 import { materialOperateColumns } from '@/utils/columns-format/wms'
 
@@ -72,6 +80,7 @@ import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/mater
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
+import FactorySelect from '@/components-system/base/factory-select.vue'
 
 const emit = defineEmits(['add'])
 
@@ -106,18 +115,16 @@ const loading = ref(false)
 // 公共库材料匹配列表
 const list = ref([])
 
-// 拼音
-const pinyinFields = ['factory.name', 'factory.shortName']
-
 // 查询过滤
 const queryFilter = ref({
-  factoryName: undefined,
-  boolNotInInventoryList: false
+  factoryId: undefined, // TODO:是否应该改成工厂下拉选择
+  boolNotMatch: false, // 不进行物料仓匹配
+  boolNotInInventoryList: false // 只显示未加入库存利用清单的列表
 })
 
 CRUD.HOOK.beforeToEdit = (crud, form) => {
   queryFilter.value = {
-    factoryName: undefined,
+    factoryId: undefined,
     boolNotInInventoryList: false
   }
 }
@@ -126,9 +133,9 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
 const filterList = computed(() => {
   return list.value.filter((row) => {
     let meets = true
-    const factoryName = queryFilter.value.factoryName
-    if (factoryName) {
-      meets = pinyinFuzzyMatching(row, factoryName, pinyinFields)
+    const factoryId = queryFilter.value.factoryId
+    if (factoryId) {
+      meets = row.factory.id === factoryId
     }
     if (meets && queryFilter.value.boolNotInInventoryList) {
       meets = !inventoryExitIdMap.value.get(row.id)
@@ -138,6 +145,7 @@ const filterList = computed(() => {
 })
 
 const emptyText = computed(() => {
+  if (queryFilter.value.boolNotMatch) return '不进行物料仓匹配'
   return isBlank(props.matchInfo) || loading.value ? '可选择左侧清单数据，匹配物料系统公共库中对应的的材料' : '未匹配到物料'
 })
 
@@ -151,10 +159,21 @@ watch(
 
 function init() {
   list.value = []
+  queryFilter.value = {
+    factoryId: undefined, // 工厂id
+    boolNotMatch: false, // 不进行物料仓匹配
+    boolNotInInventoryList: false
+  }
+}
+
+// 处理不匹配
+function handleNotMatch() {
+  list.value = []
 }
 
 // 加载列表
 async function fetchList() {
+  if (queryFilter.value.boolNotMatch) return
   const key = ++interfaceKey.value
   init()
   const info = props.matchInfo
@@ -197,9 +216,7 @@ async function fetchList() {
 
       row.operableNumber = row.corOperableQuantity
     })
-
-    // 拼音转换
-    list.value = pinyinForField(matchList, pinyinFields)
+    list.value = matchList
     loading.value = false
   } catch (error) {
     console.error('匹配物料', error)

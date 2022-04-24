@@ -143,6 +143,7 @@ const wmsRmRejectReceipt = {
         format: 'YY/MM/DD kk:mm'
       },
       { show: true, source: dataSourceEnum.SYSTEM.V, key: 'supplierName', title: '供应商：', width: 135, type: typeEnum.COMPANY_NAME.K },
+      { show: false, source: dataSourceEnum.SYSTEM.V, key: 'remark', title: '备注：', width: 190 },
       {
         show: false,
         source: dataSourceEnum.SYSTEM.V,
@@ -391,8 +392,7 @@ const wmsRmRejectReceipt = {
         align: alignEnum.LEFT.V,
         minWidth: 18,
         type: typeEnum.WAREHOUSE_NAME.K
-      },
-      { show: false, key: 'remark', title: '备注', source: dataSourceEnum.SYSTEM.V, align: alignEnum.LEFT.V, minWidth: 20 }
+      }
     ]
   }
 }

@@ -2,7 +2,7 @@
   <common-table
     v-if="props.show"
     ref="tableRef"
-    :data="purchaseList"
+    :data="filterList"
     :data-format="columnsDataFormat"
     :height="props.height"
     :default-expand-all="false"
@@ -97,10 +97,28 @@ const props = defineProps({
   height: {
     type: Number,
     default: 400
+  },
+  currentTechRow: {
+    // 当前选中的清单
+    type: Object
+  },
+  queryFilter: {
+    // 查询过滤
+    type: Object,
+    default: () => ({})
   }
 })
 // -------------------------------------------------------------------------------------------------------------------------------------
 const purchaseList = ref([])
+
+// 根据查询条件过滤列表
+const filterList = computed(() => {
+  let list = purchaseList.value
+  if (props.queryFilter.showOnlySelectTechInfo && props.currentTechRow) {
+    list = list.filter((row) => row.boundTech.id === props.currentTechRow.id)
+  }
+  return list
+})
 
 // 表格列数据格式转换
 const columnsDataFormat = [['material.theoryTotalWeight', ['to-fixed-field', 'accountingUnit']]]

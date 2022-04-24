@@ -121,6 +121,7 @@ const listComp = computed(() => {
   }
 })
 
+// 监听crud.form.technologyList变化
 watch(
   () => crud.form.technologyList,
   (list) => {
@@ -130,7 +131,8 @@ watch(
     }
   },
   {
-    immediate: true
+    immediate: true,
+    deep: true
   }
 )
 
