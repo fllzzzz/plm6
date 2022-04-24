@@ -123,19 +123,21 @@ export function isNotBlank(...arr) {
   for (const value of arr) {
     if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === 'NaN' || value === '') {
       return false
-    } else {
-      let jsonStr = null
-      try {
-        jsonStr = JSON.stringify(value)
-      } catch (error) {
-        jsonStr = ''
-      }
-      if (jsonStr === '{}') {
-        return false
-      }
-      if (jsonStr === '[]') {
-        return false
-      }
+    }
+    if (value instanceof Map) {
+      return value.size > 0
+    }
+    let jsonStr = null
+    try {
+      jsonStr = JSON.stringify(value)
+    } catch (error) {
+      jsonStr = ''
+    }
+    if (jsonStr === '{}') {
+      return false
+    }
+    if (jsonStr === '[]') {
+      return false
     }
   }
   return true
@@ -149,19 +151,21 @@ export function isBlank(...arr) {
   for (const value of arr) {
     if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === 'NaN' || value === '') {
       return true
-    } else {
-      let jsonStr = null
-      try {
-        jsonStr = JSON.stringify(value)
-      } catch (error) {
-        jsonStr = ''
-      }
-      if (jsonStr === '{}') {
-        return true
-      }
-      if (jsonStr === '[]') {
-        return true
-      }
+    }
+    let jsonStr = null
+    if (value instanceof Map) {
+      return value.size === 0
+    }
+    try {
+      jsonStr = JSON.stringify(value)
+    } catch (error) {
+      jsonStr = ''
+    }
+    if (jsonStr === '{}') {
+      return true
+    }
+    if (jsonStr === '[]') {
+      return true
     }
   }
   return false

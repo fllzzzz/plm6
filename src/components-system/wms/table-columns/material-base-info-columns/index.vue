@@ -163,6 +163,11 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  showSerialNumber: {
+    // 显示物料编号
+    type: Boolean,
+    default: true
+  },
   showProject: {
     // 显示项目
     type: Boolean,
@@ -245,7 +250,7 @@ const classifyNameWidth = computed(() => {
 // 是否显示物料种类全路径
 const showClassifyName = computed(() => isBlank(props.columns) || props.columns.visible('classifyName'))
 // 是否显示编号
-const showSerialNumber = computed(() => isBlank(props.columns) || props.columns.visible('serialNumber'))
+const showSerialNumber = computed(() => props.showSerialNumber && (isBlank(props.columns) || props.columns.visible('serialNumber')))
 // 可查看冻结信息
 const frozenViewable = computed(() => props.frozenViewable && checkPermission(permission.frozenDetail))
 // 列可排序

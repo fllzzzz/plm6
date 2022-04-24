@@ -116,6 +116,9 @@ async function submit() {
     const details = modifiedList.value.map((v) => {
       return {
         id: v.id,
+        strucWithoutList: v.strucWithoutList,
+        enclWithoutList: v.enclWithoutList,
+        auxWithoutList: v.auxWithoutList,
         strucPreparationRangeType: v.strucPreparationRangeType,
         enclPreparationRangeType: v.enclPreparationRangeType,
         auxPreparationRangeType: v.auxPreparationRangeType

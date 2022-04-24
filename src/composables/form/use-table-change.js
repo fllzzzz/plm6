@@ -9,10 +9,10 @@ import { isNotBlank } from '@/utils/data-type'
 export default function useTableChange({ fieldMap, columnsPropsChartMap }) {
   let fn
   if (isNotBlank(columnsPropsChartMap)) {
-    fn = (tableInfo) => changedCellMask(tableInfo, fieldMap)
-  } else {
     // 对照表，适用于“一个column.property对应多个字段”或“字段名与column.property不相同”的情况，如备料中的备料范围配置
     fn = (tableInfo) => changedCellMaskOfChart(tableInfo, fieldMap, columnsPropsChartMap)
+  } else {
+    fn = (tableInfo) => changedCellMask(tableInfo, fieldMap)
   }
   return {
     changedCellMask: fn
