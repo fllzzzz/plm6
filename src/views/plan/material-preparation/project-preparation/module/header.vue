@@ -25,8 +25,32 @@
         </el-tooltip>
       </div>
       <div class="filter-item">
-        <el-checkbox v-model="query.boolPreparationLessThanList" label="只显示备料量小于清单量" size="small" border @change="crud.toQuery" />
+        <el-checkbox
+          v-model="query.boolPreparationLessThanList"
+          label="只显示备料量小于清单量"
+          size="small"
+          border
+          @change="crud.toQuery"
+        />
       </div>
+      <el-input
+        v-model.trim="query.monomerName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="单体"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
+      <el-input
+        v-model.trim="query.areaName"
+        clearable
+        style="width: 200px"
+        size="small"
+        placeholder="区域"
+        class="filter-item"
+        @keyup.enter="crud.toQuery"
+      />
       <br />
       <el-date-picker
         v-model="query.listUpdateTime"
@@ -114,6 +138,8 @@ import projectPreparationTypeDlg from './configure-project-preparation-type/draw
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 // 查询默认值
 const defaultQuery = {
+  monomerName: undefined, // 单体名称
+  areaName: undefined, // 区域名称
   listUpdateTime: [], // 清单更新时间
   preparationUpdateTime: [], // 备料更新时间
   hasListUpdate: false, // 只显示有清单更新的列表（未备料 或 清单更新时间“晚于”备料更新时间）

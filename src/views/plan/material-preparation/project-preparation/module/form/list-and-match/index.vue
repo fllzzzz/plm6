@@ -12,9 +12,9 @@
                 <el-checkbox v-model="queryFilter.boolPreparationLessThanList" label="只显示备料量小于清单量" size="mini" border />
               </div>
               <common-button class="filter-item" type="success" size="mini" @click="techAddFormVisible = true">
-                添加备料清单
+                添 加
               </common-button>
-              <common-button class="filter-item" type="warning" size="mini" @click="toEditTech">编辑备料清单</common-button>
+              <common-button class="filter-item" type="warning" size="mini" @click="toEditTech">编 辑</common-button>
             </template>
             <template v-else>
               <common-button class="filter-item" size="mini" type="primary" @click="saveTechEdit">保 存</common-button>

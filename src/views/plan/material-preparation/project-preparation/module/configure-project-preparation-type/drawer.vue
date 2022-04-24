@@ -115,7 +115,7 @@
                   v-if="isEditMode"
                   v-model="row.sourceRow.auxPreparationRangeType"
                   :options="preparationRangeEnum.ENUM"
-                  :unshow-options="[preparationRangeEnum.AREA.V]"
+                  :unshow-options="[preparationRangeEnum.AREA.K]"
                   type="enum"
                   :disabled="row.sourceRow.boolAuxPrepared"
                   clearable
