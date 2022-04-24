@@ -64,7 +64,7 @@
 import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
-import { invoiceTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 import { digitUppercase, getDP, toThousand } from '@/utils/data-type/number'
 import { tableSummary } from '@/utils/el-extra'
 

@@ -91,7 +91,7 @@ import { isNotBlank } from '@data-type/index'
 import { validatorPhone, validatorUsername } from '@/utils/validate/pattern'
 
 import { regForm } from '@compos/use-crud'
-import { userSexEnum } from '@enum-ms/system'
+import { userSexEnum } from '@enum-ms/user'
 import { enabledEnum } from '@enum-ms/common'
 import menuSelect from '@/components-system/common/tree-select.vue'
 import { ElRadioGroup } from 'element-plus'

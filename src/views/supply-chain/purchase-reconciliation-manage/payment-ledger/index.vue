@@ -201,7 +201,7 @@ import { ref, provide, computed, nextTick } from 'vue'
 import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { settlementStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/finance'
 import EO from '@enum'
 
 import useMaxHeight from '@compos/use-max-height'

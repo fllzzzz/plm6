@@ -161,7 +161,7 @@ import mHeader from './module/header'
 import mForm from './module/form'
 import pagination from '@crud/Pagination'
 import { ElMessageBox } from 'element-plus'
-import { userSexEnum } from '@enum-ms/system'
+import { userSexEnum } from '@enum-ms/user'
 import { isNotBlank } from '@data-type/index'
 
 const optShow = {

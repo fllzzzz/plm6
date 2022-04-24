@@ -68,7 +68,7 @@ import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { settlementStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/finance'
 import { ledgerSum } from '@/api/contract/contract-ledger'
 import { toThousand } from '@data-type/number'
 

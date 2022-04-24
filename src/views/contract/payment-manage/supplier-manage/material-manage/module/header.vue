@@ -53,7 +53,7 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { baseMaterialTypeEnum } from '@enum-ms/wms'
-import { settlementStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/finance'
 import projectCascader from '@comp-base/project-cascader'
 
 const defaultQuery = {

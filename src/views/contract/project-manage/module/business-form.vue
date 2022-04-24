@@ -193,14 +193,13 @@ import { ElRadioGroup } from 'element-plus'
 import {
   projectTypeEnum,
   businessTypeEnum,
-  paymentModeEnum,
-  invoiceTypeEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
   TechnologyTypeEnum
 } from '@enum-ms/contract'
+import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
 import { ElMessage } from 'element-plus'
 import enclosureForm from './enclosure-form'

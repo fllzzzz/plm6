@@ -84,29 +84,6 @@ constantize(businessModifyTypeEnum)
 // }
 // constantize(orderTypeEnum)
 
-// 结算状态
-const settlementStatusEnum = {
-  UNSETTLEMENT: { L: '未结算', K: 'UNSETTLEMENT', V: 0, COLOR: '#e64242' },
-  SETTLED: { L: '已结算', K: 'SETTLED', V: 1, COLOR: '#13ce66' }
-}
-constantize(settlementStatusEnum)
-
-// 付款方式
-const paymentModeEnum = {
-  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
-  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
-  OTHER_TRANSFER: { L: '其他转账', K: 'OTHER_TRANSFER', V: 1 << 2 }
-}
-constantize(paymentModeEnum)
-
-// 票据类型
-const invoiceTypeEnum = {
-  SPECIAL: { L: '增值税专用发票', SL: '专票', K: 'SPECIAL', V: 1 << 0 },
-  ORDINARY: { L: '增值税普通发票', SL: '普票', K: 'ORDINARY', V: 1 << 1 },
-  RECEIPT: { L: '收据', SL: '收据', K: 'RECEIPT', V: 1 << 2 }
-}
-constantize(invoiceTypeEnum)
-
 // 是否含税
 const isTaxEnum = {
   YES: { L: '是', K: 'YES', V: true },
@@ -232,14 +209,14 @@ const contractPayForEnum = {
 constantize(contractPayForEnum)
 
 // 供应商付款方式
-const supplierPayModeEnum = {
-  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
-  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
-  ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 2 },
-  TRANSFER_CHECK: { L: '转账支票', K: 'TRANSFER_CHECK', V: 1 << 3 }
+// const supplierPayModeEnum = {
+//   PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
+//   PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
+//   ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 2 },
+//   TRANSFER_CHECK: { L: '转账支票', K: 'TRANSFER_CHECK', V: 1 << 3 }
 
-}
-constantize(supplierPayModeEnum)
+// }
+// constantize(supplierPayModeEnum)
 
 // TODO: 付款属性1
 const supplierPayTypeEnum = {
@@ -298,9 +275,6 @@ export {
   TechnologyTypeEnum, // 技术交底
   businessTypeEnum, // 业务类型
   businessModifyTypeEnum, // 商务变更
-  settlementStatusEnum, // 结算状态
-  paymentModeEnum, // 付款方式
-  invoiceTypeEnum,
   isTaxEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
@@ -316,7 +290,6 @@ export {
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,
   contractPayForEnum,
-  supplierPayModeEnum,
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
   reimbursementTypeEnum,
@@ -335,9 +308,6 @@ export default {
   TechnologyTypeEnum, // 技术交底
   businessTypeEnum, // 业务类型
   businessModifyTypeEnum, // 商务变更
-  settlementStatusEnum, // 结算状态
-  paymentModeEnum, // 付款方式
-  invoiceTypeEnum,
   isTaxEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
@@ -353,7 +323,6 @@ export default {
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,
   contractPayForEnum,
-  supplierPayModeEnum,
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
   reimbursementTypeEnum,
