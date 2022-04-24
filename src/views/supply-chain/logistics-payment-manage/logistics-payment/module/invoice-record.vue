@@ -55,7 +55,7 @@
 import { invoiceRecord } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
-import { invoiceTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'

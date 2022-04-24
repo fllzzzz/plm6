@@ -64,7 +64,8 @@ import crudApi from '@/api/contract/supplier-manage/payment-ledger/pay-invoice'
 import { ref } from 'vue'
 
 import { contractSupplierPaymentLedgerPM } from '@/page-permission/contract'
-import { invoiceTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
+import { supplierPayTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'

@@ -15,7 +15,7 @@
           <collection class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')"/>
         </el-tab-pane>
         <el-tab-pane label="开票列表" name="invoice">
-          <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')"/>
+          <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -34,6 +34,10 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     require: true
+  },
+  currentRow: {
+    type: Object,
+    default: () => {}
   },
   projectId: {
     type: [String, Number],

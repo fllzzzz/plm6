@@ -67,19 +67,7 @@
           </el-table-column>
           <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
             <template v-slot="scope">
-              <common-select
-                v-if="scope.row.isModify"
-                v-model="scope.row.invoiceType"
-                :options="invoiceTypeEnum.ENUM"
-                type="enum"
-                size="small"
-                clearable
-                class="filter-item"
-                placeholder="发票类型"
-                style="width: 100%"
-                @change="invoiceTypeChange(scope.row)"
-              />
-              <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+              <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
@@ -175,6 +163,10 @@ const props = defineProps({
   projectId: {
     type: [String, Number],
     default: undefined
+  },
+  currentRow: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -228,9 +220,9 @@ function addRow() {
   form.list.push({
     invoiceAmount: undefined,
     invoiceDate: undefined,
-    invoiceType: undefined,
+    invoiceType: props.currentRow.invoiceType,
     invoiceNo: undefined,
-    taxRate: undefined,
+    taxRate: props.currentRow.taxRate ? props.currentRow.taxRate * 100 : undefined,
     tax: undefined,
     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
@@ -239,10 +231,6 @@ function addRow() {
     dataIndex: form.list.length + 1,
     isModify: true
   })
-}
-
-function invoiceTypeChange(row) {
-  row.taxRate = undefined
 }
 
 // function moneyChange(row) {

@@ -71,19 +71,7 @@
       </el-table-column>
       <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
         <template v-slot="scope">
-          <common-select
-            v-if="scope.row.isModify"
-            v-model="scope.row.invoiceType"
-            :options="invoiceTypeEnum.ENUM"
-            type="enum"
-            size="small"
-            clearable
-            class="filter-item"
-            placeholder="发票类型"
-            style="width: 100%"
-            @change="invoiceTypeChange(scope.row)"
-          />
-          <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+          <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
@@ -191,7 +179,7 @@
     </common-table>
   <!--分页组件-->
   <pagination />
-  <mForm :existInvoiceNo="invoiceNoArr" :projectId="projectId"/>
+  <mForm :existInvoiceNo="invoiceNoArr" :projectId="projectId" :currentRow="currentRow"/>
   </div>
 </template>
 
@@ -225,6 +213,10 @@ const optShow = {
 }
 
 const props = defineProps({
+  currentRow: {
+    type: Object,
+    default: () => {}
+  },
   projectId: {
     type: [String, Number],
     default: undefined
@@ -333,9 +325,9 @@ async function getContractInfo(id) {
   }
 }
 
-function invoiceTypeChange(row) {
-  row.taxRate = undefined
-}
+// function invoiceTypeChange(row) {
+//   row.taxRate = undefined
+// }
 // function moneyChange(row) {
 //   totalAmount.value = 0
 //   crud.data.map(v => {

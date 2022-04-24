@@ -272,7 +272,7 @@
       <pagination />
       <numForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
       <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
-      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
+      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" @numSuccess="handleNumSuccess" :allArea="allArea" />
       <!-- pdf预览 -->
       <bim-preview-drawer
         v-model:visible="showBimDialog"
@@ -484,6 +484,10 @@ function getAreaData(val) {
 
 function handleSuccess() {
   tableRef.value.refreshParent(currentRow.value)
+  crud.toQuery()
+}
+
+function handleNumSuccess() {
   crud.toQuery()
 }
 </script>

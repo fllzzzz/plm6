@@ -523,7 +523,7 @@ watch(
   { deep: true, immediate: true }
 )
 
-const emit = defineEmits(['success', 'update:modelValue'])
+const emit = defineEmits(['success', 'update:modelValue', 'numSuccess'])
 const { visible, handleClose } = useVisible({ emit, props, closeHook })
 
 function closeHook() {
@@ -754,7 +754,11 @@ function partQuantityChange(row) {
 
 function handleSuccess() {
   ElNotification({ title: '更改成功', type: 'success' })
-  emit('success')
+  if (form.value.quantity < originDetail.value.quantity) {
+    emit('success')
+  } else {
+    emit('numSuccess')
+  }
   handleClose()
 }
 

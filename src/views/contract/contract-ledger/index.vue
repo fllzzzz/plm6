@@ -63,7 +63,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionAmount')" key="collectionAmount" prop="collectionAmount" label="累计收款" align="center">
       <template v-slot="scope">
-        <div @click="openTab(scope.row.id,'collection')" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</div>
+        <div @click="openTab(scope.row,'collection')" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</div>
         <!-- <el-tag @click="openTab(scope.row.id,'collection')" effect="plain" style="width:100%;text-align:right;">{{ isNotBlank(scope.row.collectionAmount)? toThousand(scope.row.collectionAmount): '-' }}</el-tag> -->
       </template>
     </el-table-column>
@@ -74,7 +74,7 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceAmount')" key="invoiceAmount" prop="invoiceAmount" label="累计开票" align="center">
       <template v-slot="scope">
-        <div @click="openTab(scope.row.id,'invoice')" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</div>
+        <div @click="openTab(scope.row,'invoice')" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</div>
         <!-- <el-tag @click="openTab(scope.row.id,'invoice')" effect="plain" style="width:100%;text-align:right;">{{ isNotBlank(scope.row.invoiceAmount)? toThousand(scope.row.invoiceAmount): '-' }}</el-tag> -->
       </template>
     </el-table-column>
@@ -88,7 +88,7 @@
         <div @click="openOccurAmount(scope.row.id)" style="cursor:pointer;color:#409eff;text-align:right;">{{ isNotBlank(scope.row.deliverInstallAmount)? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance:" prop="availableBalance:" label="可用余额" align="center">
+    <el-table-column v-if="columns.visible('availableBalance')" key="availableBalance" prop="availableBalance" label="可用余额" align="center">
       <template v-slot="scope">
         <div>{{ scope.row.availableBalance? toThousand(scope.row.availableBalance): '-' }}</div>
       </template>
@@ -104,7 +104,7 @@
   <!-- 发生额 -->
   <occur-amount v-model="occurVisible" :projectId="currentProjectId"/>
   <!-- 收付款 -->
-  <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName" @success="crud.toQuery"/>
+  <collectionAndInvoice v-model="tabVisible" :projectId="currentProjectId" :tabName="activeName" @success="crud.toQuery" :current-row="currentRow"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -143,6 +143,7 @@ const moneyVisible = ref(false)
 const occurVisible = ref(false)
 const tabVisible = ref(false)
 const currentProjectId = ref()
+const currentRow = ref({})
 const activeName = ref('collection')
 const { crud, columns } = useCRUD(
   {
@@ -180,7 +181,8 @@ function openOccurAmount(row) {
 
 function openTab(row, name) {
   activeName.value = name
-  currentProjectId.value = row
+  currentProjectId.value = row.id
+  currentRow.value = row
   tabVisible.value = true
 }
 </script>
