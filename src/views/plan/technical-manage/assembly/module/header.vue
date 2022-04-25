@@ -23,10 +23,10 @@
       <el-input v-model="query.material" size="small" placeholder="输入材质搜索" style="width: 170px" class="filter-item" clearable />
       <rrOperation />
     </div>
-    <crudOperation>
+    <crudOperation :disabled="globalProject.mode === projectModeEnum.STRUCTURE_STANDARD.V">
       <template #optLeft>
         <upload-btn
-          v-if="currentArea && currentArea.id"
+          v-if="currentArea && currentArea.id && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
           v-permission="crud.permission.import"
           :data="AddParam"
           :upload-fun="listUpload"
@@ -38,7 +38,7 @@
           @success="uploadSuccess"
         />
         <upload-btn
-          v-if="currentArea && currentArea.id"
+          v-if="currentArea && currentArea.id && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
           v-permission="crud.permission.import"
           :data="carryParam"
           :upload-fun="listUpload"
@@ -70,7 +70,7 @@
         <el-popconfirm
           :title="`确认清空【${currentArea.name}】下的【组立清单】么?`"
           @confirm="deleteAssemle"
-          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del) && globalProject.mode!==projectModeEnum.STRUCTURE_STANDARD.V"
         >
           <template #reference>
             <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
@@ -108,6 +108,7 @@ import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import rrOperation from '@crud/RR.operation'
 import { downloadAssemble, downloadAssembleTemplate, delAssemblyByArea, assembleError } from '@/api/plan/technical-manage/assembly'
+import { projectModeEnum } from '@enum-ms/contract'
 
 const defaultQuery = {
   name: '',
@@ -129,6 +130,10 @@ const props = defineProps({
   projectId: {
     type: [Number, String],
     default: undefined
+  },
+  globalProject: {
+    type: Object,
+    default: () => {}
   }
 })
 

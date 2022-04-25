@@ -50,7 +50,8 @@ const props = defineProps({
 })
 
 const originData = [
-  { L: '构件', K: 'STRUCTURE', V: 1 << 0 },
+  { L: '构件(便捷型)', K: 'STRUCTURE', V: 1 << 0 },
+  { L: '构件(标准型)', K: 'STRUCTURE_STANDARD', V: 1 << 3 },
   { L: '构件&组立', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
   { L: '构件&零件&组立', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
 ]
