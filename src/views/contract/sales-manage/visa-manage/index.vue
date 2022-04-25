@@ -49,7 +49,7 @@ import crudApi from '@/api/contract/sales-manage/visa-manage'
 import { ref } from 'vue'
 
 import { visaManagePM as permission } from '@/page-permission/contract'
-import { settlementStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/finance'
 import { reviewStatusEnum } from '@enum-ms/common'
 
 import useMaxHeight from '@compos/use-max-height'
