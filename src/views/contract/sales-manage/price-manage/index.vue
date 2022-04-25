@@ -73,6 +73,7 @@ import { priceManagePM as permission } from '@/page-permission/contract'
 
 import { packTypeEnum } from '@enum-ms/mes'
 import { debounce } from '@/utils'
+import { isBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
 
 import monomerSelect from '@/components-system/plan/monomer-select'
@@ -139,11 +140,15 @@ function handleMonomerChange() {
 
 // 获取项目造价
 const fetchCost = debounce(async function () {
-  if (!checkPermission(permission.cost)) return
+  if (!checkPermission(permission.cost) || isBlank(projectId.value)) {
+    projectCost.value = 0
+    monomerCost.value = 0
+    return
+  }
   try {
     costLoading.value = true
     const params = {
-      projectId: globalProjectId.value,
+      projectId: projectId.value,
       monomerId: monomerId.value
     }
     const { monomerPrice, projectPrice } = await cost(params)
