@@ -124,9 +124,9 @@ constantize(reimbursementTypeEnum)
 // 变更类型1
 const contractChangeTypeEnum = {
   CONTRACT_INFO: { L: '变更合同信息', K: 'CONTRACT_INFO', V: 1 << 0 },
-  CONTRACT_AMOUNT: { L: '变更合同金额', K: 'CONTRACT_AMOUNT', V: 1 << 1 },
-  CONTRACT_SETTLE: { L: '项目结算', K: 'CONTRACT_SETTLE', V: 1 << 2 },
-  VARIATION_ORDER: { L: '签证变更', K: 'VARIATION_ORDER', V: 1 << 3 }
+  CONTRACT_AMOUNT: { L: '变更合同金额', K: 'CONTRACT_AMOUNT', V: 1 << 1 }
+  // CONTRACT_SETTLE: { L: '项目结算', K: 'CONTRACT_SETTLE', V: 1 << 2 },
+  // VARIATION_ORDER: { L: '签证变更', K: 'VARIATION_ORDER', V: 1 << 3 }
 }
 constantize(contractChangeTypeEnum)
 
