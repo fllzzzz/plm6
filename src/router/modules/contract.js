@@ -140,15 +140,15 @@ export default {
           name: 'VisaManage',
           path: 'visa-manage',
           hidden: false,
-          redirect: '/contract/sales-manage/visa-manage/change',
-          meta: { title: '签证管理', icon: 'contract2', noCache: true },
-          children: [{
-            name: 'VisaChange',
-            path: 'change',
-            hidden: false,
-            component: '/contract/sales-manage/visa-manage/change/index',
-            meta: { title: '签证变更', icon: 'contract2', noCache: true }
-          }]
+          component: '/contract/sales-manage/visa-manage/index',
+          meta: { title: '签证管理', icon: 'contract2', noCache: true }
+        },
+        {
+          name: 'SettlementManage',
+          path: 'settlement-manage',
+          hidden: false,
+          component: '/contract/sales-manage/settlement-manage/index',
+          meta: { title: '结算管理', icon: 'contract2', noCache: true }
         },
         {
           name: 'OrderTracking',
