@@ -3,12 +3,6 @@
     <crudOperation>
       <template #optLeft>
         <div v-show="crud.searchToggle">
-          <project-radio-button
-            size="small"
-            v-model="query.projectId"
-            class="filter-item"
-            @change="crud.toQuery"
-          />
           <common-radio-button
             v-model="query.productType"
             :options="packTypeEnum.ENUM"
@@ -17,6 +11,14 @@
             size="small"
             class="filter-item"
             @change="crud.toQuery"
+          />
+          <project-visa-select
+            v-model="query.projectId"
+            class="filter-item"
+            style="width: 300px"
+            @change="crud.toQuery"
+            placeholder="可选择项目搜索"
+            clearable
           />
           <el-date-picker
             v-model="query.date"
@@ -43,6 +45,7 @@ import { packTypeEnum } from '@enum-ms/mes'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import projectVisaSelect from '@comp-base/project-visa-select'
 
 const defaultQuery = {
   date: undefined, startDate: undefined, endDate: undefined,

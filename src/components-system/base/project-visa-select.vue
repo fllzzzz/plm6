@@ -6,10 +6,10 @@
     :options="options"
     :type="'other'"
     :collapse-tags="collapseTags"
-    :dataStructure="{ key: 'id', label: 'shortName', value: 'id' }"
+    :data-structure="dataStructure"
     :size="size"
     :clearable="clearable"
-    :default="props.default"
+    :default-id="props.defaultId"
     :disabled="props.disabled"
     filterable
     :placeholder="placeholder"
@@ -29,6 +29,12 @@ const props = defineProps({
   modelValue: {
     type: [Number, String],
     default: undefined
+  },
+  dataStructure: {
+    type: Object,
+    default: () => {
+      return { key: 'id', label: 'fullName', value: 'id' }
+    }
   },
   size: {
     type: String,
@@ -50,9 +56,9 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  default: {
-    type: Boolean,
-    default: false
+  defaultId: {
+    type: [Number, String],
+    default: undefined
   },
   placeholder: {
     type: String,
@@ -60,6 +66,11 @@ const props = defineProps({
   },
   // 过滤有结算记录的项目（结算未审核也过滤）
   filterSettlement: {
+    type: Boolean,
+    default: false
+  },
+  // 是否刷新
+  isRefresh: {
     type: Boolean,
     default: false
   },
@@ -75,22 +86,6 @@ const selectValue = ref()
 
 const store = useStore()
 
-watch(
-  () => props.modelValue,
-  (val) => {
-    selectValue.value = val
-  },
-  { immediate: true }
-)
-
-// 项目业务类型
-watch(
-  () => props.businessType,
-  (val) => {
-    store.dispatch('project/fetchUserVisaProjects', { businessType: val })
-  }
-)
-
 const { visaProjects } = useUserVisaProjects({ businessType: props.businessType })
 
 const options = computed(() => {
@@ -101,6 +96,52 @@ const options = computed(() => {
   })
 })
 
+// 默认值是否可用
+const flag = computed(() => {
+  return options.value.map(v => v.id).includes(props.defaultId)
+})
+
+// 设置默认值
+watch(
+  () => flag.value,
+  (bol) => {
+    const id = bol ? props.defaultId : void 0
+    selectChange(id)
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    selectValue.value = val
+  }
+)
+
+// 是否刷新
+watch(
+  () => props.isRefresh,
+  (val) => {
+    if (val) {
+      fetchProjects()
+    }
+  }
+)
+
+// 项目业务类型
+watch(
+  () => props.businessType,
+  (val) => {
+    fetchProjects()
+  }
+)
+
+// 重新获取签证项目
+function fetchProjects() {
+  store.dispatch('project/fetchUserVisaProjects', { businessType: props.businessType })
+}
+
+// change
 function selectChange(val) {
   emit('update:modelValue', val)
   emit('change', val)

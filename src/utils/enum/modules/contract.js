@@ -11,10 +11,10 @@ import { constantize } from '../base'
 
 // TODO:项目状态
 const projectStatusEnum = {
-  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0 },
-  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1 },
-  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2 },
-  SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3 }
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0, TAG: '' },
+  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1, TAG: 'danger' },
+  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2, TAG: 'warning' },
+  SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3, TAG: 'success' }
 }
 constantize(projectStatusEnum)
 
@@ -93,8 +93,8 @@ constantize(isTaxEnum)
 
 // 是否含税
 const isTaxContractEnum = {
-  YES: { L: '是', K: 'YES', V: 1 },
-  NO: { L: '否', K: 'NO', V: 0 }
+  YES: { L: '是', SL: '含税', K: 'YES', V: 1 },
+  NO: { L: '否', SL: '不含税', K: 'NO', V: 0 }
 }
 constantize(isTaxContractEnum)
 

@@ -11,9 +11,16 @@
             size="small"
             class="filter-item"
           />
+          <project-visa-select
+            v-model="projectId"
+            :default-id="globalProjectId"
+            class="filter-item"
+            style="width: 300px"
+            placeholder="可选择项目搜索"
+          />
           <monomer-select
             v-model="monomerId"
-            :project-id="globalProjectId"
+            :project-id="projectId"
             class="filter-item"
             @change="handleMonomerChange"
           />
@@ -73,6 +80,7 @@ import structure from './structure'
 import enclosure from './enclosure'
 import auxiliaryMaterial from './auxiliary-material'
 import modifyRecord from './price-modify-list/index'
+import projectVisaSelect from '@comp-base/project-visa-select'
 
 // 当前显示组件
 const currentView = computed(() => {
@@ -92,13 +100,6 @@ const { globalProjectId, globalProject } = mapGetters(['globalProjectId', 'globa
 const enclosureMeasureMode = ref()
 
 watch(
-  globalProjectId,
-  () => {
-    handleProjectChange()
-  }
-)
-
-watch(
   globalProject,
   () => {
     enclosureMeasureMode.value = globalProject.value?.enclosureMeasureMode
@@ -107,6 +108,7 @@ watch(
 )
 
 const domRef = ref()
+const projectId = ref()
 const productType = ref()
 const modifyCount = ref(0)
 const costLoading = ref(false)
@@ -116,7 +118,7 @@ const monomerId = ref()
 const modifyVisible = ref(false)
 
 provide('monomerId', monomerId)
-provide('projectId', globalProjectId)
+provide('projectId', projectId)
 provide('modifyVisible', modifyVisible)
 provide('enclosureMeasureMode', enclosureMeasureMode)
 

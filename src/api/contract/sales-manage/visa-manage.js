@@ -5,6 +5,7 @@ import request from '@/utils/request'
  * @param {number} page|required 页码
  * @param {number} size|required 页大小
  * @param {number} projectId 项目id
+ * @param {number} businessType 签证类型[businessTypeEnum]
  * @param {string} userName 申请人名称
  * @param {string} checkUerName 审核人名称
  * @returns
@@ -30,7 +31,7 @@ export function get(params) {
  * @param {string} remark 备注
  * @returns
  */
-export function addVisa(data) {
+export function add(data) {
   return request({
     module: 'contract',
     url: 'visa/foreign',
@@ -52,47 +53,10 @@ export function addVisa(data) {
  * @param {string} remark 备注
  * @returns
  */
-export function editVisa(data) {
+export function edit(data) {
   return request({
     module: 'contract',
     url: 'visa/foreign',
-    method: 'put',
-    data
-  })
-}
-
-/**
- * 新增结算单
- * @param {number} projectId|required 项目id
- * @param {number} breachAmount|required 违约额
- * @param {number} settlementAmount|required 结算额
- * @param {number} visaAmount|required 签证额
- * @param {string} remark 备注
- * @returns
- */
-export function addSettlement(data) {
-  return request({
-    module: 'contract',
-    url: 'visa/project/handle',
-    method: 'post',
-    data
-  })
-}
-
-/**
- * 编辑结算单
- * @param {number} id|required 签证单id
- * @param {number} projectId|required 项目id
- * @param {number} breachAmount|required 违约额
- * @param {number} settlementAmount|required 结算额
- * @param {number} visaAmount|required 签证额
- * @param {string} remark 备注
- * @returns
- */
-export function editSettlement(data) {
-  return request({
-    module: 'contract',
-    url: 'visa/project/handle',
     method: 'put',
     data
   })
@@ -138,7 +102,7 @@ export function detail(id) {
  * 下载签证单
  * @param {number} id|required 签证单id
  */
-export function downloadVisa(id) {
+export function download(id) {
   return request({
     module: 'contract',
     url: `visa/${id}/export`,
@@ -147,17 +111,4 @@ export function downloadVisa(id) {
   })
 }
 
-/**
- * 下载结算单
- * @param {number} id|required 签证单id
- */
-export function downloadSettlement(id) {
-  return request({
-    module: 'contract',
-    url: `visa/${id}/settlement/export`,
-    method: 'get',
-    responseType: 'blob'
-  })
-}
-
-export default { get, detail }
+export default { get, add, edit, detail, check, download }
