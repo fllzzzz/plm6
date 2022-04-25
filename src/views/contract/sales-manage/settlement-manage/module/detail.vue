@@ -47,6 +47,17 @@
             <div>{{ detail?.project?.customerUnit }}</div>
           </el-form-item>
         </div>
+         <div class="rule-row">
+          <el-form-item label="签约人" prop="signerName">
+            <div>{{ detail?.project?.signerName }}</div>
+          </el-form-item>
+          <el-form-item label="合同含税" prop="isTax">
+            <div>
+              <span>{{ isTaxContractEnum.V?.[detail?.project?.isTax]?.['SL'] }}</span>
+              <span v-if="detail?.project?.isTax === isTaxContractEnum.YES.V">【{{ invoiceTypeEnum.VL?.[detail?.project?.invoiceType] }} {{detail?.project?.taxRate || 0 }}%】</span>
+              </div>
+          </el-form-item>
+        </div>
         <div class="rule-row">
           <el-form-item label="签订日期" prop="signingDate">
             <div v-parse-time="{ val: detail?.project?.signingDate, fmt: '{y}-{m}-{d}' }" />
@@ -57,21 +68,25 @@
         </div>
         <div class="rule-row">
           <el-form-item label="保证金额" prop="marginAmount">
-            <div>
+            <div v-if="isBlank(detail?.project?.marginAmount)">无</div>
+            <div v-else>
               <span v-thousand="detail?.project?.marginAmount" />
               <span v-if="dict.label['margin_type'] && detail?.project?.marginType">（{{ dict.label['margin_type'][detail?.project?.marginType] }}）</span>
             </div>
           </el-form-item>
-          <el-form-item label="发运额" prop="happenedAmount">
-            <div><span v-thousand="detail?.project?.happenedAmount" />（{{ digitUppercase(detail?.project?.happenedAmount || 0) }}）</div>
+          <el-form-item label="累计发运额" prop="happenedAmount">
+            <div v-if="isBlank(detail?.project?.happenedAmount)">无</div>
+            <div v-else><span v-thousand="detail?.project?.happenedAmount" />（{{ digitUppercase(detail?.project?.happenedAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
           <el-form-item label="违约金额" prop="breachAmount">
-            <div>{{ detail.breachAmount }}（{{ digitUppercase(detail.breachAmount) }}）</div>
+            <div v-if="isBlank(detail.breachAmount)">无</div>
+            <div v-else>{{ detail.breachAmount }}（{{ digitUppercase(detail.breachAmount) }}）</div>
           </el-form-item>
           <el-form-item label="签证额" prop="visaAmount">
-            <div>{{ detail.visaAmount }}（{{ digitUppercase(detail.visaAmount) }}）</div>
+            <div v-if="isBlank(detail.visaAmount)">无</div>
+            <div v-else>{{ detail.visaAmount }}（{{ digitUppercase(detail.visaAmount) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
@@ -83,17 +98,17 @@
           </el-form-item>
         </div>
         <div class="rule-row">
-          <el-form-item label="已付款" prop="collectionAmount">
+          <el-form-item label="累计收款" prop="collectionAmount">
             <div>
               <span v-thousand="detail?.project?.collectionAmount" />（{{ digitUppercase(detail?.project?.collectionAmount || 0) }}）
             </div>
           </el-form-item>
-          <el-form-item label="欠款额" prop="debitAmount">
+          <el-form-item label="结算应收" prop="debitAmount">
             <div><span v-thousand="debitAmount" />（{{ digitUppercase(debitAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
-          <el-form-item label="已开票" prop="invoiceAmount">
+          <el-form-item label="累计开票" prop="invoiceAmount">
             <div><span v-thousand="detail?.project?.invoiceAmount" />（{{ digitUppercase(detail?.project?.invoiceAmount || 0) }}）</div>
           </el-form-item>
           <el-form-item label="应补发票" prop="debitInvoice">
@@ -123,7 +138,7 @@
             v-model="detail.attachmentRemark"
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 4 }"
-            placeholder="请填写结算备注"
+            placeholder="请填写确签备注"
             maxlength="200"
             show-word-limit
           />
@@ -137,7 +152,10 @@
 import { check, download } from '@/api/contract/sales-manage/settlement-manage'
 import { ref, defineProps, defineEmits, computed } from 'vue'
 
+import { isBlank } from '@data-type/index'
 import { fileClassifyEnum } from '@enum-ms/file'
+import { isTaxContractEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@/utils/enum/modules/finance'
 import { projectNameFormatter } from '@/utils/project'
 import { reviewStatusEnum } from '@enum-ms/common'
 import { digitUppercase } from '@data-type/number'

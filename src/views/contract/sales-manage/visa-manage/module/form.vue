@@ -20,7 +20,6 @@
               <project-visa-select
                 v-else
                 v-model="form.projectId"
-                :is-refresh="crud.status.cu > 0"
                 clearable
                 class="input-underline"
                 style="width: 100%;"

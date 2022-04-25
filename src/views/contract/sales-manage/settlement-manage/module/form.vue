@@ -87,8 +87,9 @@
             <div v-if="isBlank(projectInfo.marginAmount)">无</div>
             <div v-else><span v-thousand="projectInfo.marginAmount || 0" /><span v-if="projectInfo.marginType">（{{ dict.label['margin_type'][projectInfo.marginType] }}）</span></div>
           </el-form-item>
-          <el-form-item label="发运额" prop="happenedAmount">
-            <div><span v-thousand="projectInfo.happenedAmount || 0" />（{{ digitUppercase(projectInfo.happenedAmount || 0) }}）</div>
+          <el-form-item label="累计发运额" prop="happenedAmount">
+            <div v-if="isBlank(projectInfo.happenedAmount)">无</div>
+            <div v-else><span v-thousand="projectInfo.happenedAmount || 0" />（{{ digitUppercase(projectInfo.happenedAmount || 0) }}）</div>
           </el-form-item>
         </div>
         <div class="rule-row">
@@ -187,7 +188,7 @@
 
 <script setup>
 import { getProjectInfo } from '@/api/contract/sales-manage/settlement-manage'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
@@ -241,6 +242,13 @@ const defaultForm = {
 const dict = useDict(['margin_type'])
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
 
+watch(
+  [() => form?.breachAmount, () => form?.processingSettlementAmount, () => form?.visaAmount],
+  () => {
+    form.settlementAmount = (form.processingSettlementAmount || 0) + (form.visaAmount || 0) - (form.breachAmount || 0)
+  }
+)
+
 const rules = {
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   settlementDate: [{ required: true, message: '请选择结算日期', trigger: 'change' }],
@@ -254,7 +262,14 @@ const rules = {
 // 编辑
 CRUD.HOOK.beforeEditDetailLoaded = async (crud) => {
   form.projectId = form.project.id
+  showBreachAmount.value = !!form.breachAmount
   handleProjectChange(form.projectId)
+}
+
+// 编辑
+CRUD.HOOK.beforeToAdd = async (crud) => {
+  showBreachAmount.value = false
+  projectInfo.value = {}
 }
 
 // 添加成功后更新可签证项目列表
