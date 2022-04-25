@@ -25,7 +25,9 @@
         min-width="250"
       >
         <template v-slot="scope">
-          <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+          <el-tooltip :content="scope.row.project.serialNumber+' '+scope.row.project.name" :show-after="50" placement="top" v-if="scope.row.project && scope.row.project.serialNumber">
+            <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('type')" key="type" prop="type" :show-overflow-tooltip="true" label="内容" min-width="120">

@@ -69,38 +69,6 @@ export const projectModePM = {
   edit: ['project_mode:edit'] // 修改项目模式
 }
 
-// 基础配置/构件类型配置
-export const artifactConfigPM = {
-  get: ['artifact_config:get'], // 构件类型配置列表
-  add: ['artifact_config:add'], // 添加构件类型配置
-  edit: ['artifact_config:edit'], // 修改零件类型配置
-  del: ['artifact_config:del'] // 删除零件类型配置
-}
-
-// 基础配置/母件类型配置
-export const machinePartConfigPM = {
-  get: ['machine_part_config:get'], // 母件类型配置列表
-  add: ['machine_part_config:add'], // 添加母件类型配置
-  edit: ['machine_part_config:edit'], // 修改零件类型配置
-  del: ['machine_part_config:del'] // 删除零件类型配置
-}
-
-// 基础配置/零件类型配置
-export const steelClassicPM = {
-  get: ['steel_classic:get'], // 零件类型配置列表
-  add: ['steel_classic:add'], // 新增零件类型配置
-  edit: ['steel_classic:edit'], // 修改零件类型配置
-  del: ['steel_classic:del'] // 删除零件类型配置
-}
-
-// 基础配置/变更原因
-export const changeReasonPM = {
-  get: ['change_reason:get'], // 变更原因列表
-  add: ['change_reason:add'], // 新增变更原因
-  edit: ['change_reason:edit'], // 修改变更原因
-  del: ['change_reason:del'] // 删除变更原因
-}
-
 // 基础配置/表格模板
 export const tablePrintTemplatePM = {
   get: ['table_print_template:get'], // 表格模板列表
@@ -166,6 +134,37 @@ export const configMesBasePM = {
   carModelConfigEdit: ['car_model_config:edit'] // 编辑车型配置
 }
 
+// MES-配置管理/构件类型配置
+export const artifactConfigPM = {
+  get: ['artifact_config:get'], // 构件类型配置列表
+  add: ['artifact_config:add'], // 添加构件类型配置
+  edit: ['artifact_config:edit'], // 修改零件类型配置
+  del: ['artifact_config:del'] // 删除零件类型配置
+}
+
+// MES-配置管理/母件类型配置
+export const machinePartConfigPM = {
+  get: ['machine_part_config:get'], // 母件类型配置列表
+  add: ['machine_part_config:add'], // 添加母件类型配置
+  edit: ['machine_part_config:edit'], // 修改零件类型配置
+  del: ['machine_part_config:del'] // 删除零件类型配置
+}
+
+// MES-配置管理/零件类型配置
+export const steelClassicPM = {
+  get: ['steel_classic:get'], // 零件类型配置列表
+  add: ['steel_classic:add'], // 新增零件类型配置
+  edit: ['steel_classic:edit'], // 修改零件类型配置
+  del: ['steel_classic:del'] // 删除零件类型配置
+}
+
+// MES-配置管理/变更原因
+export const changeReasonPM = {
+  get: ['change_reason:get'], // 变更原因列表
+  add: ['change_reason:add'], // 新增变更原因
+  edit: ['change_reason:edit'], // 修改变更原因
+  del: ['change_reason:del'] // 删除变更原因
+}
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################

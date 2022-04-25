@@ -24,7 +24,9 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目">
       <template v-slot="scope">
-        <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+        <el-tooltip :content="scope.row.project.serialNumber+' '+scope.row.project.name" :show-after="50" placement="top" v-if="scope.row.project && scope.row.project.serialNumber">
+          <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('collectionUnit')" key="collectionUnit" prop="collectionUnit" :show-overflow-tooltip="true" label="签约主体" align="center">

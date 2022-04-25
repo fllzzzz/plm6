@@ -62,34 +62,6 @@ export default {
           meta: { title: '项目模式', icon: 'project', noCache: true }
         },
         {
-          name: 'ArtifactConfig',
-          path: 'artifact-config',
-          hidden: false,
-          component: '/config-manage/system/artifact-config/index',
-          meta: { title: '组立配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'MachinePartConfig',
-          path: 'machine-part-config',
-          hidden: false,
-          component: '/config-manage/system/machine-part/index',
-          meta: { title: '零件配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'SteelClassic',
-          path: 'steel-classic',
-          hidden: false,
-          component: '/config-manage/system/steel-classic/index',
-          meta: { title: '零件类型配置', icon: 'project', noCache: true }
-        },
-        {
-          name: 'ChangeReason',
-          path: 'change-reason',
-          hidden: false,
-          component: '/config-manage/system/change-reason-config/index',
-          meta: { title: '变更原因配置', icon: 'project', noCache: true }
-        },
-        {
           name: 'TablePrinting',
           path: 'table-printing',
           hidden: false,
@@ -216,6 +188,34 @@ export default {
           hidden: false,
           component: '/config-manage/mes/base/index',
           meta: { title: '基础配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ArtifactConfig',
+          path: 'artifact-config',
+          hidden: false,
+          component: '/config-manage/mes/artifact-config/index',
+          meta: { title: '构件类型配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'MachinePartConfig',
+          path: 'machine-part-config',
+          hidden: false,
+          component: '/config-manage/mes/machine-part/index',
+          meta: { title: '母件类型配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'SteelClassic',
+          path: 'steel-classic',
+          hidden: false,
+          component: '/config-manage/mes/steel-classic/index',
+          meta: { title: '零件类型配置', icon: 'project', noCache: true }
+        },
+        {
+          name: 'ChangeReason',
+          path: 'change-reason',
+          hidden: false,
+          component: '/config-manage/mes/change-reason-config/index',
+          meta: { title: '变更原因配置', icon: 'project', noCache: true }
         }
       ]
     },
