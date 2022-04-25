@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/config/system-config/machine-part-config'
+import crudApi from '@/api/config/system-config/artifact-config'
 import { ref } from 'vue'
 import { artifactConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'

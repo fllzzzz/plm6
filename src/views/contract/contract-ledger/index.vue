@@ -32,7 +32,9 @@
       fixed="left"
     >
       <template v-slot="scope">
-        <span class="project-name">{{ projectNameFormatter(scope.row) }}</span>
+        <el-tooltip :content="scope.row.serialNumber+' '+scope.row.name" :show-after="50" placement="top" v-if="scope.row.serialNumber && scope.row.name">
+          <span class="project-name">{{ projectNameFormatter(scope.row) }}</span>
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('businessType')" key="businessType" prop="businessType" label="业务类型" align="center" width="80">

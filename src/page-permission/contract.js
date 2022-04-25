@@ -20,8 +20,8 @@ export const projectListPM = {
   del: ['contract_project:del'], // 删除项目
   detail: ['contract_project:detail'], // 项目详情
   changeAmount: ['contract_project:changeAmount'], // 合同金额修改
-  settle: ['contract_project:settle'], // 结算
-  variationChange: ['contract_project:variationChange'], // 签证变更
+  // settle: ['contract_project:settle'], // 结算
+  // variationChange: ['contract_project:variationChange'], // 签证变更
   editMember: ['contract_project:editMember'], // 修改成员
   completeList: {
     get: ['contract_project_complete:get'], // 可完工项目列表
