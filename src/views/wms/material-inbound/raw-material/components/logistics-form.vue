@@ -11,7 +11,7 @@
       label-position="right"
       label-width="80px"
     >
-      <el-form-item label="运费" prop="freight" label-width="50px">
+      <el-form-item label="运费" prop="freight" label-width="60px">
         <common-input-number
           class="input-underline"
           v-model="currentForm.freight"

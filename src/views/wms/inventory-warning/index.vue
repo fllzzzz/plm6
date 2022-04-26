@@ -25,7 +25,7 @@
         width="150"
       >
         <template #default="{ row }">
-          <factory-table-cell-tag :id="row.factoryId" />
+          <factory-table-cell-tag v-if="row.factory" :id="row.factory.id" />
           <span>{{ row.serialNumber }}</span>
         </template>
       </el-table-column>

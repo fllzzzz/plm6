@@ -149,6 +149,16 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  showMeasureUnit: {
+    // 是否显示计量单位
+    type: Boolean,
+    default: true
+  },
+  showQuantity: {
+    // 显示数量
+    type: Boolean,
+    default: true
+  },
   showSteelUnit: {
     // 是否显示钢材单位
     type: Boolean,
@@ -307,9 +317,11 @@ const showUnit = computed(() => {
   }
 })
 
-const showMeasureUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit')))
+const showMeasureUnit = computed(
+  () => props.showMeasureUnit && showUnit.value && (isBlank(props.columns) || props.columns.visible('measureUnit'))
+)
 const showAccountingUnit = computed(() => showUnit.value && (isBlank(props.columns) || props.columns.visible('accountingUnit')))
-const showQuantity = computed(() => isBlank(props.columns) || props.columns.visible('quantity'))
+const showQuantity = computed(() => props.showQuantity && (isBlank(props.columns) || props.columns.visible('quantity')))
 const showMete = computed(() => isBlank(props.columns) || props.columns.visible('mete'))
 
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
