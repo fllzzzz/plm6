@@ -80,7 +80,7 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
+      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="180">
         <template v-slot="scope">
           <common-select
             v-if="scope.row.isModify"
