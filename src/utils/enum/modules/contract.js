@@ -227,7 +227,8 @@ constantize(supplierPayTypeEnum)
 
 // TODO: 项目模式
 const projectModeEnum = {
-  STRUCTURE: { L: '构件', K: 'STRUCTURE', V: 1 << 0 },
+  STRUCTURE: { L: '构件(便捷型)', K: 'STRUCTURE', V: 1 << 0 },
+  STRUCTURE_STANDARD: { L: '构件(标准型)', K: 'STRUCTURE_STANDARD', V: 1 << 3 },
   STRUCTURE_ASSEMBLE: { L: '构件&组立', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
   STRUCTURE_PART_ASSEMBLE: { L: '构件&零件&组立', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
 }

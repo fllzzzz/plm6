@@ -36,11 +36,13 @@
         align="center"
       >
         <template v-slot="scope">
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
           <udOperation :data="scope.row" :show-edit="scope.row.auditStatus===auditTypeEnum.AUDITING.V?true:false" :show-del="scope.row.auditStatus===auditTypeEnum.AUDITING.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>
-    <mForm :detail-info="detailInfo"/>
+    <mForm :detail-info="detailInfo" />
+    <mDetail :detail-info="detailInfo" v-model="detailVisible" :currentRow="currentRow"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -60,6 +62,7 @@ import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mForm from './form'
+import mDetail from './detail'
 
 const permission = supplierMaterialPaymentPM.application
 
@@ -89,6 +92,8 @@ const dataFormat = ref([
 
 const tableRef = ref()
 const orderId = inject('orderId')
+const detailVisible = ref(false)
+const currentRow = ref({})
 
 const { crud, CRUD } = useCRUD(
   {
@@ -134,6 +139,11 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     v.paymentDate = String(v.paymentDate)
   })
+}
+
+function openDetail(row, type) {
+  currentRow.value = row
+  detailVisible.value = true
 }
 </script>
 

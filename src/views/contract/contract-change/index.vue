@@ -45,8 +45,8 @@
       >
         <template v-slot="scope">
           <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_INFO.V">{{toThousand(scope.row.contractAmount)}}</span>
-          <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_SETTLE.V">{{toThousand(scope.row.settlementAmount)}}</span>
-          <template v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_AMOUNT.V || scope.row.type === contractChangeTypeEnum.VARIATION_ORDER.V">
+          <!-- <span v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_SETTLE.V">{{toThousand(scope.row.settlementAmount)}}</span> -->
+          <template v-if="scope.row.type === contractChangeTypeEnum.CONTRACT_AMOUNT.V">
             <span>{{toThousand(scope.row.contractAmount)}}</span>
             <span>{{scope.row.contractAmount<scope.row.changeAmount?'<':'>'}}</span>
             <span :class="scope.row.contractAmount>scope.row.changeAmount?'tip-red':'tip-green'">{{ toThousand(scope.row.changeAmount) }}</span>
@@ -105,7 +105,7 @@
           <div>{{ scope.row.userName }}</div>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('leaderList')"
         key="leaderList"
         prop="leaderList"
@@ -119,7 +119,7 @@
             <div v-if="scope.row.leaderList && scope.row.leaderList.length>0"><span v-for="(item,index) in scope.row.leaderList" :key="item.id">{{ index!==0? ','+item.name: item.name }}</span></div>
           </template>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="columns.visible('auditTime')"
         key="auditTime"
@@ -255,15 +255,15 @@ function openDetail(row, type) {
     case (contractChangeTypeEnum.CONTRACT_AMOUNT.V):
       moneyVisible.value = true
       break
-    case (contractChangeTypeEnum.CONTRACT_SETTLE.V):
-      settleVisible.value = true
-      break
+    // case (contractChangeTypeEnum.CONTRACT_SETTLE.V):
+    //   settleVisible.value = true
+    //   break
     case (contractChangeTypeEnum.CONTRACT_INFO.V):
       contractVisible.value = true
       break
-    case (contractChangeTypeEnum.VARIATION_ORDER.V):
-      variationVisible.value = true
-      break
+    // case (contractChangeTypeEnum.VARIATION_ORDER.V):
+    //   variationVisible.value = true
+    //   break
     default:
       break
   }
