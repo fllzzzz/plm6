@@ -9,6 +9,16 @@
         class="filter-item"
         @change="handleListTypeChange"
       />
+      <common-radio-button
+        v-if="listType===listTypeEnum.ORDER.V"
+        v-model="query.settlementStatus"
+        :options="settlementStatusEnum.ENUM"
+        showOptionAll
+        :optionAllValue="undefined"
+        type="enum"
+        class="filter-item"
+        @change="crud.toQuery"
+      />
       <el-date-picker
         v-model="query.date"
         type="daterange"
@@ -63,13 +73,15 @@ import moment from 'moment'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'
+import { settlementStatusEnum } from '@enum-ms/finance'
 
 const defaultQuery = {
   date: undefined,
   startDate: undefined,
   endDate: undefined,
   serialNumber: undefined,
-  supplierName: undefined
+  supplierName: undefined,
+  settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
 }
 const { crud, query } = regHeader(defaultQuery)
 
