@@ -116,7 +116,6 @@ const tableRules = {
   // steelClassifyConfId: [{ required: true, max: 20, message: '不能超过50个字符', trigger: 'blur' }]
 }
 const { tableValidate, cleanUpData, wrongCellMask } = useTableValidate({ rules: tableRules, ditto })
-//
 const { steelClassifyConfKV } = useSteelClassifyConf()
 
 // 添加
@@ -133,7 +132,7 @@ const { maxHeight } = useMaxHeight(
 )
 
 // 提交
-const submit = async () => {
+async function submit() {
   try {
     submitLoading.value = true
     const { validResult, dealList } = tableValidate(addList.value)
@@ -165,7 +164,7 @@ const submit = async () => {
 }
 
 // 验证是否有重复数据
-const validateRepeat = (addList = [], technologyList = []) => {
+function validateRepeat(addList = [], technologyList = []) {
   // 校验自身是否有重复数据
   let repeatMap = new Map()
   let repeatResult = []

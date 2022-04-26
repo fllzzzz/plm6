@@ -1,10 +1,32 @@
 <template>
-  <common-table class="list-table" v-bind="$attrs" ref="tableRef" :data="list" :data-format="columnsDataFormat" :height="props.height" row-key="id">
-    <el-table-column label="序号" type="index" align="center" width="60" />
-    <el-table-column label="钢材种类" key="steelClassifyConfName" prop="steelClassifyConfName" align="center" width="100" />
+  <common-table
+    class="list-table"
+    v-bind="$attrs"
+    ref="tableRef"
+    :data="list"
+    :data-format="columnsDataFormat"
+    :height="props.height"
+    row-key="id"
+  >
+    <!-- <el-table-column label="序号" type="index" align="center" width="60" /> -->
+    <!-- 基础信息 -->
+    <material-base-info-columns
+      :show-serial-number="false"
+      :basic-class="basicClass"
+      show-frozen-tip
+      frozen-viewable
+      spec-merge
+      sortable
+      fixed="left"
+    />
+    <!-- 次要信息 -->
+    <material-secondary-info-columns :basic-class="basicClass" />
+    <!-- <el-table-column label="钢材种类" key="steelClassifyConfName" prop="steelClassifyConfName" align="center" width="100" />
     <el-table-column label="材质" key="material" prop="material" align="center" width="100" />
-    <el-table-column label="厚度/规格" key="specification" prop="specification" align="center" />
-    <el-table-column label="清单量（kg）" key="listMete" prop="listMete" align="center" width="110">
+    <el-table-column label="厚度/规格" key="specification" prop="specification" align="center" /> -->
+    <!-- 单位及其数量 -->
+    <el-table-column key="accountingUnit" prop="accountingUnit" label="核算单位" align="center" width="70px" show-overflow-tooltip />
+    <el-table-column label="清单量" key="listMete" prop="listMete" align="center" width="110">
       <template #default="{ row }">
         <el-input-number
           v-if="props.editMode"
@@ -19,27 +41,27 @@
         <span v-else>{{ row.listMete }}</span>
       </template>
     </el-table-column>
-    <el-table-column label="备料量（kg）" key="preparationMete" prop="preparationMete" align="center" width="110">
+    <el-table-column label="备料量" key="preparationMete" prop="preparationMete" align="center" width="110">
       <template #default="{ row: { sourceRow: row } }">
-        <span v-if="techPrepMeteKV[row.id]" v-to-fixed="{ val: techPrepMeteKV[row.id].preparation, k: 'COM_WT__KG' }" />
+        <span v-if="techPrepMeteKV[row.id]" v-to-fixed="{ val: techPrepMeteKV[row.id].preparation, dp: row.accountingPrecision }" />
         <span v-else>-</span>
       </template>
     </el-table-column>
-    <el-table-column label="差值（kg）" key="diff" prop="diff" align="center" width="100">
+    <el-table-column label="差值" key="diff" prop="diff" align="center" width="100">
       <template #default="{ row: { sourceRow: row } }">
         <span
           v-if="techPrepMeteKV[row.id]"
           :class="techPrepMeteKV[row.id].isEnough ? 'over-text' : 'not-over-text'"
-          v-to-fixed="{ val: techPrepMeteKV[row.id].diff, k: 'COM_WT__KG' }"
+          v-to-fixed="{ val: techPrepMeteKV[row.id].diff || 0, dp: row.accountingPrecision }"
           v-prefix="techPrepMeteKV[row.id].isEnough && techPrepMeteKV[row.id].diff !== 0 ? '+' : ''"
         />
         <span v-else>-</span>
       </template>
     </el-table-column>
-    <el-table-column v-if="props.editMode" label="操作" key="preparationMete" prop="preparationMete" align="center" width="50">
-      <template #default="{ row: { sourceRow: row }, $index }">
-        <!-- 当有绑定的库存利用清单或需要采购清单时，无法被删除 -->
-        <el-tooltip
+    <!-- <el-table-column v-if="props.editMode" label="操作" key="preparationMete" prop="preparationMete" align="center" width="50">
+      <template #default="{ row: { sourceRow: row }, $index }"> -->
+    <!-- 当有绑定的库存利用清单或需要采购清单时，无法被删除 -->
+    <!-- <el-tooltip
           class="item"
           effect="dark"
           content="当前清单有“绑定的库存利用清单”或“需要采购清单”，无法被删除"
@@ -56,18 +78,20 @@
               @click.stop="removeRow($index)"
             />
           </span>
-        </el-tooltip>
-      </template>
-    </el-table-column>
+        </el-tooltip> -->
+    <!-- </template>
+    </el-table-column> -->
   </common-table>
 </template>
 
 <script setup>
-import { STEEL_BASE_UNIT } from '@/settings/config'
+import { ref, defineProps, nextTick } from 'vue'
 import { toPrecision } from '@/utils/data-type'
 import { operationTypeEnum } from '@/utils/enum/modules/common'
-import { ref, defineProps, nextTick } from 'vue'
 
+import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
+import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
+import { matClsEnum } from '@/utils/enum/modules/classification'
 const props = defineProps({
   height: {
     type: Number,
@@ -89,10 +113,12 @@ const props = defineProps({
   }
 })
 
+const basicClass = matClsEnum.MATERIAL.V
+
 // 表格ref
 const tableRef = ref()
 // 列格式转换
-const columnsDataFormat = [['listMete', ['to-fixed', STEEL_BASE_UNIT.weight.precision]]]
+const columnsDataFormat = [['listMete', ['to-fixed-field', 'accountingPrecision']]]
 // 技术清单汇总列表
 // const list = ref([])
 
@@ -111,7 +137,7 @@ function handleListMeteChange(newVal, oldVal, row) {
       }
       // 重新计算差值
       const info = props.techPrepMeteKV[row.id]
-      info.diff = toPrecision(info.preparation - row.listMete, STEEL_BASE_UNIT.weight.precision) // 差值 = 总备料量 - 清单量
+      info.diff = toPrecision(info.preparation - row.listMete, row.accountingPrecision) // 差值 = 总备料量 - 清单量
       info.isEnough = info.diff >= 0 // 是否超出
     }
   }

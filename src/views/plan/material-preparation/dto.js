@@ -20,7 +20,7 @@ export const preparationSubmitDTO = async (form) => {
           material: item.material, // 材质
           specification: item.specification, // 规格/厚度
           basicClass: item.basicClass, // 基础分类
-          steelClassifyConfName: item.steelClassifyConfName// 零件钢材名称
+          steelClassifyConfName: item.steelClassifyConfName // 零件钢材名称
         }
       })
     } else {
@@ -40,6 +40,7 @@ export const preparationSubmitDTO = async (form) => {
           classifyId: material.classifyId, // 科目id
           basicClass: material.basicClass, // 基础科目
           usedQuantity: material.usedQuantity, // 使用数量
+          usedMete: material.usedMete, // 使用核算量
           accountingUnit: material.accountingUnit, // 核算单位
           accountingPrecision: material.accountingPrecision, // 核算单位精度
           measureUnit: material.measureUnit, // 计量单位
@@ -50,11 +51,18 @@ export const preparationSubmitDTO = async (form) => {
     })
 
     // 数值转换
-    await numFmtByBasicClass(form.inventoryList, {
-      prefix: 'material',
-      toNum: true,
-      toSmallest: true
-    })
+    await numFmtByBasicClass(
+      dto.inventoryList,
+      {
+        prefix: 'material',
+        toNum: true,
+        toSmallest: true
+      },
+      {
+        mete: ['usedMete'],
+        quantity: ['usedQuantity']
+      }
+    )
   }
 
   if (isNotBlank(form.purchaseList)) {
@@ -82,7 +90,7 @@ export const preparationSubmitDTO = async (form) => {
           length: material.length, // 长
           // theoryTotalWeight: material.theoryTotalWeight, // 理论总重
           // theoryWeight: material.theoryWeight, // 理论重量
-          mete: material.theoryTotalWeight, // 核算量
+          mete: material.mete, // 核算量
           quantity: material.quantity // 数量
         }
       }

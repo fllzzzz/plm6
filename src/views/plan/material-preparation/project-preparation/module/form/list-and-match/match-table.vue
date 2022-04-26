@@ -6,7 +6,7 @@
         <el-checkbox
           class="filter-item"
           v-model="queryFilter.boolNotMatch"
-          label="不进行物料仓匹配"
+          label="不进行匹配"
           size="mini"
           border
           @change="handleNotMatch"
@@ -19,7 +19,7 @@
           size="mini"
           class="filter-item"
           clearable
-          style="width: 220px"
+          style="width: 170px"
           only-one-default
         />
         <el-checkbox class="filter-item" v-model="queryFilter.boolNotInInventoryList" label="只显示未加入库存利用清单" size="mini" border />
@@ -38,16 +38,16 @@
     >
       <!-- 基础信息 -->
       <material-base-info-columns
+        :show-serial-number="false"
         :show-is-whole="true"
         :basic-class="props.matchInfo.basicClass"
         show-frozen-tip
         frozen-viewable
         spec-merge
-        fixed="left"
         @refresh="fetchList"
       />
       <!-- 次要信息 -->
-      <material-secondary-info-columns :basic-class="props.matchInfo.basicClass" :show-batch-no="false" fixed="left" />
+      <material-secondary-info-columns :basic-class="props.matchInfo.basicClass" :show-batch-no="false" />
       <!-- 单位及其数量 -->
       <material-unit-operate-quantity-columns outbound-type-mode equal-disabled />
       <!-- 工厂/仓库 -->
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { getMatchSteelPlateList, getMatchSectionSteelList } from '@/api/plan/material-preparation/material-match'
+import { getMatchSteelPlateList, getMatchSectionSteelList, getMatchAuxMaterialList } from '@/api/plan/material-preparation/material-match'
 
 import { ref, computed, defineProps, defineEmits, watch } from 'vue'
 import { isBlank } from '@/utils/data-type'
@@ -188,6 +188,9 @@ async function fetchList() {
       case rawMatClsEnum.SECTION_STEEL.V:
         matchList = await matchListForSectionSteel(info)
         break
+      case rawMatClsEnum.MATERIAL.V:
+        matchList = await matchListForAuxMaterial(info)
+        break
       default:
         throw Error('物料主分类错误')
     }
@@ -226,12 +229,12 @@ async function fetchList() {
   }
 }
 
-// // 处理添加
+// 处理添加
 function handleAdd(row) {
   emit('add', row, props.matchInfo)
 }
 
-// 匹配钢材列表
+// 匹配钢板列表
 async function matchListForSteelPlate(info) {
   const query = {
     steelClassifyConfId: info.steelClassifyConfId, // 钢材分类配置id
@@ -242,6 +245,7 @@ async function matchListForSteelPlate(info) {
   return content
 }
 
+// 匹配型材列表
 async function matchListForSectionSteel(info) {
   const query = {
     steelClassifyConfId: info.steelClassifyConfId, // 钢材分类配置id
@@ -249,6 +253,18 @@ async function matchListForSectionSteel(info) {
     specification: info.specification // 规格
   }
   const { content = [] } = await getMatchSectionSteelList(query)
+  return content
+}
+
+// 匹配辅材列表
+async function matchListForAuxMaterial(info) {
+  const query = {
+    serialNumber: info.serialNumber, // 唯一编号
+    classifyId: info.classifyId, // 科目
+    color: info.color, // 颜色
+    brand: info.brand // 品牌
+  }
+  const { content = [] } = await getMatchAuxMaterialList(query)
   return content
 }
 </script>

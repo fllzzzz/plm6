@@ -11,9 +11,7 @@
               <div class="filter-item">
                 <el-checkbox v-model="queryFilter.boolPreparationLessThanList" label="只显示备料量小于清单量" size="mini" border />
               </div>
-              <common-button class="filter-item" type="success" size="mini" @click="techAddFormVisible = true">
-                添 加
-              </common-button>
+              <common-button class="filter-item" type="success" size="mini" @click="techAddFormVisible = true"> 添 加 </common-button>
               <common-button class="filter-item" type="warning" size="mini" @click="toEditTech">编 辑</common-button>
             </template>
             <template v-else>
@@ -34,9 +32,10 @@
         :edit-mode="boolTechEditMode"
         highlight-current-row
         @row-click="handleRowClick"
-        style="width: 750px"
+        :style="{ width: showMatchTable ? '750px' : '900px' }"
       />
     </div>
+    <!-- 只有“结构”备料页面才足以显示匹配列表 -->
     <div class="match-container">
       <div class="match-table-wrapper">
         <match-table v-bind="$attrs" :height="props.height" :matchInfo="selectTechnologyRow" />
@@ -51,7 +50,9 @@ import { ref, computed, defineEmits, defineProps, watch } from 'vue'
 import { componentTypeEnum } from '@enum-ms/building-steel'
 
 import { regExtra } from '@compos/use-crud'
-import StructureList from './structure'
+import StructureList from './tech-list/structure'
+import EnclosureList from './tech-list/enclosure'
+import AuxMaterialList from './tech-list/aux-material'
 import matchTable from './match-table.vue'
 import techAddForm from './tech-add-form.vue'
 import { isBlank, toPrecision } from '@/utils/data-type'
@@ -78,6 +79,8 @@ const boolTechEditMode = ref(false)
 
 // 编辑前技术清单
 const currentTechnologyList = ref()
+
+const showMatchTable = computed(() => crud.form.technologyListType === componentTypeEnum.STRUCTURE.V)
 
 // 查询过滤
 const queryFilter = ref({
@@ -113,9 +116,9 @@ const listComp = computed(() => {
     case componentTypeEnum.STRUCTURE.V:
       return StructureList // 构件技术清单
     case componentTypeEnum.ENCLOSURE.V:
-      return StructureList // 围护技术清单
+      return EnclosureList // 围护技术清单
     case componentTypeEnum.AUXILIARY_MATERIAL.V:
-      return StructureList // 辅材技术清单
+      return AuxMaterialList // 辅材技术清单
     default:
       return null
   }
@@ -146,13 +149,13 @@ CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
 }
 
 // 初始化
-const init = () => {
+function init() {
   selectTechnologyRow.value = undefined
   queryFilter.value.boolPreparationLessThanList = false
 }
 
 // 行选中
-const handleRowClick = (row, column, event) => {
+function handleRowClick(row, column, event) {
   // 修改模式不触发
   if (!boolTechEditMode.value) {
     selectTechnologyRow.value = row
@@ -161,7 +164,7 @@ const handleRowClick = (row, column, event) => {
 }
 
 // 处理添加成功
-const handleTechAddSuccess = (list) => {
+function handleTechAddSuccess(list) {
   // 按顺序插入
   list.forEach((techRow) => {
     const info = {}
@@ -176,7 +179,7 @@ const handleTechAddSuccess = (list) => {
 }
 
 // 去修改清单
-const toEditTech = () => {
+function toEditTech() {
   // technologyList.value 设置为table数据
   // technologyList.value = crud.form.technologyList
   selectTechnologyRow.value = undefined
@@ -184,19 +187,19 @@ const toEditTech = () => {
 }
 
 // 保存清单修改
-const saveTechEdit = () => {
+function saveTechEdit() {
   crud.form.technologyList = cloneDeep(currentTechnologyList.value)
   boolTechEditMode.value = false
 }
 
 // 取消编辑
-const cancelTechEdit = () => {
+function cancelTechEdit() {
   currentTechnologyList.value = cloneDeep(crud.form.technologyList)
   boolTechEditMode.value = false
 }
 
 // 清单汇总列表 排序
-const techSort = (a, b) => {
+function techSort(a, b) {
   if (a.steelClassifyConfId === b.steelClassifyConfId) {
     if (a.material === b.material) {
       // 厚度比较
