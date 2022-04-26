@@ -77,7 +77,7 @@
           <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.inboundAmount">{{ ((actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
         </template>
         <template v-else>
-          <el-tag type="success" style="margin-left:5px;" v-if="currentInfo.actuallyPaymentAmount && currentRow.inboundAmount">{{ (currentInfo.actuallyPaymentAmount/currentRow.inboundAmount).toFixed(2)*100+'%' }}</el-tag>
+          <el-tag type="success" style="margin-left:5px;" v-if="currentInfo.actuallyPaymentAmount && currentRow.inboundAmount">{{ ((currentInfo.actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
         </template>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款方式">

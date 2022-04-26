@@ -42,7 +42,7 @@
           <span v-thousand="currentRow.applyAmount"/>
         </el-form-item>
         <el-form-item label="大写">
-          <span style="color:#82848a">{{currentRow.applyAmount?digitUppercase(currentRow.applyAmount):''}}</span>
+          <span style="color:#82848a">{{currentRow?.sourceRow?.applyAmount?digitUppercase(currentRow?.sourceRow?.applyAmount):''}}</span>
         </el-form-item>
         <el-form-item label="申请日期" prop="paymentDate">
           <span v-if="currentRow.paymentDate" style="margin-left:5px;">{{ parseTime(currentRow.paymentDate,'{y}-{m}-{d}')}}</span>
