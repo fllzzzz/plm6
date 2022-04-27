@@ -4,6 +4,7 @@
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-if="checkPermission(permission.add)">添加</common-button>
       <el-tag type="success" size="medium" v-if="detailInfo.amount">{{'合同金额:'+toThousand(detailInfo.amount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="detailInfo?.sourceRow?.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(detailInfo?.sourceRow?.settlementAmount)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"

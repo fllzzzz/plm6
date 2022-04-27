@@ -4,6 +4,7 @@
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
       <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -46,7 +47,7 @@
               v-show-thousand
               v-model.number="scope.row.invoiceAmount"
               :min="0"
-              :max="999999999999"
+              :max="currentRow.settlementAmount?currentRow.settlementAmount:999999999999"
               :step="100"
               :precision="DP.YUAN"
               placeholder="收票额(元)"
@@ -175,7 +176,7 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
-import { ref, defineProps, watch, provide, defineEmits } from 'vue'
+import { ref, defineProps, watch, provide, defineEmits, nextTick } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -291,28 +292,27 @@ watch(
 )
 
 function moneyChange(row) {
-  // totalAmount.value = 0
-  // crud.data.map(v => {
-  //   if (v.invoiceAmount) {
-  //     totalAmount.value += v.invoiceAmount
-  //   }
-  // })
-  // if (totalAmount.value > props.currentRow.amount) {
-  //   const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
-  //   // 解决修改失效
-  //   nextTick(() => {
-  //     row.invoiceAmount = num || 0
-  //     taxMoney(row)
-  //     totalAmount.value = 0
-  //     crud.data.map(v => {
-  //       if (v.invoiceAmount) {
-  //         totalAmount.value += v.invoiceAmount
-  //       }
-  //     })
-  //   })
-  // } else {
-  //   taxMoney(row)
-  // }
+  if (props.currentRow.settlementAmount) {
+    totalAmount.value = 0
+    crud.data.map(v => {
+      if (v.invoiceAmount) {
+        totalAmount.value += v.invoiceAmount
+      }
+    })
+    if (totalAmount.value > props.currentRow.settlementAmount) {
+      const num = row.invoiceAmount - (totalAmount.value - props.currentRow.settlementAmount)
+      // 解决修改失效
+      nextTick(() => {
+        row.invoiceAmount = num || 0
+        totalAmount.value = 0
+        crud.data.map(v => {
+          if (v.invoiceAmount) {
+            totalAmount.value += v.invoiceAmount
+          }
+        })
+      })
+    }
+  }
   taxMoney(row)
 }
 

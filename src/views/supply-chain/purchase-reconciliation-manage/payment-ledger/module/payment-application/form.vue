@@ -25,6 +25,9 @@
         <el-form-item label="入库额">
           <span  v-thousand="detailInfo.inboundAmount" />
         </el-form-item>
+        <el-form-item label="结算额" v-if="detailInfo?.sourceRow?.settlementAmount">
+          <span v-thousand="detailInfo.settlementAmount" />
+        </el-form-item>
         <el-form-item label="已付款">
           <span v-thousand="detailInfo.paymentAmount"/><span>（{{ detailInfo.paymentRate }}%）</span>
         </el-form-item>
@@ -40,7 +43,7 @@
               v-model="form.applyAmount"
               :step="10000"
               :min="0"
-              :max="999999999999"
+              :max="detailInfo?.sourceRow?.settlementAmount?detailInfo?.sourceRow?.settlementAmount-detailInfo?.sourceRow?.paymentAmount:999999999999"
               :precision="DP.YUAN"
               placeholder="本次付款"
               controls-position="right"

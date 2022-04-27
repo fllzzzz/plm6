@@ -3,6 +3,7 @@
     <!--表格渲染-->
     <div>
       <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -94,7 +95,7 @@
 import crudApi from '@/api/contract/supplier-manage/pay-invoice/pay'
 import { ref, defineProps, watch, defineEmits } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
-import { contractSupplierMaterialPM } from '@/page-permission/contract'
+import { contractSupplierProductPM } from '@/page-permission/contract'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -108,7 +109,7 @@ import { isNotBlank } from '@data-type/index'
 import detail from './detail'
 // import { ElMessage } from 'element-plus'
 
-const permission = contractSupplierMaterialPM.payment
+const permission = contractSupplierProductPM.payment
 
 const optShow = {
   add: false,

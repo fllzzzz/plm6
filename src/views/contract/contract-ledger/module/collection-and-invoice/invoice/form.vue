@@ -13,6 +13,7 @@
     </template>
     <template #content>
       <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -50,11 +51,12 @@
                     v-show-thousand
                     v-model.number="scope.row.invoiceAmount"
                     :min="0"
-                    :max="999999999999"
+                    :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
                     :step="100"
                     :precision="DP.YUAN"
                     placeholder="开票额(元)"
                     controls-position="right"
+                    @change="moneyChange(scope.row)"
                   />
                   <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
               </template>
@@ -134,7 +136,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineProps, watch } from 'vue'
+import { ref, inject, defineProps, watch, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -153,7 +155,9 @@ const defaultForm = {
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const contractInfo = inject('contractInfo')
+const totalAmount = inject('totalAmount')
 const invoiceNoArr = ref([])
+const extraAmount = ref(0)
 
 const props = defineProps({
   existInvoiceNo: {
@@ -233,30 +237,33 @@ function addRow() {
   })
 }
 
-// function moneyChange(row) {
-//   extraAmount.value = 0
-//   form.list.map(v => {
-//     if (v.invoiceAmount) {
-//       extraAmount.value += v.invoiceAmount
-//     }
-//   })
-//   if (extraAmount.value > (contractInfo.value.contractAmount - totalAmount.value)) {
-//     const num = row.invoiceAmount - (extraAmount.value - (contractInfo.value.contractAmount - totalAmount.value))
-//     // 解决修改失效
-//     nextTick(() => {
-//       row.invoiceAmount = num || 0
-//       taxMoney(row)
-//       extraAmount.value = 0
-//       form.list.map(v => {
-//         if (v.invoiceAmount) {
-//           extraAmount.value += v.invoiceAmount
-//         }
-//       })
-//     })
-//   } else {
-//     taxMoney(row)
-//   }
-// }
+function moneyChange(row) {
+  if (props.currentRow.settlementAmount) {
+    extraAmount.value = 0
+    form.list.map(v => {
+      if (v.invoiceAmount) {
+        extraAmount.value += v.invoiceAmount
+      }
+    })
+    if (extraAmount.value > (props.currentRow.settlementAmount - totalAmount.value)) {
+      const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.settlementAmount - totalAmount.value))
+      console.log(row.invoiceAmount)
+      // 解决修改失效
+      nextTick(() => {
+        row.invoiceAmount = num || 0
+        taxMoney(row)
+        extraAmount.value = 0
+        form.list.map(v => {
+          if (v.invoiceAmount) {
+            extraAmount.value += v.invoiceAmount
+          }
+        })
+      })
+    } else {
+      taxMoney(row)
+    }
+  }
+}
 
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {

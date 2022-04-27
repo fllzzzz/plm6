@@ -100,8 +100,8 @@
     </el-table-column> -->
     <el-table-column v-if="columns.visible('settlementStatus')" key="settlementStatus" prop="settlementStatus" label="结算状态" align="center" width="80px">
       <template v-slot="scope">
-          <el-tag v-if="isNotBlank(scope.row.settlementStatus)" :type="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ settlementStatusEnum.VL[scope.row.settlementStatus] }}</el-tag>
-          <span v-else>-</span>
+        <el-tag v-if="isNotBlank(scope.row.settlementStatus)" :type="scope.row.settlementStatus===settlementStatusEnum.SETTLED.V?'success':'warning'" effect="plain">{{ settlementStatusEnum.VL[scope.row.settlementStatus] }}</el-tag>
+        <span v-else>-</span>
       </template>
     </el-table-column>
   </common-table>

@@ -3,6 +3,7 @@
     <!--表格渲染-->
     <div>
       <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"

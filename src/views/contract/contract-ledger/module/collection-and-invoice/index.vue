@@ -12,7 +12,7 @@
     <template #content>
       <el-tabs v-model="activeName" class="tab-container">
         <el-tab-pane label="收款列表" name="collection">
-          <collection class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')"/>
+          <collection class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>
         </el-tab-pane>
         <el-tab-pane label="开票列表" name="invoice">
           <invoice class="tab-content" :projectId="props.projectId" :visibleValue="modelValue" @success="emit('success')" :currentRow="currentRow"/>
