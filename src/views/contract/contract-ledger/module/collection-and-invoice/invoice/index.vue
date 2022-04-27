@@ -4,6 +4,7 @@
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
       <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
       <print-table
         v-permission="crud.permission.print"
         api-key="invoiceRecord"
@@ -59,6 +60,7 @@
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
                 controls-position="right"
+                @change="moneyChange(scope.row)"
               />
               <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
@@ -186,7 +188,7 @@
 <script setup>
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
-import { ref, defineEmits, defineProps, watch, provide } from 'vue'
+import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -328,30 +330,32 @@ async function getContractInfo(id) {
 // function invoiceTypeChange(row) {
 //   row.taxRate = undefined
 // }
-// function moneyChange(row) {
-//   totalAmount.value = 0
-//   crud.data.map(v => {
-//     if (v.invoiceAmount) {
-//       totalAmount.value += v.invoiceAmount
-//     }
-//   })
-//   if (totalAmount.value > contractInfo.value.contractAmount) {
-//     const num = row.invoiceAmount - (totalAmount.value - contractInfo.value.contractAmount)
-//     // 解决修改失效
-//     nextTick(() => {
-//       row.invoiceAmount = num || 0
-//       taxMoney(row)
-//       totalAmount.value = 0
-//       crud.data.map(v => {
-//         if (v.invoiceAmount) {
-//           totalAmount.value += v.invoiceAmount
-//         }
-//       })
-//     })
-//   } else {
-//     taxMoney(row)
-//   }
-// }
+function moneyChange(row) {
+  if (props.currentRow.settlementAmount) {
+    totalAmount.value = 0
+    crud.data.map(v => {
+      if (v.invoiceAmount) {
+        totalAmount.value += v.invoiceAmount
+      }
+    })
+    if (totalAmount.value > props.currentRow.settlementAmount) {
+      const num = row.invoiceAmount - (totalAmount.value - props.currentRow.settlementAmount)
+      // 解决修改失效
+      nextTick(() => {
+        row.invoiceAmount = num || 0
+        taxMoney(row)
+        totalAmount.value = 0
+        crud.data.map(v => {
+          if (v.invoiceAmount) {
+            totalAmount.value += v.invoiceAmount
+          }
+        })
+      })
+    } else {
+      taxMoney(row)
+    }
+  }
+}
 
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {
