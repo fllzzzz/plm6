@@ -15,7 +15,7 @@
       <!-- <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button> -->
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="130px">
+      <el-form ref="formRef" size="small" label-width="130px">
         <el-form-item label="采购单号">
           <span>{{ detailInfo.serialNumber }}</span>
         </el-form-item>

@@ -6,6 +6,7 @@
     </div>
     <!--表格渲染-->
     <common-table
+      class="upload-table"
       ref="tableRef"
       v-loading="crud.loading"
       :data="crud.data"
@@ -16,7 +17,7 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="钢材名称" min-width="150">
+      <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="钢材名称" align="center" min-width="150">
         <template v-slot="scope">
           <span>{{ scope.row.name }}</span>
         </template>
@@ -46,23 +47,40 @@
           <span>{{ scope.row.classifyNames }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="前缀字母索引" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="规格前缀索引" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
-            <span v-for="item in scope.row.links" :key="item.id">{{
-              `${item.keyword}【${item.specIndex ? item.specIndex : '全部'}】`
-            }}</span>
+            <div v-for="(item,i) in scope.row.links" :key="item.id">
+              <div  :class="i === scope.row.links.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
+                {{`${item.keyword}【${item.specIndex ? item.specIndex : '全部'}】`}}
+              </div>
+            </div>
           </template>
+          <div v-else class="sandwich-cell-bottom"></div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('boolNestEnum')" align="center" prop="boolNestEnum" label="套料选择">
+      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="套料选择" align="center" min-width="260">
         <template v-slot="scope">
-          <span>{{ scope.row.boolNestEnum ? '√' : '-' }}</span>
+          <template v-if="scope.row.links && scope.row.links.length > 0">
+            <div v-for="(item,i) in scope.row.links" :key="item.id">
+              <div :class="i === scope.row.links.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
+                {{ item.boolNestEnum ? '√' : '-' }}
+              </div>
+            </div>
+          </template>
+          <div v-else class="sandwich-cell-bottom"></div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('boolSchedulingEnum')" align="center" prop="boolSchedulingEnum" label="参与排产">
+      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="参与排产" align="center" min-width="260">
         <template v-slot="scope">
-          <span>{{ scope.row.boolSchedulingEnum ? '√' : '-' }}</span>
+          <template v-if="scope.row.links && scope.row.links.length > 0">
+            <div v-for="(item,i) in scope.row.links" :key="item.id">
+              <div :class="i === scope.row.links.length - 1 ? 'sandwich-cell-bottom' : 'sandwich-cell-top'">
+                {{ item.boolSchedulingEnum ? '√' : '-' }}
+              </div>
+            </div>
+          </template>
+          <div v-else class="sandwich-cell-bottom"></div>
         </template>
       </el-table-column>
       <!--编辑与删除-->
@@ -150,5 +168,32 @@ $font-size: 1.5em;
   border: 1px solid;
   border-radius: 50%;
   line-height: $font-size;
+}
+.sandwich-cell-top,
+.sandwich-cell-bottom {
+  padding: 5px;
+  height: 40px;
+  line-height: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+  ::v-deep(.el-input__inner) {
+    padding: 0;
+    padding-left: 2px;
+  }
+}
+.sandwich-cell-top {
+  border-bottom: 1px solid #dfe6ec;
+}
+.upload-table {
+  ::v-deep(.cell) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  ::v-deep(thead.is-group th) {
+    background: #fff;
+  }
+}
+::v-deep(.el-table--small .el-table__cell) {
+  padding: 4px 0;
 }
 </style>
