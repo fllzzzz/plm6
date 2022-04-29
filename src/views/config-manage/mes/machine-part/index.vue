@@ -19,7 +19,7 @@
         <span v-else>{{ scope.row.name }}</span>
       </template>
     </el-table-column>
-    <el-table-column key="specPrefix" prop="specPrefix" label="*组立号前缀(大写)" align="center">
+    <el-table-column key="specPrefix" prop="specPrefix" label="*组立号规格前缀(大写)" align="center">
       <template v-slot="scope">
         <el-input v-if="scope.row.isModify" v-model.trim="scope.row.specPrefix" type="text" placeholder="请填写大写字母" maxlength="10" @blur="getName(scope.row,scope.$index)"/>
         <span v-else>{{ scope.row.specPrefix }}</span>
@@ -95,7 +95,7 @@ const validateSort = (value, row) => {
 
 const tableRules = {
   name: [{ required: true, message: '请输入杆件类型', trigger: 'blur' }],
-  specPrefix: [{ required: true, message: '请输入组立号前缀', trigger: 'blur' }],
+  specPrefix: [{ required: true, message: '请输入组立号规格前缀', trigger: 'blur' }],
   boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }],
   sort: [{ validator: validateSort, message: '请输入序号', trigger: 'change' }]
 }

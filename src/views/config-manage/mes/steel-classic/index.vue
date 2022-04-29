@@ -47,7 +47,7 @@
           <span>{{ scope.row.classifyNames }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="前缀字母索引" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('links')" key="links" prop="links" label="规格前缀索引" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.links && scope.row.links.length > 0">
             <div v-for="(item,i) in scope.row.links" :key="item.id">

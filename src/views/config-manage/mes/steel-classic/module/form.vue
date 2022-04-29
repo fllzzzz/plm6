@@ -42,7 +42,7 @@
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
         </el-form-item>
-        <el-divider><span class="title">零件前缀字母明细</span></el-divider>
+        <el-divider><span class="title">零件规格前缀明细</span></el-divider>
          <common-table
           ref="detailRef"
           border
@@ -100,7 +100,7 @@
         <el-form-item label="是否排产" prop="boolSchedulingEnum">
           <common-radio v-model="form.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
         </el-form-item> -->
-        <!-- <el-form-item label="零件前缀字母" prop="links">
+        <!-- <el-form-item label="零件规格前缀" prop="links">
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.links" :key="index" class="process-drawer">
@@ -275,7 +275,7 @@ function checkName(item, index) {
 
 CRUD.HOOK.beforeSubmit = (crud, form) => {
   if (crud.form.links && crud.form.links.length === 0) {
-    ElMessage.error('请填写零件前缀字母明细')
+    ElMessage.error('请填写零件规格前缀明细')
     return false
   }
   const { validResult, dealList } = tableValidate(crud.form.links)

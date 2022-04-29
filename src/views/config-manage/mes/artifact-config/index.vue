@@ -22,7 +22,7 @@
           <span>{{ scope.row.classificationName }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('specPrefixList')" key="specPrefixList" prop="specPrefixList" label="构件前缀" align="center" min-width="260">
+      <el-table-column v-if="columns.visible('specPrefixList')" key="specPrefixList" prop="specPrefixList" label="构件规格前缀" align="center" min-width="260">
         <template v-slot="scope">
           <template v-if="scope.row.specPrefixList && scope.row.specPrefixList.length > 0">
             <div v-for="(item,i) in scope.row.specPrefixList" :key="item.id">

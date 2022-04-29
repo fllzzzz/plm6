@@ -19,7 +19,7 @@
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
         </el-form-item>
-        <el-form-item label="构件前缀字母" prop="specPrefixList">
+        <el-form-item label="构件规格前缀" prop="specPrefixList">
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.specPrefixList" :key="index" class="process-drawer">
@@ -94,7 +94,7 @@ const validateLinks = (rule, value, callback) => {
     }
     callback()
   } else {
-    callback(new Error('请填写大写前缀字母'))
+    callback(new Error('请填写大写规格前缀'))
   }
 }
 
@@ -105,7 +105,7 @@ const rules = {
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
   specPrefixList: [
-    { required: true, message: '请填写前缀字母' },
+    { required: true, message: '请填写规格前缀' },
     { validator: validateLinks, trigger: 'change' }
   ]
 }
@@ -129,7 +129,7 @@ function checkName(item, index) {
       }
       if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
         ElMessage({
-          message: '前缀字母已存在，请重新填写',
+          message: '规格前缀已存在，请重新填写',
           type: 'error'
         })
         item.specPrefix = undefined
@@ -153,7 +153,7 @@ function checkName(item, index) {
       }
       if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
         ElMessage({
-          message: '前缀字母已存在，请重新填写',
+          message: '规格前缀已存在，请重新填写',
           type: 'error'
         })
         form.specPrefixList[index].specPrefix = undefined
