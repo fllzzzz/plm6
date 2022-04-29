@@ -47,7 +47,7 @@
           ref="detailRef"
           border
           :data="form.links"
-          :max-height="600"
+          :max-height="maxHeight"
           style="width: 100%;margin-top:10px;"
           class="table-form"
           return-source-data
@@ -153,6 +153,7 @@ import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+import useMaxHeight from '@compos/use-max-height'
 import useTableValidate from '@compos/form/use-table-validate'
 
 const props = defineProps({
@@ -179,6 +180,11 @@ const defaultForm = {
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
+const { maxHeight } = useMaxHeight({
+  wrapperBox: '.addForm',
+  paginate: true,
+  extraHeight: 240
+})
 // 序号校验
 const validateEnum = (value, row) => {
   if (!isNotBlank(value)) return false
