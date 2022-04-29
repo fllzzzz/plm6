@@ -6,7 +6,7 @@
     :visible="crud.status.cu > 0"
     :title="crud.status.title"
     :wrapper-closable="false"
-    size="860px"
+    size="60%"
   >
     <template #titleRight>
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
@@ -42,13 +42,65 @@
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
         </el-form-item>
-        <el-form-item label="是否参与套料" prop="boolNestEnum">
+        <el-divider><span class="title">零件前缀字母明细</span></el-divider>
+         <common-table
+          ref="detailRef"
+          border
+          :data="form.links"
+          :max-height="600"
+          style="width: 100%;margin-top:10px;"
+          class="table-form"
+          return-source-data
+          :showEmptySymbol="false"
+          :cell-class-name="wrongCellMask"
+        >
+          <el-table-column label="序号" type="index" align="center" width="50" />
+          <el-table-column key="keyword" prop="keyword" label="*大写字母" align="center">
+            <template v-slot="scope">
+              <el-input v-model.trim="scope.row.keyword" type="text" placeholder="大写字母" maxlength="20" @blur="checkName(scope.row, scope.$index)"/>
+            </template>
+          </el-table-column>
+          <el-table-column key="specIndex" prop="specIndex" label="*索引" align="center">
+            <template v-slot="scope">
+              <common-select
+                v-model="scope.row.specIndex"
+                :options="specIndexEnum"
+                showOptionAll
+                :allVal="0"
+                type="enum"
+                size="small"
+                clearable
+                class="filter-item"
+                placeholder="索引"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column key="boolNestEnum" prop="boolNestEnum" label="*是否参与套料" align="center">
+            <template v-slot="scope">
+              <common-radio v-model="scope.row.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
+            </template>
+          </el-table-column>
+          <el-table-column key="boolSchedulingEnum" prop="boolSchedulingEnum" label="*是否排产" align="center">
+            <template v-slot="scope">
+              <common-radio v-model="scope.row.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template v-slot="scope">
+              <common-button size="small" class="el-icon-delete" type="danger" @click="delProcess(scope.$index)" />
+            </template>
+          </el-table-column>
+        </common-table>
+        <div style="text-align:center;margin-top:10px;">
+          <common-button size="mini" type="success" @click="addProcess">添加</common-button>
+        </div>
+        <!-- <el-form-item label="是否参与套料" prop="boolNestEnum">
           <common-radio v-model="form.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
         </el-form-item>
         <el-form-item label="是否排产" prop="boolSchedulingEnum">
           <common-radio v-model="form.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
-        </el-form-item>
-        <el-form-item label="零件前缀字母" prop="links">
+        </el-form-item> -->
+        <!-- <el-form-item label="零件前缀字母" prop="links">
           <div class="process-container">
             <div class="process-box">
               <div v-for="(item, index) in form.links" :key="index" class="process-drawer">
@@ -57,6 +109,7 @@
                   type="text"
                   placeholder="大写字母"
                   style="width: 270px; margin-right: 5px"
+                  maxlength="20"
                   @blur="checkName(item, index)"
                 />
                 <common-select
@@ -84,7 +137,7 @@
             </div>
             <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" />
           </div>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </template>
   </common-drawer>
@@ -94,12 +147,13 @@
 import { ref, defineProps, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
-import { isNotBlank, deepClone, isBlank } from '@data-type/index'
+import { isNotBlank, deepClone } from '@data-type/index'
 import { matClsEnum } from '@enum-ms/classification'
 import { whetherEnum } from '@enum-ms/common'
 
 import { regForm } from '@compos/use-crud'
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
+import useTableValidate from '@compos/form/use-table-validate'
 
 const props = defineProps({
   boundAllClassifyIds: {
@@ -125,33 +179,20 @@ const defaultForm = {
 }
 
 const { crud, form, CRUD } = regForm(defaultForm, formRef)
-const validateLinks = (rule, value, callback) => {
-  if (value && value.length) {
-    for (const i in value) {
-      if (!value[i].add) {
-        if (!value[i].keyword) {
-          callback(new Error('请填写大写关键字母'))
-        }
-        if (!isNotBlank(value[i].specIndex)) {
-          callback(new Error('请选择索引'))
-        }
-      } else {
-        callback()
-      }
-    }
-    callback()
-  } else {
-    callback(new Error('请填写大写关键字母'))
-  }
+// 序号校验
+const validateEnum = (value, row) => {
+  if (!isNotBlank(value)) return false
+  return true
 }
 
-const validateNestEnum = (rule, value, callback) => {
-  if (isBlank(value)) {
-    callback(new Error('必选'))
-  } else {
-    callback()
-  }
+const tableRules = {
+  keyword: [{ required: true, message: '请输入大写字母', trigger: 'blur' }],
+  specIndex: [{ validator: validateEnum, message: '请选择索引', trigger: 'blur' }],
+  boolNestEnum: [{ validator: validateEnum, message: '请选择是否参与套料', trigger: 'change' }],
+  boolSchedulingEnum: [{ validator: validateEnum, message: '请选择是否排产', trigger: 'change' }]
 }
+
+const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
 const rules = {
   name: [
@@ -159,19 +200,7 @@ const rules = {
     { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
   ],
   sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }],
-  boolNestEnum: [
-    { required: true, message: '请选择是否参与套料' },
-    { validator: validateNestEnum, trigger: 'change' }
-  ],
-  boolSchedulingEnum: [
-    { required: true, message: '请选择是否排产' },
-    { validator: validateNestEnum, trigger: 'change' }
-  ],
-  classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }],
-  links: [
-    { required: true, message: '请选择关键字母' },
-    { validator: validateLinks, trigger: 'change' }
-  ]
+  classifyIds: [{ required: true, message: '请选择绑定的钢材科目', trigger: 'change' }]
 }
 
 watch(
@@ -193,7 +222,6 @@ function delProcess(index) {
 }
 
 function checkName(item, index) {
-  item.add = false
   const val = nameArr.value.find((v) => v.index === index)
   if (val) {
     if (item.keyword) {
@@ -239,11 +267,16 @@ function checkName(item, index) {
   }
 }
 
-CRUD.HOOK.beforeValidateCU = (crud, form) => {
-  if (crud.form.links && crud.form.links.length > 0) {
-    crud.form.links.map((v) => {
-      v.add = false
-    })
+CRUD.HOOK.beforeSubmit = (crud, form) => {
+  if (crud.form.links && crud.form.links.length === 0) {
+    ElMessage.error('请填写零件前缀字母明细')
+    return false
+  }
+  const { validResult, dealList } = tableValidate(crud.form.links)
+  if (validResult) {
+    crud.form.links = dealList
+  } else {
+    return validResult
   }
 }
 
