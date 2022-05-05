@@ -9,6 +9,7 @@
     :max-height="maxHeight"
     return-source-data
     :showEmptySymbol="false"
+    :stripe="false"
     style="width: 100%;margin-top:10px;"
     :cell-class-name="wrongCellMask"
   >
