@@ -94,50 +94,6 @@
         <div style="text-align:center;margin-top:10px;">
           <common-button size="mini" type="success" @click="addProcess">添加</common-button>
         </div>
-        <!-- <el-form-item label="是否参与套料" prop="boolNestEnum">
-          <common-radio v-model="form.boolNestEnum" :options="whetherEnum.ENUM" type="enum" />
-        </el-form-item>
-        <el-form-item label="是否排产" prop="boolSchedulingEnum">
-          <common-radio v-model="form.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
-        </el-form-item> -->
-        <!-- <el-form-item label="零件规格前缀" prop="links">
-          <div class="process-container">
-            <div class="process-box">
-              <div v-for="(item, index) in form.links" :key="index" class="process-drawer">
-                <el-input
-                  v-model="item.keyword"
-                  type="text"
-                  placeholder="大写字母"
-                  style="width: 270px; margin-right: 5px"
-                  maxlength="20"
-                  @blur="checkName(item, index)"
-                />
-                <common-select
-                  v-model="item.specIndex"
-                  :options="specIndexEnum"
-                  showOptionAll
-                  :allVal="0"
-                  type="enum"
-                  size="small"
-                  clearable
-                  class="filter-item"
-                  placeholder="索引"
-                  style="width: 250px"
-                  @change="item.add = false"
-                />
-                <common-button
-                  v-show="form.links && form.links.length > 1"
-                  icon="el-icon-delete"
-                  size="mini"
-                  type="danger"
-                  style="margin-left: 6px"
-                  @click="delProcess(index)"
-                />
-              </div>
-            </div>
-            <common-button icon="el-icon-plus" size="mini" type="success" style="margin: 0 0 12px 6px" @click="addProcess" />
-          </div>
-        </el-form-item> -->
       </el-form>
     </template>
   </common-drawer>

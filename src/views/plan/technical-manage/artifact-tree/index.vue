@@ -88,7 +88,11 @@
           :show-overflow-tooltip="true"
           label="规格"
           min-width="120"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.specification ? scope.row.specification : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('length')"
           key="length"
@@ -112,7 +116,11 @@
           label="材质"
           align="center"
           min-width="80px"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.material ? scope.row.material : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('quantity')"
           key="quantity"
@@ -121,7 +129,11 @@
           label="数量"
           align="left"
           min-width="80px"
-        />
+        >
+         <template v-slot="scope">
+            {{ scope.row.quantity ? scope.row.quantity : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('netWeight')"
           key="netWeight"
@@ -184,7 +196,11 @@
           :show-overflow-tooltip="true"
           label="图号"
           min-width="100px"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.drawingNumber ? scope.row.drawingNumber : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('surfaceArea')"
           key="surfaceArea"
@@ -205,7 +221,11 @@
           :show-overflow-tooltip="true"
           label="备注"
           min-width="120"
-        />
+        >
+         <template v-slot="scope">
+            {{ scope.row.remark ? scope.row.remark : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('userName')"
           key="userName"
@@ -213,7 +233,11 @@
           :show-overflow-tooltip="true"
           label="上传人"
           min-width="110"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.userName ? scope.row.userName : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" min-width="160px">
           <template v-slot="scope">
             <div>{{ scope.row.createTime ? parseTime(scope.row.createTime, '{y}-{m}-{d}') : '-' }}</div>
