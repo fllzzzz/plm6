@@ -2,21 +2,27 @@
   <common-drawer
     append-to-body
     :close-on-click-modal="false"
-    :before-close="handleClose"
-    v-model="visible"
-    title="特殊零件标记"
+    :before-close="crud.cancelCU"
+    :visible="crud.status.cu > 0"
+    :title="crud.status.title"
     :wrapper-closable="false"
-    size="60%"
+    size="860px"
   >
     <template #titleRight>
-      <common-button type="primary" size="mini" @click="onSubmit">确认</common-button>
+      <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">确认</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" size="small" label-width="140px">
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="140px">
+        <el-form-item label="代表杆件类型" prop="name">
+          <el-input v-model="form.name" type="text" placeholder="代表杆件类型" style="width: 270px" maxlength="30" />
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number v-model.number="form.sort" :min="1" :max="999" :step="1" controls-position="right" style="width: 270px" />
+        </el-form-item>
         <common-table
           ref="detailRef"
           border
-          :data="form.list"
+          :data="form.assembleSpecList"
           :max-height="maxHeight"
           style="width: 100%;margin-top:10px;"
           class="table-form"
@@ -25,31 +31,14 @@
           :cell-class-name="wrongCellMask"
         >
           <el-table-column label="序号" type="index" align="center" width="50" />
-          <el-table-column key="name" prop="name" label="*代表杆件类型" align="center">
+          <el-table-column key="specPrefix" prop="specPrefix" label="*组立规格前缀(大写)" align="center">
             <template v-slot="scope">
-              <el-input v-model.trim="scope.row.name" type="text" placeholder="代表杆件类型" maxlength="30" />
-            </template>
-          </el-table-column>
-          <el-table-column key="specPrefix" prop="specPrefix" label="*组立号规格前缀(大写)" align="center">
-            <template v-slot="scope">
-              <el-input v-model.trim="scope.row.specPrefix" type="text" placeholder="请填写大写字母" maxlength="10" @blur="getName(scope.row,scope.$index)"/>
+              <el-input v-model.trim="scope.row.specPrefix" type="text" placeholder="请填写大写字母" maxlength="10" @blur="checkName(scope.row,scope.$index)"/>
             </template>
           </el-table-column>
           <el-table-column key="boolSchedulingEnum" prop="boolSchedulingEnum" label="*是否有生成工序" align="center">
             <template v-slot="scope">
               <common-radio v-model="scope.row.boolSchedulingEnum" :options="whetherEnum.ENUM" type="enum" />
-            </template>
-          </el-table-column>
-          <el-table-column key="sort" prop="sort" label="*排序" align="center">
-            <template v-slot="scope">
-              <el-input-number
-                v-model="scope.row.sort"
-                placeholder="请填写"
-                type="text"
-                controls-position="right"
-                :min="0"
-                :max="10000"
-              />
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -65,7 +54,7 @@
             type="warning"
             style="margin-top: 15px"
             @click="addRow()"
-            >继续添加</common-button>
+            >添加</common-button>
         </div>
       </el-form>
     </template>
@@ -73,112 +62,117 @@
 </template>
 
 <script setup>
-import crudApi from '@/api/config/system-config/machine-part-config'
-import { ref, defineEmits, watch, defineProps, nextTick } from 'vue'
-import { whetherEnum } from '@enum-ms/common'
-import useVisible from '@compos/use-visible'
-import useMaxHeight from '@compos/use-max-height'
-import useWatchFormValidate from '@compos/form/use-watch-form-validate'
-import useTableValidate from '@compos/form/use-table-validate'
+import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const formRef = ref()
-const defaultForm = {
-  list: []
-}
-const form = ref(JSON.parse(JSON.stringify(defaultForm)))
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    require: true
-  },
-  list: {
-    type: Array,
-    default: () => []
-  }
-})
+import { whetherEnum } from '@enum-ms/common'
+import useMaxHeight from '@compos/use-max-height'
+import useTableValidate from '@compos/form/use-table-validate'
 
-watch(
-  () => props.modelValue,
-  (val) => {
-    if (val) {
-      resetForm()
-    }
-  },
-  { deep: true, immediate: true }
-)
+import { regForm } from '@compos/use-crud'
+
+const formRef = ref()
+const nameArr = ref([])
+const defaultForm = {
+  id: undefined,
+  name: '',
+  sort: undefined,
+  assembleSpecList: []
+}
+
+const { crud, form, CRUD } = regForm(defaultForm, formRef)
+
+const rules = {
+  name: [
+    { required: true, message: '请填写代表杆件类型名称', trigger: 'blur' },
+    { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
+  ],
+  sort: [{ required: true, message: '请填写排序值', trigger: 'blur', type: 'number' }]
+}
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.addForm',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 120
 })
 
-const emit = defineEmits(['success', 'update:modelValue'])
-const { visible, handleClose } = useVisible({ emit, props })
-
-// 序号校验
-const validateSort = (value, row) => {
-  if (!value) return false
-  return true
-}
-
 const tableRules = {
-  name: [{ required: true, message: '请输入杆件类型', trigger: 'blur' }],
   specPrefix: [{ required: true, message: '请输入组立号规格前缀', trigger: 'blur' }],
-  boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }],
-  sort: [{ validator: validateSort, message: '请输入序号', trigger: 'change' }]
+  boolSchedulingEnum: [{ required: true, message: '请选择是否有生成工序', trigger: 'change' }]
 }
 
 const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules }) // 表格校验
 
-function getName(val, index) {
-  if (val.specPrefix && !/^[A-Z]+$/.test(val.specPrefix)) {
-    form.value.list[index].specPrefix = undefined
-  }
-}
-
-function resetForm() {
-  if (formRef.value) {
-    formRef.value.resetFields()
-  }
-  form.value.list = []
-  if (formRef.value) {
-    nextTick(() => {
-      formRef.value.clearValidate()
-    })
-  }
-  useWatchFormValidate(formRef, form)
-}
-
 function addRow() {
-  form.value.list.push({
-    name: undefined,
-    boolSchedulingEnum: undefined,
-    specPrefix: undefined,
-    dataIndex: form.value.list.length + 1
+  form.assembleSpecList.push({
+    add: true
   })
 }
-
 function deleteRow(index) {
-  form.value.list.splice(index, 1)
+  form.assembleSpecList.splice(index, 1)
 }
 
-async function onSubmit() {
-  try {
-    const { validResult, dealList } = tableValidate(form.value.list)
-    if (validResult) {
-      form.value.list = dealList
+function checkName(item, index) {
+  const val = nameArr.value.find((v) => v.index === index)
+  if (val) {
+    if (item.specPrefix) {
+      if (val.specPrefix === item.specPrefix) {
+        return
+      }
+      if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
+        ElMessage({
+          message: '规格前缀已存在，请重新填写',
+          type: 'error'
+        })
+        item.specPrefix = undefined
+        val.specPrefix = undefined
+      } else {
+        if (!/^[A-Z]+$/.test(item.specPrefix)) {
+          form.assembleSpecList[index].specPrefix = undefined
+          val.specPrefix = undefined
+          return
+        }
+        val.specPrefix = item.specPrefix
+      }
     } else {
-      return validResult
+      val.specPrefix = undefined
     }
-    await crudApi.add(form.value.list)
-    ElMessage.success('添加成功')
-    emit('success')
-    handleClose()
-  } catch (e) {
-    console.log('添加特殊零件标记', e)
+  } else {
+    if (item.specPrefix) {
+      if (!/^[A-Z]+$/.test(item.specPrefix)) {
+        form.assembleSpecList[index].specPrefix = undefined
+        return
+      }
+      if (nameArr.value.findIndex((v) => v.specPrefix === item.specPrefix) > -1) {
+        ElMessage({
+          message: '规格前缀已存在，请重新填写',
+          type: 'error'
+        })
+        form.assembleSpecList[index].specPrefix = undefined
+      }
+      nameArr.value.push({
+        specPrefix: item.specPrefix,
+        index: index
+      })
+    }
   }
+}
+
+CRUD.HOOK.beforeValidateCU = (crud, form) => {
+  if (crud.form.assembleSpecList && crud.form.assembleSpecList.length === 0) {
+    ElMessage.error('请填写组立号规格前缀明细')
+    return false
+  }
+  const { validResult, dealList } = tableValidate(crud.form.assembleSpecList)
+  if (validResult) {
+    crud.form.assembleSpecList = dealList
+  } else {
+    return validResult
+  }
+}
+
+CRUD.HOOK.afterToAdd = () => {
+  nameArr.value = []
 }
 </script>
 <style lang="scss" scoped>
