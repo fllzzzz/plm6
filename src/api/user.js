@@ -33,11 +33,12 @@ export function getInfo() {
 /**
  * 登出
  */
-export function logout() {
+export function logout(token) {
   return request({
     module: 'user',
     url: 'user/logout',
-    method: 'delete'
+    method: 'delete',
+    data: { token }
   })
 }
 

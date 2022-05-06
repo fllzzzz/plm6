@@ -124,7 +124,9 @@ const actions = {
   // 用户退出登录
   async logout({ commit, state, dispatch }) {
     try {
-      logoutApi(state.token)
+      if (state.token) {
+        logoutApi(state.token)
+      }
       await dispatch('resetToken')
     } catch (error) {
       console.log('退出登录', error)
