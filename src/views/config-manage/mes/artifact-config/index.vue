@@ -78,6 +78,8 @@
         </template>
       </el-table-column>
     </common-table>
+    <!--分页组件-->
+    <pagination />
     <mForm />
   </div>
 </template>
@@ -89,6 +91,7 @@ import { artifactConfigPM as permission } from '@/page-permission/config'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
+import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import mHeader from './module/header'
 import mForm from './module/form'
@@ -108,7 +111,7 @@ const { crud, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: false
+    hasPagination: true
   },
   tableRef
 )

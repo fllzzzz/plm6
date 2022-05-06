@@ -73,7 +73,7 @@ const nameArr = ref([])
 const defaultForm = {
   id: undefined,
   classificationName: '',
-  sort: 1,
+  sort: undefined,
   specPrefixList: []
 }
 

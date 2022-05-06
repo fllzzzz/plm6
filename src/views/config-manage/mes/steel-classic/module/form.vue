@@ -131,7 +131,7 @@ const specIndexEnum = {
 const defaultForm = {
   id: undefined,
   name: '',
-  sort: 1,
+  sort: undefined,
   links: []
 }
 
