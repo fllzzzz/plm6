@@ -292,7 +292,7 @@ type="warning"
                     </el-form-item>
                   </div>
                   <!-- logo 图片配置 -->
-                  <!-- <div v-if="logoCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
+                  <div v-if="logoCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
                     <el-tooltip
                       effect="light"
                       :content="`图标（logo）设置：\n
@@ -375,7 +375,7 @@ type="warning"
                       </template>
                       <el-tag v-else type="danger">logo未上传</el-tag>
                     </div>
-                  </div> -->
+                  </div>
                   <!-- 二维码配置，部分表格存在该配置 -->
                   <div v-if="qrCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
                     <el-tooltip
@@ -1210,17 +1210,9 @@ style="margin-bottom: 15px"
 </template>
 
 <script setup>
+import { getLogoConfig } from '@/api/config/main/system-config'
 import { ref, reactive, computed, watch, nextTick } from 'vue'
-import { regForm } from '@compos/use-crud'
-import Sortable from 'sortablejs'
-import radioButton from '@comp-common/radio-button'
-import tableTypeCascader from '@comp-common/print/table-type-cascader'
-import tableTemplateSelect from '@comp-common/print/table-template-select'
-import textSetting from '@comp-common/print/text-setting'
-import verticalLabel from '@comp-common/vertical-label'
 
-import { isBlank, isNotBlank } from '@data-type/index'
-import { px2lengthUnit, convertUnits } from '@/utils/convert/unit'
 import {
   orientEnum,
   printModeEnum,
@@ -1236,14 +1228,23 @@ import {
   cssUnitEnum,
   cssUnitPrecisionEnum
 } from '@/utils/print/enum'
+import { isBlank, isNotBlank } from '@data-type/index'
 import { printTable } from '@/utils/print/table'
 import downloadXLSX from '@/utils/print/download'
 import { convertColumns, delNotDisplayed, getLastColumns, setting } from '@/utils/print/page-handle'
-// import { tableTypeEnum, moduleTypeEnum } from '@/utils/print/table/type'
 import example from '@/utils/print/default-template/example'
 import formatFn from '@/utils/print/format/index'
+import { px2lengthUnit, convertUnits } from '@/utils/convert/unit'
+
+import { regForm } from '@compos/use-crud'
+import radioButton from '@comp-common/radio-button'
+import tableTypeCascader from '@comp-common/print/table-type-cascader'
+import tableTemplateSelect from '@comp-common/print/table-template-select'
+import textSetting from '@comp-common/print/text-setting'
+import verticalLabel from '@comp-common/vertical-label'
 import moment from 'moment'
 import QrcodeVue from 'qrcode.vue'
+import Sortable from 'sortablejs'
 
 // 可格式化的字段类型
 const needFormatTypes = [
@@ -1328,7 +1329,7 @@ const tableHtml = ref('')
 const footerHtml = ref('')
 const pageHtml = ref('')
 const style = ref('')
-// const logos = ref([])
+const logos = ref([])
 const templateOnload = ref(true)
 const logoLoading = ref(false)
 const qrContent = ref('欢迎来到初鸣智造钢结构生产执行管理系统')
@@ -1615,6 +1616,8 @@ watch(
   { deep: true }
 )
 
+fetchCompanyLogos()
+
 CRUD.HOOK.beforeToCU = () => {
   init()
 }
@@ -1688,8 +1691,8 @@ function tableAverageWidth(key = 'width') {
 }
 
 function imgDrag(event) {
-  config.qrCode.left = px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision)
-  config.qrCode.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
+  config.logo.left = px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision)
+  config.logo.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
 }
 
 function qrDrag(event) {
@@ -1697,21 +1700,35 @@ function qrDrag(event) {
   config.qrCode.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
 }
 
-// function chooseLogo(img) {
-//   config.logo.url = img.path
-//   if (isBlank(logoCfg.value.width)) {
-//     config.logo.width = 20
-//   }
-//   if (isBlank(logoCfg.value.height)) {
-//     config.logo.height = 20
-//   }
-//   if (isBlank(logoCfg.value.top)) {
-//     config.logo.top = 10
-//   }
-//   if (isBlank(logoCfg.value.left)) {
-//     config.logo.left = 10
-//   }
-// }
+function chooseLogo(img) {
+  config.logo.url = img.path
+  if (isBlank(logoCfg.value.width)) {
+    config.logo.width = 20
+  }
+  if (isBlank(logoCfg.value.height)) {
+    config.logo.height = 20
+  }
+  if (isBlank(logoCfg.value.top)) {
+    config.logo.top = 10
+  }
+  if (isBlank(logoCfg.value.left)) {
+    config.logo.left = 10
+  }
+}
+
+async function fetchCompanyLogos() {
+  logoLoading.value = true
+  let _logos = []
+  try {
+    const { content = [] } = await getLogoConfig() || {}
+    _logos = content
+  } catch (error) {
+    console.log('error 获取公司logos', error)
+  } finally {
+    logos.value = _logos
+    logoLoading.value = false
+  }
+}
 
 function addTableField() {
   tableCfg.value.fields.push({

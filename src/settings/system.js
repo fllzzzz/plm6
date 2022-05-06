@@ -180,6 +180,6 @@ export const routerMetaSetting = [
   { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesTaskEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
-  { name: 'MesProductionReportAssemble', mode:projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
+  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
   // { name: 'MesProductionDashboardAssemblyMatch', mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
 ]
