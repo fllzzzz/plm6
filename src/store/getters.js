@@ -7,6 +7,8 @@ const getters = {
   baseApi: state => state.api.baseApi,
   // api附件上传路径
   fileUploadApi: state => state.api.fileUploadApi,
+  // api附件上传路径
+  fileUploadCompanyLogoApi: state => state.api.fileUploadCompanyLogoApi,
   // axios 取消接口tokens存储
   axiosCancelTokens: state => state.interface.axiosCancelTokens,
 
@@ -36,6 +38,9 @@ const getters = {
 
   // 访问过的页面
   visitedViews: state => state.tagsView.visitedViews,
+
+  // 公司信息
+  company: state => state.config.company,
 
   clsTree: state => state.config.clsTree,
   // 材料类科目树

@@ -148,7 +148,7 @@ const actions = {
       commit('SET_ROLES', [])
       commit('SET_USER', {})
       removeToken()
-      resetRouter()
+      // resetRouter()
       resolve()
     })
   },

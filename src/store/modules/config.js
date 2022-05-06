@@ -12,6 +12,7 @@ import { getUserAllSimple } from '@/api/common'
 import { getDeptAllSimple } from '@/api/common'
 import { getSuppliersBrief } from '@/api/common'
 import { getTaxRateBrief } from '@/api/config/wms/tax-rate'
+import { getCompanyConfig, getLogoConfig } from '@/api/config/main/system-config'
 import { getUnclosedRequisitionsBrief } from '@/api/wms/requisitions'
 import { getPurchasingPurchaseOrderBrief } from '@/api/supply-chain/purchase-order'
 import { getWarehouseBrief } from '@/api/config/wms/warehouse'
@@ -47,6 +48,13 @@ const state = {
 
   classifySpec: { specKV: {}}, // 科目规格
   dict: {}, // 字典值
+  company: { // 公司信息
+    companyName: '', // 名称
+    companyNo: '', // 编号
+    telephone: '', // 电话
+    website: '', // 网址
+    logo: '' // logo
+  },
   unit: { ALL: [], GROUP: [], MAP: new Map(), KS: new Map() }, // 单位列表 ALL，WEIGHT...
   factories: [], // 工厂
   factoryKV: {}, // 工厂id:value 格式
@@ -70,6 +78,7 @@ const state = {
   steelClassifyConfICKV: {}, // 钢材材料分类配置 key: id, value: boundFinalClassifyIds
   loaded: {
     // 接口是否加载
+    company: false,
     factories: false,
     warehouse: false,
     workshops: false,
@@ -94,6 +103,9 @@ const state = {
 const mutations = {
   SET_LOADED(state, { key, loaded = true }) {
     state.loaded[key] = loaded
+  },
+  SET_COMPANY: (state, company = {}) => {
+    state.company = Object.assign(state.company, company)
   },
   SET_TAX_RATE(state, list = []) {
     state.taxRateKV = {}
@@ -194,6 +206,22 @@ const mutations = {
 const actions = {
   fetchConfigInfo() {
     console.log('TODO：加载配置文件')
+  },
+  // 加载公司信息
+  async fetchCompany({ commit }) {
+    // 基本信息
+    const res = await getCompanyConfig() || {}
+    commit('SET_COMPANY', res)
+    // logo
+    const { content = [] } = await getLogoConfig()
+    const index = content.findIndex(v => v.isDefault)
+    if (index !== -1) {
+      commit('SET_COMPANY', { logo: content[index]?.path })
+    }
+  },
+  // 设置公司信息
+  setCompany({ commit }, data = {}) {
+    commit('SET_COMPANY', data)
   },
   // 加载税率列表
   async fetchTaxRate({ commit }) {

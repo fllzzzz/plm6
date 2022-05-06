@@ -9,9 +9,16 @@ export default {
       hidden: false,
       name: 'BaseConfig',
       alwaysShow: false,
-      redirect: '/config-manage/base-config/unit-config',
+      redirect: '/config-manage/main/unit-config',
       meta: { title: '基础配置', icon: 'config-2', noCache: true },
       children: [
+        {
+          name: 'SystemConfig',
+          path: 'system-config',
+          hidden: false,
+          component: '/config-manage/main/system-config/index',
+          meta: { title: '系统配置', icon: 'project', noCache: true }
+        },
         {
           name: 'UnitConfig',
           path: 'unit-config',

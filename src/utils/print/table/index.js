@@ -47,119 +47,125 @@ const defaultPrecision = 2
  * @author duhh
  */
 async function printTable({ header, table, footer, qrCode, config, printMode = PrintMode.QUEUE.V } = {}, intCopies = 1) {
-  if (isBlank(config)) {
-    throw new Error('打印未配置')
-  }
-  let result = false
-  try {
-    setColumns(config.table)
-    setStyle(config) // 设置各模块样式
-    const headHtml = getTitleHtml(config.title) // 拼接标题
-    const tableHtml = getTableHtml({ header, footer, table, globalConfig: config }) // 拼接表格
-    const footerHtml = getFooterHtml(footer, config) // 拼接底部信息
-    const pageNumberHtml = getPageHtml(config.page) // 拼接页码信息
-    const logoHtml = getLogoHtml(config.logo) // logo信息
-    let prevHeight = config.paddingTB // 设置上边距
-    let tbOffset2Top = 0 // 表格次页TOP偏移
-    const notHeaderSpacing = 3 // header不存在时，增加表格与table之间的间距（设置table的margin-top无效，因此在此设置）
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async function (resolve, reject) {
+    if (isBlank(config)) {
+      reject('打印未配置')
+      throw new Error('打印未配置')
+    }
+    let result = false
+    try {
+      setColumns(config.table)
+      setStyle(config) // 设置各模块样式
+      const headHtml = getTitleHtml(config.title) // 拼接标题
+      const tableHtml = getTableHtml({ header, footer, table, globalConfig: config }) // 拼接表格
+      const footerHtml = getFooterHtml(footer, config) // 拼接底部信息
+      const pageNumberHtml = getPageHtml(config.page) // 拼接页码信息
+      const logoHtml = getLogoHtml(config.logo) // logo信息
+      let prevHeight = config.paddingTB // 设置上边距
+      let tbOffset2Top = 0 // 表格次页TOP偏移
+      const notHeaderSpacing = 3 // header不存在时，增加表格与table之间的间距（设置table的margin-top无效，因此在此设置）
 
-    LODOP = await getLODOP()
+      LODOP = await getLODOP()
 
-    const loadHandler = async () => {
+      const loadHandler = async () => {
       // 打印方向
-      const orient = config.orient || orientEnum.LONGITUDINAL.V
-      // 设置纸张大小
-      LODOP.SET_PRINT_PAGESIZE(orient, config.width + config.unit, config.height + config.unit, 'CreateCustomPage')
-      // 标题
-      LODOP.ADD_PRINT_HTM(`${prevHeight}${config.unit}`, 0, '100%', `${config.title.height}${config.unit}`, headHtml)
-      LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
-      if (isNotBlank(config.title) && config.title.show) {
+        const orient = config.orient || orientEnum.LONGITUDINAL.V
+        // 设置纸张大小
+        LODOP.SET_PRINT_PAGESIZE(orient, config.width + config.unit, config.height + config.unit, 'CreateCustomPage')
+        // 标题
+        LODOP.ADD_PRINT_HTM(`${prevHeight}${config.unit}`, 0, '100%', `${config.title.height}${config.unit}`, headHtml)
+        LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+        if (isNotBlank(config.title) && config.title.show) {
         // 若不是每页显示，则只有第一页显示
-        prevHeight += config.title.height
-        if (!config.title.allPage) {
+          prevHeight += config.title.height
+          if (!config.title.allPage) {
           // 如果title不是每页都显示（只有第一页显示），则增加table次页偏移距离
-          LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
-          tbOffset2Top += config.title.height
+            LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
+            tbOffset2Top += config.title.height
+          }
         }
-      }
-      if (isNotBlank(config.header) && config.header.show && !config.header.allPage) {
-        tbOffset2Top += config.header.height
-      }
-      // title显示且表头信息不显示的情况
-      if (isNotBlank(config.title) && config.title.show && (isBlank(config.header) || !config.header.show)) {
-        prevHeight += notHeaderSpacing // 增加表格与table之间的间距
-        if (!config.title.allPage) {
+        if (isNotBlank(config.header) && config.header.show && !config.header.allPage) {
+          tbOffset2Top += config.header.height
+        }
+        // title显示且表头信息不显示的情况
+        if (isNotBlank(config.title) && config.title.show && (isBlank(config.header) || !config.header.show)) {
+          prevHeight += notHeaderSpacing // 增加表格与table之间的间距
+          if (!config.title.allPage) {
           // 如果title不是每页都显示，则增加table次页偏移距离
-          tbOffset2Top += notHeaderSpacing
+            tbOffset2Top += notHeaderSpacing
+          }
         }
-      }
-      /**
+        /**
        * LODOP——bug，BottomMargin， table有bug
        * 例如：BM为10mm，剩余高度为12mm（实际可用高度2mm）。单元格高度为11mm，这样的话不会换页
        */
-      const extraBottom = convertUnits(8, 'mm', config.unit)
-      // 表格 8mm
-      LODOP.ADD_PRINT_TABLE(
-        `${prevHeight}${config.unit}`,
-        0,
-        '100%',
-        `BottomMargin:${config.paddingTB + extraBottom}${config.unit}`,
-        tableHtml
-      )
-      LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1) // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
-      LODOP.SET_PRINT_STYLEA(0, 'TableRowThickNess', '30px') // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
-      if (tbOffset2Top) {
-        LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', `${-tbOffset2Top}${config.unit}`) // 从次页开始的上边距偏移量
-      }
-      // 当底部信息“显示且只在尾页显示”的情况，每页显示则再table的tfoot中加入代码
-      if (isNotBlank(config.footer) && config.footer.show && !config.footer.allPage) {
-        LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', footerHtml)
-        LODOP.SET_PRINT_STYLEA(0, 'LinkedItem', -1) // 关联上一个table对象，在table的末尾显示
-      }
-      if (isNotBlank(config.page) && config.page.show) {
-        LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', pageNumberHtml)
-        LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+        const extraBottom = convertUnits(8, 'mm', config.unit)
+        // 表格 8mm
+        LODOP.ADD_PRINT_TABLE(
+          `${prevHeight}${config.unit}`,
+          0,
+          '100%',
+          `BottomMargin:${config.paddingTB + extraBottom}${config.unit}`,
+          tableHtml
+        )
+        LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1) // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
+        LODOP.SET_PRINT_STYLEA(0, 'TableRowThickNess', '30px') // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
+        if (tbOffset2Top) {
+          LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', `${-tbOffset2Top}${config.unit}`) // 从次页开始的上边距偏移量
+        }
+        // 当底部信息“显示且只在尾页显示”的情况，每页显示则再table的tfoot中加入代码
+        if (isNotBlank(config.footer) && config.footer.show && !config.footer.allPage) {
+          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', footerHtml)
+          LODOP.SET_PRINT_STYLEA(0, 'LinkedItem', -1) // 关联上一个table对象，在table的末尾显示
+        }
+        if (isNotBlank(config.page) && config.page.show) {
+          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', pageNumberHtml)
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+        }
+        if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
+          LODOP.ADD_PRINT_HTM(`${config.logo.top}${config.unit}`, `${config.logo.left}${config.unit}`, '100%', '100%', logoHtml)
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+          if (!config.logo.allPage) {
+          // 如果logo不是每页都显示（只有第一页显示）
+            LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
+          }
+        }
+        if (isNotBlank(config.qrCode) && config.qrCode.show && isNotBlank(qrCode)) {
+          const tempLeft = convertUnits(1, 'mm', config.unit)
+          LODOP.ADD_PRINT_BARCODE(
+            `${config.qrCode.top}${config.unit}`,
+            `${config.qrCode.left + tempLeft}${config.unit}`,
+            `${config.qrCode.width}${config.unit}`,
+            `${config.qrCode.height}${config.unit}`,
+            'QRCode',
+            qrCode
+          )
+          LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 5)
+          LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+          if (!config.qrCode.allPage) {
+          // 如果logo不是每页都显示（只有第一页显示）
+            LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
+          }
+        }
+        LODOP.SET_PRINT_COPIES(intCopies) // 打印份数
+        result = await printByMode(printMode)
+        resolve(result)
       }
       if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-        LODOP.ADD_PRINT_HTM(`${config.logo.top}${config.unit}`, `${config.logo.left}${config.unit}`, '100%', '100%', logoHtml)
-        LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
-        if (!config.logo.allPage) {
-          // 如果logo不是每页都显示（只有第一页显示）
-          LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
-        }
+        var img = new Image()
+        img.addEventListener('load', loadHandler)
+        img.src = config.logo.url
+      } else {
+        loadHandler()
       }
-      if (isNotBlank(config.qrCode) && config.qrCode.show && isNotBlank(qrCode)) {
-        const tempLeft = convertUnits(1, 'mm', config.unit)
-        LODOP.ADD_PRINT_BARCODE(
-          `${config.qrCode.top}${config.unit}`,
-          `${config.qrCode.left + tempLeft}${config.unit}`,
-          `${config.qrCode.width}${config.unit}`,
-          `${config.qrCode.height}${config.unit}`,
-          'QRCode',
-          qrCode
-        )
-        LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 5)
-        LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
-        LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
-        if (!config.qrCode.allPage) {
-          // 如果logo不是每页都显示（只有第一页显示）
-          LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
-        }
-      }
-      LODOP.SET_PRINT_COPIES(intCopies) // 打印份数
-      result = await printByMode(printMode)
+      return result
+    } catch (error) {
+      reject()
+      throw new Error(error)
     }
-    if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-      var img = new Image()
-      img.addEventListener('load', await loadHandler)
-      img.src = config.logo.url
-    } else {
-      await loadHandler()
-    }
-    return result
-  } catch (error) {
-    throw new Error(error)
-  }
+  })
 }
 
 /**

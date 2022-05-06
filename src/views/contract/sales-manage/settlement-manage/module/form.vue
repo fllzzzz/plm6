@@ -163,10 +163,8 @@
             <div><span v-thousand="projectInfo.invoiceAmount || 0" />（{{ digitUppercase(projectInfo.invoiceAmount || 0) }}）</div>
           </el-form-item>
           <el-form-item label="应补发票" prop="debitInvoice">
-            <div>
-              <span v-if="projectInfo.isTax === isTaxContractEnum.YES.V" v-thousand="debitInvoice">（{{ digitUppercase(debitInvoice || 0) }}）</span>
-              <span v-else>无</span>
-            </div>
+            <div v-if="projectInfo.isTax === isTaxContractEnum.YES.V"><span v-thousand="debitInvoice"/>（{{ digitUppercase(debitInvoice || 0) }}）</div>
+            <div v-else>无</div>
           </el-form-item>
         </div>
         <div class="rule-row">
