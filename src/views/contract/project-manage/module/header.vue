@@ -86,8 +86,36 @@
           clearable
           @blur="crud.toQuery"
         />
+        <branch-company-select
+          v-model="query.contractSignBodyId"
+          class="filter-item"
+          placeholder="合同签订主体"
+          style="width: 200px"
+          clearable
+          @change="crud.toQuery"
+        />
         <rrOperation/>
       </div>
+       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
+        <el-col :span="4" class="card-panel-col">
+          <Panel name="项目数" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.sumQuantity || 0" :precision="0" />
+        </el-col>
+        <el-col :span="4" class="card-panel-col">
+          <Panel name="加工订单" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.processQuantity || 0" :precision="0" />
+        </el-col>
+        <el-col :span="4" class="card-panel-col">
+          <Panel name="项目承包" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.jobQuantity || 0" :precision="0" />
+        </el-col>
+        <el-col :span="4" class="card-panel-col">
+          <Panel name="进行中" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.processingQuantity || 0" :precision="0" />
+        </el-col>
+        <el-col :span="4" class="card-panel-col">
+          <Panel name="已结算" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.settlementQuantity || 0" :precision="0" />
+        </el-col>
+        <el-col :span="4" class="card-panel-col">
+          <Panel name="累计合同额" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.contractAmount || 0" :precision="2" />
+        </el-col>
+      </el-row>
       <crudOperation add-text="合同立项">
         <template #optRight>
           <template v-if="checkPermission(crud.permission.completeList.get)">
@@ -140,7 +168,9 @@ import { settlementStatusEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
 import { ElRadioGroup } from 'element-plus'
 import completeList from './complete-list'
-import { completeData } from '@/api/contract/project'
+import { completeData, projectNumData } from '@/api/contract/project'
+import branchCompanySelect from '@comp-base/branch-company-select.vue'
+import Panel from '@/components/Panel'
 
 const projectContentOption = ref([])
 let projectContent1 = []
@@ -151,9 +181,11 @@ const defaultQuery = {
   projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContentId: undefined,
   signerName: '',
   status: projectStatusEnum.PROCESS.V,
-  settlementStatus: settlementStatusEnum.UNSETTLEMENT.V
+  settlementStatus: settlementStatusEnum.UNSETTLEMENT.V,
+  contractSignBodyId: undefined
 }
 const outFinishCount = ref()
+const totalAmount = ref({})
 const emit = defineEmits(['projectChange'])
 const { crud, query } = regHeader(defaultQuery)
 const props = defineProps({
@@ -223,4 +255,33 @@ async function getCompleteData() {
     console.log('获取完工列表', error)
   }
 }
+
+getProjectNumData()
+
+async function getProjectNumData() {
+  try {
+    const data = await projectNumData()
+    totalAmount.value = data || {}
+  } catch (error) {
+    console.log('获取项目数量', error)
+  }
+}
 </script>
+<style lang="scss" scoped>
+.panel-group {
+  margin-bottom:10px;
+  ::v-deep(.card-panel) {
+    .card-panel-description {
+      .card-panel-text {
+        text-align:left;
+        margin-top: 2px;
+      }
+      .card-panel-num {
+        display:block;
+        font-size: 18px;
+        text-align:right;
+      }
+    }
+  }
+}
+</style>
