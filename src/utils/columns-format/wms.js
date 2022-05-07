@@ -8,7 +8,8 @@ export const materialColumns = [
   ['project', ['parse-project', { onlyShortName: true }]],
   ['projectFullName', 'parse-project', { source: 'project' }],
   ['quantity', ['to-fixed-field', 'measurePrecision']],
-  ['mete', ['to-fixed-field', 'accountingPrecision']]
+  ['mete', ['to-fixed-field', 'accountingPrecision']],
+  ['unitNet', ['to-fixed-field', 'accountingPrecision']]
 ]
 
 // 物料信息，嵌套
@@ -16,8 +17,8 @@ export const materialNestedColumns = [
   ['material.project', ['parse-project', { onlyShortName: true }]],
   ['material.projectFullName', 'parse-project', { source: 'material.project' }],
   ['material.quantity', ['to-fixed-field', 'material.measurePrecision']],
-  ['material.mete', ['to-fixed-field', 'material.accountingPrecision']]
-
+  ['material.mete', ['to-fixed-field', 'material.accountingPrecision']],
+  ['material.unitNet', ['to-fixed-field', 'accountingPrecision']]
 ]
 
 // 物料信息-带可操作数量

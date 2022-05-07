@@ -46,11 +46,18 @@ const get = {
               {
                 id: 1,
                 freezeType: materialFreezeTypeEnum.PREPARATION.V,
-                receipt: {
-                  id: 1,
-                  receiptType: receiptTypeEnum.PREPARATION.V,
-                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                },
+                receipt: [
+                  {
+                    id: 1,
+                    receiptType: receiptTypeEnum.PREPARATION.V,
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  {
+                    id: 2,
+                    receiptType: receiptTypeEnum.PREPARATION.V,
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  }
+                ],
                 project: {
                   id: 1,
                   name: '长安街666666号辅路',
@@ -259,11 +266,18 @@ const getMaterialFreezeRecordById = {
           {
             id: 1,
             freezeType: materialFreezeTypeEnum.PREPARATION.V,
-            receipt: {
-              id: 1,
-              receiptType: receiptTypeEnum.PREPARATION.V,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
+            receipt: [
+              {
+                id: 1,
+                receiptType: receiptTypeEnum.PREPARATION.V,
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              {
+                id: 2,
+                receiptType: receiptTypeEnum.PREPARATION.V,
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ],
             project: {
               id: 1,
               name: '长安街666666号辅路',

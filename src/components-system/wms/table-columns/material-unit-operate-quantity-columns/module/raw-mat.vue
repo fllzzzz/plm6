@@ -1,4 +1,26 @@
 <template>
+  <el-table-column
+    v-if="showUnitNet"
+    key="unitNet"
+    prop="unitNet"
+    label="单位净量"
+    align="center"
+    width="110px"
+    :fixed="fixed"
+    show-overflow-tooltip
+  >
+    <template #default="{ row }">
+      <span v-if="row.sourceRow.measureUnit">
+        {{ row.unitNet }}
+        {{
+          row.outboundUnitType === measureTypeEnum.MEASURE.V
+            ? `${row.accountingUnit} / ${row.measureUnit}`
+            : `${row.measureUnit} / ${row.accountingUnit}`
+        }}
+      </span>
+      <span v-else>-</span>
+    </template>
+  </el-table-column>
   <!-- 退货 -->
   <template v-if="outboundTypeMode">
     <el-table-column
@@ -143,6 +165,10 @@ const props = defineProps({
   basicClass: {
     // 基础分类
     type: Number
+  },
+  showUnitNet: {
+    type: Boolean,
+    default: false
   },
   showUnit: {
     // 是否显示单位
@@ -327,4 +353,5 @@ const showMete = computed(() => isBlank(props.columns) || props.columns.visible(
 const showOutboundUnit = computed(() => isBlank(props.columns) || props.columns.visible('outboundUnit'))
 const showRejectUnit = computed(() => isBlank(props.columns) || props.columns.visible('rejectUnit'))
 const showNumber = computed(() => props.showNumber && (isBlank(props.columns) || props.columns.visible(props.numberPropField)))
+const showUnitNet = computed(() => props.showUnitNet && (isBlank(props.columns) || props.columns.visible(props.unitNet)))
 </script>

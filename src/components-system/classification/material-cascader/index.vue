@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { defineExpose, defineProps, defineEmits, computed, watch, reactive, ref } from 'vue'
+import { defineExpose, defineProps, defineEmits, computed, watch, reactive, ref, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
@@ -169,7 +169,10 @@ watch(
   [() => matClsTree.value, () => props.basicClass, () => props.classifyId, clsLoad],
   ([list, basicClass, classifyId, clsLoad]) => {
     if (clsLoad) {
-      setCascader(list)
+      // FIXME: 若A,B页面皆包含该组件（且页面切换时需要加载），会在数据量过多时，产生内存溢出的问题
+      nextTick(() => {
+        setCascader(list)
+      })
     }
   },
   { deep: true, immediate: true }
@@ -250,10 +253,10 @@ function setCascader(tree) {
         pendingTree = removeNodeByExistIds(pendingTree, includeIds.value)
       }
       classification.tree = pendingTree
-      // 加入额外的选项
-      if (props.showExtra) {
-        classification.tree.unshift({ id: props.extraOptionValue, name: props.extraOptionLabel })
-      }
+      // // 加入额外的选项
+      // if (props.showExtra) {
+      //   classification.tree.unshift({ id: props.extraOptionValue, name: props.extraOptionLabel })
+      // }
     } else {
       classification.treeOrigin = []
       classification.tree = []
