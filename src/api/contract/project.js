@@ -202,4 +202,13 @@ export function downloadProjectInfo({ projectId }) {
     responseType: 'blob'
   })
 }
+
+// 项目数量统计
+export function projectNumData() {
+  return request({
+    module: 'contract',
+    url: 'project/project-Statistics',
+    method: 'get'
+  })
+}
 export default { get, add, del }
