@@ -2,12 +2,13 @@
   <!-- <crudOperation>
     <template #optLeft> -->
   <div v-show="crud.searchToggle">
-    <common-radio-button
+    <component-radio-button
+      v-if="showComponent"
       v-model="query.productType"
       :options="componentTypeEnum.ENUM"
       type="enumSL"
-      :unshowVal="organizationType?[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V]:[componentTypeEnum.AUXILIARY_MATERIAL.V]"
       default
+      :unshowVal="organizationType?[componentTypeEnum.ENCLOSURE.V,componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]:[componentTypeEnum.AUXILIARY_MATERIAL.V,...unshowVal]"
       class="filter-item"
       @change="crud.toQuery"
     />
@@ -27,6 +28,8 @@ import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 
+import useUnshowProductTypeByMode from '@compos/use-unshow-productType-by-mode.js'
+
 const projectId = inject('projectId')
 const organizationType = inject('organizationType')
 
@@ -35,6 +38,9 @@ const defaultQuery = {
 }
 
 const { crud, query, CRUD } = regHeader(defaultQuery)
+const { unshowVal, showComponent } = useUnshowProductTypeByMode({ resetQuery: function () {
+  query.productType = undefined
+} })
 
 const monomerRef = ref()
 

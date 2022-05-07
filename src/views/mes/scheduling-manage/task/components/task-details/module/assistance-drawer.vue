@@ -35,7 +35,7 @@
           <span>{{ unCompleteQuantity }}</span>
         </el-form-item>
       </el-form>
-      <common-table v-loading="tableLoading" :data="list" style="width: 100%">
+      <common-table v-loading="tableLoading" :data="list" return-source-data style="width: 100%">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="productionLineName" :show-overflow-tooltip="true" label="生产线">
           <template v-slot="scope">
@@ -62,7 +62,7 @@
           </template>
         </el-table-column>
       </common-table>
-      <common-table v-show="isEdit" :data="addList" style="width: 100%; margin-top: 10px">
+      <common-table v-show="isEdit" :data="addList" return-source-data style="width: 100%; margin-top: 10px">
         <el-table-column label="序号" type="index" align="center" width="60" />
         <el-table-column prop="productionLineName" :show-overflow-tooltip="true" label="生产线">
           <template v-slot="scope">

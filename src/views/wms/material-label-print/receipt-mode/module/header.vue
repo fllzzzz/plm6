@@ -40,10 +40,11 @@
         style="width: 300px"
         clearable
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+        :default-time="defaultTime"
         value-format="x"
         @change="crud.toQuery"
       />
-      <br/>
+      <br />
       <warehouse-project-cascader
         v-model:projectId="query.projectId"
         v-model:projectWarehouseType="query.projectWarehouseType"
@@ -64,7 +65,7 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
+import { defineEmits, ref } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
 import { boolPrintedEnum } from '@/utils/enum/modules/common'
@@ -80,6 +81,8 @@ import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['printed-success'])
+
+const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const defaultQuery = {
   boolPrinted: false, // 打印状态

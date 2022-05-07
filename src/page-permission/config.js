@@ -35,6 +35,22 @@ export const configWorkshopPM = {
   editStatus: ['workshop:editStatus'] // 更改车间状态
 }
 
+// 基础配置/系统配置
+export const systemConfigPM = {
+  company: {
+    get: ['configCompany:get'], // 查看公司信息
+    edit: ['configCompany:edit'] // 编辑公司信息
+  },
+  logo: {
+    get: ['configLogo:get'], // 查看公司logo
+    edit: ['configLogo:edit'] // 编辑公司logo
+  },
+  project: {
+    get: ['configProject:get'], // 查看项目信息
+    edit: ['configProject:edit'] // 编辑项目信息
+  }
+}
+
 // 基础配置/编号配置
 export const numberConfigPM = {
   get: ['config_numberConfig:get'], // 编号配置列表
@@ -67,34 +83,6 @@ export const branchCompanyPM = {
 export const projectModePM = {
   get: ['project_mode:get'], // 项目模式列表
   edit: ['project_mode:edit'] // 修改项目模式
-}
-
-// 基础配置/组立配置
-export const artifactConfigPM = {
-  get: ['artifact_config:get'], // 组立配置列表
-  add: ['artifact_config:add'] // 添加组立配置
-}
-
-// 基础配置/零件配置
-export const machinePartConfigPM = {
-  get: ['machine_part_config:get'], // 零件配置列表
-  add: ['machine_part_config:add'] // 添加零件配置
-}
-
-// 基础配置/钢材配置
-export const steelClassicPM = {
-  get: ['steel_classic:get'], // 钢材配置列表
-  add: ['steel_classic:add'], // 新增钢材配置
-  edit: ['steel_classic:edit'], // 修改钢材配置
-  del: ['steel_classic:del'] // 删除钢材配置
-}
-
-// 基础配置/变更原因
-export const changeReasonPM = {
-  get: ['change_reason:get'], // 变更原因列表
-  add: ['change_reason:add'], // 新增变更原因
-  edit: ['change_reason:edit'], // 修改变更原因
-  del: ['change_reason:del'] // 删除变更原因
 }
 
 // 基础配置/表格模板
@@ -162,6 +150,37 @@ export const configMesBasePM = {
   carModelConfigEdit: ['car_model_config:edit'] // 编辑车型配置
 }
 
+// MES-配置管理/构件类型配置
+export const artifactConfigPM = {
+  get: ['artifact_config:get'], // 构件类型配置列表
+  add: ['artifact_config:add'], // 添加构件类型配置
+  edit: ['artifact_config:edit'], // 修改零件类型配置
+  del: ['artifact_config:del'] // 删除零件类型配置
+}
+
+// MES-配置管理/母件类型配置
+export const machinePartConfigPM = {
+  get: ['machine_part_config:get'], // 母件类型配置列表
+  add: ['machine_part_config:add'], // 添加母件类型配置
+  edit: ['machine_part_config:edit'], // 修改零件类型配置
+  del: ['machine_part_config:del'] // 删除零件类型配置
+}
+
+// MES-配置管理/零件类型配置
+export const steelClassicPM = {
+  get: ['steel_classic:get'], // 零件类型配置列表
+  add: ['steel_classic:add'], // 新增零件类型配置
+  edit: ['steel_classic:edit'], // 修改零件类型配置
+  del: ['steel_classic:del'] // 删除零件类型配置
+}
+
+// MES-配置管理/变更原因
+export const changeReasonPM = {
+  get: ['change_reason:get'], // 变更原因列表
+  add: ['change_reason:add'], // 新增变更原因
+  edit: ['change_reason:edit'], // 修改变更原因
+  del: ['change_reason:del'] // 删除变更原因
+}
 // ---------------------------- 基础配置 end -------------------------------
 
 // ########################################################################

@@ -24,7 +24,9 @@
     </el-table-column>
     <el-table-column v-if="columns.visible('project')" key="project.serialNumber" prop="project" :show-overflow-tooltip="true" label="所属项目">
       <template v-slot="scope">
-        <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+        <el-tooltip :content="scope.row.project.serialNumber+' '+scope.row.project.name" :show-after="50" placement="top" v-if="scope.row.project && scope.row.project.serialNumber">
+          <span class="project-name">{{ projectNameFormatter(scope.row.project) }}</span>
+        </el-tooltip>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('invoiceUnit')" key="invoiceUnit" prop="invoiceUnit" :show-overflow-tooltip="true" label="签约主体" align="center">
@@ -71,7 +73,8 @@ import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import mHeader from './module/header'
-import { invoiceTypeEnum, businessTypeEnum } from '@enum-ms/contract'
+import { businessTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 import { toThousand } from '@data-type/number'
 import { parseTime } from '@/utils/date'
 import { projectNameFormatter } from '@/utils/project'

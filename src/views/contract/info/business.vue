@@ -121,7 +121,7 @@
               <div style="width: 400px">
                 <el-input
                   v-if="isModify"
-                  v-model="form.signingAddress"
+                  v-model.trim="form.signingAddress"
                   class="input-underline"
                   placeholder="签约地址"
                   style="width: 400px"
@@ -165,7 +165,7 @@
           <div class="form-row">
             <el-form-item label="合同含税" prop="isTax">
               <div style="width: 200px">
-                 <el-radio-group v-model="form.isTax" v-if="isModify">
+                 <el-radio-group v-model="form.isTax" v-if="isModify" @change="isTaxChange">
                     <el-radio
                       v-for="item in isTaxContractEnum.ENUM"
                       :key="item.V"
@@ -196,13 +196,33 @@
                 </template>
               </div>
             </el-form-item>
+            <el-form-item label="税率" prop="businessTaxRate">
+              <template v-if="isModify">
+                <el-input-number
+                  v-model="form.businessTaxRate"
+                  :step="1"
+                  :min="0"
+                  :max="100"
+                  :precision="0"
+                  :controls="false"
+                  controls-position="right"
+                  class="input-underline"
+                  style="width: 80px"
+                  placeholder="0-100"
+                  @change="taxChange"
+                />%
+              </template>
+              <template v-else>
+                <span>{{ detail.businessTaxRate ? detail.businessTaxRate+'%' : '' }}</span>
+              </template>
+              </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="付款方式描述" prop="payTypeDesc">
               <div class="input-underline" style="width: 550px">
                 <el-input
                   v-if="isModify"
-                  v-model="form.payTypeDesc"
+                  v-model.trim="form.payTypeDesc"
                   type="textarea"
                   :autosize="{ minRows: 4, maxRows: 4 }"
                   maxlength="200"
@@ -266,14 +286,13 @@ import { ElRadioGroup } from 'element-plus'
 import {
   projectTypeEnum,
   businessTypeEnum,
-  paymentModeEnum,
-  invoiceTypeEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
   TechnologyTypeEnum
 } from '@enum-ms/contract'
+import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'
 import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show'
 import EnclosureForm from '@/views/contract/project-manage/module/enclosure-form'
@@ -305,6 +324,8 @@ const defaultForm = {
   payType: paymentModeEnum.PUBLIC_TRANSFER.V, // 付款方式
   isTax: isTaxContractEnum.YES.V, // 是否含税
   invoiceType: invoiceTypeEnum.SPECIAL.V, // 发票类型
+  businessTaxRate: undefined, // 税率
+  taxRate: undefined, // 税率
   payTypeDesc: undefined, // 付款方式描述
   enclosureInfo: {},
   structureList: [],
@@ -406,6 +427,18 @@ function businessChange() {
   if (form.value.businessType) {
     projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.MACHINING.V ? projectContent1 : projectContent2
   }
+}
+
+function isTaxChange(val) {
+  if (val !== isTaxContractEnum.YES.V) {
+    form.value.invoiceType = undefined
+    form.value.businessTaxRate = undefined
+    form.value.taxRate = undefined
+  }
+}
+
+function taxChange() {
+  form.value.taxRate = form.value.businessTaxRate ? form.value.businessTaxRate / 100 : undefined
 }
 
 // function handleAddEnclosure() {
@@ -563,6 +596,7 @@ async function fetchDetail() {
     }
     projectContent1 = options || []
     projectContent2 = data2.projectContentVOList || []
+    _detail.businessTaxRate = _detail.taxRate ? _detail.taxRate * 100 : undefined
   } catch (error) {
     console.log('error', error)
   } finally {

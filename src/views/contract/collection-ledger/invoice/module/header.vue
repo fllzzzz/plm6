@@ -26,13 +26,13 @@
         @change="crud.toQuery"
       />
       <el-input
-        v-model="query.name"
+        v-model.trim="query.name"
         placeholder="项目名称"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.contractSignBodyName"
+        v-model.trim="query.contractSignBodyName"
         placeholder="合同签订主体"
         style="width:200px"
         class="filter-item"

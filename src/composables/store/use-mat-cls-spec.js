@@ -8,7 +8,7 @@ import { useStore } from 'vuex'
 const useMatClsSpec = (classifyId) => {
   const loaded = ref(true)
   const store = useStore()
-  const fetchMatClsSpec = (classifyId) => {
+  const fetchMatClsSpec = async (classifyId) => {
     const _classifyId = Array.isArray(classifyId) ? classifyId : [classifyId]
     const stateClassifySpec = store.state.config.classifySpec
     const unload = _classifyId.filter(id => stateClassifySpec[id] === undefined)
@@ -18,9 +18,8 @@ const useMatClsSpec = (classifyId) => {
       unload.forEach(id => {
         store.state.config.classifySpec[id] = {}
       })
-      store.dispatch('config/fetchMarClsSpec', unload).finally(() => {
-        loaded.value = true
-      })
+      await store.dispatch('config/fetchMarClsSpec', unload)
+      loaded.value = true
     }
   }
   if (classifyId) { // 如果传入了id则自动加载

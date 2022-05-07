@@ -18,7 +18,7 @@
     min-width="90px"
     show-overflow-tooltip
   />
-  <el-table-column v-if="showAmount" key="amount" prop="amount" label="金额" align="right" min-width="105px" show-overflow-tooltip />
+  <el-table-column v-if="showAmount" key="amount" prop="amount" label="含税金额" align="right" min-width="105px" show-overflow-tooltip />
   <el-table-column
     v-if="showUnitPriceExcludingVAT"
     key="unitPriceExcludingVAT"

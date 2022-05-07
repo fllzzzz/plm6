@@ -7,6 +7,7 @@
       ref="tableRef"
       v-loading="!steelClassifyConfLoaded || crud.loading"
       :data="crud.data"
+      :data-format="columnsDataFormat"
       :max-height="maxHeight"
       row-key="id"
     >
@@ -19,11 +20,7 @@
         label="备料单号"
         min-width="140px"
       />
-      <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="项目" min-width="150">
-        <template #default="{ row }">
-          <span v-parse-project="{ project: row.project, onlyShortName: true }" v-empty-text />
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('project')" show-overflow-tooltip key="project" prop="project" label="项目" min-width="150" />
       <el-table-column
         v-if="columns.visible('monomer.name')"
         key="monomer.name"
@@ -31,11 +28,7 @@
         :show-overflow-tooltip="true"
         label="单体"
         min-width="120"
-      >
-        <template #default="{ row }">
-          <span v-empty="{ val: row.monomer ? row.monomer.name : void 0 }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('area.name')"
         key="area.name"
@@ -43,11 +36,7 @@
         :show-overflow-tooltip="true"
         label="区域"
         min-width="100"
-      >
-        <template #default="{ row }">
-          <span v-empty="{ val: row.area ? row.area.name : void 0 }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('technologyListType')"
         key="technologyListType"
@@ -56,11 +45,7 @@
         label="清单类型"
         align="center"
         width="70"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: componentTypeEnum, v: row.technologyListType }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('materialBasicClass')"
         key="materialBasicClass"
@@ -69,11 +54,7 @@
         label="物料种类"
         align="center"
         width="90"
-      >
-        <template #default="{ row }">
-          <span v-parse-enum="{ e: projectPreparationMatClsEnum, v: row.materialBasicClass, bit: true }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('listMete')"
         key="listMete"
@@ -83,12 +64,11 @@
         align="center"
         width="110"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <template v-if="!(row.materialBasicClass & projectPreparationMatClsEnum.MATERIAL.V) && isNotBlank(row.listMete)">
-            <span v-text="row.listMete" v-empty />
-            <span>&nbsp;&nbsp;kg</span>
+            <span>{{ row.listMete }}&nbsp;&nbsp;kg</span>
           </template>
-          <span v-else v-empty />
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -100,12 +80,11 @@
         align="center"
         width="110"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <template v-if="!(row.materialBasicClass & projectPreparationMatClsEnum.MATERIAL.V) && isNotBlank(row.preparationMete)">
-            <span v-text="row.preparationMete" v-empty />
-            <span>&nbsp;&nbsp;kg</span>
+            <span>{{ row.preparationMete }}&nbsp;&nbsp;kg</span>
           </template>
-          <span v-else v-empty />
+          <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -116,11 +95,7 @@
         label="清单上传人"
         align="center"
         min-width="100"
-      >
-        <template #default="{ row }">
-          <span v-split="row.listUploaderNames" v-empty />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('preparationUpdaterName')"
         key="preparationUpdaterName"
@@ -138,11 +113,7 @@
         label="创建日期"
         align="center"
         width="100"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="{ val: row.createTime, fmt: '{y}-{m}-{d}' }" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('listUpdateTime')"
         key="listUpdateTime"
@@ -151,11 +122,7 @@
         label="清单更新时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.listUpdateTime" />
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         v-if="columns.visible('preparationUpdateTime')"
         key="preparationUpdateTime"
@@ -164,14 +131,10 @@
         label="备料更新时间"
         align="center"
         width="125"
-      >
-        <template #default="{ row }">
-          <span v-parse-time="row.preparationUpdateTime" v-empty />
-        </template>
-      </el-table-column>
+      />
       <!--编辑与删除-->
       <el-table-column label="备料" width="105" align="center" fixed="right">
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <common-button
             v-if="checkPermission(permission.edit)"
             size="mini"
@@ -233,7 +196,16 @@ const optShow = {
 }
 
 const tableRef = ref()
-
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ['createTime', ['parse-time', '{y}-{m}-{d}']],
+  ['preparationUpdateTime', 'parse-time'],
+  ['listUpdateTime', 'parse-time'],
+  ['listUploaderNames', 'split'],
+  ['materialBasicClass', ['parse-enum', projectPreparationMatClsEnum, { bit: true }]],
+  ['technologyListType', ['parse-enum', componentTypeEnum]],
+  ['project', ['parse-project', { onlyShortName: true }]]
+])
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '项目备料',

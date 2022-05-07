@@ -1,5 +1,6 @@
 import common from './common'
 import mes from './mes'
+import wms from './wms'
 import contract from './contract'
 
 const invoiceLedger = common.handleTaxRate
@@ -9,6 +10,8 @@ const projectHappenedDetail = common.handleTaxRate
 const myProject = contract.durationCalculation
 const projectList = contract.durationCalculation
 const contractLedger = contract.handleRate
+const supplierPayableSummary = contract.handleSupplierPaymentRate
+const logisticsPaymentLedger = contract.handleSupplierPaymentRate
 
 const mesStructureProductionLine = mes.productionLineMete
 const mesStructureProcess = mes.processMete
@@ -31,10 +34,20 @@ const mesWageSummary = mes.wageProducedMete
 const mesWageDetail = mes.wageCompleteMete
 const mesPaintingList = mes.surfaceArea
 
+const mesEnclosureProductionLine = mes.areaConvert
+
+const wmsRmInboundReceipt = wms.dataFormat // 入库单
+const wmsRmOutboundReceipt = wms.dataFormat // 出库单
+const wmsRmReturnReceipt = wms.dataFormat // 退库单
+const wmsRmRejectReceipt = wms.dataFormat // 退货单
+const wmsRmTransferReceipt = wms.transferDataFormat // 调拨单
+
 export default {
   invoiceLedger,
   invoiceRecord,
   projectHappenedDetail,
+  supplierPayableSummary,
+  logisticsPaymentLedger,
   myProject,
   projectList,
   contractLedger,
@@ -53,5 +66,12 @@ export default {
   mesStructureProductionStatistics,
   mesStructureProductionStatisticsIn,
   mesEnclosureProductionStatistics,
-  mesEnclosureProductionStatisticsIn
+  mesEnclosureProductionStatisticsIn,
+  mesEnclosureProductionLine,
+
+  wmsRmInboundReceipt, // 入库单
+  wmsRmOutboundReceipt, // 出库单
+  wmsRmReturnReceipt, // 退库单
+  wmsRmRejectReceipt, // 退货单
+  wmsRmTransferReceipt // 调拨单
 }

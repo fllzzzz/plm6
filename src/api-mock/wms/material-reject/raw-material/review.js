@@ -367,7 +367,7 @@ const detail_id1 = {
             id: 1,
             freezeType: materialFreezeTypeEnum.REJECTED.V,
             remark: 'fffff', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
@@ -414,7 +414,7 @@ const detail_id1 = {
             id: 2,
             freezeType: materialFreezeTypeEnum.REJECTED.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },

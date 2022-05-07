@@ -33,6 +33,13 @@ export const purchaseOrderPM = {
 
 // --------------------------- 采购对账 start --------------------------------
 
+// 采购对账管理/入库记录
+export const supplierMaterialInboundPM = {
+  get: ['supplier_material_inbound:get'], // 入库记录列表
+  detail: ['supplier_material_inbound:detail'], // 入库记录详情
+  print: ['supplier_material_inbound:print'] // 打印入库记录详情
+}
+
 // 采购对账管理/付款台账
 export const supplierMaterialPaymentPM = {
   get: ['supplier_material_payment:get'], // 付款台账列表
@@ -53,22 +60,20 @@ export const supplierMaterialPaymentPM = {
 // 物流对账管理/物流记录
 export const supplierLogisticsLogPM = {
   get: ['supplier_logistics_Log:get'], // 物流记录列表
-  detail: ['supplier_logistics_Log:detail'] // 物流记录详情
+  detail: ['supplier_logistics_Log:detail'], // 物流记录详情
+  print: ['supplier_logistics_Log:print'] // 打印物流记录
 }
 
 // 物流对账管理/付款明细
 export const supplierLogisticsPaymentPM = {
   get: ['supplier_logistics_payment:get'], // 付款明细列表
-  detail: ['supplier_logistics_payment:detail'], // 付款/收票记录
-  print: ['supplier_logistics_payment:print'], // 打印下载付款台账
+  add: ['supplier_logistics_payment:add'], // 新增申请
+  detail: ['supplier_logistics_payment:detail'], // 收票记录
+  print: ['supplier_logistics_payment:print'], // 打印下载
   application: {
-    get: ['supplier_logistics_payment_application:get'], // 付款申请列表
-    add: ['supplier_logistics_payment_application:add'], // 添加付款申请
+    get: ['supplier_logistics_payment_application:get'], // 申请记录列表
     edit: ['supplier_logistics_payment_application:edit'], // 编辑付款申请
     del: ['supplier_logistics_payment_application:del'] // 删除付款申请
-  },
-  paymentLog: {
-    get: ['supplier_logistics_paymentLog:get'] // 付款记录
   }
 }
 

@@ -58,12 +58,7 @@
         min-width="120"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.outbound"
-            :permission="permission.outboundReceiptDetail"
-            @click="openOutboundDetailView(row.outbound.id)"
-            :text="row.outbound.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outbound" />
         </template>
       </el-table-column>
       <el-table-column
@@ -97,17 +92,11 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 调拨详情 -->
-    <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
-      <outbound-detail />
-    </detail-wrapper>
-    <!-- -->
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/wms/material-return/raw-material/returnable-list'
-import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 import { rawMaterialReturnableListPM as permission } from '@/page-permission/wms'
 import { computed, defineEmits, defineProps, defineExpose, provide, reactive, ref, watchEffect } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
@@ -121,18 +110,17 @@ import { toFixed } from '@/utils/data-type'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header'
 
+import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import OutboundDetail from '@/views/wms/material-outbound/raw-material/review/module/detail.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitOperateQuantityColumns from '@/components-system/wms/table-columns/material-unit-operate-quantity-columns/index.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 import { ElMessage } from 'element-plus'
-import useMatBaseUnit from '@/composables/store/use-mat-base-unit'
+
 const emit = defineEmits(['add'])
 
 const props = defineProps({
@@ -174,8 +162,6 @@ const optShow = {
 
 // 展开行
 const expandRowKeys = ref([])
-// 出库详情ref
-const outboundDetailRef = ref()
 const returnNumber = ref({})
 // 表格ref
 const tableRef = ref()
@@ -314,11 +300,6 @@ function calcReturnInfo() {
     row.returnableMete = row.sourceReturnableMete - (mete[row.id] || 0)
   })
   returnNumber.value = number
-}
-
-// 打开出库详情窗口
-function openOutboundDetailView(outboundId) {
-  outboundDetailRef.value.toDetail(outboundId)
 }
 
 // 刷新

@@ -221,8 +221,8 @@ function rowWatch(row) {
 // 数量变更
 function handleQuantityChange(row, nVal) {
   // 单位净量
-  if (isNotBlank(nVal) && row.source.unitNet) {
-    row.mete = toPrecision(nVal * row.source.unitNet, row.accountingPrecision)
+  if (isNotBlank(nVal)) {
+    row.mete = toPrecision((nVal / +row.source.quantity) * row.source.sourceReturnableMete, row.accountingPrecision)
   } else {
     row.mete = undefined
   }
@@ -230,8 +230,8 @@ function handleQuantityChange(row, nVal) {
 
 // 核算量变更
 function handleMeteChange(row, nVal) {
-  if (row.measureUnit && isNotBlank(nVal) && isNotBlank(row.source.accountingUnitNet)) {
-    row.quantity = toPrecision(nVal * row.source.accountingUnitNet, row.measurePrecision)
+  if (row.measureUnit && isNotBlank(nVal)) {
+    row.quantity = toPrecision((nVal / +row.source.sourceReturnableMete) * row.source.quantity, row.measurePrecision)
   } else {
     row.quantity = undefined
   }

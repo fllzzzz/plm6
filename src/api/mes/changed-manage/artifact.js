@@ -8,6 +8,17 @@ export function changeStatus(id) {
   })
 }
 
+export function partChange(id) {
+  return request({
+    module: 'mes',
+    url: `abnormal/handle/part`,
+    method: 'put',
+    data: {
+      id
+    }
+  })
+}
+
 export function exceptionChange(data) {
   return request({
     module: 'mes',

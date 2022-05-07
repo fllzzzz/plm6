@@ -4,6 +4,7 @@
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
       <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
       <print-table
         v-permission="crud.permission.print"
         api-key="invoiceRecord"
@@ -40,7 +41,6 @@
             value-format="x"
             placeholder="选择日期"
             style="width:100%"
-            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
           />
           <template v-else>
             <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -60,6 +60,7 @@
                 :precision="DP.YUAN"
                 placeholder="开票额(元)"
                 controls-position="right"
+                @change="moneyChange(scope.row)"
               />
               <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
@@ -72,19 +73,7 @@
       </el-table-column>
       <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
         <template v-slot="scope">
-          <common-select
-            v-if="scope.row.isModify"
-            v-model="scope.row.invoiceType"
-            :options="invoiceTypeEnum.ENUM"
-            type="enum"
-            size="small"
-            clearable
-            class="filter-item"
-            placeholder="发票类型"
-            style="width: 100%"
-            @change="invoiceTypeChange(scope.row)"
-          />
-          <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+          <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
@@ -116,7 +105,7 @@
         <template v-slot="scope">
           <el-input
             v-if="scope.row.isModify"
-            v-model="scope.row.collectionUnit"
+            v-model.trim="scope.row.collectionUnit"
             placeholder="收票单位"
             style="width:100%;"
             maxlength="50"
@@ -126,7 +115,7 @@
       </el-table-column>
       <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="150">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
           <span v-else>{{ scope.row.invoiceNo  }}</span>
         </template>
       </el-table-column>
@@ -192,14 +181,14 @@
     </common-table>
   <!--分页组件-->
   <pagination />
-  <mForm :existInvoiceNo="invoiceNoArr" :projectId="projectId"/>
+  <mForm :existInvoiceNo="invoiceNoArr" :projectId="projectId" :currentRow="currentRow"/>
   </div>
 </template>
 
 <script setup>
 import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/collection-and-invoice/invoice'
-import { ref, defineEmits, defineProps, watch, provide } from 'vue'
+import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -226,6 +215,10 @@ const optShow = {
 }
 
 const props = defineProps({
+  currentRow: {
+    type: Object,
+    default: () => {}
+  },
   projectId: {
     type: [String, Number],
     default: undefined
@@ -285,7 +278,7 @@ function wrongCellMask({ row, column }) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -334,33 +327,35 @@ async function getContractInfo(id) {
   }
 }
 
-function invoiceTypeChange(row) {
-  row.taxRate = undefined
-}
-// function moneyChange(row) {
-//   totalAmount.value = 0
-//   crud.data.map(v => {
-//     if (v.invoiceAmount) {
-//       totalAmount.value += v.invoiceAmount
-//     }
-//   })
-//   if (totalAmount.value > contractInfo.value.contractAmount) {
-//     const num = row.invoiceAmount - (totalAmount.value - contractInfo.value.contractAmount)
-//     // 解决修改失效
-//     nextTick(() => {
-//       row.invoiceAmount = num || 0
-//       taxMoney(row)
-//       totalAmount.value = 0
-//       crud.data.map(v => {
-//         if (v.invoiceAmount) {
-//           totalAmount.value += v.invoiceAmount
-//         }
-//       })
-//     })
-//   } else {
-//     taxMoney(row)
-//   }
+// function invoiceTypeChange(row) {
+//   row.taxRate = undefined
 // }
+function moneyChange(row) {
+  if (props.currentRow.settlementAmount) {
+    totalAmount.value = 0
+    crud.data.map(v => {
+      if (v.invoiceAmount) {
+        totalAmount.value += v.invoiceAmount
+      }
+    })
+    if (totalAmount.value > props.currentRow.settlementAmount) {
+      const num = row.invoiceAmount - (totalAmount.value - props.currentRow.settlementAmount)
+      // 解决修改失效
+      nextTick(() => {
+        row.invoiceAmount = num || 0
+        taxMoney(row)
+        totalAmount.value = 0
+        crud.data.map(v => {
+          if (v.invoiceAmount) {
+            totalAmount.value += v.invoiceAmount
+          }
+        })
+      })
+    } else {
+      taxMoney(row)
+    }
+  }
+}
 
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {
@@ -439,7 +434,7 @@ async function rowSubmit(row) {
   let flag = true
   row.verify = {}
   for (const rule in rules) {
-    row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+    row.verify[rule] = validate(rule, rules[rule], row)
     if (!row.verify[rule]) {
       flag = false
     }

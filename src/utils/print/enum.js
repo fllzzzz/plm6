@@ -1,4 +1,6 @@
 import { constantize, key2val, toArr, getBits, setEnumValue } from '../enum/base'
+import { DEF_UNIT } from '@/settings/config'
+
 /**
  * @author dhh
  * L:label 名称,
@@ -62,6 +64,7 @@ constantize(weightUnitEnum)
 
 // 打印配置-字段类型
 const fieldTypeEnum = {
+  BLANK: { L: '空值', K: 'BLANK' },
   OTHER: { L: '其他', K: 'OTHER' },
   DICT: { L: '字典', K: 'DICT' },
   ENUM: { L: '枚举', K: 'ENUM' },
@@ -74,6 +77,7 @@ const fieldTypeEnum = {
   THICKNESS: { L: '厚度', K: 'THICKNESS' },
   METE: { L: '量', K: 'METE' }, // 含面积等
   RATE: { L: '百分比', K: 'RATE' },
+  DP: { L: '小数精度', K: 'DP' },
   GUID: { L: '编号', K: 'GUID' },
 
   CONTRACT_NO: { L: '合同编号', K: 'CONTRACT_NO' },
@@ -125,7 +129,6 @@ const fieldTypeEnum = {
   BANK: { L: '银行', K: 'BANK' },
   BANK_ACCOUNT: { L: '银行账号', K: 'BANK_ACCOUNT' } // 非银行卡号
 }
-constantize(fieldTypeEnum)
 
 // 数据来源
 const dataSourceEnum = {
@@ -218,6 +221,7 @@ export {
   tableConfigItemEnum, // 表格配置项
   printModeEnum, // 打印模式
   amountUnitEnum, // 金额单位
+  DEF_UNIT, // 系统常用单位
   lengthUnitEnum, // 长度单位
   weightUnitEnum, // 重量单位
   thicknessUnitEnum // 厚度单位
@@ -229,4 +233,3 @@ export default {
   getBits,
   setEnumValue
 }
-

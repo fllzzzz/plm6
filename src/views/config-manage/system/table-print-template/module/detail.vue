@@ -15,20 +15,10 @@
         <span>打印预览</span>
         <div>
           <el-select v-model="contentZoom" placeholder="显示比例" size="small" class="zoom-select">
-            <el-option
-              v-for="item in zoomArr"
-              :key="item"
-              :label="`${item}%`"
-              :value="item"
-            />
+            <el-option v-for="item in zoomArr" :key="item" :label="`${item}%`" :value="item" />
           </el-select>
           <el-select v-model="contentDataLength" @change="handleTableHtmlChange" placeholder="数据填充" size="small" class="zoom-select">
-            <el-option
-              v-for="item in contentDataArr"
-              :key="item"
-              :label="`${item}条`"
-              :value="item"
-            />
+            <el-option v-for="item in contentDataArr" :key="item" :label="`${item}条`" :value="item" />
           </el-select>
           <common-button size="small" type="danger" :disabled="isBlank(config)" @click="print">打印预览</common-button>
           <common-button size="small" type="success" :disabled="isBlank(config)" @click="exportXSLX">导出 Excel</common-button>
@@ -39,18 +29,8 @@
     <div class="dialog-middle">
       <div class="content" :style="contentStyle">
         <template v-if="isNotBlank(config)">
-          <el-image
-            v-if="logoCfg?.show && logoCfg.url"
-            class="logo-info"
-            :style="logoStyle"
-            :src="logoCfg.url"
-            fit="scale-down"
-          />
-          <div
-            v-if="qrCfg?.show"
-            class="qr-info"
-            :style="qrStyle"
-          >
+          <el-image v-if="logoCfg?.show && logoCfg.url" class="logo-info" :style="logoStyle" :src="logoCfg.url" fit="scale-down" />
+          <div v-if="qrCfg?.show" class="qr-info" :style="qrStyle">
             <qrcode-vue :value="qrContent" :size="150" :margin="1" />
           </div>
           <div v-if="tableFieldsCfg?.show" class="title-info" :style="titleStyle" v-html="titleHtml" />
@@ -316,7 +296,7 @@ CRUD.HOOK.afterToDetail = async (crud) => {
   splicingHtml()
 }
 
-function exportXSLX() {
+async function exportXSLX() {
   let param = {
     header: headerData.value,
     table: filterExampleTableData.value,
@@ -325,8 +305,9 @@ function exportXSLX() {
   }
 
   const _type = detail.type
-  if (_type && formatFn[_type]) { // 数据装换
-    param = formatFn[_type](param)
+  if (_type && formatFn[_type]) {
+    // 数据装换
+    param = await formatFn[_type](param)
   }
   param.config = JSON.parse(JSON.stringify(config.value))
   downloadXLSX(param)
@@ -356,7 +337,7 @@ function setData() {
   }
 }
 
-function print() {
+async function print() {
   let param = {
     header: headerData.value,
     table: filterExampleTableData.value,
@@ -365,8 +346,9 @@ function print() {
   }
 
   const _type = detail.type
-  if (_type && formatFn[_type]) { // 数据装换
-    param = formatFn[_type](param)
+  if (_type && formatFn[_type]) {
+    // 数据装换
+    param = await formatFn[_type](param)
   }
   param.printMode = printModeEnum.PREVIEW.V
   param.config = JSON.parse(JSON.stringify(config.value))
@@ -418,198 +400,199 @@ function handlePageHtmlChange() {
 </script>
 
 <style lang="scss">
-  .print-template-detail {
-    background: #f0f0f0;
-    .el-dialog__header {
-      padding-top:10px;
-      padding-bottom: 10px;
-      background-color: #5c93ce;
-      color: #FFFFFF;
-    }
+.print-template-detail {
+  background: #f0f0f0;
+  .el-dialog__header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #5c93ce;
+    color: #ffffff;
   }
+}
 </style>
 <style lang="scss" scoped>
-  ::v-deep(.el-dialog__body) {
-    padding: 15px 20px 10px 20px;
+::v-deep(.el-dialog__body) {
+  padding: 15px 20px 10px 20px;
+  box-sizing: border-box;
+}
+.dialog-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  > span {
+    font-size: 18px;
+  }
+  .config-item-box {
+    margin-right: 15px;
+  }
+  .zoom-select {
+    width: 100px;
+    margin-right: 10px;
+    ::v-deep(.el-input__inner) {
+      border: none;
+      background-color: #e8f4ff;
+    }
+  }
+}
+.dialog-middle {
+  width: inherit;
+  height: calc(100vh - 90px);
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: AvenirNext, Avenir, -apple-system, BlinkMacSystemFont, Roboto Slab, Droid Serif, Segoe UI, Oxygen-Sans, Ubuntu, Cantarell,
+    Georgia, serif;
+  .content {
+    overflow: hidden;
+    transform-origin: 0 0 0; /*以左上角为起点 */
     box-sizing: border-box;
-  }
-  .dialog-title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    >span {
-      font-size: 18px;
+    // border: 1px solid #333;
+    background-color: #ffffff;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
+    user-select: none;
+    .table-type-tip {
+      font-weight: bold;
+      font-size: 20px;
+      color: #ff4949;
     }
-    .config-item-box {
-      margin-right: 15px;
-    }
-    .zoom-select {
-      width:100px;
-      margin-right:10px;
-      ::v-deep(.el-input__inner) {
-        border: none;
-        background-color:#e8f4ff;
-      }
-    }
-  }
-  .dialog-middle {
-    width: inherit;
-    height: calc(100vh - 90px);
-    overflow: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 10px;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: AvenirNext,Avenir,-apple-system,BlinkMacSystemFont,Roboto Slab,Droid Serif,Segoe UI,Oxygen-Sans,Ubuntu,Cantarell,Georgia,serif;
-    .content {
-      overflow: hidden;
-      transform-origin: 0 0 0; /*以左上角为起点 */
+    > div {
+      border: 1px solidr gba(255, 255, 255, 0.1);
       box-sizing: border-box;
-      // border: 1px solid #333;
-      background-color: #FFFFFF;
-      box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
-      user-select: none;
-      .table-type-tip {
-        font-weight:bold;
-        font-size:20px;
-        color:#ff4949;
-      }
-      >div {
-        border: 1px solidr gba(255,255,255,0.1);
-        box-sizing: border-box;
-      }
-      .logo-info {
-        position: absolute;
-        border:none;
-      }
-      // 标题
-      .title-info {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
+    }
+    .logo-info {
+      position: absolute;
+      border: none;
+    }
+    // 标题
+    .title-info {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 17pt;
+      font-weight: bold;
+    }
+    // 表头信息
+    .header-info {
+      font-family: lucida sans unicode, lucida grande, Sans-Serif;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      line-height: 1.15;
+    }
+    ::v-deep(.header-info > div) {
+      display: inline-block;
+      margin: 1mm 0;
+      box-sizing: border-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    // 表格
+    .table-info {
+      box-sizing: border-box;
+      overflow: hidden;
+      width: 100%;
+      margin: 1mm 0;
+      ::v-deep(.preview-table) {
+        font-family: lucida sans unicode, lucida grande, Sans-Serif;
+        font-size: 9pt;
+        border-collapse: collapse;
         width: 100%;
-        box-sizing: border-box;
-        text-align: center;
-        font-size: 17pt;
-        font-weight: bold;
-      }
-      // 表头信息
-      .header-info {
-        font-family: lucida sans unicode,lucida grande,Sans-Serif;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        flex-wrap: wrap;
-        box-sizing: border-box;
-        line-height: 1.15;
-      }
-      ::v-deep(.header-info >div) {
-        display: inline-block;
-        margin: 1mm 0;
-        box-sizing: border-box;
-        overflow : hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      // 表格
-      .table-info {
-        box-sizing: border-box;
-        overflow: hidden;
-        width: 100%;
-        margin: 1mm 0;
-        ::v-deep(.preview-table) {
-          font-family: lucida sans unicode,lucida grande,Sans-Serif;
-          font-size: 9pt;
-          border-collapse: collapse;
-          width: 100%;
-          .blank-column {
+        .blank-column {
+          min-width: 0;
+          border: 1px dashed;
+          > div {
+            display: inline-block;
             min-width: 0;
-            border: 1px dashed;
-            >div{
-              display: inline-block;
-              min-width: 0;
-            }
           }
         }
-        ::v-deep(.preview-table th) {
-            padding:0;
-            line-height: 15pt;
-            border:1px solid #000;
-            >div {
-              padding: 0 1mm;
-              box-sizing: border-box;
-              min-height: 3mm;
-            }
-        }
-        ::v-deep(.preview-table td) {
-            padding:0;
-            border:1px solid #000;
-            line-height:13pt;
-            white-space: pre-wrap;
-            >div {
-              padding: 0 1mm;
-              box-sizing: border-box;
-              min-height: 3mm;
-            }
-        }
-        ::v-deep(.preview-table tbody tr:last-child) {
-          border-bottom:none
+      }
+      ::v-deep(.preview-table th) {
+        padding: 0;
+        line-height: 15pt;
+        border: 1px solid #000;
+        > div {
+          padding: 0 1mm;
+          box-sizing: border-box;
+          min-height: 3mm;
         }
       }
-
-      // footer
-      .footer-info{
-        font-family: lucida sans unicode,lucida grande,Sans-Serif;
-        overflow: hidden;
-        width: 100%;
-        box-sizing: content-box;
-        padding-right: 9mm;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        flex-wrap: wrap;
-        ::v-deep(.tip) {
-          display: inline-block;
-          white-space: pre-line;
-          width: 100%;
-          margin: 1mm 0;
-          font-size: 9pt;
-          color: red;
+      ::v-deep(.preview-table td) {
+        padding: 0;
+        border: 1px solid #000;
+        line-height: 13pt;
+        white-space: pre-wrap;
+        > div {
+          padding: 0 1mm;
+          box-sizing: border-box;
+          min-height: 3mm;
         }
       }
-      ::v-deep(.footer-info >div) {
-        display: inline-block;
-        margin: 1mm 0;
-        // padding-right: 5mm;
-        box-sizing: border-box;
-        overflow : hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .qr-info {
-        position: absolute;
-        img{
-          width: 100%;
-          height: 100%;
-          vertical-align: middle;
-        }
-      }
-      .page-info {
-        box-sizing: border-box;
-        width: 100%;
-        position: absolute;
-        bottom: 0;
-        left: 0;
+      ::v-deep(.preview-table tbody tr:last-child) {
+        border-bottom: none;
       }
     }
+
+    // footer
+    .footer-info {
+      font-family: lucida sans unicode, lucida grande, Sans-Serif;
+      overflow: hidden;
+      width: 100%;
+      box-sizing: content-box;
+      padding-right: 9mm;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      ::v-deep(.tip) {
+        display: inline-block;
+        white-space: pre-line;
+        width: 100%;
+        margin: 1mm 0;
+        font-size: 9pt;
+        color: red;
+      }
+    }
+    ::v-deep(.footer-info > div) {
+      display: inline-block;
+      margin: 1mm 0;
+      // padding-right: 5mm;
+      box-sizing: border-box;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .qr-info {
+      position: absolute;
+      img {
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+      }
+    }
+    .page-info {
+      box-sizing: border-box;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
   }
+}
 </style>

@@ -47,10 +47,10 @@
             fixed="left"
           />
           <el-table-column
-            v-if="columns.visible('transferReceipt.source')"
+            v-if="columns.visible('sourceInfo')"
             show-overflow-tooltip
-            key="transferReceipt.source"
-            prop="transferReceipt.source"
+            key="sourceInfo"
+            prop="sourceInfo"
             label="来源"
             min-width="170"
             fixed="left"
@@ -60,10 +60,10 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-if="columns.visible('transferReceipt.direction')"
+            v-if="columns.visible('directionInfo')"
             show-overflow-tooltip
-            key="transferReceipt.direction"
-            prop="transferReceipt.direction"
+            key="directionInfo"
+            prop="directionInfo"
             label="目的"
             min-width="170"
             fixed="left"
@@ -80,7 +80,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
+        <amount-info-columns :columns="columns" show-invoice-type/>
       </template>
       <el-table-column
         v-if="columns.visible('transferReceipt.serialNumber')"
@@ -92,12 +92,7 @@
         align="left"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.transferReceipt"
-            :permission="permission.transferReceiptDetail"
-            @click="openTransferReceiptDetail(row.transferReceipt.id)"
-            :text="row.transferReceipt.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['TRANSFER']" :receipt="row.transferReceipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -139,43 +134,34 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 调拨单详情 -->
-    <detail-wrapper ref="transferReceiptDetailRef" :api="getTransferReceiptDetail">
-      <transfer-receipt-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/transfer'
-import { detail as getTransferReceiptDetail } from '@/api/wms/material-transfer/raw-material/review'
 import { reportRawMaterialTransferDetailsPM as permission } from '@/page-permission/wms'
 import { transferTypeEnum } from '@/utils/enum/modules/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { isNotBlank } from '@/utils/data-type'
 import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useOtherCrudDetail from '@/composables/use-other-crud-detail'
-
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
 
 import SourceTextInfo from '@/views/wms/material-transfer/raw-material/review/module/source-text-info.vue'
 import DirectionTextInfo from '@/views/wms/material-transfer/raw-material/review/module/direction-text-info.vue'
-import TransferReceiptDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
-import { isNotBlank } from '@/utils/data-type'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -229,9 +215,6 @@ const showAmount = computed(() => checkPermission(permission.showAmount))
 
 // 基础类型
 const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
-
-// 调拨单详情
-const { detailRef: transferReceiptDetailRef, openDetail: openTransferReceiptDetail } = useOtherCrudDetail()
 
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

@@ -47,9 +47,9 @@
         <div>{{ scope.row.collectionAmount? toThousand(scope.row.collectionAmount): '-' }}</div>
       </template>
     </el-table-column>
-    <el-table-column v-if="columns.visible('deliverInstallAmount')" key="deliverInstallAmount" prop="deliverInstallAmount" label="发生额(元)" align="center">
+    <el-table-column v-if="columns.visible('happenedAmount')" key="happenedAmount" prop="happenedAmount" label="发生额(元)" align="center">
       <template v-slot="scope">
-        <div>{{ scope.row.deliverInstallAmount? toThousand(scope.row.deliverInstallAmount): '-' }}</div>
+        <div>{{ scope.row.happenedAmount? toThousand(scope.row.happenedAmount): '-' }}</div>
       </template>
     </el-table-column>
     <el-table-column v-if="columns.visible('arrearAmount')" key="arrearAmount" prop="arrearAmount" label="欠款(元)" align="center">

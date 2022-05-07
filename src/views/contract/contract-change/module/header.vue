@@ -14,19 +14,19 @@
       />
       <project-radio-button size="small" v-model="query.projectId" class="filter-item" @change="crud.toQuery" />
       <el-input
-        v-model="query.name"
+        v-model.trim="query.name"
         placeholder="项目搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.userName"
+        v-model.trim="query.userName"
         placeholder="发起人搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.auditorName"
+        v-model.trim="query.auditorName"
         placeholder="审核人搜索"
         style="width:200px"
         class="filter-item"

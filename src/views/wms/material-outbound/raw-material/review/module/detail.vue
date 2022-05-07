@@ -15,9 +15,6 @@
       </el-tag>
       <el-tag effect="plain">{{ `出库申请时间：${parseTime(detail.createTime)}` }}</el-tag>
     </template>
-    <template #titleRight>
-      <!-- TODO:打印按钮 -->
-    </template>
     <template #content>
       <common-table
         :data="detail.list"
@@ -57,7 +54,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column key="outboundTime" label="出库时间" width="125px" align="center" />
+        <el-table-column key="outboundTime" prop="outboundTime" label="出库时间" width="125px" align="center" />
       </common-table>
     </template>
   </common-drawer>

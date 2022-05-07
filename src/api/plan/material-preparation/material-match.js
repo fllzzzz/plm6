@@ -28,3 +28,17 @@ export function getMatchSectionSteelList(params) {
     params
   })
 }
+
+/**
+ * 加载辅材匹配列表
+ * @param {*} params
+ */
+export function getMatchAuxMaterialList(params) {
+  return request({
+    module: 'wms',
+    url: 'material-preparation/match/auxiliary-material',
+    method: 'get',
+    cancelKey: false,
+    params
+  })
+}

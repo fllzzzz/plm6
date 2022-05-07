@@ -127,6 +127,8 @@ const { crud, query, CRUD } = regHeader(defaultQuery)
 CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach(v => {
     v.totalWeight = convertUnits(v.totalWeight, 'kg', 't', DP.COM_WT__T)
+    v.newUnitPrice = v.unitPrice // number类型的单价（unitPrice可能会有千位符）
+    v.originNewUnitPrice = v.newUnitPrice
     v.originUnitPrice = emptyTextFormatter(toThousand(v.unitPrice))
     v.totalPrice = v.totalWeight * (v.unitPrice || 0)
   })
@@ -155,16 +157,17 @@ function costInit() {
   monomerCost.value = { ...costData }
 }
 
-// 出来录入状态
+// 处理录入状态
 function handelModifying(status, reset = false) {
   // 取消分配，数据还原
   if (reset) {
     crud.data.forEach((v) => {
       v.unitPrice = v.originUnitPrice
-      if (typeof v.unitPrice === 'string') {
+      v.newUnitPrice = v.originNewUnitPrice
+      if (typeof v.newUnitPrice === 'string') {
         v.totalPrice = 0
       } else {
-        v.totalPrice = v.totalWeight * (v.unitPrice || 0)
+        v.totalPrice = v.totalWeight * (v.newUnitPrice || 0)
       }
     })
   }

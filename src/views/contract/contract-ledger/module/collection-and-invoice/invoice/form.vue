@@ -13,6 +13,7 @@
     </template>
     <template #content>
       <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -36,7 +37,6 @@
                 value-format="x"
                 placeholder="选择日期"
                 style="width:100%"
-                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
               />
               <template v-else>
                 <div>{{ scope.row.invoiceDate? parseTime(scope.row.invoiceDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -51,11 +51,12 @@
                     v-show-thousand
                     v-model.number="scope.row.invoiceAmount"
                     :min="0"
-                    :max="999999999999"
+                    :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
                     :step="100"
                     :precision="DP.YUAN"
                     placeholder="开票额(元)"
                     controls-position="right"
+                    @change="moneyChange(scope.row)"
                   />
                   <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
               </template>
@@ -68,19 +69,7 @@
           </el-table-column>
           <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
             <template v-slot="scope">
-              <common-select
-                v-if="scope.row.isModify"
-                v-model="scope.row.invoiceType"
-                :options="invoiceTypeEnum.ENUM"
-                type="enum"
-                size="small"
-                clearable
-                class="filter-item"
-                placeholder="发票类型"
-                style="width: 100%"
-                @change="invoiceTypeChange(scope.row)"
-              />
-              <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+              <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
             </template>
           </el-table-column>
           <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
@@ -112,7 +101,7 @@
             <template v-slot="scope">
               <el-input
                 v-if="scope.row.isModify"
-                v-model="scope.row.collectionUnit"
+                v-model.trim="scope.row.collectionUnit"
                 placeholder="收票单位"
                 style="width:100%;"
                 maxlength="50"
@@ -122,7 +111,7 @@
           </el-table-column>
           <el-table-column prop="invoiceNo" label="*发票号码" align="center" min-width="150">
             <template v-slot="scope">
-              <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+              <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceNo" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
               <span v-else>{{ scope.row.invoiceNo  }}</span>
             </template>
           </el-table-column>
@@ -147,7 +136,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineProps, watch } from 'vue'
+import { ref, inject, defineProps, watch, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -166,7 +155,9 @@ const defaultForm = {
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const contractInfo = inject('contractInfo')
+const totalAmount = inject('totalAmount')
 const invoiceNoArr = ref([])
+const extraAmount = ref(0)
 
 const props = defineProps({
   existInvoiceNo: {
@@ -176,6 +167,10 @@ const props = defineProps({
   projectId: {
     type: [String, Number],
     default: undefined
+  },
+  currentRow: {
+    type: Object,
+    default: () => {}
   }
 })
 
@@ -229,9 +224,9 @@ function addRow() {
   form.list.push({
     invoiceAmount: undefined,
     invoiceDate: undefined,
-    invoiceType: undefined,
+    invoiceType: props.currentRow.invoiceType,
     invoiceNo: undefined,
-    taxRate: undefined,
+    taxRate: props.currentRow.taxRate ? props.currentRow.taxRate * 100 : undefined,
     tax: undefined,
     invoiceUnit: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyName : undefined,
     invoiceUnitId: contractInfo.value.companyBankAccountList && contractInfo.value.companyBankAccountList.length > 0 ? contractInfo.value.companyBankAccountList[0].companyId : undefined,
@@ -242,34 +237,33 @@ function addRow() {
   })
 }
 
-function invoiceTypeChange(row) {
-  row.taxRate = undefined
+function moneyChange(row) {
+  if (props.currentRow.settlementAmount) {
+    extraAmount.value = 0
+    form.list.map(v => {
+      if (v.invoiceAmount) {
+        extraAmount.value += v.invoiceAmount
+      }
+    })
+    if (extraAmount.value > (props.currentRow.settlementAmount - totalAmount.value)) {
+      const num = row.invoiceAmount - (extraAmount.value - (props.currentRow.settlementAmount - totalAmount.value))
+      console.log(row.invoiceAmount)
+      // 解决修改失效
+      nextTick(() => {
+        row.invoiceAmount = num || 0
+        taxMoney(row)
+        extraAmount.value = 0
+        form.list.map(v => {
+          if (v.invoiceAmount) {
+            extraAmount.value += v.invoiceAmount
+          }
+        })
+      })
+    } else {
+      taxMoney(row)
+    }
+  }
 }
-
-// function moneyChange(row) {
-//   extraAmount.value = 0
-//   form.list.map(v => {
-//     if (v.invoiceAmount) {
-//       extraAmount.value += v.invoiceAmount
-//     }
-//   })
-//   if (extraAmount.value > (contractInfo.value.contractAmount - totalAmount.value)) {
-//     const num = row.invoiceAmount - (extraAmount.value - (contractInfo.value.contractAmount - totalAmount.value))
-//     // 解决修改失效
-//     nextTick(() => {
-//       row.invoiceAmount = num || 0
-//       taxMoney(row)
-//       extraAmount.value = 0
-//       form.list.map(v => {
-//         if (v.invoiceAmount) {
-//           extraAmount.value += v.invoiceAmount
-//         }
-//       })
-//     })
-//   } else {
-//     taxMoney(row)
-//   }
-// }
 
 function taxMoney(row) {
   if (row.invoiceAmount && row.taxRate) {

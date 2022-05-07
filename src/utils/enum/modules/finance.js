@@ -17,8 +17,8 @@ constantize(weightMeasurementModeEnum)
 
 // 结算状态
 const settlementStatusEnum = {
-  UNSETTLEMENT: { L: '未结算', K: 'THEORY', V: 1, COLOR: '#e64242' },
-  SETTLED: { L: '已结算', K: 'OVERWEIGHT', V: 2, COLOR: '#13ce66' }
+  UNSETTLEMENT: { L: '未结算', K: 'UNSETTLEMENT', V: 0, COLOR: '#e64242' },
+  SETTLED: { L: '已结算', K: 'SETTLED', V: 1, COLOR: '#13ce66' }
 }
 constantize(settlementStatusEnum)
 

@@ -11,10 +11,10 @@ import { constantize } from '../base'
 
 // TODO:项目状态
 const projectStatusEnum = {
-  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0 },
-  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1 },
-  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2 },
-  SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3 }
+  PROCESS: { L: '进行中', K: 'PROCESS', V: 1 << 0, TAG: '' },
+  SUSPEND: { L: '已暂停', K: 'SUSPEND', V: 1 << 1, TAG: 'danger' },
+  COMPLETE: { L: '已完工', K: 'COMPLETE', V: 1 << 2, TAG: 'warning' },
+  SETTLED: { L: '已结算', K: 'COMPLETE', V: 1 << 3, TAG: 'success' }
 }
 constantize(projectStatusEnum)
 
@@ -84,29 +84,6 @@ constantize(businessModifyTypeEnum)
 // }
 // constantize(orderTypeEnum)
 
-// 结算状态
-const settlementStatusEnum = {
-  UNSETTLEMENT: { L: '未结算', K: 'THEORY', V: 0, COLOR: '#e64242' },
-  SETTLED: { L: '已结算', K: 'OVERWEIGHT', V: 1, COLOR: '#13ce66' }
-}
-constantize(settlementStatusEnum)
-
-// 付款方式
-const paymentModeEnum = {
-  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
-  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
-  OTHER_TRANSFER: { L: '其他转账', K: 'OTHER_TRANSFER', V: 1 << 2 }
-}
-constantize(paymentModeEnum)
-
-// 票据类型
-const invoiceTypeEnum = {
-  SPECIAL: { L: '增值税专用发票', SL: '专票', K: 'SPECIAL', V: 1 << 0 },
-  ORDINARY: { L: '增值税普通发票', SL: '普票', K: 'ORDINARY', V: 1 << 1 },
-  RECEIPT: { L: '收据', SL: '收据', K: 'RECEIPT', V: 1 << 2 }
-}
-constantize(invoiceTypeEnum)
-
 // 是否含税
 const isTaxEnum = {
   YES: { L: '是', K: 'YES', V: true },
@@ -116,8 +93,8 @@ constantize(isTaxEnum)
 
 // 是否含税
 const isTaxContractEnum = {
-  YES: { L: '是', K: 'YES', V: 1 },
-  NO: { L: '否', K: 'NO', V: 0 }
+  YES: { L: '是', SL: '含税', K: 'YES', V: 1 },
+  NO: { L: '否', SL: '不含税', K: 'NO', V: 0 }
 }
 constantize(isTaxContractEnum)
 
@@ -147,9 +124,9 @@ constantize(reimbursementTypeEnum)
 // 变更类型1
 const contractChangeTypeEnum = {
   CONTRACT_INFO: { L: '变更合同信息', K: 'CONTRACT_INFO', V: 1 << 0 },
-  CONTRACT_AMOUNT: { L: '变更合同金额', K: 'CONTRACT_AMOUNT', V: 1 << 1 },
-  CONTRACT_SETTLE: { L: '项目结算', K: 'CONTRACT_SETTLE', V: 1 << 2 },
-  VARIATION_ORDER: { L: '签证变更', K: 'VARIATION_ORDER', V: 1 << 3 }
+  CONTRACT_AMOUNT: { L: '变更合同金额', K: 'CONTRACT_AMOUNT', V: 1 << 1 }
+  // CONTRACT_SETTLE: { L: '项目结算', K: 'CONTRACT_SETTLE', V: 1 << 2 },
+  // VARIATION_ORDER: { L: '签证变更', K: 'VARIATION_ORDER', V: 1 << 3 }
 }
 constantize(contractChangeTypeEnum)
 
@@ -232,43 +209,48 @@ const contractPayForEnum = {
 constantize(contractPayForEnum)
 
 // 供应商付款方式
-const supplierPayModeEnum = {
-  PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
-  PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
-  ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 2 },
-  TRANSFER_CHECK: { L: '转账支票', K: 'TRANSFER_CHECK', V: 1 << 3 }
+// const supplierPayModeEnum = {
+//   PUBLIC_TRANSFER: { L: '对公转账', K: 'PUBLIC_TRANSFER', V: 1 << 0 },
+//   PRIVATE_TRANSFER: { L: '对私转账', K: 'PRIVATE_TRANSFER', V: 1 << 1 },
+//   ACCEPTANCE_DRAFT: { L: '承兑汇票', K: 'ACCEPTANCE_DRAFT', V: 1 << 2 },
+//   TRANSFER_CHECK: { L: '转账支票', K: 'TRANSFER_CHECK', V: 1 << 3 }
 
-}
-constantize(supplierPayModeEnum)
+// }
+// constantize(supplierPayModeEnum)
 
 // TODO: 付款属性1
 const supplierPayTypeEnum = {
-  MATERIAL: { L: '原材料采购', K: 'MATERIAL', V: 1 },
-  PRODUCT: { L: '制成品采购', K: 'PRODUCT', V: 2 },
-  TRANSPORT: { L: '原材料运输', K: 'MATERIAL_TRANSPORT', V: 3 },
-  SUBCONTRACT: { L: '专业分包', K: 'SUBCONTRACT', V: 4 }
+  PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 1 << 0 },
+  TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1 << 1 }
 }
 constantize(supplierPayTypeEnum)
 
 // TODO: 项目模式
 const projectModeEnum = {
-  STRUCTURE: { L: '构件', K: 'STRUCTURE', V: 1 << 0 },
+  STRUCTURE: { L: '构件(便捷型)', K: 'STRUCTURE', V: 1 << 0 },
+  STRUCTURE_STANDARD: { L: '构件(标准型)', K: 'STRUCTURE_STANDARD', V: 1 << 3 },
   STRUCTURE_ASSEMBLE: { L: '构件&组立', K: 'STRUCTURE_ASSEMBLE', V: 1 << 1 },
   STRUCTURE_PART_ASSEMBLE: { L: '构件&零件&组立', K: 'MATERIAL_TRANSPORT', V: 1 << 2 }
 }
 constantize(projectModeEnum)
 
+// TODO: 应付查询属性
+const payableSearchTypeEnum = {
+  PURCHASE: { L: '采购订单', K: 'PURCHASE', V: 127 },
+  TRANSPORT: { L: '物流', K: 'TRANSPORT', V: 1024 }
+}
+constantize(payableSearchTypeEnum)
 // TODO: 有无应付
 const hasPayEnum = {
-  YES: { L: '有应付', K: 'YES', V: 1 },
-  NO: { L: '无应付', K: 'NO', V: 2 }
+  YES: { L: '有应付', K: 'YES', V: true },
+  NO: { L: '无应付', K: 'NO', V: false }
 }
 constantize(hasPayEnum)
 
 // TODO: 有无欠税
 const hasTaxEnum = {
-  YES: { L: '有欠税', K: 'YES', V: 1 },
-  NO: { L: '无欠税', K: 'NO', V: 2 }
+  YES: { L: '有欠税', K: 'YES', V: true },
+  NO: { L: '无欠税', K: 'NO', V: false }
 }
 constantize(hasTaxEnum)
 
@@ -281,8 +263,8 @@ constantize(purchaseOrderStatusEnum)
 
 // 物流搜索类型
 const logisticsSearchTypeEnum = {
-  PRODUCT: { L: '制成品物流', K: 'PRODUCT', V: 1 << 0 },
-  MATERIAL: { L: '原材料物流', K: 'MATERIAL', V: 1 << 1 },
+  PRODUCT: { L: '制成品运输', K: 'PRODUCT', V: 1 << 1 },
+  MATERIAL: { L: '原材料运输', K: 'MATERIAL', V: 1 << 0 },
   COMPANY: { L: '物流公司', K: 'COMPANY', V: 1 << 2 }
 }
 constantize(logisticsSearchTypeEnum)
@@ -294,9 +276,6 @@ export {
   TechnologyTypeEnum, // 技术交底
   businessTypeEnum, // 业务类型
   businessModifyTypeEnum, // 商务变更
-  settlementStatusEnum, // 结算状态
-  paymentModeEnum, // 付款方式
-  invoiceTypeEnum,
   isTaxEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
@@ -312,7 +291,6 @@ export {
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,
   contractPayForEnum,
-  supplierPayModeEnum,
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
   reimbursementTypeEnum,
@@ -320,7 +298,8 @@ export {
   hasTaxEnum,
   hasPayEnum,
   purchaseOrderStatusEnum,
-  logisticsSearchTypeEnum
+  logisticsSearchTypeEnum,
+  payableSearchTypeEnum
 }
 
 export default {
@@ -330,9 +309,6 @@ export default {
   TechnologyTypeEnum, // 技术交底
   businessTypeEnum, // 业务类型
   businessModifyTypeEnum, // 商务变更
-  settlementStatusEnum, // 结算状态
-  paymentModeEnum, // 付款方式
-  invoiceTypeEnum,
   isTaxEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN, // 工程结算类型
@@ -348,7 +324,6 @@ export default {
   contractPayDateTypeEnum,
   contractReceiveDateTypeEnum,
   contractPayForEnum,
-  supplierPayModeEnum,
   supplierPayTypeEnum,
   contractReimbursementDateEnum,
   reimbursementTypeEnum,
@@ -356,5 +331,6 @@ export default {
   hasTaxEnum,
   hasPayEnum,
   purchaseOrderStatusEnum,
-  logisticsSearchTypeEnum
+  logisticsSearchTypeEnum,
+  payableSearchTypeEnum
 }

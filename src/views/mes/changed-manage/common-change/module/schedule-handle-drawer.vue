@@ -33,6 +33,8 @@
       <common-table
         ref="tableRef"
         v-loading="tableLoading"
+        return-source-data
+        :show-empty-symbol="false"
         :summary-method="getSummaries"
         show-summary
         :data="showList"

@@ -3,6 +3,7 @@ import { printModeEnum as PrintMode } from './enum'
 import { getLODOP, printByMode, combineHtml } from './base'
 import { spliceMaterialSpec, spliceSteelSize } from '@/utils/wms/spec-format'
 import { rawMatClsEnum } from '../enum/modules/classification'
+import { isNotBlank } from '../data-type'
 // import { projectNameFormatter } from '@/utils/project'
 // import { packTypeEnum, labelTypeEnum } from '@enum-ms/mes'
 // import { getPrintLabelHtml } from '@/utils/label/index'
@@ -119,14 +120,14 @@ export async function printSectionSteelLabel({ material, copies = 1, printMode =
 /**
  * 物料仓 - 钢卷标签打印
  */
-export async function printSteelCoilLabel({ material, copies = 1, printMode = PrintMode.QUEUE.V } = {}) {
+export async function printSteelCoilLabel({ material, copies = 1, printMode = PrintMode.QUEUE.V, emptyText = '-' } = {}) {
   let result = false
 
   try {
     // 首行：科目名 + 材质 等信息
-    const firstLineStr = `名称: ${material.classifyName}　品牌：${material.brand}`
+    const firstLineStr = `名称: ${material.classifyName}　品牌：${isNotBlank(material.brand) ? material.brand : emptyText}`
     // 第二行：钢材尺寸
-    const secondLineStr = `规格: ${spliceSteelSize(material)}　颜色：${material.color}`
+    const secondLineStr = `规格: ${spliceSteelSize(material)}　颜色：${isNotBlank(material.color) ? material.color : emptyText}`
     // 拼接主体信息
     const contentHtml = `
     <div class="material-info">

@@ -201,8 +201,9 @@
       <!--分页组件-->
       <pagination />
        <!-- pdf预览 -->
-      <drawing-pdf
+      <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -223,7 +224,7 @@ import mHeader from './module/header'
 import { DP } from '@/settings/config'
 import { parseTime } from '@/utils/date'
 import { artifactPM as permission } from '@/page-permission/plan'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ARTIFACT' })

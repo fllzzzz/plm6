@@ -49,65 +49,90 @@
           v-loading="loading"
           border
           :data="filterList"
+          :data-format="columnsDataFormat"
           :max-height="maxHeight"
           :cell-class-name="changedCellMask"
           :highlight-current-row="false"
           row-key="id"
         >
           <el-table-column type="index" label="序号" align="center" width="60" />
-          <el-table-column label="项目" align="left">
+          <el-table-column label="项目" align="left" prop="project" />
+          <el-table-column label="“结构”备料范围" align="center" width="250" prop="strucInfo">
             <template #default="{ row }">
-              <span v-parse-project="{ project: row }" v-empty-text />
+              <span v-if="isEditMode && !row.sourceRow.boolStrucPrepared" class="flex-rbc child-mr-7">
+                <common-select
+                  v-model="row.sourceRow.strucPreparationRangeType"
+                  :options="preparationRangeEnum.ENUM"
+                  type="enum"
+                  :disabled="row.sourceRow.boolStrucPrepared"
+                  clearable
+                  placeholder="结构备料范围"
+                />
+                <el-checkbox
+                  v-model="row.sourceRow.strucWithoutList"
+                  label="无清单"
+                  size="small"
+                  border
+                  :disabled="row.sourceRow.boolStrucPrepared"
+                />
+              </span>
+              <template v-else>
+                <span>{{ row.strucPreparationRangeType }}</span>
+                <span v-if="row.sourceRow.strucWithoutList === true" style="color: #e6a23c">（无清单）</span>
+              </template>
             </template>
           </el-table-column>
-          <el-table-column label="是否无清单备料" align="center" width="170" prop="withoutList">
+          <el-table-column label="“围护”备料范围" align="center" width="250" prop="enclInfo">
             <template #default="{ row }">
-              <common-radio
-                v-if="isEditMode"
-                v-model="row.withoutList"
-                :options="whetherEnum.ENUM"
-                type="enum"
-                :disabled="row.boolStrucPrepared"
-              />
-              <span v-else v-parse-enum="{ e: whetherEnum, v: row.withoutList }" v-empty />
+              <span v-if="isEditMode && !row.sourceRow.boolEnclPrepared" class="flex-rbc child-mr-7">
+                <common-select
+                  v-model="row.sourceRow.enclPreparationRangeType"
+                  :options="preparationRangeEnum.ENUM"
+                  type="enum"
+                  :disabled="row.sourceRow.boolEnclPrepared"
+                  clearable
+                  placeholder="结构备料范围"
+                />
+                <el-checkbox
+                  v-model="row.sourceRow.enclWithoutList"
+                  label="无清单"
+                  size="small"
+                  border
+                  :disabled="row.sourceRow.boolEnclPrepared"
+                />
+              </span>
+              <template v-else>
+                <span>{{ row.enclPreparationRangeType }}</span>
+                <span v-if="row.sourceRow.enclWithoutList === true" style="color: #e6a23c">（无清单）</span>
+              </template>
             </template>
           </el-table-column>
-          <el-table-column label="“结构”备料范围" align="center" width="250" prop="strucPreparationRangeType">
+          <el-table-column label="“辅材”备料范围" align="center" width="250" prop="auxInfo">
             <template #default="{ row }">
-              <common-radio
-                v-if="isEditMode"
-                v-model="row.strucPreparationRangeType"
-                :options="preparationRangeEnum.ENUM"
-                type="enum"
-                :disabled="row.boolStrucPrepared"
-              />
-              <span v-else v-parse-enum="{ e: preparationRangeEnum, v: row.strucPreparationRangeType }" v-empty />
-            </template>
-          </el-table-column>
-          <el-table-column label="“围护”备料范围" align="center" width="250" prop="enclPreparationRangeType">
-            <template #default="{ row }">
-              <common-radio
-                v-if="isEditMode"
-                v-model="row.enclPreparationRangeType"
-                :options="preparationRangeEnum.ENUM"
-                type="enum"
-                :disabled="row.boolEnclPrepared"
-              />
-              <span v-else v-parse-enum="{ e: preparationRangeEnum, v: row.enclPreparationRangeType }" v-empty />
-            </template>
-          </el-table-column>
-          <el-table-column label="“辅材”备料范围" align="center" width="250" prop="auxPreparationRangeType">
-            <template #default="{ row }">
-              <!-- 辅材没有区域 -->
-              <common-radio
-                v-if="isEditMode"
-                v-model="row.auxPreparationRangeType"
-                :options="preparationRangeEnum.ENUM"
-                :unshowVal="[preparationRangeEnum.AREA.V]"
-                type="enum"
-                :disabled="row.boolAuxPrepared"
-              />
-              <span v-else v-parse-enum="{ e: preparationRangeEnum, v: row.auxPreparationRangeType }" v-empty />
+              <span v-if="isEditMode && !row.sourceRow.boolAuxPrepared" class="flex-rbc child-mr-7">
+                <!-- 辅材没有区域 -->
+                <common-select
+                  v-if="isEditMode"
+                  v-model="row.sourceRow.auxPreparationRangeType"
+                  :options="preparationRangeEnum.ENUM"
+                  :unshow-options="[preparationRangeEnum.AREA.K]"
+                  type="enum"
+                  :disabled="row.sourceRow.boolAuxPrepared"
+                  clearable
+                  placeholder="辅材备料范围"
+                />
+                <el-checkbox
+                  v-model="row.sourceRow.auxWithoutList"
+                  label="无清单"
+                  size="small"
+                  border
+                  :disabled="row.sourceRow.boolAuxPrepared"
+                />
+              </span>
+              <template v-else>
+                <span>{{ row.auxPreparationRangeType }}</span>
+                <span v-if="row.sourceRow.auxWithoutList === true" style="color: #e6a23c">（无清单）</span>
+              </template>
             </template>
           </el-table-column>
         </common-table>
@@ -156,14 +181,31 @@ const queryFilter = ref({
 })
 
 const sourceMap = new Map([
-  ['withoutList', 'sourceWithoutList'],
+  ['strucWithoutList', 'sourceStrucWithoutList'],
+  ['enclWithoutList', 'sourceEnclWithoutList'],
+  ['auxWithoutList', 'sourceAuxWithoutList'],
   ['strucPreparationRangeType', 'sourceStrucPreparationRangeType'],
   ['enclPreparationRangeType', 'sourceEnclPreparationRangeType'],
   ['auxPreparationRangeType', 'sourceAuxPreparationRangeType']
 ])
 provide('sourceMap', sourceMap)
 
+const columnsPropsChartMap = new Map([
+  ['strucInfo', ['strucWithoutList', 'strucPreparationRangeType']],
+  ['enclInfo', ['enclWithoutList', 'enclPreparationRangeType']],
+  ['auxInfo', ['auxWithoutList', 'auxPreparationRangeType']]
+])
+
 const pinyinFields = ['name', 'shortName']
+
+// 表格列数据格式转换
+const columnsDataFormat = ref([
+  ['withoutList', ['parse-enum', whetherEnum]],
+  ['strucPreparationRangeType', ['parse-enum', preparationRangeEnum]],
+  ['enclPreparationRangeType', ['parse-enum', preparationRangeEnum]],
+  ['auxPreparationRangeType', ['parse-enum', preparationRangeEnum]],
+  ['project', ['parse-project', { onlyShortName: true }], { source: '*' }]
+])
 
 const drawerRef = ref()
 // 项目列表
@@ -196,7 +238,7 @@ const { maxHeight } = useMaxHeight(
 const modifiedList = computed(() => list.value.filter((v) => judgeItemFieldChange(v, sourceMap)))
 
 // 变更mask
-const { changedCellMask } = useTableChange({ fieldMap: sourceMap })
+const { changedCellMask } = useTableChange({ fieldMap: sourceMap, columnsPropsChartMap })
 
 // 过滤后的列表
 const filterList = computed(() => {

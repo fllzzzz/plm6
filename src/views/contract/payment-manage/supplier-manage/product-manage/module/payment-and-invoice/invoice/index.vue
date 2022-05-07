@@ -4,6 +4,7 @@
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
       <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{`结算额:${toThousand(currentRow.settlementAmount)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -21,7 +22,7 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*开票日期" align="center" width="160">
+      <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*收票日期" align="center" width="160">
         <template v-slot="scope">
           <el-date-picker
             v-if="scope.row.isModify"
@@ -30,73 +31,64 @@
             size="small"
             value-format="x"
             placeholder="选择日期"
+            :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
             style="width:100%"
-            :disabledDate="(date) => {if (scope.row.receiveInvoiceDate) { return date.getTime() > scope.row.receiveInvoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
           />
           <template v-else>
             <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="*开票额" align="center" min-width="170" class="money-column">
-        <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
+      <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="*收票额" align="center" class="money-column">
+        <el-table-column key="invoiceAmount" prop="invoiceAmount" label="小写" align="center" min-width="110">
           <template v-slot="scope">
             <el-input-number
-                v-if="scope.row.isModify"
-                v-show-thousand
-                v-model.number="scope.row.invoiceAmount"
-                :min="0"
-                :max="props.currentRow.amount"
-                :step="100"
-                :precision="DP.YUAN"
-                placeholder="开票额(元)"
-                controls-position="right"
-                @change="moneyChange(scope.row)"
-              />
-              <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
+              v-if="scope.row.isModify"
+              v-show-thousand
+              v-model.number="scope.row.invoiceAmount"
+              :min="0"
+              :max="currentRow.settlementAmount?currentRow.settlementAmount:999999999999"
+              :step="100"
+              :precision="DP.YUAN"
+              placeholder="收票额(元)"
+              controls-position="right"
+              @change="moneyChange(scope.row)"
+            />
+            <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" width="330" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
+      <el-table-column key="attachments" prop="attachments" label="附件" align="center" width="150" :show-overflow-tooltip="true">
+        <template #header>
+          <el-tooltip effect="light" :content="`双击可预览附件`" placement="top">
+            <div>
+              <span>附件</span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
         <template v-slot="scope">
-          <common-select
-            v-if="scope.row.isModify"
-            v-model="scope.row.invoiceType"
-            :options="invoiceTypeEnum.ENUM"
-            type="enum"
-            size="small"
-            clearable
-            class="filter-item"
-            placeholder="发票类型"
-            style="width: 100%"
-            @change="invoiceTypeChange(scope.row)"
-          />
-          <div v-else>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+          <upload-btn ref="uploadRef" v-if="scope.row.isModify" v-model:files="scope.row.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.pdf,.jpg,.jpeg,.png'"/>
+          <template v-if="scope.row.attachments && scope.row.attachments.length>0 && !scope.row.files">
+            <div v-for="item in scope.row.attachments" :key="item.id">
+              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            </div>
+          </template>
         </template>
       </el-table-column>
-      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="110">
+      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120" >
         <template v-slot="scope">
-          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V && scope.row.isModify">
-            <el-input-number
-              v-model="scope.row.taxRate"
-              :step="1"
-              :min="0"
-              :max="100"
-              :precision="0"
-              :controls="false"
-              controls-position="right"
-              class="input-underline"
-              style="width: 70px; text-align: center"
-              placeholder="0-100"
-              @change="taxMoney(scope.row)"
-            />%
-          </div>
-          <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
+          <div>{{ scope.row.invoiceType? invoiceTypeEnum.VL[scope.row.invoiceType]: '' }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column key="taxRate" prop="taxRate" label="税率" align="center" width="80">
+        <template v-slot="scope">
+          <div v-if="scope.row.invoiceType !== invoiceTypeEnum.RECEIPT.V">{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
       </el-table-column>
       <el-table-column key="branchCompanyId" prop="branchCompanyId" label="*购方单位" align="center" min-width="120" :show-overflow-tooltip="true">
@@ -111,13 +103,13 @@
       </el-table-column>
       <el-table-column prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
           <span v-else>{{ scope.row.invoiceSerialNumber  }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
+      <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.writtenByName }}</div>
+          <div>{{ scope.row.applyUserName }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
@@ -178,13 +170,13 @@
   <!--分页组件-->
   <pagination />
   <mForm :existInvoiceNo="invoiceNoArr" :currentRow="currentRow" :propertyType="propertyType"/>
+  <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </div>
 </template>
 
 <script setup>
-// import { contractCollectionInfo } from '@/api/contract/collection-and-invoice/collection'
 import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
-import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
+import { ref, defineProps, watch, provide, defineEmits, nextTick } from 'vue'
 import { tableSummary } from '@/utils/el-extra'
 import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
@@ -200,6 +192,9 @@ import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
 import mForm from './form'
 import { contractSupplierProductPM } from '@/page-permission/contract'
+import { fileClassifyEnum } from '@enum-ms/file'
+import UploadBtn from '@comp/file-upload/UploadBtn'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const permission = contractSupplierProductPM.invoice
 const emit = defineEmits(['success'])
@@ -228,6 +223,8 @@ const tableRef = ref()
 const originRow = ref({})
 const totalAmount = ref(0)
 const invoiceNoArr = ref([])
+const pdfShow = ref(false)
+const currentId = ref()
 provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
@@ -236,6 +233,7 @@ const { crud, CRUD } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
+    requiredQuery: ['orderId'],
     invisibleColumns: ['haveInvoiceAmount', 'collectionMode', 'invoiceType', 'collectionDepositBank', 'collectionBankAccount', 'paymentBankAccount', 'paymentDepositBank', 'auditorName', 'auditTime'],
     hasPagination: true
   },
@@ -254,8 +252,8 @@ const validateAmount = (value, row) => {
 }
 
 const tableRules = {
-  receiveInvoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
-  invoiceAmount: [{ validator: validateAmount, message: '请选择开票额', trigger: 'change', type: 'number' }],
+  receiveInvoiceDate: [{ required: true, message: '请选择收票日期', trigger: 'change' }],
+  invoiceAmount: [{ validator: validateAmount, message: '请选择收票额', trigger: 'change', type: 'number' }],
   taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceSerialNumber: [{ required: true, message: '请输入发票号', trigger: 'blur' }]
@@ -267,7 +265,7 @@ function wrongCellMask({ row, column }) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -286,38 +284,36 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
+      crud.query.orderId = props.currentRow.id
       crud.toQuery()
     }
   },
   { deep: true, immediate: true }
 )
 
-function invoiceTypeChange(row) {
-  row.taxRate = undefined
-}
 function moneyChange(row) {
-  totalAmount.value = 0
-  crud.data.map(v => {
-    if (v.invoiceAmount) {
-      totalAmount.value += v.invoiceAmount
-    }
-  })
-  if (totalAmount.value > props.currentRow.amount) {
-    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
-    // 解决修改失效
-    nextTick(() => {
-      row.invoiceAmount = num || 0
-      taxMoney(row)
-      totalAmount.value = 0
-      crud.data.map(v => {
-        if (v.invoiceAmount) {
-          totalAmount.value += v.invoiceAmount
-        }
-      })
+  if (props.currentRow.settlementAmount) {
+    totalAmount.value = 0
+    crud.data.map(v => {
+      if (v.invoiceAmount) {
+        totalAmount.value += v.invoiceAmount
+      }
     })
-  } else {
-    taxMoney(row)
+    if (totalAmount.value > props.currentRow.settlementAmount) {
+      const num = row.invoiceAmount - (totalAmount.value - props.currentRow.settlementAmount)
+      // 解决修改失效
+      nextTick(() => {
+        row.invoiceAmount = num || 0
+        totalAmount.value = 0
+        crud.data.map(v => {
+          if (v.invoiceAmount) {
+            totalAmount.value += v.invoiceAmount
+          }
+        })
+      })
+    }
   }
+  taxMoney(row)
 }
 
 function taxMoney(row) {
@@ -386,14 +382,14 @@ function rowCancel(row) {
 
 async function rowSubmit(row) {
   if (row.invoiceAmount === 0) {
-    ElMessage.error('开票额必须大于0')
+    ElMessage.error('收票额必须大于0')
     return
   }
   const rules = tableRules
   let flag = true
   row.verify = {}
   for (const rule in rules) {
-    row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+    row.verify[rule] = validate(rule, rules[rule], row)
     if (!row.verify[rule]) {
       flag = false
     }
@@ -405,6 +401,7 @@ async function rowSubmit(row) {
   const messageName = row.id ? '修改' : '新增'
   try {
     if (row.id) {
+      row.attachmentIds = row.files ? row.files.map((v) => v.id) : (row.attachments ? row.attachments.map((v) => v.id) : undefined)
       await crudApi.edit(row)
     } else {
       await crudApi.add(row)
@@ -416,9 +413,18 @@ async function rowSubmit(row) {
   }
 }
 
-CRUD.HOOK.beforeRefresh = () => {
-  crud.query.orderId = props.currentRow.id
-  crud.query.type = props.propertyType
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['invoiceAmount'],
+    toThousandFields: ['invoiceAmount']
+  })
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
@@ -435,14 +441,6 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
         dataIndex: v.dataIndex
       })
     }
-  })
-}
-
-// 合计
-function getSummaries(param) {
-  return tableSummary(param, {
-    props: ['invoiceAmount'],
-    toThousandFields: ['invoiceAmount']
   })
 }
 

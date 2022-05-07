@@ -5,7 +5,7 @@
       <mat-header-query :basic-class="query.basicClass" :query="query" :to-query="crud.toQuery" show-project-Warehouse-type>
         <template #firstLineRight>
           <span class="child-mr-6">
-            <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="crud.toQuery" />
+            <current-user-outbound-list ref="currentUserOutboundListRef" @refresh="handleCurrentUserOutbound" />
             <common-button icon="el-icon-time" size="mini" type="info" @click="toOutboundRecord">出库记录</common-button>
             <common-button type="info" size="mini" icon="el-icon-lock" @click="openFreezeRecords"> 冻结记录 </common-button>
           </span>
@@ -45,6 +45,7 @@
     <outbound-batch-handling-form
       v-model:visible="batchOutboundHandlingVisible"
       :project-warehouse-type="query.projectWarehouseType"
+      :project-id="query.projectId"
       :basic-class="query.basicClass"
       :material-list="crud.selections"
       @success="handleBatchOutbound"
@@ -132,11 +133,11 @@ async function handleBasicClassChange(val) {
   crud.setColumns()
 }
 
-// TODO:
-// 批量打印
-// function toBatchPrint() {
-
-// }
+// 处理当前用户出库成功
+function handleCurrentUserOutbound() {
+  crud.refresh()
+  notPrintedMaterialRefresh()
+}
 
 // 打印 未打印标签的物料
 function toPrintNotPrintedLabel() {

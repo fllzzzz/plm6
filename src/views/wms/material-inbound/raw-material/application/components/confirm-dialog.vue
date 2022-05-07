@@ -13,7 +13,7 @@
       <title-after-info :order="order" :detail="form" />
     </template>
     <template #titleRight>
-      <purchase-detail-button v-if="showAmount" :purchase-id="order.id" size="mini" />
+      <purchase-detail-button v-if="fillableAmount" :purchase-id="order.id" size="mini" />
     </template>
     <!-- 不刷新组件无法正常更新 -->
     <template v-if="dialogVisible">
@@ -45,18 +45,18 @@
           <material-secondary-info-columns v-if="showTableColumnSecondary" :basic-class="props.basicClass" />
           <!-- 金额设置 -->
           <price-set-columns
-            v-if="showAmount"
+            v-if="fillableAmount"
             :form="form"
             :order="order"
             :requisitions="cu.props.requisitions"
             @amount-change="handleAmountChange"
           />
           <!-- 仓库设置 -->
-          <warehouse-set-columns :form="form" v-if="showWarehouse" />
+          <warehouse-set-columns :form="form" v-if="fillableWarehouse" />
         </common-table>
         <!-- 物流信息设置 -->
         <logistics-form
-          v-if="showLogistics"
+          v-if="fillableLogistics"
           ref="logisticsRef"
           class="logistics-form-content"
           :disabled="cu.status.edit === FORM.STATUS.PROCESSING"
@@ -64,7 +64,7 @@
         />
       </el-form>
     </template>
-    <common-footer class="footer" unit="元" :total-value="amount" :show-total="showAmount" is-submit />
+    <common-footer class="footer" unit="元" :total-value="amount" :show-total="fillableAmount" is-submit />
   </common-dialog>
 </template>
 
@@ -139,13 +139,13 @@ const projectRules = {
 const tableRules = computed(() => {
   const rules = {}
   // 甲供不填写金额方面的信息
-  if (showAmount.value && !boolPartyA.value) {
+  if (fillableAmount.value && !boolPartyA.value) {
     Object.assign(rules, amountRules)
     if (isNotBlank(order.value.projects)) {
       Object.assign(rules, projectRules)
     }
   }
-  if (showWarehouse.value) Object.assign(rules, warehouseRules)
+  if (fillableWarehouse.value) Object.assign(rules, warehouseRules)
   return rules
 })
 
@@ -161,19 +161,19 @@ const logisticsRef = ref()
 // 订单信息
 const order = computed(() => cu.props.order || {})
 // 显示金额相关信息（由采购填写的信息）
-const showAmount = computed(() => inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V)
+const fillableAmount = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.amountFillWay === inboundFillWayEnum.APPLICATION.V : false)
 // 显示仓库（由仓库填写的信息）
-const showWarehouse = computed(() => inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V)
+const fillableWarehouse = computed(() => inboundFillWayCfg.value ? inboundFillWayCfg.value.warehouseFillWay === inboundFillWayEnum.APPLICATION.V : false)
 // 显示物流信息
-const showLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && showAmount.value)
+const fillableLogistics = computed(() => order.value.logisticsPayerType === logisticsPayerEnum.DEMAND.V && fillableAmount.value)
 // 是否“甲供”
 const boolPartyA = computed(() => order.value.supplyType === orderSupplyTypeEnum.PARTY_A.V)
 // 在列中显示次要信息
 const showTableColumnSecondary = computed(() => {
   // 非甲供订单，显示项目和申购单 或者仓库时
-  const unshow1 = showAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || showWarehouse.value)
+  const unshow1 = fillableAmount.value && !boolPartyA.value && ((order.value.projects && order.value.requisitionsSN) || fillableWarehouse.value)
   // 甲供订单，显示项目和申购单以及仓库时
-  const unshow2 = showAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && showWarehouse.value
+  const unshow2 = fillableAmount.value && boolPartyA.value && order.value.projects && order.value.requisitionsSN && fillableWarehouse.value
   return !(unshow1 || unshow2)
 })
 
@@ -254,7 +254,7 @@ FORM.HOOK.beforeSubmit = async () => {
     form.list = dealList
   }
   let logisticsValidResult = true
-  if (showLogistics.value && logisticsRef.value) {
+  if (fillableLogistics.value && logisticsRef.value) {
     logisticsValidResult = await logisticsRef.value.validate()
   }
   return validResult && logisticsValidResult

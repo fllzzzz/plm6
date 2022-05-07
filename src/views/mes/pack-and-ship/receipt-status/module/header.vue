@@ -20,7 +20,7 @@
         class="filter-item"
         @change="crud.toQuery"
       />
-      <common-radio-button
+      <component-radio-button
         v-model="query.productType"
         :options="packTypeEnum.ENUM"
         showOptionAll

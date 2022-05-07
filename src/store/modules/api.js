@@ -7,8 +7,8 @@ const state = {
   // updateAvatarApi: lStore.get('requestUrl') + '/api/user/updateAvatar',
   // // 文件上传
   fileUploadApi: getRequestUrl() + '/api/common/attachment',
-  // // 上传公司logo
-  // fileUploadCompanyLogoApi: lStore.get('requestUrl') + '/api/config/company/logo',
+  // 上传公司logo
+  fileUploadCompanyLogoApi: getRequestUrl() + '/api/config/company/logo',
   // // 材料清单上传
   // materialListUploadApi: lStore.get('requestUrl') + '/api/material/listUpload',
   // // 材料变更清单上传

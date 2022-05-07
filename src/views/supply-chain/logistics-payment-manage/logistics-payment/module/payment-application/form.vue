@@ -12,145 +12,76 @@
       <common-button :loading="crud.status.cu === 2" type="primary" size="mini" @click="crud.submitCU">提交审核</common-button>
     </template>
     <template #content>
-      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="150px">
-        <el-row :gutter="40">
-          <el-col :span="11">
-            <el-form-item label="申请部门">
-              <span>{{ detailInfo.serialNumber }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11">
-            <el-form-item label="付款日期" prop="paymentDate">
-              <el-date-picker
-                v-model="form.paymentDate"
-                type="date"
-                value-format="x"
-                placeholder="选择付款日期"
-                style="width: 160px"
-                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="40">
-          <el-col :span="11">
-            <el-form-item label="累计已付">
-              <span>{{ detailInfo.serialNumber }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11">
-            <el-form-item label="本次付款">
-              <span>{{ detailInfo.serialNumber }}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <span style="color:red;font-size:12px;">*请勾选本次付款明细</span>
+      <el-form ref="formRef" :model="form" :rules="rules" size="small" label-width="60px" label-position="left">
         <common-table
           ref="detailRef"
           border
-          :data="detailInfo.list"
+          :data="form.paymentDetails"
           :max-height="maxHeight"
-          style="width: 100%;"
+          style="width: 100%;margin-bottom:10px;"
           class="table-form"
           return-source-data
-          @selection-change="tableChange"
           :showEmptySymbol="false"
+          v-loading="tableLoading"
+          show-summary
+          :summary-method="getSummaries"
         >
-          <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column key="branchCompanyId" prop="branchCompanyId" label="承运属性" align="center" min-width="120" :show-overflow-tooltip="true">
+          <el-table-column key="projectName" prop="projectName" label="项目/采购订单" align="center" >
             <template v-slot="scope">
-              <div>{{ scope.row.branchCompanyName }}</div>
+              <div>{{ scope.row.projectName || scope.row.serialNumber  }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="supplierId" prop="supplierId" label="项目/采购单号" align="center" min-width="120" :show-overflow-tooltip="true">
+          <el-table-column key="type" prop="type" label="运输属性" align="center" >
             <template v-slot="scope">
-              <div>{{ scope.row.supplierName }}</div>
+              <div>{{ scope.row.type? logisticsSearchTypeEnum.VL[scope.row.type]: '-' }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="supplierId" prop="supplierId" label="运费总额" align="center" min-width="120" :show-overflow-tooltip="true">
+          <el-table-column key="freight" prop="freight" label="运费总额" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ scope.row.supplierName }}</div>
+              <div>{{ toThousand(scope.row.freight) }}</div>
             </template>
           </el-table-column>
-          <el-table-column key="supplierId" prop="supplierId" label="已付款" align="center" min-width="120" :show-overflow-tooltip="true">
+          <el-table-column key="paymentAmount" prop="paymentAmount" label="已支付" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ scope.row.supplierName }}</div>
+              <div>{{ toThousand(scope.row.paymentAmount) }}</div>
             </template>
           </el-table-column>
-           <el-table-column key="supplierId" prop="supplierId" label="未付款" align="center" min-width="120" :show-overflow-tooltip="true">
+           <el-table-column key="applyAmount" prop="applyAmount" label="本次支付金额(元)" align="center" min-width="120" :show-overflow-tooltip="true">
             <template v-slot="scope">
-              <div>{{ scope.row.supplierName }}</div>
+              <el-input-number
+                v-model.number="scope.row.applyAmount"
+                v-show-thousand
+                :min="0"
+                :max="scope.row.freight-scope.row.paymentAmount"
+                :step="100"
+                :precision="DP.YUAN"
+                placeholder="本次支付(元)"
+                controls-position="right"
+              />
             </template>
           </el-table-column>
         </common-table>
-        <!-- <el-form-item label="采购单号">
-          <span>{{ detailInfo.serialNumber }}</span>
-        </el-form-item>
-        <el-form-item label="所属项目">
-          <template v-if="detailInfo.projects && detailInfo.projects.length>0">
-            <div v-for="item in detailInfo.projects" :key="item.id">
-              {{item.serialNumber+' '+item.shortName}}
+        <el-form-item label="附件">
+          <template #label>
+            附件
+            <el-tooltip
+              effect="light"
+              :content="`双击可预览附件`"
+              placement="top"
+              v-if="form.id && form.attachments?.length && !form.files?.length"
+            >
+              <i class="el-icon-info" />
+            </el-tooltip>
+          </template>
+          <template v-if="form.id && form.attachments?.length && !form.files?.length">
+            <div v-for="item in form.attachments" :key="item.id">
+              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
             </div>
           </template>
+          <upload-btn ref="uploadRef" v-model:files="form.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.jpg,.png,.pdf,.jpeg'"/>
         </el-form-item>
-        <el-form-item label="供应商">
-          <span>{{ detailInfo.supplierName }}</span>
-        </el-form-item>
-        <el-form-item label="合同额(元)">
-          <span>{{ detailInfo.amount?toThousand(detailInfo.amount):'-' }}</span>
-        </el-form-item>
-        <el-form-item label="已付款(元)">
-          <span>{{ detailInfo.paymentAmount?toThousand(detailInfo.paymentAmount):'-' }}</span>
-          <el-tag style="margin-left:5px;" v-if="detailInfo.amount">{{ (detailInfo.paymentAmount/detailInfo.amount)*100+'%' }}</el-tag>
-        </el-form-item>
-        <el-form-item label="最后一次付款(元)">
-          <span>{{ detailInfo.lastPaymentAmount?toThousand(detailInfo.lastPaymentAmount):'-' }}</span>
-          <span v-if="detailInfo.lastPaymentTime" style="margin-left:5px;">{{ parseTime(detailInfo.lastPaymentTime,'{y}-{m}-{d}')}}</span>
-        </el-form-item>
-        <el-form-item label="付款日期" prop="paymentDate">
-          <el-date-picker
-            v-model="form.paymentDate"
-            type="date"
-            value-format="x"
-            placeholder="选择付款日期"
-            style="width: 220px"
-            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
-          />
-        </el-form-item>
-        <el-form-item label="本次付款(元)"  prop="applyAmount">
-          <el-input-number
-              v-show-thousand
-              v-model="form.applyAmount"
-              :step="1"
-              :min="0"
-              :max="detailInfo.amount?detailInfo.amount-detailInfo.paymentAmount:999999999999"
-              :precision="DP.YUAN"
-              controls-position="right"
-              style="width: 220px"
-            />
-            <span style="color:#82848a">{{form.applyAmount?digitUppercase(form.applyAmount):''}}</span>
-        </el-form-item>
-        <el-form-item label="付款事由" prop="paymentReasonId">
-          <common-select
-            v-model="form.paymentReasonId"
-            :options="dict.payment_reason"
-            type="dict"
-            size="small"
-            clearable
-            placeholder="付款事由"
-            style="width: 220px"
-          />
-        </el-form-item>
-        <el-form-item label="收款银行">
-          <span>{{detailInfo.supplierBankName}}</span>
-        </el-form-item>
-        <el-form-item label="账号">
-          <span>{{detailInfo.supplierBankAccount}}</span>
-        </el-form-item>
-        <el-form-item label="附件">
-          <upload-btn ref="uploadRef" v-model:files="form.attachments" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.zip,.jpg,.png,.pdf,.jpeg'"/>
-        </el-form-item> -->
       </el-form>
+      <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
     </template>
   </common-drawer>
 </template>
@@ -158,13 +89,15 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 import { regForm } from '@compos/use-crud'
+import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
-// import { digitUppercase, toThousand } from '@data-type/number'
-// import { parseTime } from '@/utils/date'
-// import useDict from '@compos/store/use-dict'
-// import { fileClassifyEnum } from '@enum-ms/file'
-// import { DP } from '@/settings/config'
-// import UploadBtn from '@comp/file-upload/UploadBtn'
+import { logisticsSearchTypeEnum } from '@enum-ms/contract'
+import { toThousand } from '@data-type/number'
+import { DP } from '@/settings/config'
+import { fileClassifyEnum } from '@enum-ms/file'
+import UploadBtn from '@comp/file-upload/UploadBtn'
+import { ElMessage } from 'element-plus'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const formRef = ref()
 const props = defineProps({
@@ -174,24 +107,24 @@ const props = defineProps({
   }
 })
 const defaultForm = {
-  paymentDate: undefined,
   applyAmount: undefined,
   attachmentIds: undefined,
-  attachments: undefined,
-  orderId: undefined,
-  paymentReasonId: undefined,
-  propertyType: undefined,
-  receiveBank: undefined,
-  receiveBankAccount: undefined
+  files: undefined,
+  branchCompanyId: undefined,
+  paymentReasonId: 1,
+  supplierId: undefined,
+  detailSaveParams: []
 }
 
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.paymentAddForm',
   paginate: true,
-  extraHeight: 40
+  extraHeight: 120
 })
 
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
+const pdfShow = ref(false)
+const currentId = ref()
 
 const validateMoney = (rule, value, callback) => {
   if (!value) {
@@ -206,15 +139,40 @@ const rules = {
   applyAmount: [{ required: true, validator: validateMoney, trigger: 'blur' }]
 }
 
-function tableChange() {
+const tableLoading = ref(false)
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
+// 合计
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['freight', 'paymentAmount', 'applyAmount'],
+    toThousandFields: ['freight', 'paymentAmount', 'applyAmount']
+  })
 }
 
 CRUD.HOOK.beforeSubmit = () => {
-  crud.form.orderId = props.detailInfo.id
-  // crud.form.propertyType = props.detailInfo.propertyType
-  // crud.form.receiveBank = props.detailInfo.supplierBankName || undefined
-  // crud.form.receiveBankAccount = props.detailInfo.supplierBankAccount || undefined
+  crud.form.attachmentIds = crud.form.files ? crud.form.files.map((v) => v.id) : (crud.form.attachments ? crud.form.attachments.map((v) => v.id) : undefined)
+  crud.form.supplierId = props.detailInfo.supplierId
+  crud.form.branchCompanyId = props.detailInfo.branchCompanyId
+  crud.form.applyAmount = 0
+  const listData = JSON.parse(JSON.stringify(crud.form.paymentDetails))
+  const submitData = []
+  listData.map(v => {
+    if (v.applyAmount > 0) {
+      crud.form.applyAmount += v.applyAmount
+      submitData.push(v)
+    }
+  })
+  if (submitData.length === 0) {
+    ElMessage.error('请填写本次申请明细且金额大于0')
+    return false
+  }
+  crud.form.paymentDetails = submitData
 }
 </script>
 <style lang="scss" scoped>

@@ -17,6 +17,7 @@ const state = {
     sex: '', // 性别
     inventoryNotifyPerm: false // 库存预警权限
   },
+  productMenu: null, // 产品菜单
   menus: [], // 菜单
   roles: [], // 权限
   currentMenu: null, // 当前主模块
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_PRODUCT_MENU: (state, productMenu) => {
+    state.productMenu = productMenu
   },
   SET_CURRENT_MENU: (state, currentMenu) => {
     state.currentMenu = currentMenu
@@ -84,7 +88,7 @@ const actions = {
   // 设置用户信息
   setInfo(res, commit) {
     // dept
-    const { permissions = [], roles = [] } = res
+    const { permissions = [], roles = [], productMenu } = res
     let { menus = [] } = res
 
     // 如果没有任何权限，则赋予一个默认的权限，避免请求死循环
@@ -106,9 +110,10 @@ const actions = {
     }
     if (checkPermission(['admin'])) {
       // 如果是超级管理员【admin】加入系统管理模块
-      menus.push({ name: '系统管理', id: -2, icon: 'system', redirect: '/system' })
+      menus.push({ name: '系统管理', id: -2, icon: 'module-system', redirect: '/system' })
     }
     commit('SET_MENUS', menus)
+    commit('SET_PRODUCT_MENU', productMenu)
     commit('SET_USER', res)
     // TODO: 头像 后台需要给一个默认头像的地址
     // commit('SET_AVATAR', avatar || 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
@@ -119,7 +124,9 @@ const actions = {
   // 用户退出登录
   async logout({ commit, state, dispatch }) {
     try {
-      logoutApi(state.token)
+      if (state.token) {
+        logoutApi(state.token)
+      }
       await dispatch('resetToken')
     } catch (error) {
       console.log('退出登录', error)
@@ -143,7 +150,7 @@ const actions = {
       commit('SET_ROLES', [])
       commit('SET_USER', {})
       removeToken()
-      resetRouter()
+      // resetRouter()
       resolve()
     })
   },

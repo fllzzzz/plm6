@@ -1,18 +1,24 @@
 <template>
-  <div class="list-and-batch flex-rbs">
+  <div v-bind="$attrs" class="list-and-batch flex-rbs">
     <div class="list-container">
       <div class="filter-container">
         <div class="filter-left-box">
           <span class="table-title">清单汇总列表</span>
         </div>
         <div class="filter-right-box">
-          <el-checkbox
-            class="filter-item"
-            v-model="queryFilter.boolPreparationLessThanList"
-            label="只显示备料量小于清单量"
-            size="mini"
-            border
-          />
+          <template v-if="crud.form.withoutList">
+            <template v-if="!boolTechEditMode">
+              <div class="filter-item">
+                <el-checkbox v-model="queryFilter.boolPreparationLessThanList" label="只显示备料量小于清单量" size="mini" border />
+              </div>
+              <common-button class="filter-item" type="success" size="mini" @click="techAddFormVisible = true"> 添 加 </common-button>
+              <common-button class="filter-item" type="warning" size="mini" @click="toEditTech">编 辑</common-button>
+            </template>
+            <template v-else>
+              <common-button class="filter-item" size="mini" type="primary" @click="saveTechEdit">保 存</common-button>
+              <common-button class="filter-item" size="mini" type="danger" @click="cancelTechEdit">取 消</common-button>
+            </template>
+          </template>
         </div>
       </div>
       <component
@@ -23,27 +29,36 @@
         :tech-prep-mete-k-v="crud.props.techPrepMeteKV"
         :height="props.height"
         :stripe="false"
+        :edit-mode="boolTechEditMode"
         highlight-current-row
         @row-click="handleRowClick"
-        style="width: 750px"
+        :style="{ width: showMatchTable ? '750px' : '900px' }"
       />
     </div>
+    <!-- 只有“结构”备料页面才足以显示匹配列表 -->
     <div class="match-container">
       <div class="match-table-wrapper">
         <match-table v-bind="$attrs" :height="props.height" :matchInfo="selectTechnologyRow" />
       </div>
     </div>
   </div>
+  <tech-add-form v-model="techAddFormVisible" :technology-list="currentTechnologyList" @success="handleTechAddSuccess" />
 </template>
 
 <script setup>
-import { ref, computed, defineEmits, defineProps } from 'vue'
+import { ref, computed, defineEmits, defineProps, watch } from 'vue'
 import { componentTypeEnum } from '@enum-ms/building-steel'
 
 import { regExtra } from '@compos/use-crud'
-import StructureList from './structure'
+import StructureList from './tech-list/structure'
+import EnclosureList from './tech-list/enclosure'
+import AuxMaterialList from './tech-list/aux-material'
 import matchTable from './match-table.vue'
-import { isBlank } from '@/utils/data-type'
+import techAddForm from './tech-add-form.vue'
+import { isBlank, toPrecision } from '@/utils/data-type'
+import { patternNumerical } from '@/utils/validate/pattern'
+import cloneDeep from 'lodash/cloneDeep'
+import { STEEL_BASE_UNIT } from '@/settings/config'
 
 const emit = defineEmits(['selected-change'])
 
@@ -56,15 +71,28 @@ const props = defineProps({
 
 // 当前物料
 const selectTechnologyRow = ref()
+
+// 备料清单添加显示
+const techAddFormVisible = ref(false)
+// 清单编辑模式
+const boolTechEditMode = ref(false)
+
+// 编辑前技术清单
+const currentTechnologyList = ref()
+
+const showMatchTable = computed(() => crud.form.technologyListType === componentTypeEnum.STRUCTURE.V)
+
 // 查询过滤
 const queryFilter = ref({
   boolPreparationLessThanList: false
 })
-
 // 技术清单汇总列表 过滤后的列表
 const filterList = computed(() => {
-  if (crud.form.technologyList) {
-    return crud.form.technologyList.filter((row) => {
+  if (boolTechEditMode.value) {
+    return currentTechnologyList.value
+  }
+  if (currentTechnologyList.value) {
+    return currentTechnologyList.value.filter((row) => {
       let meets = true
       if (queryFilter.value.boolPreparationLessThanList) {
         const info = crud.props.techPrepMeteKV[row.id]
@@ -79,6 +107,7 @@ const filterList = computed(() => {
 
 // 获取crud实例，并将实例注册进crud
 const { CRUD, crud } = regExtra()
+
 // 详情
 const detail = crud.form
 
@@ -87,13 +116,28 @@ const listComp = computed(() => {
     case componentTypeEnum.STRUCTURE.V:
       return StructureList // 构件技术清单
     case componentTypeEnum.ENCLOSURE.V:
-      return StructureList // 围护技术清单
+      return EnclosureList // 围护技术清单
     case componentTypeEnum.AUXILIARY_MATERIAL.V:
-      return StructureList // 辅材技术清单
+      return AuxMaterialList // 辅材技术清单
     default:
       return null
   }
 })
+
+// 监听crud.form.technologyList变化
+watch(
+  () => crud.form.technologyList,
+  (list) => {
+    if (Array.isArray(list)) {
+      list.sort(techSort)
+      currentTechnologyList.value = cloneDeep(crud.form.technologyList)
+    }
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
 
 CRUD.HOOK.beforeToEdit = (crud, form) => {
   init()
@@ -107,12 +151,67 @@ CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
 // 初始化
 function init() {
   selectTechnologyRow.value = undefined
+  queryFilter.value.boolPreparationLessThanList = false
 }
 
 // 行选中
 function handleRowClick(row, column, event) {
-  selectTechnologyRow.value = row
-  emit('selected-change', row, column, event)
+  // 修改模式不触发
+  if (!boolTechEditMode.value) {
+    selectTechnologyRow.value = row
+    emit('selected-change', row, column, event)
+  }
+}
+
+// 处理添加成功
+function handleTechAddSuccess(list) {
+  // 按顺序插入
+  list.forEach((techRow) => {
+    const info = {}
+    info.purchase = 0 // 库存利用量
+    info.preparation = 0 // 总备料量
+    info.diff = toPrecision(info.preparation, STEEL_BASE_UNIT.weight.precision) // 差值 = 总备料量 - 清单量
+    info.isEnough = info.diff >= 0 // 是否超出
+    crud.props.techPrepMeteKV[techRow.id] = info
+  })
+  // 重新设置crud.form.technologyList
+  crud.form.technologyList = [...currentTechnologyList.value, ...list]
+}
+
+// 去修改清单
+function toEditTech() {
+  // technologyList.value 设置为table数据
+  // technologyList.value = crud.form.technologyList
+  selectTechnologyRow.value = undefined
+  boolTechEditMode.value = true
+}
+
+// 保存清单修改
+function saveTechEdit() {
+  crud.form.technologyList = cloneDeep(currentTechnologyList.value)
+  boolTechEditMode.value = false
+}
+
+// 取消编辑
+function cancelTechEdit() {
+  currentTechnologyList.value = cloneDeep(crud.form.technologyList)
+  boolTechEditMode.value = false
+}
+
+// 清单汇总列表 排序
+function techSort(a, b) {
+  if (a.steelClassifyConfId === b.steelClassifyConfId) {
+    if (a.material === b.material) {
+      // 厚度比较
+      if (patternNumerical.test(a.specification) && patternNumerical.test(b.specification)) {
+        return Number(a.specification) < Number(b.specification) ? -1 : 1
+      } else {
+        return a.specification < b.specification ? -1 : 1
+      }
+    }
+    return a.material < b.material ? -1 : 1
+  }
+  return a.steelClassifyConfId < b.steelClassifyConfId ? -1 : 1
 }
 </script>
 

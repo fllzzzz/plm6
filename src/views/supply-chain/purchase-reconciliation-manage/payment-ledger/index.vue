@@ -2,9 +2,9 @@
   <div class="app-container">
     <!--工具栏-->
     <mHeader ref="headerRef" />
-    <!--表格渲染-->
+    <!-- 订单列表 -->
     <common-table
-      v-show="headerRef?.isOrderType"
+      v-if="headerRef?.isOrderType"
       ref="tableRef"
       v-loading="crud.loading"
       :data-format="dataFormat"
@@ -19,11 +19,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('createTime')" show-overflow-tooltip key="createTime" prop="createTime" label="日期" align="center" width="130" />
-      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center">
-        <template v-slot="scope">
-          <span>{{ scope.row.serialNumber }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column v-if="columns.visible('serialNumber')" key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="采购订单" align="center" min-width="130" />
       <el-table-column v-if="columns.visible('supplierName')" show-overflow-tooltip key="supplierName" prop="supplierName" label="供应商" min-width="150" />
       <el-table-column v-if="columns.visible('typeText')" show-overflow-tooltip key="typeText" prop="typeText" label="物料种类" min-width="150" />
       <el-table-column v-if="columns.visible('amount')" prop="amount" key="amount" label="合同额" align="right" min-width="120" show-overflow-tooltip />
@@ -41,7 +37,7 @@
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <el-tag effect="plain" type="success" class="clickable" @click.stop="openRecord(row, 'inbound')">{{ row.inboundAmount }}</el-tag>
+          <div type="success" class="clickable" @click.stop="openRecord(row, 'inbound')">{{ row.inboundAmount }}</div>
         </template>
       </el-table-column>
       <el-table-column v-if="columns.visible('paymentAmount')" prop="paymentAmount" key="paymentAmount" label="付款额" align="right" min-width="120" show-overflow-tooltip>
@@ -58,15 +54,15 @@
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <el-tag effect="plain" type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</el-tag>
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('paymentRate')" key="paymentRate" prop="paymentRate" label="付款比例" align="center" width="90">
+      <el-table-column v-if="columns.visible('paymentRate')" key="paymentRate" prop="paymentRate" label="付款比例" align="center" width="80">
         <template #default="{ row }">
           <span>{{ row.paymentRate }}%</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('invoiceAmount')" prop="invoiceAmount" key="invoiceAmount" label="开票额" align="right" min-width="120" show-overflow-tooltip>
+      <el-table-column v-if="columns.visible('invoiceAmount')" prop="invoiceAmount" key="invoiceAmount" label="收票额" align="right" min-width="120" show-overflow-tooltip>
         <template v-if="checkPermission(permission.detail)" #header>
           <el-tooltip
             effect="light"
@@ -74,16 +70,16 @@
             content="点击行可以查看详情"
           >
             <div style="display: inline-block">
-              <span>开票额 </span>
+              <span>收票额 </span>
               <i class="el-icon-info" />
             </div>
           </el-tooltip>
         </template>
         <template #default="{ row }">
-          <el-tag effect="plain" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</el-tag>
+          <div class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="开票比例" align="center" width="90">
+      <el-table-column v-if="columns.visible('invoiceRate')" key="invoiceRate" prop="invoiceRate" label="收票比例" align="center" width="80">
         <template #default="{ row }">
           <span>{{ row.invoiceRate }}%</span>
         </template>
@@ -91,21 +87,93 @@
       <!--编辑与删除-->
       <el-table-column
         label="操作"
-        width="190px"
+        width="120px"
         align="center"
       >
         <template #default="{ row }">
           <common-button type="primary" icon="el-icon-tickets" size="mini" @click="openApplication(row)" v-if="checkPermission(permission.application.get)"/>
-          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="row.settlementStatus!==settlementStatusEnum.SETTLED.V && checkPermission(permission.application.settle)"/>
+          <common-button type="success" icon="el-icon-money" size="mini" @click="openSettle(row)" v-if="(row.settlementStatus!==settlementStatusEnum.SETTLED.V && !row.unCheckSettlementCount) && checkPermission(permission.application.settle)"/>
+        </template>
+      </el-table-column>
+    </common-table>
+
+    <!-- 汇总列表 -->
+    <common-table
+      v-if="headerRef && !headerRef?.isOrderType"
+      ref="tableRef"
+      v-loading="crud.loading"
+      :data-format="dataFormat"
+      :data="crud.data"
+      style="width: 100%"
+      :max-height="maxHeight"
+    >
+      <el-table-column label="序号" type="index" align="center" width="60" />
+      <el-table-column prop="supplierName" label="供应商" align="center" show-overflow-tooltip min-width="140" />
+      <el-table-column prop="amount" label="累计合同额" align="right" show-overflow-tooltip min-width="120" />
+      <el-table-column prop="inboundAmount" key="inboundAmount" label="累计入库额" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计入库额 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'inbound')">{{ row.inboundAmount }}</div>
+        </template>
+      </el-table-column>
+       <el-table-column prop="inboundAmount" key="inboundAmount" label="累计已付款" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计已付款 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'payment')">{{ row.paymentAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="paymentRate" label="付款比例" align="center" show-overflow-tooltip min-width="80">
+        <template #default="{ row }">
+          <span>{{ row.paymentRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="inboundAmount" key="inboundAmount" label="累计已收票" align="right" min-width="120" show-overflow-tooltip>
+        <template v-if="checkPermission(permission.detail)" #header>
+          <el-tooltip
+            effect="light"
+            placement="top"
+            content="点击行可以查看详情"
+          >
+            <div style="display: inline-block">
+              <span>累计已收票 </span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <div type="warning" class="clickable" @click.stop="openRecord(row, 'invoice')">{{ row.invoiceAmount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="invoiceRate" label="收票比例" align="center" show-overflow-tooltip min-width="80">
+        <template #default="{ row }">
+          <span>{{ row.invoiceRate }}%</span>
         </template>
       </el-table-column>
     </common-table>
     <!--分页组件-->
-    <pagination v-show="headerRef?.isOrderType" />
-    <!-- 订单汇总 -->
-    <template v-if="headerRef">
-      <supplierOrder v-if="headerRef.isOrderType?false:true" :query="crud.query"/>
-    </template>
+    <pagination />
     <!-- 记录 -->
     <component :is="currentView" v-model="recordVisible" :permission="permission" :detail-info="detailInfo" />
     <!-- 付款申请记录 -->
@@ -122,7 +190,7 @@
         <paymentApplication :visibleValue="applicationVisible" :detail-info="detailInfo"/>
       </template>
     </common-drawer>
-    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery"/>
+    <settleForm v-model="settleVisible" :detail-info="detailInfo" @success="crud.toQuery" :showType="'add'"/>
   </div>
 </template>
 
@@ -133,7 +201,7 @@ import { ref, provide, computed, nextTick } from 'vue'
 import { supplierMaterialPaymentPM as permission } from '@/page-permission/supply-chain'
 import checkPermission from '@/utils/system/check-permission'
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { settlementStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/finance'
 import EO from '@enum'
 
 import useMaxHeight from '@compos/use-max-height'
@@ -145,7 +213,6 @@ import invoiceRecord from './module/invoice-record'
 import paymentRecord from './module/payment-record'
 import paymentApplication from './module/payment-application'
 import settleForm from './module/settle-form'
-import supplierOrder from './module/supplier-order'
 import tableCellTag from '@comp-common/table-cell-tag/index.vue'
 
 const optShow = {
@@ -168,6 +235,7 @@ const tableRef = ref()
 const headerRef = ref()
 const applicationVisible = ref(false)
 const settleVisible = ref(false)
+
 const dataFormat = ref([
   ['createTime', 'parse-time'],
   ['paymentRate', ['to-fixed', 2]],
@@ -177,6 +245,7 @@ const dataFormat = ref([
   ['paymentAmount', 'to-thousand'],
   ['invoiceAmount', 'to-thousand']
 ])
+
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '付款台账',
@@ -204,16 +273,16 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
     const basicClassArr = EO.getBits(matClsEnum.ENUM, v.basicClass, 'L')
     v.typeText = basicClassArr.join(' | ')
     // 付款比例
-    v.paymentRate = v.amount ? (v.paymentAmount || 0) / (v.amount || 0) * 100 : 0
-    // 开票比例
-    v.invoiceRate = v.amount ? (v.invoiceAmount || 0) / (v.amount || 0) * 100 : 0
+    v.paymentRate = v.inboundAmount ? (v.paymentAmount || 0) / (v.inboundAmount || 0) * 100 : 0
+    // 收票比例
+    v.invoiceRate = v.inboundAmount ? (v.invoiceAmount || 0) / (v.inboundAmount || 0) * 100 : 0
   })
 }
 
 // 打开记录
 function openRecord(row, type) {
   if (!checkPermission(permission.detail)) return
-  detailInfo.value = row.sourceRow
+  detailInfo.value = row
   recordType.value = type
   orderId.value = row.id
   nextTick(() => {
@@ -222,7 +291,7 @@ function openRecord(row, type) {
 }
 
 function openApplication(row) {
-  detailInfo.value = row.sourceRow
+  detailInfo.value = row
   orderId.value = row.id
   nextTick(() => {
     applicationVisible.value = true
@@ -230,7 +299,7 @@ function openApplication(row) {
 }
 
 function openSettle(row) {
-  detailInfo.value = row.sourceRow
+  detailInfo.value = row
   orderId.value = row.id
   nextTick(() => {
     settleVisible.value = true
@@ -239,7 +308,6 @@ function openSettle(row) {
 </script>
 <style lang="scss" scoped>
 .clickable {
-  width: 100%;
   cursor: pointer;
 }
 </style>

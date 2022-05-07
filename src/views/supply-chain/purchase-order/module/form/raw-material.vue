@@ -460,6 +460,8 @@ CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
   }
   // 是否甲供
   form.boolPartyA = form.supplyType === orderSupplyTypeEnum.PARTY_A.V
+  // 签订主体id
+  form.branchCompanyId = form.branchCompany ? form.branchCompany.id : undefined
   // 供应商id
   form.supplierId = form.supplier ? form.supplier.id : undefined
   if (Array.isArray(form.preparationList) && form.preparationList.length > 0) {

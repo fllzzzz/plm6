@@ -7,6 +7,8 @@ const getters = {
   baseApi: state => state.api.baseApi,
   // api附件上传路径
   fileUploadApi: state => state.api.fileUploadApi,
+  // api附件上传路径
+  fileUploadCompanyLogoApi: state => state.api.fileUploadCompanyLogoApi,
   // axios 取消接口tokens存储
   axiosCancelTokens: state => state.interface.axiosCancelTokens,
 
@@ -37,6 +39,9 @@ const getters = {
   // 访问过的页面
   visitedViews: state => state.tagsView.visitedViews,
 
+  // 公司信息
+  company: state => state.config.company,
+
   clsTree: state => state.config.clsTree,
   // 材料类科目树
   matClsTree: state => state.config.matClsTree,
@@ -60,6 +65,8 @@ const getters = {
   roles: state => state.user.roles,
   // 用户菜单
   menus: state => state.user.menus,
+  // 产品菜单（如是否包含围护）
+  productMenu: state => state.user.productMenu,
   // 当前主模块
   currentMenu: state => state.user.currentMenu,
   // 是否已经加载菜单
@@ -68,6 +75,8 @@ const getters = {
   // 路由
   routes: state => state.permission.routes,
 
+  // 用户项目
+  userProjects: state => state.project.userProjects,
   // 系统当前项目id（Navbar）
   globalProjectId: state => state.project.id,
   // 系统当前项目

@@ -1,5 +1,7 @@
 import contract from '@/api/print/contract'
 import mes from '@/api/print/mes'
+import wms from '@/api/print/wms'
+import supply from '@/api/print/supply-chain'
 
 // 合同
 const myProject = contract.myProject
@@ -17,6 +19,20 @@ const projectCollectionDetail = contract.collectionDetail
 const projectInvoiceDetail = contract.invoiceDetail
 const projectHappenedDetail = contract.happenedDetail
 const transactionRecord = contract.transactionRecord
+
+const logisticsPaymentLedger = contract.logisticsLedger
+const supplierPayableSummary = contract.payableSummary
+const supplierPaymentLedger = contract.supplierPayableLedger
+const supplierInvoiceLedger = contract.supplierInvoiceLedger
+
+// 供应链
+const purchaseInvoiceRecord = supply.invoiceDetail
+const purchaseInboundRecord = supply.inboundRecord
+const purchasePaymentRecord = supply.paymentRecord
+const orderPaymentLedger = supply.orderPaymentLedger
+const scmSupplierPaymentLedger = supply.supplierPaymentLedger
+
+const purchaseLogisticsRecord = supply.logisticsRecord
 
 // mes
 const mesSchedulingDetail = mes.schedulingDetail
@@ -58,6 +74,13 @@ const mesWarehouseStateStructure = mes.warehouseStateStructure
 const mesWarehouseStateEnclosure = mes.warehouseStateEnclosure
 const mesWarehouseStateReport = mes.warehouseStateReport
 
+// wms
+const wmsRmOutboundReceipt = wms.wmsRmOutboundReceipt // 出库
+const wmsRmInboundReceipt = wms.wmsRmInboundReceipt // 入库
+const wmsRmReturnReceipt = wms.wmsRmReturnReceipt // 退库
+const wmsRmRejectReceipt = wms.wmsRmRejectReceipt // 退货
+const wmsRmTransferReceipt = wms.wmsRmTransferReceipt // 调拨
+
 export default {
   myProject, // 我的项目
   projectList, // 项目列表
@@ -67,6 +90,12 @@ export default {
   invoiceLedger, // 开票台账
   invoiceRecord, // 项目开票记录
   arrearsList, // 欠款清单
+
+  logisticsPaymentLedger, // 物流台账
+  supplierPayableSummary, // 供应商应付汇总
+  supplierPaymentLedger, // 供应商付款台账
+  supplierInvoiceLedger, // 供应商收票台账
+
   contractStructurePrice, // 结构计价表
   contractEnclosurePrice, // 围护计价表
   contractAuxiliaryMaterialPrice, // 配套件计价表
@@ -74,6 +103,15 @@ export default {
   projectInvoiceDetail, // 项目开票详情
   projectHappenedDetail, // 项目发运详情
   transactionRecord, // 客户交易记录
+
+  // 供应链
+  purchaseInvoiceRecord, // 收票记录
+  purchaseInboundRecord, // 入库记录
+  purchasePaymentRecord, // 付款记录
+  orderPaymentLedger, // 采购订单付款台账
+  scmSupplierPaymentLedger, // 供应商付款台账
+
+  purchaseLogisticsRecord, // 物流记录
 
   // mes
   mesSchedulingDetail, // 工单详情
@@ -113,5 +151,12 @@ export default {
 
   mesWarehouseStateStructure, // 结构出入库状态
   mesWarehouseStateEnclosure, // 围护出入库状态
-  mesWarehouseStateReport // 入发存报表
+  mesWarehouseStateReport, // 入发存报表
+
+  // wms
+  wmsRmOutboundReceipt, // 出库（领料单）单
+  wmsRmInboundReceipt, // 入库单
+  wmsRmReturnReceipt, // 退库单
+  wmsRmRejectReceipt, // 退货单
+  wmsRmTransferReceipt // 调拨单
 }

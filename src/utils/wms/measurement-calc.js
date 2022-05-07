@@ -180,10 +180,14 @@ export async function steelInboundFormFormat(form) {
   await Promise.all(promiseList)
 }
 
-// 计算列表理论重量
-export async function calcTheoryWeight(list) {
+/**
+ * 计算列表理论重量
+ * @param {string} prefix 对象前缀 如 list:[ {material:{}}] 实际要转换的是material,则prefix为material, 不支持多层嵌套
+ */
+export async function calcTheoryWeight(list, { prefix } = {}) {
   const psList = []
-  for (const row of list) {
+  for (const item of list) {
+    const row = prefix ? item[prefix] : item
     let ps
     if (row.basicClass === rawMatClsEnum.STEEL_PLATE.V) {
       // 为余料的钢板，以实际重量作为理论重量

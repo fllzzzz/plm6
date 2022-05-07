@@ -378,6 +378,7 @@ export function filterTreeNode(tree, childField, field, value, pollingFloor = 1)
 }
 
 // 查找一个节点的所有父节点
+// TODO: getNodeIdsById 方法好像重复了
 export function familyTree(arr1, id) {
   var temp = []
   var forFn = function (arr, id) {
@@ -397,7 +398,7 @@ export function familyTree(arr1, id) {
   forFn(arr1, id)
   return temp
 }
-// 查找一个树多有第一个节点，深度遍历
+// 查找一个树的第一个节点，深度遍历
 export function getFirstNode(tree) {
   var temp = []
   var forFn = function (arr) {
@@ -410,4 +411,33 @@ export function getFirstNode(tree) {
   }
   forFn(tree)
   return temp
+}
+
+// 获取所有的子节点id
+export function getChildIds(tree) {
+  const ids = []
+  if (Array.isArray(tree)) {
+    tree.forEach((node) => {
+      if (node.children) {
+        const childIds = getChildIds(node.children)
+        return ids.push.apply(ids, childIds)
+      } else {
+        ids.push(node.id)
+      }
+    })
+  }
+  return ids
+}
+
+// 根据保留的节点，移除其他节点
+export function removeNodeByExistIds(tree, ids) {
+  if (!Array.isArray(tree) || !Array.isArray(ids)) return []
+  return tree.filter((node) => {
+    const exist = ids.includes(node.id)
+    if (exist && node.children) {
+      const children = removeNodeByExistIds(node.children, ids)
+      node.children = isNotBlank(children) ? children : void 0
+    }
+    return exist
+  })
 }

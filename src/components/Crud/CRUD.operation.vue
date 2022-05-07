@@ -61,8 +61,9 @@
         type="warning"
         icon="el-icon-download"
         @click.stop="crud.doExport"
-        >导出</common-button
       >
+        导出
+      </common-button>
       <!--右侧-->
       <slot name="optRight" />
     </span>

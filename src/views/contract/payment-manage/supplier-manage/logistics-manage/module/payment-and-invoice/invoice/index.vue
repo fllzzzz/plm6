@@ -3,7 +3,7 @@
     <!--表格渲染-->
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
-      <el-tag type="success" size="medium" v-if="currentRow.amount">{{`合同额:${toThousand(currentRow.amount)}`}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.freight">{{`运输额:${toThousand(currentRow.freight)}`}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -21,7 +21,7 @@
       :stripe="false"
     >
       <el-table-column prop="index" label="序号" align="center" width="50" type="index" />
-      <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*开票日期" align="center" width="160">
+      <el-table-column key="receiveInvoiceDate" prop="receiveInvoiceDate" label="*收票日期" align="center" width="160">
         <template v-slot="scope">
           <el-date-picker
             v-if="scope.row.isModify"
@@ -30,39 +30,57 @@
             size="small"
             value-format="x"
             placeholder="选择日期"
+            :disabledDate="(date) => {return date.getTime() > new Date().getTime()}"
             style="width:100%"
-            :disabledDate="(date) => {if (scope.row.receiveInvoiceDate) { return date.getTime() > scope.row.receiveInvoiceDate } else { return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000 }}"
           />
           <template v-else>
             <div>{{ scope.row.receiveInvoiceDate? parseTime(scope.row.receiveInvoiceDate,'{y}-{m}-{d}'): '-' }}</div>
           </template>
         </template>
       </el-table-column>
-      <el-table-column key="invoiceAmount" prop="invoiceAmount" label="*开票额" align="center" min-width="170" class="money-column">
-        <el-table-column key="invoiceAmount" prop="invoiceAmount" label="金额" align="center" min-width="85">
+      <el-table-column key="invoiceAmount1" prop="invoiceAmount1" label="*收票额" align="center" class="money-column">
+        <el-table-column key="invoiceAmount" prop="invoiceAmount" label="小写" align="center" min-width="110">
           <template v-slot="scope">
             <el-input-number
                 v-if="scope.row.isModify"
                 v-show-thousand
                 v-model.number="scope.row.invoiceAmount"
                 :min="0"
-                :max="props.currentRow.amount"
+                :max="props.currentRow.freight"
                 :step="100"
                 :precision="DP.YUAN"
-                placeholder="开票额(元)"
+                placeholder="收票额(元)"
                 controls-position="right"
                 @change="moneyChange(scope.row)"
               />
               <div v-else>{{ scope.row.invoiceAmount && scope.row.invoiceAmount>0? toThousand(scope.row.invoiceAmount): scope.row.invoiceAmount }}</div>
           </template>
         </el-table-column>
-        <el-table-column key="invoiceAmount1" prop="invoiceAmount" label="大写" align="center" min-width="85" :show-overflow-tooltip="true">
+        <el-table-column key="invoiceAmount2" prop="invoiceAmount2" label="大写" align="center" width="330" :show-overflow-tooltip="true">
           <template v-slot="scope">
             <div>{{scope.row.invoiceAmount?'('+digitUppercase(scope.row.invoiceAmount)+')':''}}</div>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="120">
+      <el-table-column key="attachments" prop="attachments" label="附件" align="center" width="150" :show-overflow-tooltip="true">
+        <template #header>
+          <el-tooltip effect="light" :content="`双击可预览附件`" placement="top">
+            <div>
+              <span>附件</span>
+              <i class="el-icon-info" />
+            </div>
+          </el-tooltip>
+        </template>
+        <template v-slot="scope">
+          <upload-btn ref="uploadRef" v-if="scope.row.isModify" v-model:files="scope.row.files" :file-classify="fileClassifyEnum.CONTRACT_ATT.V" :limit="1" :accept="'.pdf,.jpg,.jpeg,.png'"/>
+          <template v-if="scope.row.attachments && scope.row.attachments.length>0 && !scope.row.files">
+            <div v-for="item in scope.row.attachments" :key="item.id">
+              <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
+            </div>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column key="invoiceType" prop="invoiceType" label="*发票类型" align="center" width="180">
         <template v-slot="scope">
           <common-select
             v-if="scope.row.isModify"
@@ -99,25 +117,25 @@
           <div v-else>{{ scope.row.taxRate? scope.row.taxRate+'%': '' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="branchCompanyId" prop="branchCompanyId" label="*购方单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="branchCompanyId" prop="branchCompanyId" label="*购方单位" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.branchCompanyName }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="supplierId" prop="supplierId" label="*销售单位" align="center" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column key="supplierId" prop="supplierId" label="*销售单位" align="center" :show-overflow-tooltip="true">
         <template v-slot="scope">
           <div>{{ scope.row.supplierName }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="invoiceSerialNumber" label="*发票号码" align="center" min-width="150">
+      <el-table-column prop="invoiceSerialNumber" label="*发票号码" align="center" width="120">
         <template v-slot="scope">
-          <el-input v-if="scope.row.isModify" v-model="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" style="width: 120px" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
+          <el-input v-if="scope.row.isModify" v-model.trim="scope.row.invoiceSerialNumber" type="text" placeholder="发票号码" @change="checkInvoiceNo(scope.row,scope.$index)" maxlength="8"/>
           <span v-else>{{ scope.row.invoiceSerialNumber  }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="writtenByName" prop="writtenByName" label="办理人" align="center" width="100px">
+      <el-table-column key="applyUserName" prop="applyUserName" label="办理人" align="center" width="100px">
         <template v-slot="scope">
-          <div>{{ scope.row.writtenByName }}</div>
+          <div>{{ scope.row.applyUserName }}</div>
         </template>
       </el-table-column>
       <el-table-column key="auditUserName" prop="auditUserName" label="审核人" align="center" width="100px">
@@ -178,11 +196,12 @@
   <!--分页组件-->
   <pagination />
   <mForm :existInvoiceNo="invoiceNoArr" :currentRow="currentRow" :propertyType="propertyType"/>
+  <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </div>
 </template>
 
 <script setup>
-import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/invoice'
+import crudApi, { editStatus } from '@/api/contract/supplier-manage/pay-invoice/logistics'
 import { ref, defineProps, watch, nextTick, provide, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
@@ -199,6 +218,9 @@ import { validate } from '@compos/form/use-table-validate'
 import { ElMessage } from 'element-plus'
 import mForm from './form'
 import { contractSupplierLogisticsPM } from '@/page-permission/contract'
+import { fileClassifyEnum } from '@enum-ms/file'
+import UploadBtn from '@comp/file-upload/UploadBtn'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const permission = contractSupplierLogisticsPM.invoice
 const emit = defineEmits(['success'])
@@ -227,6 +249,8 @@ const tableRef = ref()
 const originRow = ref({})
 const totalAmount = ref(0)
 const invoiceNoArr = ref([])
+const pdfShow = ref(false)
+const currentId = ref()
 provide('totalAmount', totalAmount)
 const { crud, CRUD } = useCRUD(
   {
@@ -253,8 +277,8 @@ const validateAmount = (value, row) => {
 }
 
 const tableRules = {
-  receiveInvoiceDate: [{ required: true, message: '请选择开票日期', trigger: 'change' }],
-  invoiceAmount: [{ validator: validateAmount, message: '请选择开票额', trigger: 'change', type: 'number' }],
+  receiveInvoiceDate: [{ required: true, message: '请选择收票日期', trigger: 'change' }],
+  invoiceAmount: [{ validator: validateAmount, message: '请选择收票额', trigger: 'change', type: 'number' }],
   taxRate: [{ validator: validateTaxRate, message: '请输入税率', trigger: 'blur' }],
   invoiceType: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
   invoiceSerialNumber: [{ required: true, message: '请输入发票号', trigger: 'blur' }]
@@ -266,7 +290,7 @@ function wrongCellMask({ row, column }) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -291,6 +315,12 @@ watch(
   { deep: true, immediate: true }
 )
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
 function invoiceTypeChange(row) {
   row.taxRate = undefined
 }
@@ -301,8 +331,8 @@ function moneyChange(row) {
       totalAmount.value += v.invoiceAmount
     }
   })
-  if (totalAmount.value > props.currentRow.amount) {
-    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.amount)
+  if (totalAmount.value > props.currentRow.freight) {
+    const num = row.invoiceAmount - (totalAmount.value - props.currentRow.freight)
     // 解决修改失效
     nextTick(() => {
       row.invoiceAmount = num || 0
@@ -385,14 +415,14 @@ function rowCancel(row) {
 
 async function rowSubmit(row) {
   if (row.invoiceAmount === 0) {
-    ElMessage.error('开票额必须大于0')
+    ElMessage.error('收票额必须大于0')
     return
   }
   const rules = tableRules
   let flag = true
   row.verify = {}
   for (const rule in rules) {
-    row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+    row.verify[rule] = validate(rule, rules[rule], row)
     if (!row.verify[rule]) {
       flag = false
     }
@@ -404,6 +434,7 @@ async function rowSubmit(row) {
   const messageName = row.id ? '修改' : '新增'
   try {
     if (row.id) {
+      row.attachmentIds = row.files ? row.files.map((v) => v.id) : (row.attachments ? row.attachments.map((v) => v.id) : undefined)
       await crudApi.edit(row)
     } else {
       await crudApi.add(row)
@@ -424,8 +455,8 @@ function getSummaries(param) {
 }
 
 CRUD.HOOK.beforeRefresh = () => {
-  crud.query.orderId = props.currentRow.id
-  crud.query.type = props.propertyType
+  crud.query.branchCompanyId = props.currentRow.branchCompanyId
+  crud.query.supplierId = props.currentRow.supplierId
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

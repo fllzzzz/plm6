@@ -49,6 +49,13 @@ export default {
       meta: { title: '采购对账管理', icon: 'contract', noCache: true },
       children: [
         {
+          name: 'InboundLog',
+          path: 'inbound-log',
+          hidden: false,
+          component: '/supply-chain/purchase-reconciliation-manage/inbound-log/index',
+          meta: { title: '入库记录', icon: 'project', noCache: true }
+        },
+        {
           name: 'PurchasePaymentLedger',
           path: 'payment-ledger',
           hidden: false,

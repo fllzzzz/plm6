@@ -6,7 +6,7 @@
     :before-close="crud.cancelDetail"
     :title="drawerTitle"
     :show-close="true"
-    size="80%"
+    size="85%"
     custom-class="mat-label-print-receipt-mode-detail"
   >
     <template #titleAfter>

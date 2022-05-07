@@ -51,12 +51,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.purchaseOrder"
-            :permission="permission.purchaseOrderDetail"
-            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
-            :text="row.purchaseOrder.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['PURCHASE']" :receipt="row.purchaseOrder" />
         </template>
       </el-table-column>
       <el-table-column
@@ -69,12 +64,7 @@
         align="left"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.inboundReceipt"
-            :permission="permission.inboundReceiptDetail"
-            @click="openInboundDetail(row.inboundReceipt.id)"
-            :text="row.inboundReceipt.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['INBOUND']" :receipt="row.inboundReceipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -161,21 +151,11 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 入库单详情 -->
-    <detail-wrapper ref="inboundDetailRef" :api="getInboundDetail">
-      <inbound-detail />
-    </detail-wrapper>
-    <!-- 采购订单详情 -->
-    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
-      <purchase-order-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/wms/material-reject/raw-material/record'
-import { detail as getInboundDetail } from '@/api/wms/material-inbound/raw-material/review'
-import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { rawMaterialRejectRecordPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
@@ -184,18 +164,13 @@ import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useOtherCrudDetail from '@compos/use-other-crud-detail'
-
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
 
-import InboundDetail from '@/views/wms/material-inbound/raw-material/review/module/detail.vue'
-import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -220,7 +195,4 @@ const { crud, columns } = useCRUD(
 )
 
 const { maxHeight } = useMaxHeight({ paginate: true })
-
-const { detailRef: inboundDetailRef, openDetail: openInboundDetail } = useOtherCrudDetail()
-const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
 </script>

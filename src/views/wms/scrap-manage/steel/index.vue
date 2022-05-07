@@ -22,7 +22,7 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :columns="columns" :basic-class="crud.query.basicClass" />
       <!-- 仓库信息 -->
-      <warehouse-info-columns :columns="columns" />
+      <warehouse-info-columns :columns="columns" :show-project="crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V" />
       <el-table-column
         v-if="columns.visible('createTime')"
         key="createTime"
@@ -44,6 +44,7 @@ import { getSteelList } from '@/api/wms/scrap-manage/list'
 import { steelScrapPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
+import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { baseTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
@@ -65,7 +66,6 @@ const optShow = {
   del: false,
   download: false
 }
-
 // 表格列数据格式转换
 const columnsDataFormat = ref([...materialHasAmountColumns, ...baseTimeColumns])
 

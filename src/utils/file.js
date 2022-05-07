@@ -3,9 +3,8 @@
  */
 import { parseTime } from '@/utils/date'
 import XLSX from 'xlsx-styleable'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import { isNotBlank } from './data-type'
-import { ElNotification } from 'element-plus'
 
 // 获取文件后缀名
 export function getFileSuffix(fileName) {
@@ -43,12 +42,28 @@ export async function fileDownload(fn) {
 }
 
 /**
+ * 文件下载2
+ * @param {function} fn 文件下载接口,根据状态
+ */
+export async function fileDownloadByReturnStatus(fn) {
+  const context = this
+  const args = Array.prototype.slice.call(arguments)
+  args.shift()
+  try {
+    const response = await fn.apply(context, args)
+    resolveDownload(response)
+  } catch (error) {
+    throw Error(error)
+  }
+}
+
+/**
  * 下载
  * @export
  * @param {*} response
  * @returns
  */
-export function downloadFileByResponse(response) {
+export function downloadFileByResponse(response, fileName) {
   const data = response.data
   const headers = response.headers
   if (!data || !headers) {
@@ -71,19 +86,12 @@ export function downloadFileByResponse(response) {
   const downloadElement = document.createElement('a')
   const href = window.URL.createObjectURL(blob) // 创建下载的链接
   downloadElement.href = href
-  const _fullPathName = headers && headers['content-disposition'] ? headers['content-disposition'].split('=')[1].split('.') : []
-  if (!_fullPathName || _fullPathName.length === 0) {
-    return false
-  }
-  const _suffix = `${decodeURI(_fullPathName.pop())}` // 处理文件名乱码问题,后缀名
-  if (!_suffix) {
-    return false
-  }
-  // 获取文件名
-  let _name = `${decodeURI(_fullPathName.join('.'))}` // 处理文件名乱码问题
 
-  _name = `${_name}_`
-  const fileName = `${_name}${parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')}.${_suffix}` // 处理文件名乱码问题
+  if (!fileName) {
+    fileName = getFileName(response)
+  }
+  const _nameArr = fileName.split('.')
+  fileName = `${_nameArr[0]}_${parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')}.${_nameArr[1]}` // 处理文件名乱码问题
   downloadElement.download = fileName // 下载后文件名
   document.body.appendChild(downloadElement)
   downloadElement.click() // 点击下载
@@ -155,7 +163,8 @@ export function resolveExcel(file) {
         }
         if (rABS) {
           // eslint-disable-next-line no-undef
-          wb = XLSX.read(btoa(fixdata(binary)), { // 手动转化
+          wb = XLSX.read(btoa(fixdata(binary)), {
+            // 手动转化
             type: 'base64'
           })
         } else {
@@ -163,7 +172,7 @@ export function resolveExcel(file) {
             type: 'binary'
           })
         }
-        outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])// outData就是结果
+        outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]) // outData就是结果
         resolve(outData)
         // return arr
       }
@@ -185,13 +194,57 @@ export function formatExcelData(data, template = {}) {
   const fields = template.fields
   if (data.length >= startRow && fields) {
     const _data = data.slice(startRow - 1, data.length)
-    _data.forEach(item => {
+    _data.forEach((item) => {
       const obj = {}
-      fields.forEach(f => {
+      fields.forEach((f) => {
         obj[f.field] = item[f.excelField]
       })
       res.push(obj)
     })
   }
   return res
+}
+
+/**
+ * 获取文件名
+ * @param {*} response
+ * @returns
+ */
+export function getFileName(response) {
+  const headers = response.headers
+  const _fullPathName = headers && headers['content-disposition'] ? headers['content-disposition'].split('=')[1].split('.') : []
+  if (!_fullPathName || _fullPathName.length === 0) {
+    return false
+  }
+  const _suffix = `${decodeURI(_fullPathName.pop())}` // 处理文件名乱码问题,后缀名
+  if (!_suffix) {
+    return false
+  }
+  // 获取文件名
+  const _name = `${decodeURI(_fullPathName.join('.'))}` // 处理文件名乱码问题
+  const fileName = `${_name}.${_suffix}` // 处理文件名乱码问题
+  return fileName
+}
+
+/**
+ * 下载解析 code=20000;message=xxxxx
+ * @param {*} res
+ */
+export function resolveDownload(res, { fileName, successMsg, errorMsg } = {}) {
+  const result = res.headers.result && decodeURIComponent(res.headers.result).split(';')
+  console.log('res', res)
+  if (result) {
+    // code 20000上传成功，50000上传失败（返回Excel模板或错误提示）
+    const code = result[0].split('=')[1]
+    const message = result[1].split('=')[1]
+    const currentFileName = getFileName(res) || ''
+    if (code === '20000') {
+      ElNotification.success({ title: `${fileName || currentFileName}下载请求成功, 正在下载`, message: successMsg })
+      downloadFileByResponse(res, currentFileName)
+    } else {
+      ElNotification.error({ title: `${fileName || currentFileName}下载请求失败`, message: errorMsg || `${message}` })
+    }
+  } else {
+    ElNotification.error(`下载请求失败`)
+  }
 }

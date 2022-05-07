@@ -5,27 +5,35 @@
  * @author duhh
  */
 // 备注：增加了每项内容的margin
-import { toThousand } from '@/utils/data-type/number'
+import { getDP, toThousand } from '@/utils/data-type/number'
 import { isBlank, isNotBlank } from '@data-type/index'
 import { emptyTextFormatter } from '@/utils/data-type'
 import { convertUnits } from '@/utils/convert/unit'
 
 import { projectNameFormatter } from '@/utils/project'
-import { matClsEnum } from '@enum-ms/classification'
 
-import { orientEnum, amountUnitEnum, dataSourceEnum, pageFormatEnum, alignEnum, verticleAlignEnum, fieldTypeEnum, printModeEnum as PrintMode } from '../enum'
+import {
+  orientEnum,
+  amountUnitEnum,
+  dataSourceEnum,
+  pageFormatEnum,
+  alignEnum,
+  verticleAlignEnum,
+  fieldTypeEnum,
+  printModeEnum as PrintMode
+} from '../enum'
 import { convertColumns, delNotDisplayed, getLastColumns } from '../page-handle'
 
 import { projectNameArrangementModeEnum } from '@/utils/enum/modules/contract'
 import EO from '@/utils/enum'
-import { getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/unit'
 import enumAll from '@/utils/enum/all'
-import { MIN_UNIT } from '@/settings/config'
+import { MIN_UNIT, DEF_UNIT } from '@/settings/config'
 import moment from 'moment'
 import { getLODOP, printByMode } from '../base'
 import * as lodash from 'lodash'
 
 let LODOP
+const defaultPrecision = 2
 
 /**
  * 打印表格
@@ -39,113 +47,125 @@ let LODOP
  * @author duhh
  */
 async function printTable({ header, table, footer, qrCode, config, printMode = PrintMode.QUEUE.V } = {}, intCopies = 1) {
-  if (isBlank(config)) {
-    throw new Error('打印未配置')
-  }
-  let result = false
-  try {
-    setColumns(config.table)
-    setStyle(config) // 设置各模块样式
-    const headHtml = getTitleHtml(config.title) // 拼接标题
-    const tableHtml = getTableHtml({ header, footer, table, globalConfig: config }) // 拼接表格
-    const footerHtml = getFooterHtml(footer, config) // 拼接底部信息
-    const pageNumberHtml = getPageHtml(config.page) // 拼接页码信息
-    const logoHtml = getLogoHtml(config.logo) // logo信息
-    let prevHeight = config.paddingTB // 设置上边距
-    let tbOffset2Top = 0 // 表格次页TOP偏移
-    const notHeaderSpacing = 3 // header不存在时，增加表格与table之间的间距（设置table的margin-top无效，因此在此设置）
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async function (resolve, reject) {
+    if (isBlank(config)) {
+      reject('打印未配置')
+      throw new Error('打印未配置')
+    }
+    let result = false
+    try {
+      setColumns(config.table)
+      setStyle(config) // 设置各模块样式
+      const headHtml = getTitleHtml(config.title) // 拼接标题
+      const tableHtml = getTableHtml({ header, footer, table, globalConfig: config }) // 拼接表格
+      const footerHtml = getFooterHtml(footer, config) // 拼接底部信息
+      const pageNumberHtml = getPageHtml(config.page) // 拼接页码信息
+      const logoHtml = getLogoHtml(config.logo) // logo信息
+      let prevHeight = config.paddingTB // 设置上边距
+      let tbOffset2Top = 0 // 表格次页TOP偏移
+      const notHeaderSpacing = 3 // header不存在时，增加表格与table之间的间距（设置table的margin-top无效，因此在此设置）
 
-    LODOP = await getLODOP()
+      LODOP = await getLODOP()
 
-    const loadHandler = async () => {
+      const loadHandler = async () => {
       // 打印方向
-      const orient = config.orient || orientEnum.LONGITUDINAL.V
-      // 设置纸张大小
-      LODOP.SET_PRINT_PAGESIZE(orient, config.width + config.unit, config.height + config.unit, 'CreateCustomPage')
-      // 标题
-      LODOP.ADD_PRINT_HTM(`${prevHeight}${config.unit}`, 0, '100%', `${config.title.height}${config.unit}`, headHtml)
-      LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
-      if (isNotBlank(config.title) && config.title.show) {
-        // 若不是每页显示，则只有第一页显示
-        prevHeight += config.title.height
-        if (!config.title.allPage) {
-          // 如果title不是每页都显示（只有第一页显示），则增加table次页偏移距离
-          LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
-          tbOffset2Top += config.title.height
-        }
-      }
-      if (isNotBlank(config.header) && config.header.show && !config.header.allPage) {
-        tbOffset2Top += config.header.height
-      }
-      // title显示且表头信息不显示的情况
-      if (isNotBlank(config.title) && config.title.show && (isBlank(config.header) || !config.header.show)) {
-        prevHeight += notHeaderSpacing // 增加表格与table之间的间距
-        if (!config.title.allPage) {
-          // 如果title不是每页都显示，则增加table次页偏移距离
-          tbOffset2Top += notHeaderSpacing
-        }
-      }
-      /**
-         * LODOP——bug，BottomMargin， table有bug
-         * 例如：BM为10mm，剩余高度为12mm（实际可用高度2mm）。单元格高度为11mm，这样的话不会换页
-         */
-      const extraBottom = convertUnits(8, 'mm', config.unit)
-      // 表格 8mm
-      LODOP.ADD_PRINT_TABLE(`${prevHeight}${config.unit}`, 0, '100%', `BottomMargin:${config.paddingTB + extraBottom}${config.unit}`, tableHtml)
-      LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1) // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
-      LODOP.SET_PRINT_STYLEA(0, 'TableRowThickNess', '30px') // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
-      if (tbOffset2Top) {
-        LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', `${-tbOffset2Top}${config.unit}`) // 从次页开始的上边距偏移量
-      }
-      // 当底部信息“显示且只在尾页显示”的情况，每页显示则再table的tfoot中加入代码
-      if (isNotBlank(config.footer) && config.footer.show && !config.footer.allPage) {
-        LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', footerHtml)
-        LODOP.SET_PRINT_STYLEA(0, 'LinkedItem', -1) // 关联上一个table对象，在table的末尾显示
-      }
-      if (isNotBlank(config.page) && config.page.show) {
-        LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', pageNumberHtml)
+        const orient = config.orient || orientEnum.LONGITUDINAL.V
+        // 设置纸张大小
+        LODOP.SET_PRINT_PAGESIZE(orient, config.width + config.unit, config.height + config.unit, 'CreateCustomPage')
+        // 标题
+        LODOP.ADD_PRINT_HTM(`${prevHeight}${config.unit}`, 0, '100%', `${config.title.height}${config.unit}`, headHtml)
         LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+        if (isNotBlank(config.title) && config.title.show) {
+        // 若不是每页显示，则只有第一页显示
+          prevHeight += config.title.height
+          if (!config.title.allPage) {
+          // 如果title不是每页都显示（只有第一页显示），则增加table次页偏移距离
+            LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
+            tbOffset2Top += config.title.height
+          }
+        }
+        if (isNotBlank(config.header) && config.header.show && !config.header.allPage) {
+          tbOffset2Top += config.header.height
+        }
+        // title显示且表头信息不显示的情况
+        if (isNotBlank(config.title) && config.title.show && (isBlank(config.header) || !config.header.show)) {
+          prevHeight += notHeaderSpacing // 增加表格与table之间的间距
+          if (!config.title.allPage) {
+          // 如果title不是每页都显示，则增加table次页偏移距离
+            tbOffset2Top += notHeaderSpacing
+          }
+        }
+        /**
+       * LODOP——bug，BottomMargin， table有bug
+       * 例如：BM为10mm，剩余高度为12mm（实际可用高度2mm）。单元格高度为11mm，这样的话不会换页
+       */
+        const extraBottom = convertUnits(8, 'mm', config.unit)
+        // 表格 8mm
+        LODOP.ADD_PRINT_TABLE(
+          `${prevHeight}${config.unit}`,
+          0,
+          '100%',
+          `BottomMargin:${config.paddingTB + extraBottom}${config.unit}`,
+          tableHtml
+        )
+        LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1) // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
+        LODOP.SET_PRINT_STYLEA(0, 'TableRowThickNess', '30px') // 设置TABLE高度是否包含页头页尾，0-代表不包含（默认），1-代表包含头和尾 2-只包含页头 3-只包含页尾
+        if (tbOffset2Top) {
+          LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', `${-tbOffset2Top}${config.unit}`) // 从次页开始的上边距偏移量
+        }
+        // 当底部信息“显示且只在尾页显示”的情况，每页显示则再table的tfoot中加入代码
+        if (isNotBlank(config.footer) && config.footer.show && !config.footer.allPage) {
+          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', footerHtml)
+          LODOP.SET_PRINT_STYLEA(0, 'LinkedItem', -1) // 关联上一个table对象，在table的末尾显示
+        }
+        if (isNotBlank(config.page) && config.page.show) {
+          LODOP.ADD_PRINT_HTM(0, 0, '100%', '100%', pageNumberHtml)
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+        }
+        if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
+          LODOP.ADD_PRINT_HTM(`${config.logo.top}${config.unit}`, `${config.logo.left}${config.unit}`, '100%', '100%', logoHtml)
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+          if (!config.logo.allPage) {
+          // 如果logo不是每页都显示（只有第一页显示）
+            LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
+          }
+        }
+        if (isNotBlank(config.qrCode) && config.qrCode.show && isNotBlank(qrCode)) {
+          const tempLeft = convertUnits(1, 'mm', config.unit)
+          LODOP.ADD_PRINT_BARCODE(
+            `${config.qrCode.top}${config.unit}`,
+            `${config.qrCode.left + tempLeft}${config.unit}`,
+            `${config.qrCode.width}${config.unit}`,
+            `${config.qrCode.height}${config.unit}`,
+            'QRCode',
+            qrCode
+          )
+          LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 5)
+          LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
+          if (!config.qrCode.allPage) {
+          // 如果logo不是每页都显示（只有第一页显示）
+            LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
+          }
+        }
+        LODOP.SET_PRINT_COPIES(intCopies) // 打印份数
+        result = await printByMode(printMode)
+        resolve(result)
       }
       if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-        LODOP.ADD_PRINT_HTM(`${config.logo.top}${config.unit}`, `${config.logo.left}${config.unit}`, '100%', '100%', logoHtml)
-        LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
-        if (!config.logo.allPage) {
-          // 如果logo不是每页都显示（只有第一页显示）
-          LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
-        }
+        var img = new Image()
+        img.addEventListener('load', loadHandler)
+        img.src = config.logo.url
+      } else {
+        loadHandler()
       }
-      if (isNotBlank(config.qrCode) && config.qrCode.show && isNotBlank(qrCode)) {
-        const tempLeft = convertUnits(1, 'mm', config.unit)
-        LODOP.ADD_PRINT_BARCODE(
-          `${config.qrCode.top}${config.unit}`,
-          `${config.qrCode.left + tempLeft}${config.unit}`,
-          `${config.qrCode.width}${config.unit}`,
-          `${config.qrCode.height}${config.unit}`,
-          'QRCode',
-          qrCode
-        )
-        LODOP.SET_PRINT_STYLEA(0, 'QRCodeVersion', 5)
-        LODOP.SET_PRINT_STYLEA(0, 'QRCodeErrorLevel', 'M')
-        LODOP.SET_PRINT_STYLEA(0, 'ItemType', 1) // 设置标题每页显示
-        if (!config.qrCode.allPage) {
-          // 如果logo不是每页都显示（只有第一页显示）
-          LODOP.SET_PRINT_STYLEA(0, 'PageIndex', 'first')
-        }
-      }
-      LODOP.SET_PRINT_COPIES(intCopies) // 打印份数
-      result = await printByMode(printMode)
+      return result
+    } catch (error) {
+      reject()
+      throw new Error(error)
     }
-    if (isNotBlank(config.logo) && config.logo.show && config.logo.url) {
-      var img = new Image()
-      img.addEventListener('load', await loadHandler)
-      img.src = config.logo.url
-    } else {
-      await loadHandler()
-    }
-    return result
-  } catch (error) {
-    throw new Error(error)
-  }
+  })
 }
 
 /**
@@ -278,11 +298,15 @@ function getTHeadHtml(config, needBlankColumn) {
     html += '<tr>'
     if (i === 0 && config.index && config.index.show) {
       const _style = config.index.style
-      html += `<td class="th" rowspan="${columnRows.length}" style="${_style}"><div style="${_style}">${config.index.title || '序号'}</div></td>`
+      html += `<td class="th" rowspan="${columnRows.length}" style="${_style}"><div style="${_style}">${
+        config.index.title || '序号'
+      }</div></td>`
     }
-    cr.forEach(c => {
+    cr.forEach((c) => {
       if (c.show) {
-        html += `<td class="th" colspan="${c.colSpan}" rowspan="${c.rowSpan}" style="${c.style}"><div style="${c.style}">${c.title || ''}</div></td>`
+        html += `<td class="th" colspan="${c.colSpan}" rowspan="${c.rowSpan}" style="${c.style}"><div style="${c.style}">${
+          c.title || ''
+        }</div></td>`
       }
     })
     if (i === 0 && needBlankColumn) {
@@ -306,7 +330,7 @@ function getTableHtml({ header, footer, table, globalConfig }) {
   const config = globalConfig.table
   const headAbstractHtml = getHeadAbstractHtml(header, globalConfig.header)
   const footerHtml = getFooterHtml(footer, globalConfig)
-  let thColspan = config.fields.filter(f => f.show).length // th需要跨行的值
+  let thColspan = config.fields.filter((f) => f.show).length // th需要跨行的值
   if (config.index && config.index.show) {
     ++thColspan
   }
@@ -322,7 +346,8 @@ function getTableHtml({ header, footer, table, globalConfig }) {
     html += `<tr><th colspan="${thColspan}">${headAbstractHtml}</th></tr>`
   }
   // 是否需要最后空列（虚假的）
-  const needBlankColumn = config.index && config.index.show && isNotBlank(config.index.width) && config.lastColumns.every(f => isNotBlank(f.width)) // 字段都是固定宽度
+  const needBlankColumn =
+    config.index && config.index.show && isNotBlank(config.index.width) && config.lastColumns.every((f) => isNotBlank(f.width)) // 字段都是固定宽度
   html += `${getTHeadHtml(config, needBlankColumn)}`
   html += `</thead>
         <tbody>
@@ -388,18 +413,33 @@ function spliceSummary(data, config, needBlankColumn) {
       if (column && column.sum) {
         // 判断字段是否需要合计
         sum = 0 // 打印时汇总数据默认显示0
-        const columns = data.map(d => keyParse(d, column.key)) // 列数据 字段解析
-        if (!columns.every(value => isNaN(+value))) {
+        const columns = data.map((d) => keyParse(d, column.key)) // 列数据 字段解析
+        let dp = 0
+        const dpArr = []
+        if (!columns.every((value) => isNaN(+value))) {
           // 判断是否为数字类型,此处允许空格或空字符串，因此可用isNaN，否则使用正则表达式
           sum = columns.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
-              return prev + curr
+              dpArr.push(getDP(curr))
+              return prev + Number(curr)
             } else {
               return prev
             }
           }, 0)
-          sum = dataFormat({ val: sum, field: column })
+
+          // 获取最大的小数精度位数
+          dp = dpArr.getMax()
+          dp = dp > 5 ? 5 : dp
+          const cloneField = JSON.parse(JSON.stringify(column))
+          if (!cloneField.format) {
+            cloneField.format = {}
+          }
+          if (isBlank(cloneField.format.precision)) {
+            cloneField.format.precision = dp
+          }
+
+          sum = dataFormat({ val: sum, field: cloneField })
         }
       }
       html += `<td class="td" style="${column.style}"><div style="${column.style}">${sum}</div></td>`
@@ -680,8 +720,8 @@ function setTableColumnsStyle(globalConfig) {
     //   field.style = _style
     // })
     const columnRows = config.columnRows
-    columnRows.forEach(row => {
-      row.forEach(column => {
+    columnRows.forEach((row) => {
+      row.forEach((column) => {
         let _style = ''
         if (isNotBlank(column.align)) {
           _style += `text-align:${textAlign(column.align)};`
@@ -718,7 +758,7 @@ function setHeaderFieldStyle(globalConfig) {
   const config = globalConfig.header
   const fields = config.fields
   isNotBlank(fields) &&
-    fields.forEach(field => {
+    fields.forEach((field) => {
       let _style = ''
       if (isNotBlank(field.width)) {
         _style += `width:${field.width}${globalConfig.unit};`
@@ -737,7 +777,7 @@ function setFooterFieldStyle(globalConfig) {
   const config = globalConfig.footer
   const fields = config.fields
   isNotBlank(fields) &&
-    fields.forEach(field => {
+    fields.forEach((field) => {
       let _style = ''
       if (isNotBlank(field.width)) {
         _style += `width:${field.width}${globalConfig.unit};`
@@ -786,12 +826,8 @@ function dataFormat({ row = {}, val, field, emptyVal = '' }) {
       return emptyTextFormatter(
         meteFormat({
           val,
-          format: field.format,
-          basicClass: row.basicClass,
-          materialType: row.materialType,
-          materialListType: row.materialListType,
-          unit: row.unit,
-          checkUnit: row.checkUnit
+          row,
+          format: field.format
         }),
         emptyVal
       )
@@ -818,7 +854,7 @@ function enumFormat(val, format) {
       // 位运算的值
       const enums = EO.toArr(enumK)
       const res = []
-      enums.forEach(e => {
+      enums.forEach((e) => {
         if (e.V & val) {
           res.push(e[key] || e['L'])
         }
@@ -841,7 +877,11 @@ function enumFormat(val, format) {
 function projectNameFormat(val, format = {}) {
   if (isBlank(format)) {
     // 默认只显示项目简称
-    format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }
+    format = {
+      showProjectFullName: false,
+      showSerialNumber: false,
+      projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V
+    }
   }
   return projectNameFormatter(val, format, format.lineBreak)
 }
@@ -853,7 +893,7 @@ function projectNameFormat(val, format = {}) {
  * @return {string} 日期
  */
 function dateFormat(val, format = 'YY/MM/DD') {
-  const filterDate = val => {
+  const filterDate = (val) => {
     if (isNotBlank(val)) {
       return moment(+val).format(format)
     }
@@ -867,7 +907,7 @@ function dateFormat(val, format = 'YY/MM/DD') {
       }
       if (val.length > 1) {
         return val
-          .map(t => {
+          .map((t) => {
             return filterDate(t)
           })
           .join('，')
@@ -908,7 +948,7 @@ function amountFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -925,7 +965,7 @@ function weightFormat(val, format = {}) {
   if (isNotBlank(_val)) {
     // 单位转换
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
+      _val = convertUnits(_val, DEF_UNIT.WEIGHT, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -933,7 +973,7 @@ function weightFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -949,7 +989,7 @@ function lengthFormat(val, format = {}) {
   let _val = val
   if (isNotBlank(_val)) {
     if (isNotBlank(format.unit)) {
-      _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
+      _val = convertUnits(_val, DEF_UNIT.LENGTH, format.unit)
     }
     // 小数精度
     if (isNotBlank(format.precision)) {
@@ -957,7 +997,7 @@ function lengthFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -981,7 +1021,7 @@ function thicknessFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val
@@ -991,10 +1031,9 @@ function thicknessFormat(val, format = {}) {
  * “量”数据格式转换
  * @param {*} val 数据
  * @param {object} format
- * @param {number} basicClass 基础类型（enum）
  * @return {string|number} 量
  */
-function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialType, materialListType }) {
+function meteFormat({ val, row, format = {}}) {
   let _val = val
   if (isNotBlank(_val)) {
     // 小数精度
@@ -1003,34 +1042,15 @@ function meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialTyp
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
     // 是否显示单位
     if (format.showUnit) {
-      let _unit
-      if (isNotBlank(basicClass)) {
-        if (checkUnit) {
-          _unit = checkUnit
-        } else {
-          _unit = matClsEnum(basicClass)
-        }
+      if (format.unit) {
+        _val += ` ${format.unit}`
       }
-      if (isNotBlank(materialType)) {
-        if (unit) {
-          _unit = unit
-        } else {
-          _unit = getMaterialTypeUnit(materialType)
-        }
-      }
-      if (isNotBlank(materialListType)) {
-        if (unit) {
-          _unit = unit
-        } else {
-          _unit = getMaterialListTypeUnit(materialListType)
-        }
-      }
-      if (_unit) {
-        _val += ` ${_unit}`
+      if (row?.[format.rowUnit]) {
+        _val += ` ${row[format.rowUnit]}`
       }
     }
   }
@@ -1052,7 +1072,7 @@ function quantityFormat(val, format = {}) {
     }
     // 1000 => 1,000
     if (format.toThousand) {
-      _val = toThousand(_val)
+      _val = toThousand(_val, format.precision ?? defaultPrecision)
     }
   }
   return _val

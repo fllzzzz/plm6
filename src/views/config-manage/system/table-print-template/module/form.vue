@@ -25,24 +25,21 @@
             button-color="#e8f4ff"
           />
           <el-select v-model="contentZoom" placeholder="显示比例" size="small" class="zoom-select">
-            <el-option
-              v-for="item in zoomArr"
-              :key="item"
-              :label="`${item}%`"
-              :value="item"
-            />
+            <el-option v-for="item in zoomArr" :key="item" :label="`${item}%`" :value="item" />
           </el-select>
           <el-select v-model="contentDataLength" placeholder="数据填充" size="small" class="zoom-select">
-            <el-option
-              v-for="item in contentDataArr"
-              :key="item"
-              :label="`${item}条`"
-              :value="item"
-            />
+            <el-option v-for="item in contentDataArr" :key="item" :label="`${item}条`" :value="item" />
           </el-select>
           <common-button size="small" type="danger" :disabled="!form.type" @click="print">打印预览</common-button>
           <common-button size="small" type="success" :disabled="!form.type" @click="exportXSLX">导出 Excel</common-button>
-          <common-button size="small" type="warning" :disabled="!form.type" :loading="crud.status.cu === 2" @click="crud.submitCU">保存</common-button>
+          <common-button
+size="small"
+type="warning"
+:disabled="!form.type"
+:loading="crud.status.cu === 2"
+@click="crud.submitCU"
+            >保存</common-button
+          >
           <common-button size="small" type="" @click="crud.cancelCU">退出</common-button>
         </div>
       </div>
@@ -73,25 +70,55 @@
                 @dragend="qrDrag"
                 @click.stop="configItem = configItemEnum.BASE.V"
               >
-                <qrcode-vue :value="qrContent"  :margin="1" />
+                <qrcode-vue :value="qrContent" :margin="1" />
               </div>
               <!-- 标题 -->
-              <div v-if="titleCfg?.show" class="title-info" :style="titleStyle" @click.stop="configItem = configItemEnum.TITLE.V" v-html="titleHtml" />
+              <div
+                v-if="titleCfg?.show"
+                class="title-info"
+                :style="titleStyle"
+                @click.stop="configItem = configItemEnum.TITLE.V"
+                v-html="titleHtml"
+              />
 
               <!-- 头部信息 -->
-              <div v-if="headerCfg?.show" class="header-info" :style="headerStyle" @click.stop="configItem = configItemEnum.HEADER.V" v-html="headerHtml" />
+              <div
+                v-if="headerCfg?.show"
+                class="header-info"
+                :style="headerStyle"
+                @click.stop="configItem = configItemEnum.HEADER.V"
+                v-html="headerHtml"
+              />
 
               <!-- 表格信息 -->
-              <div v-if="tableCfg && isNotBlank(filterExampleTableData)" ref="tableInfo" class="table-info" :style="tableStyle" @click.stop="configItem = configItemEnum.TABLE.V">
+              <div
+                v-if="tableCfg && isNotBlank(filterExampleTableData)"
+                ref="tableInfo"
+                class="table-info"
+                :style="tableStyle"
+                @click.stop="configItem = configItemEnum.TABLE.V"
+              >
                 <div v-html="tableCfg.style" />
                 <div v-html="tableHtml" />
               </div>
 
               <!-- 底部信息 -->
-              <div v-if="footerCfg?.show" class="footer-info" :style="footerStyle" @click.stop="configItem = configItemEnum.FOOTER.V" v-html="footerHtml" />
+              <div
+                v-if="footerCfg?.show"
+                class="footer-info"
+                :style="footerStyle"
+                @click.stop="configItem = configItemEnum.FOOTER.V"
+                v-html="footerHtml"
+              />
 
               <!-- 页码 -->
-              <div v-if="pageCfg?.show" class="page-info" :style="pageStyle" @click.stop="configItem = configItemEnum.BASE.V" v-html="pageHtml" />
+              <div
+                v-if="pageCfg?.show"
+                class="page-info"
+                :style="pageStyle"
+                @click.stop="configItem = configItemEnum.BASE.V"
+                v-html="pageHtml"
+              />
             </template>
             <template v-else>
               <span class="table-type-tip">* 请选择表格模板</span>
@@ -114,7 +141,7 @@
                     :disabled="crud.status.edit === prepared"
                     filterable
                     show-all-levels
-                    style="width: 300px;"
+                    style="width: 300px"
                     @change="handleTableTypeChange"
                   />
                 </el-form-item>
@@ -123,43 +150,32 @@
                     :table-type="form.type"
                     default
                     filterable
-                    style="width: 300px;"
+                    style="width: 300px"
                     @change="handleTemplateSelect"
                     @onload="templateOnload = true"
                   />
                 </el-form-item>
                 <el-form-item label="表格名称" prop="name">
-                  <el-input
-                    v-model.trim="form.name"
-                    type="text"
-                    placeholder="请填写表格名称"
-                    style="width: 300px;"
-                  />
+                  <el-input v-model.trim="form.name" type="text" placeholder="请填写表格名称" style="width: 300px" />
                 </el-form-item>
                 <el-form-item label="备注" prop="remark">
                   <el-input
                     v-model="form.remark"
                     type="textarea"
-                    style="width: 300px;"
-                    :autosize="{ minRows: 2, maxRows: 4}"
+                    style="width: 300px"
+                    :autosize="{ minRows: 2, maxRows: 4 }"
                     placeholder="请输入备注"
                   />
                 </el-form-item>
                 <el-form-item label="默认模板" prop="isDefault">
                   <el-checkbox v-model="form.isDefault" />
                 </el-form-item>
-
               </div>
 
               <!-- 表格打印方向配置 -->
               <div class="form-card form-card-inline-block">
                 <el-form-item label="打印方向">
-                  <common-radio
-                    v-model="config.orient"
-                    :options="orientEnum.ENUM"
-                    type="enum"
-                    style="width: 350px;"
-                  />
+                  <common-radio v-model="config.orient" :options="orientEnum.ENUM" type="enum" style="width: 350px" />
                 </el-form-item>
               </div>
 
@@ -197,7 +213,7 @@
                         controls-position="right"
                         type="text"
                         placeholder="表格高度"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
@@ -208,7 +224,7 @@
                         controls-position="right"
                         type="text"
                         placeholder="表格宽度"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                   </div>
@@ -222,7 +238,7 @@
                         controls-position="right"
                         type="text"
                         placeholder="表格上下边距"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`左右边距(${config.unit})`">
@@ -233,19 +249,15 @@
                         controls-position="right"
                         type="text"
                         placeholder="表格左右边距"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                   </div>
                   <!-- 页码配置 -->
                   <div v-if="pageCfg" class="form-card form-card-inline-block">
                     <vertical-label name="页码" />
-                    <text-setting
-                      :data="pageCfg"
-                      :show-verticle-align="false"
-                      class="text-setting"
-                    />
-                    <br>
+                    <text-setting :data="pageCfg" :show-verticle-align="false" class="text-setting" />
+                    <br />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
                       <common-input-number
                         v-model="pageCfg.size"
@@ -254,7 +266,7 @@
                         :max="30"
                         type="text"
                         placeholder="字体大小"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`距离底部(${config.unit})`">
@@ -265,7 +277,7 @@
                         :max="config.height"
                         type="text"
                         placeholder="距离底部"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`格式`">
@@ -274,13 +286,13 @@
                         :options="pageFormatEnum.ENUM"
                         type="enum"
                         placeholder="请选择展示格式"
-                        style="width: 150px;"
+                        style="width: 150px"
                         @change="handlePageHtmlChange"
                       />
                     </el-form-item>
                   </div>
                   <!-- logo 图片配置 -->
-                  <!-- <div v-if="logoCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
+                  <div v-if="logoCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
                     <el-tooltip
                       effect="light"
                       :content="`图标（logo）设置：\n
@@ -363,7 +375,7 @@
                       </template>
                       <el-tag v-else type="danger">logo未上传</el-tag>
                     </div>
-                  </div> -->
+                  </div>
                   <!-- 二维码配置，部分表格存在该配置 -->
                   <div v-if="qrCfg" v-loading="logoLoading" class="form-card form-card-inline-block">
                     <el-tooltip
@@ -382,7 +394,7 @@
                       :show-verticle-align="false"
                       class="text-setting"
                     />
-                    <br>
+                    <br />
                     <el-form-item :label="`距离顶部(${config.unit})`">
                       <common-input-number
                         v-model="qrCfg.top"
@@ -392,7 +404,7 @@
                         :min="0"
                         :max="config.height"
                         placeholder="距离顶部"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`距离左侧(${config.unit})`">
@@ -404,7 +416,7 @@
                         :min="0"
                         :max="config.width"
                         placeholder="距离左侧"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                   </div>
@@ -416,19 +428,10 @@
               <div v-show="configItem == configItemEnum.TITLE.V">
                 <div v-if="isNotBlank(titleCfg)" class="form-card form-card-inline-block">
                   <vertical-label name="标题" />
-                  <text-setting
-                    :data="titleCfg"
-                    show-all-page
-                    class="text-setting"
-                  />
-                  <br>
+                  <text-setting :data="titleCfg" show-all-page class="text-setting" />
+                  <br />
                   <el-form-item label="表格名称">
-                    <el-input
-                      v-model.trim="titleCfg.title"
-                      type="text"
-                      placeholder="请填写表格名称"
-                      style="width: 150px;"
-                    />
+                    <el-input v-model.trim="titleCfg.title" type="text" placeholder="请填写表格名称" style="width: 150px" />
                   </el-form-item>
                   <el-form-item :label="`字体大小(${config.fontUnit})`">
                     <common-input-number
@@ -438,7 +441,7 @@
                       :max="40"
                       type="text"
                       placeholder="字体大小"
-                      style="width: 150px;"
+                      style="width: 150px"
                     />
                   </el-form-item>
                   <el-form-item :label="`高度(${config.unit})`">
@@ -450,7 +453,7 @@
                       :min="0"
                       :max="maxHeight"
                       placeholder="高度"
-                      style="width: 150px;"
+                      style="width: 150px"
                     />
                   </el-form-item>
                 </div>
@@ -476,7 +479,7 @@
                         :max="20"
                         type="text"
                         placeholder="字体大小"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`行高(${config.fontUnit})`">
@@ -488,7 +491,7 @@
                         :max="20"
                         type="text"
                         placeholder="行高"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`上下边距(${config.unit})`">
@@ -499,7 +502,7 @@
                         controls-position="right"
                         type="text"
                         placeholder="表头上下边距"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                   </div>
@@ -528,7 +531,7 @@
                         :max="20"
                         type="text"
                         placeholder="字体大小"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`行高(${config.fontUnit})`">
@@ -540,7 +543,7 @@
                         :max="20"
                         type="text"
                         placeholder="行高"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`上下边距(${config.unit})`">
@@ -551,16 +554,11 @@
                         controls-position="right"
                         type="text"
                         placeholder="表元上下边距"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`空值显示`">
-                      <el-input
-                        v-model="tableCfg.emptyVal"
-                        type="text"
-                        placeholder="空值显示"
-                        style="width: 130px;"
-                      />
+                      <el-input v-model="tableCfg.emptyVal" type="text" placeholder="空值显示" style="width: 130px" />
                     </el-form-item>
                     <el-form-item label="合计" label-width="65px">
                       <el-checkbox v-model="tableCfg.summary.show" />
@@ -578,12 +576,7 @@
                     >
                       <vertical-label name="序号" />
                     </el-tooltip>
-                    <text-setting
-                      :data="tableCfg.index"
-                      :show-bold="false"
-                      :show-verticle-align="false"
-                      class="text-setting"
-                    />
+                    <text-setting :data="tableCfg.index" :show-bold="false" :show-verticle-align="false" class="text-setting" />
                     <el-form-item :label="`宽度(${config.unit})`">
                       <common-input-number
                         v-model="tableCfg.index.width"
@@ -605,7 +598,7 @@
                   </div>
                   <!-- 列配置 -->
                   <div class="form-card form-card-inline-block clearfix">
-                    <div class="filter-container" style="display:flex;width:100%;margin-bottom:15px;">
+                    <div class="filter-container" style="display: flex; width: 100%; margin-bottom: 15px">
                       <div class="filter-left-box">
                         <common-button type="primary" size="small" @click="addTableField">添加自定义列</common-button>
                       </div>
@@ -645,13 +638,7 @@
                     >
                       <vertical-label name="列" />
                     </el-tooltip>
-                    <common-table
-                      ref="tableFieldsTableRef"
-                      :data="tableCfg.fields"
-                      row-key="key"
-                      border
-                      style="width: 100%"
-                    >
+                    <common-table ref="tableFieldsTableRef" return-source-data :data="tableCfg.fields" row-key="key" border style="width: 100%">
                       <el-table-column label="标题" min-width="100">
                         <template v-slot="scope">
                           <el-tooltip :content="scope.row.title" placement="top-start">
@@ -660,14 +647,21 @@
                               type="text"
                               placeholder="标题"
                               class="input-border-none input-padding-right-0"
-                              style="width:calc(100% - 23px)"
+                              style="width: calc(100% - 23px)"
                             />
                           </el-tooltip>
                         </template>
                       </el-table-column>
                       <el-table-column label="显示" min-width="60" align="center">
                         <template v-slot="scope">
-                          <common-button v-if="scope.row.source === dataSourceEnum.CUSTOMIZE.V" type="danger" icon="el-icon-delete" size="mini" style="padding: 7px 10px;" @click.stop="removeTableField(scope.$index)" />
+                          <common-button
+                            v-if="scope.row.source === dataSourceEnum.CUSTOMIZE.V"
+                            type="danger"
+                            icon="el-icon-delete"
+                            size="mini"
+                            style="padding: 7px 10px"
+                            @click.stop="removeTableField(scope.$index)"
+                          />
                           <el-checkbox v-else v-model="scope.row.show" />
                         </template>
                       </el-table-column>
@@ -714,12 +708,10 @@
                             <span v-if="!needFormatTypes.includes(scope.row.type)">/</span>
                             <template v-else-if="isNotBlank(scope.row.format)">
                               <template v-if="scope.row.type == fieldTypeEnum.PROJECT.K">
-                                <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px;">
+                                <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px">
                                   项目全称
                                 </el-checkbox>
-                                <el-checkbox v-model="scope.row.format.showContractNo">
-                                  合同编号
-                                </el-checkbox>
+                                <el-checkbox v-model="scope.row.format.showSerialNumber"> 合同编号 </el-checkbox>
                               </template>
                               <el-input
                                 v-if="dateTypes.includes(scope.row.type)"
@@ -727,13 +719,11 @@
                                 type="text"
                                 placeholder="填写日期格式"
                                 class="input-border-none input-center"
-                                style="width: 270px;"
+                                style="width: 270px"
                               />
                               <span v-if="numberTypes.includes(scope.row.type)" class="delimiter">
                                 <span v-if="toThousandfoldTypes.includes(scope.row.type)">
-                                  <el-checkbox v-model="scope.row.format.toThousandFilter">
-                                    分位符
-                                  </el-checkbox>
+                                  <el-checkbox v-model="scope.row.format.toThousand"> 分位符 </el-checkbox>
                                 </span>
                                 <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                   <common-select
@@ -775,7 +765,11 @@
                       </el-table-column>
                       <el-table-column label="合计项" min-width="70" align="center">
                         <template v-slot="scope">
-                          <el-checkbox v-if="!scope.row.children" v-model="scope.row.sum" :disabled="!sumableTypes.includes(scope.row.type)" />
+                          <el-checkbox
+                            v-if="!scope.row.children"
+                            v-model="scope.row.sum"
+                            :disabled="!sumableTypes.includes(scope.row.type)"
+                          />
                         </template>
                       </el-table-column>
                     </common-table>
@@ -786,12 +780,8 @@
                 <template v-if="isNotBlank(headerCfg)">
                   <div class="form-card form-card-inline-block">
                     <vertical-label name="表头" />
-                    <text-setting
-                      :data="headerCfg"
-                      show-all-page
-                      class="text-setting"
-                    />
-                    <br>
+                    <text-setting :data="headerCfg" show-all-page class="text-setting" />
+                    <br />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
                       <common-input-number
                         v-model="headerCfg.size"
@@ -800,7 +790,7 @@
                         :max="20"
                         type="text"
                         placeholder="字体大小"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`高度(${config.unit})`">
@@ -812,7 +802,7 @@
                         :min="0"
                         :max="maxHeight"
                         placeholder="高度"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
@@ -824,12 +814,19 @@
                         :min="0"
                         :max="maxWidth"
                         placeholder="高度"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                   </div>
                   <div class="form-card form-card-inline-block clearfix">
-                    <common-button type="primary" class="fr" size="small" style="margin-bottom:15px;" @click="addHeaderField">添加自定义字段</common-button>
+                    <common-button
+type="primary"
+class="fr"
+size="small"
+style="margin-bottom: 15px"
+@click="addHeaderField"
+                      >添加自定义字段</common-button
+                    >
                     <el-tooltip
                       effect="light"
                       :content="`表格设置：\n
@@ -858,13 +855,7 @@
                     >
                       <vertical-label name="字段" />
                     </el-tooltip>
-                    <common-table
-                      ref="headerFieldsTableRef"
-                      :data="headerCfg.fields"
-                      row-key="key"
-                      border
-                      style="width: 100%;"
-                    >
+                    <common-table ref="headerFieldsTableRef" return-source-data :data="headerCfg.fields" row-key="key" border style="width: 100%">
                       <el-table-column label="标题" min-width="100">
                         <template v-slot="scope">
                           <el-tooltip :content="scope.row.title" placement="top-start">
@@ -879,7 +870,14 @@
                       </el-table-column>
                       <el-table-column label="显示" min-width="60" align="center">
                         <template v-slot="scope">
-                          <common-button v-if="scope.row.source === dataSourceEnum.CUSTOMIZE.V" type="danger" icon="el-icon-delete" size="mini" style="padding: 7px 10px;" @click.stop="removeHeaderField(scope.$index)" />
+                          <common-button
+                            v-if="scope.row.source === dataSourceEnum.CUSTOMIZE.V"
+                            type="danger"
+                            icon="el-icon-delete"
+                            size="mini"
+                            style="padding: 7px 10px"
+                            @click.stop="removeHeaderField(scope.$index)"
+                          />
                           <el-checkbox v-else v-model="scope.row.show" />
                         </template>
                       </el-table-column>
@@ -916,12 +914,10 @@
                           <span v-if="!needFormatTypes.includes(scope.row.type)">/</span>
                           <template v-else-if="isNotBlank(scope.row.format)">
                             <template v-if="scope.row.type == fieldTypeEnum.PROJECT.K">
-                              <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px;">
+                              <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px">
                                 项目全称
                               </el-checkbox>
-                              <el-checkbox v-model="scope.row.format.showContractNo">
-                                合同编号
-                              </el-checkbox>
+                              <el-checkbox v-model="scope.row.format.showSerialNumber"> 合同编号 </el-checkbox>
                             </template>
                             <el-input
                               v-if="dateTypes.includes(scope.row.type)"
@@ -929,13 +925,11 @@
                               type="text"
                               placeholder="填写日期格式"
                               class="input-border-none input-center"
-                              style="width: 270px;"
+                              style="width: 270px"
                             />
                             <span v-if="numberTypes.includes(scope.row.type)" class="delimiter">
                               <span v-if="toThousandfoldTypes.includes(scope.row.type)">
-                                <el-checkbox v-model="scope.row.format.toThousandFilter">
-                                  分位符
-                                </el-checkbox>
+                                <el-checkbox v-model="scope.row.format.toThousand"> 分位符 </el-checkbox>
                               </span>
                               <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                 <common-select
@@ -988,12 +982,8 @@
                     >
                       <vertical-label name="表尾" />
                     </el-tooltip>
-                    <text-setting
-                      :data="footerCfg"
-                      show-all-page
-                      class="text-setting"
-                    />
-                    <br>
+                    <text-setting :data="footerCfg" show-all-page class="text-setting" />
+                    <br />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
                       <common-input-number
                         v-model="footerCfg.size"
@@ -1002,7 +992,7 @@
                         :max="20"
                         type="text"
                         placeholder="字体大小"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`高度(${config.unit})`">
@@ -1014,7 +1004,7 @@
                         :min="0"
                         :max="maxHeight"
                         placeholder="高度"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`宽度(${config.unit})`">
@@ -1026,17 +1016,13 @@
                         :min="0"
                         :max="maxWidth"
                         placeholder="高度"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                   </div>
                   <div class="form-card form-card-inline-block">
                     <vertical-label name="提示" />
-                    <text-setting
-                      :data="footerCfg.tip"
-                      :show-verticle-align="false"
-                      class="text-setting"
-                    />
+                    <text-setting :data="footerCfg.tip" :show-verticle-align="false" class="text-setting" />
                     <el-form-item :label="`字体大小(${config.fontUnit})`">
                       <common-input-number
                         v-model="footerCfg.tip.size"
@@ -1045,24 +1031,31 @@
                         :max="20"
                         type="text"
                         placeholder="字体大小"
-                        style="width: 150px;"
+                        style="width: 150px"
                       />
                     </el-form-item>
                     <el-form-item :label="`在字段上方显示`">
                       <el-checkbox v-model="footerCfg.tip.above" />
                     </el-form-item>
-                    <br>
-                    <div style="width:100%;padding: 0 20px;margin-top:10px">
+                    <br />
+                    <div style="width: 100%; padding: 0 20px; margin-top: 10px">
                       <el-input
                         v-model="footerCfg.tip.text"
                         type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 4}"
+                        :autosize="{ minRows: 2, maxRows: 4 }"
                         placeholder="请输入内容"
                       />
                     </div>
                   </div>
                   <div class="form-card form-card-inline-block clearfix">
-                    <common-button type="primary" class="fr" size="small" style="margin-bottom:15px;" @click="addFooterField">添加自定义字段</common-button>
+                    <common-button
+type="primary"
+class="fr"
+size="small"
+style="margin-bottom: 15px"
+@click="addFooterField"
+                      >添加自定义字段</common-button
+                    >
                     <el-tooltip
                       effect="light"
                       :content="`表格设置：\n
@@ -1091,13 +1084,7 @@
                     >
                       <vertical-label name="字段" />
                     </el-tooltip>
-                    <common-table
-                      ref="footerFieldsTableRef"
-                      :data="footerCfg.fields"
-                      row-key="key"
-                      border
-                      style="width: 100%;"
-                    >
+                    <common-table ref="footerFieldsTableRef" return-source-data :data="footerCfg.fields" row-key="key" border style="width: 100%">
                       <el-table-column label="标题" min-width="100">
                         <template v-slot="scope">
                           <el-tooltip :content="scope.row.title" placement="top-start">
@@ -1112,7 +1099,14 @@
                       </el-table-column>
                       <el-table-column label="显示" min-width="60" align="center">
                         <template v-slot="scope">
-                          <common-button v-if="scope.row.source === dataSourceEnum.CUSTOMIZE.V" type="danger" icon="el-icon-delete" size="mini" style="padding: 7px 10px;" @click.stop="removeFooterField(scope.$index)" />
+                          <common-button
+                            v-if="scope.row.source === dataSourceEnum.CUSTOMIZE.V"
+                            type="danger"
+                            icon="el-icon-delete"
+                            size="mini"
+                            style="padding: 7px 10px"
+                            @click.stop="removeFooterField(scope.$index)"
+                          />
                           <el-checkbox v-else v-model="scope.row.show" />
                         </template>
                       </el-table-column>
@@ -1149,12 +1143,10 @@
                           <span v-if="!needFormatTypes.includes(scope.row.type)">/</span>
                           <template v-else-if="isNotBlank(scope.row.format)">
                             <template v-if="scope.row.type == fieldTypeEnum.PROJECT.K">
-                              <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px;">
+                              <el-checkbox v-model="scope.row.format.showProjectFullName" style="margin-right: 10px">
                                 项目全称
                               </el-checkbox>
-                              <el-checkbox v-model="scope.row.format.showContractNo">
-                                合同编号
-                              </el-checkbox>
+                              <el-checkbox v-model="scope.row.format.showSerialNumber"> 合同编号 </el-checkbox>
                             </template>
                             <el-input
                               v-if="dateTypes.includes(scope.row.type)"
@@ -1162,13 +1154,11 @@
                               type="text"
                               placeholder="填写日期格式"
                               class="input-border-none input-center"
-                              style="width: 270px;"
+                              style="width: 270px"
                             />
                             <span v-if="numberTypes.includes(scope.row.type)" class="delimiter">
                               <span v-if="toThousandfoldTypes.includes(scope.row.type)">
-                                <el-checkbox v-model="scope.row.format.toThousandFilter">
-                                  分位符
-                                </el-checkbox>
+                                <el-checkbox v-model="scope.row.format.toThousand"> 分位符 </el-checkbox>
                               </span>
                               <span v-if="unitSelectableTypes.includes(scope.row.type)">
                                 <common-select
@@ -1220,40 +1210,84 @@
 </template>
 
 <script setup>
+import { getLogoConfig } from '@/api/config/main/system-config'
 import { ref, reactive, computed, watch, nextTick } from 'vue'
+
+import {
+  orientEnum,
+  printModeEnum,
+  amountUnitEnum,
+  lengthUnitEnum,
+  weightUnitEnum,
+  thicknessUnitEnum,
+  alignEnum,
+  dataSourceEnum,
+  fieldTypeEnum,
+  tableConfigItemEnum as configItemEnum,
+  pageFormatEnum,
+  cssUnitEnum,
+  cssUnitPrecisionEnum
+} from '@/utils/print/enum'
+import { isBlank, isNotBlank } from '@data-type/index'
+import { printTable } from '@/utils/print/table'
+import downloadXLSX from '@/utils/print/download'
+import { convertColumns, delNotDisplayed, getLastColumns, setting } from '@/utils/print/page-handle'
+import example from '@/utils/print/default-template/example'
+import formatFn from '@/utils/print/format/index'
+import { px2lengthUnit, convertUnits } from '@/utils/convert/unit'
+
 import { regForm } from '@compos/use-crud'
-import Sortable from 'sortablejs'
 import radioButton from '@comp-common/radio-button'
 import tableTypeCascader from '@comp-common/print/table-type-cascader'
 import tableTemplateSelect from '@comp-common/print/table-template-select'
 import textSetting from '@comp-common/print/text-setting'
 import verticalLabel from '@comp-common/vertical-label'
-
-import { isBlank, isNotBlank } from '@data-type/index'
-import { px2lengthUnit, convertUnits } from '@/utils/convert/unit'
-import { orientEnum, printModeEnum, amountUnitEnum, lengthUnitEnum, weightUnitEnum, thicknessUnitEnum, alignEnum, dataSourceEnum,
-  fieldTypeEnum, tableConfigItemEnum as configItemEnum, pageFormatEnum, cssUnitEnum, cssUnitPrecisionEnum } from '@/utils/print/enum'
-import { printTable } from '@/utils/print/table'
-import downloadXLSX from '@/utils/print/download'
-import { convertColumns, delNotDisplayed, getLastColumns, setting } from '@/utils/print/page-handle'
-// import { tableTypeEnum, moduleTypeEnum } from '@/utils/print/table/type'
-import example from '@/utils/print/default-template/example'
-import formatFn from '@/utils/print/format/index'
 import moment from 'moment'
 import QrcodeVue from 'qrcode.vue'
+import Sortable from 'sortablejs'
 
 // 可格式化的字段类型
-const needFormatTypes = [fieldTypeEnum.RATE.K, fieldTypeEnum.PROJECT.K, fieldTypeEnum.DATE.K, fieldTypeEnum.DATES.K,
-  fieldTypeEnum.AMOUNT.K, fieldTypeEnum.LENGTH.K, fieldTypeEnum.WEIGHT.K,
-  fieldTypeEnum.THICKNESS.K, fieldTypeEnum.ENUM.K, fieldTypeEnum.QUANTITY.K, fieldTypeEnum.METE.K]
+const needFormatTypes = [
+  fieldTypeEnum.RATE.K,
+  fieldTypeEnum.PROJECT.K,
+  fieldTypeEnum.DATE.K,
+  fieldTypeEnum.DATES.K,
+  fieldTypeEnum.AMOUNT.K,
+  fieldTypeEnum.LENGTH.K,
+  fieldTypeEnum.WEIGHT.K,
+  fieldTypeEnum.THICKNESS.K,
+  fieldTypeEnum.ENUM.K,
+  fieldTypeEnum.QUANTITY.K,
+  fieldTypeEnum.METE.K
+]
 const dateTypes = [fieldTypeEnum.DATE.K, fieldTypeEnum.DATES.K]
-const numberTypes = [fieldTypeEnum.RATE.K, fieldTypeEnum.AMOUNT.K, fieldTypeEnum.QUANTITY.K, fieldTypeEnum.METE.K, fieldTypeEnum.LENGTH.K, fieldTypeEnum.WEIGHT.K, fieldTypeEnum.THICKNESS.K]
+const numberTypes = [
+  fieldTypeEnum.RATE.K,
+  fieldTypeEnum.AMOUNT.K,
+  fieldTypeEnum.QUANTITY.K,
+  fieldTypeEnum.METE.K,
+  fieldTypeEnum.LENGTH.K,
+  fieldTypeEnum.WEIGHT.K,
+  fieldTypeEnum.THICKNESS.K
+]
 // 可选择单位的字段类型
 const unitSelectableTypes = [fieldTypeEnum.AMOUNT.K, fieldTypeEnum.LENGTH.K, fieldTypeEnum.WEIGHT.K, fieldTypeEnum.THICKNESS.K]
 // 需要分位符的字段类型
-const toThousandfoldTypes = [fieldTypeEnum.AMOUNT.K, fieldTypeEnum.QUANTITY.K, fieldTypeEnum.METE.K, fieldTypeEnum.LENGTH.K, fieldTypeEnum.WEIGHT.K]
+const toThousandfoldTypes = [
+  fieldTypeEnum.AMOUNT.K,
+  fieldTypeEnum.QUANTITY.K,
+  fieldTypeEnum.METE.K,
+  fieldTypeEnum.LENGTH.K,
+  fieldTypeEnum.WEIGHT.K
+]
 // 可合计的字段类型
-const sumableTypes = [fieldTypeEnum.AMOUNT.K, fieldTypeEnum.QUANTITY.K, fieldTypeEnum.METE.K, fieldTypeEnum.LENGTH.K, fieldTypeEnum.WEIGHT.K]
+const sumableTypes = [
+  fieldTypeEnum.AMOUNT.K,
+  fieldTypeEnum.QUANTITY.K,
+  fieldTypeEnum.METE.K,
+  fieldTypeEnum.LENGTH.K,
+  fieldTypeEnum.WEIGHT.K
+]
 const unitEnumMap = {}
 unitEnumMap[fieldTypeEnum.AMOUNT.K] = amountUnitEnum.ENUM
 unitEnumMap[fieldTypeEnum.LENGTH.K] = lengthUnitEnum.ENUM
@@ -1295,7 +1329,7 @@ const tableHtml = ref('')
 const footerHtml = ref('')
 const pageHtml = ref('')
 const style = ref('')
-// const logos = ref([])
+const logos = ref([])
 const templateOnload = ref(true)
 const logoLoading = ref(false)
 const qrContent = ref('欢迎来到初鸣智造钢结构生产执行管理系统')
@@ -1314,9 +1348,7 @@ const pageCfg = ref({})
 
 const rules = ref({
   remark: [{ max: 500, message: '不能超过 500 个字符', trigger: 'blur' }],
-  type: [
-    { required: true, message: '请选择表格', trigger: 'change' }
-  ],
+  type: [{ required: true, message: '请选择表格', trigger: 'change' }],
   name: [
     { required: true, message: '请填写表格名称', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
@@ -1342,11 +1374,11 @@ const pageHeight = computed(() => {
 })
 
 const maxWidth = computed(() => {
-  return pageWidth.value && config.paddingLR * 2
+  return pageWidth.value - config.paddingLR * 2
 })
 
 const maxHeight = computed(() => {
-  return pageHeight.value && config.paddingTB * 2
+  return pageHeight.value - config.paddingTB * 2
 })
 
 const contentStyle = computed(() => {
@@ -1506,6 +1538,30 @@ const tableStyle = computed(() => {
   return _style
 })
 
+const footerStyle = computed(() => {
+  const _style = {}
+  if (footerCfg.value) {
+    const _config = config
+    const itemConfig = footerCfg.value
+    if (isNotBlank(itemConfig.width)) {
+      _style['width'] = `${itemConfig.width}${_config.unit}`
+    }
+    if (isNotBlank(itemConfig.height)) {
+      _style['height'] = `${itemConfig.height}${_config.unit}`
+    }
+    if (isNotBlank(itemConfig.size)) {
+      _style['font-size'] = `${itemConfig.size}${_config.fontUnit}`
+    }
+    if (isNotBlank(itemConfig.align)) {
+      _style['justify-content'] = setting.flexAlign(itemConfig.align)
+    }
+    if (isNotBlank(itemConfig.verticleAlign)) {
+      _style['align-items'] = setting.verticleAlign(itemConfig.verticleAlign)
+    }
+  }
+  return _style
+})
+
 const filterExampleTableData = computed(() => {
   let _tableData = []
   if (isNotBlank(tableData.value)) {
@@ -1545,7 +1601,7 @@ watch(
 )
 
 watch(
-  [() => footerCfg.value.bold, () => footerCfg.value.fields, () => footerCfg.value.tip],
+  () => footerCfg.value,
   () => {
     handleFooterHtmlChange()
   },
@@ -1559,6 +1615,8 @@ watch(
   },
   { deep: true }
 )
+
+fetchCompanyLogos()
 
 CRUD.HOOK.beforeToCU = () => {
   init()
@@ -1592,30 +1650,32 @@ function init() {
   config = Object.assign(config, baseConfig)
 }
 
-function exportXSLX() {
+async function exportXSLX() {
   let param = {
     header: headerData.value,
     table: JSON.parse(JSON.stringify(filterExampleTableData.value)),
     footer: footerData.value,
     qrCode: qrContent.value
   }
-  if (form.type && formatFn[form.type]) { // 数据装换
-    param = formatFn[form.type](param)
+  if (form.type && formatFn[form.type]) {
+    // 数据装换
+    param = await formatFn[form.type](param)
   }
   param.config = JSON.parse(JSON.stringify(config))
   downloadXLSX(param)
 }
 
 function clearTableWidth() {
-  tableCfg.value.fields && tableCfg.value.fields.forEach(field => {
-    field.width = undefined
-    field.minWidth = undefined
-  })
+  tableCfg.value.fields &&
+    tableCfg.value.fields.forEach((field) => {
+      field.width = undefined
+      field.minWidth = undefined
+    })
 }
 
 function tableAverageWidth(key = 'width') {
   let width = maxWidth.value
-  const fields = tableCfg.value.fields.filter(field => field.show)
+  const fields = tableCfg.value.fields.filter((field) => field.show)
   let borderNum = fields.length + 1
   if (tableCfg.value.index.show) {
     width -= tableCfg.value.index.width
@@ -1624,15 +1684,15 @@ function tableAverageWidth(key = 'width') {
   width -= px2lengthUnit(borderNum, config.unit, config.unitPrecision) + 2
   if (isNotBlank(fields)) {
     const fWidth = +(width / fields.length).toFloor(config.unitPrecision)
-    fields.forEach(field => {
+    fields.forEach((field) => {
       field[key] = fWidth
     })
   }
 }
 
 function imgDrag(event) {
-  config.qrCode.left = px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision)
-  config.qrCode.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
+  config.logo.left = px2lengthUnit(event.pageX - 70, config.unit, config.unitPrecision)
+  config.logo.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
 }
 
 function qrDrag(event) {
@@ -1640,21 +1700,35 @@ function qrDrag(event) {
   config.qrCode.top = px2lengthUnit(event.pageY - 100, config.unit, config.unitPrecision)
 }
 
-// function chooseLogo(img) {
-//   config.logo.url = img.path
-//   if (isBlank(logoCfg.value.width)) {
-//     config.logo.width = 20
-//   }
-//   if (isBlank(logoCfg.value.height)) {
-//     config.logo.height = 20
-//   }
-//   if (isBlank(logoCfg.value.top)) {
-//     config.logo.top = 10
-//   }
-//   if (isBlank(logoCfg.value.left)) {
-//     config.logo.left = 10
-//   }
-// }
+function chooseLogo(img) {
+  config.logo.url = img.path
+  if (isBlank(logoCfg.value.width)) {
+    config.logo.width = 20
+  }
+  if (isBlank(logoCfg.value.height)) {
+    config.logo.height = 20
+  }
+  if (isBlank(logoCfg.value.top)) {
+    config.logo.top = 10
+  }
+  if (isBlank(logoCfg.value.left)) {
+    config.logo.left = 10
+  }
+}
+
+async function fetchCompanyLogos() {
+  logoLoading.value = true
+  let _logos = []
+  try {
+    const { content = [] } = await getLogoConfig() || {}
+    _logos = content
+  } catch (error) {
+    console.log('error 获取公司logos', error)
+  } finally {
+    logos.value = _logos
+    logoLoading.value = false
+  }
+}
 
 function addTableField() {
   tableCfg.value.fields.push({
@@ -1708,8 +1782,8 @@ function rowDrop() {
     { el: footerFieldsTableRef.value, table: footerCfg.value?.fields }
   ]
   for (const dom of doms) {
-    if (dom.el) {
-      const tbody = dom.el.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+    if (dom.el.$refs['tableRef']) {
+      const tbody = dom.el.$refs['tableRef'].$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       Sortable.create(tbody, {
         onEnd: ({ newIndex, oldIndex }) => {
           const currRow = dom.table.splice(oldIndex, 1)[0]
@@ -1722,7 +1796,9 @@ function rowDrop() {
 
 function handleTemplateSelect(val) {
   // config = reactive(isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig)))
-  const _config = isNotBlank(val) ? setting.correctJSON(JSON.parse(JSON.stringify(val))) : setting.correctJSON(Object.assign({}, baseConfig))
+  const _config = isNotBlank(val)
+    ? setting.correctJSON(JSON.parse(JSON.stringify(val)))
+    : setting.correctJSON(Object.assign({}, baseConfig))
   Object.assign(config, { qrCode: {}, ..._config })
   setData()
   splicingHtml()
@@ -1765,15 +1841,16 @@ function setData() {
   }
 }
 
-function print() {
+async function print() {
   let param = {
     header: headerData.value,
     table: filterExampleTableData.value,
     footer: footerData.value,
     qrCode: qrContent.value
   }
-  if (form.type && formatFn[form.type]) { // 数据装换
-    param = formatFn[form.type](param)
+  if (form.type && formatFn[form.type]) {
+    // 数据装换
+    param = await formatFn[form.type](param)
   }
   param.printMode = printModeEnum.PREVIEW.V
   param.config = JSON.parse(JSON.stringify(config))
@@ -1828,35 +1905,35 @@ function handlePageHtmlChange() {
 </script>
 
 <style lang="scss">
-  .print-template-detail {
-    background: #f0f0f0;
-    .el-dialog__header {
-      padding-top:10px;
-      padding-bottom: 10px;
-      background-color: #5c93ce;
-      color: #FFFFFF;
-    }
-    .el-dialog__body {
-      padding: 15px 20px 0 20px;
-      box-sizing: border-box;
-    }
+.print-template-detail {
+  background: #f0f0f0;
+  .el-dialog__header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #5c93ce;
+    color: #ffffff;
   }
+  .el-dialog__body {
+    padding: 15px 20px 0 20px;
+    box-sizing: border-box;
+  }
+}
 </style>
 <style lang="scss" scoped>
 // 分隔符
 .delimiter {
   display: inline-flex;
   align-items: center;
-  >span {
+  > span {
     display: inline-flex;
     align-items: center;
-    height:30px;
+    height: 30px;
   }
-  >span+span{
+  > span + span {
     margin-left: 10px;
     position: relative;
-    &::before{
-      content:'';
+    &::before {
+      content: '';
       position: absolute;
       background-color: #dcdfe6;
       top: 7px;
@@ -1870,7 +1947,7 @@ function handlePageHtmlChange() {
   width: 100%;
   margin-left: 20px;
   margin-top: 20px;
-  display: flex!important;
+  display: flex !important;
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
@@ -1887,17 +1964,17 @@ function handlePageHtmlChange() {
     overflow: hidden;
     cursor: pointer;
     user-select: none;
-    +.logo-drawer {
-        margin-left: 10px;
+    + .logo-drawer {
+      margin-left: 10px;
     }
-    >.logo-img {
+    > .logo-img {
       width: 78px;
       height: 78px;
     }
   }
   .logo-select {
     background: #11b95c;
-    transform:  rotate(45deg);
+    transform: rotate(45deg);
     color: white;
     font-weight: 100;
     position: absolute;
@@ -1909,13 +1986,13 @@ function handlePageHtmlChange() {
     display: flex;
     justify-content: center;
     align-items: center;
-    >.el-icon-check {
+    > .el-icon-check {
       transform: rotate(-45deg);
     }
   }
   .logo-default {
     background: #ff4949;
-    transform:  rotate(-45deg);
+    transform: rotate(-45deg);
     color: white;
     font-weight: 100;
     position: absolute;
@@ -1930,279 +2007,280 @@ function handlePageHtmlChange() {
   }
 }
 
-  ::v-deep(.el-table__placeholder) {
-    width: 0;
-  }
+::v-deep(.el-table__placeholder) {
+  width: 0;
+}
 
- ::v-deep(.el-button--info) {
-    color: #fff;
-    background-color: #dcdfe6;
-    border-color: #c0c4cc;
+::v-deep(.el-button--info) {
+  color: #fff;
+  background-color: #dcdfe6;
+  border-color: #c0c4cc;
+}
+.input-border-none {
+  ::v-deep(.el-input__inner) {
+    padding-left: 0;
+    background-color: unset;
   }
-  .input-border-none {
-    ::v-deep(.el-input__inner) {
-      padding-left: 0;
-      background-color: unset;
-    }
+}
+.input-center {
+  ::v-deep(.el-input__inner) {
+    text-align: center;
+    padding-right: 0;
   }
-  .input-center {
-    ::v-deep(.el-input__inner) {
-      text-align: center;
-      padding-right: 0;
-    }
+}
+.input-padding-right-0 {
+  ::v-deep(.el-input__inner) {
+    padding-right: 0;
   }
-  .input-padding-right-0 {
-    ::v-deep(.el-input__inner) {
-      padding-right: 0;
-    }
+}
+.input-number-center {
+  ::v-deep(.el-input__inner) {
+    text-align: center !important;
+    padding-right: 30px;
   }
-  .input-number-center {
-    ::v-deep(.el-input__inner) {
-      text-align: center!important;
-      padding-right: 30px;
-    }
-  }
-  ::v-deep(.el-input-number.is-controls-right .el-input__inner) {
-    text-align: left;
-  }
+}
+::v-deep(.el-input-number.is-controls-right .el-input__inner) {
+  text-align: left;
+}
 
-  .print-template-title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    >span {
-      font-size: 18px;
-    }
-    // .el-button+.el-button {
-    //   margin-left: 0;
-    // }
-    .config-item-box {
-      margin-right: 15px;
-    }
-    .zoom-select {
-      width:100px;
-      margin-right:10px;
-      ::v-deep(.el-input__inner) {
-        border: none;
-        background-color:#e8f4ff;
-      }
+.print-template-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  > span {
+    font-size: 18px;
+  }
+  // .el-button+.el-button {
+  //   margin-left: 0;
+  // }
+  .config-item-box {
+    margin-right: 15px;
+  }
+  .zoom-select {
+    width: 100px;
+    margin-right: 10px;
+    ::v-deep(.el-input__inner) {
+      border: none;
+      background-color: #e8f4ff;
     }
   }
-  .dialog-middle {
-    width: inherit;
-    height: calc(100vh - 70px);
+}
+.dialog-middle {
+  width: inherit;
+  height: calc(100vh - 70px);
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  // flex-wrap: wrap;
+  .middle-right {
+    min-width: 600px;
+    max-height: calc(100% - 10px);
     overflow: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    // flex-wrap: wrap;
-    .middle-right {
-      min-width: 600px;
-      max-height: calc(100% - 10px);
-      overflow: auto;
-      width: min-content;
-      flex: 1 0 auto;
-      margin: 0 10px 10px 10px;
-      .form-card{
-        position: relative;
-        box-sizing: border-box;
-        padding: 20px 35px;
-        width: 100%;
-        background-color: #FFFFFF;
-        &:hover {
-          box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-        }
-        .el-form-item--small.el-form-item {
-            padding: 10px 0;
-            margin-bottom: 0;
-        }
-        +.form-card{
-          margin-top: 10px;
-        }
-        +.form-cards {
-          margin-top: 10px;
-        }
-        .text-setting {
-          margin:10px 10px 10px 20px
-        }
+    width: min-content;
+    flex: 1 0 auto;
+    margin: 0 10px 10px 10px;
+    .form-card {
+      position: relative;
+      box-sizing: border-box;
+      padding: 20px 35px;
+      width: 100%;
+      background-color: #ffffff;
+      &:hover {
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       }
-      .form-cards{
-        +.form-card{
-          margin-top: 10px;
-        }
-        +.form-cards {
-          margin-top: 10px;
-        }
+      .el-form-item--small.el-form-item {
+        padding: 10px 0;
+        margin-bottom: 0;
       }
-      .form-card-inline-block{
-        >div.el-form-item {
-          display: inline-flex;
-        }
+      + .form-card {
+        margin-top: 10px;
+      }
+      + .form-cards {
+        margin-top: 10px;
+      }
+      .text-setting {
+        margin: 10px 10px 10px 20px;
       }
     }
-    .middle-left {
-      /* font-feature-settings: 'onum' 1; */
-      max-width: 70%;
-      margin-bottom: 10px;
-      color: #333;
-      max-height: calc(100% - 10px);
-      overflow: auto;
-      flex: 0 1 auto;
-      padding: 0 10px;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      font-family: AvenirNext,Avenir,-apple-system,BlinkMacSystemFont,Roboto Slab,Droid Serif,Segoe UI,Oxygen-Sans,Ubuntu,Cantarell,Georgia,serif;
-      .content {
-        overflow: hidden;
-        transform-origin: 0 0 0; /*以左上角为起点 */
+    .form-cards {
+      + .form-card {
+        margin-top: 10px;
+      }
+      + .form-cards {
+        margin-top: 10px;
+      }
+    }
+    .form-card-inline-block {
+      > div.el-form-item {
+        display: inline-flex;
+      }
+    }
+  }
+  .middle-left {
+    /* font-feature-settings: 'onum' 1; */
+    max-width: 70%;
+    margin-bottom: 10px;
+    color: #333;
+    max-height: calc(100% - 10px);
+    overflow: auto;
+    flex: 0 1 auto;
+    padding: 0 10px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: AvenirNext, Avenir, -apple-system, BlinkMacSystemFont, Roboto Slab, Droid Serif, Segoe UI, Oxygen-Sans, Ubuntu, Cantarell,
+      Georgia, serif;
+    .content {
+      overflow: hidden;
+      transform-origin: 0 0 0; /*以左上角为起点 */
+      box-sizing: border-box;
+      background-color: #ffffff;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
+      user-select: none;
+      .table-type-tip {
+        font-weight: bold;
+        font-size: 20px;
+        color: #ff4949;
+      }
+      > div {
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         box-sizing: border-box;
-        background-color: #FFFFFF;
-        box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
-        user-select: none;
-        .table-type-tip {
-          font-weight:bold;
-          font-size:20px;
-          color:#ff4949;
+        &:hover {
+          background-color: #f5f5f5;
+          border-radius: 5px;
+          border: 1px dotted #333;
         }
-        >div {
-          cursor: pointer;
-          border: 1px solid rgba(255,255,255,0.1);
-          box-sizing: border-box;
-          &:hover {
-              background-color: #f5f5f5;
-              border-radius: 5px;
-              border: 1px dotted #333;
-          }
-        }
-        .logo-info {
-          position: absolute;
-          border:none;
-        }
-        // 标题
-        .title-info {
-          display: flex;
-          justify-content: center;
-          align-items: flex-start;
-          width: 100%;
-          box-sizing: border-box;
-          text-align: center;
-          font-size: 17pt;
-          font-weight: bold;
-        }
-        // 表头信息
-        .header-info {
-          font-family: lucida sans unicode,lucida grande,Sans-Serif;
-          overflow: hidden;
-          width: 100%;
-          box-sizing: content-box;
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: center;
-          flex-wrap: wrap;
-          line-height: 1.15;
-        }
-        ::v-deep(.header-info >div) {
+      }
+      .logo-info {
+        position: absolute;
+        border: none;
+      }
+      // 标题
+      .title-info {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        font-size: 17pt;
+        font-weight: bold;
+      }
+      // 表头信息
+      .header-info {
+        font-family: lucida sans unicode, lucida grande, Sans-Serif;
+        overflow: hidden;
+        width: 100%;
+        box-sizing: content-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        line-height: 1.15;
+      }
+      ::v-deep(.header-info > div) {
+        display: inline-block;
+        margin: 1mm 0;
+        // padding-right: 5mm;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      // footer
+      .footer-info {
+        font-family: lucida sans unicode, lucida grande, Sans-Serif;
+        overflow: hidden;
+        width: 100%;
+        box-sizing: content-box;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        ::v-deep(.tip) {
           display: inline-block;
-          margin: 1mm 0;
-          // padding-right: 5mm;
-          box-sizing: border-box;
-          overflow : hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        // footer
-        .footer-info{
-          font-family: lucida sans unicode,lucida grande,Sans-Serif;
-          overflow: hidden;
-          width: 100%;
-          box-sizing: content-box;
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-start;
-          align-items: center;
-          flex-wrap: wrap;
-          ::v-deep(.tip) {
-            display: inline-block;
-            white-space: pre-line;
-            width: 100%;
-            margin: 1mm 0;
-            font-size: 9pt;
-            color: red;
-          }
-        }
-        ::v-deep(.footer-info >div) {
-          display: inline-block;
-          margin: 1mm 0;
-          // padding-right: 5mm;
-          box-sizing: border-box;
-          overflow : hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        // 表格
-        .table-info {
-          box-sizing: border-box;
-          overflow: hidden;
+          white-space: pre-line;
           width: 100%;
           margin: 1mm 0;
-          ::v-deep(.preview-table) {
-            font-family: lucida sans unicode,lucida grande,Sans-Serif;
-            font-size: 9pt;
-            border-collapse: collapse;
-            width: 100%;
-            .blank-column {
+          font-size: 9pt;
+          color: red;
+        }
+      }
+      ::v-deep(.footer-info > div) {
+        display: inline-block;
+        margin: 1mm 0;
+        // padding-right: 5mm;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      // 表格
+      .table-info {
+        box-sizing: border-box;
+        overflow: hidden;
+        width: 100%;
+        margin: 1mm 0;
+        ::v-deep(.preview-table) {
+          font-family: lucida sans unicode, lucida grande, Sans-Serif;
+          font-size: 9pt;
+          border-collapse: collapse;
+          width: 100%;
+          .blank-column {
+            min-width: 0;
+            border: 1px dashed;
+            > div {
+              display: inline-block;
               min-width: 0;
-              border: 1px dashed;
-              >div{
-                display: inline-block;
-                min-width: 0;
-              }
             }
           }
-          ::v-deep(.preview-table th) {
-              padding:0;
-              line-height: 15pt;
-              border:1px solid #000;
-              >div {
-                padding: 0 1mm;
-                box-sizing: border-box;
-                min-height: 3mm;
-              }
-          }
-          ::v-deep(.preview-table td) {
-              padding:0;
-              border:1px solid #000;
-              line-height:13pt;
-              white-space: pre-wrap;
-              >div {
-                padding: 0 1mm;
-                box-sizing: border-box;
-                min-height: 3mm;
-              }
-          }
-          ::v-deep(.preview-table tbody tr:last-child) {
-            border-bottom:none
+        }
+        ::v-deep(.preview-table th) {
+          padding: 0;
+          line-height: 15pt;
+          border: 1px solid #000;
+          > div {
+            padding: 0 1mm;
+            box-sizing: border-box;
+            min-height: 3mm;
           }
         }
-        .qr-info {
-          position: absolute;
-          canvas {
-            width: 100%!important;
-            height: 100%!important;
+        ::v-deep(.preview-table td) {
+          padding: 0;
+          border: 1px solid #000;
+          line-height: 13pt;
+          white-space: pre-wrap;
+          > div {
+            padding: 0 1mm;
+            box-sizing: border-box;
+            min-height: 3mm;
           }
         }
-        .page-info {
-          box-sizing: border-box;
-          width: 100%;
-          position: absolute;
-          bottom: 0;
-          left: 0;
+        ::v-deep(.preview-table tbody tr:last-child) {
+          border-bottom: none;
         }
+      }
+      .qr-info {
+        position: absolute;
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
+      }
+      .page-info {
+        box-sizing: border-box;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
       }
     }
   }
+}
 </style>

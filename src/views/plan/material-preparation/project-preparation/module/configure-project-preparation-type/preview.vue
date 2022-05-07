@@ -4,51 +4,67 @@
     title="变更详情"
     append-to-body
     v-model="dialogVisible"
-    width="900px"
+    width="1200px"
     :before-close="handleClose"
     :top="'5vh'"
   >
     <template #titleRight>
       <common-button :loading="loading" :disabled="isBlank(modifiedList)" type="primary" size="mini" @click="submit">保 存</common-button>
     </template>
-    <common-table :data="modifiedList" :max-height="maxHeight" empty-text="未做改动" row-key="id">
+    <common-table :data="modifiedList" :max-height="maxHeight" return-source-data empty-text="未做改动" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column label="项目" align="left">
         <template #default="{ row }">
           <span v-parse-project="{ project: row }" v-empty-text />
         </template>
       </el-table-column>
-      <el-table-column label="是否无清单备料" align="center" width="140">
-        <template v-slot="scope">
-          <cell-change-preview :old="scope.row.sourceWithoutList" :new="scope.row.withoutList" :enum="whetherEnum" />
-        </template>
+      <el-table-column label="结构" align="center">
+        <el-table-column label="备料范围" align="center" width="120">
+          <template v-slot="scope">
+            <cell-change-preview
+              :old="scope.row.sourceStrucPreparationRangeType"
+              :new="scope.row.strucPreparationRangeType"
+              :enum="preparationRangeEnum"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="无清单备料" align="center" width="120">
+          <template v-slot="scope">
+            <cell-change-preview :old="scope.row.sourceStrucWithoutList" :new="scope.row.strucWithoutList" :enum="whetherEnum" />
+          </template>
+        </el-table-column>
       </el-table-column>
-      <el-table-column label="“结构”备料范围" align="center" width="140">
-        <template v-slot="scope">
-          <cell-change-preview
-            :old="scope.row.sourceStrucPreparationRangeType"
-            :new="scope.row.strucPreparationRangeType"
-            :enum="preparationRangeEnum"
-          />
-        </template>
+      <el-table-column label="围护" align="center">
+        <el-table-column label="备料范围" align="center" width="120">
+          <template v-slot="scope">
+            <cell-change-preview
+              :old="scope.row.sourceEnclPreparationRangeType"
+              :new="scope.row.enclPreparationRangeType"
+              :enum="preparationRangeEnum"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="无清单备料" align="center" width="120">
+          <template v-slot="scope">
+            <cell-change-preview :old="scope.row.sourceEnclWithoutList" :new="scope.row.enclWithoutList" :enum="whetherEnum" />
+          </template>
+        </el-table-column>
       </el-table-column>
-      <el-table-column label="“围护”备料范围" align="center" width="140">
-        <template v-slot="scope">
-          <cell-change-preview
-            :old="scope.row.sourceEnclPreparationRangeType"
-            :new="scope.row.enclPreparationRangeType"
-            :enum="preparationRangeEnum"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="“辅材”备料范围" align="center" width="140">
-        <template v-slot="scope">
-          <cell-change-preview
-            :old="scope.row.sourceAuxPreparationRangeType"
-            :new="scope.row.auxPreparationRangeType"
-            :enum="preparationRangeEnum"
-          />
-        </template>
+      <el-table-column label="辅材" align="center">
+        <el-table-column label="备料范围" align="center" width="120">
+          <template v-slot="scope">
+            <cell-change-preview
+              :old="scope.row.sourceAuxPreparationRangeType"
+              :new="scope.row.auxPreparationRangeType"
+              :enum="preparationRangeEnum"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="无清单备料" align="center" width="120">
+          <template v-slot="scope">
+            <cell-change-preview :old="scope.row.sourceAuxWithoutList" :new="scope.row.auxWithoutList" :enum="whetherEnum" />
+          </template>
+        </el-table-column>
       </el-table-column>
     </common-table>
   </common-dialog>
@@ -100,6 +116,9 @@ async function submit() {
     const details = modifiedList.value.map((v) => {
       return {
         id: v.id,
+        strucWithoutList: v.strucWithoutList,
+        enclWithoutList: v.enclWithoutList,
+        auxWithoutList: v.auxWithoutList,
         strucPreparationRangeType: v.strucPreparationRangeType,
         enclPreparationRangeType: v.enclPreparationRangeType,
         auxPreparationRangeType: v.auxPreparationRangeType

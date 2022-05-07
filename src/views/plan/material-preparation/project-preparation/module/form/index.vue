@@ -1,6 +1,7 @@
 <template>
   <common-drawer
     ref="drawerRef"
+    v-bind="$attrs"
     :visible="drawerVisible"
     :before-close="crud.cancelCU"
     :title="title"
@@ -35,18 +36,23 @@
                 type="enum"
                 size="mini"
               />
-              <el-tag class="info-tag filter-item" effect="plain" type="info">
-                清单汇总量：
-                <span v-to-fixed="{ val: crud.props.listTotalMete || 0, k: 'COM_WT__KG' }" /> kg
-              </el-tag>
-              <el-tag class="info-tag filter-item" effect="plain" type="success">
-                库存利用量：
-                <span v-to-fixed="{ val: crud.props.inventoryTotalMete || 0, k: 'COM_WT__KG' }" /> kg
-              </el-tag>
-              <el-tag class="info-tag filter-item" effect="plain" type="warning">
-                需要采购量：
-                <span v-to-fixed="{ val: crud.props.purchaseTotalMete || 0, k: 'COM_WT__KG' }" /> kg
-              </el-tag>
+              <div class="filter-item">
+                <el-checkbox v-model="queryFilter.showOnlySelectTechInfo" label="只显示选中的清单的备料信息" size="mini" border />
+              </div>
+              <template v-if="crud.form.materialBasicClass & STEEL_ENUM">
+                <el-tag class="info-tag filter-item" effect="plain" type="info">
+                  清单汇总量：
+                  <span v-to-fixed="{ val: crud.props.listTotalMete || 0, k: 'COM_WT__KG' }" /> kg
+                </el-tag>
+                <el-tag class="info-tag filter-item" effect="plain" type="success">
+                  库存利用量：
+                  <span v-to-fixed="{ val: crud.props.inventoryTotalMete || 0, dp: STEEL_BASE_UNIT.weight.precision }" /> kg
+                </el-tag>
+                <el-tag class="info-tag filter-item" effect="plain" type="warning">
+                  需要采购量：
+                  <span v-to-fixed="{ val: crud.props.purchaseTotalMete || 0, dp: STEEL_BASE_UNIT.weight.precision }" /> kg
+                </el-tag>
+              </template>
             </div>
             <div class="filter-right-box">
               <common-button
@@ -55,7 +61,7 @@
                 type="success"
                 size="mini"
                 :disabled="!selectTechnologyRow"
-                @click="handleAddPurchaseMaterial"
+                @click="openAddPurchaseMaterialDlg"
               >
                 新增材料
               </common-button>
@@ -63,18 +69,24 @@
           </div>
           <div class="preparation-info flex-rss">
             <div class="preparation-table-list">
-              <el-form ref="formRef" :model="form" size="small" label-position="top" inline label-width="200px">
-                <inventory-table
-                  ref="inventoryTableRef"
-                  :show="preparationListType === preparationListTypeEnum.INVENTORY_LIST.V"
-                  :height="maxHeight"
-                />
-                <purchase-table
-                  ref="purchaseTableRef"
-                  :show="preparationListType === preparationListTypeEnum.PURCHASE_LIST.V"
-                  :height="maxHeight"
-                />
-              </el-form>
+              <div class="table-wrapper">
+                <el-form ref="formRef" :model="form" size="small" label-position="top" inline label-width="200px">
+                  <inventory-table
+                    ref="inventoryTableRef"
+                    :show="preparationListType === preparationListTypeEnum.INVENTORY_LIST.V"
+                    :current-tech-row="selectTechnologyRow"
+                    :query-filter="queryFilter"
+                    :height="maxHeight"
+                  />
+                  <purchase-table
+                    ref="purchaseTableRef"
+                    :show="preparationListType === preparationListTypeEnum.PURCHASE_LIST.V"
+                    :current-tech-row="selectTechnologyRow"
+                    :query-filter="queryFilter"
+                    :height="maxHeight"
+                  />
+                </el-form>
+              </div>
             </div>
             <div class="preparation-remark-info" :style="heightStyle">
               <el-input
@@ -102,17 +114,29 @@
       </div>
     </template>
   </common-drawer>
+  <purchase-material-add-dlg
+    v-model="addPurchaseMaterialDlgVisible"
+    :technology-row="selectTechnologyRow"
+    @success="handleAddPurchaseMaterial"
+  />
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
+import { STEEL_BASE_UNIT, STEEL_ENUM } from '@/settings/config'
+import { createUniqueString } from '@/utils/data-type/string'
+import { preparationSubmitDTO } from '@/views/plan/material-preparation/dto'
 
 import { regForm } from '@compos/use-crud'
+import useMaxHeight from '@/composables/use-max-height'
 import ListAndMatch from './list-and-match'
 import inventoryTable from './inventory-table.vue'
 import purchaseTable from './purchase-table.vue'
-import useMaxHeight from '@/composables/use-max-height'
-import { createUniqueString } from '@/utils/data-type/string'
+import purchaseMaterialAddDlg from './purchase-material-add/dialog.vue'
+import { componentTypeEnum } from '@/utils/enum/modules/building-steel'
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import cloneDeep from 'lodash/cloneDeep'
 
 // 备料清单选项
 const preparationListTypeEnum = {
@@ -134,20 +158,32 @@ const formRef = ref()
 const inventoryTableRef = ref()
 // 需要采购清单ref
 const purchaseTableRef = ref()
+// 采购添加
+const addPurchaseMaterialDlgVisible = ref(false)
 // crud
 const { CRUD, crud, form } = regForm(void 0, formRef)
 // drawer 显示
 const drawerVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
+// 查询条件
+const queryFilter = ref({
+  showOnlySelectTechInfo: false
+})
+
+// 高度
+const { maxHeight, heightStyle } = useMaxHeight(
+  {
+    mainBox: '.project-preparation-form',
+    extraBox: ['.el-drawer__header', '.head', '.middle-head'],
+    wrapperBox: ['.el-drawer__body'],
+    navbar: false,
+    clientHRepMainH: true
+  },
+  drawerVisible
+)
 
 // 初始化表单
-CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
-  form.technologyList = form.technologyList || []
-  form.technologyList.forEach((tRow) => {
-    tRow.id = createUniqueString() // 唯一编号
-    tRow.boundInvIds = [] // 绑定库存利用清单
-    tRow.boundPurIds = [] // 绑定需要采购清单
-    crud.props.listTotalMete += tRow.listMete
-  })
+CRUD.HOOK.beforeEditDetailLoaded = async (crud, form) => {
+  await handleDetailForTechnologyList(crud, form)
 }
 
 CRUD.HOOK.beforeToEdit = (crud, form) => {
@@ -166,9 +202,16 @@ CRUD.HOOK.beforeToEdit = (crud, form) => {
   listUploaderNames.value = form.listUploaderNames
 }
 
+CRUD.HOOK.beforeValidateCU = (crud, form) => {
+  const invResult = inventoryTableRef.value.validate()
+  if (!invResult) return false
+  const purResult = purchaseTableRef.value.validate()
+  return purResult
+}
+
 // 表单提交数据清理
-crud.submitFormFormat = (form) => {
-  return form
+crud.submitFormFormat = async (form) => {
+  return await preparationSubmitDTO(form)
 }
 
 // 初始化
@@ -176,38 +219,57 @@ function init() {
   title.value = '备料'
   selectTechnologyRow.value = undefined
   listUploaderNames.value = ''
+  preparationListType.value = preparationListTypeEnum.INVENTORY_LIST.V
+  queryFilter.value = {
+    showOnlySelectTechInfo: false
+  }
   crud.props.techPrepMeteKV = {}
   crud.props.listTotalMete = 0
   crud.props.inventoryTotalMete = 0
   crud.props.purchaseTotalMete = 0
 }
 
+// 处理详情的技术清单
+async function handleDetailForTechnologyList(crud, form) {
+  form.technologyList = form.technologyList || []
+  form.sourceTechnologyList = cloneDeep(form.technologyList)
+  form.technologyList.forEach((tRow) => {
+    tRow.id = tRow.id || createUniqueString() // 唯一编号
+    tRow.boundInvIds = [] // 绑定库存利用清单
+    tRow.boundPurIds = [] // 绑定需要采购清单
+    // 辅材不需要计算汇总量
+    if (form.technologyListType !== componentTypeEnum.AUXILIARY_MATERIAL.V) {
+      crud.props.listTotalMete += tRow.listMete
+    }
+  })
+  // 辅材，进行数据转换
+  if (form.technologyListType === componentTypeEnum.AUXILIARY_MATERIAL.V) {
+    await setSpecInfoToList(form.technologyList)
+    await numFmtByBasicClass(form.technologyList, {
+      toNum: true
+    })
+  }
+}
+
 // 处理“添加”库存利用材料
 function handleAddInventoryMaterial(row, technologyRow) {
-  inventoryTableRef.value && inventoryTableRef.value.add(row, technologyRow)
+  inventoryTableRef.value && inventoryTableRef.value.add({ material: row }, technologyRow)
 }
 
 // 处理“添加”采购材料
-function handleAddPurchaseMaterial(row) {
-  purchaseTableRef.value && purchaseTableRef.value.add(row)
+function handleAddPurchaseMaterial(row, technologyRow) {
+  purchaseTableRef.value && purchaseTableRef.value.add({ material: row }, technologyRow)
+}
+
+// 打开添加采购物料窗口
+function openAddPurchaseMaterialDlg() {
+  addPurchaseMaterialDlgVisible.value = true
 }
 
 // 处理“选中”清单汇总记录
 function handleSelectedChange(row) {
   selectTechnologyRow.value = row
 }
-
-// 高度
-const { maxHeight, heightStyle } = useMaxHeight(
-  {
-    mainBox: '.project-preparation-form',
-    extraBox: ['.el-drawer__header', '.head', '.middle-head'],
-    wrapperBox: ['.el-drawer__body'],
-    navbar: false,
-    clientHRepMainH: true
-  },
-  drawerVisible
-)
 </script>
 
 <style lang="scss" scoped>
@@ -218,6 +280,7 @@ const { maxHeight, heightStyle } = useMaxHeight(
   .middle {
     .middle-head {
       width: calc(100% - 320px);
+      height: 39px;
     }
     .preparation-info {
       width: 100%;
@@ -227,6 +290,15 @@ const { maxHeight, heightStyle } = useMaxHeight(
     }
     .preparation-table-list {
       flex: auto;
+      position: relative;
+      width: 100%;
+
+      .table-wrapper {
+        width: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
     }
     .preparation-remark-info {
       padding-left: 20px;

@@ -12,6 +12,8 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      @sort-change="crud.handleSortChange"
+      @selection-change="crud.selectionChangeHandler"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
@@ -27,6 +29,7 @@
           </p>
         </template>
       </el-expand-table-column>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('purchaseSN')"

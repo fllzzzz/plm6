@@ -27,6 +27,8 @@
         ref="tableRef"
         v-loading="tableLoading"
         :summary-method="getSummaries"
+        return-source-data
+        :show-empty-symbol="false"
         show-summary
         :data="showList"
         :max-height="maxHeight"
@@ -92,6 +94,7 @@ import handleOperation from '../components/handle-operation.vue'
 import mPreview from './production-preview.vue'
 import itemDetailInfo from '@/views/mes/changed-manage/common-change/components/item-detail-info'
 import belongingInfoColumns from '@comp-mes/table-columns/belonging-info-columns'
+import { isBlank } from '@/utils/data-type'
 
 const tableRef = ref()
 const drawerRef = ref()
@@ -143,6 +146,7 @@ async function fetchList() {
     const { reportList, limitList, quantity } = await exceptionList({
       id: props.info?.id
     })
+    totalHandleQuantity.value = quantity
     for (let i = 0; i < limitList.length; i++) {
       const _i = limitList[i]
       processLimitObj.value[_i.taskId] = {}
@@ -151,14 +155,13 @@ async function fetchList() {
         processLimitObj.value[_i.taskId][parseInt(processId)] = quantity || 0
       }
     }
-    list.value = reportList.map((v) => {
+    list.value = reportList && reportList.map((v) => {
       v.reportTypeText = abnormalReportTypeEnum.VL[v.reportType]
       const limitQuantity = (processLimitObj.value[v.taskId] && processLimitObj.value[v.taskId][parseInt(v.processId)]) || 0
       v.canHandleQuantity = Math.min(limitQuantity, v.quantity)
       return v
     })
     showList.value = list.value
-    totalHandleQuantity.value = quantity
   } catch (error) {
     console.log('获取处理列表失败')
   } finally {
@@ -184,8 +187,23 @@ const remainHandleQuantity = computed(() => {
   return totalHandleQuantity.value - alreadyHandleQuantity.value
 })
 
+const alreadyHandleProcessObj = computed(() => {
+  return list.value.reduce((pre, curr) => {
+    if (isBlank(pre[curr.taskId])) pre[curr.taskId] = {}
+    if (isBlank(pre[curr.taskId][curr.processId])) pre[curr.taskId][curr.processId] = 0
+    if (curr.dealQuantity) {
+      pre[curr.taskId][curr.processId] += curr.dealQuantity
+      return pre
+    } else {
+      return pre
+    }
+  }, {})
+})
+
 function getMax(row) {
-  return Math.min(row.canHandleQuantity, remainHandleQuantity.value + (row.dealQuantity || 0))
+  const limit = processLimitObj.value[row.taskId] && processLimitObj.value[row.taskId][row.processId] || 0
+  const handleLimit = alreadyHandleProcessObj.value[row.taskId][row.processId]
+  return Math.min(row.canHandleQuantity, remainHandleQuantity.value + (row.dealQuantity || 0), (limit - handleLimit + (row.dealQuantity || 0)))
 }
 
 function previewIt() {

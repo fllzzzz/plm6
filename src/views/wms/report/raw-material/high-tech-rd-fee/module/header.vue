@@ -47,9 +47,12 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
+      <!-- 打印 -->
       <template #optLeft>
         <common-button type="primary" size="mini" @click="rdFeeConfVisible = true">查看/设置高新研发费占比</common-button>
+        <export-button v-permission="permission.get" :params="query" :fn="exportExcel" response-header-result>
+          下载高新研发费报表（根据查询条件）
+        </export-button>
       </template>
       <template #viewLeft>
         <div class="flex-rcc child-mr-7">
@@ -67,17 +70,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { exportExcel } from '@/api/wms/report/raw-material/high-tech-rd-fee'
+import { inject, ref } from 'vue'
 import { rawMatClsEnum } from '@/utils/enum/modules/classification'
 
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation.vue'
-import { projectWarehouseTypeEnum } from '@/utils/enum/modules/wms'
-import { mapGetters } from '@/store/lib'
 
 import MaterialCascader from '@comp-cls/material-cascader/index.vue'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+import ExportButton from '@comp-common/export-button/index.vue'
 import highTechRdFeeConfView from '@/views/config-manage/wms/high-tech-rd-fee/index.vue'
 
 const defaultQuery = {
@@ -87,6 +90,8 @@ const defaultQuery = {
   projectWarehouseType: undefined, // 仓库类型
   basicClass: undefined // 基础类型
 }
+
+const permission = inject('permission')
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0)])
 
 // 高新研发费总额
@@ -95,28 +100,6 @@ const rdFeeForYear = ref()
 const rdFeeConfVisible = ref(false)
 
 const { CRUD, crud, query } = regHeader(defaultQuery)
-
-// 全局项目id
-const { globalProjectId } = mapGetters('globalProjectId')
-
-// 选中项目库时， 根据项目id的变化刷新列表
-watch(
-  globalProjectId,
-  () => {
-    if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-      crud.toQuery()
-    }
-  },
-  { immediate: true }
-)
-
-CRUD.HOOK.beforeToQuery = () => {
-  if (crud.query.projectWarehouseType === projectWarehouseTypeEnum.PROJECT.V) {
-    crud.query.projectId = globalProjectId.value || undefined
-  } else {
-    crud.query.projectId = undefined
-  }
-}
 
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {
   rdFeeForMonth.value = data.rdFeeForMonth

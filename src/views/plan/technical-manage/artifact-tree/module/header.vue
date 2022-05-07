@@ -7,13 +7,13 @@
         :project-id="props.projectId"
         class="filter-item"
         :productType="TechnologyTypeAllEnum.STRUCTURE.V"
-        :show-tips="areaInfo.length<=0"
+        :show-tips="areaInfo.length <= 0"
         @getAreaInfo="getAreaInfo"
         @change="monomerChange"
       />
       <area-tabs
         class="filter-item"
-        :style="areaInfo.length>0?'width:calc(100% - 230px)':'width:calc(100% - 380px)'"
+        :style="areaInfo.length > 0 ? 'width:calc(100% - 230px)' : 'width:calc(100% - 380px)'"
         v-model="query.areaId"
         :area-info="areaInfo"
         :default-tab="defaultTab"
@@ -71,44 +71,52 @@
           v-if="currentArea && currentArea.id && checkPermission(crud.permission.download)"
           :fn="downloadArtifactTree"
           :params="carryParam"
-          show-btn-text
-          btn-text="零构件清单(按构件条件查询)"
           class="filter-item"
-          :disabled="crud.data.length===0"
-        />
-        <export-button :fn="downloadArtifactTreeTemplate" show-btn-text btn-text="零构件清单模板" class="filter-item" v-permission="crud.permission.templateDownload"/>
-        <el-popconfirm :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`" @confirm="deleteArtifact" v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)">
+          :disabled="crud.data.length === 0"
+        >
+          零构件清单(按构件条件查询)
+        </export-button>
+        <export-button :fn="downloadArtifactTreeTemplate" class="filter-item" v-permission="crud.permission.templateDownload">
+          零构件清单模板
+        </export-button>
+        <el-popconfirm
+          :title="`确认清空【${currentArea.name}】下的【零构件清单】么?`"
+          @confirm="deleteArtifact"
+          v-if="currentArea && currentArea.id && checkPermission(crud.permission.del)"
+        >
           <template #reference>
-            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length===0">一键清空(按区域)</common-button>
+            <common-button type="danger" size="mini" :loading="deleteLoading" class="filter-item" :disabled="crud.data.length === 0">
+              一键清空(按区域)
+            </common-button>
           </template>
         </el-popconfirm>
       </template>
       <template #viewLeft>
-        <el-tooltip
-          effect="light"
-          :content="`${mismatchList.join(',')}`"
-          placement="top"
-        >
+        <el-tooltip effect="light" :content="`${mismatchList.join(',')}`" placement="top">
           <div class="filter-item">
-            <el-tag v-if="mismatchList.length>0" type="danger" class="filter-item" effect="plain">本区域下存在{{ mismatchList.length }}条错误数据,鼠标悬停查看</el-tag>
+            <el-tag v-if="mismatchList.length > 0" type="danger" class="filter-item" effect="plain">
+              本区域下存在{{ mismatchList.length }}条错误数据,鼠标悬停查看
+            </el-tag>
           </div>
         </el-tooltip>
-        <common-button type="primary" size="mini" @click="techVisible=true" v-if="checkPermission(crud.permission.techDetail)">技术交底</common-button>
+        <common-button type="primary" size="mini" @click="techVisible = true" v-if="checkPermission(crud.permission.techDetail)">
+          技术交底
+        </common-button>
       </template>
     </crudOperation>
     <common-drawer
       append-to-body
-      :before-close="()=>{techVisible=false}"
+      :before-close="
+        () => {
+          techVisible = false
+        }
+      "
       :visible="techVisible"
       title="技术交底(结构)"
       size="80%"
     >
       <template #content>
-       <structureTable
-        :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]"
-        :is-show="true"
-        style="margin-top:20px;"
-      />
+        <structureTable :table-data="tableData[TechnologyTypeAllEnum.STRUCTURE.V]" :is-show="true" style="margin-top: 20px" />
       </template>
     </common-drawer>
   </div>
@@ -125,7 +133,12 @@ import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/artifact-tree'
 import ExportButton from '@comp-common/export-button/index.vue'
 import { TechnologyTypeAllEnum } from '@enum-ms/contract'
-import { downloadArtifactTree, downloadArtifactTreeTemplate, errorArtifact, delArtifactTreeByArea } from '@/api/plan/technical-manage/artifact-tree'
+import {
+  downloadArtifactTree,
+  downloadArtifactTreeTemplate,
+  errorArtifact,
+  delArtifactTreeByArea
+} from '@/api/plan/technical-manage/artifact-tree'
 import { getContractTechInfo } from '@/api/contract/project'
 import { isNotBlank } from '@data-type/index'
 import checkPermission from '@/utils/system/check-permission'
@@ -191,7 +204,7 @@ function monomerChange() {
     const val = monomerSelectRef.value.getOption(query.monomerId) || {}
     if (isNotBlank(val)) {
       if (val.areaSimpleList && val.areaSimpleList.length > 0) {
-        areaArr = val.areaSimpleList.filter(v => v.productType === TechnologyTypeAllEnum.STRUCTURE.V)
+        areaArr = val.areaSimpleList.filter((v) => v.productType === TechnologyTypeAllEnum.STRUCTURE.V)
       }
     }
   }
@@ -227,7 +240,7 @@ async function getErrorArtifactData() {
   try {
     const { content } = await errorArtifact({ areaId: crud.query.areaId })
     if (content && content.length > 0) {
-      content.map(v => {
+      content.map((v) => {
         mismatchList.value.push(v.serialNumber)
       })
     }

@@ -208,8 +208,8 @@ import mDetail from './module/detail/index.vue'
 
 // 发运审核
 const shipAuditEnum = {
-  PASS: { L: '同意', K: 'PASS', V: 1 },
-  NO_PASS: { L: '不同意', K: 'NO_PASS', V: 2 }
+  PASS: { L: '同意', K: 'PASS', V: 2 },
+  NO_PASS: { L: '不同意', K: 'NO_PASS', V: 4 }
 }
 
 const optShow = {

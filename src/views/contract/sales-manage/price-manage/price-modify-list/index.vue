@@ -21,7 +21,11 @@
       <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建时间"  align="center"  width="130" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('checkUserName')" key="checkUserName" prop="checkUserName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
       <el-table-column v-if="columns.visible('checkTime')" key="checkTime"  prop="checkTime" label="审核时间"  align="center"  width="130" show-overflow-tooltip />
-      <el-table-column v-if="columns.visible('status')" prop="status" align="center" width="90" label="状态" show-overflow-tooltip />
+      <el-table-column v-if="columns.visible('status')" prop="status" align="center" width="90" label="状态" show-overflow-tooltip>
+        <template #default="{ row }">
+          <el-tag :type="reviewStatusEnum.V[row?.sourceRow?.status].TAG" size="medium" effect="plain">{{ row.status }}</el-tag>
+        </template>
+      </el-table-column>
       <!--详情-->
       <el-table-column v-if="checkPermission(permission.detail)" label="操作" width="70px" align="center" fixed="right">
         <template #default="{ row }">
@@ -63,7 +67,7 @@ const optShow = {
 const tableRef = ref()
 const detailInfo = ref({})
 const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
+  ['project', 'parse-project'],
   ['type', ['parse-enum', packTypeEnum, { f: 'SL' }]],
   ['status', ['parse-enum', reviewStatusEnum]],
   ['createTime', 'parse-time'],

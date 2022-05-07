@@ -373,9 +373,9 @@
                     <el-input-number
                       v-if="scope.row.add || editing"
                       v-model.number="scope.row.quantity"
-                      :min="originDetail.quantity"
+                      :min="form.quantity"
                       :max="maxNumber"
-                      :step="originDetail.quantity"
+                      :step="form.quantity"
                       step-strictly
                       placeholder="请填写"
                       controls-position="right"
@@ -386,11 +386,11 @@
                     <span v-else >{{ scope.row.quantity }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column key="firstProcessName" prop="firstProcessName" :show-overflow-tooltip="true" :label="originDetail.firstProcessName?'已'+originDetail.firstProcessName:''" align="center" width="100">
+                <!-- <el-table-column key="firstProcessName" prop="firstProcessName" :show-overflow-tooltip="true" :label="originDetail.firstProcessName?'已'+originDetail.firstProcessName:''" align="center" width="100">
                   <template v-slot="scope">
                     <span>{{ scope.row.unitData && form.producedQuantity?form.producedQuantity*scope.row.unitData: 0 }}</span>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
               </common-table>
             </div>
           </div>
@@ -523,8 +523,12 @@ watch(
   { deep: true, immediate: true }
 )
 
-const emit = defineEmits(['success', 'update:modelValue'])
-const { visible, handleClose } = useVisible({ emit, props })
+const emit = defineEmits(['success', 'update:modelValue', 'numSuccess'])
+const { visible, handleClose } = useVisible({ emit, props, closeHook })
+
+function closeHook() {
+  if (editing.value) closeEdit()
+}
 
 function resetForm() {
   if (formRef.value) {
@@ -574,7 +578,7 @@ async function getInfo(data) {
     let monomerPartNet = 0
     areaOriginDetail.value = await artifactInfo({ serialNumber: data.serialNumber, areaId: data.areaId })
     monomerOriginDetail.value = await artifactInfo({ serialNumber: data.serialNumber, monomerId: data.monomerId })
-    areaOriginDetail.value.newSurfaceArea = areaOriginDetail.value.surfaceArea ? areaOriginDetail.value.surfaceArea / 1000000 : ''
+    areaOriginDetail.value.newSurfaceArea = areaOriginDetail.value.surfaceArea ? areaOriginDetail.value.surfaceArea / 1000000 : 0
     if (areaOriginDetail.value.parts.length > 0) {
       areaOriginDetail.value.parts.map(v => {
         if (areaOriginDetail.value.quantity && v.quantity) {
@@ -584,7 +588,7 @@ async function getInfo(data) {
         }
       })
     }
-    monomerOriginDetail.value.newSurfaceArea = monomerOriginDetail.value.surfaceArea ? monomerOriginDetail.value.surfaceArea / 1000000 : ''
+    monomerOriginDetail.value.newSurfaceArea = monomerOriginDetail.value.surfaceArea ? monomerOriginDetail.value.surfaceArea / 1000000 : 0
     if (monomerOriginDetail.value.parts.length > 0) {
       monomerOriginDetail.value.parts.map(v => {
         if (monomerOriginDetail.value.quantity && v.quantity) {
@@ -750,7 +754,11 @@ function partQuantityChange(row) {
 
 function handleSuccess() {
   ElNotification({ title: '更改成功', type: 'success' })
-  emit('success')
+  if (form.value.quantity < originDetail.value.quantity) {
+    emit('success')
+  } else {
+    emit('numSuccess')
+  }
   handleClose()
 }
 

@@ -1,30 +1,31 @@
 <template>
   <common-drawer
-    ref="dialogRef"
+    ref="drawerRef"
     title="入库记录"
     :close-on-click-modal="false"
     v-model="visible"
     direction="rtl"
     :before-close="handleClose"
-    custom-class="collection-record"
-    size="95%"
+    custom-class="inbound-record"
+    size="100%"
   >
     <template #titleAfter>
-      <div>{{ detailInfo.serialNumber }}</div>
+      <el-tag v-if="detailInfo.serialNumber" type="success" effect="plain" size="medium">采购订单：{{detailInfo.serialNumber}}</el-tag>
+      <el-tag v-else type="warning" effect="plain" size="medium">供应商：{{detailInfo.supplierName}}</el-tag>
     </template>
     <template #titleRight>
       <div class="print-wrap">
-        <!-- <print-table
+        <print-table
           v-permission="props.permission?.print"
-          api-key="projectCollectionDetail"
+          api-key="purchaseInboundRecord"
           :params="{ ...params }"
           size="mini"
           type="warning"
-        /> -->
+        />
       </div>
     </template>
     <template #content>
-      <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
+      <common-table :data="list" v-loading="tableLoading" show-summary :summary-method="getSummaries" :data-format="dataFormat" :max-height="maxHeight">
         <!-- 基础信息 -->
         <material-base-info-columns
           :columns="{}"
@@ -34,11 +35,10 @@
         <material-unit-quantity-columns :columns="{}" />
         <!-- 价格信息 -->
         <amount-info-columns :columns="{}" :show-tax-rate="true"/>
-        <el-table-column prop="inputVat" label="税额" align="center" show-overflow-tooltip />
-        <el-table-column prop="inboundTime" label="入库时间" align="center" show-overflow-tooltip />
-        <el-table-column prop="inboundId" label="入库单号" align="center" show-overflow-tooltip />
-        <el-table-column prop="invoiceAmount" label="入库人" align="center" show-overflow-tooltip />
-        <el-table-column prop="invoiceUnit" label="审核人" align="center" show-overflow-tooltip />
+        <el-table-column prop="inboundTime" label="入库时间" align="center" width="90" show-overflow-tooltip />
+        <el-table-column prop="inboundSerialNumber" label="入库单号" align="center" min-width="110" show-overflow-tooltip />
+        <el-table-column prop="applicantName" label="入库人" align="center" show-overflow-tooltip width="90" />
+        <el-table-column prop="reviewerName" label="审核人" align="center" show-overflow-tooltip width="90" />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -57,11 +57,15 @@
 <script setup>
 import { inboundRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
+
+import { setSpecInfoToList } from '@/utils/wms/spec'
+import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
+import { DP } from '@/settings/config'
+import { tableSummary } from '@/utils/el-extra'
+
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
-import { setSpecInfoToList } from '@/utils/wms/spec'
-import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
 import usePagination from '@compos/use-pagination'
@@ -88,8 +92,15 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 
 // 请求参数
 const params = computed(() => {
+  // 订单列表
+  if (props.detailInfo.id) {
+    return {
+      orderId: props.detailInfo.id
+    }
+  }
+  // 汇总列表
   return {
-    orderId: props.detailInfo.id
+    supplierId: props.detailInfo.supplierId
   }
 })
 
@@ -103,10 +114,14 @@ watch(
 )
 
 const list = ref([])
-const dialogRef = ref()
+const drawerRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
-  ['inputVat', 'to-thousand'],
+  ['unitPrice', 'to-thousand'],
+  ['amount', 'to-thousand'],
+  ['unitPriceExcludingVAT', 'to-thousand'],
+  ['amountExcludingVAT', 'to-thousand'],
+  ['inputVAT', 'to-thousand'],
   ['inboundTime', ['parse-time', '{y}-{m}-{d}']]
 ])
 
@@ -115,13 +130,20 @@ const { maxHeight } = useMaxHeight(
     mainBox: '.inbound-record',
     extraBox: '.el-drawer__header',
     wrapperBox: '.el-drawer__body',
-    extraHeight: '5vh',
+    paginate: true,
     minHeight: 300,
     navbar: false,
     clientHRepMainH: true
   },
-  dialogRef
+  drawerRef
 )
+
+function getSummaries(param) {
+  return tableSummary(param, {
+    props: ['amount', 'amountExcludingVAT', 'inputVAT', ['mete', DP.COM_WT__KG]],
+    toThousandFields: ['amount', 'amountExcludingVAT', 'inputVAT', 'mete']
+  })
+}
 
 // 获取入库记录
 async function fetchList() {

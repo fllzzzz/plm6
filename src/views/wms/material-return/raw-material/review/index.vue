@@ -12,6 +12,8 @@
       :default-expand-all="false"
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      @sort-change="crud.handleSortChange"
+      @selection-change="crud.selectionChangeHandler"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
@@ -20,23 +22,14 @@
           </p>
           <p>
             关联出库单：
-            <template v-if="row.outboundList && row.outboundList.length > 0">
-              <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
-                <clickable-permission-span
-                  :permission="permission.outboundReceiptDetail"
-                  @click="openOutboundDetailView(outbound.id)"
-                  :text="outbound.serialNumber"
-                />
-                <span v-if="ri !== row.outboundList.length - 1">、</span>
-              </template>
-            </template>
-            <template v-else>-</template>
+            <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outboundList" />
           </p>
           <p>
             审批意见：<span>{{ row.approvalComments }}</span>
           </p>
         </template>
       </el-expand-table-column>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('serialNumber')"
@@ -73,17 +66,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <template v-if="row.outboundList && row.outboundList.length > 0">
-            <template v-for="(outbound, ri) in row.outboundList" :key="outbound.id">
-              <clickable-permission-span
-                :permission="permission.outboundReceiptDetail"
-                @click="openOutboundDetailView(outbound.id)"
-                :text="outbound.serialNumber"
-              />
-              <span v-if="ri !== row.outboundList.length - 1"> 、</span>
-            </template>
-          </template>
-          <span v-else>-</span>
+          <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outboundList" />
         </template>
       </el-table-column>
       <el-table-column
@@ -172,15 +155,10 @@
     <m-detail />
     <!-- 审核 -->
     <review v-model="reviewVisible" :data="currentRow" @refresh="crud.refresh" />
-    <!-- 出库详情 -->
-    <detail-wrapper ref="outboundDetailRef" :api="getOutboundDetail">
-      <outbound-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
-import { detail as getOutboundDetail } from '@/api/wms/material-outbound/raw-material/review'
 import crudApi from '@/api/wms/material-return/raw-material/record'
 import { rawMaterialReturnReviewPM as permission } from '@/page-permission/wms'
 
@@ -192,11 +170,9 @@ import checkPermission from '@/utils/system/check-permission'
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 
-import OutboundDetail from '@/views/wms/material-outbound/raw-material/review/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header'
@@ -213,9 +189,8 @@ const optShow = {
 const currentRow = ref({})
 const reviewVisible = ref(false)
 const expandRowKeys = ref([])
-// 出库详情ref
-const outboundDetailRef = ref()
 const tableRef = ref()
+
 // 表格列数据格式转换
 const columnsDataFormat = ref([...wmsReceiptColumns, ['approvalComments', 'empty-text']])
 const { CRUD, crud, columns } = useCRUD(
@@ -236,11 +211,6 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   data.content.forEach((v) => {
     v.reviewable = v.reviewStatus === reviewStatusEnum.UNREVIEWED.V && checkPermission(permission.review)
   })
-}
-
-// 打开出库详情窗口
-function openOutboundDetailView(outboundId) {
-  outboundDetailRef.value.toDetail(outboundId)
 }
 
 // 打开审核

@@ -387,7 +387,11 @@ watch(
 )
 
 const emit = defineEmits(['success', 'update:modelValue'])
-const { visible, handleClose } = useVisible({ emit, props })
+const { visible, handleClose } = useVisible({ emit, props, closeHook })
+
+function closeHook() {
+  if (editing.value) closeEdit()
+}
 
 function resetForm() {
   if (formRef.value) {

@@ -186,7 +186,7 @@ export function spliceSteelSize(material) {
       // 厚度mm
       return `${Number(material.thickness)} * ${material.width} * ${material.length}`
     case rawMatClsEnum.SECTION_STEEL.V:
-      return `${material.specNameKV[material.nationalStandard]}`
+      return `${material.specNameKV[material.nationalStandard] || ''}`
     case rawMatClsEnum.STEEL_COIL.V:
       return `${Number(material.thickness)} * ${material.width}`
     default:

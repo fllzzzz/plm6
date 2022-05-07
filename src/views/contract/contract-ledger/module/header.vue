@@ -23,19 +23,19 @@
         @change="crud.toQuery"
       />
       <el-input
-        v-model="query.serialNumber"
+        v-model.trim="query.serialNumber"
         placeholder="编号搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.name"
+        v-model.trim="query.name"
         placeholder="项目搜索"
         style="width:200px"
         class="filter-item"
       />
       <el-input
-        v-model="query.projectManagerName"
+        v-model.trim="query.projectManagerName"
         placeholder="业务负责人搜索"
         style="width:200px"
         class="filter-item"
@@ -68,7 +68,7 @@ import { ref } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { settlementStatusEnum } from '@enum-ms/contract'
+import { settlementStatusEnum } from '@enum-ms/finance'
 import { ledgerSum } from '@/api/contract/contract-ledger'
 import { toThousand } from '@data-type/number'
 

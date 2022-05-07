@@ -23,9 +23,9 @@
       </div>
     </template>
     <el-descriptions class="margin-top" :column="2" border>
-      <el-descriptions-item label-class-name="contractLabel" label="申请人">{{currentInfo.applyUserName}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="申请人" >{{currentInfo.applyUserName}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="申请日期">{{currentInfo.createTime? parseTime(currentInfo.createTime,'{y}-{m}-{d}'): '-'}}</el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="采购单号">{{currentInfo.serialNumber}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="采购单号">{{currentRow.serialNumber}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="所属项目">
         <template v-if="currentRow.projects && currentRow.projects.length>0">
           <div v-for="item in currentRow.projects" :key="item.id">
@@ -34,10 +34,13 @@
         </template>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="供应商">{{currentRow.supplierName}}</el-descriptions-item>
-      <el-descriptions-item label-class-name="contractLabel" label="合同额">{{currentRow.amount}}</el-descriptions-item>
+      <el-descriptions-item label-class-name="contractLabel" label="合同额">
+        {{currentRow.amount?toThousand(currentRow.amount):'-'}}
+        <span>（入库额:{{currentRow.inboundAmount?toThousand(currentRow.inboundAmount):'-'}}）</span>
+      </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="已付款">
         <span>{{ currentRow.paymentAmount?toThousand(currentRow.paymentAmount):'-' }}</span>
-        <span style="margin-left:5px;" v-if="currentRow.paymentAmount && currentRow.amount">{{ (currentRow.paymentAmount/currentRow.amount)*100+'%' }}</span>
+        <span style="margin-left:5px;" v-if="currentRow.paymentAmount && currentRow.inboundAmount">{{ ((currentRow.paymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="最近一次付款">
         <span>{{ currentRow.lastPaymentAmount?toThousand(currentRow.lastPaymentAmount):'-' }}</span>
@@ -45,7 +48,7 @@
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="本次申请">
         <el-tag effect="plain">{{currentInfo.applyAmount?toThousand(currentInfo.applyAmount):'-'}}</el-tag>
-        <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentRow.amount">{{ (currentInfo.applyAmount/currentRow.amount)*100+'%' }}</el-tag>
+        <el-tag style="margin-left:5px;" v-if="currentInfo.applyAmount && currentRow.inboundAmount">{{ ((currentInfo.applyAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="大写">
         <div>{{currentInfo.applyAmount?'('+digitUppercase(currentInfo.applyAmount)+')':'-'}}</div>
@@ -58,6 +61,7 @@
       <el-descriptions-item label-class-name="contractLabel" label="账号">{{currentInfo.receiveBankAccount}}</el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="本次实付">
         <el-input-number
+          v-if="showType==='audit'"
           v-model.number="actuallyPaymentAmount"
           v-show-thousand
           :min="0"
@@ -68,10 +72,17 @@
           controls-position="right"
           style="width:220px;"
         />
-        <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.amount">{{ (actuallyPaymentAmount/currentRow.amount)*100+'%' }}</el-tag>
+        <span v-else>{{currentInfo.actuallyPaymentAmount?toThousand(currentInfo.actuallyPaymentAmount):'-'}}</span>
+        <template v-if="showType==='audit'">
+          <el-tag type="success" style="margin-left:5px;" v-if="actuallyPaymentAmount && currentRow.inboundAmount">{{ ((actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
+        </template>
+        <template v-else>
+          <el-tag type="success" style="margin-left:5px;" v-if="currentInfo.actuallyPaymentAmount && currentRow.inboundAmount">{{ ((currentInfo.actuallyPaymentAmount/currentRow.inboundAmount)*100).toFixed(2)+'%' }}</el-tag>
+        </template>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款方式">
         <common-select
+          v-if="showType==='audit'"
           v-model="paymentMethod"
           :options="paymentFineModeEnum.ENUM"
           type="enum"
@@ -79,9 +90,11 @@
           placeholder="付款方式"
           style="width:100%;"
         />
+        <span v-else>{{ currentInfo.paymentMethod?paymentFineModeEnum.VL[currentInfo.paymentMethod]:'-' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="付款银行">
         <common-select
+          v-if="showType==='audit'"
           v-model="paymentBankAccount"
           :options="bankList"
           type="other"
@@ -91,14 +104,20 @@
           style="width:100%;"
           @change="bankChange"
         />
+        <span v-else>{{ currentInfo.paymentBank?currentInfo.paymentBank:'-' }}</span>
       </el-descriptions-item>
       <el-descriptions-item label-class-name="contractLabel" label="附件">
         <template v-if="currentInfo && currentInfo.attachments && currentInfo.attachments.length>0">
-          <div v-for="item in currentInfo.attachments" :key="item.id">{{item.name}}
-            <export-button :params="{id: item.id}"/>
+          <div v-for="item in currentInfo.attachments" :key="item.id">
+            <div style="cursor:pointer;" @dblclick="attachmentView(item)">{{item.name}}</div>
           </div>
-        </template></el-descriptions-item>
+        </template>
+      </el-descriptions-item>
+      <el-descriptions-item label-class-name="remark" label="备注" :span="2">
+        <span>{{currentInfo.remark}}</span>
+      </el-descriptions-item>
     </el-descriptions>
+    <showPdfAndImg v-if="pdfShow" :isVisible="pdfShow" :showType="'attachment'" :id="currentId" @close="pdfShow=false"/>
   </common-dialog>
 </template>
 
@@ -114,7 +133,7 @@ import { DP } from '@/settings/config'
 import { paymentFineModeEnum } from '@enum-ms/finance'
 import useDict from '@compos/store/use-dict'
 import { ElNotification, ElMessage } from 'element-plus'
-import ExportButton from '@comp-common/export-button/index.vue'
+import showPdfAndImg from '@comp-base/show-pdf-and-img.vue'
 
 const props = defineProps({
   modelValue: {
@@ -141,12 +160,14 @@ const props = defineProps({
 
 const dict = useDict(['payment_reason'])
 const bankList = ref([])
-const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
+const typeProp = { key: 'account', label: 'depositBank', value: 'account' }
 const actuallyPaymentAmount = ref()
 const paymentBankAccount = ref()
 const paymentBank = ref()
 const paymentMethod = ref()
 const currentInfo = ref({})
+const pdfShow = ref(false)
+const currentId = ref()
 const emit = defineEmits(['success', 'update:modelValue'])
 const { visible, handleClose } = useVisible({ emit, props })
 
@@ -185,6 +206,12 @@ async function getBankData(companyId) {
   }
 }
 
+// 预览附件
+function attachmentView(item) {
+  currentId.value = item.id
+  pdfShow.value = true
+}
+
 function bankChange(val) {
   if (val) {
     const choseVal = bankList.value.find(v => v.account === val)
@@ -198,6 +225,10 @@ async function passConfirm(val) {
   if (val === auditTypeEnum.PASS.V) {
     if (!actuallyPaymentAmount.value) {
       ElMessage.error('本次实付必填且大于0')
+      return
+    }
+    if (!paymentMethod.value) {
+      ElMessage.error('付款方式必填')
       return
     }
     if (!paymentBankAccount.value) {
@@ -255,5 +286,8 @@ async function passConfirm(val) {
 }
 .detail-break{
   word-break:break-all;
+}
+::v-deep(.contractLabel.el-descriptions__label){
+   min-width:150px;
 }
 </style>

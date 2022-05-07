@@ -23,19 +23,19 @@
     <template #content>
       <common-table :data="list" :data-format="dataFormat" :max-height="maxHeight">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column prop="invoiceDate" label="开票日期" align="center" width="100" show-overflow-tooltip />
+        <el-table-column prop="receiveInvoiceDate" label="开票日期" align="center" width="100" show-overflow-tooltip />
         <el-table-column prop="invoiceAmount" label="开票额" align="center" min-width="120" show-overflow-tooltip />
         <el-table-column prop="invoiceType" label="开票类型" align="center" width="110" show-overflow-tooltip />
         <el-table-column prop="taxRate" label="税率" align="center" width="70" show-overflow-tooltip>
           <template #default="{ row }">
-            <span>{{ row.taxRate }}%</span>
+            <span>{{ row.taxRate }}<span v-if="row.taxRate!=='-'">%</span></span>
           </template>
         </el-table-column>
-        <el-table-column prop="invoiceUnit" label="购方单位" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="collectionUnit" label="销售单位" align="center" min-width="140" show-overflow-tooltip />
-        <el-table-column prop="invoiceNo" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="branchCompanyName" label="购方单位" align="center" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="supplierName" label="销售单位" align="center" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="invoiceSerialNumber" label="发票编号" align="center" min-width="100" show-overflow-tooltip />
         <el-table-column prop="writtenByName" label="办理人" align="center" min-width="100" show-overflow-tooltip />
-        <el-table-column prop="auditorName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
+        <el-table-column prop="auditUserName" label="审核人" align="center" min-width="100" show-overflow-tooltip />
       </common-table>
       <!--分页组件-->
       <el-pagination
@@ -52,10 +52,10 @@
 </template>
 
 <script setup>
-import { invoiceRecord } from '@/api/supply-chain/purchase-reconciliation-manage/payment-ledger'
+import { invoiceRecord } from '@/api/supply-chain/logistics-payment-manage/logistics-record-ledger'
 import { ref, defineEmits, defineProps, watch, computed } from 'vue'
 
-import { invoiceTypeEnum } from '@enum-ms/contract'
+import { invoiceTypeEnum } from '@enum-ms/finance'
 
 import useVisible from '@/composables/use-visible'
 import useMaxHeight from '@compos/use-max-height'
@@ -84,8 +84,8 @@ const { handleSizeChange, handleCurrentChange, total, setTotalPage, queryPage } 
 // 请求参数
 const params = computed(() => {
   return {
-    orderId: props.detailInfo.id,
-    propertyType: props.detailInfo.propertyType
+    branchCompanyId: props.detailInfo.branchCompanyId,
+    supplierId: props.detailInfo.supplierId
   }
 })
 
@@ -103,7 +103,7 @@ const dialogRef = ref()
 const tableLoading = ref(false)
 const dataFormat = ref([
   ['invoiceType', ['parse-enum', invoiceTypeEnum]],
-  ['invoiceDate', ['parse-time', '{y}-{m}-{d}']],
+  ['receiveInvoiceDate', ['parse-time', '{y}-{m}-{d}']],
   ['invoiceAmount', 'to-thousand'],
   ['taxRate', ['to-fixed', 2]]
 ])

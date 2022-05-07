@@ -100,7 +100,7 @@ function setReceiptExist(receiptTypes = []) {
 // 打开详情
 function openDetail(detailId, receiptType) {
   if (!receiptType && props.receiptTypes && props.receiptTypes.length === 1) {
-    receiptType = receiptTypeEnum.VK[props.receiptTypes[0]]
+    receiptType = receiptTypeEnum[props.receiptTypes[0]].V
   }
   switch (receiptType) {
     case receiptTypeEnum.PURCHASE.V:

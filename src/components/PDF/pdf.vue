@@ -38,7 +38,7 @@ const props = defineProps({
 const containerRef = ref()
 const pdfViewer = ref()
 const pdfLinkService = ref()
-const currentScale = ref('page-actual')
+// const currentScale = ref('page-actual')
 const loadingTask = ref()
 const CMAP_URL = ref()
 
@@ -63,8 +63,10 @@ watch(
   () => props.scale,
   () => {
     console.log(pdfViewer.value)
-    pdfViewer.value.currentScaleValue = props.scale
-    pdfLinkService.value.setViewer(pdfViewer.value)
+    if (pdfViewer.value) {
+      pdfViewer.value.currentScaleValue = props.scale
+      pdfLinkService.value.setViewer(pdfViewer.value)
+    }
   }
 )
 
@@ -77,7 +79,7 @@ watch(
 )
 
 function onPagesInit({ source }) {
-  source.currentScaleValue = currentScale
+  source.currentScaleValue = props.scale
 }
 
 async function pdfLibInit() {

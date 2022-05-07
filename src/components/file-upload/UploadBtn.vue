@@ -117,7 +117,7 @@ watch(
 function handleSuccess(response, file, fileList) {
   if (response && response.code === 20000) {
     const f = response.data
-    const files = [...props.files]
+    const files = [...(props.files || [])]
     files.push(Object.assign(f, { uid: file.uid }))
     emit('update:files', files)
     emit('change')

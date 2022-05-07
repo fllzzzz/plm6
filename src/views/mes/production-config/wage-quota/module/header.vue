@@ -9,7 +9,7 @@
       size="small"
       @change="crud.toQuery"
     />
-    <common-radio-button
+    <component-radio-button
       v-model="query.sequenceType"
       :options="typeEnum.ENUM"
       class="filter-item"

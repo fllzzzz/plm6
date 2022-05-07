@@ -1,18 +1,18 @@
-import { MIN_UNIT } from '@/settings/config'
-import { emptyTextFormatter, isNotBlank } from '@data-type/index'
-import { toThousand } from '@data-type/number'
+import { MIN_UNIT, DEF_UNIT } from '@/settings/config'
+import { emptyTextFormatter, isBlank, isNotBlank } from '@data-type/index'
+import { getDP, toThousand } from '@data-type/number'
 import { convertUnits } from '@/utils/convert/unit'
 import { projectNameFormatter } from '@/utils/project'
 import { amountUnitEnum, alignEnum, verticleAlignEnum, dataSourceEnum, fieldTypeEnum, pageFormatEnum } from '@/utils/print/enum'
 import EO from '@/utils/enum'
 import { projectNameArrangementModeEnum } from '@enum-ms/contract'
-// import { getBasicClassUnit, getMaterialTypeUnit, getMaterialListTypeUnit } from '@/utils/other'
 import enumAll from '@/utils/enum/all'
 import moment from 'moment'
 import _ from 'lodash'
 
 // TODO: 待修改
 const pageFormatEnumV = EO.key2val(pageFormatEnum)
+const defaultPrecision = 2
 
 // 获取所有列
 const getAllColumns = (columns) => {
@@ -102,8 +102,8 @@ const convertColumns = (originColumns) => {
 const getLastColumns = (originColumnRows) => {
   const lastColumns = []
   const maxLevel = originColumnRows.length
-  originColumnRows.forEach(r => {
-    r.forEach(c => {
+  originColumnRows.forEach((r) => {
+    r.forEach((c) => {
       // 末级
       if (c.level === maxLevel || c.rowSpan > 1) {
         lastColumns.push(c)
@@ -167,9 +167,9 @@ const setting = {
     return config
   },
   /**
- * 标题html
- * @param {object} config 标题的配置信息
- */
+   * 标题html
+   * @param {object} config 标题的配置信息
+   */
   getTitleHtml(config) {
     if (!isNotBlank(config)) {
       return ''
@@ -179,9 +179,9 @@ const setting = {
   },
 
   /**
- * 标题html
- * @param {object} config 标题的配置信息
- */
+   * 标题html
+   * @param {object} config 标题的配置信息
+   */
   getPageHtml(config) {
     if (!isNotBlank(config)) {
       return ''
@@ -191,10 +191,10 @@ const setting = {
   },
 
   /**
- * 表头信息html（标题之下，表格之上的内容）
- * @param {object} data 表头信息数据
- * @param {object} config 表头信息的配置信息
- */
+   * 表头信息html（标题之下，表格之上的内容）
+   * @param {object} data 表头信息数据
+   * @param {object} config 表头信息的配置信息
+   */
   getHeaderHtml(data, config) {
     if (!config) {
       return ''
@@ -226,7 +226,9 @@ const setting = {
     const tipCfg = config.tip
     let html = ''
     if (tipCfg && tipCfg.show && tipCfg.above) {
-      html += `<span class="tip" style="font-size:${tipCfg.size}${globalConfig.fontUnit};font-weight:${tipCfg.bold};text-align:${this.textAlign(tipCfg.align)}">${isNotBlank(tipCfg.text) ? tipCfg.text : ''}</span>`
+      html += `<span class="tip" style="font-size:${tipCfg.size}${globalConfig.fontUnit};font-weight:${
+        tipCfg.bold
+      };text-align:${this.textAlign(tipCfg.align)}">${isNotBlank(tipCfg.text) ? tipCfg.text : ''}</span>`
     }
     if (config.fields) {
       for (const field of config.fields) {
@@ -244,7 +246,9 @@ const setting = {
       }
     }
     if (tipCfg && tipCfg.show && !tipCfg.above) {
-      html += `<span class="tip" style="font-size:${tipCfg.size}${globalConfig.fontUnit};font-weight:${tipCfg.bold};text-align:${this.textAlign(tipCfg.align)}">${isNotBlank(tipCfg.text) ? tipCfg.text : ''}</span>`
+      html += `<span class="tip" style="font-size:${tipCfg.size}${globalConfig.fontUnit};font-weight:${
+        tipCfg.bold
+      };text-align:${this.textAlign(tipCfg.align)}">${isNotBlank(tipCfg.text) ? tipCfg.text : ''}</span>`
     }
     return html
   },
@@ -262,7 +266,7 @@ const setting = {
         const _style = config.index.style
         html += `<th rowspan="${columnRows.length}" style="${_style}"><div style="${_style}">${config.index.title || '序号'}</div></th>`
       }
-      cr.forEach(c => {
+      cr.forEach((c) => {
         if (c.show) {
           html += `<th colspan="${c.colSpan}" rowspan="${c.rowSpan}" style="${c.style}"><div style="${c.style}">${c.title || ''}</div></th>`
         }
@@ -277,10 +281,10 @@ const setting = {
   },
 
   /**
- * 表格信息html
- * @param {object} data 表格数据
- * @param {object} config 表格的配置信息
- */
+   * 表格信息html
+   * @param {object} data 表格数据
+   * @param {object} config 表格的配置信息
+   */
   getTableHtml(data, config, columnCfg) {
     if (!config) {
       return ''
@@ -288,8 +292,7 @@ const setting = {
     let html = ''
     // 需要空列
     const needBlankColumn =
-        (config.index && config.index.show && isNotBlank(config.index.width)) &&
-        columnCfg.lastColumns.every(f => isNotBlank(f.width)) // 字段都是固定宽度
+      config.index && config.index.show && isNotBlank(config.index.width) && columnCfg.lastColumns.every((f) => isNotBlank(f.width)) // 字段都是固定宽度
     html += `
       <table class="preview-table" border="1">
        ${this.getTHeadHtml(config, columnCfg, needBlankColumn)}
@@ -320,7 +323,10 @@ const setting = {
     // 是否需要合计
     if (config.summary && config.summary.show) {
       html += this.spliceSummary({
-        data, config, needBlankColumn, columnCfg
+        data,
+        config,
+        needBlankColumn,
+        columnCfg
       })
     }
     html += `
@@ -331,10 +337,10 @@ const setting = {
   },
 
   /**
- * 表格的合计信息html
- * @param {object} data 表格数据
- * @param {object} config 表格的配置信息
- */
+   * 表格的合计信息html
+   * @param {object} data 表格数据
+   * @param {object} config 表格的配置信息
+   */
   spliceSummary({ data, config, needBlankColumn, columnCfg }) {
     let html = `<tr>`
     if (config.index && config.index.show) {
@@ -344,18 +350,34 @@ const setting = {
     for (const field of columnCfg.lastColumns) {
       // 单元格填充内容
       let sum = ''
-      if (field && field.sum) { // 判断字段是否需要合计
-        const columns = data.map(d => this.keyParse(d, field.key)) // 列数据
-        if (!columns.every(value => isNaN(+value))) { // 判断是否为数字类型,此处允许空格或空字符串，因此可用isNaN，否则使用正则表达式
+      if (field && field.sum) {
+        // 判断字段是否需要合计
+        const columns = data.map((d) => this.keyParse(d, field.key)) // 列数据
+        let dp = 0
+        const dpArr = []
+        if (!columns.every((value) => isNaN(+value))) {
+          // 判断是否为数字类型,此处允许空格或空字符串，因此可用isNaN，否则使用正则表达式
           sum = columns.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
-              return prev + curr
+              dpArr.push(getDP(curr))
+              return prev + Number(curr)
             } else {
               return prev
             }
           }, 0)
-          sum = this.dataFormat({ val: sum, field })
+          // 获取最大的小数精度位数
+          dp = dpArr.getMax()
+          dp = dp > 5 ? 5 : dp
+          const cloneField = JSON.parse(JSON.stringify(field))
+          if (!cloneField.format) {
+            cloneField.format = {}
+          }
+          if (isBlank(cloneField.format.precision)) {
+            cloneField.format.precision = dp
+          }
+
+          sum = this.dataFormat({ val: sum, field: cloneField })
         }
       }
       html += `<td style="${field.style}"><div style="${field.style}">${sum}</div></td>`
@@ -424,16 +446,16 @@ const setting = {
   },
 
   /**
- * 设置表格字段的样式
- * @param {object} globalConfig 表格配置信息
- */
+   * 设置表格字段的样式
+   * @param {object} globalConfig 表格配置信息
+   */
   setTableColumnsStyle(globalConfig, columnCfg) {
     const config = globalConfig.table
     if (globalConfig && isNotBlank(config)) {
       // 列样式
       const columnRows = columnCfg.columnRows
-      columnRows.forEach(row => {
-        row.forEach(column => {
+      columnRows.forEach((row) => {
+        row.forEach((column) => {
           let _style = ''
           if (isNotBlank(column.align)) {
             _style += `text-align:${this.textAlign(column.align)};`
@@ -464,45 +486,47 @@ const setting = {
   },
 
   /**
- * 设置表头信息字段的样式
- * @param {object} globalConfig 表格配置信息
- */
+   * 设置表头信息字段的样式
+   * @param {object} globalConfig 表格配置信息
+   */
   setHeaderFieldStyle(globalConfig) {
     const config = globalConfig.header
     if (globalConfig && isNotBlank(config)) {
       const fields = config.fields
-      isNotBlank(fields) && fields.forEach(field => {
-        let _style = ''
-        if (isNotBlank(field.width)) {
-          _style += `width:${field.width}${globalConfig.unit};`
-        } else if (isNotBlank(field.maxWidth)) {
-          _style += `max-width:${field.maxWidth}${globalConfig.unit};`
-        }
-        field.style = _style
-      })
+      isNotBlank(fields) &&
+        fields.forEach((field) => {
+          let _style = ''
+          if (isNotBlank(field.width)) {
+            _style += `width:${field.width}${globalConfig.unit};`
+          } else if (isNotBlank(field.maxWidth)) {
+            _style += `max-width:${field.maxWidth}${globalConfig.unit};`
+          }
+          field.style = _style
+        })
     }
   },
 
   /**
- * 设置表头信息字段的样式
- * @param {object} globalConfig 表格配置信息
- */
+   * 设置表头信息字段的样式
+   * @param {object} globalConfig 表格配置信息
+   */
   setFooterFieldStyle(globalConfig) {
     const config = globalConfig.footer
     if (globalConfig && isNotBlank(config)) {
       const fields = config.fields
-      isNotBlank(fields) && fields.forEach(field => {
-        let _style = ''
-        if (isNotBlank(field.width)) {
-          _style += `width:${field.width}${globalConfig.unit};`
-        } else if (isNotBlank(field.maxWidth)) {
-          _style += `max-width:${field.maxWidth}${globalConfig.unit};`
-        }
-        if (isNotBlank(field.align)) {
-          _style += `text-align:${this.textAlign(field.align)};`
-        }
-        field.style = _style
-      })
+      isNotBlank(fields) &&
+        fields.forEach((field) => {
+          let _style = ''
+          if (isNotBlank(field.width)) {
+            _style += `width:${field.width}${globalConfig.unit};`
+          } else if (isNotBlank(field.maxWidth)) {
+            _style += `max-width:${field.maxWidth}${globalConfig.unit};`
+          }
+          if (isNotBlank(field.align)) {
+            _style += `text-align:${this.textAlign(field.align)};`
+          }
+          field.style = _style
+        })
     }
   },
 
@@ -521,22 +545,37 @@ const setting = {
       val = this.keyParse(row, field.key)
     }
     switch (field.type) {
-      case fieldTypeEnum.PROJECT.K: return emptyTextFormatter(this.projectNameFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.DATE.K: return emptyTextFormatter(this.dateFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.DATES.K: return emptyTextFormatter(this.dateFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.AMOUNT.K: return emptyTextFormatter(this.amountFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.WEIGHT.K: return emptyTextFormatter(this.weightFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.LENGTH.K: return emptyTextFormatter(this.lengthFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.RATE.K: return emptyTextFormatter(this.rateFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.THICKNESS.K: return emptyTextFormatter(this.thicknessFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.METE.K: return emptyTextFormatter(this.meteFormat({
-        val, format: field.format, basicClass: row.basicClass,
-        materialType: row.materialType, materialListType: row.materialListType,
-        unit: row.unit, checkUnit: row.checkUnit
-      }), emptyVal)
-      case fieldTypeEnum.QUANTITY.K: return emptyTextFormatter(this.quantityFormat(val, field.format), emptyVal)
-      case fieldTypeEnum.ENUM.K: return emptyTextFormatter(this.enumFormat(val, field.format), emptyVal)
-      default: return emptyTextFormatter(val, emptyVal)
+      case fieldTypeEnum.PROJECT.K:
+        return emptyTextFormatter(this.projectNameFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.DATE.K:
+        return emptyTextFormatter(this.dateFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.DATES.K:
+        return emptyTextFormatter(this.dateFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.AMOUNT.K:
+        return emptyTextFormatter(this.amountFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.WEIGHT.K:
+        return emptyTextFormatter(this.weightFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.LENGTH.K:
+        return emptyTextFormatter(this.lengthFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.RATE.K:
+        return emptyTextFormatter(this.rateFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.THICKNESS.K:
+        return emptyTextFormatter(this.thicknessFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.METE.K:
+        return emptyTextFormatter(
+          this.meteFormat({
+            val,
+            row,
+            format: field.format
+          }),
+          emptyVal
+        )
+      case fieldTypeEnum.QUANTITY.K:
+        return emptyTextFormatter(this.quantityFormat(val, field.format), emptyVal)
+      case fieldTypeEnum.ENUM.K:
+        return emptyTextFormatter(this.enumFormat(val, field.format), emptyVal)
+      default:
+        return emptyTextFormatter(val, emptyVal)
     }
   },
   /**
@@ -568,10 +607,11 @@ const setting = {
     if (flag) {
       const key = format.key || 'L'
       const enumK = enumAll[format.enum]
-      if (format.bit) { // 位运算的值
+      if (format.bit) {
+        // 位运算的值
         const enums = EO.toArr(enumK)
         const res = []
-        enums.forEach(e => {
+        enums.forEach((e) => {
           if (e.V & val) {
             res.push(e[key] || e['L'])
           }
@@ -593,8 +633,12 @@ const setting = {
    */
   projectNameFormat(val, format = {}) {
     if (!isNotBlank(format)) {
-    // 默认只显示项目简称
-      format = { showProjectFullName: false, showSerialNumber: false, projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V }
+      // 默认只显示项目简称
+      format = {
+        showProjectFullName: false,
+        showSerialNumber: false,
+        projectNameShowConfig: projectNameArrangementModeEnum.SERIAL_NUMBER_START.V
+      }
     }
     return projectNameFormatter(val, format, format.lineBreak)
   },
@@ -611,16 +655,19 @@ const setting = {
         return moment(+val).format(format)
       }
     }
-    if (typeof val === 'string') { // 'xx,xx,xx'
+    if (typeof val === 'string') {
+      // 'xx,xx,xx'
       val = val.split(',')
       if (val instanceof Array) {
         if (val.length === 1) {
           return filterDate(val[0])
         }
         if (val.length > 1) {
-          return val.map(t => {
-            return filterDate(t)
-          }).join('，')
+          return val
+            .map((t) => {
+              return filterDate(t)
+            })
+            .join('，')
         }
       }
     }
@@ -646,7 +693,7 @@ const setting = {
   amountFormat(val, format = {}) {
     let _val = val
     if (isNotBlank(_val)) {
-    // 单位转换
+      // 单位转换
       if (isNotBlank(format.unit)) {
         if (format.unit === amountUnitEnum.WAN.V) {
           _val /= 10000
@@ -658,7 +705,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -675,7 +722,7 @@ const setting = {
     if (isNotBlank(_val)) {
       // 单位转换
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, MIN_UNIT.WEIGHT, format.unit)
+        _val = convertUnits(_val, DEF_UNIT.WEIGHT, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -683,7 +730,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -699,7 +746,7 @@ const setting = {
     let _val = val
     if (isNotBlank(_val)) {
       if (isNotBlank(format.unit)) {
-        _val = convertUnits(_val, MIN_UNIT.LENGTH, format.unit)
+        _val = convertUnits(_val, DEF_UNIT.LENGTH, format.unit)
       }
       // 小数精度
       if (isNotBlank(format.precision)) {
@@ -707,7 +754,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -731,7 +778,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -741,12 +788,9 @@ const setting = {
    * “量”数据格式转换
    * @param {*} val 数据
    * @param {object} format
-   * @param {number} basicClass 基础类型（enum）
-   * @param {number} materialType 材料类型（enum）
-   * @param {number} materialListType 材料清单类型（enum）
    * @return {string|number} 量
    */
-  meteFormat({ val, unit, checkUnit, format = {}, basicClass, materialType, materialListType }) {
+  meteFormat({ val, row, format = {}}) {
     let _val = val
     if (isNotBlank(_val)) {
       // 小数精度
@@ -755,34 +799,15 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
       // 是否显示单位
       if (format.showUnit) {
-        let _unit
-        // if (isNotBlank(basicClass)) {
-        //   if (checkUnit) {
-        //     _unit = checkUnit
-        //   } else {
-        //     _unit = getBasicClassUnit(basicClass)
-        //   }
-        // }
-        // if (isNotBlank(materialType)) {
-        //   if (unit) {
-        //     _unit = unit
-        //   } else {
-        //     _unit = getMaterialTypeUnit(materialType)
-        //   }
-        // }
-        // if (isNotBlank(materialListType)) {
-        //   if (unit) {
-        //     _unit = unit
-        //   } else {
-        //     _unit = getMaterialListTypeUnit(materialListType)
-        //   }
-        // }
-        if (_unit) {
-          _val += ` ${_unit}`
+        if (format.unit) {
+          _val += ` ${format.unit}`
+        }
+        if (row?.[format.rowUnit]) {
+          _val += ` ${row[format.rowUnit]}`
         }
       }
     }
@@ -804,7 +829,7 @@ const setting = {
       }
       // 1000 => 1,000
       if (format.toThousand) {
-        _val = toThousand(_val)
+        _val = toThousand(_val, format.precision ?? defaultPrecision)
       }
     }
     return _val
@@ -826,53 +851,59 @@ const setting = {
   },
 
   /**
- * flex对齐方式
- * @param {*} align
- */
+   * flex对齐方式
+   * @param {*} align
+   */
   flexAlign(align) {
     switch (align) {
-      case alignEnum.LEFT.V: return 'flex-start'
-      case alignEnum.RIGHT.V: return 'flex-end'
-      case alignEnum.CENTER.V: return 'center'
-      default: return 'flex-start'
+      case alignEnum.LEFT.V:
+        return 'flex-start'
+      case alignEnum.RIGHT.V:
+        return 'flex-end'
+      case alignEnum.CENTER.V:
+        return 'center'
+      default:
+        return 'flex-start'
     }
   },
 
   /**
- * flex垂直对齐方式（align-item）
- * @param {*} align
- */
+   * flex垂直对齐方式（align-item）
+   * @param {*} align
+   */
   verticleAlign(align) {
     switch (align) {
-      case verticleAlignEnum.TOP.V: return 'flex-start'
-      case verticleAlignEnum.BOTTOM.V: return 'flex-end'
-      case verticleAlignEnum.CENTER.V: return 'center'
-      default: return 'flex-start'
+      case verticleAlignEnum.TOP.V:
+        return 'flex-start'
+      case verticleAlignEnum.BOTTOM.V:
+        return 'flex-end'
+      case verticleAlignEnum.CENTER.V:
+        return 'center'
+      default:
+        return 'flex-start'
     }
   },
 
   /**
- * text对齐方式
- * @param {*} align
- */
+   * text对齐方式
+   * @param {*} align
+   */
   textAlign(align) {
     switch (align) {
-      case alignEnum.LEFT.V: return 'left'
-      case alignEnum.RIGHT.V: return 'right'
-      case alignEnum.CENTER.V: return 'center'
-      default: return 'left'
+      case alignEnum.LEFT.V:
+        return 'left'
+      case alignEnum.RIGHT.V:
+        return 'right'
+      case alignEnum.CENTER.V:
+        return 'center'
+      default:
+        return 'left'
     }
   },
 
   pageFormat(val) {
     return pageFormatEnumV[val] ? pageFormatEnumV[val].L : '1 / 1'
   }
-
 }
 
-export {
-  convertColumns,
-  delNotDisplayed,
-  getLastColumns,
-  setting
-}
+export { convertColumns, delNotDisplayed, getLastColumns, setting }

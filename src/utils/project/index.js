@@ -8,7 +8,17 @@ import store from '@/store'
  * 获取项目信息
  * @param {number} id 项目id
  */
-export function getProjectInfo() {}
+export function getProjectInfo(id) {
+  if (!id) return
+  // 后期改KV模式
+  const projects = store.getters.userProjects
+  for (const project of projects) {
+    if (project.id === id) {
+      return project
+    }
+  }
+  return
+}
 
 /**
  * 项目名称格式转化
@@ -22,9 +32,14 @@ export function projectNameFormatter(project, config, lineBreak = true) {
     return ''
   }
   // 若不传入配置，则调用系统配置
+  const _config = store.getters.projectNameShowConfig
   if (isBlank(config)) {
     config = store.getters.projectNameShowConfig
   }
+
+  // 打印表格取默认配置
+  config.arrangement = config.arrangement || _config.arrangement
+
   const _projectName = config.showProjectFullName ? project.name : project.shortName
   if (!config.showSerialNumber || !project.serialNumber) {
     return _projectName
@@ -33,6 +48,8 @@ export function projectNameFormatter(project, config, lineBreak = true) {
   if (lineBreak) {
     extra = ` \n`
   }
+
+  // 默认全局配置
   switch (config.arrangement) {
     case projectNameArrangementModeEnum.SERIAL_NUMBER_START.V:
       return `${project.serialNumber}${extra}${_projectName}`

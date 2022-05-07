@@ -35,12 +35,7 @@
         min-width="120"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.transfer"
-            :permission="permission.transferReceiptDetail"
-            @click="openTransferDetailView(row.transfer.id)"
-            :text="row.transfer.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['TRANSFER']" :receipt="row.transfer" />
         </template>
       </el-table-column>
       <el-table-column
@@ -53,10 +48,10 @@
         width="90"
       />
       <el-table-column
-        v-if="columns.visible('createTime')"
-        key="createTime"
+        v-if="columns.visible('reviewTime')"
+        key="reviewTime"
         :show-overflow-tooltip="true"
-        prop="createTime"
+        prop="reviewTime"
         label="买入日期"
         align="center"
         width="140"
@@ -65,37 +60,29 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 调拨详情 -->
-    <detail-wrapper ref="transferDetailRef" :api="getTransferDetail">
-      <transfer-detail />
-    </detail-wrapper>
-    <!-- -->
   </div>
 </template>
 
 <script setup>
 import crudApi from '@/api/wms/material-transfer/raw-material/party-a-buy-in'
-import { detail as getTransferDetail } from '@/api/wms/material-transfer/raw-material/review'
 import { operateRecordPartyABuyInPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import { setSpecInfoToList } from '@/utils/wms/spec'
-import { baseTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
+import { reviewTimeColumns, materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header'
 
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
-import TransferDetail from '@/views/wms/material-transfer/raw-material/review/module/detail.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
 import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/material-unit-quantity-columns/index.vue'
 import amountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   batchAdd: false,
@@ -106,18 +93,16 @@ const optShow = {
 }
 
 // 表格列数据格式转换
-const columnsDataFormat = ref([...materialHasAmountColumns, ...baseTimeColumns])
+const columnsDataFormat = ref([...materialHasAmountColumns, ...reviewTimeColumns])
 
 // 展开行
 const expandRowKeys = ref([])
-// 调拨详情ref
-const transferDetailRef = ref()
 // 表格ref
 const tableRef = ref()
 const { CRUD, crud, columns } = useCRUD(
   {
     title: '甲供买入',
-    sort: ['id.desc'],
+    sort: ['reviewTime.desc'],
     invisibleColumns: ['heatNoAndBatchNo', 'project', 'warehouse', 'invoiceType', 'taxRate', 'transferSN', 'applicantName'],
     permission: { ...permission },
     optShow: { ...optShow },
@@ -134,10 +119,5 @@ CRUD.HOOK.handleRefresh = async (crud, { data }) => {
     toSmallest: false,
     toNum: false
   })
-}
-
-// 打开调拨详情窗口
-function openTransferDetailView(transferId) {
-  transferDetailRef.value.toDetail(transferId)
 }
 </script>

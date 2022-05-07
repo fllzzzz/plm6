@@ -3,7 +3,7 @@
     <span v-if="materialFreezeTypeEnum.V[record.freezeType]">{{ materialFreezeTypeEnum.V[record.freezeType].DOC }}</span>
   </el-form-item>
   <el-form-item label="单据编号">
-    <span v-if="record.document">{{ record.document.serialNumber }}</span>
+    <span v-if="record.receipt">{{ record.receipt.serialNumber }}</span>
   </el-form-item>
   <el-form-item label="关联项目">
     <span v-parse-project="{ project: record.project, onlyShortName: true }" v-empty-text />

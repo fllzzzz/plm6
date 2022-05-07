@@ -40,6 +40,7 @@
         style="width: 300px"
         clearable
         :shortcuts="PICKER_OPTIONS_SHORTCUTS"
+        :default-time="defaultTime"
         value-format="x"
         @change="crud.toQuery"
       />
@@ -64,7 +65,7 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
+import { defineEmits, ref } from 'vue'
 import { STEEL_ENUM } from '@/settings/config'
 import { materialLabelPrintTypeEnum } from '@/utils/enum/modules/wms'
 import { steelClsEnum } from '@/utils/enum/modules/classification'
@@ -75,6 +76,8 @@ import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import usePrint from '../../composables/use-print'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
+
+const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const emit = defineEmits(['printed-success'])
 

@@ -1,4 +1,4 @@
-import { materialFreezeTypeEnum } from '@/utils/enum/modules/wms'
+import { materialFreezeTypeEnum, receiptTypeEnum } from '@/utils/enum/modules/wms'
 import { matClsEnum } from '@/utils/enum/modules/classification'
 
 const get = {
@@ -45,11 +45,19 @@ const get = {
             recordList: [
               {
                 id: 1,
-                freezeType: materialFreezeTypeEnum.REQUISITIONS.V,
-                document: {
-                  id: 1,
-                  serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-                },
+                freezeType: materialFreezeTypeEnum.PREPARATION.V,
+                receipt: [
+                  {
+                    id: 1,
+                    receiptType: receiptTypeEnum.PREPARATION.V,
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  },
+                  {
+                    id: 2,
+                    receiptType: receiptTypeEnum.PREPARATION.V,
+                    serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+                  }
+                ],
                 project: {
                   id: 1,
                   name: '长安街666666号辅路',
@@ -62,9 +70,10 @@ const get = {
               },
               {
                 id: 2,
-                freezeType: materialFreezeTypeEnum.OUTBOUND.V,
-                document: {
+                freezeType: materialFreezeTypeEnum.OUTBOUND_APPLY.V,
+                receipt: {
                   id: 1,
+                  receiptType: receiptTypeEnum.OUTBOUND_APPLY.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
                 project: {
@@ -81,8 +90,9 @@ const get = {
               {
                 id: 3,
                 freezeType: materialFreezeTypeEnum.TRANSFER.V,
-                document: {
+                receipt: {
                   id: 1,
+                  receiptType: receiptTypeEnum.TRANSFER.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
                 project: {
@@ -99,8 +109,9 @@ const get = {
               {
                 id: 4,
                 freezeType: materialFreezeTypeEnum.REJECTED.V,
-                document: {
+                receipt: {
                   id: 1,
+                  receiptType: receiptTypeEnum.REJECTED.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
                 project: {
@@ -150,9 +161,10 @@ const get = {
             recordList: [
               {
                 id: 1,
-                freezeType: materialFreezeTypeEnum.REQUISITIONS.V,
-                document: {
+                freezeType: materialFreezeTypeEnum.PREPARATION.V,
+                receipt: {
                   id: 1,
+                  receiptType: receiptTypeEnum.PREPARATION.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
                 project: {
@@ -202,9 +214,10 @@ const get = {
             recordList: [
               {
                 id: 1,
-                freezeType: materialFreezeTypeEnum.REQUISITIONS.V,
-                document: {
+                freezeType: materialFreezeTypeEnum.PREPARATION.V,
+                receipt: {
                   id: 1,
+                  receiptType: receiptTypeEnum.PREPARATION.V,
                   serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
                 },
                 project: {
@@ -252,11 +265,19 @@ const getMaterialFreezeRecordById = {
         content: [
           {
             id: 1,
-            freezeType: materialFreezeTypeEnum.REQUISITIONS.V,
-            document: {
-              id: 1,
-              serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
-            },
+            freezeType: materialFreezeTypeEnum.PREPARATION.V,
+            receipt: [
+              {
+                id: 1,
+                receiptType: receiptTypeEnum.PREPARATION.V,
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              {
+                id: 2,
+                receiptType: receiptTypeEnum.PREPARATION.V,
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              }
+            ],
             project: {
               id: 1,
               name: '长安街666666号辅路',
@@ -270,9 +291,10 @@ const getMaterialFreezeRecordById = {
           },
           {
             id: 2,
-            freezeType: materialFreezeTypeEnum.OUTBOUND.V,
-            document: {
+            freezeType: materialFreezeTypeEnum.OUTBOUND_APPLY.V,
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.OUTBOUND_APPLY.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {
@@ -289,8 +311,9 @@ const getMaterialFreezeRecordById = {
           {
             id: 3,
             freezeType: materialFreezeTypeEnum.TRANSFER.V,
-            document: {
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.TRANSFER.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {
@@ -307,8 +330,9 @@ const getMaterialFreezeRecordById = {
           {
             id: 4,
             freezeType: materialFreezeTypeEnum.REJECTED.V,
-            document: {
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.REJECTED.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {

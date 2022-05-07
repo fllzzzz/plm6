@@ -13,6 +13,7 @@
     </template>
     <template #content>
       <el-tag type="success" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
       <el-form ref="formRef" :model="form" size="small" label-width="140px">
         <common-table
           ref="detailRef"
@@ -36,7 +37,6 @@
                 value-format="x"
                 placeholder="选择日期"
                 style="width:100%"
-                :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
               />
               <template v-else>
                 <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -51,12 +51,13 @@
                   v-show-thousand
                   v-model.number="scope.row.collectionAmount"
                   :min="0"
-                  :max="999999999999"
+                  :max="currentRow.settlementAmount?currentRow.settlementAmount-totalAmount:999999999999"
                   :step="100"
                   :precision="DP.YUAN"
                   placeholder="收款金额(元)"
                   controls-position="right"
                   :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
+                  @change="moneyChange(scope.row)"
                 />
                 <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
               </template>
@@ -121,7 +122,7 @@
             <template v-slot="scope">
               <el-input
                 v-if="scope.row.isModify"
-                v-model="scope.row.paymentUnit"
+                v-model.trim="scope.row.paymentUnit"
                 placeholder="付款单位"
                 style="width:100%;"
                 maxlength="50"
@@ -150,7 +151,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineProps } from 'vue'
+import { ref, inject, defineProps, nextTick } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { DP } from '@/settings/config'
@@ -168,6 +169,10 @@ const defaultForm = {
   list: []
 }
 const props = defineProps({
+  currentRow: {
+    type: Object,
+    default: () => {}
+  },
   existInvoiceNo: {
     type: Array,
     default: () => {}
@@ -180,8 +185,8 @@ const props = defineProps({
 const { CRUD, crud, form } = regForm(defaultForm, formRef)
 const contractInfo = inject('contractInfo')
 const bankList = inject('bankList')
-// const totalAmount = inject('totalAmount')
-// const extraAmount = ref(0)
+const totalAmount = inject('totalAmount')
+const extraAmount = ref(0)
 const dict = useDict(['payment_reason'])
 const typeProp = { key: 'id', label: 'depositBank', value: 'id' }
 const { maxHeight } = useMaxHeight({
@@ -211,7 +216,7 @@ function wrongCellMask({ row, column }) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -243,26 +248,28 @@ function addRow() {
   })
 }
 
-// function moneyChange(row) {
-//   extraAmount.value = 0
-//   form.list.map(v => {
-//     if (v.collectionAmount) {
-//       extraAmount.value += v.collectionAmount
-//     }
-//   })
-//   if (extraAmount.value > (contractInfo.value.contractAmount - totalAmount.value)) {
-//     const num = row.collectionAmount - (extraAmount.value - (contractInfo.value.contractAmount - totalAmount.value))
-//     nextTick(() => {
-//       row.collectionAmount = num || 0
-//       extraAmount.value = 0
-//       form.list.map(v => {
-//         if (v.collectionAmount) {
-//           extraAmount.value += v.collectionAmount
-//         }
-//       })
-//     })
-//   }
-// }
+function moneyChange(row) {
+  extraAmount.value = 0
+  if (props.currentRow.settlementAmount) {
+    form.list.map(v => {
+      if (v.collectionAmount) {
+        extraAmount.value += v.collectionAmount
+      }
+    })
+    if (extraAmount.value > (props.currentRow.settlementAmount - totalAmount.value)) {
+      const num = row.collectionAmount - (extraAmount.value - (props.currentRow.settlementAmount - totalAmount.value))
+      nextTick(() => {
+        row.collectionAmount = num || 0
+        extraAmount.value = 0
+        form.list.map(v => {
+          if (v.collectionAmount) {
+            extraAmount.value += v.collectionAmount
+          }
+        })
+      })
+    }
+  }
+}
 
 function bankChange(row) {
   if (row.collectionBankAccountId) {
@@ -286,7 +293,7 @@ CRUD.HOOK.beforeValidateCU = (crud, form) => {
   crud.form.list.map(row => {
     row.verify = {}
     for (const rule in rules) {
-      row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+      row.verify[rule] = validate(rule, rules[rule], row)
       if (!row.verify[rule]) {
         flag = false
       }

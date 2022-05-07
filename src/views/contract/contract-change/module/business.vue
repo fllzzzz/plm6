@@ -95,6 +95,9 @@
                 <span>{{ detail.invoiceType ? invoiceTypeEnum.VL[detail.invoiceType] : '' }}</span>
               </div>
             </el-form-item>
+            <el-form-item label="税率" prop="businessTaxRate">
+                <span>{{ detail.taxRate ? detail.taxRate*100+'%' : '' }}</span>
+              </el-form-item>
           </div>
           <div class="form-row">
             <el-form-item label="付款方式描述" prop="payTypeDesc">
@@ -116,14 +119,13 @@ import { ref, defineProps, watch } from 'vue'
 import {
   projectTypeEnum,
   businessTypeEnum,
-  paymentModeEnum,
-  invoiceTypeEnum,
   isTaxContractEnum,
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
   TechnologyTypeEnum
 } from '@enum-ms/contract'
+import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { isNotBlank } from '@data-type/index'
 import EnclosureShow from '@/views/contract/project-manage/module/enclosure-show'
 import { parseTime } from '@/utils/date'

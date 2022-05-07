@@ -92,14 +92,25 @@
       <rrOperation />
     </div>
     <crudOperation>
-      <!-- TODO:打印 -->
-      <template #optLeft></template>
+      <!-- 打印 -->
+      <template #optLeft>
+        <print-table
+          v-permission="permission.get"
+          api-key="wmsRmRejectReceipt"
+          :params="selectionIds"
+          :disabled="selectionIds.length === 0"
+          size="mini"
+          type="warning"
+          class="filter-item"
+          @success="crud.selectAllChange"
+        />
+      </template>
     </crudOperation>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, inject, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { PICKER_OPTIONS_SHORTCUTS, STEEL_ENUM } from '@/settings/config'
 import { supplierTypeEnum } from '@enum-ms/supplier'
@@ -127,8 +138,14 @@ const defaultQuery = {
   operatorName: undefined // 创建人
 }
 
+const permission = inject('permission')
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
+
+const selectionIds = computed(() => {
+  return crud.selections.map((row) => row.id)
+})
+
 onMounted(() => {
   if (+route.params.basicClass === STEEL_ENUM) {
     query.basicClass = rawMatClsEnum.STEEL_PLATE.V

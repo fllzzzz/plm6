@@ -15,7 +15,7 @@
             </span>
             <span v-if="basicClass === rawMatClsEnum.SECTION_STEEL.V" class="info-item">
               <span>总长度(m)</span>
-              <span v-to-fixed="{ val: allLength || 0, dp: baseUnit.length.precision }" />
+              <span v-to-fixed="{ val: allLength || 0, dp: 3 }" />
             </span>
           </template>
         </span>
@@ -147,7 +147,7 @@ function calcAllQuantity() {
 // 计算所有型材总长
 function calcAllLength() {
   allLength.value = form.list.reduce((sum, cur) => {
-    return +toFixed(sum + cur.totalLength, 2)
+    return +toFixed(sum + (cur.totalLength || 0), 2)
   }, 0)
 }
 

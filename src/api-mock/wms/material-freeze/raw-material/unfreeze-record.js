@@ -1,5 +1,5 @@
 import { matClsEnum } from '@/utils/enum/modules/classification'
-import { materialFreezeTypeEnum } from '@/utils/enum/modules/wms'
+import { materialFreezeTypeEnum, receiptTypeEnum } from '@/utils/enum/modules/wms'
 
 const get = {
   url: '/api/wms/freeze/raw-material/unfreeze',
@@ -13,10 +13,11 @@ const get = {
         content: [
           {
             id: 1,
-            freezeType: materialFreezeTypeEnum.REQUISITIONS.V,
+            freezeType: materialFreezeTypeEnum.PREPARATION.V,
             remark: 'fffff', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.PREPARATION.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {
@@ -60,10 +61,11 @@ const get = {
           },
           {
             id: 2,
-            freezeType: materialFreezeTypeEnum.OUTBOUND.V,
+            freezeType: materialFreezeTypeEnum.OUTBOUND_APPLY.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.OUTBOUND_APPLY.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {
@@ -109,8 +111,9 @@ const get = {
             id: 3,
             freezeType: materialFreezeTypeEnum.TRANSFER.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.TRANSFER.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {
@@ -156,8 +159,9 @@ const get = {
             id: 3,
             freezeType: materialFreezeTypeEnum.REJECTED.V,
             remark: '666666', // 解冻备注
-            document: {
+            receipt: {
               id: 1,
+              receiptType: receiptTypeEnum.REJECTED.V,
               serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
             },
             project: {

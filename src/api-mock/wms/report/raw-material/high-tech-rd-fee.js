@@ -285,4 +285,28 @@ const get = {
   }
 }
 
-export default [get]
+// 高新研发费报表excel导出
+const exportExcel = {
+  url: '/api/wms/report/raw-materials/high-tech-rd-fee/excel',
+  method: 'get',
+  timeout: 500,
+  rawResponse: async (req, res) => {
+    let result = ''
+    res.setHeader('Content-Type', 'application/vnd.ms-excel;charset=UTF-8')
+    res.setHeader(
+      'Content-Disposition',
+      'attachment;filename=%E9%AB%98%E6%96%B0%E7%A0%94%E5%8F%91%E8%B4%B9%E6%8A%A5%E8%A1%A8.xlsx'
+    )
+    if (Math.random() > 0.5) {
+      result = 'code=20000;message='
+    } else {
+      result =
+        'code=40000;message=%E9%AB%98%E6%96%B0%E7%A0%94%E5%8F%91%E8%B4%B9%E6%8A%A5%E8%A1%A8excel%E8%A1%A8%E6%A0%BC%E5%AF%BC%E5%87%BA%E6%97%B6%E9%97%B4%E8%8C%83%E5%9B%B4%E4%B8%8D%E5%8F%AF%E8%B6%85%E8%BF%87%E4%B8%80%E5%B9%B4'
+    }
+    res.setHeader('Result', result)
+    res.statusCode = 200
+    res.end(`高新研发费报表excel导出`)
+  }
+}
+
+export default [get, exportExcel]

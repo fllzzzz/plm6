@@ -2,8 +2,7 @@
   <div>
     <!--表格渲染-->
     <div>
-      <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;" v-if="checkPermission(permission.add)">添加</common-button>
-      <el-tag type="success" size="medium" v-if="detailInfo.amount">{{'合同金额:'+toThousand(detailInfo.amount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.amount">{{'合同金额:'+toThousand(currentRow.amount)}}</el-tag>
     </div>
     <common-table
       ref="tableRef"
@@ -23,11 +22,16 @@
           <div>{{ scope.row.applyUserName? scope.row.applyUserName:'-' }}</div>
         </template>
       </el-table-column>
-      <el-table-column key="paymentDate" prop="paymentDate" label="*付款日期" align="center" >
+       <el-table-column key="paymentDate" prop="paymentDate" label="申请日期" align="center" >
         <template v-slot="scope">
           <div>{{ scope.row.paymentDate? parseTime(scope.row.paymentDate,'{y}-{m}-{d}'): '-' }}</div>
         </template>
       </el-table-column>
+      <!-- <el-table-column key="type" prop="type" label="承运属性" align="center" >
+        <template v-slot="scope">
+          <div>{{ scope.row.type? logisticsSearchTypeEnum.VL[scope.row.type]: '-' }}</div>
+        </template>
+      </el-table-column> -->
       <el-table-column key="applyAmount" prop="applyAmount" label="申请金额" align="center">
         <template v-slot="scope">
           <div>{{ scope.row.applyAmount && scope.row.applyAmount>0? toThousand(scope.row.applyAmount): scope.row.applyAmount }}</div>
@@ -51,17 +55,18 @@
       </el-table-column>
       <!--编辑与删除-->
       <el-table-column
-        v-if="checkPermission([ ...permission.edit,...permission.del])"
         label="操作"
         width="190px"
         align="center"
       >
         <template v-slot="scope">
+          <common-button icon="el-icon-view" type="primary" size="mini" @click="openDetail(scope.row, 'detail')"/>
           <udOperation :data="scope.row" :show-edit="scope.row.auditStatus===auditTypeEnum.AUDITING.V?true:false" :show-del="scope.row.auditStatus===auditTypeEnum.AUDITING.V?true:false" :permission="permission"/>
         </template>
       </el-table-column>
     </common-table>
     <mForm :detail-info="detailInfo" />
+    <applicationDetail v-model="detailVisible" :showType="'detail'" :detailInfo="detailInfo" />
   <!--分页组件-->
   <pagination />
   </div>
@@ -69,18 +74,18 @@
 
 <script setup>
 import crudApi from '@/api/supply-chain/logistics-payment-manage/logistics-payment'
-import { ref, defineProps, watch, nextTick } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
+import { ref, defineProps, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
-import { auditTypeEnum } from '@enum-ms/contract'
+import { auditTypeEnum, supplierPayTypeEnum } from '@enum-ms/contract'
 import { parseTime } from '@/utils/date'
 // import { DP } from '@/settings/config'
 import { toThousand } from '@data-type/number'
 import mForm from './form'
 import { supplierLogisticsPaymentPM } from '@/page-permission/supply-chain'
+import applicationDetail from '@/views/contract/payment-manage/supplier-manage/logistics-manage/module/payment-audit/detail'
 
 const permission = supplierLogisticsPaymentPM.application
 
@@ -92,7 +97,7 @@ const optShow = {
 }
 
 const props = defineProps({
-  detailInfo: {
+  currentRow: {
     type: Object,
     default: () => {}
   },
@@ -103,7 +108,8 @@ const props = defineProps({
 })
 
 const tableRef = ref()
-
+const detailVisible = ref(false)
+const detailInfo = ref({})
 const { CRUD, crud } = useCRUD(
   {
     title: '付款申请',
@@ -111,7 +117,7 @@ const { CRUD, crud } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    requiredQuery: ['supplierId'],
+    requiredQuery: ['supplierId', 'branchCompanyId'],
     hasPagination: true
   },
   tableRef
@@ -127,23 +133,19 @@ watch(
   () => props.visibleValue,
   (val) => {
     if (val) {
+      crud.query.supplierId = props.currentRow.supplierId
+      crud.query.branchCompanyId = props.currentRow.branchCompanyId
+      crud.query.propertyType = supplierPayTypeEnum.TRANSPORT.V
       crud.toQuery()
     }
   },
   { deep: true, immediate: true }
 )
 
-watch(
-  props.detailInfo,
-  (id) => {
-    nextTick(() => {
-      crud.query.supplierId = props.detailInfo.supplierId
-      crud.toQuery()
-    })
-  },
-  { immediate: true }
-)
-
+function openDetail(row) {
+  detailInfo.value = row
+  detailVisible.value = true
+}
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v) => {
     v.paymentDate = String(v.paymentDate)

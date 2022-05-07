@@ -7,6 +7,8 @@ export default function useDrawing({ pidField = 'id', typeField = 'productType',
 
   function drawingPreview(row) {
     drawingRow.value = {
+      boolBim: row.boolBim,
+      monomerId: row.monomerId,
       serialNumber: row.serialNumber,
       attachmentId: row.attachmentId,
       productId: row[pidField],

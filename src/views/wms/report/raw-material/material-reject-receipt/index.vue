@@ -13,6 +13,8 @@
       highlight-current-row
       :expand-row-keys="expandRowKeys"
       row-key="id"
+      @sort-change="crud.handleSortChange"
+      @selection-change="crud.selectionChangeHandler"
     >
       <el-expand-table-column :data="crud.data" v-model:expand-row-keys="expandRowKeys" row-key="id">
         <template #default="{ row }">
@@ -24,6 +26,7 @@
           </p>
         </template>
       </el-expand-table-column>
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column
         v-if="columns.visible('rejectTime')"
@@ -52,12 +55,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.purchaseOrder"
-            :permission="permission.purchaseOrderDetail"
-            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
-            :text="row.purchaseOrder.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['PURCHASE']" :receipt="row.purchaseOrder" />
         </template>
       </el-table-column>
       <el-table-column
@@ -70,12 +68,7 @@
         align="left"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.inboundReceipt"
-            :permission="permission.inboundReceiptDetail"
-            @click="openInboundDetail(row.inboundReceipt.id)"
-            :text="row.inboundReceipt.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['INBOUND']" :receipt="row.inboundReceipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -169,21 +162,11 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 入库单详情 -->
-    <detail-wrapper ref="inboundDetailRef" :api="getInboundDetail">
-      <inbound-detail />
-    </detail-wrapper>
-    <!-- 采购订单详情 -->
-    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
-      <purchase-order-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import { getReceiptList as get, getReceiptDetail as detail } from '@/api/wms/report/raw-material/reject'
-import { getReceiptDetail as getInboundDetail } from '@/api/wms/report/raw-material/inbound'
-import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { reportRawMaterialRejectReceiptPM as permission } from '@/page-permission/wms'
 
 import { computed, ref } from 'vue'
@@ -193,18 +176,12 @@ import checkPermission from '@/utils/system/check-permission'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useOtherCrudDetail from '@compos/use-other-crud-detail'
-
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
-
-import InboundDetail from '@/views/wms/report/raw-material/material-inbound-receipt/module/detail.vue'
-import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import elExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -243,7 +220,4 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 
 // 是否有显示金额权限
 const showAmount = computed(() => checkPermission(permission.showAmount))
-
-const { detailRef: inboundDetailRef, openDetail: openInboundDetail } = useOtherCrudDetail()
-const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
 </script>

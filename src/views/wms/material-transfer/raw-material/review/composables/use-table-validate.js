@@ -22,7 +22,7 @@ export default function useTableValidate() {
 function tableValidate(list, rules) {
   let flag = true
   // 筛选需要校验的行
-  const partyABuyInList = list.filter(row => {
+  const partyABuyInList = list.filter((row) => {
     return row.boolPartyA && row.partyATransferType === partyAMatTransferEnum.BUY_IN.V
   })
   // 不存在买入的甲供物料直接返回true
@@ -35,7 +35,7 @@ function tableValidate(list, rules) {
 
     row.verify = {}
     for (const rule in rules) {
-      row.verify[rule] = validate(rules[rule], row[rule], row)
+      row.verify[rule] = validate(rule, rules[rule], row)
       if (!row.verify[rule]) {
         flag = false
       }

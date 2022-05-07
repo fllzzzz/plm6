@@ -110,27 +110,28 @@ const baseMaterialTypeEnum = {
 }
 constantize(baseMaterialTypeEnum)
 
-// 冻结类型
-const materialFreezeTypeEnum = {
-  REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 1 << 0, DOC: '申购单' },
-  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 1 << 1, DOC: '出库申请单' },
-  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 1 << 2, DOC: '调拨单' },
-  REJECTED: { L: '退货', K: 'REJECTED', V: 1 << 3, DOC: '退货单' }
-}
-constantize(materialFreezeTypeEnum)
-
 // 单据类型
 const receiptTypeEnum = {
-  // REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 1 << 0, DOC: '申购单' },
-  PURCHASE: { L: '采购', K: 'PURCHASE', V: 1, DOC: '采购单' },
-  INBOUND: { L: '入库', K: 'INBOUND', V: 2, DOC: '入库单' },
-  OUTBOUND_APPLY: { L: '出库申请', K: 'OUTBOUND_APPLY', V: 3, DOC: '出库申请单' },
-  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 4, DOC: '出库单' },
-  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 5, DOC: '调拨单' },
-  RETURN: { L: '退库', K: 'RETURN', V: 6, DOC: '退库单' },
-  REJECTED: { L: '退货', K: 'REJECTED', V: 7, DOC: '退货单' }
+  PREPARATION: { L: '备料', K: 'PREPARATION', V: 1, DOC: '备料单' },
+  REQUISITIONS: { L: '申购', K: 'REQUISITIONS', V: 2, DOC: '申购单' },
+  PURCHASE: { L: '采购', K: 'PURCHASE', V: 11, DOC: '采购单' },
+  INBOUND: { L: '入库', K: 'INBOUND', V: 12, DOC: '入库单' },
+  OUTBOUND_APPLY: { L: '出库申请', K: 'OUTBOUND_APPLY', V: 13, DOC: '出库申请单' },
+  OUTBOUND: { L: '出库', K: 'OUTBOUND', V: 14, DOC: '出库单' },
+  TRANSFER: { L: '调拨', K: 'TRANSFER', V: 15, DOC: '调拨单' },
+  RETURN: { L: '退库', K: 'RETURN', V: 16, DOC: '退库单' },
+  REJECTED: { L: '退货', K: 'REJECTED', V: 17, DOC: '退货单' }
 }
 constantize(receiptTypeEnum)
+
+// 冻结类型
+const materialFreezeTypeEnum = {
+  PREPARATION: receiptTypeEnum.PREPARATION,
+  OUTBOUND_APPLY: { L: '出库', K: 'OUTBOUND_APPLY', V: receiptTypeEnum.OUTBOUND_APPLY.V, DOC: '出库申请单' },
+  TRANSFER: receiptTypeEnum.TRANSFER,
+  REJECTED: receiptTypeEnum.REJECTED
+}
+constantize(materialFreezeTypeEnum)
 
 // 物料打印标签类型
 const materialLabelPrintTypeEnum = {

@@ -66,7 +66,7 @@
         fixed="right"
         min-width="120"
       >
-        <template #default="{ row }">
+        <template #default="{ row: { sourceRow: row } }">
           <common-input-number v-model="row.printNumber" :min="1" :max="999" />
         </template>
       </el-table-column>

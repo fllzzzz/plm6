@@ -363,3 +363,10 @@ body .el-table th.gutter {
   padding: 0px 9px !important;
   min-height: 22px !important;
 }
+
+// 通知可换行
+.el-notification__content {
+  p {
+    white-space: pre-wrap;
+  }
+}

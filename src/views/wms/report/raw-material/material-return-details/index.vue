@@ -42,7 +42,7 @@
       <material-unit-quantity-columns :columns="columns" :basic-class="basicClass" />
       <!-- 价格信息 -->
       <template v-if="showAmount">
-        <amount-info-columns :columns="columns" show-invoice-type show-tax-rate />
+        <amount-info-columns :columns="columns" show-invoice-type />
       </template>
       <warehouse-info-columns :columns="columns" show-project />
       <el-table-column
@@ -55,12 +55,7 @@
         align="left"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.returnReceipt"
-            :permission="permission.returnReceiptDetail"
-            @click="openReturnReceiptDetail(row.returnReceipt.id)"
-            :text="row.returnReceipt.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['RETURN']" :receipt="row.returnReceipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -73,12 +68,7 @@
         align="left"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.outboundReceipt"
-            :permission="permission.outboundReceiptDetail"
-            @click="openOutboundReceiptDetail(row.outboundReceipt.id)"
-            :text="row.outboundReceipt.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['OUTBOUND']" :receipt="row.outboundReceipt" />
         </template>
       </el-table-column>
       <el-table-column
@@ -120,22 +110,12 @@
     </common-table>
     <!--分页组件-->
     <pagination />
-    <!-- 出库单详情 -->
-    <detail-wrapper ref="outboundReceiptDetailRef" :api="getOutboundReceiptDetail">
-      <outbound-receipt-detail />
-    </detail-wrapper>
-    <!-- 退库单详情 -->
-    <detail-wrapper ref="returnReceiptDetailRef" :api="getReturnReceiptDetail">
-      <return-receipt-detail />
-    </detail-wrapper>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue'
 import { getDetails as get } from '@/api/wms/report/raw-material/return'
-import { detail as getOutboundReceiptDetail } from '@/api/wms/material-outbound/raw-material/record'
-import { detail as getReturnReceiptDetail } from '@/api/wms/material-return/raw-material/record'
 import { reportRawMaterialReturnDetailsPM as permission } from '@/page-permission/wms'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
@@ -144,14 +124,9 @@ import { materialHasAmountColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useOtherCrudDetail from '@/composables/use-other-crud-detail'
-
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import Pagination from '@crud/Pagination'
 import MHeader from './module/header.vue'
 
-import OutboundReceiptDetail from '@/views/wms/material-outbound/raw-material/record/module/detail.vue'
-import ReturnReceiptDetail from '@/views/wms/material-return/raw-material/record/module/detail.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
 import ExpandSecondaryInfo from '@/components-system/wms/table-columns/expand-secondary-info/index.vue'
 import MaterialBaseInfoColumns from '@/components-system/wms/table-columns/material-base-info-columns/index.vue'
@@ -159,7 +134,7 @@ import MaterialUnitQuantityColumns from '@/components-system/wms/table-columns/m
 import MaterialSecondaryInfoColumns from '@/components-system/wms/table-columns/material-secondary-info-columns/index.vue'
 import AmountInfoColumns from '@/components-system/wms/table-columns/amount-info-columns/index.vue'
 import WarehouseInfoColumns from '@/components-system/wms/table-columns/warehouse-info-columns/index.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -208,12 +183,6 @@ const { maxHeight } = useMaxHeight({ paginate: true })
 const showAmount = computed(() => checkPermission(permission.showAmount))
 
 const basicClass = computed(() => (crud.query ? crud.query.basicClass : undefined))
-
-// 出库单详情
-const { detailRef: outboundReceiptDetailRef, openDetail: openOutboundReceiptDetail } = useOtherCrudDetail()
-
-// 退库单详情
-const { detailRef: returnReceiptDetailRef, openDetail: openReturnReceiptDetail } = useOtherCrudDetail()
 
 // 处理刷新
 CRUD.HOOK.handleRefresh = async (crud, { data }) => {

@@ -16,4 +16,18 @@ export function get(params) {
   })
 }
 
+/**
+ * 甲供买入excel导出
+ */
+export function exportExcel(params) {
+  return request({
+    module: 'wms',
+    url: `transfer/party-a-buy-in/excel`,
+    method: 'get',
+    responseType: 'blob',
+    timeout: 60000000,
+    params
+  })
+}
+
 export default { get }

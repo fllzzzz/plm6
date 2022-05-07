@@ -88,7 +88,11 @@
           :show-overflow-tooltip="true"
           label="规格"
           min-width="120"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.specification ? scope.row.specification : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('length')"
           key="length"
@@ -112,7 +116,11 @@
           label="材质"
           align="center"
           min-width="80px"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.material ? scope.row.material : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('quantity')"
           key="quantity"
@@ -121,7 +129,11 @@
           label="数量"
           align="left"
           min-width="80px"
-        />
+        >
+         <template v-slot="scope">
+            {{ scope.row.quantity ? scope.row.quantity : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('netWeight')"
           key="netWeight"
@@ -184,7 +196,11 @@
           :show-overflow-tooltip="true"
           label="图号"
           min-width="100px"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.drawingNumber ? scope.row.drawingNumber : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('surfaceArea')"
           key="surfaceArea"
@@ -205,7 +221,11 @@
           :show-overflow-tooltip="true"
           label="备注"
           min-width="120"
-        />
+        >
+         <template v-slot="scope">
+            {{ scope.row.remark ? scope.row.remark : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="columns.visible('userName')"
           key="userName"
@@ -213,7 +233,11 @@
           :show-overflow-tooltip="true"
           label="上传人"
           min-width="110"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.row.userName ? scope.row.userName : '-' }}
+          </template>
+        </el-table-column>
         <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="上传时间" min-width="160px">
           <template v-slot="scope">
             <div>{{ scope.row.createTime ? parseTime(scope.row.createTime, '{y}-{m}-{d}') : '-' }}</div>
@@ -270,13 +294,22 @@
       </common-table>
       <!--分页组件-->
       <pagination />
-      <mForm />
       <numForm v-model="numVisible" :detailInfo="currentRow" @success="handleSuccess" />
       <listForm v-model="listVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
-      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" :allArea="allArea" />
+      <serialNumForm v-model="serialVisible" :detailInfo="currentRow" @success="handleSuccess" @numSuccess="handleNumSuccess" :allArea="allArea" />
       <!-- pdf预览 -->
-      <drawing-pdf
-        v-model="showDrawing"
+      <bim-preview-drawer
+        v-model:visible="showBimDialog"
+        :bool-bim="drawingRow?.boolBim"
+        :monomer-id="drawingRow?.monomerId"
+        :serial-number="drawingRow?.serialNumber"
+        :productId="drawingRow?.productId"
+        :productType="drawingRow?.productType"
+      />
+      <!-- pdf预览 -->
+      <drawing-preview-fullscreen-dialog
+        v-model="showDrawingDialog"
+        :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -287,7 +320,7 @@
 
 <script setup>
 import crudApi, { editStatus, artifactPart } from '@/api/plan/technical-manage/artifact-tree'
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import { artifactTreePM as permission } from '@/page-permission/plan'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -297,18 +330,46 @@ import useDrawing from '@compos/use-drawing'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
-import mForm from './module/form'
 import { DP } from '@/settings/config'
 import { ElMessageBox } from 'element-plus'
 import { parseTime } from '@/utils/date'
 import numForm from './module/num-form'
 import listForm from './module/list-form'
 import serialNumForm from './module/serialNum-form'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 import { componentTypeEnum } from '@enum-ms/mes'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', typeField: 'productType' })
+
+const showBimDialog = ref(false)
+const showDrawingDialog = ref(false)
+
+watch(
+  [() => showBimDialog.value, () => showDrawingDialog.value],
+  ([b, d]) => {
+    if (!b && !d) {
+      showDrawing.value = false
+    }
+    console.log(b, d, showDrawing.value, 'show')
+  }
+)
+
+watch(
+  () => showDrawing.value,
+  (val) => {
+    if (val) {
+      if (drawingRow.value?.productType && drawingRow.value?.productType & componentTypeEnum.ARTIFACT.V) {
+        showBimDialog.value = true
+      }
+      if (drawingRow.value?.productType && !(drawingRow.value?.productType & componentTypeEnum.ARTIFACT.V)) {
+        showDrawingDialog.value = true
+      }
+    }
+  }
+)
+
 const optShow = {
   add: false,
   edit: false,
@@ -447,6 +508,10 @@ function getAreaData(val) {
 
 function handleSuccess() {
   tableRef.value.refreshParent(currentRow.value)
+  crud.toQuery()
+}
+
+function handleNumSuccess() {
   crud.toQuery()
 }
 </script>

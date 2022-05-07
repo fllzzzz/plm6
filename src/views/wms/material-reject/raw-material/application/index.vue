@@ -30,12 +30,7 @@
         min-width="155"
       >
         <template #default="{ row }">
-          <clickable-permission-span
-            v-if="row.purchaseOrder"
-            :permission="permission.purchaseOrderDetail"
-            @click="openPurchaseOrderDetail(row.purchaseOrder.id)"
-            :text="row.purchaseOrder.serialNumber"
-          />
+          <receipt-sn-clickable :receipt-types="['PURCHASE']" :receipt="row.purchaseOrder" />
         </template>
       </el-table-column>
       <el-table-column
@@ -146,10 +141,6 @@
     <pagination />
     <!-- 查看详情 -->
     <m-detail />
-    <!-- 采购订单详情 -->
-    <detail-wrapper ref="purchaseOrderRef" :api="getPurchaseOrderDetail">
-      <purchase-order-detail />
-    </detail-wrapper>
     <!-- 退货办理页面 -->
     <m-application v-model:visible="rejectApplicationVisible" :inbound-id="currentRowId" @success="crud.refresh" />
   </div>
@@ -157,7 +148,6 @@
 
 <script setup>
 import crudApi from '@/api/wms/material-reject/raw-material/application'
-import { detail as getPurchaseOrderDetail } from '@/api/supply-chain/purchase-order'
 import { rawMaterialRejectApplicationPM as permission } from '@/page-permission/wms'
 
 import { ref } from 'vue'
@@ -165,18 +155,14 @@ import { wmsReceiptColumns } from '@/utils/columns-format/wms'
 
 import useCRUD from '@compos/use-crud'
 import useMaxHeight from '@compos/use-max-height'
-import useOtherCrudDetail from '@/composables/use-other-crud-detail'
-
 import UdOperation from '@crud/UD.operation.vue'
 import Pagination from '@crud/Pagination'
-import DetailWrapper from '@crud/detail-wrapper.vue'
 import MHeader from './module/header.vue'
 import MDetail from './module/detail.vue'
 import MApplication from './module/application.vue'
 
-import purchaseOrderDetail from '@/views/supply-chain/purchase-order/module/detail/raw-material.vue'
 import ElExpandTableColumn from '@comp-common/el-expand-table-column.vue'
-import ClickablePermissionSpan from '@/components-system/common/clickable-permission-span.vue'
+import ReceiptSnClickable from '@/components-system/wms/receipt-sn-clickable'
 
 const optShow = {
   add: false,
@@ -210,5 +196,4 @@ function handleRejectApplication(row) {
   currentRowId.value = row.id
 }
 
-const { detailRef: purchaseOrderRef, openDetail: openPurchaseOrderDetail } = useOtherCrudDetail()
 </script>

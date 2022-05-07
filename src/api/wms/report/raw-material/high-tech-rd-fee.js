@@ -12,4 +12,18 @@ export function get(params) {
   })
 }
 
+/**
+ * 高薪研发费excel导出
+ */
+export function exportExcel(params) {
+  return request({
+    module: 'wms',
+    url: `report/raw-materials/high-tech-rd-fee/excel`,
+    method: 'get',
+    responseType: 'blob',
+    timeout: 60000000,
+    params
+  })
+}
+
 export default { get }

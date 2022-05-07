@@ -41,10 +41,7 @@
         />
       </template>
       <template v-if="form.reviewStatus === reviewStatusEnum.PASS.V">
-        <!-- TODO:打印按钮 -->
-        <common-button :loading="submitOptLoading" size="mini" icon="el-icon-print" type="success" @click="nextRecord">
-          打印/下载完毕
-        </common-button>
+        <print-table api-key="wmsRmOutboundReceipt" :params="form.id" size="mini" type="warning" class="filter-item" @success="nextRecord" />
       </template>
     </template>
     <template #content>

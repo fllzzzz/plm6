@@ -3,7 +3,7 @@
     <div class="header-container">
       <div class="filter-container">
         <div class="filter-left-box">
-          <el-input v-model="filterText" class="filter-item" placeholder="输入关键字进行过滤" style="width: 270px" />
+          <el-input v-model.trim="filterText" class="filter-item" placeholder="输入关键字进行过滤" style="width: 270px" />
         </div>
         <div class="filter-right-box" style="display: inline-block">
           <common-button

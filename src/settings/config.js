@@ -23,7 +23,7 @@ export const allPT = Object.keys(projectTypeEnum.VL).reduce((res, cur) => {
 }, 0)
 
 // 基础配置，钢材误差单位g
-export const STEEL_DIFF_UNIT = 'g'
+export const STEEL_DIFF_UNIT = 'kg'
 
 // 基础配置，钢材尺寸误差单位mm
 export const STEEL_SIZE_DIFF_UNIT = 'mm'
@@ -35,20 +35,20 @@ export const UNIT_NET_PRECISION = 8
 export const MAT_BASE_UNIT = {}
 MAT_BASE_UNIT[matClsEnum.STEEL_PLATE.V] = {
   measure: { unit: '张', precision: 0 },
-  weight: { unit: 'kg', precision: 1 },
+  weight: { unit: 'kg', precision: 0 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 },
   thickness: { unit: 'mm', precision: 2 }
 }
 MAT_BASE_UNIT[matClsEnum.SECTION_STEEL.V] = {
   measure: { unit: '根', precision: 0 },
-  weight: { unit: 'kg', precision: 1 },
+  weight: { unit: 'kg', precision: 0 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 }
 }
 MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
   measure: { unit: 'mm', precision: 0 },
-  weight: { unit: 'kg', precision: 1 },
+  weight: { unit: 'kg', precision: 0 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 },
   thickness: { unit: 'mm', precision: 3 }
@@ -56,10 +56,13 @@ MAT_BASE_UNIT[matClsEnum.STEEL_COIL.V] = {
 
 MAT_BASE_UNIT[STEEL_ENUM] = {
   measure: { unit: '件', precision: 0 },
-  weight: { unit: 'kg', precision: 1 },
+  weight: { unit: 'kg', precision: 0 },
   length: { unit: 'mm', precision: 0 },
   width: { unit: 'mm', precision: 0 }
 }
+
+// 钢材单位
+export const STEEL_BASE_UNIT = MAT_BASE_UNIT[STEEL_ENUM]
 
 // 系统最小单位（默认）
 export const MIN_UNIT = {
@@ -75,6 +78,15 @@ export const MIN_UNIT = {
   VOLUME_DP: 0
 }
 
+// 系统常用单位
+export const DEF_UNIT = {
+  WEIGHT: 'kg',
+  WEIGHT_DP: 2,
+  LENGTH: 'mm',
+  LENGTH_DP: 3
+}
+
+// 二维码拼接路径
 export const specialPath = {
   QR_SCAN_ARTIFACT_TASK: '/s/s/a',
   QR_SCAN_ENCLOSURE_TASK: '/s/s/e',
@@ -86,12 +98,12 @@ export const specialPath = {
 
 export const QR_SCAN_F_TYPE = {
   MEW_PRODUCTION: 1, // 建钢产品
-  MES_PACKAGE_SHIP: 2// 建钢打包发运
+  MES_PACKAGE_SHIP: 2 // 建钢打包发运
 }
 
 export const QR_SCAN_TYPE = {
   MES_PACKAGE: 1, // 建钢包
-  MES_SHIP_LIST: 2// 建钢发运清单
+  MES_SHIP_LIST: 2 // 建钢发运清单
 }
 
 // mes系统单位

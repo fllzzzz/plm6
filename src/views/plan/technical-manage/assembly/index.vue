@@ -3,7 +3,7 @@
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length > 0">
       <!--工具栏-->
       <div class="head-container">
-        <mHeader :project-id="globalProjectId" />
+        <mHeader :project-id="globalProjectId" :globalProject="globalProject"/>
       </div>
       <!--表格渲染-->
       <common-table
@@ -61,7 +61,7 @@
                       style="min-width: 100px"
                       size="mini"
                     />
-                    <span v-else>{{ scope.row.specification }}</span>
+                    <span v-else>{{ scope.row.specification?scope.row.specification:'-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column key="material" prop="material" label="材质" align="center">
@@ -125,17 +125,17 @@
                       style="width: 140px"
                       size="mini"
                     />
-                    <span v-else>{{ scope.row.quantity }}</span>
+                    <span v-else>{{ scope.row.quantity?scope.row.quantity:'-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column v-if="columns.visible('assembleQuantity')" prop="assembleQuantity" :show-overflow-tooltip="true" align="center" label="对应组立数量">
                   <template v-slot="scope">
-                    <span v-if="!scope.row.add">{{ scope.row.assembleQuantity }}</span>
+                    <span v-if="!scope.row.add">{{ scope.row.assembleQuantity?scope.row.assembleQuantity:'-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column key="add" prop="add" label="已生产" align="center">
                   <template v-slot="scope">
-                    <span v-if="!scope.row.add">{{ scope.row.productQuantity }}</span>
+                    <span v-if="!scope.row.add">{{ scope.row.productQuantity?scope.row.productQuantity:'-' }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
@@ -169,23 +169,22 @@
             </el-tooltip>
           </template>
           <template v-slot="scope">
-            <!-- <span>{{ scope.row.serialNumber }}</span> -->
             <span style="cursor: pointer" @dblclick="drawingPreview(scope.row)">{{ scope.row.serialNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('quantity')" prop="quantity" :show-overflow-tooltip="true" align="center" label="总数">
           <template v-slot="scope">
-            <span>{{ scope.row.quantity }}</span>
+            <span>{{ scope.row.quantity?scope.row.quantity:'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('producedQuantity')" prop="producedQuantity" :show-overflow-tooltip="true" align="center" label="已生产">
           <template v-slot="scope">
-            <span>{{ scope.row.producedQuantity }}</span>
+            <span>{{ scope.row.producedQuantity?scope.row.producedQuantity:'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="columns.visible('usedQuantity')" prop="usedQuantity" :show-overflow-tooltip="true" align="center" label="已使用">
           <template v-slot="scope">
-            <span>{{ scope.row.usedQuantity }}</span>
+            <span>{{ scope.row.usedQuantity?scope.row.usedQuantity:'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="翼板腹板信息">
@@ -195,17 +194,18 @@
                 <template v-if="scope.row.detailDTOList.length > 0">
                   <div v-for="(k,i) in scope.row.detailDTOList" :key="k.id">
                     <div :class="i===scope.row.detailDTOList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
-                      {{k[item.key]}}
+                      {{k[item.key]?k[item.key]:'-'}}
                     </div>
                   </div>
                 </template>
+                <template v-else>-</template>
               </template>
             </el-table-column>
           </template>
         </el-table-column>
         <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注">
           <template v-slot="scope">
-            <span>{{ scope.row.remark }}</span>
+            <span>{{ scope.row.remark?scope.row.remark:'-' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -237,8 +237,9 @@
       <!--分页组件-->
       <pagination />
       <!-- pdf预览 -->
-      <drawing-pdf
+      <drawing-preview-fullscreen-dialog
         v-model="showDrawing"
+        :bool-bim="drawingRow?.boolBim"
         :serial-number="drawingRow?.serialNumber"
         :productId="drawingRow?.productId"
         :productType="drawingRow?.productType"
@@ -261,7 +262,7 @@ import { DP } from '@/settings/config'
 import useTableValidate from '@compos/form/use-table-validate'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ASSEMBLE' })

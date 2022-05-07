@@ -76,7 +76,6 @@ import { reviewStatusEnum } from '@enum-ms/common'
 import { rawMatClsEnum } from '@enum-ms/classification'
 
 import { regHeader } from '@compos/use-crud'
-import useGlobalProjectIdChangeToQuery from '@compos/use-global-project-id-change-to-query'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import warehouseProjectCascader from '@comp-wms/warehouse-project-cascader'
@@ -95,7 +94,6 @@ const defaultQuery = {
 
 const route = useRoute()
 const { crud, query } = regHeader(defaultQuery)
-useGlobalProjectIdChangeToQuery(crud)
 onMounted(() => {
   query.basicClass = route.params.basicClass
 })

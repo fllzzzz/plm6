@@ -124,8 +124,10 @@
     <!--分页组件-->
     <pagination />
     <!-- pdf预览 -->
-    <drawing-pdf
-      v-model="showDrawing"
+    <bim-preview-drawer
+      v-model:visible="showDrawing"
+      :bool-bim="drawingRow?.boolBim"
+      :monomer-id="drawingRow?.monomerId"
       :serial-number="drawingRow?.serialNumber"
       :productId="drawingRow?.productId"
       :productType="drawingRow?.productType"
@@ -149,7 +151,7 @@ import { productFormat } from '@/utils/columns-format/mes'
 import productTypeFullInfoColumns from '@comp-mes/table-columns/productType-full-info-columns'
 import mHeader from '@/views/mes/scheduling-manage/scheduling/components/scheduling-header'
 import useDrawing from '@compos/use-drawing'
-import drawingPdf from '@comp-base/drawing-pdf.vue'
+import bimPreviewDrawer from '@/components-system/bim/bim-preview-drawer'
 
 const { showDrawing, drawingRow, drawingPreview } = useDrawing({ pidField: 'id', productTypeField: 'ARTIFACT' })
 

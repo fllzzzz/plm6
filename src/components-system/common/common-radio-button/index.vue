@@ -88,9 +88,11 @@ function selectChange(val) {
 function setDefault() {
   if (props.default && (copyValue.value === -999999999) && isNotBlank(props.options)) {
     for (const i in props.options) {
-      copyValue.value = props.options[i][DS.value]
-      selectChange(copyValue.value)
-      return
+      if (props.unshowVal.indexOf(props.options[i][DS.value]) === -1) {
+        copyValue.value = props.options[i][DS.value]
+        selectChange(copyValue.value)
+        return
+      }
     }
   }
 }

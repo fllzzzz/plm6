@@ -4,6 +4,7 @@
     <div>
       <common-button type="primary" size="mini" @click="crud.toAdd" style="margin-right:10px;">添加</common-button>
       <el-tag type="success" size="medium" v-if="contractInfo.contractAmount">{{'合同金额:'+toThousand(contractInfo.contractAmount)}}</el-tag>
+      <el-tag type="success" size="medium" v-if="currentRow.settlementAmount" style="margin-left:5px;">{{'结算金额:'+toThousand(currentRow.settlementAmount)}}</el-tag>
       <print-table
         v-permission="crud.permission.print"
         api-key="collectionRecord"
@@ -40,7 +41,6 @@
             value-format="x"
             placeholder="选择日期"
             style="width:100%"
-            :disabledDate="(date) => {return date.getTime() < new Date().getTime() - 1 * 24 * 60 * 60 * 1000}"
           />
           <template v-else>
             <div>{{ scope.row.collectionDate? parseTime(scope.row.collectionDate,'{y}-{m}-{d}'): '-' }}</div>
@@ -61,6 +61,7 @@
               placeholder="收款金额(元)"
               controls-position="right"
               :key="scope.row.dataIndex?scope.row.dataIndex:scope.row.id"
+              @change="moneyChange(scope.row)"
             />
             <div v-else>{{ scope.row.collectionAmount && scope.row.collectionAmount>0? toThousand(scope.row.collectionAmount): scope.row.collectionAmount }}</div>
           </template>
@@ -125,7 +126,7 @@
         <template v-slot="scope">
           <el-input
             v-if="scope.row.isModify"
-            v-model="scope.row.paymentUnit"
+            v-model.trim="scope.row.paymentUnit"
             placeholder="付款单位"
             style="width:100%;"
             maxlength="50"
@@ -193,7 +194,7 @@
         </template>
       </el-table-column>
     </common-table>
-    <mForm :projectId="projectId" />
+    <mForm :projectId="projectId" :currentRow="currentRow"/>
   <!--分页组件-->
   <pagination />
   </div>
@@ -201,7 +202,7 @@
 
 <script setup>
 import crudApi, { contractCollectionInfo, bankData, editStatus } from '@/api/contract/collection-and-invoice/collection'
-import { ref, defineEmits, defineProps, watch, provide } from 'vue'
+import { ref, defineEmits, defineProps, watch, provide, nextTick } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { tableSummary } from '@/utils/el-extra'
 import useMaxHeight from '@compos/use-max-height'
@@ -229,6 +230,10 @@ const optShow = {
 }
 
 const props = defineProps({
+  currentRow: {
+    type: Object,
+    default: () => {}
+  },
   projectId: {
     type: [String, Number],
     default: undefined
@@ -277,7 +282,7 @@ function wrongCellMask({ row, column }) {
   let flag = true
   if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
     if (row.verify[column.property] === false) {
-      flag = validate(column.property, rules[column.property], row[column.property], row)
+      flag = validate(column.property, rules[column.property], row)
     }
     if (flag) {
       row.verify[column.property] = true
@@ -315,26 +320,28 @@ watch(
   { deep: true, immediate: true }
 )
 
-// function moneyChange(row) {
-//   totalAmount.value = 0
-//   crud.data.map(v => {
-//     if (v.collectionAmount) {
-//       totalAmount.value += v.collectionAmount
-//     }
-//   })
-//   if (totalAmount.value > contractInfo.value.contractAmount) {
-//     const num = row.collectionAmount - (totalAmount.value - contractInfo.value.contractAmount)
-//     nextTick(() => {
-//       row.collectionAmount = num || 0
-//       totalAmount.value = 0
-//       crud.data.map(v => {
-//         if (v.collectionAmount) {
-//           totalAmount.value += v.collectionAmount
-//         }
-//       })
-//     })
-//   }
-// }
+function moneyChange(row) {
+  if (props.currentRow.settlementAmount) {
+    totalAmount.value = 0
+    crud.data.map(v => {
+      if (v.collectionAmount) {
+        totalAmount.value += v.collectionAmount
+      }
+    })
+    if (totalAmount.value > props.currentRow.settlementAmount) {
+      const num = row.collectionAmount - (totalAmount.value - props.currentRow.settlementAmount)
+      nextTick(() => {
+        row.collectionAmount = num || 0
+        totalAmount.value = 0
+        crud.data.map(v => {
+          if (v.collectionAmount) {
+            totalAmount.value += v.collectionAmount
+          }
+        })
+      })
+    }
+  }
+}
 async function getContractInfo(id) {
   let data = {}
   try {
@@ -412,7 +419,7 @@ async function rowSubmit(row) {
   let flag = true
   row.verify = {}
   for (const rule in rules) {
-    row.verify[rule] = validate(rule, rules[rule], row[rule], row)
+    row.verify[rule] = validate(rule, rules[rule], row)
     if (!row.verify[rule]) {
       flag = false
     }

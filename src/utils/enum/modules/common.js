@@ -100,8 +100,8 @@ constantize(dataSourceSysEnum)
 // 操作类型
 const operationTypeEnum = {
   ADD: { L: '新增', K: 'ADD', V: 1, T: 'primary' },
-  DELETE: { L: '删除', K: 'DELETE', V: 2, T: 'danger' },
-  EDIT: { L: '修改', K: 'EDIT', V: 3, T: 'info' }
+  EDIT: { L: '修改', K: 'EDIT', V: 2, T: 'info' },
+  DELETE: { L: '删除', K: 'DELETE', V: 3, T: 'danger' }
 }
 constantize(operationTypeEnum)
 
