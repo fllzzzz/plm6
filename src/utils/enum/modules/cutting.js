@@ -24,8 +24,8 @@ const MessageTypeEnum = {
 constantize(MessageTypeEnum)
 
 const PlateTypeEnum = {
-  WING_PLATE: { L: '翼腹板', K: 'VERIFICATION_CODE', V: 16 },
-  PART_BOARD: { L: '零件板', K: 'VERIFICATION_CODE', V: 2 }
+  WING_PLATE: { L: '翼腹板', K: 'VERIFICATION_CODE', V: 16},
+  PART_BOARD: { L: '零件板', K: 'VERIFICATION_CODE', V: 2}
 }
 constantize(PlateTypeEnum)
 
@@ -45,11 +45,19 @@ constantize(NestingStateEnum)
 
 // 套料状态
 const NestingEnum = {
-  NOT_LINED_UP:{ L: '未套料', K:'VERIFICATION_CODE', V: 0},
-  PARTIAL_ROW_SETS:{ L: '套料指令已发送', K:'VERIFICATION_CODE', V: 1},
-  LINED_UP:{ L: '套料结束', K:'VERIFICATION_CODE', V: 2},
+  NOT_LINED_UP:{ L: '未套料', K:'VERIFICATION_CODE', V: 2},
+  PARTIAL_ROW_SETS:{ L: '部分套料', K:'VERIFICATION_CODE', V: 1 },
+  LINED_UP:{ L: '套料结束', K:'VERIFICATION_CODE', V: 0},
 }
 constantize(NestingEnum)
+
+// 设备类型
+const MachineTypeEnum = {
+  FLAME_CUTTING:{L:'火焰切割设备',K:'VERIFICATION_CODE', V: '0'},
+  PLASMA_CUTTING:{L:'等离子切割设备',K:'VERIFICATION_CODE', V: '1'},
+  LASER_CUTTING:{L:'激光切割设备',K:'VERIFICATION_CODE', V: '2'}
+}
+constantize(MachineTypeEnum)
 
 export {
   TypeEnum,
@@ -57,7 +65,8 @@ export {
   MessageTypeEnum,
   PlateTypeEnum,
   NestingStateEnum,
-  NestingEnum
+  NestingEnum,
+  MachineTypeEnum
 }
 
 export default {
@@ -66,6 +75,7 @@ export default {
   MessageTypeEnum,
   PlateTypeEnum,
   NestingStateEnum,
-  NestingEnum
+  NestingEnum,
+  MachineTypeEnum
 }
 

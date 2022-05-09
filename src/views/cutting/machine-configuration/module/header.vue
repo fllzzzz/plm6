@@ -12,7 +12,7 @@
       />
       <el-input
         v-model="query.machineNumber"
-        placeholder="请输入机器编号"
+        placeholder="请输入设备编号"
         class="filter-item"
         style="width: 200px"
         size="small"
@@ -21,7 +21,7 @@
       />
       <el-input
         v-model="query.machineName"
-        placeholder="请输入机器名称"
+        placeholder="请输入设备名称"
         class="filter-item"
         style="width: 200px"
         size="small"

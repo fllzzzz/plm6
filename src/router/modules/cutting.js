@@ -63,30 +63,30 @@ export default {
   //   }
   //   ]
   // },
-  {
-    path: '/cutting/nest-work-list',
-    component: 'Layout',
-    hidden: false,
-    name: 'cuttingWorkList',
-    alwaysShow: false,
-    redirect: '/cutting/nest-work-list',
-    meta: {
-      title: '套料工单管理',
-      icon: 'config-2',
-      noCache: true
-    },
-    children: [{
-      name: 'nestWorkList',
-      path: 'nest-work-list',
-      hidden: false,
-      component: '/cutting/nest-work-list/index',
-      meta: {
-        title: '套料工单',
-        icon: 'project',
-        noCache: true
-      }
-    }]
-  },
+  // {
+  //   path: '/cutting/nest-work-list',
+  //   component: 'Layout',
+  //   hidden: false,
+  //   name: 'cuttingWorkList',
+  //   alwaysShow: false,
+  //   redirect: '/cutting/nest-work-list',
+  //   meta: {
+  //     title: '套料工单管理',
+  //     icon: 'config-2',
+  //     noCache: true
+  //   },
+  //   children: [{
+  //     name: 'nestWorkList',
+  //     path: 'nest-work-list',
+  //     hidden: false,
+  //     component: '/cutting/nest-work-list/index',
+  //     meta: {
+  //       title: '套料工单',
+  //       icon: 'project',
+  //       noCache: true
+  //     }
+  //   }]
+  // },
   {
     path: '/cutting/cutting-work-order',
     component: 'Layout',
@@ -99,28 +99,62 @@ export default {
       icon: 'config-2',
       noCache: true
     },
-    children: [{
-      name: 'cuttingScheduling',
-      path: 'cutting-scheduling',
-      hidden: false,
-      component: '/cutting/cutting-work-order/cutting-scheduling/index',
-      meta: {
-        title: '切割排产',
-        icon: 'project',
-        noCache: true
-      }
-    },
-    {
-      name: 'cuttingReport',
-      path: 'cutting-report',
-      hidden: false,
-      component: '/cutting/cutting-work-order/cutting-report/index',
-      meta: {
-        title: '切割报表',
-        icon: 'project',
-        noCache: true
-      }
-    },
+    children: [
+      {
+        name: 'cuttingWork',
+        path: 'cutting-work',
+        hidden: false,
+        component: '/cutting/cutting-work-order/cutting-work/index',
+        meta: {
+          title: '切割工单',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'projectTask',
+        path: 'project-task',
+        hidden: false,
+        component: '/cutting/cutting-work-order/project-task/index',
+        meta: {
+          title: '项目任务',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'deviceTask',
+        path: 'device-task',
+        hidden: false,
+        component: '/cutting/cutting-work-order/device-task/index',
+        meta: {
+          title: '设备任务',
+          icon: 'project',
+          noCache: true
+        }
+      },
+    //   {
+    //   name: 'cuttingScheduling',
+    //   path: 'cutting-scheduling',
+    //   hidden: false,
+    //   component: '/cutting/cutting-work-order/cutting-scheduling/index',
+    //   meta: {
+    //     title: '切割排产',
+    //     icon: 'project',
+    //     noCache: true
+    //   }
+    // },
+    // {
+    //   name: 'cuttingReport',
+    //   path: 'cutting-report',
+    //   hidden: false,
+    //   component: '/cutting/cutting-work-order/cutting-report/index',
+    //   meta: {
+    //     title: '切割报表',
+    //     icon: 'project',
+    //     noCache: true
+    //   }
+    // },
     {
       name: 'equipmentMonitoring',
       path: 'equipment-monitoring',
@@ -179,7 +213,7 @@ export default {
       hidden: false,
       component: '/cutting/machine-configuration/index',
       meta: {
-        title: '机器配置',
+        title: '设备配置',
         icon: 'project',
         noCache: true
       }

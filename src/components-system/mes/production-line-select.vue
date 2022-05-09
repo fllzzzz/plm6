@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref, watch,defineExpose } from 'vue'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useOnlyProductLines from '@compos/store/use-only-product-lines'
 
@@ -59,7 +59,11 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择生产线'
-  }
+  },
+  defaultValue: {
+    type: Boolean,
+    default: false
+  },
 })
 
 const selectValue = ref()
@@ -94,6 +98,13 @@ watch(
   },
   { immediate: true }
 )
+// watch(
+//   () => props.workshopInfId,
+//   (value) => {
+//     dataFormat()
+//   },
+//   { immediate: true }
+// )
 
 function handleChange(val) {
   if (props.modelValue !== val) {
@@ -125,10 +136,18 @@ function dataFormat() {
       selectValue.value = options.value[0].value
     }
     const isExit = options.value.some((v) => v.value === selectValue.value)
-    if (!isExit) {
+    if (!isExit && !props.defaultValue) {
       selectValue.value = undefined
     }
     handleChange(selectValue.value)
   }
 }
+// 获取车间信息
+function getOption(val) {
+  return onlyProductLines.value.find((k) => k.id === val)
+}
+
+defineExpose({
+  getOption
+})
 </script>

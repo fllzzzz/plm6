@@ -8,6 +8,14 @@ export function get(params) {
     params
   })
 }
+// 通过mac地址查找设备
+export function getMac(mac) {
+  return request({
+    url: `/api/cut/getMachine/${mac}`,
+    method: 'get',
+    cancelKey:false
+  })
+}
 
 // 增加切割设备
 export function add(data) {
@@ -25,6 +33,14 @@ export function del(ids) {
     method: 'delete'
   })
 }
+// 修改切割设备
+export function edit(data) {
+  return request({
+    url: '/api/cut/updateMachine',
+    method: 'post',
+    data,
+  })
+}
 
 // 分配任务
 export function assign(params, data) {
@@ -40,6 +56,15 @@ export function assign(params, data) {
 export function sentTask(data) {
   return request({
     url: `/api/cut/sentTask`,
+    method: 'post',
+    data
+  })
+}
+
+// 重置任务
+export function resetTask(data) {
+  return request({
+    url: `/api/cut/resetTask`,
     method: 'post',
     data
   })
@@ -84,12 +109,18 @@ export function changeTask(params, data) {
 export function getMachineInformation(params) {
   return request({
     url: `/api/cut/getMachineInformation/${params}`,
-    method: 'post'
+    method: 'get'
   })
 }
 
 export default {
   get,
   add,
-  del
+  del,
+  edit,
+  getMac,
+  sentTask,
+  cleanTask,
+  resetTask,
+  getMachineInformation
 }
