@@ -146,7 +146,8 @@ function struTransform(data) {
 }
 
 defineExpose({
-  getUser
+  getUser,
+  users
 })
 </script>
 

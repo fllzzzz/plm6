@@ -12,7 +12,7 @@
       style="width: 100%"
     >
       <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
-      <el-table-column
+      <!-- <el-table-column
         v-if="columns.visible('machineNumber')"
         align="center"
         key="machineNumber"
@@ -23,73 +23,118 @@
         <template v-slot="scope">
           <span>{{ scope.row.machineNumber }}</span>
         </template>
+      </el-table-column> -->
+        <el-table-column
+        v-if="columns.visible('factory')"
+        align="center"
+        key="factory"
+        prop="factory"
+        label="工厂"
+        min-width="40px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.factory }}</span>
+        </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('machineName')" key="machineName" prop="machineName" label="机器名称" min-width="50px">
+            <el-table-column v-if="columns.visible('workshopInf')" key="workshopInf" prop="workshopInf" label="车间" min-width="45px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.workshopInf }}</span>
+        </template>
+      </el-table-column>
+            <el-table-column v-if="columns.visible('productionLine')" key="productionLine" prop="productionLine" label="生产线" min-width="45px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.productionLine }}</span>
+        </template>
+      </el-table-column>
+         <el-table-column v-if="columns.visible('machineType')" key="machineType" prop="machineType" label="设备类型" min-width="45px" align="center">
+        <template v-slot="scope">
+          <span v-if="scope.row.machineType==='0'">火焰切割设备</span>
+          <span v-if="scope.row.machineType==='1'">等离子切割设备</span>
+          <span v-if="scope.row.machineType==='2'">激光切割设备</span>
+          <!-- <span>{{MachineTypeEnum.VL[scope.row.machineType] }}</span> -->
+        </template>
+         </el-table-column>
+            <el-table-column v-if="columns.visible('machineName')" key="machineName" prop="machineName" label="设备名称" min-width="40px" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.machineName }}</span>
         </template>
       </el-table-column>
+            <el-table-column v-if="columns.visible('brand')" key="brand" prop="brand" label="设备品牌" min-width="40px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.brand }}</span>
+        </template>
+      </el-table-column>
+       <el-table-column
+        v-if="columns.visible('machineNumber')"
+        align="center"
+        key="machineNumber"
+        prop="machineNumber"
+        label="设备编号"
+        min-width="40px"
+      >
+        <template v-slot="scope">
+          <span>{{ scope.row.machineNumber }}</span>
+        </template>
+      </el-table-column>
+       <el-table-column v-if="columns.visible('director')" key="director" prop="director" label="负责人" min-width="40px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.director }}</span>
+        </template>
+      </el-table-column>
+       <el-table-column v-if="columns.visible('mac')" key="mac" prop="mac" label="MAC地址" min-width="60px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.mac }}</span>
+        </template>
+      </el-table-column>
+       <el-table-column v-if="columns.visible('opcUrl')" key="opcUrl" prop="opcUrl" label="工控机地址" min-width="60px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.opcUrl }}</span>
+        </template>
+      </el-table-column>
+       <!-- <el-table-column v-if="columns.visible('machineName')" key="machineName" prop="machineName" label="机器名称" min-width="50px" align="center">
+        <template v-slot="scope">
+          <span>{{ scope.row.machineName }}</span>
+        </template>
+      </el-table-column> -->
       <el-table-column
-        v-if="columns.visible('workshopInf')"
-        key="workshopInf"
+        v-if="columns.visible('online')"
+        key="online"
         prop="online"
         align="center"
-        label="代理连接状态"
+        label="链接状态"
         min-width="45px"
       >
         <template v-slot="scope">
           <span>{{ MessageTypeEnum.VL[scope.row.online] }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('mac')" key="mac" prop="mac" label="MAC地址" min-width="60px">
-        <template v-slot="scope">
-          <span>{{ scope.row.mac }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('machineType')" key="machineType" prop="machineType" label="机器类型" min-width="45px">
-        <template v-slot="scope">
-          <span>{{ scope.row.machineType }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('workshopInf')" key="workshopInf" prop="workshopInf" label="车间信息" min-width="45px">
-        <template v-slot="scope">
-          <span>{{ scope.row.workshopInf }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('position')" key="position" prop="position" label="位置" min-width="45px">
+      <!-- <el-table-column v-if="columns.visible('position')" key="position" prop="position" label="位置" min-width="45px" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.position }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('director')" key="director" prop="director" label="负责人" min-width="40px">
-        <template v-slot="scope">
-          <span>{{ scope.row.director }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('workshopInf')" key="workshopInf" prop="brand" label="设备品牌" min-width="40px">
-        <template v-slot="scope">
-          <span>{{ scope.row.brand }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="code" label="代号" min-width="40px">
+     
+
+      <el-table-column v-if="columns.visible('code')" key="code" prop="code" label="代号" min-width="40px" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.code }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px">
+      <el-table-column v-if="columns.visible('updateTime')" key="updateTime" prop="updateTime" label="编辑日期" width="140px" align="center">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.updateTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px">
+      <el-table-column v-if="columns.visible('createTime')" key="createTime" prop="createTime" label="创建日期" width="140px" align="center">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
-      </el-table-column>
-      <!--编辑与删除-->
-      <el-table-column v-if="checkPermission([...permission.del])" label="操作" width="130px" align="center" fixed="right">
+      </el-table-column> -->
+      <!-- 编辑与删除  -->
+      <el-table-column v-if="checkPermission([...permission.edit])" label="操作" width="130px" align="center" fixed="right">
         <template v-slot="scope">
-          <udOperation :showEdit="false" :data="scope.row" />
+          <udOperation :showEdit="true" :showDel="false" :data="scope.row" />
+          <!-- <udOperation  :data="scope.row" /> -->
         </template>
       </el-table-column>
     </common-table>
@@ -111,7 +156,7 @@ import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import useMaxHeight from '@compos/use-max-height'
 import checkPermission from '@/utils/system/check-permission'
-import { MessageTypeEnum } from '@enum-ms/cutting'
+import { MessageTypeEnum, MachineTypeEnum} from '@enum-ms/cutting'
 import { machineConfigurationPM as permission } from '@/page-permission/cutting'
 
 const tableRef = ref()
@@ -123,7 +168,7 @@ const optShow = {
   download: false
 }
 
-const { crud, columns } = useCRUD(
+const { crud, columns,CRUD } = useCRUD(
   {
     title: '机器配置',
     sort: [],
@@ -140,4 +185,5 @@ const { maxHeight } = useMaxHeight({
   paginate: true,
   extraHeight: 40
 })
+
 </script>

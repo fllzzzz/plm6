@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref, watch,defineExpose } from 'vue'
 import { isBlank, judgeSameValue } from '@data-type/index'
 import useFactory from '@compos/store/use-factories'
 
@@ -92,4 +92,12 @@ function handleChange(val) {
     emit('change', data)
   }
 }
+
+// 获取工厂信息
+function getOption(val) {
+  return factories.value.find((k) => k.id === val)
+}
+defineExpose({
+  getOption
+})
 </script>

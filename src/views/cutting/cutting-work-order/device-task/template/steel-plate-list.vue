@@ -39,9 +39,9 @@
             <span>{{ scope.row.width}} * {{scope.row.length}}</span>
           </template>
         </el-table-column>
-        <el-table-column key="equipment" prop="equipment" :show-overflow-tooltip="true" label="产线设备" min-width="100" align="center">
+        <el-table-column key="projectName" prop="projectName" :show-overflow-tooltip="true" label="所属项目" min-width="55" align="center">
           <template v-slot="scope">
-            <span v-if="scope.row.factory">{{ scope.row.factory }}>{{scope.row.workshopInf}}>{{scope.row.productionLine}}</span>
+            <span>{{ scope.row.projectNumber }}-{{scope.row.projectName}}</span>
           </template>
         </el-table-column>
         
@@ -64,7 +64,7 @@
 
         <el-table-column align="center" :show-overflow-tooltip="true" label="套料成果" min-width="70">
           <template v-slot="scope">
-            <common-button v-if="checkPermission(permission.detailResult)" type="success" size="mini" @click="nestResults(scope.row)">查看</common-button>
+            <common-button type="success" size="mini" @click="nestResults(scope.row)">查看</common-button>
           </template>
         </el-table-column>
         <!-- <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="70">
@@ -74,7 +74,7 @@
         </el-table-column> -->
         <!-- <el-table-column align="center" :show-overflow-tooltip="true" label="状态" min-width="70">
           <template v-slot="scope">
-            <common-button v-if="checkPermission(permission.detailDelete)" type="danger" size="mini" @click="del(scope.row)">删除</common-button>
+            <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
           </template>
         </el-table-column> -->
       </common-table>
@@ -95,12 +95,9 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
-import detail from '@/views/cutting/template/detail.vue'
-import { getMac }  from '@/api/cutting/machine'
+import detail from '@/views/cutting/cutting-work-order/device-task/template/detail.vue'
 import { defineProps, defineEmits, ref } from 'vue'
 import { get } from '@/api/cutting/project-data'
-import checkPermission from '@/utils/system/check-permission'
-import { projectTaskingPM as permission } from '@/page-permission/cutting'
 
 const props = defineProps({
   visible: {
@@ -140,25 +137,11 @@ function closeHook() {
 async function plateDataGet() {
   tabLoading.value = true
   try {
-    const data = await get({ projectId: props.detailData.projectId, pageSize: page.size, pageNumber: page.page })
+    const data = await get({ projectId: props.detailData.projectId, pageSize: page.size, pageNumber: page.page,mac: props.detailData.cutMachine.mac})
     page.total = data.totalElements
-
-    // mac地址查看机器设备
-      for(var i = 0; i < data.content.length; i++) {
-           
-          if(data.content[i].mac) {
-              const macData = await getMac(data.content[i].mac)
-              data.content[i].machineType = macData.machineType
-              data.content[i].factory = macData.factory
-              data.content[i].workshopInf = macData.workshopInf
-              data.content[i].productionLine = macData.productionLine    
-          }
-      }
-
+    
+  
     plateData.value = data.content
-
-
-
   } catch (err) {
     console.log('钢板清单页面接口报错', err)
   }

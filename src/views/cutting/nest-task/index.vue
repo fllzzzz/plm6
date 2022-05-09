@@ -20,12 +20,12 @@
         key="projectName"
         prop="projectName"
         :show-overflow-tooltip="true"
-        label="项目"
+        label="项目名称"
         min-width="100"
         header-align="center"
       >
         <template v-slot="scope">
-          <span>{{ scope.row.projectName }}</span>
+          <span>{{scope.row.projectNumber}}-{{ scope.row.projectName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -90,9 +90,9 @@
         min-width="60"
       >
         <template v-slot="scope">
-          <el-tag style="width: 100%" v-if="scope.row.nestingState === 0">未排套</el-tag>
+          <el-tag style="width: 100%" v-if="scope.row.nestingState === 0" type="danger">未排套</el-tag>
           <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">部分排套</el-tag>
-          <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 2" type="danger">排套结束</el-tag>
+          <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 2" type="success">排套结束</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -132,8 +132,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { watch,reactive,provide } from 'vue'
+import {ref} from 'vue'
 import crudApi from '@/api/cutting/radan-controller'
+import { getProjectInfo } from '@/api/cutting/radan-controller'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
 import { parseTime } from '@/utils/date'
@@ -142,6 +144,7 @@ import detail from './detail/index.vue'
 import useMaxHeight from '@compos/use-max-height'
 import checkPermission from '@/utils/system/check-permission'
 import { nestingTaskPM as permission } from '@/page-permission/cutting'
+
 
 const specsVisible = ref(false)
 const tableRef = ref()
@@ -154,7 +157,16 @@ const optShow = {
   download: false
 }
 
-const { crud, columns } = useCRUD(
+// 项目汇总数据（子页面使用）
+const projectInfo = reactive({
+  summary: {}, // 项目汇总数量
+  provinceList: [], // 省份项目数量汇总
+  loading: true
+})
+
+provide('projectInfo', projectInfo)
+
+const { crud, columns} = useCRUD(
   {
     title: '套料任务',
     sort: ['createTime.desc'],
@@ -166,12 +178,35 @@ const { crud, columns } = useCRUD(
   tableRef
 )
 
-const { maxHeight } = useMaxHeight({
-  wrapperBox: '.contractRecord',
-  paginate: true,
-  extraHeight: 40
-})
+watch(
+  // () => crud.query.year,
+  (val) => {
+    fetchProjectInfo()
+    crud.toQuery()
+  },
+  { deep: true }
+)
 
+const { maxHeight } = useMaxHeight({
+  // wrapperBox: '.contractRecord',
+  paginate: true,
+  // extraHeight: 40
+})
+// 获取项目汇总数据
+async function fetchProjectInfo() {
+  if (!checkPermission(permission.statistics)) return
+  projectInfo.loading = true
+  try {
+    const res = (await getProjectInfo({ year: crud.query.year })) || {}
+    projectInfo.provinceList = res.provinceList
+    delete res.provinceList
+    projectInfo.summary = res
+  } catch (error) {
+    console.log('获取项目汇总图表数据', error)
+  } finally {
+    projectInfo.loading = false
+  }
+}
 // 查看详情
 function viewDetails(row) {
   specsVisible.value = true
