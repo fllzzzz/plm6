@@ -158,4 +158,28 @@ const userMenu = {
   }
 }
 
-export default [userLogin, userLogout, userInfo, userMenu]
+// 修改用户信息
+const editUser = {
+  url: '/api/user/info',
+  method: 'put',
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
+// 修改密码
+const updatePwd = {
+  url: '/api/user/updatePwd',
+  method: 'post',
+  response: () => {
+    return {
+      code: 20000,
+      message: '成功'
+    }
+  }
+}
+
+export default [userLogin, userLogout, userInfo, editUser, userMenu, updatePwd]

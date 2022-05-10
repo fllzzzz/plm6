@@ -10,6 +10,10 @@ const state = {
   user: {
     id: '', // 用户标识
     name: '', // 用户姓名
+    username: '', // 登录账号
+    email: '', // 邮箱
+    dept: '', // 部门
+    job: '', // 岗位
     avatar: '', // 头像
     introduction: '', // 介绍
     companyName: '', // 公司名称
@@ -44,8 +48,8 @@ const mutations = {
   SET_LOAD_MENUS: (state, loadedMenus) => {
     state.loadedMenus = loadedMenus
   },
-  SET_USER: (state, { id, name = '', avatar = '', introduction = '', companyName = '', phone = '', inventoryNotifyPerm = false, sex }) => {
-    state.user = { id, name, avatar, introduction, companyName, phone, sex, inventoryNotifyPerm }
+  SET_USER: (state, { id, name = '', email = '', username = '', job = '', dept = '', avatar = '', introduction = '', companyName = '', phone = '', inventoryNotifyPerm = false, sex }) => {
+    state.user = { id, name, email, username, job, dept, avatar, introduction, companyName, phone, sex, inventoryNotifyPerm }
   },
   SET_REQUEST_URL: (state, requestUrl) => {
     state.requestUrl = requestUrl

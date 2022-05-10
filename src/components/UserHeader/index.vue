@@ -22,10 +22,8 @@
           <span v-if="showLayout" style="display: block" @click="show = true">
             <el-dropdown-item> 布局设置 </el-dropdown-item>
           </span>
-          <el-dropdown-item> 消息通知 </el-dropdown-item>
-          <el-dropdown-item divided>
-            <span style="display: block" @click="logout">退出登录</span>
-          </el-dropdown-item>
+          <!-- <el-dropdown-item> 消息通知 </el-dropdown-item> -->
+          <el-dropdown-item divided  @click="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -96,9 +94,9 @@ async function logout() {
     console.log(error)
   } finally {
     // TODO:使用会白屏，先注释
-    // setTimeout(() => {
-    //   location.reload() // 为了重新实例化vue-router对象 避免bug
-    // }, 0)
+    setTimeout(() => {
+      location.reload() // 为了重新实例化vue-router对象 避免bug
+    }, 300)
   }
 }
 </script>

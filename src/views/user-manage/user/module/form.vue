@@ -56,7 +56,7 @@
         />
       </el-form-item>
       <el-form-item label="状态">
-         <el-radio-group v-model="form.enabled" style="width: 178px" :disabled="form.id === user.id">
+         <el-radio-group v-model="form.enabled" style="width: 178px" :disabled="!checkPermission(crud.permission.edit) || form.id === user.id">
           <el-radio v-for="item in enabledEnum.ENUM" :key="item.V" :label="item.V">{{ item.L }}</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -84,15 +84,16 @@
 <script setup>
 import { roleAll } from '@/api/user-manage/role'
 import { jobAll } from '@/api/user-manage/job'
-
 import { defineProps, ref } from 'vue'
 import { mapGetters } from '@/store/lib'
-import { isNotBlank } from '@data-type/index'
-import { validatorPhone, validatorUsername } from '@/utils/validate/pattern'
 
-import { regForm } from '@compos/use-crud'
 import { userSexEnum } from '@enum-ms/user'
 import { enabledEnum } from '@enum-ms/common'
+import { isNotBlank } from '@data-type/index'
+import { validatorPhone, validatorUsername } from '@/utils/validate/pattern'
+import checkPermission from '@/utils/system/check-permission'
+
+import { regForm } from '@compos/use-crud'
 import menuSelect from '@/components-system/common/tree-select.vue'
 import { ElRadioGroup } from 'element-plus'
 
@@ -170,10 +171,14 @@ getJobAll()
 
 async function getJobAll(id) {
   jobs.value = []
-  form.jobId = undefined
   try {
     const submitData = { deptId: id }
     const { content } = await jobAll(submitData)
+    // 岗位可能不在当前选择的部门下面
+    const index = content.findIndex(row => row.id === form.jobId)
+    if (index === -1) {
+      form.jobId = undefined
+    }
     jobs.value = content
   } catch (e) {
     console.log('获取角色', e)
