@@ -19,6 +19,8 @@
 <script>
 import { validRequestUrl } from '@/utils/validate'
 
+import { ElMessage } from 'element-plus'
+
 export default {
   name: 'RegCompany',
   data() {
@@ -40,7 +42,7 @@ export default {
         await this.$store.dispatch('user/setRequestUrl', fullUrl)
         this.$emit('reg-result', true)
       } else {
-        this.$message({ message: '错误格式的域名', type: 'warning' })
+        ElMessage.warning({ message: '错误格式的域名', type: 'warning' })
       }
     }
   }

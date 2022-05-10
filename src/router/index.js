@@ -50,12 +50,20 @@ const constantRoutes = [
     meta: { title: '配套件信息' },
     hidden: true
   },
-  // {
-  //   path: '/personal',
-  //   component: () => import('@/views/user-center/index'),
-  //   meta: { title: '个人中心' },
-  //   hidden: true
-  // },
+  {
+    path: '/personal',
+    component: Layout,
+    hidden: true,
+    redirect: 'noRedirect',
+    children: [
+      {
+        path: 'center',
+        component: () => import('@/views/user-center/index'),
+        name: '个人中心',
+        meta: { title: '个人中心' }
+      }
+    ]
+  },
   {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),

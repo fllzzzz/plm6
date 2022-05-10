@@ -117,7 +117,7 @@
               inactive-color="#F56C6C"
               :active-value="enabledEnum.TRUE.V"
               :inactive-value="enabledEnum.FALSE.V"
-            :disabled="!checkPermission(permission.edit)"
+              :disabled="!checkPermission(permission.edit) || scope.row.id === user.id"
               @change="changeStatus(scope.row, scope.row.enabled)"
             />
           </template>
@@ -148,11 +148,13 @@
 <script setup>
 import crudApi, { editStatus } from '@/api/user-manage/user'
 import { deptTree } from '@/api/user-manage/dept'
-import { userConfigPM as permission } from '@/page-permission/user'
-
 import { provide, reactive, ref, watch } from 'vue'
+import { userConfigPM as permission } from '@/page-permission/user'
+import { mapGetters } from '@/store/lib'
+
 import { enabledEnum } from '@enum-ms/common'
 import checkPermission from '@/utils/system/check-permission'
+import { isNotBlank } from '@data-type/index'
 
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
@@ -162,7 +164,6 @@ import mForm from './module/form'
 import pagination from '@crud/Pagination'
 import { ElMessageBox } from 'element-plus'
 import { userSexEnum } from '@enum-ms/user'
-import { isNotBlank } from '@data-type/index'
 
 const optShow = {
   add: true,
@@ -170,6 +171,8 @@ const optShow = {
   del: true,
   download: false
 }
+
+const { user } = mapGetters(['user'])
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -237,25 +240,28 @@ function handleNodeClick(data) {
 
 async function changeStatus(data, val) {
   try {
-    const msg = val === enabledEnum.TRUE.V ? '启用' : '禁用'
-    await ElMessageBox.confirm(`确定${msg}“${data.name}” 吗 ？`, '提示', {
+    await ElMessageBox.confirm('此操作将 "' + enabledEnum.VL[val] + '" ' + data.name + ', 是否继续？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
-    await editStatus({ id: data.id, enabled: val })
-    crud.notify(`${msg}成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    const submitData = {
+      id: data.id,
+      enabled: data.enabled
+    }
+    await editStatus(submitData)
     crud.refresh()
+    crud.notify(enabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
-    console.log(error)
-    data.status = data.status === enabledEnum.TRUE.V ? enabledEnum.FALSE.V : enabledEnum.TRUE.V
+    console.log('变更用户状态', error)
+    data.enabled = !val
   }
 }
 CRUD.HOOK.handleRefresh = (crud, data) => {
   data.data.content = data.data.content.map((v) => {
     const deptName = v.dept ? v.dept.name : ''
     const jobName = v.job ? v.job.name : ''
-    v.deptAndJob = `${deptName}/${jobName}`
+    v.deptAndJob = `${deptName} / ${jobName}`
     return v
   })
 }

@@ -62,9 +62,9 @@
 
 <script setup>
 import crudApi, { editStatus } from '@/api/user-manage/job'
-import { jobConfigPM as permission } from '@/page-permission/user'
-
 import { ref } from 'vue'
+
+import { jobConfigPM as permission } from '@/page-permission/user'
 import { systemEnabledEnum } from '@enum-ms/system'
 import checkPermission from '@/utils/system/check-permission'
 
@@ -72,9 +72,9 @@ import { ElMessageBox } from 'element-plus'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import mForm from './module/form'
-import pagination from '@crud/Pagination'
 
 const tableRef = ref()
 const { crud, columns, CRUD } = useCRUD(
@@ -107,7 +107,7 @@ async function changeStatus(data, val) {
     crud.refresh()
     crud.notify(systemEnabledEnum.VL[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
   } catch (error) {
-    console.log('变更岗位状态', error)
+    console.log('变更岗位状态', error, val)
     data.enabled = data.enabled === systemEnabledEnum.TRUE.V ? systemEnabledEnum.FALSE.V : systemEnabledEnum.TRUE.V
   }
 }
