@@ -46,6 +46,14 @@ export default function useSchedulingIndex() {
       })
       return
     }
+    if (row.schedulingMap[line.id].totalTaskQuantity > _val) {
+    // 分配数量小于已下发数量
+      nextTick(() => {
+        row.schedulingMap[line.id].quantity = row.schedulingMap[line.id].lastQuantity
+        ElMessage.warning(`分配数量不得小于已下发数量，已下发数量：${row.schedulingMap[line.id].totalTaskQuantity}`)
+      })
+      return
+    }
     if (!value) {
     // 分配数量为 0/undefined
       nextTick(() => {
