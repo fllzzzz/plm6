@@ -28,16 +28,4 @@ export function cost({ projectId, monomerId }) {
   })
 }
 
-/**
- * 商务详情
- * @param {*} businessId 必填，商务构件id
- */
-export function businessDetail(businessId) {
-  return request({
-    module: 'contract',
-    url: `business/auxiliary-material/${businessId}`,
-    method: 'get'
-  })
-}
-
 export default { get }
