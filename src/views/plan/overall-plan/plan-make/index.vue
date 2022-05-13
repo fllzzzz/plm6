@@ -1,10 +1,6 @@
 <template>
   <div class="app-container">
     <template v-if="globalProject && globalProject.projectContentList && globalProject.projectContentList.length>0">
-      <!--工具栏-->
-      <div class="head-container">
-        <mHeader :project-id="globalProjectId"  :global-project="globalProject"/>
-      </div>
       <!--表格渲染-->
       <common-table
       ref="tableRef"
@@ -14,81 +10,205 @@
       :max-height="maxHeight"
       return-source-data
       :showEmptySymbol="false"
+      :stripe="false"
+      class="upload-table"
       style="width: 100%"
+      :span-method="objectSpanMethod"
     >
-      <el-table-column label="序号" type="index" align="center" width="60" />
-       <el-table-column v-if="columns.visible('name')" key="name" prop="name" :show-overflow-tooltip="true" label="区域名称" min-width="100" />
-      <el-table-column v-if="columns.visible('axis')" key="axis" prop="axis" :show-overflow-tooltip="true" label="轴线/标高" min-width="180" />
-      <el-table-column v-if="columns.visible('type')" key="type" prop="type" label="制造类型" width="80">
-        <template v-slot="scope">
-          <el-tag effect="plain" :type="scope.row.typeTagType">{{ isNotBlank(scope.row.areaType)?manufactureTypeEnum.VL[scope.row.areaType]:'-' }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('startDate')" key="startDate" prop="startDate" label="开始日期" align="center" width="220px">
-        <template v-slot="scope">
-          <el-date-picker
-            v-if="scope.row.modifying"
-            v-model="scope.row.startDate"
-            type="date"
-            size="small"
-            value-format="x"
-            placeholder="选择日期"
-            style="width:160px"
-            :disabledDate="(date) => {if (scope.row.endDate) { return date.getTime() < globalProject.startDate || date.getTime() > scope.row.endDate-1 * 24 * 60 * 60 * 1000 } else { return date.getTime() < globalProject.startDate || date.getTime() > scope.row.date-1 * 24 * 60 * 60 * 1000 }}"
-            @change="handleDateChange($event, scope.row)"
-          />
-          <template v-else>
-            <span v-if="scope.row.startDate">{{ scope.row.startDate? parseTime(scope.row.startDate,'{y}-{m}-{d}'): '-' }}</span>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('endDate')" key="endDate" prop="endDate" label="结束日期" align="center" width="220px">
-        <template v-slot="scope">
-          <el-date-picker
-            v-if="scope.row.modifying"
-            v-model="scope.row.endDate"
-            type="date"
-            size="small"
-            value-format="x"
-            placeholder="选择日期"
-            style="width:160px"
-            :disabledDate="(date) => {if (scope.row.startDate) { return date.getTime() -1 * 24 * 60 * 60 * 1000 < scope.row.startDate || date.getTime() > scope.row.date } else { return date.getTime()-1 * 24 * 60 * 60 * 1000 < globalProject.startDate || date.getTime() > scope.row.date }}"
-            @change="handleDateChange($event, scope.row)"
-          />
-          <template v-else>
-            <span>{{ scope.row.endDate? parseTime(scope.row.endDate,'{y}-{m}-{d}'): '-' }}</span>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="columns.visible('dateDifference')" key="dateDifference" prop="dateDifference" label="计划用时" align="center" min-width="100px" />
-      <el-table-column v-if="columns.visible('remark')" key="remark" prop="remark" :show-overflow-tooltip="true" label="备注" min-width="160px">
-        <template v-slot="scope">
-          <el-input
-            v-if="scope.row.modifying"
-            v-model="scope.row.remark"
-            style="width: 130px;"
-            size="small"
-          />
-          <span v-else>{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-      <!--编辑与删除-->
+      <el-table-column v-if="columns.visible('monomerName')" key="monomerName" prop="monomerName" align="center" :show-overflow-tooltip="true" label="单体" />
       <el-table-column
-        v-if="checkPermission([...permission.edit])"
-        label="操作"
-        width="160px"
+        v-if="columns.visible('content')"
+        key="content"
+        prop="content"
+        label="项目内容"
         align="center"
-        fixed="right"
       >
         <template v-slot="scope">
-          <template v-if="scope.row.modifying">
-            <common-button type="warning" size="mini" @click="handelModifying(scope.row,false)">取消</common-button>
-            <common-button type="success" size="mini" @click="submit(scope.row)">保存</common-button>
-          </template>
-          <common-button v-else type="primary" size="mini" @click="handelModifying(scope.row, true)" v-permission="permission.edit">编辑</common-button>
+          {{scope.row.type?TechnologyTypeAllEnum.VL[scope.row.type]:'-'}}
         </template>
       </el-table-column>
-    </common-table>
+       <el-table-column
+          v-if="columns.visible('unit')"
+          key="unit"
+          prop="unit"
+          label="单元"
+          align="center"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  {{k.name}}
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('type')"
+          key="type"
+          prop="type"
+          label="生产方式"
+          align="center"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  {{isNotBlank(k.type)?manufactureTypeEnum.VL[k.type]:'-'}}
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('deepen')"
+          key="deepen"
+          prop="deepen"
+          label="深化计划"
+          align="center"
+          min-width="150"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  <template v-if="isNotBlank(k.deepVal)">
+                    <el-date-picker
+                      v-if="k.isModify"
+                      v-model="k.deepVal.timeArr"
+                      type="daterange"
+                      range-separator=":"
+                      size="small"
+                      class="date-item filter-item"
+                      value-format="x"
+                      start-placeholder="开始"
+                      end-placeholder="结束"
+                      @change="timeChange(k.deepVal,k)"
+                      :disabledDate="(date) => {return date.getTime() < globalProject.startDate || date.getTime() > k.date}"
+                    />
+                    <span>{{k.deepVal?.startDate && k.deepVal?.endDate? parseTime(k.deepVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.deepVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
+                  </template>
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('process')"
+          key="process"
+          prop="process"
+          label="加工计划"
+          align="center"
+          min-width="150"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  <template v-if="isNotBlank(k.processVal)">
+                    <el-date-picker
+                      v-if="k.isModify"
+                      v-model="k.processVal.timeArr"
+                      type="daterange"
+                      range-separator=":"
+                      size="small"
+                      class="date-item filter-item"
+                      value-format="x"
+                      start-placeholder="开始"
+                      end-placeholder="结束"
+                      @change="timeChange(k.processVal,k)"
+                      :disabled="!isNotBlank(k.deepVal.timeArr)"
+                      :disabledDate="(date) => {if (k.deepVal.startDate) { return date.getTime() < k.deepVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                    />
+                    <span>{{k.processVal?.startDate && k.processVal?.endDate? parseTime(k.processVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.processVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
+                  </template>
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('install') && globalProject.businessType === businessTypeEnum.INSTALLATION.V"
+          key="install"
+          prop="install"
+          label="安装计划"
+          align="center"
+          min-width="150"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  <template v-if="isNotBlank(k.installVal)">
+                    <el-date-picker
+                      v-if="k.isModify"
+                      v-model="k.installVal.timeArr"
+                      type="daterange"
+                      range-separator=":"
+                      size="small"
+                      class="date-item filter-item"
+                      value-format="x"
+                      start-placeholder="开始"
+                      end-placeholder="结束"
+                      @change="timeChange(k.installVal,k)"
+                      :disabled="!(isNotBlank(k.processVal.timeArr)&&isNotBlank(k.deepVal.timeArr))"
+                      :disabledDate="(date) => {if (k.processVal.startDate) { return date.getTime() < k.processVal.startDate || date.getTime() > k.date } else { return date.getTime() < globalProject.startDate || date.getTime() > k.date }}"
+                    />
+                    <span>{{k.installVal?.startDate && k.installVal?.endDate? parseTime(k.installVal.startDate,'{y}-{m}-{d}')+' : '+parseTime(k.installVal.endDate,'{y}-{m}-{d}'): '-'}}</span>
+                  </template>
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="columns.visible('totalDays')"
+          key="totalDays"
+          prop="totalDays"
+          label="用时(天)"
+          align="center"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  {{k.totalDays?k.totalDays:'-'}}
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="160px"
+          align="center"
+          fixed="right"
+        >
+          <template v-slot="scope">
+            <template v-if="scope.row.areaList.length > 0">
+              <div v-for="(k,i) in scope.row.areaList" :key="k.id">
+                <div :class="i===scope.row.areaList.length-1?'sandwich-cell-bottom':'sandwich-cell-top'">
+                  <template v-if="k.isModify">
+                    <common-button type="info" size="mini" @click="rowCancel(scope.row,i)">取消</common-button>
+                    <common-button type="primary" size="mini" @click="rowSubmit(scope.row,i)">保存</common-button>
+                  </template>
+                  <template v-else>
+                    <common-button size="mini" @click="handleRow(scope.row,i)" icon="el-icon-edit" type="primary" v-permission="permission.edit"/>
+                  </template>
+                </div>
+              </div>
+            </template>
+            <div v-else class="sandwich-cell-bottom"></div>
+          </template>
+        </el-table-column>
+      </common-table>
       <!--分页组件-->
       <pagination />
     </template>
@@ -101,17 +221,17 @@
 <script setup>
 import crudApi from '@/api/plan/plan-make'
 import { ref, watch } from 'vue'
-import checkPermission from '@/utils/system/check-permission'
 import useMaxHeight from '@compos/use-max-height'
 import useCRUD from '@compos/use-crud'
 import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
-import mHeader from './module/header'
-import { manufactureTypeEnum } from '@enum-ms/plan'
+import { businessTypeEnum } from '@enum-ms/contract'
+import { manufactureTypeEnum, areaPlanTypeEnum } from '@enum-ms/plan'
 import { isNotBlank } from '@data-type/index'
 import { dateDifferenceReduce } from '@/utils/date'
 import { parseTime } from '@/utils/date'
 import { planMakeListPM as permission } from '@/page-permission/plan'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
 
 const { globalProject, globalProjectId } = mapGetters(['globalProject', 'globalProjectId'])
@@ -124,13 +244,14 @@ const optShow = {
 }
 
 const tableRef = ref()
+const originDetailRow = ref({})
 const { crud, columns, CRUD } = useCRUD(
   {
     title: '区域计划',
     sort: ['id.desc'],
     permission: { ...permission },
     optShow: { ...optShow },
-    requiredQuery: ['projectId', 'productType'],
+    requiredQuery: ['projectId'],
     crudApi: { ...crudApi },
     hasPagination: true
   },
@@ -154,61 +275,119 @@ watch(
   { immediate: true, deep: true }
 )
 
-function handelModifying(row, modifying) {
-  row.modifying = modifying
-  if (!modifying) {
-    row.startDate = row.sourceStartDate
-    row.endDate = row.sourceEndDate
-    row.remark = row.sourceRemark
-    this.handleDateChange('', row)
+function objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+  if (columnIndex === 0) {
+    if (row.monomerNameSpan) {
+      return {
+        rowspan: row.monomerNameSpan,
+        colspan: 1
+      }
+    } else {
+      return {
+        rowspan: 0,
+        colspan: 1
+      }
+    }
   }
 }
 
-function handleDateChange(val, row) {
-  if (row.startDate && row.endDate) {
-    row.dateDifference = dateDifferenceReduce(row.startDate, row.endDate) + '天'
+function handleRow(row, index) {
+  originDetailRow.value = JSON.parse(JSON.stringify(row.areaList[index]))
+  row.areaList[index].isModify = true
+}
+
+function rowCancel(row, index) {
+  row.areaList[index] = Object.assign(row.areaList[index], JSON.parse(JSON.stringify(originDetailRow.value)))
+  row.areaList[index].isModify = false
+}
+
+function timeChange(value, k) {
+  if (isNotBlank(value.timeArr)) {
+    value.startDate = value.timeArr[0]
+    value.endDate = value.timeArr[1]
   } else {
-    row.dateDifference = ''
+    value.startDate = undefined
+    value.endDate = undefined
+  }
+  totalTime(k)
+}
+
+function totalTime(k) {
+  const startDate = k.deepVal?.startDate || k.processVal?.startDate || k?.startDate || undefined
+  const endDate = k.installVal?.endDate || k.processVal?.endDate || k.deepVal?.endDate || undefined
+  if (startDate && endDate) {
+    k.totalDays = dateDifferenceReduce(startDate, endDate)
   }
 }
-async function submit(row) {
-  if (!row.startDate || !row.endDate) {
-    ElMessage.error('开始和结束时间必填！')
+async function rowSubmit(row, index) {
+  if (!isNotBlank(row.areaList[index].deepVal.timeArr)) {
+    ElMessage.error('深化计划必填')
+    return
+  }
+  if (!isNotBlank(row.areaList[index].processVal.timeArr)) {
+    ElMessage.error('生产计划必填')
+    return
+  }
+  if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V && !isNotBlank(row.areaList[index].installVal.timeArr)) {
+    ElMessage.error('安装计划必填')
     return
   }
   try {
-    const data = {
-      id: row.id,
-      startDate: row.startDate,
-      endDate: row.endDate,
-      remark: row.remark
+    const data = [{ ...row.areaList[index].deepVal }, { ...row.areaList[index].processVal }]
+    if (globalProject.value.businessType === businessTypeEnum.INSTALLATION.V) {
+      data.push({ ...row.areaList[index].installVal })
     }
-    await crudApi.edit(data)
-    crud.notify('操作成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
-    row.modifying = false
-  } catch (error) {
-    console.log('区域计划保存', error)
-  } finally {
-    // crud.toQuery()
+    await crudApi.edit(row.areaList[index].id, data)
+    crud.notify(`修改成功`, CRUD.NOTIFICATION_TYPE.SUCCESS)
+    row.areaList[index].isModify = false
+  } catch (e) {
+    console.log(`修改`, e)
   }
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {
-  data.data.content = data.data.content.map(v => {
-    v.typeTagType = v.type === manufactureTypeEnum.HOMEMADE.V ? '' : 'warning'
-    if (v.startDate && v.endDate) {
-      v.dateDifference = dateDifferenceReduce(v.startDate, v.endDate) + '天'
-    } else {
-      v.dateDifference = ''
+  const showData = []
+  data.data.content.map(v => {
+    if (v.monomerDetailList.length > 0) {
+      v.monomerDetailList.map((k, index) => {
+        k.monomerName = v.name
+        if (index === 0) {
+          k.monomerNameSpan = v.monomerDetailList.length
+        }
+        if (k.areaList && k.areaList.length > 0) {
+          k.areaList.map((value, index) => {
+            const deepVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.DEEPEN.V)
+            const processVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.PROCESS.V)
+            const installVal = value.planDetailList.find(m => m.type === areaPlanTypeEnum.INSTALL.V)
+            if (deepVal) {
+              deepVal.timeArr = []
+              if (deepVal.startDate && deepVal.endDate) {
+                deepVal.timeArr = [deepVal.startDate, deepVal.endDate]
+              }
+            }
+            if (processVal) {
+              processVal.timeArr = []
+              if (processVal.startDate && processVal.endDate) {
+                processVal.timeArr = [processVal.startDate, processVal.endDate]
+              }
+            }
+            if (installVal && installVal.startDate && installVal.endDate) {
+              installVal.timeArr = []
+              if (installVal.startDate && installVal.endDate) {
+                installVal.timeArr = [installVal.startDate, installVal.endDate]
+              }
+            }
+            value.deepVal = deepVal
+            value.processVal = processVal
+            value.installVal = installVal
+            totalTime(value)
+          })
+        }
+        showData.push(k)
+      })
     }
-    v.sourceRemark = v.remark
-    v.sourceStartDate = v.startDate
-    v.sourceEndDate = v.endDate
-    v.startDate = v.startDate ? v.startDate + '' : undefined
-    v.endDate = v.endDate ? v.endDate + '' : undefined
-    v.modifying = false
-    return v
   })
+  data.data.content = showData || []
 }
 
 CRUD.HOOK.beforeSubmit = () => {
@@ -216,3 +395,32 @@ CRUD.HOOK.beforeSubmit = () => {
   return !!crud.form.projectId
 }
 </script>
+<style lang="scss" scoped>
+.sandwich-cell-top {
+  border-bottom: 1px solid #dfe6ec;
+}
+.sandwich-cell-top,
+.sandwich-cell-bottom {
+  padding: 5px;
+  height: 40px;
+  line-height: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+  // ::v-deep(.el-input__inner) {
+  //   padding: 0;
+  //   padding-left: 2px;
+  // }
+}
+.upload-table {
+  ::v-deep(.cell) {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  ::v-deep(thead.is-group th) {
+    background: #fff;
+  }
+}
+::v-deep(.el-table--small .el-table__cell){
+  padding:4px 0;
+}
+</style>

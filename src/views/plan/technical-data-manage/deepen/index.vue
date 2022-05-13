@@ -111,7 +111,7 @@ import { ref, watch } from 'vue'
 import useMaxHeight from '@compos/use-max-height'
 import { mapGetters } from '@/store/lib'
 import { isNotBlank } from '@data-type/index'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { modelTranslateStatusEnum as translateStatusEnum } from '@enum-ms/bim'
 import deepenTable from './module/deepen-table'
 import machinePartTable from './module/machine-part-table'
@@ -143,18 +143,8 @@ watch(
     if (isNotBlank(val)) {
       const projectContent = []
       val.projectContentList.forEach((v) => {
-        if (val.businessType === businessTypeEnum.MACHINING.V) {
-          if (v.no) {
-            projectContent.push(Number(v.no))
-          }
-        } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
-          if (v.childrenList && v.childrenList.length > 0) {
-            v.childrenList.forEach((value) => {
-              if (value.no) {
-                projectContent.push(Number(value.no))
-              }
-            })
-          }
+        if (v.no) {
+          projectContent.push(Number(v.no))
         }
       })
       if (projectContent.indexOf(TechnologyTypeAllEnum.STRUCTURE.V) > -1) {

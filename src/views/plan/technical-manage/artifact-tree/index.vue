@@ -433,8 +433,12 @@ function handleRowClassName({ row, rowIndex }) {
   }
 }
 
-function cellClassName() {
-  return ''
+function cellClassName({ row, rowIndex }) {
+  if (row.abnormal === 1) {
+    return 'abnormal-row'
+  } else {
+    return row.children ? 'parent-row' : 'hidden-select'
+  }
 }
 
 CRUD.HOOK.handleRefresh = (crud, data) => {

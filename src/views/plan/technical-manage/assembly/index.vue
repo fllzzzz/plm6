@@ -334,8 +334,8 @@ function handleRowClassName({ row, rowIndex }) {
   return row.existStatus === 1 ? '' : 'abnormal-row'
 }
 
-function cellClassName() {
-  return ''
+function cellClassName({ row, rowIndex }) {
+  return row.abnormal === 1 ? 'abnormal-row' : ''
 }
 
 function addRow(val, index) {

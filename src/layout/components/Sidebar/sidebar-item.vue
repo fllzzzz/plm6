@@ -46,7 +46,7 @@ import { ElSubMenu, ElMenuItem } from 'element-plus'
 import Item from './item.vue'
 import AppLink from './link.vue'
 import { isNotBlank } from '@/utils/data-type'
-import { TechnologyTypeAllEnum, businessTypeEnum, projectModeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum, projectModeEnum, TechnologyMainTypeEnum } from '@enum-ms/contract'
 
 const props = defineProps({
   item: {
@@ -81,17 +81,7 @@ watch(
       const projectContentData = []
       if (val.projectContentList && val.projectContentList.length > 0) {
         val.projectContentList.forEach(v => {
-          if (val.businessType === businessTypeEnum.MACHINING.V) {
-            v.alias = v.parentCategory
-            projectContentData.push(v)
-          } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
-            if (v.childrenList && v.childrenList.length > 0) {
-              v.childrenList.forEach(value => {
-                value.alias = v.alias
-                projectContentData.push(value)
-              })
-            }
-          }
+          projectContentData.push(v)
         })
       }
       if (projectContentData.length > 0) {
@@ -107,7 +97,7 @@ watch(
             }
           }
         })
-        if (projectContentData.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
+        if (projectContentData.findIndex((k) => k.categoryType === TechnologyMainTypeEnum.ENCLOSURE.V) > -1) {
           arr.push('PlanEnclosureList')
         }
       }

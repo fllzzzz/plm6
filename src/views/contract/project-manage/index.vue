@@ -64,10 +64,10 @@
         prop="projectContent"
         label="项目内容"
         align="center"
-        width="150"
+        width="160"
       >
         <template v-slot="scope">
-          <div style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.projectContent }}</div>
+          <div v-if="scope.row.projectContent" style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.projectContent }}</div>
         </template>
       </el-table-column>
       <el-table-column

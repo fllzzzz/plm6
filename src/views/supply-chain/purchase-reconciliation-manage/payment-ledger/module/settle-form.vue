@@ -16,8 +16,8 @@
     <template #titleRight>
       <common-button v-loading="submitLoading" type="primary" size="mini" @click="onSubmit" v-if="showType==='add'">提交审核</common-button>
       <template v-else>
-        <common-button v-if="showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
-        <common-button v-if="showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
+        <common-button v-loading="submitLoading" v-if="showType==='audit'" size="small" type="info" @click="passConfirm(auditTypeEnum.REJECT.V)">驳回</common-button>
+        <common-button v-loading="submitLoading" v-if="showType==='audit'" size="small" type="success" @click="passConfirm(auditTypeEnum.PASS.V)">通过</common-button>
       </template>
     </template>
     <template #content>
@@ -208,6 +208,7 @@ function resetForm(data) {
 }
 
 async function onSubmit() {
+  submitLoading.value = true
   try {
     const valid = await formRef.value.validate()
     if (!valid) {
@@ -217,15 +218,18 @@ async function onSubmit() {
     form.value.propertyType = props.detailInfo.propertyType
     form.value.attachmentIds = form.value.attachments ? form.value.attachments.map((v) => v.id) : undefined
     await settleSave(form.value)
+    submitLoading.value = false
     ElNotification({ title: '提交成功', type: 'success' })
     emit('success')
     handleClose()
   } catch (error) {
+    submitLoading.value = false
     console.log('项目结算失败', error)
   }
 }
 
 async function passConfirm(val) {
+  submitLoading.value = true
   const msg = val === auditTypeEnum.PASS.V ? '通过' : '驳回'
   try {
     const submitForm = {
@@ -233,10 +237,12 @@ async function passConfirm(val) {
       orderId: props.detailInfo.id
     }
     await settleConfirm(submitForm)
+    submitLoading.value = false
     ElNotification({ title: '审核' + msg, type: 'success' })
     emit('success')
     handleClose()
   } catch (error) {
+    submitLoading.value = false
     console.log('项目结算审核失败', error)
   }
 }

@@ -177,7 +177,7 @@ import crudOperation from '@crud/CRUD.operation'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import areaTabs from '@/components-system/plan/area-tabs'
 import { enclosureCreateTypeEnum } from '@enum-ms/plan'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import uploadBtn from '@comp/file-upload/ExcelUploadBtn'
 import { listUpload } from '@/api/plan/technical-manage/enclosure'
 import ExportButton from '@comp-common/export-button/index.vue'
@@ -249,6 +249,11 @@ const techOptions = [
     name: '夹芯板',
     no: TechnologyTypeAllEnum.SANDWICH_BOARD.V,
     alias: 'ENCLOSURE'
+  },
+  {
+    name: '折边件',
+    no: TechnologyTypeAllEnum.BENDING.V,
+    alias: 'ENCLOSURE'
   }
 ]
 const currentView = computed(() => {
@@ -271,26 +276,10 @@ watch(
     typeOption.value = []
     if (isNotBlank(val)) {
       techOptions.forEach((v) => {
-        if (val.businessType === businessTypeEnum.MACHINING.V) {
-          if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
-            typeOption.value.push(v)
-          }
-        } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
-          val.projectContentList.forEach((k) => {
-            if (k.childrenList && k.childrenList.length > 0 && k.childrenList.findIndex((value) => Number(value.no) === v.no) > -1) {
-              typeOption.value.push(v)
-            }
-          })
+        if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
+          typeOption.value.push(v)
         }
       })
-      if (typeOption.value.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
-        const optionVal = {
-          name: '折边件',
-          alias: 'ENCLOSURE',
-          no: TechnologyTypeAllEnum.BENDING.V
-        }
-        typeOption.value.push(optionVal)
-      }
       query.category = typeOption.value.length > 0 ? typeOption.value[0].no : undefined
     }
   },
