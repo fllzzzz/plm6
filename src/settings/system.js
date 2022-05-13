@@ -112,10 +112,7 @@ export const showProjectSearch = [
   { component: '/contract/contract-record/index', type: allPT, required: false },
   { component: '/contract/contract-ledger/index', type: allPT, required: false },
   { component: '/contract/collection-ledger/index', type: allPT, required: false },
-  { component: '/contract/collection-warn/index', type: allPT, required: false },
-  { component: '/contract/sales-manage/price-manage/index', type: allPT, required: true },
-  { component: '/contract/sales-manage/order-tracking/index', type: allPT, required: false },
-  { component: '/contract/sales-manage/visa-manage/change/index', type: allPT, required: false }
+  { component: '/contract/collection-warn/index', type: allPT, required: false }
 
   // { component: '/supply-chain/purchase-order/index', type: allPT, required: false },
   // { component: '/supply-chain/logistics-order/index', type: allPT, required: false }
@@ -161,12 +158,12 @@ export const routerMetaSetting = [
   {
     name: 'MesSchedulingArtifactAssemble',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
   },
   {
     name: 'MesSchedulingArtifactArtifact',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
   },
   { name: 'MesSchedulingArtifactMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesSchedulingEnclosure', productType: ENCLOSURE_ALL_BIT },
@@ -178,11 +175,11 @@ export const routerMetaSetting = [
   {
     name: 'MesTaskArtifact',
     productType: ttEnum.STRUCTURE.V,
-    mode: projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
+    mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V
   },
   { name: 'MesTaskMachinePart', productType: ttEnum.STRUCTURE.V, mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
   { name: 'MesTaskEnclosure', productType: ENCLOSURE_ALL_BIT },
   { name: 'MesProductionReportMachinePart', mode: projectModeEnum.STRUCTURE_PART_ASSEMBLE.V },
-  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
-  // { name: 'MesProductionDashboardAssemblyMatch', mode: projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
+  { name: 'MesProductionReportAssemble', mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
+  // { name: 'MesProductionDashboardAssemblyMatch', mode: projectModeEnum.STRUCTURE_STANDARD.V | projectModeEnum.STRUCTURE_ASSEMBLE.V | projectModeEnum.STRUCTURE_PART_ASSEMBLE.V }
 ]

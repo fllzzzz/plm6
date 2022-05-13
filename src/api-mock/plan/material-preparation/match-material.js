@@ -119,7 +119,7 @@ const getMatchSteelPlateList = {
 }
 
 // 型材库存
-const getSectionSteel = {
+const getMatchSectionSteel = {
   url: '/api/wms/material-preparation/match/section-steel',
   method: 'get',
   timeout: 1000,
@@ -166,8 +166,8 @@ const getSectionSteel = {
 }
 
 // 钢卷库存
-const getSteelCoil = {
-  url: '/api/wms/material-inventory/steel-coil',
+const getMatchSteelCoil = {
+  url: '/api/wms/material-preparation/match/steel-coil',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -215,8 +215,8 @@ const getSteelCoil = {
 }
 
 // 辅材库存
-const getAuxMatInventory = {
-  url: '/api/wms/material-inventory/auxiliary-material',
+const getMatchAuxMat = {
+  url: '/api/wms/material-preparation/match/auxiliary-material',
   method: 'get',
   timeout: 1000,
   response: () => {
@@ -253,43 +253,43 @@ const getAuxMatInventory = {
   }
 }
 
-// 气体库存
-const getGasInventory = {
-  url: '/api/wms/material-inventory/gas',
-  method: 'get',
-  timeout: 1000,
-  response: () => {
-    return {
-      code: 20000,
-      message: '成功',
-      data: {
-        content: [
-          {
-            id: 1,
-            classifyId: 901,
-            // specification: '',
-            basicClass: matClsEnum.GAS.V,
-            quantity: 10,
-            brand: '嘻嘻',
-            remark: '66666',
-            mete: 250000,
-            frozenMete: 25000, // 冻结量
-            frozenQuantity: 1, // 冻结数量
-            factory: {
-              id: 1,
-              name: '一号工厂',
-              shortName: '一工'
-            },
-            warehouse: {
-              id: 4,
-              name: '622号仓库'
-            }
-          }
-        ],
-        totalElements: 1
-      }
-    }
-  }
-}
+// // 气体库存
+// const getGasInventory = {
+//   url: '/api/wms/material-preparation/match/gas',
+//   method: 'get',
+//   timeout: 1000,
+//   response: () => {
+//     return {
+//       code: 20000,
+//       message: '成功',
+//       data: {
+//         content: [
+//           {
+//             id: 1,
+//             classifyId: 901,
+//             // specification: '',
+//             basicClass: matClsEnum.GAS.V,
+//             quantity: 10,
+//             brand: '嘻嘻',
+//             remark: '66666',
+//             mete: 250000,
+//             frozenMete: 25000, // 冻结量
+//             frozenQuantity: 1, // 冻结数量
+//             factory: {
+//               id: 1,
+//               name: '一号工厂',
+//               shortName: '一工'
+//             },
+//             warehouse: {
+//               id: 4,
+//               name: '622号仓库'
+//             }
+//           }
+//         ],
+//         totalElements: 1
+//       }
+//     }
+//   }
+// }
 
-export default [getMatchSteelPlateList, getSectionSteel, getSteelCoil, getAuxMatInventory, getGasInventory]
+export default [getMatchSteelPlateList, getMatchSectionSteel, getMatchSteelCoil, getMatchAuxMat]

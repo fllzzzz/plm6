@@ -59,38 +59,38 @@
       >
         <el-table-column type="selection" align="center" width="55" />
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60">
+        <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.monomerName }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="单元" min-width="60">
+        <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="单元" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.areaName }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="sum" prop="sum" :show-overflow-tooltip="true" label="零件数量（件）" min-width="60">
+        <el-table-column key="sum" prop="sum" :show-overflow-tooltip="true" label="零件数量（件）" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.sum }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="reduce" prop="reduce" :show-overflow-tooltip="true" label="零件重量（kg）" min-width="60">
+        <el-table-column key="reduce" prop="reduce" :show-overflow-tooltip="true" label="零件重量（kg）" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.reduce }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="packNum" prop="packNum" :show-overflow-tooltip="true" label="已创建数（件）" min-width="60">
+        <el-table-column key="packNum" prop="packNum" :show-overflow-tooltip="true" label="已创建数（件）" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.packNum }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="packWeight" prop="packWeight" :show-overflow-tooltip="true" label="已创建量（kg）" min-width="60">
+        <el-table-column key="packWeight" prop="packWeight" :show-overflow-tooltip="true" label="已创建量（kg）" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.packWeight }}</span>
           </template>
         </el-table-column>
         <!-- 操作 -->
-        <el-table-column align="center" label="操作" min-width="60">
+        <el-table-column align="center" label="操作" min-width="60" >
           <template v-slot="scope">
             <common-button size="mini" type="primary" icon="el-icon-view" @click="details(scope.row)">查看</common-button>
           </template>
@@ -144,17 +144,17 @@
       >
         <el-table-column type="selection" align="center" width="55" />
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60">
+        <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.monomerName }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60">
+        <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="单元" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.areaName }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60">
+        <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
             <el-tag style="float: right; margin-right: 10px" v-if="scope.row.relationType && scope.row.relationType === 2" type="success">
@@ -169,37 +169,37 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60">
+        <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60">
+        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.length }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度" min-width="60">
+        <el-table-column key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.thick }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60">
+        <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60">
+        <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.quantity }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60">
+        <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.netWeight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60">
+        <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.totalNetWeight }}</span>
           </template>
@@ -217,22 +217,22 @@
           <span>{{ scope.row.monomerName }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60">
+      <el-table-column align="center" key="areaName" prop="areaName" :show-overflow-tooltip="true" label="单元" min-width="60">
         <template v-slot="scope">
           <span>{{ scope.row.areaName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60">
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60">
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60">
+      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.length }}</span>
         </template>
@@ -242,17 +242,17 @@
           <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60">
+      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60">
+      <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.netWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60">
+      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.totalNetWeight }}</span>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <common-dialog
-    title="钢板清单"
+    title="钢板切割状态"
     width="70%"
     :show-close="false"
     :close-on-click-modal="false"
@@ -13,58 +13,70 @@
     <div class="flex-rss">
       <common-table v-loading="tabLoading" row-key="id" ref="tableRef" :max-height="500" style="width: 100%" :data="plateData">
         <el-table-column label="序号" type="index" align="center" width="60" />
-        <el-table-column key="cutInstructionId" prop="cutInstructionId" :show-overflow-tooltip="true" label="指令号" min-width="100">
+        <el-table-column key="cutInstructionId" prop="cutInstructionId" :show-overflow-tooltip="true" label="切割指令号" min-width="100" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.cutInstructionId }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="num" prop="num" :show-overflow-tooltip="true" label="数量" min-width="35">
+        <!-- <el-table-column align="center" key="num" prop="num" :show-overflow-tooltip="true" label="数量" min-width="35"> -->
           <!-- <template v-slot="scope">
             <span>{{ scope.row.num }}</span>
           </template> -->
-          <span>1</span>
+          <!-- <span>1</span>
+        </el-table-column> -->
+           <el-table-column align="center" key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度（mm）" min-width="50">
+          <template v-slot="scope">
+            <span>{{ scope.row.thick }}</span>
+          </template>
         </el-table-column>
         <el-table-column key="material" align="center" prop="material" :show-overflow-tooltip="true" label="材质" min-width="40">
           <template v-slot="scope">
             <span>{{ scope.row.material }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" key="thick" prop="thick" :show-overflow-tooltip="true" label="厚度（mm）" min-width="50">
+        <el-table-column key="specification" align="center" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="40">
           <template v-slot="scope">
-            <span>{{ scope.row.thick }}</span>
+            <span>{{ scope.row.width}} * {{scope.row.length}}</span>
           </template>
         </el-table-column>
-        <el-table-column key="width" prop="width" :show-overflow-tooltip="true" label="宽度（mm）" min-width="55">
+        <el-table-column key="equipment" prop="equipment" :show-overflow-tooltip="true" label="产线设备" min-width="100" align="center">
           <template v-slot="scope">
-            <span>{{ scope.row.width }}</span>
+            <span v-if="scope.row.factory">{{ scope.row.factory }}>{{scope.row.workshopInf}}>{{scope.row.productionLine}}</span>
           </template>
         </el-table-column>
-        <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="55">
+        
+        <!-- <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="55" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.length }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="单重（kg）" min-width="55">
+        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="单重（kg）" min-width="55" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.weight }}</span>
           </template>
         </el-table-column>
-        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="总重（kg）" min-width="55">
+        <el-table-column key="weight" prop="weight" :show-overflow-tooltip="true" label="总重（kg）" min-width="55" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.weight }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
+
         <el-table-column align="center" :show-overflow-tooltip="true" label="套料成果" min-width="70">
           <template v-slot="scope">
-            <common-button type="success" size="mini" @click="nestResults(scope.row)">查看</common-button>
+            <common-button v-if="checkPermission(permission.detailResult)" type="success" size="mini" @click="nestResults(scope.row)">查看</common-button>
           </template>
         </el-table-column>
-        <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="70">
+        <!-- <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="70">
           <template v-slot="scope">
             <common-button type="danger" size="mini" @click="del(scope.row)">删除</common-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
+        <!-- <el-table-column align="center" :show-overflow-tooltip="true" label="状态" min-width="70">
+          <template v-slot="scope">
+            <common-button v-if="checkPermission(permission.detailDelete)" type="danger" size="mini" @click="del(scope.row)">删除</common-button>
+          </template>
+        </el-table-column> -->
       </common-table>
     </div>
     <el-pagination
@@ -84,9 +96,11 @@
 <script setup>
 import useVisible from '@compos/use-visible'
 import detail from '@/views/cutting/template/detail.vue'
-
+import { getMac }  from '@/api/cutting/machine'
 import { defineProps, defineEmits, ref } from 'vue'
 import { get } from '@/api/cutting/project-data'
+import checkPermission from '@/utils/system/check-permission'
+import { projectTaskingPM as permission } from '@/page-permission/cutting'
 
 const props = defineProps({
   visible: {
@@ -128,7 +142,23 @@ async function plateDataGet() {
   try {
     const data = await get({ projectId: props.detailData.projectId, pageSize: page.size, pageNumber: page.page })
     page.total = data.totalElements
+
+    // mac地址查看机器设备
+      for(var i = 0; i < data.content.length; i++) {
+           
+          if(data.content[i].mac) {
+              const macData = await getMac(data.content[i].mac)
+              data.content[i].machineType = macData.machineType
+              data.content[i].factory = macData.factory
+              data.content[i].workshopInf = macData.workshopInf
+              data.content[i].productionLine = macData.productionLine    
+          }
+      }
+
     plateData.value = data.content
+
+
+
   } catch (err) {
     console.log('钢板清单页面接口报错', err)
   }

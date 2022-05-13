@@ -17,7 +17,7 @@ export default ({ command }) => {
     brotliSize: false, // 关闭计算打包时间
     server: {
       open: true,
-      // host: '172.16.3.4',
+      // host: '172.16.1.9',
       host: 'localhost',
       port: 668, // 本地服务端口
       strictPort: false // 设为 true 时若端口已被占用则会直接退出，而不是尝试下一个可用端口

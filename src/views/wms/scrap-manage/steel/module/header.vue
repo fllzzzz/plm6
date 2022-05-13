@@ -15,11 +15,10 @@
             type="enum"
             size="small"
             class="filter-item"
-            @change="handleBasicClassChange"
+            @change="crud.toQuery"
           />
         </template>
       </mat-header-query>
-
       <rrOperation />
     </div>
     <crudOperation>

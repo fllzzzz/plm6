@@ -9,7 +9,7 @@
     size="50%"
   >
     <template #titleRight>
-      <export-button v-permission="crud.permission.download" :params="detail.id" :fn="downloadVisa"> 下载签证单 </export-button>
+      <export-button v-permission="crud.permission.download" :params="detail.id" :fn="download"> 下载签证单 </export-button>
       <span v-if="props.status === reviewStatusEnum.UNREVIEWED.V">
         <common-button :loading="submitLoading" size="mini" type="success" @click="handleSubmit(true)">确 签</common-button>
         <el-popconfirm title="确定要拒绝此条签证单吗？" @confirm="handleSubmit(false)">
@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { check, downloadVisa } from '@/api/contract/sales-manage/visa-change'
+import { check, download } from '@/api/contract/sales-manage/visa-manage'
 import { ref, defineProps, defineEmits, computed } from 'vue'
 
 import { fileClassifyEnum } from '@enum-ms/file'

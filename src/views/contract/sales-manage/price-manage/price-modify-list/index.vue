@@ -67,7 +67,7 @@ const optShow = {
 const tableRef = ref()
 const detailInfo = ref({})
 const dataFormat = ref([
-  ['project', ['parse-project', { onlyShortName: true }]],
+  ['project', 'parse-project'],
   ['type', ['parse-enum', packTypeEnum, { f: 'SL' }]],
   ['status', ['parse-enum', reviewStatusEnum]],
   ['createTime', 'parse-time'],

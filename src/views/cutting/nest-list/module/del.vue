@@ -1,12 +1,12 @@
 <template>
   <span class="ud-operation" style="display: inline-block">
-    <common-button
+    <!-- <common-button
       @click="editClick(data)"
       v-if="data.state === '0' || (data.state === '1' && checkPermission(permission.edit))"
       type="warning"
       size="mini"
       >修改</common-button
-    >
+    > -->
     <el-popover
       v-if="data.state !== '2' && props.showDel && checkPermission(permission.revoke)"
       v-model:visible="pop"
@@ -23,7 +23,7 @@
       </div>
       <template #reference>
         <common-button
-          :loading="crud.dataStatus[data.id].delete === 2"
+          
           :disabled="props.disabledDel"
           type="danger"
           size="mini"
@@ -33,7 +33,25 @@
         </common-button>
       </template>
     </el-popover>
-
+    
+          <!-- <el-popover
+            v-if="data.state === '0'"
+            v-model:visible="data.deleteBtn"
+            placement="top"
+            width="180"
+            trigger="click"
+            @show="onPopoverDelClickShow"
+            @hide="onPopoverDelClickHide"
+          >
+            <p>选择删除操作，让数据删除？</p>
+            <div style="text-align: right; margin: 0">
+              <common-button size="mini" type="text" @click="cancelDeleteBtn(scope.row)">取消</common-button>
+              <common-button type="primary" size="mini" @click="delClick(scope.row)">确定</common-button>
+            </div>
+            <template #reference>
+              <common-button type="danger" size="mini" @click.stop="toDeleteBtn(scope.row)">删除</common-button>
+            </template>
+          </el-popover> -->
     <el-popover
       v-if="data.state === '0' && props.showDel && checkPermission(permission.Nesting)"
       v-model:visible="nesting"
@@ -52,108 +70,109 @@
         <common-button type="success" size="mini" @click.stop="toNesting"> 去套料 </common-button>
       </template>
     </el-popover>
+     
 
     <!-- <common-button @click="NestingClick(data)" v-if="data.state === '0'" type="success" size="mini">去套料</common-button> -->
   </span>
 
   <!-- 零件工单 -->
-  <common-dialog @close="closeDialog" width="70%" title="零件清单" append-to-body v-model="innerVisible">
+  <!-- <common-dialog @close="closeDialog" width="70%" title="零件清单" append-to-body v-model="innerVisible">
     <common-table v-loading="innerLoading" ref="tableRef" :data="updateData" :max-height="400" style="width: 100%" row-key="id">
       <el-table-column label="序号" type="index" align="center" width="60" />
-      <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60">
+      <el-table-column key="monomerName" prop="monomerName" :show-overflow-tooltip="true" label="单体" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.monomerName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60">
+      <el-table-column key="areaName" prop="areaName" :show-overflow-tooltip="true" label="区域" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.areaName }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60">
+      <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.serialNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60">
+      <el-table-column key="specification" prop="specification" :show-overflow-tooltip="true" label="规格" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.specification }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60">
+      <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.length }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60">
+      <el-table-column key="material" prop="material" :show-overflow-tooltip="true" label="材质" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.material }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60">
+      <el-table-column key="quantity" prop="quantity" :show-overflow-tooltip="true" label="数量" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.quantity }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60">
+      <el-table-column key="netWeight" prop="netWeight" :show-overflow-tooltip="true" label="单重（kg）" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.netWeight }}</span>
         </template>
       </el-table-column>
-      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60">
+      <el-table-column key="totalNetWeight" prop="totalNetWeight" :show-overflow-tooltip="true" label="总重（kg）" min-width="60" align="center">
         <template v-slot="scope">
           <span>{{ scope.row.totalNetWeight }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" :show-overflow-tooltip="true" label="操作" min-width="60">
-        <template v-slot="scope">
+        <template v-slot="scope"> -->
           <!-- <common-button v-if="scope.row.nestingState === 1" @click="delClick(scope.row)" type="danger" icon="el-icon-delete" size="mini" /> -->
 
-          <el-popover
+          <!-- <el-popover
             v-if="scope.row.nestingState === 1"
-            v-model:visible="deleteBtn"
+            v-model:visible="scope.row.deleteBtn"
             placement="top"
             width="180"
-            trigger="manual"
+            trigger="click"
             @show="onPopoverDelClickShow"
             @hide="onPopoverDelClickHide"
           >
             <p>选择删除操作，让数据删除？</p>
             <div style="text-align: right; margin: 0">
-              <common-button size="mini" type="text" @click="cancelDeleteBtn">取消</common-button>
+              <common-button size="mini" type="text" @click="cancelDeleteBtn(scope.row)">取消</common-button>
               <common-button type="primary" size="mini" @click="delClick(scope.row)">确定</common-button>
             </div>
             <template #reference>
-              <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDeleteBtn" />
+              <common-button type="danger" icon="el-icon-delete" size="mini" @click.stop="toDeleteBtn(scope.row)" />
             </template>
           </el-popover>
 
           <el-popover
             v-else-if="scope.row.nestingState === 2"
-            v-model:visible="addBTn"
+            v-model:visible="scope.row.addBtn"
             placement="top"
             width="180"
-            trigger="manual"
+            trigger="click"
             @show="onPopoverAddClickShow"
             @hide="onPopoverAddClickHide"
           >
             <p>选择新增操作，让数据添加？</p>
             <div style="text-align: right; margin: 0">
-              <common-button size="mini" type="text" @click="cancelAddBtn">取消</common-button>
+              <common-button size="mini" type="text" @click="cancelAddBtn(scope.row)">取消</common-button>
               <common-button type="primary" size="mini" @click="addClick(scope.row)">确定</common-button>
             </div>
             <template #reference>
-              <common-button type="primary" size="mini" @click.stop="toAddBtn"> 新增 </common-button>
+              <common-button type="primary" size="mini" @click.stop="toAddBtn(scope.row)"> 新增 </common-button>
             </template>
-          </el-popover>
+          </el-popover> -->
           <!--
           <common-button v-else-if="scope.row.nestingState === 2" @click="addClick(scope.row)" type="primary" size="mini">
             新增
           </common-button> -->
-        </template>
+        <!-- </template>
       </el-table-column>
     </common-table>
-  </common-dialog>
+  </common-dialog> -->
 </template>
 
 <script setup>
@@ -162,6 +181,8 @@ import checkPermission from '@/utils/system/check-permission'
 import { regExtra } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
 import { del, uploadOrder, updateOrder, addPartFromOrder, deletePartFromOrder } from '@/api/cutting/taskPack'
+import crudApi1 from '@/api/cutting/project-data'
+
 
 const emit = defineEmits(['selectionChange'])
 
@@ -204,8 +225,6 @@ const updateData = ref([]) // 弹出层数据
 const { crud } = regExtra()
 
 const nesting = ref(false)
-const deleteBtn = ref(false)
-const addBTn = ref(false)
 
 // 取消删除
 function cancelDelete() {
@@ -223,24 +242,24 @@ function toNesting() {
   nesting.value = true
 }
 
-// 点击删除按钮
+// 点击删除按钮  
 function toDelete() {
-  pop.value = true
+  pop.value= true  
 }
 
-function toDeleteBtn() {
-  deleteBtn.value = true
+function toDeleteBtn(row) {
+  row.deleteBtn = true
 }
 
-function toAddBtn() {
-  addBTn.value = true
+function toAddBtn(row) {
+  row.addBtn = true
 }
 
-function cancelDeleteBtn() {
-  deleteBtn.value = false
+function cancelDeleteBtn(row) {
+  row.deleteBtn = false
 }
-function cancelAddBtn() {
-  addBTn.value = false
+function cancelAddBtn(row) {
+  row.addBtn = false
 }
 
 // 确认删除
@@ -259,12 +278,12 @@ async function handleDelete() {
 async function NestingClick(row) {
   try {
     const message = await uploadOrder(props.data.cutTaskId)
-    ElMessage({ type: 'success', message: message })
-    nesting.value = false
+    ElMessage({ type: 'success', message: message })   
     emit('query')
   } catch (err) {
     console.log(err)
   }
+  nesting.value = false
 }
 
 // 编辑弹窗？？
@@ -274,6 +293,10 @@ async function editClick(row) {
   //   console.log('props.data.cutTaskId', props.data.cutTaskId)
   try {
     updateData.value = await updateOrder({ cutTaskId: props.data.cutTaskId })
+    updateData.value.forEach(v=>{
+      v.deleteBtn = false
+      v.addBtn = false
+    })
     console.log('updateData', updateData.value)
   } catch (err) {
     console.log(err)
@@ -369,7 +392,17 @@ function onPopoverAddClickShow() {
 function onPopoverAddClickHide() {
   document.removeEventListener('click', handleDocumentAddClick)
 }
+// 请求钢板接口数据
+async function plateDataGet(row) {
+  currentRow.value = row
+  try {
+    const { content } = await crudApi1.get({ projectId: currentRow.value.projectId})
+    console.log('content', content)
 
+  } catch (err) {
+    console.log('钢板清单页面接口报错', err)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

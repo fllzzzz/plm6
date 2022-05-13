@@ -30,6 +30,7 @@ const useSteelClassifyConf = (loadedCallBack, reload = false) => {
   return {
     loaded,
     steelClassifyConf: computed(() => store.state.config.steelClassifyConf),
+    steelClassifyConfKV: computed(() => store.state.config.steelClassifyConfKV),
     steelClassifyConfICKV: computed(() => store.state.config.steelClassifyConfICKV)
   }
 }

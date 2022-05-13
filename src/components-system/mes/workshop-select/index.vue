@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, ref, watch,defineExpose } from 'vue'
 import { isNotBlank, isBlank, deepClone } from '@data-type/index'
 import useWorkshop from '@compos/store/use-workshops'
 
@@ -59,6 +59,10 @@ const props = defineProps({
   placeholder: {
     type: String,
     default: '请选择车间'
+  },
+  defaultValue: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -123,11 +127,19 @@ function dataFormat() {
     if (isNotBlank(options.value) && props.default && !selectValue.value) {
       selectValue.value = options.value[0].value
     }
+    console.log(options.value,selectValue.value,props.modelValue)
     const isExit = options.value.some((v) => v.value === selectValue.value)
-    if (!isExit) {
+    if (!isExit && !props.defaultValue) {
       selectValue.value = undefined
     }
     handleChange(selectValue.value)
   }
 }
+// 获取车间信息
+function getOption(val) {
+  return workshops.value.find((k) => k.id === val)
+}
+defineExpose({
+  getOption
+})
 </script>

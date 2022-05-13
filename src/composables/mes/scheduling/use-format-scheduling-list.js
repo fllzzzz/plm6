@@ -12,6 +12,7 @@ export default function useFormatSchedulingList(schedulingList, schedulingMapTem
       _t.sourceQuantity = t.totalSchedulingQuantity || 0
       _t.lastQuantity = t.totalSchedulingQuantity || undefined // 最后一次分配的任务数量，用于数量输入错误，还原到上一次
       _t.producedQuantity = t.producedQuantity || 0
+      _t.totalTaskQuantity = t.totalTaskQuantity || 0
     }
   })
   return schedulingMap

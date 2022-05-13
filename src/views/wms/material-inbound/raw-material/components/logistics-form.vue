@@ -1,8 +1,17 @@
 <template>
   <div class="logistics-form">
     <el-divider><span class="title">物流信息</span></el-divider>
-    <el-form ref="formRef" :model="currentForm" :disabled="props.disabled" :rules="rules" size="small" inline label-position="right" label-width="80px">
-      <el-form-item label="运费" prop="freight" label-width="50px">
+    <el-form
+      ref="formRef"
+      :model="currentForm"
+      :disabled="props.disabled"
+      :rules="rules"
+      size="small"
+      inline
+      label-position="right"
+      label-width="80px"
+    >
+      <el-form-item label="运费" prop="freight" label-width="60px">
         <common-input-number
           class="input-underline"
           v-model="currentForm.freight"
@@ -94,7 +103,9 @@ const props = defineProps({
 const formRef = ref()
 const currentForm = ref({})
 
-watchEffect(() => { currentForm.value = props.form })
+watchEffect(() => {
+  currentForm.value = props.form
+})
 
 const validateFreight = (rule, value, callback) => {
   if (isNotBlank(currentForm.value.supplierId) && isBlank(currentForm.value.freight)) {
@@ -111,7 +122,10 @@ const validateSupplierId = (rule, value, callback) => {
 }
 
 const rules = {
-  freight: [{ validator: validateFreight, trigger: 'blur' }],
+  freight: [
+    { required: true, message: '请输入运费', trigger: 'blur' },
+    { validator: validateFreight, trigger: 'blur' }
+  ],
   supplierId: [{ validator: validateSupplierId, trigger: 'change' }]
 }
 

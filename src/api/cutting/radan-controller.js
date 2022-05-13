@@ -17,6 +17,14 @@ export function getTaskByProjectId(params) {
   })
 }
 
+// 套料任务项目信息总览
+export function getProjectInfo() {
+  return request({
+    url: `/api/radan/getProjectInfo`,
+    method: 'get',
+  })
+}
+
 // 创建任务包、根据厚度（翼板副板分）
 export function creatTaskPack(data, params) {
   return request({

@@ -35,6 +35,22 @@ export const configWorkshopPM = {
   editStatus: ['workshop:editStatus'] // 更改车间状态
 }
 
+// 基础配置/系统配置
+export const systemConfigPM = {
+  company: {
+    get: ['configCompany:get'], // 查看公司信息
+    edit: ['configCompany:edit'] // 编辑公司信息
+  },
+  logo: {
+    get: ['configLogo:get'], // 查看公司logo
+    edit: ['configLogo:edit'] // 编辑公司logo
+  },
+  project: {
+    get: ['configProject:get'], // 查看项目信息
+    edit: ['configProject:edit'] // 编辑项目信息
+  }
+}
+
 // 基础配置/编号配置
 export const numberConfigPM = {
   get: ['config_numberConfig:get'], // 编号配置列表

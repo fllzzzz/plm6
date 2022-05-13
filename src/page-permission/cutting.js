@@ -12,7 +12,9 @@ export const commonPM = {}
 // 机器配置管理/机器配置
 export const machineConfigurationPM = {
   get: ['machine_configuration:get'], // 机器配置列表
-  del: ['machine_configuration:del'] // 删除机器
+  del: ['machine_configuration:del'], // 删除机器
+  edit: ['machine_configuration:edit'] // 编辑机器配置
+
 }
 // --------------------------- 机器配置 end --------------------------------
 
@@ -36,7 +38,8 @@ export const nestWorkListPM = {
   get: ['nest_work_list:get'], // 套料工单列表
   detail: ['nest_work_list:detail'], // 钢板清单
   download: ['nest_work_list:download'], // 套料成果
-  Production: ['nest_work_list:Production'] // 任务排产
+  Production: ['nest_work_list:Production'], // 任务排产
+  taskLoading: ['nest_work_list:taskLoading'] // 任务下发
 }
 // --------------------------- 套料工单管理/套料工单 end --------------------
 
@@ -47,7 +50,8 @@ export const nestWorkListPM = {
 // 套料任务管理-套料任务
 export const nestingTaskPM = {
   get: ['nesting_task:get'], // 套料任务列表
-  detail: ['nesting_task:detail'] // 查看
+  detail: ['nesting_task:detail'], // 查看
+  statistics: ['nesting_task:statistics'] // 项目统计
 }
 // --------------------------- 套料任务 end --------------------------------
 
@@ -77,3 +81,38 @@ export const cuttingSchedulingPM = {
 // ---------------------------  切割工单管理/切割排产  end ------------------
 
 // ########################################################################
+
+// 切割工单管理/切割工单
+export const cuttingWorkingPM = {
+  get: ['cutting_working:get'], // 切割工单列表
+  detail: ['cutting_working:detail'], // 钢板清单
+  download: ['cutting_working:download'], // 下载套料成果
+  Production: ['cutting_working:Production'], // 任务排产
+  taskLoading: ['cutting_working:taskLoading'], // 任务下发
+  cleanLoading: ['cutting_working:cleanLoading'], // 任务清除
+  resetLoading: ['cutting_working:resetLoading'] // 任务重置
+}
+// ---------------------------  切割工单管理/切割工单  end ------------------
+
+// ########################################################################
+
+// ---------------------------切割工单管理/项目任务 start ------------------
+
+// 切割工单管理/项目任务
+export const projectTaskingPM = {
+  get: ['project_tasking:get'], // 项目任务列表
+  detail: ['project_tasking:detail'], // 项目任务查看钢板切割状态
+  detailResult: ['project_tasking:detailResult'], // 查看套料成果
+  detailDelete: ['project_tasking:detailDelete'], // 查看切割状态中的删除
+  pauseCutting: ['project_tasking:pauseCutting'] // 暂停切割
+}
+// ---------------------------  切割工单管理/项目任务  end ------------------
+
+// 切割工单管理/设备任务
+export const deviceTaskingPM = {
+  get: ['device_tasking:get'], // 设备任务列表
+  detail: ['device_tasking:detail'], //  设备任务查看钢板切割状态
+  detailResult: ['device_tasking:detailResult'] // 查看套料成果
+
+}
+// ---------------------------  切割工单管理/设备任务  end ------------------

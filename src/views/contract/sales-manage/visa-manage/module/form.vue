@@ -23,6 +23,7 @@
                 clearable
                 class="input-underline"
                 style="width: 100%;"
+                filterSettlement
                 @change="handleProjectChange"
               />
             </el-form-item>
@@ -122,16 +123,20 @@
 </template>
 
 <script setup>
-import { getProjectInfo } from '@/api/contract/sales-manage/visa-change'
+import { getProjectInfo } from '@/api/contract/sales-manage/visa-manage'
 import { ref, computed } from 'vue'
+import { mapGetters } from '@/store/lib'
 
+import moment from 'moment'
 import { DP } from '@/settings/config'
 import { projectNameFormatter } from '@/utils/project'
 
 import { regForm } from '@compos/use-crud'
 import useDict from '@compos/store/use-dict'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
-import projectVisaSelect from '@comp-base/project-visa-select.vue'
+import projectVisaSelect from '@comp-base/project-visa-select'
+
+const { user } = mapGetters('user')
 
 // 是否是编辑状态
 const isEdit = computed(() => {
@@ -143,13 +148,13 @@ const formRef = ref()
 const defaultForm = {
   projectId: undefined,
   visaAmount: undefined,
-  visaDate: undefined,
+  visaDate: moment().startOf('day').format('x'),
   reasonId: undefined,
   governmentRegulation: '',
   supervisionUnit: '',
   designUnit: '',
   remark: '',
-  userId: ''
+  userId: user?.value?.id
 }
 
 const dict = useDict(['visa_reason'])

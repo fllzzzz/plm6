@@ -215,14 +215,24 @@ export const transactionRecordPM = {
   print: ['transaction_record:print'] // 打印
 }
 
-// 销售管理/签证变更
-export const visaChangePM = {
-  get: ['contract_visa_change:get'], // 签证列表
-  add: ['contract_visa_change:add'], // 新增签证单
-  edit: ['contract_visa_change:edit'], // 修改签证单
-  detail: ['contract_visa_change:detail'], // 签证单详情
-  audit: ['contract_visa_change:audit'], // 审核签证单
-  download: ['contract_visa_change:download'] // 签证单下载
+// 销售管理/签证管理
+export const visaManagePM = {
+  get: ['contract_visa_manage:get'], // 签证列表
+  add: ['contract_visa_manage:add'], // 新增签证单
+  edit: ['contract_visa_manage:edit'], // 修改签证单
+  detail: ['contract_visa_manage:detail'], // 签证单详情
+  audit: ['contract_visa_manage:audit'], // 审核签证单
+  download: ['contract_visa_manage:download'] // 签证单下载
+}
+
+// 销售管理/结算管理
+export const settlementManagePM = {
+  get: ['contract_settlement_manage:get'], // 结算列表
+  add: ['contract_settlement_manage:add'], // 新增结算单
+  edit: ['contract_settlement_manage:edit'], // 修改结算单
+  detail: ['contract_settlement_manage:detail'], // 结算单详情
+  audit: ['contract_settlement_manage:audit'], // 审核结算单
+  download: ['contract_settlement_manage:download'] // 结算单下载
 }
 
 // --------------------------- 销售管理 end --------------------------------

@@ -120,6 +120,7 @@ service.interceptors.response.use(
             type: 'warning'
           }).then(() => {
             store.dispatch('user/logout')
+          }).finally(() => {
             location.reload() // 为了重新实例化vue-router对象 避免bug
           })
           break

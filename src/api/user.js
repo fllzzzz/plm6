@@ -30,14 +30,24 @@ export function getInfo() {
   })
 }
 
+// 修改用户信息
+export function editUser(data) {
+  return request({
+    url: '/api/user/info',
+    method: 'put',
+    data
+  })
+}
+
 /**
  * 登出
  */
-export function logout() {
+export function logout(token) {
   return request({
     module: 'user',
     url: 'user/logout',
-    method: 'delete'
+    method: 'delete',
+    data: { token }
   })
 }
 
@@ -47,5 +57,18 @@ export function fetchMenus() {
     module: 'user',
     url: 'user/menu',
     method: 'get'
+  })
+}
+
+// 修改密码
+export function updatePwd(user) {
+  const data = {
+    oldPwd: encrypt(user.oldPwd),
+    newPwd: encrypt(user.newPwd)
+  }
+  return request({
+    url: 'api/user/updatePwd',
+    method: 'post',
+    data
   })
 }

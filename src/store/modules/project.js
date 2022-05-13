@@ -3,7 +3,7 @@ import { addRoutes, resetRouter } from '@/router'
 import EO from '@enum'
 import { projectTypeEnum, projectStatusEnum, TechnologyTypeAllEnum } from '@enum-ms/contract'
 import storage from '@/utils/storage'
-import { projectsToCascade } from '@/utils/project'
+import { projectsToCascade, projectNameFormatter } from '@/utils/project'
 import { isNotBlank, isBlank } from '@data-type/index'
 import { allPT } from '@/settings/config'
 
@@ -162,6 +162,9 @@ const actions = {
   async fetchUserVisaProjects({ commit, state }, params) {
     commit('SET_VISA_LOADED', false)
     const { content: projects = [] } = await getUserVisaProjects(params)
+    projects.forEach(p => {
+      p.fullName = projectNameFormatter(p, null, false)
+    })
     commit('SET_USER_VISA_PROJECTS', projects)
     commit('SET_VISA_LOADED', true)
   }
