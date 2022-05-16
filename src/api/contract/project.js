@@ -207,7 +207,7 @@ export function downloadProjectInfo({ projectId }) {
 export function projectNumData() {
   return request({
     module: 'contract',
-    url: 'project/project-Statistics',
+    url: 'project/projectStatistics',
     method: 'get'
   })
 }

@@ -27,16 +27,19 @@
             />
           </el-form-item>
           <el-form-item label="项目内容" prop="projectContent">
-            <el-select
+            <el-cascader
+              ref="cascaderRef"
               v-model="form.projectContent"
-              multiple
               placeholder="项目内容,可多选"
+              :options="projectContentOption"
               class="input-underline"
+              :props="cascaderProps"
+              :show-all-levels="true"
+              :clearable="true"
               style="width: 320px"
               @change="getShowItem"
-            >
-              <el-option v-for="item in projectContentOption" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
+              filterable
+            />
           </el-form-item>
         </div>
         <div class="form-row">
@@ -185,7 +188,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineExpose, nextTick } from 'vue'
+import { ref, defineProps, watch, defineExpose, nextTick, computed } from 'vue'
 import userDeptCascader from '@comp-base/user-dept-cascader.vue'
 import branchCompanySelect from '@comp-base/branch-company-select.vue'
 import useWatchFormValidate from '@compos/form/use-watch-form-validate'
@@ -197,7 +200,8 @@ import {
   engineerSettlementTypeEnumN,
   enclosureSettlementTypeEnum,
   transportModeEnum,
-  TechnologyTypeEnum
+  TechnologyTypeEnum,
+  TechnologyMainTypeEnum
 } from '@enum-ms/contract'
 import { invoiceTypeEnum, paymentModeEnum } from '@enum-ms/finance'
 import { getContentInfo } from '@/api/contract/project'
@@ -208,13 +212,25 @@ import { isNotBlank } from '@/utils/data-type'
 
 const formRef = ref()
 let projectContent1 = []
+let AllContent1 = []
 let projectContent2 = []
-const originConstruct = []
+let AllContent2 = []
 const projectContentOption = ref([])
 const showItem = ref([])
 const showCategory = ref([])
 const enclosureVisible = ref(false)
 const enclosureFormRef = ref()
+const cascaderProps = computed(() => {
+  return {
+    value: 'id',
+    label: 'name',
+    children: 'children',
+    expandTrigger: 'hover',
+    emitPath: false,
+    multiple: true,
+    checkStrictly: false
+  }
+})
 const props = defineProps({
   formData: {
     type: Object,
@@ -305,27 +321,33 @@ function resetForm(data) {
 contentInfo()
 
 async function contentInfo() {
+  AllContent1 = []
+  AllContent2 = []
   try {
-    const options = []
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.ENUM.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.ENUM.INSTALLATION.V })
-    if (data1 && data1.projectContentVOList.length > 0) {
-      data1.projectContentVOList.forEach((v) => {
-        if (v.contentList.length > 0) {
-          v.contentList.forEach((k) => {
-            k.alias = v.type
-            options.push(k)
-            if (k.alias === 'STRUCTURE') {
-              if (originConstruct.indexOf(k) < 0) {
-                originConstruct.push(k)
-              }
-            }
+    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    if (data1 && data1.content.length > 0) {
+      data1.content.map(v => {
+        v.name = v.categoryName
+        if (v.children && v.children.length > 0) {
+          v.children.map(k => {
+            AllContent1.push(k)
           })
         }
       })
     }
-    projectContent1 = options || []
-    projectContent2 = data2.projectContentVOList || []
+    if (data2 && data2.content.length > 0) {
+      data2.content.map(v => {
+        v.name = v.categoryName
+        if (v.children && v.children.length > 0) {
+          v.children.map(k => {
+            AllContent2.push(k)
+          })
+        }
+      })
+    }
+    projectContent1 = data1.content || []
+    projectContent2 = data2.content || []
   } catch (error) {
     console.log(error)
   }
@@ -340,7 +362,7 @@ function businessChange() {
   form.value.enclosureMeasureMode = undefined
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   if (form.value.businessType) {
-    projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.MACHINING.V ? projectContent1 : projectContent2
+    projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
   }
 }
 function isTaxChange(val) {
@@ -378,31 +400,16 @@ function getShowItem(val) {
   const AllInfo = []
   if (val.length > 0) {
     val.map((v) => {
-      if (form.value.businessType === businessTypeEnum.ENUM.MACHINING.V) {
-        const val = projectContent1.find((k) => k.id === v)
-        AllInfo.push(val)
-        if (val.alias === 'STRUCTURE') {
-          if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
-            showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
-          }
-          showCategory.value.push(val)
-        } else {
-          if (totalArr.indexOf(Number(val.no)) > -1 && showItem.value.indexOf(Number(val.no)) < 0) {
-            showItem.value.push(Number(val.no))
-          }
+      const val = AllContent1.find((k) => k.id === v)
+      AllInfo.push(val)
+      if (val.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) {
+        if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
+          showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
         }
+        showCategory.value.push(val)
       } else {
-        const val = projectContent2.find((k) => k.id === v)
-        AllInfo.push(val)
-        if (val.alias) {
-          if (val.alias === 'STRUCTURE') {
-            if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
-              showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
-              showCategory.value = originConstruct
-            }
-          } else if (val.alias === 'ENCLOSURE') {
-            showItem.value = [...showItem.value, ...totalArr]
-          }
+        if (totalArr.indexOf(val.no) > -1 && showItem.value.indexOf(val.no) < 0) {
+          showItem.value.push(val.no)
         }
       }
     })
@@ -413,8 +420,11 @@ function getShowItem(val) {
         }
       }
     })
-    form.value.structureMeasureMode = AllInfo.findIndex(v => v.alias === 'STRUCTURE') > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
-    form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.alias === 'ENCLOSURE') > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
+    form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
+    form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.ENCLOSURE.V) > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
+    if (enclosureFormRef.value) {
+      enclosureSave()
+    }
   }
 }
 
@@ -424,6 +434,11 @@ function typeChange(val) {
 // 围护保存
 function enclosureSave() {
   const info = enclosureFormRef.value.tableData
+  info[TechnologyTypeEnum.STRUCTURE.V] = showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) > -1 ? info[TechnologyTypeEnum.STRUCTURE.V] : []
+  info[TechnologyTypeEnum.PROFILED_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.PROFILED_PLATE.V) > -1 ? info[TechnologyTypeEnum.PROFILED_PLATE.V] : []
+  info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) > -1 ? info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] : []
+  info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) > -1 ? info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] : []
+  info[TechnologyTypeEnum.SANDWICH_BOARD.V] = showItem.value.indexOf(TechnologyTypeEnum.SANDWICH_BOARD.V) > -1 ? info[TechnologyTypeEnum.SANDWICH_BOARD.V] : []
   form.value = {
     ...form.value,
     enclosureInfo: info,

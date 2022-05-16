@@ -54,17 +54,25 @@
         style="width:200px"
         @change="crud.toQuery"
       />
-      <common-select
+      <el-cascader
+        ref="cascaderRef"
         v-model="query.projectContentId"
-        :options="projectContentOption"
-        :type="'other'"
-        :dataStructure="typeProp"
-        size="small"
-        clearable
-        class="filter-item"
-        filterable
         placeholder="项目内容"
+        :options="projectContentOption"
+        class="filter-item"
+        :props="cascaderProps"
+        :show-all-levels="true"
+        :clearable="true"
         style="width:200px"
+        @change="crud.toQuery"
+        filterable
+      />
+      <branch-company-select
+        v-model="query.contractSignBodyId"
+        class="filter-item"
+        placeholder="合同签订主体"
+        style="width: 200px"
+        clearable
         @change="crud.toQuery"
       />
       <div>
@@ -86,17 +94,9 @@
           clearable
           @blur="crud.toQuery"
         />
-        <branch-company-select
-          v-model="query.contractSignBodyId"
-          class="filter-item"
-          placeholder="合同签订主体"
-          style="width: 200px"
-          clearable
-          @change="crud.toQuery"
-        />
         <rrOperation/>
       </div>
-       <el-row v-loading="crud.loading" :gutter="20" class="panel-group">
+       <el-row v-loading="crud.loading" v-if="checkPermission(crud.permission.get)" :gutter="20" class="panel-group">
         <el-col :span="4" class="card-panel-col">
           <Panel name="项目数" text-color="#626262" num-color="#1890ff" :end-val="totalAmount.sumQuantity || 0" :precision="0" />
         </el-col>
@@ -158,7 +158,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, defineEmits } from 'vue'
+import { defineProps, ref, watch, defineEmits, computed } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import checkPermission from '@/utils/system/check-permission'
 import rrOperation from '@crud/RR.operation'
@@ -175,7 +175,17 @@ import Panel from '@/components/Panel'
 const projectContentOption = ref([])
 let projectContent1 = []
 let projectContent2 = []
-const typeProp = { key: 'id', label: 'name', value: 'id' }
+const cascaderProps = computed(() => {
+  return {
+    value: 'id',
+    label: 'name',
+    children: 'children',
+    expandTrigger: 'hover',
+    emitPath: false,
+    multiple: false,
+    checkStrictly: false
+  }
+})
 const completeVisible = ref(false)
 const defaultQuery = {
   projectType: undefined, year: undefined, noOrProjectName: undefined, businessType: undefined, projectContentId: undefined,
@@ -209,21 +219,20 @@ contentInfo()
 
 async function contentInfo() {
   try {
-    const options = []
-    const data1 = await getContentInfo({ businessType: businessTypeEnum.ENUM.MACHINING.V })
-    const data2 = await getContentInfo({ businessType: businessTypeEnum.ENUM.INSTALLATION.V })
-    if (data1 && data1.projectContentVOList.length > 0) {
-      data1.projectContentVOList.forEach(v => {
-        if (v.contentList.length > 0) {
-          v.contentList.forEach(k => {
-            k.alias = v.type
-            options.push(k)
-          })
-        }
+    const data1 = await getContentInfo({ businessType: businessTypeEnum.MACHINING.V })
+    const data2 = await getContentInfo({ businessType: businessTypeEnum.INSTALLATION.V })
+    if (data1 && data1.content.length > 0) {
+      data1.content.map(v => {
+        v.name = v.categoryName
       })
     }
-    projectContent1 = options || []
-    projectContent2 = data2.projectContentVOList || []
+    if (data2 && data2.content.length > 0) {
+      data2.content.map(v => {
+        v.name = v.categoryName
+      })
+    }
+    projectContent1 = data1.content || []
+    projectContent2 = data2.content || []
   } catch (error) {
     console.log(error)
   }

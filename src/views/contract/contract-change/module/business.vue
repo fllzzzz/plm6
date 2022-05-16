@@ -141,6 +141,7 @@ const props = defineProps({
   }
 })
 const totalArr = [
+  TechnologyTypeEnum.STRUCTURE.V,
   TechnologyTypeEnum.SANDWICH_BOARD.V,
   TechnologyTypeEnum.PROFILED_PLATE.V,
   TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V,
@@ -153,26 +154,8 @@ watch(
       showItem.value = []
       if (val.projectContentList.length > 0) {
         val.projectContentList.forEach(v => {
-          if (val.businessType === businessTypeEnum.MACHINING.V) {
-            if (v.parentCategory === 'STRUCTURE') {
-              if (showItem.value.indexOf(Number(v.no)) < 0) {
-                showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
-              }
-            } else if (v.parentCategory === 'ENCLOSURE') {
-              if (totalArr.indexOf(Number(v.no)) > -1 && showItem.value.indexOf(Number(v.no)) < 0) {
-                showItem.value.push(Number(v.no))
-              }
-            }
-          } else {
-            if (v.alias) {
-              if (v.alias === 'STRUCTURE') {
-                if (showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) < 0) {
-                  showItem.value.push(TechnologyTypeEnum.STRUCTURE.V)
-                }
-              } else if (v.alias === 'ENCLOSURE') {
-                showItem.value = [...showItem.value, ...totalArr]
-              }
-            }
+          if (totalArr.indexOf(v.no) > -1 && showItem.value.indexOf(v.no) < 0) {
+            showItem.value.push(v.no)
           }
         })
       }

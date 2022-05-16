@@ -84,7 +84,7 @@ import { mapGetters } from '@/store/lib'
 import mDetail from './module/detail'
 import enclosureTable from './module/enclosure-table'
 import { isNotBlank } from '@data-type/index'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import monomerSelect from '@/components-system/plan/monomer-select'
 import { DP } from '@/settings/config'
 
@@ -144,6 +144,13 @@ const techOptions = [
     dateKey: 'pressureBearingPlateDate',
     no: TechnologyTypeAllEnum.PRESSURE_BEARING_PLATE.V,
     alias: 'ENCLOSURE'
+  },
+  {
+    name: '折边件',
+    key: 'flangingPiece',
+    dateKey: 'flangingPieceDate',
+    alias: 'ENCLOSURE',
+    no: TechnologyTypeAllEnum.BENDING.V
   }
 ]
 watch(
@@ -152,39 +159,20 @@ watch(
     if (isNotBlank(val)) {
       currentOption.value = []
       val.projectContentList.forEach((v) => {
-        if (val.businessType === businessTypeEnum.ENUM.MACHINING.V) {
-          if (v.no && techOptions.findIndex((k) => k.no === Number(v.no)) > -1 && Number(v.no) !== TechnologyTypeAllEnum.STRUCTURE.V) {
-            const optionVal = techOptions.find((k) => k.no === Number(v.no))
-            currentOption.value.push(optionVal)
-          }
-        } else if (val.businessType === businessTypeEnum.ENUM.INSTALLATION.V) {
-          if (v.childrenList && v.childrenList.length > 0) {
-            v.childrenList.forEach((value) => {
-              if (value.no && techOptions.findIndex((k) => k.no === Number(value.no)) > -1 && Number(value.no) !== TechnologyTypeAllEnum.STRUCTURE.V) {
-                const optionVal = techOptions.find((k) => k.no === Number(value.no))
-                currentOption.value.push(optionVal)
-              }
-            })
-          }
+        if (v.no && techOptions.findIndex((k) => k.no === Number(v.no)) > -1 && Number(v.no) !== TechnologyTypeAllEnum.STRUCTURE.V) {
+          const optionVal = techOptions.find((k) => k.no === Number(v.no))
+          currentOption.value.push(optionVal)
         }
       })
-      if (currentOption.value.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
-        const optionVal = {
-          name: '折边件',
-          key: 'flangingPiece',
-          dateKey: 'flangingPieceDate',
-          alias: 'ENCLOSURE',
-          no: TechnologyTypeAllEnum.BENDING.V
-        }
-        currentOption.value.push(optionVal)
+      if (val.projectContentList.findIndex(v => v.no === TechnologyTypeAllEnum.STRUCTURE.V) > -1) {
+        currentOption.value.unshift(
+          {
+            name: '构件',
+            no: 7
+          },
+          { name: '零件', no: 9 }
+        )
       }
-      currentOption.value.unshift(
-        {
-          name: '构件',
-          no: 7
-        },
-        { name: '零件', no: 9 }
-      )
       queryProductType.value = currentOption.value.length > 0 ? currentOption.value[0].no : undefined
       typeChange(queryProductType.value)
     }
