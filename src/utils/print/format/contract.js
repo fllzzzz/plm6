@@ -46,7 +46,7 @@ function handleSupplierPaymentRate({ header, table = [], footer, qrCode }) {
   const _table = table.map(row => {
     const amount = row.amount || row.freight || 0
     row.paymentRate = amount ? (row.paymentAmount || 0) / amount * 100 : 0
-    row.invoiceRate = amount ? (row.invoiceRate || 0) / amount * 100 : 0
+    row.invoiceRate = amount ? (row.invoiceAmount || 0) / amount * 100 : 0
     return row
   })
   return {

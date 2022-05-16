@@ -69,14 +69,15 @@ export function logisticsSummary(params) {
  * 结构出入库状态
  * @export
  * @param {*} monomerId|required 单体id
+ * @param {*} monomerId|required 区域id
  * @param {*} factoryId 工厂id
  * @returns
  */
-export function warehouseStateStructure({ monomerId, factoryId }) {
+export function warehouseStateStructure({ monomerId, areaId, factoryId }) {
   return request({
     url: 'api/mes/building/warehouse/artifact/print',
     method: 'get',
-    params: { monomerId, factoryId }
+    params: { monomerId, areaId, factoryId }
   })
 }
 
@@ -84,14 +85,15 @@ export function warehouseStateStructure({ monomerId, factoryId }) {
  * 围护出入库状态
  * @export
  * @param {*} monomerId|required 单体id
+ * @param {*} monomerId|required 区域id
  * @param {*} factoryId 工厂id
  * @returns
  */
-export function warehouseStateEnclosure({ monomerId, factoryId }) {
+export function warehouseStateEnclosure({ monomerId, areaId, factoryId }) {
   return request({
     url: 'api/mes/building/warehouse/enclosure/print',
     method: 'get',
-    params: { monomerId, factoryId }
+    params: { monomerId, areaId, factoryId }
   })
 }
 
