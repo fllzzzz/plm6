@@ -73,7 +73,7 @@ import { ref, defineProps, watch } from 'vue'
 import { regForm } from '@compos/use-crud'
 import { isNotBlank } from '@data-type/index'
 import { DP } from '@/settings/config'
-import { TechnologyTypeAllEnum, businessTypeEnum } from '@enum-ms/contract'
+import { TechnologyTypeAllEnum } from '@enum-ms/contract'
 import { ElMessage } from 'element-plus'
 
 const formRef = ref()
@@ -178,32 +178,12 @@ watch(
   () => props.globalProject,
   (val) => {
     if (isNotBlank(val)) {
-      const unitData = 'm'
       currentOption.value = []
       props.originOption.forEach(v => {
-        if (val.businessType === businessTypeEnum.MACHINING.V) {
-          if (val.projectContentList.findIndex((k) => Number(k.no) === v.no) > -1) {
-            currentOption.value.push(v)
-          }
-        } else if (val.businessType === businessTypeEnum.INSTALLATION.V) {
-          val.projectContentList.forEach(k => {
-            if (k.childrenList && k.childrenList.length > 0 && k.childrenList.findIndex((value) => Number(value.no) === v.no) > -1) {
-              currentOption.value.push(v)
-            }
-          })
+        if (val.projectContentList.findIndex((k) => k.no === v.no) > -1) {
+          currentOption.value.push(v)
         }
       })
-      if (currentOption.value.findIndex((k) => k.alias === 'ENCLOSURE') > -1) {
-        const optionVal = {
-          label: '折边件',
-          key: 'flangingPiece',
-          dateKey: 'flangingPieceDate',
-          alias: 'ENCLOSURE',
-          no: TechnologyTypeAllEnum.BENDING.V,
-          unit: unitData
-        }
-        currentOption.value.push(optionVal)
-      }
     }
   },
   { deep: true, immediate: true }

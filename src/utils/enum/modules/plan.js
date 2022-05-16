@@ -11,7 +11,7 @@ import { constantize } from '../base'
 // 制造类型
 const manufactureTypeEnum = {
   HOMEMADE: { L: '自制', K: 'HOMEMADE', V: 0 },
-  OUTSOURCE: { L: '外包', K: 'OUTSOURCE', V: 1 }
+  OUTSOURCE: { L: '外协', K: 'OUTSOURCE', V: 1 }
 }
 constantize(manufactureTypeEnum)
 

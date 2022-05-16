@@ -41,6 +41,14 @@ const projectTypeEnum = {
 }
 constantize(projectTypeEnum)
 
+// 技术交底type
+const TechnologyMainTypeEnum = {
+  STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 0 },
+  ENCLOSURE: { L: '围护', K: 'ENCLOSURE', V: 1 << 1 },
+  AUXILIARY_MATERIAL: { L: '配套件', K: 'AUXILIARY_MATERIAL', V: 1 << 2 }
+}
+constantize(TechnologyMainTypeEnum)
+
 // 技术交底类型1
 const TechnologyTypeEnum = {
   STRUCTURE: { L: '结构', K: 'STRUCTURE', V: 1 << 0 },
@@ -299,7 +307,8 @@ export {
   hasPayEnum,
   purchaseOrderStatusEnum,
   logisticsSearchTypeEnum,
-  payableSearchTypeEnum
+  payableSearchTypeEnum,
+  TechnologyMainTypeEnum
 }
 
 export default {
@@ -332,5 +341,6 @@ export default {
   hasPayEnum,
   purchaseOrderStatusEnum,
   logisticsSearchTypeEnum,
-  payableSearchTypeEnum
+  payableSearchTypeEnum,
+  TechnologyMainTypeEnum
 }

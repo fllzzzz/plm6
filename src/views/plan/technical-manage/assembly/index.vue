@@ -31,7 +31,6 @@
                 :data="scope.row.artifactDTOList"
                 class="customer-table"
                 :cell-class-name="wrongCellMask"
-                :row-class-name="handleRowClassName"
                 row-key="rowKey"
                 :stripe="false"
                 style="width: 100%; border-color: transparent"
@@ -259,7 +258,8 @@ import pagination from '@crud/Pagination'
 import { mapGetters } from '@/store/lib'
 import mHeader from './module/header'
 import { DP } from '@/settings/config'
-import useTableValidate from '@compos/form/use-table-validate'
+import { validate } from '@compos/form/use-table-validate'
+import { ElMessage } from 'element-plus'
 import { assemblyListPM as permission } from '@/page-permission/plan'
 import useDrawing from '@compos/use-drawing'
 import drawingPreviewFullscreenDialog from '@comp-base/drawing-preview/drawing-preview-fullscreen-dialog'
@@ -293,7 +293,20 @@ const tableRules = {
   material: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }],
   netWeight: [{ required: true, max: 50, message: '不能超过 50 个字符', trigger: 'blur' }]
 }
-const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules })
+function wrongCellMask({ row, column }) {
+  if (!row) return
+  const rules = tableRules
+  let flag = true
+  if (row.verify && Object.keys(row.verify) && Object.keys(row.verify).length > 0) {
+    if (row.verify[column.property] === false) {
+      flag = validate(column.property, rules[column.property], row)
+    }
+    if (flag) {
+      row.verify[column.property] = true
+    }
+  }
+  return flag ? (row.existStatus === 1 ? '' : 'abnormal-row') : 'mask-td'
+}
 const expandArr = ref([])
 
 const { crud, columns, CRUD } = useCRUD(
@@ -330,12 +343,8 @@ function handleAssemblyRowClassName({ row, rowIndex }) {
   return row.abnormal === 1 ? 'abnormal-row' : ''
 }
 
-function handleRowClassName({ row, rowIndex }) {
-  return row.existStatus === 1 ? '' : 'abnormal-row'
-}
-
-function cellClassName() {
-  return ''
+function cellClassName({ row, rowIndex }) {
+  return row.abnormal === 1 ? 'abnormal-row' : ''
 }
 
 function addRow(val, index) {
@@ -356,13 +365,20 @@ function addRow(val, index) {
   })
 }
 async function addArtifact(val) {
-  try {
-    const { validResult, dealList } = tableValidate(crud.data[val.mainIndex].artifactDTOList)
-    if (validResult) {
-      crud.data[val.mainIndex].artifactDTOList = dealList
-    } else {
-      return validResult
+  const rules = tableRules
+  let flag = true
+  val.verify = {}
+  for (const rule in rules) {
+    val.verify[rule] = validate(rule, rules[rule], val)
+    if (!val.verify[rule]) {
+      flag = false
     }
+  }
+  if (!flag) {
+    ElMessage.error('请填写表格中标红数据')
+    return
+  }
+  try {
     await addAssemblyArtifact(val)
     crud.notify('添加成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
     crud.toQuery()
