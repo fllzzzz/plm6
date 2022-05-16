@@ -11,7 +11,7 @@
         <print-table
           v-permission="crud.permission.print"
           api-key="mesWarehouseStateStructure"
-          :params="{ monomerId: query.monomerId, factoryId: query.factoryId }"
+          :params="{ ...query }"
           size="mini"
           type="warning"
           class="filter-item"
