@@ -57,8 +57,9 @@
       <el-cascader
         ref="cascaderRef"
         v-model="query.projectContentId"
-        placeholder="项目内容,可多选"
+        placeholder="项目内容"
         :options="projectContentOption"
+        class="filter-item"
         :props="cascaderProps"
         :show-all-levels="true"
         :clearable="true"

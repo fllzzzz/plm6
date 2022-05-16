@@ -422,6 +422,9 @@ function getShowItem(val) {
     })
     form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
     form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.ENCLOSURE.V) > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
+    if (enclosureFormRef.value) {
+      enclosureSave()
+    }
   }
 }
 
@@ -431,14 +434,19 @@ function typeChange(val) {
 // 围护保存
 function enclosureSave() {
   const info = enclosureFormRef.value.tableData
+  info[TechnologyTypeEnum.STRUCTURE.V] = showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) > -1 ? info[TechnologyTypeEnum.STRUCTURE.V] : []
+  info[TechnologyTypeEnum.PROFILED_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.PROFILED_PLATE.V) > -1 ? info[TechnologyTypeEnum.PROFILED_PLATE.V] : []
+  info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) > -1 ? info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] : []
+  info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) > -1 ? info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] : []
+  info[TechnologyTypeEnum.SANDWICH_BOARD.V] = showItem.value.indexOf(TechnologyTypeEnum.SANDWICH_BOARD.V) > -1 ? info[TechnologyTypeEnum.SANDWICH_BOARD.V] : []
   form.value = {
     ...form.value,
     enclosureInfo: info,
-    structureSaveRequestVOS: showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) > -1 ? info[TechnologyTypeEnum.STRUCTURE.V] : [],
-    profiledPlateSaveRequestVOS: showItem.value.indexOf(TechnologyTypeEnum.PROFILED_PLATE.V) > -1 ? info[TechnologyTypeEnum.PROFILED_PLATE.V] : [],
-    pressureBearingPlateSaveVOS: showItem.value.indexOf(TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) > -1 ? info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] : [],
-    trussFloorPlateSaveRequestVOS: showItem.value.indexOf(TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) > -1 ? info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] : [],
-    sandwichBoardSaveRequestVOS: showItem.value.indexOf(TechnologyTypeEnum.SANDWICH_BOARD.V) > -1 ? info[TechnologyTypeEnum.SANDWICH_BOARD.V] : []
+    structureSaveRequestVOS: info[TechnologyTypeEnum.STRUCTURE.V],
+    profiledPlateSaveRequestVOS: info[TechnologyTypeEnum.PROFILED_PLATE.V],
+    pressureBearingPlateSaveVOS: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
+    trussFloorPlateSaveRequestVOS: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
+    sandwichBoardSaveRequestVOS: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
   }
   enclosureVisible.value = false
 }

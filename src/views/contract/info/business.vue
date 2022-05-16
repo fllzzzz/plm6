@@ -452,7 +452,7 @@ function businessChange() {
   form.value.enclosureMeasureMode = undefined
   Object.assign(form.value, JSON.parse(JSON.stringify(techForm)))
   if (form.value.businessType) {
-    projectContentOption.value = form.value.businessType === businessTypeEnum.ENUM.MACHINING.V ? projectContent1 : projectContent2
+    projectContentOption.value = form.value.businessType === businessTypeEnum.MACHINING.V ? projectContent1 : projectContent2
   }
 }
 
@@ -527,6 +527,9 @@ function getShowItem(val) {
     })
     form.value.structureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.STRUCTURE.V) > -1 ? engineerSettlementTypeEnumN.THEORY.V : undefined
     form.value.enclosureMeasureMode = AllInfo.findIndex(v => v.categoryType === TechnologyMainTypeEnum.ENCLOSURE.V) > -1 ? enclosureSettlementTypeEnum.LENGTH.V : undefined
+    if (enclosureFormRef.value) {
+      enclosureSave()
+    }
   }
 }
 
@@ -537,14 +540,19 @@ function typeChange(val) {
 // 围护保存
 function enclosureSave() {
   const info = enclosureFormRef.value.tableData
+  info[TechnologyTypeEnum.STRUCTURE.V] = showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) > -1 ? info[TechnologyTypeEnum.STRUCTURE.V] : []
+  info[TechnologyTypeEnum.PROFILED_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.PROFILED_PLATE.V) > -1 ? info[TechnologyTypeEnum.PROFILED_PLATE.V] : []
+  info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) > -1 ? info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] : []
+  info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] = showItem.value.indexOf(TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) > -1 ? info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] : []
+  info[TechnologyTypeEnum.SANDWICH_BOARD.V] = showItem.value.indexOf(TechnologyTypeEnum.SANDWICH_BOARD.V) > -1 ? info[TechnologyTypeEnum.SANDWICH_BOARD.V] : []
   form.value = {
     ...form.value,
     enclosureInfo: info,
-    structureList: showItem.value.indexOf(TechnologyTypeEnum.STRUCTURE.V) > -1 ? info[TechnologyTypeEnum.STRUCTURE.V] : [],
-    profiledPlateList: showItem.value.indexOf(TechnologyTypeEnum.PROFILED_PLATE.V) > -1 ? info[TechnologyTypeEnum.PROFILED_PLATE.V] : [],
-    pressureBearingPlateList: showItem.value.indexOf(TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V) > -1 ? info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V] : [],
-    trussFloorPlateList: showItem.value.indexOf(TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V) > -1 ? info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V] : [],
-    sandwichBoardList: showItem.value.indexOf(TechnologyTypeEnum.SANDWICH_BOARD.V) > -1 ? info[TechnologyTypeEnum.SANDWICH_BOARD.V] : []
+    structureList: info[TechnologyTypeEnum.STRUCTURE.V],
+    profiledPlateList: info[TechnologyTypeEnum.PROFILED_PLATE.V],
+    pressureBearingPlateList: info[TechnologyTypeEnum.PRESSURE_BEARING_PLATE.V],
+    trussFloorPlateList: info[TechnologyTypeEnum.TRUSS_FLOOR_PLATE.V],
+    sandwichBoardList: info[TechnologyTypeEnum.SANDWICH_BOARD.V]
   }
   enclosureVisible.value = false
 }
@@ -617,13 +625,7 @@ async function fetchDetail() {
     if (detail.value.projectContentList && detail.value.projectContentList.length > 0) {
       detail.value.projectContentList.forEach((v) => {
         form.value.projectContent.push(v.id)
-        if (detail.value.businessType === businessTypeEnum.MACHINING.V) {
-          originContentValue.value.push(v.no)
-        } else {
-          v.childrenList.forEach(k => {
-            originContentValue.value.push(k.no)
-          })
-        }
+        originContentValue.value.push(v.no)
       })
     }
     originContent.value = JSON.parse(JSON.stringify(form.value.projectContent))
