@@ -29,7 +29,7 @@
           style="margin-right: 8px"
           class="filter-item"
           v-model="query.nestingState"
-          :options="SchedulingEnum.ENUM"
+          :options="schedulingEnum.ENUM"
           show-option-all
           type="enum"
           size="small"
@@ -53,7 +53,7 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { SchedulingEnum } from '@enum-ms/cutting'
+import { schedulingEnum } from '@enum-ms/cutting'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { parseTime } from '@/utils/date'

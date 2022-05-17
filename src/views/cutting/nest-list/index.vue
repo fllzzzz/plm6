@@ -15,14 +15,13 @@
       style="width: 100%"
       @expand-change="expandChange"
     >
-    
       <el-table-column type="expand">
         <template v-slot='scope'>
         <common-table
               v-loading="scope.row.loadingList"
               :data="scope.row.subList"
               row-key="id"
-              style="width: 100%" 
+              style="width: 100%"
               border
             >
             <el-table-column prop="index" label="序号" align="center" width="60" type="index" />
@@ -35,11 +34,11 @@
               style="width: 100%"
               label="钢板厚度"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.thick}} 
-                </template> 
-             </el-table-column> 
+                    {{scope.row.thick}}
+                </template>
+             </el-table-column>
                <el-table-column
               v-if="columns.visible('material')"
               header-align="center"
@@ -49,11 +48,11 @@
               style="width: 100%"
               label="材质"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.material}} 
-                </template> 
-             </el-table-column> 
+                    {{scope.row.material}}
+                </template>
+             </el-table-column>
                   <el-table-column
               v-if="columns.visible('sum')"
               header-align="center"
@@ -63,11 +62,11 @@
               style="width: 100%"
               label="零件数量"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.sum}} 
-                </template> 
-             </el-table-column> 
+                    {{scope.row.sum}}
+                </template>
+             </el-table-column>
                 <el-table-column
               v-if="columns.visible('reduce')"
               header-align="center"
@@ -77,11 +76,11 @@
               style="width: 100%"
               label="零件重量"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.reduce}} 
-                </template> 
-             </el-table-column> 
+                    {{scope.row.reduce}}
+                </template>
+             </el-table-column>
                 <el-table-column
               v-if="columns.visible('relationType')"
               header-align="center"
@@ -91,20 +90,20 @@
               style="width: 50%"
               label="零件属性"
               align="center"
-              min-width="60"> 
+              min-width="60">
               <template v-slot="scope">
                 <!-- <el-tag type="success">
                   {{PlateTypeEnum.VL[scope.row.relationType]}}
                 </el-tag> -->
-                <el-tag  v-if='scope.row.relationType&&scope.row.relationType===2' type="success">
+                <el-tag  v-if='scope.row.relationType&&scope.row.relationType===plateTypeEnum.PART_BOARD.V' type="success">
                   零件板
-                </el-tag> 
-                <el-tag  v-else-if='scope.row.relationType&&scope.row.relationType===16' type="danger">
+                </el-tag>
+                <el-tag  v-else-if='scope.row.relationType&&scope.row.relationType===plateTypeEnum.WING_PLATE.V' type="danger">
                   翼腹板
-                </el-tag>    
+                </el-tag>
 
               </template>
-             </el-table-column> 
+             </el-table-column>
              <!-- 任务包零件上传状态 -->
              <el-table-column
         v-if="columns.visible('state')"
@@ -117,13 +116,13 @@
       >
         <template v-slot="scope">
           <span>
-            <el-tag style="width: 100%" effect="plain" v-if="scope.row.state && scope.row.state === '1'" type="warning">
+            <el-tag style="width: 100%" effect="plain" v-if="scope.row.state && scope.row.state === uploadEnum.UPLOADING_UP.V" type="warning">
               已上传
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.state && scope.row.state === '0'" type="danger">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.state && scope.row.state === uploadEnum.NOT_UPLOAD.V" type="danger">
               未上传
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.state && scope.row.state === '2'" type="success">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.state && scope.row.state === uploadEnum.UPLOADING_UP_ENDING.V" type="success">
               套料结束
             </el-tag>
           </span>
@@ -227,7 +226,7 @@
         v-if="columns.visible('plateNum')"
         header-align="center"
         key="plateNum"
-        prop="plateNumplateNum"
+        prop="plateNum"
         align="center"
         :show-overflow-tooltip="true"
         label="使用钢板数"
@@ -262,14 +261,14 @@
       >
         <template v-slot="scope">
           <span>
-            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === nestingStateEnum.NOT_LINED_UP.V" type="danger">
+              未套料
+            </el-tag>
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === nestingStateEnum.PARTIAL_ROW_SETS.V" type="warning">
               部分套料
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === 0" type="success">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === nestingStateEnum.LINED_UP.V" type="success">
               套料结束
-            </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === 2" type="danger">
-              未套料
             </el-tag>
           </span>
         </template>
@@ -291,20 +290,19 @@ import { ref } from 'vue'
 import crudApi1 from '@/api/cutting/taskPack'
 import crudApi from '@/api/cutting/radan-controller'
 import useCRUD from '@compos/use-crud'
-import { parseTime } from '@/utils/date'
+// import { parseTime } from '@/utils/date'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
-import {PlateTypeEnum,NestingEnum} from '@enum-ms/cutting'
+import { plateTypeEnum, nestingStateEnum, uploadEnum } from '@enum-ms/cutting'
 import useMaxHeight from '@compos/use-max-height'
-import checkPermission from '@/utils/system/check-permission'
+// import checkPermission from '@/utils/system/check-permission'
 import { nestingListPM as permission } from '@/page-permission/cutting'
 import delBtn from './module/del'
 
 const tableRef = ref()
-const dataList = ref([])
+// const dataList = ref([])
 const loadingList = ref(false)
-const currentRow=ref({})
-
+const currentRow = ref({})
 
 // crud交由presenter持有
 // const permission = {
@@ -317,7 +315,7 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const { crud, CRUD, columns } = useCRUD(
@@ -328,7 +326,7 @@ const { crud, CRUD, columns } = useCRUD(
     optShow: { ...optShow },
     crudApi: { ...crudApi },
     hasPagination: true,
-    formStore: true,
+    formStore: true
   },
   tableRef
 )
@@ -341,15 +339,14 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
-//获取钢板
-async function getPlate(){
+// 获取钢板
+async function getPlate() {
   try {
     const data = await crudApi1.get({
-      nestingState:currentRow.value.nestingState,
+      nestingState: currentRow.value.nestingState,
       sort: ['createTime.desc'],
-      projectId:currentRow.value.projectId
+      projectId: currentRow.value.projectId
     })
-    
     crud.data[currentRow.value.rowIndex].subList = data.content
   } catch (error) {
     console.log('请求接口数据失败')
@@ -358,17 +355,16 @@ async function getPlate(){
 
 // 请求接口数据
 async function expandChange(row, expandedRowsOrExpanded) {
-  currentRow.value=row
+  currentRow.value = row
   console.log(row, expandedRowsOrExpanded)
   loadingList.value = true
   try {
     const data = await crudApi1.get({
-      nestingState:row.nestingState,
+      nestingState: row.nestingState,
       sort: ['createTime.desc'],
-      projectId:row.projectId
+      projectId: row.projectId
     })
     console.log('data', data)
-      
     row.subList = data.content
   } catch (error) {
     console.log('请求接口数据失败')
@@ -376,18 +372,17 @@ async function expandChange(row, expandedRowsOrExpanded) {
   loadingList.value = false
 }
 // 删除操作
-function del(row) {
-  console.log(row)
-}
+// function del(row) {
+//   console.log(row)
+// }
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.contractRecord',
   paginate: true,
-  extraHeight: 40,
+  extraHeight: 40
 })
 
 // function NestingClick(row) {
 //   console.log('row', row.cutTaskId)
 // }
-
 
 </script>

@@ -90,9 +90,9 @@
         min-width="60"
       >
         <template v-slot="scope">
-          <el-tag style="width: 100%" v-if="scope.row.nestingState === 0" type="danger">未排套</el-tag>
-          <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">部分排套</el-tag>
-          <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === 2" type="success">排套结束</el-tag>
+          <el-tag style="width: 100%" v-if="scope.row.nestingState === nestingStateEnum.NOT_LINED_UP.V" type="danger">未排套</el-tag>
+          <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === nestingStateEnum.PARTIAL_ROW_SETS.V" type="warning">部分排套</el-tag>
+          <el-tag style="width: 100%" v-if="scope.row.nestingState && scope.row.nestingState === nestingStateEnum.LINED_UP.V" type="success">排套结束</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -118,7 +118,6 @@
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column> -->
-      
       <el-table-column v-if="checkPermission(permission.detail)" :show-overflow-tooltip="true" label="操作" align="center">
         <template v-slot="scope">
           <common-button size="mini" type="primary" icon="el-icon-view" @click="viewDetails(scope.row)">查看</common-button>
@@ -132,19 +131,19 @@
 </template>
 
 <script setup>
-import { watch,reactive,provide } from 'vue'
-import {ref} from 'vue'
+import { watch, reactive, provide } from 'vue'
+import { ref } from 'vue'
 import crudApi from '@/api/cutting/radan-controller'
 import { getProjectInfo } from '@/api/cutting/radan-controller'
+import { nestingStateEnum } from '@enum-ms/cutting'
 import useCRUD from '@compos/use-crud'
 import mHeader from './module/header'
-import { parseTime } from '@/utils/date'
+// import { parseTime } from '@/utils/date'
 import pagination from '@crud/Pagination'
 import detail from './detail/index.vue'
 import useMaxHeight from '@compos/use-max-height'
 import checkPermission from '@/utils/system/check-permission'
 import { nestingTaskPM as permission } from '@/page-permission/cutting'
-
 
 const specsVisible = ref(false)
 const tableRef = ref()
@@ -166,7 +165,7 @@ const projectInfo = reactive({
 
 provide('projectInfo', projectInfo)
 
-const { crud, columns} = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '套料任务',
     sort: ['createTime.desc'],
@@ -189,7 +188,7 @@ watch(
 
 const { maxHeight } = useMaxHeight({
   // wrapperBox: '.contractRecord',
-  paginate: true,
+  paginate: true
   // extraHeight: 40
 })
 // 获取项目汇总数据

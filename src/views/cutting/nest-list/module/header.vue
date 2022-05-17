@@ -30,7 +30,7 @@
           style="margin-right: 8px"
           class="filter-item"
           v-model="query.nestingState"
-          :options="NestingEnum.ENUM"
+          :options="nestingEnum.ENUM"
           show-option-all
           type="enum"
           size="small"
@@ -46,7 +46,7 @@
             @keyup.enter="crud.toQuery"
           />
           <rrOperation />
-        </div> 
+        </div>
       </template>
     </crudOperation>
   </div>
@@ -54,11 +54,10 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
-import { NestingEnum } from '@enum-ms/cutting'
+import { nestingEnum } from '@enum-ms/cutting'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { parseTime } from '@/utils/date'
-
 
 const defaultQuery = {
   // importTime: undefined
@@ -71,5 +70,4 @@ function disabledDate(time) {
 const { crud, query } = regHeader(defaultQuery)
 
 </script>
-
 

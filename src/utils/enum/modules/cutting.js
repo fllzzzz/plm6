@@ -16,86 +16,95 @@ const steelPlateEnum = {
 constantize(steelPlateEnum)
 
 // 代理连接状态
-const MessageTypeEnum = {
+const messageTypeEnum = {
   SMS_NOTIFICATION: { L: '离线', K: 'SMS_NOTIFICATION', V: 0 },
   VERIFICATION_CODE: { L: '在线', K: 'VERIFICATION_CODE', V: 1 },
   PROMOTION_SMS: { L: '连线中', K: 'PROMOTION_SMS', V: 2 }
 }
-constantize(MessageTypeEnum)
+constantize(messageTypeEnum)
 
-const PlateTypeEnum = {
-  WING_PLATE: { L: '翼腹板', K: 'VERIFICATION_CODE', V: 16},
-  PART_BOARD: { L: '零件板', K: 'VERIFICATION_CODE', V: 2}
+// 任务包零件上传状态
+const uploadEnum = {
+  NOT_UPLOAD: { L: '未上传', K: 'VERIFICATION_CODE', V: '0' },
+  UPLOADING_UP: { L: '已上传', K: 'VERIFICATION_CODE', V: '1' },
+  UPLOADING_UP_ENDING: { L: '套料结束', K: 'VERIFICATION_CODE', V: '2' }
 }
-constantize(PlateTypeEnum)
+constantize(uploadEnum)
 
-const TypeEnum = {
+const plateTypeEnum = {
+  WING_PLATE: { L: '翼腹板', K: 'VERIFICATION_CODE', V: 16 },
+  PART_BOARD: { L: '零件板', K: 'VERIFICATION_CODE', V: 2 }
+}
+constantize(plateTypeEnum)
+const typeEnum = {
   WING_PLATE: { L: '按设备查看', K: 'VERIFICATION_CODE', V: 0 },
   PART_BOARD: { L: '按项目查看', K: 'VERIFICATION_CODE', V: 1 }
 }
-constantize(TypeEnum)
+constantize(typeEnum)
 
 // 排套状态
-const NestingStateEnum = {
-  NOT_LINED_UP:{ L: '未排套',  K:'VERIFICATION_CODE', V: 0},
-  PARTIAL_ROW_SETS:{ L: '部分排套', K:'VERIFICATION_CODE', V: 1},
-  LINED_UP:{ L: '排套结束', K:'VERIFICATION_CODE', V: 2},
+const nestingStateEnum = {
+  NOT_LINED_UP: { L: '未排套', K: 'VERIFICATION_CODE', V: 0 },
+  PARTIAL_ROW_SETS: { L: '部分排套', K: 'VERIFICATION_CODE', V: 1 },
+  LINED_UP: { L: '排套结束', K: 'VERIFICATION_CODE', V: 2 }
 }
-constantize(NestingStateEnum)
+constantize(nestingStateEnum)
 
 // 套料状态
-const NestingEnum = {
-  NOT_LINED_UP:{ L: '未套料', K:'VERIFICATION_CODE', V: 2},
-  PARTIAL_ROW_SETS:{ L: '部分套料', K:'VERIFICATION_CODE', V: 1 },
-  LINED_UP:{ L: '套料结束', K:'VERIFICATION_CODE', V: 0},
+const nestingEnum = {
+  NOT_LINED_UP: { L: '未套料', K: 'VERIFICATION_CODE', V: 0 },
+  PARTIAL_ROW_SETS: { L: '部分套料', K: 'VERIFICATION_CODE', V: 1 },
+  LINED_UP: { L: '套料结束', K: 'VERIFICATION_CODE', V: 2 }
 }
-constantize(NestingEnum)
+constantize(nestingEnum)
 
 // 排产状态
-const SchedulingEnum = {
-  NOT_Scheduling_up:{ L: '未排产', K:'VERIFICATION_CODE', V: 0},
-  PARTIAL_Scheduling_up:{ L: '部分排产', K:'VERIFICATION_CODE', V: 1 },
-  Scheduling_up:{ L: '排产结束', K:'VERIFICATION_CODE', V: 2},
+const schedulingEnum = {
+  NOT_Scheduling_up: { L: '未排产', K: 'VERIFICATION_CODE', V: 0 },
+  PARTIAL_Scheduling_up: { L: '部分排产', K: 'VERIFICATION_CODE', V: 1 },
+  Scheduling_up: { L: '排产结束', K: 'VERIFICATION_CODE', V: 2 }
 }
-constantize(SchedulingEnum)
+constantize(schedulingEnum)
 
 // 切割状态
-const CuttingEnum = {
-  NOT_Cutting_up:{ L: '未切割', K:'VERIFICATION_CODE', V: 0},
-  PARTIAL_Cutting_up:{ L: '部分切割', K:'VERIFICATION_CODE', V: 1 },
-  Cutting_up:{ L: '切割完成', K:'VERIFICATION_CODE', V: 2},
+const cuttingEnum = {
+  NOT_Cutting_up: { L: '未切割', K: 'VERIFICATION_CODE', V: 0 },
+  PARTIAL_Cutting_up: { L: '部分切割', K: 'VERIFICATION_CODE', V: 1 },
+  Cutting_up: { L: '切割完成', K: 'VERIFICATION_CODE', V: 2 }
 }
-constantize(CuttingEnum)
+constantize(cuttingEnum)
 
 // 设备类型
-const MachineTypeEnum = {
-  FLAME_CUTTING:{L:'火焰切割设备',K:'VERIFICATION_CODE', V: '0'},
-  PLASMA_CUTTING:{L:'等离子切割设备',K:'VERIFICATION_CODE', V: '1'},
-  LASER_CUTTING:{L:'激光切割设备',K:'VERIFICATION_CODE', V: '2'}
+const machineTypeEnum = {
+  FLAME_CUTTING: { L: '火焰切割设备', K: 'VERIFICATION_CODE', V: '0' },
+  PLASMA_CUTTING: { L: '等离子切割设备', K: 'VERIFICATION_CODE', V: '1' },
+  LASER_CUTTING: { L: '激光切割设备', K: 'VERIFICATION_CODE', V: '2' }
 }
-constantize(MachineTypeEnum)
+constantize(machineTypeEnum)
 
 export {
-  TypeEnum,
+  typeEnum,
   steelPlateEnum,
-  MessageTypeEnum,
-  PlateTypeEnum,
-  NestingStateEnum,
-  NestingEnum,
-  MachineTypeEnum,
-  SchedulingEnum,
-  CuttingEnum
+  messageTypeEnum,
+  plateTypeEnum,
+  nestingStateEnum,
+  nestingEnum,
+  machineTypeEnum,
+  schedulingEnum,
+  cuttingEnum,
+  uploadEnum
 }
 
 export default {
-  TypeEnum,
+  typeEnum,
   steelPlateEnum,
-  MessageTypeEnum,
-  PlateTypeEnum,
-  NestingStateEnum,
-  NestingEnum,
-  MachineTypeEnum,
-  SchedulingEnum,
-  CuttingEnum
+  messageTypeEnum,
+  plateTypeEnum,
+  nestingStateEnum,
+  nestingEnum,
+  machineTypeEnum,
+  schedulingEnum,
+  cuttingEnum,
+  uploadEnum
 }
 

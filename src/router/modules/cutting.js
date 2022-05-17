@@ -133,39 +133,39 @@ export default {
           noCache: true
         }
       },
-    //   {
-    //   name: 'cuttingScheduling',
-    //   path: 'cutting-scheduling',
-    //   hidden: false,
-    //   component: '/cutting/cutting-work-order/cutting-scheduling/index',
-    //   meta: {
-    //     title: '切割排产',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // },
-    // {
-    //   name: 'cuttingReport',
-    //   path: 'cutting-report',
-    //   hidden: false,
-    //   component: '/cutting/cutting-work-order/cutting-report/index',
-    //   meta: {
-    //     title: '切割报表',
-    //     icon: 'project',
-    //     noCache: true
-    //   }
-    // },
-    {
-      name: 'equipmentMonitoring',
-      path: 'equipment-monitoring',
-      hidden: false,
-      component: '/cutting/cutting-work-order/equipment-monitoring/index',
-      meta: {
-        title: '设备监控',
-        icon: 'project',
-        noCache: true
+      //   {
+      //   name: 'cuttingScheduling',
+      //   path: 'cutting-scheduling',
+      //   hidden: false,
+      //   component: '/cutting/cutting-work-order/cutting-scheduling/index',
+      //   meta: {
+      //     title: '切割排产',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      // {
+      //   name: 'cuttingReport',
+      //   path: 'cutting-report',
+      //   hidden: false,
+      //   component: '/cutting/cutting-work-order/cutting-report/index',
+      //   meta: {
+      //     title: '切割报表',
+      //     icon: 'project',
+      //     noCache: true
+      //   }
+      // },
+      {
+        name: 'equipmentMonitoring',
+        path: 'equipment-monitoring',
+        hidden: false,
+        component: '/cutting/cutting-work-order/equipment-monitoring/index',
+        meta: {
+          title: '设备监控',
+          icon: 'project',
+          noCache: true
+        }
       }
-    }
 
     ]
   },

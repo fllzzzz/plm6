@@ -23,7 +23,6 @@
       </div>
       <template #reference>
         <common-button
-          
           :disabled="props.disabledDel"
           type="danger"
           size="mini"
@@ -33,7 +32,6 @@
         </common-button>
       </template>
     </el-popover>
-    
           <!-- <el-popover
             v-if="data.state === '0'"
             v-model:visible="data.deleteBtn"
@@ -70,7 +68,6 @@
         <common-button type="success" size="mini" @click.stop="toNesting"> 去套料 </common-button>
       </template>
     </el-popover>
-     
 
     <!-- <common-button @click="NestingClick(data)" v-if="data.state === '0'" type="success" size="mini">去套料</common-button> -->
   </span>
@@ -180,9 +177,8 @@ import { defineProps, ref, inject, defineEmits } from 'vue'
 import checkPermission from '@/utils/system/check-permission'
 import { regExtra } from '@compos/use-crud'
 import { ElMessage } from 'element-plus'
-import { del, uploadOrder, updateOrder, addPartFromOrder, deletePartFromOrder } from '@/api/cutting/taskPack'
-import crudApi1 from '@/api/cutting/project-data'
-
+import { del, uploadOrder } from '@/api/cutting/taskPack'
+// import crudApi1 from '@/api/cutting/project-data'
 
 const emit = defineEmits(['selectionChange'])
 
@@ -218,10 +214,10 @@ const props = defineProps({
 })
 
 const permission = inject('permission')
-const innerLoading = ref(false)
+// const innerLoading = ref(false)
 const pop = ref(false)
-const innerVisible = ref(false) // 弹出层
-const updateData = ref([]) // 弹出层数据
+// const innerVisible = ref(false) // 弹出层
+// const updateData = ref([]) // 弹出层数据
 const { crud } = regExtra()
 
 const nesting = ref(false)
@@ -242,25 +238,25 @@ function toNesting() {
   nesting.value = true
 }
 
-// 点击删除按钮  
+// 点击删除按钮
 function toDelete() {
-  pop.value= true  
+  pop.value = true
 }
 
-function toDeleteBtn(row) {
-  row.deleteBtn = true
-}
+// function toDeleteBtn(row) {
+//   row.deleteBtn = true
+// }
 
-function toAddBtn(row) {
-  row.addBtn = true
-}
+// function toAddBtn(row) {
+//   row.addBtn = true
+// }
 
-function cancelDeleteBtn(row) {
-  row.deleteBtn = false
-}
-function cancelAddBtn(row) {
-  row.addBtn = false
-}
+// function cancelDeleteBtn(row) {
+//   row.deleteBtn = false
+// }
+// function cancelAddBtn(row) {
+//   row.addBtn = false
+// }
 
 // 确认删除
 async function handleDelete() {
@@ -278,7 +274,7 @@ async function handleDelete() {
 async function NestingClick(row) {
   try {
     const message = await uploadOrder(props.data.cutTaskId)
-    ElMessage({ type: 'success', message: message })   
+    ElMessage({ type: 'success', message: message })
     emit('query')
   } catch (err) {
     console.log(err)
@@ -287,52 +283,52 @@ async function NestingClick(row) {
 }
 
 // 编辑弹窗？？
-async function editClick(row) {
-  innerLoading.value = true
-  innerVisible.value = true
-  //   console.log('props.data.cutTaskId', props.data.cutTaskId)
-  try {
-    updateData.value = await updateOrder({ cutTaskId: props.data.cutTaskId })
-    updateData.value.forEach(v=>{
-      v.deleteBtn = false
-      v.addBtn = false
-    })
-    console.log('updateData', updateData.value)
-  } catch (err) {
-    console.log(err)
-  }
-  innerLoading.value = false
-}
+// async function editClick(row) {
+//   innerLoading.value = true
+//   innerVisible.value = true
+//   //   console.log('props.data.cutTaskId', props.data.cutTaskId)
+//   try {
+//     updateData.value = await updateOrder({ cutTaskId: props.data.cutTaskId })
+//     updateData.value.forEach(v => {
+//       v.deleteBtn = false
+//       v.addBtn = false
+//     })
+//     console.log('updateData', updateData.value)
+//   } catch (err) {
+//     console.log(err)
+//   }
+//   innerLoading.value = false
+// }
 
-async function delClick(row) {
-  try {
-    const data = []
-    data.push(row.id)
-    const message = await deletePartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
-    ElMessage({ type: 'success', message: message })
-    // 重新查询
-    editClick()
-  } catch (err) {
-    console.log('addClick', err)
-  }
-}
+// async function delClick(row) {
+//   try {
+//     const data = []
+//     data.push(row.id)
+//     const message = await deletePartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
+//     ElMessage({ type: 'success', message: message })
+//     // 重新查询
+//     editClick()
+//   } catch (err) {
+//     console.log('addClick', err)
+//   }
+// }
 
-async function addClick(row) {
-  try {
-    const data = []
-    data.push(row.id)
-    const message = await addPartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
-    ElMessage({ type: 'success', message: message })
-    // 重新查询
-    editClick()
-  } catch (err) {
-    console.log('addClick', err)
-  }
-}
+// async function addClick(row) {
+//   try {
+//     const data = []
+//     data.push(row.id)
+//     const message = await addPartFromOrder({ cutTaskId: props.data.cutTaskId }, data)
+//     ElMessage({ type: 'success', message: message })
+//     // 重新查询
+//     editClick()
+//   } catch (err) {
+//     console.log('addClick', err)
+//   }
+// }
 
-function closeDialog() {
-  emit('query')
-}
+// function closeDialog() {
+//   emit('query')
+// }
 // 打开删除提示窗
 function onPopoverShow() {
   setTimeout(() => {
@@ -365,44 +361,44 @@ function onPopoverNestingHide() {
   document.removeEventListener('click', handleDocumentNestingClick)
 }
 
-function handleDocumentDelClick(event) {
-  deleteBtn.value = false
-}
+// function handleDocumentDelClick(event) {
+//   deleteBtn.value = false
+// }
 
-function onPopoverDelClickShow() {
-  setTimeout(() => {
-    document.addEventListener('click', handleDocumentDelClick, { passive: false })
-  }, 0)
-}
+// function onPopoverDelClickShow() {
+//   setTimeout(() => {
+//     document.addEventListener('click', handleDocumentDelClick, { passive: false })
+//   }, 0)
+// }
 
-function onPopoverDelClickHide() {
-  document.removeEventListener('click', handleDocumentDelClick)
-}
+// function onPopoverDelClickHide() {
+//   document.removeEventListener('click', handleDocumentDelClick)
+// }
 
-function handleDocumentAddClick(event) {
-  addBTn.value = false
-}
+// function handleDocumentAddClick(event) {
+//   addBTn.value = false
+// }
 
-function onPopoverAddClickShow() {
-  setTimeout(() => {
-    document.addEventListener('click', handleDocumentAddClick, { passive: false })
-  }, 0)
-}
+// function onPopoverAddClickShow() {
+//   setTimeout(() => {
+//     document.addEventListener('click', handleDocumentAddClick, { passive: false })
+//   }, 0)
+// }
 
-function onPopoverAddClickHide() {
-  document.removeEventListener('click', handleDocumentAddClick)
-}
+// function onPopoverAddClickHide() {
+//   document.removeEventListener('click', handleDocumentAddClick)
+// }
 // 请求钢板接口数据
-async function plateDataGet(row) {
-  currentRow.value = row
-  try {
-    const { content } = await crudApi1.get({ projectId: currentRow.value.projectId})
-    console.log('content', content)
+// async function plateDataGet(row) {
+//   currentRow.value = row
+//   try {
+//     const { content } = await crudApi1.get({ projectId: currentRow.value.projectId})
+//     console.log('content', content)
 
-  } catch (err) {
-    console.log('钢板清单页面接口报错', err)
-  }
-}
+//   } catch (err) {
+//     console.log('钢板清单页面接口报错', err)
+//   }
+// }
 </script>
 
 <style lang="scss" scoped>

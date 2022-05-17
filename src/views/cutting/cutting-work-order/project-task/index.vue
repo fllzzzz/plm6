@@ -41,11 +41,11 @@
               style="width: 100%"
               label="切割指令号"
               align="center"
-              min-width="100"> 
+              min-width="100">
                 <template v-slot="scope">
-                    {{scope.row.cutInstructionId}} 
-                </template> 
-             </el-table-column> 
+                    {{scope.row.cutInstructionId}}
+                </template>
+             </el-table-column>
            <el-table-column
               v-if="columns.visible('thick')"
               header-align="center"
@@ -56,8 +56,7 @@
               label="钢板厚度"
               align="center"
               min-width="60"
-              > 
-                  
+              >
                   <!-- <el-tooltip
                     class="box-item"
                     effect="dark"
@@ -73,11 +72,11 @@
                       <i class="el-icon-info" />
                     </div>
                   </el-tooltip>
-                </template> 
-                <template v-slot="scope">  
+                </template>
+                <template v-slot="scope">
                     <el-button v-if="checkPermission(permission.detailResult)" @click="nestResults(scope.row)">{{scope.row.thick}}</el-button>
-                </template>                
-             </el-table-column> 
+                </template>
+             </el-table-column>
                <el-table-column
               v-if="columns.visible('material')"
               header-align="center"
@@ -87,11 +86,11 @@
               style="width: 100%"
               label="材质"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.material}} 
-                </template> 
-             </el-table-column> 
+                    {{scope.row.material}}
+                </template>
+             </el-table-column>
               <el-table-column
               v-if="columns.visible('specification')"
               header-align="center"
@@ -101,11 +100,11 @@
               style="width: 100%"
               label="规格"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
                     {{scope.row.width}} * {{scope.row.length}}
-                </template> 
-             </el-table-column> 
+                </template>
+             </el-table-column>
                   <el-table-column
               v-if="columns.visible('num')"
               header-align="center"
@@ -115,12 +114,12 @@
               style="width: 100%"
               label="数量"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <!-- <template v-slot="scope">
-                    {{scope.row.num}} 
+                    {{scope.row.num}}
                 </template>  -->
                 <span>1</span>
-             </el-table-column> 
+             </el-table-column>
                <el-table-column
         v-if="columns.visible('plateState')"
         key="plateState"
@@ -134,32 +133,39 @@
         </template>
       </el-table-column>
 
-        <el-table-column align="center" 
-          v-if="columns.visible('machineType')"
+        <el-table-column
+        align="center"
+        v-if="columns.visible('machineType')"
         key="machineType"
         prop="machineType"
-        :show-overflow-tooltip="true" label="切割方式" min-width="70">
+        :show-overflow-tooltip="true"
+        label="切割方式"
+        min-width="70">
           <template v-slot="scope">
-            <span v-if="scope.row.mac&&scope.row.machineType === '0'">火焰切割设备</span>
-            <span v-if="scope.row.mac&&scope.row.machineType === '1'">等离子切割设备</span>
-            <span v-if="scope.row.mac&&scope.row.machineType === '2'">激光切割设备</span>
+            <span v-if="scope.row.mac&&scope.row.machineType === machineTypeEnum.FLAME_CUTTING.V">火焰切割设备</span>
+            <span v-if="scope.row.mac&&scope.row.machineType === machineTypeEnum.PLASMA_CUTTING.V">等离子切割设备</span>
+            <span v-if="scope.row.mac&&scope.row.machineType === machineTypeEnum.LASER_CUTTING.V">激光切割设备</span>
             <!-- {{scope.row.machineType}} -->
           </template>
         </el-table-column>
-        <el-table-column 
-        align="center" 
+        <el-table-column
+        align="center"
         v-if="columns.visible('name')"
         key="name"
         prop="name"
-        :show-overflow-tooltip="true" label="所属产线" min-width="100">
+        :show-overflow-tooltip="true"
+        label="所属产线"
+        min-width="100">
             <template v-slot="scope">
               <span v-if="scope.row.factory">{{scope.row.factory}}>{{scope.row.workshopInf}}>{{scope.row.productionLine}}</span>
             </template>
         </el-table-column>
-        <el-table-column  
-        align="center" 
-       :show-overflow-tooltip="true" label="暂停切割" 
-       v-if="checkPermission(permission.pauseCutting)" min-width="70">
+        <el-table-column
+        align="center"
+       :show-overflow-tooltip="true"
+       label="暂停切割"
+       v-if="checkPermission(permission.pauseCutting)"
+        min-width="70">
           <template v-slot="subScope">
              <el-switch
               v-loading="subScope.row.switchLoading"
@@ -188,10 +194,10 @@
               style="width: 100%"
               label="零件重量"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.reduce}} 
-                </template> 
+                    {{scope.row.reduce}}
+                </template>
              </el-table-column>  -->
                 <!-- <el-table-column
               v-if="columns.visible('relationType')"
@@ -202,17 +208,17 @@
               style="width: 100%"
               label="零件属性"
               align="center"
-              min-width="60"> 
+              min-width="60">
               <template v-slot="scope"> -->
                 <!-- <el-tag type="success">
                   {{PlateTypeEnum.VL[scope.row.relationType]}}
                 </el-tag> -->
                 <!-- <el-tag  v-if='scope.row.relationType&&scope.row.relationType===2' type="success">
                   零件板
-                </el-tag> 
+                </el-tag>
                 <el-tag  v-else-if='scope.row.relationType&&scope.row.relationType===16' type="danger">
                   翼腹板
-                </el-tag>    
+                </el-tag>
 
               </template>
              </el-table-column>  -->
@@ -376,13 +382,13 @@
       >
         <template v-slot="scope">
           <span>
-            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.cutState === 0" type="danger">
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.cutState === cuttingEnum.NOT_Cutting_up.V" type="danger">
               未切割
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.cutState && scope.row.cutState === 1" type="warning">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.cutState && scope.row.cutState === cuttingEnum.PARTIAL_Cutting_up.V" type="warning">
               部分切割
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.cutState && scope.row.cutState === 2" type="success">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.cutState && scope.row.cutState === cuttingEnum.Cutting_up.V" type="success">
               切割结束
             </el-tag>
           </span>
@@ -414,7 +420,7 @@
           <span>{{ scope.row.distributionWeight }}</span>
         </template>
       </el-table-column> -->
-      
+
       <!-- <el-table-column
         v-if="columns.visible('distributionPartNum')"
         align="center"
@@ -441,7 +447,6 @@
         </template>
       </el-table-column> -->
 
-
       <!-- <el-table-column v-if="checkPermission(permission.detail)" fixed="right" align="center" label="钢板清单" min-width="80px">
         <template v-slot="scope">
           <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
@@ -452,7 +457,6 @@
           <common-button @click="taskScheduling(scope.row)" type="success" size="mini">任务排产</common-button>
         </template>
       </el-table-column> -->
-
 
       <!-- <el-table-column v-if="checkPermission(permission.download)" fixed="right" align="center" label="套料成果" min-width="80px">
         <template v-slot="scope">
@@ -514,10 +518,10 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
-import { defineProps, defineEmits,ref,watch,reactive,provide } from 'vue'
+import { defineProps, defineEmits, ref, watch, reactive, provide } from 'vue'
 import crudApi from '@/api/cutting/nestList'
 import { get } from '@/api/cutting/project-data'
-import { getMac }  from '@/api/cutting/machine'
+import { getMac } from '@/api/cutting/machine'
 // import crudApi2 from '@/api/cutting/machine-part'
 
 import { suspendTask } from '@/api/cutting/scheduling'
@@ -527,7 +531,7 @@ import pagination from '@crud/Pagination'
 import mHeader from './module/header'
 import detail from '@/views/cutting/template/steel-plate-list.vue'
 import detailResult from '@/views/cutting/template/detail.vue'
-import {steelPlateEnum} from '@enum-ms/cutting'
+import { steelPlateEnum, cuttingEnum, machineTypeEnum } from '@enum-ms/cutting'
 // import taskSchedul from './module/task-scheduling'
 import useMaxHeight from '@compos/use-max-height'
 import checkPermission from '@/utils/system/check-permission'
@@ -540,16 +544,16 @@ const tableRef = ref()
 const innerVisible = ref(false)
 const detailObj = ref({})
 // 钢板清单
-const dataList = ref([])
-const loadingList = ref(false)
+// const dataList = ref([])
+// const loadingList = ref(false)
 const specsVisible = ref(false)
 
-const plateData = ref([])
-const switchLoading =ref(false)
+// const plateData = ref([])
+// const switchLoading = ref(false)
 const selectLineId = ref('')
-const machineName = ref('')
-const tabLoading = ref(false)
-const currentRow=ref({})
+// const machineName = ref('')
+// const tabLoading = ref(false)
+const currentRow = ref({})
 // const machineVisible = ref(false)
 
 const props = defineProps({
@@ -557,7 +561,7 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-    detailData: {
+  detailData: {
     type: Object
   }
 })
@@ -569,7 +573,7 @@ function showHook() {
   // if (props.detailData) {
   //   console.log(props.detailData,'111111111');
   //   machineName.value = props.detailData.cutMachine.machineName
- StateChange()
+  StateChange()
 
   // }
 }
@@ -578,50 +582,47 @@ function closeHook() {
   emit('colesHook')
 }
 
-
 // 重新请求钢板的接口
-async function plateDataGet(row) {
-  tabLoading.value = true
-  try {
-    const { content } = await get({mac:row.mac,projectId:row.projectId})
-    content.forEach(item => {
-      if (item.plateState == '5') {
-        item.State = false
-      } else {
-        item.State = true
-      }
-    })
-    // plateData.value  = content
-     crud.data[row.rowIndex].subList = content
-    // dataList.value[row.index] = content
-  } catch (err) {
-    console.log('钢板清单页面接口报错', err)
-  }
-  tabLoading.value = false
-}
+// async function plateDataGet(row) {
+//   tabLoading.value = true
+//   try {
+//     const { content } = await get({mac:row.mac,projectId:row.projectId})
+//     content.forEach(item => {
+//       if (item.plateState == '5') {
+//         item.State = false
+//       } else {
+//         item.State = true
+//       }
+//     })
+//     // plateData.value  = content
+//      crud.data[row.rowIndex].subList = content
+//     // dataList.value[row.index] = content
+//   } catch (err) {
+//     console.log('钢板清单页面接口报错', err)
+//   }
+//   tabLoading.value = false
+// }
 
 // 暂停切割
-async function StateChange(row,parentRow) {
+async function StateChange(row, parentRow) {
   // 当前行和未展开之前的行
-  console.log(row,parentRow)
+  console.log(row, parentRow)
   row.switchLoading = true
   try {
     const data = [row.id]
-    console.log(data);
+    console.log(data)
     let message = ''
     if (row.plateState === '5') {
       // 继续
       message = await continueTask(data)
-      
     } else {
       // 暂停
       message = await suspendTask(data)
-      
     }
     ElNotification({ title: '更改状态成功', message: message, type: 'success' })
     // 重新调用钢板的接口
-    console.log(currentRow.value,'11111111111')
-    const list = await get({mac:parentRow.mac,projectId:parentRow.projectId})
+    console.log(currentRow.value, '11111111111')
+    const list = await get({ mac: parentRow.mac, projectId: parentRow.projectId })
     list.content.forEach(item => {
       if (item.plateState === '5') {
         item.State = false
@@ -630,21 +631,19 @@ async function StateChange(row,parentRow) {
       }
     })
     // 通过mac地址查机器设备
-      for(var i = 0; i < list.content.length; i++) { 
-          if(list.content[i].mac) {
-              const macData = await getMac(list.content[i].mac)
-              // if(macData !== null) {
-                list.content[i].machineType = macData.machineType
-                list.content[i].factory = macData.factory
-                list.content[i].workshopInf = macData.workshopInf
-                list.content[i].productionLine = macData.productionLine
-                // }
-              
-              
-          }
+    for (var i = 0; i < list.content.length; i++) {
+      if (list.content[i].mac) {
+        const macData = await getMac(list.content[i].mac)
+        // if(macData !== null) {
+        list.content[i].machineType = macData.machineType
+        list.content[i].factory = macData.factory
+        list.content[i].workshopInf = macData.workshopInf
+        list.content[i].productionLine = macData.productionLine
+        // }
       }
+    }
     // plateData.value  = list.content
-     crud.data[parentRow.rowIndex].subList = list.content
+    crud.data[parentRow.rowIndex].subList = list.content
     // crud.toQuery()
   } catch (err) {
     console.log(err)
@@ -673,7 +672,7 @@ const { crud, CRUD, columns } = useCRUD(
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -712,17 +711,15 @@ async function fetchProjectInfo() {
 }
 
 // 请求接口数据
- async function expandChange(row, expandedRowsOrExpanded) {
+async function expandChange(row, expandedRowsOrExpanded) {
   console.log(row, expandedRowsOrExpanded)
   currentRow.value = row
   row.loadingList = true
   try {
-
     const data = await get({
       // nestingState:row.nestingState,
-      projectId:currentRow.value.projectId,
-      mac:currentRow.value.mac
-    
+      projectId: currentRow.value.projectId,
+      mac: currentRow.value.mac
     })
     data.content.forEach(item => {
       if (item.plateState === '5') {
@@ -735,25 +732,23 @@ async function fetchProjectInfo() {
     // data.content.map(v=>{
     //   v.machineType=macData.machineType
     // })
-      // dataList.value[row.index] = data.content
+    // dataList.value[row.index] = data.content
 
-      // 通过mac地址查询机器设备
-      for(var i = 0; i < data.content.length; i++) { 
-          if(data.content[i].mac) {
-              const macData = await getMac(data.content[i].mac)
-              // if(macData !== null) {
-                data.content[i].machineType = macData.machineType
-                data.content[i].factory = macData.factory
-                data.content[i].workshopInf = macData.workshopInf
-                data.content[i].productionLine = macData.productionLine
-                // }
-              
-              
-          }
+    // 通过mac地址查询机器设备
+    for (var i = 0; i < data.content.length; i++) {
+      if (data.content[i].mac) {
+        const macData = await getMac(data.content[i].mac)
+        // if(macData !== null) {
+        data.content[i].machineType = macData.machineType
+        data.content[i].factory = macData.factory
+        data.content[i].workshopInf = macData.workshopInf
+        data.content[i].productionLine = macData.productionLine
+        // }
       }
+    }
 
-      row.subList = data.content
-      // plateData.value = data.content
+    row.subList = data.content
+    // plateData.value = data.content
   } catch (error) {
     console.log('请求接口数据失败')
   }
@@ -761,7 +756,7 @@ async function fetchProjectInfo() {
 }
 // 删除
 function del(row) {
-  console.log(row) 
+  console.log(row)
 }
 // 点击厚度查看套料成果
 function nestResults(row) {
@@ -770,10 +765,8 @@ function nestResults(row) {
   specsVisible.value = true
 }
 
-
 function handleChangeDetail(row) {
   selectLineId.value = row.mac
-  
 }
 
 // function endEvent() {
@@ -787,26 +780,25 @@ const { maxHeight } = useMaxHeight({
   extraHeight: 40
 })
 
-const quicklyAssignVisible = ref(false) // 快速分配dlg
+// const quicklyAssignVisible = ref(false) // 快速分配dlg
 
 async function showDetail(row) {
   detailObj.value = row
   innerVisible.value = true
 }
 
-function download(row) {
-  if (row.reportUrl !== null) {
-    window.location.href = row.reportUrl
-  } else {
-    ElNotification({ title: '下载失败', message: '暂无套料成果 ', type: 'error' })
-  }
-}
+// function download(row) {
+//   if (row.reportUrl !== null) {
+//     window.location.href = row.reportUrl
+//   } else {
+//     ElNotification({ title: '下载失败', message: '暂无套料成果 ', type: 'error' })
+//   }
+// }
 
-function taskScheduling(row) {
-  detailObj.value = row
-  quicklyAssignVisible.value = true
-  
-}
+// function taskScheduling(row) {
+//   detailObj.value = row
+//   quicklyAssignVisible.value = true
+// }
 // CRUD.HOOK.handleRefresh = (crud, data) => {
 //   data.data.content = data.data.content.map((v, i) => {
 //     v.index = i

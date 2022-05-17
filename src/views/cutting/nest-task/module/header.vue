@@ -46,7 +46,7 @@
           style="margin-right: 8px"
           class="filter-item"
           v-model="query.nestingState"
-          :options="NestingStateEnum.ENUM"
+          :options="nestingStateEnum.ENUM"
           show-option-all
           type="enum"
           size="small"
@@ -73,7 +73,7 @@
 import { inject } from 'vue'
 
 import { regHeader } from '@compos/use-crud'
-import { NestingStateEnum } from '@enum-ms/cutting'
+import { nestingStateEnum } from '@enum-ms/cutting'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { parseTime } from '@/utils/date'
@@ -83,7 +83,7 @@ const projectInfo = inject('projectInfo')
 
 const defaultQuery = {
   projectName: undefined,
-  year:parseTime(new Date(), '{y}')
+  year: parseTime(new Date(), '{y}')
   // monomerValue: undefined,
   // areaValue: undefined
 }
