@@ -262,14 +262,14 @@
       >
         <template v-slot="scope">
           <span>
-            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === 0" type="danger">
+              未套料
+            </el-tag>
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">
               部分套料
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === 0" type="success">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === 2" type="success">
               套料结束
-            </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === 2" type="danger">
-              未套料
             </el-tag>
           </span>
         </template>
