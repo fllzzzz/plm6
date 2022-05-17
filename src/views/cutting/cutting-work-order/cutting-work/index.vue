@@ -14,6 +14,7 @@
       style="width: 100%"
       row-key="projectId"
       @expand-change="expandChange"
+      :expand-row-keys="expandArr"
       returnSourceData
     >
       <el-table-column type="expand">
@@ -140,7 +141,6 @@
                 <common-button
                   v-if="scope.row.plateState === '0'&&checkPermission(permission.Production)"
                   @click.stop="taskScheduling(scope.row)"
-                  @sucess="success"
                   type="success"
                   size="mini"
                   >任务排产</common-button
@@ -393,6 +393,29 @@
           />
         </template>
       </el-table-column>
+       <el-table-column
+        v-if="columns.visible('nestingState')"
+        align="center"
+        key="nestingState"
+        prop="nestingState"
+        :show-overflow-tooltip="true"
+        label="状态"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <span>
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === 0" type="danger">
+              未排产
+            </el-tag>
+            <el-tag style="width: 100%" effect="plain" v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">
+              部分排产
+            </el-tag>
+            <el-tag style="width: 100%" effect="plain" v-if="scope.row.nestingState && scope.row.nestingState === 2" type="success">
+              排产结束
+            </el-tag>
+          </span>
+        </template>
+      </el-table-column>
       <!-- <el-table-column
         v-if="columns.visible('distributionNum')"
         align="center"
@@ -562,6 +585,7 @@ function closeHook() {
 
 const tableRef = ref()
 const innerVisible = ref(false)
+const expandArr = ref([])
 // const detailObj = ref()
 // 钢板清单
 const dataList = ref([])
@@ -678,10 +702,10 @@ async function taskClick(row) {
     sentData.push(row.id)
     const message = await sentTask(sentData)
     ElMessage({ message: message, type: 'success' })
-    // console.log(content)
-
-    // 重新调用钢板数据
+    const index = expandArr.value.find(v=>v.id === currentRow.value.projectId)
+    expandArr.value.push(index)
     plateDataGet()
+    crud.toQuery()
     // plateData.value = content
   } catch (error) {
     console.log('请求下发任务的接口失败')
@@ -799,7 +823,11 @@ async function taskReset(row) {
     resetData.push(row.id)
     const message = await resetTask(resetData)
     ElMessage({ type: 'warning', message: message })
+    
+    const index = expandArr.value.find(v=>v.id === currentRow.value.projectId)
+    expandArr.value.push(index)
     plateDataGet()
+    crud.toQuery()
   } catch (error) {
     console.log('请求重置任务的接口失败')
   }

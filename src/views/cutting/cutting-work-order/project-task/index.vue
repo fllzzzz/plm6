@@ -365,6 +365,29 @@
           <common-button icon="el-icon-view" type="primary" size="mini" @click="showDetail(scope.row)" />
         </template>
       </el-table-column>
+             <el-table-column
+        v-if="columns.visible('cutState')"
+        align="center"
+        key="cutState"
+        prop="cutState"
+        :show-overflow-tooltip="true"
+        label="状态"
+        min-width="100px"
+      >
+        <template v-slot="scope">
+          <span>
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.cutState === 0" type="danger">
+              未切割
+            </el-tag>
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.cutState && scope.row.cutState === 1" type="warning">
+              部分切割
+            </el-tag>
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.cutState && scope.row.cutState === 2" type="success">
+              切割结束
+            </el-tag>
+          </span>
+        </template>
+      </el-table-column>
 
       <!-- <el-table-column
         v-if="columns.visible('distributionNum')"
@@ -491,7 +514,7 @@
 
 <script setup>
 import useVisible from '@compos/use-visible'
-import { defineProps, defineEmits,ref,watch } from 'vue'
+import { defineProps, defineEmits,ref,watch,reactive,provide } from 'vue'
 import crudApi from '@/api/cutting/nestList'
 import { get } from '@/api/cutting/project-data'
 import { getMac }  from '@/api/cutting/machine'
@@ -511,6 +534,7 @@ import checkPermission from '@/utils/system/check-permission'
 import { ElNotification } from 'element-plus'
 // import { nestWorkListPM as permission } from '@/page-permission/cutting'
 import { projectTaskingPM as permission } from '@/page-permission/cutting'
+import { getProjectInfo } from '@/api/cutting/radan-controller'
 
 const tableRef = ref()
 const innerVisible = ref(false)
@@ -634,6 +658,14 @@ const optShow = {
   download: false
 }
 
+// 项目汇总数据（子页面使用）
+const projectInfo = reactive({
+  summary: {}, // 项目汇总数量
+  provinceList: [], // 省份项目数量汇总
+  loading: true
+})
+provide('projectInfo', projectInfo)
+
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '项目任务',
@@ -646,6 +678,15 @@ const { crud, CRUD, columns } = useCRUD(
   tableRef
 )
 
+watch(
+  // () => crud.query.year,
+  (val) => {
+    fetchProjectInfo()
+    crud.toQuery()
+  },
+  { deep: true }
+)
+
 CRUD.HOOK.handleRefresh = (crud, res) => {
   res.data.content = res.data.content.map((v, index) => {
     v.subList = []
@@ -654,6 +695,21 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
   })
 }
 
+// 获取项目汇总数据
+async function fetchProjectInfo() {
+  if (!checkPermission(permission.statistics)) return
+  projectInfo.loading = true
+  try {
+    const res = (await getProjectInfo({ year: crud.query.importTime })) || {}
+    projectInfo.provinceList = res.provinceList
+    delete res.provinceList
+    projectInfo.summary = res
+  } catch (error) {
+    console.log('获取项目汇总图表数据', error)
+  } finally {
+    projectInfo.loading = false
+  }
+}
 
 // 请求接口数据
  async function expandChange(row, expandedRowsOrExpanded) {

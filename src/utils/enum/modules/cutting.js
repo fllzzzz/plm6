@@ -51,6 +51,22 @@ const NestingEnum = {
 }
 constantize(NestingEnum)
 
+// 排产状态
+const SchedulingEnum = {
+  NOT_Scheduling_up:{ L: '未排产', K:'VERIFICATION_CODE', V: 0},
+  PARTIAL_Scheduling_up:{ L: '部分排产', K:'VERIFICATION_CODE', V: 1 },
+  Scheduling_up:{ L: '排产结束', K:'VERIFICATION_CODE', V: 2},
+}
+constantize(SchedulingEnum)
+
+// 切割状态
+const CuttingEnum = {
+  NOT_Cutting_up:{ L: '未切割', K:'VERIFICATION_CODE', V: 0},
+  PARTIAL_Cutting_up:{ L: '部分切割', K:'VERIFICATION_CODE', V: 1 },
+  Cutting_up:{ L: '切割完成', K:'VERIFICATION_CODE', V: 2},
+}
+constantize(CuttingEnum)
+
 // 设备类型
 const MachineTypeEnum = {
   FLAME_CUTTING:{L:'火焰切割设备',K:'VERIFICATION_CODE', V: '0'},
@@ -66,7 +82,9 @@ export {
   PlateTypeEnum,
   NestingStateEnum,
   NestingEnum,
-  MachineTypeEnum
+  MachineTypeEnum,
+  SchedulingEnum,
+  CuttingEnum
 }
 
 export default {
@@ -76,6 +94,8 @@ export default {
   PlateTypeEnum,
   NestingStateEnum,
   NestingEnum,
-  MachineTypeEnum
+  MachineTypeEnum,
+  SchedulingEnum,
+  CuttingEnum
 }
 

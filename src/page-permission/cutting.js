@@ -104,7 +104,8 @@ export const projectTaskingPM = {
   detail: ['project_tasking:detail'], // 项目任务查看钢板切割状态
   detailResult: ['project_tasking:detailResult'], // 查看套料成果
   detailDelete: ['project_tasking:detailDelete'], // 查看切割状态中的删除
-  pauseCutting: ['project_tasking:pauseCutting'] // 暂停切割
+  pauseCutting: ['project_tasking:pauseCutting'], // 暂停切割
+  statistics: ['project_tasking:statistics'] // 项目统计
 }
 // ---------------------------  切割工单管理/项目任务  end ------------------
 
