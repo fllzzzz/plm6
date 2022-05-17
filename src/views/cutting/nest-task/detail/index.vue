@@ -122,7 +122,7 @@
           style="margin-right: 8px"
           class="enumBtn"
           v-model="PlateType"
-          :options="PlateTypeEnum.ENUM"
+          :options="plateTypeEnum.ENUM"
           show-option-all
           type="enum"
           size="small"
@@ -267,7 +267,7 @@ import { defineProps, defineEmits, ref } from 'vue'
 import group from './group.vue'
 import { ElMessage } from 'element-plus'
 import { getTaskByProjectId, feedingOperation, ByAreaId, area, monomer, createOrder } from '@/api/cutting/radan-controller'
-import { PlateTypeEnum } from '@enum-ms/cutting'
+import { plateTypeEnum } from '@enum-ms/cutting'
 
 const props = defineProps({
   visible: {

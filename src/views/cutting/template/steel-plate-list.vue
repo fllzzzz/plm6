@@ -44,7 +44,6 @@
             <span v-if="scope.row.factory">{{ scope.row.factory }}>{{scope.row.workshopInf}}>{{scope.row.productionLine}}</span>
           </template>
         </el-table-column>
-        
         <!-- <el-table-column key="length" prop="length" :show-overflow-tooltip="true" label="长度（mm）" min-width="55" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.length }}</span>
@@ -96,7 +95,7 @@
 <script setup>
 import useVisible from '@compos/use-visible'
 import detail from '@/views/cutting/template/detail.vue'
-import { getMac }  from '@/api/cutting/machine'
+import { getMac } from '@/api/cutting/machine'
 import { defineProps, defineEmits, ref } from 'vue'
 import { get } from '@/api/cutting/project-data'
 import checkPermission from '@/utils/system/check-permission'
@@ -144,21 +143,17 @@ async function plateDataGet() {
     page.total = data.totalElements
 
     // mac地址查看机器设备
-      for(var i = 0; i < data.content.length; i++) {
-           
-          if(data.content[i].mac) {
-              const macData = await getMac(data.content[i].mac)
-              data.content[i].machineType = macData.machineType
-              data.content[i].factory = macData.factory
-              data.content[i].workshopInf = macData.workshopInf
-              data.content[i].productionLine = macData.productionLine    
-          }
+    for (var i = 0; i < data.content.length; i++) {
+      if (data.content[i].mac) {
+        const macData = await getMac(data.content[i].mac)
+        data.content[i].machineType = macData.machineType
+        data.content[i].factory = macData.factory
+        data.content[i].workshopInf = macData.workshopInf
+        data.content[i].productionLine = macData.productionLine
       }
+    }
 
     plateData.value = data.content
-
-
-
   } catch (err) {
     console.log('钢板清单页面接口报错', err)
   }
@@ -170,9 +165,9 @@ function nestResults(row) {
   specsVisible.value = true
 }
 
-function del(row) {
-  console.log(row)
-}
+// function del(row) {
+//   console.log(row)
+// }
 
 function handleChange(row) {
   selectLineId.value = row.id

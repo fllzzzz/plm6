@@ -98,9 +98,6 @@
               align="center"
               min-width="60"
             >
-              <!-- <template v-slot="scope">
-                    {{scope.row.num}} 
-                </template>  -->
               <span>1</span>
             </el-table-column>
             <el-table-column
@@ -130,9 +127,9 @@
               min-width="70"
             >
               <template v-slot="scope">
-                <span v-if="scope.row.mac && scope.row.machineType === '0'">火焰切割设备</span>
-                <span v-if="scope.row.mac && scope.row.machineType === '1'">等离子切割设备</span>
-                <span v-if="scope.row.mac && scope.row.machineType === '2'">激光切割设备</span>
+                <span v-if="scope.row.mac && scope.row.machineType === machineTypeEnum.FLAME_CUTTING.V">火焰切割设备</span>
+                <span v-if="scope.row.mac && scope.row.machineType === machineTypeEnum.PLASMA_CUTTING.V">等离子切割设备</span>
+                <span v-if="scope.row.mac && scope.row.machineType === machineTypeEnum.LASER_CUTTING.V">激光切割设备</span>
                 <!-- {{scope.row.machineType}} -->
               </template>
             </el-table-column>
@@ -183,7 +180,11 @@
                     <common-button type="primary" size="mini" @click="taskClean(scope.row)">确定</common-button>
                   </div>
                   <template #reference>
-                     <common-button v-if="checkPermission(permission.cleanLoading)" @click.stop="clean(scope.row)" type="danger" size="mini"
+                     <common-button
+                      v-if="checkPermission(permission.cleanLoading)"
+                      @click.stop="clean(scope.row)"
+                      type="danger"
+                      size="mini"
                   >任务清除</common-button
                 >
                   </template>
@@ -221,10 +222,10 @@
               style="width: 100%"
               label="零件重量"
               align="center"
-              min-width="60"> 
+              min-width="60">
                 <template v-slot="scope">
-                    {{scope.row.reduce}} 
-                </template> 
+                    {{scope.row.reduce}}
+                </template>
              </el-table-column>  -->
             <!-- <el-table-column
               v-if="columns.visible('relationType')"
@@ -235,17 +236,17 @@
               style="width: 100%"
               label="零件属性"
               align="center"
-              min-width="60"> 
+              min-width="60">
               <template v-slot="scope"> -->
             <!-- <el-tag type="success">
                   {{PlateTypeEnum.VL[scope.row.relationType]}}
                 </el-tag> -->
             <!-- <el-tag  v-if='scope.row.relationType&&scope.row.relationType===2' type="success">
                   零件板
-                </el-tag> 
+                </el-tag>
                 <el-tag  v-else-if='scope.row.relationType&&scope.row.relationType===16' type="danger">
                   翼腹板
-                </el-tag>    
+                </el-tag>
 
               </template>
              </el-table-column>  -->
@@ -404,13 +405,13 @@
       >
         <template v-slot="scope">
           <span>
-            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === 0" type="danger">
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === schedulingEnum.NOT_Scheduling_up.V" type="danger">
               未排产
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-if="scope.row.nestingState && scope.row.nestingState === 1" type="warning">
+            <el-tag style="width: 100%" effect="plain" v-if="scope.row.nestingState && scope.row.nestingState === schedulingEnum.PARTIAL_Scheduling_up.V" type="warning">
               部分排产
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-if="scope.row.nestingState && scope.row.nestingState === 2" type="success">
+            <el-tag style="width: 100%" effect="plain" v-if="scope.row.nestingState && scope.row.nestingState === schedulingEnum.Scheduling_up.V" type="success">
               排产结束
             </el-tag>
           </span>
@@ -548,24 +549,23 @@ import mHeader from './module/header'
 import detail from '@/views/cutting/template/steel-plate-list.vue'
 import taskSchedul from './module/task-scheduling'
 import useMaxHeight from '@compos/use-max-height'
-import { steelPlateEnum } from '@enum-ms/cutting'
+import { steelPlateEnum, schedulingEnum, machineTypeEnum } from '@enum-ms/cutting'
 import checkPermission from '@/utils/system/check-permission'
 import { ElNotification, ElMessage } from 'element-plus'
 // import { nestWorkListPM as permission } from '@/page-permission/cutting'
 import { cuttingWorkingPM as permission } from '@/page-permission/cutting'
 import useVisible from '@compos/use-visible'
 import detailResult from '@/views/cutting/template/detail.vue'
-import { defineProps, defineEmits, ref, nextTick } from 'vue'
-import { Message } from '@element-plus/icons'
+import { defineProps, defineEmits, ref } from 'vue'
 
 const props = defineProps({
   visible: {
     type: Boolean,
-    required: true,
+    required: true
   },
   detailData: {
-    type: Object,
-  },
+    type: Object
+  }
 })
 
 // const permission = inject('permission')
@@ -588,10 +588,10 @@ const innerVisible = ref(false)
 const expandArr = ref([])
 // const detailObj = ref()
 // 钢板清单
-const dataList = ref([])
-const loadingList = ref(false)
-const tabLoading = ref(false)
-const plateData = ref([])
+// const dataList = ref([])
+// const loadingList = ref(false)
+// const tabLoading = ref(false)
+// const plateData = ref([])
 // 套料成果
 const selectLineId = ref()
 const detailObj = ref([])
@@ -609,17 +609,17 @@ const optShow = {
   add: false,
   edit: false,
   del: false,
-  download: false,
+  download: false
 }
 
 const { crud, CRUD, columns } = useCRUD(
   {
     title: '切割工单',
-    sort:[],
+    sort: [],
     permission: { ...permission },
     optShow: { ...optShow },
     crudApi: { ...crudApi },
-    hasPagination: true,
+    hasPagination: true
   },
   tableRef
 )
@@ -633,7 +633,7 @@ CRUD.HOOK.handleRefresh = (crud, res) => {
 
 // 请求接口数据
 async function expandChange(row, expandedRowsOrExpanded) {
-  if(!checkPermission(permission.detail)) {
+  if (!checkPermission(permission.detail)) {
     return false
   }
   console.log(row, expandedRowsOrExpanded, 'expandChange')
@@ -643,7 +643,7 @@ async function expandChange(row, expandedRowsOrExpanded) {
     const data = await crudApi1.get({
       // nestingState:row.nestingState,
       projectId: currentRow.value.projectId,
-      mac: currentRow.value.mac,
+      mac: currentRow.value.mac
     })
     // data.content.forEach((item,index) => {
     //     if(item.id === currentRow.id) {
@@ -651,7 +651,7 @@ async function expandChange(row, expandedRowsOrExpanded) {
     //     }
     // });
     console.log('data', data)
-    //通过mac地址获取设备
+
     for (var i = 0; i < data.content.length; i++) {
       console.log(data.content[i].mac)
       if (data.content[i].mac !== null) {
@@ -661,7 +661,7 @@ async function expandChange(row, expandedRowsOrExpanded) {
     }
     // data.content.map(async (item)=>{
     //   const macData = await getMac(item.mac)
-    //   item.machineType = macData.machineTyepe
+    //   item.machineType = macData.machineType
     // })
     // dataList.value[row.index] = data.content
     // plateData.value = data.content
@@ -679,7 +679,7 @@ async function plateDataGet() {
     // const content = await crudApi1.get(props.detailData)
     const { content } = await crudApi1.get({ projectId: currentRow.value.projectId, mac: currentRow.value.mac })
     console.log('content', content)
-    //通过mac地址获取设备
+
     for (var i = 0; i < content.length; i++) {
       console.log(content[i].mac)
       if (content[i].mac !== null) {
@@ -702,7 +702,7 @@ async function taskClick(row) {
     sentData.push(row.id)
     const message = await sentTask(sentData)
     ElMessage({ message: message, type: 'success' })
-    const index = expandArr.value.find(v=>v.id === currentRow.value.projectId)
+    const index = expandArr.value.find(v => v.id === currentRow.value.projectId)
     expandArr.value.push(index)
     plateDataGet()
     crud.toQuery()
@@ -714,7 +714,7 @@ async function taskClick(row) {
 }
 // 隐藏任务下发的提示框
 function handleDocumentTaskingClick(event) {
-  row.taskLoading = false
+  taskLoading.value = false
 }
 // 隐藏任务清楚的提示框
 function handleDocumentCleaningClick(event) {
@@ -724,7 +724,6 @@ function handleDocumentCleaningClick(event) {
 function handleDocumentResetClick(event) {
   resetLoading.value = false
 }
-
 
 // 打开下发任务提示窗
 function onPopoverTaskingShow() {
@@ -761,7 +760,6 @@ function onPopoverResetHide() {
 // 点击任务下发的按钮
 function taskIssuance(row) {
   row.taskLoading = true
- 
 }
 // 点击任务清除的按钮
 function clean(row) {
@@ -774,7 +772,6 @@ function resetTasking(row) {
 // 点击取消任务下发的按钮
 function cancelTask(row) {
   row.taskLoading = false
-  
 }
 // 点击取消任务清除的按钮
 function cancelClean(row) {
@@ -823,8 +820,7 @@ async function taskReset(row) {
     resetData.push(row.id)
     const message = await resetTask(resetData)
     ElMessage({ type: 'warning', message: message })
-    
-    const index = expandArr.value.find(v=>v.id === currentRow.value.projectId)
+    const index = expandArr.value.find(v => v.id === currentRow.value.projectId)
     expandArr.value.push(index)
     plateDataGet()
     crud.toQuery()
@@ -847,15 +843,15 @@ function handleChange(row) {
 const { maxHeight } = useMaxHeight({
   wrapperBox: '.contractRecord',
   paginate: true,
-  extraHeight: 40,
+  extraHeight: 40
 })
 
 const quicklyAssignVisible = ref(false) // 快速分配dlg
 
-async function showDetail(row) {
-  detailObj.value = row
-  innerVisible.value = true
-}
+// async function showDetail(row) {
+//   detailObj.value = row
+//   innerVisible.value = true
+// }
 
 function download(row) {
   if (row.reportUrl !== null) {

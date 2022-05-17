@@ -33,7 +33,7 @@
           style="margin-right: 8px"
           class="filter-item"
           v-model="query.cutState"
-          :options="CuttingEnum.ENUM"
+          :options="cuttingEnum.ENUM"
           show-option-all
           type="enum"
           size="small"
@@ -67,18 +67,17 @@
 <script setup>
 import { inject } from 'vue'
 import { regHeader } from '@compos/use-crud'
-import { CuttingEnum } from '@enum-ms/cutting'
+import { cuttingEnum } from '@enum-ms/cutting'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import { parseTime } from '@/utils/date'
 import Panel from '@/components/Panel'
 
-
 const projectInfo = inject('projectInfo')
 const defaultQuery = {
   projectName: undefined,
-  projectNumber:undefined,
-  importTime:parseTime(new Date(), '{y}')
+  projectNumber: undefined,
+  importTime: parseTime(new Date(), '{y}')
 }
 // 如果时间选取的时间年份比当前的时间大就被禁用
 function disabledDate(time) {

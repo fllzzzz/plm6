@@ -48,9 +48,9 @@
       </el-table-column>
          <el-table-column v-if="columns.visible('machineType')" key="machineType" prop="machineType" label="设备类型" min-width="45px" align="center">
         <template v-slot="scope">
-          <span v-if="scope.row.machineType==='0'">火焰切割设备</span>
-          <span v-if="scope.row.machineType==='1'">等离子切割设备</span>
-          <span v-if="scope.row.machineType==='2'">激光切割设备</span>
+          <span v-if="scope.row.machineType===machineTypeEnum.FLAME_CUTTING.V">火焰切割设备</span>
+          <span v-if="scope.row.machineType===machineTypeEnum.PLASMA_CUTTING.V">等离子切割设备</span>
+          <span v-if="scope.row.machineType===machineTypeEnum.LASER_CUTTING.V">激光切割设备</span>
           <!-- <span>{{MachineTypeEnum.VL[scope.row.machineType] }}</span> -->
         </template>
          </el-table-column>
@@ -105,7 +105,7 @@
         min-width="45px"
       >
         <template v-slot="scope">
-          <span>{{ MessageTypeEnum.VL[scope.row.online] }}</span>
+          <span>{{ messageTypeEnum.VL[scope.row.online] }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column v-if="columns.visible('position')" key="position" prop="position" label="位置" min-width="45px" align="center">
@@ -113,7 +113,6 @@
           <span>{{ scope.row.position }}</span>
         </template>
       </el-table-column>
-     
 
       <el-table-column v-if="columns.visible('code')" key="code" prop="code" label="代号" min-width="40px" align="center">
         <template v-slot="scope">
@@ -150,13 +149,13 @@ import { ref } from 'vue'
 import crudApi from '@/api/cutting/machine'
 import useCRUD from '@compos/use-crud'
 import mForm from './module/form'
-import { parseTime } from '@/utils/date'
+// import { parseTime } from '@/utils/date'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
 import udOperation from '@crud/UD.operation'
 import useMaxHeight from '@compos/use-max-height'
 import checkPermission from '@/utils/system/check-permission'
-import { MessageTypeEnum, MachineTypeEnum} from '@enum-ms/cutting'
+import { messageTypeEnum, machineTypeEnum } from '@enum-ms/cutting'
 import { machineConfigurationPM as permission } from '@/page-permission/cutting'
 
 const tableRef = ref()
@@ -168,7 +167,7 @@ const optShow = {
   download: false
 }
 
-const { crud, columns,CRUD } = useCRUD(
+const { crud, columns } = useCRUD(
   {
     title: '机器配置',
     sort: [],

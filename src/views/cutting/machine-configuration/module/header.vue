@@ -3,7 +3,7 @@
     <div v-show="crud.searchToggle">
       <common-radio-button
         v-model="query.online"
-        :options="MessageTypeEnum.ENUM"
+        :options="messageTypeEnum.ENUM"
         show-option-all
         type="enum"
         size="small"
@@ -37,7 +37,7 @@
 <script setup>
 // import { supplierIsHideEnum } from '@enum-ms/supplier'
 
-import { MessageTypeEnum } from '@enum-ms/cutting'
+import { messageTypeEnum } from '@enum-ms/cutting'
 import { regHeader } from '@compos/use-crud'
 import crudOperation from '@crud/CRUD.operation'
 import rrOperation from '@crud/RR.operation'

@@ -28,17 +28,16 @@
         </el-form-item> -->
         <el-form-item label="设备类型：" prop="machineType" >
              <common-select
-            ref="machineTypeRef" 
+            ref="machineTypeRef"
             type="enum"
             v-model="form.machineType"
-            :options="MachineTypeEnum.ENUM"
+            :options="machineTypeEnum.ENUM"
             clearable
             placeholder="请选择设备类型"
             style="width: 270px"
             class="filter-item"
             @change='handleChange'
           />
-          
         </el-form-item>
         <el-form-item label="设备名称：" prop="machineName">
           <el-input ref="saveTagInput" v-model="form.machineName" class="input-underline" placeholder="输入设备名称"/>
@@ -48,10 +47,10 @@
         </el-form-item>
         <el-form-item label="所属工厂：" prop="factoryId">
           <!-- <el-select ref="saveTagInput" v-model="form.factory"  placeholder="输入工厂" /> -->
-          <factory-select 
-          ref="factoryRef"  
-          v-model="form.factoryId" 
-          placeholder="请选择工厂" 
+          <factory-select
+          ref="factoryRef"
+          v-model="form.factoryId"
+          placeholder="请选择工厂"
           style="width: 270px"
           @change="factoryChange"
          />
@@ -84,7 +83,6 @@
           placeholder="请先选择生产线"
           style="width: 270px"
           defaultValue>
-     
         </production-line-select>
           <!-- <el-input ref="saveTagInput" v-model="form.productionLine" class="input-underline" placeholder="输入生产线" /> -->
         </el-form-item>
@@ -99,15 +97,14 @@
           </template>
         </el-form-item> -->
         <el-form-item label="负责人：" prop="directorId">
-          <user-select 
-            ref="userRef" 
-            v-model="form.directorId" 
+          <user-select
+            ref="userRef"
+            v-model="form.directorId"
             placeholder="请选择负责人"
-            style="width: 270px" 
+            style="width: 270px"
             defaultValue />
           <!-- <el-input ref="saveTagInput" v-model="form.director" class="input-underline" placeholder="输入负责人" /> -->
         </el-form-item>
-       
         <el-form-item label="MAC地址：" prop="mac">
           <el-input ref="saveTagInput" :disabled="isEdit" v-model="form.mac" class="input-underline" placeholder="输入MAC地址" />
         </el-form-item>
@@ -117,25 +114,23 @@
         <!-- <el-form-item label="代号：" prop="code">
           <el-input ref="saveTagInput" v-model="form.code" class="input-underline" placeholder="输入代号" />
         </el-form-item> -->
-        
       </el-form>
     </div>
   </common-dialog>
 </template>
 
 <script setup>
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { regForm } from '@compos/use-crud'
-import {MachineTypeEnum} from '@enum-ms/cutting'
+import { machineTypeEnum } from '@enum-ms/cutting'
 import storeOperation from '@crud/STORE.operation'
 import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
 import productionLineSelect from '@comp-mes/production-line-select'
-import useOnlyProductLines from '@compos/store/use-only-product-lines'
+// import useOnlyProductLines from '@compos/store/use-only-product-lines'
 import userSelect from '@comp-common/user-select'
-import { componentTypeEnum } from '@enum-ms/mes'
+// import { componentTypeEnum } from '@enum-ms/mes'
 // import workshop from '@/api/mes/production-config/workshop'
-
 
 const formRef = ref()
 // 工厂信息
@@ -147,19 +142,18 @@ const productionLineRef = ref()
 // 人员信息
 const userRef = ref()
 
-
 const defaultForm = {
   machineNumber: '', // 机器编号
   machineName: '', // 机器名称
   machineType: '', // 机器类型
   workshopInfId: '', // 车间信息
   // position: '', // 位置
-  factoryId:'',   //工厂
-  productionLineId:'',//生产线
+  factoryId: '', // 工厂
+  productionLineId: '', // 生产线
   directorId: '', // 负责人
   opcUrl: '', // 工控机地址
-  brand: '品牌', //设备品牌
-  mac: '',      //设备mac地址
+  brand: '品牌', // 设备品牌
+  mac: '' // 设备mac地址
   // code: ''
 }
 const isEdit = computed(() => crud.status.edit >= 1)
@@ -178,19 +172,19 @@ const rules = {
   directorId: [{ required: true, message: '请选择负责人', trigger: 'blur' }]
 }
 
-const defaultQuery = {
-  machineType: undefined,
-}
+// const defaultQuery = {
+//   machineType: undefined,
+// }
 function handleChange(val) {
-  console.log(val);
+  console.log(val)
 }
 
-function factoryChange(){
+function factoryChange() {
   crud.form.workshopInfId = undefined
   crud.form.productionLineId = undefined
 }
 // 编辑之前
-CRUD.HOOK.afterToEdit = (crud,form) =>{
+CRUD.HOOK.afterToEdit = (crud, form) => {
   console.log(form)
 }
 
@@ -199,13 +193,13 @@ CRUD.HOOK.beforeToQuery = async () => { }
 // 编辑之前
 CRUD.HOOK.beforeToEdit = () => {
   console.log(form)
- }
+}
 
 // 提交前
 CRUD.HOOK.beforeSubmit = async () => {
   console.log(factoryRef.value.factories)
   // 工厂信息
-  form.factory=factoryRef.value.getOption(form.factoryId).name
+  form.factory = factoryRef.value.getOption(form.factoryId).name
   // return false
 
   // 车间信息
@@ -217,13 +211,13 @@ CRUD.HOOK.beforeSubmit = async () => {
   form.productionLine = productionLineRef.value.getOption(form.productionLineId).name
   // 人员信息
   console.log(userRef.value.users)
-  form.director = userRef.value.users.find(v=>v.id===form.directorId)?.name
-  
+  form.director = userRef.value.users.find(v => v.id === form.directorId)?.name
+
   // 设备类型信息
   // console.log(machineTypeRef.value.MachineTypeEnum.ENUM,'111111111')
   // return false
 //   form.machineType = machineTypeRef.value.MachineTypeEnum.ENUM.find(v=>{v.id===form.})
- }
+}
 </script>
 
 <style lang="scss" scoped></style>
