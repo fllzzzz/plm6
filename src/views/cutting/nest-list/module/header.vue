@@ -36,8 +36,17 @@
           size="small"
           @change="crud.toQuery"
         />
+          <el-input
+            v-model="query.projectName"
+            placeholder="请输入项目名称"
+            class="filter-item"
+            style="width: 200px"
+            size="small"
+            clearable
+            @keyup.enter="crud.toQuery"
+          />
           <rrOperation />
-        </div>
+        </div> 
       </template>
     </crudOperation>
   </div>

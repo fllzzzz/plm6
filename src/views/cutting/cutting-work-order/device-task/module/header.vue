@@ -25,8 +25,7 @@
           @change="crud.toQuery"
         /> -->
         <el-date-picker
-            v-model="query.createTime"
-            :default-time="defaultTime"
+            v-model="query.date"
             type="daterange"
             range-separator=":"
             size="small"
@@ -36,8 +35,8 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             style="width: 240px"
-            class="filter-item"
-            @change="crud.toQuery"
+            class="filter-item date-item"
+            @change="handleDateChange"
           />
           <!-- <common-select
             v-model="query.factory"
@@ -55,7 +54,7 @@
            class="filter-item" 
            style="width: 270px"
            :factory-id="query.factoryId"
-           @change="crud.toQuery" 
+           @change="crud.toQuery"
            />
            <!-- <common-select
             v-model="query.workshopInf"
@@ -93,18 +92,34 @@
 
 <script setup>
 import { regHeader } from '@compos/use-crud'
+import moment from 'moment'
 // import { NestingEnum } from '@enum-ms/cutting'
+import { PICKER_OPTIONS_SHORTCUTS } from '@/settings/config'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
 import factorySelect from '@comp-base/factory-select.vue'
 import workshopSelect from '@comp-mes/workshop-select'
 
+//时间默认为最近30天内
 const defaultQuery = {
   machineName: undefined,
   factoryId:undefined,
   workshopInfId:undefined,
-  createTime:undefined
+  date: [moment().subtract(1, 'month').valueOf(), moment().valueOf()],
+  startDate: moment().subtract(1, 'month').valueOf(),
+  endDate: moment().valueOf()
 }
 
 const { crud, query } = regHeader(defaultQuery)
+
+function handleDateChange() {
+  if (query.date && query.date.length > 1) {
+    query.startDate = query.date[0]
+    query.endDate = query.date[1]
+  } else {
+    query.startDate = undefined
+    query.endDate = undefined
+  }
+  crud.toQuery()
+}
 </script>
