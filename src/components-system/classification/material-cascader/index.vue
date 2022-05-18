@@ -32,7 +32,7 @@ import { useStore } from 'vuex'
 import { mapGetters } from '@/store/lib'
 
 import { isNotBlank, isBlank } from '@data-type/index'
-import { getChildIds, getFirstNode, judgeNodeExistByIds, removeNodeByExistIds } from '@/utils/data-type/tree'
+import { getChildIds, getExistNodeIds, getFirstNode, removeNodeByExistIds } from '@/utils/data-type/tree'
 import useMatClsList from '@/composables/store/use-mat-class-list'
 
 const emit = defineEmits(['change', 'update:modelValue'])
@@ -262,9 +262,17 @@ function setCascader(tree) {
       classification.tree = []
     }
     if (currentValue.value) {
-      const valExist = judgeNodeExistByIds(classification.tree, currentValue.value)
-      if (!valExist) {
+      const existIds = getExistNodeIds(classification.tree, currentValue.value)
+      if (existIds?.length === 0) {
         handleChange(undefined)
+      } else {
+        // 数组
+        if (Array.isArray(currentValue.value)) {
+          if (currentValue.value.length !== existIds.length) {
+            handleChange(existIds)
+          }
+        }
+        // 非数组存在的情况，则不需要处理
       }
     } else {
       setDefault()

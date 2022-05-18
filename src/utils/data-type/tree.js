@@ -279,6 +279,39 @@ export function judgeNodeExistByIds(arr, ids, idField = 'id', childField = 'chil
   return exist
 }
 
+// 返回存在的节点（多个）
+export function getExistNodeIds(tree, ids, idField = 'id', childField = 'children') {
+  let cloneIds
+  if (typeof ids === 'string' || typeof ids === 'number') {
+    cloneIds = [ids]
+  } else if (Array.isArray(ids)) {
+    cloneIds = [...ids]
+  }
+  const tempFlag = tree instanceof Array && tree.length > 0 && cloneIds && cloneIds.length > 0 && idField && childField
+  if (!tempFlag) return []
+  const exitIds = []
+  cloneIds.forEach((id) => {
+    const exit = getExistNodeId(tree, id, idField, childField)
+    if (exit) exitIds.push(id)
+  })
+  return exitIds
+}
+
+// 返回存在的节点（单个）
+export function getExistNodeId(tree, id, idField = 'id', childField = 'children') {
+  if (!tree || tree.length === 0) return
+  for (const node of tree) {
+    if (node[idField] === id) {
+      return id
+    }
+    const children = node[childField]
+    if (children && children.length > 0) {
+      const result = getExistNodeId(children, id, idField, childField)
+      if (result) return id
+    }
+  }
+}
+
 /**
  * 根据节点数组获取级联名称
  *
