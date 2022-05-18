@@ -18,8 +18,8 @@ constantize(steelPlateEnum)
 // 代理连接状态
 const messageTypeEnum = {
   SMS_NOTIFICATION: { L: '离线', K: 'SMS_NOTIFICATION', V: 0 },
-  VERIFICATION_CODE: { L: '在线', K: 'VERIFICATION_CODE', V: 1 },
-  PROMOTION_SMS: { L: '连线中', K: 'PROMOTION_SMS', V: 2 }
+  VERIFICATION_CODE: { L: '在线', K: 'VERIFICATION_CODE', V: 1 }
+  // PROMOTION_SMS: { L: '连线中', K: 'PROMOTION_SMS', V: 2 }
 }
 constantize(messageTypeEnum)
 
