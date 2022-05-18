@@ -11,3 +11,13 @@ export function fetchInventoryNotify(params) {
     cancelKey: false
   })
 }
+
+// 获取已入库物料的理论厚度列表
+export function getInboundThicknessById(classifyId) {
+  return request({
+    module: 'wms',
+    url: `inbound/application/review/theory-thickness/${classifyId}`,
+    method: 'get',
+    cancelKey: false
+  })
+}

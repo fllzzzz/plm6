@@ -13,6 +13,7 @@
         :end-val="props.endVal"
         :decimals="props.precision"
         :separator="props.separator"
+        :suffix="suffix"
         :duration="2600"
         class="card-panel-num"
       />
@@ -59,6 +60,10 @@ const props = defineProps({
     default: 'rgba(0, 0, 0, 0.45)'
   },
   numColor: {
+    type: String,
+    default: ''
+  },
+  suffix: {
     type: String,
     default: ''
   },

@@ -22,6 +22,32 @@ export default {
       ]
     },
     {
+      path: '/plan-kpi',
+      component: 'Layout',
+      hidden: false,
+      name: 'PlanKpi',
+      alwaysShow: false,
+      redirect: '/plan-kpi/technical-kpi',
+      meta: {
+        title: 'KPI',
+        icon: 'project',
+        noCache: true
+      },
+      children: [
+        {
+          name: 'MesTechnicalKpi',
+          path: 'technical-kpi',
+          hidden: false,
+          component: '/plan/technical-kpi/index',
+          meta: {
+            title: '技术KPI',
+            icon: 'project',
+            noCache: true
+          }
+        }
+      ]
+    },
+    {
       path: '/plan/overall-plan',
       component: 'Layout',
       hidden: false,
