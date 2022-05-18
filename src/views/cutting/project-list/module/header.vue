@@ -23,13 +23,13 @@
         /> -->
 
         <common-radio-button
-          v-model="TypeEnumV"
-          :options="TypeEnum.ENUM"
+          v-model="typeEnumV"
+          :options="typeEnum.ENUM"
           size="small"
           default
           class="filter-item"
           type="enum"
-          @change="TypeEnumChange"
+          @change="typeEnumChange"
         />
         <rrOperation />
       </template>
@@ -42,7 +42,7 @@ import { ref, defineEmits } from 'vue'
 import { regHeader } from '@compos/use-crud'
 import rrOperation from '@crud/RR.operation'
 import crudOperation from '@crud/CRUD.operation'
-import { TypeEnum } from '@enum-ms/cutting'
+import { typeEnum } from '@enum-ms/cutting'
 
 const defaultQuery = {
   projectName: undefined,
@@ -52,7 +52,7 @@ const defaultQuery = {
 const { CRUD } = regHeader(defaultQuery)
 // const { crud, query, CRUD } = regHeader(defaultQuery)
 
-const TypeEnumV = ref(0)
+const typeEnumV = ref(0)
 const date = ref('')
 const emit = defineEmits(['change'])
 // function changeDate() {
@@ -67,7 +67,7 @@ CRUD.HOOK.beforeResetQuery = () => {
   date.value = ''
 }
 
-function TypeEnumChange() {
-  emit('change', TypeEnumV.value)
+function typeEnumChange() {
+  emit('change', typeEnumV.value)
 }
 </script>

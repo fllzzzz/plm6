@@ -157,12 +157,12 @@
         <el-table-column key="serialNumber" prop="serialNumber" :show-overflow-tooltip="true" label="编号" min-width="60" align="center">
           <template v-slot="scope">
             <span>{{ scope.row.serialNumber }}</span>
-            <el-tag style="float: right; margin-right: 10px" v-if="scope.row.relationType && scope.row.relationType === 2" type="success">
+            <el-tag style="float: right; margin-right: 10px" v-if="scope.row.relationType && scope.row.relationType === plateTypeEnum.PART_BOARD.V" type="success">
               零件板
             </el-tag>
             <el-tag
               style="float: right; margin-right: 10px"
-              v-else-if="scope.row.relationType && scope.row.relationType === 16"
+              v-else-if="scope.row.relationType && scope.row.relationType === plateTypeEnum.WING_PLATE.V"
               type="danger"
             >
               翼腹板
