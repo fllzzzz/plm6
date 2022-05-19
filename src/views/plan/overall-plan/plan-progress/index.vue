@@ -61,7 +61,7 @@
                 />
               </template>
               <template v-else>
-                <div><span>{{`计划用时${scope.row.deepVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deepVal?.actualDays && scope.row.deepVal?.totalDays) && (scope.row.deepVal.actualDays>scope.row.deepVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deepVal?.actualDays}天 | `}}</span><span>{{`已完成${scope.row.deepVal?.completedMete.toFixed(scope.row.deepVal?.decimal) || '-' }${scope.row.deepVal?.unit || ''}`}}</span></div>
+                <div><span>{{`计划用时${scope.row.deepVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deepVal?.actualDays && scope.row.deepVal?.totalDays) && (scope.row.deepVal.actualDays>scope.row.deepVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deepVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.deepVal?.completedMete.toFixed(scope.row.deepVal?.decimal) || '-' }${scope.row.deepVal?.unit || ''}`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>
@@ -95,7 +95,7 @@
                 />
               </template>
               <template v-else>
-                <div><span>{{`计划用时${scope.row.processVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.processVal?.actualDays && scope.row.processVal?.totalDays) && (scope.row.processVal.actualDays>scope.row.processVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.processVal?.actualDays}天 | `}}</span><span>{{`已完成${scope.row.processVal?.completedMete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''}`}}</span></div>
+                <div><span>{{`计划用时${scope.row.processVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.processVal?.actualDays && scope.row.processVal?.totalDays) && (scope.row.processVal.actualDays>scope.row.processVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.processVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.processVal?.mete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''} | 已完成${scope.row.processVal?.completedMete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''}`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>
