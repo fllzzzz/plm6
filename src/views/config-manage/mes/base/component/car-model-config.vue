@@ -18,7 +18,7 @@
         <common-button size="mini" type="warning" style="float: right" v-else @click="cancel">取消编辑</common-button>
       </div>
     </template>
-    <common-table v-loading="dataLoading" :maxHeight="maxHeight" :data="carModels">
+    <common-table v-loading="dataLoading" :maxHeight="maxHeight" :data="carModels" return-source-data>
       <el-table-column label="序号" type="index" align="center" width="60" />
       <el-table-column prop="name" label="车型">
         <template v-slot="scope">

@@ -15,6 +15,8 @@ import { specialPath } from '@/settings/config'
 // import supplyChainRouter from '@/router/modules/supply-chain'
 // import userRouter from '@/router/modules/user'
 // import cuttingRouter from '@/router/modules/cutting'
+// import bimRouter from '@/router/modules/bim'
+// import operationRouter from '@/router/modules/operation'
 
 import { validRequestUrl } from '@/utils/validate' // 请求路径验证规则
 
@@ -127,7 +129,7 @@ const loadMenus = async (next, to) => {
   try {
     // 菜单：content
     const menus = await fetchMenus()
-    // const menus = [configRouter, projectRouter, wmsRouter, mesRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter]
+    // const menus = [configRouter, projectRouter, wmsRouter, mesRouter, planRouter, contractRouter, supplyChainRouter, userRouter, cuttingRouter, bimRouter, operationRouter]
     await store.dispatch('permission/generateRoutes', menus)
     const asyncRoutes = await store.dispatch('permission/setRoutes', to.path)
     addRoutes(asyncRoutes)

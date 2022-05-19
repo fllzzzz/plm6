@@ -147,6 +147,12 @@ div:focus {
   align-items: center;
 }
 
+.flex-ccc {
+  @extend .flex-c;
+  justify-content: center;
+  align-items: center;
+}
+
 .flex-cac {
   @extend .flex-c;
   justify-content: space-around;

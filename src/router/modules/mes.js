@@ -26,6 +26,43 @@ export default {
     }]
   },
   {
+    path: '/mes-kpi',
+    component: 'Layout',
+    hidden: false,
+    name: 'MesKpi',
+    alwaysShow: false,
+    redirect: '/mes-kpi/production-kpi',
+    meta: {
+      title: 'KPI',
+      icon: 'project',
+      noCache: true
+    },
+    children: [
+      {
+        name: 'MesProductionKpi',
+        path: 'production-kpi',
+        hidden: false,
+        component: '/mes/production-kpi/index',
+        meta: {
+          title: '生产KPI',
+          icon: 'project',
+          noCache: true
+        }
+      },
+      {
+        name: 'MesShipKpi',
+        path: 'ship-kpi',
+        hidden: false,
+        component: '/mes/ship-kpi/index',
+        meta: {
+          title: '发运KPI',
+          icon: 'project',
+          noCache: true
+        }
+      }
+    ]
+  },
+  {
     path: '/mes/changed-manage',
     component: 'Layout',
     hidden: false,
