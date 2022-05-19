@@ -261,13 +261,13 @@
       >
         <template v-slot="scope">
           <span>
-            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === nestingStateEnum.NOT_LINED_UP.V" type="danger">
+            <el-tag style="width: 100%" effect="plain"  v-if="scope.row.nestingState === nestingEnum.NOT_LINED_UP.V" type="danger">
               未套料
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === nestingStateEnum.PARTIAL_ROW_SETS.V" type="warning">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === nestingEnum.PARTIAL_ROW_SETS.V" type="warning">
               部分套料
             </el-tag>
-            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === nestingStateEnum.LINED_UP.V" type="success">
+            <el-tag style="width: 100%" effect="plain" v-else-if="scope.row.nestingState && scope.row.nestingState === nestingEnum.LINED_UP.V" type="success">
               套料结束
             </el-tag>
           </span>
@@ -293,7 +293,7 @@ import useCRUD from '@compos/use-crud'
 // import { parseTime } from '@/utils/date'
 import mHeader from './module/header'
 import pagination from '@crud/Pagination'
-import { plateTypeEnum, nestingStateEnum, uploadEnum } from '@enum-ms/cutting'
+import { plateTypeEnum, nestingEnum, uploadEnum } from '@enum-ms/cutting'
 import useMaxHeight from '@compos/use-max-height'
 // import checkPermission from '@/utils/system/check-permission'
 import { nestingListPM as permission } from '@/page-permission/cutting'

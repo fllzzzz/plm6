@@ -31,7 +31,7 @@
       <template #optLeft>
         <div v-show="crud.searchToggle">
              <el-date-picker
-            v-model="query.year"
+            v-model="query.importTime"
             type="year"
             size="small"
             class="date-item filter-item"
@@ -83,7 +83,7 @@ const projectInfo = inject('projectInfo')
 
 const defaultQuery = {
   projectName: undefined,
-  year: parseTime(new Date(), '{y}')
+  importTime: parseTime(new Date(), '{y}')
   // monomerValue: undefined,
   // areaValue: undefined
 }
