@@ -1,5 +1,13 @@
 <template>
-  <common-table class="list-table" v-bind="$attrs" ref="tableRef" :data="list" :data-format="columnsDataFormat" :height="props.height" row-key="id">
+  <common-table
+    class="list-table"
+    v-bind="$attrs"
+    ref="tableRef"
+    :data="list"
+    :data-format="columnsDataFormat"
+    :height="props.height"
+    row-key="id"
+  >
     <el-table-column label="序号" type="index" align="center" width="60" />
     <el-table-column label="钢材种类" key="steelClassifyConfName" prop="steelClassifyConfName" align="center" width="100" />
     <el-table-column label="材质" key="material" prop="material" align="center" width="100" />
@@ -43,7 +51,7 @@
           class="item"
           effect="dark"
           content="当前清单有“绑定的库存利用清单”或“需要采购清单”，无法被删除"
-          :disabled="!(row.boundInvIds && row.boundInvIds.length > 0)"
+          :disabled="!((row.boundInvIds && row.boundInvIds.length > 0) || (row.boundPurIds && row.boundPurIds.length > 0))"
           placement="top-start"
         >
           <span>
@@ -52,7 +60,7 @@
               icon="el-icon-delete"
               size="mini"
               style="padding: 6px"
-              :disabled="row.boundInvIds && row.boundInvIds.length > 0"
+              :disabled="(row.boundInvIds && row.boundInvIds.length > 0) || (row.boundPurIds && row.boundPurIds.length > 0)"
               @click.stop="removeRow($index)"
             />
           </span>
@@ -63,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, nextTick } from 'vue'
+import { ref, defineProps, defineExpose, nextTick } from 'vue'
 import { STEEL_BASE_UNIT } from '@/settings/config'
 import { toPrecision } from '@/utils/data-type'
 import { operationTypeEnum } from '@/utils/enum/modules/common'
@@ -126,6 +134,12 @@ function handleListMeteChange(newVal, oldVal, row) {
     triggerCalc()
   }
 }
+
+defineExpose({
+  setCurrentRow: (row) => {
+    tableRef.value.setCurrentRow(row)
+  }
+})
 </script>
 
 <style scoped>

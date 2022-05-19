@@ -18,6 +18,7 @@ import useVisible from '@compos/use-visible'
 import { ElMessage } from 'element-plus'
 import steelPlate from './form/steel-plate.vue'
 import sectionSteel from './form/section-steel.vue'
+import auxMaterial from './form/aux-material.vue'
 
 const emit = defineEmits(['update:modelValue', 'success'])
 const props = defineProps({
@@ -38,7 +39,9 @@ const comp = computed(() => {
     case rawMatClsEnum.SECTION_STEEL.V:
       return sectionSteel
     case rawMatClsEnum.STEEL_COIL.V:
+      return steelPlate
     case rawMatClsEnum.MATERIAL.V:
+      return auxMaterial
     case rawMatClsEnum.GAS.V:
     default:
       return steelPlate

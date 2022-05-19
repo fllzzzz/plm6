@@ -123,10 +123,10 @@ const columnsDataFormat = [['listMete', ['to-fixed-field', 'accountingPrecision'
 // const list = ref([])
 
 // 删除
-function removeRow(index) {
-  const list = props.list
-  list.splice(index, 1)
-}
+// function removeRow(index) {
+//   const list = props.list
+//   list.splice(index, 1)
+// }
 
 // 处理清单量变化
 function handleListMeteChange(newVal, oldVal, row) {

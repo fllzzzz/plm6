@@ -60,7 +60,7 @@
                 class="filter-item"
                 type="success"
                 size="mini"
-                :disabled="!selectTechnologyRow"
+                :disabled="!selectTechnologyRow || crud.props.boolTechEditMode"
                 @click="openAddPurchaseMaterialDlg"
               >
                 新增材料
@@ -122,7 +122,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { STEEL_BASE_UNIT, STEEL_ENUM } from '@/settings/config'
 import { createUniqueString } from '@/utils/data-type/string'
 import { preparationSubmitDTO } from '@/views/plan/material-preparation/dto'
@@ -137,6 +137,7 @@ import { componentTypeEnum } from '@/utils/enum/modules/building-steel'
 import { setSpecInfoToList } from '@/utils/wms/spec'
 import { numFmtByBasicClass } from '@/utils/wms/convert-unit'
 import cloneDeep from 'lodash/cloneDeep'
+import { arr2obj } from '@/utils/convert/type'
 
 // 备料清单选项
 const preparationListTypeEnum = {
@@ -168,6 +169,8 @@ const drawerVisible = computed(() => crud.status.cu > CRUD.STATUS.NORMAL)
 const queryFilter = ref({
   showOnlySelectTechInfo: false
 })
+// 技术清单 id - info
+// const technologyListKV = ref({})
 
 // 高度
 const { maxHeight, heightStyle } = useMaxHeight(
@@ -179,6 +182,18 @@ const { maxHeight, heightStyle } = useMaxHeight(
     clientHRepMainH: true
   },
   drawerVisible
+)
+
+watch(
+  () => crud.form.technologyList,
+  (list) => {
+    if (list && list.length > 0 && list[0].id) {
+      crud.props.technologyListKV = arr2obj(list)
+    } else {
+      crud.props.technologyListKV = {}
+    }
+  },
+  { immediate: true }
 )
 
 // 初始化表单
@@ -223,6 +238,8 @@ function init() {
   queryFilter.value = {
     showOnlySelectTechInfo: false
   }
+  crud.props.boolTechEditMode = false
+  crud.props.technologyListKV = {}
   crud.props.techPrepMeteKV = {}
   crud.props.listTotalMete = 0
   crud.props.inventoryTotalMete = 0

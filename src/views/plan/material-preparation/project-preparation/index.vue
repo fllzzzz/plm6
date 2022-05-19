@@ -2,7 +2,6 @@
   <div class="app-container">
     <!--工具栏-->
     <mHeader />
-    <!-- 表格渲染 -->
     <common-table
       ref="tableRef"
       v-loading="!steelClassifyConfLoaded || crud.loading"
@@ -229,7 +228,7 @@ CRUD.HOOK.handleRefresh = (crud, { data }) => {
   //   return v
   // })
 }
-
 // 查看修改日志
-function openLog() {}
+function openLog() {
+}
 </script>

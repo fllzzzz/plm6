@@ -49,7 +49,11 @@
       <!-- 次要信息 -->
       <material-secondary-info-columns :basic-class="props.matchInfo.basicClass" :show-batch-no="false" />
       <!-- 单位及其数量 -->
-      <material-unit-operate-quantity-columns outbound-type-mode equal-disabled />
+      <material-unit-operate-quantity-columns
+        :show-unit-net="props.matchInfo.basicClass === rawMatClsEnum.MATERIAL.V"
+        outbound-type-mode
+        equal-disabled
+      />
       <!-- 工厂/仓库 -->
       <warehouse-info-columns />
       <!-- 操作 -->
@@ -146,13 +150,16 @@ const filterList = computed(() => {
 
 const emptyText = computed(() => {
   if (queryFilter.value.boolNotMatch) return '不进行物料仓匹配'
+  if (crud.props.boolTechEditMode) return '编辑清单时，不进行物料仓匹配'
   return isBlank(props.matchInfo) || loading.value ? '可选择左侧清单数据，匹配物料系统公共库中对应的的材料' : '未匹配到物料'
 })
 
 watch(
   () => props.matchInfo,
   () => {
-    fetchList()
+    if (!crud.props.boolTechEditMode) {
+      fetchList()
+    }
   },
   { immediate: true }
 )
@@ -165,6 +172,13 @@ function init() {
     boolNotInInventoryList: false
   }
 }
+
+watch(
+  () => crud.props.boolTechEditMode,
+  (flag) => {
+    if (flag) list.value = []
+  }
+)
 
 // 处理不匹配
 function handleNotMatch() {

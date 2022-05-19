@@ -245,6 +245,28 @@ const getMatchAuxMat = {
               id: 4,
               name: '622号仓库'
             }
+          },
+          {
+            id: 2,
+            classifyId: 247,
+            basicClass: matClsEnum.MATERIAL.V,
+            quantity: 10,
+            mete: 250000,
+            brand: '彩虹油漆',
+            // specification:undefined,
+            // remark: undefined,
+            // frozenMete: undefined,
+            // frozenQuantity: undefined, // 冻结数量
+            color: '天蓝',
+            factory: {
+              id: 1,
+              name: '一号工厂',
+              shortName: '一工'
+            },
+            warehouse: {
+              id: 4,
+              name: '622号仓库'
+            }
           }
         ],
         totalElements: 1

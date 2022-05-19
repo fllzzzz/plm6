@@ -58,25 +58,25 @@
     /> -->
     <el-table-column prop="material.measureUnit" label="计量单位" align="center" min-width="70px" />
     <el-table-column prop="material.usedQuantity" label="数量" align="center" min-width="120px">
-      <template #default="{ row: { sourceRow: row } }">
+      <template #default="{ row }">
         <template v-if="row.material.measureUnit">
           <el-tooltip
-            v-if="row.material.outboundUnitType === measureTypeEnum.MEASURE.V"
+            v-if="row.sourceRow.material.outboundUnitType === measureTypeEnum.MEASURE.V"
             effect="dark"
-            :content="`当前物料最大可利用数：${row.material.operableNumber}`"
+            :content="`当前物料最大可利用数：${row.sourceRow.material.operableNumber}`"
             :show-after="1000"
             placement="top-start"
           >
             <common-input-number
-              v-model="row.material.usedQuantity"
-              :min="row.material.lowerLimitNumber"
-              :max="row.material.operableNumber"
+              v-model="row.sourceRow.material.usedQuantity"
+              :min="row.sourceRow.material.lowerLimitNumber"
+              :max="row.sourceRow.material.operableNumber"
               :controls="false"
               :step="1"
-              :precision="+row.material.measurePrecision"
+              :precision="+row.sourceRow.material.measurePrecision"
               size="mini"
               placeholder="数量"
-              @change="(nv, ov) => handleQuantityChange(nv, ov, row)"
+              @change="(nv, ov) => handleQuantityChange(nv, ov, row.sourceRow)"
             />
           </el-tooltip>
           <span v-else>{{ row.material.usedQuantity || 0 }}</span>
@@ -86,24 +86,24 @@
     </el-table-column>
     <el-table-column prop="material.accountingUnit" label="核算单位" align="center" min-width="70px" />
     <el-table-column prop="material.usedMete" label="核算量" align="center" min-width="120px">
-      <template #default="{ row: { sourceRow: row } }">
+      <template #default="{ row }">
         <el-tooltip
-          v-if="row.material.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
+          v-if="row.sourceRow.material.outboundUnitType === measureTypeEnum.ACCOUNTING.V"
           effect="dark"
-          :content="`当前物料最大可利用数：${row.material.operableNumber}`"
+          :content="`当前物料最大可利用数：${row.sourceRow.material.operableNumber}`"
           :show-after="1000"
           placement="top-start"
         >
           <common-input-number
-            v-model="row.material.usedMete"
-            :min="row.material.lowerLimitNumber"
-            :max="row.material.operableNumber"
+            v-model="row.sourceRow.material.usedMete"
+            :min="row.sourceRow.material.lowerLimitNumber"
+            :max="row.sourceRow.material.operableNumber"
             :controls="false"
             :step="1"
-            :precision="+row.material.accountingPrecision"
+            :precision="+row.sourceRow.material.accountingPrecision"
             size="mini"
             placeholder="核算量"
-            @change="(nv, ov) => handleMeteChange(nv, ov, row)"
+            @change="(nv, ov) => handleMeteChange(nv, ov, row.sourceRow)"
           />
         </el-tooltip>
         <span v-else>{{ row.material.usedMete || 0 }}</span>
@@ -173,13 +173,16 @@ const inventoryList = ref([])
 const filterList = computed(() => {
   let list = inventoryList.value
   if (props.queryFilter.showOnlySelectTechInfo && props.currentTechRow) {
-    list = list.filter((row) => row.boundTech.id === props.currentTechRow.id)
+    list = list.filter((row) => row.boundTechId === props.currentTechRow.id)
   }
   return list
 })
 
 // 表格列数据格式转换
-const columnsDataFormat = [['material.usedMete', ['to-fixed-field', 'accountingUnit']]]
+const columnsDataFormat = [
+  ['material.usedMete', ['to-fixed-field', 'material.accountingPrecision']],
+  ['material.usedQuantity', ['to-fixed-field', 'material.measurePrecision']]
+]
 
 // 数量校验方式
 const validateQuantity = (value, row) => {
@@ -206,7 +209,10 @@ const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, e
 
 // 校验
 function validate() {
-  if (isBlank(inventoryList.value)) return true
+  if (isBlank(inventoryList.value)) {
+    crud.form.inventoryList = []
+    return true
+  }
   const { validResult, dealList } = tableValidate(inventoryList.value)
   inventoryList.value = dealList
   // 为表单赋值
@@ -301,8 +307,11 @@ function addRow(row, technologyRow) {
   invRow.boolAdd = true // 是否添加
   invRow.id = createUniqueString() // 设置记录id（假，用于绑定）
   // 技术清单与库存利用清单互相绑定
-  invRow.boundTech = technologyRow
-  technologyRow.boundInvIds.push(invRow.id)
+  invRow.boundTechId = technologyRow.id
+  const tr = crud.props.technologyListKV[invRow.boundTechId]
+  if (tr) {
+    tr.boundInvIds.push(invRow.id)
+  }
   // 监听
   // rowWatch(invRow)
   inventoryList.value.push(invRow)
@@ -313,8 +322,11 @@ function delRow(row, index) {
   crud.props.inventoryExitIdMap.set(row.material.id, false)
   inventoryList.value.splice(index, 1)
   // 解除技术清单与库存利用清单之间的绑定
-  const techRow = row.boundTech
-  techRow.boundInvIds.remove(row.id)
+  const tId = row.boundTechId
+  const techRow = crud.props.technologyListKV[tId]
+  if (techRow) {
+    techRow.boundInvIds.remove(row.id)
+  }
   // 重新计算备料量
   calcTechPrepMete(inventoryList.value, techRow)
   // 重新计算库存利用总量
@@ -336,7 +348,7 @@ function handleQuantityChange(newVal, oldVal, row) {
           material.usedMete = undefined
         }
       }
-      calcTechPrepMete(inventoryList.value, row.boundTech)
+      calcTechPrepMete(inventoryList.value, crud.props.technologyListKV[row.boundTechId])
       calcInventoryTotalMete(inventoryList.value)
     }
   }
@@ -363,7 +375,7 @@ function handleMeteChange(newVal, oldVal, row) {
       } else {
         material.usedQuantity = undefined
       }
-      calcTechPrepMete(inventoryList.value, row.boundTech)
+      calcTechPrepMete(inventoryList.value, crud.props.technologyListKV[row.boundTechId])
       calcInventoryTotalMete(inventoryList.value)
     }
   }
@@ -415,7 +427,7 @@ function initialBindingTechnologyList(inventoryList, technologyList) {
           material.specNameKV['材质'] === techRow.material && // 材质相同
           `${material.theoryThickness}` === techRow.specification // 厚度相同
         ) {
-          invRow.boundTech = techRow
+          invRow.boundTechId = techRow.id
           techRow.boundInvIds.push(invRow.id)
           break
         }
@@ -426,7 +438,7 @@ function initialBindingTechnologyList(inventoryList, technologyList) {
           material.specNameKV['材质'] === techRow.material && // 材质相同
           material.specNameKV[material.nationalStandard] === techRow.specification // 规格相同
         ) {
-          invRow.boundTech = techRow
+          invRow.boundTechId = techRow.id
           techRow.boundInvIds.push(invRow.id)
           break
         }
@@ -448,7 +460,7 @@ function initialBindingTechnologyList(inventoryList, technologyList) {
         )
         // 相同则绑定
         if (boolSameMat) {
-          invRow.boundTech = techRow
+          invRow.boundTechId = techRow.id
           techRow.boundInvIds.push(invRow.id)
           break
         }

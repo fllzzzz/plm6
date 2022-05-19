@@ -53,24 +53,24 @@
     /> -->
     <el-table-column prop="material.measureUnit" label="计量单位" align="center" min-width="70px" />
     <el-table-column prop="material.quantity" label="数量" align="center" min-width="120px">
-      <template #default="{ row: { sourceRow: row } }">
-        <template v-if="row.material.measureUnit">
+      <template #default="{ row }">
+        <template v-if="row.sourceRow.material.measureUnit">
           <el-tooltip
             effect="dark"
-            :content="`当前记录已分拣：${row.material.lowerLimitQuantity}`"
+            :content="`当前记录已分拣：${row.sourceRow.material.lowerLimitQuantity}`"
             :show-after="1000"
             placement="top-start"
           >
             <common-input-number
-              v-model="row.material.quantity"
-              :min="row.material.lowerLimitQuantity"
+              v-model="row.sourceRow.material.quantity"
+              :min="row.sourceRow.material.lowerLimitQuantity"
               :max="999999999"
               :controls="false"
               :step="1"
-              :precision="+row.material.measurePrecision"
+              :precision="+row.sourceRow.material.measurePrecision"
               size="mini"
               placeholder="数量"
-              @change="(nv, ov) => handleQuantityChange(nv, ov, row)"
+              @change="(nv, ov) => handleQuantityChange(nv, ov, row.sourceRow)"
             />
           </el-tooltip>
         </template>
@@ -79,24 +79,24 @@
     </el-table-column>
     <el-table-column prop="material.accountingUnit" label="核算单位" align="center" min-width="70px" />
     <el-table-column prop="material.mete" label="核算量" align="center" min-width="120px">
-      <template #default="{ row: { sourceRow: row } }">
+      <template #default="{ row }">
         <el-tooltip
           v-if="crud.form.materialBasicClass === matClsEnum.MATERIAL.V"
           effect="dark"
-          :content="`当前记录已分拣：${row.material.lowerLimitMete}`"
+          :content="`当前记录已分拣：${row.sourceRow.material.lowerLimitMete || 0}`"
           :show-after="1000"
           placement="top-start"
         >
           <common-input-number
-            v-model="row.material.mete"
-            :min="row.material.lowerLimitMete"
+            v-model="row.sourceRow.material.mete"
+            :min="row.sourceRow.material.lowerLimitMete"
             :max="999999999"
             :controls="false"
             :step="1"
-            :precision="+row.material.accountingPrecision"
+            :precision="+row.sourceRow.material.accountingPrecision"
             size="mini"
             placeholder="核算量"
-            @change="(nv, ov) => handleMeteChange(nv, ov, row)"
+            @change="(nv, ov) => handleMeteChange(nv, ov, row.sourceRow)"
           />
         </el-tooltip>
         <span v-else>{{ row.material.mete || 0 }}</span>
@@ -164,13 +164,13 @@ const purchaseList = ref([])
 const filterList = computed(() => {
   let list = purchaseList.value
   if (props.queryFilter.showOnlySelectTechInfo && props.currentTechRow) {
-    list = list.filter((row) => row.boundTech.id === props.currentTechRow.id)
+    list = list.filter((row) => row.boundTechId === props.currentTechRow.id)
   }
   return list
 })
 
 // 表格列数据格式转换
-const columnsDataFormat = [['material.mete', ['to-fixed-field', 'accountingUnit']]]
+const columnsDataFormat = [['material.mete', ['to-fixed-field', 'material.accountingPrecision']]]
 
 // 数量校验方式
 const validateQuantity = (value, row) => {
@@ -197,7 +197,10 @@ const { tableValidate, wrongCellMask } = useTableValidate({ rules: tableRules, e
 
 // 校验
 function validate() {
-  if (isBlank(purchaseList.value)) return true
+  if (isBlank(purchaseList.value)) {
+    crud.form.purchaseList = []
+    return true
+  }
   const { validResult, dealList } = tableValidate(purchaseList.value)
   purchaseList.value = dealList
   // 为表单赋值
@@ -229,8 +232,9 @@ function addRow(row, technologyRow) {
   purRow.boolAdd = true // 是否添加
   purRow.id = createUniqueString() // 设置记录id（假，用于绑定）
   // 技术清单与库存利用清单互相绑定
-  purRow.boundTech = technologyRow
-  technologyRow.boundPurIds.push(purRow.id)
+  purRow.boundTechId = technologyRow.id
+  const tr = crud.props.technologyListKV[purRow.boundTechId]
+  tr.boundPurIds.push(purRow.id)
   // 监听
   // rowWatch(invRow)
   calcSteelTotalWeight(purRow.material)
@@ -246,7 +250,7 @@ function delRow(row, index) {
   crud.props.inventoryExitIdMap.set(row.material.id, false)
   purchaseList.value.splice(index, 1)
   // 解除技术清单与需要采购清单之间的绑定
-  const techRow = row.boundTech
+  const techRow = crud.props.technologyListKV[row.boundTechId]
   techRow.boundPurIds.remove(row.id)
   // 重新计算备料量
   calcTechPrepMete(purchaseList.value, techRow)
@@ -272,7 +276,7 @@ function handleQuantityChange(newVal, oldVal, row) {
       if (material.basicClass & STEEL_ENUM) {
         calcSteelTotalWeight(material)
       }
-      calcTechPrepMete(purchaseList.value, row.boundTech)
+      calcTechPrepMete(purchaseList.value, crud.props.technologyListKV[row.boundTechId])
       calcPurchaseTotalMete(purchaseList.value)
     }
   }
@@ -294,7 +298,7 @@ function handleMeteChange(newVal, oldVal, row) {
   // 填写的字段
   const triggerCalc = () => {
     if (oldVal !== material.mete) {
-      calcTechPrepMete(purchaseList.value, row.boundTech)
+      calcTechPrepMete(purchaseList.value, crud.props.technologyListKV[row.boundTechId])
       calcPurchaseTotalMete(purchaseList.value)
     }
   }
@@ -385,7 +389,7 @@ function initialBindingTechnologyList(purchaseList, technologyList) {
           material.specNameKV['材质'] === techRow.material && // 材质相同
           `${material.theoryThickness}` === techRow.specification // 厚度相同
         ) {
-          purRow.boundTech = techRow
+          purRow.boundTechId = techRow.id
           techRow.boundPurIds.push(purRow.id)
           break
         }
@@ -396,7 +400,7 @@ function initialBindingTechnologyList(purchaseList, technologyList) {
           material.specNameKV['材质'] === techRow.material && // 材质相同
           material.specNameKV[material.nationalStandard] === techRow.specification // 规格相同
         ) {
-          purRow.boundTech = techRow
+          purRow.boundTechId = techRow.id
           techRow.boundPurIds.push(purRow.id)
           break
         }

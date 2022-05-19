@@ -7,7 +7,7 @@
         </div>
         <div class="filter-right-box">
           <template v-if="crud.form.withoutList">
-            <template v-if="!boolTechEditMode">
+            <template v-if="!crud.props.boolTechEditMode">
               <div class="filter-item">
                 <el-checkbox v-model="queryFilter.boolPreparationLessThanList" label="只显示备料量小于清单量" size="mini" border />
               </div>
@@ -22,14 +22,15 @@
         </div>
       </div>
       <component
+        ref="technologyListRef"
         v-if="detail.technologyListType"
         v-loading="crud.editDetailLoading"
         :is="listComp"
         :list="filterList"
-        :tech-prep-mete-k-v="crud.props.techPrepMeteKV"
+        :tech-prep-mete-k-v="techPrepMeteKV"
         :height="props.height"
         :stripe="false"
-        :edit-mode="boolTechEditMode"
+        :edit-mode="crud.props.boolTechEditMode"
         highlight-current-row
         @row-click="handleRowClick"
         :style="{ width: showMatchTable ? '750px' : '900px' }"
@@ -69,16 +70,22 @@ const props = defineProps({
   }
 })
 
+// 技术清单列表
+const technologyListRef = ref()
 // 当前物料
 const selectTechnologyRow = ref()
 
 // 备料清单添加显示
 const techAddFormVisible = ref(false)
-// 清单编辑模式
-const boolTechEditMode = ref(false)
 
-// 编辑前技术清单
+// 当前技术清单
 const currentTechnologyList = ref()
+
+// 编辑状态：清单
+const editTechnologyList = ref()
+
+// 编辑状态：备料量信息
+const editTechPrepMeteKV = ref()
 
 const showMatchTable = computed(() => crud.form.technologyListType === componentTypeEnum.STRUCTURE.V)
 
@@ -88,8 +95,8 @@ const queryFilter = ref({
 })
 // 技术清单汇总列表 过滤后的列表
 const filterList = computed(() => {
-  if (boolTechEditMode.value) {
-    return currentTechnologyList.value
+  if (crud.props.boolTechEditMode) {
+    return editTechnologyList.value
   }
   if (currentTechnologyList.value) {
     return currentTechnologyList.value.filter((row) => {
@@ -102,6 +109,15 @@ const filterList = computed(() => {
     })
   } else {
     return []
+  }
+})
+
+// 备料量信息
+const techPrepMeteKV = computed(() => {
+  if (crud.props.boolTechEditMode) {
+    return editTechPrepMeteKV.value
+  } else {
+    return crud.props.techPrepMeteKV
   }
 })
 
@@ -124,17 +140,56 @@ const listComp = computed(() => {
   }
 })
 
-// 监听crud.form.technologyList变化
+/**
+ * 监听crud.form.technologyList变化，实现如下功能
+ * 在清单编辑模式下，修改 editTechnologyList 中绑定的库存利用清单与需要采购清单信息
+ */
 watch(
   () => crud.form.technologyList,
   (list) => {
     if (Array.isArray(list)) {
       list.sort(techSort)
       currentTechnologyList.value = cloneDeep(crud.form.technologyList)
+
+      // 编辑状态下
+      if (crud.props.boolTechEditMode && editTechnologyList.value) {
+        const kv = crud.props.technologyListKV
+        /**
+         * 此时需要采购清单中有数据被删除，才会触发
+         * 因此以下代码没有问题，若是技术清单中的其他信息变更，可能需要重写此处代码。
+         */
+        editTechnologyList.value.forEach((item) => {
+          // 当状态改变时，修改编辑清单中的信息
+          item.boundPurIds = kv[item.id]?.boundPurIds
+          item.boundInvIds = kv[item.id]?.boundInvIds
+        })
+      }
     }
   },
   {
     immediate: true,
+    deep: true
+  }
+)
+
+/**
+ * 监听crud.props.techPrepMeteKV变化，实现如下功能
+ * 在清单编辑模式下，修改 editTechPrepMeteKV 中的清单量
+ */
+watch(
+  () => crud.props.techPrepMeteKV,
+  (kv) => {
+    // 编辑状态下
+    if (crud.props.boolTechEditMode && typeof editTechPrepMeteKV.value === 'object') {
+      const keys = Object.getOwnPropertyNames(editTechPrepMeteKV.value)
+      keys.forEach(key => {
+        const listMete = editTechPrepMeteKV.value[key].listMete
+        editTechPrepMeteKV.value[key] = cloneDeep(kv[key])
+        editTechPrepMeteKV.value[key].listMete = listMete
+      })
+    }
+  },
+  {
     deep: true
   }
 )
@@ -150,17 +205,19 @@ CRUD.HOOK.beforeEditDetailLoaded = (crud, form) => {
 
 // 初始化
 function init() {
-  selectTechnologyRow.value = undefined
+  setCurrentRow()
   queryFilter.value.boolPreparationLessThanList = false
+  editTechnologyList.value = undefined
+  editTechPrepMeteKV.value = undefined
 }
 
 // 行选中
-function handleRowClick(row, column, event) {
+function handleRowClick(row) {
   // 修改模式不触发
-  if (!boolTechEditMode.value) {
-    selectTechnologyRow.value = row
-    emit('selected-change', row, column, event)
-  }
+  // if (!crud.props.boolTechEditMode) {
+  selectTechnologyRow.value = row
+  emit('selected-change', row)
+  // }
 }
 
 // 处理添加成功
@@ -182,20 +239,24 @@ function handleTechAddSuccess(list) {
 function toEditTech() {
   // technologyList.value 设置为table数据
   // technologyList.value = crud.form.technologyList
-  selectTechnologyRow.value = undefined
-  boolTechEditMode.value = true
+  // setCurrentRow()
+  crud.props.boolTechEditMode = true
+  editTechnologyList.value = cloneDeep(currentTechnologyList.value)
+  editTechPrepMeteKV.value = cloneDeep(crud.props.techPrepMeteKV)
 }
 
 // 保存清单修改
 function saveTechEdit() {
-  crud.form.technologyList = cloneDeep(currentTechnologyList.value)
-  boolTechEditMode.value = false
+  crud.form.technologyList = cloneDeep(editTechnologyList.value)
+  crud.props.techPrepMeteKV = cloneDeep(editTechPrepMeteKV.value)
+  crud.props.boolTechEditMode = false
+  // setCurrentRow()
 }
 
 // 取消编辑
 function cancelTechEdit() {
-  currentTechnologyList.value = cloneDeep(crud.form.technologyList)
-  boolTechEditMode.value = false
+  crud.props.boolTechEditMode = false
+  // setCurrentRow()
 }
 
 // 清单汇总列表 排序
@@ -212,6 +273,13 @@ function techSort(a, b) {
     return a.material < b.material ? -1 : 1
   }
   return a.steelClassifyConfId < b.steelClassifyConfId ? -1 : 1
+}
+
+// 设置当前行
+function setCurrentRow(row) {
+  selectTechnologyRow.value = row
+  technologyListRef.value.setCurrentRow(row)
+  emit('selected-change', row)
 }
 </script>
 

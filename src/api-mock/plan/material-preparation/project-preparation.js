@@ -401,8 +401,41 @@ const detail_5 = {
             listMete: 10
           }
         ],
-        inventoryList: [],
-        purchaseList: []
+        inventoryList: [
+          {
+            id: 1, // 记录id
+            remark: '须购买鞍钢', // 备注
+            material: {
+              classifyId: 247,
+              basicClass: matClsEnum.MATERIAL.V,
+              brand: '彩虹',
+              color: '天蓝色',
+              remark: '66666',
+              quantity: 10,
+              mete: 10,
+              project: {
+                id: 1,
+                name: '长安街666666号辅路',
+                shortName: '长安街',
+                serialNumber: /([A-Z0-9]{2,3}\-){1,3}[A-Z0-9]{2,3}/
+              },
+              factory: {
+                id: 1,
+                name: '一号工厂',
+                shortName: '一工'
+              },
+              warehouse: {
+                id: 1,
+                name: '666号仓库'
+              }
+              // sortingMete: 0, // 分拣量
+              // sortingQuantity: 0 // 分拣数量
+            }
+          }
+        ],
+        purchaseList: [
+
+        ]
       }
     }
   }
