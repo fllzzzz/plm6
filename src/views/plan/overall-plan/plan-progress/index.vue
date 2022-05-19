@@ -44,7 +44,7 @@
           <template v-slot="scope">
             <template v-if="isNotBlank(scope.row.deepVal)">
               <template v-if="scope.row.showType===1">
-                <div>{{`计划用时${scope.row.deepVal?.totalDays || '-'}天|已用时${scope.row.deepVal?.actualDays || '-'}天`}}</div>
+                <div><span>{{`计划用时${scope.row.deepVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deepVal?.actualDays && scope.row.deepVal?.totalDays) && (scope.row.deepVal.actualDays>scope.row.deepVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deepVal?.actualDays}天`}}</span></div>
                 <el-progress
                   v-if="isNotBlank(scope.row.deepVal)"
                   :text-inside="true"
@@ -61,16 +61,8 @@
                 />
               </template>
               <template v-else>
-                <div>{{`计划用时${scope.row.deepVal?.totalDays || '-'}天|已用时${scope.row.deepVal?.actualDays || '-'}天 | 已完成${scope.row.deepVal?.completedMete.toFixed(scope.row.deepVal?.decimal) || '-' }${scope.row.deepVal?.unit || ''}`}}</div>
-                <el-progress
-                  v-if="isNotBlank(scope.row.deepVal)"
-                  :text-inside="true"
-                  :stroke-width="26"
-                  :percentage="scope.row.deepVal?.dayRate"
-                  status="warning"
-                />
+                <div><span>{{`计划用时${scope.row.deepVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.deepVal?.actualDays && scope.row.deepVal?.totalDays) && (scope.row.deepVal.actualDays>scope.row.deepVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.deepVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.deepVal?.completedMete.toFixed(scope.row.deepVal?.decimal) || '-' }${scope.row.deepVal?.unit || ''}`}}</span></div>
               </template>
-
             </template>
             <template v-else>-</template>
           </template>
@@ -86,7 +78,7 @@
           <template v-slot="scope">
             <template v-if="isNotBlank(scope.row.deepVal)">
               <template v-if="scope.row.showType===1">
-                <div>{{`计划用时${scope.row.processVal?.totalDays || '-'}天|已用时${scope.row.processVal?.actualDays || '-'}天`}}</div>
+                <div><span>{{`计划用时${scope.row.processVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.processVal?.actualDays && scope.row.processVal?.totalDays) && (scope.row.processVal.actualDays>scope.row.processVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.processVal?.actualDays}天`}}</span></div>
                 <el-progress
                   v-if="isNotBlank(scope.row.processVal)"
                   :text-inside="true"
@@ -103,14 +95,7 @@
                 />
               </template>
               <template v-else>
-                <div>{{`计划用时${scope.row.processVal?.totalDays || '-'}天|已用时${scope.row.processVal?.actualDays || '-'}天|已完成${scope.row.processVal?.completedMete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''}`}}</div>
-                <el-progress
-                  v-if="isNotBlank(scope.row.processVal)"
-                  :text-inside="true"
-                  :stroke-width="26"
-                  :percentage="scope.row.processVal?.dayRate"
-                  status="warning"
-                />
+                <div><span>{{`计划用时${scope.row.processVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.processVal?.actualDays && scope.row.processVal?.totalDays) && (scope.row.processVal.actualDays>scope.row.processVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.processVal?.actualDays}天 | `}}</span><span>{{`总量${scope.row.processVal?.mete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''} | 已完成${scope.row.processVal?.completedMete.toFixed(scope.row.processVal?.decimal) || '-' }${scope.row.processVal?.unit || ''}`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>
@@ -127,7 +112,7 @@
           <template v-slot="scope">
             <template v-if="isNotBlank(scope.row.deepVal)">
               <template v-if="scope.row.showType===1">
-                <div>{{`计划用时${scope.row.installVal?.totalDays || '-'}天|已用时${scope.row.installVal?.actualDays || '-'}天`}}</div>
+                <div><span>{{`计划用时${scope.row.installVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.installVal?.actualDays && scope.row.installVal?.totalDays) && (scope.row.installVal.actualDays>scope.row.installVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.installVal?.actualDays}天`}}</span></div>
                 <el-progress
                   v-if="isNotBlank(scope.row.installVal)"
                   :text-inside="true"
@@ -144,14 +129,7 @@
                 />
               </template>
               <template v-else>
-                <div>{{`计划用时${scope.row.installVal?.totalDays || '-'}天|已用时${scope.row.installVal?.actualDays || '-'}天`}}</div>
-                <el-progress
-                  v-if="isNotBlank(scope.row.installVal)"
-                  :text-inside="true"
-                  :stroke-width="26"
-                  :percentage="scope.row.installVal?.dayRate"
-                  status="warning"
-                />
+                <div><span>{{`计划用时${scope.row.installVal?.totalDays || '-'}天 | `}}</span><span :class="(scope.row.installVal?.actualDays && scope.row.installVal?.totalDays) && (scope.row.installVal.actualDays>scope.row.installVal.totalDays)?'red-color':'green-color'">{{`已用时${scope.row.installVal?.actualDays}天`}}</span></div>
               </template>
             </template>
             <template v-else>-</template>
@@ -320,5 +298,11 @@ CRUD.HOOK.handleRefresh = (crud, data) => {
 ::v-deep(.el-progress-bar__inner){
   text-align: center;
   max-width: 100%;
+}
+.red-color{
+  color:red;
+}
+.green-color{
+  color:green;
 }
 </style>
