@@ -16,7 +16,7 @@
           /> -->
           <el-date-picker
             style="margin-right: 5px; width: 150px"
-            v-model="query.year"
+            v-model="query.importTime"
             type="year"
             size="small"
             class="filter-item"
@@ -61,7 +61,7 @@ import { parseTime } from '@/utils/date'
 
 const defaultQuery = {
   // importTime: undefined
-  year: parseTime(new Date(), '{y}')
+  importTime: parseTime(new Date(), '{y}')
 }
 // 如果时间选取的时间年份比当前的时间大就被禁用
 function disabledDate(time) {
